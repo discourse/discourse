@@ -1,59 +1,28 @@
-import Service, { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
-import I18n from "I18n";
-import { dasherize } from "@ember/string";
 import { action } from "@ember/object";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { inject as service } from "@ember/service";
+import { dasherize } from "@ember/string";
+import $ from "jquery";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import deprecated from "discourse-common/lib/deprecated";
+import I18n from "discourse-i18n";
 
 // Known legacy modals in core. Silence deprecation warnings for these so the messages
 // don't cause unnecessary noise.
 const KNOWN_LEGACY_MODALS = [
   "associate-account-confirm",
-  "auth-token",
   "avatar-selector",
-  "bulk-change-category",
-  "bulk-notification-level",
-  "bulk-progress",
   "change-owner",
   "change-post-notice",
   "create-account",
   "create-invite-bulk",
   "create-invite",
-  "edit-topic-timer",
-  "edit-user-directory-columns",
-  "explain-reviewable",
-  "feature-topic-on-profile",
-  "feature-topic",
-  "flag",
   "grant-badge",
   "group-default-notifications",
-  "history",
-  "ignore-duration-with-username",
-  "ignore-duration",
-  "login",
-  "move-to-topic",
-  "post-enqueued",
-  "publish-page",
-  "raw-email",
   "reject-reason-reviewable",
   "reorder-categories",
-  "request-group-membership-form",
-  "share-and-invite",
-  "tag-upload",
-  "topic-summary",
-  "user-status",
-  "admin-penalize-user",
-  "admin-badge-preview",
-  "admin-edit-badge-groupings",
-  "admin-reseed",
-  "admin-theme-item",
-  "admin-color-scheme-select-base",
-  "admin-form-template-validation-options",
-  "admin-staff-action-log-details",
-  "admin-uploaded-image-list",
 ];
 
 const LEGACY_OPTS = new Set([

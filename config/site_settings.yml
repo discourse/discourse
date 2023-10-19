@@ -192,6 +192,7 @@ basic:
   post_menu:
     client: true
     type: list
+    list_type: simple
     default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
@@ -207,6 +208,7 @@ basic:
   post_menu_hidden_items:
     client: true
     type: list
+    list_type: simple
     default: "flag|bookmark|edit|delete|admin"
     allow_any: false
     choices:
@@ -221,6 +223,7 @@ basic:
   share_links:
     client: true
     type: list
+    list_type: simple
     default: "twitter|facebook|email"
     allow_any: false
     choices:
@@ -233,7 +236,7 @@ basic:
   share_quote_visibility:
     client: true
     type: enum
-    default: "anonymous"
+    default: "all"
     choices:
       - none
       - anonymous
@@ -241,6 +244,7 @@ basic:
   share_quote_buttons:
     client: true
     type: list
+    list_type: simple
     default: "twitter|email"
     allow_any: false
     choices:
@@ -1006,7 +1010,8 @@ posting:
     list_type: compact
   show_copy_button_on_codeblocks:
     client: true
-    default: false
+    default: true
+    hidden: true
   delete_old_hidden_posts: true
   enable_emoji:
     default: true
@@ -1118,12 +1123,15 @@ posting:
   max_draft_length:
     default: 400_000
     hidden: true
+  max_drafts_per_user:
+    default: 10_000
+    hidden: true
   max_form_template_title_length:
     default: 100
     min: 5
     max: 255
   max_form_template_content_length:
-    default: 2000
+    default: 5000
     max: 150000
 
 email:
@@ -1155,6 +1163,9 @@ email:
     max: 36500
   digest_suppress_categories:
     type: category_list
+    default: ""
+  digest_suppress_tags:
+    type: tag_list
     default: ""
   disable_digest_emails:
     default: false
@@ -1436,6 +1447,10 @@ files:
     default: 1024
     min: 1
     max: 10240
+  secure_uploads_pm_only:
+    default: false
+    hidden: true
+    client: true
   enable_s3_uploads:
     default: false
     client: true
@@ -1839,6 +1854,14 @@ security:
     default: false
   display_personal_messages_tag_counts:
     default: false
+  cross_origin_opener_policy_header:
+    default: "unsafe-none"
+    type: enum
+    choices:
+      - "unsafe-none"
+      - "same-origin"
+      - "same-origin-allow-popups"
+    hidden: true
 
 onebox:
   post_onebox_maxlength:
@@ -1919,7 +1942,9 @@ spam:
   auto_respond_to_flag_actions: true
   min_first_post_typing_time: 3000
   auto_silence_fast_typers_on_first_post: true
-  auto_silence_fast_typers_max_trust_level: 0
+  auto_silence_fast_typers_max_trust_level:
+    default: 0
+    enum: "TrustLevelSetting"
   auto_silence_first_post_regex: ""
   high_trust_flaggers_auto_hide_posts: true
   cooldown_hours_until_reflag:
@@ -1947,12 +1972,15 @@ spam:
   reviewable_low_priority_threshold:
     default: 0
     min: 0
+  reviewable_revision_reasons:
+    default: "Duplicate|Does not meet posting guidelines"
+    type: list
+    client: true
 
 rate_limits:
   unique_posts_mins: 5
   rate_limit_create_topic: 15
   rate_limit_create_post: 5
-  rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
   rate_limit_search_anon_global_per_minute:
     hidden: true
@@ -2111,10 +2139,6 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_hashtag_autocomplete:
-    default: true
-    client: true
-    hidden: true
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -2125,7 +2149,6 @@ developer:
   experimental_form_templates:
     client: true
     default: false
-    hidden: true
   experimental_new_new_view_groups:
     client: true
     type: group_list
@@ -2139,6 +2162,10 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
+  experimental_passkeys:
+    client: true
+    default: false
+    hidden: true
   experimental_search_menu_groups:
     type: group_list
     list_type: compact
@@ -2152,12 +2179,25 @@ developer:
     default: false
     hidden: true
   enable_experimental_bookmark_redesign_groups:
-    client: true
     type: group_list
     list_type: compact
     default: ""
     allow_any: false
     refresh: true
+    hidden: true
+    client: true
+  enable_experimental_admin_ui_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    hidden: true
+    client: true
+  lazy_load_categories:
+    default: false
+    client: true
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -2494,10 +2534,6 @@ uncategorized:
     type: float
     default: 48
 
-  enable_system_avatars:
-    hidden: true
-    default: true
-
   use_site_small_logo_as_system_avatar:
     default: true
 
@@ -2562,10 +2598,6 @@ uncategorized:
   bootstrap_mode_enabled:
     default: false
     client: true
-    hidden: true
-
-  check_for_new_features:
-    default: false
     hidden: true
 
   automatically_unpin_topics:
@@ -2687,7 +2719,6 @@ user_preferences:
     default: false
   default_hide_profile_and_presence:
     default: false
-
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"
     default: 2880
@@ -2772,13 +2803,15 @@ api:
   api_key_last_used_epoch:
     default: "" # Value is added in a migration
     hidden: true
-  revoke_api_keys_days:
+  revoke_api_keys_unused_days:
     default: 180
     max: 36500
+  revoke_api_keys_maxlife_days:
+    default: 0
+    max: 36500
+    hidden: true
 
 user_api:
-  allow_user_api_keys:
-    default: true
   allow_user_api_key_scopes:
     default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
@@ -2795,9 +2828,13 @@ user_api:
   allowed_user_api_auth_redirects:
     default: "https://api.discourse.org/api/auth_redirect|discourse://auth_redirect"
     type: list
-  expire_user_api_keys_days:
+  revoke_user_api_keys_unused_days:
     default: 180
     max: 36500
+  revoke_user_api_keys_maxlife_days:
+    default: 0
+    max: 36500
+    hidden: true
 
 tags:
   tagging_enabled:
@@ -2872,6 +2909,8 @@ tags:
     default: true
     client: true
   create_post_for_category_and_tag_changes:
+    default: false
+  automatically_clean_unused_tags:
     default: false
 
 dashboard:

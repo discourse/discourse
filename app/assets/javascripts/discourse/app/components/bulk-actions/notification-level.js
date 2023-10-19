@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
+import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import { topicLevels } from "discourse/lib/notification-levels";
-import { action } from "@ember/object";
+import I18n from "discourse-i18n";
 
 // Support for changing the notification level of various topics
 export default class NotificationLevel extends Component {

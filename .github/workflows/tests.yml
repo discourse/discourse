@@ -2,11 +2,15 @@ name: Tests
 
 on:
   pull_request:
+    paths-ignore:
+      - "migrations/**"
   push:
     branches:
       - main
       - beta
       - stable
+    paths-ignore:
+      - "migrations/**"
 
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
@@ -18,7 +22,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}${{(matrix.embroider == '1') && ' (Embroider)' || ''}}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -28,27 +32,34 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
+      USE_EMBROIDER: ${{ matrix.embroider }}
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
+      MINIO_RUNNER_LOG_LEVEL: DEBUG
 
     strategy:
       fail-fast: false
 
       matrix:
         build_type: [backend, frontend, system, annotations]
+        embroider: ["0", "1"]
         target: [core, plugins]
         ruby: ["3.2"]
         exclude:
           - build_type: annotations
+            embroider: "1"
+          - build_type: annotations
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
+          - build_type: backend
+            embroider: "1"
 
     steps:
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -106,6 +117,11 @@ jobs:
         if: matrix.target == 'plugins'
         run: bin/rake plugin:pull_compatible_all
 
+      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+        run: |
+          echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
+
       - name: Fetch app state cache
         uses: actions/cache@v3
         id: app-cache
@@ -119,7 +135,7 @@ jobs:
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
-        run: psql -f tmp/app-cache/cache.sql postgres
+        run: psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
 
       - name: Restore uploads from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -197,16 +213,18 @@ jobs:
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
+        run: QUNIT_WRITE_EXECUTION_FILE=1 QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
+
+      - uses: actions/upload-artifact@v3
+        if: always() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        with:
+          name: ember-exam-execution-plugins-frontend-${{(matrix.embroider == '1') && 'embroider' || 'classic'}}
+          path: ./app/assets/javascripts/discourse/test-execution-*.json
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
-
-      - name: Setup Webdriver
-        if: matrix.build_type == 'system'
-        run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.required_version='114.0.5735.90'; Webdrivers::Chromedriver.update"
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -243,7 +261,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }})
+    name: core frontend (${{ matrix.browser }})${{(matrix.embroider == '1') && ' (Embroider)' || ''}}
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
@@ -254,14 +272,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        embroider: ["1", "0"]
         browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+        exclude:
+          # Testing the classic build on one browser is good enough
+          - embroider: "0"
+            browser: Firefox ESR
+          - embroider: "0"
+            browser: Firefox Evergreen
 
     env:
+      USE_EMBROIDER: ${{ matrix.embroider }}
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 

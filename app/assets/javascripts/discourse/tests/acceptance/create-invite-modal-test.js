@@ -1,4 +1,5 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
@@ -6,8 +7,7 @@ import {
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 acceptance("Invites - Create & Edit Invite Modal", function (needs) {
   needs.user();

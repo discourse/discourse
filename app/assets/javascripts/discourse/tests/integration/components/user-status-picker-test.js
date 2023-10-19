@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
 import { click, fillIn, render } from "@ember/test-helpers";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | user-status-picker", function (hooks) {
@@ -24,6 +24,12 @@ module("Integration | Component | user-status-picker", function (hooks) {
       status.description,
       "the status description is shown"
     );
+  });
+
+  test("it focuses the input on insert", async function (assert) {
+    await render(hbs`<UserStatusPicker />`);
+
+    assert.dom(".user-status-description").isFocused();
   });
 
   test("it picks emoji", async function (assert) {

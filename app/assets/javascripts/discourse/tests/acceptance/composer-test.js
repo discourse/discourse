@@ -7,9 +7,8 @@ import {
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
-import { toggleCheckDraftPopup } from "discourse/services/composer";
-import { cloneJSON } from "discourse-common/lib/object";
-import TopicFixtures from "discourse/tests/fixtures/topic";
+import { test } from "qunit";
+import sinon from "sinon";
 import LinkLookup from "discourse/lib/link-lookup";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Composer, {
@@ -17,6 +16,9 @@ import Composer, {
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import { toggleCheckDraftPopup } from "discourse/services/composer";
+import TopicFixtures from "discourse/tests/fixtures/topic";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
@@ -28,10 +30,8 @@ import {
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "I18n";
-import { test } from "qunit";
-import sinon from "sinon";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 acceptance("Composer", function (needs) {
   needs.user({
@@ -331,6 +331,22 @@ acceptance("Composer", function (needs) {
     assert.strictEqual(
       query(".topic-post:last-of-type .cooked p").innerText,
       "this is the content of my reply"
+    );
+  });
+
+  test("Replying to the first post in a topic is a topic reply", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click("#post_1 .reply.create");
+    assert.strictEqual(
+      query(".reply-details a.topic-link").innerText,
+      "Internationalization / localization"
+    );
+
+    await click("#post_1 .reply.create");
+    assert.strictEqual(
+      query(".reply-details a.topic-link").innerText,
+      "Internationalization / localization"
     );
   });
 

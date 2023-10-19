@@ -12,7 +12,8 @@ class AdminPluginSerializer < ApplicationSerializer
              :has_settings,
              :is_official,
              :commit_hash,
-             :commit_url
+             :commit_url,
+             :meta_url
 
   def id
     object.directory_name
@@ -77,5 +78,10 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def commit_url
     object.commit_url
+  end
+
+  def meta_url
+    return if object.metadata.meta_topic_id.blank?
+    "https://meta.discourse.org/t/#{object.metadata.meta_topic_id}"
   end
 end

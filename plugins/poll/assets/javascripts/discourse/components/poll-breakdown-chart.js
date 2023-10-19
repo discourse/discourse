@@ -1,12 +1,12 @@
-import { classNames } from "@ember-decorators/component";
-import { mapBy } from "@ember/object/computed";
 import Component from "@ember/component";
-import I18n from "I18n";
-import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
-import discourseComputed from "discourse-common/utils/decorators";
-import { getColors } from "discourse/plugins/poll/lib/chart-colors";
-import { htmlSafe } from "@ember/template";
+import { mapBy } from "@ember/object/computed";
 import { next } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
+import { classNames } from "@ember-decorators/component";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
 @classNames("poll-breakdown-chart-container")
 export default class PollBreakdownChart extends Component {

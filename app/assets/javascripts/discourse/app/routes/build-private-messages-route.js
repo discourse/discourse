@@ -1,11 +1,11 @@
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
+import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
-import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { action } from "@ember/object";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import getURL from "discourse-common/lib/get-url";
-import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 export const NEW_FILTER = "new";
 export const UNREAD_FILTER = "unread";
@@ -22,12 +22,6 @@ export default (inboxType, path, filter) => {
         I18n.t(`user.messages.${filter}`),
         I18n.t("user.private_messages"),
       ];
-    },
-
-    @action
-    didTransition() {
-      this.controllerFor("user-topics-list")._showFooter();
-      return true;
     },
 
     model() {
@@ -66,12 +60,12 @@ export default (inboxType, path, filter) => {
         hideCategory: true,
         showPosters: true,
         tagsForUser: this.modelFor("user").get("username_lower"),
-        selected: [],
         showToggleBulkSelect: true,
         filter,
         group: null,
         inbox: inboxType,
       });
+      userTopicsListController.bulkSelectHelper.clear();
 
       userTopicsListController.subscribe();
 

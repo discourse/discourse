@@ -1,10 +1,10 @@
+import { render, tab } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render, tab } from "@ember/test-helpers";
-import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { query } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },

@@ -1,6 +1,10 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { next } from "@ember/runloop";
 import { click, fillIn, render, settled } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import {
   exists,
   paste,
@@ -11,11 +15,7 @@ import {
   getTextareaSelection,
   setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
-import { hbs } from "ember-cli-htmlbars";
-import I18n from "I18n";
-import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
-import { next } from "@ember/runloop";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);

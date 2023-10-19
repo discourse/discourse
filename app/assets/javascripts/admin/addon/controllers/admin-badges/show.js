@@ -1,13 +1,13 @@
-import Controller, { inject as controller } from "@ember/controller";
-import { observes } from "@ember-decorators/object";
-import I18n from "I18n";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { next } from "@ember/runloop";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import getURL from "discourse-common/lib/get-url";
 import { tracked } from "@glimmer/tracking";
+import Controller, { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
+import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { observes } from "@ember-decorators/object";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 const IMAGE = "image";
 const ICON = "icon";

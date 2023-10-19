@@ -20,13 +20,18 @@
           <span class="sidebar-section-header-text">
             {{@headerLinkText}}
           </span>
+
           {{#if @indicatePublic}}
-            <span class="sidebar-section-header-global-indicator">
-              {{d-icon "globe"}}
-              <DTooltip @placement="top">{{d-icon "shield-alt"}}
-                {{i18n "sidebar.sections.global_section"}}
-              </DTooltip>
-            </span>
+            <DTooltip
+              @icon="globe"
+              class="sidebar-section-header-global-indicator"
+            >
+              <span
+                class="sidebar-section-header-global-indicator__content"
+              >{{d-icon "shield-alt"}}{{i18n
+                  "sidebar.sections.global_section"
+                }}</span>
+            </DTooltip>
           {{/if}}
         </Sidebar::SectionHeader>
 

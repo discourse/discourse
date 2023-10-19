@@ -6,7 +6,13 @@
 
 sl:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vedno"
+          never: "Nikoli"
     chat:
+      deleted_chat_username: izbrisano
       create: "Ustvari"
       cancel: "Prekliči"
       channel_settings:
@@ -15,6 +21,7 @@ sl:
         join: "Pridruži se"
         leave: "Zapusti"
       close: "Zapri"
+      remove: "Odstrani"
       delete: "Izbriši"
       edited: "urejen"
       muted: "utišani"
@@ -26,8 +33,6 @@ sl:
       flag: "Prijavi"
       join: "Pridruži se"
       last_visit: "zadnji obisk"
-      mention_warning:
-        dismiss: "opusti"
       reply: "Odgovori"
       edit: "Uredi"
       rebake_message: "Obnovi HTML"
@@ -53,7 +58,6 @@ sl:
       channel_info:
         back_to_channel: "Nazaj"
         tabs:
-          about: O nas
           members: Člani
           settings: Nastavitve
       direct_message_creator:
@@ -80,6 +84,10 @@ sl:
         saved: "Shranjeno"
         unfollow: "Zapusti"
         admin_title: "Admin"
+        settings_title: "Nastavitve"
+        category_label: "Kategorija"
+        history_label: "Zgodovina"
+        members_label: "Člani"
       incoming_webhooks:
         back: "Nazaj"
         description: "Opis"
@@ -100,6 +108,12 @@ sl:
           title: "Prestavi v obstoječo temo"
         new_message:
           title: "Prestavi v novo ZS"
+      retention_reminders:
+        short:
+          one: "%{count} dan"
+          two: "%{count} dneva"
+          few: "%{count} dnevi"
+          other: "%{count} dni"
       emoji_picker:
         objects: "Stvari"
         activities: "Dejavnosti"

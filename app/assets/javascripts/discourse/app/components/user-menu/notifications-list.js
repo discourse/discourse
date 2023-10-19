@@ -1,17 +1,17 @@
-import UserMenuItemsList from "discourse/components/user-menu/items-list";
-import I18n from "I18n";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
+import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import { ajax } from "discourse/lib/ajax";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import {
   mergeSortedLists,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
-import { inject as service } from "@ember/service";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
-import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
-import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
+import I18n from "discourse-i18n";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service appEvents;

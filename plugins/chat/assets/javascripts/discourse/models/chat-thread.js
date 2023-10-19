@@ -1,13 +1,12 @@
-import { getOwner } from "discourse-common/lib/get-owner";
-import I18n from "I18n";
-import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
-import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
+import { escapeExpression } from "discourse/lib/utilities";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
-import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 
 export const THREAD_STATUSES = {
   open: "open",
@@ -34,7 +33,7 @@ export default class ChatThread {
   @tracked currentUserMembership = null;
   @tracked preview = null;
 
-  messagesManager = new ChatMessagesManager(getOwner(this));
+  messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
 
   constructor(channel, args = {}) {
     this.id = args.id;
@@ -48,11 +47,7 @@ export default class ChatThread {
       ? ChatMessage.create(channel, args.original_message)
       : null;
 
-    this.title =
-      args.title ||
-      `${I18n.t("chat.thread.default_title", {
-        thread_id: this.id,
-      })}`;
+    this.title = args.title;
 
     if (args.current_user_membership) {
       this.currentUserMembership = UserChatThreadMembership.create(
@@ -60,7 +55,7 @@ export default class ChatThread {
       );
     }
 
-    this.tracking = new ChatTrackingState(getOwner(this));
+    this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
     this.preview = ChatThreadPreview.create(args.preview);
   }
 

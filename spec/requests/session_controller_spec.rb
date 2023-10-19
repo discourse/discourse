@@ -117,8 +117,11 @@ RSpec.describe SessionController do
             [user_security_key.credential_id],
           )
           secure_session = SecureSession.new(session["secure_session_id"])
-          expect(response_body_parsed["challenge"]).to eq(Webauthn.challenge(user, secure_session))
-          expect(Webauthn.rp_id(user, secure_session)).to eq(Discourse.current_hostname)
+
+          expect(response_body_parsed["challenge"]).to eq(
+            DiscourseWebauthn.challenge(user, secure_session),
+          )
+          expect(DiscourseWebauthn.rp_id).to eq("localhost")
         end
       end
     end
@@ -1460,7 +1463,7 @@ RSpec.describe SessionController do
         expect(redirect_query["sig"][0]).to eq(expected_sig)
       end
 
-      it "it fails to log in if secret is wrong" do
+      it "fails to log in if secret is wrong" do
         get "/session/sso_provider",
             params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
         expect(response.status).to eq(422)
@@ -1509,6 +1512,47 @@ RSpec.describe SessionController do
         expect(sso2.avatar_url).to start_with(Discourse.base_url)
         expect(sso2.profile_background_url).to start_with(Discourse.base_url)
         expect(sso2.card_background_url).to start_with(Discourse.base_url)
+        expect(sso2.confirmed_2fa).to eq(nil)
+        expect(sso2.no_2fa_methods).to eq(nil)
+      end
+
+      it "fails with a nice error message if `prompt` parameter has an invalid value" do
+        @sso.prompt = "xyzpdq"
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        expect(response.status).to eq(400)
+        expect(response.body).to eq(
+          I18n.t("discourse_connect.invalid_parameter_value", param: "prompt"),
+        )
+      end
+
+      it "redirects browser to return_sso_url with auth failure when prompt=none is requested and the user is not logged in" do
+        @sso.prompt = "none"
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        location = response.header["Location"]
+        expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
+
+        payload = location.split("?")[1]
+        sso2 = DiscourseConnectProvider.parse(payload)
+
+        expect(sso2.failed).to eq(true)
+
+        expect(sso2.email).to eq(nil)
+        expect(sso2.name).to eq(nil)
+        expect(sso2.username).to eq(nil)
+        expect(sso2.external_id).to eq(nil)
+        expect(sso2.admin).to eq(nil)
+        expect(sso2.moderator).to eq(nil)
+        expect(sso2.groups).to eq(nil)
+
+        expect(sso2.avatar_url).to eq(nil)
+        expect(sso2.profile_background_url).to eq(nil)
+        expect(sso2.card_background_url).to eq(nil)
         expect(sso2.confirmed_2fa).to eq(nil)
         expect(sso2.no_2fa_methods).to eq(nil)
       end
@@ -1998,7 +2042,9 @@ RSpec.describe SessionController do
             expect(session[:current_user_id]).to eq(nil)
             response_body = response.parsed_body
             expect(response_body["failed"]).to eq("FAILED")
-            expect(response_body["error"]).to eq(I18n.t("login.invalid_security_key"))
+            expect(response_body["error"]).to eq(
+              I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+            )
           end
         end
 
@@ -2961,6 +3007,146 @@ RSpec.describe SessionController do
 
       post "/session/2fa/test-action", params: { second_factor_nonce: nonce }
       expect(response.status).to eq(401)
+    end
+  end
+
+  describe "#passkey_challenge" do
+    it "returns a challenge for an anonymous user" do
+      get "/session/passkey/challenge.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["challenge"]).not_to eq(nil)
+    end
+
+    it "returns a challenge for an authenticated user" do
+      sign_in(user)
+      get "/session/passkey/challenge.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["challenge"]).not_to eq(nil)
+    end
+
+    it "reset challenge on subsequent calls" do
+      get "/session/passkey/challenge.json"
+      expect(response.status).to eq(200)
+      challenge1 = response.parsed_body["challenge"]
+
+      get "/session/passkey/challenge.json"
+      expect(response.parsed_body["challenge"]).not_to eq(challenge1)
+    end
+
+    it "fails if local logins are not allowed" do
+      SiteSetting.enable_local_logins = false
+
+      get "/session/passkey/challenge.json"
+      expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#passkey_login" do
+    it "returns 404 if feature is not enabled" do
+      SiteSetting.experimental_passkeys = false
+
+      post "/session/passkey/auth.json"
+      expect(response.status).to eq(404)
+    end
+
+    context "when experimental_passkeys is enabled" do
+      before { SiteSetting.experimental_passkeys = true }
+
+      it "fails if public key param is missing" do
+        post "/session/passkey/auth.json"
+        expect(response.status).to eq(400)
+
+        json = response.parsed_body
+        expect(json["errors"][0]).to include("param is missing")
+        expect(json["errors"][0]).to include("publicKeyCredential")
+      end
+
+      it "fails on malformed credentials" do
+        post "/session/passkey/auth.json", params: { publicKeyCredential: "someboringstring" }
+        expect(response.status).to eq(401)
+
+        json = response.parsed_body
+        expect(json["errors"][0]).to eq(
+          I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+        )
+      end
+
+      it "fails on invalid credentials" do
+        post "/session/passkey/auth.json",
+             params: {
+               # creds are well-formed but security key is not registered
+               publicKeyCredential: {
+                 signature:
+                   "MEYCIQDYtbfkTGHOfizXHBHltn5KOq1eC3EM6Uq4peZ0L+3wMwIhAMgzm88qOOZ7SPYh5M6zvKMjVsUAne7n9RKdN/4Bb6z8",
+                 clientData:
+                   "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiWmpJMk16UmxNMlV3TkRSaFl6QmhNemczTURjMlpUaGhaR1l5T1dGaU5qSXpNamMxWmpCaU9EVmxNVFUzTURaaVpEaGpNVEUwTVdJeU1qRXkiLCJvcmlnaW4iOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2x9",
+                 authenticatorData: "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2MFAAAAAA==",
+                 credentialId: "humAArAAAiZZuwFE/F9Gi4BAVTsRL/FowuzQsYTPKIk=",
+               },
+             }
+
+        expect(response.status).to eq(401)
+        json = response.parsed_body
+        expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.not_found_error"))
+      end
+
+      context "when user has a valid registered passkey" do
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            user: user,
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+            last_used: nil,
+            name: "A key",
+          )
+        end
+
+        it "fails if local logins are not allowed" do
+          SiteSetting.enable_local_logins = false
+
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential: valid_passkey_auth_data,
+               }
+          expect(response.status).to eq(403)
+        end
+
+        it "fails when the key is registered to another user" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(SecureRandom.hex(20)) },
+                   ),
+               }
+          expect(response.status).to eq(401)
+          json = response.parsed_body
+          expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.ownership_error"))
+          expect(session[:current_user_id]).to eq(nil)
+        end
+
+        it "logs the user in" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+
+          expect(session[:current_user_id]).to eq(user.id)
+        end
+      end
     end
   end
 

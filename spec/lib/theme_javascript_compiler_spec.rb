@@ -24,17 +24,17 @@ RSpec.describe ThemeJavascriptCompiler do
     it "maintains module names so that discourse-boot.js can correct them" do
       compiler.append_ember_template("/connectors/blah-1", "{{var}}")
       expect(compiler.raw_content.to_s).to include(
-        "define(\"discourse/theme-1/connectors/blah-1\", [\"exports\", \"@ember/template-factory\"]",
+        "define(\"discourse/theme-1/connectors/blah-1\", [\"exports\", ",
       )
 
       compiler.append_ember_template("connectors/blah-2", "{{var}}")
       expect(compiler.raw_content.to_s).to include(
-        "define(\"discourse/theme-1/connectors/blah-2\", [\"exports\", \"@ember/template-factory\"]",
+        "define(\"discourse/theme-1/connectors/blah-2\", [\"exports\", ",
       )
 
       compiler.append_ember_template("javascripts/connectors/blah-3", "{{var}}")
       expect(compiler.raw_content.to_s).to include(
-        "define(\"discourse/theme-1/javascripts/connectors/blah-3\", [\"exports\", \"@ember/template-factory\"]",
+        "define(\"discourse/theme-1/javascripts/connectors/blah-3\", [\"exports\", ",
       )
     end
   end
@@ -119,7 +119,9 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/templates/components/mycomponent.hbs" => "{{my-component-template}}",
         },
       )
-      expect(compiler.raw_content).to include('define("discourse/theme-1/components/mycomponent"')
+      expect(compiler.raw_content).to include(
+        'define("discourse/theme-1/discourse/components/mycomponent"',
+      )
       expect(compiler.raw_content).to include(
         'define("discourse/theme-1/discourse/templates/components/mycomponent"',
       )
@@ -209,6 +211,49 @@ RSpec.describe ThemeJavascriptCompiler do
       compiler.append_raw_script("filename.js", "if(someCondition")
       expect(compiler.content).to include('console.error("[THEME 1')
       expect(compiler.content).to include("Unexpected token")
+    end
+  end
+
+  describe "ember-this-fallback" do
+    it "applies its transforms" do
+      compiler.append_tree(
+        {
+          "discourse/components/my-component.js" => <<~JS,
+            import Component from "@glimmer/component";
+            export default class MyComponent extends Component {
+              value = "foo";
+            }
+          JS
+          "discourse/components/my-component.hbs" => "{{value}}",
+        },
+      )
+      expect(compiler.raw_content).to include("ember-this-fallback")
+      expect(compiler.raw_content).to include(
+        "The `value` property path was used in the `discourse/components/my-component.hbs` template without using `this`. This fallback behavior has been deprecated, all properties must be looked up on `this` when used in the template: {{this.value}}",
+      )
+    end
+  end
+
+  describe "ember-template-imports" do
+    it "applies its transforms" do
+      compiler.append_tree({ "discourse/components/my-component.gjs" => <<~JS })
+        import Component from "@glimmer/component";
+
+        export default class MyComponent extends Component {
+          <template>
+            {{this.value}}
+          </template>
+
+          value = "foo";
+        }
+      JS
+
+      expect(compiler.raw_content).to include(
+        "define(\"discourse/theme-1/discourse/components/my-component\", [\"exports\",",
+      )
+      expect(compiler.raw_content).to include("_defineProperty(this, \"value\", \"foo\");")
+      expect(compiler.raw_content).to include("setComponentTemplate")
+      expect(compiler.raw_content).to include("createTemplateFactory")
     end
   end
 end

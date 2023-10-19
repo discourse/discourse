@@ -1,5 +1,5 @@
-import { classNames } from "@ember-decorators/component";
 import Component from "@ember/component";
+import { classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
 @classNames("penalty-history")

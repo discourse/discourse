@@ -1,7 +1,8 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import $ from "jquery";
 import { module, test } from "qunit";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { setupTest } from "ember-qunit";
 import { helperContext } from "discourse-common/lib/helpers";
 
 module("Unit | Utility | category-badge", function (hooks) {

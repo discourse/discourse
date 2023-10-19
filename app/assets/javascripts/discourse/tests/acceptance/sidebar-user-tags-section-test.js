@@ -1,6 +1,7 @@
-import I18n from "I18n";
-import { test } from "qunit";
 import { click, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   count,
@@ -9,9 +10,8 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
-import { NotificationLevels } from "discourse/lib/notification-levels";
+import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   needs.settings({

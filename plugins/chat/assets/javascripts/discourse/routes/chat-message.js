@@ -1,7 +1,7 @@
-import DiscourseRoute from "discourse/routes/discourse";
+import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { defaultHomepage } from "discourse/lib/utilities";
-import { inject as service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatMessageRoute extends DiscourseRoute {
   @service chat;
@@ -17,7 +17,7 @@ export default class ChatMessageRoute extends DiscourseRoute {
           params.messageId
         );
       })
-      .catch(() => this.replaceWith("/404"));
+      .catch(() => this.router.replaceWith("/404"));
   }
 
   beforeModel() {

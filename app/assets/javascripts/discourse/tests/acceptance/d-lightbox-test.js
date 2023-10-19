@@ -1,26 +1,25 @@
 import {
-  LIGHTBOX_IMAGE_FIXTURES,
-  generateLightboxMarkup,
-} from "discourse/tests/helpers/lightbox-helpers";
-import {
-  acceptance,
-  chromeTest,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
-import {
   click,
   triggerEvent,
   triggerKeyEvent,
   visit,
   waitFor,
 } from "@ember/test-helpers";
-
-import { cloneJSON } from "discourse-common/lib/object";
-import i18n from "I18n";
-import sinon from "sinon";
 import { skip, test } from "qunit";
-import topicFixtures from "discourse/tests/fixtures/topic";
+import sinon from "sinon";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import topicFixtures from "discourse/tests/fixtures/topic";
+import {
+  generateLightboxMarkup,
+  LIGHTBOX_IMAGE_FIXTURES,
+} from "discourse/tests/helpers/lightbox-helpers";
+import {
+  acceptance,
+  chromeTest,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
+import i18n from "discourse-i18n";
 
 async function waitForLoad() {
   return await waitFor(".d-lightbox.is-finished-loading", {

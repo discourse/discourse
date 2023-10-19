@@ -23,9 +23,6 @@ RSpec.describe PostCreator do
     let(:creator_with_category) do
       PostCreator.new(user, basic_topic_params.merge(category: category.id))
     end
-    let(:creator_with_meta_data) do
-      PostCreator.new(user, basic_topic_params.merge(meta_data: { hello: "world" }))
-    end
     let(:creator_with_image_sizes) do
       PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes))
     end
@@ -96,6 +93,7 @@ RSpec.describe PostCreator do
           user,
           basic_topic_params.merge(topic_opts: { custom_fields: { hello: "world" } }),
         )
+
       expect(post.topic.custom_fields).to eq("hello" => "world")
     end
 
@@ -208,7 +206,6 @@ RSpec.describe PostCreator do
         cat.save
 
         created_post = nil
-        other_user_tracking_topic = nil
 
         messages =
           MessageBus.track_publish do
@@ -329,10 +326,6 @@ RSpec.describe PostCreator do
 
       it "assigns a category when supplied" do
         expect(creator_with_category.create.topic.category).to eq(category)
-      end
-
-      it "adds  meta data from the post" do
-        expect(creator_with_meta_data.create.topic.meta_data["hello"]).to eq("world")
       end
 
       it "passes the image sizes through" do
@@ -1097,6 +1090,26 @@ RSpec.describe PostCreator do
         target_usernames: [target_user1.username, target_user2.username].join(","),
         category: 1,
       )
+    end
+
+    it "respects min_personal_message_post_length" do
+      SiteSetting.min_personal_message_post_length = 5
+      SiteSetting.min_first_post_length = 20
+      SiteSetting.min_post_length = 25
+      SiteSetting.body_min_entropy = 20
+      user.update!(trust_level: 3)
+      Group.refresh_automatic_groups!
+
+      expect {
+        PostCreator.create!(
+          user,
+          title: "hi there welcome to my PM",
+          raw: "sorry",
+          archetype: Archetype.private_message,
+          target_usernames: [target_user1.username, target_user2.username].join(","),
+          category: 1,
+        )
+      }.not_to raise_error
     end
 
     it "acts correctly" do
@@ -2078,7 +2091,7 @@ RSpec.describe PostCreator do
     end
   end
 
-  describe "secure uploads uploads" do
+  describe "secure uploads" do
     fab!(:image_upload) { Fabricate(:upload, secure: true) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:public_topic) { Fabricate(:topic) }
@@ -2091,12 +2104,13 @@ RSpec.describe PostCreator do
     end
 
     it "links post uploads" do
-      _public_post =
+      public_post =
         PostCreator.create(
           user,
           topic_id: public_topic.id,
-          raw: "A public post with an image.\n![](#{image_upload.short_path})",
+          raw: "A public post with an image.\n![secure image](#{image_upload.short_path})",
         )
+      expect(public_post.reload.uploads.map(&:access_control_post_id)).to eq([public_post.id])
     end
   end
 

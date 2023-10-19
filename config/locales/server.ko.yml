@@ -278,7 +278,6 @@ ko:
     configure: "임베딩 환경설정"
     more_replies:
       other: "%{count}개 댓글 더 보기"
-    loading: "토론 로드 중..."
     permalink: "Permalink"
     imported_from: "%{link}에 있는 원본 엔트리의 동반 토론 주제입니다."
     in_reply_to: "▶ %{username}"
@@ -781,8 +780,6 @@ ko:
   draft_backup:
     pm_title: "진행 중인 주제의 백업 초안"
     pm_body: "백업 초안이 포함된 주제"
-  user_activity:
-    no_log_search_queries: "검색 로그 쿼리는 현재 비활성화되어 있습니다(관리자가 사이트 설정에서 활성화할 수 있음)."
   email_settings:
     pop3_authentication_error: "제공된 POP3 크리덴셜에 문제가 있습니다. 아이디와 비밀번호를 확인하고 다시 시도하세요."
     imap_authentication_error: "제공된 IMAP 크리덴셜에 문제가 있습니다. 아이디와 비밀번호를 확인하고 다시 시도하세요."
@@ -1276,9 +1273,6 @@ ko:
     allow_user_locale: "사용자가 자체 인터페이스 환경설정을 선택하도록 허용"
     set_locale_from_accept_language_header: "익명 사용자의 인터페이스 언어를 웹브라우저 언어 헤더를 기준으로 설정"
     support_mixed_text_direction: "왼쪽에서 오른쪽 및 오른쪽에서 왼쪽 텍스트 방향 혼합을 지원합니다."
-    min_post_length: "게시물에 허용되는 최소 문자 수"
-    min_first_post_length: "첫 게시물(주제 본문)에 허용되는 최소 문자 수"
-    min_personal_message_post_length: "메시지용 게시물에 허용되는 최소 문자 수"
     max_post_length: "게시물에 허용되는 최대 문자 수"
     topic_featured_link_enabled: "주제와 함께 링크 게시를 활성화합니다."
     show_topic_featured_link_in_digest: "다이제스트 메일에 주제 추천 링크를 표시합니다."
@@ -1374,7 +1368,6 @@ ko:
     tl2_additional_flags_per_day_multiplier: "tl2(회원)의 일일 신고 한도를 올릴 배수"
     tl3_additional_flags_per_day_multiplier: "tl3(정회원)의 일일 신고 한도를 올릴 배수"
     tl4_additional_flags_per_day_multiplier: "tl4(리더)의 일일 신고 한도를 올릴 배수"
-    num_users_to_silence_new_user: "신규 사용자의 게시물이 많은 다른 사용자로부터 num_spam_flags_to_silence_new_user 스팸 신고를 받으면 해당 사용자의 모든 게시물을 숨기고 향후 게시를 방지합니다. 비활성화하려면 0으로 설정하세요."
     num_tl3_flags_to_silence_new_user: "신규 사용자의 게시물이 num_tl3_users_to_silence_new_user 다른 신뢰 레벨 3 사용자로부터 많은 신고를 받으면 모든 게시물을 숨기고 향후 게시를 방지합니다. 비활성화하려면 0으로 설정하세요."
     num_tl3_users_to_silence_new_user: "신규 사용자의 게시물이 많은 다른 사용자로부터 num_tl3_flags_to_silence_new_user 신고를 받으면 해당 사용자의 모든 게시물을 숨기고 향후 게시를 방지합니다. 비활성화하려면 0으로 설정하세요."
     notify_mods_when_user_silenced: "사용자가 자동으로 차단되면 모든 운영자에게 메시지를 전송합니다."
@@ -1388,7 +1381,6 @@ ko:
     must_approve_users: "운영진은 모든 신규 사용자가 사이트에 액세스할 수 있기 전에 해당 계정을 승인해야 합니다."
     invite_code: "계정 등록을 하려면 이 코드를 입력해야 합니다(대소문자 구분). 비어 있으면 무시합니다."
     approve_suspect_users: "검토 대기열에 의심스러운 사용자를 추가합니다. 의심스러운 사용자가 소개/웹사이트를 방문했지만 읽기 활동은 없습니다."
-    review_every_post: "모든 게시물을 검토해야 합니다. 경고! 사용량이 많은 사이트에는 권장되지 않습니다."
     pending_users_reminder_delay_minutes: "신규 사용자가 이 시간(분) 이상 승인을 기다리는 경우 운영자에게 알립니다. 알림을 비활성화하려면 -1로 설정합니다."
     persistent_sessions: "사용자는 웹 브라우저를 닫아도 로그인 상태를 유지합니다."
     maximum_session_age: "마지막 방문 이후 n시간 사용자의 로그인이 유지됩니다"
@@ -1396,7 +1388,6 @@ ko:
     ga_universal_tracking_code: "Google Universal Analytics 추적 코드 ID입니다. 예: UA-12345678-9, <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>를 참조하세요."
     ga_universal_domain_name: "Google Universal Analytics 도메인 이름입니다. 예: mysite.com, <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>를 참조하세요."
     ga_universal_auto_link_domains: "Google Google Universal Analytics 교차 도메인 추적을 활성화합니다. 이러한 도메인으로 나가는 링크에는 클라이언트 ID가 추가됩니다. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google의 교차 도메인 추적 가이드</a>를 참조하세요."
-    gtm_container_id: "Google Tag Manager 컨테이너 ID입니다. 예 : GTM-ABCDEF. <br/>참고 : GTM에서 로드한 서드파티 스크립트는 '콘텐츠 보안 정책 스크립트 소스'의 허용 목록에 있어야 합니다."
     enable_escaped_fragments: "웹 크롤러가 탐지되지 않으면 Google의 Ajax-Crawling API로 폴백하세요. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>를 참조하세요."
     moderators_change_post_ownership: "운영자가 게시물 소유자를 변경할 수 있도록 허용"
     cors_origins: "교차 출처 요청(Cross-Origin Resource Sharing, CORS)의 허용된 출처입니다. 각 출처는 반드시 http:// 나 https://를 포함해야 합니다. DISCOURSE_ENABLE_CORS 환경 변수를 true로 설정해야 CORS를 활성화할 수 있습니다."
@@ -1408,11 +1399,8 @@ ko:
     allowed_crawler_user_agents: "사이트 액세스를 허용해야 하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
     blocked_crawler_user_agents: "사이트 액세스가 허용되지 않아야 하는 웹 크롤러를 식별하는 사용자 에이전트 스트링에서 대소문자를 구분하지 않는 고유한 단어입니다. 허용 목록이 정의된 경우 적용되지 않습니다."
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면 이 비율이 모든 크롤러에 적용됩니다(요청 간 지연 시간(초))."
-    content_security_policy: "콘텐츠 보안 정책 활성화"
-    content_security_policy_report_only: "콘텐츠 보안 정책 리포트만 활성화"
     content_security_policy_collect_reports: "/csp_reports에서 CSP 위반 리포트 수집 활성화"
     content_security_policy_frame_ancestors: "CSP를 통해 iframe에 이 사이트를 임베드할 수 있는 사용자를 제한합니다. <a href='%{base_path}/admin/customize/embedding'>임베딩</a>에서 허용된 호스트를 제어합니다."
-    content_security_policy_script_src: "추가 허용 목록에 있는 스크립트 소스입니다. 현재 호스트와 CDN이 기본적으로 포함됩니다. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>콘텐츠 보안 정책으로 XSS 공격 완화</a>를 참조하세요."
     invalidate_inactive_admin_email_after_days: "이 기간에 사이트를 방문하지 않은 관리자 계정은 로그인하기 전에 이메일 주소를 다시 확인해야 합니다. 비활성화하려면 0으로 설정하세요."
     top_menu: "홈페이지 메뉴에 표시할 항목과 순서를 결정합니다. 예: 최신|신규|읽지 않음|카테고리|주요|읽음|게시함|북마크"
     post_menu: "게시물 메뉴에 표시할 항목과 순서를 결정합니다. 예: 좋아요|편집|신고|삭제|공유|북마크|댓글"
@@ -1515,7 +1503,6 @@ ko:
     enable_safe_mode: "사용자가 안전 모드에서 플러그인을 디버깅하도록 허용합니다."
     rate_limit_create_topic: "주제 생성 후 추가로 주제를 생성하려면 (n)초 기다려야 합니다."
     rate_limit_create_post: "게시물 작성 후 추가로 게시물을 작성하려면 (n)초 기다려야 합니다."
-    rate_limit_new_user_create_topic: "신규 사용자가 주제 생성 후 추가로 주제를 생성하려면 (n)초 기다려야 합니다."
     rate_limit_new_user_create_post: "신규 사용자가 게시물 작성 후 추가로 게시물을 작성하려면 (n)초 기다려야 합니다."
     max_likes_per_day: "사용자당 일일 최대 좋아요 수입니다."
     max_flags_per_day: "사용자당 일일 최대 신고 수입니다."
@@ -1891,12 +1878,9 @@ ko:
     default_title_count_mode: "페이지 제목 카운터의 디폴트 모드"
     retain_web_hook_events_period_days: "Webhook 이벤트 기록 보유 기간(일)입니다."
     retry_web_hook_events: "실패한 Webhook 이벤트를 4번 자동으로 재시도합니다. 재시도 간 간격은 1, 5, 25 및 125분입니다."
-    revoke_api_keys_days: "사용하지 않는 API 키가 자동으로 취소되기까지의 기간(일)(0은 취소 안 함)"
-    allow_user_api_keys: "사용자 API 키 생성 허용"
     allow_user_api_key_scopes: "사용자 API 키에 허용되는 범위 목록"
     allowed_user_api_auth_redirects: "사용자 API 키의 인증 리디렉션을 위해 허용된 URL입니다. 와일드 카드 기호 *를 사용하면 일부를 일치시킬 수 있습니다(예 : www.example.com/*)."
     allowed_user_api_push_urls: "사용자 API의 서버 푸시를 위한 허용된 URL"
-    expire_user_api_keys_days: "사용자 API 키가 자동으로 만료되기까지의 기간(일)(0은 만료 안 함)"
     tagging_enabled: "주제에 태그를 활성화할까요?"
     min_trust_to_create_tag: "태그를 생성하기 위한 최소 신뢰 레벨입니다."
     max_tags_per_topic: "주제에 적용할 수 있는 최대 태그입니다."
@@ -1910,7 +1894,6 @@ ko:
     suppress_overlapping_tags_in_list: "태그가 주제 제목의 단어와 정확히 일치하면 태그를 표시하지 않습니다."
     remove_muted_tags_from_latest: "최신 주제 목록에서 뮤트된 태그로만 태그된 주제를 표시하지 않습니다."
     force_lowercase_tags: "모든 새 태그를 완전히 소문자로 만듭니다."
-    company_name: "회사 이름"
     governing_law: "준거법"
     city_for_disputes: "분쟁 도시"
     shared_drafts_category: "주제 초안에 카테고리를 지정하여 공유 초안을 활성화합니다. 이 카테고리의 주제는 운영진의 주제 목록에서 표시되지 않습니다."
@@ -2123,18 +2106,6 @@ ko:
   admin:
     email:
       sent_test: "전송되었습니다!"
-    user:
-      merge_user:
-        updating_username: "아이디 업데이트 중..."
-        changing_post_ownership: "게시물 소유자 변경 중..."
-        merging_given_daily_likes: "보낸 일일 좋아요 병합 중..."
-        merging_post_timings: "게시물 시간 병합 중..."
-        merging_user_visits: "사용자 방문 병합 중..."
-        updating_site_settings: "사이트 설정 업데이트 중..."
-        updating_user_stats: "사용자 통계 업데이트 중..."
-        merging_user_attributes: "사용자 어트리뷰트 병합 중..."
-        updating_user_ids: "사용자 ID 업데이트 중..."
-        deleting_source_user: "소스 사용자 삭제 중..."
   user:
     deactivated: "'%{email}'에 반송 이메일이 너무 많아 비활성화되었습니다."
     deactivated_by_staff: "운영진에 의해 비활성화됨"
@@ -3888,8 +3859,6 @@ ko:
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
       delete_single:
         title: "삭제"
-      delete:
-        title: "삭제..."
       delete_and_ignore_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
       delete_and_agree_replies:
@@ -3912,7 +3881,6 @@ ko:
       approve_user:
         title: "사용자 승인"
       reject_user:
-        title: "사용자 삭제..."
         delete:
           title: "사용자 삭제"
           description: "사용자가 포럼에서 삭제됩니다."
@@ -3921,7 +3889,6 @@ ko:
           description: "사용자가 삭제되고 IP 및 이메일 주소가 차단됩니다."
       reject:
         title: "거부"
-        bundle_title: "거부..."
       reject_and_suspend:
         title: "사용자 거부 정지"
       reject_and_silence:

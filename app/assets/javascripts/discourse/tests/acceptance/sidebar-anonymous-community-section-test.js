@@ -1,13 +1,11 @@
-import I18n from "I18n";
-
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-
 import {
   acceptance,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
   needs.settings({

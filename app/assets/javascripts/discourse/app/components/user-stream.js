@@ -1,14 +1,15 @@
-import ClickTrack from "discourse/lib/click-track";
 import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
-import Draft from "discourse/models/draft";
-import I18n from "I18n";
-import LoadMore from "discourse/mixins/load-more";
-import Post from "discourse/models/post";
-import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import { on } from "@ember/object/evented";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
+import $ from "jquery";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import ClickTrack from "discourse/lib/click-track";
+import DiscourseURL from "discourse/lib/url";
+import LoadMore from "discourse/mixins/load-more";
+import { NEW_TOPIC_KEY } from "discourse/models/composer";
+import Draft from "discourse/models/draft";
+import Post from "discourse/models/post";
+import I18n from "discourse-i18n";
 
 export default Component.extend(LoadMore, {
   tagName: "ul",
@@ -40,6 +41,7 @@ export default Component.extend(LoadMore, {
       return ClickTrack.trackClick(e, this.siteSettings);
     });
     this._updateLastDecoratedElement();
+    this.appEvents.trigger("decorate-non-stream-cooked-element", this.element);
   }),
 
   // This view is being removed. Shut down operations
@@ -130,6 +132,7 @@ export default Component.extend(LoadMore, {
         let element = this._lastDecoratedElement?.nextElementSibling;
         while (element) {
           this.trigger("user-stream:new-item-inserted", element);
+          this.appEvents.trigger("decorate-non-stream-cooked-element", element);
           element = element.nextElementSibling;
         }
         this._updateLastDecoratedElement();

@@ -1,21 +1,21 @@
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
+import Mixin from "@ember/object/mixin";
+import { bind, cancel, next, schedule, throttle } from "@ember/runloop";
+import { isEmpty, isNone, isPresent } from "@ember/utils";
+import { createPopper } from "@popperjs/core";
+import { Promise } from "rsvp";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import deprecated from "discourse-common/lib/deprecated";
+import { makeArray } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
 import PluginApiMixin, {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
 } from "select-kit/mixins/plugin-api";
-import { bind, cancel, next, schedule, throttle } from "@ember/runloop";
-import { isEmpty, isNone, isPresent } from "@ember/utils";
-import Component from "@ember/component";
-import I18n from "I18n";
-import Mixin from "@ember/object/mixin";
-import { Promise } from "rsvp";
 import UtilsMixin from "select-kit/mixins/utils";
-import { createPopper } from "@popperjs/core";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { guidFor } from "@ember/object/internals";
-import { makeArray } from "discourse-common/lib/helpers";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
@@ -860,7 +860,7 @@ export default Component.extend(
 
       this.clearErrors();
 
-      const inModal = this.element.closest("#discourse-modal");
+      const inModal = this.element.closest(".fixed-modal");
       if (inModal && this.site.mobileView) {
         const modalBody = inModal.querySelector(".modal-body");
         modalBody.style = "";
@@ -884,7 +884,7 @@ export default Component.extend(
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
-        const inModal = this.element.closest("#discourse-modal .modal-body");
+        const inModal = this.element.closest(".fixed-modal .modal-body");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );
@@ -948,7 +948,7 @@ export default Component.extend(
               fn: ({ state }) => {
                 if (inModal) {
                   const innerModal = document.querySelector(
-                    "#discourse-modal div.modal-inner-container"
+                    ".fixed-modal div.modal-inner-container"
                   );
 
                   if (innerModal) {
@@ -1127,8 +1127,8 @@ export default Component.extend(
     },
 
     _deprecateMutations() {
-      this.actions = this.actions || {};
-      this.attrs = this.attrs || {};
+      this.actions ??= {};
+      this.attrs ??= {};
 
       if (!this.attrs.onChange && !this.actions.onChange) {
         this._deprecated(

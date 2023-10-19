@@ -10,6 +10,9 @@ pt_BR:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Nunca"
       logs:
         staff_actions:
           actions:
@@ -21,11 +24,8 @@ pt_BR:
           descriptions:
             chat:
               create_message: "Crie uma mensagem de chat em um canal especificado."
-    about:
-      chat_messages_count: "Mensagens de chat"
-      chat_channels_count: "Canais de chat"
-      chat_users_count: "Usuários do chat"
     chat:
+      deleted_chat_username: excluído(a)
       dates:
         time_tiny: "h:mm"
       all_loaded: "Mostrando todas as mensagens"
@@ -81,12 +81,13 @@ pt_BR:
         create: "Novo canal"
       click_to_join: "Clique aqui para visualizar os canais disponíveis."
       close: "Fechar"
+      remove: "Remover"
       collapse: "Recolher gaveta de chat"
       expand: "Expandir Chat"
       confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"
       deleted:
-        one: "Uma mensagem foi excluída. [visualizar]"
-        other: "%{count} mensagens foram excluídas. [visualizar todas]"
+        one: "Uma mensagem foi excluída. [view]"
+        other: "%{count} mensagens foram excluídas. [ver todas]"
       hidden: "Uma mensagem foi ocultada. [visualizar]"
       delete: "Excluir"
       edited: "editou"
@@ -124,27 +125,10 @@ pt_BR:
           one: "Última hora"
           other: "Últimas %{count} horas"
       mention_warning:
-        dismiss: "ignorar"
-        cannot_see: "%{username} não pode acessar este canal e não foi notificado(a)."
-        cannot_see_multiple:
-          one: "%{username} e %{count} outro usuário não podem acessar este canal e não foram notificados"
-          other: "%{username} e %{count} outros usuários não podem acessar este canal e não foram notificados"
         invitations_sent:
           one: "Convite enviado"
           other: "Convites enviados"
         invite: "convidar para canal"
-        without_membership: "%{username} não entrou neste canal."
-        without_membership_multiple:
-          one: "%{username} e %{count} outro usuário não se juntaram a este canal"
-          other: "%{username} e %{count} outros(as) usuários(as) não se juntaram a este canal"
-        group_mentions_disabled: "%{group_name} não permite menções."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} e %{count} outro grupo não permitem menções"
-          other: "%{group_name} e %{count} outros grupos não permitem menções"
-        too_many_members: "%{group_name} tem membros demais. Ninguém foi notificado."
-        too_many_members_multiple:
-          one: "%{group_name} e %{count} outro grupo têm membros demais. Ninguém foi notificado."
-          other: "%{group_name} e %{count} outros grupos têm membros demais. Ninguém foi notificado."
         groups:
           header:
             some: "Alguns usuários não serão notificados"
@@ -312,7 +296,6 @@ pt_BR:
         back_to_all_channels: "Todos os canais"
         back_to_channel: "Voltar"
         tabs:
-          about: Sobre
           members: Membros
           settings: Configurações
       new_message_modal:
@@ -398,13 +381,13 @@ pt_BR:
         you_and_single_user: "Você e %{username} reagiram com :%{emoji}:"
         you_and_multiple_users: "Você, %{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
         you_multiple_users_and_more:
-          one: "Você, %{commaSeparatedUsernames} e mais %{count} outro(a) reagiram com :%{emoji}:"
+          one: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
           other: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
         single_user: "%{username} reagiu com :%{emoji}:"
         multiple_users: "%{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
         multiple_users_and_more:
           one: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
-          other: "%{commaSeparatedUsernames} e mais %{count} outros(as) reagiram com :%{emoji}:"
+          other: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
       composer:
         toggle_toolbar: "Ativar/desativar barra de ferramentas"
         italic_text: "texto enfatizado"
@@ -442,11 +425,14 @@ pt_BR:
         saved: "Salvou"
         unfollow: "Sair"
         admin_title: "Administrador(a)"
+        settings_title: "Configurações"
+        category_label: "Categoria"
+        history_label: "Histórico"
+        members_label: "Membros"
       admin:
         title: "Chat"
         export_messages:
           title: "Exportar mensagens do chat"
-          description: "A exportação está atualmente limitada a 10.000 mensagens mais recentes nos últimos 6 meses."
           create_export: "Criar exportação"
           export_has_started: "A exportação foi iniciada. Você receberá uma MP quando estiver pronta."
       direct_messages:
@@ -512,14 +498,9 @@ pt_BR:
           one: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
           other: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
       retention_reminders:
-        public_none: "O histórico do canal é mantido indefinidamente."
-        public:
-          one: "O histórico do canal é mantido por %{count} dia."
-          other: "O histórico do canal é mantido por %{count} dias."
-        dm_none: "O histórico do chat pessoal é mantido indefinidamente."
-        dm:
-          one: "O histórico do chat pessoal é mantido por %{count} dia."
-          other: "O histórico do chat pessoal é mantido por %{count} dias."
+        short:
+          one: "%{count} dia"
+          other: "%{count} dias"
       flags:
         off_topic: "Esta mensagem não é relevante para a discussão atual, conforme definido pelo título do canal, e provavelmente deve ser movida para outro lugar."
         inappropriate: "Esta mensagem contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação de <a href=\"%{basePath}/guidelines\">nossas diretrizes da comunidade</a>."
@@ -544,7 +525,6 @@ pt_BR:
       thread:
         title: "Título"
         view_thread: Visualizar tópico
-        default_title: "Tópico"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostas"
@@ -552,7 +532,7 @@ pt_BR:
         close: "Fechar tópico"
         original_message:
           started_by: "Iniciado por"
-        settings: "Configurações"
+        settings: "Definições"
         last_reply: "última resposta"
         notifications:
           regular:
@@ -614,6 +594,9 @@ pt_BR:
       types:
         chat_reviewable_message:
           title: "Mensagem de chat sinalizada"
+        reviewable_chat_message:
+          title: "Mensagem de chat sinalizada"
+          noun: "mensagem de chat"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -649,3 +632,7 @@ pt_BR:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

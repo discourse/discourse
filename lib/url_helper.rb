@@ -66,15 +66,6 @@ class UrlHelper
     self.absolute(Upload.secure_uploads_url_from_upload_url(url), nil)
   end
 
-  def self.escape_uri(uri)
-    Discourse.deprecate(
-      "UrlHelper.escape_uri is deprecated. For normalization of user input use `.normalized_encode`. For true encoding, use `.encode`",
-      output_in_test: true,
-      drop_from: "3.0",
-    )
-    normalized_encode(uri)
-  end
-
   def self.normalized_encode(uri)
     url = uri.to_s
 

@@ -17,14 +17,17 @@
   </span>
 </section>
 
-<DSection @class="navigation-container category-navigation">
+<section class="navigation-container category-navigation">
   <DNavigation
     @category={{this.category}}
     @filterMode={{this.filterMode}}
     @noSubcategories={{this.noSubcategories}}
     @canCreateTopic={{this.canCreateTopic}}
-    @createTopic={{route-action "createTopic"}}
-    @createTopicDisabled={{this.cannotCreateTopicOnCategory}}
+    @createTopic={{fn
+      this.composer.openNewTopic
+      (hash category=this.createTopicTargetCategory preferDraft=true)
+    }}
+    @createTopicDisabled={{not this.enableCreateTopicButton}}
     @hasDraft={{this.currentUser.has_topic_draft}}
     @editCategory={{route-action "editCategory" this.category}}
   />
@@ -34,4 +37,4 @@
     @connectorTagName="div"
     @outletArgs={{hash category=this.category}}
   />
-</DSection>
+</section>

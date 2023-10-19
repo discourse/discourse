@@ -22,7 +22,7 @@ module OneboxHelpers
 
     let(:onebox) { described_class.new(link) }
     let(:html) { onebox.to_html }
-    let(:data) { Onebox::Helpers.symbolize_keys(onebox.send(:data)) }
+    let(:data) { onebox.send(:data).deep_symbolize_keys }
     let(:link) { @link }
   end
 

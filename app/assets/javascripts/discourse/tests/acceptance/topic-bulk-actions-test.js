@@ -1,12 +1,12 @@
+import { click, triggerEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, triggerEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Topic - Bulk Actions", function (needs) {
   needs.user();

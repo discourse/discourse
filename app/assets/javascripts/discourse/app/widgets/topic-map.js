@@ -1,13 +1,13 @@
-import { avatarFor, avatarImg } from "discourse/widgets/post";
-import { dateNode, numberNode } from "discourse/helpers/node";
-import I18n from "I18n";
-import { createWidget } from "discourse/widgets/widget";
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
-import { replaceEmoji } from "discourse/widgets/emoji";
+import { dateNode, numberNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { userPath } from "discourse/lib/url";
+import { replaceEmoji } from "discourse/widgets/emoji";
+import { avatarFor, avatarImg } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { hbs } from "ember-cli-htmlbars";
+import { createWidget } from "discourse/widgets/widget";
+import I18n from "discourse-i18n";
 
 const LINKS_SHOWN = 5;
 
@@ -406,9 +406,9 @@ export default createWidget("topic-map", {
     return new RenderGlimmer(
       this,
       "section.information.toggle-summary",
-      hbs`<SummaryBox 
+      hbs`<SummaryBox
         @postAttrs={{@data.postAttrs}}
-        @topRepliesToggle={{@data.actionDispatchFunc}} 
+        @topRepliesToggle={{@data.actionDispatchFunc}}
       />`,
       {
         postAttrs: attrs,

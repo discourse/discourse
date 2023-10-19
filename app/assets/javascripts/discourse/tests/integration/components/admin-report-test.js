@@ -1,9 +1,9 @@
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render } from "@ember/test-helpers";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | admin-report", function (hooks) {
   setupRenderingTest(hooks);

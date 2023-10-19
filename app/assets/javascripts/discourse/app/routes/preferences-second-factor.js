@@ -1,12 +1,10 @@
-import RestrictedUserRoute from "discourse/routes/restricted-user";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default RestrictedUserRoute.extend({
   currentUser: service(),
   siteSettings: service(),
-
-  showFooter: true,
 
   model() {
     return this.modelFor("user");

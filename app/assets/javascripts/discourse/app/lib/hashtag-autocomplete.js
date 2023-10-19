@@ -1,18 +1,18 @@
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import domFromString from "discourse-common/lib/dom-from-string";
-import discourseLater from "discourse-common/lib/later";
-import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import { cancel } from "@ember/runloop";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { emojiUnescape } from "discourse/lib/text";
 import {
   caretPosition,
   escapeExpression,
   inCodeBlock,
 } from "discourse/lib/utilities";
-import { emojiUnescape } from "discourse/lib/text";
-import { htmlSafe } from "@ember/template";
+import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import domFromString from "discourse-common/lib/dom-from-string";
+import discourseLater from "discourse-common/lib/later";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 
 let hashtagTypeClasses = {};
 export function registerHashtagType(type, typeClassInstance) {
@@ -46,6 +46,22 @@ export function decorateHashtags(element, site) {
     // can read the hashtag text.
     hashtagEl.setAttribute("aria-label", `${hashtagEl.innerText.trim()}`);
   });
+}
+
+export function generatePlaceholderHashtagHTML(type, spanEl, data) {
+  // NOTE: When changing the HTML structure here, you must also change
+  // it in the hashtag-autocomplete markdown rule, and vice-versa.
+  const link = document.createElement("a");
+  link.classList.add("hashtag-cooked");
+  link.href = data.relative_url;
+  link.dataset.type = type;
+  link.dataset.id = data.id;
+  link.dataset.slug = data.slug;
+  const hashtagTypeClass = new getHashtagTypeClasses()[type];
+  link.innerHTML = `${hashtagTypeClass.generateIconHTML(
+    data
+  )}<span>${emojiUnescape(data.text)}</span>`;
+  spanEl.replaceWith(link);
 }
 
 /**
@@ -243,19 +259,7 @@ function _findAndReplaceSeenHashtagPlaceholder(
     // Replace raw span for the hashtag with a cooked one
     const matchingSeenHashtag = seenHashtags[type]?.[slugRef];
     if (matchingSeenHashtag) {
-      // NOTE: When changing the HTML structure here, you must also change
-      // it in the hashtag-autocomplete markdown rule, and vice-versa.
-      const link = document.createElement("a");
-      link.classList.add("hashtag-cooked");
-      link.href = matchingSeenHashtag.relative_url;
-      link.dataset.type = type;
-      link.dataset.id = matchingSeenHashtag.id;
-      link.dataset.slug = matchingSeenHashtag.slug;
-      const hashtagType = new getHashtagTypeClasses()[type];
-      link.innerHTML = `${hashtagType.generateIconHTML(
-        matchingSeenHashtag
-      )}<span>${emojiUnescape(matchingSeenHashtag.text)}</span>`;
-      hashtagSpan.replaceWith(link);
+      generatePlaceholderHashtagHTML(type, hashtagSpan, matchingSeenHashtag);
     }
   });
 }

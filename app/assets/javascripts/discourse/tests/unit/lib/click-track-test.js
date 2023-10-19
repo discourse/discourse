@@ -1,10 +1,12 @@
-import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
+import { setupTest } from "ember-qunit";
+import $ from "jquery";
 import { module, skip, test } from "qunit";
+import sinon from "sinon";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
 import pretender from "discourse/tests/helpers/create-pretender";
-import sinon from "sinon";
+import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setPrefix } from "discourse-common/lib/get-url";
 
 const track = ClickTrack.trackClick;
@@ -14,6 +16,8 @@ function generateClickEventOn(selector) {
 }
 
 module("Unit | Utility | click-track", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     logIn();
 
@@ -57,7 +61,6 @@ module("Unit | Utility | click-track", function (hooks) {
   });
 
   skip("tracks internal URLs", async function (assert) {
-    assert.expect(2);
     sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
     const done = assert.async();
@@ -121,8 +124,6 @@ module("Unit | Utility | click-track", function (hooks) {
   });
 
   skip("tracks external URLs", async function (assert) {
-    assert.expect(2);
-
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
       assert.ok(
@@ -136,7 +137,6 @@ module("Unit | Utility | click-track", function (hooks) {
   });
 
   skip("tracks external URLs when opening in another window", async function (assert) {
-    assert.expect(3);
     User.currentProp("user_option.external_links_in_new_tab", true);
 
     const done = assert.async();

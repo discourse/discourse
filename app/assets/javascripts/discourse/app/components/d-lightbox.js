@@ -1,3 +1,7 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import {
   ANIMATION_DURATION,
   KEYBOARD_SHORTCUTS,
@@ -16,13 +20,8 @@ import {
   setCarouselScrollPosition,
   setSiteThemeColor,
 } from "discourse/lib/lightbox/helpers";
-
-import Component from "@glimmer/component";
-import { bind } from "discourse-common/utils/decorators";
 import discourseLater from "discourse-common/lib/later";
-import { htmlSafe } from "@ember/template";
-import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class DLightbox extends Component {
   @service appEvents;
@@ -128,7 +127,7 @@ export default class DLightbox extends Component {
   get shouldDisplayCarouselArrows() {
     return (
       !this.options.isMobile &&
-      this.totalItemCount >= this.options.minCarosuelArrowItemCount
+      this.totalItemCount >= this.options.minCarouselArrowItemCount
     );
   }
 
@@ -187,7 +186,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  deregisterAppEventListners() {
+  deregisterAppEventListeners() {
     this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.OPEN, this.open);
     this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.CLOSE, this.close);
   }

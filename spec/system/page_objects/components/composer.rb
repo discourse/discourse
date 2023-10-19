@@ -77,9 +77,13 @@ module PageObjects
         find(AUTOCOMPLETE_MENU)
       end
 
+      def category_chooser
+        Components::SelectKit.new(".category-chooser")
+      end
+
       def switch_category(category_name)
-        find(".category-chooser").click
-        find(".category-row[data-name='#{category_name}']").click
+        category_chooser.expand
+        category_chooser.select_row_by_name(category_name)
       end
 
       def preview
@@ -166,6 +170,14 @@ module PageObjects
         page.has_css?(".form-template-field__error", text: error)
       end
 
+      def has_form_template_field_label?(label)
+        page.has_css?(".form-template-field__label", text: label)
+      end
+
+      def has_form_template_field_description?(description)
+        page.has_css?(".form-template-field__description", text: description)
+      end
+
       def composer_input
         find("#{COMPOSER_ID} .d-editor .d-editor-input")
       end
@@ -194,6 +206,30 @@ module PageObjects
           const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
           composer.setSelectionRange(0, composer.value.length);
         JS
+      end
+
+      def submit
+        find("#{COMPOSER_ID} .save-or-cancel .create").click
+      end
+
+      def close
+        find("#{COMPOSER_ID} .save-or-cancel .cancel").click
+      end
+
+      def has_no_in_progress_uploads?
+        find("#{COMPOSER_ID}").has_no_css?("#file-uploading")
+      end
+
+      def has_in_progress_uploads?
+        find("#{COMPOSER_ID}").has_css?("#file-uploading")
+      end
+
+      def select_pm_user(username)
+        select_kit = PageObjects::Components::SelectKit.new("#private-message-users")
+        select_kit.expand
+        select_kit.search(username)
+        select_kit.select_row_by_value(username)
+        select_kit.collapse
       end
 
       private

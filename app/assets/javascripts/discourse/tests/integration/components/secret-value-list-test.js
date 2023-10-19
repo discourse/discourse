@@ -1,9 +1,9 @@
+import { blur, click, fillIn, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | secret-value-list", function (hooks) {
   setupRenderingTest(hooks);

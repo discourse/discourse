@@ -1,13 +1,13 @@
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import I18n from "I18n";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import I18n from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 let deleteAndBlock = null;

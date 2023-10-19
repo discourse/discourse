@@ -1,9 +1,9 @@
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import discourseLater from "discourse-common/lib/later";
 import { action, computed } from "@ember/object";
-import { clipboardCopy } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
+import { clipboardCopy } from "discourse/lib/utilities";
+import discourseLater from "discourse-common/lib/later";
+import I18n from "discourse-i18n";
 
 export default class AdminCustomizeColorsShowController extends Controller {
   @service dialog;

@@ -214,7 +214,6 @@ sv:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kan inte inaktivera lokal inloggning om 2FA har genomdrivits. Inaktivera genomdriven 2FA innan du inaktiverar lokala inloggningar."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kan inte aktivera S3-uppladdningar eftersom S3-uppladdningar redan är aktiverade globalt, och aktivering av denna webbplatsnivå kan orsaka kritiska problem med uppladdningar"
       cors_origins_should_not_have_trailing_slash: "Du bör inte lägga till det avslutande snedstrecket (/) till CORS-ursprung."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Användaragenter måste vara minst 3 tecken långt för att undvika felaktiga hastighetsbegränsning för mänskliga användare."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kan inte lägga till något av följande värden till inställningen: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kan inte inaktivera Radera metadata för bild om 'composer media optimization image enabled' är aktiverat. Inaktivera 'composer media optimization image enabled' innan du inaktiverar Radera metadata för bild."
       twitter_summary_large_image_no_svg: "Twitter, sammanfattningsbilder som används för twitter: bildens metadata kan inte vara .svg"
@@ -325,7 +324,6 @@ sv:
     more_replies:
       one: "Ytterligare %{count} svar"
       other: "Ytterligare %{count} svar"
-    loading: "Laddar diskussion..."
     permalink: "Permalänk"
     imported_from: "Detta är ett kopplat diskussionsämne till det ursprungliga inlägget på %{link}"
     in_reply_to: "▶ %{username}"
@@ -682,7 +680,6 @@ sv:
     media_placeholder:
       blocked_hotlinked_title: "Media finns på en annan webbplats. Klicka för att öppna i en ny flik."
       blocked_hotlinked: "Extern media"
-    hidden_bidi_character: "Dubbelriktade tecken kan ändra ordningen som text renderas. Detta kan användas för att dölja skadlig kod."
     has_likes:
       one: "%{count} gillning"
       other: "%{count} gillningar"
@@ -908,8 +905,6 @@ sv:
   draft_backup:
     pm_title: "Säkerhetskopiera utkast från pågående ämnen"
     pm_body: "Ämne som innehåller säkerhetskopierade utkast"
-  user_activity:
-    no_log_search_queries: "Sökloggsfrågor är för närvarande inaktiverade (en administratör kan aktivera dem i webbplatsinställningarna)."
   email_settings:
     pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
     imap_authentication_error: "Det uppstod ett problem med de angivna IMAP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
@@ -1378,7 +1373,6 @@ sv:
         qtt_like: Mottagna gillningar
       description: "Topp 10-användare som har fått gillningar från ett brett spektrum av personer."
   dashboard:
-    group_email_credentials_warning: 'Det uppstod ett problem med autentiseringsuppgifterna för gruppen <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Inga e-postmeddelanden skickas från gruppinkorgen förrän problemet är åtgärdat. %{error}'
     rails_env_warning: "Din server kör i %{env}-läge."
     host_names_warning: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
     sidekiq_warning: 'Sidekiq körs inte. Många uppgifter, som att skicka e-post, utförs asynkront av sidekiq. Se till att minst en sidekiq-process körs. <a href="https://github.com/mperham/sidekiq">Läs mer om Sidekiq här</a>.'
@@ -1407,7 +1401,6 @@ sv:
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
     v3_analytics_deprecated: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
-    legacy_navigation_menu_deprecated: "Din Discourse använder för närvarande den \"äldre\" navigeringsmenyn som <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>kommer att tas bort i den första betaversionen av Discourse 3.2</a>. Migrera till den nya navigeringsmenyn genom att uppdatera din <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>webbplatsinställning för navigeringsmenyer</a> till 'sidebar' eller 'header dropdown'."
   site_settings:
     allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
     disabled: "inaktiverade"
@@ -1418,9 +1411,6 @@ sv:
     allow_user_locale: "Tillåt användare att själva välja gränssnittsspråk"
     set_locale_from_accept_language_header: "basera anonyma användares gränssnittsspråk på deras webbläsares språkinställning"
     support_mixed_text_direction: "Stöd blandade vänster till höger- och höger till vänster-textriktningar."
-    min_post_length: "Lägsta tillåtna inläggslängd uttryckt i tecken"
-    min_first_post_length: "Lägsta antal tillåtna tecken i första inlägget (ämnestext)"
-    min_personal_message_post_length: "Lägsta antal tillåtna tecken i inlägg för meddelanden"
     max_post_length: "Högsta tillåtna längd på inlägg uttryckt i tecken"
     topic_featured_link_enabled: "Tillåt att lägga upp en länk med ämnen."
     show_topic_featured_link_in_digest: "Visa den aktuella länken i det sammanfattade e-postmeddelandet."
@@ -1540,7 +1530,6 @@ sv:
     tl2_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl2 (medlem) genom att multiplicera med detta nummer"
     tl3_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl3 (vanlig) genom att multiplicera med detta nummer"
     tl4_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl4 (ledare) genom att multiplicera med detta nummer"
-    num_users_to_silence_new_user: "Om en ny användares inlägg får num_spam_flags_to_silence_new_user skräppost-flaggor från detta antalet olika användare, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
     num_tl3_flags_to_silence_new_user: "Om en ny användares inlägg får så här många flaggningar från num_tl3_users_to_silence_new_user olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. Ange 0 för att inaktivera."
     num_tl3_users_to_silence_new_user: "Om en ny användares inlägg får num_tl3_flags_to_silence_new_user flaggningar från så här många olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
     notify_mods_when_user_silenced: "Om en användare tystas automatiskt, skicka ett meddelande till alla moderatorer."
@@ -1554,7 +1543,6 @@ sv:
     must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen."
     invite_code: "Användare måste ange denna kod för att ha tillåtelse att registrera ett konto, ignoreras om det lämnas tomt (ej skiftlägeskänslig)"
     approve_suspect_users: "Lägg till misstänkta användare i kön för granskning. Misstänkta användare har angett en bio/webbsida men har ingen läsaktivitet."
-    review_every_post: "Alla inlägg måste granskas. VARNING! REKOMMENDERAS INTE FÖR MYCKET AKTIVA WEBBPLATSER."
     pending_users_reminder_delay_minutes: "Avisera moderatorer om nya användare har väntat på godkännande längre än så här många minuter. Ange -1 för att inaktivera aviseringar."
     persistent_sessions: "Användarna förblir inloggade när webbläsaren stängs"
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
@@ -1562,7 +1550,6 @@ sv:
     ga_universal_tracking_code: "Google Universal Analytics spårningskods-ID, t.ex.: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domännamn, t.ex.: minsida.se; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Aktivera Google Universal Analytics spårning över flera domäner. Utgående länkar till dessa domäner kommer att få klient-id tillagt till dem. Se <a href='https://support.google.com/analytics/answer/1034342?hl=sv' target='_blank'>Googles guide över domänspårning.</a>"
-    gtm_container_id: "Innehålls-ID för Google Tag Manager. t.ex. GTM-ABCDEF. <br/>Notera: Skript från tredje part som laddats av GTM kan behöva vitlistas i 'content security policy script src'."
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Tillåt moderatorer att skapa och hantera kategorier och grupper"
     moderators_change_post_ownership: "Tillåt att moderatorer ändrar inläggsägarskap"
@@ -1576,11 +1563,8 @@ sv:
     blocked_crawler_user_agents: "Unikt fall av känsligt ord i användaragent-strängen som identifierar webbsökare som inte bör få åtkomst till webbplatsen. Gäller inte om vitlista har definierats."
     slow_down_crawler_user_agents: 'Användaragenter för sökrobotar som ska vara hastighetsbegränsade vilket konfigurerats i inställningen "sakta ned sökrobots hastighet". Varje värde måste vara minst 3 tecken långt.'
     slow_down_crawler_rate: "Om slow_down_crawler_user_agents anges kommer denna hastighet att gälla för alla sökrobotar (fördröjning mellan förfrågningarna uttryckt i sekunder)"
-    content_security_policy: "Aktivera säkerhetspolicy för innehåll"
-    content_security_policy_report_only: "Aktivera enbart säkerhetspolicy för innehåll"
     content_security_policy_collect_reports: "Aktivera insamling av CSP-överträdelserapporter på /csp_reports"
     content_security_policy_frame_ancestors: "Begränsa vem som kan bädda in denna webbplats i iframes via CSP. Kontrollera tillåtna värdar på <a href='%{base_path}/admin/customize/embedding'>Inbäddning</a>"
-    content_security_policy_script_src: "Ytterligare vitlistade skriptkällor. Den aktuella värden och CDN ingår som standard. Se <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minska XSS-attacker genom policy för innehållssäkerhet.</a>"
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
     display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
@@ -1703,7 +1687,6 @@ sv:
     enable_safe_mode: "Tillåt användare att gå in i säkert läge för att felsöka tillägg."
     rate_limit_create_topic: "Efter att ha skapat ett ämne, måste användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_create_post: "Efter att ha skrivit ett inlägg, måste användare vänta (n) sekunder innan de skriver ett nytt."
-    rate_limit_new_user_create_topic: "Efter att ha skapat ett ämne, måste nya användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_new_user_create_post: "Efter att ha skrivit ett inlägg, måste nya användare vänta (n) sekunder innan de kan skriva ett nytt."
     max_likes_per_day: "Max antal gillningar per användare och dag."
     max_flags_per_day: "Max antal flaggningar per användare och dag."
@@ -2123,15 +2106,12 @@ sv:
     default_sidebar_switch_panel_position: "Placering av panelknappar för sidofältsomkoppling"
     retain_web_hook_events_period_days: "Antal dagar för att behålla register över webhook-händelsedata."
     retry_web_hook_events: "Försök automatiskt igen för misslyckade händelser för webhooken 4 gånger. Tidsspannet mellan försöken är 1, 5, 25 och 125 minuter."
-    revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
-    allow_user_api_keys: "Tillåt generering av API-nycklar för användare"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API-nycklar"
     min_trust_level_for_user_api_key: |
       Förtroendenivå som krävs för generering av användar-API-nycklar.<br>
       <b>VARNING</b>: Ändring av förtroendenivån kommer att förhindra användare med en lägre förtroendenivå från att logga in via Discourse Hub
     allowed_user_api_auth_redirects: "Tillåten URL för omdirigering efter verifiering av användares API-nycklar. Jokersymbol * kan användas för att matcha vilken del som helst av denna (t.ex. www.exempel.se/*)."
     allowed_user_api_push_urls: "Tillåtna URL:er för serverframstötning till användar-API"
-    expire_user_api_keys_days: "Antal dagar innan en användares API-nyckel automatiskt upphör (0 för aldrig)"
     tagging_enabled: "Vill du aktivera taggar på ämnen?"
     min_trust_to_create_tag: "Lägsta förtroendenivå som krävs för att skapa en tagg."
     max_tags_per_topic: "Högsta antal taggar som kan tillskrivas ett ämne."
@@ -2149,7 +2129,6 @@ sv:
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
     force_lowercase_tags: "Tvinga alla nya taggar att vara helt i små bokstäver."
     create_post_for_category_and_tag_changes: "Skapa ett litet åtgärdsinlägg när ett ämnes kategori eller taggar ändras"
-    company_name: "Företagsnamn"
     governing_law: "Gällande lag"
     city_for_disputes: "Domstol vid tvist"
     shared_drafts_category: "Aktivera funktionen Delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin undantas från ämneslistor för personalanvändare."
@@ -2182,7 +2161,6 @@ sv:
     navigation_menu: "Bestäm vilken navigeringsmeny som ska användas. Sidofälts- och rubriknavigering kan anpassas av användare. Det äldre alternativet är tillgängligt för bakåtkompatibilitet."
     default_navigation_menu_categories: "Valda kategorier visas som standard under navigeringsmenyns sektion Kategorier."
     default_navigation_menu_tags: "Valda taggar visas som standard under navigeringsmenyns sektion Taggar."
-    enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     experimental_new_new_view_groups: 'EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken "Allt" i sidofältet länkar till den.'
     enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
     experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
@@ -2419,18 +2397,6 @@ sv:
   admin:
     email:
       sent_test: "skickat!"
-    user:
-      merge_user:
-        updating_username: "Uppdaterar användarnamn..."
-        changing_post_ownership: "Ändrar äganderätt till inlägget..."
-        merging_given_daily_likes: "Sammanslagning av dagliga gillanden..."
-        merging_post_timings: "Sammanslagning av tidpunkter för inlägg..."
-        merging_user_visits: "Sammanslagning av användarbesök..."
-        updating_site_settings: "Uppdaterar webbplatsinställningar..."
-        updating_user_stats: "Uppdaterar användarstatistik..."
-        merging_user_attributes: "Sammanslagning av användarattribut..."
-        updating_user_ids: "Uppdaterar användar-id..."
-        deleting_source_user: "Tar bort källanvändare..."
   user:
     deactivated: "Inaktiverades på grund av för många studsade e-postmeddelanden till '%{email}'."
     deactivated_by_staff: "Avaktiverades av personalen"
@@ -4532,8 +4498,6 @@ sv:
         description: "Godkänn flaggning och dölj detta inlägg + sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
       delete_single:
         title: "Radera"
-      delete:
-        title: "Radera..."
       delete_and_ignore:
         title: "Ignorera flaggning och radera inlägget"
         description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
@@ -4568,7 +4532,6 @@ sv:
       approve_user:
         title: "Godkänn användare"
       reject_user:
-        title: "Radera användare..."
         delete:
           title: "Ta bort användare"
           description: "Användaren kommer att raderas från forumet."
@@ -4577,7 +4540,6 @@ sv:
           description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
       reject:
         title: "Avvisa"
-        bundle_title: "Avvisa..."
       reject_and_suspend:
         title: "Avvisa och stäng av användare"
       reject_and_silence:

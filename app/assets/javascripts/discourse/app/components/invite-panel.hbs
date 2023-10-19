@@ -44,8 +44,8 @@
         {{#if this.capabilities.hasContactPicker}}
           <DButton
             @icon="address-book"
-            @action={{action "searchContact"}}
-            @class="btn-primary open-contact-picker"
+            @action={{this.searchContact}}
+            class="btn-primary open-contact-picker"
           />
         {{/if}}
       </div>
@@ -93,26 +93,22 @@
 
 <div class="footer">
   {{#if this.inviteModel.finished}}
-    <DButton
-      @class="btn-primary"
-      @action={{action "sendCloseModal"}}
-      @label="close"
-    />
+    <DButton @action={{@closeModal}} @label="close" class="btn-primary" />
   {{else}}
     <DButton
       @icon={{this.inviteIcon}}
-      @action={{action "createInvite"}}
-      @class="btn-primary send-invite"
+      @action={{this.createInvite}}
       @disabled={{this.disabled}}
       @label={{this.buttonTitle}}
+      class="btn-primary send-invite"
     />
     {{#if this.showCopyInviteButton}}
       <DButton
         @icon="link"
-        @action={{action "generateInviteLink"}}
-        @class="btn-primary generate-invite-link"
+        @action={{this.generateInviteLink}}
         @disabled={{this.disabledCopyLink}}
         @label="user.invited.generate_link"
+        class="btn-primary generate-invite-link"
       />
     {{/if}}
   {{/if}}

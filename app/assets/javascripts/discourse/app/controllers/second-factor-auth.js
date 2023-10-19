@@ -1,13 +1,13 @@
 import Controller from "@ember/controller";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { equal, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { equal, readOnly } from "@ember/object/computed";
-import { getWebauthnCredential } from "discourse/lib/webauthn";
 import DiscourseURL from "discourse/lib/url";
+import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 export default Controller.extend({

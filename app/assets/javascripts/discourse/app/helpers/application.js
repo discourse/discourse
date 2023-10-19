@@ -1,12 +1,12 @@
+import { htmlSafe } from "@ember/template";
 import {
   autoUpdatingRelativeAge,
   longDate,
   number,
 } from "discourse/lib/formatter";
-import I18n from "I18n";
 import { escapeExpression } from "discourse/lib/utilities";
-import { htmlSafe } from "@ember/template";
 import { registerUnbound } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
 
 registerUnbound("raw-date", (dt) => htmlSafe(longDate(new Date(dt))));
 

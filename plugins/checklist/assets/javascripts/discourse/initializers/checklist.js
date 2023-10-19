@@ -1,13 +1,13 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { ajax } from "discourse/lib/ajax";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function initializePlugin(api) {
   const siteSettings = api.container.lookup("site-settings:main");
 
   if (siteSettings.checklist_enabled) {
-    api.decorateCookedElement(checklistSyntax, { id: "checklist" });
+    api.decorateCookedElement(checklistSyntax);
   }
 }
 

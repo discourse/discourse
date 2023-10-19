@@ -8,9 +8,16 @@
     </label>
   {{/if}}
 
+  {{#if @attributes.description}}
+    <span class="form-template-field__description">
+      {{html-safe @attributes.description}}
+    </span>
+  {{/if}}
+
   <Input
-    name={{@attributes.label}}
+    name={{@id}}
     class="form-template-field__input"
+    @value={{@value}}
     @type={{if @validations.type @validations.type "text"}}
     placeholder={{@attributes.placeholder}}
     required={{if @validations.required "required" ""}}

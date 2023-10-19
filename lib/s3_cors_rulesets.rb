@@ -19,7 +19,13 @@ class S3CorsRulesets
   }.freeze
 
   DIRECT_UPLOAD = {
-    allowed_headers: %w[Authorization Content-Disposition Content-Type],
+    allowed_headers: %w[
+      Authorization
+      Content-Disposition
+      Content-Type
+      X-Amz-Acl
+      X-Amz-Meta-Sha1-Checksum
+    ],
     expose_headers: ["ETag"],
     allowed_methods: %w[GET HEAD PUT],
     allowed_origins: ["*"],

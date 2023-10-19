@@ -1,11 +1,11 @@
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import Controller from "@ember/controller";
+import { sort } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { sort } from "@ember/object/computed";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, Evented, {
   init() {

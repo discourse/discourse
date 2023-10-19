@@ -1,13 +1,13 @@
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { get } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { get } from "@ember/object";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 const STAFF_GROUP_NAME = "staff";
 
@@ -345,6 +345,16 @@ const Category = RestModel.extend({
   isUncategorizedCategory(id) {
     return Category.isUncategorized(id);
   },
+
+  get canCreateTopic() {
+    return this.permission === PermissionType.FULL;
+  },
+
+  get subcategoryWithCreateTopicPermission() {
+    return this.subcategories?.find(
+      (subcategory) => subcategory.canCreateTopic
+    );
+  },
 });
 
 let _uncategorized;
@@ -373,7 +383,9 @@ Category.reopenClass({
   },
 
   slugEncoded() {
-    let siteSettings = getOwner(this).lookup("service:site-settings");
+    let siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
     return siteSettings.slug_generation_method === "encoded";
   },
 
@@ -639,6 +651,27 @@ Category.reopenClass({
     }
 
     return data.sortBy("read_restricted");
+  },
+
+  async asyncSearch(term, opts) {
+    opts ||= {};
+
+    const result = await ajax("/categories/search", {
+      data: {
+        term,
+        parent_category_id: opts.parentCategoryId,
+        include_uncategorized: opts.includeUncategorized,
+        select_category_ids: opts.selectCategoryIds,
+        reject_category_ids: opts.rejectCategoryIds,
+        include_subcategories: opts.includeSubcategories,
+        prioritized_category_id: opts.prioritizedCategoryId,
+        limit: opts.limit,
+      },
+    });
+
+    return result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
   },
 });
 

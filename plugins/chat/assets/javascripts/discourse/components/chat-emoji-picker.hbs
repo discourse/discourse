@@ -15,6 +15,7 @@
     {{will-destroy (if @willDestroy @willDestroy (noop))}}
     {{will-destroy this.removeClickOutsideEventListener}}
     {{on "keydown" this.trapKeyDownEvents}}
+    ...attributes
   >
     <div class="chat-emoji-picker__filter-container">
       <DcFilterInput

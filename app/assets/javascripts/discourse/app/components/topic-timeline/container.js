@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import I18n from "I18n";
-import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
-import { bind, debounce } from "discourse-common/utils/decorators";
-import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
-import domUtils from "discourse-common/utils/dom-utils";
+import { htmlSafe } from "@ember/template";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
+import { bind, debounce } from "discourse-common/utils/decorators";
+import domUtils from "discourse-common/utils/dom-utils";
+import I18n from "discourse-i18n";
 
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;
@@ -37,6 +37,9 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked excerpt = "";
 
   intersectionObserver = null;
+  scrollareaElement = null;
+  scrollerElement = null;
+  dragOffset = null;
 
   constructor() {
     super(...arguments);
@@ -272,17 +275,33 @@ export default class TopicTimelineScrollArea extends Component {
 
   @bind
   updatePercentage(e) {
-    // pageY for mouse and mobile
-    const y = e.pageY || e.touches[0].pageY;
-    const area = document.querySelector(".timeline-scrollarea");
-    const areaTop = domUtils.offset(area).top;
+    const currentCursorY = e.pageY || e.touches[0].pageY;
 
-    this.percentage = this.clamp(parseFloat(y - areaTop) / area.offsetHeight);
+    const desiredScrollerCentre = currentCursorY - this.dragOffset;
+
+    const areaTop = domUtils.offset(this.scrollareaElement).top;
+    const areaHeight = this.scrollareaElement.offsetHeight;
+    const scrollerHeight = this.scrollerElement.offsetHeight;
+
+    // The range of possible positions for the centre of the scroller
+    const scrollableTop = areaTop + scrollerHeight / 2;
+    const scrollableHeight = areaHeight - scrollerHeight;
+
+    this.percentage = this.clamp(
+      parseFloat(desiredScrollerCentre - scrollableTop) / scrollableHeight
+    );
     this.commit();
   }
 
   @bind
-  didStartDrag() {
+  didStartDrag(event) {
+    const y = event.pageY || event.touches[0].pageY;
+
+    const scrollerCentre =
+      domUtils.offset(this.scrollerElement).top +
+      this.scrollerElement.offsetHeight / 2;
+
+    this.dragOffset = y - scrollerCentre;
     this.dragging = true;
   }
 
@@ -296,6 +315,7 @@ export default class TopicTimelineScrollArea extends Component {
   @bind
   didEndDrag() {
     this.dragging = false;
+    this.dragOffset = null;
     this.commit();
   }
 
@@ -392,6 +412,16 @@ export default class TopicTimelineScrollArea extends Component {
       default:
         return this.clamp(parseFloat(postIndex) / total);
     }
+  }
+
+  @action
+  registerScrollarea(element) {
+    this.scrollareaElement = element;
+  }
+
+  @action
+  registerScroller(element) {
+    this.scrollerElement = element;
   }
 }
 

@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: 783a90554053002017510285bc736099b2749c22
+  revision: c17bac468c5c5e4ca6808f7232abaca090f71e26
   specs:
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -40,7 +40,7 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    actionview_precompiler (0.2.3)
+    actionview_precompiler (0.3.0)
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
@@ -92,7 +92,7 @@ GEM
     bootsnap (1.16.0)
       msgpack (~> 1.2)
     builder (3.2.4)
-    bullet (7.0.7)
+    bullet (7.1.2)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
@@ -110,7 +110,7 @@ GEM
     cgi (0.3.6)
     chunky_png (1.4.0)
     coderay (1.1.3)
-    colored2 (3.1.2)
+    colored2 (4.0.0)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
     cose (1.3.0)
@@ -120,16 +120,10 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    css_parser (1.14.0)
+    css_parser (1.16.0)
       addressable
     dartsass-ruby (3.0.1)
       sass-embedded (~> 1.54)
-    dartsass-sprockets (3.0.0)
-      dartsass-ruby (~> 3.0)
-      railties (>= 4.0.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     date (3.3.3)
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
@@ -145,14 +139,15 @@ GEM
     docile (1.4.0)
     email_reply_trimmer (0.1.13)
     erubi (1.12.0)
-    excon (0.100.0)
-    execjs (2.8.1)
+    excon (0.104.0)
+    execjs (2.9.1)
     exifr (1.4.0)
     fabrication (2.30.0)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
     fakeweb (1.3.0)
-    faraday (2.7.10)
+    faraday (2.7.11)
+      base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
@@ -161,16 +156,16 @@ GEM
     fast_blank (1.0.1)
     fast_xs (0.8.0)
     fastimage (2.2.7)
-    ffi (1.15.5)
+    ffi (1.16.3)
     fspath (3.1.2)
     gc_tracer (1.5.1)
-    globalid (1.1.0)
-      activesupport (>= 5.0)
-    google-protobuf (3.24.0)
-    google-protobuf (3.24.0-aarch64-linux)
-    google-protobuf (3.24.0-arm64-darwin)
-    google-protobuf (3.24.0-x86_64-darwin)
-    google-protobuf (3.24.0-x86_64-linux)
+    globalid (1.2.1)
+      activesupport (>= 6.1)
+    google-protobuf (3.24.4)
+    google-protobuf (3.24.4-aarch64-linux)
+    google-protobuf (3.24.4-arm64-darwin)
+    google-protobuf (3.24.4-x86_64-darwin)
+    google-protobuf (3.24.4-x86_64-linux)
     guess_html_encoding (0.0.11)
     hana (1.3.7)
     hashdiff (1.0.1)
@@ -193,7 +188,7 @@ GEM
     json (2.6.3)
     json-schema (3.0.0)
       addressable (>= 2.8)
-    json_schemer (1.0.3)
+    json_schemer (2.0.0)
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       simpleidn (~> 0.2)
@@ -209,7 +204,7 @@ GEM
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     literate_randomizer (0.4.0)
-    lograge (0.13.0)
+    lograge (0.14.0)
       actionpack (>= 4)
       activesupport (>= 4)
       railties (>= 4)
@@ -217,8 +212,8 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.12.2)
-    loofah (2.21.3)
+    logster (2.13.0)
+    loofah (2.21.4)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     lru_redux (1.1.0)
@@ -231,7 +226,7 @@ GEM
     matrix (0.4.2)
     maxminddb (0.1.22)
     memory_profiler (1.0.1)
-    message_bus (4.3.7)
+    message_bus (4.3.8)
       rack (>= 1.1.3)
     method_source (1.0.0)
     mini_mime (1.1.5)
@@ -240,10 +235,11 @@ GEM
       libv8-node (~> 18.16.0.0)
     mini_scheduler (0.16.0)
       sidekiq (>= 4.2.3, < 7.0)
-    mini_sql (1.4.0)
+    mini_sql (1.5.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
-    minitest (5.19.0)
+    minio_runner (0.1.1)
+    minitest (5.20.0)
     mocha (2.1.0)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.2)
@@ -252,26 +248,26 @@ GEM
     mustache (1.1.1)
     net-http (0.3.2)
       uri
-    net-imap (0.3.7)
+    net-imap (0.4.1)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
     net-protocol (0.2.1)
       timeout
-    net-smtp (0.3.3)
+    net-smtp (0.4.0)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.15.3)
+    nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.15.3-aarch64-linux)
+    nokogiri (1.15.4-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.15.3-arm64-darwin)
+    nokogiri (1.15.4-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.3-x86_64-darwin)
+    nokogiri (1.15.4-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.3-x86_64-linux)
+    nokogiri (1.15.4-x86_64-linux)
       racc (~> 1.4)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
@@ -285,7 +281,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 4)
-    oj (3.15.1)
+    oj (3.16.1)
     omniauth (1.9.2)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
@@ -308,14 +304,14 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    openssl (3.1.0)
+    openssl (3.2.0)
     openssl-signature_algorithm (1.3.0)
       openssl (> 2.0)
     optimist (3.1.0)
     parallel (1.23.0)
-    parallel_tests (4.2.1)
+    parallel_tests (4.3.0)
       parallel
-    parser (3.2.2.3)
+    parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
     pg (1.4.6)
@@ -330,7 +326,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (5.0.3)
-    puma (6.3.0)
+    puma (6.4.0)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
@@ -375,12 +371,12 @@ GEM
     redis (4.8.1)
     redis-namespace (1.11.0)
       redis (>= 4)
-    regexp_parser (2.8.1)
+    regexp_parser (2.8.2)
     request_store (1.5.1)
       rack (>= 1.4)
     rexml (3.2.6)
     rinku (2.0.6)
-    rotp (6.2.2)
+    rotp (6.3.0)
     rouge (4.1.3)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
@@ -410,21 +406,21 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.1)
-    rss (0.2.9)
+    rss (0.3.0)
       rexml
-    rswag-specs (2.10.1)
-      activesupport (>= 3.1, < 7.1)
+    rswag-specs (2.11.0)
+      activesupport (>= 3.1, < 7.2)
       json-schema (>= 2.2, < 4.0)
-      railties (>= 3.1, < 7.1)
+      railties (>= 3.1, < 7.2)
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.56.0)
+    rubocop (1.57.1)
       base64 (~> 0.1.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.2.3)
+      parser (>= 3.2.2.4)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
@@ -433,14 +429,14 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.29.0)
       parser (>= 3.2.1.0)
-    rubocop-capybara (2.18.0)
+    rubocop-capybara (2.19.0)
       rubocop (~> 1.41)
-    rubocop-discourse (3.3.0)
+    rubocop-discourse (3.4.0)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
-    rubocop-factory_bot (2.23.1)
+    rubocop-factory_bot (2.24.0)
       rubocop (~> 1.33)
-    rubocop-rspec (2.23.2)
+    rubocop-rspec (2.24.1)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
       rubocop-factory_bot (~> 2.22)
@@ -451,25 +447,25 @@ GEM
       nokogiri (>= 1.6.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sanitize (6.0.2)
+    sanitize (6.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sass-embedded (1.64.2)
+    sass-embedded (1.69.4)
       google-protobuf (~> 3.23)
       rake (>= 13.0.0)
-    sass-embedded (1.64.2-aarch64-linux-gnu)
+    sass-embedded (1.69.4-aarch64-linux-gnu)
       google-protobuf (~> 3.23)
-    sass-embedded (1.64.2-arm64-darwin)
+    sass-embedded (1.69.4-arm64-darwin)
       google-protobuf (~> 3.23)
-    sass-embedded (1.64.2-x86_64-darwin)
+    sass-embedded (1.69.4-x86_64-darwin)
       google-protobuf (~> 3.23)
-    sass-embedded (1.64.2-x86_64-linux-gnu)
+    sass-embedded (1.69.4-x86_64-linux-gnu)
       google-protobuf (~> 3.23)
-    selenium-webdriver (4.10.0)
+    selenium-webdriver (4.14.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sidekiq (6.5.9)
+    sidekiq (6.5.12)
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
@@ -488,14 +484,13 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sshkey (2.0.0)
+    sshkey (3.0.0)
     stackprof (0.2.25)
     syntax_tree (6.1.1)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
-    test-prof (1.2.2)
-    thor (1.2.2)
-    tilt (2.2.0)
+    test-prof (1.2.3)
+    thor (1.3.0)
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -506,7 +501,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
-    unicode-display_width (2.4.2)
+    unicode-display_width (2.5.0)
     unicorn (6.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -517,20 +512,16 @@ GEM
       hkdf (~> 1.0)
       jwt (~> 2.0)
       openssl (~> 3.0)
-    webdrivers (5.3.1)
-      nokogiri (~> 1.6)
-      rubyzip (>= 1.3.0)
-      selenium-webdriver (~> 4.0, < 4.11)
-    webmock (3.18.1)
+    webmock (3.19.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    websocket (1.2.9)
+    websocket (1.2.10)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
     yard (0.9.34)
-    zeitwerk (2.6.11)
+    zeitwerk (2.6.12)
 
 PLATFORMS
   aarch64-linux
@@ -568,7 +559,6 @@ DEPENDENCIES
   cppjieba_rb
   css_parser
   dartsass-ruby
-  dartsass-sprockets
   diffy
   digest
   discourse-fonts
@@ -609,6 +599,7 @@ DEPENDENCIES
   mini_scheduler
   mini_sql
   mini_suffix
+  minio_runner
   minitest
   mocha
   multi_json
@@ -657,7 +648,7 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
-  selenium-webdriver
+  selenium-webdriver (~> 4.11)
   shoulda-matchers!
   sidekiq
   simplecov
@@ -674,7 +665,6 @@ DEPENDENCIES
   unf
   unicorn
   web-push
-  webdrivers
   webmock
   yaml-lint
   yard

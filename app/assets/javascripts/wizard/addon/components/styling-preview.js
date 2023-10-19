@@ -1,7 +1,7 @@
-import { chooseDarker, darkLightDiff } from "wizard/lib/preview";
-import I18n from "I18n";
-import { bind, observes } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import { bind, observes } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import { chooseDarker, darkLightDiff } from "wizard/lib/preview";
 import WizardPreviewBaseComponent from "./wizard-preview-base";
 
 const LOREM = `
@@ -76,7 +76,7 @@ export default WizardPreviewBaseComponent.extend({
     if (slider.scrollLeft < 50) {
       this.set("previewTopic", true);
     }
-    if (slider.scrollLeft > slider.offsetWidth) {
+    if (slider.scrollLeft > slider.offsetWidth - 50) {
       this.set("previewTopic", false);
     }
   },

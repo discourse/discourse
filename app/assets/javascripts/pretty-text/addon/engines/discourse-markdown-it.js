@@ -1,8 +1,8 @@
 import AllowLister from "pretty-text/allow-lister";
-import { cloneJSON } from "discourse-common/lib/object";
-import deprecated from "discourse-common/lib/deprecated";
 import guid from "pretty-text/guid";
 import { sanitize } from "pretty-text/sanitizer";
+import deprecated from "discourse-common/lib/deprecated";
+import { cloneJSON } from "discourse-common/lib/object";
 
 export const ATTACHMENT_CSS_CLASS = "attachment";
 
@@ -159,11 +159,7 @@ function videoHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
-  return `<div class="video-container">
-    <video width="100%" height="100%" preload="metadata" controls>
-      <source src="${src}" ${dataOrigSrcAttr}>
-      <a href="${src}">${src}</a>
-    </video>
+  return `<div class="video-placeholder-container" data-video-src="${src}" ${dataOrigSrcAttr}>
   </div>`;
 }
 
@@ -191,13 +187,26 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   if (split[1] === "video") {
     if (
       options.discourse.previewing &&
-      !options.discourse.limitedSiteSettings.enableDiffhtmlPreview
+      options.discourse.limitedSiteSettings.enableDiffhtmlPreview
     ) {
-      return `<div class="onebox-placeholder-container">
+      const src = token.attrGet("src");
+      const origSrc = token.attrGet("data-orig-src");
+      const dataOrigSrcAttr =
+        origSrc !== null ? `data-orig-src="${origSrc}"` : "";
+      return `<div class="video-container">
+        <video width="100%" height="100%" preload="metadata" controls>
+          <source src="${src}" ${dataOrigSrcAttr}>
+          <a href="${src}">${src}</a>
+        </video>
+        </div>`;
+    } else {
+      if (options.discourse.previewing) {
+        return `<div class="onebox-placeholder-container">
         <span class="placeholder-icon video"></span>
       </div>`;
-    } else {
-      return videoHTML(token);
+      } else {
+        return videoHTML(token);
+      }
     }
   } else if (split[1] === "audio") {
     return audioHTML(token);
@@ -479,7 +488,7 @@ export function setup(opts, siteSettings, state) {
   // all of the modules under discourse-markdown or markdown-it
   // directories are considered additional markdown "features" which
   // may define their own rules
-  Object.keys(require._eak_seen).forEach((entry) => {
+  Object.keys(require.entries).forEach((entry) => {
     if (check.test(entry)) {
       const module = requirejs(entry);
       if (module && module.setup) {

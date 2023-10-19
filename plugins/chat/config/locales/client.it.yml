@@ -10,6 +10,10 @@ it:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          fullscreen: "Quando la chat è a schermo intero"
+          never: "Mai"
       logs:
         staff_actions:
           actions:
@@ -21,11 +25,10 @@ it:
           descriptions:
             chat:
               create_message: "Crea un messaggio di chat in un canale specifico."
-    about:
-      chat_messages_count: "Messaggi di chat"
-      chat_channels_count: "Canali di chat"
-      chat_users_count: "Utenti della chat"
     chat:
+      text_copied: Testo copiato nella clipboard
+      link_copied: Link copiato nella clipboard
+      deleted_chat_username: cancellati
       dates:
         time_tiny: "h:mm"
       all_loaded: "Mostra tutti i messaggi"
@@ -81,6 +84,7 @@ it:
         create: "Nuovo canale"
       click_to_join: "Fai clic qui per visualizzare i canali disponibili."
       close: "Chiudi"
+      remove: "Rimuovi"
       collapse: "Comprimi il cassetto della chat"
       expand: "Espandi il pannello della chat"
       confirm_flag: "Vuoi segnalare il messaggio di %{username}?"
@@ -106,6 +110,8 @@ it:
         all_new: "Tutti i nuovi messaggi"
         dm_and_mentions: "Messaggi diretti e menzioni"
         never: "Mai"
+      separate_sidebar_mode:
+        title: "Mostra modalità separate della barra laterale per forum e chat"
       enable: "Abilita chat"
       flag: "Segnala"
       emoji: "Inserisci emoji"
@@ -124,27 +130,11 @@ it:
           one: "Ultima ora"
           other: "Ultime %{count} ore"
       mention_warning:
-        dismiss: "ignora"
-        cannot_see: "%{username} non può accedere a questo canale e non è stato avvisato."
-        cannot_see_multiple:
-          one: "%{username} e %{count} altro utente non possono accedere a questo canale e non sono stati avvisati."
-          other: "%{username} e altri %{count} utenti non possono accedere a questo canale e non sono stati avvisati."
         invitations_sent:
           one: "Invito inviato"
           other: "Inviti inviati"
         invite: "Invita al canale"
-        without_membership: "%{username} non ha partecipato a questo canale."
-        without_membership_multiple:
-          one: "%{username} e %{count} altro utente non si sono uniti a questo canale."
-          other: "%{username} e altri %{count} utenti non si sono uniti a questo canale."
-        group_mentions_disabled: "%{group_name} non consente menzioni."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} e %{count} altro gruppo non consentono menzioni."
-          other: "%{group_name} e %{count} altri gruppi non consentono menzioni."
-        too_many_members: "%{group_name} ha troppi membri. Nessuno è stato avvisato."
-        too_many_members_multiple:
-          one: "%{group_name} e %{count} altro gruppo hanno troppi membri. Nessuno è stato notificato."
-          other: "%{group_name} e %{count} altri gruppi hanno troppi membri. Nessuno è stato notificato."
+        channel_wide_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
         groups:
           header:
             some: "Alcuni utenti non riceveranno notifiche"
@@ -154,6 +144,60 @@ it:
           unreachable_multiple:
             one: "@%{group} e %{count} altro gruppo non consentono menzioni."
             other: "@%{group} e %{count} altri gruppi non consentono menzioni."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utente.}
+                              other {La menzione di @{group1} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utenti.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} supera il limite di notifica di # utente.}
+                              other {La menzione di @{group1} supera il limite di notifica di # utenti.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} e @{group2} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utente.}
+                            other {La menzione di @{group1} e @{group2} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utenti.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} e @{group2} supera il limite di notifica di # utente.}
+                            other {La menzione di @{group1} e @{group2} supera il limite di notifica di # utenti.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La menzione di questi {groupCount} gruppi supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utente.}
+                            other {La menzione di questi {groupCount} gruppi supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utenti.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La menzione di questi {groupCount} gruppi supera il limite di notifica di # utente.}
+                            other {La menzione di questi {groupCount} gruppi supera il limite di notifica di # utenti.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "Questo messaggio supera il limite di notifica di %{count} menzione."
           other: "Questo messaggio supera il limite di notifica di %{count} menzioni."
@@ -190,6 +234,7 @@ it:
       reply: "Rispondi"
       edit: "Modifica"
       copy_link: "Copia link"
+      copy_text: "Copia testo"
       rebake_message: "Ricompila HTML"
       retry_staged_message:
         title: "Errore di rete"
@@ -228,6 +273,7 @@ it:
         read_only: "Sola lettura"
         archived_header: "Il canale è archiviato"
         archived: "Archiviati"
+        archive_failed: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati. <a target=\"_blank\" href=\"%{topic_url}\">L'argomento di destinazione</a> è stato creato. Premi Riprova per tentare di completare l'archiviazione."
         archive_failed_no_topic: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati e l'argomento di destinazione non è stato creato. Premi Riprova per tentare di completare l'archiviazione."
         archive_completed: "Vedi <a target=\"_blank\" href=\"%{topic_url}\">l'argomento di archiviazione</a>"
         closed_header: "Il canale è chiuso"
@@ -257,7 +303,6 @@ it:
         back_to_all_channels: "Tutti i canali"
         back_to_channel: "Indietro"
         tabs:
-          about: Informazioni
           members: Membri
           settings: Impostazioni
       new_message_modal:
@@ -387,11 +432,16 @@ it:
         saved: "Salvato"
         unfollow: "Esci"
         admin_title: "Amministratore"
+        settings_title: "Impostazioni"
+        info_title: "Informazioni sul canale"
+        category_label: "Categoria"
+        history_label: "Cronologia"
+        members_label: "Membri"
       admin:
         title: "Chat"
         export_messages:
           title: "Esporta i messaggi della chat"
-          description: "L'esportazione è attualmente limitata a 10000 messaggi più recenti negli ultimi 6 mesi."
+          description: "Questo esporta tutti i messaggi da tutti i canali."
           create_export: "Crea esportazione"
           export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
       direct_messages:
@@ -457,14 +507,11 @@ it:
           one: "%{commaSeparatedUsernames} e %{count} altro stanno scrivendo"
           other: "%{commaSeparatedUsernames} e altri %{count} stanno scrivendo"
       retention_reminders:
-        public_none: "La cronologia del canale viene conservata a tempo indeterminato."
-        public:
-          one: "La cronologia del canale è conservata per %{count} giorno."
-          other: "La cronologia del canale è conservata per %{count} giorni."
-        dm_none: "La cronologia della chat personale viene conservata a tempo indeterminato."
-        dm:
-          one: "La cronologia della chat personale è conservata per %{count} giorno."
-          other: "La cronologia della chat personale è conservata per %{count} giorni."
+        indefinitely_short: "indefinitamente"
+        indefinitely_long: "Le impostazioni della chat sono state configurate per conservare i messaggi del canale a tempo indeterminato."
+        short:
+          one: "%{count} giorno"
+          other: "%{count} giorni"
       flags:
         off_topic: "Questo messaggio non è rilevante per la discussione in corso in base alla definizione del titolo del canale e probabilmente dovrebbe essere spostato altrove."
         inappropriate: "Questo messaggio ha contenuti che chiunque considererebbe offensivi o ingiuriosi, oppure contiene violazioni delle <a href=\"%{basePath}/guidelines\">nostre linee guida della community</a>."
@@ -489,7 +536,6 @@ it:
       thread:
         title: "Titolo"
         view_thread: Visualizza thread
-        default_title: "Thread"
         replies:
           one: "%{count} risposta"
           other: "%{count} risposte"
@@ -559,6 +605,9 @@ it:
       types:
         chat_reviewable_message:
           title: "Messaggio di chat segnalato"
+        reviewable_chat_message:
+          title: "Messaggio di chat segnalato"
+          noun: "messaggio di chat"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -594,3 +643,7 @@ it:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

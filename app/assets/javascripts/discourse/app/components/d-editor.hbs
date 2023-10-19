@@ -15,7 +15,11 @@
         />
       {{/if}}
       <form id="form-template-form">
-        <FormTemplateField::Wrapper @id={{this.selectedFormTemplateId}} />
+        <FormTemplateField::Wrapper
+          @id={{this.selectedFormTemplateId}}
+          @initialValues={{@formTemplateInitialValues}}
+          @onSelectFormTemplate={{@onSelectFormTemplate}}
+        />
       </form>
     {{else}}
       <div
@@ -38,16 +42,14 @@
                 />
               {{else}}
                 <DButton
-                  @action={{b.action}}
-                  @type="button"
-                  @actionParam={{b}}
+                  @action={{fn (action b.action) b}}
                   @translatedTitle={{b.title}}
                   @label={{b.label}}
                   @icon={{b.icon}}
-                  @class={{b.className}}
                   @preventFocus={{b.preventFocus}}
-                  @tabindex={{b.tabindex}}
                   @onKeyDown={{this.rovingButtonBar}}
+                  tabindex={{b.tabindex}}
+                  class={{b.className}}
                 />
               {{/if}}
             {{/each}}

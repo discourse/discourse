@@ -1,12 +1,12 @@
-import { isEmpty } from "@ember/utils";
-import I18n from "I18n";
-import { formattedReminderTime } from "discourse/lib/bookmark";
-import { computed } from "@ember/object";
 import Component from "@ember/component";
+import { computed } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { formattedReminderTime } from "discourse/lib/bookmark";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
+import I18n from "discourse-i18n";
 
 export default class BookmarkIcon extends Component {
   tagName = "";

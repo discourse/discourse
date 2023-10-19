@@ -1,11 +1,11 @@
-import { not } from "@ember/object/computed";
 import { A } from "@ember/array";
 import ArrayProxy from "@ember/array/proxy";
-import ColorSchemeColor from "admin/models/color-scheme-color";
 import EmberObject from "@ember/object";
-import I18n from "I18n";
+import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import ColorSchemeColor from "admin/models/color-scheme-color";
 
 class ColorSchemes extends ArrayProxy {}
 

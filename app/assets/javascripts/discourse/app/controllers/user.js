@@ -1,16 +1,16 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
-import User from "discourse/models/user";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
+import { inject as service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { inject as service } from "@ember/service";
-import { dasherize } from "@ember/string";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
+import User from "discourse/models/user";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(CanCheckEmails, {
   router: service(),

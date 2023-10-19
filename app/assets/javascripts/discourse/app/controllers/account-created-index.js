@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
-import getUrl from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import { inject as service } from "@ember/service";
+import getUrl from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   router: service(),

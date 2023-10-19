@@ -1,7 +1,7 @@
-import { acceptance, exists, queryAll } from "../helpers/qunit-helpers";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import userFixtures from "../fixtures/user-fixtures";
+import { acceptance, exists, queryAll } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / Read - bulk actions", function (needs) {
   needs.user();

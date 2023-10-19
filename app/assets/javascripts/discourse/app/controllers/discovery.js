@@ -1,36 +1,31 @@
-import { inject as service } from "@ember/service";
-import { alias, equal, not } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import Category from "discourse/models/category";
+import { alias, equal } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
 
 export default class DiscoveryController extends Controller {
   @service router;
 
-  @controller("discovery/topics") discoveryTopics;
   @controller("navigation/category") navigationCategory;
-  @controller application;
 
   @equal("router.currentRouteName", "discovery.categories")
   viewingCategoriesList;
 
   @alias("navigationCategory.category") category;
   @alias("navigationCategory.noSubcategories") noSubcategories;
-  @not("discoveryTopics.model.canLoadMore") loadedAllItems;
 
   loading = false;
 
   @action
   loadingBegan() {
     this.set("loading", true);
-    this.set("application.showFooter", false);
   }
 
   @action
   loadingComplete() {
     this.set("loading", false);
-    this.set("application.showFooter", this.loadedAllItems);
   }
 
   showMoreUrl(period) {

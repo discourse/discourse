@@ -1,18 +1,18 @@
+import { getOwner } from "@ember/application";
 import { click, currentURL, visit } from "@ember/test-helpers";
-import DiscourseURL from "discourse/lib/url";
-import {
-  acceptance,
-  publishToMessageBus,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
 import { test } from "qunit";
 import sinon from "sinon";
 import {
   getCachedTopicList,
   setCachedTopicList,
 } from "discourse/lib/cached-topic-list";
-import { getOwner } from "discourse-common/lib/get-owner";
+import DiscourseURL from "discourse/lib/url";
+import {
+  acceptance,
+  publishToMessageBus,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 acceptance("Personal Message", function (needs) {
   needs.user();
@@ -82,7 +82,7 @@ acceptance("Personal Message - invite", function (needs) {
     await click(".private-message-map .controls .add-participant-btn");
 
     assert
-      .dom(".d-modal.share-and-invite .invite-user-control")
+      .dom(".d-modal.add-pm-participants .invite-user-control")
       .exists("invite modal is displayed");
   });
 });

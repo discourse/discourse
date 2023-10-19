@@ -214,7 +214,6 @@ es:
       local_login_cannot_be_disabled_if_second_factor_enforced: "No puede desactivar el inicio de sesión local si se aplica 2FA. Deshabilite 2FA antes de desactivar los inicios de sesión locales."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "No puedes activar las cargas S3 porque las cargas S3 ya están activadas globalmente, y activar este nivel de sitio podría causar problemas críticos con las cargas."
       cors_origins_should_not_have_trailing_slash: "No deberías añadir una barra al final (/) a los CORS origins."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Los agentes de usuario deben tener al menos 3 caracteres para evitar limitar la velocidad a usuarios humanos por error."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "No puedes añadir ninguno de los siguientes valores a este ajuste: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
       twitter_summary_large_image_no_svg: "Las imágenes de resumen de Twitter usadas para los metadatos de twitter:image no pueden ser .svg"
@@ -325,7 +324,6 @@ es:
     more_replies:
       one: "%{count} respuesta más"
       other: "%{count} respuestas más"
-    loading: "Cargando discusión..."
     permalink: "Enlace permanente"
     imported_from: "Este es un tema de discusión derivado de la entrada %{link}"
     in_reply_to: "▶ %{username}"
@@ -514,7 +512,7 @@ es:
       Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
     dominating_topic: '¡Has publicado mucho en este tema! Considera la posibilidad de dar a los demás la oportunidad de responder aquí y debatir también entre ellos.'
     get_a_room: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje personal directamente?
-    dont_feed_the_trolls: Esta publicación ya ha sido marcada para llamar la atención del moderador. ¿Seguro que deseas responder a ella? Las respuestas a contenido negativo tienden a fomentar un comportamiento más negativo.
+    dont_feed_the_trolls: Este mensaje ya ha sido marcado para llamar la atención del moderador. ¿Seguro que deseas responder a él? Las respuestas a contenido negativo tienden a fomentar un comportamiento más negativo.
     too_many_replies: |
       ### Has llegado al límite de respuestas en este tema
 
@@ -668,7 +666,6 @@ es:
     media_placeholder:
       blocked_hotlinked_title: "Medio alojado en otro sitio. Haz clic para abrir en una nueva pestaña."
       blocked_hotlinked: "Medio externo"
-    hidden_bidi_character: "Los caracteres bidireccionales pueden cambiar el orden en el que se muestra el texto. Esto podría usarse para ocultar código malintencionado."
     has_likes:
       one: "%{count} me gusta"
       other: "%{count} Me gusta"
@@ -894,8 +891,6 @@ es:
   draft_backup:
     pm_title: "Borradores de respaldo de temas en curso"
     pm_body: "Tema que contiene borradores de respaldo"
-  user_activity:
-    no_log_search_queries: "Los registros de búsquedas están desactivados (un administrador los puede activar en los ajustes)"
   email_settings:
     pop3_authentication_error: "Ha habido un problema con las credenciales POP3 proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
     imap_authentication_error: "Ha habido un problema con las credenciales IMAP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
@@ -1364,7 +1359,6 @@ es:
         qtt_like: Me gusta recibidos
       description: "Los 10 usuarios que han recibido más me gusta de varias personas."
   dashboard:
-    group_email_credentials_warning: 'Hay un problema con las credenciales del correo electrónico del grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No se enviarán mensajes desde la bandeja de entrada del grupo hasta que se solucione el problema. %{error}'
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo config/database.yml está utilizando el hostname localhost predeterminado. Actualízalo para usar el hostname de tu sitio."
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, tal como el envío de correos electrónicos, se están ejecutando de forma desincronizada por sidekiq. Asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Puedes obtener más información sobre Sidekiq aquí</a>.'
@@ -1393,7 +1387,6 @@ es:
     unreachable_themes: "No pudimos verificar actualizaciones de los siguientes temas:"
     watched_word_regexp_error: "Expresión regular no válida para las palabras vigiladas con acción de «%{action}». Por favor, revisa los <a href='%{base_path}/admin/customize/watched_words'>ajustes sobre palabras vigiladas</a> o desactiva el ajuste «watched words regular expressions»."
     v3_analytics_deprecated: "Tu Discourse utiliza actualmente Google Analytics 3, que dejará de ser compatible después de julio de 2023. <a href='https://meta.discourse.org/t/260498'>Actualízate a Google Analytics 4</a> ahora para seguir recibiendo información y análisis valiosos sobre el rendimiento de tu sitio web."
-    legacy_navigation_menu_deprecated: "Tu Discourse utiliza actualmente el menú de navegación «heredado» que <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>se eliminará en la primera versión beta de Discourse 3.2</a>. Migra al nuevo menú de navegación actualizando tu <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>configuración del menú de navegación del sitio</a> a «barra lateral» o «encabezado desplegable»."
   site_settings:
     allow_bulk_invite: "Permitir invitaciones en masa subiendo un archivo CSV"
     disabled: "desactivado"
@@ -1404,9 +1397,6 @@ es:
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
     set_locale_from_accept_language_header: "establecer el idioma de la interfaz para usuarios anónimos desde los encabezados de idioma del navegador web"
     support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda."
-    min_post_length: "Extensión mínima de las publicaciones en número de caracteres"
-    min_first_post_length: "Extensión mínima en la primera publicación (cuerpo del tema) en número de caracteres"
-    min_personal_message_post_length: "Longitud mínima de una publicación en número de caracteres para mensajes"
     max_post_length: "Extensión máxima de las publicaciones en número de caracteres"
     topic_featured_link_enabled: "Activar la publicación de temas a partir de un enlace."
     show_topic_featured_link_in_digest: "Mostrar el enlace destacado del tema en el correo electrónico de resumen."
@@ -1526,7 +1516,6 @@ es:
     tl2_additional_flags_per_day_multiplier: "Aumenta el límite de reportes por día para nc2 (miembro) al multiplicar con este número"
     tl3_additional_flags_per_day_multiplier: "Aumenta el límite de reportes por día para nc3 (regular) al multiplicar con este número"
     tl4_additional_flags_per_day_multiplier: "Aumenta el límite de reportes por día para nc4 (líder) al multiplicar con este número"
-    num_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo se denuncian como spam por num_spam_flags_to_silence_new_user usuarios diferentes, ocultar todas sus publicaciones y evitar que publique en el futuro. Establece el valor en 0 para desactivar."
     num_tl3_flags_to_silence_new_user: "Si las publicaciones de un usuario nuevo obtienen este número de denuncias de num_tl3_users_to_silence_new_user diferentes usuarios con nivel de confianza 3, se ocultarán todas sus publicaciones y no podrá publicar más en un futuro. Establece el valor en 0 para desactivar."
     num_tl3_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo reciben num_tl3_flags_to_silence_new_user denuncias de este número de usuarios de nivel 3 de confianza, ocultar todas sus publicaciones y prevenir futuras publicaciones. Establece el valor en 0 para desactivar."
     notify_mods_when_user_silenced: "Si un usuario es silenciado automáticamente, enviar un mensaje a todos los moderadores."
@@ -1540,7 +1529,6 @@ es:
     must_approve_users: "El personal debe aprobar todas las cuentas nuevas antes de que se les permita acceder al sitio."
     invite_code: "El usuario debe introducir este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
     approve_suspect_users: "Mandar usuarios sospechosos a la lista de revisión. Se consideran usuarios sospechosos aquellos que hayan introducido una biografía o página web, pero que no hayan registrado ninguna actividad de lectura."
-    review_every_post: "Todas las publicaciones deben ser revisadas. ¡ADVERTENCIA! NO SE RECOMIENDA PARA SITIOS CON MUCHA ACTIVIDAD."
     pending_users_reminder_delay_minutes: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de minutos. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
@@ -1548,7 +1536,6 @@ es:
     ga_universal_tracking_code: "ID de código de seguimiento de Google Universal Analytics, ej.: UA-12345678-9. Ver <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nombre de dominio para Google Universal Analytics. Ver <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Activar seguimiento multi-dominio de Google Universal Analytics. Los enlaces salientes a estos dominios tendrán la id de cliente añadida a ellos. Ver <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "ID de contenedor de Google Tag Manager. Ej.: GTM-ABCDEF. <br/>Nota: puede que los scripts de terceros cargados por GTM tengan que ser añadidos a la lista de admitidos en «content security policy script src»."
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permitir que los moderadores creen y gestionen grupos y categorías"
     moderators_change_post_ownership: "Permitir que los moderadores cambien el autor de las publicaciones."
@@ -1562,11 +1549,8 @@ es:
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
     slow_down_crawler_user_agents: 'Agentes de usuario de rastreadores web a los que se les debe limitar la velocidad según lo configurado en el ajuste «slow down crawler rate». Cada valor debe tener al menos 3 caracteres.'
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents es especificado, esta proporción aplicará para todos los crawlers (número de segundos de demora entre solicitudes)"
-    content_security_policy: "Activar la política de seguridad de contenido (CSP)"
-    content_security_policy_report_only: "Activar solo el informe de la política de seguridad de contenido (CPS)"
     content_security_policy_collect_reports: "Activar la recolección de denuncias de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restringir quién puede incrustar este sitio en iframes a través de CSP. Controla los hosts permitidos en <a href='%{base_path}/admin/customize/embedding'>Insertado</a>"
-    content_security_policy_script_src: "Fuentes de script adicionales en la lista de permitidos. El host actual y CDN se incluyen por defecto. Leer <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar ataques XSS con la Política de Seguridad de Contenidos.</a>"
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
     include_secure_categories_in_tag_counts: "Si está activada, el recuento de temas de una etiqueta incluirá los temas que estén en categorías de lectura restringida para todos los usuarios. Si está desactivada, a los usuarios normales solo se les mostrará un recuento de temas para una etiqueta en la que todos los temas estén en categorías públicas."
     display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
@@ -1689,7 +1673,6 @@ es:
     enable_safe_mode: "Permitir a los usuarios ingresar al modo seguro para depurar plugins."
     rate_limit_create_topic: "Después de crear un tema, los usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_create_post: "Después de realizar una publicación, los usuarios deben esperar (n) segundos antes de crear otra publicación."
-    rate_limit_new_user_create_topic: "Después de crear un tema, los nuevos usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_new_user_create_post: "Después de realizar una publicación, los nuevos usuarios deben esperar (n) segundos antes de crear otra publicación."
     max_likes_per_day: "Máximo número de me gusta por usuario por día."
     max_flags_per_day: "Máximo número de denuncias por usuario por día."
@@ -1998,6 +1981,8 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar a todos los visitantes un mensaje global para URGENCIAS o EMERGENCIAS que no se pueda ocultar. Deja este campo en blanco para quitarlo (puedes usar HTML)."
     disable_system_edit_notifications: "Desactivar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
+    disable_category_edit_notifications: "Desactiva las notificaciones para las ediciones de categorías de temas. Esto incluye los temas «publicados» (por ejemplo, borradores compartidos)."
+    disable_tags_edit_notifications: "Desactiva las notificaciones para las ediciones de etiquetas de temas. Esto incluye los temas «publicados» (por ejemplo, borradores compartidos)."
     notification_consolidation_threshold: "Cantidad de me gusta o notificaciones de solicitud de membresía recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para desactivar."
     likes_notification_consolidation_window_mins: "Minutos durante los que las notificaciones se consolidan en una sola notificación una vez que se haya alcanzado el limite. El límite se puede configurar en «SiteSetting.notification_consolidation_threshold»."
     automatically_unpin_topics: "Desanclar automáticamente cuando el usuario llega al final del tema."
@@ -2107,15 +2092,12 @@ es:
     default_sidebar_switch_panel_position: "Posición de los botones del panel conmutador de la barra lateral"
     retain_web_hook_events_period_days: "Número de días para retener registros de eventos de web hook."
     retry_web_hook_events: "Reintentar automáticamente 4 veces los eventos del web hook fallidos. Los intervalos de tiempo entre los reintentos son 1, 5, 25 y 125 minutos."
-    revoke_api_keys_days: "Número de días antes de que una clave de API sin usar sea revocada automáticamente (0 para nunca)"
-    allow_user_api_keys: "Permitir que se generen claves de API de usuario"
     allow_user_api_key_scopes: "Lista de ámbitos permitidos para las claves API de usuario"
     min_trust_level_for_user_api_key: |
       Nivel de confianza requerido para la generación de claves API de usuario.<br>
       <b>ADVERTENCIA</b>: Cambiar el nivel de confianza impedirá a los usuarios con un nivel de confianza inferior iniciar sesión a través de Discourse Hub
     allowed_user_api_auth_redirects: "URL permitida para autenticar redirección para claves API de usuario. Símbolo comodín * puede ser usado para que coincida cualquier parte de la misma (por ejemplo www.ejemplo.com/*)."
     allowed_user_api_push_urls: "URLs permitidas para el push del servidor al API de usuario"
-    expire_user_api_keys_days: "Número de días antes de que la clave API del usuario caduque automáticamente (0 para nunca)"
     tagging_enabled: "¿Activar etiquetas para los temas?"
     min_trust_to_create_tag: "El nivel de confianza mínimo requerido para crear una etiqueta."
     max_tags_per_topic: "El número máximo de etiquetas que se pueden añadir a un tema."
@@ -2134,7 +2116,6 @@ es:
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
     create_post_for_category_and_tag_changes: "Crear una pequeña publicación de acción cuando cambie la categoría o las etiquetas de un tema"
     watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy observando y que también pertenezcan a una que haya silenciado"
-    company_name: "Nombre de la compañía"
     governing_law: "Ley que rige"
     city_for_disputes: "Ciudad para disputas"
     shared_drafts_category: "Habilite la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del personal."
@@ -2148,7 +2129,7 @@ es:
     enable_sitemap: "Generar un sitemap para el sitio e incluirlo en el archivo robots.txt."
     sitemap_page_size: "Número de URLs que incluir en cada página del sitemap. Máximo de 50.000"
     enable_user_status: "(experimental) Permitir a los usuarios establecer un mensaje de estado personalizado (emoji + descripción)."
-    enable_user_tips: "Activar nuevos consejos de usuario que describan las funciones clave a los usuarios"
+    enable_user_tips: "Habilitar nuevos consejos de usuario que describan las funciones clave a los usuarios"
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
@@ -2167,9 +2148,8 @@ es:
     navigation_menu: "Determina qué menú de navegación utilizar. La barra lateral y la navegación del encabezado son personalizables por los usuarios. La opción heredada está disponible para compatibilidad con versiones anteriores."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
-    enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Utiliza el nuevo sistema de autocompletado #hashtag para categorías y etiquetas que muestra el elemento seleccionado de forma diferente y ha mejorado la búsqueda"
-    experimental_new_new_view_groups: 'EXPERIMENTAL: Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    enable_custom_sidebar_sections: "EXPERIMENTAL: Activa secciones personalizadas de la barra lateral"
+    experimental_new_new_view_groups: 'EXPERIMENTAL: Habilita una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
+    enable_custom_sidebar_sections: "EXPERIMENTAL: Habilita secciones personalizadas de la barra lateral"
     experimental_topics_filter: "EXPERIMENTAL: Habilita la ruta del filtro de temas experimentales en /filter"
     experimental_search_menu_groups: "EXPERIMENTAL: Habilita el nuevo menú de búsqueda que se ha actualizado para utilizar glimmer"
     enable_experimental_lightbox: "EXPERIMENTAL: Sustituye el lightbox de imágenes por defecto por el diseño renovado."
@@ -2404,18 +2384,6 @@ es:
   admin:
     email:
       sent_test: "¡enviado!"
-    user:
-      merge_user:
-        updating_username: "Actualizando nombre de usuario..."
-        changing_post_ownership: "Cambiando la propiedad de la publicación ..."
-        merging_given_daily_likes: "Fusionando los me gusta diarios dados..."
-        merging_post_timings: "Fusionando tiempos de publicación ..."
-        merging_user_visits: "Fusionando visitas de usuarios..."
-        updating_site_settings: "Actualizando ajustes del sitio..."
-        updating_user_stats: "Actualizando estadísticas de los usuarios..."
-        merging_user_attributes: "Fusionando atributos de usuario..."
-        updating_user_ids: "Actualizando identificadores de usuario..."
-        deleting_source_user: "Eliminando usuario de origen..."
   user:
     deactivated: "Ha sido desactivado debido a muchos correod electrónicos rechazados a «%{email}»."
     deactivated_by_staff: "Desactivado por el personal"
@@ -4699,11 +4667,9 @@ es:
         description: "Restaurar la publicación para que los usuarios puedan verla."
       agree_and_hide:
         title: "Ocultar publicación"
-        description: "Aceptar la denuncia y ocultar esta publicación + enviar automáticamente al usuario un mensaje instándole a editarla."
+        description: "Aceptar la denuncia y ocultar esta entrada + enviar automáticamente al usuario un mensaje instándole a editarla."
       delete_single:
         title: "Eliminar"
-      delete:
-        title: "Eliminar..."
       delete_and_ignore:
         title: "Ignorar la denuncia y eliminar la publicación"
         description: "Ignorar la denuncia quitándola de la cola y eliminar la publicación; si es la primera publicación, eliminar también el tema. "
@@ -4738,7 +4704,6 @@ es:
       approve_user:
         title: "Aprobar usuario"
       reject_user:
-        title: "Eliminar usuario..."
         delete:
           title: "Eliminar usuario"
           description: "El usuario será eliminado del foro."
@@ -4747,7 +4712,6 @@ es:
           description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
       reject:
         title: "Rechazar"
-        bundle_title: "Rechazar..."
       reject_and_suspend:
         title: "Rechazar y suspender usuario"
       reject_and_silence:

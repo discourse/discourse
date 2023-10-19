@@ -1,14 +1,15 @@
-import { computed } from "@ember/object";
 import Controller, { inject as controller } from "@ember/controller";
-import AdminDashboard from "admin/models/admin-dashboard";
-import I18n from "I18n";
-import PeriodComputationMixin from "admin/mixins/period-computation";
-import Report from "admin/models/report";
-import discourseComputed from "discourse-common/utils/decorators";
+import { action, computed } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { setting } from "discourse/lib/computed";
 import getURL from "discourse-common/lib/get-url";
 import { makeArray } from "discourse-common/lib/helpers";
-import { setting } from "discourse/lib/computed";
-import { inject as service } from "@ember/service";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import PeriodComputationMixin from "admin/mixins/period-computation";
+import AdminDashboard from "admin/models/admin-dashboard";
+import Report from "admin/models/report";
+import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 function staticReport(reportType) {
   return computed("reports.[]", function () {
@@ -19,6 +20,7 @@ function staticReport(reportType) {
 export default class AdminDashboardGeneralController extends Controller.extend(
   PeriodComputationMixin
 ) {
+  @service modal;
   @service router;
   @service siteSettings;
   @controller("exception") exceptionController;
@@ -153,5 +155,21 @@ export default class AdminDashboardGeneralController extends Controller.extend(
 
   _reportsForPeriodURL(period) {
     return getURL(`/admin?period=${period}`);
+  }
+
+  @action
+  setCustomDateRange(startDate, endDate) {
+    this.setProperties({ startDate, endDate });
+  }
+
+  @action
+  openCustomDateRangeModal() {
+    this.modal.show(CustomDateRangeModal, {
+      model: {
+        startDate: this.startDate,
+        endDate: this.endDate,
+        setCustomDateRange: this.setCustomDateRange,
+      },
+    });
   }
 }

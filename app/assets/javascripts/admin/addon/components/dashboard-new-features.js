@@ -1,6 +1,6 @@
-import { classNameBindings, classNames } from "@ember-decorators/component";
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
+import { classNameBindings, classNames } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 
 @classNames("section", "dashboard-new-features")

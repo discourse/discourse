@@ -1,3 +1,8 @@
+import Component from "@ember/component";
+import { action } from "@ember/object";
+import { equal, or, readOnly } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import ItsATrap from "@discourse/itsatrap";
 import {
   BUMP_TYPE,
   CLOSE_AFTER_LAST_POST_STATUS_TYPE,
@@ -6,20 +11,15 @@ import {
   DELETE_STATUS_TYPE,
   OPEN_STATUS_TYPE,
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
-} from "discourse/controllers/edit-topic-timer";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
-import discourseComputed from "discourse-common/utils/decorators";
-import { equal, or, readOnly } from "@ember/object/computed";
-import I18n from "I18n";
-import { action } from "@ember/object";
-import Component from "@ember/component";
-import { isEmpty } from "@ember/utils";
+} from "discourse/components/modal/edit-topic-timer";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
-import ItsATrap from "@discourse/itsatrap";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export default Component.extend({
   statusType: readOnly("topicTimer.status_type"),

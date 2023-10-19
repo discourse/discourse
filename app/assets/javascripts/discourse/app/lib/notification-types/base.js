@@ -1,8 +1,8 @@
-import { formatUsername, postUrl } from "discourse/lib/utilities";
-import { userPath } from "discourse/lib/url";
-import { emojiUnescape } from "discourse/lib/text";
 import { htmlSafe } from "@ember/template";
-import I18n from "I18n";
+import { emojiUnescape } from "discourse/lib/text";
+import { userPath } from "discourse/lib/url";
+import { formatUsername, postUrl } from "discourse/lib/utilities";
+import I18n from "discourse-i18n";
 
 export default class NotificationTypeBase {
   constructor({ notification, currentUser, siteSettings, site }) {

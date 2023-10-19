@@ -1542,6 +1542,11 @@ RSpec.describe Guardian do
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(user).can_convert_topic?(topic)).to be_falsey
     end
+
+    it "returns true if user is not in personal_message_enabled_groups but they are still admin" do
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_truthy
+    end
   end
 
   describe "can_edit?" do
@@ -4389,7 +4394,7 @@ RSpec.describe Guardian do
 
     context "when attempting to destroy your own reviewable" do
       it "returns true" do
-        queued_post = Fabricate(:reviewable_queued_post, created_by: user)
+        queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
         env =
           create_request_env(path: "/review/#{queued_post.id}.json").merge(
             { "REQUEST_METHOD" => "DELETE" },

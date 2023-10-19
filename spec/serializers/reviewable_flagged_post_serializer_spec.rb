@@ -11,6 +11,7 @@ RSpec.describe ReviewableFlaggedPostSerializer do
     expect(json[:cooked]).to eq(p0.cooked)
     expect(json[:raw]).to eq(p0.raw)
     expect(json[:target_url]).to eq(Discourse.base_url + p0.url)
+    expect(json[:created_from_flag]).to eq(true)
   end
 
   it "works when the topic is deleted" do

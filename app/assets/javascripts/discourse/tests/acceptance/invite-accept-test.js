@@ -1,12 +1,12 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import PreloadStore from "discourse/lib/preload-store";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import PreloadStore from "discourse/lib/preload-store";
-import I18n from "I18n";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 function setAuthenticationData(hooks, json) {
   hooks.beforeEach(() => {

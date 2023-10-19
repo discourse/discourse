@@ -14,7 +14,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
   context "as unauthorized user" do
     before { SiteSetting.chat_allowed_groups = Fabricate(:group).id }
 
-    it "can’t see channel members" do
+    it "can't see channel members" do
       chat_page.visit_channel_members(channel_1)
 
       expect(page).to have_current_path("/latest")
@@ -23,10 +23,10 @@ RSpec.describe "Channel - Info - Members page", type: :system do
 
   context "as authorized user" do
     context "with no members" do
-      it "redirects to about page" do
+      it "redirects to settings page" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/about")
+        expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
       end
     end
 
@@ -44,15 +44,15 @@ RSpec.describe "Channel - Info - Members page", type: :system do
 
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_selector(".channel-members-view__list-item", count: 50, wait: 15)
+        expect(page).to have_selector(".chat-channel-members__list-item", count: 60)
 
-        scroll_to(find(".channel-members-view__list-item:nth-child(50)"))
+        scroll_to(find(".chat-channel-members__list-item:nth-child(60)"))
 
-        expect(page).to have_selector(".channel-members-view__list-item", count: 100, wait: 15)
+        expect(page).to have_selector(".chat-channel-members__list-item", count: 100)
 
-        scroll_to(find(".channel-members-view__list-item:nth-child(100)"))
+        scroll_to(find(".chat-channel-members__list-item:nth-child(100)"))
 
-        expect(page).to have_selector(".channel-members-view__list-item", count: 100, wait: 15)
+        expect(page).to have_selector(".chat-channel-members__list-item", count: 100)
       end
 
       context "with filter" do
@@ -62,9 +62,9 @@ RSpec.describe "Channel - Info - Members page", type: :system do
           Jobs::Chat::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
 
           chat_page.visit_channel_members(channel_1)
-          find(".channel-members-view__search-input").fill_in(with: "cat")
+          find(".chat-channel-members__filter").fill_in(with: "cat")
 
-          expect(page).to have_selector(".channel-members-view__list-item", count: 1, text: "cat")
+          expect(page).to have_selector(".chat-channel-members__list-item", count: 1, text: "cat")
         end
       end
     end

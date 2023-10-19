@@ -1,6 +1,22 @@
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
-export default function prepareFormTemplateData(form) {
+export function getFormTemplateObject(form) {
+  const formData = new FormData(form);
+
+  const formObject = {};
+  formData.forEach((value, key) => {
+    formObject[key] = value;
+  });
+
+  return formObject;
+}
+
+export default function prepareFormTemplateData(form, formTemplate) {
+  const labelMap = formTemplate.reduce((acc, field) => {
+    acc[field.id] = field.attributes.label;
+    return acc;
+  }, {});
+
   const formData = new FormData(form);
 
   // Validate the form template
@@ -36,7 +52,7 @@ export default function prepareFormTemplateData(form) {
     const key = Object.keys(item)[0];
     const value = item[key];
     if (value) {
-      return `### ${key}\n${value}`;
+      return `### ${labelMap[key]}\n${value}`;
     }
   });
 

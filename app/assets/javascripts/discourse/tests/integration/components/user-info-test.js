@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | user-info", function (hooks) {
@@ -13,8 +13,8 @@ module("Integration | Component | user-info", function (hooks) {
 
     await render(hbs`<UserInfo @user={{this.currentUser}} />`);
 
-    assert.strictEqual(query(".name.bold").innerText.trim(), "Evil Trout");
-    assert.strictEqual(query(".username.margin").innerText.trim(), "eviltrout");
+    assert.strictEqual(query(".name").innerText.trim(), "Evil Trout");
+    assert.strictEqual(query(".username").innerText.trim(), "eviltrout");
   });
 
   test("prioritized username", async function (assert) {
@@ -23,8 +23,8 @@ module("Integration | Component | user-info", function (hooks) {
 
     await render(hbs`<UserInfo @user={{this.currentUser}} />`);
 
-    assert.strictEqual(query(".username.bold").innerText.trim(), "eviltrout");
-    assert.strictEqual(query(".name.margin").innerText.trim(), "Evil Trout");
+    assert.strictEqual(query(".username").innerText.trim(), "eviltrout");
+    assert.strictEqual(query(".name").innerText.trim(), "Evil Trout");
   });
 
   test("includeLink", async function (assert) {
@@ -33,10 +33,12 @@ module("Integration | Component | user-info", function (hooks) {
     );
 
     this.set("includeLink", true);
-    assert.ok(exists(`.username a[href="/u/${this.currentUser.username}"]`));
+    assert.ok(exists(`.name-line a[href="/u/${this.currentUser.username}"]`));
 
     this.set("includeLink", false);
-    assert.notOk(exists(`.username a[href="/u/${this.currentUser.username}"]`));
+    assert.notOk(
+      exists(`.name-line a[href="/u/${this.currentUser.username}"]`)
+    );
   });
 
   test("includeAvatar", async function (assert) {
@@ -118,31 +120,17 @@ module("Integration | Component | user-info", function (hooks) {
       .exists();
   });
 
-  test("doesn't show status tooltip by default", async function (assert) {
-    this.currentUser.name = "Evil Trout";
-    this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
-
-    await render(
-      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} />`
-    );
-    await triggerEvent(query(".user-status-message"), "mouseenter");
-
-    assert.notOk(
-      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
-    );
-  });
-
   test("shows status tooltip if enabled", async function (assert) {
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
-      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} @showStatusTooltip={{true}} />`
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}}  /><DInlineTooltip />`
     );
-    await triggerEvent(query(".user-status-message"), "mouseenter");
+    await triggerEvent(query(".user-status-message"), "mousemove");
 
-    assert.ok(
-      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
-    );
+    assert
+      .dom("[data-content][data-identifier='user-status-message-tooltip']")
+      .exists();
   });
 });

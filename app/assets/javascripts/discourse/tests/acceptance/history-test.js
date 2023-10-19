@@ -1,6 +1,6 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const revisionResponse = {
   created_at: "2021-11-24T10:59:36.163Z",

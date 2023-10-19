@@ -1,8 +1,11 @@
+import { inject as service } from "@ember/service";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
+  router: service(),
+
   model(params) {
     return Category.reloadCategoryWithPermissions(
       params,
@@ -13,7 +16,7 @@ export default DiscourseRoute.extend({
 
   afterModel(model) {
     if (!model.can_edit) {
-      this.replaceWith("/404");
+      this.router.replaceWith("/404");
       return;
     }
   },

@@ -1,3 +1,10 @@
+import { getOwner } from "@ember/application";
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { setupTest } from "ember-qunit";
+import Handlebars from "handlebars";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   caretRowCol,
   clipboardCopyAsync,
@@ -15,15 +22,8 @@ import {
   slugify,
   toAsciiPrintable,
 } from "discourse/lib/utilities";
-import sinon from "sinon";
-import { module, test } from "qunit";
-import Handlebars from "handlebars";
-import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utilities", function (hooks) {
   setupTest(hooks);

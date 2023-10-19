@@ -258,7 +258,6 @@ hr:
       one: "još %{count} odgovor"
       few: "još %{count} odgovora"
       other: "još %{count} odgovora"
-    loading: "Učitavanje rasprave"
     permalink: "Poveznica"
     imported_from: "Ovo je prateća tema rasprave za originalni unos na %{link}"
     in_reply_to: "▶ %{username}"
@@ -482,7 +481,6 @@ hr:
     media_placeholder:
       blocked_hotlinked_title: "Mediji smješteni na drugom mjestu. Kliknite za otvaranje u novoj kartici."
       blocked_hotlinked: "Vanjski mediji"
-    hidden_bidi_character: "Dvosmjerni znakovi mogu promijeniti redoslijed prikaza teksta. To se može koristiti za prikrivanje zlonamjernog koda."
     has_likes:
       one: "%{count} Like"
       few: "%{count} Likeova"
@@ -1078,9 +1076,6 @@ hr:
     allow_user_locale: "Dopustite korisnicima da odaberu vlastite postavke jezika sučelja"
     set_locale_from_accept_language_header: "postaviti jezik sučelja za anonimne korisnike iz jezičnih zaglavlja njihovih web preglednika"
     support_mixed_text_direction: "Podržava mješoviti smjer teksta slijeva nadesno i zdesna nalijevo."
-    min_post_length: "Minimalna dopuštena duljina posta u znakovima"
-    min_first_post_length: "Minimalna dopuštena duljina prve objave (tijelo teme) u znakovima"
-    min_personal_message_post_length: "Minimalna dopuštena duljina posta u znakovima za poruke"
     max_post_length: "Najveća dopuštena duljina posta u znakovima"
     topic_featured_link_enabled: "Omogući objavljivanje poveznice s temama."
     show_topic_featured_link_in_digest: "Pokažite istaknutu vezu na temu u sažetku e-pošte."
@@ -1145,7 +1140,6 @@ hr:
     tl2_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl2 (član) množenjem s ovim brojem"
     tl3_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl3 (regular) množenjem s ovim brojem"
     tl4_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl4 (voditelj) množenjem s ovim brojem"
-    num_users_to_silence_new_user: "Ako postovi novog korisnika dobiju num_spam_flags_to_silence_new_user zastavice neželjene pošte od toliko različitih korisnika, sakrijte sve njihove postove i spriječite buduće objavljivanje. 0 za onemogućavanje."
     num_tl3_flags_to_silence_new_user: "Ako postovi novog korisnika dobiju ovoliko oznaka od num_tl3_users_to_silence_new_user različitih korisnika razine povjerenja 3, sakrijte sve njihove postove i spriječite buduća objavljivanja. 0 za onemogućavanje."
     num_tl3_users_to_silence_new_user: "Ako postovi novog korisnika dobiju oznake num_tl3_flags_to_silence_new_user od toliko različitih korisnika razine povjerenja 3, sakrijte sve njihove postove i spriječite buduća objavljivanja. 0 za onemogućavanje."
     notify_mods_when_user_silenced: "Ako je korisnik automatski utišan, pošaljite poruku svim moderatorima."
@@ -1159,7 +1153,6 @@ hr:
     must_approve_users: "Osoblje mora odobriti sve nove korisničke račune prije nego im se dopusti pristup stranici."
     invite_code: "Korisnik mora upisati ovaj kod kako bi mu se omogućila registracija računa, zanemaruje se kada je prazan (neosjetljivo je na velika i mala slova)"
     approve_suspect_users: "Dodajte sumnjive korisnike u red čekanja za pregled. Sumnjivi korisnici ušli su u biografiju/web stranicu, ali nemaju aktivnosti čitanja."
-    review_every_post: "Sve objave moraju biti pregledane. UPOZORENJE! NE PREPORUČUJE SE ZA PROMETNA MJESTA."
     pending_users_reminder_delay_minutes: "Obavijesti moderatore ako novi korisnici čekaju na odobrenje dulje od ovoliko minuta. Postavite na -1 da biste onemogućili obavijesti."
     persistent_sessions: "Korisnici će ostati prijavljeni kada se web preglednik zatvori"
     maximum_session_age: "Korisnik će ostati prijavljen n sati od zadnje posjete"
@@ -1167,7 +1160,6 @@ hr:
     ga_universal_tracking_code: "Google Universal Analytics ID koda za praćenje, npr.: UA-12345678-9; pogledajte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics naziv domene, npr.: mysite.com; pogledajte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Omogućite Google Universal Analytics praćenje među domenama. Odlazne veze na te domene imat će dodan ID klijenta. Pogledajte <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googleov vodič za praćenje među domenama.</a>"
-    gtm_container_id: "ID spremnika Google upravitelja oznaka. npr.: GTM-ABCDEF. <br/>Napomena: Skripte trećih strana koje učitava GTM možda će morati biti stavljene na popis dopuštenih u 'src skripte sigurnosne politike sadržaja'."
     enable_escaped_fragments: "Vratite se na Googleov Ajax-Crawling API ako se ne otkrije alat za indeksiranje. Pogledajte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Dopustite moderatorima stvaranje i upravljanje kategorijama i grupama"
     moderators_change_post_ownership: "Dopusti moderatorima promjenu vlasništva posta"
@@ -1424,7 +1416,6 @@ hr:
     suppress_overlapping_tags_in_list: "Ako oznake odgovaraju točnim riječima u naslovima tema, nemojte prikazivati oznaku"
     remove_muted_tags_from_latest: "Ne prikazuj teme označene samo prigušenim oznakama na najnovijem popisu tema."
     force_lowercase_tags: "Prisilno navedite da sve nove oznake budu ispisane malim slovima."
-    company_name: "Ime tvrtke"
     governing_law: "Mjerodavno pravo"
     city_for_disputes: "Grad za sporove"
     shared_drafts_category: "Omogućite značajku Dijeljene skice određivanjem kategorije za skice tema. Teme u ovoj kategoriji bit će potisnute s popisa tema za korisnike osoblja."
@@ -1454,7 +1445,6 @@ hr:
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
     splash_screen: "Prikazuje privremeni zaslon za učitavanje dok se sredstva web-mjesta učitavaju"
     navigation_menu: "Odredite koji navigacijski izbornik koristiti. Bočnu traku i navigaciju u zaglavlju korisnici mogu prilagoditi. Naslijeđena opcija dostupna je za kompatibilnost s prethodnim verzijama."
-    enable_experimental_hashtag_autocomplete: "EKSPERIMENTALNO: Upotrijebite novi #hashtag sustav automatskog dovršavanja za kategorije i oznake koji drugačije prikazuje odabranu stavku i ima poboljšano pretraživanje"
     errors:
       invalid_css_color: "Nevažeća boja. Unesite naziv boje ili hex vrijednost."
       invalid_email: "Nevažeća adresa e-pošte."
@@ -1925,7 +1915,6 @@ hr:
       approve:
         title: "Odobri"
       reject_user:
-        title: "Obriši korisnika..."
         delete:
           title: "Obriši korisnika"
       reject:

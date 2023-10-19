@@ -1,6 +1,6 @@
-import I18n from "I18n";
-import { createWidget } from "discourse/widgets/widget";
 import { longDate } from "discourse/lib/formatter";
+import { createWidget } from "discourse/widgets/widget";
+import I18n from "discourse-i18n";
 
 function mult(val) {
   return 60 * 50 * 1000 * val;

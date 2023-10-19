@@ -10,24 +10,7 @@
 
     .channels-list-container {
       background: var(--secondary);
-    }
-
-    .chat-channel-row {
-      height: 4em;
-      margin: 0;
-      padding: 0 1.5rem;
-      border-radius: 0;
-      border-bottom: 1px solid var(--primary-low);
-
-      .chat-channel-metadata {
-        .chat-channel-unread-indicator {
-          font-size: var(--font-down-2);
-          margin-top: 0.25rem;
-        }
-        &__date {
-          font-size: var(--font-down-2);
-        }
-      }
+      overflow: hidden;
     }
 
     .chat-channel-divider {
@@ -50,9 +33,6 @@
     }
 
     .chat-channel-title {
-      width: 100%;
-      overflow: hidden;
-
       &__users-count {
         font-size: var(--font-up-2);
         & + .chat-channel-title__name {

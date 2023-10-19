@@ -10,6 +10,9 @@ sv:
       site_settings:
         categories:
           chat: Chatt
+        chat_separate_sidebar_mode:
+          always: "Alltid"
+          never: "Aldrig"
       logs:
         staff_actions:
           actions:
@@ -21,11 +24,8 @@ sv:
           descriptions:
             chat:
               create_message: "Skapa ett chattmeddelande i en angiven kanal."
-    about:
-      chat_messages_count: "Chattmeddelanden"
-      chat_channels_count: "Chattkanaler"
-      chat_users_count: "Chattanvändare"
     chat:
+      deleted_chat_username: raderat
       dates:
         time_tiny: "h:mm"
       all_loaded: "Visar alla meddelanden"
@@ -81,6 +81,7 @@ sv:
         create: "Ny kanal"
       click_to_join: "Klicka här för att se tillgängliga kanaler."
       close: "Stäng"
+      remove: "Ta bort"
       collapse: "Komprimera chattruta"
       expand: "Expandera chattlådan"
       confirm_flag: "Är du säker på att du vill flagga %{username}:s meddelande?"
@@ -124,27 +125,10 @@ sv:
           one: "Senaste timmen"
           other: "Senaste %{count} timmarna"
       mention_warning:
-        dismiss: "avfärda"
-        cannot_see: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
-        cannot_see_multiple:
-          one: "%{username} och %{count} annan användare kan inte komma åt den här kanalen och har inte aviserats."
-          other: "%{username} och %{count} andra användare kan inte komma åt den här kanalen och har inte aviserats."
         invitations_sent:
           one: "Inbjudan skickad"
           other: "Inbjudningar skickade"
         invite: "Bjud in till kanal"
-        without_membership: "%{username} har inte gått med i den här kanalen."
-        without_membership_multiple:
-          one: "%{username} och %{count} annan användare har inte gått med i den här kanalen."
-          other: "%{username} och %{count} andra användare har inte gått med i den här kanalen."
-        group_mentions_disabled: "%{group_name} tillåter inte omnämnanden."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} och ytterligare %{count} grupp tillåter inte omnämnanden."
-          other: "%{group_name} och ytterligare %{count} grupper tillåter inte omnämnanden."
-        too_many_members: "%{group_name} har för många medlemmar. Ingen aviserades."
-        too_many_members_multiple:
-          one: "%{group_name} och %{count} annan grupp har för många medlemmar. Ingen aviserades."
-          other: "%{group_name} och %{count} andra grupper har för många medlemmar. Ingen aviserades."
         groups:
           header:
             some: "Vissa användare kommer inte att aviseras"
@@ -312,7 +296,6 @@ sv:
         back_to_all_channels: "Alla kanaler"
         back_to_channel: "Tillbaka"
         tabs:
-          about: Om
           members: Medlemmar
           settings: Inställningar
       new_message_modal:
@@ -442,11 +425,14 @@ sv:
         saved: "Sparad"
         unfollow: "Lämna"
         admin_title: "Admin"
+        settings_title: "Inställningar"
+        category_label: "Kategori"
+        history_label: "Historik"
+        members_label: "Medlemmar"
       admin:
         title: "Chatt"
         export_messages:
           title: "Exportera chattmeddelanden"
-          description: "Exporten är för närvarande begränsad till de 10 000 senaste meddelanden under de senaste 6 månaderna."
           create_export: "Skapa export"
           export_has_started: "Exporten har börjat. Du får ett PM när det är klart."
       direct_messages:
@@ -512,14 +498,9 @@ sv:
           one: "%{commaSeparatedUsernames} och %{count} skriver"
           other: "%{commaSeparatedUsernames} och %{count} andra skriver"
       retention_reminders:
-        public_none: "Kanalhistoriken bevaras på obestämd tid."
-        public:
-          one: "Kanalhistoriken bevaras %{count} dag."
-          other: "Kanalhistoriken bevaras %{count} dagar."
-        dm_none: "Personlig chatthistorik bevaras på obestämd tid."
-        dm:
-          one: "Personlig chatthistorik bevaras %{count} dag."
-          other: "Personlig chatthistorik bevaras %{count} dagar."
+        short:
+          one: "%{count} dag"
+          other: "%{count} dagar"
       flags:
         off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
         inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."
@@ -544,7 +525,6 @@ sv:
       thread:
         title: "Rubrik"
         view_thread: Visa tråd
-        default_title: "Tråd"
         replies:
           one: "%{count} svar"
           other: "%{count} svar"
@@ -614,6 +594,8 @@ sv:
       types:
         chat_reviewable_message:
           title: "Flaggat chattmeddelande"
+        reviewable_chat_message:
+          title: "Flaggat chattmeddelande"
     keyboard_shortcuts_help:
       chat:
         title: "Chatt"
@@ -649,3 +631,7 @@ sv:
       sections:
         chat:
           title: Chatt
+    sidebar:
+      panels:
+        chat:
+          label: "Chatt"

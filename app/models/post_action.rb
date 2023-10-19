@@ -82,6 +82,15 @@ class PostAction < ActiveRecord::Base
         result = result.joins(post: :topic).where("topics.category_id = ?", opts[:category_id])
       end
     end
+
+    if opts[:group_ids]
+      result =
+        result
+          .joins("INNER JOIN users ON users.id = post_actions.user_id")
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", opts[:group_ids])
+    end
+
     result.group("date(post_actions.created_at)").order("date(post_actions.created_at)").count
   end
 
@@ -112,19 +121,6 @@ class PostAction < ActiveRecord::Base
 
   def self.limit_action!(user, post, post_action_type_id)
     RateLimiter.new(user, "post_action-#{post.id}_#{post_action_type_id}", 4, 1.minute).performed!
-  end
-
-  def self.act(created_by, post, post_action_type_id, opts = {})
-    Discourse.deprecate(
-      "PostAction.act is deprecated. Use `PostActionCreator` instead.",
-      output_in_test: true,
-      drop_from: "2.9.0",
-    )
-
-    result =
-      PostActionCreator.new(created_by, post, post_action_type_id, message: opts[:message]).perform
-
-    result.success? ? result.post_action : nil
   end
 
   def self.copy(original_post, target_post)

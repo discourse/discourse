@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["controls", "save-button"],

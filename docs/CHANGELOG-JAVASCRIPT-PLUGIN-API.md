@@ -7,6 +7,51 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.0] - 2023-10-18
+
+### Added
+
+- Added `hidden` option to `addSidebarPanel`, this can be used to remove the panel from combined sidebar mode as well as hiding its switch button. Useful for cases where only one sidebar should be shown at a time regardless of other panels.
+- Added `getSidebarPanel` function, which returns the current sidebar panel object for comparison.
+
+## [1.14.0] - 2023-10-06
+
+### Added
+
+- Added `addComposerToolbarPopupMenuOption` as a replacement for `addToolbarPopupMenuOptionsCallback` with new changes
+  introduced to the method's signature.
+
+### Changed
+
+- Deprecate `addToolbarPopupMenuOptionsCallback` in favor of `addComposerToolbarPopupMenuOption`.
+
+## [1.13.0] - 2023-10-05
+
+### Added
+
+- Introduces `renderInOutlet` API for rendering components into plugin outlets
+
+## [1.12.0] - 2023-09-06
+
+### Added
+
+- Adds `addPostAdminMenuButton` which allows to register a new button in the post admin menu.
+
+## [1.11.0] - 2023-08-30
+
+### Added
+
+- Adds `addBeforeAuthCompleteCallback` which allows plugins and themes to add functions to be
+  evaluated before the auth-complete logic is run. If any of these callbacks return false, the
+  auth-complete logic will be aborted.
+
+## [1.10.0] - 2023-08-25
+
+### Added
+
+- Adds `registerReviewableActionModal` which allows core and plugins to register a modal component class
+  which is used to show a modal for certain reviewable actions.
+
 ## [1.9.0] - 2023-08-09
 
 ### Added
@@ -24,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.0] - 2023-07-18
 
 ### Added
-- Adds `addSidebarPanel` which is experimental, and adds a Sidebar panel by returning a class which extends from the 
+- Adds `addSidebarPanel` which is experimental, and adds a Sidebar panel by returning a class which extends from the
   BaseCustomSidebarPanel class.
 
 - Adds `setSidebarPanel` which is experimental, and sets the current sidebar panel.

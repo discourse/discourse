@@ -17,6 +17,7 @@
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
   max-height: 80vh;
+  border-radius: var(--d-border-radius-large);
 }
 
 .menu-panel {
@@ -100,6 +101,7 @@
   right: 0;
   width: 320px;
   padding: 0;
+  border-top-right-radius: 0px;
 
   .panel-body-bottom {
     flex: 0;
@@ -122,6 +124,7 @@
       display: flex;
       padding: 0.857em;
       position: relative;
+      border-radius: 0px;
 
       .d-icon {
         color: var(--primary-medium);
@@ -451,9 +454,9 @@
       span.double-user,
       // e.g., "username, username2"
       span.multi-user
-      // e.g., "username, username2, and n others"
+      // e.g., "username and n others"
       {
-        display: inline-flex;
+        display: inline;
         max-width: 100%;
         align-items: baseline;
         white-space: nowrap;
@@ -589,19 +592,11 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  background-color: black;
-  --opacity: 0.5;
-  opacity: var(--opacity);
+  background-color: rgba(0, 0, 0, 0.3);
   top: var(--header-top);
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
-
-  @media (prefers-reduced-motion: no-preference) {
-    &.animate {
-      transition: opacity 0.1s linear;
-    }
-  }
 }
 
 .menu-panel.slide-in {
@@ -614,6 +609,7 @@
   @supports (height: 100dvh) {
     --100dvh: 100dvh;
   }
+  box-shadow: 0px 0 30px -2px rgba(0, 0, 0, 0.5);
 
   --base-height: calc(var(--100dvh) - var(--header-top));
 
@@ -621,20 +617,5 @@
 
   body.footer-nav-ipad & {
     height: calc(var(--base-height) - var(--footer-nav-height));
-  }
-
-  transform: translateX(var(--offset));
-  @media (prefers-reduced-motion: no-preference) {
-    &.animate {
-      transition: transform 0.1s linear;
-    }
-  }
-  &.moving,
-  &.animate {
-    // PERF: only render first 20 items in a list to allow for smooth
-    // pan events
-    li:nth-child(n + 20) {
-      display: none;
-    }
   }
 }

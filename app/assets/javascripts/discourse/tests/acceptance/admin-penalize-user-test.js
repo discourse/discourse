@@ -1,4 +1,5 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -9,8 +10,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "I18n";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 acceptance("Admin - Suspend User", function (needs) {
   needs.user();
@@ -65,9 +65,9 @@ acceptance("Admin - Suspend User", function (needs) {
 
     await click(".d-modal-cancel");
     assert.strictEqual(count(".dialog-body:visible"), 1);
-    assert.ok(!exists(".suspend-user-modal:visible"));
 
     await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".suspend-user-modal:visible"));
     assert.ok(!exists(".dialog-body:visible"));
   });
 

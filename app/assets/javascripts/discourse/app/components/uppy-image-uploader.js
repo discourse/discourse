@@ -1,19 +1,19 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
-import {
-  cleanupLightboxes,
-  default as lightbox,
-  setupLightboxes,
-} from "discourse/lib/lightbox";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import $ from "jquery";
+import lightbox, {
+  cleanupLightboxes,
+  setupLightboxes,
+} from "discourse/lib/lightbox";
 import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
-import I18n from "I18n";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend(UppyUploadMixin, {
   classNames: ["image-uploader"],

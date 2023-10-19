@@ -45,18 +45,6 @@ RSpec.describe AdminDashboardData do
         expect(problems.map(&:to_s)).to include("a problem was found")
       end
     end
-
-    describe "when `navigation_menu` site setting is `legacy`" do
-      it "should include the right problem message" do
-        SiteSetting.set(:navigation_menu, "legacy")
-
-        problem = AdminDashboardData.fetch_problems.last
-
-        expect(problem.message).to include(
-          I18n.t("dashboard.legacy_navigation_menu_deprecated", base_path: Discourse.base_path),
-        )
-      end
-    end
   end
 
   describe "adding scheduled checks" do
@@ -376,6 +364,28 @@ RSpec.describe AdminDashboardData do
 
       it "outputs nothing" do
         expect(dashboard_data.translation_overrides_check).to eq(nil)
+      end
+    end
+  end
+
+  describe "#deprecated_category_style_check" do
+    subject(:dashboard_data) { described_class.new }
+
+    context "with a non-default category style" do
+      before { SiteSetting.set(:category_style, "box") }
+
+      it "outputs the correct message" do
+        expect(dashboard_data.deprecated_category_style_check).to eq(
+          I18n.t("dashboard.category_style_deprecated"),
+        )
+      end
+    end
+
+    context "with the default category style" do
+      before { SiteSetting.set(:category_style, "bullet") }
+
+      it "outputs nothing" do
+        expect(dashboard_data.deprecated_category_style_check).to eq(nil)
       end
     end
   end

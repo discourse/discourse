@@ -6,7 +6,10 @@ export default class SidebarApiSections extends Component {
 
   get sections() {
     if (this.sidebarState.combinedMode) {
-      return this.sidebarState.panels.map((panel) => panel.sections).flat();
+      return this.sidebarState.panels
+        .filter((panel) => !panel.hidden)
+        .map((panel) => panel.sections)
+        .flat();
     } else {
       return this.sidebarState.currentPanel.sections;
     }

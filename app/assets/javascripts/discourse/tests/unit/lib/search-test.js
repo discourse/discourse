@@ -1,11 +1,14 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
   searchContextDescription,
   translateResults,
 } from "discourse/lib/search";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
-module("Unit | Utility | search", function () {
+module("Unit | Utility | search", function (hooks) {
+  setupTest(hooks);
+
   test("unescapesEmojisInBlurbs", async function (assert) {
     const source = {
       posts: [

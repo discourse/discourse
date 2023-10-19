@@ -77,6 +77,9 @@ class DiscoursePluginRegistry
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
 
+  define_filtered_register :staff_editable_topic_custom_fields
+  define_filtered_register :public_editable_topic_custom_fields
+
   define_filtered_register :self_editable_user_custom_fields
   define_filtered_register :staff_editable_user_custom_fields
 
@@ -115,6 +118,8 @@ class DiscoursePluginRegistry
   define_filtered_register :list_suggested_for_providers
 
   define_filtered_register :summarization_strategies
+
+  define_filtered_register :post_action_notify_user_handlers
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider

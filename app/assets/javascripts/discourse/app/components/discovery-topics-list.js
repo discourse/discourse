@@ -1,8 +1,9 @@
-import { observes, on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { inject as service } from "@ember/service";
+import $ from "jquery";
 import LoadMore from "discourse/mixins/load-more";
 import UrlRefresh from "discourse/mixins/url-refresh";
-import { inject as service } from "@ember/service";
+import { observes, on } from "discourse-common/utils/decorators";
 
 export default Component.extend(UrlRefresh, LoadMore, {
   classNames: ["contents"],

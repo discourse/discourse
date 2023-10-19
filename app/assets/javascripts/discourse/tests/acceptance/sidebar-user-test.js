@@ -1,31 +1,13 @@
-import I18n from "I18n";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import Sinon from "sinon";
 import {
   acceptance,
   exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import Sinon from "sinon";
-
-acceptance(
-  "Sidebar - Logged on user - Legacy navigation menu enabled",
-  function (needs) {
-    needs.user();
-
-    needs.settings({
-      navigation_menu: "legacy",
-    });
-
-    test("clicking header hamburger icon displays old hamburger dropdown", async function (assert) {
-      await visit("/");
-      await click(".hamburger-dropdown");
-
-      assert.ok(exists(".menu-container-general-links"));
-    });
-  }
-);
+import I18n from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Mobile view - Header dropdown navigation menu enabled",

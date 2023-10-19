@@ -1,17 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import I18n from "I18n";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cookAsync } from "discourse/lib/text";
 import { shortDateNoYear } from "discourse/lib/formatter";
+import { cook } from "discourse/lib/text";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const MIN_POST_READ_TIME = 4;
 
 export default class SummaryBox extends Component {
   @service siteSettings;
+  @service messageBus;
+  @service currentUser;
 
   @tracked summary = "";
   @tracked summarizedOn = null;
@@ -24,6 +27,40 @@ export default class SummaryBox extends Component {
   @tracked showSummaryBox = false;
   @tracked canCollapseSummary = false;
   @tracked loadingSummary = false;
+
+  @bind
+  subscribe() {
+    const channel = `/summaries/topic/${this.args.postAttrs.topicId}`;
+    this.messageBus.subscribe(channel, this._updateSummary);
+  }
+
+  @bind
+  unsubscribe() {
+    this.messageBus.unsubscribe("/summaries/topic/*", this._updateSummary);
+  }
+
+  @bind
+  _updateSummary(update) {
+    const topicSummary = update.topic_summary;
+
+    if (topicSummary.summarized_text) {
+      cook(topicSummary.summarized_text).then((cooked) => {
+        this.summary = cooked;
+      });
+    }
+
+    if (update.done) {
+      this.summarizedOn = shortDateNoYear(topicSummary.summarized_on);
+      this.summarizedBy = topicSummary.algorithm;
+      this.newPostsSinceSummary = topicSummary.new_posts_since_summary;
+      this.outdated = topicSummary.outdated;
+      this.newPostsSinceSummary = topicSummary.new_posts_since_summary;
+      this.canRegenerate = topicSummary.outdated && topicSummary.can_regenerate;
+
+      this.canCollapseSummary = !this.canRegenerate;
+      this.loadingSummary = false;
+    }
+  }
 
   get generateSummaryTitle() {
     const title = this.canRegenerate
@@ -130,27 +167,23 @@ export default class SummaryBox extends Component {
       this.loadingSummary = true;
     }
 
-    let fetchURL = `/t/${this.args.postAttrs.topicId}/strategy-summary`;
+    let fetchURL = `/t/${this.args.postAttrs.topicId}/strategy-summary?`;
 
-    if (this.canRegenerate) {
-      fetchURL += "?skip_age_check=true";
+    if (this.currentUser) {
+      fetchURL += `stream=true`;
+
+      if (this.canRegenerate) {
+        fetchURL += "&skip_age_check=true";
+      }
     }
 
     ajax(fetchURL)
       .then((data) => {
-        cookAsync(data.summary).then((cooked) => {
-          this.summary = cooked;
-          this.summarizedOn = shortDateNoYear(data.summarized_on);
-          this.summarizedBy = data.summarized_by;
-          this.newPostsSinceSummary = data.new_posts_since_summary;
-          this.outdated = data.outdated;
-          this.newPostsSinceSummary = data.new_posts_since_summary;
-          this.canRegenerate = data.outdated && data.can_regenerate;
-
-          this.canCollapseSummary = !this.canRegenerate;
-        });
+        if (!this.currentUser) {
+          data.done = true;
+          this._updateSummary(data);
+        }
       })
-      .catch(popupAjaxError)
-      .finally(() => (this.loadingSummary = false));
+      .catch(popupAjaxError);
   }
 }

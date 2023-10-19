@@ -1,11 +1,11 @@
+import { computed } from "@ember/object";
 import { equal, readOnly } from "@ember/object/computed";
 import { i18n, setting } from "discourse/lib/computed";
-import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
-import TagsMixin from "select-kit/mixins/tags";
-import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
+import ComboBoxComponent from "select-kit/components/combo-box";
 import { MAIN_COLLECTION } from "select-kit/components/select-kit";
+import TagsMixin from "select-kit/mixins/tags";
 
 export const NO_TAG_ID = "no-tags";
 export const ALL_TAGS_ID = "all-tags";

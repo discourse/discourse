@@ -1,5 +1,5 @@
+import I18n from "discourse-i18n";
 import StyleguideExample from "../../styleguide-example";
-import I18n from "I18n";
 
 const t = I18n.t.bind(I18n);
 

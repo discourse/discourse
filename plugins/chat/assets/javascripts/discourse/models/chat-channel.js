@@ -1,17 +1,16 @@
-import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
-import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
-import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
-import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
-import { getOwner } from "discourse-common/lib/get-owner";
 import guid from "pretty-text/guid";
-import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
-import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
-import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
+import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
+import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
+import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
+import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
+import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -71,8 +70,8 @@ export default class ChatChannel {
   @tracked tracking;
   @tracked threadingEnabled = false;
 
-  threadsManager = new ChatThreadsManager(getOwner(this));
-  messagesManager = new ChatMessagesManager(getOwner(this));
+  threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
+  messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
 
   @tracked _currentUserMembership;
   @tracked _lastMessage;
@@ -102,7 +101,7 @@ export default class ChatChannel {
       this.archive = ChatChannelArchive.create(args);
     }
 
-    this.tracking = new ChatTrackingState(getOwner(this));
+    this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
     this.lastMessage = args.last_message;
     this.meta = args.meta;
   }
@@ -188,23 +187,6 @@ export default class ChatChannel {
 
   get canJoin() {
     return this.meta.can_join_chat_channel;
-  }
-
-  createStagedThread(message) {
-    const clonedMessage = message.duplicate();
-
-    const thread = new ChatThread(this, {
-      id: `staged-thread-${message.channel.id}-${message.id}`,
-      original_message: message,
-      staged: true,
-      created_at: moment.utc().format(),
-    });
-
-    clonedMessage.thread = thread;
-    clonedMessage.manager = thread.messagesManager;
-    thread.messagesManager.addMessages([clonedMessage]);
-
-    return thread;
   }
 
   async stageMessage(message) {

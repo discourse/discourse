@@ -36,6 +36,7 @@ class Plugin::Metadata
         discourse-fontawesome-pro
         discourse-footnote
         discourse-gamification
+        discourse-geoblocking
         discourse-github
         discourse-gradle-issue
         discourse-graphviz
@@ -79,6 +80,7 @@ class Plugin::Metadata
         discourse-staff-alias
         discourse-steam-login
         discourse-subscriptions
+        discourse-tag-by-group
         discourse-teambuild
         discourse-templates
         discourse-tooltips
@@ -99,7 +101,17 @@ class Plugin::Metadata
       ],
     )
 
-  FIELDS ||= %i[name about version authors contact_emails url required_version transpile_js]
+  FIELDS ||= %i[
+    name
+    about
+    version
+    authors
+    contact_emails
+    url
+    required_version
+    transpile_js
+    meta_topic_id
+  ]
   attr_accessor(*FIELDS)
 
   def self.parse(text)

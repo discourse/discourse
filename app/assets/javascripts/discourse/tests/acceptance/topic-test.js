@@ -1,4 +1,15 @@
 import {
+  click,
+  currentURL,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
+import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
+import topicFixtures from "discourse/tests/fixtures/topic";
+import {
   acceptance,
   count,
   exists,
@@ -7,20 +18,9 @@ import {
   selectText,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import {
-  click,
-  currentURL,
-  fillIn,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
-import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
-import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
+import I18n from "discourse-i18n";
 
 acceptance("Topic", function (needs) {
   needs.user();

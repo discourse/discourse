@@ -10,16 +10,16 @@ fa_IR:
       site_settings:
         categories:
           chat: گفتگو
+        chat_separate_sidebar_mode:
+          always: "همیشه"
+          never: "هرگز"
       logs:
         staff_actions:
           actions:
             chat_channel_status_change: "وضعیت کانال گفتگو تغییر کرد"
             chat_channel_delete: "کانال گفتگو حذف شد"
-    about:
-      chat_messages_count: "پیام‌های گفتگو"
-      chat_channels_count: "کانال‌های گفتگو"
-      chat_users_count: "کاربران گفتگو"
     chat:
+      deleted_chat_username: حذف شد
       dates:
         time_tiny: "HH:mm"
       all_loaded: "نمایش همه پیام‌ها"
@@ -63,6 +63,7 @@ fa_IR:
         create: "کانال جدید"
       click_to_join: "برای مشاهده کانال‌های موجود، اینجا را کلیک کنید."
       close: "بستن"
+      remove: "پاک کردن"
       confirm_flag: "آیا برای پرچم گذاری پیام %{username} مطمئن هستید؟"
       hidden: "یک پیام پنهان شده است. [view]"
       delete: "حذف"
@@ -89,7 +90,6 @@ fa_IR:
       join: "عضو شدن"
       last_visit: "آخرین بازدید"
       mention_warning:
-        dismiss: "رد کردن"
         invitations_sent:
           one: "دعوت‌نامه ارسال شد"
           other: "دعوت‌نامه‌ها ارسال شد"
@@ -166,7 +166,6 @@ fa_IR:
         back_to_all_channels: "همه کانال‌ها"
         back_to_channel: "بازگشت"
         tabs:
-          about: درباره
           members: اعضاء
           settings: تنظیمات
       channel_edit_name_slug_modal:
@@ -230,6 +229,10 @@ fa_IR:
         saved: "ذخیره شد"
         unfollow: "ترک کردن"
         admin_title: "مدیر کل"
+        settings_title: "تنظیمات"
+        category_label: "دسته‌بندی"
+        history_label: "تاریخچه"
+        members_label: "اعضاء"
       admin:
         title: "گفتگو"
       direct_messages:
@@ -270,6 +273,10 @@ fa_IR:
       replying_indicator:
         single_user: "%{username} در حال نوشتن"
         multiple_users: "%{commaSeparatedUsernames} و %{lastUsername} در حال نوشتن"
+      retention_reminders:
+        short:
+          one: "%{count} روز"
+          other: "%{count} روز"
       emoji_picker:
         favorites: "اغلب استفاده می‌شه"
         objects: "اشیا"
@@ -354,3 +361,7 @@ fa_IR:
       sections:
         chat:
           title: گفتگو
+    sidebar:
+      panels:
+        chat:
+          label: "گفتگو"

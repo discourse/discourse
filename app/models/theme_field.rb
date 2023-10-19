@@ -108,7 +108,10 @@ class ThemeField < ActiveRecord::Base
           if is_raw
             js_compiler.append_raw_template(name, hbs_template)
           else
-            js_compiler.append_ember_template("discourse/templates/#{name}", hbs_template)
+            js_compiler.append_ember_template(
+              "discourse/templates/#{name.delete_prefix("/")}",
+              hbs_template,
+            )
           end
         rescue ThemeJavascriptCompiler::CompileError => ex
           js_compiler.append_js_error("discourse/templates/#{name}", ex.message)
@@ -146,6 +149,7 @@ class ThemeField < ActiveRecord::Base
           js_compiler.append_module(
             js,
             "discourse/initializers/#{initializer_name}",
+            "js",
             include_variables: true,
           )
         rescue ThemeJavascriptCompiler::CompileError => ex
@@ -201,7 +205,11 @@ class ThemeField < ActiveRecord::Base
 
     begin
       content = File.read(path)
-      Nokogiri.XML(content) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
+      if content.to_s.bytesize > SvgSprite::MAX_THEME_SPRITE_SIZE
+        error = "Error with #{self.name}: Icon sprite file is too large"
+      else
+        Nokogiri.XML(content) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
+      end
     rescue => e
       error = "Error with #{self.name}: #{e.inspect}"
     end
@@ -269,6 +277,7 @@ class ThemeField < ActiveRecord::Base
       js_compiler.append_module(
         js,
         "discourse/pre-initializers/theme-#{theme_id}-translations",
+        "js",
         include_variables: false,
       )
     rescue ThemeTranslationParser::InvalidYaml => e
@@ -664,7 +673,7 @@ class ThemeField < ActiveRecord::Base
     rescue => e
       Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
     else
-      if content.length > 4 * 1024**2
+      if content.length > SvgSprite::MAX_THEME_SPRITE_SIZE
         Rails.logger.warn(
           "can't store theme svg sprite for theme #{theme_id} and upload #{upload_id}, sprite too big",
         )

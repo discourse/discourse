@@ -1,13 +1,17 @@
 import Component from "@ember/component";
-import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   classNames: ["controls"],
 
-  @discourseComputed("labelKey")
-  label(labelKey) {
-    return I18n.t(labelKey);
+  @discourseComputed("labelKey", "labelCount")
+  label(labelKey, labelCount) {
+    if (labelCount) {
+      return I18n.t(labelKey, { count: labelCount });
+    } else {
+      return I18n.t(labelKey);
+    }
   },
 
   change() {

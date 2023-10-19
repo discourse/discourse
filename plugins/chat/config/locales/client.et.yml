@@ -6,7 +6,13 @@
 
 et:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Alati"
+          never: "Mitte kunagi"
     chat:
+      deleted_chat_username: kustutatud
       create: "Loo"
       cancel: "Tühista"
       channel_settings:
@@ -15,6 +21,7 @@ et:
         join: "Liitu"
         leave: "Lahku"
       close: "Sulge"
+      remove: "Eemalda"
       delete: "Kustuta"
       muted: "vaigistatud"
       joined: "liitus"
@@ -25,8 +32,6 @@ et:
       flag: "Tähis"
       join: "Liitu"
       last_visit: "viimane visiit"
-      mention_warning:
-        dismiss: "ignoreeri"
       reply: "Vasta"
       edit: "Muuda"
       rebake_message: "Rekonstrueeri HTML"
@@ -52,7 +57,6 @@ et:
       channel_info:
         back_to_channel: "Tagasi"
         tabs:
-          about: Teave
           members: Liikmed
           settings: Sätted
       direct_message_creator:
@@ -80,6 +84,10 @@ et:
         saved: "Salvestatud"
         unfollow: "Lahku"
         admin_title: "Admin"
+        settings_title: "Sätted"
+        category_label: "Foorum"
+        history_label: "Ajalugu"
+        members_label: "Liikmed"
       incoming_webhooks:
         back: "Tagasi"
         description: "Kirjeldus"
@@ -100,6 +108,10 @@ et:
           title: "Liiguta olemasolevasse teemasse"
         new_message:
           title: "Liiguta uude sõnumisse"
+      retention_reminders:
+        short:
+          one: "%{count} päev"
+          other: "%{count} päeva"
       emoji_picker:
         objects: "Objektid"
         flags: "Tähised"

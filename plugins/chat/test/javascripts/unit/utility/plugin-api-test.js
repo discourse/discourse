@@ -1,14 +1,14 @@
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import User from "discourse/models/user";
+import pretender from "discourse/tests/helpers/create-pretender";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import ChatMessageInteractor, {
   resetRemovedChatComposerSecondaryActions,
 } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import pretender from "discourse/tests/helpers/create-pretender";
-import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Chat | Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);

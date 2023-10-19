@@ -1,17 +1,19 @@
-import {
-  default as deprecated,
-  withSilencedDeprecations,
-  withSilencedDeprecationsAsync,
-} from "discourse-common/lib/deprecated";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import Sinon from "sinon";
+import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,
 } from "discourse/tests/helpers/raise-on-deprecation";
-import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
-import { module, test } from "qunit";
-import Sinon from "sinon";
+import deprecated, {
+  withSilencedDeprecations,
+  withSilencedDeprecationsAsync,
+} from "discourse-common/lib/deprecated";
 
 module("Unit | Utility | deprecated", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     disableRaiseOnDeprecation();
     this.warnStub = Sinon.stub(console, "warn");
@@ -21,7 +23,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
   });
 
-  hooks.afterEach(() => {
+  hooks.afterEach(function () {
     enableRaiseOnDeprecation();
   });
 

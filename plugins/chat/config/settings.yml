@@ -116,3 +116,8 @@ chat:
   max_chat_draft_length:
     default: 50_000
     hidden: true
+  chat_separate_sidebar_mode:
+    client: true
+    default: "never"
+    type: enum
+    enum: "Chat::SeparateSidebarModeSiteSetting"

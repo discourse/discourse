@@ -1,12 +1,12 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
 
 acceptance("Dashboard", function (needs) {
   needs.user();
@@ -48,6 +48,7 @@ acceptance("Dashboard", function (needs) {
   test("general tab", async function (assert) {
     await visit("/admin");
 
+    assert.ok(exists(".custom-date-range-button"), "custom date range button");
     assert.ok(exists(".admin-report.signups"), "signups report");
     assert.ok(exists(".admin-report.posts"), "posts report");
     assert.ok(exists(".admin-report.dau-by-mau"), "dau-by-mau report");
@@ -65,6 +66,17 @@ acceptance("Dashboard", function (needs) {
       ).innerHTML.trim(),
       "Houston...",
       "displays problems"
+    );
+  });
+
+  test("moderation tab", async function (assert) {
+    await visit("/admin");
+    await click(".dashboard .navigation-item.moderation .navigation-link");
+
+    assert.ok(exists(".custom-date-range-button"), "custom date range button");
+    assert.ok(
+      exists(".admin-report.moderators-activity"),
+      "moderators activity report"
     );
   });
 

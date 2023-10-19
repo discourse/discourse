@@ -78,8 +78,11 @@ en:
       generic: An error occurred while importing that theme
       upload: "Error creating upload asset: %{name}. %{errors}"
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
+      about_json_too_big: "Import Error: about.json is bigger than the %{limit} limit."
       about_json_values: "about.json contains invalid values: %{errors}"
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
+      asset_too_big: "Asset %{filename} is bigger than the %{limit} limit"
+      theme_too_big: "Theme is bigger than the %{limit} limit"
       git: "Error cloning git repository, access is denied or repository is not found"
       git_ref_not_found: "Unable to checkout git reference: %{ref}"
       git_unsupported_scheme: "Unable to clone git repo: scheme unsupported"
@@ -88,6 +91,7 @@ en:
       unknown_file_type: "The file you uploaded does not appear to be a valid Discourse theme."
       not_allowed_theme: "`%{repo}` is not in the list of allowed themes (check `allowed_theme_repos` global setting)."
       ssh_key_gone: "You waited too long to install the theme and SSH key expired. Please try again."
+      too_many_files: "The number of files (%{count}) in the theme has exceeded the maximum allowed number of files (%{limit})"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
@@ -332,6 +336,8 @@ en:
   reading_time: "Reading time"
   likes: "Likes"
 
+  action_already_performed: "Oops! You already performed this action. Can you try refreshing the page?"
+
   too_many_replies:
     one: "We're sorry, but new users are temporarily limited to %{count} reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
@@ -353,7 +359,7 @@ en:
       one: "%{count} more reply"
       other: "%{count} more replies"
 
-    loading: "Loading Discussion..."
+    loading: "Loading Discussion…"
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
@@ -978,6 +984,9 @@ en:
     sequence_conflict_error:
       title: "draft error"
       description: "Draft is being edited in another window. Please reload this page."
+    too_many_drafts:
+      title: "Too many drafts"
+      description: "You have reached the maximum number of allowed drafts. Please delete some of [your drafts](%{base_url}/my/activity/drafts) and try again."
   draft_backup:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
@@ -1003,6 +1012,7 @@ en:
       invalid_origin_error: "The origin of the authentication request does not match the server origin."
       malformed_attestation_error: "There was an error decoding the attestation data."
       invalid_relying_party_id_error: "The Relying Party ID of the authentication request does not match the server Relying Party ID."
+      user_presence_error: "User presence is required."
       user_verification_error: "User verification is required."
       unsupported_public_key_algorithm_error: "The provided public key algorithm is not supported by the server."
       unsupported_attestation_format_error: "The attestation format is not supported by the server."
@@ -1011,6 +1021,7 @@ en:
       ownership_error: "The security key is not owned by the user."
       not_found_error: "A security key with the provided credential ID could not be found."
       unknown_cose_algorithm_error: "The algorithm used for the security key is not recognized."
+      malformed_public_key_credential_error: "The provided public key is invalid."
 
   topic_flag_types:
     spam:
@@ -1491,7 +1502,7 @@ en:
     unreachable_themes: "We were unable to check for updates on the following themes:"
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
-    legacy_navigation_menu_deprecated: "Your Discourse is currently using the 'legacy' navigation menu which <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>will be removed in the first beta release of Discourse 3.2</a>. Migrate to the new navigation menu by updating your <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>navigation menu site setting</a> to 'sidebar' or 'header dropdown'."
+    category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1503,9 +1514,9 @@ en:
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
-    min_post_length: "Minimum allowed post length in characters"
-    min_first_post_length: "Minimum allowed first post (topic body) length in characters"
-    min_personal_message_post_length: "Minimum allowed post length in characters for messages"
+    min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
+    min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
+    min_personal_message_post_length: "Minimum allowed post length in characters for messages (both first post and replies)"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Enable posting a link with topics."
     show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
@@ -1635,7 +1646,7 @@ en:
     tl3_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl3 (regular) by multiplying with this number"
     tl4_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl4 (leader) by multiplying with this number"
 
-    num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
+    num_users_to_silence_new_user: "If a new user's posts exceed the hide_post_sensitivity setting, and has spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     notify_mods_when_user_silenced: "If a user is automatically silenced, send a message to all moderators."
@@ -1650,7 +1661,7 @@ en:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
-    review_every_post: "All posts must be reviewed. WARNING! NOT RECOMMENDED FOR BUSY SITES."
+    review_every_post: "Send every new post to the review queue for moderation. Posts are still published immediately and are visible to all users. WARNING! Not recommended for high-traffic sites due to the potential volume of posts needing review."
     pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
@@ -1658,7 +1669,7 @@ en:
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
+    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCD12E. <br/>Note: To use GTM when the Content Security Policy (CSP) is enabled, see the documentation on meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Allow moderators to create and manage categories and groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
@@ -1672,16 +1683,16 @@ en:
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
-    content_security_policy: "Enable Content-Security-Policy"
-    content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only"
+    content_security_policy: "Enable Content-Security-Policy (CSP)"
+    content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
-    content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
+    content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "Determine which items appear in the homepage navigation, and in what order."
+    post_menu: "Determine which items appear on the post menu, and in what order."
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     allow_username_in_share_links: "Allow usernames to be included in share links. This is useful to reward badges based on unique visitors."
@@ -1821,7 +1832,6 @@ en:
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
-    rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."
     rate_limit_new_user_create_post: "After posting, new users must wait (n) seconds before creating another post."
 
     max_likes_per_day: "Maximum number of likes per user per day."
@@ -2149,6 +2159,7 @@ en:
     digest_min_excerpt_length: "Minimum post excerpt in the email summary, in characters."
     suppress_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
+    digest_suppress_tags: "Suppress these tags from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
     apply_custom_styles_to_digest: "Custom email template and css are applied to summary emails."
     email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF0000')."
@@ -2292,6 +2303,7 @@ en:
     approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
     approve_unless_staged: "New topics and posts for staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
+    reviewable_revision_reasons: "List of reasons that can be selected when rejecting a reviewable queued post with a revision. Other is always available as well, which allows for a custom reason to be entered."
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
     auto_close_topics_create_linked_topic: "Create a new linked topic when a topic is auto-closed based on 'auto close topics post count' setting"
@@ -2362,16 +2374,17 @@ en:
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
-    revoke_api_keys_days: "Number of days before an unused API key is automatically revoked (0 for never)"
+    revoke_api_keys_unused_days: "Number of days since an API key was last used before it is automatically revoked (0 for never)"
+    revoke_api_keys_maxlife_days: "Number of days before an API key is automatically revoked (0 for never)"
 
-    allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
     min_trust_level_for_user_api_key: |
       Trust level required for generation of user API keys.<br>
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
-    expire_user_api_keys_days: "Number of days before a user API key automatically expires (0 for never)"
+    revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
+    revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
@@ -2390,9 +2403,10 @@ en:
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
     create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
+    automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or private messages on a daily basis."
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
-    company_name: "Company Name"
+    company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
     governing_law: "Governing Law"
     city_for_disputes: "City for Disputes"
 
@@ -2437,13 +2451,14 @@ en:
     navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
-    enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     experimental_search_menu_groups: "EXPERIMENTAL: Enables the new search menu that has been upgraded to use glimmer"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
+
+    experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
 
@@ -2532,6 +2547,7 @@ en:
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
     missing_secret: "Authentication failed due to missing secret. Contact the site administrators to fix this problem."
     invite_redeem_failed: "Invite redemption failed. Please contact the site's administrator."
+    invalid_parameter_value: "Authentication failed due to invalid value for `%{param}` parameter. Contact the site administrators to fix this problem."
 
   original_poster: "Original Poster"
   most_recent_poster: "Most Recent Poster"
@@ -2676,6 +2692,8 @@ en:
     invalid_security_key: "Invalid security key."
     missing_second_factor_name: "Please provide a name."
     missing_second_factor_code: "Please provide a code."
+    too_many_authenticators: "Sorry, you can't have more than 50 authenticators. Please remove an existing one and try again."
+    too_many_security_keys: "Sorry, you can't have more than 50 security keys. Please remove an existing one and try again."
     second_factor_toggle:
       totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"
@@ -2694,16 +2712,16 @@ en:
       sent_test: "sent!"
     user:
       merge_user:
-        updating_username: "Updating username..."
-        changing_post_ownership: "Changing post ownership..."
-        merging_given_daily_likes: "Merging given daily likes..."
-        merging_post_timings: "Merging post timings..."
-        merging_user_visits: "Merging user visits..."
-        updating_site_settings: "Updating site settings..."
-        updating_user_stats: "Updating user stats..."
-        merging_user_attributes: "Merging user attributes..."
-        updating_user_ids: "Updating user ids..."
-        deleting_source_user: "Deleting source user..."
+        updating_username: "Updating username…"
+        changing_post_ownership: "Changing post ownership…"
+        merging_given_daily_likes: "Merging given daily likes…"
+        merging_post_timings: "Merging post timings…"
+        merging_user_visits: "Merging user visits…"
+        updating_site_settings: "Updating site settings…"
+        updating_user_stats: "Updating user stats…"
+        merging_user_attributes: "Merging user attributes…"
+        updating_user_ids: "Updating user ids…"
+        deleting_source_user: "Deleting source user…"
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
@@ -2968,6 +2986,29 @@ en:
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+
+    reviewable_queued_post_revise_and_reject:
+      title: "Feedback on your post"
+      subject_template: "Feedback on your post in %{topic_title}"
+      text_body_template: |
+        Hi %{username},
+
+        We've reviewed your post in [%{topic_title}](%{topic_url}) and have some feedback for you.
+
+        Reason: %{reason}
+
+        Feedback: %{feedback}
+
+        You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Thanks,
+        %{site_name} Moderators
 
     post_hidden_again:
       title: "Post Hidden again"
@@ -5123,6 +5164,9 @@ en:
       automatic_revoked:
         one: "Automatically revoked, last activity more than %{count} day ago"
         other: "Automatically revoked, last activity more than %{count} days ago"
+      automatic_revoked_max_life:
+        one: "Automatically revoked, created at more than %{count} day ago"
+        other: "Automatically revoked, created at more than %{count} days ago"
       revoked: Revoked
       restored: Restored
 
@@ -5186,7 +5230,7 @@ en:
       delete_single:
         title: "Delete"
       delete:
-        title: "Delete..."
+        title: "Delete…"
       delete_and_ignore:
         title: "Ignore flag and delete post"
         description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
@@ -5206,6 +5250,10 @@ en:
         description: "Restore the post so that all users can see it."
       disagree:
         title: "No"
+      discard_post:
+        title: "Discard Post"
+      revise_and_reject_post:
+        title: "Revise Post..."
       ignore:
         title: "Ignore"
       ignore_and_do_nothing:
@@ -5221,7 +5269,7 @@ en:
       approve_user:
         title: "Approve User"
       reject_user:
-        title: "Delete User..."
+        title: "Delete User…"
         delete:
           title: "Delete User"
           description: "The user will be deleted from the forum."
@@ -5230,7 +5278,7 @@ en:
           description: "The user will be deleted, and we'll block their IP and email address."
       reject:
         title: "Reject"
-        bundle_title: "Reject..."
+        bundle_title: "Reject…"
       reject_and_suspend:
         title: "Reject and Suspend user"
       reject_and_silence:
@@ -5289,3 +5337,7 @@ en:
       invalid_yaml: "is not a valid YAML string"
       invalid_type: "contains an invalid template type: %{type} (valid types are: %{valid_types})"
       missing_type: "is missing a field type"
+      missing_id: "is missing a field id"
+      duplicate_ids: "has duplicate ids"
+      reserved_id: "has a reserved keyword as id: %{id}"
+      unsafe_description: "has an unsafe HTML description"

@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import I18n from "I18n";
 import Route from "@ember/routing/route";
+import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export default class AdminCustomizeThemesEditRoute extends Route {
   @service dialog;
@@ -10,13 +10,15 @@ export default class AdminCustomizeThemesEditRoute extends Route {
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
     const model = all.findBy("id", parseInt(params.theme_id, 10));
-    return model
-      ? {
-          model,
-          target: params.target,
-          field_name: params.field_name,
-        }
-      : this.replaceWith("adminCustomizeThemes.index");
+    if (model) {
+      return {
+        model,
+        target: params.target,
+        field_name: params.field_name,
+      };
+    } else {
+      this.router.replaceWith("adminCustomizeThemes.index");
+    }
   }
 
   serialize(wrapper) {

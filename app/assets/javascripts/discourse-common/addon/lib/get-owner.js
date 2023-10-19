@@ -3,12 +3,30 @@ import deprecated from "discourse-common/lib/deprecated";
 
 let _default = {};
 
-export function getOwner(obj) {
+/**
+ * Works similarly to { getOwner } from `@ember/application`, but has a fallback
+ * when the passed object doesn't have an owner.
+ *
+ * This exists for historical reasons. Ideally, any uses of it should be updated to use
+ * the official `@ember/application` implementation.
+ */
+export function getOwnerWithFallback(obj) {
   if (emberGetOwner) {
     return emberGetOwner(obj || _default) || emberGetOwner(_default);
   }
 
   return obj.container;
+}
+
+/**
+ * @deprecated use `getOwnerWithFallback` instead
+ */
+export function getOwner(obj) {
+  deprecated(
+    "Importing getOwner from `discourse-common/lib/get-owner` is deprecated. Use `import { getOwner } from '@ember/application'`, or if you still need the fallback shim, use `import { getOwnerWithFallback } from 'discourse-common/lib/get-owner';`.",
+    { since: "3.2", id: "discourse.get-owner-with-fallback" }
+  );
+  return getOwnerWithFallback(obj);
 }
 
 export function setDefaultOwner(container) {
@@ -18,7 +36,7 @@ export function setDefaultOwner(container) {
 // `this.container` is deprecated, but we can still build a container-like
 // object for components to use
 export function getRegister(obj) {
-  const owner = getOwner(obj);
+  const owner = getOwnerWithFallback(obj);
   const register = {
     lookup: (...args) => owner.lookup(...args),
     lookupFactory: (...args) => {

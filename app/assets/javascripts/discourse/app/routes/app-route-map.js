@@ -1,5 +1,5 @@
-import Site from "discourse/models/site";
 import { capitalize } from "@ember/string";
+import Site from "discourse/models/site";
 
 export default function () {
   // Error page

@@ -1,11 +1,12 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import DiscourseURL from "discourse/lib/url";
-import { next } from "@ember/runloop";
-import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { tracked } from "@glimmer/tracking";
+import { next } from "@ember/runloop";
+import $ from "jquery";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
+import DiscourseURL from "discourse/lib/url";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "ul",

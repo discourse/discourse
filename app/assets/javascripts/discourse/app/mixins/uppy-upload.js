@@ -1,27 +1,27 @@
+import { warn } from "@ember/debug";
+import EmberObject from "@ember/object";
+import { or } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { run } from "@ember/runloop";
-import ExtendableUploader from "discourse/mixins/extendable-uploader";
-import { or } from "@ember/object/computed";
-import EmberObject from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
+import { inject as service } from "@ember/service";
+import AwsS3 from "@uppy/aws-s3";
+import Uppy from "@uppy/core";
+import DropTarget from "@uppy/drop-target";
+import XHRUpload from "@uppy/xhr-upload";
+import { ajax, updateCsrfToken } from "discourse/lib/ajax";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
   validateUploadedFile,
 } from "discourse/lib/uploads";
-import { deepMerge } from "discourse-common/lib/object";
-import getUrl from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import Uppy from "@uppy/core";
-import DropTarget from "@uppy/drop-target";
-import XHRUpload from "@uppy/xhr-upload";
-import AwsS3 from "@uppy/aws-s3";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
-import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
+import ExtendableUploader from "discourse/mixins/extendable-uploader";
+import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
+import getUrl from "discourse-common/lib/get-url";
+import { deepMerge } from "discourse-common/lib/object";
 import { bind, on } from "discourse-common/utils/decorators";
-import { warn } from "@ember/debug";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
@@ -350,9 +350,9 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   _useXHRUploads() {
     this._uppyInstance.use(XHRUpload, {
       endpoint: this._xhrUploadUrl(),
-      headers: {
+      headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
-      },
+      }),
     });
   },
 
@@ -397,6 +397,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
               method: "put",
               url: response.url,
               headers: {
+                ...response.signed_headers,
                 "Content-Type": file.type,
               },
             };
@@ -428,8 +429,13 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   @bind
-  _addFiles(files, opts = {}) {
+  async _addFiles(files, opts = {}) {
+    if (!this.session.csrfToken) {
+      await updateCsrfToken();
+    }
+
     files = Array.isArray(files) ? files : [files];
+
     try {
       this._uppyInstance.addFiles(
         files.map((file) => {

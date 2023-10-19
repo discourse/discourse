@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { afterRender } from "discourse-common/utils/decorators";
-import { create } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
-import loadScript from "discourse/lib/load-script";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { create } from "virtual-dom";
+import loadScript from "discourse/lib/load-script";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { afterRender } from "discourse-common/utils/decorators";
 
 export default class JsonSchemaEditorModal extends Component {
   @tracked editor = null;

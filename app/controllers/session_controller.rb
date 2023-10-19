@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class SessionController < ApplicationController
-  before_action :check_local_login_allowed, only: %i[create forgot_password]
+  before_action :check_local_login_allowed,
+                only: %i[create forgot_password passkey_challenge passkey_login]
   before_action :rate_limit_login, only: %i[create email_login]
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json,
@@ -59,9 +60,14 @@ class SessionController < ApplicationController
       end
 
       if data[:no_current_user]
-        cookies[:sso_payload] = payload || request.query_string
-        redirect_to path("/login")
-        return
+        if data[:prompt] == "none"
+          redirect_to data[:sso_redirect_url], allow_other_host: true
+          return
+        else
+          cookies[:sso_payload] = payload || request.query_string
+          redirect_to path("/login")
+          return
+        end
       end
 
       if request.xhr?
@@ -88,6 +94,8 @@ class SessionController < ApplicationController
     render plain: I18n.t("discourse_connect.login_error"), status: 422
   rescue DiscourseConnectProvider::BlankReturnUrl
     render plain: "return_sso_url is blank, it must be provided", status: 400
+  rescue DiscourseConnectProvider::InvalidParameterValueError => e
+    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param), status: 400
   end
 
   # For use in development mode only when login options could be limited or disabled.
@@ -325,6 +333,34 @@ class SessionController < ApplicationController
     end
   end
 
+  def passkey_challenge
+    render json: DiscourseWebauthn.stage_challenge(current_user, secure_session)
+  end
+
+  def passkey_login
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
+    params.require(:publicKeyCredential)
+
+    security_key =
+      ::DiscourseWebauthn::AuthenticationService.new(
+        nil,
+        params[:publicKeyCredential],
+        session: secure_session,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+      ).authenticate_security_key
+
+    user = User.where(id: security_key.user_id, active: true).first
+
+    if user.email_confirmed?
+      login(user, false)
+    else
+      not_activated(user)
+    end
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
+    render_json_error(err.message, status: 401)
+  end
+
   def email_login_info
     token = params[:token]
     matched_token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])
@@ -344,9 +380,9 @@ class SessionController < ApplicationController
       end
 
       if matched_user&.security_keys_enabled?
-        Webauthn.stage_challenge(matched_user, secure_session)
+        DiscourseWebauthn.stage_challenge(matched_user, secure_session)
         response.merge!(
-          Webauthn.allowed_credentials(matched_user, secure_session).merge(
+          DiscourseWebauthn.allowed_credentials(matched_user, secure_session).merge(
             security_key_required: true,
           ),
         )
@@ -433,8 +469,8 @@ class SessionController < ApplicationController
         allowed_methods: challenge[:allowed_methods],
       )
       if user.security_keys_enabled?
-        Webauthn.stage_challenge(user, secure_session)
-        json.merge!(Webauthn.allowed_credentials(user, secure_session))
+        DiscourseWebauthn.stage_challenge(user, secure_session)
+        json.merge!(DiscourseWebauthn.allowed_credentials(user, secure_session))
         json[:security_keys_enabled] = true
       else
         json[:security_keys_enabled] = false
@@ -660,8 +696,8 @@ class SessionController < ApplicationController
     if !second_factor_authentication_result.ok
       failure_payload = second_factor_authentication_result.to_h
       if user.security_keys_enabled?
-        Webauthn.stage_challenge(user, secure_session)
-        failure_payload.merge!(Webauthn.allowed_credentials(user, secure_session))
+        DiscourseWebauthn.stage_challenge(user, secure_session)
+        failure_payload.merge!(DiscourseWebauthn.allowed_credentials(user, secure_session))
       end
       @second_factor_failure_payload = failed_json.merge(failure_payload)
       return second_factor_authentication_result

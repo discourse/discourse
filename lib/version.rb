@@ -7,7 +7,7 @@ module Discourse
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
-      STRING = "3.2.0.beta1-dev"
+      STRING = "3.2.0.beta3-dev"
 
       PARTS = STRING.split(".")
       private_constant :PARTS
@@ -92,12 +92,37 @@ module Discourse
   # Find a compatible resource from a git repo
   def self.find_compatible_git_resource(path)
     return unless File.directory?("#{path}/.git")
-    compat_resource, std_error, s =
-      Open3.capture3(
-        "git -C '#{path}' show HEAD@{upstream}:#{Discourse::VERSION_COMPATIBILITY_FILENAME}",
+
+    tree_info =
+      Discourse::Utils.execute_command(
+        "git",
+        "-C",
+        path,
+        "ls-tree",
+        "-l",
+        "HEAD",
+        Discourse::VERSION_COMPATIBILITY_FILENAME,
       )
-    Discourse.find_compatible_resource(compat_resource) if s.success?
+    blob_size = tree_info.split[3].to_i
+
+    if blob_size > Discourse::MAX_METADATA_FILE_SIZE
+      $stderr.puts "#{Discourse::VERSION_COMPATIBILITY_FILENAME} file in #{path} too big"
+      return
+    end
+
+    compat_resource =
+      Discourse::Utils.execute_command(
+        "git",
+        "-C",
+        path,
+        "show",
+        "HEAD@{upstream}:#{Discourse::VERSION_COMPATIBILITY_FILENAME}",
+      )
+
+    Discourse.find_compatible_resource(compat_resource)
   rescue InvalidVersionListError => e
     $stderr.puts "Invalid version list in #{path}"
+  rescue Discourse::Utils::CommandError => e
+    nil
   end
 end

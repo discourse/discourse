@@ -1,4 +1,8 @@
-import I18n from "I18n";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
+import pretender from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
@@ -6,12 +10,8 @@ import {
   query,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import sinon from "sinon";
-import { test } from "qunit";
-import pretender from "discourse/tests/helpers/create-pretender";
+import I18n from "discourse-i18n";
 
 acceptance("Category Edit", function (needs) {
   needs.user();

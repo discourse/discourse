@@ -15,13 +15,18 @@ function fixLegacyExtensions(tree) {
     getDestinationPath: function (relativePath) {
       if (relativePath.endsWith(".es6")) {
         return relativePath.slice(0, -4);
-      } else if (relativePath.includes("/templates/")) {
-        if (relativePath.endsWith(".raw.hbs")) {
-          relativePath = relativePath.replace(".raw.hbs", ".hbr");
-        }
+      } else if (relativePath.endsWith(".raw.hbs")) {
+        relativePath = relativePath.replace(".raw.hbs", ".hbr");
+      }
 
-        if (relativePath.endsWith(".hbr")) {
-          return relativePath.replace("/templates/", "/raw-templates/");
+      if (relativePath.endsWith(".hbr")) {
+        if (relativePath.includes("/templates/")) {
+          relativePath = relativePath.replace("/templates/", "/raw-templates/");
+        } else if (relativePath.includes("/connectors/")) {
+          relativePath = relativePath.replace(
+            "/connectors/",
+            "/raw-templates/connectors/"
+          );
         }
       }
 
@@ -93,6 +98,14 @@ module.exports = {
   options: {
     babel: {
       plugins: [require.resolve("deprecation-silencer")],
+    },
+
+    "ember-cli-babel": {
+      throwUnlessParallelizable: true,
+    },
+
+    "ember-this-fallback": {
+      enableLogging: false,
     },
   },
 
@@ -236,11 +249,6 @@ module.exports = {
     // files in the addon directories. We need to override that
     // check so that the template compiler always runs.
     return true;
-  },
-
-  treeFor() {
-    // This addon doesn't contribute any 'real' trees to the app
-    return;
   },
 
   // Matches logic from GlobalSetting.load_plugins? in the ruby app

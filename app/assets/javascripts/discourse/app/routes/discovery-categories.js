@@ -1,22 +1,18 @@
-import CategoryList from "discourse/models/category-list";
-import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import OpenComposer from "discourse/mixins/open-composer";
-import PreloadStore from "discourse/lib/preload-store";
-import TopicList from "discourse/models/topic-list";
-import { ajax } from "discourse/lib/ajax";
-import { defaultHomepage } from "discourse/lib/utilities";
-import { hash } from "rsvp";
-import { next } from "@ember/runloop";
-import showModal from "discourse/lib/show-modal";
-import Session from "discourse/models/session";
 import { inject as service } from "@ember/service";
+import { hash } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import PreloadStore from "discourse/lib/preload-store";
+import showModal from "discourse/lib/show-modal";
+import { defaultHomepage } from "discourse/lib/utilities";
+import CategoryList from "discourse/models/category-list";
+import TopicList from "discourse/models/topic-list";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 
-export default class DiscoveryCategoriesRoute extends DiscourseRoute.extend(
-  OpenComposer
-) {
+export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service router;
+  @service session;
 
   renderTemplate() {
     this.render("navigation/categories", { outlet: "navigation-bar" });
@@ -55,6 +51,8 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute.extend(
   }
 
   _loadBefore(store) {
+    const session = this.session;
+
     return function (topic_ids, storeInSession) {
       // refresh dupes
       this.topics.removeObjects(
@@ -77,7 +75,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute.extend(
         });
 
         if (storeInSession) {
-          Session.currentProp("topicList", this);
+          session.set("topicList", this);
         }
       });
     };
@@ -155,20 +153,5 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute.extend(
   @action
   reorderCategories() {
     showModal("reorder-categories");
-  }
-
-  @action
-  createTopic() {
-    if (this.get("currentUser.has_topic_draft")) {
-      this.openTopicDraft();
-    } else {
-      this.openComposer(this.controllerFor("discovery/categories"));
-    }
-  }
-
-  @action
-  didTransition() {
-    next(() => this.controllerFor("application").set("showFooter", true));
-    return true;
   }
 }

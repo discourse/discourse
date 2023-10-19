@@ -18,6 +18,12 @@ module PageObjects
         end
       end
 
+      def select_action(reviewable, value)
+        within(reviewable_by_id(reviewable.id)) do
+          find(".reviewable-action.#{value.dasherize}").click
+        end
+      end
+
       def reviewable_by_id(id)
         find(".reviewable-item[data-reviewable-id=\"#{id}\"]")
       end

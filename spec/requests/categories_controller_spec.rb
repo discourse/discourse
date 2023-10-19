@@ -714,8 +714,8 @@ RSpec.describe CategoriesController do
         end
 
         it "updates per-category settings correctly" do
-          category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
-          category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = false
+          category.require_topic_approval = false
+          category.require_reply_approval = false
 
           category.navigate_to_first_post_after_read = false
           category.save!
@@ -726,11 +726,9 @@ RSpec.describe CategoriesController do
                 color: category.color,
                 text_color: category.text_color,
                 navigate_to_first_post_after_read: true,
-                custom_fields: {
+                category_setting_attributes: {
                   require_reply_approval: true,
                   require_topic_approval: true,
-                },
-                category_setting_attributes: {
                   num_auto_bump_daily: 10,
                 },
               }
@@ -1039,6 +1037,130 @@ RSpec.describe CategoriesController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["groups"]).to eq([])
+    end
+  end
+
+  describe "#search" do
+    fab!(:category) { Fabricate(:category, name: "Foo") }
+    fab!(:subcategory) { Fabricate(:category, name: "Foobar", parent_category: category) }
+    fab!(:category2) { Fabricate(:category, name: "Notfoo") }
+
+    before do
+      SearchIndexer.enable
+      [category, category2, subcategory].each { |c| SearchIndexer.index(c, force: true) }
+    end
+
+    context "with term" do
+      it "returns categories" do
+        get "/categories/search.json", params: { term: "Foo" }
+
+        expect(response.parsed_body["categories"].size).to eq(2)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Foo",
+          "Foobar",
+        )
+      end
+    end
+
+    context "with parent_category_id" do
+      it "returns categories" do
+        get "/categories/search.json", params: { parent_category_id: category.id }
+
+        expect(response.parsed_body["categories"].size).to eq(2)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Foo",
+          "Foobar",
+        )
+      end
+    end
+
+    context "with include_uncategorized" do
+      it "returns Uncategorized" do
+        get "/categories/search.json", params: { include_uncategorized: true }
+
+        expect(response.parsed_body["categories"].size).to eq(4)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Foobar",
+          "Notfoo",
+        )
+      end
+
+      it "does not return Uncategorized" do
+        get "/categories/search.json", params: { include_uncategorized: false }
+
+        expect(response.parsed_body["categories"].size).to eq(3)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Foo",
+          "Foobar",
+          "Notfoo",
+        )
+      end
+    end
+
+    context "with select_category_ids" do
+      it "returns categories" do
+        get "/categories/search.json", params: { select_category_ids: [category.id] }
+
+        expect(response.parsed_body["categories"].size).to eq(1)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly("Foo")
+      end
+    end
+
+    context "with reject_category_ids" do
+      it "returns categories" do
+        get "/categories/search.json", params: { reject_category_ids: [category2.id] }
+
+        expect(response.parsed_body["categories"].size).to eq(3)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Foobar",
+        )
+      end
+    end
+
+    context "with include_subcategories" do
+      it "returns categories" do
+        get "/categories/search.json", params: { include_subcategories: false }
+
+        expect(response.parsed_body["categories"].size).to eq(3)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Notfoo",
+        )
+      end
+
+      it "returns categories and subcategories" do
+        get "/categories/search.json", params: { include_subcategories: true }
+
+        expect(response.parsed_body["categories"].size).to eq(4)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Foobar",
+          "Notfoo",
+        )
+      end
+    end
+
+    context "with prioritized_category_id" do
+      it "returns categories" do
+        get "/categories/search.json", params: { prioritized_category_id: category2.id }
+
+        expect(response.parsed_body["categories"].size).to eq(4)
+        expect(response.parsed_body["categories"][0]["name"]).to eq("Notfoo")
+      end
+    end
+
+    context "with limit" do
+      it "returns categories" do
+        get "/categories/search.json", params: { limit: 2 }
+
+        expect(response.parsed_body["categories"].size).to eq(2)
+      end
     end
   end
 end

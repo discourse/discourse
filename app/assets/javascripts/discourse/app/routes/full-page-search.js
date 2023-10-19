@@ -1,15 +1,15 @@
+import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import { getTransient, setTransient } from "discourse/lib/page-tracker";
+import PreloadStore from "discourse/lib/preload-store";
 import {
   getSearchKey,
   isValidSearchTerm,
   translateResults,
 } from "discourse/lib/search";
-import { getTransient, setTransient } from "discourse/lib/page-tracker";
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
-import PreloadStore from "discourse/lib/preload-store";
-import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
-import { action } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
   queryParams: {

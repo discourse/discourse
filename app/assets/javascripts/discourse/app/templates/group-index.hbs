@@ -1,12 +1,16 @@
+{{#if (or this.loading this.canLoadMore)}}
+  {{hide-application-footer}}
+{{/if}}
+
 <section class="user-content">
   <div class="group-members-actions">
 
     {{#if this.canManageGroup}}
       <DButton
-        @class="bulk-select"
         @icon="list"
-        @action={{action "toggleBulkSelect"}}
+        @action={{this.toggleBulkSelect}}
         @title="topics.bulk.toggle"
+        class="bulk-select"
       />
     {{/if}}
 
@@ -32,18 +36,18 @@
             />
 
             <DButton
-              @action={{action "bulkClearAll"}}
+              @action={{this.bulkClearAll}}
               @label="topics.bulk.clear_all"
               @icon="far-square"
-              @class="bulk-select-clear"
+              class="bulk-select-clear"
             />
           {{/if}}
 
           <DButton
-            @action={{action "bulkSelectAll"}}
+            @action={{this.bulkSelectAll}}
             @label="topics.bulk.select_all"
             @icon="check-square"
-            @class="bulk-select-all"
+            class="bulk-select-all"
           />
 
         </span>
@@ -54,7 +58,7 @@
           @icon="plus"
           @action={{route-action "showAddMembersModal"}}
           @label="groups.manage.add_members"
-          @class="btn-default group-members-add"
+          class="btn-default group-members-add"
         />
 
         {{#if this.currentUser.can_invite_to_forum}}
@@ -62,7 +66,7 @@
             @icon="plus"
             @action={{route-action "showInviteModal"}}
             @label="groups.manage.invite_members"
-            @class="btn-default group-members-add"
+            class="btn-default group-members-invite"
           />
         {{/if}}
       </div>

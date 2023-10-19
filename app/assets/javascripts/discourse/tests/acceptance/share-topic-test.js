@@ -1,13 +1,13 @@
-import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
-import I18n from "I18n";
 import { click, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 acceptance("Share and Invite modal", function (needs) {
   needs.user();
@@ -54,6 +54,10 @@ acceptance("Share and Invite modal", function (needs) {
       exists(".link-share-actions .invite"),
       "it shows the invite button"
     );
+
+    await click(".link-share-actions .invite");
+
+    assert.dom(".create-invite-modal").exists();
   });
 
   test("Post date link", async function (assert) {

@@ -1,13 +1,11 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class WebhookEventChooser extends Component {
-  get name() {
-    return I18n.t(`admin.web_hooks.${this.args.type.name}_event.name`);
-  }
-
   get details() {
-    return I18n.t(`admin.web_hooks.${this.args.type.name}_event.details`);
+    return I18n.t(
+      `admin.web_hooks.${this.args.group}_event.${this.args.type.name}`
+    );
   }
 
   get eventTypeExists() {

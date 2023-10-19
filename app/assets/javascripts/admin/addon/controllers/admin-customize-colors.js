@@ -1,12 +1,13 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 
 export default class AdminCustomizeColorsController extends Controller {
   @service router;
+  @service modal;
 
   @discourseComputed("model.@each.id")
   baseColorScheme() {
@@ -44,9 +45,11 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @action
   newColorScheme() {
-    showModal("admin-color-scheme-select-base", {
-      model: this.baseColorSchemes,
-      admin: true,
+    this.modal.show(ColorSchemeSelectBaseModal, {
+      model: {
+        baseColorSchemes: this.baseColorSchemes,
+        newColorSchemeWithBase: this.newColorSchemeWithBase,
+      },
     });
   }
 }

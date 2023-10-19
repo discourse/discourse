@@ -457,10 +457,9 @@ RSpec.describe UsersController do
           end
         end
 
-        it "stages a webauthn challenge and rp-id for the user" do
+        it "stages a webauthn challenge for the user" do
           secure_session = SecureSession.new(session["secure_session_id"])
-          expect(Webauthn.challenge(user1, secure_session)).not_to eq(nil)
-          expect(Webauthn.rp_id(user1, secure_session)).to eq(Discourse.current_hostname)
+          expect(DiscourseWebauthn.challenge(user1, secure_session)).not_to eq(nil)
         end
 
         it "changes password with valid security key challenge and authentication" do
@@ -835,6 +834,46 @@ RSpec.describe UsersController do
         end
       end
 
+      context "when normalize_emails is enabled" do
+        let (:email) {
+          "jane+100@gmail.com"
+        }
+        let (:dupe_email) {
+          "jane+191@gmail.com"
+        }
+        let! (:user) {
+          Fabricate(:user, email: email, password: "strongpassword")
+        }
+
+        before do
+          SiteSetting.hide_email_address_taken = true
+          SiteSetting.normalize_emails = true
+        end
+
+        it "sends an email to normalized email owner when hide_email_address_taken is enabled" do
+          expect do
+            expect_enqueued_with(
+              job: Jobs::CriticalUserEmail,
+              args: {
+                type: "account_exists",
+                user_id: user.id,
+              },
+            ) do
+              post "/u.json",
+                   params: {
+                     name: "Jane Doe",
+                     username: "janedoe9999",
+                     password: "strongpassword",
+                     email: dupe_email,
+                   }
+            end
+          end.to_not change { User.count }
+
+          expect(response.status).to eq(200)
+          expect(session["user_created_message"]).to be_present
+        end
+      end
+
       context "when users already exists with given email" do
         let!(:existing) { Fabricate(:user, email: post_user_params[:email]) }
 
@@ -851,7 +890,15 @@ RSpec.describe UsersController do
 
         it "returns success if hide_email_address_taken is enabled" do
           SiteSetting.hide_email_address_taken = true
-          expect { post_user }.to_not change { User.count }
+          expect {
+            expect_enqueued_with(
+              job: Jobs::CriticalUserEmail,
+              args: {
+                type: "account_exists",
+                user_id: existing.id,
+              },
+            ) { post_user }
+          }.to_not change { User.count }
 
           expect(response.status).to eq(200)
           expect(session["user_created_message"]).to be_present
@@ -4104,6 +4151,24 @@ RSpec.describe UsersController do
       expect(json["user_summary"]["post_count"]).to eq(0)
     end
 
+    context "when `hide_user_profiles_from_public` site setting is enabled" do
+      before { SiteSetting.hide_user_profiles_from_public = true }
+
+      it "returns 200 for logged in users" do
+        sign_in(Fabricate(:user))
+
+        get "/u/#{user.username_lower}/summary.json"
+
+        expect(response.status).to eq(200)
+      end
+
+      it "returns 403 for anonymous users" do
+        get "/u/#{user.username_lower}/summary.json"
+
+        expect(response.status).to eq(403)
+      end
+    end
+
     context "when `hide_profile_and_presence` user option is checked" do
       before_all { user1.user_option.update_columns(hide_profile_and_presence: true) }
 
@@ -4479,7 +4544,9 @@ RSpec.describe UsersController do
       it "should redirect to login page for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
-        expect(response).to redirect_to "/login"
+        expect(response).to have_http_status(:forbidden)
+        get "/u/#{user.username}/messages.json"
+        expect(response).to have_http_status(:forbidden)
       end
 
       describe "user profile views" do
@@ -4682,10 +4749,10 @@ RSpec.describe UsersController do
         expect(parsed["trust_level"]).to be_present
       end
 
-      it "should redirect to login page for anonymous user when profiles are hidden" do
+      it "should have http status 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}/card.json"
-        expect(response).to redirect_to "/login"
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -4741,10 +4808,10 @@ RSpec.describe UsersController do
       expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
     end
 
-    it "should redirect to login page for anonymous user when profiles are hidden" do
+    it "should have http status 403 for anonymous user when profiles are hidden" do
       SiteSetting.hide_user_profiles_from_public = true
       get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
-      expect(response).to redirect_to "/login"
+      expect(response).to have_http_status(:forbidden)
     end
 
     context "when `hide_profile_and_presence` user option is checked" do
@@ -4850,6 +4917,35 @@ RSpec.describe UsersController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["users"].map { |u| u["username"] }).to include(user.username)
+    end
+
+    context "when searching usernames" do
+      it "searches when provided a list of usernames" do
+        users = Fabricate.times(3, :user)
+
+        get "/u/search/users.json", params: { usernames: users.map(&:username).join(",") }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["username"] }).to match_array(users.map(&:username))
+      end
+
+      it "searches groups if include_groups = true" do
+        users = Fabricate.times(3, :user)
+        group = Fabricate(:group)
+
+        sign_in(user)
+
+        get "/u/search/users.json",
+            params: {
+              usernames: [group.name, users.first.username].join(","),
+              include_groups: true,
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["users"].map { |u| u["username"] }).to contain_exactly(users.first.username)
+        expect(json["groups"].map { |u| u["name"] }).to contain_exactly(group.name)
+      end
     end
 
     it "searches when provided the topic only" do
@@ -5492,6 +5588,46 @@ RSpec.describe UsersController do
         expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_second_factor_code"))
       end
     end
+
+    it "doesn't allow creating too many TOTPs" do
+      Fabricate(:user_second_factor_totp, user: user1)
+
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      stub_const(UserSecondFactor, "MAX_TOTPS_PER_USER", 1) do
+        post "/users/enable_second_factor_totp.json",
+             params: {
+               name: "test",
+               second_factor_token: token,
+             }
+      end
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(I18n.t("login.too_many_authenticators"))
+
+      expect(user1.user_second_factors.count).to eq(1)
+    end
+
+    it "doesn't allow the TOTP name to exceed the limit" do
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      post "/users/enable_second_factor_totp.json",
+           params: {
+             name: "a" * (UserSecondFactor::MAX_NAME_LENGTH + 1),
+             second_factor_token: token,
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        "Name is too long (maximum is 300 characters)",
+      )
+
+      expect(user1.user_second_factors.count).to eq(0)
+    end
   end
 
   describe "#update_second_factor" do
@@ -5658,13 +5794,22 @@ RSpec.describe UsersController do
       create_second_factor_security_key
       secure_session = read_secure_session
       response_parsed = response.parsed_body
-      expect(response_parsed["challenge"]).to eq(Webauthn.challenge(user1, secure_session))
-      expect(response_parsed["rp_id"]).to eq(Webauthn.rp_id(user1, secure_session))
-      expect(response_parsed["rp_name"]).to eq(Webauthn.rp_name(user1, secure_session))
+      expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, secure_session))
+      expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
+      expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
       expect(response_parsed["user_secure_id"]).to eq(
         user1.reload.create_or_fetch_secure_identifier,
       )
-      expect(response_parsed["supported_algorithms"]).to eq(::Webauthn::SUPPORTED_ALGORITHMS)
+      expect(response_parsed["supported_algorithms"]).to eq(
+        ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
+      )
+    end
+
+    it "doesn't create a challenge if the user has the maximum number allowed of security keys" do
+      Fabricate(:user_security_key_with_random_credential, user: user1)
+      stub_const(UserSecurityKey, "MAX_KEYS_PER_USER", 1) { create_second_factor_security_key }
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(I18n.t("login.too_many_security_keys"))
     end
 
     context "if the user has security key credentials already" do
@@ -5696,11 +5841,47 @@ RSpec.describe UsersController do
         )
         expect(user1.security_keys.last.name).to eq(valid_security_key_create_post_data[:name])
       end
+
+      it "doesn't allow creating too many security keys" do
+        simulate_localhost_webauthn_challenge
+        create_second_factor_security_key
+        _response_parsed = response.parsed_body
+
+        Fabricate(:user_security_key_with_random_credential, user: user1)
+
+        stub_const(UserSecurityKey, "MAX_KEYS_PER_USER", 1) do
+          post "/u/register_second_factor_security_key.json",
+               params: valid_security_key_create_post_data
+        end
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t("login.too_many_security_keys"))
+
+        expect(user1.security_keys.count).to eq(1)
+      end
+
+      it "doesn't allow the security key name to exceed the limit" do
+        simulate_localhost_webauthn_challenge
+        create_second_factor_security_key
+        _response_parsed = response.parsed_body
+
+        post "/u/register_second_factor_security_key.json",
+             params:
+               valid_security_key_create_post_data.merge(
+                 name: "a" * (UserSecurityKey::MAX_NAME_LENGTH + 1),
+               )
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          "Name is too long (maximum is 300 characters)",
+        )
+
+        expect(user1.security_keys.count).to eq(0)
+      end
     end
 
     context "when the creation parameters are invalid" do
       it "shows a security key error and does not create a key" do
-        stub_as_dev_localhost
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5728,6 +5909,7 @@ RSpec.describe UsersController do
         sign_in(user1)
         stub_secure_session_confirmed
       end
+
       context "when user has a registered totp and security key" do
         before do
           _totp_second_factor = Fabricate(:user_second_factor_totp, user: user1)
@@ -5737,9 +5919,10 @@ RSpec.describe UsersController do
               user: user1,
               factor_type: UserSecurityKey.factor_types[:second_factor],
             )
+          Fabricate(:passkey_with_random_credential, user: user1)
         end
 
-        it "should disable all totp and security keys" do
+        it "should disable all totp and security keys (but not passkeys)" do
           expect_enqueued_with(
             job: :critical_user_email,
             args: {
@@ -5752,9 +5935,202 @@ RSpec.describe UsersController do
             expect(response.status).to eq(200)
 
             expect(user1.reload.user_second_factors).to be_empty
-            expect(user1.security_keys).to be_empty
+            expect(user1.second_factor_security_keys).to be_empty
+            expect(user1.security_keys.length).to eq(1)
+            expect(user1.security_keys[0].factor_type).to eq(
+              UserSecurityKey.factor_types[:first_factor],
+            )
+            expect(user1.passkey_credential_ids.length).to eq(1)
           end
         end
+      end
+    end
+  end
+
+  describe "#create_passkey" do
+    before do
+      SiteSetting.experimental_passkeys = true
+      stub_secure_session_confirmed
+    end
+
+    it "fails if user is not logged in" do
+      post "/u/create_passkey.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "stores the challenge in the session and returns challenge data, user id, and supported algorithms" do
+      sign_in(user1)
+      post "/u/create_passkey.json"
+
+      secure_session = read_secure_session
+      response_parsed = response.parsed_body
+      expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, secure_session))
+      expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
+      expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
+      expect(response_parsed["user_secure_id"]).to eq(user1.reload.secure_identifier)
+      expect(response_parsed["supported_algorithms"]).to eq(
+        ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
+      )
+    end
+
+    context "when user has a passkey" do
+      fab!(:user_security_key) { Fabricate(:passkey_with_random_credential, user: user1) }
+
+      it "returns existing active credentials" do
+        sign_in(user1)
+        post "/u/create_passkey.json"
+
+        response_parsed = response.parsed_body
+        expect(response_parsed["existing_passkey_credential_ids"]).to eq(
+          [user_security_key.credential_id],
+        )
+      end
+    end
+  end
+
+  describe "#rename_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "fails if no user is logged in" do
+      put "/u/rename_passkey/NONE.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "fails if no name parameter is provided" do
+      sign_in(user1)
+      put "/u/rename_passkey/ID.json"
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"][0]).to eq(
+        "param is missing or the value is empty: name",
+      )
+    end
+
+    it "fails if key is invalid" do
+      sign_in(user1)
+      put "/u/rename_passkey/ID.json", params: { name: "new name" }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"][0]).to include(
+        "You supplied invalid parameters to the request: id",
+      )
+    end
+
+    context "with an existing passkey" do
+      fab!(:passkey) do
+        Fabricate(:passkey_with_random_credential, user: user1, name: "original name")
+      end
+
+      it "renames the key" do
+        sign_in(user1)
+        put "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
+        response_parsed = response.parsed_body
+
+        expect(response.status).to eq(200)
+        expect(passkey.reload.name).to eq("new name")
+      end
+
+      it "does not let an admin delete a passkey associated with user1" do
+        sign_in(admin)
+
+        put "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
+
+        expect(passkey.reload.name).to eq("original name")
+      end
+    end
+  end
+
+  describe "#delete_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+    fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
+
+    it "fails if user does not have a confirmed session" do
+      sign_in(user1)
+      delete "/u/delete_passkey/#{passkey.id}.json"
+      expect(response.status).to eq(403)
+    end
+
+    context "with a confirmed session" do
+      before { stub_secure_session_confirmed }
+
+      it "fails if user is not logged in" do
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "deletes the key" do
+        sign_in(user1)
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(200)
+        expect(user1.passkey_credential_ids).to eq([])
+      end
+
+      it "does not let an admin delete a passkey associated with user1" do
+        sign_in(admin)
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(200)
+
+        expect(user1.passkey_credential_ids[0]).to eq(passkey.credential_id)
+      end
+    end
+  end
+
+  describe "#register_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "fails if user is not logged in" do
+      stub_secure_session_confirmed
+      post "/u/register_passkey.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "fails if session is not confirmed" do
+      sign_in(user1)
+      post "/u/register_passkey.json"
+      expect(response.status).to eq(403)
+    end
+
+    context "with a valid key" do
+      let(:attestation) do
+        "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVikSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAK3OAAI1vMYKZIsLJfHwVQMAICRXq4sFZ9XpWZOzfJ8EguJmoEPMzNVyFMUWQfT5u1QzpQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmI="
+      end
+      let(:valid_client_param) { passkey_client_data_param("webauthn.create") }
+      let(:invalid_client_param) { passkey_client_data_param("webauthn.get") }
+
+      before do
+        sign_in(user1)
+        stub_secure_session_confirmed
+        simulate_localhost_passkey_challenge
+      end
+
+      it "registers the passkey" do
+        post "/u/register_passkey.json",
+             params: {
+               name: "My Passkey",
+               attestation: attestation,
+               clientData: Base64.encode64(valid_client_param.to_json),
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["name"]).to eq("My Passkey")
+        expect(user1.passkey_credential_ids).to eq([valid_passkey_data[:credential_id]])
+      end
+
+      it "does not register a passkey with the wrong webauthn type" do
+        post "/u/register_passkey.json",
+             params: {
+               name: "My Passkey",
+               attestation: attestation,
+               clientData: Base64.encode64(invalid_client_param.to_json),
+             }
+
+        expect(response.status).to eq(401)
+        expect(response.parsed_body["errors"][0]).to eq(
+          I18n.t("webauthn.validation.invalid_type_error"),
+        )
       end
     end
   end
@@ -5996,6 +6372,88 @@ RSpec.describe UsersController do
           end
         end
       end
+    end
+  end
+
+  describe "#confirm_session" do
+    let(:user) { user1 }
+    let(:password) { "test" }
+
+    before { sign_in(user) }
+
+    context "when SSO is enabled" do
+      before do
+        SiteSetting.discourse_connect_url = "https://discourse.test/sso"
+        SiteSetting.enable_discourse_connect = true
+      end
+
+      it "does not allow access" do
+        post "/u/confirm-session.json", params: { password: password }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when local logins are not enabled" do
+      before { SiteSetting.enable_local_logins = false }
+
+      it "does not allow access" do
+        post "/u/confirm-session.json", params: { password: password }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when the site settings allow second factors" do
+      before do
+        SiteSetting.enable_local_logins = true
+        SiteSetting.enable_discourse_connect = false
+      end
+
+      context "when the password is wrong" do
+        it "returns incorrect password response" do
+          post "/u/confirm-session.json", params: { password: password }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq("Incorrect password")
+        end
+      end
+
+      context "when the password is correct" do
+        fab!(:user2) { Fabricate(:user, password: "8555039dd212cc66ec68") }
+
+        it "returns a successful response" do
+          sign_in(user2)
+          post "/u/confirm-session.json", params: { password: "8555039dd212cc66ec68" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(nil)
+        end
+      end
+    end
+  end
+
+  describe "#trusted_session" do
+    it "returns 403 for anons" do
+      get "/u/trusted-session.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "resopnds with a 'failed' result by default" do
+      sign_in(user1)
+
+      get "/u/trusted-session.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
+    it "response with 'success' on a confirmed session" do
+      user2 = Fabricate(:user, password: "8555039dd212cc66ec68")
+      sign_in(user2)
+
+      post "/u/confirm-session.json", params: { password: "8555039dd212cc66ec68" }
+      expect(response.status).to eq(200)
+
+      get "/u/trusted-session.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
     end
   end
 

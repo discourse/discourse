@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Sharing from "discourse/lib/sharing";
+import I18n from "discourse-i18n";
 
 export default {
   initialize(owner) {

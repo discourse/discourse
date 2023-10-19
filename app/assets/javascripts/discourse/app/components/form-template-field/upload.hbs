@@ -8,7 +8,13 @@
     </label>
   {{/if}}
 
-  <input type="hidden" name={{@attributes.label}} value={{this.uploadValue}} />
+  {{#if @attributes.description}}
+    <span class="form-template-field__description">
+      {{html-safe @attributes.description}}
+    </span>
+  {{/if}}
+
+  <input type="hidden" name={{@id}} value={{this.uploadValue}} />
 
   <PickFilesButton
     @fileInputClass="form-template-field__upload"

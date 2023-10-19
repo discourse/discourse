@@ -48,7 +48,7 @@ class TopicCreator
     setup_tags(topic)
 
     if fields = @opts[:custom_fields]
-      topic.custom_fields.merge!(fields)
+      topic.custom_fields = fields
     end
 
     DiscourseEvent.trigger(:before_create_topic, topic, self)
@@ -122,7 +122,7 @@ class TopicCreator
       visible: @opts[:visible],
     }
 
-    %i[subtype archetype meta_data import_mode advance_draft].each do |key|
+    %i[subtype archetype import_mode advance_draft].each do |key|
       topic_params[key] = @opts[key] if @opts[key].present?
     end
 

@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
-import I18n from "I18n";
-import Setting from "admin/mixins/setting-object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import Setting from "admin/mixins/setting-object";
 
 export default class SiteSetting extends EmberObject.extend(Setting) {
   static findAll() {

@@ -8,6 +8,7 @@ describe "Composer Form Templates", type: :system do
       name: "Bug Reports",
       template:
         "- type: input
+  id: full-name
   attributes:
     label: What is your full name?
     placeholder: John Doe
@@ -16,13 +17,13 @@ describe "Composer Form Templates", type: :system do
     )
   end
   fab!(:form_template_2) do
-    Fabricate(:form_template, name: "Feature Request", template: "- type: checkbox")
+    Fabricate(:form_template, name: "Feature Request", template: "- type: checkbox\n  id: check")
   end
   fab!(:form_template_3) do
-    Fabricate(:form_template, name: "Awesome Possum", template: "- type: dropdown")
+    Fabricate(:form_template, name: "Awesome Possum", template: "- type: dropdown\n  id: dropdown")
   end
   fab!(:form_template_4) do
-    Fabricate(:form_template, name: "Biography", template: "- type: textarea")
+    Fabricate(:form_template, name: "Biography", template: "- type: textarea\n  id: bio")
   end
   fab!(:form_template_5) do
     Fabricate(
@@ -31,12 +32,14 @@ describe "Composer Form Templates", type: :system do
       template:
         %Q(
         - type: input
+          id: full-name
           attributes:
             label: "What is your name?"
             placeholder: "John Smith"
           validations:
             required: false
         - type: upload
+          id: prescription
           attributes:
             file_types: ".jpg, .png"
             allow_multiple: false
@@ -44,12 +47,38 @@ describe "Composer Form Templates", type: :system do
             validations:
             required: true
         - type: upload
+          id: additional-docs
           attributes:
             file_types: ".jpg, .png, .pdf, .mp3, .mp4"
             allow_multiple: true
             label: "Any additional docs"
             validations:
             required: false"),
+    )
+  end
+  fab!(:form_template_6) do
+    Fabricate(
+      :form_template,
+      name: "Descriptions",
+      template:
+        %Q(
+        - type: input
+          id: full-name
+          attributes:
+            label: "Full name"
+            description: "What is your full name?"
+            placeholder: "John Smith"
+          validations:
+            required: false
+        - type: upload
+          id: prescription
+          attributes:
+            file_types: ".jpg, .png"
+            allow_multiple: false
+            label: "Prescription"
+            description: "Upload your prescription"
+          validations:
+            required: true"),
     )
   end
   fab!(:category_with_template_1) do
@@ -108,6 +137,15 @@ describe "Composer Form Templates", type: :system do
       topic_count: 5,
       form_template_ids: [],
       topic_template: "Testing",
+    )
+  end
+  fab!(:category_with_template_6) do
+    Fabricate(
+      :category,
+      name: "Descriptions",
+      slug: "descriptions",
+      topic_count: 2,
+      form_template_ids: [form_template_6.id],
     )
   end
 
@@ -225,13 +263,13 @@ describe "Composer Form Templates", type: :system do
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Bruce Wayne")
     composer.create
-    topic = Topic.where(user: user, title: topic_title)
-    topic_id = Topic.where(user: user, title: topic_title).pluck(:id)
-    post = Post.where(topic_id: topic_id).first
 
     expect(topic_page).to have_topic_title(topic_title)
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked p")).to have_content(
       "Bruce Wayne",
+    )
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked h3")).to have_content(
+      "What is your full name?",
     )
   end
 
@@ -240,7 +278,7 @@ describe "Composer Form Templates", type: :system do
 
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "upload-your-prescription-uploader",
+    attach_file "prescription-uploader",
                 "#{Rails.root}/spec/fixtures/images/logo.png",
                 make_visible: true
     composer.fill_title(topic_title)
@@ -253,11 +291,9 @@ describe "Composer Form Templates", type: :system do
   end
 
   it "doesn't allow uploading an invalid file type" do
-    topic_title = "Bruce Wayne's Medication"
-
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "upload-your-prescription-uploader",
+    attach_file "prescription-uploader",
                 "#{Rails.root}/spec/fixtures/images/animated.gif",
                 make_visible: true
     expect(find("#dialog-holder .dialog-body p", visible: :all)).to have_content(
@@ -270,10 +306,10 @@ describe "Composer Form Templates", type: :system do
 
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "upload-your-prescription-uploader",
+    attach_file "prescription-uploader",
                 "#{Rails.root}/spec/fixtures/images/logo.png",
                 make_visible: true
-    attach_file "any-additional-docs-uploader",
+    attach_file "additional-docs-uploader",
                 [
                   "#{Rails.root}/spec/fixtures/media/small.mp3",
                   "#{Rails.root}/spec/fixtures/media/small.mp4",
@@ -289,6 +325,23 @@ describe "Composer Form Templates", type: :system do
     )
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("a.attachment")
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("audio")
-    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("video")
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
+      ".video-placeholder-container",
+    )
+  end
+
+  it "shows labels and descriptions when a form template is assigned to the category" do
+    category_page.visit(category_with_template_6)
+    category_page.new_topic_button.click
+    expect(composer).to have_no_composer_input
+    expect(composer).to have_form_template
+
+    expect(composer).to have_form_template_field("input")
+    expect(composer).to have_form_template_field_label("Full name")
+    expect(composer).to have_form_template_field_description("What is your full name?")
+
+    expect(composer).to have_form_template_field("upload")
+    expect(composer).to have_form_template_field_label("Prescription")
+    expect(composer).to have_form_template_field_description("Upload your prescription")
   end
 end

@@ -1,20 +1,21 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import { escapeExpression } from "discourse/lib/utilities";
-import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
-import { htmlSafe } from "@ember/template";
+import I18n from "discourse-i18n";
 
 export default class ForgotPassword extends Component {
   @service siteSettings;
 
-  @tracked emailOrUsername = cookie("email") || this.args.model.emailOrUsername;
+  @tracked
+  emailOrUsername = cookie("email") || this.args.model?.emailOrUsername || "";
   @tracked disabled = false;
   @tracked helpSeen = false;
   @tracked offerHelp;
@@ -24,9 +25,9 @@ export default class ForgotPassword extends Component {
     if (this.disabled) {
       return true;
     } else if (this.siteSettings.hide_email_address_taken) {
-      return !(this.emailOrUsername || "").includes("@");
+      return !this.emailOrUsername.includes("@");
     } else {
-      return isEmpty((this.emailOrUsername || "").trim());
+      return isEmpty(this.emailOrUsername.trim());
     }
   }
 

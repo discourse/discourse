@@ -1,7 +1,7 @@
 "use strict";
 
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
-const { resolve, join } = require("path");
+const path = require("path");
 const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
 const { createI18nTree } = require("./lib/translation-plugin");
@@ -15,15 +15,34 @@ const generateWorkboxTree = require("./lib/workbox-tree-builder");
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
 module.exports = function (defaults) {
-  const discourseRoot = resolve("../../../..");
+  const discourseRoot = path.resolve("../../../..");
   const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   DeprecationSilencer.silence(console, "warn");
   DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
+  const isEmbroider = process.env.USE_EMBROIDER !== "0";
   const isProduction = EmberApp.env().includes("production");
-  const isTest = EmberApp.env().includes("test");
+
+  // This is more or less the same as the one in @embroider/test-setup
+  const maybeEmbroider = (app, options) => {
+    if (isEmbroider) {
+      const { compatBuild } = require("@embroider/compat");
+      const { Webpack } = require("@embroider/webpack");
+
+      // https://github.com/embroider-build/embroider/issues/1581
+      if (Array.isArray(options?.extraPublicTrees)) {
+        options.extraPublicTrees = [
+          app.addonPostprocessTree("all", mergeTrees(options.extraPublicTrees)),
+        ];
+      }
+
+      return compatBuild(app, Webpack, options);
+    } else {
+      return app.toTree(options?.extraPublicTrees);
+    }
+  };
 
   const app = new EmberApp(defaults, {
     autoRun: false,
@@ -39,6 +58,7 @@ module.exports = function (defaults) {
     autoImport: {
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
+      watchDependencies: ["discourse-i18n"],
       webpack: {
         // Workarounds for https://github.com/ef4/ember-auto-import/issues/519 and https://github.com/ef4/ember-auto-import/issues/478
         devtool: isProduction ? false : "source-map", // Sourcemaps contain reference to the ephemeral broccoli cache dir, which changes on every deploy
@@ -81,14 +101,15 @@ module.exports = function (defaults) {
       enabled: false,
     },
 
+    "ember-cli-deprecation-workflow": {
+      enabled: true,
+    },
+
     "ember-cli-terser": {
       enabled: isProduction,
-      exclude: [
-        "**/test-*.js",
-        "**/core-tests*.js",
-        "**/highlightjs/*",
-        "**/javascripts/*",
-      ],
+      exclude:
+        ["**/highlightjs/*", "**/javascripts/*"] +
+        (isEmbroider ? [] : ["**/test-*.js", "**/core-tests*.js"]),
     },
 
     "ember-cli-babel": {
@@ -99,8 +120,9 @@ module.exports = function (defaults) {
       plugins: [require.resolve("deprecation-silencer")],
     },
 
-    // We need to build tests in prod for theme tests
-    tests: true,
+    // Was previously true so that we could run theme tests in production
+    // but we're moving away from that as part of the Embroider migration
+    tests: isEmbroider ? !isProduction : true,
 
     vendorFiles: {
       // Freedom patch - includes bug fix and async stack support
@@ -110,65 +132,8 @@ module.exports = function (defaults) {
     },
   });
 
-  // Patching a private method is not great, but there's no other way for us to tell
-  // Ember CLI that we want the tests alone in a package without helpers/fixtures, since
-  // we re-use those in the theme tests.
-  app._defaultPackager.packageApplicationTests = function (tree) {
-    let appTestTrees = []
-      .concat(
-        this.packageEmberCliInternalFiles(),
-        this.packageTestApplicationConfig(),
-        tree
-      )
-      .filter(Boolean);
-
-    appTestTrees = mergeTrees(appTestTrees, {
-      overwrite: true,
-      annotation: "TreeMerger (appTestTrees)",
-    });
-
-    const tests = concat(appTestTrees, {
-      inputFiles: ["**/tests/**/*-test.js"],
-      headerFiles: ["vendor/ember-cli/tests-prefix.js"],
-      footerFiles: ["vendor/ember-cli/app-config.js"],
-      outputFile: "/assets/core-tests.js",
-      annotation: "Concat: Core Tests",
-      sourceMapConfig: false,
-    });
-
-    const testHelpers = concat(appTestTrees, {
-      inputFiles: [
-        "**/tests/loader-shims.js",
-        "**/tests/test-boot-ember-cli.js",
-        "**/tests/helpers/**/*.js",
-        "**/tests/fixtures/**/*.js",
-        "**/tests/setup-tests.js",
-      ],
-      outputFile: "/assets/test-helpers.js",
-      annotation: "Concat: Test Helpers",
-      sourceMapConfig: false,
-    });
-
-    if (isTest) {
-      return mergeTrees([
-        tests,
-        testHelpers,
-        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
-        discourseScss(
-          `${discourseRoot}/app/assets/stylesheets`,
-          "qunit-custom.scss"
-        ),
-      ]);
-    } else {
-      return mergeTrees([tests, testHelpers]);
-    }
-  };
-
   // WARNING: We should only import scripts here if they are not in NPM.
-  // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
-  app.import("node_modules/bootstrap/js/modal.js");
-  app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
   });
@@ -178,10 +143,6 @@ module.exports = function (defaults) {
     discourseRoot +
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
-
-  // See: https://github.com/embroider-build/embroider/issues/1574
-  // Specifically, markdownItBundleTree is triggering the MacrosConfig error
-  finalizeEmbroiderMacrosConfigs(app, resolve("."), app.project);
 
   const discoursePluginsTree = app.project
     .findAddonByName("discourse-plugins")
@@ -195,7 +156,16 @@ module.exports = function (defaults) {
     .findAddonByName("pretty-text")
     .treeForMarkdownItBundle();
 
-  return app.toTree([
+  const testStylesheetTree = mergeTrees([
+    discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+    discourseScss(
+      `${discourseRoot}/app/assets/stylesheets`,
+      "qunit-custom.scss"
+    ),
+  ]);
+  app.project.liveReloadFilterPatterns = [/.*\.scss/];
+
+  const extraPublicTrees = [
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -218,23 +188,39 @@ module.exports = function (defaults) {
     }),
     generateScriptsTree(app),
     discoursePluginsTree,
-  ]);
+    testStylesheetTree,
+  ];
+
+  return maybeEmbroider(app, {
+    extraPublicTrees,
+    packagerOptions: {
+      webpackConfig: {
+        devtool: "source-map",
+        externals: [
+          function ({ request }, callback) {
+            if (
+              !request.includes("-embroider-implicit") &&
+              (request.startsWith("admin/") ||
+                request.startsWith("wizard/") ||
+                (request.startsWith("pretty-text/engines/") &&
+                  request !== "pretty-text/engines/discourse-markdown-it") ||
+                request.startsWith("discourse/plugins/") ||
+                request.startsWith("discourse/theme-"))
+            ) {
+              callback(null, request, "commonjs");
+            } else {
+              callback();
+            }
+          },
+        ],
+        module: {
+          parser: {
+            javascript: {
+              exportsPresence: "error",
+            },
+          },
+        },
+      },
+    },
+  });
 };
-
-// See: https://github.com/embroider-build/embroider/issues/1574
-function finalizeEmbroiderMacrosConfigs(appInstance, appRoot, parent) {
-  parent.initializeAddons?.();
-
-  for (let addon of parent.addons) {
-    if (addon.name === "@embroider/macros") {
-      const MacrosConfig = require(join(
-        addon.packageRoot,
-        "src",
-        "macros-config"
-      )).default;
-      MacrosConfig.for(appInstance, appRoot).finalize();
-    } else {
-      finalizeEmbroiderMacrosConfigs(appInstance, appRoot, addon);
-    }
-  }
-}

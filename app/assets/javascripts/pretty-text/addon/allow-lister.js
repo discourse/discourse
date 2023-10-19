@@ -197,6 +197,7 @@ export const DEFAULT_LIST = [
   "span.excerpt",
   "div.excerpt",
   "div.video-container",
+  "div.video-placeholder-container",
   "div.onebox-placeholder-container",
   "span.placeholder-icon video",
   "span.hashtag",

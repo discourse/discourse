@@ -10,6 +10,10 @@ da:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Altid"
+          fullscreen: "Når chat er i fuld skærm"
+          never: "Aldrig"
       logs:
         staff_actions:
           actions:
@@ -20,11 +24,8 @@ da:
           descriptions:
             chat:
               create_message: "Opret en chatbesked i en angivet kanal."
-    about:
-      chat_messages_count: "Chatbeskeder"
-      chat_channels_count: "Chatkanaler"
-      chat_users_count: "Chatbrugere"
     chat:
+      deleted_chat_username: slettet
       dates:
         time_tiny: "tt:mm"
       all_loaded: "Viser alle beskeder"
@@ -65,6 +66,7 @@ da:
         create: "Ny kanal"
       click_to_join: "Klik her for at se tilgængelige kanaler."
       close: "Luk"
+      remove: "Fjern"
       delete: "Slet"
       edited: "redigeret"
       muted: "stille!"
@@ -73,6 +75,8 @@ da:
         never: "Aldrig"
       header_indicator_preference:
         never: "Aldrig"
+      separate_sidebar_mode:
+        title: "Vis separate sidebjælke-tilstande for forum og chat"
       enable: "Aktiver chat"
       flag: "Rapportér"
       invalid_access: "Du har ikke adgang til at se denne chatkanal"
@@ -81,8 +85,6 @@ da:
       heading: "Chat"
       join: "Tilslut"
       last_visit: "sidste besøg"
-      mention_warning:
-        dismiss: "afvis"
       reply: "Svar"
       edit: "Rediger"
       rebake_message: "Gendan HTML"
@@ -125,7 +127,6 @@ da:
       channel_info:
         back_to_channel: "Tilbage"
         tabs:
-          about: Om
           members: Brugere
           settings: Indstillinger
       new_message_modal:
@@ -169,8 +170,14 @@ da:
         saved: "Gemt"
         unfollow: "Forlad"
         admin_title: "Admin"
+        settings_title: "Indstillinger"
+        category_label: "Kategori"
+        history_label: "Historik"
+        members_label: "Brugere"
       admin:
         title: "Chat"
+        export_messages:
+          description: "Dette eksporterer alle beskeder fra alle kanaler."
       incoming_webhooks:
         back: "Tilbage"
         description: "Beskrivelse"
@@ -196,6 +203,10 @@ da:
           title: "Flyt til ny besked"
       replying_indicator:
         single_user: "%{username} skriver"
+      retention_reminders:
+        short:
+          one: "%{count} dag"
+          other: "%{count} dage"
       emoji_picker:
         objects: "Objekter"
         activities: "Aktiviteter"
@@ -251,8 +262,16 @@ da:
             sender:
               label: Afsender
               description: Standard er system
+    review:
+      types:
+        reviewable_chat_message:
+          noun: "chatbesked"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Skift kanal"
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

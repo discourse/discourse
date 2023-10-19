@@ -1,13 +1,13 @@
-import { inject as service } from "@ember/service";
 import Component from "@ember/component";
-import I18n from "I18n";
 import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
+import { inject as service } from "@ember/service";
 import { classify } from "@ember/string";
-import discourseComputed from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
-import loadScript from "discourse/lib/load-script";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import loadScript from "discourse/lib/load-script";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class PollBreakdownModal extends Component {
   @service dialog;

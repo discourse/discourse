@@ -1,18 +1,18 @@
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { skip, test } from "qunit";
+import sinon from "sinon";
+import { configureEyeline } from "discourse/lib/eyeline";
+import DiscourseURL from "discourse/lib/url";
+import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   exists,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import sinon from "sinon";
-import { skip, test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import { configureEyeline } from "discourse/lib/eyeline";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({

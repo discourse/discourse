@@ -1,11 +1,12 @@
+import { run } from "@ember/runloop";
+import $ from "jquery";
 import { Promise } from "rsvp";
+import userPresent from "discourse/lib/user-presence";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import getURL from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
-import { run } from "@ember/runloop";
-import userPresent from "discourse/lib/user-presence";
+import getURL from "discourse-common/lib/get-url";
 
 let _trackView = false;
 let _transientHeader = null;

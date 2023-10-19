@@ -10,6 +10,9 @@ es:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Siempre"
+          never: "Nunca"
       logs:
         staff_actions:
           actions:
@@ -21,11 +24,8 @@ es:
           descriptions:
             chat:
               create_message: "Crea un mensaje de chat en un canal especificado."
-    about:
-      chat_messages_count: "Mensajes de chat"
-      chat_channels_count: "Canales de chat"
-      chat_users_count: "Usuarios del chat"
     chat:
+      deleted_chat_username: eliminado
       dates:
         time_tiny: "h:mm"
       all_loaded: "Mostrando todos los mensajes"
@@ -81,6 +81,7 @@ es:
         create: "Nuevo canal"
       click_to_join: "Haz clic aquí para ver los canales disponibles."
       close: "Cerrar"
+      remove: "Eliminar"
       collapse: "Contraer contenedor del chat"
       expand: "Ampliar el cajón de chat"
       confirm_flag: "¿Seguro que quieres denunciar el mensaje de %{username}?"
@@ -124,27 +125,10 @@ es:
           one: "Última hora"
           other: "Últimas %{count} horas"
       mention_warning:
-        dismiss: "descartar"
-        cannot_see: "%{username} no puede acceder a este canal y no ha sido notificado."
-        cannot_see_multiple:
-          one: "%{username} y otro usuario no pueden acceder a este canal y no fueron notificados."
-          other: "%{username} y otros %{count} usuarios no pueden acceder a este canal y no fueron notificados."
         invitations_sent:
           one: "Invitación enviada"
           other: "Invitaciones enviadas"
         invite: "Invitar al canal"
-        without_membership: "%{username} no se ha unido a este canal."
-        without_membership_multiple:
-          one: "%{username} y otro usuario no se han unido a este canal."
-          other: "%{username} y otros %{count} usuarios no se han unido a este canal."
-        group_mentions_disabled: "%{group_name} no permite menciones."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} y otro grupo no permiten menciones."
-          other: "%{group_name} y otros %{count} grupos no permiten menciones."
-        too_many_members: "%{group_name} tiene demasiados miembros. No se notificó a nadie."
-        too_many_members_multiple:
-          one: "%{group_name} y otro grupo tienen demasiados miembros. No se ha notificado a nadie."
-          other: "%{group_name} y otros %{count} grupos tienen demasiados miembros. No se ha notificado a nadie."
         groups:
           header:
             some: "Algunos usuarios no serán notificados"
@@ -282,6 +266,7 @@ es:
         read_only: "Solo lectura"
         archived_header: "El canal está archivado"
         archived: "Archivado"
+        archive_failed: "Error al archivar el canal. Se han archivado %{completed}/%{total} mensajes. Se ha creado <a target=\"_blank\" href=\"%{topic_url}\">el tema de destino</a>. Pulsa reintentar para intentar completar el archivo."
         archive_failed_no_topic: "Error al archivar el canal. Se han archivado %{completed}/%{total} mensajes, no se ha creado el tema de destino. Pulsa reintentar para intentar completar el archivo."
         archive_completed: "Ver <a target=\"_blank\" href=\"%{topic_url}\">el tema del archivo</a>"
         closed_header: "El canal está cerrado"
@@ -311,7 +296,6 @@ es:
         back_to_all_channels: "Todos los canales"
         back_to_channel: "Atrás"
         tabs:
-          about: Acerca de
           members: Miembros
           settings: Ajustes
       new_message_modal:
@@ -441,11 +425,14 @@ es:
         saved: "Guardado"
         unfollow: "Abandonar"
         admin_title: "Administrador"
+        settings_title: "Ajustes"
+        category_label: "Categoría"
+        history_label: "Historial"
+        members_label: "Miembros"
       admin:
         title: "Chat"
         export_messages:
           title: "Exportar mensajes de chat"
-          description: "Actualmente, la exportación está limitada a los 10 000 mensajes más recientes de los últimos 6 meses."
           create_export: "Crear exportación"
           export_has_started: "La exportación ha comenzado. Recibirás un MP cuando esté lista."
       direct_messages:
@@ -511,14 +498,9 @@ es:
           one: "%{commaSeparatedUsernames} y %{count} más está escribiendo"
           other: "%{commaSeparatedUsernames} y %{count} más están escribiendo"
       retention_reminders:
-        public_none: "El historial del canal se conserva indefinidamente."
-        public:
-          one: "El historial del canal se conserva durante %{count} día."
-          other: "El historial del canal se conserva durante %{count} días."
-        dm_none: "El historial personal de chat se conserva indefinidamente."
-        dm:
-          one: "El historial de chat personal se conserva durante %{count} día."
-          other: "El historial de chat personal se conserva durante %{count} días."
+        short:
+          one: "%{count} día"
+          other: "%{count} días"
       flags:
         off_topic: "Este mensaje no es relevante para la discusión actual, tal y como se define en el título del canal, y probablemente debería moverse a otro lugar."
         inappropriate: "Este mensaje tiene un contenido que una persona razonable consideraría ofensivo, abusivo o que viola las <a href=\"%{basePath}/guidelines\">directrices de nuestra comunidad</a>."
@@ -543,7 +525,6 @@ es:
       thread:
         title: "Título"
         view_thread: Ver hilo
-        default_title: "Hilo"
         replies:
           one: "%{count} respuesta"
           other: "%{count} respuestas"
@@ -613,6 +594,9 @@ es:
       types:
         chat_reviewable_message:
           title: "Mensaje de chat denunciado"
+        reviewable_chat_message:
+          title: "Mensaje de chat denunciado"
+          noun: "mensaje de chat"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -648,3 +632,7 @@ es:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

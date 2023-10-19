@@ -1,21 +1,21 @@
-import { escapeExpression, formatUsername } from "discourse/lib/utilities";
-import { deepMerge } from "discourse-common/lib/object";
-import I18n from "I18n";
-import RawHtml from "discourse/widgets/raw-html";
-import { avatarImg } from "discourse/widgets/post";
-import { createWidget } from "discourse/widgets/widget";
-import { dateNode } from "discourse/helpers/node";
-import { emojiUnescape } from "discourse/lib/text";
-import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
-import widgetHbs from "discourse/widgets/hbs-compiler";
-import highlightSearch from "discourse/lib/highlight-search";
-import { iconNode } from "discourse-common/lib/icon-library";
-import renderTag from "discourse/lib/render-tag";
-import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
-import User from "discourse/models/user";
 import { hbs } from "ember-cli-htmlbars";
+import { h } from "virtual-dom";
+import { dateNode } from "discourse/helpers/node";
+import highlightSearch from "discourse/lib/highlight-search";
+import renderTag from "discourse/lib/render-tag";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression, formatUsername } from "discourse/lib/utilities";
+import User from "discourse/models/user";
+import widgetHbs from "discourse/widgets/hbs-compiler";
+import { avatarImg } from "discourse/widgets/post";
+import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
+import { createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { deepMerge } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 const suggestionShortcuts = [
   "in:title",

@@ -1,7 +1,7 @@
-import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
-import I18n from "I18n";
-import { createWidgetFrom } from "discourse/widgets/widget";
 import { formatUsername } from "discourse/lib/utilities";
+import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
+import { createWidgetFrom } from "discourse/widgets/widget";
+import I18n from "discourse-i18n";
 
 createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
   text(notificationName, data) {
@@ -9,7 +9,7 @@ createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
     const description = this.description(data);
 
     if (data.count > 1) {
-      const count = data.count - 2;
+      const count = data.count - 1;
       const username2 = formatUsername(data.username2);
 
       if (count === 0) {
@@ -22,7 +22,6 @@ createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
         return I18n.t("notifications.liked_many", {
           description,
           username: `<span class="multi-username">${username}</span>`,
-          username2: `<span class="multi-username">${username2}</span>`,
           count,
         });
       }

@@ -1,7 +1,7 @@
-import { createWidget } from "discourse/widgets/widget";
-import { dateNode } from "discourse/helpers/node";
-import { h } from "virtual-dom";
 import { dasherize } from "@ember/string";
+import { h } from "virtual-dom";
+import { dateNode } from "discourse/helpers/node";
+import { createWidget } from "discourse/widgets/widget";
 
 createWidget("large-notification-item", {
   tagName: "li",

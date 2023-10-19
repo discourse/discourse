@@ -1,28 +1,31 @@
-import Controller, { inject as controller } from "@ember/controller";
+import { A } from "@ember/array";
+import Controller from "@ember/controller";
+import EmberObject, { action } from "@ember/object";
+import { notEmpty } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import $ from "jquery";
+import { Promise } from "rsvp";
+import LoginModal from "discourse/components/modal/login";
+import { ajax } from "discourse/lib/ajax";
+import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { userPath } from "discourse/lib/url";
+import { emailValid } from "discourse/lib/utilities";
+import { wavingHandURL } from "discourse/lib/waving-hand-url";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import NameValidation from "discourse/mixins/name-validation";
+import PasswordValidation from "discourse/mixins/password-validation";
+import UserFieldsValidation from "discourse/mixins/user-fields-validation";
+import UsernameValidation from "discourse/mixins/username-validation";
+import { findAll } from "discourse/models/login-method";
+import User from "discourse/models/user";
+import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import { A } from "@ember/array";
-import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import NameValidation from "discourse/mixins/name-validation";
-import PasswordValidation from "discourse/mixins/password-validation";
-import { Promise } from "rsvp";
-import User from "discourse/models/user";
-import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
-import { ajax } from "discourse/lib/ajax";
-import { emailValid } from "discourse/lib/utilities";
-import { findAll } from "discourse/models/login-method";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { isEmpty } from "@ember/utils";
-import { notEmpty } from "@ember/object/computed";
-import { setting } from "discourse/lib/computed";
-import { userPath } from "discourse/lib/url";
-import { wavingHandURL } from "discourse/lib/waving-hand-url";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -31,7 +34,7 @@ export default Controller.extend(
   NameValidation,
   UserFieldsValidation,
   {
-    login: controller(),
+    modal: service(),
 
     complete: false,
     accountChallenge: 0,
@@ -50,27 +53,6 @@ export default Controller.extend(
     @discourseComputed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
     showCreateForm(hasAuthOptions, canCreateLocal, skipConfirmation) {
       return (hasAuthOptions || canCreateLocal) && !skipConfirmation;
-    },
-
-    resetForm() {
-      // We wrap the fields in a structure so we can assign a value
-      this.setProperties({
-        accountName: "",
-        accountEmail: "",
-        accountUsername: "",
-        accountPassword: "",
-        serverAccountEmail: null,
-        serverEmailValidation: null,
-        authOptions: null,
-        complete: false,
-        formSubmitted: false,
-        rejectedEmails: [],
-        rejectedPasswords: [],
-        prefilledUsername: null,
-        isDeveloper: false,
-        maskPassword: true,
-      });
-      this._createUserFields();
     },
 
     @discourseComputed("formSubmitted")
@@ -444,7 +426,14 @@ export default Controller.extend(
 
     actions: {
       externalLogin(provider) {
-        this.login.send("externalLogin", provider, { signup: true });
+        // we will automatically redirect to the external auth service
+        this.modal.show(LoginModal, {
+          model: {
+            isExternalLogin: true,
+            externalLoginMethod: provider,
+            signup: true,
+          },
+        });
       },
 
       createAccount() {

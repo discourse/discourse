@@ -1,10 +1,9 @@
-import "./loader-shims";
 import {
   cook as cookIt,
   setup as setupIt,
 } from "pretty-text/engines/discourse-markdown-it";
-import { deepMerge } from "discourse-common/lib/object";
 import deprecated from "discourse-common/lib/deprecated";
+import { deepMerge } from "discourse-common/lib/object";
 
 export function registerOption() {
   deprecated(
@@ -124,6 +123,10 @@ export default class {
     let result;
     result = cookIt(raw, this.opts);
     return result ? result : "";
+  }
+
+  parse(markdown, env = {}) {
+    return this.opts.engine.parse(markdown, env);
   }
 
   sanitize(html) {

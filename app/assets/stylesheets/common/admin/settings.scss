@@ -58,6 +58,7 @@
       float: left;
     }
     .input-setting-string,
+    .input-setting-integer,
     .input-setting-textarea {
       width: 100%;
       @media (max-width: $mobile-breakpoint) {

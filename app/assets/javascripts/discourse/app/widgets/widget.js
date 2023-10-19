@@ -1,3 +1,10 @@
+import { getOwner, setOwner } from "@ember/application";
+import { get } from "@ember/object";
+import { camelize } from "@ember/string";
+import { Promise } from "rsvp";
+import { h } from "virtual-dom";
+import { consolePrefix } from "discourse/lib/source-identifier";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
 import {
   WidgetChangeHook,
   WidgetClickHook,
@@ -17,16 +24,9 @@ import {
   WidgetTouchMoveHook,
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
-import DecoratorHelper from "discourse/widgets/decorator-helper";
-import I18n from "I18n";
-import { Promise } from "rsvp";
-import { deepMerge } from "discourse-common/lib/object";
-import { get } from "@ember/object";
-import { h } from "virtual-dom";
 import { isProduction } from "discourse-common/config/environment";
-import { consolePrefix } from "discourse/lib/source-identifier";
-import { getOwner, setOwner } from "@ember/application";
-import { camelize } from "@ember/string";
+import { deepMerge } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 const _registry = {};
 

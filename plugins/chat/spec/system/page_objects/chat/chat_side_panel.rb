@@ -27,6 +27,10 @@ module PageObjects
       def has_open_thread_list?
         has_css?(".chat-side-panel .chat-thread-list")
       end
+
+      def has_no_open_thread_list?
+        has_no_css?(".chat-side-panel .chat-thread-list")
+      end
     end
   end
 end

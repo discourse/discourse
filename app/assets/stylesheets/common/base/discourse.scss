@@ -47,19 +47,21 @@
   }
 }
 
-.placeholder-animation {
-  animation-duration: 4s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-  animation-name: placeHolderShimmer;
-  animation-timing-function: linear;
-  background: var(--primary-very-low);
-  background: linear-gradient(
-    to right,
-    var(--primary-very-low) 10%,
-    var(--primary-low) 18%,
-    var(--primary-very-low) 33%
-  );
+@media (prefers-reduced-motion: no-preference) {
+  .placeholder-animation {
+    animation-duration: 4s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: var(--primary-very-low);
+    background: linear-gradient(
+      to right,
+      var(--primary-very-low) 10%,
+      var(--primary-low) 18%,
+      var(--primary-very-low) 33%
+    );
+  }
 }
 
 // Base Elements
@@ -709,55 +711,6 @@ table {
   }
 }
 
-.pref-auth-tokens {
-  .row {
-    border-bottom: 1px solid #ddd;
-    margin: 5px 0px;
-    padding-bottom: 5px;
-
-    &:last-child {
-      border-bottom: 0;
-    }
-  }
-
-  .auth-token-icon {
-    color: var(--primary-medium);
-    font-size: 2.25em;
-    float: left;
-    margin-right: 10px;
-  }
-
-  .auth-token-first {
-    font-size: 1.1em;
-
-    .auth-token-device {
-      font-weight: bold;
-    }
-  }
-
-  .auth-token-second {
-    color: var(--primary-medium);
-
-    .active {
-      color: var(--success);
-      font-weight: bold;
-    }
-  }
-
-  .auth-token-dropdown {
-    float: right;
-
-    .btn,
-    .btn:hover {
-      background: transparent;
-
-      .d-icon {
-        color: var(--primary-high);
-      }
-    }
-  }
-}
-
 .topic-statuses {
   // avoid adding margin/padding on this parent; sometimes it appears as an empty container
   float: left;
@@ -777,7 +730,7 @@ table {
   }
 }
 
-.broken-theme-alert {
+.broken-theme-alert-banner {
   font-size: var(--base-font-size);
   font-weight: bold;
   padding: 5px 0;
@@ -830,4 +783,9 @@ a#skip-link {
     top: 0px;
     transition: top 0.15s ease-in;
   }
+}
+
+.scroll-lock {
+  overflow: hidden !important;
+  margin-right: var(--scroll-gap, 0);
 }

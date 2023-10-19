@@ -26,11 +26,11 @@ module DiscourseDev
       user = membership.user
 
       om =
-        Chat::MessageCreator.create(
-          user: user,
-          content: Faker::Lorem.paragraph,
-          chat_channel: channel,
-        ).chat_message
+        Chat::CreateMessage.call(
+          guardian: user.guardian,
+          message: Faker::Lorem.paragraph,
+          chat_channel_id: channel.id,
+        ).message
 
       { original_message_user: user, original_message: om, channel: channel }
     end
@@ -45,11 +45,11 @@ module DiscourseDev
             .first
             .user
         @message_count.times do
-          Chat::MessageCreator.create(
+          Chat::CreateMessage.call(
             {
-              user: user,
-              chat_channel: thread.channel,
-              content: Faker::Lorem.paragraph,
+              guardian: user.guardian,
+              chat_channel_id: thread.channel_id,
+              message: Faker::Lorem.paragraph,
               thread_id: thread.id,
             },
           )

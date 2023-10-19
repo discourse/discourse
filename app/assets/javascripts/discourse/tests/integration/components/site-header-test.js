@@ -1,5 +1,3 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   click,
   render,
@@ -7,9 +5,11 @@ import {
   triggerKeyEvent,
   waitUntil,
 } from "@ember/test-helpers";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import I18n from "I18n";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | site-header", function (hooks) {
   setupRenderingTest(hooks);
@@ -35,16 +35,6 @@ module("Integration | Component | site-header", function (hooks) {
       ".header-dropdown-toggle.current-user .unread-notifications"
     );
     assert.strictEqual(unreadBadge.textContent, "5");
-  });
-
-  test("hamburger menu icon shows pending reviewables count", async function (assert) {
-    this.siteSettings.navigation_menu = "legacy";
-    this.currentUser.set("reviewable_count", 1);
-    await render(hbs`<SiteHeader />`);
-    let pendingReviewablesBadge = query(
-      ".hamburger-dropdown .badge-notification"
-    );
-    assert.strictEqual(pendingReviewablesBadge.textContent, "1");
   });
 
   test("hamburger menu icon doesn't show pending reviewables count for non-legacy navigation menu", async function (assert) {

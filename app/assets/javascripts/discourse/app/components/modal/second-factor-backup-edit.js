@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import { debounce } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { debounce } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class SecondFactorBackupEdit extends Component {
   @tracked loading = false;

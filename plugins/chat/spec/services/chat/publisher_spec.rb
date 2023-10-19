@@ -181,32 +181,6 @@ describe Chat::Publisher do
         end
       end
 
-      context "when a staged thread has been provided" do
-        fab!(:thread) do
-          Fabricate(
-            :chat_thread,
-            original_message: Fabricate(:chat_message, chat_channel: channel),
-            channel: channel,
-          )
-        end
-
-        before { message_1.update!(thread: thread) }
-
-        it "generates the correct targets" do
-          targets =
-            described_class.calculate_publish_targets(
-              channel,
-              message_1,
-              staged_thread_id: "stagedthreadid",
-            )
-
-          expect(targets).to contain_exactly(
-            "/chat/#{channel.id}/thread/#{thread.id}",
-            "/chat/#{channel.id}/thread/stagedthreadid",
-          )
-        end
-      end
-
       context "when the message is a thread reply" do
         fab!(:thread) do
           Fabricate(
@@ -255,6 +229,13 @@ describe Chat::Publisher do
           },
         )
       end
+
+      it "calls MessageBus with the correct permissions" do
+        MessageBus.stubs(:publish)
+        MessageBus.expects(:publish).with("/chat/#{channel.id}", anything, {})
+
+        described_class.publish_new!(channel, message_1, staged_id)
+      end
     end
 
     context "when the message is a thread reply" do
@@ -279,27 +260,41 @@ describe Chat::Publisher do
           expect(messages).not_to be_empty
         end
 
-        context "if threading_enabled is true for the channel" do
-          before { channel.update!(threading_enabled: true) }
+        it "calls MessageBus with the correct permissions" do
+          MessageBus.stubs(:publish)
+          MessageBus.expects(:publish).with("/chat/#{channel.id}", anything, {})
 
-          it "does publish to the new_messages_message_bus_channel" do
-            messages =
-              MessageBus.track_publish(
-                described_class.new_messages_message_bus_channel(channel.id),
-              ) { described_class.publish_new!(channel, message_1, staged_id) }
-            expect(messages.first.data).to eq(
-              {
-                type: "thread",
-                channel_id: channel.id,
-                thread_id: thread.id,
-                message:
-                  Chat::MessageSerializer.new(
-                    message_1,
-                    { scope: Guardian.new(nil), root: false },
-                  ).as_json,
-              },
-            )
-          end
+          described_class.publish_new!(channel, message_1, staged_id)
+        end
+      end
+
+      context "if threading_enabled is true for the channel" do
+        before { channel.update!(threading_enabled: true) }
+
+        it "does publish to the new_messages_message_bus_channel" do
+          messages =
+            MessageBus.track_publish(
+              described_class.new_messages_message_bus_channel(channel.id),
+            ) { described_class.publish_new!(channel, message_1, staged_id) }
+          expect(messages.first.data).to eq(
+            {
+              type: "thread",
+              channel_id: channel.id,
+              thread_id: thread.id,
+              message:
+                Chat::MessageSerializer.new(
+                  message_1,
+                  { scope: Guardian.new(nil), root: false },
+                ).as_json,
+            },
+          )
+        end
+
+        it "calls MessageBus with the correct permissions" do
+          MessageBus.stubs(:publish)
+          MessageBus.expects(:publish).with("/chat/#{channel.id}", anything, {})
+
+          described_class.publish_new!(channel, message_1, staged_id)
         end
       end
     end

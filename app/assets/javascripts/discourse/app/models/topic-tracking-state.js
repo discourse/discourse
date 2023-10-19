@@ -1,13 +1,13 @@
 import EmberObject, { get } from "@ember/object";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
-import { deepEqual, deepMerge } from "discourse-common/lib/object";
-import DiscourseURL from "discourse/lib/url";
+import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
-import User from "discourse/models/user";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
 import Site from "discourse/models/site";
-import { isEmpty } from "@ember/utils";
+import User from "discourse/models/user";
+import { deepEqual, deepMerge } from "discourse-common/lib/object";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 function isNew(topic) {
   return (
@@ -94,45 +94,45 @@ const TopicTrackingState = EmberObject.extend({
     this.messageBus.subscribe(
       "/latest",
       this._processChannelPayload,
-      meta["/latest"] || messageBusDefaultNewMessageId
+      meta["/latest"] ?? messageBusDefaultNewMessageId
     );
 
     if (this.currentUser) {
       this.messageBus.subscribe(
         "/new",
         this._processChannelPayload,
-        meta["/new"] || messageBusDefaultNewMessageId
+        meta["/new"] ?? messageBusDefaultNewMessageId
       );
 
       this.messageBus.subscribe(
         `/unread`,
         this._processChannelPayload,
-        meta["/unread"] || messageBusDefaultNewMessageId
+        meta["/unread"] ?? messageBusDefaultNewMessageId
       );
 
       this.messageBus.subscribe(
         `/unread/${this.currentUser.id}`,
         this._processChannelPayload,
-        meta[`/unread/${this.currentUser.id}`] || messageBusDefaultNewMessageId
+        meta[`/unread/${this.currentUser.id}`] ?? messageBusDefaultNewMessageId
       );
     }
 
     this.messageBus.subscribe(
       "/delete",
       this.onDeleteMessage,
-      meta["/delete"] || messageBusDefaultNewMessageId
+      meta["/delete"] ?? messageBusDefaultNewMessageId
     );
 
     this.messageBus.subscribe(
       "/recover",
       this.onRecoverMessage,
-      meta["/recover"] || messageBusDefaultNewMessageId
+      meta["/recover"] ?? messageBusDefaultNewMessageId
     );
 
     this.messageBus.subscribe(
       "/destroy",
       this.onDestroyMessage,
-      meta["/destroy"] || messageBusDefaultNewMessageId
+      meta["/destroy"] ?? messageBusDefaultNewMessageId
     );
   },
 
@@ -732,22 +732,23 @@ const TopicTrackingState = EmberObject.extend({
 
   lookupCount({ type, category, tagId, noSubcategories, customFilterFn } = {}) {
     if (type === "latest") {
-      return (
-        this.lookupCount({
-          type: "new",
-          category,
-          tagId,
-          noSubcategories,
-          customFilterFn,
-        }) +
-        this.lookupCount({
+      let count = this.lookupCount({
+        type: "new",
+        category,
+        tagId,
+        noSubcategories,
+        customFilterFn,
+      });
+      if (!this.currentUser?.new_new_view_enabled) {
+        count += this.lookupCount({
           type: "unread",
           category,
           tagId,
           noSubcategories,
           customFilterFn,
-        })
-      );
+        });
+      }
+      return count;
     }
 
     let categoryId = category ? get(category, "id") : null;

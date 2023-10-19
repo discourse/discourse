@@ -1,5 +1,10 @@
 // Modal wrappers
 
+.fixed-modal:not(#discourse-modal) {
+  // new <DModal /> only, not <DModalLegacy />
+  pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
+}
+
 .modal-outer-container {
   width: 100%;
   height: 100%;
@@ -12,6 +17,7 @@
 }
 
 .modal-inner-container {
+  pointer-events: auto;
   --modal-max-width: 47em; // set in ems to scale with user font-size
   box-sizing: border-box;
   flex: 0 1 auto;
@@ -84,6 +90,7 @@
 }
 
 .modal-backdrop {
+  user-select: none;
   position: fixed;
   top: 0;
   right: 0;
@@ -99,6 +106,9 @@
 .modal-backdrop,
 .modal-backdrop.fade.in {
   animation: fade 0.3s;
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
   opacity: 0.9;
   filter: alpha(opacity=90);
 }
@@ -779,4 +789,25 @@
   @extend .no-text;
   @extend .btn-flat;
   @extend .btn-small;
+}
+
+.confirm-session {
+  &__instructions {
+    margin-bottom: 1.5em;
+  }
+
+  form {
+    margin: 1.5em 0;
+  }
+
+  &__fine-print {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    max-width: 500px;
+  }
+}
+
+.rename-passkey__message {
+  max-width: 500px;
+  margin-bottom: 2em;
 }

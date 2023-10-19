@@ -1,7 +1,8 @@
-import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
+import { setupTest } from "ember-qunit";
 import { module, skip, test } from "qunit";
-import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
+import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
+import { createFile } from "discourse/tests/helpers/qunit-helpers";
 
 class FakeUppy {
   constructor() {
@@ -48,7 +49,9 @@ class FakeUppy {
 
 let withCrypto = window.crypto.subtle ? test : skip;
 
-module("Unit | Utility | UppyChecksum Plugin", function () {
+module("Unit | Utility | UppyChecksum Plugin", function (hooks) {
+  setupTest(hooks);
+
   test("sets the options passed in", function (assert) {
     const capabilities = {};
     const fakeUppy = new FakeUppy();

@@ -1,25 +1,26 @@
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { Promise, all } from "rsvp";
+import { all, Promise } from "rsvp";
 import {
+  changeNewListSubset,
   changeSort,
   queryParams,
   resetParams,
 } from "discourse/controllers/discovery-sortable";
+import PreloadStore from "discourse/lib/preload-store";
+import Category from "discourse/models/category";
+import CategoryList from "discourse/models/category-list";
+import TopicList from "discourse/models/topic-list";
 import {
   filterQueryParams,
   findTopicList,
 } from "discourse/routes/build-topic-route";
-import Category from "discourse/models/category";
-import CategoryList from "discourse/models/category-list";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
-import PermissionType from "discourse/models/permission-type";
-import TopicList from "discourse/models/topic-list";
-import { action } from "@ember/object";
-import PreloadStore from "discourse/lib/preload-store";
+import I18n from "discourse-i18n";
 
 class AbstractCategoryRoute extends DiscourseRoute {
   @service composer;
+  @service router;
 
   queryParams = queryParams;
 
@@ -49,7 +50,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
 
   afterModel(model, transition) {
     if (!model) {
-      this.replaceWith("/404");
+      this.router.replaceWith("/404");
       return;
     }
 
@@ -63,10 +64,11 @@ class AbstractCategoryRoute extends DiscourseRoute {
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
-      return this.replaceWith(
+      this.router.replaceWith(
         "discovery.categoryNone",
         modelParams.category_slug_path_with_id
       );
+      return;
     }
 
     this._setupNavigation(category);
@@ -152,33 +154,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
 
   setupController(controller, model) {
     const topics = this.topics,
-      category = model.category,
-      canCreateTopic = topics.get("can_create_topic");
-
-    let canCreateTopicOnCategory =
-      canCreateTopic && category.get("permission") === PermissionType.FULL;
-    let cannotCreateTopicOnCategory = !canCreateTopicOnCategory;
-    let defaultSubcategory;
-    let canCreateTopicOnSubCategory;
-
-    if (this.siteSettings.default_subcategory_on_read_only_category) {
-      cannotCreateTopicOnCategory = false;
-
-      if (!canCreateTopicOnCategory && category.subcategories) {
-        defaultSubcategory = category.subcategories.find((subcategory) => {
-          return subcategory.get("permission") === PermissionType.FULL;
-        });
-        canCreateTopicOnSubCategory = !!defaultSubcategory;
-      }
-    }
-
-    this.controllerFor("navigation/category").setProperties({
-      canCreateTopicOnCategory,
-      cannotCreateTopicOnCategory,
-      canCreateTopic,
-      canCreateTopicOnSubCategory,
-      defaultSubcategory,
-    });
+      category = model.category;
 
     let topicOpts = {
       model: topics,
@@ -186,13 +162,8 @@ class AbstractCategoryRoute extends DiscourseRoute {
       period:
         topics.get("for_period") ||
         (model.modelParams && model.modelParams.period),
-      selected: [],
       noSubcategories: this.routeConfig && !!this.routeConfig.no_subcategories,
       expandAllPinned: true,
-      canCreateTopic,
-      canCreateTopicOnCategory,
-      canCreateTopicOnSubCategory,
-      defaultSubcategory,
     };
 
     const p = category.get("params");
@@ -206,6 +177,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
     }
 
     this.controllerFor("discovery/topics").setProperties(topicOpts);
+    this.controllerFor("discovery/topics").bulkSelectHelper.clear();
     this.searchService.searchContext = category.get("searchContext");
     this.set("topics", null);
   }
@@ -247,6 +219,11 @@ class AbstractCategoryRoute extends DiscourseRoute {
   @action
   changeSort(sortBy) {
     changeSort.call(this, sortBy);
+  }
+
+  @action
+  changeNewListSubset(subset) {
+    changeNewListSubset.call(this, subset);
   }
 
   @action

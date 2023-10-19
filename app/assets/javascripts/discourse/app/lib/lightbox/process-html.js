@@ -1,6 +1,5 @@
-import { SELECTORS } from "./constants";
-import { escapeExpression } from "discourse/lib/utilities";
 import { htmlSafe } from "@ember/template";
+import { SELECTORS } from "./constants";
 
 export async function processHTML({ container, selector, clickTarget }) {
   selector ??= SELECTORS.DEFAULT_ITEM_SELECTOR;
@@ -41,7 +40,7 @@ export async function processHTML({ container, selector, clickTarget }) {
         null;
 
       const _title =
-        item.title || item.alt || innerImage.title || innerImage.alt || null;
+        item.title || item.alt || innerImage.title || innerImage.alt || "";
 
       const _aspectRatio =
         item.dataset?.aspectRatio ||
@@ -67,7 +66,7 @@ export async function processHTML({ container, selector, clickTarget }) {
         fullsizeURL: encodeURI(_fullsizeURL),
         smallURL: encodeURI(_smallURL),
         downloadURL: encodeURI(_downloadURL),
-        title: escapeExpression(_title),
+        title: _title,
         fileDetails: _fileDetails,
         dominantColor: _dominantColor,
         aspectRatio: _aspectRatio,

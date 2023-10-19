@@ -257,10 +257,6 @@ class SiteSetting < ActiveRecord::Base
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
   end
 
-  def self.legacy_navigation_menu?
-    SiteSetting.navigation_menu == "legacy"
-  end
-
   protected
 
   def self.clear_cache!

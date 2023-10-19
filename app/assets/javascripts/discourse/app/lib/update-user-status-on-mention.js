@@ -1,14 +1,24 @@
-import createUserStatusMessage from "discourse/lib/user-status-message";
+import { guidFor } from "@ember/object/internals";
+import { UserStatusMessage } from "discourse/lib/user-status-message";
 
-export function updateUserStatusOnMention(mention, status, tippyInstances) {
+const userStatusMessages = {};
+
+export function updateUserStatusOnMention(owner, mention, status) {
   removeStatus(mention);
   if (status) {
-    const statusHtml = createUserStatusMessage(status, { showTooltip: true });
-    tippyInstances.push(statusHtml._tippy);
-    mention.appendChild(statusHtml);
+    const userStatusMessage = new UserStatusMessage(owner, status);
+    userStatusMessages[guidFor(mention)] = userStatusMessage;
+    mention.appendChild(userStatusMessage.html);
   }
 }
 
+export function destroyUserStatusOnMentions() {
+  Object.values(userStatusMessages).forEach((instance) => {
+    instance.destroy();
+  });
+}
+
 function removeStatus(mention) {
+  userStatusMessages[guidFor(mention)]?.destroy();
   mention.querySelector("span.user-status-message")?.remove();
 }

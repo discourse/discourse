@@ -1,6 +1,6 @@
+import { scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import { isTesting } from "discourse-common/config/environment";
-import { scheduleOnce } from "@ember/runloop";
 
 const context = {
   _scrollTop() {

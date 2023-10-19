@@ -78,6 +78,8 @@
 }
 
 .user-main {
+  background: var(--d-content-background);
+
   .about {
     width: 100%;
     margin-bottom: 0;
@@ -648,6 +650,90 @@
     display: flex;
     align-items: center;
     gap: 1em;
+  }
+
+  .pref-auth-tokens {
+    .auth-token-icon {
+      color: var(--primary-medium);
+      font-size: 2.25em;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .auth-token-first {
+      font-size: 1.1em;
+
+      .auth-token-device {
+        font-weight: bold;
+      }
+    }
+
+    .auth-token-second {
+      color: var(--primary-medium);
+
+      .active {
+        color: var(--success);
+        font-weight: bold;
+      }
+    }
+
+    .auth-token-dropdown {
+      float: right;
+
+      .btn,
+      .btn:hover {
+        background: transparent;
+
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
+    }
+  }
+
+  .pref-passkeys,
+  .pref-auth-tokens {
+    .row {
+      border-top: 1px solid var(--primary-low);
+      padding: 0.5em 0;
+      margin: 0.5em 0;
+
+      &:last-child {
+        border-bottom: 1px solid var(--primary-low);
+      }
+    }
+  }
+
+  .pref-passkeys {
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .row-passkey__name {
+        font-weight: bold;
+      }
+
+      .row-passkey__created-date,
+      .row-passkey__used-date {
+        color: var(--primary-medium);
+      }
+    }
+
+    &__add {
+      margin-top: 1em;
+    }
+
+    .passkey-options-dropdown {
+      .btn,
+      .btn:hover {
+        background: transparent;
+
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
+    }
   }
 }
 

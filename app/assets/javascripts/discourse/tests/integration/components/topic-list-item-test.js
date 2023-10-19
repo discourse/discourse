@@ -1,9 +1,9 @@
+import { getOwner } from "@ember/application";
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Integration | Component | topic-list-item", function (hooks) {
   setupRenderingTest(hooks);

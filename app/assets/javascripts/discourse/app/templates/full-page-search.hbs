@@ -1,4 +1,10 @@
-<DSection @pageClass="search" @class="search-container">
+{{#if this.loading}}
+  {{hide-application-footer}}
+{{/if}}
+
+{{body-class "search-page"}}
+
+<section class="search-container">
   <ScrollTracker
     @name="full-page-search"
     @tag={{this.searchTerm}}
@@ -32,12 +38,12 @@
         @options={{hash castInteger=true}}
       />
       <DButton
-        @action={{action "search" (hash collapseFilters=true)}}
+        @action={{fn (action "search") (hash collapseFilters=true)}}
         @icon="search"
         @label="search.search_button"
-        @class="btn-primary search-cta"
         @ariaLabel="search.search_button"
         @disabled={{this.searchButtonDisabled}}
+        class="btn-primary search-cta"
       />
     </div>
     {{#if this.usingDefaultSearchType}}
@@ -77,6 +83,12 @@
   </div>
 
   <div class="search-advanced">
+    <PluginOutlet
+      @name="full-page-search-below-search-header"
+      @connectorTagName="div"
+      @outletArgs={{hash search=this.searchTerm type=this.search_type}}
+    />
+
     {{#if this.hasResults}}
       {{#if this.usingDefaultSearchType}}
         <div
@@ -87,16 +99,16 @@
           {{#if this.canBulkSelect}}
             <DButton
               @icon="list"
-              @class="btn-default bulk-select"
               @title="topics.bulk.toggle"
               @action={{action "toggleBulkSelect"}}
+              class="btn-default bulk-select"
             />
             {{#if this.selected}}
               <DButton
-                @class="btn-default bulk-select-btn"
                 @selected={{this.selected}}
                 @action={{action "showBulkActions"}}
                 @icon="wrench"
+                class="btn-default bulk-select-btn"
               />
             {{/if}}
           {{/if}}
@@ -105,18 +117,18 @@
             {{#if this.hasUnselectedResults}}
               <DButton
                 @icon="check-square"
-                @class="btn-default"
                 @action={{action "selectAll"}}
                 @label="search.select_all"
+                class="btn-default"
               />
             {{/if}}
 
             {{#if this.hasSelection}}
               <DButton
                 @icon="far-square"
-                @class="btn-default"
                 @action={{action "clearAll"}}
                 @label="search.clear_all"
+                class="btn-default"
               />
             {{/if}}
           {{/if}}
@@ -270,4 +282,4 @@
       </div>
     {{/if}}
   </div>
-</DSection>
+</section>

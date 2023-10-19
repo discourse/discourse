@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { ajax } from "discourse/lib/ajax";
-import { cancel } from "@ember/runloop";
-import { action } from "@ember/object";
-import { extractError } from "discourse/lib/ajax-error";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse-common/lib/debounce";
+
+const SLUG_MAX_LENGTH = 100;
 
 export default class ChatModalEditChannelName extends Component {
   @service chatApi;
@@ -26,7 +28,8 @@ export default class ChatModalEditChannelName extends Component {
     return (
       (this.channel.title === this.editedName &&
         this.channel.slug === this.editedSlug) ||
-      this.editedName?.length > this.siteSettings.max_topic_title_length
+      this.editedName?.length > this.siteSettings.max_topic_title_length ||
+      this.editedSlug?.length > SLUG_MAX_LENGTH
     );
   }
 

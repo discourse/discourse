@@ -1,5 +1,7 @@
+import { deepFreeze } from "discourse-common/lib/object";
+
 export default {
-  "/session/current.json": {
+  "/session/current.json": deepFreeze({
     current_user: {
       id: 19,
       username: "eviltrout",
@@ -14,6 +16,7 @@ export default {
       moderator: true,
       staff: true,
       can_create_group: true,
+      can_create_topic: true,
       title: "co-founder",
       reply_count: 859,
       topic_count: 36,
@@ -132,5 +135,5 @@ export default {
         },
       ]
     },
-  },
+  }),
 };

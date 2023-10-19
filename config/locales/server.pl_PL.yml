@@ -228,7 +228,7 @@ pl_PL:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Nie można wyłączyć lokalnego logowania, jeśli wymuszone jest 2FA. Wyłącz wymuszone 2FA przed wyłączeniem lokalnych logowań."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nie można włączyć przesyłania S3, ponieważ przesyłanie S3 jest już włączone globalnie, a włączenie tego poziomu witryny może powodować krytyczne problemy z przesyłaniem"
       cors_origins_should_not_have_trailing_slash: "Nie należy dodawać końcowego ukośnika (/) do źródeł CORS."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć niewłaściwego ograniczania prawdziwych użytkowników."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć przypadkowego ograniczania prawdziwych użytkowników."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Do ustawienia nie można dodać żadnej z następujących wartości: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nie można wyłączyć usuwania metadanych obrazu, jeśli 'composer media optimization image enabled'. Wyłącz 'composer media optimization image enabled' przed wyłączeniem usuwania metadanych obrazu."
       twitter_summary_large_image_no_svg: "Obrazy podsumowania Twittera używane w metadanych twitter:image nie mogą być obrazami .svg."
@@ -349,7 +349,7 @@ pl_PL:
       few: "%{count} odpowiedzi więcej"
       many: "%{count} odpowiedzi więcej"
       other: "%{count} odpowiedzi więcej"
-    loading: "Wczytuję dyskusję…"
+    loading: "Ładowanie dyskusji…"
     permalink: "Link bezpośredni"
     imported_from: "Ten temat jest powiązany ze źródłową dyskusją: %{link}"
     in_reply_to: "▶ %{username}"
@@ -737,7 +737,7 @@ pl_PL:
     media_placeholder:
       blocked_hotlinked_title: "Media przechowywane są w innej witrynie. Kliknij, aby otworzyć nową kartę."
       blocked_hotlinked: "Zewnętrzne media"
-    hidden_bidi_character: "Znaki dwukierunkowe mogą zmienić kolejność renderowania tekstu. Może to służyć do ukrywania złośliwego kodu."
+    hidden_bidi_character: "Dwukierunkowe znaki sterujące mogą zmieniać kolejność renderowania tekstu. Może to zostać wykorzystane do ukrycia złośliwego kodu."
     has_likes:
       one: "%{count} polubienie"
       few: "%{count} polubienia"
@@ -1010,11 +1010,14 @@ pl_PL:
     sequence_conflict_error:
       title: "błąd wersji roboczej"
       description: "Szkic jest edytowany w innym oknie. Załaduj ponownie tę stronę."
+    too_many_drafts:
+      title: "Zbyt wiele szkiców"
+      description: "Osiągnąłeś maksymalną liczbę dozwolonych szkiców. Usuń niektóre z [twoich szkiców](%{base_url}/my/activity/draft) i spróbuj ponownie."
   draft_backup:
     pm_title: "Kopie zapasowe wersje robocze z bieżących tematów"
     pm_body: "Temat zawierający kopie zapasowe"
   user_activity:
-    no_log_search_queries: "Zapytania dziennika wyszukiwania są obecnie wyłączone (administrator może je włączyć w ustawieniach witryny)."
+    no_log_search_queries: "Dzienniki zapytań wyszukiwania są obecnie wyłączone (administrator może je włączyć w ustawieniach witryny)."
   email_settings:
     pop3_authentication_error: "Wystąpił problem z podanymi poświadczeniami POP3, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
     imap_authentication_error: "Wystąpił problem z podanymi poświadczeniami IMAP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
@@ -1483,7 +1486,7 @@ pl_PL:
         qtt_like: Polubienia otrzymane
       description: "Top 10 użytkowników, którzy otrzymali polubienia od szerokiego grona osób."
   dashboard:
-    group_email_credentials_warning: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Żadne e-maile nie będą wysyłane ze skrzynki odbiorczej grupy, dopóki ten problem nie zostanie rozwiązany. %{error}'
+    group_email_credentials_warning: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Wiadomości e-mail nie będą wysyłane z grupowej skrzynki odbiorczej do czasu rozwiązania tego problemu. %{error}'
     rails_env_warning: "Twój serwer działa w trybie %{env}"
     host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
@@ -1514,7 +1517,6 @@ pl_PL:
     unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
     watched_word_regexp_error: "Wyrażenie regularne dla '%{action}' jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a> lub wyłącz ustawienie witryny „obserwowane słowa regularne”."
     v3_analytics_deprecated: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
-    legacy_navigation_menu_deprecated: "Twój Discourse używa obecnie \"starszego\" menu nawigacyjnego, które <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>zostanie usunięte w pierwszej wersji beta Discourse 3.2</a>. Przeprowadź migrację do nowego menu nawigacyjnego, aktualizując ustawienia witryny menu nawigacyjnego <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'></a> do 'sidebar' lub 'header dropdown'."
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -1525,9 +1527,6 @@ pl_PL:
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych ustawieniach"
     set_locale_from_accept_language_header: "ustaw język interfejsu dla anonimowych użytkowników na podstawie nagłówków języka z ich przeglądarki"
     support_mixed_text_direction: "Wspieraj mieszane kierunki tekstu od lewej do prawej i od prawej do lewej strony."
-    min_post_length: "Minimalna długość wpisu w znakach"
-    min_first_post_length: "Minimalna długość treści (liczba znaków) pierwszego wpisu w temacie "
-    min_personal_message_post_length: "Minimalna długość treści wiadomości "
     max_post_length: "Maksymalna długość wpisu, w znakach"
     topic_featured_link_enabled: "Włącz dodawanie linków w tematach."
     show_topic_featured_link_in_digest: "Pokazuj polecany link tematu w podsumowaniu e-mailowym."
@@ -1647,7 +1646,6 @@ pl_PL:
     tl2_additional_flags_per_day_multiplier: "Zwiększ dzienny limit flag dla tl2 (członek) mnożąc przez tę liczbę"
     tl3_additional_flags_per_day_multiplier: "Zwiększ dzienny limit flag dla tl3 (zwykły) mnożąc przez tę liczbę"
     tl4_additional_flags_per_day_multiplier: "Zwiększ dzienny limit flag dla tl4 (lider) mnożąc przez tę liczbę"
-    num_users_to_silence_new_user: "Jeśli wpisy nowego użytkownika otrzymają znaczniki spamu num_spam_flags_to_silence_new_user od wielu różnych użytkowników, ukryj wszystkie ich wpisy i zapobiegaj publikowaniu w przyszłości. 0, aby wyłączyć."
     num_tl3_flags_to_silence_new_user: "Jeśli wpisy nowego użytkownika otrzymają tyle flag od num_tl3_users_to_silence_new_user różnych użytkowników poziomu zaufania 3, ukryj wszystkie ich wpisy i zapobiegaj publikowaniu w przyszłości. 0, aby wyłączyć."
     num_tl3_users_to_silence_new_user: "Jeśli wpisy nowego użytkownika otrzymają flagi num_tl3_flags_to_silence_new_user od wielu różnych użytkowników poziomu zaufania 3, ukryj wszystkie ich wpisy i zapobiegaj publikowaniu w przyszłości. 0, aby wyłączyć."
     notify_mods_when_user_silenced: "Jeśli użytkownik zostanie automatycznie wyciszony, wyślij wiadomość do wszystkich moderatorów."
@@ -1661,7 +1659,6 @@ pl_PL:
     must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu."
     invite_code: "Użytkownik musi wpisać ten kod, aby zezwolić na rejestrację konta, ignorowany, gdy jest pusty (bez rozróżniania wielkości liter)"
     approve_suspect_users: "Dodaj podejrzanych użytkowników do kolejki recenzji. Podejrzani użytkownicy weszli do biografii / witryny, ale nie czytali."
-    review_every_post: "Wszystkie posty muszą zostać sprawdzone. OSTRZEŻENIE! NIE ZALECA SIĘ DLA RUCHLIWYCH WITRYN."
     pending_users_reminder_delay_minutes: "Powiadom moderatorów, jeśli nowi użytkownicy czekają na zatwierdzenie dłużej niż tyle minut. Ustaw na -1, aby wyłączyć powiadomienia."
     persistent_sessions: "Użytkownicy pozostaną zalogowani po zamknięciu przeglądarki internetowej"
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
@@ -1669,7 +1666,6 @@ pl_PL:
     ga_universal_tracking_code: "Kod śledzenia analityki Google, np: UA-12345678-9; zobacz <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Domena śledzenia analityki Google, np: mojawitryna.pl; zobacz <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach za pomocą Google Analythics. Wychodzące linki do tych domen będą miały dodatkowy identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>poradnik Cross-Domain Tracking od Google.</a>"
-    gtm_container_id: "Identyfikator menedżera tagów Google. np .: GTM-ABCDEF. <br/>Uwaga: skrypty innych firm ładowane przez GTM mogą wymagać uwzględnienia w 'content security policy script src'."
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Zezwalaj moderatorom na tworzenie kategorii i grup oraz zarządzanie nimi"
     moderators_change_post_ownership: "Zezwalaj moderatorom na zmianę właściciela posta"
@@ -1683,11 +1679,11 @@ pl_PL:
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
     slow_down_crawler_user_agents: 'User-Agent''y robotów indeksujących, którym należy ograniczyć prędkość, zgodnie z ustawieniami "spowolnij szybkość indeksowania". Każda wartość musi mieć co najmniej 3 znaki.'
     slow_down_crawler_rate: "Jeśli określono parametr slow_down_crawler_user_agents, ta stawka będzie obowiązywać dla wszystkich robotów (liczba sekund opóźnienia między żądaniami)"
-    content_security_policy: "Włącz politykę bezpieczeństwa treści"
-    content_security_policy_report_only: "Włącz tylko treść-bezpieczeństwo-zasady-tylko raport"
+    content_security_policy: "Włącz Content-Security-Policy (CSP)"
+    content_security_policy_report_only: "Włącz Content-Security-Policy-Report-Only (CSP)."
     content_security_policy_collect_reports: "Włącz zbieranie raportów o naruszeniach CSP na / csp_reports"
     content_security_policy_frame_ancestors: "Określ, kto może osadzić tę witrynę w ramkach iframe za pośrednictwem CSP. Kontroluj dozwolone hosty w <a href='%{base_path}/admin/customize/embedding'>ustawieniach osadzania</a>"
-    content_security_policy_script_src: "Dodatkowe dozwolone źródła skryptów. Bieżący host i CDN są domyślnie uwzględniane. Zobacz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>ograniczanie ataków XSS za pomocą zasad zabezpieczeń zawartości (CSP).</a>"
+    content_security_policy_script_src: "Dodatkowe dozwolone źródła skryptów. Bieżący host i CDN są domyślnie uwzględniane. Zobacz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Ograniczanie ataków XSS dzięki Content Security Policy.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
     display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba wiadomości osobistych oznaczonych danym tagiem."
@@ -1810,7 +1806,6 @@ pl_PL:
     enable_safe_mode: "Zezwól użytkownikom na wchodzenie do trybu awaryjnego w celu debudowania wtyczek."
     rate_limit_create_topic: "Po otworzeniu tematu użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
     rate_limit_create_post: "Po napisaniu wpisu użytkownicy muszą odczekać (n) sekund, zanim napiszą inny wpis."
-    rate_limit_new_user_create_topic: "Po otworzeniu tematu nowi użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
     rate_limit_new_user_create_post: "Po napisaniu wpisu nowi użytkownicy muszą odczekać (n) sekund, zanim napiszą inny wpis."
     max_likes_per_day: "Maksymalna liczba polubień per użytkownik per dzień"
     max_flags_per_day: "Maksymalna liczba oflagowań per użytkownik per dzień."
@@ -1996,7 +1991,7 @@ pl_PL:
     alternative_reply_by_email_addresses: "Lista alternatywnych szablonów do odpowiedzi przez adres email. Przykład: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Do przychodzących wiadomości e-mail używaj HTML zamiast tekstu."
     strip_incoming_email_lines: "Usuń wiodące i końcowe białe spacje z każdej linii przychodzących wiadomości e-mail."
-    disable_emails: "Zapobiegaj wysyłaniu przez Discourse jakichkolwiek wiadomości e-mail. Wybierz „tak”, aby wyłączyć e-maile dla wszystkich użytkowników. Wybierz opcję „nie będący pracownikami”, aby wyłączyć wiadomości e-mail tylko dla użytkowników niebędących członkami personelu."
+    disable_emails: "Zapobiegaj wysyłaniu przez Discourse jakichkolwiek wiadomości e-mail. Wybierz 'yes', aby wyłączyć e-maile dla wszystkich użytkowników. Wybierz opcję 'non-staff', aby wyłączyć wiadomości e-mail tylko dla użytkowników niebędących członkami personelu."
     strip_images_from_short_emails: "Pasek zdjęć z emaila o rozmiarze mniejszym niż 2800 bajtów"
     short_email_length: "Długość krótkiego emaila w bajtach"
     display_name_on_email_from: "Wyświetl pełne nazwy na emailach z pól"
@@ -2076,6 +2071,7 @@ pl_PL:
     digest_min_excerpt_length: "Minimalny wycinek wpisu (liczba znaków) w podsumowaniu e-mail."
     suppress_digest_email_after_days: "Znieś emaile podsumowujące dla użytkowników niewidocznych na stronie przez więcej niż (n) dni."
     digest_suppress_categories: "Znieś te kategorie z emaili podsumowujących."
+    digest_suppress_tags: "Pomiń te tagi w e-mailach z podsumowaniem."
     disable_digest_emails: "Wyłącz podsumowania e-mailowe dla wszystkich użytkowników."
     apply_custom_styles_to_digest: "Niestandardowe szablony wiadomości e-mail i css są stosowane do wiadomości e-mail z podsumowaniem."
     email_accent_bg_color: "Kolor akcentu używany jako tło niektórych elementów w wiadomościach HTML. Wprowadź angielską nazwę koloru ('red') lub wartość szesnastkową ('#FF0000')."
@@ -2230,15 +2226,12 @@ pl_PL:
     default_sidebar_switch_panel_position: "Położenie przycisków panelu przełączania paska bocznego"
     retain_web_hook_events_period_days: "Liczba dni przechowywania rekordów zdarzeń webhooków."
     retry_web_hook_events: "Automatycznie ponów 4 razy nieudane zdarzenia webhooków. Luki czasowe między ponownymi próbami wynoszą 1, 5, 25 i 125 minut."
-    revoke_api_keys_days: "Liczba dni do automatycznego unieważnienia nieużywanego klucza API (0 oznacza brak)"
-    allow_user_api_keys: "Pozwól na generację kluczy API użytkownika."
     allow_user_api_key_scopes: "Lista zakresów dozwolona dla kluczy API użytkownika."
     min_trust_level_for_user_api_key: |
       Poziom zaufania wymagany do generowania kluczy API użytkownika.<br>
       <b>OSTRZEŻENIE</b>: Zmiana poziomu zaufania uniemożliwi użytkownikom o niższym poziomie zaufania logowanie się przez Discourse Hub
     allowed_user_api_auth_redirects: "Dozwolony adres URL do przekierowania uwierzytelniania dla kluczy interfejsu API użytkownika. Symbol wieloznaczny * może być użyty do dopasowania dowolnej jego części (np. www.example.com/*)."
     allowed_user_api_push_urls: "Dozwolone URLs dla serwera push do API użytkownika"
-    expire_user_api_keys_days: "Liczba dni do automatycznego wygaśnięcia klucza API użytkownika (0 oznacza brak)"
     tagging_enabled: "Włączyć tagi w tematach?"
     min_trust_to_create_tag: "Minimalny poziom zaufania potrzebny do stworzenia tagu."
     max_tags_per_topic: "Maksymalna liczba tagów, które mogą zostać połączone z tematem."
@@ -2257,7 +2250,6 @@ pl_PL:
     force_lowercase_tags: "Wymuś, aby wszystkie nowe tagi były małymi literami."
     create_post_for_category_and_tag_changes: "Utwórz mały post akcji, gdy zmieni się kategoria tematu lub tagi"
     watched_precedence_over_muted: "Powiadamiaj mnie o tematach w obserwowanych przeze mnie kategoriach lub tagach, które również należą do tych, które wyciszyłem."
-    company_name: "Nazwa firmy"
     governing_law: "Obowiązujące prawo"
     city_for_disputes: "Miasto sporów"
     shared_drafts_category: "Włącz funkcję współdzielonych szkiców przez wyznaczenie kategorii dla szkiców tematów. Tematy w tej kategorii zostaną ukryte z list tematów dla personelu."
@@ -2290,12 +2282,12 @@ pl_PL:
     navigation_menu: "Określ, którego menu nawigacyjnego użyć. Pasek boczny i nawigacja z nagłówka są konfigurowalne przez użytkowników. Opcja przestarzała jest dostępna dla kompatybilności wstecznej."
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
-    enable_experimental_hashtag_autocomplete: "EKSPERYMENTALNIE: Użyj nowego systemu autouzupełniania #hashtagów dla kategorii i tagów, który inaczej renderuje wybrany element i usprawnia wyszukiwanie"
     experimental_new_new_view_groups: 'EKSPERYMENTALNE: Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i utwórz link "Wszystko" na pasku bocznym.'
     enable_custom_sidebar_sections: "EKSPERYMENTALNIE: Włącz niestandardowe sekcje paska bocznego"
     experimental_topics_filter: "EKSPERYMENTALNE: Włącza eksperymentalną ścieżkę filtrowania tematów w /filter"
     experimental_search_menu_groups: "EKSPERYMENTALNE: Włącza nowe menu wyszukiwania, które zostało ulepszone tak, by korzystało z glimmer"
     enable_experimental_lightbox: "EKSPERYMENTALNIE: Zastąp domyślny lightbox obrazu odświeżonym projektem."
+    experimental_form_templates: "EKSPERYMENTALNIE: Włącz funkcję szablonów formularzy. <b>Po włączeniu</b> zarządzaj szablonami w <a href='%{base_path}/admin/customize/form-templates'>Dostosuj / Szablony</a>."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
@@ -2379,6 +2371,7 @@ pl_PL:
     email_error: "Konto nie może być zarejestrowane pod adresem e-mail <b>%{email}</b>. Skontaktuj się z administratorem witryny."
     missing_secret: "Uwierzytelnianie nie powiodło się z powodu braku sekretnego klucza. Skontaktuj się z administratorami, aby rozwiązać ten problem."
     invite_redeem_failed: "Zaproszenie nie powiodło się. Skontaktuj się z administratorem serwisu."
+    invalid_parameter_value: "Uwierzytelnianie nie powiodło się z powodu nieprawidłowej wartości parametru `%{param}`. Skontaktuj się z administratorami witryny, aby rozwiązać ten problem."
   original_poster: "Autor pierwszego wpisu"
   most_recent_poster: "Autor najnowszego wpisu"
   frequent_poster: "Aktywny uczestnik"
@@ -2567,16 +2560,7 @@ pl_PL:
       sent_test: "wysłany!"
     user:
       merge_user:
-        updating_username: "Aktualizuję nazwę użytkownika ..."
-        changing_post_ownership: "Zmiana właściciela wpisu..."
-        merging_given_daily_likes: "Łączenie oddanych dziennych polubień..."
-        merging_post_timings: "Łączenie czasów postów..."
-        merging_user_visits: "Łączenie odwiedzin użytkownika..."
-        updating_site_settings: "Aktualizowanie ustawień strony..."
-        updating_user_stats: "Aktualizowanie statystyk użytkownika..."
-        merging_user_attributes: "Łączenie atrybutów użytkownika..."
-        updating_user_ids: "Aktualizuję identyfikatory użytkowników..."
-        deleting_source_user: "Usuwanie użytkownika źródłowego..."
+        updating_username: "Aktualizowanie nazwy użytkownika…"
   user:
     deactivated: "Został dezaktywowany w związku ze zbyt dużą liczbą odrzuconych emaili na '%{email}'."
     deactivated_by_staff: "Wyłączone przez personel"
@@ -4891,7 +4875,7 @@ pl_PL:
       delete_single:
         title: "Usuń"
       delete:
-        title: "Usuń..."
+        title: "Usuń…"
       delete_and_ignore:
         title: "Zignoruj flagę i usuń post"
         description: "Zignoruj flagę, usuwając ją z kolejki i usuń post; jeśli jest to pierwszy post, usuń również temat. "
@@ -4911,6 +4895,8 @@ pl_PL:
         description: "Przywróć post, aby wszyscy użytkownicy mogli go zobaczyć."
       disagree:
         title: "Nie"
+      discard_post:
+        title: "Odrzuć post"
       ignore:
         title: "Ignoruj"
       ignore_and_do_nothing:
@@ -4926,7 +4912,7 @@ pl_PL:
       approve_user:
         title: "Zatwierdź użytkownika"
       reject_user:
-        title: "Usuń użytkownika..."
+        title: "Usuń użytkownika…"
         delete:
           title: "Usuń użytkownika"
           description: "Użytkownik zostanie usunięty z forum."
@@ -4935,7 +4921,7 @@ pl_PL:
           description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
       reject:
         title: "Odrzuć"
-        bundle_title: "Odrzuć..."
+        bundle_title: "Odrzuć…"
       reject_and_suspend:
         title: "Odrzuć i zawieś użytkownika"
       reject_and_silence:
@@ -4988,6 +4974,7 @@ pl_PL:
       invalid_yaml: "nie jest prawidłowym ciągiem YAML"
       invalid_type: "zawiera nieprawidłowy typ szablonu: %{type} (prawidłowe typy to: %{valid_types})"
       missing_type: "brakuje typu pola"
+      duplicate_ids: "ma zduplikowane identyfikatory"
   activemodel:
     errors:
       <<: *errors

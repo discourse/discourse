@@ -1,13 +1,14 @@
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
+import { setupTest } from "ember-qunit";
+import { registerEmoji } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
+import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import QUnit, { module, test } from "qunit";
 import { deepMerge } from "discourse-common/lib/object";
-import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
-import { registerEmoji } from "pretty-text/emoji";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 const rawOpts = {
   siteSettings: {
@@ -53,7 +54,9 @@ QUnit.assert.cookedPara = function (input, expected, message) {
   QUnit.assert.cooked(input, `<p>${expected}</p>`, message);
 };
 
-module("Unit | Utility | pretty-text", function () {
+module("Unit | Utility | pretty-text", function (hooks) {
+  setupTest(hooks);
+
   test("buildOptions", function (assert) {
     assert.ok(
       buildOptions({ siteSettings: { enable_emoji: true } }).discourse.features
@@ -1014,11 +1017,7 @@ eviltrout</p>
   test("video", function (assert) {
     assert.cooked(
       "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
-      `<p><div class="video-container">
-    <video width="100%" height="100%" preload="metadata" controls>
-      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
-      <a href="/404">/404</a>
-    </video>
+      `<p><div class="video-placeholder-container" data-video-src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
   </div></p>`,
       "It returns the correct video player HTML"
     );
@@ -1040,11 +1039,7 @@ eviltrout</p>
         siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
-      `<p><div class="video-container">
-    <video width="100%" height="100%" preload="metadata" controls>
-      <source src="/secure-uploads/original/3X/c/b/test.mp4">
-      <a href="/secure-uploads/original/3X/c/b/test.mp4">/secure-uploads/original/3X/c/b/test.mp4</a>
-    </video>
+      `<p><div class="video-placeholder-container" data-video-src="/secure-uploads/original/3X/c/b/test.mp4">
   </div></p>`,
       "It returns the correct video HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );

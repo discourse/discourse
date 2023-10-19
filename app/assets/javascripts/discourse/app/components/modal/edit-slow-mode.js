@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
-import I18n from "I18n";
+import { extractError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import Topic from "discourse/models/topic";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 const SLOW_MODE_OPTIONS = [
   {
@@ -154,7 +155,7 @@ export default class EditSlowMode extends Component {
       this.args.model.topic.set("slow_mode_seconds", 0);
       this.args.closeModal();
     } catch (e) {
-      this.flash = e;
+      this.flash = extractError(e);
     } finally {
       this.saveDisabled = false;
     }

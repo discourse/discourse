@@ -1,11 +1,11 @@
-import { cloak, uncloak } from "discourse/widgets/post-stream";
 import { schedule, scheduleOnce } from "@ember/runloop";
-import DiscourseURL from "discourse/lib/url";
-import MountWidget from "discourse/components/mount-widget";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { isWorkaroundActive } from "discourse/lib/safari-hacks";
-import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
+import MountWidget from "discourse/components/mount-widget";
+import offsetCalculator from "discourse/lib/offset-calculator";
+import { isWorkaroundActive } from "discourse/lib/safari-hacks";
+import DiscourseURL from "discourse/lib/url";
+import { cloak, uncloak } from "discourse/widgets/post-stream";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
 
@@ -37,7 +37,7 @@ export default MountWidget.extend({
   widget: "post-stream",
   _topVisible: null,
   _bottomVisible: null,
-  _currentPost: null,
+  _currentPostObj: null,
   _currentVisible: null,
   _currentPercent: null,
 
@@ -219,11 +219,11 @@ export default MountWidget.extend({
         this.bottomVisibleChanged({ post: last, refresh });
       }
 
-      const changedPost = this._currentPost !== currentPost;
+      const currentPostObj = posts.objectAt(currentPost);
+      const changedPost = this._currentPostObj !== currentPostObj;
       if (changedPost) {
-        this._currentPost = currentPost;
-        const post = posts.objectAt(currentPost);
-        this.currentPostChanged({ post });
+        this._currentPostObj = currentPostObj;
+        this.currentPostChanged({ post: currentPostObj });
       }
 
       if (percent !== null) {
@@ -237,7 +237,7 @@ export default MountWidget.extend({
     } else {
       this._topVisible = null;
       this._bottomVisible = null;
-      this._currentPost = null;
+      this._currentPostObj = null;
       this._currentPercent = null;
     }
 

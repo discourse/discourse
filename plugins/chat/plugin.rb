@@ -6,6 +6,7 @@
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/chat
 # transpile_js: true
+# meta_topic_id: 230881
 
 enabled_site_setting :chat_enabled
 
@@ -18,6 +19,7 @@ register_asset "stylesheets/mobile/index.scss", :mobile
 register_svg_icon "comments"
 register_svg_icon "comment-slash"
 register_svg_icon "lock"
+register_svg_icon "clipboard"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
@@ -47,6 +49,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
+  UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
 
   register_reviewable_type Chat::ReviewableMessage
 
@@ -65,66 +68,12 @@ after_initialize do
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
     Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
+    WebHook.prepend Chat::OutgoingWebHookExtension
   end
 
   if Oneboxer.respond_to?(:register_local_handler)
     Oneboxer.register_local_handler("chat/chat") do |url, route|
-      if route[:message_id].present?
-        message = Chat::Message.find_by(id: route[:message_id])
-        next if !message
-
-        chat_channel = message.chat_channel
-        user = message.user
-        next if !chat_channel || !user
-      else
-        chat_channel = Chat::Channel.find_by(id: route[:channel_id])
-        next if !chat_channel
-      end
-
-      next if !Guardian.new.can_preview_chat_channel?(chat_channel)
-
-      name = (chat_channel.name if chat_channel.name.present?)
-
-      users =
-        chat_channel
-          .user_chat_channel_memberships
-          .includes(:user)
-          .where(user: User.activated.not_suspended.not_staged)
-          .limit(10)
-          .map do |membership|
-            {
-              username: membership.user.username,
-              avatar_url: membership.user.avatar_template_url.gsub("{size}", "60"),
-            }
-          end
-
-      remaining_user_count_str =
-        if chat_channel.user_count > users.size
-          I18n.t("chat.onebox.and_x_others", count: chat_channel.user_count - users.size)
-        end
-
-      args = {
-        url: url,
-        channel_id: chat_channel.id,
-        channel_name: name,
-        description: chat_channel.description,
-        user_count_str: I18n.t("chat.onebox.x_members", count: chat_channel.user_count),
-        users: users,
-        remaining_user_count_str: remaining_user_count_str,
-        is_category: chat_channel.chatable_type == "Category",
-        color: chat_channel.chatable_type == "Category" ? chat_channel.chatable.color : nil,
-      }
-
-      if message.present?
-        args[:message_id] = message.id
-        args[:username] = message.user.username
-        args[:avatar_url] = message.user.avatar_template_url.gsub("{size}", "20")
-        args[:cooked] = message.cooked
-        args[:created_at] = message.created_at
-        args[:created_at_str] = message.created_at.iso8601
-      end
-
-      Mustache.render(Chat.onebox_template, args)
+      Chat::OneboxHandler.handle(url, route)
     end
   end
 
@@ -297,6 +246,12 @@ after_initialize do
     object.chat_header_indicator_preference
   end
 
+  add_to_serializer(:user_option, :chat_separate_sidebar_mode) { object.chat_separate_sidebar_mode }
+
+  add_to_serializer(:current_user_option, :chat_separate_sidebar_mode) do
+    object.chat_separate_sidebar_mode
+  end
+
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
     chat_channel_retention_days: :dismissed_channel_retention_reminder,
     chat_dm_retention_days: :dismissed_dm_retention_reminder,
@@ -418,7 +373,6 @@ after_initialize do
   end
 
   on(:category_updated) do |category|
-    # TODO(roman): remove early return after 2.9 release.
     # There's a bug on core where this event is triggered with an `#update` result (true/false)
     if category.is_a?(Category) && category_channel = Chat::Channel.find_by(chatable: category)
       if category_channel.auto_join_users
@@ -426,6 +380,35 @@ after_initialize do
       end
 
       Jobs.enqueue(Jobs::Chat::AutoRemoveMembershipHandleCategoryUpdated, category_id: category.id)
+    end
+  end
+
+  # outgoing webhook events
+  %i[
+    chat_message_created
+    chat_message_edited
+    chat_message_trashed
+    chat_message_restored
+  ].each do |chat_message_event|
+    on(chat_message_event) do |message, channel, user|
+      guardian = Guardian.new(user)
+
+      payload = {
+        message: Chat::MessageSerializer.new(message, { scope: guardian, root: false }).as_json,
+        channel:
+          Chat::ChannelSerializer.new(
+            channel,
+            { scope: guardian, membership: channel.membership_for(user), root: false },
+          ).as_json,
+      }
+
+      category_id = channel.chatable_type == "Category" ? channel.chatable_id : nil
+
+      WebHook.enqueue_chat_message_hooks(
+        chat_message_event,
+        payload.to_json,
+        category_id: category_id,
+      )
     end
   end
 
@@ -465,14 +448,14 @@ after_initialize do
         placeholders = { channel_name: channel.title(sender) }.merge(context["placeholders"] || {})
 
         creator =
-          Chat::MessageCreator.create(
-            chat_channel: channel,
-            user: sender,
-            content: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+          ::Chat::CreateMessage.call(
+            chat_channel_id: channel.id,
+            guardian: sender.guardian,
+            message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
           )
 
-        if creator.failed?
-          Rails.logger.warn "[discourse-automation] Chat message failed to send, error was: #{creator.error}"
+        if creator.failure?
+          Rails.logger.warn "[discourse-automation] Chat message failed to send:\n#{creator.inspect_steps.inspect}\n#{creator.inspect_steps.error}"
         end
       end
     end
@@ -480,7 +463,12 @@ after_initialize do
 
   add_api_key_scope(
     :chat,
-    { create_message: { actions: %w[chat/chat#create_message], params: %i[chat_channel_id] } },
+    {
+      create_message: {
+        actions: %w[chat/api/channel_messages#create],
+        params: %i[chat_channel_id],
+      },
+    },
   )
 
   # Dark mode email styles

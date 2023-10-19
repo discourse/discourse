@@ -31,44 +31,46 @@ describe "Local dates", type: :system do
 
       expect(topic_page).to have_content(topic.title)
 
-      post_dates = topic_page.find_all("span[data-date]")
-
       # Single date in a paragraph.
       #
-      post_dates[0].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
-
-      expect(tippy_date).to have_text("#{formatted_date_for_year(12, 15)}\n2:19 PM", exact: true)
+      find("span[data-date]:nth-of-type(1)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
+        "#{formatted_date_for_year(12, 15)}\n2:19 PM",
+        exact: true,
+      )
+      page.send_keys(:escape)
 
       # Two single dates in the same paragraph.
       #
-      post_dates[1].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
+      find("span[data-date]:nth-of-type(2)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
+        "#{formatted_date_for_year(12, 15)}\n1:20 AM",
+        exact: true,
+      )
+      page.send_keys(:escape)
 
-      expect(tippy_date).to have_text("#{formatted_date_for_year(12, 15)}\n1:20 AM", exact: true)
-
-      post_dates[2].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
-
-      expect(tippy_date).to have_text("#{formatted_date_for_year(12, 15)}\n2:40 AM", exact: true)
+      find("span[data-date]:nth-of-type(3)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
+        "#{formatted_date_for_year(12, 15)}\n2:40 AM",
+        exact: true,
+      )
+      page.send_keys(:escape)
 
       # Two date ranges in the same paragraph.
       #
-      post_dates[3].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
-
-      expect(tippy_date).to have_text(
+      find("span[data-date]:nth-of-type(4)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
         "#{formatted_date_for_year(12, 15)}\n11:25 AM → 12:26 AM",
         exact: true,
       )
+      page.send_keys(:escape)
 
-      post_dates[5].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
-
-      expect(tippy_date).to have_text(
+      find("span[data-date]:nth-of-type(6)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
         "#{formatted_date_for_year(12, 22)} 11:57 AM → #{formatted_date_for_year(12, 23)} 11:58 AM",
         exact: true,
       )
+      page.send_keys(:escape)
     end
   end
 

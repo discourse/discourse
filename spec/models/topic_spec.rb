@@ -1705,48 +1705,6 @@ RSpec.describe Topic do
     end
   end
 
-  describe "meta data" do
-    fab!(:topic) { Fabricate(:topic, meta_data: { "hello" => "world" }) }
-
-    it "allows us to create a topic with meta data" do
-      expect(topic.meta_data["hello"]).to eq("world")
-    end
-
-    context "when updating" do
-      context "with existing key" do
-        before { topic.update_meta_data("hello" => "bane") }
-
-        it "updates the key" do
-          expect(topic.meta_data["hello"]).to eq("bane")
-        end
-      end
-
-      context "with a new key" do
-        before { topic.update_meta_data("city" => "gotham") }
-
-        it "adds the new key" do
-          expect(topic.meta_data["city"]).to eq("gotham")
-          expect(topic.meta_data["hello"]).to eq("world")
-        end
-      end
-
-      context "with a new key" do
-        before_all do
-          topic.update_meta_data("other" => "key")
-          topic.save!
-        end
-
-        it "can be loaded" do
-          expect(Topic.find(topic.id).meta_data["other"]).to eq("key")
-        end
-
-        it "is in sync with custom_fields" do
-          expect(Topic.find(topic.id).custom_fields["other"]).to eq("key")
-        end
-      end
-    end
-  end
-
   describe "after create" do
     fab!(:topic) { Fabricate(:topic) }
 
@@ -2363,6 +2321,28 @@ RSpec.describe Topic do
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
+      it "doesn't return topics from suppressed tags" do
+        category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
+        topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
+        topic2 = Fabricate(:topic, category: category, created_at: 1.minute.ago)
+        tag = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
+        Fabricate(:topic_tag, topic: topic, tag: tag)
+
+        SiteSetting.digest_suppress_tags = "#{tag.name}|#{tag2.name}"
+        topics = Topic.for_digest(user, 1.year.ago, top_order: true)
+        expect(topics).to eq([topic2])
+
+        Fabricate(
+          :topic_user,
+          user: user,
+          topic: topic,
+          notification_level: TopicUser.notification_levels[:regular],
+        )
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic2])
+      end
+
       it "doesn't return topics from TL0 users" do
         new_user = Fabricate(:user, trust_level: 0)
         Fabricate(:topic, user: new_user, created_at: 1.minute.ago)
@@ -2550,6 +2530,16 @@ RSpec.describe Topic do
       )
       expect(Topic.listable_count_per_day(2.days.ago, Time.now)).not_to include(
         4.days.ago.to_date => 1,
+      )
+    end
+
+    it "returns the correct count with group filter" do
+      group = Fabricate(:group)
+      group.add(user)
+      topic = Fabricate(:topic, user: user)
+
+      expect(Topic.listable_count_per_day(2.days.ago, Time.now, nil, false, [group.id])).to include(
+        Time.now.utc.to_date => 1,
       )
     end
   end

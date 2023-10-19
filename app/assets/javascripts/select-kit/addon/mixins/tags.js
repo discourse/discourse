@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import Mixin from "@ember/object/mixin";
-import { ajax } from "discourse/lib/ajax";
-import getURL from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
-import { makeArray } from "discourse-common/lib/helpers";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { reads } from "@ember/object/computed";
+import Mixin from "@ember/object/mixin";
+import { isEmpty } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse-common/lib/get-url";
+import { makeArray } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
 
 export default Mixin.create({
   searchTags(url, data, callback) {

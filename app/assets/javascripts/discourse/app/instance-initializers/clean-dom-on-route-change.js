@@ -1,4 +1,5 @@
 import { scheduleOnce } from "@ember/runloop";
+import $ from "jquery";
 
 function _clean(transition) {
   if (window.MiniProfiler && transition.from) {

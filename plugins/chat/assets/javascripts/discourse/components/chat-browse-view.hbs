@@ -13,13 +13,13 @@
 
   {{#if this.currentUser.staff}}
     <DButton
-      @action={{action "createChannel"}}
+      @action={{this.createChannel}}
       @icon="plus"
-      @class={{concat-class
+      @label={{if this.site.desktopView "chat.create_channel.title"}}
+      class={{concat-class
         "new-channel-btn"
         (if this.site.mobileView "btn-flat")
       }}
-      @label={{if this.site.desktopView "chat.create_channel.title"}}
     />
   {{/if}}
 </div>

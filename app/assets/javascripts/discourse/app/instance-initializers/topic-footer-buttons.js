@@ -1,10 +1,10 @@
-import I18n from "I18n";
+import ShareTopicModal from "discourse/components/modal/share-topic";
+import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
-import ShareTopicModal from "discourse/components/modal/share-topic";
+import I18n from "discourse-i18n";
 
 const SHARE_PRIORITY = 1000;
 const BOOKMARK_PRIORITY = 900;

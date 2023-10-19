@@ -4,7 +4,7 @@
     But for now, this classic component wrapper takes care of the tagName.
   }}
   <this.wrapperComponent @tagName={{@tagName}}>
-    {{#each this.connectors as |c|}}
+    {{#each (this.getConnectors) as |c|}}
       {{#if c.componentClass}}
         <c.componentClass @outletArgs={{this.outletArgsWithDeprecations}} />
       {{else if @defaultGlimmer}}
@@ -22,13 +22,17 @@
       {{/if}}
     {{/each}}
   </this.wrapperComponent>
-{{else}}
+{{else if this.connectorsExist}}
   {{! The modern path: no wrapper element = no classic component }}
-  {{#each this.connectors as |c|}}
+  {{#each (this.getConnectors hasBlock=(has-block)) as |c|}}
     {{#if c.componentClass}}
-      <c.componentClass @outletArgs={{this.outletArgsWithDeprecations}} />
+      <c.componentClass
+        @outletArgs={{this.outletArgsWithDeprecations}}
+      >{{yield}}</c.componentClass>
     {{else if @defaultGlimmer}}
-      <c.templateOnly @outletArgs={{this.outletArgsWithDeprecations}} />
+      <c.templateOnly
+        @outletArgs={{this.outletArgsWithDeprecations}}
+      >{{yield}}</c.templateOnly>
     {{else}}
       <PluginConnector
         @connector={{c}}
@@ -38,7 +42,11 @@
         @class={{c.classicClassNames}}
         @tagName={{or @connectorTagName ""}}
         @layout={{c.template}}
-      />
+      >{{yield}}</PluginConnector>
     {{/if}}
+  {{else}}
+    {{yield}}
   {{/each}}
+{{else}}
+  {{yield}}
 {{/if}}

@@ -1,9 +1,9 @@
+import { resetAjax, trackNextAjaxAsPageview } from "discourse/lib/ajax";
 import {
   googleTagManagerPageChanged,
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
-import { resetAjax, trackNextAjaxAsPageview } from "discourse/lib/ajax";
 
 export default {
   after: "inject-objects",
@@ -65,10 +65,17 @@ export default {
   },
 
   handleRouteWillChange(transition) {
-    // will be null on initial boot transition, which is already tracked as a pageview via the HTML request
-    if (transition.from) {
-      trackNextAjaxAsPageview();
+    // transition.from will be null on initial boot transition, which is already tracked as a pageview via the HTML request
+    if (!transition.from) {
+      return;
     }
+
+    // Ignore intermediate transitions (e.g. loading substates)
+    if (transition.isIntermediate) {
+      return;
+    }
+
+    trackNextAjaxAsPageview();
   },
 
   teardown() {

@@ -1,37 +1,37 @@
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import Component from "@glimmer/component";
-import { bind } from "discourse-common/utils/decorators";
+import { cached, tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
-// TODO (martin) Remove this when the handleSentMessage logic inside chatChannelPaneSubscriptionsManager
-// is moved over from this file completely.
-import { handleStagedMessage } from "discourse/plugins/chat/discourse/services/chat-pane-base-subscriptions-manager";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cancel, next, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resetIdle } from "discourse/lib/desktop-notifications";
+import DiscourseURL from "discourse/lib/url";
 import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import { bodyScrollFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
-import {
-  scrollListToBottom,
-  scrollListToMessage,
-} from "discourse/plugins/chat/discourse/lib/scroll-helpers";
-import {
-  checkMessageBottomVisibility,
-  checkMessageTopVisibility,
-} from "discourse/plugins/chat/discourse/lib/check-message-visibility";
-import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
-import { cached, tracked } from "@glimmer/tracking";
 import discourseDebounce from "discourse-common/lib/debounce";
-import DiscourseURL from "discourse/lib/url";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { bind } from "discourse-common/utils/decorators";
 import {
   FUTURE,
   PAST,
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
+import { bodyScrollFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
+import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
+import {
+  checkMessageBottomVisibility,
+  checkMessageTopVisibility,
+} from "discourse/plugins/chat/discourse/lib/check-message-visibility";
+import {
+  scrollListToBottom,
+  scrollListToMessage,
+} from "discourse/plugins/chat/discourse/lib/scroll-helpers";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+// TODO (martin) Remove this when the handleSentMessage logic inside chatChannelPaneSubscriptionsManager
+// is moved over from this file completely.
+import { handleStagedMessage } from "discourse/plugins/chat/discourse/services/chat-pane-base-subscriptions-manager";
 import { stackingContextFix } from "../lib/chat-ios-hacks";
 
 export default class ChatChannel extends Component {
@@ -539,6 +539,7 @@ export default class ChatChannel extends Component {
     } catch (e) {
       popupAjaxError(e);
     } finally {
+      message.editing = false;
       this.chatDraftsManager.remove({ channelId: this.args.channel.id });
       this.pane.sending = false;
     }

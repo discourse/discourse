@@ -10,6 +10,9 @@ ru:
       site_settings:
         categories:
           chat: Чат
+        chat_separate_sidebar_mode:
+          always: "Всегда"
+          never: "Никогда"
       logs:
         staff_actions:
           actions:
@@ -21,11 +24,8 @@ ru:
           descriptions:
             chat:
               create_message: "Создать сообщение чата в указанном канале."
-    about:
-      chat_messages_count: "Сообщения чата"
-      chat_channels_count: "Каналы чата"
-      chat_users_count: "Пользователи чата"
     chat:
+      deleted_chat_username: удалён
       dates:
         time_tiny: "h:mm"
       all_loaded: "Показать все сообщения"
@@ -83,6 +83,7 @@ ru:
         create: "Новый канал"
       click_to_join: "Нажмите здесь для просмотра доступных каналов."
       close: "Закрыть"
+      remove: "Отозвать"
       collapse: "Свернуть чат"
       expand: "Развернуть панель чата"
       confirm_flag: "Действительно пожаловаться на сообщение пользователя %{username}?"
@@ -130,37 +131,12 @@ ru:
           many: "Последние %{count} часов"
           other: "Последние %{count} часа"
       mention_warning:
-        dismiss: "Отклонить"
-        cannot_see: "Пользователь %{username} не имеет доступа к этому каналу и не был уведомлен."
-        cannot_see_multiple:
-          one: "%{username} и еще %{count} пользователь не имеют доступа к этому каналу и не были уведомлены."
-          few: "%{username} и еще %{count} пользователя не имеют доступа к этому каналу и не были уведомлены."
-          many: "%{username} и еще %{count} пользователей не имеют доступа к этому каналу и не были уведомлены."
-          other: "%{username} и еще %{count} пользователя не имеют доступа к этому каналу и не были уведомлены."
         invitations_sent:
           one: "Приглашение отправлено"
           few: "Приглашения отправлены"
           many: "Приглашений отправлены"
           other: "Приглашений отправлены"
         invite: "Пригласить в канал"
-        without_membership: "Пользователь %{username} не является участником канала."
-        without_membership_multiple:
-          one: "%{username} и еще %{count} пользователь не являются участниками канала."
-          few: "%{username} и еще %{count} пользователя не являются участниками канала."
-          many: "%{username} и еще %{count} пользователей не являются участниками канала."
-          other: "%{username} и еще %{count} пользователя не являются участниками канала."
-        group_mentions_disabled: "В группе «%{group_name}» не разрешены упоминания."
-        group_mentions_disabled_multiple:
-          one: "В группе «%{group_name}» и еще %{count} не разрешены упоминания."
-          few: "В группе «%{group_name}» и еще %{count} не разрешены упоминания."
-          many: "В группе «%{group_name}» и еще %{count} не разрешены упоминания."
-          other: "В группе «%{group_name}» и еще %{count} не разрешены упоминания."
-        too_many_members: "В группе «%{group_name}» слишком много участников. Никто не был уведомлен."
-        too_many_members_multiple:
-          one: "В группе «%{group_name}» и еще %{count} слишком много участников. Никто не был уведомлен."
-          few: "В группе «%{group_name}» и еще %{count} слишком много участников. Никто не был уведомлен."
-          many: "В группе «%{group_name}» и еще %{count} слишком много участников. Никто не был уведомлен."
-          other: "В группе «%{group_name}» и еще %{count} слишком много участников. Никто не был уведомлен."
         groups:
           header:
             some: "Некоторые пользователи не будут уведомлены"
@@ -350,7 +326,6 @@ ru:
         back_to_all_channels: "Все каналы"
         back_to_channel: "Назад"
         tabs:
-          about: Информация
           members: Участники
           settings: Настройки
       new_message_modal:
@@ -512,11 +487,14 @@ ru:
         saved: "Сохранено"
         unfollow: "Отписаться"
         admin_title: "Администрирование"
+        settings_title: "Настройки"
+        category_label: "Категория"
+        history_label: "История"
+        members_label: "Участники"
       admin:
         title: "Чат"
         export_messages:
           title: "Экспорт сообщений чата"
-          description: "Текущее ограничение на экспорт — 10 000 последних сообщений за последние шесть месяцев."
           create_export: "Создать экспорт"
           export_has_started: "Экспорт начался. Когда он завершится, вы получите личное сообщение."
       direct_messages:
@@ -590,18 +568,11 @@ ru:
           many: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
           other: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
       retention_reminders:
-        public_none: "История канала хранится неограниченное время."
-        public:
-          one: "История канала хранится %{count} день."
-          few: "История канала хранится %{count} дня."
-          many: "История канала хранится %{count} дней."
-          other: "История канала хранится %{count} дня."
-        dm_none: "История личного чата хранится неограниченное время."
-        dm:
-          one: "История личного чата хранится %{count} день."
-          few: "История личного чата хранится %{count} дня."
-          many: "История личного чата хранится %{count} дней."
-          other: "История личного чата хранится %{count} дня."
+        short:
+          one: "%{count} день"
+          few: "%{count} дней"
+          many: "%{count} дня"
+          other: "%{count} дня"
       flags:
         off_topic: "Это сообщение не имеет отношения к текущему обсуждению, как указано в названии канала, и, вероятно, его следует переместить в другое место."
         inappropriate: "Это сообщение содержит контент, который обоснованно можно считать оскорбительным или нарушающим <a href=\"%{basePath}/guidelines\">рекомендации для сообщества</a>."
@@ -626,7 +597,6 @@ ru:
       thread:
         title: "Название"
         view_thread: Просмотреть цепочку
-        default_title: "Цепочка"
         replies:
           one: "%{count} ответ"
           few: "%{count} ответа"
@@ -700,6 +670,9 @@ ru:
       types:
         chat_reviewable_message:
           title: "На сообщение пожаловались"
+        reviewable_chat_message:
+          title: "На сообщение пожаловались"
+          noun: "сообщение чата"
     keyboard_shortcuts_help:
       chat:
         title: "Чат"
@@ -737,3 +710,7 @@ ru:
       sections:
         chat:
           title: Чат
+    sidebar:
+      panels:
+        chat:
+          label: "Чат"

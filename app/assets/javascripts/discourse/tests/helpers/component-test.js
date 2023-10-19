@@ -1,11 +1,12 @@
 import { render } from "@ember/test-helpers";
+import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
+import $ from "jquery";
+import QUnit, { test } from "qunit";
+import { autoLoadModules } from "discourse/instance-initializers/auto-load-modules";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
-import { autoLoadModules } from "discourse/instance-initializers/auto-load-modules";
-import QUnit, { test } from "qunit";
-import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 
 export function setupRenderingTest(hooks) {

@@ -1,7 +1,7 @@
-import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import I18n from "I18n";
+import { action } from "@ember/object";
+import I18n from "discourse-i18n";
 
 export default class extends Component {
   @tracked inline = true;

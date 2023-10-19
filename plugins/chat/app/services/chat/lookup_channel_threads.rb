@@ -33,6 +33,7 @@ module Chat
     model :threads
     step :fetch_tracking
     step :fetch_memberships
+    step :fetch_participants
     step :build_load_more_url
 
     # @!visibility private
@@ -131,6 +132,10 @@ module Chat
           thread_id: threads.map(&:id),
           user_id: guardian.user.id,
         )
+    end
+
+    def fetch_participants(threads:, **)
+      context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
     def build_load_more_url(contract:, **)

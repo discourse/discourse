@@ -1,6 +1,13 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import I18n from "I18n";
+import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import {
+  resetHighestReadCache,
+  setHighestReadCache,
+} from "discourse/lib/topic-list-tracker";
+import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
@@ -9,16 +16,9 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
-import selectKit from "../helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import {
-  resetHighestReadCache,
-  setHighestReadCache,
-} from "discourse/lib/topic-list-tracker";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
+import I18n from "discourse-i18n";
+import selectKit from "../helpers/select-kit-helper";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -744,7 +744,7 @@ acceptance(
       await visit("/t/12");
 
       assert.strictEqual(
-        query(".suggested-topics-message").innerText.trim(),
+        query(".more-topics__browse-more").innerText.trim(),
         "Want to read more? Browse other messages in personal messages.",
         "displays the right browse more message"
       );
@@ -756,7 +756,7 @@ acceptance(
       await publishNewToMessageBus({ userId: 5, topicId: 1 });
 
       assert.strictEqual(
-        query(".suggested-topics-message").innerText.trim(),
+        query(".more-topics__browse-more").innerText.trim(),
         "There is 1 new message remaining, or browse other personal messages",
         "displays the right browse more message"
       );
@@ -764,7 +764,7 @@ acceptance(
       await publishUnreadToMessageBus({ userId: 5, topicId: 2 });
 
       assert.strictEqual(
-        query(".suggested-topics-message").innerText.trim(),
+        query(".more-topics__browse-more").innerText.trim(),
         "There is 1 unread and 1 new message remaining, or browse other personal messages",
         "displays the right browse more message"
       );
@@ -772,7 +772,7 @@ acceptance(
       await publishReadToMessageBus({ userId: 5, topicId: 2 });
 
       assert.strictEqual(
-        query(".suggested-topics-message").innerText.trim(),
+        query(".more-topics__browse-more").innerText.trim(),
         "There is 1 new message remaining, or browse other personal messages",
         "displays the right browse more message"
       );
@@ -782,7 +782,7 @@ acceptance(
       await visit("/t/13");
 
       assert.ok(
-        query(".suggested-topics-message")
+        query(".more-topics__browse-more")
           .innerText.trim()
           .match(
             /Want to read more\? Browse other messages in\s+awesome_group\./
@@ -797,7 +797,7 @@ acceptance(
       await publishGroupNewToMessageBus({ groupIds: [14], topicId: 1 });
 
       assert.ok(
-        query(".suggested-topics-message")
+        query(".more-topics__browse-more")
           .innerText.trim()
           .match(
             /There is 1 new message remaining, or browse other messages in\s+awesome_group/
@@ -808,7 +808,7 @@ acceptance(
       await publishGroupUnreadToMessageBus({ groupIds: [14], topicId: 2 });
 
       assert.ok(
-        query(".suggested-topics-message")
+        query(".more-topics__browse-more")
           .innerText.trim()
           .match(
             /There is 1 unread and 1 new message remaining, or browse other messages in\s+awesome_group/

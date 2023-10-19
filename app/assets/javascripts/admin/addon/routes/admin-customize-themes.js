@@ -1,9 +1,9 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import Route from "@ember/routing/route";
-import I18n from "I18n";
-import InstallThemeModal from "../components/modal/install-theme";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
+import InstallThemeModal from "../components/modal/install-theme";
 
 export default class AdminCustomizeThemesRoute extends Route {
   @service dialog;

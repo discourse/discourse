@@ -1,12 +1,12 @@
+import { inject as service } from "@ember/service";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
-import Notification from "discourse/models/notification";
-import I18n from "I18n";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
-import Topic from "discourse/models/topic";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import { mergeSortedLists } from "discourse/lib/utilities";
-import { inject as service } from "@ember/service";
+import Notification from "discourse/models/notification";
+import Topic from "discourse/models/topic";
+import I18n from "discourse-i18n";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   @service store;

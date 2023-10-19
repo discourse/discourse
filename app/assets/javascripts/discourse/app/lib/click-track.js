@@ -1,14 +1,14 @@
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { Promise } from "rsvp";
-import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import getURL, { samePrefix } from "discourse-common/lib/get-url";
-import { isTesting } from "discourse-common/config/environment";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwner } from "discourse-common/lib/get-owner";
 import jQuery from "jquery";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import DiscourseURL from "discourse/lib/url";
+import User from "discourse/models/user";
+import { isTesting } from "discourse-common/config/environment";
+import deprecated from "discourse-common/lib/deprecated";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import getURL, { samePrefix } from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 export function isValidLink(link) {
   if (link instanceof jQuery) {
@@ -102,7 +102,7 @@ export default {
         siteSettings?.prevent_anons_from_downloading_files &&
         !User.current()
       ) {
-        const dialog = getOwner(this).lookup("service:dialog");
+        const dialog = getOwnerWithFallback(this).lookup("service:dialog");
         dialog.alert(I18n.t("post.errors.attachment_download_requires_login"));
       } else if (wantsNewWindow(e)) {
         const newWindow = window.open(href, "_blank");

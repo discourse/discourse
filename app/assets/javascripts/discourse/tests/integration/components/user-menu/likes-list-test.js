@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import I18n from "I18n";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 module(
   "Integration | Component | user-menu | likes-notifications-list",

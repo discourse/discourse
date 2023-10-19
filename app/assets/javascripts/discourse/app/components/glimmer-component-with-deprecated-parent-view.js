@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
+import EmberGlimmerComponentManager from "@glimmer/component/-private/ember-component-manager";
 import {
   CustomComponentManager,
   setInternalComponentManager,
 } from "@glimmer/manager";
-import EmberGlimmerComponentManager from "@glimmer/component/-private/ember-component-manager";
 import { valueForRef } from "@glimmer/reference";
 
 class GlimmerComponentWithParentViewManager extends CustomComponentManager {

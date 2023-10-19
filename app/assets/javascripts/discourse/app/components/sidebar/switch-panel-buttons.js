@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { defaultHomepage } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
 
 export default class SwitchPanelButtons extends Component {
   @service router;
@@ -15,10 +16,16 @@ export default class SwitchPanelButtons extends Component {
     this.sidebarState.currentPanel.lastKnownURL = this.router.currentURL;
 
     const url = panel.lastKnownURL || panel.switchButtonDefaultUrl;
-    const destination = url === "/" ? `discovery.${defaultHomepage()}` : url;
-    this.router.transitionTo(destination).finally(() => {
-      this.isSwitching = false;
-      this.sidebarState.setPanel(panel.key);
-    });
+    const destination =
+      url === "/" ? `discovery.${defaultHomepage()}` : getURL(url);
+
+    this.router
+      .transitionTo(destination)
+      .then(() => {
+        this.sidebarState.setPanel(panel.key);
+      })
+      .finally(() => {
+        this.isSwitching = false;
+      });
   }
 }

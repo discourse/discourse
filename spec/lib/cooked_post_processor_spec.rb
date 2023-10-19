@@ -516,8 +516,6 @@ RSpec.describe CookedPostProcessor do
 
           context "when the upload is attached to the correct post" do
             before do
-              FastImage.expects(:size).returns([1750, 2000])
-              OptimizedImage.expects(:resize).returns(true)
               Discourse
                 .store
                 .class
@@ -525,14 +523,50 @@ RSpec.describe CookedPostProcessor do
                 .expects(:has_been_uploaded?)
                 .at_least_once
                 .returns(true)
-              upload.update(secure: true, access_control_post: post)
+              upload.update!(secure: true, access_control_post: post)
+              post.link_post_uploads
             end
 
             # TODO fix this spec, it is sometimes getting CDN links when it runs concurrently
             xit "handles secure images with the correct lightbox link href" do
+              FastImage.expects(:size).returns([1750, 2000])
+              OptimizedImage.expects(:resize).returns(true)
               cpp.post_process
 
               expect(cpp.html).to match_html cooked_html
+            end
+
+            context "when the upload was not secure" do
+              before { upload.update!(secure: false) }
+
+              it "changes the secure status" do
+                cpp.post_process
+                expect(upload.reload.secure).to eq(true)
+              end
+            end
+
+            context "when the upload should no longer be considered secure" do
+              before { SiteSetting.login_required = false }
+
+              it "changes the secure status" do
+                cpp.post_process
+                expect(upload.reload.secure).to eq(false)
+              end
+
+              it "does not use a secure-uploads URL for the lightbox href" do
+                SiteSetting.create_thumbnails = false
+                SiteSetting.max_image_width = 10
+                SiteSetting.max_image_height = 10
+
+                cpp.post_process
+                expect(cpp.html).not_to have_tag(
+                  "a",
+                  with: {
+                    class: "lightbox",
+                    href: "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png",
+                  },
+                )
+              end
             end
           end
 
@@ -649,7 +683,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png"><img src="//test.localhost/subfolder/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="><img src=x onerror=alert('haha')>.png"><img src="//test.localhost/subfolder/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">&gt;&lt;img src=x onerror=alert('haha')&gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
         end
       end

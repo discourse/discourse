@@ -286,7 +286,6 @@ da:
     more_replies:
       one: "%{count} svar til"
       other: "%{count} svar til"
-    loading: "Indlæser diskussion…"
     permalink: "Permalink"
     imported_from: "Importeret fra: %{link}"
     in_reply_to: "▶ %{username}"
@@ -793,6 +792,8 @@ da:
     sequence_conflict_error:
       title: "kladdefejl"
       description: "Kladde redigeres i et andet vindue. Genindlæs venligst denne side."
+    too_many_drafts:
+      title: "For mange kladder"
   draft_backup:
     pm_title: "Sikkerhedskopiér Kladder fra igangværende emner"
     pm_body: "Emne, der indeholder backup-kladder"
@@ -1232,7 +1233,6 @@ da:
         qtt_like: Likes modtaget
       description: "Top 10 over brugere, der har fået 'Synes godt om' fra en lang række personer."
   dashboard:
-    group_email_credentials_warning: 'Der opstod et problem med e-mail-legitimationsoplysninger for gruppen <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Ingen e-mails vil blive sendt fra gruppe-indbakken, før problemet er løst. %{error}'
     rails_env_warning: "Din server kører i %{env}-tilstand."
     host_names_warning: "Din config/database.yml fil bruger standardnavnet localhost som værtsnavn. Opdatér den med webstedets værtsnavn."
     sidekiq_warning: 'Sidekiq kører ikke. Mange opgaver, som f.eks. udsendelse af e-mails, afvikles asynkront af sidekiq. Du skal sikre dig at der kører mindst én sidekiq-proces. <a href="https://github.com/mperham/sidekiq" target="_blank">Læs mere om Sidekiq her</a>.'
@@ -1268,9 +1268,6 @@ da:
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
     set_locale_from_accept_language_header: "indstil grænsefladesprog for anonyme brugere ud fra deres webbrowsers sprog headere"
     support_mixed_text_direction: "Understøt blandede tekstretninger fra venstre til højre og højre mod venstre."
-    min_post_length: "Minimumlængde tilladt for indlæg i tegn"
-    min_first_post_length: "Minimum tilladte antal tegn (i emne felt) i første indlæg"
-    min_personal_message_post_length: "Minimumlængde tilladt for indlæg i tegn"
     max_post_length: "Maksimal længde af indlæg i tegn"
     topic_featured_link_enabled: "Tillad opslag af et link med emner."
     show_topic_featured_link_in_digest: "Vis link med det fremhævede emne i e-mail-sammendraget."
@@ -1337,7 +1334,6 @@ da:
     tl2_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr dag for tl2 (medlemmer) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl4 (leader) ved at gange med dette tal"
-    num_users_to_silence_new_user: "Hvis en ny brugers indlæg får num_spam_flags_to_silence_new_user spam-flag fra disse mange forskellige brugere, så skjul alle deres indlæg og forhindre fremtidige indlæg. 0 for at deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brugers indlæg får så mange rapporteringer fra num_tl3_users_to_silence_new_user forskellige tillidsniveauer 3 brugere, skal du skjule alle deres indlæg og forhindre fremtidige indlæg. 0 for at deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brugers indlæg får num_tl3_flags_to_silence_new_user rapporteringer fra så mange forskellige tillidsniveau 3-brugere, skal du skjule alle deres indlæg og forhindrer fremtidige indlæg. 0 til at deaktivere."
     flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP-adresse som den bruger, der startede emnet, skal begges deres indlæg anmeldes som potentiel spam."
@@ -1360,8 +1356,6 @@ da:
     allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
     slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
-    content_security_policy: "Aktivér indholds-sikkerheds-politik"
-    content_security_policy_report_only: "Aktivér indholds-sikkerheds-politik-kun-rapportering"
     content_security_policy_collect_reports: "Aktivér CSP-overtrædelsesrapportindsamling på /csp_reports"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
     top_menu: "Afklar hvilke ting fremgår af sidens navigations bar, og i hvilken rækkefølge. Eksempel: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -1623,9 +1617,11 @@ da:
     default_tags_tracking: "Liste over mærker, der spores som standard."
     default_tags_muted: "Liste over mærker, der er tavse som standard."
     default_tags_watching_first_post: "Liste over mærker, hvor første indlæg i hvert nyt emne vil blive overvåget som standard."
-    allow_user_api_keys: "Tillad generering af bruger API nøgler"
+    revoke_api_keys_unused_days: "Antal dage siden en API-nøgle sidst blev brugt, før den automatisk tilbagekaldes (0 for aldrig)"
+    revoke_api_keys_maxlife_days: "Antal dage før en API-nøgle tilbagekaldes automatisk (0 for aldrig)"
     allow_user_api_key_scopes: "Liste over tilladte anvendelsesområder for bruger-API-nøgler"
-    expire_user_api_keys_days: "Antal dage før en bruger API-nøgle automatisk udløber (0 for aldrig)"
+    revoke_user_api_keys_unused_days: "Antal dage siden en bruger-API-nøgle sidst blev brugt, før den automatisk tilbagekaldes (0 for aldrig)"
+    revoke_user_api_keys_maxlife_days: "Antal dage før en bruger-API-nøgle automatisk tilbagekaldes (0 for aldrig)"
     tagging_enabled: "Aktivér mærker på emner?"
     max_tags_per_topic: "Det maksimale antal mærker, der kan anvendes i et emne."
     max_tag_search_results: "Ved søger efter mærker, skal der maksimalt vises følgende antal resultater."
@@ -1636,7 +1632,6 @@ da:
     suppress_overlapping_tags_in_list: "Hvis mærkerne matcher nøjagtige ord i emnetitler, skal du ikke vise mærket"
     remove_muted_tags_from_latest: "Vis ikke emner, der kun er mærket med tavse mærker på den seneste emneliste."
     force_lowercase_tags: "Tving alle nye mærker til at kun benytte små bogstaver."
-    company_name: "Virksomhedens navn"
     governing_law: "Gældende Lov"
     city_for_disputes: "By for tvister"
     shared_drafts_category: "Aktiver funktionen Delte kladder ved at angive en kategori for emneudkast. Emner i denne kategori vil blive undertrykt fra emnelister for personalebrugere."
@@ -1785,16 +1780,9 @@ da:
       sent_test: "sendt!"
     user:
       merge_user:
-        updating_username: "Opdaterer brugernavn..."
-        changing_post_ownership: "Ændrer ejerskab af indlæg..."
-        merging_given_daily_likes: "Sammenfletter de givne daglige 'Synes godt om'..."
-        merging_post_timings: "Fletter indlægs tider..."
-        merging_user_visits: "Fletter brugerbesøg..."
-        updating_site_settings: "Opdaterer webstedsindstillinger..."
-        updating_user_stats: "Opdaterer brugerstatistik..."
-        merging_user_attributes: "Fletter brugerattributter..."
-        updating_user_ids: "Opdaterer bruger-id'er..."
-        deleting_source_user: "Sletter kildebruger..."
+        updating_username: "Opdaterer brugernavn…"
+        changing_post_ownership: "Ændrer ejerskab af indlæg…"
+        updating_user_ids: "Opdaterer bruger-id'er…"
   user:
     deactivated: "Blev deaktiveret på grund af for mange returnerede e-mails til '%{email}'."
     deactivated_by_staff: "Deaktiveret af hjælperteamet"
@@ -2302,9 +2290,9 @@ da:
       text_body_template: |
         Hej,
 
-        Dette er en automatisk besked fra %{site_name} at informere dig om, at @%{username} er blevet ignoreret af %{ignores_threshold} brugere. Dette kan indikere, at der er ved at udvikle sig et problem i dit fællesskab.
+        Dette er en automatisk besked fra %{site_name}, for at informere dig om, at @%{username} er blevet ignoreret af %{ignores_threshold} brugere. Dette kan indikere, at der er ved at udvikle sig et problem i dit fællesskab.
 
-        Du vil måske [gennemgå de seneste indlæg](%{base_url}/u/%{username}/resume) fra denne bruger og potentielt andre brugere i [ignoreret og tavs brugerrapport] (%{base_url}/admin/reports/top_ignored_users).
+        Du vil måske [gennemgå de seneste indlæg](%{base_url}/u/%{username}/resume) fra denne bruger og potentielt andre brugere i [ignoreret og tavs brugerrapport](%{base_url}/admin/reports/top_ignored_users).
 
         For yderligere vejledning henvises til vores [fællesskabs-retningslinjer](%{base_url}/guidelines).
     too_many_spam_flags:
@@ -3285,6 +3273,9 @@ da:
       automatic_revoked:
         one: "Automatisk tilbagekaldt, sidste aktivitet for mere end %{count} dag siden"
         other: "Automatisk tilbagekaldt, sidste aktivitet for mere end %{count} dage siden"
+      automatic_revoked_max_life:
+        one: "Automatisk tilbagekaldt, oprettet for mere end %{count} dag siden"
+        other: "Automatisk tilbagekaldt, oprettet for mere end %{count} dage siden"
       revoked: Tilbagekaldt
       restored: Gendannet
   reviewables:
@@ -3312,7 +3303,7 @@ da:
       delete_single:
         title: "Slet"
       delete:
-        title: "Slet..."
+        title: "Slet…"
       delete_and_ignore_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       delete_and_agree_replies:
@@ -3334,7 +3325,7 @@ da:
       approve_user:
         title: "Godkend Bruger"
       reject_user:
-        title: "Slet Bruger..."
+        title: "Slet Bruger…"
         delete:
           title: "Slet Bruger"
           description: "Brugeren vil blive slettet fra forummet."
@@ -3343,6 +3334,7 @@ da:
           description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
       reject:
         title: "Afvis"
+        bundle_title: "Afvis…"
       delete_user:
         reason: "Slettet via gennemgangskø"
   email_style:
@@ -3351,6 +3343,11 @@ da:
     ignore_error: "Beklager, du kan ikke ignorere denne bruger."
     mute_error: "Beklager, du kan ikke gøre denne bruger tavs."
   fallback_username: "bruger"
+  form_templates:
+    errors:
+      missing_id: "mangler et felt-id"
+      duplicate_ids: "har duplikerede id'er"
+      reserved_id: "har et reserveret nøgleord som id: %{id}"
   activemodel:
     errors:
       <<: *errors

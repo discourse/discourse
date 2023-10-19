@@ -1,22 +1,22 @@
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { and, notEmpty } from "@ember/object/computed";
-import DiscourseURL, { userPath } from "discourse/lib/url";
-import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
+import { action } from "@ember/object";
+import { and, notEmpty } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
+import DiscourseURL, { userPath } from "discourse/lib/url";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
-import MergeUsersConfirmationModal from "../components/modal/merge-users-confirmation";
-import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
-import MergeUsersProgressModal from "../components/modal/merge-users-progress";
 import DeletePostsConfirmationModal from "../components/modal/delete-posts-confirmation";
 import DeleteUserPostsProgressModal from "../components/modal/delete-user-posts-progress";
+import MergeUsersConfirmationModal from "../components/modal/merge-users-confirmation";
+import MergeUsersProgressModal from "../components/modal/merge-users-progress";
+import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
 
 export default class AdminUserIndexController extends Controller.extend(
   CanCheckEmails

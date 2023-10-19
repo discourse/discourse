@@ -1,10 +1,10 @@
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
-import Notification from "discourse/models/notification";
-import I18n from "I18n";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Bookmark from "discourse/models/bookmark";
+import Notification from "discourse/models/notification";
+import I18n from "discourse-i18n";
 
 export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   get dismissTypes() {

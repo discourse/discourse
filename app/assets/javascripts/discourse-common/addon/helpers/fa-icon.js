@@ -1,5 +1,5 @@
-import deprecated from "discourse-common/lib/deprecated";
 import { htmlSafe } from "@ember/template";
+import deprecated from "discourse-common/lib/deprecated";
 import { registerUnbound } from "discourse-common/lib/helpers";
 import { renderIcon } from "discourse-common/lib/icon-library";
 

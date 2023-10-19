@@ -1,5 +1,3 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   blur,
   click,
@@ -7,8 +5,10 @@ import {
   render,
   triggerKeyEvent,
 } from "@ember/test-helpers";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
@@ -45,6 +45,25 @@ module("Integration | Component | simple-list", function (hooks) {
       count(".values .value"),
       4,
       "it adds the value when keying Enter"
+    );
+  });
+
+  test("adding a value when list is predefined", async function (assert) {
+    this.set("values", "vinkas\nosama");
+    this.set("choices", ["vinkas", "osama", "kris"]);
+
+    await render(
+      hbs`<SimpleList @values={{this.values}} @allowAny={{false}} @choices={{this.choices}}/>`
+    );
+
+    await click(".add-value-input summary");
+    assert.strictEqual(count(".select-kit-row"), 1);
+    await click(".select-kit-row");
+
+    assert.strictEqual(
+      count(".values .value"),
+      3,
+      "it adds the value to the list of values"
     );
   });
 

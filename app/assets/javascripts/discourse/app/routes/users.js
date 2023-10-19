@@ -1,11 +1,15 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { Promise } from "rsvp";
-import { action } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
+  router: service(),
+  siteSettings: service(),
+  currentUser: service(),
+
   queryParams: {
     period: { refreshModel: true },
     order: { refreshModel: true },
@@ -37,7 +41,7 @@ export default DiscourseRoute.extend({
 
   beforeModel() {
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      this.replaceWith("discovery");
+      this.router.replaceWith("discovery");
     }
   },
 
@@ -59,11 +63,5 @@ export default DiscourseRoute.extend({
       controller.loadGroups(),
       controller.loadUsers(model.params),
     ]);
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("users")._showFooter();
-    return true;
   },
 });

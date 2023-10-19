@@ -6,7 +6,13 @@
 
 gl:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Nunca"
     chat:
+      deleted_chat_username: eliminado
       create: "Crear"
       cancel: "Cancelar"
       channel_settings:
@@ -15,6 +21,7 @@ gl:
         join: "Participar"
         leave: "Abandonar"
       close: "Pechar"
+      remove: "Retirar"
       delete: "Eliminar"
       edited: "editado"
       muted: "silenciado"
@@ -26,8 +33,6 @@ gl:
       flag: "Sinalar"
       join: "Participar"
       last_visit: "última visita"
-      mention_warning:
-        dismiss: "desbotar"
       reply: "Responder"
       edit: "Editar"
       rebake_message: "Reconstruír HTML"
@@ -53,7 +58,6 @@ gl:
       channel_info:
         back_to_channel: "Volver"
         tabs:
-          about: Verbo de
           members: Membros
           settings: Configuración
       new_message_modal:
@@ -83,6 +87,10 @@ gl:
         saved: "Gardado"
         unfollow: "Abandonar"
         admin_title: "Administrador"
+        settings_title: "Configuración"
+        category_label: "Categoría"
+        history_label: "Historial"
+        members_label: "Membros"
       incoming_webhooks:
         back: "Volver"
         description: "Descrición"
@@ -103,6 +111,10 @@ gl:
           title: "Mover a un tema existente"
         new_message:
           title: "Mover a Nova mensaxe"
+      retention_reminders:
+        short:
+          one: "%{count} día"
+          other: "%{count} días"
       emoji_picker:
         objects: "Obxectos"
         activities: "Actividades"

@@ -1,3 +1,6 @@
+import { click, render, settled, waitFor } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import {
@@ -5,9 +8,6 @@ import {
   createFile,
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import { click, render, settled, waitFor } from "@ember/test-helpers";
-import { module, test } from "qunit";
 
 const fakeUpload = {
   type: ".png",

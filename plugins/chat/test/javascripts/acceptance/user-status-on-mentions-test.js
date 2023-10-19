@@ -1,3 +1,6 @@
+import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
+import { skip, test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   emulateAutocomplete,
@@ -5,9 +8,6 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { skip } from "qunit";
-import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Chat | User status on mentions", function (needs) {
   const channelId = 1;
@@ -46,6 +46,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser1.username}">@${mentionedUser1.username}</a></p>`,
     mentioned_users: [mentionedUser1],
     user: actingUser,
+    created_at: "2020-08-04T15:00:00.000Z",
   };
   const newStatus = {
     description: "working remotely",
@@ -55,7 +56,8 @@ acceptance("Chat | User status on mentions", function (needs) {
     id: channelId,
     chatable_id: 1,
     chatable_type: "Category",
-    meta: { message_bus_last_ids: {} },
+    title: "A category channel",
+    meta: { message_bus_last_ids: {}, can_delete_self: true },
     current_user_membership: { following: true },
     chatable: { id: 1 },
   };
@@ -78,19 +80,19 @@ acceptance("Chat | User status on mentions", function (needs) {
     pretender.put(`/chat/1/edit/${messageId}`, () => response({}));
     pretender.post(`/chat/drafts`, () => response({}));
     pretender.put(`/chat/api/channels/1/read/1`, () => response({}));
+    pretender.get(`/chat/api/channels/1/messages`, () =>
+      response({
+        messages: [message],
+        meta: {
+          can_load_more_future: false,
+        },
+      })
+    );
     pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () =>
       response({})
     );
     pretender.put(`/chat/api/channels/1/messages/${messageId}/restore`, () =>
       response({})
-    );
-
-    pretender.get(`/chat/api/channels/1`, () =>
-      response({
-        channel,
-        chat_messages: [message],
-        meta: { can_delete_self: true },
-      })
     );
 
     pretender.get("/u/search/users", () =>
@@ -116,11 +118,6 @@ acceptance("Chat | User status on mentions", function (needs) {
       statusSelector(mentionedUser2.username),
       mentionedUser2.status
     );
-    await assertStatusTooltipIsRendered(
-      assert,
-      statusSelector(mentionedUser2.username),
-      mentionedUser2.status
-    );
   });
 
   skip("just posted messages | it updates status on mentions", async function (assert) {
@@ -134,7 +131,6 @@ acceptance("Chat | User status on mentions", function (needs) {
     const selector = statusSelector(mentionedUser2.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
-    await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
   skip("just posted messages | it deletes status on mentions", async function (assert) {
@@ -164,11 +160,6 @@ acceptance("Chat | User status on mentions", function (needs) {
       statusSelector(mentionedUser3.username),
       mentionedUser3.status
     );
-    await assertStatusTooltipIsRendered(
-      assert,
-      statusSelector(mentionedUser3.username),
-      mentionedUser3.status
-    );
   });
 
   skip("edited messages | it updates status on mentions", async function (assert) {
@@ -185,7 +176,6 @@ acceptance("Chat | User status on mentions", function (needs) {
     const selector = statusSelector(mentionedUser3.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
-    await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
   skip("edited messages | it deletes status on mentions", async function (assert) {
@@ -205,7 +195,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
-  skip("deleted messages | it shows status on mentions", async function (assert) {
+  test("deleted messages | it shows status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -216,14 +206,9 @@ acceptance("Chat | User status on mentions", function (needs) {
       statusSelector(mentionedUser1.username),
       mentionedUser1.status
     );
-    await assertStatusTooltipIsRendered(
-      assert,
-      statusSelector(mentionedUser1.username),
-      mentionedUser1.status
-    );
   });
 
-  skip("deleted messages | it updates status on mentions", async function (assert) {
+  test("deleted messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -236,10 +221,9 @@ acceptance("Chat | User status on mentions", function (needs) {
     const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
-    await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
-  skip("deleted messages | it deletes status on mentions", async function (assert) {
+  test("deleted messages | it deletes status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -254,7 +238,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
-  skip("restored messages | it shows status on mentions", async function (assert) {
+  test("restored messages | it shows status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -265,14 +249,9 @@ acceptance("Chat | User status on mentions", function (needs) {
       statusSelector(mentionedUser1.username),
       mentionedUser1.status
     );
-    await assertStatusTooltipIsRendered(
-      assert,
-      statusSelector(mentionedUser1.username),
-      mentionedUser1.status
-    );
   });
 
-  skip("restored messages | it updates status on mentions", async function (assert) {
+  test("restored messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -285,10 +264,9 @@ acceptance("Chat | User status on mentions", function (needs) {
     const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
-    await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
-  skip("restored messages | it deletes status on mentions", async function (assert) {
+  test("restored messages | it deletes status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -312,27 +290,6 @@ acceptance("Chat | User status on mentions", function (needs) {
         new RegExp(`${status.emoji}.png`),
         "status emoji is updated"
       );
-  }
-
-  async function assertStatusTooltipIsRendered(assert, selector, status) {
-    await triggerEvent(selector, "mouseenter");
-
-    assert.equal(
-      document
-        .querySelector(".user-status-tooltip-description")
-        .textContent.trim(),
-      status.description,
-      "status description is correct"
-    );
-
-    assert.ok(
-      document.querySelector(
-        `.user-status-message-tooltip img[alt='${status.emoji}']`
-      ),
-      "status emoji is correct"
-    );
-
-    await triggerEvent(selector, "mouseleave");
   }
 
   async function deleteMessage(messageSelector) {

@@ -1,6 +1,6 @@
-import I18n from "I18n";
 import EmberObject from "@ember/object";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { click, currentRouteName, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
@@ -10,9 +10,9 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentRouteName, visit } from "@ember/test-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 acceptance("User Routes", function (needs) {
   needs.user();

@@ -1,7 +1,7 @@
+import { computed } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { escapeExpression } from "discourse/lib/utilities";
 import SelectedChoiceComponent from "select-kit/components/selected-choice";
-import { schedule } from "@ember/runloop";
-import { computed } from "@ember/object";
 
 export default SelectedChoiceComponent.extend({
   tagName: "",

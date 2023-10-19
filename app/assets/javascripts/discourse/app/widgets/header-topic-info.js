@@ -1,13 +1,13 @@
-import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import RawHtml from "discourse/widgets/raw-html";
-import { avatarImg } from "discourse/widgets/post";
-import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
 import renderTags from "discourse/lib/render-tags";
 import { topicFeaturedLinkNode } from "discourse/lib/render-topic-featured-link";
+import DiscourseURL from "discourse/lib/url";
+import { avatarImg } from "discourse/widgets/post";
+import RawHtml from "discourse/widgets/raw-html";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 createWidget("topic-header-participant", {
   tagName: "span",

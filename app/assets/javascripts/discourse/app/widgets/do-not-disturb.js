@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { createWidget } from "discourse/widgets/widget";
-import { dateNode } from "discourse/helpers/node";
 import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
-import DoNotDisturb from "discourse/lib/do-not-disturb";
 import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
+import { dateNode } from "discourse/helpers/node";
+import DoNotDisturb from "discourse/lib/do-not-disturb";
+import { createWidget } from "discourse/widgets/widget";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 export default createWidget("do-not-disturb", {
   tagName: "li.do-not-disturb",

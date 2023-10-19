@@ -337,7 +337,7 @@ uk:
     related_messages:
       title: "Повʼязані повідомлення"
       pill: "Повʼязані повідомлення"
-      see_all: 'Переглянути <a href="%{path}">усі дописи </a> від @%{username}…'
+      see_all: 'Переглянути <a href="%{path}">усі повідомлення</a> від @%{username}…'
     suggested_topics:
       title: "Нові та непрочитані теми"
       pill: "Запропоновано"
@@ -351,15 +351,15 @@ uk:
       moderators: "Модератори"
       stat:
         all_time: "За весь час"
-        last_day: "Останні 24 години"
-        last_7_days: "Останні 7 днів"
-        last_30_days: "Останні 30 днів"
+        last_day: "24 години"
+        last_7_days: "7 днів"
+        last_30_days: "30 днів"
       like_count: "Вподобання"
       topic_count: "Теми"
       post_count: "Дописи"
       user_count: "Реєстрації"
       active_user_count: "Активні користувачі"
-      contact: "Контакти"
+      contact: "Зв'язатися з нами"
       contact_info: "У випадку серйозних проблем з цим сайтом, будь ласка, звʼяжіться з нами через %{contact_info}."
     bookmarked:
       title: "Закладки"
@@ -417,6 +417,11 @@ uk:
         confirm: "У вас вже є чернетка. Які дії виконати з нею?"
         yes_value: "Відхилити"
         no_value: "Продовжити редагування"
+    topic_count_all:
+      one: "Переглянути %{count} нову тему"
+      few: "Переглянути %{count} нові теми"
+      many: "Переглянути %{count} нових тем"
+      other: "Переглянути %{count} нові теми"
     topic_count_categories:
       one: "Переглянути %{count} нову чи оновлену тему"
       few: "Переглянути %{count} нові чи оновлені теми"
@@ -444,14 +449,14 @@ uk:
       other: "Переглянути %{count} нових тем"
     preview: "попередній перегляд"
     cancel: "скасувати"
-    deleting: "Видалення…"
+    deleting: "Видалення"
     save: "Зберегти зміни"
-    saving: "Збереження…"
+    saving: "Збереження"
     saved: "Збережено!"
     upload: "Надіслати"
-    uploading: "Надсилання…"
+    uploading: "Завантаження…"
     processing: "Обробка…"
-    uploading_filename: "Надсилання: %{filename}…"
+    uploading_filename: "Завантаження: %{filename}…"
     processing_filename: "Обробка: %{filename}…"
     clipboard: "буфер обміну"
     uploaded: "Надіслано!"
@@ -502,6 +507,9 @@ uk:
         type_bonus:
           name: "тип бонуса"
           title: "Деяким типам повідомлень, які переглядаються, учасники команди обслуговування можуть призначити бонуси, щоб зробити їх більш пріоритетними."
+      revise_and_reject_post:
+        reason: "Причина"
+        optional: "опціонально"
       stale_help: "<b>%{username}</b> розглянув це."
       claim_help:
         optional: "Ви можете заявити права на цей елемент, щоб інші не могли його розглядати."
@@ -647,23 +655,26 @@ uk:
         all:
           title: "Усе"
       context_question:
-        is_this_post: "Це повідомлення %{reviewable_human_score_types}?"
+        is_this_post: "Це %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "або"
-        something_else_wrong: "Щось не так з цим дописом?"
+        something_else_wrong: "Щось не так з цим %{reviewable_type}?"
       types:
         reviewable_flagged_post:
           title: "Позначений допис"
           flagged_by: "Позначено"
+          noun: "допис"
         reviewable_queued_topic:
           title: "Тема в черзі"
+          noun: "тема"
         reviewable_queued_post:
           title: "Допис у черзі"
+          noun: "допис"
         reviewable_user:
           title: "Користувач"
+          noun: "користувач"
         reviewable_post:
           title: "Допис"
-        reviewable_chat_message:
-          title: "Позначене повідомлення чату"
+          noun: "допис"
       approval:
         title: "Допис потребує схвалення"
         description: "Ми отримали ваш новий допис, але він потребує схвалення модератором, перш ніж зʼявитися. Будь ласка, будьте терплячі."
@@ -1085,7 +1096,7 @@ uk:
         few: "%{count} нові теми за минулий місяць."
         many: "%{count} нових тем за минулий місяць."
         other: "%{count} нових тем за минулий місяць."
-      n_more: "Розділи (ще %{count})…"
+      n_more: "Категорії (ще %{count} )…"
     ip_lookup:
       title: Пошук IP адреси
       hostname: Імʼя хоста
@@ -1110,6 +1121,7 @@ uk:
     user:
       said: "%{username}:"
       profile: "Профіль"
+      profile_possessive: "Профіль користувача %{username}"
       mute: "Приглушити"
       edit: "Редагувати налаштування"
       download_archive:
@@ -1138,7 +1150,7 @@ uk:
         ignore_no_users: "У вас немає ігнорованих користувачів."
         ignore_option: "Ігноровано"
         ignore_option_title: "Ви не отримуватимете сповіщення, повʼязані з цим користувачем, а всі їхні теми та відповіді буде приховано."
-        add_ignored_user: "Додати…"
+        add_ignored_user: "Додавання…"
         mute_option: "Приглушено"
         mute_option_title: "Ви не отримуватимете жодних сповіщень, повʼязаних з цим користувачем."
         normal_option: "Нормальний"
@@ -1464,7 +1476,6 @@ uk:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
         error: "(помилка)"
-        emoji: "lock emoji"
         action: "Надіслати лист для відновлення пароля"
         set_password: "Встановити пароль"
         choose_new: "Вибрати новий пароль"
@@ -1508,8 +1519,6 @@ uk:
           Проскануйте цей QR-код у застосунку (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) і введіть свій код автентифікації.
         disable_description: "Будь ласка, введіть код автентифікації з вашої програми"
         show_key_description: "Введіть вручну"
-        short_description: |
-          Захистіть свій обліковий запис одноразовими кодами безпеки.
         extended_description: |
           Двофакторна автентифікація краще захищає ваш обліковий запис, вимагаючи окрім вашого пароля ще й введення одноразового токена. Токени можна генерувати на пристроях з <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> та <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Будь ласка, зверніть увагу, що вхід через соціальні мережі буде вимкнено, як тільки у вашому обліковому записі буде увімкнена двофакторна автентифікація."
@@ -1548,6 +1557,10 @@ uk:
           save: "Зберегти"
           edit_description: "Назва фізичного ключа безпеки"
           name_required_error: "Ви повинні вказати назву для вашого ключа безпеки."
+      passkeys:
+        save: "Зберегти"
+        added_prefix: "Додано"
+        last_used_prefix: "Використано"
       change_about:
         title: "Змінити інформацію про мене"
         error: "Сталася помилка під час цієї зміни."
@@ -1839,6 +1852,7 @@ uk:
         ok: "Ваш пароль виглядає добре."
         instructions: "не менше %{count} символів"
         required: "Будь ласка, введіть пароль"
+        confirm: "Підтвердити"
       summary:
         title: "Підсумок"
         stats: "Статистика"
@@ -2086,6 +2100,7 @@ uk:
       title: "Створити обліковий запис"
       failed: "Щось пішло не так; скоріше за все, цю електронну пошту вже зареєстровано, спробуйте посилання для відновлення пароля"
       associate: "Вже є обліковий запис? <a href='%{associate_link}'>Увійдіть</a>, щоб пов’язати свій обліковий запис та %{provider}."
+      activation_title: "Активувати обліковий запис"
     forgot_password:
       title: "Скидання пароля"
       action: "Я забув(ла) свій пароль"
@@ -2105,7 +2120,6 @@ uk:
       link_label: "Надішліть мені посилання для входу "
       button_label: "E-mail"
       login_link: "Пропустіть пароль; надішліть мені посилання для входу"
-      emoji: "lock emoji"
       complete_username: "Якщо обліковий запис збігається з ім’ям користувача <b>%{username}</b>, ви повинні отримати електронного листа з посиланням для входу в систему найближчим часом."
       complete_email: "Якщо дані облікового запису збігаються з <b>%{email}</b>, ви повинні отримати електронного листа з посиланням для входу в систему найближчим часом."
       complete_username_found: "Ми знайшли обліковий запис, який відповідає імені користувача <b>%{username}</b>, найближчим часом ви отримаєте електронного листа з посиланням для входу."
@@ -2137,6 +2151,7 @@ uk:
       security_key_not_allowed_error: "Час перевірки автентичності ключа безпеки минув або дію було скасовано."
       security_key_no_matching_credential_error: "У зазначеному ключі безпеки не знайдено відповідних облікових даних."
       security_key_support_missing_error: "Ваше поточний пристрій або оглядач не підтримує використання ключів безпеки. Будь ласка, використовуйте інший метод."
+      security_key_invalid_response_error: "Процес автентифікації ключа безпеки зазнав невдачі через недійсну відповідь."
       email_placeholder: "Email / Ім’я користувача"
       caps_lock_warning: "Caps Lock увімкнено"
       error: "Невідома помилка"
@@ -2196,7 +2211,6 @@ uk:
         security_key: "Натомість використовуйте ключ безпеки"
     invites:
       accept_title: "Запрошення"
-      emoji: "envelope emoji"
       welcome_to: "Ласкаво просимо до %{site_name}!"
       invited_by: "Вас запросив:"
       social_login_available: "Ви також зможете ввійти за допомогою будь-якої соціальної мережі, використовуючи цю електронну адресу."
@@ -2251,7 +2265,7 @@ uk:
       delete_item: "Видалити %{name}"
       filter_by: "Фільтрувати за: %{name}"
       select_to_filter: "Виберіть значення для фільтрування"
-      default_header_text: Вибрати…
+      default_header_text: Виберіть…
       no_content: Збігів, не знайдено
       results_count:
         one: "%{count} результат"
@@ -2259,7 +2273,7 @@ uk:
         many: "%{count} результатів"
         other: "%{count} результатів"
       filter_placeholder: Пошук…
-      filter_placeholder_with_any: Знайти або створити…
+      filter_placeholder_with_any: Знайти або створити
       create: "Створити: '%{content}'"
       max_content_reached:
         one: "Можна вибрати тільки %{count} елемент."
@@ -2304,10 +2318,10 @@ uk:
       destination_category: "Розділ Призначення"
       publish: "Опублікувати спільну чернетку"
       confirm_publish: "Ви впевнені, що хочете опублікувати цю чернетку?"
-      publishing: "Публікація теми…"
+      publishing: "Публікація теми"
     composer:
       emoji: "Емодзі :)"
-      more_emoji: "ще…"
+      more_emoji: "ще"
       options: "Параметри"
       whisper: "шепотіння"
       unlist: "приховане зі стрічок"
@@ -2320,7 +2334,7 @@ uk:
       drafts_offline: "чернетки офлайн"
       edit_conflict: "конфлікт редагування"
       esc: "esc"
-      esc_label: "Клацніть або натисніть Esc, щоб відхилити"
+      esc_label: "відхилити повідомлення"
       ok_proceed: "Добре, продовжуйте"
       group_mentioned_limit:
         one: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{count} користувачів. Ніхто не отримає сповіщення."
@@ -2402,7 +2416,7 @@ uk:
       saving: "Збереження"
       saved: "Збережено!"
       saved_draft: "Опублікувати чернетку. Торкніться, щоб продовжити."
-      uploading: "Надсилання…"
+      uploading: "Завантаження…"
       show_preview: "показати попередній перегляд"
       hide_preview: "приховати попередній перегляд"
       quote_post_title: "Процитувати весь допис повністю"
@@ -2528,16 +2542,16 @@ uk:
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} та %{count} інший</span>, %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} та %{count} інших</span>, %{description}"
-        many: "<span class='multi-user'>%{username}, %{username2} та %{count} інших</span>, %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} та %{count} інших</span>, %{description}"
+        one: "<span class='multi-user'>%{username} та %{count} інший</span> %{description}"
+        few: "<span class='multi-user'>%{username} та %{count} інших</span> %{description}"
+        many: "<span class='multi-user'>%{username} та %{count} інші</span> %{description}"
+        other: "<span class='multi-user'>%{username} та %{count} інші</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} та %{count} інший"
-        few: "%{username}, %{username2} та %{count} інші"
-        many: "%{username}, %{username2} та %{count} інших"
-        other: "%{username}, %{username2} та %{count} інших"
+        one: "%{username} і ще %{count}"
+        few: "%{username} і ще %{count}"
+        many: "%{username} і ще %{count}"
+        other: "%{username} і ще %{count}"
       liked_consolidated_description:
         one: "вподобав(ла) %{count} ваш допис"
         few: "вподобав(ла) %{count} ваших дописи"
@@ -2714,7 +2728,7 @@ uk:
           label: З теґами
           aria_label: Фільтруйте за теґами
         filters:
-          label: Повертати лише теми/дописи…
+          label: Обмежити пошук по темам/повідомленням...
           title: Збігам в заголовку
           likes: Мені сподобалося
           posted: В яких я писав
@@ -2863,7 +2877,18 @@ uk:
         dismiss_new_modal:
           title: "Відхилити нові"
           topics: "Відхилити нові теми"
-          posts: "Відхилити нові повідомлення"
+          posts: "Відхиляти нові відповіді"
+          topics_with_count:
+            one: "Відхилено %{count} нову тему"
+            few: "Відхилено %{count} нові теми"
+            many: "Відхилено %{count} нових тем"
+            other: "Відхилено %{count} нових тем"
+          replies_with_count:
+            one: "Відхилено %{count} нову відповідь"
+            few: "Відхилено %{count} нові відповіді"
+            many: "Відхилено %{count} нових відповідей"
+            other: "Відхилено %{count} нових відповідей"
+          replies: "Відхиляти нові відповіді"
           untrack: "Припинити відстежувати ці теми, щоб вони більше не з’являлися в моєму списку нового"
         dismiss_new_with_selected:
           one: "Відхилити (%{count}) новий…"
@@ -2872,7 +2897,7 @@ uk:
           other: "Відхилити (%{count}) нових…"
         toggle: "перемикання масового вибору тем"
         actions: "Масові дії"
-        change_category: "Обрати розділ…"
+        change_category: "Обрати категорію"
         close_topics: "Закрити теми"
         archive_topics: "Архівувати теми"
         move_messages_to_inbox: "Перемістити у Вхідні"
@@ -3031,9 +3056,8 @@ uk:
           false { або <a href="{basePath}/latest">переглянути останні теми</a>}
           other {}
         }
-      bumped_at_title: |
-        Перший допис: %{createdAtDate}
-        Опубліковано: %{bumpedAtDate}
+      created_at: "Створено: %{date}"
+      bumped_at: "Останні:%{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Перегляньте всі категорії</a> або <a href='%{basePath}/latest'>перегляньте останні теми</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Перегляньте всі категорії</a>, <a href='%{basePath}/latest'>перегляньте останні теми</a> або перегляньте топ:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Переглянути всі теги</a> або <a href='%{basePath}/latest'>переглянути останні теми</a>."
@@ -3190,7 +3214,7 @@ uk:
         close: "Закрити тему"
         multi_select: "Вибрати допис…"
         slow_mode: "Встановити повільний режим…"
-        timed_update: "Дія за таймером…"
+        timed_update: "Встановити таймер теми…"
         pin: "Закріпити тему…"
         unpin: "Відмінити закріплення теми…"
         unarchive: "Розархівувати тему"
@@ -3265,7 +3289,7 @@ uk:
         banner_note: "Користувачі можуть закривати оголошення, кожен сам для себе, після чого воно більше не буде для них покиваться. Тільки одна тема може бути зроблена активним оголошенням в будь-який момент часу."
         no_banner_exists: "Немає поточних тем-оголошень."
         banner_exists: "На даний момент <strong class='badge badge-notification unread'>вже є</strong> тема-оголошення."
-      inviting: "Запрошуємо…"
+      inviting: "Запрошення…"
       automatically_add_to_groups: "Це запрошення надасть доступ до таких груп:"
       invite_private:
         title: "Запросити в бесіду"
@@ -3498,7 +3522,8 @@ uk:
       errors:
         create: "Вибачте, під час створення допису сталася помилка. Будь ласка, спробуйте ще раз."
         edit: "Вибачте, під час редагування вашого допису сталася помилка. Будь ласка, спробуйте ще раз."
-        upload: "На жаль, під час завантаження файлу сталася помилка. Будь ласка спробуйте ще раз."
+        upload: "Вибачте, сталася помилка при завантаженні %{file_name}. Будь ласка, спробуйте ще раз."
+        backup_too_large: "Вибачте, файл резервної копії занадто великий."
         file_too_large: "Вибачте, файл завеликий (максимальний розмір %{max_size_kb}Кб). Чому б не завантажити свій великий файл у хмарну службу обміну, а потім вставити посилання?"
         file_size_zero: "Вибачте, схоже, щось пішло не так. Файл, який ви намагаєтеся завантажити, має 0 байтів. Будь ласка, спробуйте ще раз."
         file_too_large_humanized: "Вибачте, цей файл завеликий (максимальний розмір %{max_size}). Чому б не завантажити свій великий файл у хмарну службу обміну, а потім вставити посилання?"
@@ -3579,7 +3604,7 @@ uk:
         delete_topic_confirm_modal_no: "Ні, зберегти цю тему"
         delete_topic_error: "Сталася помилка під час видалення теми"
         delete_topic: "видалити тему"
-        add_post_notice: "Повідомлення модератору…"
+        add_post_notice: "Повідомлення модератору"
         change_post_notice: "Змінити повідомлення модератору…"
         delete_post_notice: "Видалити повідомлення модератору"
         remove_timer: "видалити таймер"
@@ -3721,7 +3746,7 @@ uk:
         description: "Вимагати, щоб нові теми мали теґи з групи теґів:"
         delete: "Вилучити"
         add: "Додайте необхідну групу теґів"
-        placeholder: "вибрати групу теґів…"
+        placeholder: "вибрати групу тегів…"
       topic_featured_link_allowed: "Дозволити популярні посилання в цьому розділі"
       delete: "Видалити розділ"
       create: "Новий розділ"
@@ -3890,10 +3915,10 @@ uk:
           many: "Введіть хоча б %{count} символів"
           other: "Введіть хоча б %{count} символів"
         more:
-          one: "ще %{count} символ для продовження…"
-          few: "ще %{count} символи для продовження…"
-          many: "ще %{count} символів для продовження…"
-          other: "ще %{count} символів для продовження…"
+          one: "Ще %{count} символ"
+          few: "Ще %{count} символи"
+          many: "Ще %{count} символів"
+          other: "Ще %{count} символів"
         left:
           one: "Залишилося не більше %{count} символ"
           few: "Залишилося не більше %{count} символи"
@@ -3955,6 +3980,7 @@ uk:
         med {з дуже високим рейтингом вподобань}
         high {з надзвичайно високим рейтингом вподобань}
         other {}}
+    latest_poster_link: "Профіль %{username}, останній постер"
     original_post: "Перший допис"
     views: "Перегляди"
     sr_views: "Сортувати за переглядами"
@@ -4046,6 +4072,12 @@ uk:
           many: "Нові (%{count})"
           other: "Нові (%{count})"
         help: "теми, створені за останні кілька днів"
+        all: "Все"
+        all_with_count: "Всі (%{count})"
+        topics: "Теми"
+        topics_with_count: "Теми (%{count})"
+        replies: "Відповіді"
+        replies_with_count: "Відповіді (%{count})"
       posted:
         title: "Мої дописи"
         help: "теми, в які ви дописували"
@@ -4101,7 +4133,7 @@ uk:
       screen_reader_image_title: "Зображення %{current} з %{total}: %{title}"
       buttons:
         next: "Далі (клавіша зі стрілкою вправо або вниз)"
-        previous: "Назад (клавіша зі стрілкою вліво або вгору)"
+        previous: "Попередній (клавіша зі стрілкою вліво або вгору)"
         close: "Закрити (Esc)"
         download: "Завантажити зображення"
         newtab: "Відкрити зображення в новій вкладці"
@@ -4193,6 +4225,7 @@ uk:
         print: "%{shortcut} Друкувати тему"
         defer: "%{shortcut} Відкласти тему"
         topic_admin_actions: "%{shortcut} Відкрити дії адміністратора теми"
+        archive_private_message: "%{shortcut} Перемикач архіву приватних повідомлень"
       search_menu:
         title: "Меню «Пошук»"
         prev_next: "%{shortcut} Переміщення по результатам пошуку"
@@ -4224,7 +4257,7 @@ uk:
         many: "+ ще %{count}"
         other: "+ ще %{count}"
       awarded:
-        one: "%{number} нагороджено"
+        one: "%{number} нагороджений"
         few: "%{number} нагороджено"
         many: "%{number} нагороджено"
         other: "%{number} нагороджено"
@@ -4262,19 +4295,18 @@ uk:
       other_tags: "Інші теґи"
       selector_all_tags: "усі теґи"
       selector_no_tags: "без теґів"
-      changed: "теґи змінено:"
       tags: "Теґи"
       choose_for_topic: "додаткові теґи"
       choose_for_topic_required:
-        one: "Ви повинні вибрати принаймні %{count} теґ"
-        few: "Ви повинні вибрати принаймні %{count} теґи"
-        many: "Ви повинні вибрати принаймні %{count} теґів"
-        other: "Ви повинні вибрати принаймні %{count} теґів"
+        one: "виберіть принаймні %{count} тег…"
+        few: "виберіть принаймні %{count} теги…"
+        many: "виберіть принаймні %{count} тегів…"
+        other: "виберіть принаймні %{count} тегів…"
       choose_for_topic_required_group:
-        one: "виберіть %{count} теґ з '%{name}'…"
-        few: "виберіть %{count} теґи з '%{name}'.…"
+        one: "виберіть тег %{count} із «%{name}»…"
+        few: "виберіть теги %{count} з '%{name}'…"
         many: "виберіть %{count} теґів з '%{name}'.…"
-        other: "виберіть %{count} теґів з '%{name}'.…"
+        other: "вибрати %{count} тегів з '%{name}'..."
       info: "Інформація"
       default_info: "Цей теґ не обмежений розділами та не має синонімів."
       staff_info: "Щоб додати обмеження, додайте цей теґ у <a href=%{basePath}/tag_groups>групу теґів</a>."
@@ -4414,7 +4446,7 @@ uk:
       enabled: "Включено безпечний режим, щоб вийти з безпечного режиму, закрийте поточне вікно браузера"
     image_removed: "(зображення видалено)"
     pause_notifications:
-      title: "Призупинити сповіщення для..."
+      title: "Призупинити сповіщення для"
       label: "Призупинити сповіщення"
       options:
         half_hour: "30 хвилин"
@@ -4476,12 +4508,12 @@ uk:
       categories_form_modal:
         title: "Редагувати навігацію по категоріях"
         subtitle:
-          text: "і ми автоматично покажемо найпопулярніші категорії сайту"
+          text: "і ми автоматично покажемо найпопулярніші категорії цього сайту"
         filter_placeholder: "Фільтр категорій"
         no_categories: "Немає категорій, що відповідають даним умовам."
       tags_form_modal:
         title: "Редагувати навігацію тегами"
-        filter_placeholder: "Фільтрація тегів"
+        filter_placeholder: "Теги фільтрів"
         no_tags: "Немає тегів, що відповідають заданому терміну."
         subtitle:
           text: "і ми автоматично покажемо найпопулярніші теги цього сайту"
@@ -4611,19 +4643,19 @@ uk:
         valueMissing:
           default: "Будь ласка, заповніть це поле."
           text: "Будь ласка, заповніть це поле."
-          select-one: "Будь ласка, виберіть пункт у списку."
-          select-multiple: "Виберіть принаймні один пункт у списку."
-          checkbox: "Будь ласка, встановіть цей прапорець, якщо ви хочете продовжити."
+          select-one: "Будь ласка, виберіть елемент у списку."
+          select-multiple: "Будь ласка, виберіть принаймні один елемент у списку."
+          checkbox: "Будь ласка, поставте прапорець, якщо Ви хочете продовжити."
         typeMismatch:
           default: "Будь ласка, введіть коректне значення."
           color: "Будь ласка, введіть колір."
           date: "Будь ласка, введіть дату."
           email: "Будь ласка, введіть вірну адресу електронної пошти."
           number: "Будь ласка, введіть число."
-          password: "Введіть дійсний пароль."
-          tel: "Введіть дійсний номер телефону."
+          password: "Будь ласка, введіть дійсний пароль."
+          tel: "Будь ласка, введіть дійсний номер телефону."
           text: "Будь ласка, введіть текстове значення."
-          url: "Введіть дійсну URL-адресу."
+          url: "Будь ласка, введіть дійсну URL-адресу."
         tooShort:
           one: "Введені дані мають бути мінімум %{count} символ або більше."
           few: "Введені дані мають містити %{count} символів або більше."
@@ -4647,7 +4679,7 @@ uk:
         patternMismatch: "Будь ласка, використовуйте правильний формат."
         badInput: "Будь ласка, введіть коректне значення."
   admin_js:
-    type_to_filter: "введіть, щоб фільтрувати…"
+    type_to_filter: "текст для пошуку…"
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
@@ -4718,6 +4750,7 @@ uk:
         too_many_requests: Ви виконуєте цю дію занадто часто. Будь ласка, зачекайте, перш ніж намагатися знову.
         not_found_error: Вибачте, цього звіту не існує
         filter_reports: Фільтр звітів
+        custom_date_range: Вибрати дату та час
         reports:
           trend_title: "%{percent} зміни. В даний час %{current}, було %{prev} в попередні періоди."
           today: "Сьогодні"
@@ -4896,6 +4929,11 @@ uk:
               list: Список останніх публікацій і приватних повідомлень. Також підтримується RSS.
             tags:
               list: Список тегів.
+            tag_groups:
+              list: Отримати список груп тегів.
+              show: Отримайте одну групу тегів за ідентифікатором.
+              create: Створює групу тегів.
+              update: Оновлює групу тегів, визначену за ідентифікатором.
             categories:
               list: Отримати список розділів.
               show: Отримайте розділ за його ID.
@@ -4972,41 +5010,65 @@ uk:
         groups_filter: "Тільки для Груп"
         delete_confirm: "Вилучити цей вебгук?"
         topic_event:
-          name: "подія теми"
-          details: "Відбувається, коли тема створюється, переглядається, змінюється або видаляється."
+          group_name: "Події теми"
+          topic_created: "Тема створена"
+          topic_revised: "Тема переглянута"
+          topic_edited: "Тему оновлено"
+          topic_destroyed: "Тему видалено"
+          topic_recovered: "Тема відновлена"
         post_event:
-          name: "подія повідомлення"
-          details: "Відбувається, коли повідомлення створюється, редагується, видаляється або відновлюється."
-        user_event:
-          name: "подія користувача"
-          details: "Коли користувач входить в систему, реєструється, підтверджує свою електронну пошту, схвалено або оновлено."
+          group_name: "Події публікації"
+          post_created: "Повідомлення створено"
+          post_edited: "Повідомлення оновлено"
+          post_destroyed: "Допис видалено"
+          post_recovered: "Допис відновлено"
         group_event:
-          name: "групове Захід"
-          details: "При створенні, оновленні або видаленні групи."
-        category_event:
-          name: "Розділ Подій"
-          details: "Коли розділ створюється, оновлюється або видаляється."
+          group_name: "Події групи"
+          group_created: "Група створена"
+          group_updated: "Група оновлена"
+          group_destroyed: "Групу видалено"
         tag_event:
-          name: "Теґ події"
-          details: "Коли теґ створюється, оновлюється або знищується"
+          group_name: "Події тегів"
+          tag_created: "Тег створено"
+          tag_updated: "Тег оновлено"
+          tag_destroyed: "Тег видалено"
+        category_event:
+          group_name: "Події категорії"
+          category_created: "Категорію створено"
+          category_updated: "Категорію оновлено"
+          category_destroyed: "Категорію видалено"
+        user_event:
+          group_name: "Події користувача"
+          user_logged_in: "Користувач увійшов"
+          user_logged_out: "Користувач вийшов із системи"
+          user_confirmed_email: "Користувач підтвердив електронну пошту"
+          user_created: "Користувач створений"
+          user_approved: "Користувач схвалений"
+          user_updated: "Користувача оновлено"
+          user_destroyed: "Користувача видалено"
+          user_suspended: "Користувача призупинено"
+          user_unsuspended: "Користувача розблоковано"
         reviewable_event:
-          name: "переглянуті Події"
-          details: "Коли новий елемент готовий до розгляду та коли його статус оновлюється."
-        notification_event:
-          name: "подія Повідомлення"
-          details: "Коли користувач отримує повідомлення в своїй стрічці."
-        user_promoted_event:
-          name: "Подія підвищення рівня довіри користувача"
-          details: "Коли користувач переходить з одного рівня довіри до іншого."
+          group_name: "Події, що підлягають перегляду"
+          reviewable_created: "Елемент для перегляду готовий"
+          reviewable_updated: "Рецензований елемент оновлено"
         user_badge_event:
-          name: "Значок Події"
-          details: "Коли значок надається або відкликано."
-        group_user_event:
-          name: "Подія користувача групи"
-          details: "Коли користувач додається або видаляється з групи."
+          group_name: "Події з бейджами"
+          user_badge_granted: "Надано бейдж користувачу"
+          user_badge_revoked: "Бейдж користувача відкликано"
         like_event:
-          name: "Подія Подобається"
-          details: "Коли користувач вподобав допис."
+          group_name: "Події вподобань"
+          post_liked: "Коли користувач вподобав допис."
+        notification_event:
+          group_name: "Події сповіщень"
+          notification_created: "Користувач отримує сповіщення у своїй стрічці"
+        group_user_event:
+          group_name: "Групові події користувачів"
+          user_added_to_group: "Користувача додано до групи"
+          user_removed_from_group: "Користувача видалено з групи"
+        user_promoted_event:
+          group_name: "Події, запропоновані користувачем"
+          user_promoted: "Користувач просуває"
         delivery_status:
           title: "Стан доставки"
           inactive: "Неактивно"
@@ -5047,7 +5109,6 @@ uk:
         enabled: "Включено?"
         is_enabled: "Т"
         not_enabled: "Н"
-        change_settings: "Налаштування плагіна"
         change_settings_short: "Налаштування"
         howto: "Як встановити плагін?"
         official: "Офіційний плагін"
@@ -5078,12 +5139,12 @@ uk:
         upload:
           label: "Вивантажити"
           title: "Завантажити копію на сервер"
-          uploading: "Надсилання…"
-          uploading_progress: "Завантаження… %{progress}%"
+          uploading: "Завантаження…"
+          uploading_progress: "Завантаження: %{progress}…"
           success: "'%{filename}' успішно завантажений. Файл тепер обробляється та займе хвилин, щоб його рядки відбилися в списку."
           error: "There has been an error while uploading '%{filename}': %{message}"
         operations:
-          is_running: "Наразі виконується операція…"
+          is_running: "Зараз виконується операція…"
           failed: "The %{operation} failed. Please check the logs."
           cancel:
             label: "Скасувати"
@@ -5093,7 +5154,8 @@ uk:
             label: "Backup"
             title: "Create a backup"
             confirm: "Запустити резервне копіювання?"
-            without_uploads: "Так (не включати завантаження)"
+            include_uploads: "включити всі завантаження"
+            s3_upload_warning: 'Це стосується лише резервних копій баз даних. Завантаження не будуть включені, тобто всі зображення та інші завантажені файли можуть бути відсутніми, якщо резервну копію буде відновлено на іншому хостингу. <b>Щоб увімкнути повне резервне копіювання, включно із завантаженнями на S3, див. <a href="https://meta.discourse.org/t/-/276535" target="_blank">цей посібник</a>.</b>'
           download:
             label: "Завантажити"
             title: "Надіслати лист з посиланням для скачування"
@@ -5144,6 +5206,9 @@ uk:
         install: "Install"
         delete: "Видалити"
         delete_confirm: 'Ви впевнені, що хочете видалити "%{theme_name}"?'
+        bulk_delete: "Ви впевнені?"
+        bulk_themes_delete_confirm: "Це призведе до видалення наступних тем, вони більше не будуть доступні для користувачів вашого сайту:"
+        bulk_components_delete_confirm: "Це призведе до видалення наступних компонентів, які більше не зможуть використовуватись користувачами вашого сайту:"
         color: "Колір"
         opacity: "Непрозорість"
         copy: "Дублювати"
@@ -5166,7 +5231,6 @@ uk:
           theme_name: "Назва теми"
           component_name: "Назва компонента"
           themes_intro: "Виберіть існуючу тему, або встановіть нову, щоб почати роботу"
-          themes_intro_emoji: "woman artist emoji"
           beginners_guide_title: "Керівництво для початківців по використанню Discourse Тем"
           developers_guide_title: "Керівництво розробника по темам Discourse"
           browse_themes: "Перегляд Тем спільноти "
@@ -5214,6 +5278,8 @@ uk:
           convert_theme_tooltip: "Перетворити цю тему в компонент"
           inactive_themes: "Неактивні теми:"
           inactive_components: "Невикористані компоненти:"
+          selected: "%{count} вибрано"
+          cancel: "Скасувати"
           broken_theme_tooltip: "Ця тема має помилки в CSS, HTML або YAML"
           disabled_component_tooltip: "Цей компонент відключений"
           default_theme_tooltip: "Ця тема є темою за замовчуванням на сайті"
@@ -5223,7 +5289,7 @@ uk:
           uploads: "Завантаження"
           no_uploads: "Ви можете завантажувати різні ресурси для вашого стилю, такі як шрифти та зображення"
           add_upload: "Вкласти"
-          upload_file_tip: "Виберіть файл для завантаження (png, woff2 та т.д.)"
+          upload_file_tip: "Виберіть файл для завантаження (png, woff2 тощо…)"
           variable_name: "Ім’я змінної SCSS:"
           variable_name_invalid: "Неправильне ім’я змінної. Допускається тільки буквено-цифрове значення. Повинен починатися з літери. Повинен бути унікальним."
           variable_name_error:
@@ -5245,7 +5311,7 @@ uk:
           add_all: "Додати все"
           import_web_tip: "Репозиторій стилю"
           direct_install_tip: "Ви дійсно хочете встановити <strong>%{name}</strong> зі сховища, наведеного нижче?"
-          import_web_advanced: "Додатково…"
+          import_web_advanced: "Додатково"
           import_file_tip: ".tar.gz, .zip, або .dcstyle .json файл, який містить тему"
           is_private: "Тема знаходиться в приватному репозиторії git"
           finish_install: "Завершити встановлення теми"
@@ -5480,7 +5546,7 @@ uk:
             title: "Filter"
             user_placeholder: "username"
             address_placeholder: "name@example.com"
-            type_placeholder: "дайджест, підписка…"
+            type_placeholder: "дайджест, підписка"
             reply_key_placeholder: "Ключ відповіді"
             smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
@@ -5722,7 +5788,7 @@ uk:
       form_templates:
         nav_title: "Шаблони"
         title: "Шаблони форм"
-        help: "Створіть структуру шаблону, яку можна використовувати для створення нових тем, дописів і повідомлень."
+        help: "Створіть структуру шаблону форми, яку можна використовувати для створення нових тем."
         new_template: "Новий шаблон"
         list_table:
           headings:
@@ -5743,10 +5809,10 @@ uk:
           cancel: "Скасувати"
           name:
             label: "Назва шаблону"
-            placeholder: "Введіть назву для цього шаблону..."
+            placeholder: "Введіть назву для цього шаблону"
           template:
             label: "Шаблон"
-            placeholder: "Створіть YAML шаблон тут..."
+            placeholder: "Створіть YAML шаблон тут"
           preview: "Попередній перегляд"
         delete_confirm: "Ви справді бажаєте вилучити цей шаблон?"
         quick_insert_fields:
@@ -5789,6 +5855,7 @@ uk:
           title: "Попередній перегляд шаблону"
         field_placeholders:
           validations: "введіть перевірки тут"
+          id: "введіть-ідентифікатор-тут"
           label: "Введіть мітку тут"
           placeholder: "Введіть заповнювач тут"
           none_label: "Виберіть елемент"
@@ -5860,7 +5927,7 @@ uk:
           combative: "Занадто агресивний"
           in_wrong_place: "Не в тому місці"
           no_constructive_purpose: "Немає конструктиву його дій, окрім створення розколу у спільноті"
-          custom: "Власний…"
+          custom: "Користувацька"
         suspend_message: "Повідомлення пошти"
         suspend_message_placeholder: "При бажанні, надайте додаткову інформацію про припинення, та вона буде відправлена ​​користувачеві по електронній пошті."
         suspended_by: "Призупинено"
@@ -5984,7 +6051,7 @@ uk:
             text: "перенесення @%{username} в @%{targetUsername}"
             transfer_and_delete: "Передача та видалення @%{username}"
             cancel: "Скасувати"
-        merging_user: "Об’єднання користувачів…"
+        merging_user: "Приєднання користувача…"
         merge_failed: "Помилка під час об'єднання користувачів."
         delete_forbidden_because_staff: "Адміністраторів та модераторів видалити не можливо."
         delete_posts_forbidden_because_staff: "Не можна видалити всі повідомлення адміністраторів та модераторів."
@@ -6007,7 +6074,7 @@ uk:
         delete_confirm: "Загалом краще анонімізувати користувачів, а не видаляти їх, щоб уникнути видалення вмісту з існуючих обговорень."
         delete_and_block: "Видалити та <b>заблокувати</b> цей e-mail та IP адресу"
         delete_dont_block: "Лише видалення"
-        deleting_user: "Видалити користувача…"
+        deleting_user: "Видалення користувача…"
         deleted: "Користувача було видалено."
         delete_failed: "Під час видалення цього користувача сталася помилка. Перш ніж намагатися видалити користувача, переконайтеся, що всі дописи видалено."
         send_activation_email: "Надіслати листа для активації"
@@ -6150,6 +6217,7 @@ uk:
         show_outdated: "Показувати лише застарілі/недійсні"
         locale: "Мова:"
         more_than_50_results: "Знайдено понад 50 результатів. Будь ласка виправте параметри пошуку."
+        no_results: "Відповідних текстів на сайті не знайдено"
         interpolation_keys: "Доступні ключі інтерполяції:"
         outdated:
           title: "Цей переклад застарів"
@@ -6304,7 +6372,6 @@ uk:
             with_time: <span class="username">%{username}</span> в <span class="time">%{time}</span>
         badge_intro:
           title: "Виберіть існуючу нагороду або створіть нову, щоб почати роботу"
-          emoji: "жінка студент емодзі"
           what_are_badges_title: "Що таке нагороди?"
           badge_query_examples_title: "Приклади запиту нагород"
         mass_award:
@@ -6393,11 +6460,11 @@ uk:
       finish: "Вийти з налаштування"
       back: "Назад"
       next: "Далі"
-      configure_more: "Налаштувати більше..."
+      configure_more: "Більше налаштувань"
       step-text: "Крок"
       step: "%{current} з %{total}"
       upload: "Завантажити файл"
-      uploading: "Надсилання…"
+      uploading: "Завантаження…"
       upload_error: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
       staff_count:
         one: "У вашій спільноті %{count} співробітник (це ви)."

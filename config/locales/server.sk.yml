@@ -164,7 +164,6 @@ sk:
       few: "%{count} ďalšie odpovede"
       many: "%{count} ďalších odpovedí"
       other: "%{count} ďalších odpovedí"
-    loading: "Nahrávanie Diskusie ..."
     permalink: "Trvalý odkaz"
     imported_from: "Toto je sprievodná diskusia k pôvodnej téme na %{link}"
     in_reply_to: "▶ %{username}"
@@ -784,9 +783,6 @@ sk:
     censored_words: "Slová, ktoré budu automatický nahradené znakmi &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatické zmazanie príspevkov, ktoré ostali skryté viac ako 30 dní"
     allow_user_locale: "Povoliť používateľom zvoliť si vlastný jazyk"
-    min_post_length: "Minimálny povolený počet znakov v príspevkoch"
-    min_first_post_length: "Minimálny povolený počet znakov pre prvý príspevok (obsah témy)"
-    min_personal_message_post_length: "Minimálny povolený počet znakov v správe"
     max_post_length: "Maximálny povolený počet znakov v príspevkoch"
     min_topic_title_length: "Minimálny povolený počet znakov v názve témy"
     max_topic_title_length: "Maximálny povolený počet znakov v názve témy"
@@ -862,7 +858,6 @@ sk:
     top_topics_formula_least_likes_per_post_multiplier: "hodnota násobku (n) pre najmenej páči sa mi pre prísprvok v najznámejších témach: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Po vytvorení témy musí používateľ počkať (n) sekúnd pred vytvorením ďalšej témy."
     rate_limit_create_post: "Po odoslaní prísprevku používateľ počkať (n) sekúnd pred vytvorením ďalšieho príspevku."
-    rate_limit_new_user_create_topic: "Po vytvorení témy musí používateľ počkať (n) sekúnd pred vytvorením ďalšej témy."
     rate_limit_new_user_create_post: "Po odoslaní príspevku používateľ počkať (n) sekúnd pred vytvorením ďalšieho príspevku."
     max_likes_per_day: "Maximálny počet páči sa mi používateľa denne."
     max_flags_per_day: "Maximálny počet príznakov používateľa denne."
@@ -1416,7 +1411,6 @@ sk:
       approve:
         title: "Schváliť"
       reject_user:
-        title: "Odstrániť používateľa..."
         delete:
           title: "Odstrániť používateľa"
       reject:

@@ -1,10 +1,10 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
-import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 
 function initTags(context) {
   const categories = context.site.categoriesList;

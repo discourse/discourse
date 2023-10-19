@@ -91,14 +91,13 @@ function head(buffer, bootstrap, headers, baseURL) {
 
 function localeScript(buffer, bootstrap) {
   buffer.push(`<script defer src="${bootstrap.locale_script}"></script>`);
+  (bootstrap.extra_locales || []).forEach((l) =>
+    buffer.push(`<script defer src="${l}"></script>`)
+  );
 }
 
 function beforeScriptLoad(buffer, bootstrap) {
   buffer.push(bootstrap.html.before_script_load);
-  localeScript(buffer, bootstrap);
-  (bootstrap.extra_locales || []).forEach((l) =>
-    buffer.push(`<script defer src="${l}"></script>`)
-  );
 }
 
 function discoursePreloadStylesheets(buffer, bootstrap) {
@@ -206,7 +205,11 @@ function replaceIn(bootstrap, template, id, headers, baseURL) {
   BUILDERS[id](buffer, bootstrap, headers, baseURL);
   let contents = buffer.filter((b) => b && b.length > 0).join("\n");
 
-  return template.replace(`<bootstrap-content key="${id}">`, contents);
+  if (id === "html-tag") {
+    return template.replace(`<html>`, contents);
+  } else {
+    return template.replace(`<!-- bootstrap-content ${id} -->`, contents);
+  }
 }
 
 function extractPreloadJson(html) {

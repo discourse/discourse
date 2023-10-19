@@ -1,9 +1,9 @@
+import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias, equal } from "@ember/object/computed";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const EVERYONE = "everyone";
 

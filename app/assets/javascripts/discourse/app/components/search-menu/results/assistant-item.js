@@ -1,12 +1,9 @@
 import Component from "@glimmer/component";
-import getURL from "discourse-common/lib/get-url";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { focusSearchInput } from "discourse/components/search-menu";
+import getURL from "discourse-common/lib/get-url";
 import { debounce } from "discourse-common/utils/decorators";
-import {
-  focusSearchButton,
-  focusSearchInput,
-} from "discourse/components/search-menu";
 
 export default class AssistantItem extends Component {
   @service search;
@@ -59,8 +56,12 @@ export default class AssistantItem extends Component {
 
   @action
   onKeydown(e) {
+    // don't capture tab key
+    if (e.key === "Tab") {
+      return;
+    }
+
     if (e.key === "Escape") {
-      focusSearchButton();
       this.args.closeSearchMenu();
       e.preventDefault();
       return false;
@@ -90,6 +91,7 @@ export default class AssistantItem extends Component {
     } else {
       updatedValue = this.prefix.trim();
     }
+
     const inTopicContext = this.search.searchContext?.type === "topic";
     this.args.searchTermChanged(updatedValue, {
       searchTopics: !inTopicContext || this.search.activeGlobalSearchTerm,

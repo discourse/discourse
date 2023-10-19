@@ -1,110 +1,60 @@
-import I18n from "I18n";
-import ComposerEditor, {
+import $ from "jquery";
+import { h } from "virtual-dom";
+import {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
+import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
+import { addToolbarCallback } from "discourse/components/d-editor";
+import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { addGlobalNotice } from "discourse/components/global-notice";
+import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
+import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
-  addButton,
-  apiExtraButtons,
-  removeButton,
-  replaceButton,
-} from "discourse/widgets/post-menu";
+  addPluginReviewableParam,
+  registerReviewableActionModal,
+} from "discourse/components/reviewable-item";
+import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/components/search-menu/results/assistant";
+import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
+import { addTopicTitleDecorator } from "discourse/components/topic-title";
+import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
+import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
+import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
+import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
+import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import {
   addExtraIconRenderer,
   replaceCategoryLinkRenderer,
 } from "discourse/helpers/category-link";
-import {
-  addPostTransformCallback,
-  preventCloak,
-} from "discourse/widgets/post-stream";
-import {
-  addSaveableUserField,
-  addSaveableUserOptionField,
-} from "discourse/models/user";
-import {
-  addToHeaderIcons,
-  attachAdditionalPanel,
-} from "discourse/widgets/header";
-import {
-  changeSetting,
-  createWidget,
-  decorateWidget,
-  queryRegistry,
-  reopenWidget,
-} from "discourse/widgets/widget";
-import {
-  iconNode,
-  registerIconRenderer,
-  replaceIcon,
-} from "discourse-common/lib/icon-library";
-import Composer, {
-  registerCustomizationCallback,
-} from "discourse/models/composer";
-import DiscourseBanner from "discourse/components/discourse-banner";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import Sharing from "discourse/lib/sharing";
-import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
-import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
-import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { addDecorator } from "discourse/widgets/post-cooked";
-import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
-import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
-import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
-import { addGlobalNotice } from "discourse/components/global-notice";
-import { addNavItem } from "discourse/models/nav-item";
-import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
-import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import { addPluginReviewableParam } from "discourse/components/reviewable-item";
-import {
-  addComposerSaveErrorCallback,
-  addPopupMenuOptionsCallback,
-} from "discourse/services/composer";
-import { addPostClassesCallback } from "discourse/widgets/post";
-import {
-  addGroupPostSmallActionCode,
-  addPostSmallActionClassesCallback,
-  addPostSmallActionIcon,
-} from "discourse/widgets/post-small-action";
-import { addTagsHtmlCallback } from "discourse/lib/render-tags";
-import { addToolbarCallback } from "discourse/components/d-editor";
-import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
-import { addTopicTitleDecorator } from "discourse/components/topic-title";
-import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
-import { addWidgetCleanCallback } from "discourse/components/mount-widget";
-import deprecated from "discourse-common/lib/deprecated";
-import { disableNameSuppression } from "discourse/widgets/poster-name";
-import { extraConnectorClass } from "discourse/lib/plugin-connectors";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { h } from "virtual-dom";
-import { includeAttributes } from "discourse/lib/transform-post";
-import { modifySelectKit } from "select-kit/mixins/plugin-api";
-import { on } from "@ember/object/evented";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
-import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
+import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
+import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
+import { downloadCalendar } from "discourse/lib/download-calendar";
+import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { registerModelTransformer } from "discourse/lib/model-transformers";
+import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
+import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
+import {
+  extraConnectorClass,
+  extraConnectorComponent,
+} from "discourse/lib/plugin-connectors";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
-import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
-import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
-import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
-import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
+import { addTagsHtmlCallback } from "discourse/lib/render-tags";
+import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 import { addSearchResultsCallback } from "discourse/lib/search";
-import { addOnKeyDownCallback } from "discourse/widgets/search-menu";
-import {
-  addQuickSearchRandomTip,
-  addSearchSuggestion,
-  removeDefaultQuickSearchRandomTips,
-} from "discourse/widgets/search-menu-results";
-import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/components/search-menu/results/assistant";
-import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
-import { downloadCalendar } from "discourse/lib/download-calendar";
-import { consolePrefix } from "discourse/lib/source-identifier";
+import Sharing from "discourse/lib/sharing";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   addSidebarPanel,
@@ -116,21 +66,77 @@ import {
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
+import { consolePrefix } from "discourse/lib/source-identifier";
+import { includeAttributes } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
-import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
-import { registerModelTransformer } from "discourse/lib/model-transformers";
-import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
-import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
-import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
-import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
+import { replaceFormatter } from "discourse/lib/utilities";
+import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
+import Composer, {
+  registerCustomizationCallback,
+} from "discourse/models/composer";
+import { addNavItem } from "discourse/models/nav-item";
+import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
+import {
+  addSaveableUserField,
+  addSaveableUserOptionField,
+} from "discourse/models/user";
+import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
+import { addComposerSaveErrorCallback } from "discourse/services/composer";
+import {
+  addToHeaderIcons,
+  attachAdditionalPanel,
+} from "discourse/widgets/header";
+import { addPostClassesCallback } from "discourse/widgets/post";
+import { addDecorator } from "discourse/widgets/post-cooked";
+import {
+  addButton,
+  apiExtraButtons,
+  removeButton,
+  replaceButton,
+} from "discourse/widgets/post-menu";
+import {
+  addGroupPostSmallActionCode,
+  addPostSmallActionClassesCallback,
+  addPostSmallActionIcon,
+} from "discourse/widgets/post-small-action";
+import {
+  addPostTransformCallback,
+  preventCloak,
+} from "discourse/widgets/post-stream";
+import { disableNameSuppression } from "discourse/widgets/poster-name";
+import { addOnKeyDownCallback } from "discourse/widgets/search-menu";
+import {
+  addQuickSearchRandomTip,
+  addSearchSuggestion,
+  removeDefaultQuickSearchRandomTips,
+} from "discourse/widgets/search-menu-results";
+import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
+import {
+  changeSetting,
+  createWidget,
+  decorateWidget,
+  queryRegistry,
+  reopenWidget,
+} from "discourse/widgets/widget";
+import { isTesting } from "discourse-common/config/environment";
+import deprecated from "discourse-common/lib/deprecated";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import {
+  iconNode,
+  registerIconRenderer,
+  replaceIcon,
+} from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
+import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
+import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.9.0";
+
+export const PLUGIN_API_VERSION = "1.15.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -162,6 +168,9 @@ function wrapWithErrorHandler(func, messageKey) {
           detail: { messageKey, error },
         })
       );
+      if (isTesting()) {
+        throw error;
+      }
       return;
     }
   };
@@ -363,13 +372,9 @@ class PluginApi {
    *
    * ```
    * api.decorateCookedElement(
-   *   elem => { elem.style.backgroundColor = 'yellow' },
-   *   { id: 'yellow-decorator' }
+   *   elem => { elem.style.backgroundColor = 'yellow' }
    * );
    * ```
-   *
-   * NOTE: To avoid memory leaks, it is highly recommended to pass a unique `id` parameter.
-   * You will receive a warning if you do not.
    **/
   decorateCookedElement(callback, opts) {
     opts = opts || {};
@@ -379,12 +384,7 @@ class PluginApi {
     addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
 
     if (!opts.onlyStream) {
-      decorate(ComposerEditor, "previewRefreshed", callback, opts.id);
-      decorate(DiscourseBanner, "didInsertElement", callback, opts.id);
-      ["didInsertElement", "user-stream:new-item-inserted"].forEach((event) => {
-        const klass = this.container.factoryFor("component:user-stream").class;
-        decorate(klass, event, callback, opts.id);
-      });
+      this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
   }
 
@@ -523,45 +523,45 @@ class PluginApi {
     decorateWidget(name, fn);
   }
 
+  /**
+   * This is a bridge to support the legacy hamburger widget links that are added by decorating the widgets. This can
+   * be removed once the legacy hamburger widget no longer exists.
+   */
   _deprecateDecoratingHamburgerWidgetLinks(name, fn) {
     if (
       name === "hamburger-menu:generalLinks" ||
       name === "hamburger-menu:footerLinks"
     ) {
-      const siteSettings = this.container.lookup("service:site-settings");
-
-      if (siteSettings.navigation_menu !== "legacy") {
-        try {
-          const { href, route, label, rawLabel, className } = fn();
-          const textContent = rawLabel || I18n.t(label);
-
-          const args = {
-            name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
-            title: textContent,
-            text: textContent,
-          };
-
-          if (href) {
-            if (DiscourseURL.isInternal(href)) {
-              args.href = href;
-            } else {
-              // Skip external links support for now
-              return;
-            }
-          } else {
-            args.route = route;
-          }
-
-          this.addCommunitySectionLink(args, name.match(/footerLinks/));
-        } catch {
-          deprecated(
-            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`navigation_menu\` site setting when not set to "legacy". Please use \`api.addCommunitySectionLink\` instead.`,
-            { id: "discourse.decorate-widget.hamburger-widget-links" }
-          );
+      deprecated(
+        `Usage of \`api.decorateWidget('${name}')\` is deprecated, please use \`api.addCommunitySectionLink\` instead.`,
+        {
+          id: "discourse.decorate-widget.hamburger-widget-links",
+          since: "3.2",
+          dropFrom: "3.3",
         }
+      );
 
-        return;
+      const { href, route, label, rawLabel, className } = fn();
+      const textContent = rawLabel || I18n.t(label);
+
+      const args = {
+        name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
+        title: textContent,
+        text: textContent,
+      };
+
+      if (href) {
+        if (DiscourseURL.isInternal(href)) {
+          args.href = href;
+        } else {
+          // Skip external links support for now
+          return;
+        }
+      } else {
+        args.route = route;
       }
+
+      this.addCommunitySectionLink(args, name.match(/footerLinks/));
     }
   }
 
@@ -637,6 +637,30 @@ class PluginApi {
   }
 
   /**
+   * Add a new button in the post admin menu.
+   *
+   * Example:
+   *
+   * ```
+   * api.addPostAdminMenuButton((name, attrs) => {
+   *   return {
+   *     action: () => {
+   *       alert('You clicked on the coffee button!');
+   *     },
+   *     icon: 'coffee',
+   *     className: 'hot-coffee',
+   *     title: 'coffee.title',
+   *   };
+   * });
+   * ```
+   **/
+  addPostAdminMenuButton(name, callback) {
+    this.container
+      .lookup("service:admin-post-menu-buttons")
+      .addButton(name, callback);
+  }
+
+  /**
    * Remove existing button below a post with your plugin.
    *
    * Example:
@@ -699,23 +723,50 @@ class PluginApi {
   }
 
   /**
-   * Add a new button in the options popup menu.
+   * Add a new button in the composer's toolbar options popup menu.
    *
-   * Example:
+   * @callback action
+   * @param {Object} toolbarEvent - A toolbar event object.
+   * @param {function} toolbarEvent.applySurround - Surrounds the selected text with the given text.
+   * @param {function} toolbarEvent.addText - Append the given text to the selected text in the composer.
    *
-   * ```
-   * api.addToolbarPopupMenuOptionsCallback(() => {
-   *  return {
-   *    action: 'toggleWhisper',
-   *    icon: 'far-eye-slash',
-   *    label: 'composer.toggle_whisper',
-   *    condition: "canWhisper"
-   *  };
+   * @callback condition
+   * @param {Object} composer - The composer service object.
+   * @returns {boolean} - Whether the button should be displayed.
+   *
+   * @param {Object} opts - An Object.
+   * @param {string} opts.icon - The name of the FontAwesome icon to display for the button.
+   * @param {string} opts.label - The I18n translation key for the button's label.
+   * @param {action} opts.action - The action to perform when the button is clicked.
+   * @param {condition} opts.condition - A condition that must be met for the button to be displayed.
+   *
+   * @example
+   * api.addComposerToolbarPopupMenuOption({
+   *   action: (toolbarEvent) => {
+   *     toolbarEvent.applySurround("**", "**");
+   *   },
+   *   icon: 'far-bold',
+   *   label: 'composer.bold_some_text',
+   *   condition: (composer) => {
+   *     return composer.editingPost;
+   *   }
    * });
-   * ```
    **/
-  addToolbarPopupMenuOptionsCallback(callback) {
-    addPopupMenuOptionsCallback(callback);
+  addComposerToolbarPopupMenuOption(opts) {
+    addPopupMenuOption(opts);
+  }
+
+  addToolbarPopupMenuOptionsCallback(opts) {
+    deprecated(
+      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addToolbarPopupMenuOption`",
+      {
+        id: "discourse.add-toolbar-popup-menu-options-callback",
+        since: "3.2",
+        dropFrom: "3.3",
+      }
+    );
+
+    this.addComposerToolbarPopupMenuOption(opts);
   }
 
   /**
@@ -898,6 +949,8 @@ class PluginApi {
   }
 
   /**
+   * @deprecated
+   *
    * Register a Connector class for a particular outlet and connector.
    *
    * For example, if the outlet is `user-profile-primary` and your connector
@@ -911,11 +964,40 @@ class PluginApi {
    * });
    * ```
    *
-   * For more information on connector classes, see:
-   * https://meta.discourse.org/t/important-changes-to-plugin-outlets-for-ember-2-10/54136
+   * This API is deprecated. See renderIntoOutlet instead.
+   *
    **/
   registerConnectorClass(outletName, connectorName, klass) {
     extraConnectorClass(`${outletName}/${connectorName}`, klass);
+  }
+
+  /**
+   * Register a component to be rendered in a particular outlet.
+   *
+   * For example, if the outlet is `user-profile-primary`, you could register
+   * a component like
+   *
+   * ```javascript
+   * import MyComponent from "discourse/plugins/my-plugin/components/my-component";
+   * api.renderInOutlet('user-profile-primary', MyComponent);
+   * ```
+   *
+   * Alternatively, a component could be defined inline using gjs:
+   *
+   * ```javascript
+   * api.renderInOutlet('user-profile-primary', <template>Hello world</template>);
+   * ```
+   *
+   * Note that when passing a component definition to an outlet like this, the default
+   * `@connectorTagName` of the outlet is not used. If you need a wrapper element, you'll
+   * need to add it to your component's template.
+   *
+   * @param {string} outletName - Name of plugin outlet to render into
+   * @param {Component} klass - Component class definition to be rendered
+   *
+   */
+  renderInOutlet(outletName, klass) {
+    extraConnectorComponent(outletName, klass);
   }
 
   /**
@@ -1648,8 +1730,42 @@ class PluginApi {
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
+
+  /**
+   * Adds additional params to be sent to the reviewable/:id/perform/:action
+   * endpoint for a given reviewable type. This is so plugins can provide more
+   * complex reviewable actions that may depend on a custom modal.
+   *
+   * This is copied from the reviewable model instance when performing an action
+   * on the ReviewableItem component.
+   *
+   * ```
+   * api.addPluginReviewableParam("ReviewablePluginType", "some_param");
+   * ```
+   **/
   addPluginReviewableParam(reviewableType, param) {
     addPluginReviewableParam(reviewableType, param);
+  }
+
+  /**
+   * Registers a mapping between a JavaScript modal component class and a server-side reviewable
+   * action, which is registered via `actions.add` and `build_actions`.
+   *
+   * For more information about modal classes, which are special Ember components used with
+   * the DModal API, see:
+   *
+   * https://meta.discourse.org/t/using-the-dmodal-api-to-render-modal-windows-aka-popups-dialogs-in-discourse/268304.
+   *
+   * @param {String} reviewableAction - The action name, as registered in the server-side.
+   * @param {Class} modalClass - The actual JavaScript class of the modal.
+   *
+   * @example
+   * ```
+   * api.registerReviewableActionModal("approve_category_expert", ExpertGroupChooserModal);
+   * ```
+   **/
+  registerReviewableActionModal(reviewableType, modalClass) {
+    registerReviewableActionModal(reviewableType, modalClass);
   }
 
   /**
@@ -2088,7 +2204,15 @@ class PluginApi {
    * Support for setting a Sidebar panel.
    */
   setSidebarPanel(name) {
-    this._lookupContainer("service:sidebar-state").setPanel(name);
+    this._lookupContainer("service:sidebar-state")?.setPanel(name);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for getting the current Sidebar panel.
+   */
+  getSidebarPanel() {
+    return this._lookupContainer("service:sidebar-state")?.currentPanel;
   }
 
   /**
@@ -2096,7 +2220,7 @@ class PluginApi {
    * Set combined sidebar section mode. In this mode, sections from all panels are displayed together.
    */
   setCombinedSidebarMode() {
-    this._lookupContainer("service:sidebar-state").setCombinedMode();
+    this._lookupContainer("service:sidebar-state")?.setCombinedMode();
   }
 
   /**
@@ -2120,7 +2244,7 @@ class PluginApi {
    * Hide sidebar switch panels buttons in separated mode.
    */
   hideSidebarSwitchPanelButtons() {
-    this._lookupContainer("service:sidebar-state").hideSwitchPanelButtons();
+    this._lookupContainer("service:sidebar-state")?.hideSwitchPanelButtons();
   }
 
   /**
@@ -2364,6 +2488,15 @@ class PluginApi {
   }
 
   /**
+   * @param {function} fn - Function that will be called before the auth complete logic is run
+   * in instance-initializers/auth-complete.js. If any single callback returns false, the
+   * auth-complete logic will be aborted.
+   */
+  addBeforeAuthCompleteCallback(fn) {
+    addBeforeAuthCompleteCallback(fn);
+  }
+
+  /**
    * Registers a hashtag type and its corresponding class.
    * This is used when generating CSS classes in the hashtag-css-generator.
    *
@@ -2440,7 +2573,7 @@ function getPluginApi(version) {
   version = version.toString();
 
   if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
-    const owner = getOwner(this);
+    const owner = getOwnerWithFallback(this);
     let pluginApi = owner.lookup("plugin-api:main");
 
     if (!pluginApi) {
@@ -2479,43 +2612,4 @@ export function withPluginApi(version, apiCodeCallback, opts) {
   if (api) {
     return apiCodeCallback(api, opts);
   }
-}
-
-let _decorateId = 0;
-let _decorated = new WeakMap();
-
-function decorate(klass, evt, cb, id) {
-  if (!id) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      consolePrefix(),
-      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks in test mode. The id will be used to ensure the decorator is only applied once."
-    );
-  } else {
-    if (!_decorated.has(klass)) {
-      _decorated.set(klass, new Set());
-    }
-    id = `${id}:${evt}`;
-    let set = _decorated.get(klass);
-    if (set.has(id)) {
-      return;
-    }
-    set.add(id);
-  }
-
-  const mixin = {};
-  let name = `_decorate_${_decorateId++}`;
-
-  if (id) {
-    name += `_${id.replaceAll(/\W/g, "_")}`;
-  }
-
-  mixin[name] = on(evt, function (elem) {
-    elem = elem || this.element;
-    if (elem) {
-      cb(elem);
-    }
-  });
-
-  klass.reopen(mixin);
 }

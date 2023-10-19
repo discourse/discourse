@@ -1,5 +1,5 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminDashboardRoute extends DiscourseRoute {
   activate() {

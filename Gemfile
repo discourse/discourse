@@ -141,10 +141,10 @@ group :test do
   gem "fakeweb", require: false
   gem "minitest", require: false
   gem "simplecov", require: false
-  gem "selenium-webdriver", require: false
+  gem "selenium-webdriver", "~> 4.11", require: false
   gem "test-prof"
-  gem "webdrivers", require: false
   gem "rails-dom-testing", require: false
+  gem "minio_runner", require: false
 end
 
 group :test, :development do
@@ -228,9 +228,8 @@ gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
 
-# These are forks of sassc and sassc-rails with dart-sass support
+# A fork of sassc with dart-sass support
 gem "dartsass-ruby"
-gem "dartsass-sprockets"
 
 gem "rotp", require: false
 

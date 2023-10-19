@@ -1,11 +1,12 @@
-import getURL from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
-import I18n from "I18n";
-import { escape } from "pretty-text/sanitizer";
+import $ from "jquery";
 import toMarkdown from "discourse/lib/to-markdown";
-import deprecated from "discourse-common/lib/deprecated";
-import * as AvatarUtils from "discourse-common/lib/avatar-utils";
 import { capabilities } from "discourse/services/capabilities";
+import * as AvatarUtils from "discourse-common/lib/avatar-utils";
+import deprecated from "discourse-common/lib/deprecated";
+import escape from "discourse-common/lib/escape";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 let _defaultHomepage;
 
@@ -595,4 +596,20 @@ export function mergeSortedLists(list1, list2, comparator) {
     }
   }
   return merged;
+}
+
+export function getCaretPosition(element, options) {
+  const jqueryElement = $(element);
+  const position = jqueryElement.caretPosition(options);
+
+  // Get the position of the textarea on the page
+  const textareaRect = element.getBoundingClientRect();
+
+  // Calculate the x and y coordinates by adding the element's position
+  const adjustedPosition = {
+    x: position.left + textareaRect.left,
+    y: position.top + textareaRect.top,
+  };
+
+  return adjustedPosition;
 }

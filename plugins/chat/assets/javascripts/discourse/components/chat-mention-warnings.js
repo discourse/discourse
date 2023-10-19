@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
-import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 export default class ChatMentionWarnings extends Component {
   @service siteSettings;
@@ -19,6 +19,10 @@ export default class ChatMentionWarnings extends Component {
 
   get hasTooManyMentions() {
     return this.chatComposerWarningsTracker.tooManyMentions;
+  }
+
+  get channelWideMentionDisallowed() {
+    return this.chatComposerWarningsTracker.channelWideMentionDisallowed;
   }
 
   get mentionsCount() {
@@ -50,6 +54,7 @@ export default class ChatMentionWarnings extends Component {
   get show() {
     return (
       this.hasTooManyMentions ||
+      this.channelWideMentionDisallowed ||
       this.hasUnreachableGroupMentions ||
       this.hasOverMembersLimitGroupMentions
     );

@@ -114,42 +114,8 @@ module PageObjects
         find(".chat-thread .chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
-      def has_message?(text: nil, id: nil, thread_id: nil)
-        check_message_presence(exists: true, text: text, id: id, thread_id: thread_id)
-      end
-
-      def has_no_message?(text: nil, id: nil, thread_id: nil)
-        check_message_presence(exists: false, text: text, id: id, thread_id: thread_id)
-      end
-
-      def check_message_presence(exists: true, text: nil, id: nil, thread_id: nil)
-        css_method = exists ? :has_css? : :has_no_css?
-        selector = thread_id ? ".chat-thread[data-id=\"#{thread_id}\"]" : ".chat-thread"
-        if text
-          find(selector).send(css_method, ".chat-message-text", text: text, wait: 5)
-        elsif id
-          find(selector).send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
-        end
-      end
-
       def expand_deleted_message(message)
         message_by_id(message.id).find(".chat-message-expand").click
-      end
-
-      def copy_link(message)
-        expand_message_actions(message)
-        find("[data-value='copyLink']").click
-      end
-
-      def delete_message(message)
-        expand_message_actions(message)
-        find("[data-value='delete']").click
-      end
-
-      def restore_message(message)
-        expand_deleted_message(message)
-        expand_message_actions(message)
-        find("[data-value='restore']").click
       end
 
       def expand_message_actions(message)
@@ -173,14 +139,8 @@ module PageObjects
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
 
-      def open_edit_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='edit']").click
-      end
-
       def edit_message(message, text = nil)
-        open_edit_message(message)
+        messages.edit(message)
         send_message(message.message + text) if text
       end
     end

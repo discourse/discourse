@@ -136,6 +136,7 @@ fa_IR:
     site_settings:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "یوزر ایجینت باید حداقل 3 کاراکتر داشته باشند تا از محدود شدن نرخ درخواست کاربران قانونی به صورت تصادفی جلوگیری شود."
   word_connector:
     comma: "، "
   invite:
@@ -184,7 +185,7 @@ fa_IR:
     more_replies:
       one: "%{count} پاسخ دیگر"
       other: "%{count} پاسخ دیگر"
-    loading: "بارگزاری بحث..."
+    loading: "در حال بارگیری بحث…"
     permalink: " پیوند یکتا"
     imported_from: "این بحث‌وگفتگوی همراه برای ورود اصلی در %{link} است"
     in_reply_to: "◀ %{username}"
@@ -578,6 +579,8 @@ fa_IR:
       title: "پسندیدن"
       description: "پسندیدن این فرسته"
       short_description: "پسندیدن این فرسته"
+  user_activity:
+    no_log_search_queries: "لاگ درخواست‌های جستجو در حال حاضر غیرفعال است (مدیر می‌تواند آن را در تنظیمات سایت فعال کند)."
   topic_flag_types:
     spam:
       title: "هرز‌نامه"
@@ -885,9 +888,6 @@ fa_IR:
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "تمام فرسته‌هایی که بیش از ۳۰ روز پنهان باقی می‌مانند پاک شوند."
     allow_user_locale: "اجازه انتخاب زبان به کاربران داده شود."
-    min_post_length: "حداقل طول مجاز فرسته بر حسب تعداد نویسه"
-    min_first_post_length: "حداقل طول فرسته (بدنه‌ی موضوع) بر حسب نویسه"
-    min_personal_message_post_length: "حداقل طول فرسته در پیام‌ها بر حسب نویسه "
     max_post_length: "حداکثر طول فرسته بر حسب نویسه"
     topic_featured_link_enabled: "فرستادن پیوند همراه موضوع فعال باشد."
     show_topic_featured_link_in_digest: "نمایش پیوند‌های برجسته موضوع در ایمیل خلاصه"
@@ -935,10 +935,11 @@ fa_IR:
     traditional_markdown_linebreaks: "در مدل‌های نشانه گزاری از خط جدید سنتی استفاده کن،‌ که برای linebreak نیاز به دو فضای انتهایی دارد ."
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند، پرچم گذاری،‌ چیزهای دیگر)."
     must_approve_users: "مدیران باید کاربران جدید را قبل از اجازه دسترسی به سایت تایید کنند."
-    review_every_post: "همه نوشته‌ها باید بررسی شوند. هشدار! برای وب‌سایت‌های فعال و مشغول توصیه نمی‌شود."
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS env برای تنظیم به کارگیری CORS باید متغیر باشد."
     use_admin_ip_allowlist: "مدیر‌ها فقط در صورتی می‌توانند وارد شوند که در لیست آیپی‌های نمایش داده شده باشند. (مدیریت > گزارش‌ها > آیپی‌های نمایش داده شده)"
+    content_security_policy: "فعال کردن Content-Security-Policy (CSP)"
+    content_security_policy_report_only: "فعال کردن Content-Security-Policy-Report-Only (CSP)"
     top_menu: "مشخص کنید کدام موارد و با چه ترتیبی در ناوبری صفحه خانگی نشان داده شوند. برای مثال: آخرین‌ها|تازه‌ها|نخوانده‌ها|دسته‌ها|خوانده‌ها|فرسته‌ها|نشانک‌ها"
     post_menu: "مشخص کنید کدام موارد بر روی فهرست نوشته ها نشان داده شوند٬ و بر اساس چه ترتیبی. برای مثال : پسند|ویرایش|پرچم|پاک کردن|همرسانی|نشانک|پاسخ"
     post_menu_hidden_items: "فهرست موارد مخفی شود بطور پیش فرض در فهرست نوشته مگر اینکه رفع گسترش به حالت روشن باشد."
@@ -986,7 +987,6 @@ fa_IR:
     top_topics_formula_least_likes_per_post_multiplier: "مقدار پسند‌های حداقل هر نوشته ضربدر (n) در موضوعات برتر است فرمول: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "بعد از ایجاد موضوع،‌ کاربر باید (n) ثانیه قبل از اینکه موضوع دیگری ایجاد کند صبر کند. "
     rate_limit_create_post: "بعد از نوشته،‌ کاربر باید (n) ثانیه قبل از ساختن نوشته‌ی دیگر صبر کند. "
-    rate_limit_new_user_create_topic: "بعد از ایجاد یک موضوع، کاربر جدید باید (n) ثانیه قبل از ایجاد موضوع دیگر صبر کند."
     rate_limit_new_user_create_post: "بعد از نوشته،‌ کاربر جدید باید (n) ثانیه قبل از ساختن نوشته‌ی دیگر صبر کند. "
     max_likes_per_day: "حداکثر تعداد پسند هر کاربر در روز"
     max_flags_per_day: "حداکثر تعداد پرچم هر کاربر در روز"
@@ -1207,7 +1207,6 @@ fa_IR:
     default_categories_tracking: "لیست دسته‌بندی‌هایی که به صورت پیشفرض پیگیری می‌شوند."
     default_categories_muted: "لیست دسته‌بندی‌هایی که به صورت پیشفرض غیر‌فعال می‌شوند."
     default_categories_watching_first_post: "لیست دسته‌بندی‌هایی که نوشته‌هایشان در هر موضوع به صورت پیشفرض تحت نظر هستند."
-    allow_user_api_keys: "اجازه‌ی ساخت کلید‌های API"
     allow_user_api_key_scopes: "لیست حوزه‌های مجاز برای کلید‌های API کاربری"
     allowed_user_api_push_urls: "لینک‌های مجاز برای سرور و ارسال به API کاربری"
     tagging_enabled: "فعالسازی برچسب در موضوعات؟"
@@ -2056,7 +2055,7 @@ fa_IR:
       name: خوش آمدید
       description: یک پسند دریافت کرده‌اید
     autobiographer:
-      name: نویسنده شرح‌حال
+      name: شرح‌حال نویس
       description: اطلاعات <a href="%{base_path}/my/preferences">صفحه شخصی</a> خود را تکمیل کرده
     anniversary:
       name: سالگرد
@@ -2330,6 +2329,8 @@ fa_IR:
         title: "بازیابی نوشته"
       delete_single:
         title: "حذف"
+      delete:
+        title: "حذف…"
       delete_and_agree:
         title: "حذف نوشته"
       disagree:
@@ -2339,16 +2340,20 @@ fa_IR:
       approve:
         title: "تایید"
       reject_user:
-        title: "حذف کاربر..."
+        title: "حذف کاربر…"
         delete:
           title: "حذف کاربر"
       reject:
         title: "رد کردن"
-        bundle_title: "رد کردن..."
+        bundle_title: "رد کردن…"
   fallback_username: "کاربران"
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at باید بیشتر از set_at باشد"
+  form_templates:
+    errors:
+      duplicate_ids: "دارای شناسه های تکراری است"
+      reserved_id: "دارای یک کلمه کلیدی رزرو شده به عنوان شناسه است: %{id}"
   activemodel:
     errors:
       <<: *errors

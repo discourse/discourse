@@ -3,6 +3,7 @@
 class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
+  include HasSanitizableFields
 
   self.ignored_columns = [
     "topic_count", # TODO(tgxworld): Remove on 1 July 2023
@@ -29,7 +30,7 @@ class Tag < ActiveRecord::Base
   # tags that have never been used and don't belong to a tag group
   scope :unused,
         -> {
-          where(staff_topic_count: 0, pm_topic_count: 0).joins(
+          where(staff_topic_count: 0, pm_topic_count: 0, target_tag_id: nil).joins(
             "LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id",
           ).where("tgm.tag_id IS NULL")
         }
@@ -55,6 +56,8 @@ class Tag < ActiveRecord::Base
   belongs_to :target_tag, class_name: "Tag", optional: true
   has_many :synonyms, class_name: "Tag", foreign_key: "target_tag_id", dependent: :destroy
   has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
+
+  before_save :sanitize_description
 
   after_save :index_search
   after_save :update_synonym_associations
@@ -244,6 +247,9 @@ class Tag < ActiveRecord::Base
 
   private
 
+  def sanitize_description
+    self.description = sanitize_field(self.description) if description_changed?
+  end
   def name_validator
     errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
   end

@@ -1,8 +1,9 @@
 import { action } from "@ember/object";
+import $ from "jquery";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import { Promise } from "rsvp";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
   templateName: "user/bookmarks",
@@ -50,12 +51,6 @@ export default DiscourseRoute.extend({
 
   titleToken() {
     return I18n.t("user_action_groups.3");
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("user-activity")._showFooter();
-    return true;
   },
 
   @action

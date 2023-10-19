@@ -1,9 +1,9 @@
-import Component from "@ember/component";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import { computed } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { dasherize } from "@ember/string";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
 
 export default class FormTemplateFieldUpload extends Component.extend(
   UppyUploadMixin
@@ -12,12 +12,10 @@ export default class FormTemplateFieldUpload extends Component.extend(
   @tracked uploadComplete = false;
   @tracked uploadedFiles = [];
   @tracked disabled = this.uploading;
-  @tracked
-  fileUploadElementId = this.attributes?.label
-    ? `${dasherize(this.attributes.label)}-uploader`
-    : `${this.elementId}-uploader`;
+  @tracked fileUploadElementId = `${dasherize(this.id)}-uploader`;
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;
-  @tracked id = this.fileUploadElementId;
+
+  type = "composer";
 
   @computed("uploading", "uploadValue")
   get uploadStatus() {

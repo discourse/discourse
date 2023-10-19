@@ -1,12 +1,12 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import { scheduleOnce } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import { scheduleOnce } from "@ember/runloop";
-import showModal from "discourse/lib/show-modal";
-import { inject as service } from "@ember/service";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import StaffActionLogDetailsModal from "../components/modal/staff-action-log-details";
 import ThemeChangeModal from "../components/modal/theme-change";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
@@ -156,10 +156,8 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @action
   showDetailsModal(model, event) {
     event?.preventDefault();
-    showModal("admin-staff-action-log-details", {
-      model,
-      admin: true,
-      modalClass: "log-details-modal",
+    this.modal.show(StaffActionLogDetailsModal, {
+      model: { staffActionLog: model },
     });
   }
 

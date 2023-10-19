@@ -1,9 +1,9 @@
-import { alias, and } from "@ember/object/computed";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import LoadMore from "discourse/mixins/load-more";
+import { alias, and } from "@ember/object/computed";
 import { on } from "@ember/object/evented";
 import { inject as service } from "@ember/service";
+import LoadMore from "discourse/mixins/load-more";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import TopicBulkActions from "./modal/topic-bulk-actions";
 
 export default Component.extend(LoadMore, {
@@ -183,6 +183,17 @@ export default Component.extend(LoadMore, {
           refreshClosure: this.bulkSelectAction,
         },
       });
+    });
+
+    onClick("button.topics-replies-toggle", (element) => {
+      if (element.classList.contains("--all")) {
+        this.changeNewListSubset(null);
+      } else if (element.classList.contains("--topics")) {
+        this.changeNewListSubset("topics");
+      } else if (element.classList.contains("--replies")) {
+        this.changeNewListSubset("replies");
+      }
+      this.rerender();
     });
   },
 

@@ -208,7 +208,7 @@ class AdminDashboardData
                       :watched_words_check,
                       :google_analytics_version_check,
                       :translation_overrides_check,
-                      :legacy_navigation_menu_check
+                      :deprecated_category_style_check
 
     register_default_scheduled_problem_checks
 
@@ -368,12 +368,6 @@ class AdminDashboardData
     end
   end
 
-  def legacy_navigation_menu_check
-    if SiteSetting.navigation_menu == "legacy"
-      I18n.t("dashboard.legacy_navigation_menu_deprecated", base_path: Discourse.base_path)
-    end
-  end
-
   def image_magick_check
     if SiteSetting.create_thumbnails && !system("command -v convert >/dev/null;")
       I18n.t("dashboard.image_magick_warning")
@@ -452,6 +446,10 @@ class AdminDashboardData
     return unless themes.present?
 
     themes_html_format(themes, "dashboard.unreachable_themes")
+  end
+
+  def deprecated_category_style_check
+    I18n.t("dashboard.category_style_deprecated") if SiteSetting.category_style != "bullet"
   end
 
   private

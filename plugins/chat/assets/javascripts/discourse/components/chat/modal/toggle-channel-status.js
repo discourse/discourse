@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
-import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
-import I18n from "I18n";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "discourse-i18n";
+import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatModalToggleChannelStatus extends Component {
   @service chatApi;

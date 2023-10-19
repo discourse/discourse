@@ -30,6 +30,7 @@ Chat::Engine.routes.draw do
     get "/mentions/groups" => "hints#check_group_mentions", :format => :json
 
     get "/channels/:channel_id/threads" => "channel_threads#index"
+    post "/channels/:channel_id/threads" => "channel_threads#create"
     put "/channels/:channel_id/threads/:thread_id" => "channel_threads#update"
     get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
     get "/channels/:channel_id/threads/:thread_id/messages" => "channel_thread_messages#index"
@@ -79,7 +80,7 @@ Chat::Engine.routes.draw do
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   put "/:chat_channel_id/invite" => "chat#invite_users"
   post "/drafts" => "chat#set_draft"
-  post "/:chat_channel_id" => "chat#create_message"
+  post "/:chat_channel_id" => "api/channel_messages#create"
   put "/flag" => "chat#flag"
   get "/emojis" => "emojis#index"
 

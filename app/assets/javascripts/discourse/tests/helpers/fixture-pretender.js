@@ -3,7 +3,7 @@ export default function (helpers) {
   const fixturesByUrl = {};
 
   // Load any fixtures automatically
-  Object.keys(require._eak_seen).forEach((entry) => {
+  Object.keys(require.entries).forEach((entry) => {
     if (/^discourse\/tests\/fixtures/.test(entry)) {
       const fixture = require(entry, null, null, true);
       if (fixture && fixture.default) {

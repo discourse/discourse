@@ -1,4 +1,6 @@
-<DSection @pageClass="invite">
+{{body-class "invite-page"}}
+
+<section>
   <div class="container invites-show clearfix">
     <div class="login-welcome-header">
       <h1 class="login-title">{{this.welcomeTitle}}</h1>
@@ -11,7 +13,7 @@
     <div class={{if this.successMessage "invite-success" "invite-form"}}>
       <div class="two-col">
         <div class="col-image">
-          <img src={{this.inviteImageUrl}} alt={{i18n "invites.emoji"}} />
+          <img src={{this.inviteImageUrl}} alt="" />
         </div>
 
         <div class="col-form">
@@ -161,7 +163,7 @@
                       <TogglePasswordMask
                         @maskPassword={{this.maskPassword}}
                         @togglePasswordMask={{this.togglePasswordMask}}
-                        @parentController={{"invites-show"}}
+                        @parentController="invites-show"
                       />
                     </div>
                   </div>
@@ -183,11 +185,11 @@
 
                 <div class="invitation-cta">
                   <DButton
-                    @class="btn-primary invitation-cta__accept"
                     @action={{action "submit"}}
-                    @type="submit"
                     @disabled={{this.submitDisabled}}
                     @label="invites.accept_invite"
+                    type="submit"
+                    class="btn-primary invitation-cta__accept"
                   />
                   <div class="invitation-cta__info">
                     <span class="invitation-cta__signed-up">{{i18n
@@ -195,8 +197,8 @@
                       }}</span>
                     <DButton
                       @action={{route-action "showLogin"}}
-                      @class="btn-flat invitation-cta__sign-in"
                       @label="log_in"
+                      class="btn-flat invitation-cta__sign-in"
                     />
                   </div>
                 </div>
@@ -214,11 +216,11 @@
             {{#if this.existingUserRedeeming}}
               {{#if this.existingUserCanRedeem}}
                 <DButton
-                  @class="btn-primary"
                   @action={{action "submit"}}
-                  @type="submit"
                   @disabled={{this.submitDisabled}}
                   @label="invites.accept_invite"
+                  type="submit"
+                  class="btn-primary"
                 />
               {{else}}
                 <div
@@ -231,4 +233,4 @@
       </div>
     </div>
   </div>
-</DSection>
+</section>

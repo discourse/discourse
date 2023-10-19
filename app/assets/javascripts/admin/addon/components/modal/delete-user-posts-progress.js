@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import AdminUser from "admin/models/admin-user";
+import { action } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
+import AdminUser from "admin/models/admin-user";
 
 export default class DeleteUserPostsProgress extends Component {
   @tracked deletedPosts = 0;

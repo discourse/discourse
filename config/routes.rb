@@ -100,6 +100,14 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
+    namespace :admin_revamp,
+              path: "admin-revamp",
+              module: "admin",
+              constraints: StaffConstraint.new do
+      get "" => "admin#index"
+      get "config/:area" => "admin#index"
+    end
+
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
 
@@ -230,6 +238,7 @@ Discourse::Application.routes.draw do
           post "import" => "themes#import"
           post "upload_asset" => "themes#upload_asset"
           post "generate_key_pair" => "themes#generate_key_pair"
+          delete "bulk_destroy" => "themes#bulk_destroy"
         end
       end
 
@@ -428,6 +437,8 @@ Discourse::Application.routes.draw do
     if Rails.env.test?
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
+    get "session/passkey/challenge" => "session#passkey_challenge"
+    post "session/passkey/auth" => "session#passkey_login"
     get "session/scopes" => "session#scopes"
     get "composer/mentions" => "composer#mentions"
     get "composer_messages" => "composer_messages#index"
@@ -465,6 +476,9 @@ Discourse::Application.routes.draw do
         end
       end
 
+      get "#{root_path}/trusted-session" => "users#trusted_session"
+      post "#{root_path}/confirm-session" => "users#confirm_session"
+
       post "#{root_path}/second_factors" => "users#list_second_factors"
       put "#{root_path}/second_factor" => "users#update_second_factor"
 
@@ -478,6 +492,11 @@ Discourse::Application.routes.draw do
       put "#{root_path}/disable_second_factor" => "users#disable_second_factor"
 
       put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
+
+      post "#{root_path}/create_passkey" => "users#create_passkey"
+      post "#{root_path}/register_passkey" => "users#register_passkey"
+      put "#{root_path}/rename_passkey/:id" => "users#rename_passkey"
+      delete "#{root_path}/delete_passkey/:id" => "users#delete_passkey"
 
       put "#{root_path}/update-activation-email" => "users#update_activation_email"
       post "#{root_path}/email-login" => "users#email_login"
@@ -1144,6 +1163,7 @@ Discourse::Application.routes.draw do
 
     resources :categories, except: %i[show new edit]
     post "categories/reorder" => "categories#reorder"
+    get "categories/search" => "categories#search"
 
     scope path: "category/:category_id" do
       post "/move" => "categories#move"

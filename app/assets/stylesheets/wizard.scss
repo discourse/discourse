@@ -22,17 +22,19 @@ body.wizard {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 1.5em;
+    background-image: url(../assets/bubbles-bg.png);
+    height: 100%;
   }
 
-  @media screen and (max-height: 900px) {
-    .desktop-view & {
-      #main-outlet {
-        padding-top: 0;
-      }
+  .desktop-view & {
+    #main-outlet {
+      padding-top: 0;
     }
   }
 
   .discourse-logo svg {
+    position: relative;
     height: 70px;
     width: auto;
     @include breakpoint("mobile-extra-large") {
@@ -43,6 +45,12 @@ body.wizard {
         display: none;
       }
     }
+  }
+
+  .wizard-canvas {
+    position: fixed;
+    top: 0;
+    pointer-events: none;
   }
 }
 
@@ -96,13 +104,8 @@ body.wizard {
   &__step-counter {
     text-align: center;
     font-weight: 700;
-    color: var(--primary-medium);
-  }
-
-  &__step-banner {
-    @include breakpoint("large") {
-      display: none;
-    }
+    color: var(--primary-high);
+    text-shadow: 1px 1px 12px var(--secondary);
   }
 
   &__step-description {
@@ -144,8 +147,10 @@ body.wizard {
   &__field.invalid input {
     outline: 0;
     border: 3px solid var(--danger);
-    animation: bump 0.25s ease-in-out;
-    animation-iteration-count: 2;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: bump 0.25s ease-in-out;
+      animation-iteration-count: 2;
+    }
   }
 
   &__field label {
@@ -281,36 +286,7 @@ body.wizard {
     }
   }
 
-  @media only screen and (max-device-width: 568px) {
-    &__step.introduction .wizard-container__step-banner,
-    &__step.privacy .wizard-container__step-banner {
-      display: none;
-    }
-  }
-
-  &__step-banner {
-    flex: 0 1 40%;
-  }
-
-  &__step-banner-image {
-    width: 100%;
-  }
-
   &__step.ready {
-    .wizard-container__step-banner {
-      display: flex;
-      flex: 1 0 100%;
-      gap: 2em;
-    }
-    .wizard-container__step-banner-image {
-      padding-top: 2em;
-      flex: 0 1 40%;
-      margin-left: 2em;
-      max-height: 300px;
-      @include breakpoint("large") {
-        display: none;
-      }
-    }
     .wizard-container__buttons {
       flex-direction: row-reverse;
     }

@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import Mixin from "@ember/object/mixin";
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import Mixin from "@ember/object/mixin";
 import { isPresent } from "@ember/utils";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Mixin.create({
   @discourseComputed("value", "default")

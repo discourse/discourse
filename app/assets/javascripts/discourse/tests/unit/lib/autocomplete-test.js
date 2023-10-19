@@ -1,8 +1,11 @@
+import { setupTest } from "ember-qunit";
+import { compile } from "handlebars";
+import $ from "jquery";
 import { module, test } from "qunit";
 import autocomplete from "discourse/lib/autocomplete";
-import { compile } from "handlebars";
 
 module("Unit | Utility | autocomplete", function (hooks) {
+  setupTest(hooks);
   let elements = [];
 
   function textArea(value) {

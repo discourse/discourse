@@ -1,7 +1,7 @@
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import I18n from "I18n";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 acceptance("Admin - Themes - Install modal", function (needs) {
   needs.user();
@@ -111,7 +111,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
 
     assert.ok(
       query(
-        '.popular-theme-item[data-name="Minima"] .popular-theme-buttons button'
+        '.popular-theme-item[data-name="Mint"] .popular-theme-buttons button'
       ),
       "install button is shown for not installed themes"
     );

@@ -1,4 +1,4 @@
-<DSection @class="award-badge">
+<section class="award-badge">
   <h1>{{i18n "admin.badges.mass_award.title"}}</h1>
   <p>{{i18n "admin.badges.mass_award.description"}}</p>
 
@@ -40,12 +40,12 @@
         {{/if}}
       </div>
       <DButton
-        @class="btn-primary"
-        @action={{action "massAward"}}
-        @type="submit"
+        @action={{this.massAward}}
         @disabled={{this.massAwardButtonDisabled}}
         @icon="certificate"
         @label="admin.badges.mass_award.perform"
+        type="submit"
+        class="btn-primary"
       />
       <LinkTo @route="adminBadges.index" class="btn btn-normal">
         {{d-icon "times"}}
@@ -93,4 +93,4 @@
         "admin.badges.mass_award.no_badge_selected"
       }}</span>
   {{/if}}
-</DSection>
+</section>

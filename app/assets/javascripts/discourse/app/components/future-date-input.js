@@ -1,16 +1,16 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
-import I18n from "I18n";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
-import discourseComputed from "discourse-common/utils/decorators";
 import {
-  TIME_SHORTCUT_TYPES,
   extendedDefaultTimeShortcuts,
   formatTime,
   hideDynamicTimeShortcuts,
+  TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export default Component.extend({
   selection: null,

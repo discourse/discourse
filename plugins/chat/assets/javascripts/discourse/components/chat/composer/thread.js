@@ -1,7 +1,7 @@
-import ChatComposer from "../../chat-composer";
-import { inject as service } from "@ember/service";
-import I18n from "I18n";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
+import ChatComposer from "../../chat-composer";
 
 export default class ChatComposerThread extends ChatComposer {
   @service("chat-channel-composer") channelComposer;

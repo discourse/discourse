@@ -1,9 +1,9 @@
-import { classNames } from "@ember-decorators/component";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import I18n from "I18n";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import { alias } from "@ember/object/computed";
+import { classNames } from "@ember-decorators/component";
 import { dialog } from "discourse/lib/uploads";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import I18n from "discourse-i18n";
 
 @classNames("watched-words-uploader")
 export default class WatchedWordUploader extends Component.extend(

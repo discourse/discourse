@@ -1,13 +1,13 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, render } from "@ember/test-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
+import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import I18n from "I18n";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 function getNotificationsData() {
   return cloneJSON(NotificationFixtures["/notifications"].notifications);

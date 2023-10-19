@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { iconHTML } from "discourse-common/lib/icon-library";
 /* You might be looking for navigation-item. */
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   tagName: "li",

@@ -23,6 +23,7 @@ require "fabrication"
 require "mocha/api"
 require "certified"
 require "webmock/rspec"
+require "minio_runner"
 
 class RspecErrorTracker
   def self.last_exception=(ex)
@@ -59,11 +60,8 @@ require "shoulda-matchers"
 require "sidekiq/testing"
 require "test_prof/recipes/rspec/let_it_be"
 require "test_prof/before_all/adapters/active_record"
-require "webdrivers"
 require "selenium-webdriver"
 require "capybara/rails"
-
-Webdrivers::Chromedriver.required_version = "114.0.5735.90"
 
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
@@ -185,7 +183,7 @@ RSpec.configure do |config|
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
   config.include SystemHelpers, type: :system
-  config.include WebauthnIntegrationHelpers
+  config.include DiscourseWebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
   config.include UploadsHelpers
@@ -233,6 +231,21 @@ RSpec.configure do |config|
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
 
+    # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is requried for
+    # system tests to support running system tests in multiple processes. If we don't download the `chromedriver` binary
+    # before running system tests in multiple processes, each process will end up calling the `selenium-manager` binary
+    # to download the `chromedriver` binary at the same time but the problem is that the binary is being downloaded to
+    # the same location and this can interfere with the running tests in another process.
+    #
+    # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
+    # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
+    if !File.directory?("~/.cache/selenium")
+      File.open("#{Rails.root}/tmp/chrome_driver_flock", "w") do |file|
+        file.flock(File::LOCK_EX)
+        `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
+      end
+    end
+
     Sidekiq.error_handlers.clear
 
     # Ugly, but needed until we have a user creator
@@ -255,7 +268,35 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    WebMock.disable_net_connect!(allow_localhost: true, allow: [Webdrivers::Chromedriver.base_url])
+    # Used for S3 system specs, see also setup_s3_system_test.
+    MinioRunner.config do |minio_runner_config|
+      minio_runner_config.minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"] || "minio.local"
+      minio_runner_config.buckets =
+        (
+          if ENV["MINIO_RUNNER_BUCKETS"]
+            ENV["MINIO_RUNNER_BUCKETS"].split(",")
+          else
+            ["discoursetest"]
+          end
+        )
+      minio_runner_config.public_buckets =
+        (
+          if ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]
+            ENV["MINIO_RUNNER_PUBLIC_BUCKETS"].split(",")
+          else
+            ["discoursetest"]
+          end
+        )
+    end
+
+    WebMock.disable_net_connect!(
+      allow_localhost: true,
+      allow: [
+        *MinioRunner.config.minio_urls,
+        URI(MinioRunner::MinioBinary.platform_binary_url).host,
+        ENV["CAPYBARA_REMOTE_DRIVER_URL"],
+      ].compact,
+    )
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
       Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
@@ -268,8 +309,10 @@ RSpec.configure do |config|
     Capybara.w3c_click_offset = false
 
     Capybara.configure do |capybara_config|
-      capybara_config.server_host = "localhost"
-      capybara_config.server_port = 31_337 + ENV["TEST_ENV_NUMBER"].to_i
+      capybara_config.server_host = ENV["CAPYBARA_SERVER_HOST"].presence || "localhost"
+
+      capybara_config.server_port =
+        (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
     end
 
     module IgnoreUnicornCapturedErrors
@@ -341,14 +384,22 @@ RSpec.configure do |config|
           options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
+    driver_options = { browser: :chrome }
+
+    if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
+      driver_options[:browser] = :remote
+      driver_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
+    end
+
+    desktop_driver_options = driver_options.merge(options: chrome_browser_options)
+
     Capybara.register_driver :selenium_chrome do |app|
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **desktop_driver_options)
     end
 
     Capybara.register_driver :selenium_chrome_headless do |app|
       chrome_browser_options.add_argument("--headless=new")
-
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **desktop_driver_options)
     end
 
     mobile_chrome_browser_options =
@@ -356,16 +407,21 @@ RSpec.configure do |config|
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
           options.add_emulation(device_name: "iPhone 12 Pro")
+          options.add_argument(
+            '--user-agent="--user-agent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/36.0  Mobile/15E148 Safari/605.1.15"',
+          )
           apply_base_chrome_options(options)
         end
 
+    mobile_driver_options = driver_options.merge(options: mobile_chrome_browser_options)
+
     Capybara.register_driver :selenium_mobile_chrome do |app|
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
     Capybara.register_driver :selenium_mobile_chrome_headless do |app|
       mobile_chrome_browser_options.add_argument("--headless=new")
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
     if ENV["ELEVATED_UPLOADS_ID"]
@@ -405,6 +461,7 @@ RSpec.configure do |config|
   config.after(:suite) do
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
     Downloads.clear
+    MinioRunner.stop
   end
 
   config.around :each do |example|
@@ -629,6 +686,12 @@ end
 def file_from_fixtures(filename, directory = "images")
   tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
   FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
+  File.new(tmp_file_path)
+end
+
+def file_from_contents(contents, filename, directory = "images")
+  tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
+  File.write(tmp_file_path, contents)
   File.new(tmp_file_path)
 end
 

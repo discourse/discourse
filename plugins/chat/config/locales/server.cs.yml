@@ -19,11 +19,11 @@ cs:
           description: "Schválit nahlášení a ztišit uživatele."
         disagree:
           title: "Neschvaluji"
-        ignore:
-          title: "ignorovat"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "označit jako přečtené"
   discourse_push_notifications:
     popup:
       chat_mention:

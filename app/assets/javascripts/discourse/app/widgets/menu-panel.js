@@ -1,6 +1,6 @@
-import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
+import { createWidget } from "discourse/widgets/widget";
 
 createWidget("menu-links", {
   buildClasses(attrs) {

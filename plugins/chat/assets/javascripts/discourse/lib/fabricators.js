@@ -5,20 +5,19 @@ styleguide to use them, and eventually to generate dummy data
 in a placeholder component. It should not be used for any other case.
 */
 
+import Bookmark from "discourse/models/bookmark";
+import Category from "discourse/models/category";
+import Group from "discourse/models/group";
+import User from "discourse/models/user";
 import ChatChannel, {
   CHANNEL_STATUSES,
   CHATABLE_TYPES,
 } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
-import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
-import ChatMessageMentionWarning from "discourse/plugins/chat/discourse/models/chat-message-mention-warning";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import User from "discourse/models/user";
-import Bookmark from "discourse/models/bookmark";
-import Category from "discourse/models/category";
-import Group from "discourse/models/group";
 
 let sequence = 0;
 
@@ -137,15 +136,17 @@ function threadPreviewFabricator(args = {}) {
     last_reply_id: args.last_reply_id || sequence++,
     last_reply_created_at: args.last_reply_created_at || Date.now(),
     last_reply_excerpt: args.last_reply_excerpt || "This is a reply",
+    participant_count: args.participant_count ?? 0,
+    participant_users: args.participant_users ?? [],
   });
 }
 
 function reactionFabricator(args = {}) {
   return ChatMessageReaction.create({
-    count: args.count || 1,
+    count: args.count ?? 1,
     users: args.users || [userFabricator()],
     emoji: args.emoji || "heart",
-    reacted: args.reacted || false,
+    reacted: args.reacted ?? false,
   });
 }
 
@@ -153,10 +154,6 @@ function groupFabricator(args = {}) {
   return Group.create({
     name: args.name || "Engineers",
   });
-}
-
-function messageMentionWarningFabricator(message, args = {}) {
-  return ChatMessageMentionWarning.create(message, args);
 }
 
 function uploadFabricator() {
@@ -189,6 +186,5 @@ export default {
   upload: uploadFabricator,
   category: categoryFabricator,
   directMessage: directMessageFabricator,
-  messageMentionWarning: messageMentionWarningFabricator,
   group: groupFabricator,
 };

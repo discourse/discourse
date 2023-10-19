@@ -1,24 +1,24 @@
 import Component from "@glimmer/component";
-import { extractError } from "discourse/lib/ajax-error";
-import { sanitize } from "discourse/lib/text";
-import { CLOSE_INITIATED_BY_CLICK_OUTSIDE } from "discourse/components/d-modal";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import I18n from "I18n";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { action } from "@ember/object";
+import { and, notEmpty } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
-import {
-  TIME_SHORTCUT_TYPES,
-  defaultTimeShortcuts,
-} from "discourse/lib/time-shortcut";
-import { action } from "@ember/object";
+import { CLOSE_INITIATED_BY_CLICK_OUTSIDE } from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
-import { and, notEmpty } from "@ember/object/computed";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { sanitize } from "discourse/lib/text";
+import {
+  defaultTimeShortcuts,
+  TIME_SHORTCUT_TYPES,
+} from "discourse/lib/time-shortcut";
+import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import discourseLater from "discourse-common/lib/later";
+import I18n from "discourse-i18n";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },

@@ -1,3 +1,9 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import sinon from "sinon";
+import Draft from "discourse/models/draft";
+import { toggleCheckDraftPopup } from "discourse/services/composer";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   count,
@@ -6,15 +12,9 @@ import {
   selectText,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import Draft from "discourse/models/draft";
-import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import sinon from "sinon";
-import { test } from "qunit";
-import { toggleCheckDraftPopup } from "discourse/services/composer";
-import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 acceptance("Composer Actions", function (needs) {
   needs.user({

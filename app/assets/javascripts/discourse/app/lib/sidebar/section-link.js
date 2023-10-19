@@ -1,7 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import { bind } from "discourse-common/utils/decorators";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
+import { defaultHomepage } from "discourse/lib/utilities";
 import discourseLater from "discourse-common/lib/later";
+import { bind } from "discourse-common/utils/decorators";
 
 const TOUCH_SCREEN_DELAY = 300;
 const MOUSE_DELAY = 250;
@@ -22,10 +23,17 @@ export default class SectionLink {
     this.text = name;
     this.value = value;
     this.section = section;
+    this.withAnchor = value.match(/#\w+$/gi);
 
     if (!this.externalOrFullReload) {
       const routeInfoHelper = new RouteInfoHelper(router, value);
-      this.route = routeInfoHelper.route;
+
+      if (routeInfoHelper.route === "discovery.index") {
+        this.route = `discovery.${defaultHomepage()}`;
+      } else {
+        this.route = routeInfoHelper.route;
+      }
+
       this.models = routeInfoHelper.models;
       this.query = routeInfoHelper.query;
     }
@@ -36,7 +44,7 @@ export default class SectionLink {
   }
 
   get externalOrFullReload() {
-    return this.external || this.fullReload;
+    return this.external || this.fullReload || this.withAnchor;
   }
 
   @bind

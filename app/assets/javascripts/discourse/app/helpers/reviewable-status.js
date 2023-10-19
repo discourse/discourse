@@ -1,3 +1,4 @@
+import { htmlSafe } from "@ember/template";
 import {
   APPROVED,
   DELETED,
@@ -5,9 +6,8 @@ import {
   PENDING,
   REJECTED,
 } from "discourse/models/reviewable";
-import I18n from "I18n";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { htmlSafe } from "@ember/template";
+import I18n from "discourse-i18n";
 
 function dataFor(status, type) {
   switch (status) {

@@ -1,13 +1,13 @@
 // Remove when legacy modals are dropped (deprecation: discourse.modal-controllers)
 
 import Component from "@glimmer/component";
-import I18n from "I18n";
-import { next, schedule } from "@ember/runloop";
-import { bind } from "discourse-common/utils/decorators";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { next, schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 @disableImplicitInjections
 export default class DModal extends Component {

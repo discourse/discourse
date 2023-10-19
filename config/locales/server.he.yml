@@ -68,8 +68,11 @@ he:
       generic: אירעה שגיאה בעת ייבוא ערכת העיצוב הזו
       upload: "שגיאה ביצירת משאב להעלאה: %{name}. %{errors}"
       about_json: "שגיאת ייבוא: about.json לא קיים או שהוא שגוי. האם אכן מדובר בערכת עיצוב של Discourse?"
+      about_json_too_big: "שגיאת ייבוא: about.json גדול ממגבלת %{limit}."
       about_json_values: "about.json מכיל ערכים שגויים: %{errors}"
       modifier_values: "המחליפים ב־about.json מכילים ערכים שגויים: %{errors}"
+      asset_too_big: "הנכס %{filename} גדול ממגבלת %{limit}"
+      theme_too_big: "ערכת העיצוב גדולה ממגבלת %{limit}"
       git: "שגיאה בעת שכפול מאגר git, הגישה נדחיתה או שהמאגר לא נמצא"
       git_ref_not_found: "לא ניתן למשוך (checkout) הפניית git:‏ %{ref}"
       git_unsupported_scheme: "לא ניתן לשבט מאגר git: אין תמיכה בסכמה"
@@ -78,6 +81,7 @@ he:
       unknown_file_type: "הקובץ שהעלית הוא כפי הנראה אינה ערכת עיצוב תקנית של Discourse."
       not_allowed_theme: "‚%{repo}’ אינו ברשימת הנושאים המורשים (יש לבדוק את ההגדרה הגלובלית `allowed_theme_repos` - מאגרי ערכות עיצוב מורשים)."
       ssh_key_gone: "המתנת זמן רב מדי להתקנת ערכת העיצוב ותוקף מפתח ה־SSH פג. נא לנסות שוב."
+      too_many_files: "מספר הקבצים (%{count}) בערכת העיצוב חרג ממספר הקבצים המרבי המותר (%{limit})"
     errors:
       component_no_user_selectable: "רכיבי ערכת העיצוב לא יכולים להיות לבחירת המשתמש"
       component_no_default: "רכיבי ערכת העיצוב לא יכולים להיות בררת המחדל של ערכת העיצוב"
@@ -228,7 +232,7 @@ he:
       local_login_cannot_be_disabled_if_second_factor_enforced: "אי אפשר להשבית כניסה מקומית אם נאכף אימות דו־שלבי. יש להשבית את אכיפת האימות הדו־שלבי בטרם השבתת כניסה מקומית."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "לא ניתן להפעיל העלאות ל־S3 כיוון שהעלאות ל־S3 כבר פעילות באופן גלובלי והפעלת האפשרות הזאת ברמת האתר עשויה להוביל לתקלות חמורות בהעלאה."
       cors_origins_should_not_have_trailing_slash: "אין להוסיף לוכסן (/) לסוף מקורות ה־CORS."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "סוכני משתמש חייבים להיות באורך של 3 תווים לפחות כדי למנוע הגבלת שגויה של כמות פניות ממשתמשים אנושיים."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "סוכני משתמש חייבים להיות באורך של 3 תווים לפחות כדי למנוע הגבלה בשוגג של כמות פניות ממשתמשים תקפים."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "אי אפשר להוסיף אף אחת מהערכים הבאים להגדרה: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "אי אפשר להשבית הפשטת נתוני על מתמונה אם האפשרות ‚תמונת מיטוב מדיה בכתיבת הודעה פעילה’ פעילה. יש להשבית את האפשרות בטרם השבתת הפשטת נתוני על מתמונה."
       twitter_summary_large_image_no_svg: "תמונות התקציר של טוויטר שמשמשות לנתוני העל של twitter:image לא יכולות להיות תמונת ‎.svg"
@@ -325,6 +329,7 @@ he:
   delete_topic_failed: "אירעה שגיאה במחיקת הנושא הזה. נא ליצור קשר עם הנהלת האתר."
   reading_time: "זמן קריאה"
   likes: "לייקים"
+  action_already_performed: "אופס! כבר ביצעת את הפעולה הזאת. אולי כדאי לרענן את העמוד?"
   too_many_replies:
     one: "משתמשים חדשים מוגבלים זמנית לתגובה אחת לאותו הנושא, עמך הסליחה."
     two: "משתמשים חדשים מוגבלים זמנית ל־%{count} תגובות לאותו הנושא, עמך הסליחה."
@@ -736,7 +741,7 @@ he:
     media_placeholder:
       blocked_hotlinked_title: "המדיה מתארחת באתר אחר. לחיצה תפתח אותה בלשונית חדשה."
       blocked_hotlinked: "מדיה חיצונית"
-    hidden_bidi_character: "תווי דו־כיווניות יכולים לשנות את סדר עיבוד הטקסט. אפשר להשתמש בהם להסוואת קוד זדוני."
+    hidden_bidi_character: "תווי בקרת דו־כיווניות יכולים לשנות את סדר בו הטקסט מעובד. אפשר להשתמש בהם להסוואת קוד זדוני."
     has_likes:
       one: "לייק %{count}"
       two: "%{count} לייקים"
@@ -810,7 +815,7 @@ he:
       x_days:
         one: "יום"
         two: "יומיים"
-        many: "%{count} ימים"
+        many: "%{count} יום"
         other: "%{count} ימים"
       about_x_months:
         one: "חודש"
@@ -1009,11 +1014,14 @@ he:
     sequence_conflict_error:
       title: "שגיאת טיוטה"
       description: "הטיוטה נערכת בחלון אחר. נא לרענן את העמוד הזה."
+    too_many_drafts:
+      title: "יותר מדי טיוטות"
+      description: "הגעת למספר הטיוטות המרבי המותר. נא למחוק חלק מה[טיוטות שלך](%{base_url}/my/activity/drafts) ולנסות שוב."
   draft_backup:
     pm_title: "טיוטות גיבוי מנושאים שמתנהלים כרגע"
     pm_body: "נושא שמכיל טיוטות גיבוי"
   user_activity:
-    no_log_search_queries: "שאילתות מול יומן החיפושים מושבתות (הנהלת המערכת יכולה להפעיל אותן בהגדרות האתר)."
+    no_log_search_queries: "יומני שאילתות חיפוש מושבתות (הנהלת המערכת יכולה להפעיל אותן בהגדרות האתר)."
   email_settings:
     pop3_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור POP3, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
     imap_authentication_error: "אירעה תקלה עם פרטי הגישה שסופקו עבור IMAP, נא לבדוק את שם המשתמש והססמה ולנסות שוב."
@@ -1033,6 +1041,7 @@ he:
       invalid_origin_error: "מקור בקשת האימות לא תואמת למקור השרת."
       malformed_attestation_error: "איך שגיאה בעת פענוח נתוני העדות."
       invalid_relying_party_id_error: "ה־Relying Party ID של בקשת האימות לא תואמת ל־Relying Party ID של השרת."
+      user_presence_error: "נוכחות משתמש נחוצה."
       user_verification_error: "נדרש אימות משתמש."
       unsupported_public_key_algorithm_error: "אלגוריתם המפתח הציבורי שסופק לא נתמך על ידי השרת."
       unsupported_attestation_format_error: "תצורת העדות לא נתמכת על ידי השרת."
@@ -1041,6 +1050,7 @@ he:
       ownership_error: "מפתח האבטחה אינו בבעלות המשתמש."
       not_found_error: "לא ניתן למצוא מפתח אבטחה עם מזהה פרטי הגישה שסופק."
       unknown_cose_algorithm_error: "האלגוריתם בו נעשה שימוש למפתח האבטחה אינו מוכר."
+      malformed_public_key_credential_error: "המפתח הציבורי שסופק שגוי."
   topic_flag_types:
     spam:
       title: "ספאם"
@@ -1513,7 +1523,6 @@ he:
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
     watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב ‚%{action}’ שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
     v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
-    legacy_navigation_menu_deprecated: "ה־Discourse שלך משתמש עדיין בתפריט הניווט ה‚מיושן’ ש<a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>יוסר במהדורת הבטא הראשונה של Discourse 3.2</a>. כדי לעבור לתפריט הניווט החדש על ידי עדכון <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>הגדרת תפריט הניווט באתר</a> שלך ל־‚sidebar’ (סרגל צד) או ל־‚header dropdown’ (תפריט נגלל משורת הכותרת)."
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"
@@ -1524,9 +1533,9 @@ he:
     allow_user_locale: "לאפשר למשתמשים לבחור את העדפת שפת המנשק לעצמם באופן עצמאי"
     set_locale_from_accept_language_header: "הגדרת שפת המנשק למשתמשים אלמוניים לפי כותרי השפה בדפדפן שלהם"
     support_mixed_text_direction: "תמיכה בכיווני שמאל לימין וימין לשמאל בצורה מעורבת."
-    min_post_length: "מספר התווים המותר כאורך מזערי לפוסט"
-    min_first_post_length: "אורך מזערי מותר לפוסט ראשון (בגוף הנושא) בתווים"
-    min_personal_message_post_length: "האורך המזערי המותר לפוסט בתווים להודעות"
+    min_post_length: "אורך פוסט מזערי מותר בתווים (לא כולל הודעות אישיות)"
+    min_first_post_length: "אורך מזערי מותר לנושא ראשון (גוף הנושא - לא כולל הודעות אישיות)"
+    min_personal_message_post_length: "אורך פוסט מזערי מותר בתווים עבור הודעות (הן פוסט ראשון והן תשובות)"
     max_post_length: "מספר התווים המקסימלי כאורך פוסט"
     topic_featured_link_enabled: "לאפשר פרסום קישור עם נושאים."
     show_topic_featured_link_in_digest: "הצגת קישור מומלץ של הנושא בהודעת התמצית בדוא״ל."
@@ -1646,7 +1655,7 @@ he:
     tl2_additional_flags_per_day_multiplier: "להגדיל את כמות הסימונים האפשרית ביום עבור דרגת אמון 2 (חברים) באמצעות הכפלה במספר זה"
     tl3_additional_flags_per_day_multiplier: "להגדיל את כמות הסימונים האפשרית ביום עבור דרגת אמון 3 (רגיל) באמצעות הכפלה במספר זה"
     tl4_additional_flags_per_day_multiplier: "להגדיל את כמות הסימונים האפשרית ביום עבור דרגת אמון 4 (הנהגה) באמצעות הכפלה במספר זה"
-    num_users_to_silence_new_user: "אם פוסטים של משתמש חדש מקבלים num_spam_flags_to_silence_new_user סימוני דגל ספאם מכמות כזו של משתמשים שונים, יש להסתיר את כל הפוסטים שלו ולמנוע פרסום עתידי. 0 לביטול."
+    num_users_to_silence_new_user: "אם פוסטים של משתמש חדש חורגים מהגדרת hide_post_sensitivity והתקבלו עליהם סימונים ממגוון של משתמשים שונים, להסתיר את הפוסטים שלהם ולמנוע פרסום עתידי. 0 להשבתה."
     num_tl3_flags_to_silence_new_user: "אם פוסטים של משתמש חדש מקבלים כמות כזו של סימוני דגלי ספאם מ־num_tl3_users_to_silence_new_user משתמשים שונים בדרגת אמון 3, יש להסתיר את כל הפוסטים שלו ולמנוע פרסום עתידי. 0 לביטול."
     num_tl3_users_to_silence_new_user: "אם פוסטים של משתמש חדש מקבלים כמות כזו של סימוני דגלים מ־num_tl3_flags_to_silence_new_user משתמשים שונים בדרגת אמון 3, יש להסתיר את כל הפוסטים שלו ולמנוע פרסום עתידי. 0 לביטול."
     notify_mods_when_user_silenced: "אם משתמש מושתק אוטומטית, יש לשלוח הודעה לכל המפקחים."
@@ -1660,7 +1669,7 @@ he:
     must_approve_users: "על הסגל לאשר את כל חשבונות המשתמשים החדשים בטרם מתאפשרת כניסתם לאתר."
     invite_code: "על המשתמש להקליד את הקוד הזה כדי שיתאפשר לו להירשם לחשבון, כשריק אין לזה משמעות (אין משמעות לאותיות גדולות/קטנות)"
     approve_suspect_users: "הוספת משתמשים חשודים לתור הסקירה. משתמשים חשודים מילאו ביוגרפיה/אתר אבל לא קראו שום דבר."
-    review_every_post: "כל הפוסטים חייבים בסקירה. אזהרה! לא מומלץ לאתרים עמוסים."
+    review_every_post: "לשלוח כל פוסט חדש לתור הסקירה כדי שיבדקו אותו. פוסטים עדיין מפורסמים מיידית והם חשופים לכל המשתמשים. אזהרה! לא מומלץ לאתר עם תעבורה גבוהה עקב כמות אפשרית גבוהה של פוסטים שידרשו סקירה."
     pending_users_reminder_delay_minutes: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של דקות. יש להגדיר ל־‎-1 כדי להשבית את ההתראות."
     persistent_sessions: "המשתמשים יישארו במערכת כאשר הדפדפן סגור"
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
@@ -1668,7 +1677,7 @@ he:
     ga_universal_tracking_code: "מזהה קוד המעקב של Google Universal Analytics, למשל: UA-12345678-9; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "שם התחום של Google Universal Analytics, למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות תחום של Google Universal Analytics. לקישורים יוצאים לשמות תחום אלו יתווסף מזהה לקוח. ניתן לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>במדריך למעקב חוצה שמות תחום של Google.</a>"
-    gtm_container_id: "מזהה מכולה של Google Tag Manager. למשל: GTM-ABCDEF. <br/>לתשומת לבך: סקריפטים של צד‏־שלישי שנטענים על ידי GTM דורשים הוספה לרשימת ההיתר תחת ‚content security policy script src’."
+    gtm_container_id: "מזהה מיכל מנהל התגיות של Google, למשל: GTM-ABCD12E. <br/>לתשומת ליבך: כדי להשתמש ב־GTM (מנהל התגיות של Google) כאשר מדיניות אבטחת תוכן (CSP) פעילה, יש לעיין בתיעוד בפורום ה־meta שלנו: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>שימוש במחרוזות אקראיות חד־פעמיות בסקריפטים של מנהל התגיות של Google</a>."
     enable_escaped_fragments: "נסיגה ל־API של Google's Ajax-Crawling אם לא זוהה סורק אינטרנט. מידע נוסף בכתובת <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "לאפשר למפקחים ליצור ולנהל קטגוריות וקבוצות"
     moderators_change_post_ownership: "לאפשר למפקחים לשנות בעלות על פוסטים"
@@ -1682,11 +1691,11 @@ he:
     blocked_crawler_user_agents: "מילה ייחודית שאינה תלוית רישיות במחרוזת סוכן המשתמש (user agent) שמגדירה לאילו סורקי רשת אין הרשאת גישה לאתר. לא חל במקרה שהגדרת רשימת היתר."
     slow_down_crawler_user_agents: 'סוכני משתמשים של סורקי רשת שכמות הגישה שלהם תוגבל בהתאם להגדרה „האטת קצב סורקי רשת”. כל ערך חייב להיות באורך של 3 תווים לפחות.'
     slow_down_crawler_rate: "אם הוגדר slow_down_crawler_user_agents (האטת סורקי אינטרנט) קצב זה יחול על כל סורקי האינטרנט (כמות ההמתנה בשניות בין בקשות)"
-    content_security_policy: "הפעלת Content-Security-Policy (מדיניות אבטחת תוכן)"
-    content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד)"
+    content_security_policy: "הפעלת Content-Security-Policy (מדיניות אבטחת תוכן - CSP)"
+    content_security_policy_report_only: "הפעלת Content-Security-Policy-Report-Only (מדיניות אבטחת תוכן בדיווח בלבד - CSP)"
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
-    content_security_policy_script_src: "מקורות סקריפטים נוספים ברשימת ההיתר. המארח וה־CDN הנוכחיים נכללים כבררת מחדל. ניתן לעיין ב<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>התקפות XSS בעזרת CSP - מדיניות אבטחת תוכן.</a>"
+    content_security_policy_script_src: "מקורות סקריפטים נוספים ברשימת ההיתר. המארח וה־CDN הנוכחיים נכללים כבררת מחדל. ניתן לעיין ב<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>התקפות XSS בעזרת CSP - מדיניות אבטחת תוכן.</a>)"
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי להשבית."
     include_secure_categories_in_tag_counts: "כאשר האפשרות פעילה, מניין הנושאים לתגית יכלול נושאים בקטגוריות שמוגבלות לקריאה לכל המשתמשים. כשהאפשרות מוגבלת, משתמשים רגילים חשופים רק למניין הנושאים לתגית כאשר כל הנושאים הם בקטגוריות ציבוריות."
     display_personal_messages_tag_counts: "כאשר האפשרות פעילה, מניין ההודעות האישיות שמתויגות בתגית מסוימת יוצגו."
@@ -1809,7 +1818,6 @@ he:
     enable_safe_mode: "לאפשר למשתמשים להיכנס למצב בטוח כדי לנפות שגיאות בתוספים."
     rate_limit_create_topic: "לאחר יצירת נושא, על המשתמשים להמתין (n) שניות לפני יצירת נושא אחר."
     rate_limit_create_post: "לאחר הפרסום על המשתמשים להמתין (n) שניות לפני יצירת פוסט חדש."
-    rate_limit_new_user_create_topic: "לאחר יצירת נושא, משתמשים חדשים יחוייבו לחכות (n) שניות לפני שיוכלו ליצור נושא אחר."
     rate_limit_new_user_create_post: "לאחר פרסום, משתמשים חדשים יחוייבו לחכות (n) שניות לפני שיוכלו ליצור פוסט אחר."
     max_likes_per_day: "מספר מקסימלי של לייקים למשתמש/ת ביום."
     max_flags_per_day: "מספר מקסימלי של דגלים מותרים למשתמשים ביום."
@@ -2075,6 +2083,7 @@ he:
     digest_min_excerpt_length: "אורך קטע מזערי מהפוסט להודעות סיכום בדוא״ל, בתווים."
     suppress_digest_email_after_days: "השתקת מיילים של סיכום למשתמשים שלא נראו באתר למעלה מ (n) ימים."
     digest_suppress_categories: "וותרו על קטגוריות אלו במיילים מסכמים."
+    digest_suppress_tags: "לוותר על התגיות האלו בהודעות תקציר."
     disable_digest_emails: "השבתת הודעות סיכום בדוא״ל לכל המשתמשים."
     apply_custom_styles_to_digest: "תבנית ו־css לדוא״ל בהתאמה אישית חלים על הודעות התקציר שנשלחות בדוא״ל."
     email_accent_bg_color: "צבע ההדגשה לשימוש כרקע של חלק מרכיבי ה־HTML בהודעות דוא״ל. ניתן לכתוב את שם הצבע באנגלית (‚red’) או ערך הקסדצימלי (‚‎#FF0000’)."
@@ -2229,15 +2238,16 @@ he:
     default_sidebar_switch_panel_position: "מיקום כפתורי החלפת לוח בסרגל הצד"
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
     retry_web_hook_events: "לנסות מחדש אירועי התליה שנכשלו במשך 4 פעמים. פרקי הזמן שבין הניסיונות החוזרים הם 1, 5, 25 ו־125 דקות."
-    revoke_api_keys_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API שלא היה בשימוש (0 - לעולם לא)."
-    allow_user_api_keys: "לאפשר למשתמשים ליצור מפתחות API"
+    revoke_api_keys_unused_days: "מספר הימים אחרי השימוש האחרון במפתח API לפני שלילתו אוטומטית (0 כדי לא לשלול לעולם)"
+    revoke_api_keys_maxlife_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API (0 - לעולם לא)."
     allow_user_api_key_scopes: "רשימת אזורים מותרים למפתחות API של משתמשים"
     min_trust_level_for_user_api_key: |
       נדרשת דרגת אמון ליצירת מפתחות API למשתמש.<br>
       <b>אזהרה</b>: שינוי דרגת האמון ימנע ממשתמשים עם דרגת אמון נמוכה יותר להיכנס דרך Discourse Hub
     allowed_user_api_auth_redirects: "כתובת מורשית להפניית אימות למפתחות API של משתמש. בסימן התו־כל * ניתן להשתמש כדי ללכוד חלק ממנה (למשל: www.example.com/*‎)."
     allowed_user_api_push_urls: "URLים מורשים לדחיפת שרת ל API של משתמשים."
-    expire_user_api_keys_days: "מספר הימים בטרם פקיעת תוקף מפתח ה־API של המשתמש אוטומטית (0 - לעולם לא)."
+    revoke_user_api_keys_unused_days: "מספר הימים אחרי השימוש האחרון במפתח API של משתמש לפני שלילתו אוטומטית (0 כדי לא לשלול לעולם)"
+    revoke_user_api_keys_maxlife_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API של משתמש (0 - לעולם לא)."
     tagging_enabled: "לאפשר תגיות על נושאים?"
     min_trust_to_create_tag: "דרגת האמון המזערית שנדרשת כדי ליצור תגית."
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
@@ -2255,8 +2265,9 @@ he:
     remove_muted_tags_from_latest: "לא להציג נושאים שמתויגים רק בתגיות מושתקות ברשימת הנושאים האחרונים."
     force_lowercase_tags: "לאלץ את כל התגיות החדשות להיות באותיות קטנות בלבד."
     create_post_for_category_and_tag_changes: "ליצור פוסט פעולה קטן כאשר קטגוריה או תגיות של נושא משתנים"
+    automatically_clean_unused_tags: "למחוק אוטומטית תגיות שאין בהן שימוש באף נושא או הודעה פרטית על בסיס יומי."
     watched_precedence_over_muted: "להודיע לי על נושאים בקטגוריות או תגיות שאני עוקב אחריהם שגם שייכים לזה שהשתקתי"
-    company_name: "שם החברה"
+    company_name: "שם החברה או הארגון שלך. בהעדר תוכן לא יסופקו תבניות תנאי שירות או הצהרת פרטיות."
     governing_law: "החוק המחייב"
     city_for_disputes: "עיר המחלוקת"
     shared_drafts_category: "הפעלת תכונת הטיוטות המשותפות על ידי הקצאת קטגוריה שתשמש לטובת טיוטות לנושאים. נושאים בקטגוריה זו יוסתרו מרשימות הנושאים לחברי הסגל."
@@ -2289,12 +2300,12 @@ he:
     navigation_menu: "קביעת תפריט הניווט לשימוש. המשתמשים יכולים להתאים את הניווט מסרגל הצד והכותרת. האפשרות הישנה זמינה לטובת תאימות לאחור."
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
     default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
-    enable_experimental_hashtag_autocomplete: "ניסיוני: ניתן להשתמש במערכת אוטומטית להשלמת #תגיות עבור קטגוריות ותגיות שמעבדת את הפריט הנבחר באופן שונה והחיפוש בה משופר"
     experimental_new_new_view_groups: 'ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
     enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
     experimental_search_menu_groups: "ניסיוני: מאפשר את תפריט החיפוש החדש ששודרג כך שישתמש ב־glimmer"
     enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
+    experimental_form_templates: "ניסיוני: יש להפעיל את יכולת תבניות הטפסים. <b>לאחר ההפעלה,</b> אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
@@ -2378,6 +2389,7 @@ he:
     email_error: "לא ניתן להירשם לחשבון עם כתובת הדוא״ל <b>%{email}</b>. נא ליצור קשר עם הנהלת האתר."
     missing_secret: "האימות נכשל כי חסר סוד. יש ליצור קשר עם ההנהלה כדי לתקן את התקלה הזאת."
     invite_redeem_failed: "ניצול ההזמנה נכשל. נא ליצור קשר עם הנהלת האתר."
+    invalid_parameter_value: "האימות נכשל עקב ערך לא תקין בפרמטר `%{param}`. נא ליצור קשר עם מנהלי האתר כדי לתקן בעיה זו."
   original_poster: "מפרסמים מקוריים"
   most_recent_poster: "המפרסמים האחרונים"
   frequent_poster: "מפרסמים מתמידים"
@@ -2549,6 +2561,8 @@ he:
     invalid_security_key: "מפתח אבטחה שגוי."
     missing_second_factor_name: "נא לציין שם."
     missing_second_factor_code: "נא לציין קוד."
+    too_many_authenticators: "לא יכולים להיות לך יותר מ־50 מאמתים. נא להסיר אחד קיים ולנסות שוב."
+    too_many_security_keys: "לא יכולים להיות לך יותר מ־50 מפתחות אבטחה. נא להסיר אחד קיים ולנסות שוב."
     second_factor_toggle:
       totp: "יש להשתמש ביישומון מאמת או במפתח אבטחה במקום"
       backup_code: "להשתמש בקוד גיבוי במקום"
@@ -2571,7 +2585,7 @@ he:
         merging_given_daily_likes: "הלייקים היומיים שחולקו ממוזגים…"
         merging_post_timings: "תזמוני הפוסטים ממוזגים…"
         merging_user_visits: "ביקורי המשתמש מתמזגים…"
-        updating_site_settings: "הגדרות האתר מתמזגות…"
+        updating_site_settings: "הגדרות האתר מתעדכנות…"
         updating_user_stats: "סטטיסטיקת המשתמש מתעדכנת…"
         merging_user_attributes: "מאפייני המשתמש מתמזגים…"
         updating_user_ids: "מזהי המשתמש מתעדכנים…"
@@ -2828,6 +2842,9 @@ he:
         הפוסט הזה הוסתר עקב סימוני דגל רבים מצד הקהילה, לכן מומלץ לשקול כיצד להתאים את הפוסט כך שיענה על המשוב המבוקש. **ניתן לערוך את הפוסט שלך לאחר %{edit_delay} דקות וההסתרה תבוטל אוטומטית.**
 
         להנחיות נוספות, נא לפנות אל [הנחיות הקהילה](%{base_url}/guidelines) שלנו.
+    reviewable_queued_post_revise_and_reject:
+      title: "משוב על הפוסט שלך"
+      subject_template: "משוב על הפוסט שלך תחת %{topic_title}"
     post_hidden_again:
       title: "הפוסט הוסתר שוב"
       subject_template: "הפוסט הוסתר עקב סימוני דגל מהקהילה, הסגל קיבל הודעה"
@@ -4807,6 +4824,11 @@ he:
         two: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מיומיים (%{count})"
         many: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מ־%{count} ימים"
         other: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מ־%{count} ימים"
+      automatic_revoked_max_life:
+        one: "נשלל אוטומטית, נוצר לפני למעלה מיום"
+        two: "נשלל אוטומטית, נוצר לפני למעלה מיומיים"
+        many: "נשלל אוטומטית, נוצר לפני יותר מ־%{count} ימים"
+        other: "נשלל אוטומטית, נוצר לפני יותר מ־%{count} ימים"
       revoked: נשל
       restored: שוחזר
   reviewables:
@@ -4888,6 +4910,8 @@ he:
         description: "לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
       disagree:
         title: "לא"
+      discard_post:
+        title: "השלכת פוסט"
       ignore:
         title: "התעלמות"
       ignore_and_do_nothing:
@@ -4912,7 +4936,7 @@ he:
           description: "המשתמש יימחק ואנו נחסום את כתובת ה־IP והדוא״ל שלו."
       reject:
         title: "לדחות"
-        bundle_title: "לדחות..."
+        bundle_title: "דחייה…"
       reject_and_suspend:
         title: "לדחות ולהשעות את המשתמש"
       reject_and_silence:
@@ -4965,6 +4989,10 @@ he:
       invalid_yaml: "איזה מחרוזת YAML תקנית"
       invalid_type: "מכיל סוג תבנית שגוי: %{type} (הסוגים התקפים הם: %{valid_types})"
       missing_type: "סוג השדה חסר"
+      missing_id: "חסר מזהה שדה"
+      duplicate_ids: "יש מזהים כפולים"
+      reserved_id: "יש מילת מפתח שמורה בתור מזהה: %{id}"
+      unsafe_description: "יש תיאור HTML מפוקפק"
   activemodel:
     errors:
       <<: *errors

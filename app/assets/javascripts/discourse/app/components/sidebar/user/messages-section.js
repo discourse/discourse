@@ -1,11 +1,10 @@
-import { cached } from "@glimmer/tracking";
-
-import { getOwner } from "discourse-common/lib/get-owner";
 import Component from "@glimmer/component";
-import { bind } from "discourse-common/utils/decorators";
+import { cached } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 import GroupMessageSectionLink from "discourse/lib/sidebar/user/messages-section/group-message-section-link";
 import PersonalMessageSectionLink from "discourse/lib/sidebar/user/messages-section/personal-message-section-link";
-import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 
 export const INBOX = "inbox";
 export const UNREAD = "unread";

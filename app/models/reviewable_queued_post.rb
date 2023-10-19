@@ -16,6 +16,16 @@ class ReviewableQueuedPost < Reviewable
 
   after_commit :compute_user_stats, only: %i[create update]
 
+  def self.additional_args(params)
+    return {} if params[:revise_reason].blank?
+
+    {
+      revise_reason: params[:revise_reason],
+      revise_feedback: params[:revise_feedback],
+      revise_custom_reason: params[:revise_custom_reason],
+    }
+  end
+
   def updatable_reviewable_scores
     # Approvals are possible for already rejected queued posts. We need the
     # scores to be updated when this happens.
@@ -41,13 +51,27 @@ class ReviewableQueuedPost < Reviewable
     end
 
     if pending?
-      actions.add(:reject_post) do |a|
-        a.icon = "times"
-        a.label = "reviewables.actions.reject_post.title"
+      if guardian.can_delete_user?(target_created_by)
+        reject_bundle =
+          actions.add_bundle("#{id}-reject", label: "reviewables.actions.reject_post.title")
+
+        actions.add(:reject_post, bundle: reject_bundle) do |a|
+          a.icon = "times"
+          a.label = "reviewables.actions.discard_post.title"
+          a.button_class = "reject-post"
+        end
+        delete_user_actions(actions, reject_bundle)
+      else
+        actions.add(:reject_post) do |a|
+          a.icon = "times"
+          a.label = "reviewables.actions.reject_post.title"
+        end
+      end
+
+      actions.add(:revise_and_reject_post) do |a|
+        a.label = "reviewables.actions.revise_and_reject_post.title"
       end
     end
-
-    delete_user_actions(actions) if pending? && guardian.can_delete_user?(target_created_by)
 
     actions.add(:delete) if guardian.can_delete?(self)
   end
@@ -134,6 +158,24 @@ class ReviewableQueuedPost < Reviewable
 
     StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now) if performed_by.staff?
 
+    create_result(:success, :rejected)
+  end
+
+  def perform_revise_and_reject_post(performed_by, args)
+    pm_translation_args = {
+      topic_title: self.topic.title,
+      topic_url: self.topic.url,
+      reason: args[:revise_custom_reason].presence || args[:revise_reason],
+      feedback: args[:revise_feedback],
+      original_post: self.payload["raw"],
+      site_name: SiteSetting.title,
+    }
+    SystemMessage.create_from_system_user(
+      self.target_created_by,
+      :reviewable_queued_post_revise_and_reject,
+      pm_translation_args,
+    )
+    StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now) if performed_by.staff?
     create_result(:success, :rejected)
   end
 

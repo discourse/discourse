@@ -1,20 +1,20 @@
-import DiscourseURL, { userPath } from "discourse/lib/url";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import { findAll } from "discourse/models/login-method";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
-import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
-import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
 import SecondFactorAddTotp from "discourse/components/modal/second-factor-add-totp";
 import SecondFactorBackupEdit from "discourse/components/modal/second-factor-backup-edit";
+import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
+import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import DiscourseURL, { userPath } from "discourse/lib/url";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
+import { findAll } from "discourse/models/login-method";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),

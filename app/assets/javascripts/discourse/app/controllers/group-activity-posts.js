@@ -1,6 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { fmt } from "discourse/lib/computed";
-import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   group: controller(),
@@ -40,10 +39,5 @@ export default Controller.extend({
           });
       }
     },
-  },
-
-  @observes("canLoadMore")
-  _showFooter() {
-    this.set("application.showFooter", !this.canLoadMore);
   },
 });

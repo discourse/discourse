@@ -53,14 +53,16 @@
           @reorderCallback={{this.reorder}}
         />
       {{/each}}
+
       <DButton
-        @action={{action "addLink"}}
-        @class="btn-flat btn-text add-link"
+        @action={{this.addLink}}
         @title="sidebar.sections.custom.links.add"
         @icon="plus"
         @label="sidebar.sections.custom.links.add"
         @ariaLabel="sidebar.sections.custom.links.add"
+        class="btn-flat btn-text add-link"
       />
+
       {{#if this.transformedModel.sectionType}}
         <hr />
         <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
@@ -72,65 +74,69 @@
           />
         {{/each}}
         <DButton
-          @action={{action "addSecondaryLink"}}
-          @class="btn-flat btn-text add-link"
+          @action={{this.addSecondaryLink}}
           @title="sidebar.sections.custom.links.add"
           @icon="plus"
           @label="sidebar.sections.custom.links.add"
           @ariaLabel="sidebar.sections.custom.links.add"
+          class="btn-flat btn-text add-link"
         />
-
       {{/if}}
-      {{#if (and this.currentUser.staff)}}
+
+      {{#if (and this.currentUser.admin)}}
         <div
           class="row-wrapper mark-public-wrapper
             {{if this.transformedModel.sectionType '-disabled'}}"
         >
           <label class="checkbox-label">
             {{#if this.transformedModel.sectionType}}
-              <DTooltip @placement="top-start">
-                {{i18n "sidebar.sections.custom.always_public"}}
-              </DTooltip>
+              <DTooltip
+                @icon="check-square"
+                @content={{i18n "sidebar.sections.custom.always_public"}}
+                class="always-public-tooltip"
+              />
+            {{else}}
+              <Input
+                @type="checkbox"
+                @checked={{this.transformedModel.public}}
+                class="mark-public"
+                disabled={{this.transformedModel.sectionType}}
+              />
             {{/if}}
-            <Input
-              @type="checkbox"
-              @checked={{this.transformedModel.public}}
-              class="mark-public"
-              disabled={{this.transformedModel.sectionType}}
-            />
-            {{i18n "sidebar.sections.custom.public"}}
+            <span>{{i18n "sidebar.sections.custom.public"}}</span>
           </label>
         </div>
       {{/if}}
     </form>
   </:body>
+
   <:footer>
     <DButton
-      @id="save-section"
-      @action={{action "save"}}
-      @class="btn-primary"
+      @action={{this.save}}
       @label="sidebar.sections.custom.save"
       @ariaLabel="sidebar.sections.custom.save"
       @disabled={{not this.transformedModel.valid}}
+      id="save-section"
+      class="btn-primary"
     />
     {{#if this.canDelete}}
       <DButton
         @icon="trash-alt"
-        @id="delete-section"
-        @class="btn-danger delete"
-        @action={{action "delete"}}
+        @action={{this.delete}}
         @label="sidebar.sections.custom.delete"
         @ariaLabel="sidebar.sections.custom.delete"
+        id="delete-section"
+        class="btn-danger delete"
       />
     {{/if}}
     {{#if this.transformedModel.sectionType}}
       <DButton
-        @action={{action "resetToDefault"}}
-        @class="btn-flat btn-text reset-link"
+        @action={{this.resetToDefault}}
         @icon="undo"
         @title="sidebar.sections.custom.links.reset"
         @label="sidebar.sections.custom.links.reset"
         @ariaLabel="sidebar.sections.custom.links.reset"
+        class="btn-flat btn-text reset-link"
       />
     {{/if}}
   </:footer>

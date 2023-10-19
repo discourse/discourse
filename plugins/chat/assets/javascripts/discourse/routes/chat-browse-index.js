@@ -1,6 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
 import { defaultHomepage } from "discourse/lib/utilities";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatBrowseIndexRoute extends DiscourseRoute {
   @service chat;
@@ -18,6 +18,6 @@ export default class ChatBrowseIndexRoute extends DiscourseRoute {
   }
 
   afterModel() {
-    this.replaceWith("chat.browse.open");
+    this.router.replaceWith("chat.browse.open");
   }
 }

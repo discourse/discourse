@@ -1,20 +1,21 @@
+import { getOwner } from "@ember/application";
+import Component from "@ember/component";
+import { alias } from "@ember/object/computed";
+import { on } from "@ember/object/evented";
+import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import $ from "jquery";
+import { topicTitleDecorators } from "discourse/components/topic-title";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import DiscourseURL, { groupPath } from "discourse/lib/url";
+import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import DiscourseURL, { groupPath } from "discourse/lib/url";
-import I18n from "I18n";
-import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
-import { alias } from "@ember/object/computed";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { on } from "@ember/object/evented";
-import { schedule } from "@ember/runloop";
-import { topicTitleDecorators } from "discourse/components/topic-title";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { htmlSafe } from "@ember/template";
-import { inject as service } from "@ember/service";
-import { getOwner } from "@ember/application";
+import I18n from "discourse-i18n";
 
 export function showEntrance(e) {
   let target = $(e.target);

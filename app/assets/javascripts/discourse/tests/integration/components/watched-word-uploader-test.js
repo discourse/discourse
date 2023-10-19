@@ -1,12 +1,12 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
-import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { module, test } from "qunit";
 import sinon from "sinon";
-import I18n from "I18n";
 import { dialog } from "discourse/lib/uploads";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { createFile } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | watched-word-uploader", function (hooks) {
   setupRenderingTest(hooks);

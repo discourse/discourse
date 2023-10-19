@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { htmlSafe } from "@ember/template";
-import I18n from "I18n";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
+import I18n from "discourse-i18n";
 import {
   EXISTING_TOPIC_SELECTION,
   NEW_TOPIC_SELECTION,
 } from "discourse/plugins/chat/discourse/components/chat-to-topic-selector";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
-import { isEmpty } from "@ember/utils";
 
 export default class ChatModalArchiveChannel extends Component {
   @service chatApi;

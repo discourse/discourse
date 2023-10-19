@@ -1,12 +1,12 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
-import { count, exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { createWidget } from "discourse/widgets/widget";
+import { module, test } from "qunit";
 import { h } from "virtual-dom";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { count, exists } from "discourse/tests/helpers/qunit-helpers";
+import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
+import { createWidget } from "discourse/widgets/widget";
 
 module("Integration | Component | Widget | post-menu", function (hooks) {
   setupRenderingTest(hooks);

@@ -83,7 +83,7 @@ RSpec.describe PostRevisor do
 
     it "does not revise category when the destination category requires topic approval" do
       new_category = Fabricate(:category)
-      new_category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      new_category.require_topic_approval = true
       new_category.save!
 
       post = create_post
@@ -92,7 +92,7 @@ RSpec.describe PostRevisor do
       post.revise(post.user, category_id: new_category.id)
       expect(post.reload.topic.category_id).to eq(old_category_id)
 
-      new_category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+      new_category.require_topic_approval = false
       new_category.save!
 
       post.revise(post.user, category_id: new_category.id)
@@ -1549,7 +1549,7 @@ RSpec.describe PostRevisor do
 
           expect(image5.reload.secure).to eq(false)
           expect(image5.security_last_changed_reason).to eq(
-            "access control post dictates security | source: post revisor",
+            "access control post dictates security | source: post processor",
           )
         end
 
@@ -1563,7 +1563,7 @@ RSpec.describe PostRevisor do
 
           expect(image5.reload.secure).to eq(true)
           expect(image5.security_last_changed_reason).to eq(
-            "access control post dictates security | source: post revisor",
+            "access control post dictates security | source: post processor",
           )
         end
       end

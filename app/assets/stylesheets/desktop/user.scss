@@ -92,7 +92,7 @@
   margin-top: 2em;
   padding-bottom: 12px;
   margin-bottom: 12px;
-  background-color: var(--secondary);
+  background: var(--d-content-background, var(--secondary));
   box-sizing: border-box;
 
   .btn.right {

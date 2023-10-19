@@ -48,3 +48,13 @@ updates:
       timezone: Australia/Sydney
     open-pull-requests-limit: 20
     versioning-strategy: increase
+    groups:
+      babel:
+        patterns:
+          - "@babel*"
+      embroider:
+        patterns:
+          - "@embroider*"
+      types:
+        patterns:
+          - "@types/*"

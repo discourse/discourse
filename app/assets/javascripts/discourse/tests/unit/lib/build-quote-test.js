@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { buildQuote } from "discourse/lib/quote";
 import PrettyText from "pretty-text/pretty-text";
+import { module, test } from "qunit";
+import { buildQuote } from "discourse/lib/quote";
 
 module("Unit | Utility | build-quote", function (hooks) {
   setupTest(hooks);

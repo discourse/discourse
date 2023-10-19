@@ -1,6 +1,6 @@
-import SelectedNameComponent from "select-kit/components/selected-name";
-import discourseComputed from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
+import discourseComputed from "discourse-common/utils/decorators";
+import SelectedNameComponent from "select-kit/components/selected-name";
 
 export default SelectedNameComponent.extend({
   classNames: ["select-kit-selected-color"],

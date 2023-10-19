@@ -1,11 +1,11 @@
 /* global Pikaday:true */
-import { isEmpty } from "@ember/utils";
 import Component from "@glimmer/component";
-import I18n from "I18n";
-import loadScript from "discourse/lib/load-script";
-import { Promise } from "rsvp";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import loadScript from "discourse/lib/load-script";
+import I18n from "discourse-i18n";
 
 export default class CalendarDateTimeInput extends Component {
   _timeFormat = this.args.timeFormat || "HH:mm:ss";

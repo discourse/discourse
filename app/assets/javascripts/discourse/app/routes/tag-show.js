@@ -1,43 +1,52 @@
-import {
-  filterQueryParams,
-  findTopicList,
-} from "discourse/routes/build-topic-route";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import {
   queryParams,
   resetParams,
 } from "discourse/controllers/discovery-sortable";
+import PreloadStore from "discourse/lib/preload-store";
+import showModal from "discourse/lib/show-modal";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
-import { escapeExpression } from "discourse/lib/utilities";
+import {
+  filterQueryParams,
+  findTopicList,
+} from "discourse/routes/build-topic-route";
+import DiscourseRoute from "discourse/routes/discourse";
 import { makeArray } from "discourse-common/lib/helpers";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
-import showModal from "discourse/lib/show-modal";
-import { action } from "@ember/object";
-import PreloadStore from "discourse/lib/preload-store";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 const NONE = "none";
 const ALL = "all";
 
-export default DiscourseRoute.extend({
-  composer: service(),
-  navMode: "latest",
+export default class TagShowRoute extends DiscourseRoute {
+  @service composer;
+  @service router;
+  @service currentUser;
 
-  queryParams,
+  queryParams = queryParams;
+  controllerName = "tag.show";
+  templateName = "tag.show";
+  routeConfig = {};
 
-  controllerName: "tag.show",
-  templateName: "tag.show",
+  get navMode() {
+    return this.routeConfig.navMode || "latest";
+  }
+
+  get noSubcategories() {
+    return this.routeConfig.noSubcategories;
+  }
 
   beforeModel() {
-    const controller = this.controllerFor("tag.show");
+    const controller = this.controllerFor(this.controllerName);
     controller.setProperties({
       loading: true,
       showInfo: false,
     });
-  },
+  }
 
   async model(params, transition) {
     const tag = this.store.createRecord("tag", {
@@ -57,7 +66,7 @@ export default DiscourseRoute.extend({
     const filterType = this.navMode.split("/")[0];
 
     let tagNotification;
-    if (tag && tag.id !== NONE && this.currentUser) {
+    if (tag && tag.id !== NONE && this.currentUser && !additionalTags) {
       // If logged in, we should get the tag's user settings
       tagNotification = await this.store.find(
         "tagNotification",
@@ -65,7 +74,7 @@ export default DiscourseRoute.extend({
       );
     }
 
-    const category = params.category_slug_path_with_id
+    let category = params.category_slug_path_with_id
       ? Category.findBySlugPathWithID(params.category_slug_path_with_id)
       : null;
     const filteredQueryParams = filterQueryParams(
@@ -87,6 +96,13 @@ export default DiscourseRoute.extend({
       filter += `/${tagId}/l/${topicFilter}`;
     } else if (additionalTags) {
       filter = `tags/intersection/${tagId}/${additionalTags.join("/")}`;
+
+      if (transition.to.queryParams["category"]) {
+        filteredQueryParams["category"] = transition.to.queryParams["category"];
+        category = Category.findBySlugPathWithID(
+          transition.to.queryParams["category"]
+        );
+      }
     } else {
       filter = `tag/${tagId}/l/${topicFilter}`;
     }
@@ -98,7 +114,7 @@ export default DiscourseRoute.extend({
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
-      return this.replaceWith(
+      return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
         tagId
@@ -136,12 +152,12 @@ export default DiscourseRoute.extend({
       canCreateTopicOnCategory: category?.permission === PermissionType.FULL,
       canCreateTopicOnTag: !tag.staff || this.currentUser?.staff,
     };
-  },
+  }
 
   setupController(controller, model) {
     const noSubcategories = this.noSubcategories;
 
-    this.controllerFor("tag.show").setProperties({
+    controller.setProperties({
       model: model.tag,
       ...model,
       period: model.list.for_period,
@@ -164,13 +180,13 @@ export default DiscourseRoute.extend({
     } else {
       this.searchService.searchContext = model.tag.searchContext;
     }
-  },
+  }
 
   titleToken() {
     const filterText = I18n.t(
       `filters.${this.navMode.replace("/", ".")}.title`
     );
-    const controller = this.controllerFor("tag.show");
+    const controller = this.controllerFor(this.controllerName);
 
     if (controller.tag?.id) {
       if (controller.category) {
@@ -197,24 +213,24 @@ export default DiscourseRoute.extend({
         });
       }
     }
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
     this.searchService.searchContext = null;
-  },
+  }
 
   @action
   renameTag(tag) {
     showModal("rename-tag", { model: tag });
-  },
+  }
 
   @action
   createTopic() {
     if (this.currentUser?.has_topic_draft) {
       this.openTopicDraft();
     } else {
-      const controller = this.controllerFor("tag.show");
+      const controller = this.controllerFor(this.controllerName);
       this.composer
         .open({
           categoryId: controller.category?.id,
@@ -229,46 +245,47 @@ export default DiscourseRoute.extend({
           }
         });
     }
-  },
+  }
 
   @action
   dismissReadTopics(dismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
     this.send("dismissRead", operationType);
-  },
+  }
 
   @action
   dismissRead(operationType) {
-    const controller = this.controllerFor("tag-show");
+    const controller = this.controllerFor(this.controllerName);
     let options = {
       tagName: controller.tag?.id,
     };
     const categoryId = controller.category?.id;
 
     if (categoryId) {
-      options = Object.assign({}, options, {
+      options = {
+        ...options,
         categoryId,
         includeSubcategories: !controller.noSubcategories,
-      });
+      };
     }
 
     controller.send("dismissRead", operationType, options);
-  },
+  }
 
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("tag.show")._showFooter();
-    return true;
-  },
+  }
 
   _controllerTags(controller) {
     return [controller.get("model.id"), ...makeArray(controller.additionalTags)]
       .filter(Boolean)
       .filter((tag) => ![NONE, ALL].includes(tag));
-  },
-});
+  }
+}
+
+export function buildTagRoute(routeConfig = {}) {
+  return class extends TagShowRoute {
+    routeConfig = routeConfig;
+  };
+}
