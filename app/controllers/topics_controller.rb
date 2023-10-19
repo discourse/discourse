@@ -1253,7 +1253,7 @@ class TopicsController < ApplicationController
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     end
 
-    opts = params.slice(:page, :print, :filter_top_level_replies)
+    opts = params.slice(:page, :print, :filter_top_level_replies, :preview_theme_id)
     opts.delete(:page) if params[:page] == 0
 
     url = topic.relative_url
