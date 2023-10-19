@@ -90,7 +90,7 @@ function resolveParams(ctx, options) {
  */
 export function registerUnbound(name, fn) {
   deprecated(
-    "You should use `registerRawHelper` if this helper is being used in `raw-hbs`. Otherwise, you should only export a default function from `helpers/*.js`",
+    `[registerUnbound ${name}] registerUnbound is deprecated. Instead, you should export a default function from 'discourse/helpers/${name}.js'. If the helper is also used in raw-hbs, you can register it using 'registerRawHelper'.`,
     { id: "discourse.register-unbound" }
   );
 
