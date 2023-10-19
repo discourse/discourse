@@ -2,7 +2,6 @@ import Helper from "@ember/component/helper";
 import { get } from "@ember/object";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
-import deprecated from "discourse-common/lib/deprecated";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 
 export function makeArray(obj) {
@@ -89,11 +88,6 @@ function resolveParams(ctx, options) {
  * do `export default ...` from a `helpers/*.js` file.
  */
 export function registerUnbound(name, fn) {
-  deprecated(
-    "You should use `registerRawHelper` if this helper is being used in `raw-hbs`. Otherwise, you should only export a default function from `helpers/*.js`",
-    { id: "discourse.register-unbound" }
-  );
-
   _helpers[name] = Helper.extend({
     compute: (params, args) => fn(...params, args),
   });
