@@ -26,6 +26,12 @@ export default class DiscoveryService extends Service {
     }
   }
 
+  get tag() {
+    if (this.onDiscoveryRoute) {
+      return this.#routeAttrs.tag;
+    }
+  }
+
   get currentTopicList() {
     if (this.onDiscoveryRoute) {
       const routeModel = this.#routeAttrs;

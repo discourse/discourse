@@ -35,6 +35,21 @@ class DiscoveryTopicsControllerShim extends EmberObject {
   }
 }
 
+class TagShowControllerShim extends EmberObject {
+  @service discovery;
+
+  @dependentKeyCompat
+  get tag() {
+    deprecated(
+      "controller:tag-show no longer exists, and this shim will eventually be removed. Use the discovery service instead.",
+      {
+        id: "discourse.tag-show-controller",
+      }
+    );
+    return this.discovery.tag;
+  }
+}
+
 export default {
   initialize(container) {
     container.register(
@@ -46,5 +61,7 @@ export default {
       "controller:discovery/topics",
       DiscoveryTopicsControllerShim
     );
+
+    container.register("controller:tag-show", TagShowControllerShim);
   },
 };
