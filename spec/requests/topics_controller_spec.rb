@@ -3397,6 +3397,15 @@ RSpec.describe TopicsController do
       expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
     end
 
+    it "removes invalid characters from the feed" do
+      topic.title = "This is a big topic title with a "
+      topic.save!
+
+      get "/t/foo/#{topic.id}.rss"
+      expect(response.status).to eq(200)
+      expect(response.body).to_not include("")
+    end
+
     it "renders rss of the topic correctly with subfolder" do
       set_subfolder "/forum"
       get "/t/foo/#{topic.id}.rss"
