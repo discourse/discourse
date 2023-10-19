@@ -66,6 +66,7 @@ export default class DModalBody extends Component {
 
   @action
   willDestroy() {
+    super.willDestroy(...arguments);
     this.appEvents.trigger("modal:body-dismissed");
   }
 }

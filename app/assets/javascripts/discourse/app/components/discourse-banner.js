@@ -44,6 +44,7 @@ export default Component.extend({
   },
 
   didInsertElement() {
+    this._super(...arguments);
     this.appEvents.trigger("decorate-non-stream-cooked-element", this.element);
   },
 });

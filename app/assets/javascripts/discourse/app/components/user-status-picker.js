@@ -10,7 +10,7 @@ export default class UserStatusPicker extends Component {
   emojiPickerIsActive = false;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     if (!this.status) {
       this.set("status", {});

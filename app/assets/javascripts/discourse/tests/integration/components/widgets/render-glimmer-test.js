@@ -68,18 +68,22 @@ class DemoComponent extends ClassicComponent {
   }
 
   didInsertElement() {
+    super.didInsertElement(...arguments);
     DemoComponent.eventLog.push("didInsertElement");
   }
 
   willDestroyElement() {
+    super.willDestroyElement(...arguments);
     DemoComponent.eventLog.push("willDestroyElement");
   }
 
   didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
     DemoComponent.eventLog.push("didReceiveAttrs");
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     DemoComponent.eventLog.push("willDestroy");
   }
 }

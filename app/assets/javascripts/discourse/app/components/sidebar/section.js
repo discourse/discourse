@@ -25,9 +25,8 @@ export default class SidebarSection extends Component {
   }
 
   willDestroy() {
-    if (this.args.willDestroy) {
-      this.args.willDestroy();
-    }
+    super.willDestroy(...arguments);
+    this.args.willDestroy?.();
   }
 
   @action

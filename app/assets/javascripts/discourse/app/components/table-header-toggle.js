@@ -59,11 +59,15 @@ export default Component.extend({
     this.toggleChevron();
     this._updateA11yAttributes();
   },
+
   didRender() {
+    this._super(...arguments);
+
     if (this.onActiveRender && this.chevronIcon) {
       this.onActiveRender(this.element);
     }
   },
+
   _updateA11yAttributes() {
     let criteria = "";
     const pressed = this.order === this.field;
