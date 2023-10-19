@@ -3,6 +3,6 @@ import { registerRawHelper } from "discourse-common/lib/helpers";
 
 registerRawHelper("get-url", getUrl);
 
-export default function getUrl() {
-  return emberGetUrl("");
+export default function getUrl(value) {
+  return emberGetUrl(value);
 }
