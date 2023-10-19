@@ -1,6 +1,7 @@
 export default function () {
   this.route("admin", { resetNamespace: true }, function () {
     this.route("dashboard", { path: "/" }, function () {
+      // eslint-disable-next-line ember/no-shadow-route-definition
       this.route("general", { path: "/" });
       this.route("admin.dashboardModeration", {
         path: "/dashboard/moderation",
@@ -101,7 +102,7 @@ export default function () {
           "adminCustomizeFormTemplates",
           { path: "/form-templates", resetNamespace: true },
           function () {
-            this.route("new", { path: "/new" });
+            this.route("new");
             this.route("edit", { path: "/:id" });
           }
         );
@@ -109,7 +110,6 @@ export default function () {
           "adminWatchedWords",
           { path: "/watched_words", resetNamespace: true },
           function () {
-            this.route("index", { path: "/" });
             this.route("action", { path: "/action/:action_id" });
           }
         );
@@ -122,7 +122,7 @@ export default function () {
         { path: "/keys", resetNamespace: true },
         function () {
           this.route("show", { path: "/:api_key_id" });
-          this.route("new", { path: "/new" });
+          this.route("new");
         }
       );
 
@@ -164,8 +164,7 @@ export default function () {
           "adminSearchLogs",
           { path: "/search_logs", resetNamespace: true },
           function () {
-            this.route("index", { path: "/" });
-            this.route("term", { path: "/term" });
+            this.route("term");
           }
         );
       }
@@ -203,13 +202,7 @@ export default function () {
       }
     );
 
-    this.route(
-      "adminPlugins",
-      { path: "/plugins", resetNamespace: true },
-      function () {
-        this.route("index", { path: "/" });
-      }
-    );
+    this.route("adminPlugins", { path: "/plugins", resetNamespace: true });
   });
 
   // EXPERIMENTAL: These admin routes are hidden behind an `enable_experimental_admin_ui_groups`
