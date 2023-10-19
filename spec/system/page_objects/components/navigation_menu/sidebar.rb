@@ -40,6 +40,10 @@ module PageObjects
         def custom_section_modal_title
           find("#discourse-modal-title")
         end
+
+        def click_section_link(name)
+          find(".sidebar-section-link[data-link-name=\"#{name}\"").click
+        end
       end
     end
   end

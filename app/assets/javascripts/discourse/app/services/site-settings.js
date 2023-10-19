@@ -16,6 +16,7 @@ export default class SiteSettingsService {
       }
 
       return setting
+        .toString()
         .split("|")
         .filter(Boolean)
         .map((groupId) => parseInt(groupId, 10));
