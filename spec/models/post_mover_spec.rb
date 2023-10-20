@@ -2482,25 +2482,25 @@ RSpec.describe PostMover do
       it "uses first_post_moved trigger for first post" do
         post_mover = PostMover.new(topic_1, Discourse.system_user, [post_1.id])
         events = DiscourseEvent.track_events(:first_post_moved) { post_mover.to_topic(topic_2.id) }
-
         expect(events.size).to eq(1)
-        expect(events.first[:event_name]).to eq(:first_post_moved)
 
         new_post = Post.find_by(topic_id: topic_2.id, post_number: 1)
 
-        expect(events.first[:params][0]).to eq(new_post)
-        expect(events.first[:params][1]).to eq(post_1)
+        event = events.first
+        expect(event[:event_name]).to eq(:first_post_moved)
+        expect(event[:params][0]).to eq(new_post)
+        expect(event[:params][1]).to eq(post_1)
       end
 
       it "uses post_moved trigger for other posts" do
         post_mover = PostMover.new(topic_1, Discourse.system_user, [post_2.id])
         events = DiscourseEvent.track_events(:post_moved) { post_mover.to_topic(topic_2.id) }
-
         expect(events.size).to eq(1)
-        expect(events.first[:event_name]).to eq(:post_moved)
 
-        expect(events.first[:params][0]).to eq(post_2)
-        expect(events.first[:params][1]).to eq(topic_1.id)
+        event = events.first
+        expect(event[:event_name]).to eq(:post_moved)
+        expect(event[:params][0]).to eq(post_2)
+        expect(event[:params][1]).to eq(topic_1.id)
       end
     end
   end
