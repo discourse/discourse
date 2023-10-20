@@ -40,7 +40,8 @@ export function deleteFromRegistry(name) {
 
 const _decorators = {};
 
-export function decorateWidget(widgetName, cb) {
+export function decorateWidget(decorateIdentifier, cb) {
+  const widgetName = decorateIdentifier.split(":")[0];
   if (!_registry[widgetName]) {
     // eslint-disable-next-line no-console
     console.error(
@@ -48,8 +49,8 @@ export function decorateWidget(widgetName, cb) {
       `decorateWidget: Could not find widget '${widgetName}' in registry`
     );
   }
-  _decorators[widgetName] ??= [];
-  _decorators[widgetName].push(cb);
+  _decorators[decorateIdentifier] ??= [];
+  _decorators[decorateIdentifier].push(cb);
 }
 
 export function traverseCustomWidgets(tree, callback) {
