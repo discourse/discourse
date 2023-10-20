@@ -53,6 +53,7 @@ export default class AdminGraph extends Component {
   }
 
   didInsertElement() {
+    super.didInsertElement(...arguments);
     loadScript("/javascripts/Chart.min.js").then(() =>
       this.refreshChart.apply(this)
     );

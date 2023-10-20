@@ -161,6 +161,7 @@ export default Component.extend(CleansUp, {
   },
 
   willDestroyElement() {
+    this._super(...arguments);
     this.appEvents.off("topic-entrance:show", this, "_show");
   },
 

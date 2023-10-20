@@ -352,12 +352,13 @@ class CategoriesController < ApplicationController
 
     categories = categories.order(<<~SQL) if prioritized_category_id.present?
       CASE
-      WHEN id = #{prioritized_category_id} OR parent_category_id = #{prioritized_category_id} THEN 0
-      ELSE 1
+      WHEN id = #{prioritized_category_id} THEN 1
+      WHEN parent_category_id = #{prioritized_category_id} THEN 2
+      ELSE 3
       END
     SQL
 
-    categories = categories.order(:read_restricted)
+    categories.order(:id)
 
     render json: categories, each_serializer: SiteCategorySerializer
   end
@@ -458,6 +459,7 @@ class CategoriesController < ApplicationController
             :uploaded_logo_id,
             :uploaded_logo_dark_id,
             :uploaded_background_id,
+            :uploaded_background_dark_id,
             :slug,
             :allow_badges,
             :topic_template,

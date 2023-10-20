@@ -3734,6 +3734,7 @@ en:
       logo: "Category Logo Image"
       logo_dark: "Dark Mode Category Logo Image"
       background_image: "Category Background Image"
+      background_image_dark: "Dark Category Background Image"
       badge_colors: "Badge colors"
       background_color: "Background color"
       foreground_color: "Foreground color"
@@ -4493,7 +4494,7 @@ en:
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
           reset_confirm: "Are you sure you want to reset this section to default?"
-          public: "Make this section public and visible to everyone"
+          public: "Visible to everyone"
           always_public: "Content in this section is always public"
           more_menu: "More menu"
           links:

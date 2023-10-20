@@ -642,22 +642,22 @@ class PluginApi {
    * Example:
    *
    * ```
-   * api.addPostAdminMenuButton((name, attrs) => {
+   * api.addPostAdminMenuButton((post) => {
    *   return {
    *     action: () => {
    *       alert('You clicked on the coffee button!');
    *     },
    *     icon: 'coffee',
    *     className: 'hot-coffee',
-   *     title: 'coffee.title',
+   *     label: 'coffee.title',
    *   };
    * });
    * ```
    **/
-  addPostAdminMenuButton(name, callback) {
+  addPostAdminMenuButton(callback) {
     this.container
       .lookup("service:admin-post-menu-buttons")
-      .addButton(name, callback);
+      .addButton(callback);
   }
 
   /**
@@ -1923,6 +1923,7 @@ class PluginApi {
         pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
 
         didInsertElement() {
+          // eslint-disable-next-line ember/no-ember-super-in-es-classes
           this._super();
           this.dispatch(appEvent, widgetKey);
         },
