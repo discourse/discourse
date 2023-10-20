@@ -41,11 +41,11 @@ export function deleteFromRegistry(name) {
 const _decorators = {};
 
 export function decorateWidget(widgetName, cb) {
-  if (!_registry[name]) {
+  if (!_registry[widgetName]) {
     // eslint-disable-next-line no-console
     console.error(
       consolePrefix(),
-      `decorateWidget: Could not find widget '${name}' in registry`
+      `decorateWidget: Could not find widget '${widgetName}' in registry`
     );
   }
   _decorators[widgetName] ??= [];
