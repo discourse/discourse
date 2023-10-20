@@ -81,6 +81,11 @@ module.exports = function (defaults) {
     },
   });
 
+  // TODO: remove me
+  // Ember 3.28 still has some internal dependency on jQuery being a global,
+  // for the time being we will bring it in vendor.js
+  app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
+
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(vendorJs + "bootbox.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
@@ -154,7 +159,9 @@ module.exports = function (defaults) {
           function ({ request }, callback) {
             if (
               !request.includes("-embroider-implicit") &&
-              (request.startsWith("admin/") ||
+              // TODO: delete special case for jquery when removing app.import() above
+              (request === "jquery" ||
+                request.startsWith("admin/") ||
                 request.startsWith("wizard/") ||
                 (request.startsWith("pretty-text/engines/") &&
                   request !== "pretty-text/engines/discourse-markdown-it") ||
@@ -173,6 +180,22 @@ module.exports = function (defaults) {
               exportsPresence: "error",
             },
           },
+          rules: [
+            {
+              test: require.resolve("bootstrap/js/modal"),
+              use: [
+                {
+                  loader: "imports-loader",
+                  options: {
+                    imports: {
+                      moduleName: "jquery",
+                      name: "jQuery",
+                    },
+                  },
+                },
+              ],
+            },
+          ],
         },
       },
     },
