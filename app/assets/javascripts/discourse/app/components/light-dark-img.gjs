@@ -38,6 +38,7 @@ export default class LightDarkImg extends Component {
           media="(prefers-color-scheme: dark)"
         />
         <CdnImg
+          ...attributes
           @src={{this.defaultImg.url}}
           @width={{this.defaultImg.width}}
           @height={{this.defaultImg.height}}
@@ -45,6 +46,7 @@ export default class LightDarkImg extends Component {
       </picture>
     {{else if @lightImg.url}}
       <CdnImg
+        ...attributes
         @src={{@lightImg.url}}
         @width={{@lightImg.width}}
         @height={{@lightImg.height}}
