@@ -1,6 +1,6 @@
 const templateLint = require("@discourse/lint-configs/template-lint");
 
-const config = {
+module.exports = {
   ...templateLint,
   rules: {
     ...templateLint.rules,
@@ -8,5 +8,3 @@ const config = {
     "require-button-type": false,
   },
 };
-
-module.exports = config;
