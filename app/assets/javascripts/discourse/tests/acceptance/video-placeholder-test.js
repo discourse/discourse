@@ -11,7 +11,7 @@ acceptance("Video Placeholder Test", function () {
     );
     assert.ok(
       postWithVideo.hasAttribute("data-video-src"),
-      "Video placeholder should have the 'data-videoSrc' attribute"
+      "Video placeholder should have the 'data-video-src' attribute"
     );
 
     const overlay = postWithVideo.querySelector(".video-placeholder-overlay");
