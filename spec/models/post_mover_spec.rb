@@ -2463,5 +2463,24 @@ RSpec.describe PostMover do
         end
       end
     end
+
+    describe "with event trigger" do
+      fab!(:topic_1) { Fabricate(:topic) }
+      fab!(:topic_2) { Fabricate(:topic) }
+      fab!(:post_1) { Fabricate(:post, topic: topic_1) }
+      fab!(:post_2) { Fabricate(:post, topic: topic_1) }
+
+      it "uses first_post_moved trigger for first post" do
+        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_1.id])
+        events = DiscourseEvent.track_events(:first_post_moved) { post_mover.to_topic(topic_2.id) }
+        expect(events.size).to eq(1)
+      end
+
+      it "uses post_moved trigger for other posts" do
+        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_2.id])
+        events = DiscourseEvent.track_events(:post_moved) { post_mover.to_topic(topic_2.id) }
+        expect(events.size).to eq(1)
+      end
+    end
   end
 end
