@@ -647,11 +647,7 @@ class PostsController < ApplicationController
     guardian.ensure_can_rebake!
 
     post = find_post_from_params
-    post.rebake!(
-      invalidate_oneboxes: true,
-      invalidate_broken_images: true,
-      update_upload_security: true,
-    )
+    post.rebake!(invalidate_oneboxes: true, invalidate_broken_images: true)
 
     render body: nil
   end

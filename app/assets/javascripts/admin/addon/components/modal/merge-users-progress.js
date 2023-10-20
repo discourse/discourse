@@ -16,6 +16,7 @@ export default class MergeUsersProgress extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.messageBus.unsubscribe("/merge_user", this.onMessage);
   }
 

@@ -2177,7 +2177,7 @@ RSpec.describe TopicsController do
     it "preserves only select query params" do
       get "/t/external_id/asdf.json", params: { filter_top_level_replies: true }
       expect(response.status).to eq(301)
-      expect(response).to redirect_to(topic.relative_url + ".json?filter_top_level_replies=true")
+      expect(response).to redirect_to("#{topic.relative_url}.json?filter_top_level_replies=true")
 
       get "/t/external_id/asdf.json", params: { not_valid: true }
       expect(response.status).to eq(301)
@@ -2186,13 +2186,18 @@ RSpec.describe TopicsController do
       get "/t/external_id/asdf.json", params: { filter_top_level_replies: true, post_number: 9999 }
       expect(response.status).to eq(301)
       expect(response).to redirect_to(
-        topic.relative_url + "/9999.json?filter_top_level_replies=true",
+        "#{topic.relative_url}/9999.json?filter_top_level_replies=true",
       )
 
-      get "/t/external_id/asdf.json", params: { filter_top_level_replies: true, print: true }
+      get "/t/external_id/asdf.json",
+          params: {
+            filter_top_level_replies: true,
+            print: true,
+            preview_theme_id: 9999,
+          }
       expect(response.status).to eq(301)
       expect(response).to redirect_to(
-        topic.relative_url + ".json?print=true&filter_top_level_replies=true",
+        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999",
       )
     end
 
@@ -3395,6 +3400,15 @@ RSpec.describe TopicsController do
       # in the index, and do not want links followed
       # this allows us to remove it while allowing via robots.txt
       expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
+    end
+
+    it "removes invalid characters from the feed" do
+      topic.title = "This is a big topic title with a "
+      topic.save!
+
+      get "/t/foo/#{topic.id}.rss"
+      expect(response.status).to eq(200)
+      expect(response.body).to_not include("")
     end
 
     it "renders rss of the topic correctly with subfolder" do

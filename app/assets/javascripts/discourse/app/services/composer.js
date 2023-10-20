@@ -172,7 +172,7 @@ export default class ComposerService extends Service {
       return null;
     }
 
-    return this.model.category?.get("form_template_ids");
+    return this.model?.category?.get("form_template_ids");
   }
 
   get hasFormTemplate() {
@@ -492,7 +492,13 @@ export default class ComposerService extends Service {
   @action
   async focusComposer(opts = {}) {
     await this._openComposerForFocus(opts);
-    this._focusAndInsertText(opts.insertText);
+
+    scheduleOnce(
+      "afterRender",
+      this,
+      this._focusAndInsertText,
+      opts.insertText
+    );
   }
 
   async _openComposerForFocus(opts) {
@@ -525,13 +531,11 @@ export default class ComposerService extends Service {
   }
 
   _focusAndInsertText(insertText) {
-    scheduleOnce("afterRender", () => {
-      document.querySelector("textarea.d-editor-input")?.focus();
+    document.querySelector("textarea.d-editor-input")?.focus();
 
-      if (insertText) {
-        this.model.appendText(insertText, null, { new_line: true });
-      }
-    });
+    if (insertText) {
+      this.model.appendText(insertText, null, { new_line: true });
+    }
   }
 
   @action
@@ -1449,10 +1453,6 @@ export default class ComposerService extends Service {
       opts.topicTitle.length <= this.siteSettings.max_topic_title_length
     ) {
       this.model.set("title", opts.topicTitle);
-    }
-
-    if (opts.topicCategoryId) {
-      this.model.set("categoryId", opts.topicCategoryId);
     }
 
     if (opts.topicTags && this.site.can_tag_topics) {

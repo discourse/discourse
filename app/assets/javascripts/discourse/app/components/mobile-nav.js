@@ -48,6 +48,7 @@ export default Component.extend({
   },
 
   willDestroyElement() {
+    this._super(...arguments);
     this.router.off("routeDidChange", this, this.currentRouteChanged);
   },
 

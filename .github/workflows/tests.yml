@@ -22,7 +22,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}${{(matrix.embroider == '1') && ' (Embroider)' || ''}}
+    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -32,7 +32,6 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-      USE_EMBROIDER: ${{ matrix.embroider }}
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
@@ -42,18 +41,13 @@ jobs:
 
       matrix:
         build_type: [backend, frontend, system, annotations]
-        embroider: ["0", "1"]
         target: [core, plugins]
         ruby: ["3.2"]
         exclude:
           - build_type: annotations
-            embroider: "1"
-          - build_type: annotations
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-          - build_type: backend
-            embroider: "1"
 
     steps:
       - name: Set working directory owner
@@ -219,7 +213,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
         with:
-          name: ember-exam-execution-plugins-frontend-${{(matrix.embroider == '1') && 'embroider' || 'classic'}}
+          name: ember-exam-execution-plugins-frontend
           path: ./app/assets/javascripts/discourse/test-execution-*.json
 
       - name: Ember Build for System Tests
@@ -261,7 +255,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }})${{(matrix.embroider == '1') && ' (Embroider)' || ''}}
+    name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
@@ -272,17 +266,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        embroider: ["1", "0"]
         browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
-        exclude:
-          # Testing the classic build on one browser is good enough
-          - embroider: "0"
-            browser: Firefox ESR
-          - embroider: "0"
-            browser: Firefox Evergreen
 
     env:
-      USE_EMBROIDER: ${{ matrix.embroider }}
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 

@@ -22,6 +22,7 @@ RSpec.describe UploadReference do
     fab!(:upload1) { Fabricate(:upload) }
     fab!(:upload2) { Fabricate(:upload) }
     fab!(:upload3) { Fabricate(:upload) }
+    fab!(:upload4) { Fabricate(:upload) }
 
     it "creates upload references" do
       category = nil
@@ -32,13 +33,14 @@ RSpec.describe UploadReference do
             uploaded_logo_id: upload1.id,
             uploaded_logo_dark_id: upload2.id,
             uploaded_background_id: upload3.id,
+            uploaded_background_dark_id: upload4.id,
           )
-      }.to change { UploadReference.count }.by(3)
+      }.to change { UploadReference.count }.by(4)
 
       upload_reference = UploadReference.last
       expect(upload_reference.target).to eq(category)
 
-      expect { category.destroy! }.to change { UploadReference.count }.by(-3)
+      expect { category.destroy! }.to change { UploadReference.count }.by(-4)
     end
   end
 

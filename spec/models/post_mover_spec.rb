@@ -2463,5 +2463,45 @@ RSpec.describe PostMover do
         end
       end
     end
+
+    context "with event trigger" do
+      fab!(:topic_1) { Fabricate(:topic) }
+      fab!(:topic_2) { Fabricate(:topic) }
+      fab!(:post_1) { Fabricate(:post, topic: topic_1) }
+      fab!(:post_2) { Fabricate(:post, topic: topic_1) }
+
+      it "receives 2 post moved event triggers for the first post" do
+        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_1.id])
+        events = DiscourseEvent.track_events { post_mover.to_topic(topic_2.id) }
+        filtered_events =
+          events.filter { |e| %i[first_post_moved post_moved].include? e[:event_name] }
+
+        expect(filtered_events.size).to eq(2)
+      end
+
+      it "uses first_post_moved trigger for first post" do
+        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_1.id])
+        events = DiscourseEvent.track_events(:first_post_moved) { post_mover.to_topic(topic_2.id) }
+        expect(events.size).to eq(1)
+
+        new_post = Post.find_by(topic_id: topic_2.id, post_number: 1)
+
+        event = events.first
+        expect(event[:event_name]).to eq(:first_post_moved)
+        expect(event[:params][0]).to eq(new_post)
+        expect(event[:params][1]).to eq(post_1)
+      end
+
+      it "uses post_moved trigger for other posts" do
+        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_2.id])
+        events = DiscourseEvent.track_events(:post_moved) { post_mover.to_topic(topic_2.id) }
+        expect(events.size).to eq(1)
+
+        event = events.first
+        expect(event[:event_name]).to eq(:post_moved)
+        expect(event[:params][0]).to eq(post_2)
+        expect(event[:params][1]).to eq(topic_1.id)
+      end
+    end
   end
 end

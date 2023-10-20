@@ -136,7 +136,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.14.0";
+export const PLUGIN_API_VERSION = "1.15.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -642,22 +642,22 @@ class PluginApi {
    * Example:
    *
    * ```
-   * api.addPostAdminMenuButton((name, attrs) => {
+   * api.addPostAdminMenuButton((post) => {
    *   return {
    *     action: () => {
    *       alert('You clicked on the coffee button!');
    *     },
    *     icon: 'coffee',
    *     className: 'hot-coffee',
-   *     title: 'coffee.title',
+   *     label: 'coffee.title',
    *   };
    * });
    * ```
    **/
-  addPostAdminMenuButton(name, callback) {
+  addPostAdminMenuButton(callback) {
     this.container
       .lookup("service:admin-post-menu-buttons")
-      .addButton(name, callback);
+      .addButton(callback);
   }
 
   /**
@@ -1923,6 +1923,7 @@ class PluginApi {
         pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
 
         didInsertElement() {
+          // eslint-disable-next-line ember/no-ember-super-in-es-classes
           this._super();
           this.dispatch(appEvent, widgetKey);
         },
@@ -2205,6 +2206,14 @@ class PluginApi {
    */
   setSidebarPanel(name) {
     this._lookupContainer("service:sidebar-state")?.setPanel(name);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for getting the current Sidebar panel.
+   */
+  getSidebarPanel() {
+    return this._lookupContainer("service:sidebar-state")?.currentPanel;
   }
 
   /**

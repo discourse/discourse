@@ -27,6 +27,7 @@ export default class AceEditor extends Component {
   }
 
   didRender() {
+    super.didRender(...arguments);
     this._skipContentChangeEvent = false;
   }
 
@@ -160,9 +161,8 @@ export default class AceEditor extends Component {
   }
 
   willDestroyElement() {
-    if (this._darkModeListener) {
-      this._darkModeListener.removeListener(this.setAceTheme);
-    }
+    super.willDestroyElement(...arguments);
+    this._darkModeListener?.removeListener(this.setAceTheme);
   }
 
   @bind

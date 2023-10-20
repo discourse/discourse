@@ -18,6 +18,7 @@ export default class SidebarMoreSectionLinks extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.#removeClickEventListener();
     this.router.off("routeDidChange", this, this.#setActiveSectionLink);
   }
