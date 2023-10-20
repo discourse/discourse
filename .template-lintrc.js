@@ -1,35 +1,12 @@
-const templateLint = require("eslint-config-discourse/template-lint");
+const templateLint = require("@discourse/lint-configs/template-lint");
 
-const config = { ...templateLint };
-config.rules = {
-  ...config.rules,
-  "no-action-modifiers": true,
-  "no-args-paths": true,
-  "no-attrs-in-components": true,
-  "no-capital-arguments": false, // TODO: we extensively use `args` argument name
-  "no-curly-component-invocation": {
-    allow: [
-      // These are helpers, not components
-      "directory-item-header-title",
-      "directory-item-user-field-value",
-      "directory-item-value",
-      "directory-table-header-title",
-      "loading-spinner",
-      "directory-item-label",
-      "hide-application-footer",
-    ],
+const config = {
+  ...templateLint,
+  rules: {
+    ...templateLint.rules,
+    "no-capital-arguments": false, // TODO: we extensively use `args` argument name
+    "require-button-type": false,
   },
-  "no-implicit-this": {
-    allow: ["loading-spinner", "hide-application-footer"],
-  },
-  "require-mandatory-role-attributes": false,
-  "require-media-caption": false,
-  // Begin prettier compatibility
-  "eol-last": false,
-  "self-closing-void-elements": false,
-  "block-indentation": false,
-  quotes: false,
-  // End prettier compatibility
 };
 
 module.exports = config;

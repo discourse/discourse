@@ -1,1 +1,1 @@
-module.exports = require("eslint-config-discourse/prettier");
+module.exports = require("@discourse/lint-configs/prettier");

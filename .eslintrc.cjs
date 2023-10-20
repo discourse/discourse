@@ -1,11 +1,9 @@
-const eslint = require("eslint-config-discourse/eslint");
+const eslint = require("@discourse/lint-configs/eslint");
 
 const config = { ...eslint };
 config.rules = {
   ...config.rules,
-  "discourse-ember/global-ember": "error",
-  "eol-last": "error",
-  "no-restricted-globals": "off",
+  // "no-restricted-globals": "off",
 };
 
 module.exports = config;
