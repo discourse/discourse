@@ -290,6 +290,24 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
+"@discourse/lint-configs@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@discourse/lint-configs/-/lint-configs-1.0.0.tgz#683ebeebfdf9e75b18ad69bbeff584206bde3e20"
+  integrity sha512-8+xJ5ZRCsuQ+Mov5YiWsrYBJVj+H+JL9jyNctt5QFz79vfb1VLut4/4Kq58v0xh0pTT43bL1d4fEM+XllHmpCQ==
+  dependencies:
+    "@babel/core" "^7.23.2"
+    "@babel/eslint-parser" "^7.22.15"
+    "@babel/plugin-proposal-decorators" "^7.23.2"
+    ember-template-lint "^5.11.2"
+    eslint "^8.51.0"
+    eslint-plugin-decorator-position "^5.0.2"
+    eslint-plugin-ember "^11.11.1"
+    eslint-plugin-simple-import-sort "^10.0.0"
+    eslint-plugin-sort-class-members "^1.19.0"
+    globals "^13.23.0"
+    prettier "^2.8.8"
+    prettier-plugin-ember-template-tag "^0.3.2"
+
 "@discourse/moment-timezone-names-translations@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@discourse/moment-timezone-names-translations/-/moment-timezone-names-translations-1.0.0.tgz#b22344456513d37c81baf384a41487b539b91534"
@@ -748,19 +766,6 @@
   integrity sha512-Cn6WYCm0tXv8p6k+A8PvbDG763EDpBoTzHdA+Q/MF6H3sapGjCm9NzoaJncJS9tUKSuCoDs9XHxYYsQDgxR6kw==
   dependencies:
     "@types/node" "*"
-
-"@typescript-eslint/types@6.8.0":
-  version "6.8.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-6.8.0.tgz#1ab5d4fe1d613e3f65f6684026ade6b94f7e3ded"
-  integrity sha512-p5qOxSum7W3k+llc7owEStXlGmSl8FcGvhYt8Vjy7FqEnmkCVlM3P57XQEGj58oqaBWDQXbJDZxwUWMS/EAPNQ==
-
-"@typescript-eslint/visitor-keys@^6.8.0":
-  version "6.8.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-6.8.0.tgz#cffebed56ae99c45eba901c378a6447b06be58b8"
-  integrity sha512-oqAnbA7c+pgOhW2OhGvxm0t1BULX5peQI/rLsNDpGM78EebV3C9IGbX5HNZabuZ6UQrYveCLjKo8Iy/lLlBkkg==
-  dependencies:
-    "@typescript-eslint/types" "6.8.0"
-    eslint-visitor-keys "^3.4.1"
 
 ace-builds@1.4.13:
   version "1.4.13"
@@ -1640,7 +1645,7 @@ ember-template-imports@^3.4.1, ember-template-imports@^3.4.2:
     string.prototype.matchall "^4.0.6"
     validate-peer-dependencies "^1.1.0"
 
-ember-template-lint@5.11.2, ember-template-lint@^5.11.2:
+ember-template-lint@^5.11.2:
   version "5.11.2"
   resolved "https://registry.yarnpkg.com/ember-template-lint/-/ember-template-lint-5.11.2.tgz#dd7cf15000444fcc8899d907e8d911cd77c31fc0"
   integrity sha512-G8KXmFCYLKM9ifMb+rluL8CNIawUl45i4z4VrK+Nn5ciWSo+Vx2jUp+sS6wKCdBqGYoiqjUgn/hmGnCVOId+yQ==
@@ -1830,28 +1835,6 @@ escodegen@^2.1.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-"eslint-config-discourse@file:../eslint-config-discourse/lint":
-  version "5.0.0"
-  dependencies:
-    "@babel/core" "^7.23.2"
-    "@babel/eslint-parser" "^7.22.15"
-    "@babel/parser" "^7.23.0"
-    "@babel/plugin-proposal-decorators" "^7.23.2"
-    "@babel/types" "^7.23.0"
-    "@typescript-eslint/visitor-keys" "^6.8.0"
-    ember-template-lint "^5.11.2"
-    eslint "^8.51.0"
-    eslint-plugin-decorator-position "^5.0.2"
-    eslint-plugin-discourse-ember latest
-    eslint-plugin-ember "^11.11.1"
-    eslint-plugin-simple-import-sort "^10.0.0"
-    eslint-plugin-sort-class-members "^1.19.0"
-    globals "^13.23.0"
-    hermes-parser "^0.17.0"
-    prettier "2.8.8"
-    prettier-plugin-ember-template-tag "^0.3.2"
-    to-fast-properties "^3.0.1"
-
 eslint-formatter-kakoune@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/eslint-formatter-kakoune/-/eslint-formatter-kakoune-1.0.0.tgz#a95cc4fe1fbc06b84e0f2397e83f5f0b68340125"
@@ -1867,13 +1850,6 @@ eslint-plugin-decorator-position@^5.0.2:
     "@ember-data/rfc395-data" "^0.0.4"
     ember-rfc176-data "^0.3.17"
     snake-case "^3.0.4"
-
-eslint-plugin-discourse-ember@latest:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-discourse-ember/-/eslint-plugin-discourse-ember-0.0.3.tgz#69e5876c2ece38ab3d6c4a05f0a20a7dc4c21e37"
-  integrity sha512-EFwWU4FlOSLBa4RolKZL8QD1eGOnvSkACLt4Big+o1ZUIpW7gGvfnJPtxkbaQ4XmhtZ5HetYt6862vVqhUMv9A==
-  dependencies:
-    requireindex "~1.1.0"
 
 eslint-plugin-ember@^11.11.1:
   version "11.11.1"
@@ -2485,18 +2461,6 @@ heimdalljs@^0.2.0, heimdalljs@^0.2.1, heimdalljs@^0.2.3, heimdalljs@^0.2.5, heim
   integrity sha512-o9bd30+5vLBvBtzCPwwGqpry2+n0Hi6H1+qwt6y+0kwRHGGF8TFIhJPmnuM0xO97zaKrDZMwO/V56fAnn8m/tA==
   dependencies:
     rsvp "~3.2.1"
-
-hermes-estree@0.17.0:
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/hermes-estree/-/hermes-estree-0.17.0.tgz#4b1b0d8131826178f0af79a317ceaca3723e9012"
-  integrity sha512-bW9+bMZqnro+0+l6dUqTJW0VaNUvs4HRHh/J7VotTGnMmhBFRIcJz6ZxrRE7xIXmK7S5bJE9qrEooSiig4N70g==
-
-hermes-parser@^0.17.0:
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/hermes-parser/-/hermes-parser-0.17.0.tgz#722bb8079b9081a0de4902b770d5d45dbeb380bd"
-  integrity sha512-2fmppmZheY1UU071EMKAzXfuUCiDXF3fmzKLuN1XmE3+njIFs3CAeKP88+FtNBUpS6pEMJv6lPXCaJGqGsrURQ==
-  dependencies:
-    hermes-estree "0.17.0"
 
 http-proxy-agent@^7.0.0:
   version "7.0.0"
@@ -3546,7 +3510,7 @@ prettier-plugin-ember-template-tag@^0.3.2:
     prettier "^2.8.3"
     ts-replace-all "^1.0.0"
 
-prettier@2.8.8, prettier@^2.0.4, prettier@^2.8.3, prettier@^2.8.8:
+prettier@^2.0.4, prettier@^2.8.3, prettier@^2.8.8:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
@@ -3704,11 +3668,6 @@ requireindex@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/requireindex/-/requireindex-1.2.0.tgz#3463cdb22ee151902635aa6c9535d4de9c2ef1ef"
   integrity sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==
-
-requireindex@~1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/requireindex/-/requireindex-1.1.0.tgz#e5404b81557ef75db6e49c5a72004893fe03e162"
-  integrity sha512-LBnkqsDE7BZKvqylbmn7lTIVdpx4K/QCduRATpO5R+wtPmky/a8pN1bO2D6wXppn1497AJF9mNjqAXr6bdl9jg==
 
 requizzle@^0.2.3:
   version "0.2.4"
@@ -4221,11 +4180,6 @@ to-fast-properties@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
   integrity sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==
-
-to-fast-properties@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-3.0.1.tgz#c7d507fdccc306c1e6782069db6b0e6fcc1a93f5"
-  integrity sha512-/wtNi1tW1F3nf0OL6AqVxGw9Tr1ET70InMhJuVxPwFdGqparF0nQ4UWGLf2DsoI2bFDtthlBnALncZpUzOnsUw==
 
 to-regex-range@^5.0.1:
   version "5.0.1"
