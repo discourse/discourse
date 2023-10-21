@@ -94,13 +94,35 @@ export function getWebauthnCredential(
     });
 }
 
-export async function getPasskeyCredential(challenge, errorCallback) {
+class WebauthnAbortService {
+  controller = undefined;
+
+  signal() {
+    if (this.controller) {
+      const abortError = new Error("Cancelling pending webauthn call");
+      abortError.name = "AbortError";
+      this.controller.abort(abortError);
+    }
+
+    this.controller = new AbortController();
+    return this.controller.signal;
+  }
+}
+
+// we need a singleton because only one webauthn ceremony is active at a time
+const WebauthnAbortHandler = new WebauthnAbortService();
+
+export async function getPasskeyCredential(
+  challenge,
+  errorCallback,
+  mediation = "optional"
+) {
   if (!isWebauthnSupported()) {
     return errorCallback(I18n.t("login.security_key_support_missing_error"));
   }
 
-  return navigator.credentials
-    .get({
+  try {
+    const credential = await navigator.credentials.get({
       publicKey: {
         challenge: stringToBuffer(challenge),
         // https://www.w3.org/TR/webauthn-2/#user-verification
@@ -109,22 +131,27 @@ export async function getPasskeyCredential(challenge, errorCallback) {
         // lib/discourse_webauthn/authentication_service.rb requires this flag too
         userVerification: "required",
       },
-    })
-    .then((credential) => {
-      return {
-        signature: bufferToBase64(credential.response.signature),
-        clientData: bufferToBase64(credential.response.clientDataJSON),
-        authenticatorData: bufferToBase64(
-          credential.response.authenticatorData
-        ),
-        credentialId: bufferToBase64(credential.rawId),
-        userHandle: bufferToBase64(credential.response.userHandle),
-      };
-    })
-    .catch((err) => {
-      if (err.name === "NotAllowedError") {
-        return errorCallback(I18n.t("login.security_key_not_allowed_error"));
-      }
-      errorCallback(err);
+      signal: WebauthnAbortHandler.signal(),
+      mediation,
     });
+
+    return {
+      signature: bufferToBase64(credential.response.signature),
+      clientData: bufferToBase64(credential.response.clientDataJSON),
+      authenticatorData: bufferToBase64(credential.response.authenticatorData),
+      credentialId: bufferToBase64(credential.rawId),
+      userHandle: bufferToBase64(credential.response.userHandle),
+    };
+  } catch (error) {
+    if (error.name === "NotAllowedError") {
+      return errorCallback(I18n.t("login.security_key_not_allowed_error"));
+    } else if (error.name === "AbortError") {
+      // no need to show an error, the previous ceremony is being cancelled
+      // this can happen when switching between conditional method (username input autofill)
+      // and the optional method (login button)
+      return null;
+    } else {
+      return errorCallback(error);
+    }
+  }
 }
