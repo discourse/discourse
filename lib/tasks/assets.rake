@@ -1,21 +1,22 @@
 # frozen_string_literal: true
 
-task "assets:precompile:before": "environment" do
-  require "uglifier"
-  require "open3"
-
+task "assets:precompile:prereqs" do
   unless %w[profile production].include? Rails.env
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
   end
+end
 
+task "assets:precompile:build" do
   if ENV["EMBER_CLI_COMPILE_DONE"] != "1"
-    compile_command = "yarn --cwd app/assets/javascripts/discourse run ember build"
+    compile_command =
+      "yarn --cwd app/assets/javascripts/discourse run ember build"
 
     heap_size_limit = check_node_heap_size_limit
 
     if heap_size_limit < 1024
       STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 1024MB. Setting --max-old-space-size=1024."
-      compile_command = "NODE_OPTIONS='--max-old-space-size=1024' #{compile_command}"
+      compile_command =
+        "NODE_OPTIONS='--max-old-space-size=1024' #{compile_command}"
     end
 
     if heap_size_limit < 2048
@@ -23,7 +24,9 @@ task "assets:precompile:before": "environment" do
       compile_command = "JOBS=0 #{compile_command}"
     end
 
-    compile_command = "EMBER_ENV=production #{compile_command}" if ENV["EMBER_ENV"].nil?
+    compile_command = "EMBER_ENV=production #{compile_command}" if ENV[
+      "EMBER_ENV"
+    ].nil?
 
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
 
@@ -34,6 +37,15 @@ task "assets:precompile:before": "environment" do
       system compile_command, exception: true
     end
   end
+end
+
+task "assets:precompile:before": %w[
+       environment
+       assets:precompile:prereqs
+       assets:precompile:build
+     ] do
+  require "uglifier"
+  require "open3"
 
   # Ensure we ALWAYS do a clean build
   # We use many .erbs that get out of date quickly, especially with plugins
@@ -62,7 +74,8 @@ task "assets:precompile:before": "environment" do
   require "digest/sha1"
 
   # Add ember cli chunks
-  chunk_files = EmberCli.script_chunks.values.flatten.map { |name| "#{name}.js" }
+  chunk_files =
+    EmberCli.script_chunks.values.flatten.map { |name| "#{name}.js" }
   map_files = chunk_files.map { |file| EmberCli.parse_source_map_path(file) }
   Rails.configuration.assets.precompile.push(*chunk_files, *map_files)
 end
@@ -94,7 +107,9 @@ task "assets:precompile:css" => "environment" do
           Stylesheet::Manager.recalculate_fs_asset_cachebuster!
           Stylesheet::Manager.precompile_css if db == "default"
           Stylesheet::Manager.precompile_theme_css
-        rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError, NoMethodError => e
+        rescue PG::UndefinedColumn,
+               ActiveModel::MissingAttributeError,
+               NoMethodError => e
           STDERR.puts "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
           STDERR.puts "Skipping precompilation of CSS cause schema is old, you are precompiling prior to running migrations."
         end
@@ -120,7 +135,11 @@ end
 
 def check_node_heap_size_limit
   output, status =
-    Open3.capture2("node", "-e", "console.log(v8.getHeapStatistics().heap_size_limit/1024/1024)")
+    Open3.capture2(
+      "node",
+      "-e",
+      "console.log(v8.getHeapStatistics().heap_size_limit/1024/1024)"
+    )
   raise "Failed to fetch node memory limit" if status != 0
   output.to_f
 end
@@ -171,12 +190,15 @@ def compress_ruby(from, to)
       comments: :none,
       source_map: {
         filename: File.basename(from),
-        output_filename: File.basename(to),
-      },
+        output_filename: File.basename(to)
+      }
     ).compile_with_map(data)
   dest = "#{assets_path}/#{to}"
 
-  File.write(dest, uglified << "\n//# sourceMappingURL=#{cdn_path "/assets/#{to}.map"}")
+  File.write(
+    dest,
+    uglified << "\n//# sourceMappingURL=#{cdn_path "/assets/#{to}.map"}"
+  )
   File.write(dest + ".map", map)
 
   GC.start
@@ -185,7 +207,9 @@ end
 def gzip(path)
   STDERR.puts "gzip -f -c -9 #{path} > #{path}.gz"
   STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`.strip
-  raise "gzip compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
+  if $?.exitstatus != 0
+    raise "gzip compression failed: exit code #{$?.exitstatus}"
+  end
 end
 
 # different brotli versions use different parameters
@@ -197,7 +221,9 @@ end
 def brotli(path, max_compress)
   STDERR.puts brotli_command(path, max_compress)
   STDERR.puts `#{brotli_command(path, max_compress)}`
-  raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
+  if $?.exitstatus != 0
+    raise "brotli compression failed: exit code #{$?.exitstatus}"
+  end
   STDERR.puts `chmod +r #{path}.br`.strip
   raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
 end
@@ -214,11 +240,7 @@ def max_compress?(path, locales)
 end
 
 def compress(from, to)
-  if $node_compress
-    compress_node(from, to)
-  else
-    compress_ruby(from, to)
-  end
+  $node_compress ? compress_node(from, to) : compress_ruby(from, to)
 end
 
 def concurrent?
@@ -227,7 +249,9 @@ def concurrent?
     executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
     yield(
       Proc.new do |&block|
-        concurrent_compressors << Concurrent::Future.execute(executor: executor) { block.call }
+        concurrent_compressors << Concurrent::Future.execute(
+          executor: executor
+        ) { block.call }
       end
     )
     concurrent_compressors.each(&:wait!)
@@ -266,7 +290,14 @@ task "assets:precompile:compress_js": "environment" do
           .reject { |k, v| k =~ %r{/workbox-.*'/} }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
-            _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
+            _file =
+              (
+                if (d = File.dirname(file)) == "."
+                  "_#{file}"
+                else
+                  "#{d}/_#{File.basename(file)}"
+                end
+              )
             _path = "#{assets_path}/#{_file}"
             max_compress = max_compress?(info["logical_path"], locales)
             if File.exist?(_path)
@@ -299,7 +330,10 @@ task "assets:precompile:compress_js": "environment" do
 
     if GlobalSetting.fallback_assets_path.present?
       begin
-        FileUtils.cp_r("#{Rails.root}/public/assets/.", GlobalSetting.fallback_assets_path)
+        FileUtils.cp_r(
+          "#{Rails.root}/public/assets/.",
+          GlobalSetting.fallback_assets_path
+        )
       rescue => e
         STDERR.puts "Failed to backup assets to #{GlobalSetting.fallback_assets_path}"
         STDERR.puts e
