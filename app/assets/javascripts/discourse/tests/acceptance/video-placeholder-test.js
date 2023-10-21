@@ -26,11 +26,9 @@ acceptance("Video Placeholder Test", function () {
       .dom(postWithVideo)
       .hasStyle({ cursor: "auto" }, "The curser is set back to normal");
 
-    assert.equal(
-      overlay.innerHTML,
-      '<div class="spinner"></div>',
-      "has a loading spinner"
-    );
+    assert
+      .dom(".video-placeholder-overlay > div")
+      .hasClass("spinner", "has a loading spinner");
 
     assert.dom("video").exists("The video element appears");
 
