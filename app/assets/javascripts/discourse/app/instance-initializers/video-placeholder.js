@@ -12,6 +12,8 @@ export default {
         const wrapper = parentDiv.querySelector(".video-placeholder-wrapper");
         const overlay = wrapper.querySelector(".video-placeholder-overlay");
 
+        parentDiv.style.cursor = "";
+        parentDiv.removeEventListener("click", handleVideoPlaceholderClick);
         overlay.innerHTML = spinnerHTML;
 
         const videoHTML = `
