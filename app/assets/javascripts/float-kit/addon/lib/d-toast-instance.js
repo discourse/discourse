@@ -20,6 +20,8 @@ export default class DToastInstance {
   registerAutoClose = modifier((element) => {
     let innerHandler;
 
+    cancel(this.autoCloseHandler);
+
     this.autoCloseHandler = discourseLater(() => {
       element.classList.add(TRANSITION_CLASS);
 
@@ -52,5 +54,10 @@ export default class DToastInstance {
     }
 
     cancel(this.autoCloseHandler);
+  }
+
+  @action
+  resumeAutoClose(event) {
+    this.registerAutoClose(event.target);
   }
 }

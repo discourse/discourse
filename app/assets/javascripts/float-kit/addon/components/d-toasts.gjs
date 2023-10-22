@@ -7,21 +7,23 @@ export default class DToasts extends Component {
   @service toasts;
 
   <template>
-    <div class="fk-d-toasts">
+    <section class="fk-d-toasts">
       {{#each this.toasts.activeToasts as |toast|}}
-        <div
+        <output
+          role="status"
           role={{if toast.options.autoClose "status" "log"}}
           key={{toast.id}}
           class={{concatClass "fk-d-toast" toast.options.class}}
           {{(if toast.options.autoClose (modifier toast.registerAutoClose))}}
           {{on "mouseenter" toast.cancelAutoClose}}
+          {{on "mouseleave" toast.resumeAutoClose}}
         >
           <toast.options.component
             @data={{toast.options.data}}
             @close={{toast.close}}
           />
-        </div>
+        </output>
       {{/each}}
-    </div>
+    </section>
   </template>
 }
