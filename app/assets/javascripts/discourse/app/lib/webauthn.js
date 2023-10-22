@@ -94,6 +94,8 @@ export function getWebauthnCredential(
     });
 }
 
+// The webauthn API only supports one auth attempt at a time
+// We need this service to cancel the previous attempt when a new one is started
 class WebauthnAbortService {
   controller = undefined;
 
@@ -109,7 +111,8 @@ class WebauthnAbortService {
   }
 }
 
-// we need a singleton because only one webauthn ceremony is active at a time
+// Need to use a singleton here to reset the active webauthn ceremony
+// Inspired by the BaseWebAuthnAbortService in https://github.com/MasterKale/SimpleWebAuthn
 const WebauthnAbortHandler = new WebauthnAbortService();
 
 export async function getPasskeyCredential(
@@ -146,9 +149,9 @@ export async function getPasskeyCredential(
     if (error.name === "NotAllowedError") {
       return errorCallback(I18n.t("login.security_key_not_allowed_error"));
     } else if (error.name === "AbortError") {
-      // no need to show an error, the previous ceremony is being cancelled
-      // this can happen when switching between conditional method (username input autofill)
-      // and the optional method (login button)
+      // no need to show an error when the cancelling a pending ceremony
+      // this happens when switching from the conditional method (username input autofill)
+      // to the optional method (login button) or vice versa
       return null;
     } else {
       return errorCallback(error);
