@@ -7,7 +7,7 @@ task "assets:precompile:prereqs" do
 end
 
 task "assets:precompile:build" do
-  if ENV["EMBER_CLI_COMPILE_DONE"] != "1"
+  if ENV["SKIP_EMBER_CLI_COMPILE"] != "1"
     compile_command =
       "yarn --cwd app/assets/javascripts/discourse run ember build"
 
@@ -32,7 +32,7 @@ task "assets:precompile:build" do
 
     if only_assets_precompile_remaining
       # Using exec to free up Rails app memory during ember build
-      exec "#{compile_command} && EMBER_CLI_COMPILE_DONE=1 bin/rake assets:precompile"
+      exec "#{compile_command} && SKIP_EMBER_CLI_COMPILE=1 bin/rake assets:precompile"
     else
       system compile_command, exception: true
     end
