@@ -240,17 +240,22 @@ task "docker:test" do
         unless ENV["SKIP_PLUGINS"]
           if ENV["SINGLE_PLUGIN"]
             @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
+            if ENV["RUN_SYSTEM_TESTS"]
+              @good &&=
+                run_or_fail(
+                  "LOAD_PLUGINS=1 timeout --verbose 1600 bundle exec rspec plugins/#{ENV["SINGLE_PLUGIN"]}/spec/system".strip,
+                )
+            end
           else
             fail_fast = "RSPEC_FAILFAST=1" unless ENV["SKIP_FAILFAST"]
             task = ENV["USE_TURBO"] ? "plugin:turbo_spec" : "plugin:spec"
             @good &&= run_or_fail("#{fail_fast} bundle exec rake #{task}")
-          end
-
-          if ENV["RUN_SYSTEM_TESTS"]
-            @good &&=
-              run_or_fail(
-                "LOAD_PLUGINS=1 timeout --verbose 1600 bundle exec rspec plugins/*/spec/system".strip,
-              )
+            if ENV["RUN_SYSTEM_TESTS"]
+              @good &&=
+                run_or_fail(
+                  "LOAD_PLUGINS=1 timeout --verbose 1600 bundle exec rspec plugins/*/spec/system".strip,
+                )
+            end
           end
         end
       end
