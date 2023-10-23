@@ -7,6 +7,7 @@ import {
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
+import { addBeforeLoadMoreCallback } from "discourse/components/discovery-topics-list";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
@@ -1698,6 +1699,10 @@ class PluginApi {
 
   addFeaturedLinkMetaDecorator(decorator) {
     addFeaturedLinkMetaDecorator(decorator);
+  }
+
+  addBeforeLoadMoreCallback(fn) {
+    addBeforeLoadMoreCallback(fn);
   }
 
   /**
