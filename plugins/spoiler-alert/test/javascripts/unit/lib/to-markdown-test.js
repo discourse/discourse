@@ -2,7 +2,7 @@ import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import toMarkdown from "discourse/lib/to-markdown";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { initializeSpoiler } from "discourse/plugins/discourse-spoiler-alert/initializers/spoiler-alert";
+import { initializeSpoiler } from "discourse/plugins/spoiler-alert/initializers/spoiler-alert";
 
 discourseModule("Spoiler Alert | Unit | to-markdown", function (hooks) {
   hooks.beforeEach(function () {
