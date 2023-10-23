@@ -27,4 +27,13 @@ describe "Viewing user private messages", type: :system do
       expect(user_private_messages_page).to have_right_inbox_dropdown_value("miXeD_caSE_name")
     end
   end
+
+  describe "on subfolder setup" do
+    it "allows the user to view the default messages inbox" do
+      set_subfolder "/forum"
+
+      page.visit "/forum/u/#{user.username}/messages"
+      expect(user_private_messages_page).to have_right_inbox_dropdown_value("Inbox")
+    end
+  end
 end
