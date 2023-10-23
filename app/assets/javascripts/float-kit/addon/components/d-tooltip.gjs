@@ -49,7 +49,6 @@ export default class DTooltip extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <span
       class={{concatClass
         "fk-d-tooltip__trigger"

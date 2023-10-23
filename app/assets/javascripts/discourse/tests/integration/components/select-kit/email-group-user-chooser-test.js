@@ -128,7 +128,7 @@ module(
         })
       );
 
-      await render(hbs`<EmailGroupUserChooser @showUserStatus=true />`);
+      await render(hbs`<EmailGroupUserChooser @showUserStatus={{true}} />`);
       await this.subject.expand();
       await fillIn(".filter-input", "test-user");
 

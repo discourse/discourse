@@ -29,7 +29,7 @@ module("Integration | Component | ace-editor", function (hooks) {
 
   test("disabled editor", async function (assert) {
     await render(hbs`
-      <AceEditor @mode="sql" @content="SELECT * FROM users" @disabled=true />
+      <AceEditor @mode="sql" @content="SELECT * FROM users" @disabled={{true}} />
     `);
 
     assert.ok(exists(".ace_editor"), "it renders the ace editor");
