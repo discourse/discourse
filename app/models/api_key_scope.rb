@@ -126,7 +126,14 @@ class ApiKeyScope < ActiveRecord::Base
             params: %i[username],
           },
           update: {
-            actions: %w[users#update],
+            actions: %w[
+              users#update
+              users#badge_title
+              users#pick_avatar
+              users#select_avatar
+              users#feature_topic
+              users#clear_featured_topic
+            ],
             params: %i[username],
           },
           log_out: {

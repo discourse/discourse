@@ -12,7 +12,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    this.trustLevelOptions = [
+    this.set("trustLevelOptions", [
       {
         name: I18n.t("admin.groups.manage.membership.trust_levels_none"),
         value: 0,
@@ -21,7 +21,7 @@ export default Component.extend({
       { name: 2, value: 2 },
       { name: 3, value: 3 },
       { name: 4, value: 4 },
-    ];
+    ]);
 
     if (this.showAssociatedGroups) {
       this.loadAssociatedGroups();

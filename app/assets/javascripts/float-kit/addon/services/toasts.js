@@ -14,6 +14,7 @@ export default class Toasts extends Service {
    *
    * @param {Object} [options] - options passed to the toast component as `@toast` argument
    * @param {String} [options.duration] - The duration (ms) of the toast, will be closed after this time
+   * @param {Boolean} [options.autoClose=true] - When true, the toast will autoClose after the duration
    * @param {ComponentClass} [options.component] - A component to render, will use `DDefaultToast` if not provided
    * @param {String} [options.class] - A class added to the d-toast element
    * @param {Object} [options.data] - An object which will be passed as the `@data` argument to the component

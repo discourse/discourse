@@ -200,16 +200,7 @@
     .link-icon {
       grid-column: 2;
     }
-    &.mark-public-wrapper {
-      margin-top: 1em;
-      padding-bottom: 0;
-      &.-disabled label {
-        cursor: not-allowed;
-      }
-      label {
-        grid-column: 1 / -1;
-      }
-    }
+
     .input-group {
       margin: 0 0.5em;
       @include breakpoint(mobile-large) {
@@ -239,11 +230,32 @@
     }
   }
   .modal-footer {
-    display: flex;
-    justify-content: space-between;
-
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.5em;
+    @include breakpoint(mobile-extra-large) {
+      grid-template-columns: auto 1fr;
+      justify-items: left;
+      .mark-public-wrapper {
+        grid-row: 1;
+        grid-column: 1 / span 2;
+      }
+      .checkbox-label {
+        padding: 0 0 0.5em 0;
+      }
+    }
+    .reset-link,
     .delete {
-      margin-right: 0;
+      margin: 0;
+      justify-self: right;
+    }
+    .mark-public-wrapper {
+      &.-disabled label {
+        cursor: not-allowed;
+      }
+      .checkbox-label {
+        margin: 0;
+      }
     }
   }
   .select-kit.multi-select .multi-select-header .formatted-selection {

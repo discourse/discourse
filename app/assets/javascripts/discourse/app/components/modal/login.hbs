@@ -31,6 +31,8 @@
           @loginName={{this.loginName}}
           @loginNameChanged={{this.loginNameChanged}}
           @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
+          @canUsePasskeys={{this.canUsePasskeys}}
+          @passkeyLogin={{this.passkeyLogin}}
           @loginPassword={{this.loginPassword}}
           @secondFactorMethod={{this.secondFactorMethod}}
           @secondFactorToken={{this.secondFactorToken}}
@@ -67,7 +69,10 @@
         </div>
       {{/unless}}
       <div class="login-right-side">
-        <LoginButtons @externalLogin={{this.externalLogin}} />
+        <LoginButtons
+          @externalLogin={{this.externalLogin}}
+          @passkeyLogin={{this.passkeyLogin}}
+        />
       </div>
     {{/if}}
   </:body>

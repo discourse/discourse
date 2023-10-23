@@ -46,7 +46,6 @@ export default class DFloatBody extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <DFloatPortal
       @inline={{@inline}}
       @portalOutletElement={{@portalOutletElement}}

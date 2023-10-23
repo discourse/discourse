@@ -145,10 +145,10 @@ describe Chat::Notifier do
           Jobs.run_immediately!
           msg = build_cooked_msg(mention, user_1)
 
-          Chat::MessageUpdater.update(
+          Chat::UpdateMessage.call(
             guardian: user_1.guardian,
-            chat_message: msg,
-            new_content: "hello @all",
+            message_id: msg.id,
+            message: "hello @all",
           )
 
           described_class.new(msg, msg.created_at).notify_edit

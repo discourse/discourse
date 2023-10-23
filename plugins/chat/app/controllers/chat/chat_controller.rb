@@ -12,7 +12,7 @@ module Chat
     # these endpoints require a standalone find because they need to be
     # able to get deleted channels and recover them.
     before_action :find_chatable, only: %i[enable_chat disable_chat]
-    before_action :find_chat_message, only: %i[edit_message rebake message_link]
+    before_action :find_chat_message, only: %i[rebake message_link]
     before_action :set_channel_and_chatable_with_access_check,
                   except: %i[
                     respond
@@ -75,20 +75,6 @@ module Chat
       else
         render_json_error(chat_channel)
       end
-    end
-
-    def edit_message
-      chat_message_updater =
-        Chat::MessageUpdater.update(
-          guardian: guardian,
-          chat_message: @message,
-          new_content: params[:new_message],
-          upload_ids: params[:upload_ids] || [],
-        )
-
-      return render_json_error(chat_message_updater.error) if chat_message_updater.failed?
-
-      render json: success_json
     end
 
     def react

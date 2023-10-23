@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import { click, fillIn, render, settled } from "@ember/test-helpers";
+import { click, fillIn, focus, render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";

@@ -4,7 +4,7 @@ import { isRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
-import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
+import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
@@ -95,7 +95,8 @@ export function categoryLinkHTML(category, options) {
   return htmlSafe(categoryBadgeHTML(category, categoryOptions));
 }
 
-registerUnbound("category-link", categoryLinkHTML);
+export default categoryLinkHTML;
+registerRawHelper("category-link", categoryLinkHTML);
 
 function buildTopicCount(count) {
   return `<span class="topic-count" aria-label="${I18n.t(

@@ -2,6 +2,20 @@
 
 module Chat
   module ServiceMatchers
+    class RunServiceSuccessfully
+      attr_reader :result
+
+      def matches?(result)
+        @result = result
+        result.success?
+      end
+
+      def failure_message
+        inspector = StepsInspector.new(result)
+        "Expected to run the service sucessfully but failed:\n\n#{inspector.inspect}\n\n#{inspector.error}"
+      end
+    end
+
     class FailStep
       attr_reader :name, :result
 
@@ -122,6 +136,10 @@ module Chat
 
     def fail_a_step(name = "model")
       FailStep.new(name)
+    end
+
+    def run_service_successfully
+      RunServiceSuccessfully.new
     end
 
     def inspect_steps(result)
