@@ -62,7 +62,7 @@ export default class DFloatBody extends Component {
         aria-expanded={{if @instance.expanded "true" "false"}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
-        {{(if @trapTab (modifier TrapTab))}}
+        {{(if @trapTab (modifier TrapTab autofocus=false))}}
         {{(if
           this.supportsCloseOnClickOutside
           (modifier FloatKitCloseOnClickOutside this.trigger @instance.close)

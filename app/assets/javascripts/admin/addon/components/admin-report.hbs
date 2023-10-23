@@ -24,24 +24,27 @@
                   </a>
 
                   {{#if this.model.description}}
-                    {{#if this.model.description_link}}
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href={{this.model.description_link}}
-                        class="info"
-                        data-tooltip={{this.model.description}}
-                      >
+                    <DTooltip
+                      @interactive={{this.model.description_link.length}}
+                    >
+                      <:trigger>
                         {{d-icon "question-circle"}}
-                      </a>
-                    {{else}}
-                      <span
-                        class="info"
-                        data-tooltip={{this.model.description}}
-                      >
-                        {{d-icon "question-circle"}}
-                      </span>
-                    {{/if}}
+                      </:trigger>
+                      <:content>
+                        {{#if this.model.description_link}}
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={{this.model.description_link}}
+                            class="info"
+                          >
+                            {{this.model.description}}
+                          </a>
+                        {{else}}
+                          <span>{{this.model.description}}</span>
+                        {{/if}}
+                      </:content>
+                    </DTooltip>
                   {{/if}}
                 </li>
               {{/unless}}
