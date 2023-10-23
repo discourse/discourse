@@ -96,6 +96,8 @@ class Plugin::Metadata
         poll
         styleguide
         checklist
+        footnote
+        spoiler-alert
       ],
     )
 
