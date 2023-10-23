@@ -14,10 +14,14 @@ class DiscourseEvent
 
   def self.trigger(event_name, *args, **kwargs)
     events[event_name].each { |event| event.call(*args, **kwargs) }
-    filtered_events[[event_name, args, kwargs]].each { |event| event.call(*args, **kwargs) }
+    lookup_args = []
+    args.each do |arg|
+      lookup_args << arg
+      filtered_events[[event_name, lookup_args]].each { |event| event.call(*args, **kwargs) }
+    end
   end
 
-  def self.on(event_name, *args, **kwargs, &block)
+  def self.on(event_name, *args, &block)
     case event_name
     when :user_badge_removed
       Discourse.deprecate(
@@ -37,8 +41,8 @@ class DiscourseEvent
       # ignore
     end
 
-    if args.present? || kwargs.present?
-      filtered_events[[event_name, args, kwargs]] << block
+    if args.present?
+      filtered_events[[event_name, args]] << block
     else
       events[event_name] << block
     end
