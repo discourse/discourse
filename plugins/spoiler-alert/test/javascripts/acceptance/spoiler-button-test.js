@@ -1,6 +1,5 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import {
   acceptance,
   exists,
@@ -12,9 +11,6 @@ import I18n from "discourse-i18n";
 acceptance("Spoiler Button", function (needs) {
   needs.user();
   needs.settings({ spoiler_enabled: true });
-  needs.hooks.beforeEach(() => {
-    clearPopupMenuOptionsCallback();
-  });
 
   test("spoiler button", async (assert) => {
     const popUpMenu = selectKit(".toolbar-popup-menu-options");
@@ -28,7 +24,7 @@ acceptance("Spoiler Button", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
     await popUpMenu.expand();
-    await popUpMenu.selectRowByValue("insertSpoiler");
+    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -54,7 +50,7 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionEnd = textarea.value.length;
 
     await popUpMenu.expand();
-    await popUpMenu.selectRowByValue("insertSpoiler");
+    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -79,7 +75,7 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionEnd = 21;
 
     await popUpMenu.expand();
-    await popUpMenu.selectRowByValue("insertSpoiler");
+    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -104,7 +100,7 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionEnd = 21;
 
     await popUpMenu.expand();
-    await popUpMenu.selectRowByValue("insertSpoiler");
+    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -130,7 +126,7 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionEnd = 22;
 
     await popUpMenu.expand();
-    await popUpMenu.selectRowByValue("insertSpoiler");
+    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
