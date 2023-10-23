@@ -5,10 +5,14 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import { isWebauthnSupported } from "discourse/lib/webauthn";
+import {
+  getPasskeyCredential,
+  isWebauthnSupported,
+} from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
@@ -107,6 +111,34 @@ export default class Login extends Component {
     return (
       this.args.model.canSignUp && !this.loggingIn && !this.showSecondFactor
     );
+  }
+
+  @action
+  async passkeyLogin(mediation = "optional") {
+    try {
+      const response = await ajax("/session/passkey/challenge.json");
+
+      const publicKeyCredential = await getPasskeyCredential(
+        response.challenge,
+        (errorMessage) => this.dialog.alert(errorMessage),
+        mediation
+      );
+
+      if (publicKeyCredential) {
+        const authResult = await ajax("/session/passkey/auth.json", {
+          type: "POST",
+          data: { publicKeyCredential },
+        });
+
+        if (authResult && !authResult.error) {
+          window.location.reload();
+        } else {
+          this.dialog.alert(authResult.error);
+        }
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   @action

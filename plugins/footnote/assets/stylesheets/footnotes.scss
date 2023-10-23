@@ -1,0 +1,106 @@
+.inline-footnotes {
+  a.expand-footnote {
+    user-select: none;
+    padding: 0px 0.5em;
+    margin: 0 0 0 0.25em;
+    color: var(--primary-low-mid-or-secondary-high);
+    background: var(--primary-low);
+    border-radius: 3px;
+    min-height: 20px;
+    display: inline-flex;
+    align-items: center;
+
+    &:hover {
+      background: var(--primary-medium);
+      color: var(--secondary);
+    }
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
+  // This is hack to work with lazy-loading, we will trick the browser
+  // to believe the image is in the DOM and can be loaded
+  .footnotes-list,
+  .footnotes-sep {
+    position: absolute;
+    // the left/right positioning prevents overflow issues
+    // with long words causing overflow on small screens
+    left: 0;
+    right: 0;
+  }
+
+  .footnotes-sep,
+  .footnotes-list,
+  .footnote-ref {
+    display: none;
+  }
+}
+
+#footnote-tooltip {
+  background-color: var(--primary-low);
+  color: var(--primary);
+  padding: 0.5em;
+  font-size: var(--font-down-1);
+  border-radius: 3px;
+  display: none;
+  z-index: z("tooltip");
+  max-width: 400px;
+  overflow-wrap: break-word;
+
+  .footnote-tooltip-content {
+    overflow: hidden;
+
+    .footnote-backref {
+      display: none;
+    }
+
+    img {
+      object-fit: cover;
+      max-width: 385px;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+#footnote-tooltip[data-show] {
+  display: block;
+}
+
+#arrow,
+#arrow::before {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: inherit;
+}
+
+#arrow {
+  visibility: hidden;
+}
+
+#arrow::before {
+  visibility: visible;
+  content: "";
+  transform: rotate(45deg);
+}
+
+#footnote-tooltip[data-popper-placement^="top"] > #arrow {
+  bottom: -4px;
+}
+
+#footnote-tooltip[data-popper-placement^="bottom"] > #arrow {
+  top: -4px;
+}
+
+#footnote-tooltip[data-popper-placement^="left"] > #arrow {
+  right: -4px;
+}
+
+#footnote-tooltip[data-popper-placement^="right"] > #arrow {
+  left: -4px;
+}

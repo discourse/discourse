@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "discourse-common": "1.0.0",
-    "ember-auto-import": "^2.6.3",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-template-imports": "^4.0.0"
@@ -44,7 +43,7 @@
     "@types/ember__template": "^4.0.3",
     "@types/ember__test": "^4.0.4",
     "@types/ember__utils": "^4.0.4",
-    "@types/jquery": "^3.5.24",
+    "@types/jquery": "^3.5.25",
     "@types/qunit": "^2.19.7",
     "@types/rsvp": "^4.0.6",
     "broccoli-asset-rev": "^3.0.0",

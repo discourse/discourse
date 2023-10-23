@@ -157,7 +157,6 @@ export default class ChatChannelRow extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <LinkTo
       @route="chat.channel"
       @models={{@channel.routeModels}}

@@ -493,7 +493,6 @@ export default class ChatMessage extends Component {
 
   <template>
     {{! template-lint-disable no-invalid-interactive }}
-    {{! template-lint-disable modifier-name-case }}
     {{#if this.shouldRender}}
       {{#if (eq @context "channel")}}
         <ChatMessageSeparatorDate

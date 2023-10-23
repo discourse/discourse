@@ -11,6 +11,7 @@ import and from "truth-helpers/helpers/and";
 
 export default class DTooltip extends Component {
   @service tooltip;
+  @service internalTooltip;
 
   @tracked tooltipInstance = null;
 
@@ -19,8 +20,9 @@ export default class DTooltip extends Component {
       ...this.args,
       ...{
         listeners: true,
-        beforeTrigger: () => {
-          this.tooltip.close();
+        beforeTrigger: (instance) => {
+          this.internalTooltip.activeTooltip?.close?.();
+          this.internalTooltip.activeTooltip = instance;
         },
       },
     };
@@ -49,7 +51,6 @@ export default class DTooltip extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <span
       class={{concatClass
         "fk-d-tooltip__trigger"

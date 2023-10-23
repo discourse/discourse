@@ -19,7 +19,7 @@ export default {
 
     if (siteSettings.spoiler_enabled) {
       const applySpoiler = requirejs(
-        "discourse/plugins/discourse-spoiler-alert/lib/apply-spoiler"
+        "discourse/plugins/spoiler-alert/lib/apply-spoiler"
       ).default;
       api.decorateChatMessage(
         (element) => {
