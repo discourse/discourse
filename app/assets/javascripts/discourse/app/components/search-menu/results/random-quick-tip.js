@@ -47,6 +47,10 @@ export function resetQuickSearchRandomTips() {
   QUICK_TIPS = [].concat(DEFAULT_QUICK_TIPS);
 }
 
+export function removeDefaultQuickSearchRandomTips() {
+  QUICK_TIPS = QUICK_TIPS.filter((tip) => !DEFAULT_QUICK_TIPS.includes(tip));
+}
+
 resetQuickSearchRandomTips();
 
 export default class RandomQuickTip extends Component {

@@ -151,7 +151,7 @@ export default class SearchMenu extends Component {
   clearSearch(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.search.activeGlobalSearchTerm = "";
+    this.search.updateActiveGlobalTerm("");
     focusSearchInput();
     this.triggerSearch();
   }
@@ -162,7 +162,7 @@ export default class SearchMenu extends Component {
     if (opts.setTopicContext) {
       this.search.inTopicContext = true;
     }
-    this.search.activeGlobalSearchTerm = term;
+    this.search.updateActiveGlobalTerm(term);
     this.triggerSearch();
   }
 

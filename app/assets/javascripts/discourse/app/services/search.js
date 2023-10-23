@@ -21,6 +21,14 @@ export default class Search extends Service {
     return this.searchContext?.type || null;
   }
 
+  updateActiveGlobalTerm(term) {
+    this.activeGlobalSearchTerm = term;
+
+    // This appEvent allows themes/plugins to listen for search term changes without relying on
+    // an observer.
+    this.appEvents.trigger("search:term-updated", { term });
+  }
+
   // The need to navigate with the keyboard creates a lot shared logic
   // between multiple components
   //
