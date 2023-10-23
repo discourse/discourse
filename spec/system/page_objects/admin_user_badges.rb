@@ -8,8 +8,11 @@ module PageObjects
         self
       end
 
+      def user_badges_table
+        page.find(:table, id: "user-badges", visible: true)
+      end
       def find_badge_row_by_granter(granter)
-        page.find(:table_row, { "Granted By" => "#{granter.username}" })
+        user_badges_table.find(:table_row, { "Granted By" => "#{granter.username}" })
       end
     end
   end

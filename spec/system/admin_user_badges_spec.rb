@@ -13,9 +13,9 @@ describe "Admin User Badges Page", type: :system do
   it "displays badge granter and links to their profile" do
     BadgeGranter.grant(badge, user, granted_by: granter)
     badge_row = user_badges_page.visit_page(user).find_badge_row_by_granter(granter)
-    expect(badge_row.has_css?("[data-badge-name='#{badge.name}']")).to be true
+    expect(badge_row).to have_css("[data-badge-name='#{badge.name}']")
 
-    badge_row.find(:link, text: "#{granter.username}").click
+    badge_row.click_link(granter.username)
     expect(page).to have_current_path "/admin/users/#{granter.id}/#{granter.username}"
   end
 end

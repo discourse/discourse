@@ -62,17 +62,14 @@ export default class AdminUserBadgesController extends Controller {
 
       expanded.push(result);
     });
+    expanded.forEach((badgeGroup) => {
+      const user = badgeGroup.granted_by;
+      if (user) {
+        badgeGroup.granted_by = AdminUser.create(user);
+      }
+    });
 
-    return expanded
-      .map((badgeGroup) => {
-        const user = badgeGroup.granted_by;
-        if (user) {
-          badgeGroup.granted_by = AdminUser.create(user);
-        }
-        return badgeGroup;
-      })
-      .sortBy("granted_at")
-      .reverse();
+    return expanded.sortBy("granted_at").reverse();
   }
   @action
   expandGroup(userBadge) {
