@@ -42,6 +42,7 @@
 !/plugins/chat/
 !/plugins/poll/
 !/plugins/styleguide
+!/plugins/spoiler-alert/
 !/plugins/checklist/
 !/plugins/footnote/
 /plugins/*/auto_generated/
