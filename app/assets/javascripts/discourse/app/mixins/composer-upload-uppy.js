@@ -636,7 +636,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       );
       this.mobileUploadButton?.addEventListener(
         "click",
-        this.mobileUploadButtonEventListener,
+        this._mobileUploadButtonEventListener,
         false
       );
     }
@@ -650,7 +650,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   _unbindMobileUploadButton() {
     this.mobileUploadButton?.removeEventListener(
       "click",
-      this.mobileUploadButtonEventListener
+      this._mobileUploadButtonEventListener
     );
   },
 
