@@ -19,7 +19,7 @@
         @searchTermChanged={{@searchTermChanged}}
       />
     {{else}}
-      {{#if (and (not @searchTopics) (not @inPMInboxContext)) }}
+      {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
         {{! render the first couple suggestions before a search has been performed}}
         <SearchMenu::Results::InitialOptions
           @closeSearchMenu={{@closeSearchMenu}}
@@ -50,7 +50,13 @@
           @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
         />
-      {{else if (and (not @inPMInboxContext) this.resultsTypesWithComponent)}}
+      {{else if
+        (and
+          (not @inPMInboxContext)
+          (not @searchTopics)
+          this.resultTypesWithComponent
+        )
+      }}
         <SearchMenu::Results::Types
           @resultTypes={{this.resultTypesWithComponent}}
           @closeSearchMenu={{@closeSearchMenu}}
@@ -58,13 +64,13 @@
         />
       {{/if}}
     {{/if}}
-      <PluginOutlet
-        @name="search-menu-results-bottom"
-        @outletArgs={{hash
-          inTopicContext=this.search.inTopicContext
-          onLinkClicked=@searchTermChanged
-          searchTopics=@searchTopics
-        }}
-      />
+    <PluginOutlet
+      @name="search-menu-results-bottom"
+      @outletArgs={{hash
+        inTopicContext=this.search.inTopicContext
+        onLinkClicked=@searchTermChanged
+        searchTopics=@searchTopics
+      }}
+    />
   </div>
 {{/if}}
