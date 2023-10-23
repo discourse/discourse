@@ -3,7 +3,7 @@ import {
   addBlockDecorateCallback,
   addTagDecorateCallback,
 } from "discourse/lib/to-markdown";
-import applySpoiler from "discourse/plugins/discourse-spoiler-alert/lib/apply-spoiler";
+import applySpoiler from "discourse/plugins/spoiler-alert/lib/apply-spoiler";
 
 function spoil(element) {
   element.querySelectorAll(".spoiler").forEach((spoiler) => {
