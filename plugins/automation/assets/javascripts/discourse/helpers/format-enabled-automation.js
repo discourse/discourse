@@ -1,8 +1,7 @@
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { registerUnbound } from "discourse-common/lib/helpers";
 import { htmlSafe } from "@ember/template";
 
-registerUnbound("format-enabled-automation", function (enabled, trigger) {
+export default function formatEnabledAutomation(enabled, trigger) {
   if (enabled && trigger.id) {
     return htmlSafe(
       iconHTML("check", {
@@ -18,4 +17,4 @@ registerUnbound("format-enabled-automation", function (enabled, trigger) {
       })
     );
   }
-});
+}
