@@ -169,7 +169,7 @@ class ThemeSettingsManager
   class Enum < self
     def value
       val = super
-      match = choices.find { |choice| choice == val || choice.to_s == val }
+      match = choices&.find { |choice| choice == val || choice.to_s == val }
       match || val
     end
 
