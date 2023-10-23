@@ -89,4 +89,38 @@ RSpec.describe DiscourseEvent do
       DiscourseEvent.off(:acid_face, &handler)
     end
   end
+
+  describe("#filtered_events") do
+    it "allows filtering events on kwargs" do
+      begin
+        handler =
+          Proc.new do |name:, message:|
+            expect(name).to eq("Supervillain")
+            expect(message).to eq("Two Face")
+          end
+
+        DiscourseEvent.on(:acid_face, name: "Supervillain", &handler)
+        DiscourseEvent.trigger(:acid_face, name: "Supervillain", message: "Two Face")
+        DiscourseEvent.trigger(:acid_face, name: "Supervillain 2", message: "Three Face")
+      ensure
+        DiscourseEvent.off(:acid_face, &handler)
+      end
+    end
+
+    it "allows filtering events on args" do
+      begin
+        handler =
+          Proc.new do |name, message|
+            expect(name).to eq("Supervillain")
+            expect(message).to eq("Two Face")
+          end
+
+        DiscourseEvent.on(:acid_face, "Supervillain", &handler)
+        DiscourseEvent.trigger(:acid_face, "Supervillain", "Two Face")
+        DiscourseEvent.trigger(:acid_face, "Hero", "Not Two Face")
+      ensure
+        DiscourseEvent.off(:acid_face, &handler)
+      end
+    end
+  end
 end

@@ -5,14 +5,19 @@
 class DiscourseEvent
   # Defaults to a hash where default values are empty sets.
   def self.events
-    @events ||= Hash.new { |hash, key| hash[key] = Set.new }
+    @events ||= Hash.new { |h, k| h[k] = Set.new }
+  end
+
+  def self.filtered_events
+    @filtered_events ||= Hash.new { |h, k| h[k] = Set.new }
   end
 
   def self.trigger(event_name, *args, **kwargs)
     events[event_name].each { |event| event.call(*args, **kwargs) }
+    filtered_events[[event_name, args, kwargs]].each { |event| event.call(*args, **kwargs) }
   end
 
-  def self.on(event_name, &block)
+  def self.on(event_name, *args, **kwargs, &block)
     case event_name
     when :user_badge_removed
       Discourse.deprecate(
@@ -32,15 +37,21 @@ class DiscourseEvent
       # ignore
     end
 
-    events[event_name] << block
+    if args.present? || kwargs.present?
+      filtered_events[[event_name, args, kwargs]] << block
+    else
+      events[event_name] << block
+    end
   end
 
   def self.off(event_name, &block)
     raise ArgumentError.new "DiscourseEvent.off must reference a block" if block.nil?
     events[event_name].delete(block)
+    filtered_events.each { |k, v| v.delete(block) if k[0] == event_name }
   end
 
   def self.all_off(event_name)
     events.delete(event_name)
+    filtered_events.delete_if { |k, v| k[0] == event_name }
   end
 end
