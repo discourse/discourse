@@ -24,7 +24,7 @@ acceptance("Video Placeholder Test", function () {
 
     assert
       .dom(postWithVideo)
-      .hasStyle({ cursor: "auto" }, "The curser is set back to normal");
+      .hasStyle({ cursor: "auto" }, "The cursor is set back to normal");
 
     assert
       .dom(".video-placeholder-overlay > div")
