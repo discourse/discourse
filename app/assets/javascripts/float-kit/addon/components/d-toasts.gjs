@@ -10,7 +10,6 @@ export default class DToasts extends Component {
     <section class="fk-d-toasts">
       {{#each this.toasts.activeToasts as |toast|}}
         <output
-          role="status"
           role={{if toast.options.autoClose "status" "log"}}
           key={{toast.id}}
           class={{concatClass "fk-d-toast" toast.options.class}}
