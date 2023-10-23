@@ -29,9 +29,9 @@ task "assets:precompile:build" do
 
     # Using exec to free up Rails app memory during ember build
     if only_ember_precompile_build_remaining
-      exec "#{compile_command}
+      exec "#{compile_command}"
     elsif only_assets_precompile_remaining
-      exec " #{compile_command} && SKIP_EMBER_CLI_COMPILE=1 bin/rake assets:precompile"
+      exec "#{compile_command} && SKIP_EMBER_CLI_COMPILE=1 bin/rake assets:precompile"
     else
       system compile_command, exception: true
     end
