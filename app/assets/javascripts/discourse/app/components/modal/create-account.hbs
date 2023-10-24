@@ -66,9 +66,9 @@
 
             <div class="input-group create-account__username">
               <Input
-                @value={{this.accountUsername}}
+                @value={{this.model.accountUsername}}
                 disabled={{this.usernameDisabled}}
-                class={{value-entered this.accountUsername}}
+                class={{value-entered this.model.accountUsername}}
                 id="new-account-username"
                 name="username"
                 maxlength={{this.maxUsernameLength}}
@@ -123,7 +123,7 @@
               @name="create-account-before-password"
               @outletArgs={{hash
                 accountName=this.model.accountName
-                accountUsername=this.accountUsername
+                accountUsername=this.model.accountUsername
                 accountPassword=this.accountPassword
                 userFields=this.userFields
                 authOptions=this.authOptions
@@ -206,7 +206,7 @@
               @name="create-account-after-password"
               @outletArgs={{hash
                 accountName=this.model.accountName
-                accountUsername=this.accountUsername
+                accountUsername=this.model.accountUsername
                 accountPassword=this.accountPassword
                 userFields=this.userFields
               }}
@@ -234,7 +234,7 @@
               @name="create-account-after-user-fields"
               @outletArgs={{hash
                 accountName=this.model.accountName
-                accountUsername=this.accountUsername
+                accountUsername=this.model.accountUsername
                 accountPassword=this.accountPassword
                 userFields=this.userFields
               }}
