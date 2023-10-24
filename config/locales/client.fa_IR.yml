@@ -1791,10 +1791,6 @@ fa_IR:
       enter: "وارد شدن "
     conditional_loading_section:
       loading: در حال بارگیری…
-    category_row:
-      plus_subcategories_title:
-        one: "%{name} و یک زیرشاخه"
-        other: "%{name} و %{count} زیر‌شاخه"
     select_kit:
       delete_item: "حذف %{name}"
       filter_by: "فیلتر توسط: %{name}"

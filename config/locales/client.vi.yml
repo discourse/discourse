@@ -1186,8 +1186,6 @@ vi:
           save: "Lưu"
           name_required_error: "Bạn phải cung cấp tên cho khóa bảo mật của mình."
       passkeys:
-        name:
-          icloud_keychain: "Chuỗi khóa iCloud"
         save: "Lưu lại"
         added_prefix: "Đã thêm"
         last_used_prefix: "Được sử dụng lần cuối"
@@ -1778,10 +1776,6 @@ vi:
     category_row:
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
-      plus_subcategories_title:
-        other: "%{name} và %{count} danh mục phụ"
-      plus_subcategories:
-        other: "+ %{count} danh mục phụ"
     select_kit:
       delete_item: "Xoá %{name}"
       filter_by: "Lọc theo: %{name}"

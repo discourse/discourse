@@ -1223,8 +1223,6 @@ ca:
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
     content_security_policy_collect_reports: "Habilita la recol·lecció de reports de violació de CSP en /csp_reports"
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
-    top_menu: "Determineu quins elements apareixen en la navegació de la pàgina principal i en quin ordre. Per exemple, latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Determineu quins elements apareixen en el menú de publicacions i en qui ordre. Exemple: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Elements del menú que s'oculten per defecte en el menú de publicacions llevat que es faci clic en els tres punts d'expansió."
     share_links: "Determina quins elements apareixen en el diàleg de compartir i en qui ordre."
     site_contact_username: "Nom d'usuari vàlid de l'equip responsable des del qual s'envien tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
