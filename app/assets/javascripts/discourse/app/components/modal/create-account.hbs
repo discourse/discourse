@@ -1,8 +1,9 @@
-<CreateAccount
+<DModal @title="TODO" @closeModal={{@closeModal}}>
+  {{!-- <CreateAccount
   @email={{this.accountEmail}}
   @disabled={{this.submitDisabled}}
   @action={{action "createAccount"}}
->
+  > --}}
   {{#unless this.complete}}
     <span>
       <PluginOutlet
@@ -287,4 +288,5 @@
       </div>
     </DModalBody>
   {{/unless}}
-</CreateAccount>
+  {{! </CreateAccount> }}
+</DModal>

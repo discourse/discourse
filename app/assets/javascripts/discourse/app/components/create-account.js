@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import cookie from "discourse/lib/cookie";
 import { bind } from "discourse-common/utils/decorators";
 
+// TODO: restore in the create-account component
 export default Component.extend({
   classNames: ["create-account-body"],
 

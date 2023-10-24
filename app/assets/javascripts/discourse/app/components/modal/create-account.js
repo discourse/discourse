@@ -1,5 +1,5 @@
 import { A } from "@ember/array";
-import Controller from "@ember/controller";
+import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
@@ -13,7 +13,6 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
@@ -27,8 +26,7 @@ import discourseComputed, {
 } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Controller.extend(
-  ModalFunctionality,
+export default Component.extend(
   PasswordValidation,
   UsernameValidation,
   NameValidation,
