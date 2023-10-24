@@ -31,7 +31,7 @@ acceptance("Create Account - external auth", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists("#discourse-modal div.create-account-body"),
+      exists(".d-modal .create-account"),
       "it shows the registration modal"
     );
 
@@ -48,7 +48,7 @@ acceptance("Create Account - external auth", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists("#discourse-modal div.create-account-body"),
+      exists(".d-modal .create-account"),
       "it shows the registration modal"
     );
 
@@ -73,7 +73,7 @@ acceptance("Create account - with associate link", function (needs) {
     await visit("/");
 
     assert.ok(
-      exists("#discourse-modal div.create-account-body"),
+      exists(".d-modal .create-account"),
       "it shows the registration modal"
     );
     assert.ok(exists("#new-account-username"), "it shows the fields");

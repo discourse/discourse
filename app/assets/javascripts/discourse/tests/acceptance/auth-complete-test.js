@@ -30,7 +30,7 @@ acceptance("Auth Complete", function (needs) {
     );
 
     assert.ok(
-      exists("#discourse-modal div.create-account-body"),
+      exists(".d-modal .create-account"),
       "it shows the registration modal"
     );
   });
@@ -46,7 +46,7 @@ acceptance("Auth Complete", function (needs) {
     );
 
     assert.ok(
-      exists("#discourse-modal div.create-account-body"),
+      exists(".d-modal .create-account"),
       "it shows the registration modal"
     );
   });
@@ -70,7 +70,7 @@ acceptance("Auth Complete", function (needs) {
     );
 
     assert.notOk(
-      exists("#discourse-modal div.create-account-body"),
+      exists(".d-modal .create-account"),
       "registration modal is not shown"
     );
   });

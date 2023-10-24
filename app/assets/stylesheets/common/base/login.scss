@@ -291,10 +291,11 @@ body.invite-page {
   }
 
   @media screen and (min-width: 701px) {
-    .create-account-body {
+    .modal-body {
       max-width: 40em;
     }
   }
+
   .user-field {
     input[type="text"] {
       margin-bottom: 0;
