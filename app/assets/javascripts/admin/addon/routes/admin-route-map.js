@@ -165,7 +165,7 @@ export default function () {
           { path: "/search_logs", resetNamespace: true },
           function () {
             // eslint-disable-next-line ember/no-unnecessary-index-route
-            this.route("index");
+            this.route("index", { path: "/" });
             this.route("term");
           }
         );
