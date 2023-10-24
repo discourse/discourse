@@ -15,6 +15,7 @@ task "import:ensure_consistency" => :environment do
   insert_user_stats
   insert_user_visits
   insert_draft_sequences
+  insert_automatic_group_users
 
   update_user_stats
   update_posts
@@ -252,6 +253,40 @@ def insert_draft_sequences
             AND archetype = 'regular'
     ON CONFLICT DO NOTHING
   SQL
+end
+
+def insert_automatic_group_users
+  Group::AUTO_GROUPS.each do |group_name, group_id|
+    user_condition =
+      case group_name
+      when :everyone
+        "TRUE"
+      when :admins
+        "id > 0 AND admin AND NOT staged"
+      when :moderators
+        "id > 0 AND moderator AND NOT staged"
+      when :staff
+        "id > 0 AND (moderator OR admin) AND NOT staged"
+      when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        "id > 0 AND trust_level >= :min_trust_level AND NOT staged"
+      when :trust_level_0
+        "id > 0 AND NOT staged"
+      end
+
+    DB.exec(<<~SQL, group_id: group_id, min_trust_level: group_id - 10)
+      INSERT INTO group_users (group_id, user_id, created_at, updated_at)
+      SELECT :group_id, id, NOW(), NOW()
+        FROM users u
+       WHERE #{user_condition}
+         AND NOT EXISTS (
+                          SELECT 1
+                            FROM group_users gu
+                           WHERE gu.group_id = :group_id AND gu.user_id = u.id
+                        )
+    SQL
+
+    Group.reset_user_count(Group.find(group_id))
+  end
 end
 
 def update_user_stats
