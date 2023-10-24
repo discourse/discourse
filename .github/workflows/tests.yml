@@ -220,6 +220,10 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
+      - name: Ensure latest minio binary installed for System Tests
+        if: matrix.build_type == 'system'
+        run: bundle exec ruby script/install_minio_binaries.rb
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
