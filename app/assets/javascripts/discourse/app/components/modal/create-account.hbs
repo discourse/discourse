@@ -262,12 +262,10 @@
         /> }}
       {{/if}}
 
-      {{#if this.site.desktopView}}
-        {{#unless this.hasAuthOptions}}
-          <div class="create-account-login-buttons">
-            <LoginButtons @externalLogin={{action "externalLogin"}} />
-          </div>
-        {{/unless}}
+      {{#if showExternalLoginButtons}}
+        <div class="create-account-login-buttons">
+          <LoginButtons @externalLogin={{action "externalLogin"}} />
+        </div>
       {{/if}}
 
       {{#if this.skipConfirmation}}

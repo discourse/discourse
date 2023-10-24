@@ -52,6 +52,11 @@ export default Component.extend(
       return (hasAuthOptions || canCreateLocal) && !skipConfirmation;
     },
 
+    @discourseComputed("site.desktopView", "hasAuthOptions")
+    showExternalLoginButtons(desktopView, hasAuthOptions) {
+      return this.desktopView && !hasAuthOptions;
+    },
+
     @discourseComputed("formSubmitted")
     submitDisabled() {
       if (this.formSubmitted) {
