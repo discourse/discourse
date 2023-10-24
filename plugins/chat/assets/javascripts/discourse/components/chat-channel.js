@@ -526,7 +526,7 @@ export default class ChatChannel extends Component {
     this.pane.sending = true;
 
     const data = {
-      new_message: message.message,
+      message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 

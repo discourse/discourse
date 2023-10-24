@@ -37,16 +37,6 @@ module.exports = function (defaults) {
       // This forces the use of `fast-sourcemap-concat` which works in production.
       enabled: true,
     },
-    autoImport: {
-      // TODO: Ideally we shouldn't be relying on autoImport at all, but this tweak is still necessary for script/check_reproducible_assets.rb to pass
-      // Sounds like it's related to the `app.addonPostprocessTree` workaround we use below. Once that's removed, we should be
-      // able to remove this.
-      webpack: {
-        optimization: {
-          moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
-        },
-      },
-    },
     fingerprint: {
       // Handled by Rails asset pipeline
       enabled: false,
@@ -114,6 +104,9 @@ module.exports = function (defaults) {
   ]);
   app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
+  const terserPlugin = app.project.findAddonByName("ember-cli-terser");
+  const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
+
   let extraPublicTrees = [
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
@@ -140,13 +133,7 @@ module.exports = function (defaults) {
     testStylesheetTree,
   ];
 
-  // https://github.com/embroider-build/embroider/issues/1581
-  extraPublicTrees = [
-    app.addonPostprocessTree("all", mergeTrees(extraPublicTrees)),
-  ];
-
-  return compatBuild(app, Webpack, {
-    extraPublicTrees,
+  const appTree = compatBuild(app, Webpack, {
     packagerOptions: {
       webpackConfig: {
         devtool: "source-map",
@@ -177,4 +164,6 @@ module.exports = function (defaults) {
       },
     },
   });
+
+  return mergeTrees([appTree, applyTerser(mergeTrees(extraPublicTrees))]);
 };

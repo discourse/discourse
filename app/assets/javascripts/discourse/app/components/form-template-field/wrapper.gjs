@@ -77,7 +77,6 @@ export default class FormTemplateFieldWrapper extends Component {
     {{#if this.parsedTemplate}}
       <div
         class="form-template-form__wrapper"
-        {{! template-lint-disable modifier-name-case }}
         {{didUpdate this.refreshTemplate @id}}
       >
         {{#each this.parsedTemplate as |content|}}

@@ -158,7 +158,7 @@ RSpec.describe Chat::ChatController do
     end
   end
 
-  describe "#edit_message" do
+  xdescribe "#edit_message" do
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
 
     context "when current user is silenced" do

@@ -277,7 +277,6 @@ export default class PostTextSelection extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <div
       {{this.documentListeners}}
       {{this.appEventsListeners}}
