@@ -11,11 +11,12 @@
   @disabled={{this.submitDisabled}}
   @action={{action "createAccount"}}
   > --}}
-  {{! <PluginOutlet
-    @name="create-account-before-modal-body"
-    @connectorTagName="div"
-  /> }}
   <:body>
+    <PluginOutlet
+      @name="create-account-before-modal-body"
+      @connectorTagName="div"
+    />
+
     <div
       class={{concat-class
         "create-account-form"
