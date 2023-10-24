@@ -2021,12 +2021,6 @@ bg:
       topic_count:
         one: "%{count} тема в тази категория"
         other: "%{count} теми в тази категория"
-      plus_subcategories_title:
-        one: "%{name} и една подкатегория"
-        other: "%{name} и %{count} подкатегории"
-      plus_subcategories:
-        one: "+ %{count} подкатегория"
-        other: "+ %{count} подкатегории"
     select_kit:
       delete_item: "Изтрий %{name}"
       filter_by: "Филтриране по: %{name}"
@@ -3340,7 +3334,6 @@ bg:
           save: "Запази"
           delete: "Изтрий"
           delete_confirm: "Сигурни ли сте, че искате да изтриете този раздел?"
-          public: "Направете този раздел публичен и видим от всички"
           links:
             add: "Добавете друга връзка"
             delete: "Изтриване на връзката"

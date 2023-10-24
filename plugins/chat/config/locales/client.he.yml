@@ -557,6 +557,7 @@ he:
           other: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
       retention_reminders:
         indefinitely_short: "ללא הגבלת זמן"
+        indefinitely_long: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ לעד."
         short:
           one: "יום"
           two: "יומיים"

@@ -1793,12 +1793,6 @@ pt:
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
-      plus_subcategories_title:
-        one: "%{name} e uma subcategoria"
-        other: "%{name} e %{count} subcategorias"
-      plus_subcategories:
-        one: "+ %{count} subcategoria"
-        other: "+ %{count} subcategorias"
     select_kit:
       delete_item: "Apagar %{name}"
       filter_by: "Filtrar por: %{name}"

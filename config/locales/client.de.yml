@@ -1422,15 +1422,13 @@ de:
         rename_passkey_instructions: "Wähle einen Namen für den Hauptschlüssel, mit dem du ihn leicht identifizieren kannst, zum Beispiel den Namen deines Passwortmanagers."
         name:
           default: "Hauptpassschlüssel"
-          google_password_manager: "Google Passwort Manager"
-          icloud_keychain: "iCloud-Schlüsselbund"
         save: "Speichern"
         title: "Hauptschlüssel"
         short_description: "Hauptschlüssel ersetzen Passwörter, die deine Identität biometrisch (z.B. durch Berührung, FaceID) oder über eine Geräte-PIN/ein Passwort validieren."
         added_prefix: "Hinzugefügt"
         last_used_prefix: "Zuletzt verwendet"
         never_used: "Nie benutzt"
-        not_allowed_error: "Der Registrierungsvorgang für den Hauptschlüssel ist abgelaufen oder wurde abgebrochen."
+        not_allowed_error: "Bei der Registrierung des Hauptschlüssels wurde entweder das Zeitlimit überschritten, er wurde abgebrochen oder ist nicht zulässig."
         already_added_error: "Du hast diesen Hauptschlüssel bereits registriert. Du musst ihn nicht erneut registrieren."
       change_about:
         title: "„Über mich“ ändern"
@@ -2104,12 +2102,6 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
-      plus_subcategories_title:
-        one: "%{name} und eine Unterkategorie"
-        other: "%{name} und %{count} Unterkategorien"
-      plus_subcategories:
-        one: "+ %{count} Unterkategorie"
-        other: "+ %{count} Unterkategorien"
     select_kit:
       delete_item: "%{name} löschen"
       filter_by: "Filtern nach: %{name}"
@@ -3443,6 +3435,7 @@ de:
       logo: "Logo für Kategorie"
       logo_dark: "Logobild der Kategorie „Dunkler Modus“"
       background_image: "Hintergrundbild für Kategorie"
+      background_image_dark: "Dunkle Kategorie Hintergrundbild"
       badge_colors: "Farben des Abzeichens"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
@@ -4152,7 +4145,7 @@ de:
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
           reset_confirm: "Bist du sicher, dass du diesen Abschnitt auf die Standardeinstellungen zurücksetzen willst?"
-          public: "Diesen Abschnitt öffentlich und für alle sichtbar machen"
+          public: "Für alle sichtbar"
           always_public: "Die Inhalte in diesem Abschnitt sind immer öffentlich"
           more_menu: "Menü „Mehr“"
           links:

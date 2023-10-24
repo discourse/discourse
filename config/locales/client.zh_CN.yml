@@ -1347,15 +1347,13 @@ zh_CN:
         rename_passkey_instructions: "选择一个易于识别的 Passkey 名称，例如，使用密码管理器的名称。"
         name:
           default: "主 Passkey"
-          google_password_manager: "谷歌密码管理器"
-          icloud_keychain: "iCloud 钥匙串"
         save: "保存"
         title: "Passkeys"
         short_description: "Passkeys 是密码替代品，可通过生物特征识别 (例如触摸、faceID) 或通过设备 PIN/密码验证你的身份。"
         added_prefix: "已添加"
         last_used_prefix: "最后使用"
         never_used: "从未使用过"
-        not_allowed_error: "Passkey 注册过程超时或被取消。"
+        not_allowed_error: "Passkey 注册过程超时、被取消或不允许。"
         already_added_error: "你已经注册了此 Passkeys。无需再次注册。"
       change_about:
         title: "更改自我介绍"
@@ -2015,10 +2013,6 @@ zh_CN:
     category_row:
       topic_count:
         other: "此类别下有 %{count} 个话题"
-      plus_subcategories_title:
-        other: "%{name} 和 %{count} 个子类别"
-      plus_subcategories:
-        other: "+ %{count} 个子类别"
     select_kit:
       delete_item: "删除 %{name}"
       filter_by: "筛选条件：%{name}"
@@ -3268,6 +3262,7 @@ zh_CN:
       logo: "类别徽标图片"
       logo_dark: "深色模式类别徽标图片"
       background_image: "类别背景图片"
+      background_image_dark: "深色类别背景图像"
       badge_colors: "徽章颜色"
       background_color: "背景色"
       foreground_color: "前景色"
@@ -3946,7 +3941,6 @@ zh_CN:
           delete: "删除"
           delete_confirm: "确定要删除此版块吗？"
           reset_confirm: "确定要将此版块重置为默认值吗？"
-          public: "将此版块设为公开并对所有人可见"
           always_public: "此版块中的内容始终公开"
           more_menu: "“更多”菜单"
           links:
