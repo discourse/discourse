@@ -96,9 +96,9 @@
               {{#if this.fullnameRequired}}
                 <TextField
                   @disabled={{this.nameDisabled}}
-                  @value={{this.accountName}}
+                  @value={{this.model.accountName}}
                   @id="new-account-name"
-                  @class={{value-entered this.accountName}}
+                  @class={{value-entered this.model.accountName}}
                   aria-describedby="fullname-validation"
                   aria-invalid={{this.nameValidation.failed}}
                 />
@@ -122,7 +122,7 @@
             <PluginOutlet
               @name="create-account-before-password"
               @outletArgs={{hash
-                accountName=this.accountName
+                accountName=this.model.accountName
                 accountUsername=this.accountUsername
                 accountPassword=this.accountPassword
                 userFields=this.userFields
@@ -205,7 +205,7 @@
             <PluginOutlet
               @name="create-account-after-password"
               @outletArgs={{hash
-                accountName=this.accountName
+                accountName=this.model.accountName
                 accountUsername=this.accountUsername
                 accountPassword=this.accountPassword
                 userFields=this.userFields
@@ -233,7 +233,7 @@
             {{!-- <PluginOutlet
               @name="create-account-after-user-fields"
               @outletArgs={{hash
-                accountName=this.accountName
+                accountName=this.model.accountName
                 accountUsername=this.accountUsername
                 accountPassword=this.accountPassword
                 userFields=this.userFields

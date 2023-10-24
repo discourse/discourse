@@ -317,7 +317,7 @@ export default Component.extend(
       }
 
       const attrs = this.getProperties(
-        "accountName",
+        "model.accountName",
         "model.accountEmail",
         "accountPassword",
         "model.accountUsername",
