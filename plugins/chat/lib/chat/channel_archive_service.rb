@@ -107,21 +107,49 @@ module Chat
         # Another future improvement is to send a MessageBus message for each
         # completed batch, so the UI can receive updates and show a progress
         # bar or something similar.
+
+        def create_post_from_batch(chat_messages)
+          create_post(
+            Chat::TranscriptService.new(
+              chat_channel,
+              chat_channel_archive.archived_by,
+              messages_or_ids: chat_messages,
+              opts: {
+                no_link: true,
+                include_reactions: true,
+              },
+            ).generate_markdown,
+          ) { delete_message_batch(chat_messages.map(&:id)) }
+        end
+
+        buffer = []
+
         chat_channel
           .chat_messages
-          .find_in_batches(batch_size: ARCHIVED_MESSAGES_PER_POST) do |chat_messages|
-            create_post(
-              Chat::TranscriptService.new(
-                chat_channel,
-                chat_channel_archive.archived_by,
-                messages_or_ids: chat_messages,
-                opts: {
-                  no_link: true,
-                  include_reactions: true,
-                },
-              ).generate_markdown,
-            ) { delete_message_batch(chat_messages.map(&:id)) }
+          .order("created_at ASC")
+          .find_in_batches(batch_size: ARCHIVED_MESSAGES_PER_POST) do |message_batch|
+            thread_ids = message_batch.map(&:thread_id).compact.uniq
+            full_threads =
+              chat_channel.chat_messages.where(thread_id: thread_ids).order("created_at ASC").to_a
+
+            complete_batch = (buffer + message_batch + full_threads).uniq { |message| message.id }
+            buffer.clear
+
+            grouped_messages = complete_batch.group_by { |msg| msg.thread_id || msg.id }.values
+
+            batch = []
+            grouped_messages.flatten.each do |message|
+              batch << message
+              if batch.size >= ARCHIVED_MESSAGES_PER_POST
+                create_post_from_batch(batch)
+                batch.clear
+              end
+            end
+
+            buffer += batch
           end
+
+        create_post_from_batch(buffer) unless buffer.empty?
 
         kick_all_users
         complete_archive
