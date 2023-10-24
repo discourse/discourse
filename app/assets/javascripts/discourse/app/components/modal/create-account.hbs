@@ -4,12 +4,10 @@
   @disabled={{this.submitDisabled}}
   @action={{action "createAccount"}}
   > --}}
-  <span>
-    <PluginOutlet
-      @name="create-account-before-modal-body"
-      @connectorTagName="div"
-    />
-  </span>
+  <PluginOutlet
+    @name="create-account-before-modal-body"
+    @connectorTagName="div"
+  />
   <DModalBody
     @class={{this.modalBodyClasses}}
     @preventModalAlertHiding={{true}}
