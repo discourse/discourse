@@ -63,37 +63,8 @@ export default Component.extend(
       }
     },
 
-    didInsertElement() {
-      this._super(...arguments);
-
-      const userTextFields = document
-        .getElementsByClassName("user-fields")[0]
-        ?.getElementsByClassName("ember-text-field");
-
-      if (userTextFields) {
-        for (const element of userTextFields) {
-          element.addEventListener("focus", this.userInputFocus);
-          element.addEventListener("focusout", this.userInputFocusOut);
-        }
-      }
-    },
-
-    willDestroyElement() {
-      this._super(...arguments);
-
-      const userTextFields = document
-        .getElementsByClassName("user-fields")[0]
-        ?.getElementsByClassName("ember-text-field");
-
-      if (userTextFields) {
-        for (const element of userTextFields) {
-          element.removeEventListener("focus", this.userInputFocus);
-          element.removeEventListener("focusout", this.userInputFocusOut);
-        }
-      }
-    },
-
     // used for animating the label inside of inputs
+    @bind
     userInputFocus(event) {
       const userField = event.target.parentElement.parentElement;
       if (!userField.classList.contains("value-entered")) {
@@ -102,6 +73,7 @@ export default Component.extend(
     },
 
     // used for animating the label inside of inputs
+    @bind
     userInputFocusOut(event) {
       const userField = event.target.parentElement.parentElement;
       if (
