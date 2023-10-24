@@ -232,7 +232,7 @@
               </div>
             {{/if}}
 
-            {{!-- <PluginOutlet
+            <PluginOutlet
               @name="create-account-after-user-fields"
               @outletArgs={{hash
                 accountName=this.model.accountName
@@ -240,7 +240,7 @@
                 accountPassword=this.accountPassword
                 userFields=this.userFields
               }}
-            /> --}}
+            />
           </form>
         </div>
 
@@ -268,10 +268,10 @@
           {{/unless}}
         </div>
 
-        {{! <PluginOutlet
+        <PluginOutlet
           @name="create-account-after-modal-footer"
           @connectorTagName="div"
-        /> }}
+        />
       {{/if}}
 
       {{#if this.showExternalLoginButtons}}
