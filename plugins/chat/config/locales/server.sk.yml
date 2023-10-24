@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 sk:
+  site_settings:
+    chat_enabled: "Povoľte doplnok chatu."
   system_messages:
     chat_channel_archive_failed_no_topic:
       title: "Archív kanálov chatu zlyhal"
