@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
+import CreateAccount from "discourse/components/modal/create-account";
 import LoginModal from "discourse/components/modal/login";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import showModal from "discourse/lib/show-modal";
@@ -116,21 +117,17 @@ export default {
               return;
             }
 
-            const skipConfirmation = siteSettings.auth_skip_create_confirm;
-            owner.lookup("controller:createAccount").setProperties({
-              accountEmail: options.email,
-              accountUsername: options.username,
-              accountName: options.name,
-              authOptions: EmberObject.create(options),
-              skipConfirmation,
-            });
-
-            next(() => {
-              showModal("create-account", {
-                modalClass: "create-account",
-                titleAriaElementId: "create-account-title",
-              });
-            });
+            next(() =>
+              modal.show(CreateAccount, {
+                model: {
+                  accountEmail: options.email,
+                  accountUsername: options.username,
+                  accountName: options.name,
+                  authOptions: EmberObject.create(options),
+                  skipConfirmation: siteSettings.auth_skip_create_confirm,
+                },
+              })
+            );
           }
         });
       });
