@@ -193,7 +193,6 @@ class OptimizedImage < ActiveRecord::Base
     end
 
     if !extension || !extension.match?(IM_DECODERS)
-      # TODO check if it's safe to output the extension in this error message!
       raise Discourse::InvalidAccess.new("Unsupported extension: #{extension}")
     end
     "#{extension}:#{path}"
