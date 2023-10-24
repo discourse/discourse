@@ -5427,6 +5427,18 @@ RSpec.describe UsersController do
         expect(response).to redirect_to("/")
       end
     end
+
+    describe "when user bounce score is above the site threshold" do
+      it "should return an error" do
+        Email::Receiver.update_bounce_score(user1.email, 99)
+
+        post "/u/email-login.json", params: { login: user1.email }
+
+        json = response.parsed_body
+
+        expect(json.has_key?("errors")).to eq(true)
+      end
+    end
   end
 
   describe "#create_second_factor_totp" do
