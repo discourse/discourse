@@ -12,8 +12,8 @@ const COMPONENTS = {
 };
 
 const UserField = <template>
-  {{#let (get COMPONENTS @field.field_type) as |component|}}
-    <component
+  {{#let (get COMPONENTS @field.field_type) as |Component|}}
+    <Component
       @field={{@field}}
       @value={{@value}}
       @class={{@class}}
