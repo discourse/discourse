@@ -253,14 +253,14 @@ export default Component.extend(
       if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
         // then remove the username.
-        if (this.accountUsername === this.prefilledUsername) {
-          this.set("accountUsername", "");
+        if (this.model.accountUsername === this.prefilledUsername) {
+          this.set("model.accountUsername", "");
         }
         this.set("prefilledUsername", null);
       }
       if (
         this.get("emailValidation.ok") &&
-        (isEmpty(this.accountUsername) || this.get("authOptions.email"))
+        (isEmpty(this.model.accountUsername) || this.get("authOptions.email"))
       ) {
         // If email is valid and username has not been entered yet,
         // or email and username were filled automatically by 3rd party auth,
@@ -320,7 +320,7 @@ export default Component.extend(
         "accountName",
         "model.accountEmail",
         "accountPassword",
-        "accountUsername",
+        "model.accountUsername",
         "accountChallenge",
         "inviteCode"
       );
