@@ -1492,7 +1492,7 @@ class BulkImport::Base
       upload_url = @upload_urls_by_id[upload_id]
       cdn_url = Discourse.store.cdn_url(upload_url)
 
-      attributes = %{loading="lazy"}
+      attributes = +%{loading="lazy"}
       attributes << %{ alt="#{alt}"} if alt.present?
       attributes << %{ width="#{width}"} if width.present?
       attributes << %{ height="#{height}"} if height.present?
