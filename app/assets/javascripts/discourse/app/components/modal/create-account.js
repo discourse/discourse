@@ -43,7 +43,7 @@ export default Component.extend(
     isDeveloper: false,
     maskPassword: true,
 
-    hasAuthOptions: notEmpty("authOptions"),
+    hasAuthOptions: notEmpty("model.authOptions"),
     canCreateLocal: setting("enable_local_logins"),
     requireInviteCode: setting("require_invite_code"),
 
@@ -88,12 +88,15 @@ export default Component.extend(
       return classes.join(" ");
     },
 
-    @discourseComputed("authOptions", "authOptions.can_edit_username")
+    @discourseComputed(
+      "model.authOptions",
+      "model.authOptions.can_edit_username"
+    )
     usernameDisabled(authOptions, canEditUsername) {
       return authOptions && !canEditUsername;
     },
 
-    @discourseComputed("authOptions", "authOptions.can_edit_name")
+    @discourseComputed("model.authOptions", "model.authOptions.can_edit_name")
     nameDisabled(authOptions, canEditName) {
       return authOptions && !canEditName;
     },
@@ -105,7 +108,7 @@ export default Component.extend(
       );
     },
 
-    @discourseComputed("authOptions.auth_provider")
+    @discourseComputed("model.authOptions.auth_provider")
     passwordRequired(authProvider) {
       return isEmpty(authProvider);
     },
@@ -166,14 +169,14 @@ export default Component.extend(
       }
 
       if (
-        this.get("authOptions.email") === email &&
-        this.get("authOptions.email_valid")
+        this.get("model.authOptions.email") === email &&
+        this.get("model.authOptions.email_valid")
       ) {
         return EmberObject.create({
           ok: true,
           reason: I18n.t("user.email.authenticated", {
             provider: this.authProviderDisplayName(
-              this.get("authOptions.auth_provider")
+              this.get("model.authOptions.auth_provider")
             ),
           }),
         });
@@ -229,13 +232,13 @@ export default Component.extend(
 
     @discourseComputed(
       "model.accountEmail",
-      "authOptions.email",
-      "authOptions.email_valid"
+      "model.authOptions.email",
+      "model.authOptions.email_valid"
     )
     emailDisabled() {
       return (
-        this.get("authOptions.email") === this.model.accountEmail &&
-        this.get("authOptions.email_valid")
+        this.get("model.authOptions.email") === this.model.accountEmail &&
+        this.get("model.authOptions.email_valid")
       );
     },
 
@@ -260,7 +263,8 @@ export default Component.extend(
       }
       if (
         this.get("emailValidation.ok") &&
-        (isEmpty(this.model.accountUsername) || this.get("authOptions.email"))
+        (isEmpty(this.model.accountUsername) ||
+          this.get("model.authOptions.email"))
       ) {
         // If email is valid and username has not been entered yet,
         // or email and username were filled automatically by 3rd party auth,
@@ -328,7 +332,7 @@ export default Component.extend(
       attrs["accountPasswordConfirm"] = this.accountHoneypot;
 
       const userFields = this.userFields;
-      const destinationUrl = this.get("authOptions.destination_url");
+      const destinationUrl = this.get("model.authOptions.destination_url");
 
       if (!isEmpty(destinationUrl)) {
         cookie("destination_url", destinationUrl, { path: "/" });
@@ -410,7 +414,10 @@ export default Component.extend(
       }
     },
 
-    @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")
+    @discourseComputed(
+      "model.authOptions.associate_url",
+      "model.authOptions.auth_provider"
+    )
     associateHtml(url, provider) {
       if (!url) {
         return;

@@ -17,7 +17,7 @@
     <div
       class={{concat-class
         "create-account-form"
-        this.authOptions.auth_provider
+        this.model.authOptions.auth_provider
       }}
     >
       <div class="login-welcome-header" id="create-account-title">
@@ -126,7 +126,7 @@
                 accountUsername=this.model.accountUsername
                 accountPassword=this.accountPassword
                 userFields=this.userFields
-                authOptions=this.authOptions
+                authOptions=this.model.authOptions
               }}
             />
 
