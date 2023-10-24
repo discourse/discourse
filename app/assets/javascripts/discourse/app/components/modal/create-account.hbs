@@ -4,10 +4,10 @@
   @disabled={{this.submitDisabled}}
   @action={{action "createAccount"}}
   > --}}
-  <PluginOutlet
+  {{! <PluginOutlet
     @name="create-account-before-modal-body"
     @connectorTagName="div"
-  />
+  /> }}
   <DModalBody
     @class={{this.modalBodyClasses}}
     @preventModalAlertHiding={{true}}
@@ -223,7 +223,7 @@
               </div>
             {{/if}}
 
-            <PluginOutlet
+            {{!-- <PluginOutlet
               @name="create-account-after-user-fields"
               @outletArgs={{hash
                 accountName=this.accountName
@@ -231,7 +231,7 @@
                 accountPassword=this.accountPassword
                 userFields=this.userFields
               }}
-            />
+            /> --}}
           </form>
         </div>
 
@@ -257,15 +257,14 @@
               class="btn-large"
             />
           {{/unless}}
-
         </div>
 
-        <PluginOutlet
+        {{! <PluginOutlet
           @name="create-account-after-modal-footer"
           @connectorTagName="div"
-        />
-
+        /> }}
       {{/if}}
+
       {{#if this.site.desktopView}}
         {{#unless this.hasAuthOptions}}
           <div class="create-account-login-buttons">
@@ -273,6 +272,7 @@
           </div>
         {{/unless}}
       {{/if}}
+
       {{#if this.skipConfirmation}}
         {{loading-spinner size="large"}}
       {{/if}}
