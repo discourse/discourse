@@ -1,8 +1,20 @@
 # frozen_string_literal: true
 
-require_relative "base"
-require "sqlite3"
-require "json"
+begin
+  require_relative "base"
+  require "sqlite3"
+  require "json"
+rescue LoadError
+  STDERR.puts "",
+              "ERROR: Failed to load required gems.",
+              "",
+              "You need to enable the `generic_import` group in your Gemfile.",
+              "Execute the following command to do so:",
+              "",
+              "\tbundle config set --local with generic_import && bundle install",
+              ""
+  exit 1
+end
 
 class BulkImport::Generic < BulkImport::Base
   AVATAR_DIRECTORY = ENV["AVATAR_DIRECTORY"]
