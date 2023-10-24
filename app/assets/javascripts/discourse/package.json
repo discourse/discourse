@@ -16,7 +16,7 @@
     "postinstall": "../run-patch-package"
   },
   "dependencies": {
-    "@glimmer/syntax": "^0.84.3",
+    "@glimmer/syntax": "^0.85.3",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
     "ember-route-template": "^1.0.1",
