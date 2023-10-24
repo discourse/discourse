@@ -33,6 +33,8 @@ export default Component.extend(
   UserFieldsValidation,
   {
     modal: service(),
+    site: service(),
+    siteSettings: service(),
 
     accountChallenge: 0,
     accountHoneypot: 0,
