@@ -863,6 +863,7 @@ en:
     success_unapproved: "You successfully changed your password."
 
   email_login:
+    bounce_score_too_high: "Email login is disabled for this account, please use another method to log in."
     invalid_token: 'Oops! The link you used no longer works. You can <a href="%{base_url}/login">Log In</a> now. If you forgot your password, you can <a href="%{base_url}/password-reset">request a link</a> to reset it.'
     title: "Email login"
 
