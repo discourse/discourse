@@ -376,9 +376,9 @@ export default Component.extend(
             $hidden_login_form.submit();
             return new Promise(() => {}); // This will never resolve, the page will reload instead
           } else {
-            this.flash(
-              result.message || I18n.t("create_account.failed"),
-              "error"
+            this.set(
+              "flash",
+              result.message || I18n.t("create_account.failed")
             );
             if (result.is_developer) {
               this.set("isDeveloper", true);
@@ -405,7 +405,7 @@ export default Component.extend(
         () => {
           this.set("formSubmitted", false);
           removeCookie("destination_url");
-          return this.flash(I18n.t("create_account.failed"), "error");
+          return this.set("flash", I18n.t("create_account.failed"));
         }
       );
     },
@@ -450,8 +450,7 @@ export default Component.extend(
       },
 
       createAccount() {
-        this.clearFlash();
-
+        this.set("flash", "");
         this.set("forceValidationReason", true);
         const validation = [
           this.emailValidation,
