@@ -47,7 +47,11 @@ export default Component.extend(
     canCreateLocal: setting("enable_local_logins"),
     requireInviteCode: setting("require_invite_code"),
 
-    @discourseComputed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
+    @discourseComputed(
+      "hasAuthOptions",
+      "canCreateLocal",
+      "model.skipConfirmation"
+    )
     showCreateForm(hasAuthOptions, canCreateLocal, skipConfirmation) {
       return (hasAuthOptions || canCreateLocal) && !skipConfirmation;
     },
@@ -407,9 +411,9 @@ export default Component.extend(
     },
 
     onShow() {
-      if (this.skipConfirmation) {
+      if (this.model.skipConfirmation) {
         this.performAccountCreation().finally(() =>
-          this.set("skipConfirmation", false)
+          this.set("model.skipConfirmation", false)
         );
       }
     },
