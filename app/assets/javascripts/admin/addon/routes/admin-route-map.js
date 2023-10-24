@@ -164,6 +164,8 @@ export default function () {
           "adminSearchLogs",
           { path: "/search_logs", resetNamespace: true },
           function () {
+            // eslint-disable-next-line ember/no-unnecessary-index-route
+            this.route("index");
             this.route("term");
           }
         );
@@ -202,7 +204,14 @@ export default function () {
       }
     );
 
-    this.route("adminPlugins", { path: "/plugins", resetNamespace: true });
+    this.route(
+      "adminPlugins",
+      { path: "/plugins", resetNamespace: true },
+      function () {
+        // eslint-disable-next-line ember/no-unnecessary-index-route
+        this.route("index", { path: "/" });
+      }
+    );
   });
 
   // EXPERIMENTAL: These admin routes are hidden behind an `enable_experimental_admin_ui_groups`
