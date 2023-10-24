@@ -111,7 +111,6 @@ export default class ChatMessageActionsDesktop extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     {{#if (and this.site.desktopView this.chat.activeMessage.model.persisted)}}
       <div
         {{didInsert this.setup}}

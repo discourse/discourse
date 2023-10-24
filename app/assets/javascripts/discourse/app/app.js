@@ -1,11 +1,15 @@
-import Application from "@ember/application";
-import "./global-compat";
+/* eslint-disable simple-import-sort/imports */
 import "./loader-shims";
+import "./global-compat";
+/* eslint-enable simple-import-sort/imports */
+
+import Application from "@ember/application";
 import require from "require";
+import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { isTesting } from "discourse-common/config/environment";
 import { buildResolver } from "discourse-common/resolver";
-import { normalizeEmberEventHandling } from "./lib/ember-events";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -147,8 +151,6 @@ function loadInitializers(app) {
   }
 
   // Plugins that are registered via `<script>` tags.
-  const { withPluginApi } = require("discourse/lib/plugin-api");
-
   for (let [i, callback] of _pluginCallbacks.entries()) {
     app.instanceInitializer({
       name: `_discourse_plugin_${i}`,

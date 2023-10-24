@@ -4,8 +4,8 @@ import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import ColorSchemeColor from "admin/models/color-scheme-color";
-import I18n from "I18n";
 
 class ColorSchemes extends ArrayProxy {}
 

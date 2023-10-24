@@ -507,6 +507,9 @@ uk:
         type_bonus:
           name: "тип бонуса"
           title: "Деяким типам повідомлень, які переглядаються, учасники команди обслуговування можуть призначити бонуси, щоб зробити їх більш пріоритетними."
+      revise_and_reject_post:
+        reason: "Причина"
+        optional: "опціонально"
       stale_help: "<b>%{username}</b> розглянув це."
       claim_help:
         optional: "Ви можете заявити права на цей елемент, щоб інші не могли його розглядати."
@@ -1516,8 +1519,6 @@ uk:
           Проскануйте цей QR-код у застосунку (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) і введіть свій код автентифікації.
         disable_description: "Будь ласка, введіть код автентифікації з вашої програми"
         show_key_description: "Введіть вручну"
-        short_description: |
-          Захистіть свій обліковий запис одноразовими кодами безпеки.
         extended_description: |
           Двофакторна автентифікація краще захищає ваш обліковий запис, вимагаючи окрім вашого пароля ще й введення одноразового токена. Токени можна генерувати на пристроях з <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> та <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Будь ласка, зверніть увагу, що вхід через соціальні мережі буде вимкнено, як тільки у вашому обліковому записі буде увімкнена двофакторна автентифікація."
@@ -1556,6 +1557,10 @@ uk:
           save: "Зберегти"
           edit_description: "Назва фізичного ключа безпеки"
           name_required_error: "Ви повинні вказати назву для вашого ключа безпеки."
+      passkeys:
+        save: "Зберегти"
+        added_prefix: "Додано"
+        last_used_prefix: "Використано"
       change_about:
         title: "Змінити інформацію про мене"
         error: "Сталася помилка під час цієї зміни."
@@ -1847,6 +1852,7 @@ uk:
         ok: "Ваш пароль виглядає добре."
         instructions: "не менше %{count} символів"
         required: "Будь ласка, введіть пароль"
+        confirm: "Підтвердити"
       summary:
         title: "Підсумок"
         stats: "Статистика"
@@ -2145,6 +2151,7 @@ uk:
       security_key_not_allowed_error: "Час перевірки автентичності ключа безпеки минув або дію було скасовано."
       security_key_no_matching_credential_error: "У зазначеному ключі безпеки не знайдено відповідних облікових даних."
       security_key_support_missing_error: "Ваше поточний пристрій або оглядач не підтримує використання ключів безпеки. Будь ласка, використовуйте інший метод."
+      security_key_invalid_response_error: "Процес автентифікації ключа безпеки зазнав невдачі через недійсну відповідь."
       email_placeholder: "Email / Ім’я користувача"
       caps_lock_warning: "Caps Lock увімкнено"
       error: "Невідома помилка"
@@ -2327,7 +2334,7 @@ uk:
       drafts_offline: "чернетки офлайн"
       edit_conflict: "конфлікт редагування"
       esc: "esc"
-      esc_label: "Клацніть або натисніть Esc, щоб відхилити"
+      esc_label: "відхилити повідомлення"
       ok_proceed: "Добре, продовжуйте"
       group_mentioned_limit:
         one: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{count} користувачів. Ніхто не отримає сповіщення."
@@ -4922,6 +4929,11 @@ uk:
               list: Список останніх публікацій і приватних повідомлень. Також підтримується RSS.
             tags:
               list: Список тегів.
+            tag_groups:
+              list: Отримати список груп тегів.
+              show: Отримайте одну групу тегів за ідентифікатором.
+              create: Створює групу тегів.
+              update: Оновлює групу тегів, визначену за ідентифікатором.
             categories:
               list: Отримати список розділів.
               show: Отримайте розділ за його ID.
@@ -4998,41 +5010,65 @@ uk:
         groups_filter: "Тільки для Груп"
         delete_confirm: "Вилучити цей вебгук?"
         topic_event:
-          name: "подія теми"
-          details: "Відбувається, коли тема створюється, переглядається, змінюється або видаляється."
+          group_name: "Події теми"
+          topic_created: "Тема створена"
+          topic_revised: "Тема переглянута"
+          topic_edited: "Тему оновлено"
+          topic_destroyed: "Тему видалено"
+          topic_recovered: "Тема відновлена"
         post_event:
-          name: "подія повідомлення"
-          details: "Відбувається, коли повідомлення створюється, редагується, видаляється або відновлюється."
-        user_event:
-          name: "подія користувача"
-          details: "Коли користувач входить в систему, виходить з неї, підтверджує свою електронну пошту, створюється, затверджується, оновлюється, призупиняється або розблоковується."
+          group_name: "Події публікації"
+          post_created: "Повідомлення створено"
+          post_edited: "Повідомлення оновлено"
+          post_destroyed: "Допис видалено"
+          post_recovered: "Допис відновлено"
         group_event:
-          name: "групове Захід"
-          details: "При створенні, оновленні або видаленні групи."
-        category_event:
-          name: "Розділ Подій"
-          details: "Коли розділ створюється, оновлюється або видаляється."
+          group_name: "Події групи"
+          group_created: "Група створена"
+          group_updated: "Група оновлена"
+          group_destroyed: "Групу видалено"
         tag_event:
-          name: "Теґ події"
-          details: "Коли теґ створюється, оновлюється або знищується"
+          group_name: "Події тегів"
+          tag_created: "Тег створено"
+          tag_updated: "Тег оновлено"
+          tag_destroyed: "Тег видалено"
+        category_event:
+          group_name: "Події категорії"
+          category_created: "Категорію створено"
+          category_updated: "Категорію оновлено"
+          category_destroyed: "Категорію видалено"
+        user_event:
+          group_name: "Події користувача"
+          user_logged_in: "Користувач увійшов"
+          user_logged_out: "Користувач вийшов із системи"
+          user_confirmed_email: "Користувач підтвердив електронну пошту"
+          user_created: "Користувач створений"
+          user_approved: "Користувач схвалений"
+          user_updated: "Користувача оновлено"
+          user_destroyed: "Користувача видалено"
+          user_suspended: "Користувача призупинено"
+          user_unsuspended: "Користувача розблоковано"
         reviewable_event:
-          name: "переглянуті Події"
-          details: "Коли новий елемент готовий до розгляду та коли його статус оновлюється."
-        notification_event:
-          name: "подія Повідомлення"
-          details: "Коли користувач отримує повідомлення в своїй стрічці."
-        user_promoted_event:
-          name: "Подія підвищення рівня довіри користувача"
-          details: "Коли користувач переходить з одного рівня довіри до іншого."
+          group_name: "Події, що підлягають перегляду"
+          reviewable_created: "Елемент для перегляду готовий"
+          reviewable_updated: "Рецензований елемент оновлено"
         user_badge_event:
-          name: "Значок Події"
-          details: "Коли значок надається або відкликано."
-        group_user_event:
-          name: "Подія користувача групи"
-          details: "Коли користувач додається або видаляється з групи."
+          group_name: "Події з бейджами"
+          user_badge_granted: "Надано бейдж користувачу"
+          user_badge_revoked: "Бейдж користувача відкликано"
         like_event:
-          name: "Подія Подобається"
-          details: "Коли користувач вподобав допис."
+          group_name: "Події вподобань"
+          post_liked: "Коли користувач вподобав допис."
+        notification_event:
+          group_name: "Події сповіщень"
+          notification_created: "Користувач отримує сповіщення у своїй стрічці"
+        group_user_event:
+          group_name: "Групові події користувачів"
+          user_added_to_group: "Користувача додано до групи"
+          user_removed_from_group: "Користувача видалено з групи"
+        user_promoted_event:
+          group_name: "Події, запропоновані користувачем"
+          user_promoted: "Користувач просуває"
         delivery_status:
           title: "Стан доставки"
           inactive: "Неактивно"
@@ -5170,6 +5206,9 @@ uk:
         install: "Install"
         delete: "Видалити"
         delete_confirm: 'Ви впевнені, що хочете видалити "%{theme_name}"?'
+        bulk_delete: "Ви впевнені?"
+        bulk_themes_delete_confirm: "Це призведе до видалення наступних тем, вони більше не будуть доступні для користувачів вашого сайту:"
+        bulk_components_delete_confirm: "Це призведе до видалення наступних компонентів, які більше не зможуть використовуватись користувачами вашого сайту:"
         color: "Колір"
         opacity: "Непрозорість"
         copy: "Дублювати"
@@ -5239,6 +5278,8 @@ uk:
           convert_theme_tooltip: "Перетворити цю тему в компонент"
           inactive_themes: "Неактивні теми:"
           inactive_components: "Невикористані компоненти:"
+          selected: "%{count} вибрано"
+          cancel: "Скасувати"
           broken_theme_tooltip: "Ця тема має помилки в CSS, HTML або YAML"
           disabled_component_tooltip: "Цей компонент відключений"
           default_theme_tooltip: "Ця тема є темою за замовчуванням на сайті"

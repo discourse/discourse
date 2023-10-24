@@ -16,6 +16,7 @@ class CategoryList
   def self.included_associations
     [
       :uploaded_background,
+      :uploaded_background_dark,
       :uploaded_logo,
       :uploaded_logo_dark,
       :topic_only_relative_url,

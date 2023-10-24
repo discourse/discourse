@@ -296,7 +296,6 @@ sv:
         back_to_all_channels: "Alla kanaler"
         back_to_channel: "Tillbaka"
         tabs:
-          about: Om
           members: Medlemmar
           settings: Inställningar
       new_message_modal:
@@ -426,6 +425,10 @@ sv:
         saved: "Sparad"
         unfollow: "Lämna"
         admin_title: "Admin"
+        settings_title: "Inställningar"
+        category_label: "Kategori"
+        history_label: "Historik"
+        members_label: "Medlemmar"
       admin:
         title: "Chatt"
         export_messages:
@@ -495,14 +498,9 @@ sv:
           one: "%{commaSeparatedUsernames} och %{count} skriver"
           other: "%{commaSeparatedUsernames} och %{count} andra skriver"
       retention_reminders:
-        public_none: "Kanalhistoriken bevaras på obestämd tid."
-        public:
-          one: "Kanalhistoriken bevaras %{count} dag."
-          other: "Kanalhistoriken bevaras %{count} dagar."
-        dm_none: "Personlig chatthistorik bevaras på obestämd tid."
-        dm:
-          one: "Personlig chatthistorik bevaras %{count} dag."
-          other: "Personlig chatthistorik bevaras %{count} dagar."
+        short:
+          one: "%{count} dag"
+          other: "%{count} dagar"
       flags:
         off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
         inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."

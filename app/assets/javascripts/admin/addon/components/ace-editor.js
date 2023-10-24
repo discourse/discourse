@@ -2,10 +2,11 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import $ from "jquery";
 import loadScript from "discourse/lib/load-script";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const COLOR_VARS_REGEX =
   /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
@@ -26,6 +27,7 @@ export default class AceEditor extends Component {
   }
 
   didRender() {
+    super.didRender(...arguments);
     this._skipContentChangeEvent = false;
   }
 
@@ -159,9 +161,8 @@ export default class AceEditor extends Component {
   }
 
   willDestroyElement() {
-    if (this._darkModeListener) {
-      this._darkModeListener.removeListener(this.setAceTheme);
-    }
+    super.willDestroyElement(...arguments);
+    this._darkModeListener?.removeListener(this.setAceTheme);
   }
 
   @bind

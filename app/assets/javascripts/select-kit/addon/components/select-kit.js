@@ -10,7 +10,7 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import PluginApiMixin, {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,

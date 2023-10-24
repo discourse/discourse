@@ -7,12 +7,22 @@ import {
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { registerRawHelpers } from "discourse-common/lib/raw-handlebars-helpers";
 
+function isThemeOrPluginHelper(path) {
+  return (
+    path.includes("/helpers/") &&
+    (path.startsWith("discourse/theme-") ||
+      path.startsWith("discourse/plugins/")) &&
+    !path.endsWith("-test")
+  );
+}
+
 export function autoLoadModules(owner, registry) {
   Object.keys(requirejs.entries).forEach((entry) => {
-    if (/\/helpers\//.test(entry) && !/-test/.test(entry)) {
+    if (isThemeOrPluginHelper(entry)) {
+      // Once the discourse.register-unbound deprecation is resolved, we can remove this eager loading
       requirejs(entry, null, null, true);
     }
-    if (/\/widgets\//.test(entry) && !/-test/.test(entry)) {
+    if (entry.includes("/widgets/") && !entry.endsWith("-test")) {
       requirejs(entry, null, null, true);
     }
   });
@@ -31,7 +41,7 @@ export function autoLoadModules(owner, registry) {
 
   createHelperContext(context);
   registerHelpers(registry);
-  registerRawHelpers(RawHandlebars, Handlebars);
+  registerRawHelpers(RawHandlebars, Handlebars, owner);
 }
 
 export default {

@@ -1,4 +1,3 @@
-import { escape } from "pretty-text/sanitizer";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
@@ -10,10 +9,11 @@ import {
   updateUserStatusOnMention,
 } from "discourse/lib/update-user-status-on-mention";
 import domFromString from "discourse-common/lib/dom-from-string";
+import escape from "discourse-common/lib/escape";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];

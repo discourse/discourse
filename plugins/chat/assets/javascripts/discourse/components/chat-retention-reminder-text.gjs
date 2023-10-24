@@ -1,26 +1,30 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ChatRetentionReminderText extends Component {
   @service siteSettings;
 
+  get type() {
+    return this.args.type ?? "long";
+  }
+
   get text() {
     if (this.args.channel.isDirectMessageChannel) {
       if (this.#countForChannelType > 0) {
-        return I18n.t("chat.retention_reminders.dm", {
+        return I18n.t(`chat.retention_reminders.${this.type}`, {
           count: this.siteSettings.chat_dm_retention_days,
         });
       } else {
-        return I18n.t("chat.retention_reminders.dm_none");
+        return I18n.t(`chat.retention_reminders.indefinitely_${this.type}`);
       }
     } else {
       if (this.#countForChannelType > 0) {
-        return I18n.t("chat.retention_reminders.public", {
+        return I18n.t(`chat.retention_reminders.${this.type}`, {
           count: this.siteSettings.chat_channel_retention_days,
         });
       } else {
-        return I18n.t("chat.retention_reminders.public_none");
+        return I18n.t(`chat.retention_reminders.indefinitely_${this.type}`);
       }
     }
   }

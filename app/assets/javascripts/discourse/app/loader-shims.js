@@ -24,6 +24,7 @@ loaderShim("@uppy/utils/lib/EventTracker", () =>
 );
 loaderShim("@uppy/xhr-upload", () => importSync("@uppy/xhr-upload"));
 loaderShim("a11y-dialog", () => importSync("a11y-dialog"));
+loaderShim("discourse-i18n", () => importSync("discourse-i18n"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("handlebars", () => importSync("handlebars"));

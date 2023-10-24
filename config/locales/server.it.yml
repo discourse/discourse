@@ -1551,7 +1551,7 @@ it:
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito."
     invite_code: "L'utente deve digitare questo codice per consentire la registrazione dell'account (senza distinzione tra maiuscole e minuscole), se lasciato vuoto sarà ignorato"
     approve_suspect_users: "Aggiungi utenti sospetti alla coda di revisione. Gli utenti sospetti sono quelli che hanno inserito una biografia o un sito web ma non svolgono attività di lettura."
-    review_every_post: "Tutti i messaggi devono essere revisionati. ATTENZIONE! NON CONSIGLIATO PER SITI MOLTO ATTIVI."
+    review_every_post: "Invia ogni nuovo messaggio alla coda di revisione per la moderazione. I messaggi vengono comunque pubblicati immediatamente e sono visibili a tutti gli utenti. AVVERTIMENTO! Non consigliato per siti ad alto traffico a causa del potenziale volume di messaggi che necessitano di revisione."
     pending_users_reminder_delay_minutes: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di questo numero di minuti. Imposta il valore a -1 per disabilitare le notifiche."
     persistent_sessions: "Gli utenti rimarranno connessi alla chiusura del browser"
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
@@ -1559,7 +1559,6 @@ it:
     ga_universal_tracking_code: "ID del codice di monitoraggio di Google Universal Analytics, ad esempio: UA-12345678-9; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nome del dominio di Google Universal Analytics, ad esempio: mysite.com; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Abilita il monitoraggio tra domini di Google Universal Analytics. I collegamenti in uscita verso questi domini avranno l'ID del client aggiunto. Vedi <a href='https://support.google.com/analytics/answer/1034342?hl=it' target='_blank'>Impostare il monitoraggio tra domini.</a>"
-    gtm_container_id: "ID del contenitore di Google Tag Manager. ad esempio: GTM-ABCDEF. <br/>Nota: potrebbe essere necessario inserire l'abilitazione degli script di terze parti caricati da GTM in \"Content Security Policy Script src\"."
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permetti ai moderatori di creare e gestire categorie e gruppi"
     moderators_change_post_ownership: "Consenti ai moderatori di modificare la proprietà del messaggio"
@@ -2065,6 +2064,7 @@ it:
     approve_new_topics_unless_trust_level: "I nuovi argomenti degli utenti al di sotto di questo livello di attendibilità devono essere approvati"
     approve_unless_staged: "Nuovi argomenti e messaggi per gli utenti temporanei devono essere approvati"
     notify_about_queued_posts_after: "Se ci sono messaggi che sono in attesa di essere revisionati per più di questo numero di ore, invia una notifica a tutti i moderatori. Impostare su 0 per disabilitare queste notifiche."
+    reviewable_revision_reasons: "Elenco di motivi che possono essere selezionati quando si rifiuta un messaggio in coda di revisione con una revisione. È sempre disponibile anche Altro, che consente di inserire un motivo personalizzato."
     auto_close_messages_post_count: "Numero massimo di messaggi consentiti in un messaggio privato prima di essere automaticamente chiuso (0 per disabilitare)"
     auto_close_topics_post_count: "Numero massimo di messaggi consentiti in un argomento prima di essere automaticamente chiuso (0 per disabilitare)"
     auto_close_topics_create_linked_topic: "Quando un argomento viene chiuso in base all'impostazione \"chiudi automaticamente argomenti per il numero dei post\", creane un altro collegato."
@@ -2148,7 +2148,6 @@ it:
     force_lowercase_tags: "Forza tutte le nuove Etichette interamente in minuscolo."
     create_post_for_category_and_tag_changes: "Crea un piccolo post di azione quando la categoria o i tag di un argomento cambiano"
     watched_precedence_over_muted: "Inviami notifiche sugli argomenti nelle categorie o nei tag che sto osservando anche se appartengono a un oggetto silenziato"
-    company_name: "Nome azienda"
     governing_law: "Diritto applicabile"
     city_for_disputes: "Sede per eventuali controversie"
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
@@ -2181,7 +2180,6 @@ it:
     navigation_menu: "Determina quale menu di navigazione utilizzare. La barra laterale e la navigazione dell'intestazione sono personalizzabili dagli utenti. L'opzione Compatibile è disponibile per la compatibilità con le versioni precedenti."
     default_navigation_menu_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie del menu di navigazione."
     default_navigation_menu_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette del menu di navigazione."
-    enable_experimental_hashtag_autocomplete: "SPERIMENTALE: utilizza il nuovo sistema di completamento automatico degli #hashtag per categorie ed etichette che rende l'elemento selezionato in modo diverso e con ricerca migliorata"
     experimental_new_new_view_groups: 'SPERIMENTALE: abilita un nuovo elenco di argomenti che combini argomenti non letti e nuovi e crea il link "Tutto" nella barra laterale ad esso.'
     enable_custom_sidebar_sections: "SPERIMENTALE: abilita le sezioni della barra laterale personalizzate"
     experimental_topics_filter: "SPERIMENTALE: abilita il percorso del filtro degli argomenti sperimentali in /filter"
@@ -2663,6 +2661,28 @@ it:
         Tuttavia, se il messaggio verrà nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che non interverrà lo staff.
 
         Per ulteriori informazioni, fai riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
+    reviewable_queued_post_revise_and_reject:
+      title: "Feedback sul tuo messaggio"
+      subject_template: "Feedback sul tuo messaggio in %{topic_title}"
+      text_body_template: |
+        Ciao %{username},
+
+        Abbiamo esaminato il tuo messaggio in [%{topic_title}](%{topic_url}) e abbiamo un feedback per te.
+
+        Motivo: %{reason}
+
+        Feedback: %{feedback}
+
+        Puoi modificare il tuo post originale qui sotto e riinviarlo con le modifiche suggerite, o rispondi a questo messaggio se hai domande.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Grazie,
+        Moderatori%{site_name}
     post_hidden_again:
       title: "Messaggio nascosto nuovamente"
       subject_template: "Messaggio nascosto dalle segnalazioni della comunità. Lo staff è stato informato"
@@ -4248,6 +4268,8 @@ it:
         title: "No"
       discard_post:
         title: "Annulla messaggio"
+      revise_and_reject_post:
+        title: "Revisiona il messaggio..."
       ignore:
         title: "Ignora"
       ignore_and_do_nothing:

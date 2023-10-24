@@ -6,10 +6,10 @@
     <meta name="color-scheme" content="light dark">
 
     <%- if @has_test_bundle && !@suggested_themes %>
-      <%= preload_script "locales/#{I18n.locale}" %>
       <%= preload_script "vendor" %>
       <%= preload_script "test-support" %>
       <%= preload_script "discourse-for-tests" %>
+      <%= preload_script "locales/#{I18n.locale}" %>
       <%= preload_script "admin" %>
       <%- Discourse.find_plugin_js_assets(include_disabled: true).each do |file| %>
         <%= preload_script file %>

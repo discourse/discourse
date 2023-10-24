@@ -77,6 +77,9 @@ class DiscoursePluginRegistry
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
 
+  define_filtered_register :staff_editable_topic_custom_fields
+  define_filtered_register :public_editable_topic_custom_fields
+
   define_filtered_register :self_editable_user_custom_fields
   define_filtered_register :staff_editable_user_custom_fields
 

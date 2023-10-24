@@ -5,7 +5,7 @@ import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const LoginMethod = EmberObject.extend({
   @discourseComputed

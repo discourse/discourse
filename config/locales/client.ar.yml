@@ -575,6 +575,9 @@ ar:
         type_bonus:
           name: "مكافأة النوع"
           title: "يمكن لفريق العمل تخصيص مكافأة لبعض الأنواع القابلة للمراجعة لمنحها أولوية أعلى."
+      revise_and_reject_post:
+        reason: "السبب"
+        optional: "اختياري"
       stale_help: "تم إجراء هذه المراجعة بواسطة <b>%{username}</b>."
       claim_help:
         optional: "يمكنك المطالبة بهذا العنصر لمنع الآخرين من مراجعته."
@@ -1651,8 +1654,6 @@ ar:
           امسح رمز QR ضوئيًا في أحد التطبيقات المدعومة (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> و<a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) وأدخِل رمز المصادقة.
         disable_description: "يُرجى إدخال رمز المصادقة من تطبيقك"
         show_key_description: "الإدخال يدويًا"
-        short_description: |
-          احمِ حسابك برموز أمان تُستخدَم لمرة واحدة.
         extended_description: |
           تضيف المصادقة الثنائية أمانًا إضافيًا إلى حسابك من خلال طلب رمز مميز لمرة واحدة بالإضافة إلى كلمة مرورك. يمكن إنشاء الرموز المميزة على الأجهزة التي تعمل بنظام التشغيل <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> و<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "يُرجى العلم بأنه سيتم إيقاف تسجيل الدخول بحسابات التواصل الاجتماعي بعد تفعيل المصادقة الثنائية على حسابك."
@@ -1691,6 +1692,10 @@ ar:
           save: "حفظ"
           edit_description: "اسم مفتاح الأمان المادي"
           name_required_error: "يجب عليك إدخال اسم لمفتاح الأمان."
+      passkeys:
+        save: "حفظ"
+        added_prefix: "تمت الإضافة"
+        last_used_prefix: "آخر استخدام"
       change_about:
         title: "تغيير \"نبذة عني\""
         error: "حدث خطأ في أثناء تغيير هذه القيمة."
@@ -1986,6 +1991,7 @@ ar:
         ok: "تبدو كلمة مرورك جيدة."
         instructions: "يجب ألا يقل عن %{count} حرف"
         required: "يُرجى إدخال كلمة المرور"
+        confirm: "تأكيد"
       summary:
         title: "الملخص"
         stats: "الإحصاءات"
@@ -2499,7 +2505,6 @@ ar:
       drafts_offline: "مسودات بلا اتصال"
       edit_conflict: "تعارض في التعديل"
       esc: "Esc"
-      esc_label: "انقر أو اضغط على Esc للتجاهل"
       ok_proceed: "حسنًا، المتابعة"
       group_mentioned_limit:
         zero: "<b>تحذير!</b>لقد أشرت إلى <a href='%{group_link}'>%{group}</a>، لكن هذه المجموعة تتضمَّن عدد أعضاء أكثر من حد الإشارة الذي عيَّنه المسؤول وهو %{count} مستخدم. لن يتم إرسال إشعار إلى أي أحد."
@@ -5398,41 +5403,8 @@ ar:
         groups_filter_instructions: "لن يتم تشغيل خطافات الويب ذات الصلة إلا إذا كان الحدث مرتبطًا بمجموعات محدَّدة. اتركه فارغًا لتشغيل خطافات الويب لجميع المجموعات."
         groups_filter: "المجموعات المشغَّلة"
         delete_confirm: "هل تريد حذف خطاف الويب هذا؟"
-        topic_event:
-          name: "حدث الموضوع"
-          details: "عندما يكون هناك موضوع جديد، أو تمت مراجعته أو تغييره أو حذفه."
-        post_event:
-          name: "حدث المنشور"
-          details: "عندما يكون هناك رد جديد، أو تم تعديله أو حذفه أو استعادته."
-        user_event:
-          name: "حدث المستخدم"
-        group_event:
-          name: "حدث المجموعة"
-          details: "عند إنشاء مجموعة أو تحديثها أو مسحها."
-        category_event:
-          name: "حدث الفئة"
-          details: "عند إنشاء فئة أو تحديثها أو مسحها."
-        tag_event:
-          name: "حدث الوسم"
-          details: "عند إنشاء وسم أو تحديثه أو مسحه."
-        reviewable_event:
-          name: "حدث العنصر القابل للمراجعة"
-          details: "عند وجود عنصر جديد جاهز للمراجعة وعند تحديث حالته."
-        notification_event:
-          name: "حدث الإشعار"
-          details: "عند تلقي المستخدم إشعار في موجزه."
-        user_promoted_event:
-          name: "حدث يروِّج له المستخدم"
-          details: "عندما تتم ترقية المستخدم من مستوى ثقة إلى آخر."
-        user_badge_event:
-          name: "حدث الشارة"
-          details: "عند منح شارة أو سحبها."
-        group_user_event:
-          name: "حدث مستخدم المجموعة"
-          details: "عند إضافة مستخدم أو إزالته في مجموعة."
         like_event:
-          name: "حدث الإعجاب"
-          details: "عند تسجيل المستخدم إعجابه بمنشور."
+          post_liked: "عند تسجيل المستخدم إعجابه بمنشور."
         delivery_status:
           title: "حالة التسليم"
           inactive: "غير نشط"
@@ -5643,6 +5615,7 @@ ar:
           convert_theme_tooltip: "تحويل هذه السمة إلى مكوِّن"
           inactive_themes: "السمات غير النشطة:"
           inactive_components: "المكوِّنات غير المستخدمة:"
+          cancel: "إلغاء"
           broken_theme_tooltip: "هذه السمة بها أخطاء في CSS أو HTML أو YAML"
           disabled_component_tooltip: "لقد تم إيقاف هذا المكوِّن"
           default_theme_tooltip: "هذه السمة هي السمة الافتراضية للموقع"

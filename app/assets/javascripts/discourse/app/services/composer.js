@@ -5,6 +5,7 @@ import Service, { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
+import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
@@ -42,7 +43,7 @@ import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -171,7 +172,7 @@ export default class ComposerService extends Service {
       return null;
     }
 
-    return this.model.category?.get("form_template_ids");
+    return this.model?.category?.get("form_template_ids");
   }
 
   get hasFormTemplate() {
@@ -491,7 +492,13 @@ export default class ComposerService extends Service {
   @action
   async focusComposer(opts = {}) {
     await this._openComposerForFocus(opts);
-    this._focusAndInsertText(opts.insertText);
+
+    scheduleOnce(
+      "afterRender",
+      this,
+      this._focusAndInsertText,
+      opts.insertText
+    );
   }
 
   async _openComposerForFocus(opts) {
@@ -524,13 +531,11 @@ export default class ComposerService extends Service {
   }
 
   _focusAndInsertText(insertText) {
-    scheduleOnce("afterRender", () => {
-      document.querySelector("textarea.d-editor-input")?.focus();
+    document.querySelector("textarea.d-editor-input")?.focus();
 
-      if (insertText) {
-        this.model.appendText(insertText, null, { new_line: true });
-      }
-    });
+    if (insertText) {
+      this.model.appendText(insertText, null, { new_line: true });
+    }
   }
 
   @action
@@ -1448,10 +1453,6 @@ export default class ComposerService extends Service {
       opts.topicTitle.length <= this.siteSettings.max_topic_title_length
     ) {
       this.model.set("title", opts.topicTitle);
-    }
-
-    if (opts.topicCategoryId) {
-      this.model.set("categoryId", opts.topicCategoryId);
     }
 
     if (opts.topicTags && this.site.can_tag_topics) {

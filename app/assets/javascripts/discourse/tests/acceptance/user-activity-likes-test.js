@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { acceptance, query } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / Likes - empty state", function (needs) {

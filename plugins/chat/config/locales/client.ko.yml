@@ -172,7 +172,6 @@ ko:
         back_to_all_channels: "모든 채널"
         back_to_channel: "뒤로"
         tabs:
-          about: 소개
           members: 회원
           settings: 설정
       new_message_modal:
@@ -246,6 +245,10 @@ ko:
         saved: "저장되었습니다"
         unfollow: "나가기"
         admin_title: "관리자"
+        settings_title: "설정"
+        category_label: "카테고리"
+        history_label: "히스토리"
+        members_label: "회원"
       admin:
         title: "채팅"
         export_messages:
@@ -287,12 +290,8 @@ ko:
       replying_indicator:
         single_user: "%{username}님이 입력 중"
       retention_reminders:
-        public_none: "채널 기록은 평생 보관됩니다."
-        public:
-          other: "채널 기록은 %{count}일 동안 보관됩니다."
-        dm_none: "개인 채팅 기록은 평생 보관됩니다."
-        dm:
-          other: "개인 채팅 기록은 %{count}일 동안 보관됩니다."
+        short:
+          other: "%{count}일"
       flagging:
         action: "신고 메시지"
       emoji_picker:

@@ -7,7 +7,7 @@ import {
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // This picker is intended to be used with UppyUploadMixin or with
 // ComposerUploadUppy, which is why there are no change events registered

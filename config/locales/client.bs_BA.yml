@@ -380,6 +380,9 @@ bs_BA:
         type_bonus:
           name: "bonus tip"
           title: "Neki ocjenjivi tipovi mogu zaprimiti bonus od strane osoblja foruma kako bi tim tipovima podigli prioritet"
+      revise_and_reject_post:
+        reason: "Reason"
+        optional: "opciono"
       claim_help:
         optional: "Možete tražiti ova da sprijećite ostale da ga pregledaju"
         required: "VI morate tvrditi stavari prije ih morate cijeniti"
@@ -1057,8 +1060,6 @@ bs_BA:
           Skenirajte ovaj QR kod u podržanoj aplikaciji ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> ) i unesite kod za provjeru autentičnosti.
         disable_description: "Molimo da uneste kod za ovjeru autentičnosti sa vaše aplikacije"
         show_key_description: "Unesi manuelno"
-        short_description: |
-          Zaštitite svoj račun pomoću jednokratnih sigurnosnih kodova.
         use: "Koristi Authenticator app?"
         disable: "Onemogući"
         delete: "Obriši"
@@ -1076,6 +1077,10 @@ bs_BA:
           already_added_error: "Već ste registrirali ovaj sigurnosni ključ. Ne morate ga ponovno registrirati."
           save: "Sačuvaj"
           name_required_error: "Morate navesti ime za svoj sigurnosni ključ."
+      passkeys:
+        save: "Save"
+        added_prefix: "Doodano"
+        last_used_prefix: "Posljednji put korišten"
       change_about:
         title: "Promjeni O meni"
         error: "Desila se greška prilikom promjene."
@@ -3262,26 +3267,6 @@ bs_BA:
         groups_filter_instructions: "Relevantne web-kuke će biti aktivirane samo ako je događaj povezan sa određenim grupama. Ostavite prazno da biste pokrenuli web-kuke za sve grupe."
         groups_filter: "Pokrenute grupe"
         delete_confirm: "Izbrisati ovaj webhook?"
-        topic_event:
-          name: "Teme dogadaj"
-          details: "Kada se stvori nova tema, revidirana, izmijenjena ili izbrisana."
-        post_event:
-          name: "Objavi doađaj"
-          details: "Kada postoji novi odgovor, uredite, obrišite ili oporavite."
-        user_event:
-          name: "Korisnički događaj"
-        group_event:
-          name: "Grupni događaj"
-          details: "Kada se grupa kreira, ažurira ili uništava."
-        category_event:
-          name: "Kategorija Događaj"
-          details: "Kada je kategorija stvorena, ažurirana ili uništena."
-        tag_event:
-          name: "Oznaći događaj"
-          details: "Kada se oznaka kreira, ažurira ili uništava."
-        reviewable_event:
-          name: "Eventable Event"
-          details: "Kada je nova stavka spremna za pregled i kada je njen status ažuriran."
         delivery_status:
           title: "Status isporuke"
           inactive: "Neaktivan"
@@ -3455,6 +3440,7 @@ bs_BA:
           convert_theme_tooltip: "Pretvorite ovu temu u komponentu"
           inactive_themes: "Neaktivne teme:"
           inactive_components: "Neiskorištene komponente:"
+          cancel: "Odustani"
           broken_theme_tooltip: "Ova tema ima greške u CSS-u, HTML-u ili YAML-u"
           disabled_component_tooltip: "Ova komponenta je onemogućena"
           default_theme_tooltip: "Ova tema je podrazumevana tema sajta"

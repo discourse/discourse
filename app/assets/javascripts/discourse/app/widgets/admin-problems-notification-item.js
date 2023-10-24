@@ -2,7 +2,7 @@ import { DefaultNotificationItem } from "discourse/widgets/default-notification-
 import { createWidgetFrom } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 createWidgetFrom(DefaultNotificationItem, "admin-problems-notification-item", {
   text() {

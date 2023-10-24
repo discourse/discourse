@@ -115,9 +115,10 @@ describe "Uploading files in chat messages", type: :system do
       channel_page.messages.edit(message_2)
       find(".chat-composer-upload").hover
       find(".chat-composer-upload__remove-btn").click
+      expect(channel_page.message_by_id(message_2.id)).to have_no_css(".chat-uploads")
+
       channel_page.click_send_message
-      expect(channel_page.message_by_id(message_2.id)).not_to have_css(".chat-uploads")
-      try_until_success(timeout: 5) { expect(message_2.reload.uploads).to be_empty }
+      try_until_success(timeout: 5) { expect(message_2.reload.upload_ids).to be_empty }
     end
 
     it "allows adding more uploads" do

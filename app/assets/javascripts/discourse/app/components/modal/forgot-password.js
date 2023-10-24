@@ -9,7 +9,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import { escapeExpression } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ForgotPassword extends Component {
   @service siteSettings;

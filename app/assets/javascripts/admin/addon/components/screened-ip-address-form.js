@@ -4,8 +4,8 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { classNames, tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
-import I18n from "I18n";
 
 /**
   A form to create an IP address that will be blocked or allowed.

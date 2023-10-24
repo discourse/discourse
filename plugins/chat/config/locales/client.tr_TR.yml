@@ -26,14 +26,17 @@ tr_TR:
             chat:
               create_message: "Belirtilen kanalda bir sohbet mesajı oluşturun."
       web_hooks:
-        chat_message_event:
-          name: "Sohbet mesajı etkinliği"
-          details: "Bir sohbet mesajı oluşturulduğunda, düzenlendiğinde, çöpe atıldığında veya geri yüklendiğinde."
+        chat_event:
+          group_name: "Sohbet olayları"
+          chat_message_created: "Mesaj oluşturuldu"
+          chat_message_edited: "Mesaj düzenlendi"
     about:
       chat_messages_count: "Sohbet mesajları"
       chat_channels_count: "Sohbet kanalları"
       chat_users_count: "Sohbet kullanıcıları"
     chat:
+      text_copied: Metin panoya kopyalandı
+      link_copied: Bağlantı panoya kopyalandı
       deleted_chat_username: silindi
       dates:
         time_tiny: "h:mm"
@@ -240,6 +243,7 @@ tr_TR:
       reply: "Yanıtla"
       edit: "Düzenle"
       copy_link: "Bağlantıyı kopyala"
+      copy_text: "Metni kopyala"
       rebake_message: "HTML'yi yeniden oluştur"
       retry_staged_message:
         title: "Ağ hatası"
@@ -308,7 +312,6 @@ tr_TR:
         back_to_all_channels: "Tüm kanallar"
         back_to_channel: "Geri"
         tabs:
-          about: Hakkında
           members: Üyeler
           settings: Ayarlar
       new_message_modal:
@@ -438,6 +441,11 @@ tr_TR:
         saved: "Kaydedildi"
         unfollow: "Ayrıl"
         admin_title: "Yönetici"
+        settings_title: "Ayarlar"
+        info_title: "Kanal bilgisi"
+        category_label: "Kategori"
+        history_label: "Geçmiş"
+        members_label: "Üyeler"
       admin:
         title: "Sohbet"
         export_messages:
@@ -507,14 +515,10 @@ tr_TR:
           one: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
       retention_reminders:
-        public_none: "Kanal geçmişi süresiz olarak saklanır."
-        public:
-          one: "Kanal geçmişi %{count} gün boyunca saklanır."
-          other: "Kanal geçmişi %{count} gün boyunca saklanır."
-        dm_none: "Kişisel sohbet geçmişi süresiz olarak saklanır."
-        dm:
-          one: "Kişisel sohbet geçmişi %{count} gün boyunca saklanır."
-          other: "Kişisel sohbet geçmişi %{count} gün boyunca saklanır."
+        indefinitely_short: "süresiz olarak"
+        short:
+          one: "%{count} gün"
+          other: "%{count} gün"
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."

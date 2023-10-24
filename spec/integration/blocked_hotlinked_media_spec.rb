@@ -48,7 +48,7 @@ RSpec.describe "hotlinked media blocking" do
       post = Fabricate(:post, raw: "![alt text|video](#{hotlinked_url})")
       expect(post.cooked).not_to have_tag("video source[src]")
       expect(post.cooked).to have_tag(
-        "video source",
+        "div",
         with: {
           PrettyText::BLOCKED_HOTLINKED_SRC_ATTR => hotlinked_url,
         },

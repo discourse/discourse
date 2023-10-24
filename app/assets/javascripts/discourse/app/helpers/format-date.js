@@ -1,12 +1,14 @@
 import { htmlSafe } from "@ember/template";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
 /**
   Display logic for dates. It is unbound in Ember but will use jQuery to
   update the dates on a regular interval.
 **/
-registerUnbound("format-date", function (val, params) {
+
+registerRawHelper("format-date", formatDate);
+export default function formatDate(val, params = {}) {
   let leaveAgo,
     format = "medium",
     title = true;
@@ -32,4 +34,4 @@ registerUnbound("format-date", function (val, params) {
       })
     );
   }
-});
+}

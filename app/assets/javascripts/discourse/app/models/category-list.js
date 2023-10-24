@@ -5,7 +5,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const CategoryList = ArrayProxy.extend({
   init() {

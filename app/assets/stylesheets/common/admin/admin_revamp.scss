@@ -1,0 +1,12 @@
+.admin-revamp {
+  &__config {
+    padding: 1em;
+    background-color: var(--primary-low);
+  }
+
+  &__config-area {
+    padding: 1em;
+    margin: 1em 0;
+    background-color: var(--primary-very-low);
+  }
+}

@@ -263,6 +263,9 @@ sw:
     review:
       explain:
         total: "Jumla"
+      revise_and_reject_post:
+        reason: "Sababu"
+        optional: "sio muhimu"
       delete: "Futa"
       settings:
         saved: "Imehifadhiwa"
@@ -746,6 +749,8 @@ sw:
         security_key:
           register: "Jisajili"
           save: "hifadhi"
+      passkeys:
+        save: "Hifadhi"
       change_about:
         title: "Badilisha Taarifa Zangu"
         error: "Hitilafu imetokea wakati wa kubadilisha namba hii."
@@ -2416,23 +2421,6 @@ sw:
         individual_event: "Chagua matukio rejareja."
         active: "Amilifu"
         active_notice: "Tutakuletea taarifa za tukio zinapotokea."
-        topic_event:
-          name: "Mada Tukio"
-          details: "Wakati kuna mada mpya, iliyotadubiriwa, badilisha au kufutwa."
-        post_event:
-          name: "Chapisho Tukio"
-          details: "Wakati kuna jibu jipya, uhariri, kufutwa au kurejeshwa."
-        user_event:
-          name: "Mtumiaji Tukio"
-        group_event:
-          name: "Kikundi Tukio"
-          details: "Wakati kikundi kinapotengenezwa, sasishwa au kuvunjwa."
-        category_event:
-          name: "Kategoria Tukio"
-          details: "Wakati kitengo kinapotengenezwa, sasishwa au kuvunjwa."
-        tag_event:
-          name: "Lebo Tukio"
-          details: "Wakati lebo inapotengenezwa, sasishwa au kufutwa."
         delivery_status:
           title: "Hali ya Uwasilishaji"
           inactive: "Isiyo Amilifu"
@@ -2567,6 +2555,7 @@ sw:
           color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
           custom_sections: "Vifungu binafsi:"
           theme_components: "Vipengele vya Mandhari"
+          cancel: "Ghairi"
           collapse: Kunja
           uploads: "Upakiaji"
           no_uploads: "Unaweza kupakia vitu vinavyoendana na mandhari yako kama picha na fonti"

@@ -466,6 +466,9 @@ cs:
         type_bonus:
           name: "bonus za psaní"
           title: "Některým revidovatelným typům mohou redaktoři přidělit bonus, aby měly vyšší prioritu."
+      revise_and_reject_post:
+        reason: "Reason"
+        optional: "volitelné"
       stale_help: "Tuto revizi vyřešil/a <b>%{username}</b>."
       claim_help:
         optional: "Tuto položku si můžete nárokovat, abyste zabránili ostatním v její kontrole."
@@ -1278,8 +1281,6 @@ cs:
           Naskenujte tento QR kód v podporované aplikaci (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) a zadejte ověřovací kód.
         disable_description: "Zadejte prosím ověřovací kód z vaší aplikace"
         show_key_description: "Vložit ručně"
-        short_description: |
-          Chraňte svůj účet jednorázovými bezpečnostními kódy.
         extended_description: |
           Dvoufaktorové ověření zvyšuje zabezpečení vašeho účtu tím, že vyžaduje jednorázový kód navíc k vašemu heslu. Kódy mohou být generovány na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> zařízeních.
         oauth_enabled_warning: "Vezměte prosím na vědomí, že přihlášení pomocí sociálních sítí bude zakázáno, jakmile bude dvoufaktorové ověřování na vašem účtu povoleno."
@@ -1315,6 +1316,10 @@ cs:
           save: "Uložit"
           edit_description: "Název fyzického bezpečnostního klíče"
           name_required_error: "Musíte zadat název bezpečnostního klíče."
+      passkeys:
+        save: "Uložit"
+        added_prefix: "Přidáno"
+        last_used_prefix: "Naposledy použito"
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -1970,7 +1975,6 @@ cs:
       drafts_offline: "koncepty offline"
       edit_conflict: "upravit konflikt"
       esc: "esc"
-      esc_label: "Kliknutím nebo stisknutím klávesy Esc zavřete"
       ok_proceed: "Ok, pokračovat"
       group_mentioned:
         one: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} člověka</a> – jste si jistý/á?"
@@ -3975,17 +3979,8 @@ cs:
         groups_filter_instructions: "Relevantní webhooky budou spuštěny pouze tehdy, pokud událost souvisí se specifikovanými skupinami. Nechte prázdné pro spuštění webhooků pro všechny skupiny."
         groups_filter: "Spuštěné skupiny"
         delete_confirm: "Smazat tento webhook? "
-        topic_event:
-          name: "Téma události "
-          details: "Pokud je zde nové téma, reviduj, změň nebo smaž. "
-        post_event:
-          name: "Zveřejnit událost"
-          details: "Pokud je zde nová odpověď, uprav, smaž nebo odeber."
-        user_event:
-          name: "Uživatelské události"
         like_event:
-          name: "Líbí se mi událost"
-          details: "Když se uživateli líbí příspěvek."
+          post_liked: "Když se uživateli líbí příspěvek."
         delivery_status:
           title: "Stav doručení"
           inactive: "Neaktivní"
@@ -4161,6 +4156,7 @@ cs:
           color_scheme_select: "Vybrat barvy motivu"
           custom_sections: "vlastí sekce:"
           theme_components: "Komponenty motivu"
+          cancel: "Zrušit"
           collapse: Sbalit
           uploads: "nahrání"
           no_uploads: "Můžeš nahrát položku spojenou s tvým motivem jako jsou fonty a obrázky."

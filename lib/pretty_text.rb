@@ -342,10 +342,13 @@ module PrettyText
     allowed_pattern = allowed_src_pattern
 
     doc
-      .css("img[src], source[src], source[srcset], track[src]")
+      .css("img[src], source[src], source[srcset], track[src], div[data-video-src]")
       .each do |el|
         if el["src"] && !el["src"].match?(allowed_pattern)
           el[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] = el.delete("src")
+        end
+        if el["data-video-src"] && !el["data-video-src"].match?(allowed_pattern)
+          el[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR] = el["data-video-src"]
         end
 
         if el["srcset"]

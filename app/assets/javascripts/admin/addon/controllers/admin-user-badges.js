@@ -7,7 +7,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
 import UserBadge from "discourse/models/user-badge";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
+import AdminUser from "admin/models/admin-user";
 
 export default class AdminUserBadgesController extends Controller {
   @service dialog;
@@ -60,6 +61,12 @@ export default class AdminUserBadgesController extends Controller {
       };
 
       expanded.push(result);
+    });
+    expanded.forEach((badgeGroup) => {
+      const user = badgeGroup.granted_by;
+      if (user) {
+        badgeGroup.granted_by = AdminUser.create(user);
+      }
     });
 
     return expanded.sortBy("granted_at").reverse();

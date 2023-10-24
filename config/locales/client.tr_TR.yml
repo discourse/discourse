@@ -425,6 +425,14 @@ tr_TR:
         type_bonus:
           name: "tür bonusu"
           title: "Bazı incelenebilir türlere daha yüksek öncelikli olmaları için personel tarafından bonus atanabilir."
+      revise_and_reject_post:
+        title: "Gözden Geçir"
+        reason: "Sebep"
+        send_pm: "Özel Mesaj gönder"
+        feedback: "Geri bildirim"
+        custom_reason: "Nedenini net bir şekilde açıklayın"
+        other_reason: "Diğer..."
+        optional: "i̇steğe bağlı"
       stale_help: "Bu incelenebilir, <b>%{username}</b> tarafından çözüldü."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu ögeyi talep edebilirsiniz."
@@ -1354,8 +1362,6 @@ tr_TR:
           Bu QR kodunu desteklenen bir uygulamada tarayın (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) ve doğrulama kodunuzu girin.
         disable_description: "Lütfen uygulamanızdan kimlik doğrulama kodunu girin"
         show_key_description: "Manuel olarak girin"
-        short_description: |
-          Hesabınızı tek kullanımlık güvenlik kodlarıyla koruyun.
         extended_description: |
           İki adımlı kimlik doğrulama, şifrenize ek olarak tek seferlik belirteç gerektirerek hesabınıza ekstra güvenlik ekler. Belirteçler <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ve <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> cihazlarında oluşturulabilir.
         oauth_enabled_warning: "Hesabınızda iki adımlı kimlik doğrulama etkinleştirildikten sonra sosyal giriş yapma işlemlerinin devre dışı bırakılacağını lütfen dikkate alın."
@@ -1394,6 +1400,12 @@ tr_TR:
           save: "Kaydet"
           edit_description: "Fiziksel Güvenlik Anahtarı Adı"
           name_required_error: "Güvenlik anahtarınız için bir ad girmeniz gerekir."
+      passkeys:
+        name:
+          google_password_manager: "Google Şifre Yöneticisi"
+        save: "Kaydet"
+        added_prefix: "Eklendi"
+        last_used_prefix: "Son Kullanılan"
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
         error: "Bu değeri değiştirirken bir hata oluştu."
@@ -1668,6 +1680,10 @@ tr_TR:
             <p>Yüklediğiniz CSV dosyanızdaki her e-posta adresine bir davetiye gönderilir ve bu davetiyeleri daha sonra yönetebilirsiniz.</p>
           success: "Dosya başarıyla yüklendi. İşlem tamamlandığında mesaj yoluyla bildirim alacaksınız."
           error: "Üzgünüz, dosya CSV biçiminde olmalı."
+      confirm_access:
+        title: "Erişimi onaylayın"
+        incorrect_password: "Girilen şifre yanlış."
+        logged_in_as: "Şu kullanıcı ile giriş yaptınız: "
       password:
         title: "Şifre"
         too_short: "Şifreniz çok kısa."
@@ -1677,6 +1693,8 @@ tr_TR:
         ok: "Şifreniz iyi görünüyor."
         instructions: "en az %{count} karakter"
         required: "lütfen bir şifre girin"
+        confirm: "Onayla"
+        incorrect_password: "Girilen şifre yanlış."
       summary:
         title: "Özet"
         stats: "İstatistikler"
@@ -1947,6 +1965,7 @@ tr_TR:
       security_key_not_allowed_error: "Güvenlik anahtarı kimlik doğrulama işlemi zaman aşımına uğradı veya iptal edildi."
       security_key_no_matching_credential_error: "Sağlanan güvenlik anahtarında eşleşen kimlik bilgileri bulunamadı."
       security_key_support_missing_error: "Mevcut cihazınız veya tarayıcınız güvenlik anahtarlarının kullanımını desteklemiyor. Lütfen farklı bir yöntem kullanın."
+      security_key_invalid_response_error: "Güvenlik anahtarı kimlik doğrulama işlemi geçersiz bir yanıt nedeniyle başarısız oldu."
       email_placeholder: "E-posta / Kullanıcı adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
@@ -2105,7 +2124,7 @@ tr_TR:
       drafts_offline: "taslaklar çevrimdışı"
       edit_conflict: "çakışmayı düzenle"
       esc: "esc"
-      esc_label: "Kapatmak için tıklayın veya Esc tuşuna basın"
+      esc_label: "mesajı kapat"
       ok_proceed: "Tamam, devam et"
       group_mentioned_limit:
         one: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
@@ -2239,6 +2258,7 @@ tr_TR:
           desc: Fısıltılar yalnızca personel tarafından görülebilir
         create_topic:
           label: "Yeni Konu"
+          desc: Yeni bir konu oluşturun
         shared_draft:
           label: "Paylaşılan Taslak"
           desc: "Yalnızca izin verilen kullanıcılar tarafından görülebilecek bir konu taslağı oluşturun"
@@ -4505,40 +4525,65 @@ tr_TR:
         groups_filter: "Tetiklenen Gruplar"
         delete_confirm: "Bu web kancası silinsin mi?"
         topic_event:
-          name: "Konu Olayı"
-          details: "Yeni bir konu olduğunda, revize edildiğinde, değiştirildiğinde veya silindiğinde."
+          group_name: "Konu Olayları"
+          topic_created: "Konu oluşturuldu"
+          topic_revised: "Konu revize edildi"
+          topic_edited: "Konu güncellendi"
+          topic_destroyed: "Konu silindi"
+          topic_recovered: "Konu kurtarıldı"
         post_event:
-          name: "Gönderi Olayı"
-          details: "Yeni bir yanıt olduğunda, düzenlendiğinde, silindiğinde veya kurtarıldığında."
-        user_event:
-          name: "Kullanıcı Olayı"
+          group_name: "Gönderi Olayları"
+          post_created: "Gönderi oluşturuldu"
+          post_edited: "Gönderi güncellendi"
+          post_destroyed: "Gönderi silindi"
+          post_recovered: "Gönderi kurtarıldı"
         group_event:
-          name: "Grup Olayı"
-          details: "Bir grup oluşturulduğunda, güncellendiğinde veya yok edildiğinde."
-        category_event:
-          name: "Kategori Olayı"
-          details: "Bir kategori oluşturulduğunda, güncellendiğinde veya yok edildiğinde."
+          group_name: "Grup Olayları"
+          group_created: "Grup oluşturuldu"
+          group_updated: "Grup güncellendi"
+          group_destroyed: "Grup silindi"
         tag_event:
-          name: "Etiket Olayı"
-          details: "Bir etiket oluşturulduğunda, güncellendiğinde veya yok edildiğinde."
+          group_name: "Etiket Olayları"
+          tag_created: "Etiket oluşturuldu"
+          tag_updated: "Etiket güncellendi"
+          tag_destroyed: "Etiket silindi"
+        category_event:
+          group_name: "Kategori Olayları"
+          category_created: "Kategori oluşturuldu"
+          category_updated: "Kategori güncellendi"
+          category_destroyed: "Kategori silindi"
+        user_event:
+          group_name: "Kullanıcı Olayları"
+          user_logged_in: "Kullanıcı oturum açtı"
+          user_logged_out: "Kullanıcı oturumu kapattı"
+          user_confirmed_email: "Kullanıcı e-postasını onayladı"
+          user_created: "Kullanıcı oluşturuldu"
+          user_approved: "Kullanıcı onaylandı"
+          user_updated: "Kullanıcı güncellendi"
+          user_destroyed: "Kullanıcı silindi"
+          user_suspended: "Kullanıcı askıya alındı"
+          user_unsuspended: "Kullanıcı askıya alınma durumu kaldırıldı"
         reviewable_event:
-          name: "İncelenebilir Olay"
-          details: "Yeni bir öge incelemeye hazır olduğunda ve durumu güncellendiğinde."
-        notification_event:
-          name: "Bildirim Olayı"
-          details: "Bir kullanıcı özet akışında bir bildirim aldığında."
-        user_promoted_event:
-          name: "Kullanıcı Tarafından Tanıtılan Olay"
-          details: "Bir kullanıcı bir güven seviyesinden diğerine terfi ettiğinde."
+          group_name: "İncelenebilir Öğe Olayları"
+          reviewable_created: "İncelenebilir öğe hazır"
+          reviewable_updated: "İncelenebilir öğe güncellendi"
         user_badge_event:
-          name: "Rozet Etkinliği"
-          details: "Rozet verildiğinde veya geri alındığında."
-        group_user_event:
-          name: "Grup Kullanıcı Olayı"
-          details: "Bir kullanıcı bir gruba eklendiğinde veya gruptan çıkarıldığında."
+          group_name: "Rozet Olayları"
+          user_badge_granted: "Kullanıcı rozeti verildi"
+          user_badge_revoked: "Kullanıcı rozeti iptal edildi"
         like_event:
-          name: "Beğeni Olayı"
-          details: "Bir kullanıcı bir gönderiyi beğendiğinde."
+          group_name: "Beğeni Olayları"
+          post_liked: "Bir kullanıcı bir gönderiyi beğendiğinde."
+        notification_event:
+          group_name: "Bildirim Olayları"
+          notification_created: "Bir kullanıcı akışında bir bildirim aldığında"
+        group_user_event:
+          group_name: "Grup Kullanıcı Olayları"
+          user_added_to_group: "Bir kullanıcı bir gruba eklendi"
+          user_removed_from_group: "Bir kullanıcı bir gruptan çıkarıldı"
+        user_promoted_event:
+          group_name: "Kullanıcı Terfi Olayları"
+          user_promoted: "Bir kullanıcı terfi ettirildi"
         delivery_status:
           title: "Teslim Durumu"
           inactive: "Aktif Değil"
@@ -4667,6 +4712,9 @@ tr_TR:
         install: "Yükle"
         delete: "Sil"
         delete_confirm: '"%{theme_name}" adlı temayı silmek istediğinizden emin misiniz?'
+        bulk_delete: "Emin misiniz?"
+        bulk_themes_delete_confirm: "Bu işlem aşağıdaki temaları kaldıracak ve artık bu temalar sitenizdeki hiçbir kullanıcı tarafından kullanılamayacak:"
+        bulk_components_delete_confirm: "Bu işlem aşağıdaki bileşenleri kaldıracak ve artık bu bileşenler sitenizdeki hiçbir kullanıcı tarafından kullanılamayacak:"
         color: "Renk"
         opacity: "Opaklık"
         copy: "Eş Kopya"
@@ -4736,6 +4784,8 @@ tr_TR:
           convert_theme_tooltip: "Bu temayı bileşene dönüştür"
           inactive_themes: "Etkin olmayan temalar:"
           inactive_components: "Kullanılmayan bileşenler:"
+          selected: "%{count} adet seçildi"
+          cancel: "İptal et"
           broken_theme_tooltip: "Bu temanın CSS, HTML veya YAML'sinde hatalar var"
           disabled_component_tooltip: "Bu bileşen devre dışı bırakıldı"
           default_theme_tooltip: "Bu tema, sitenin varsayılan teması"

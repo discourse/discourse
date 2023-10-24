@@ -1,2 +1,5 @@
 chat:
   - plugins/chat/**/*
+
+migration:
+  - migrations/**/*

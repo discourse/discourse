@@ -53,6 +53,8 @@ export default class SidebarUserMessagesSection extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
+
     this.appEvents.off(
       "page:changed",
       this,

@@ -443,6 +443,9 @@ hr:
         type_bonus:
           name: "upišite bonus"
           title: "Određenim vrstama koje mogu pregledati osoblje može im dodijeliti bonus kako bi im postao veći prioritet."
+      revise_and_reject_post:
+        reason: "Razlog"
+        optional: "neobvezno"
       stale_help: "Ova revizija je riješena <b>%{username}</b>."
       claim_help:
         optional: "Možete prisvojiti ovu stavku kako drugi ne bi mogli dodavati osvrte."
@@ -1349,8 +1352,6 @@ hr:
           Skenirajte ovaj QR kod u podržanoj aplikaciji (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> — <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) i unesite svoj kod za provjeru autentičnosti.
         disable_description: "Unesite kod za provjeru autentičnosti iz svoje aplikacije"
         show_key_description: "Unesite ručno"
-        short_description: |
-          Zaštitite svoj račun pomoću jednokratnih sigurnosnih kodova.
         extended_description: |
           Dvofaktorna provjera autentičnosti dodaje dodatnu sigurnost vašem računu tako da uz lozinku zahtijeva jednokratni token. Tokeni se mogu generirati na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> uređajima.
         oauth_enabled_warning: "Imajte na umu da će prijave na društvene mreže biti onemogućene nakon što je omogućena dva faktora autentifikacije na vašem računu."
@@ -1389,6 +1390,10 @@ hr:
           save: "Spremi"
           edit_description: "Naziv ključa fizičke sigurnosti"
           name_required_error: "Morate navesti ime za svoj sigurnosni ključ."
+      passkeys:
+        save: "Spremi"
+        added_prefix: "Dodano"
+        last_used_prefix: "Posljednji put korišteno"
       change_about:
         title: "Promijeni O meni"
         error: "Došlo je do pogreške u promjeni ove vrijednosti."
@@ -1673,6 +1678,7 @@ hr:
         ok: "Vaša zaporka dobro izgleda."
         instructions: "minimalno %{count} znakova"
         required: "Molimo unesite lozinku"
+        confirm: "Potvrdi"
       summary:
         title: "Sažetak"
         stats: "Statistike"
@@ -2094,7 +2100,6 @@ hr:
       drafts_offline: "nacrti offline"
       edit_conflict: "uredi sukob"
       esc: "esc"
-      esc_label: "Kliknite ili pritisnite Esc za odbacivanje"
       ok_proceed: "Ok, nastavi"
       group_mentioned_limit:
         one: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora konfiguriranog ograničenja spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
@@ -4462,38 +4467,8 @@ hr:
         groups_filter_instructions: "Relevantne web dojave pokrenut će se samo ako je događaj povezan s navedenim skupinama. Ostavite prazno da biste pokrenuli web dojave za sve grupe."
         groups_filter: "Pokrenute grupe"
         delete_confirm: "Izbrisati ovu web dojavu?"
-        topic_event:
-          name: "Tema događaja"
-          details: "Kada postoji nova tema, revidirana, promijenjena ili izbrisana."
-        post_event:
-          name: "Post Event"
-          details: "Kada postoji novi odgovor, uređivanje, brisanje ili oporavak."
-        user_event:
-          name: "Korisnički događaj"
-        group_event:
-          name: "Grupni događaj"
-          details: "Kada se grupa kreira, ažurira ili uništi."
-        category_event:
-          name: "Kategorija Događaj"
-          details: "Kada se kategorija kreira, ažurira ili uništi."
-        tag_event:
-          name: "Tag Event"
-          details: "Kada se oznaka kreira, ažurira ili uništi."
-        reviewable_event:
-          name: "Događaj koji se može pregledati"
-          details: "Kada je nova stavka spremna za pregled i kada se njezin status ažurira."
-        notification_event:
-          name: "Događaj obavijesti"
-          details: "Kada korisnik primi obavijest u svom feedu."
-        user_promoted_event:
-          name: "Događaj koji promovira korisnik"
-          details: "Kada se korisnik unaprijedi s jedne razine povjerenja na drugu."
-        group_user_event:
-          name: "Grupni korisnički događaj"
-          details: "Kada se korisnik doda ili ukloni u grupi."
         like_event:
-          name: "Kao Događaj"
-          details: "Kada korisnik lajka objavu."
+          post_liked: "Kada korisnik lajka objavu."
         delivery_status:
           title: "Status isporuke"
           inactive: "Neaktivan"
@@ -4685,6 +4660,7 @@ hr:
           convert_theme_tooltip: "Pretvorite ovu temu u komponentu"
           inactive_themes: "Neaktivne teme:"
           inactive_components: "Neiskorištene komponente:"
+          cancel: "Odustani"
           broken_theme_tooltip: "Ova tema ima pogreške u svom CSS -u, HTML -u ili YAML -u"
           disabled_component_tooltip: "Ova komponenta je onemogućena"
           default_theme_tooltip: "Ova je tema zadana tema web stranice"

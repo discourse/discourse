@@ -3,7 +3,7 @@ import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import RequestGroupMembershipForm from "./modal/request-group-membership-form";
 
 export default Component.extend({

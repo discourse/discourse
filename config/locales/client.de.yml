@@ -433,6 +433,14 @@ de:
         type_bonus:
           name: "Bonustyp"
           title: "Bestimmte überprüfbare Typen können vom Team mit einem Bonus ausgestattet werden, damit sie höher priorisiert sind."
+      revise_and_reject_post:
+        title: "Überarbeite"
+        reason: "Grund"
+        send_pm: "PM senden"
+        feedback: "Feedback"
+        custom_reason: "Gib eine klare Beschreibung des Grundes an"
+        other_reason: "Andere..."
+        optional: "optional"
       stale_help: "Diese Überprüfung wurde von <b>%{username}</b> gelöst."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
@@ -1367,7 +1375,7 @@ de:
         disable_description: "Bitte gib den Authentifizierungscode aus deiner App ein."
         show_key_description: "Manuell eingeben"
         short_description: |
-          Schütze dein Konto mit Einweg-Sicherheitscodes.
+          Schütze dein Konto mit einmalig verwendbaren Sicherheitscodes oder physischen Sicherheitsschlüsseln.
         extended_description: |
           Zwei-Faktor-Authentifizierung erhöht die Sicherheit deines Kontos, indem zusätzlich zum Passwort ein einmalig gültiger Code erforderlich ist. Codes können auf <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+android" target='_blank'>Android</a>- und <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+iOS">iOS</a>-Geräten generiert werden.
         oauth_enabled_warning: "Bitte beachte, dass soziale Anmeldemethoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert wurde."
@@ -1406,6 +1414,24 @@ de:
           save: "Speichern"
           edit_description: "Name des physischen Sicherheitsschlüssels"
           name_required_error: "Du musst einen Namen für deinen Sicherheitsschlüssel angeben."
+      passkeys:
+        rename_passkey: "Hauptschlüssel umbenennen"
+        add_passkey: "Hauptschlüssel hinzufügen"
+        confirm_delete_passkey: "Möchtest du wirklich diesen Hauptschlüssel löschen?"
+        passkey_successfully_created: "Erfolg! Dein neuer Hauptschlüssel wurde erstellt."
+        rename_passkey_instructions: "Wähle einen Namen für den Hauptschlüssel, mit dem du ihn leicht identifizieren kannst, zum Beispiel den Namen deines Passwortmanagers."
+        name:
+          default: "Hauptpassschlüssel"
+          google_password_manager: "Google Passwort Manager"
+          icloud_keychain: "iCloud-Schlüsselbund"
+        save: "Speichern"
+        title: "Hauptschlüssel"
+        short_description: "Hauptschlüssel ersetzen Passwörter, die deine Identität biometrisch (z.B. durch Berührung, FaceID) oder über eine Geräte-PIN/ein Passwort validieren."
+        added_prefix: "Hinzugefügt"
+        last_used_prefix: "Zuletzt verwendet"
+        never_used: "Nie benutzt"
+        not_allowed_error: "Der Registrierungsvorgang für den Hauptschlüssel ist abgelaufen oder wurde abgebrochen."
+        already_added_error: "Du hast diesen Hauptschlüssel bereits registriert. Du musst ihn nicht erneut registrieren."
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -1516,6 +1542,7 @@ de:
         instructions: "Zur Registrierung eines Benutzerkontos wird ein Einladungs-Code benötigt."
       auth_tokens:
         title: "Kürzlich benutzte Geräte"
+        short_description: "Dies ist eine Liste der Geräte, die sich kürzlich bei deinem Konto angemeldet haben."
         details: "Details"
         log_out_all: "Überall abmelden"
         not_you: "Das bist nicht du?"
@@ -1684,6 +1711,12 @@ de:
           progress: "%{progress} % hochgeladen …"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
           error: "Die Datei sollte im CSV Format vorliegen."
+      confirm_access:
+        title: "Zugriff bestätigen"
+        incorrect_password: "Das eingegebene Passwort ist falsch."
+        logged_in_as: "Du bist eingeloggt als: "
+        instructions: "Bitte bestätige deine Identität, um diese Aktion abzuschließen."
+        fine_print: "Wir bitten dich, deine Identität zu bestätigen, da dies eine potenziell sensible Aktion ist. Wenn du dich einmal authentifiziert hast, wirst du erst nach ein paar Stunden Inaktivität wieder aufgefordert, dich erneut zu authentifizieren."
       password:
         title: "Passwort"
         too_short: "Dein Passwort ist zu kurz."
@@ -1693,6 +1726,8 @@ de:
         ok: "Dein Passwort sieht in Ordnung aus."
         instructions: "mindestens %{count} Zeichen"
         required: "Bitte Passwort eingeben"
+        confirm: "Bestätigen"
+        incorrect_password: "Das eingegebene Passwort ist falsch."
       summary:
         title: "Zusammenfassung"
         stats: "Statistiken"
@@ -1969,6 +2004,7 @@ de:
       security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
       security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldedaten gefunden."
       security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
+      security_key_invalid_response_error: "Der Authentifizierungsprozess des Sicherheitsschlüssels ist aufgrund einer ungültigen Antwort fehlgeschlagen."
       email_placeholder: "E-Mail/Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
@@ -2022,6 +2058,8 @@ de:
         name: "Discord"
         title: "Mit Discord anmelden"
         sr_title: "Mit Discord anmelden"
+      passkey:
+        name: "Anmeldung mit einem Hauptschlüssel"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"
@@ -2139,7 +2177,7 @@ de:
       drafts_offline: "Entwürfe offline"
       edit_conflict: "Konflikt bearbeiten"
       esc: "esc"
-      esc_label: "Klicken oder Esc drücken, um zu schließen"
+      esc_label: "Nachricht verwerfen"
       ok_proceed: "Ok, weiter"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
@@ -2274,6 +2312,7 @@ de:
           desc: Ein geflüsterter Beitrag ist nur für Team-Mitglieder sichtbar
         create_topic:
           label: "Neues Thema"
+          desc: Erstelle ein neues Thema
         shared_draft:
           label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
@@ -4573,41 +4612,65 @@ de:
         groups_filter: "Ausgelöste Gruppen"
         delete_confirm: "Diesen Webhook löschen?"
         topic_event:
-          name: "Themenereignis"
-          details: "Wenn ein neues Thema erstellt, bearbeitet oder gelöscht wird."
+          group_name: "Themenereignisse"
+          topic_created: "Thema wird erstellt"
+          topic_revised: "Thema wird überarbeitet"
+          topic_edited: "Thema wird aktualisiert"
+          topic_destroyed: "Thema wird gelöscht"
+          topic_recovered: "Thema wird wiederhergestellt"
         post_event:
-          name: "Beitragsereignis"
-          details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
-        user_event:
-          name: "Benutzer-Ereignis"
-          details: "Wenn sich ein Benutzer anmeldet, sich abmeldet, seine E-Mail bestätigt, erstellt, genehmigt, aktualisiert, gesperrt oder entsperrt wird."
+          group_name: "Veranstaltung posten"
+          post_created: "Erstellte Beiträge"
+          post_edited: "Beitrag wird aktualisiert"
+          post_destroyed: "Beitrag wird gelöscht"
+          post_recovered: "Beitrag wird wiederhergestellt"
         group_event:
-          name: "Gruppen-Ereignis"
-          details: "Wenn eine Gruppe erstellt, aktualisiert oder gelöscht wird."
-        category_event:
-          name: "Kategorie-Ereignis"
-          details: "Wenn eine Kategorie erstellt, aktualisiert oder gelöscht wird."
+          group_name: "Gruppenveranstaltungen"
+          group_created: "Gruppe wird erstellt"
+          group_updated: "Gruppe wird aktualisiert"
+          group_destroyed: "Gruppe wird gelöscht"
         tag_event:
-          name: "Schlagwort-Ereignis"
-          details: "Wenn ein Schlagwort erstellt, aktualisiert oder gelöscht wird."
+          group_name: "Schlagwort-Ereignisse"
+          tag_created: "Schlagwort wird erstellt"
+          tag_updated: "Schlagwort wird aktualisiert"
+          tag_destroyed: "Schlagwort wird gelöscht"
+        category_event:
+          group_name: "Kategorie Veranstaltungen"
+          category_created: "Kategorie wird erstellt"
+          category_updated: "Kategorie wird aktualisiert"
+          category_destroyed: "Kategorie wird gelöscht"
+        user_event:
+          group_name: "Benutzer-Ereignisse"
+          user_logged_in: "Benutzer hat sich angemeldet"
+          user_logged_out: "Benutzer hat sich abgemeldet"
+          user_confirmed_email: "Vom Benutzer bestätigte E-Mail"
+          user_created: "Benutzer wird erstellt"
+          user_approved: "Benutzer wird zugelassen"
+          user_updated: "Benutzer wird aktualisiert"
+          user_destroyed: "Benutzer wird gelöscht"
+          user_suspended: "Benutzer wird gesperrt"
+          user_unsuspended: "Benutzer wird entsperrt"
         reviewable_event:
-          name: "Überprüfbares Ereignis"
-          details: "Wenn ein neuer Eintrag zur Überprüfung bereit ist und wenn sich sein Status ändert."
-        notification_event:
-          name: "Benachrichtigungs-Ereignis"
-          details: "Wenn ein Benutzer eine Benachrichtigung in seinem Feed erhält."
-        user_promoted_event:
-          name: "Benutzer-Beförderungs-Ereignis"
-          details: "Wenn ein Benutzer von einer Vertrauensstufe zur nächsten befördert wird."
+          group_name: "Überprüfbare Ereignisse"
+          reviewable_created: "Überprüfbares Element ist bereit"
+          reviewable_updated: "Überprüfbares Element wird aktualisiert"
         user_badge_event:
-          name: "Abzeichen-Ereignis"
-          details: "Wenn ein Abzeichen vergeben oder widerrufen wird."
-        group_user_event:
-          name: "Gruppenbenutzer-Ereignis"
-          details: "Wenn ein Benutzer in einer Gruppe hinzugefügt oder entfernt wird."
+          group_name: "Abzeichen-Ereignisse"
+          user_badge_granted: "Benutzer-Abzeichen wird gewährt"
+          user_badge_revoked: "Benutzer-Abzeichen wird widerrufen"
         like_event:
-          name: "„Gefällt mir“-Ereignis"
-          details: "Wenn ein Benutzer einen Beitrag mit einem „Gefällt mir“ versieht."
+          group_name: "„Gefällt mir“-Ereignisse"
+          post_liked: "Wenn ein Benutzer einen Beitrag mit einem „Gefällt mir“ versieht."
+        notification_event:
+          group_name: "Benachrichtigungs-Ereignisse"
+          notification_created: "Ein Benutzer erhält eine Benachrichtigung in seinem Feed"
+        group_user_event:
+          group_name: "Gruppenbenutzer-Ereignisse"
+          user_added_to_group: "Ein Benutzer wird zu einer Gruppe hinzugefügt"
+          user_removed_from_group: "Ein Benutzer wird aus einer Gruppe entfernt"
+        user_promoted_event:
+          group_name: "Benutzer-Beförderungs-Ereignisse"
+          user_promoted: "Ein Benutzer wird befördert"
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -4741,6 +4804,9 @@ de:
         install: "Installieren"
         delete: "Löschen"
         delete_confirm: 'Möchtest du wirklich „%{theme_name}“ löschen?'
+        bulk_delete: "Bist du sicher?"
+        bulk_themes_delete_confirm: "Dadurch werden die folgenden Themes deinstalliert und können von den Nutzern auf deiner Website nicht mehr verwendet werden:"
+        bulk_components_delete_confirm: "Dadurch werden die folgenden Komponenten deinstalliert und können von den Nutzern deiner Website nicht mehr verwendet werden:"
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Duplizieren"
@@ -4810,6 +4876,8 @@ de:
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
           inactive_components: "Nicht verwendete Komponenten:"
+          selected: "%{count} ausgewählt"
+          cancel: "Abbrechen"
           broken_theme_tooltip: "Dieses Theme hat fehlerhaftes CSS, HTML oder YAML."
           disabled_component_tooltip: "Diese Komponente wurde deaktiviert"
           default_theme_tooltip: "Dieses Theme ist das Standardtheme der Website."

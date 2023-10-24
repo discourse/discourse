@@ -17,7 +17,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import NotActivatedModal from "../components/modal/not-activated";
 
 function unlessStrictlyReadOnly(method, message) {

@@ -8,7 +8,6 @@ export default class DInlineMenu extends Component {
   @service menu;
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <div
       id={{MENU.portalOutletId}}
       {{didInsert this.menu.registerPortalOutletElement}}

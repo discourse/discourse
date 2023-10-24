@@ -748,12 +748,7 @@ class Post < ActiveRecord::Base
     problems
   end
 
-  def rebake!(
-    invalidate_broken_images: false,
-    invalidate_oneboxes: false,
-    priority: nil,
-    update_upload_security: false
-  )
+  def rebake!(invalidate_broken_images: false, invalidate_oneboxes: false, priority: nil)
     new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: invalidate_oneboxes)
     old_cooked = cooked
 
@@ -769,10 +764,6 @@ class Post < ActiveRecord::Base
     # Extracts urls from the body
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
-
-    # Settings may have changed before rebake, so any uploads linked to the post
-    # should have their secure status reexamined.
-    update_uploads_secure_status(source: "post rebake") if update_upload_security
 
     # make sure we trigger the post process
     trigger_post_process(bypass_bump: true, priority: priority)
@@ -1084,8 +1075,8 @@ class Post < ActiveRecord::Base
   end
 
   def update_uploads_secure_status(source:)
-    if Discourse.store.external? && SiteSetting.secure_uploads?
-      Jobs.enqueue(:update_post_uploads_secure_status, post_id: self.id, source: source)
+    if Discourse.store.external?
+      self.uploads.each { |upload| upload.update_secure_status(source: source) }
     end
   end
 

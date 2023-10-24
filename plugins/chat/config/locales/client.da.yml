@@ -127,7 +127,6 @@ da:
       channel_info:
         back_to_channel: "Tilbage"
         tabs:
-          about: Om
           members: Brugere
           settings: Indstillinger
       new_message_modal:
@@ -171,6 +170,10 @@ da:
         saved: "Gemt"
         unfollow: "Forlad"
         admin_title: "Admin"
+        settings_title: "Indstillinger"
+        category_label: "Kategori"
+        history_label: "Historik"
+        members_label: "Brugere"
       admin:
         title: "Chat"
         export_messages:
@@ -200,6 +203,10 @@ da:
           title: "Flyt til ny besked"
       replying_indicator:
         single_user: "%{username} skriver"
+      retention_reminders:
+        short:
+          one: "%{count} dag"
+          other: "%{count} dage"
       emoji_picker:
         objects: "Objekter"
         activities: "Aktiviteter"

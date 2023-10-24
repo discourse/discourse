@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { i18n, setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminBackupsIndexController extends Controller {
   @service dialog;

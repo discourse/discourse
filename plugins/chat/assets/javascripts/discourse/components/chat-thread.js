@@ -391,7 +391,7 @@ export default class ChatThread extends Component {
     this.chatThreadPane.sending = true;
 
     const data = {
-      new_message: message.message,
+      message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 

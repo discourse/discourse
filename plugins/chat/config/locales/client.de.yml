@@ -26,14 +26,19 @@ de:
             chat:
               create_message: "Erstelle eine Chat-Nachricht in einem bestimmten Kanal."
       web_hooks:
-        chat_message_event:
-          name: "Chat-Nachrichtenereignis"
-          details: "Wenn eine Chat-Nachricht erstellt, bearbeitet, gelöscht oder wiederhergestellt wird."
+        chat_event:
+          group_name: "Chat-Ereignisse"
+          chat_message_created: "Nachricht wird erstellt"
+          chat_message_edited: "Nachricht wird bearbeitet"
+          chat_message_trashed: "Nachricht wird gelöscht"
+          chat_message_restored: "Nachricht wird wiederhergestellt"
     about:
       chat_messages_count: "Chat-Nachrichten"
       chat_channels_count: "Chat-Kanäle"
       chat_users_count: "Chat-Benutzer"
     chat:
+      text_copied: Text in die Zwischenablage kopiert
+      link_copied: Link in die Zwischenablage kopiert
       deleted_chat_username: gelöscht
       dates:
         time_tiny: "h:mm"
@@ -240,6 +245,7 @@ de:
       reply: "Antworten"
       edit: "Bearbeiten"
       copy_link: "Link kopieren"
+      copy_text: "Text kopieren"
       rebake_message: "HTML neu erstellen"
       retry_staged_message:
         title: "Netzwerkfehler"
@@ -308,7 +314,6 @@ de:
         back_to_all_channels: "Alle Kanäle"
         back_to_channel: "Zurück"
         tabs:
-          about: Über
           members: Mitglieder
           settings: Einstellungen
       new_message_modal:
@@ -438,6 +443,11 @@ de:
         saved: "Gespeichert"
         unfollow: "Verlassen"
         admin_title: "Administrator"
+        settings_title: "Einstellungen"
+        info_title: "Kanal-Info"
+        category_label: "Kategorie"
+        history_label: "Verlauf"
+        members_label: "Mitglieder"
       admin:
         title: "Chat"
         export_messages:
@@ -508,14 +518,14 @@ de:
           one: "%{commaSeparatedUsernames} und %{count} andere Person schreiben"
           other: "%{commaSeparatedUsernames} und %{count} andere Personen schreiben"
       retention_reminders:
-        public_none: "Der Kanalverlauf wird auf unbestimmte Zeit gespeichert."
-        public:
-          one: "Der Kanalverlauf wird für %{count} Tag gespeichert."
-          other: "Der Kanalverlauf wird für %{count} Tage gespeichert."
-        dm_none: "Der persönliche Chatverlauf wird auf unbestimmte Zeit gespeichert."
-        dm:
-          one: "Der persönliche Chatverlauf wird für %{count} Tag gespeichert."
-          other: "Der persönliche Chatverlauf wird für %{count} Tage gespeichert."
+        indefinitely_short: "unbegrenzt"
+        indefinitely_long: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten auf unbestimmte Zeit gespeichert werden."
+        short:
+          one: "%{count} Tag"
+          other: "%{count} Tage"
+        long:
+          one: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tag aufbewahrt werden."
+          other: "Die Chat-Einstellungen wurden so eingestellt, dass Channel-Nachrichten für %{count} Tage aufbewahrt werden."
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."

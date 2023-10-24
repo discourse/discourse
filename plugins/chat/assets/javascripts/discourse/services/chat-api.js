@@ -386,10 +386,10 @@ export default class ChatApi extends Service {
    * @param {Array<number>} data.upload_ids - The uploads attached to the message after editing.
    */
   editMessage(channelId, messageId, data) {
-    return ajax(`/chat/${channelId}/edit/${messageId}`, {
-      type: "PUT",
-      data,
-    });
+    return this.#putRequest(
+      `/channels/${channelId}/messages/${messageId}`,
+      data
+    );
   }
 
   /**

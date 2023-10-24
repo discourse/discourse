@@ -433,6 +433,10 @@ class Upload < ActiveRecord::Base
     self.sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
   end
 
+  def self.sha1_from_long_url(url)
+    $2 if url =~ URL_REGEX || url =~ OptimizedImage::URL_REGEX
+  end
+
   def self.sha1_from_base62_encoded(encoded_sha1)
     sha1 = Base62.decode(encoded_sha1).to_s(16)
 

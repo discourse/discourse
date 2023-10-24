@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // Modal that displays confirmation text when user deletes a topic
 // The modal will display only if the topic exceeds a certain amount of views

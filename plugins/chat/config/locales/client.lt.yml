@@ -61,7 +61,6 @@ lt:
       channel_info:
         back_to_channel: "Atgal"
         tabs:
-          about: Apie
           members: Nariai
           settings: Nustatymai
       new_message_modal:
@@ -91,6 +90,10 @@ lt:
         saved: "Išsaugota"
         unfollow: "Palikti"
         admin_title: "Administratorius"
+        settings_title: "Nustatymai"
+        category_label: "Kategorija"
+        history_label: "Istorija"
+        members_label: "Nariai"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"
@@ -111,6 +114,12 @@ lt:
           title: "Perkelti į esamą temą"
         new_message:
           title: "Pereiti prie naujos žinutės"
+      retention_reminders:
+        short:
+          one: "%{count} diena"
+          few: "%{count} dienos"
+          many: "%{count} dienų"
+          other: "%{count} dienų"
       emoji_picker:
         objects: "Objektai"
         activities: "Veikla"

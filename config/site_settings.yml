@@ -192,6 +192,7 @@ basic:
   post_menu:
     client: true
     type: list
+    list_type: simple
     default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
@@ -207,6 +208,7 @@ basic:
   post_menu_hidden_items:
     client: true
     type: list
+    list_type: simple
     default: "flag|bookmark|edit|delete|admin"
     allow_any: false
     choices:
@@ -221,6 +223,7 @@ basic:
   share_links:
     client: true
     type: list
+    list_type: simple
     default: "twitter|facebook|email"
     allow_any: false
     choices:
@@ -241,6 +244,7 @@ basic:
   share_quote_buttons:
     client: true
     type: list
+    list_type: simple
     default: "twitter|email"
     allow_any: false
     choices:
@@ -1968,6 +1972,10 @@ spam:
   reviewable_low_priority_threshold:
     default: 0
     min: 0
+  reviewable_revision_reasons:
+    default: "Duplicate|Does not meet posting guidelines"
+    type: list
+    client: true
 
 rate_limits:
   unique_posts_mins: 5
@@ -2131,10 +2139,6 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_hashtag_autocomplete:
-    default: true
-    client: true
-    hidden: true
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -2158,6 +2162,10 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
+  experimental_passkeys:
+    client: true
+    default: false
+    hidden: true
   experimental_search_menu_groups:
     type: group_list
     list_type: compact
@@ -2169,6 +2177,18 @@ developer:
     hidden: true
   instrument_gc_stat_per_request:
     default: false
+    hidden: true
+  enable_experimental_admin_ui_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    hidden: true
+    client: true
+  lazy_load_categories:
+    default: false
+    client: true
     hidden: true
 
 navigation:
@@ -2881,6 +2901,8 @@ tags:
     default: true
     client: true
   create_post_for_category_and_tag_changes:
+    default: false
+  automatically_clean_unused_tags:
     default: false
 
 dashboard:

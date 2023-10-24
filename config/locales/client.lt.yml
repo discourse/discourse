@@ -436,6 +436,9 @@ lt:
         type_bonus:
           name: "tipo premija"
           title: "Tam tikriems peržiūrėtiems tipams darbuotojai gali priskirti premiją, kad jie taptų aukštesniu prioritetu."
+      revise_and_reject_post:
+        reason: "Priežastis"
+        optional: "pasirinktinai"
       stale_help: "Ši peržiūra buvo išspręsta <b>%{username}</b>."
       claim_help:
         optional: "Galite pareikšti teises į šį elementą, kad kiti negalėtų jo peržiūrėti."
@@ -1212,8 +1215,6 @@ lt:
         rate_limit: "Prašome palaukti prieš bandydami kitą autentifikavimo kodą."
         disable_description: "Prašome įvesti autentifikavimo kodą iš savo programos"
         show_key_description: "Įveskite rankiniu būdu"
-        short_description: |
-          Apsaugokite paskyrą naudodami vienkartinius saugos kodus.
         oauth_enabled_warning: "Atminkite, kad socialiniai prisijungimai bus išjungti, kai jūsų paskyroje bus įgalintas dviejų veiksnių autentifikavimas."
         use: "Naudoti autentifikavimo programėlę"
         enforced_notice: "Prieš prisijungdami prie šios svetainės turite įjungti dviejų veiksnių autentifikavimą."
@@ -1236,6 +1237,10 @@ lt:
           already_added_error: "Jūs jau užregistravote šį saugos raktą. Jums nereikia jo užregistruoti dar kartą."
           save: "Saugoti"
           name_required_error: "Turite nurodyti saugos rakto pavadinimą."
+      passkeys:
+        save: "Išsaugoti"
+        added_prefix: "Pridėta"
+        last_used_prefix: "Paskutinis naudotas"
       change_about:
         title: "Keisti Apie Mane"
         error: "Rasta klaida bandant pakeisti reikšmę. Prašom patikslinti veiksmus."
@@ -1502,6 +1507,7 @@ lt:
         ok: "Jūsų slaptažodis yra tinkamas."
         instructions: "bent jau %{count}simboliai"
         required: "Įveskite slaptažodį"
+        confirm: "Patvirtinti"
       summary:
         title: "Aprašymas"
         stats: "Statistika"
@@ -3772,33 +3778,8 @@ lt:
         categories_filter: "Suaktyvintos kategorijos"
         tags_filter: "Suaktyvintos žymos"
         groups_filter: "Suaktyvintos grupės"
-        topic_event:
-          name: "Temos įvykis"
-          details: "Kai yra nauja tema, peržiūrėta, pakeista arba ištrinta."
-        post_event:
-          name: "Paskelbti įvykį"
-          details: "Kai yra naujas atsakymas, redaguokite, ištrinkite arba atkurkite."
-        user_event:
-          name: "Vartotojo įvykis"
-        group_event:
-          name: "Grupės renginys"
-        category_event:
-          name: "Kategorijos įvykis"
-          details: "Kai sukuriama, atnaujinama ar sunaikinama kategorija."
-        tag_event:
-          name: "Žymos įvykis"
-          details: "Kai žyma sukuriama, atnaujinama arba sunaikinama."
-        reviewable_event:
-          name: "Įvykis, kurį galima peržiūrėti"
-          details: "Kai naujas elementas yra paruoštas peržiūrėti ir kai jo būsena atnaujinama."
-        notification_event:
-          name: "Pranešimo įvykis"
-          details: "Kai vartotojas gauna pranešimą savo sklaidos kanale."
-        group_user_event:
-          name: "Grupės vartotojo įvykis"
-          details: "Kai vartotojas įtraukiamas arba pašalinamas iš grupės."
         like_event:
-          details: "Kai vartotojui patinka įrašas."
+          post_liked: "Kai vartotojui patinka įrašas."
         delivery_status:
           title: "Pristatymo būsena"
           inactive: "Neaktyvus"
@@ -3970,6 +3951,7 @@ lt:
           convert_theme_tooltip: "Konvertuoti šią temą į komponentą"
           inactive_themes: "Neaktyvios temos:"
           inactive_components: "Nepanaudoti komponentai:"
+          cancel: "Atšaukti"
           broken_theme_tooltip: "Ši tema turi klaidų savo CSS, HTML arba YAML"
           disabled_component_tooltip: "Šis komponentas buvo išjungtas"
           default_theme_tooltip: "Ši tema yra numatytoji svetainės tema"

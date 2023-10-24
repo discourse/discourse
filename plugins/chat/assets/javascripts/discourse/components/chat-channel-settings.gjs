@@ -9,7 +9,7 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import categoryBadge from "discourse/helpers/category-badge";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
 import ChatModalArchiveChannel from "discourse/plugins/chat/discourse/components/chat/modal/archive-channel";
@@ -443,7 +443,7 @@ export default class ChatAboutScreen extends Component {
           {{/if}}
 
           <section.row @label={{this.historyLabel}}>
-            <ChatRetentionReminderText @channel={{@channel}} />
+            <ChatRetentionReminderText @channel={{@channel}} @type="short" />
           </section.row>
         </form.section>
 

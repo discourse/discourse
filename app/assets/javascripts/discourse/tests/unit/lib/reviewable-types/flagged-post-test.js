@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { emojiUnescape } from "discourse/lib/text";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { createRenderDirector } from "discourse/tests/helpers/reviewable-types-helper";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function getReviewable(overrides = {}) {
   return UserMenuReviewable.create(

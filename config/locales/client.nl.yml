@@ -419,6 +419,9 @@ nl:
         type_bonus:
           name: "typebonus"
           title: "Aan bepaalde beoordeelbare typen kan door medewerkers een bonus worden toegekend om ze hogere prioriteit te geven."
+      revise_and_reject_post:
+        reason: "Reden"
+        optional: "optioneel"
       stale_help: "Dit beoordeelbare item is afgehandeld door <b>%{username}</b>."
       claim_help:
         optional: "Je kunt dit item claimen om te voorkomen dat anderen het beoordelen."
@@ -1347,8 +1350,6 @@ nl:
           Scan deze QR-code in een ondersteunde app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) en voer je verificatiecode in.
         disable_description: "Voer de verificatiecode van je app in"
         show_key_description: "Voer handmatig in"
-        short_description: |
-          Bescherm je account met eenmalige beveiligingscodes.
         extended_description: |
           Tweeledige verificatie voegt extra beveiliging toe aan je account door naast je wachtwoord een eenmalige code te vereisen. Tokens kunnen worden gegenereerd op <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- en <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> -apparaten.
         oauth_enabled_warning: "Houd er rekening mee dat sociale aanmeldingen worden uitgeschakeld zodra tweeledige verificatie is ingeschakeld op je account."
@@ -1387,6 +1388,10 @@ nl:
           save: "Opslaan"
           edit_description: "Naam fysieke beveiligingssleutel"
           name_required_error: "Je moet een naam voor je beveiligingssleutel opgeven."
+      passkeys:
+        save: "Opslaan"
+        added_prefix: "Toegevoegd"
+        last_used_prefix: "Laatst gebruikt"
       change_about:
         title: "Over mij wijzigen"
         error: "Er is een fout opgetreden bij het wijzigen van deze waarde."
@@ -1670,6 +1675,7 @@ nl:
         ok: "Je wachtwoord ziet er goed uit."
         instructions: "minimaal %{count} tekens"
         required: "Voer een wachtwoord in"
+        confirm: "Bevestigen"
       summary:
         title: "Samenvatting"
         stats: "Statistieken"
@@ -2097,7 +2103,6 @@ nl:
       drafts_offline: "concepten offline"
       edit_conflict: "bewerkingsconflict"
       esc: "Esc"
-      esc_label: "Klik of druk op Esc om te sluiten"
       ok_proceed: "OK, doorgaan"
       group_mentioned_limit:
         one: "<b>Waarschuwing!</b> Je hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde vermeldingslimiet van %{count} gebruiker. Niemand krijgt een melding."
@@ -4475,41 +4480,8 @@ nl:
         groups_filter_instructions: "Relevante webhooks worden alleen geactiveerd als de gebeurtenis bij opgegeven groepen hoort. Laat dit leeg om webhooks voor alle groepen te activeren."
         groups_filter: "Geactiveerde groepen"
         delete_confirm: "Deze webhook verwijderen?"
-        topic_event:
-          name: "Topicgebeurtenis"
-          details: "Wanneer een nieuw topic wordt geplaatst, gereviseerd, gewijzigd of verwijderd."
-        post_event:
-          name: "Berichtgebeurtenis"
-          details: "Wanneer een (nieuw) bericht wordt geplaatst, bewerkt, verwijderd of hersteld."
-        user_event:
-          name: "Gebruikersgebeurtenis"
-        group_event:
-          name: "Groepsgebeurtenis"
-          details: "Wanneer een groep wordt gemaakt, bijgewerkt of verwijderd."
-        category_event:
-          name: "Categoriegebeurtenis"
-          details: "Wanneer een categorie wordt gemaakt, bijgewerkt of verwijderd."
-        tag_event:
-          name: "Tag-gebeurtenis"
-          details: "Wanneer een tag wordt gemaakt, bijgewerkt of verwijderd."
-        reviewable_event:
-          name: "Beoordeelbare gebeurtenis"
-          details: "Wanneer een nieuw item gereed is voor beoordeling en wanneer de status ervan is bijgewerkt."
-        notification_event:
-          name: "Meldingsgebeurtenis"
-          details: "Wanneer een gebruiker een melding in diens feed ontvangt."
-        user_promoted_event:
-          name: "Door gebruiker gepromoot evenement"
-          details: "Wanneer een gebruiker wordt gepromoveerd van het ene vertrouwensniveau naar het andere."
-        user_badge_event:
-          name: "Badgegebeurtenis"
-          details: "Wanneer een badge wordt toegekend of ingetrokken."
-        group_user_event:
-          name: "Groepgebruikersgebeurtenis"
-          details: "Wanneer een gebruiker wordt toegevoegd of verwijderd in een groep."
         like_event:
-          name: "Likegebeurtenis"
-          details: "Wanneer een gebruiker een bericht liket."
+          post_liked: "Wanneer een gebruiker een bericht liket."
         delivery_status:
           title: "Afleveringsstatus"
           inactive: "Inactief"
@@ -4705,6 +4677,7 @@ nl:
           convert_theme_tooltip: "Dit thema naar een onderdeel converteren"
           inactive_themes: "Inactieve thema's:"
           inactive_components: "Ongebruikte onderdelen:"
+          cancel: "Annuleren"
           broken_theme_tooltip: "Dit thema bevat fouten in de CSS, HTML of YAML ervan"
           disabled_component_tooltip: "Dit onderdeel is uitgeschakeld"
           default_theme_tooltip: "Dit thema is het standaardthema van de website"

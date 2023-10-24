@@ -83,7 +83,7 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
   }
 
   @bind
-  getConnectors({ hasBlock }) {
+  getConnectors({ hasBlock } = {}) {
     const connectors = renderedConnectorsFor(
       this.args.name,
       this.outletArgsWithDeprecations,

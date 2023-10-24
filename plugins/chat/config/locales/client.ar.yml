@@ -336,7 +336,6 @@ ar:
         back_to_all_channels: "كل القنوات"
         back_to_channel: "العودة"
         tabs:
-          about: نبذة
           members: الأعضاء
           settings: الإعدادات
       new_message_modal:
@@ -490,6 +489,10 @@ ar:
         saved: "تم الحفظ"
         unfollow: "مغادرة"
         admin_title: "مسؤول"
+        settings_title: "الإعدادات"
+        category_label: "الفئة"
+        history_label: "السجل"
+        members_label: "الأعضاء"
       admin:
         title: "الدردشة"
         export_messages:
@@ -576,22 +579,13 @@ ar:
           many: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
           other: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
       retention_reminders:
-        public_none: "يتم الاحتفاظ بسجل القناة إلى أجلٍ غير مسمى."
-        public:
-          zero: "يتم الاحتفاظ بسجل القناة لمدة %{count} يوم."
-          one: "يتم الاحتفاظ بسجل القناة لمدة يوم واحد (%{count})."
-          two: "يتم الاحتفاظ بسجل القناة لمدة يومين (%{count})."
-          few: "يتم الاحتفاظ بسجل القناة لمدة %{count} أيام."
-          many: "يتم الاحتفاظ بسجل القناة لمدة %{count} يومًا."
-          other: "يتم الاحتفاظ بسجل القناة لمدة %{count} يوم."
-        dm_none: "يتم الاحتفاظ بسجل الدردشة الشخصية إلى أجلٍ غير مسمى."
-        dm:
-          zero: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة %{count} يوم."
-          one: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة يوم واحد (%{count})."
-          two: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة يومين (%{count})."
-          few: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة %{count} أيام."
-          many: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة %{count} يومًا."
-          other: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة %{count} يوم."
+        short:
+          zero: "يومان (%{count})"
+          one: "يوم واحد (%{count})"
+          two: "يومان (%{count})"
+          few: "%{count} أيام"
+          many: "%{count} يومًا"
+          other: "%{count} يوم"
       flags:
         off_topic: "هذه الرسالة ليست ذات صلة بالمناقشة الحالية كما هو محدَّد في عنوان القناة، وربما ينبغي نقلها إلى مكانٍ آخر."
         inappropriate: "تحتوي هذه الرسالة على محتوى قد يعتبره الشخص العاقل مسيئًا أو مهينًا أو ينتهك <a href=\"%{basePath}/guidelines\">إرشادات المجتمع</a> لدينا."

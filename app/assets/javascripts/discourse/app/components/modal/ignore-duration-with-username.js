@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import User from "discourse/models/user";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class IgnoreDurationModal extends Component {
   @service currentUser;

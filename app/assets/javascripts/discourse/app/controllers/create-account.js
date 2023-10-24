@@ -4,6 +4,7 @@ import EmberObject, { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import $ from "jquery";
 import { Promise } from "rsvp";
 import LoginModal from "discourse/components/modal/login";
 import { ajax } from "discourse/lib/ajax";
@@ -24,7 +25,7 @@ import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(
   ModalFunctionality,

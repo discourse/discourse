@@ -57,7 +57,6 @@ sw:
       channel_info:
         back_to_channel: "Iliyopita"
         tabs:
-          about: Kuhusu
           members: Wanachama
           settings: Mipangilio
       direct_message_creator:
@@ -85,6 +84,10 @@ sw:
         saved: "Imehifadhiwa"
         unfollow: "Ondoka"
         admin_title: "Kiongozi"
+        settings_title: "Mipangilio"
+        category_label: "Kategoria"
+        history_label: "Historia"
+        members_label: "Wanachama"
       incoming_webhooks:
         back: "Iliyopita"
         description: "Elezo"
@@ -103,6 +106,10 @@ sw:
           title: "Hamisha kwenda Mada Mpya"
         existing_topic:
           title: "Hamisha kwenda kwenye Mada Iliyopo"
+      retention_reminders:
+        short:
+          one: "siku %{count}"
+          other: "siku %{count}"
       emoji_picker:
         objects: "Vitu"
         flags: "Bendera"

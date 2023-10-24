@@ -4,6 +4,14 @@ import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-use
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 
 export default class ChatUserInfo extends Component {
+  get avatarSize() {
+    return this.args.avatarSize ?? "medium";
+  }
+
+  get userPath() {
+    return userPath(this.args.user.username);
+  }
+
   <template>
     {{#if @user}}
       <a href={{this.userPath}} data-user-card={{@user.username}}>
@@ -14,12 +22,4 @@ export default class ChatUserInfo extends Component {
       </a>
     {{/if}}
   </template>
-
-  get avatarSize() {
-    return this.args.avatarSize ?? "medium";
-  }
-
-  get userPath() {
-    return userPath(this.args.user.username);
-  }
 }

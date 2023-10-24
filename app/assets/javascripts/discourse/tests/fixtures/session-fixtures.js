@@ -1,5 +1,7 @@
+import { deepFreeze } from "discourse-common/lib/object";
+
 export default {
-  "/session/current.json": {
+  "/session/current.json": deepFreeze({
     current_user: {
       id: 19,
       username: "eviltrout",
@@ -133,5 +135,5 @@ export default {
         },
       ]
     },
-  },
+  }),
 };

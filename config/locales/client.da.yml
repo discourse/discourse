@@ -395,6 +395,9 @@ da:
         type_bonus:
           name: "skriv bonus"
           title: "Visse gennemgåelige typer kan tildeles en bonus af medarbejdere, for at give dem til en højere prioritet."
+      revise_and_reject_post:
+        reason: "Begrundelse"
+        optional: "valgfri"
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
         required: "Du skal kræve punkter, før du kan gennemgå dem."
@@ -1200,8 +1203,6 @@ da:
           Scan denne QR-kode i en understøttet app ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>), og indtast din godkendelseskode.
         disable_description: "Indtast godkendelseskoden fra din app"
         show_key_description: "Indtast manuelt"
-        short_description: |
-          Beskyt din konto med engangs-sikkerhedskoder.
         extended_description: |
           To-faktor godkendelse tilføjer ekstra sikkerhed til din konto ved at kræve en engangstoken ud over dit adgangskode. Tokens kan genereres på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> og <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a> enheder.
         oauth_enabled_warning: "Bemærk, at sociale logins deaktiveres, når To-faktor godkendelse er aktiveret på din konto."
@@ -1229,6 +1230,10 @@ da:
           edit: "Rediger Fysisk Sikkerhedsnøgle"
           save: "Gem"
           name_required_error: "Du skal angive et navn til din sikkerhedsnøgle."
+      passkeys:
+        save: "Gem"
+        added_prefix: "Tilføjet"
+        last_used_prefix: "Sidst Brugt"
       change_about:
         title: "Skift “Om mig”"
         error: "Der opstod en fejl ved ændringen af denne værdi."
@@ -1507,6 +1512,7 @@ da:
         ok: "Din adgangskode ser fin ud."
         instructions: "mindst %{count} tegn"
         required: "Indtast venligst en adgangskode"
+        confirm: "Bekræft"
       summary:
         title: "Statistik"
         stats: "Statistik"
@@ -1906,7 +1912,6 @@ da:
       drafts_offline: "kladder offline"
       edit_conflict: "rediger konflikt"
       esc: "esc"
-      esc_label: "Klik eller tryk på Esc for at afvise"
       ok_proceed: "Ok, fortsæt"
       group_mentioned_limit:
         one: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} bruger. Ingen bliver underrettet."
@@ -3943,35 +3948,8 @@ da:
         groups_filter_instructions: "De relevante webhooks vil kun blive udløst, hvis eventet er relateret med angivne grupper. Lad stå tom for at udløse webhook for alle grupper."
         groups_filter: "Udløste grupper"
         delete_confirm: "Slet denne webhook?"
-        topic_event:
-          name: "Emne-event"
-          details: "Når der er et nyt emne, revideret, ændret eller slettet."
-        post_event:
-          name: "Send event"
-          details: "Når der er et nyt svar, redigering, sletning eller gendannelse."
-        user_event:
-          name: "Bruger-event"
-        group_event:
-          name: "Gruppebegivenhed"
-          details: "Når en gruppe bliver oprettet, opdateret eller ødelagt."
-        category_event:
-          name: "Kategori begivenhed"
-          details: "Når en kategori bliver oprettet, opdateret eller ødelagt."
-        tag_event:
-          name: "Marker begivenhed med Mærke"
-          details: "Når et mærke bliver oprettet, opdateret eller ødelagt."
-        reviewable_event:
-          name: "Begivenhed, der kan gennemgås"
-          details: "Når et nyt punkt er klar til gennemgang, og når dets status opdateres."
-        notification_event:
-          name: "Meddelelsesbegivenhed"
-          details: "Når en bruger modtager en underretning i deres beskedstrøm."
-        group_user_event:
-          name: "Gruppe Bruger Begivenhed"
-          details: "Når en bruger tilføjes eller fjernes en gruppe."
         like_event:
-          name: "'Synes godt om' Begivenhed"
-          details: "Når en bruger 'Synes godt om' et indlæg."
+          post_liked: "Når en bruger 'Synes godt om' et indlæg."
         delivery_status:
           title: "Leveringsstatus"
           inactive: "Inaktiv"
@@ -4162,6 +4140,7 @@ da:
           convert_theme_tooltip: "Konverter dette tema til komponent"
           inactive_themes: "Inaktive temaer:"
           inactive_components: "Ubrugte komponenter:"
+          cancel: "Annuller"
           broken_theme_tooltip: "Dette tema har fejl i dets CSS, HTML eller YAML"
           disabled_component_tooltip: "Denne komponent er deaktiveret"
           default_theme_tooltip: "Dette tema er sidens standard tema"

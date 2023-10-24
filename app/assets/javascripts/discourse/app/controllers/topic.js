@@ -37,7 +37,7 @@ import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let customPostMessageCallbacks = {};
 
@@ -565,6 +565,14 @@ export default Controller.extend(bufferedProperty("model"), {
           DiscourseURL.routeTo(this.model.urlForPostNumber(nearestPost));
           this.updateQueryParams();
         });
+    },
+
+    collapseSummary() {
+      this.get("model.postStream").collapseSummary();
+    },
+
+    showSummary() {
+      this.get("model.postStream").showSummary(this.currentUser);
     },
 
     removeAllowedUser(user) {
@@ -1617,6 +1625,9 @@ export default Controller.extend(bufferedProperty("model"), {
       this.onMessage,
       this.get("model.message_bus_last_id")
     );
+
+    const summariesChannel = `/summaries/topic/${this.get("model.id")}`;
+    this.messageBus.subscribe(summariesChannel, this._updateSummary);
   },
 
   unsubscribe() {
@@ -1626,6 +1637,13 @@ export default Controller.extend(bufferedProperty("model"), {
     }
 
     this.messageBus.unsubscribe("/topic/*", this.onMessage);
+    this.messageBus.unsubscribe("/summaries/topic/*", this._updateSummary);
+  },
+
+  @bind
+  _updateSummary(update) {
+    const postStream = this.get("model.postStream");
+    postStream.processSummaryUpdate(update);
   },
 
   @bind

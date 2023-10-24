@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { handleLogoff } from "discourse/lib/ajax";
 import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 import { isProduction, isTesting } from "discourse-common/config/environment";

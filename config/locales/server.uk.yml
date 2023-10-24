@@ -1041,6 +1041,7 @@ uk:
       invalid_origin_error: "Джерело запиту автентифікації не відповідає джерелу сервера."
       malformed_attestation_error: "Під час декодування даних атестації сталася помилка."
       invalid_relying_party_id_error: "Ідентифікатор перевіряючої сторони в запиті на автентифікацію не збігається з ідентифікатором перевіряючої сторони сервера."
+      user_presence_error: "Необхідна присутність користувача."
       user_verification_error: "Потрібна перевірка користувача."
       unsupported_public_key_algorithm_error: "Наданий алгоритм відкритого ключа не підтримується сервером."
       unsupported_attestation_format_error: "Формат атестації не підтримується сервером."
@@ -1049,6 +1050,7 @@ uk:
       ownership_error: "Ключ безпеки не належить користувачу."
       not_found_error: "Не вдалося знайти ключ безпеки з наданим ідентифікатором облікових даних."
       unknown_cose_algorithm_error: "Алгоритм, який використовується для ключа безпеки, не розпізнається."
+      malformed_public_key_credential_error: "Наданий відкритий ключ недійсний."
   topic_flag_types:
     spam:
       title: "Спам"
@@ -1667,7 +1669,6 @@ uk:
     must_approve_users: "Член команди обслуговування повинен схвалити всі нові облікові записи користувачів, перш ніж їм буде надано доступ до сайту"
     invite_code: "Користувач повинен ввести цей код, щоб отримати дозвіл на реєстрацію облікового запису, ігнорується, якщо він порожній (незалежно від регістру)"
     approve_suspect_users: "Додавати підозрілих користувачів до черги огляду. Підозрілі користувачі можуть входити до профілю, але не можуть читати повідомлення."
-    review_every_post: "Всі дописи повинні бути переглянуті. ПОПЕРЕДЖЕННЯ! НЕ РЕКОМЕНДУЄТЬСЯ ДЛЯ ПЕРЕВАНТАЖЕНИХ САЙТІВ."
     pending_users_reminder_delay_minutes: "Повідомляти модераторів, якщо нові користувачі чекають схвалення довше ніж цієї кількості хвилин. Встановіть -1 для вимкнення сповіщення."
     persistent_sessions: "Користувачі залишатимуться авторизованими після закриття вебоглядача"
     maximum_session_age: "Користувач залишиться в системі протягом n годин з моменту останнього відвідування"
@@ -1675,7 +1676,7 @@ uk:
     ga_universal_tracking_code: "Ідентифікатор коду відстеження Google Universal Analytics, наприклад: UA-12345678-9; див. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Доменне ім’я Google Universal Analytics, наприклад: mysite.com; див. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Увімкніть міждоменне відстеження Google Universal Analytics. До вихідних посилань на ці домени буде додано ідентифікатор клієнта. Див. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Посібник міждоменного відстеження Google.</a>"
-    gtm_container_id: "Контейнер Google Tag Manager. Наприклад: GTM-ABCDEF. <br/>Примітка: Сторонні сценарії, завантажені GTM повинні бути дозволені в 'content security policy script src'."
+    gtm_container_id: "Ідентифікатор контейнера Google Tag Manager, напр: GTM-ABCD12E. <br/>Примітка: Щоб використовувати GTM, коли увімкнено політику безпеки вмісту (CSP), див. документацію про метадані: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Використання нонсів у скриптах Google Tag Manager</a>."
     enable_escaped_fragments: "Поверніться до API Ajax-Crawling від Google, якщо вебсканер не виявлено. Див. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Дозволити модераторам створювати та керувати розділами та групами"
     moderators_change_post_ownership: "Дозволити модераторам змінювати власника допису"
@@ -2264,7 +2265,6 @@ uk:
     force_lowercase_tags: "Примусово використовувати всі нові теґи лише в нижньому регістрі."
     create_post_for_category_and_tag_changes: "Створюйте невеличке повідомлення під час зміни категорії або тегів"
     watched_precedence_over_muted: "Сповіщати мене про теми в категоріях або тегах, які я переглядаю і які також належать до тих, які я вимкнув"
-    company_name: "Назва компанії"
     governing_law: "Законодавство"
     city_for_disputes: "Місто для розгляду суперечок"
     shared_drafts_category: "Увімкніть функцію «Спільні чернетки», призначивши розділ для чернеток тем. Теми в цьому розділі будуть вилучені зі списків тем для членів команди обслуговування."
@@ -2297,7 +2297,6 @@ uk:
     navigation_menu: "Визначте, яке меню навігації використовувати. Навігація бічної панелі та заголовка налаштовується користувачами. Для зворотної сумісності доступна застаріла опція."
     default_navigation_menu_categories: "Вибрані категорії будуть відображатися в розділі \"Меню навігації\" за замовчуванням."
     default_navigation_menu_tags: "За замовчуванням вибрані теги відображатимуться в розділі Мітки меню навігації."
-    enable_experimental_hashtag_autocomplete: "ЕКСПЕРИМЕНТАЛЬНО: Використовуйте нову систему автозаповнення #hashtag для категорій і тегів, яка по-іншому показувати вибраний елемент і покращує пошук"
     experimental_new_new_view_groups: 'ЕКСПЕРИМЕНТАЛЬНО: Увімкніть список нових тем, який об''єднує непрочитані та нові теми, і зробіть так, щоб посилання "Все" на бічній панелі посилалося на нього.'
     enable_custom_sidebar_sections: "ЕКСПЕРИМЕНТАЛЬНО: Увімкнути користувацькі розділи бічної панелі"
     experimental_topics_filter: "ЕКСПЕРИМЕНТАЛЬНО: Вмикає експериментальний маршрут фільтрування тем за адресою /filter"
@@ -4969,6 +4968,7 @@ uk:
       missing_id: "відсутній ідентифікатор поля"
       duplicate_ids: "має дублікати ідентифікаторів"
       reserved_id: "має зарезервоване ключове слово як id: %{id}."
+      unsafe_description: "має небезпечний HTML-опис"
   activemodel:
     errors:
       <<: *errors

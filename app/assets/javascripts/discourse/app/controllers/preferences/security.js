@@ -7,9 +7,10 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
+import { isWebauthnSupported } from "discourse/lib/webauthn";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
@@ -19,6 +20,15 @@ export default Controller.extend(CanCheckEmails, {
   passwordProgress: null,
   subpageTitle: I18n.t("user.preferences_nav.security"),
   showAllAuthTokens: false,
+
+  get canUsePasskeys() {
+    return (
+      !this.siteSettings.enable_discourse_connect &&
+      this.siteSettings.enable_local_logins &&
+      this.siteSettings.experimental_passkeys &&
+      isWebauthnSupported()
+    );
+  },
 
   @discourseComputed("model.is_anonymous")
   canChangePassword(isAnonymous) {

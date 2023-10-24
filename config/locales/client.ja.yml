@@ -382,6 +382,9 @@ ja:
         type_bonus:
           name: "タイプボーナス"
           title: "特定のレビュー待ち項目タイプには、スタッフがボーナスを割り当てて優先順位を上げられます。"
+      revise_and_reject_post:
+        reason: "理由"
+        optional: "オプション"
       stale_help: "このレビュー待ち項目は <b>%{username}</b> によって解決されました。"
       claim_help:
         optional: "この項目を自分に割り当ててほかのユーザーがレビューしないようにできます。"
@@ -1272,8 +1275,6 @@ ja:
           サポートされているアプリ (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) でこの QR コードをスキャンし、認証コードを入力します。
         disable_description: "アプリから認証コードを入力してください"
         show_key_description: "手動で入力する"
-        short_description: |
-          1 回限りのセキュリティコードでアカウントを保護します。
         extended_description: |
           二要素認証は、パスワードに加えてワンタイムトークンを必要とすることで、アカウントにさらにセキュリティを追加します。トークンは <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> および <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> デバイスで生成できます。
         oauth_enabled_warning: "アカウントで二要素認証が有効になると、ソーシャルログインは無効になります。"
@@ -1312,6 +1313,10 @@ ja:
           save: "保存"
           edit_description: "物理的なセキュリティキーの名前"
           name_required_error: "セキュリティキーの名前を入力する必要があります。"
+      passkeys:
+        save: "保存"
+        added_prefix: "追加済み"
+        last_used_prefix: "最後の使用"
       change_about:
         title: "自己紹介を変更"
         error: "この値を変更中にエラーが発生しました。"
@@ -1593,6 +1598,7 @@ ja:
         ok: "そのパスワードで良さそうです。"
         instructions: "%{count} 文字以上"
         required: "パスワードを入力してください"
+        confirm: "確認"
       summary:
         title: "要約"
         stats: "統計"
@@ -2003,7 +2009,6 @@ ja:
       drafts_offline: "オフラインの下書き"
       edit_conflict: "競合を編集する"
       esc: "esc"
-      esc_label: "クリックまたは Esc を押して閉じる"
       ok_proceed: "OK、続行する"
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
@@ -4266,41 +4271,8 @@ ja:
         groups_filter_instructions: "関連する Webhook はイベントが指定されたグループに関連している場合にのみトリガーされます。すべてのグループに Webhook をトリガーするには空のままにします。"
         groups_filter: "トリガーされたグループ"
         delete_confirm: "この Webhook を削除しますか？"
-        topic_event:
-          name: "トピックイベント"
-          details: "トピックが新規作成、編集、変更、または削除された場合。"
-        post_event:
-          name: "投稿イベント"
-          details: "返信が新規作成、編集、削除、または復元された場合。"
-        user_event:
-          name: "ユーザーイベント"
-        group_event:
-          name: "グループイベント"
-          details: "グループが作成、更新、または消去された場合。"
-        category_event:
-          name: "カテゴリイベント"
-          details: "カテゴリが作成、更新、または消去された場合。"
-        tag_event:
-          name: "タグイベント"
-          details: "タグが作成、更新、または消去された場合。"
-        reviewable_event:
-          name: "レビュー待ち項目イベント"
-          details: "新しいアイテムのレビュー準備が整った場合、ステータスが更新された場合。"
-        notification_event:
-          name: "通知イベント"
-          details: "ユーザーがフィードに通知を受け取った場合。"
-        user_promoted_event:
-          name: "ユーザー昇格イベント"
-          details: "ユーザーがある信頼レベルから別の信頼レベルに昇格したとき。"
-        user_badge_event:
-          name: "バッジイベント"
-          details: "バッジが付与または取り消されたとき。"
-        group_user_event:
-          name: "グループユーザーイベント"
-          details: "ユーザーがグループに追加またはグループから削除された場合。"
         like_event:
-          name: "「いいね！」イベント"
-          details: "ユーザーが投稿に「いいね！」した場合。"
+          post_liked: "ユーザーが投稿に「いいね！」した場合。"
         delivery_status:
           title: "配信ステータス"
           inactive: "非アクティブ"
@@ -4494,6 +4466,7 @@ ja:
           convert_theme_tooltip: "このテーマをコンポーネントに変換します"
           inactive_themes: "非アクティブなテーマ:"
           inactive_components: "未使用のコンポーネント:"
+          cancel: "キャンセル"
           broken_theme_tooltip: "このテーマの CSS、HTML、または YAML にエラーがあります"
           disabled_component_tooltip: "このコンポーネントは削除されています"
           default_theme_tooltip: "このテーマはサイトのデフォルトのテーマです"

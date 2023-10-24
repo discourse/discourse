@@ -295,7 +295,6 @@ class Topic < ActiveRecord::Base
   attr_accessor :participants
   attr_accessor :participant_groups
   attr_accessor :topic_list
-  attr_accessor :meta_data
   attr_accessor :include_last_poster
   attr_accessor :import_mode # set to true to optimize creation and save for imports
 
@@ -619,19 +618,6 @@ class Topic < ActiveRecord::Base
     end
 
     topics
-  end
-
-  def meta_data=(data)
-    custom_fields.replace(data)
-  end
-
-  def meta_data
-    custom_fields
-  end
-
-  def update_meta_data(data)
-    custom_fields.update(data)
-    save
   end
 
   def reload(options = nil)
@@ -2066,6 +2052,13 @@ class Topic < ActiveRecord::Base
 
   def visible_tags(guardian)
     tags.reject { |tag| guardian.hidden_tag_names.include?(tag[:name]) }
+  end
+
+  def self.editable_custom_fields(guardian)
+    fields = []
+    fields.push(*DiscoursePluginRegistry.public_editable_topic_custom_fields)
+    fields.push(*DiscoursePluginRegistry.staff_editable_topic_custom_fields) if guardian.is_staff?
+    fields
   end
 
   private

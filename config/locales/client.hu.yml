@@ -409,6 +409,9 @@ hu:
         type_bonus:
           name: "típusbónusz"
           title: "Bizonyos felülvizsgálandó típusokat a stáb bónuszban részesíthet, hogy magasabb prioritást kapjanak."
+      revise_and_reject_post:
+        reason: "Ok"
+        optional: "nem kötelező"
       stale_help: "Ezt a felülvizsgálandó elemet <b>%{username}</b> oldotta meg."
       claim_help:
         optional: "Zárolhatja ezt az elemet, hogy mások ne hagyhassák jóvá."
@@ -1268,8 +1271,6 @@ hu:
           Olvassa be ezt a QR-kódot egy támogatott alkalmazásban (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) és adja meg a hitelesítési kódját.
         disable_description: "Írja be az azonosító kódját az alkalmazásból"
         show_key_description: "Kézi beírás"
-        short_description: |
-          Védje fiókját egyszer használatos biztonsági kódokkal.
         extended_description: |
           A kétfaktoros hitelesítés további biztonságot nyújt a fiókja számára, mert a jelszaván kívül még egy egyszer használatos token beírását is igényli. A tokenek <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>androidos</a> és <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-es</a> eszközökön egyaránt előállíthatók.
         oauth_enabled_warning: "Felhívjuk figyelmét, hogy a közösségi bejelentkezések letiltásra kerülnek, ha a fiókjában engedélyezi a kétfaktoros hitelesítést."
@@ -1306,6 +1307,10 @@ hu:
           save: "Mentés"
           edit_description: "Fizikai biztonsági kulcs neve"
           name_required_error: "Meg kell adnia a biztonsági kulcs nevét."
+      passkeys:
+        save: "Mentés"
+        added_prefix: "Hozzáadva"
+        last_used_prefix: "Utoljára használva"
       change_about:
         title: "Névjegy módosítása"
         error: "Hiba történt az érték módosításakor."
@@ -1588,6 +1593,7 @@ hu:
         ok: "A jelszava megfelelőnek tűnik."
         instructions: "legalább %{count} karakter"
         required: "Adjon meg egy jelszót"
+        confirm: "Megerősít"
       summary:
         title: "Összefoglaló"
         stats: "Statisztikák"
@@ -1987,7 +1993,6 @@ hu:
       drafts_offline: "vázlatok offline"
       edit_conflict: "szerkesztési ütközés"
       esc: "Esc"
-      esc_label: "Kattintson vagy nyomja meg az Esc billentyűt az eltüntetéshez"
       ok_proceed: "Rendben, tovább"
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
@@ -3929,27 +3934,6 @@ hu:
         active_notice: "Az esemény részleteit akkor közöljük, amikor az megtörténik."
         categories_filter: "Elindított kategóriák"
         groups_filter: "Elindított csoportok"
-        topic_event:
-          name: "Témakör"
-        post_event:
-          name: "Bejegyzés témája"
-        user_event:
-          name: "Felhasználói esemény"
-        group_event:
-          name: "Csoport esemény"
-          details: "Amikor egy csoport létrejön, módosul vagy megsemmisül."
-        category_event:
-          name: "Kategória esemény"
-          details: "Amikor egy kategória létrejön, módosul vagy megsemmisül."
-        tag_event:
-          name: "Címke esemény"
-          details: "Amikor egy címke létrejön, módosul vagy megsemmisül."
-        reviewable_event:
-          name: "Áttekinthető esemény"
-          details: "Ha egy új elem készen áll a felülvizsgálatra és állapota frissül."
-        user_badge_event:
-          name: "Jelvény esemény"
-          details: "A jelvény megadásakor vagy visszavonásakor."
         delivery_status:
           title: "Kiszállítás állapota"
           inactive: "Inaktív"
@@ -4120,6 +4104,7 @@ hu:
           convert_theme_tooltip: "A téma átalakítása komponenssé"
           inactive_themes: "Inaktív témák:"
           inactive_components: "Nem használt komponensek:"
+          cancel: "Mégse"
           broken_theme_tooltip: "A téma CSS, HTML vagy YAML hibákat tartalmaz"
           disabled_component_tooltip: "Ez az összetevő le van tiltva"
           default_theme_tooltip: "Ez a téma a webhely alapértelmezett témája"

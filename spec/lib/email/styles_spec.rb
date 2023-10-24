@@ -294,7 +294,7 @@ RSpec.describe Email::Styles do
     end
   end
 
-  describe "inline_secure_images" do
+  describe "#inline_secure_images" do
     before do
       setup_s3
       SiteSetting.secure_uploads = true

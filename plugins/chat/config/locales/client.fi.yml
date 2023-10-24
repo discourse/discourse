@@ -243,7 +243,6 @@ fi:
         back_to_all_channels: "Kaikki kanavat"
         back_to_channel: "Takaisin"
         tabs:
-          about: Tietoja
           members: Jäsenet
           settings: Asetukset
       new_message_modal:
@@ -373,6 +372,10 @@ fi:
         saved: "Tallennettu"
         unfollow: "Poistu"
         admin_title: "Ylläpitäjä"
+        settings_title: "Asetukset"
+        category_label: "Luokka"
+        history_label: "Historia"
+        members_label: "Jäsenet"
       admin:
         title: "Chat"
         export_messages:
@@ -442,14 +445,9 @@ fi:
           one: "%{commaSeparatedUsernames} ja %{count} muu kirjoittavat"
           other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
       retention_reminders:
-        public_none: "Kanavan historia säilytetään ikuisesti."
-        public:
-          one: "Kanavan historia säilytetään %{count} päivän ajan."
-          other: "Kanavan historia säilytetään %{count} päivän ajan."
-        dm_none: "Henkilökohtainen chat-historia säilytetään ikuisesti."
-        dm:
-          one: "Henkilökohtainen chat-historia säilytetään %{count} päivän ajan."
-          other: "Henkilökohtainen chat-historia säilytetään %{count} päivän ajan."
+        short:
+          one: "%{count} päivä"
+          other: "%{count} päivää"
       flags:
         off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
         inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."

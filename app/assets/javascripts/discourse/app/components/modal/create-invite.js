@@ -10,7 +10,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export default Component.extend(bufferedProperty("invite"), {
@@ -45,7 +45,7 @@ export default Component.extend(bufferedProperty("invite"), {
     });
 
     this.set("invite", this.model.invite || Invite.create());
-    this.set("topics", this.invite?.topics || []);
+    this.set("topics", this.invite?.topics || this.model.topics || []);
 
     this.buffered.setProperties({
       max_redemptions_allowed: 1,
@@ -53,6 +53,8 @@ export default Component.extend(bufferedProperty("invite"), {
         .add(this.siteSettings.invite_expiry_days, "days")
         .format(FORMAT),
       groupIds: this.model?.groupIds,
+      topicId: this.model.topicId,
+      topicTitle: this.model.topicTitle,
     });
   },
 

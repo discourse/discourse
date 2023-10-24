@@ -7,7 +7,7 @@ import { replaceEmoji } from "discourse/widgets/emoji";
 import { avatarFor, avatarImg } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const LINKS_SHOWN = 5;
 
@@ -406,9 +406,9 @@ export default createWidget("topic-map", {
     return new RenderGlimmer(
       this,
       "section.information.toggle-summary",
-      hbs`<SummaryBox 
+      hbs`<SummaryBox
         @postAttrs={{@data.postAttrs}}
-        @topRepliesToggle={{@data.actionDispatchFunc}} 
+        @actionDispatchFunc={{@data.actionDispatchFunc}} 
       />`,
       {
         postAttrs: attrs,

@@ -7,7 +7,7 @@ import {
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Invites - Create & Edit Invite Modal", function (needs) {
   needs.user();

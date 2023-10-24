@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const NOTIFY_MODERATORS_KEY = "notify_moderators";
 

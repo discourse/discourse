@@ -5,10 +5,10 @@ import { setting } from "discourse/lib/computed";
 import getURL from "discourse-common/lib/get-url";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import PeriodComputationMixin from "admin/mixins/period-computation";
 import AdminDashboard from "admin/models/admin-dashboard";
 import Report from "admin/models/report";
-import I18n from "I18n";
 import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 function staticReport(reportType) {

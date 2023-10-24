@@ -12,7 +12,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import eq from "truth-helpers/helpers/eq";
 import ChatChannelMetadata from "discourse/plugins/chat/discourse/components/chat-channel-metadata";
@@ -157,7 +157,6 @@ export default class ChatChannelRow extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <LinkTo
       @route="chat.channel"
       @models={{@channel.routeModels}}

@@ -31,7 +31,7 @@ export default class Sidebar extends Component {
     }
 
     return this.sidebarState.panels.filter(
-      (panel) => panel !== this.sidebarState.currentPanel
+      (panel) => panel !== this.sidebarState.currentPanel && !panel.hidden
     );
   }
 
@@ -57,6 +57,7 @@ export default class Sidebar extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     if (this.site.mobileView) {
       document.removeEventListener("click", this.collapseSidebar);
     }

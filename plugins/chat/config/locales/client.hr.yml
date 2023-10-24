@@ -178,7 +178,6 @@ hr:
       channel_info:
         back_to_channel: "Natrag"
         tabs:
-          about: O nama
           members: Članovi
           settings: Postavke
       new_message_modal:
@@ -243,6 +242,10 @@ hr:
         saved: "Spremljeno"
         unfollow: "Napustiti"
         admin_title: "Administrator"
+        settings_title: "Postavke"
+        category_label: "Kategorija"
+        history_label: "Povijest"
+        members_label: "Članovi"
       admin:
         title: "Čet"
         export_messages:
@@ -270,16 +273,10 @@ hr:
         new_message:
           title: "Premjestite u novu poruku"
       retention_reminders:
-        public_none: "Povijest kanala čuva se na neodređeno vrijeme."
-        public:
-          one: "Povijest kanala čuva se %{count} dan."
-          few: "Povijest kanala čuva se %{count} dana."
-          other: "Povijest kanala čuva se %{count} dana."
-        dm_none: "Osobna povijest čavrljanja čuva se na neodređeno vrijeme."
-        dm:
-          one: "Osobna povijest čavrljanja čuva se %{count} dan."
-          few: "Osobna povijest čavrljanja čuva se %{count} dana."
-          other: "Osobna povijest čavrljanja čuva se %{count} dana."
+        short:
+          one: "%{count} dan"
+          few: "%{count} dana"
+          other: "%{count} dana"
       emoji_picker:
         objects: "Objekti"
         activities: "Aktivnosti"

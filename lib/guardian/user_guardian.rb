@@ -122,6 +122,10 @@ module UserGuardian
     true
   end
 
+  def public_can_see_profiles?
+    !SiteSetting.hide_user_profiles_from_public || !anonymous?
+  end
+
   def can_see_profile?(user)
     return false if user.blank?
     return true if !SiteSetting.allow_users_to_hide_profile?

@@ -380,6 +380,9 @@ id:
         type_bonus:
           name: "jenis bonus"
           title: "Jenis tertentu yang dapat ditinjau akan diberikan bonus oleh staf untuk menjadikannya prioritas yang lebih tinggi."
+      revise_and_reject_post:
+        reason: "Alasan"
+        optional: "opsional"
       stale_help: "Butir tinjauan ini telah diselesaikan oleh <b>%{username}</b>."
       claim_help:
         optional: "Anda dapat mengklaim item ini untuk mencegah orang lain meninjaunya."
@@ -1105,6 +1108,9 @@ id:
         edit: "Ubah"
         security_key:
           save: "Simpan"
+      passkeys:
+        save: "Simpan"
+        added_prefix: "Ditambahkan"
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"
@@ -1267,6 +1273,7 @@ id:
         same_as_email: "Password dan email kamu sama"
         ok: "Kata sandi Anda terlihat baik."
         instructions: "paling tidak %{count} karakter"
+        confirm: "Konfirmasi"
       summary:
         title: "Ringkasan"
         stats: "Statistik"
@@ -1737,6 +1744,7 @@ id:
         other: "%{count} Balasan"
       errors:
         upload: "Maaf, terjadi kesalahan saat mengunggah %{file_name}. Silakan coba lagi."
+        backup_too_large: "Maaf, file cadangan terlalu besar."
         image_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah gambar."
         attachment_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah lampiran."
       cancel_composer:
@@ -2068,6 +2076,7 @@ id:
         report_filter_any: "apa saja"
         disabled: Dinonaktifkan
         filter_reports: Filter laporan
+        custom_date_range: Rentang tanggal tertentu
         reports:
           last_7_days: "7 terakhir"
           last_30_days: "30 terakhir"
@@ -2118,8 +2127,6 @@ id:
         edit: "Ubah"
         save: "Simpan"
         active: "Aktif"
-        user_badge_event:
-          details: "Ketika badge diberikan atau dicabut."
         delivery_status:
           failed: "Gagal"
           disabled: "Dinonaktifkan"
@@ -2163,6 +2170,7 @@ id:
           save: "Simpan"
           edit: "Ubah"
           settings: "Pengaturan"
+          cancel: "Batal"
           collapse: Persempit
           upload: "Unggah"
           discard: "Batalkan"

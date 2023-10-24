@@ -921,6 +921,7 @@ tr_TR:
       invalid_origin_error: "Kimlik doğrulama isteğinin kaynağı sunucu kaynağıyla eşleşmiyor."
       malformed_attestation_error: "Tasdik verilerinin kodu çözülürken bir hata oluştu."
       invalid_relying_party_id_error: "Kimlik doğrulama isteğinin Bağlı Taraf Kimliği, sunucunun Bağlı Taraf Kimliği ile eşleşmiyor."
+      user_presence_error: "Kullanıcı var olmalı."
       user_verification_error: "Kullanıcı doğrulaması gerekli."
       unsupported_public_key_algorithm_error: "Sağlanan açık anahtar algoritması sunucu tarafından desteklenmiyor."
       unsupported_attestation_format_error: "Tasdik formatı sunucu tarafından desteklenmiyor."
@@ -929,6 +930,7 @@ tr_TR:
       ownership_error: "Güvenlik anahtarı kullanıcıya ait değil."
       not_found_error: "Sağlanan giriş bilgisi kimliğine sahip bir güvenlik anahtarı bulunamadı."
       unknown_cose_algorithm_error: "Güvenlik anahtarı için kullanılan algoritma tanınmıyor."
+      malformed_public_key_credential_error: "Sağlanan ortak anahtar geçersiz."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1544,7 +1546,7 @@ tr_TR:
     must_approve_users: "Personel, siteye erişmelerine izin verilmeden önce tüm yeni kullanıcı hesaplarını onaylamalıdır."
     invite_code: "Kullanıcının hesap kaydına izin verilmesi için bu kodu yazması gerekir, boş olduğunda yok sayılır (büyük/küçük harfe duyarlı değildir)"
     approve_suspect_users: "Şüpheli kullanıcıları inceleme kuyruğuna ekleyin. Şüpheli kullanıcılar bir biyografi/web sitesi girmiş ancak okuma etkinliği yok."
-    review_every_post: "Tüm gönderiler gözden geçirilmelidir. UYARI! YOĞUN SİTELER İÇİN TAVSİYE EDİLMEZ."
+    review_every_post: "Her yeni gönderiyi moderasyon için inceleme kuyruğuna ekle. Gönderiler yine de hemen yayınlanır ve tüm kullanıcılar tarafından görülebilir. UYARI! İncelenmesi gereken gönderilerin potansiyel hacmi nedeniyle yüksek trafikli siteler için önerilmez."
     pending_users_reminder_delay_minutes: "Yeni kullanıcılar şu kadar dakikadan uzun süredir onay bekliyorsa moderatörleri bilgilendirin. Bildirimleri devre dışı bırakmak için -1 olarak ayarlayın."
     persistent_sessions: "Web tarayıcısı kapatıldığında kullanıcıların oturumları açık kalır"
     maximum_session_age: "Kullanıcı, son ziyaretinden bu yana n saat süreyle oturum açmış durumda kalır"
@@ -1552,7 +1554,6 @@ tr_TR:
     ga_universal_tracking_code: "Google Universal Analytics izleme kodu kimliği, ör.: UA-12345678-9; bkz. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics alan adı, ör.: mysite.com; bkz. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Google Universal Analytics çapraz alan izleme özelliğini etkinleştirin. Bu alan adlarına giden bağlantılara müşteri kimliği eklenecektir. Bkz. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google'ın Alan Adları Arası İzleme kılavuzu.</a>"
-    gtm_container_id: "Google Etiket Yöneticisi kapsayıcı kimliği. ör.: GTM-ABCDEF. <br/>Not: GTM tarafından yüklenen üçüncü taraf komut dosyalarının \"içerik güvenlik politikası komut dosyası kaynağında\" izin verilenler listesine eklenmesi gerekebilir."
     enable_escaped_fragments: "Herhangi bir web veri gezgini algılanmazsa Google'ın Ajax Veri Gezgini API'sine geri dönün. Bkz. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Moderatörlerin kategori ve grup oluşturmasına ve yönetmesine izin verin"
     moderators_change_post_ownership: "Moderatörlerin gönderi sahipliğini değiştirmesine izin verin"
@@ -2058,6 +2059,7 @@ tr_TR:
     approve_new_topics_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcılar için yeni konular onaylanmalıdır"
     approve_unless_staged: "Aşamalı kullanıcılar için yeni konular ve gönderiler onaylanmalıdır"
     notify_about_queued_posts_after: "Şu kadar saatten uzun süredir incelenmeyi bekleyen gönderiler varsa tüm moderatörlere bir bildirim gönderin. Bu bildirimleri devre dışı bırakmak için 0 olarak ayarlayın."
+    reviewable_revision_reasons: "İncelenmek üzere sıraya alınmış bir gönderiyi revizyonla reddederken seçilebilecek nedenler listesi. Diğer seçeneğini de her zaman kullanabilirsiniz, ki bunu yaparsanız özel bir neden de girebilirsiniz."
     auto_close_messages_post_count: "Otomatik olarak kapatılmadan önce bir mesajda izin verilen maksimum gönderi sayısı (devre dışı bırakmak için 0)"
     auto_close_topics_post_count: "Otomatik olarak kapatılmadan önce bir konuda izin verilen maksimum gönderi sayısı (devre dışı bırakmak için 0)"
     auto_close_topics_create_linked_topic: "\"Konuları otomatik kapat gönderi sayısı\" ayarına göre bir konu otomatik olarak kapatıldığında yeni bir bağlantılı konu oluşturun"
@@ -2136,8 +2138,9 @@ tr_TR:
     remove_muted_tags_from_latest: "En son konu listesinde yalnızca sessize alınmış etiketlerle etiketlenmiş konuları göstermeyin."
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
     create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde küçük bir bilgi gönderisi oluşturun"
+    automatically_clean_unused_tags: "Herhangi bir konuda veya özel mesajda kullanılmayan etiketleri günlük olarak otomatik olarak sil."
     watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendirin"
-    company_name: "Şirket Adı"
+    company_name: "Şirketinizin veya kuruluşunuzun adı. Boş bırakılırsa, Hizmet Şartları veya Gizlilik Bildirimi'ne ilişkin ortak metin sağlanmayacak."
     governing_law: "Geçerli Kanun"
     city_for_disputes: "Anlaşmazlıklar için şehir"
     shared_drafts_category: "Konu taslakları için bir kategori belirleyerek Paylaşılan Taslaklar özelliğini etkinleştirin. Bu kategorideki konular, personel kullanıcılar için konu listelerinden bastırılır."
@@ -2170,7 +2173,6 @@ tr_TR:
     navigation_menu: "Hangi gezinme menüsünün kullanılacağını belirleyin. Kenar çubuğu ve başlık gezinmesi, kullanıcılar tarafından özelleştirilebilir. Geriye dönük uyumluluk için eski seçenek mevcuttur."
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
-    enable_experimental_hashtag_autocomplete: "DENEYSEL: Seçilen ögeyi farklı şekilde işleyen ve aramayı iyileştiren kategoriler ve etiketler için yeni #hashtag otomatik tamamlama sistemini kullanın"
     experimental_new_new_view_groups: 'DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     enable_custom_sidebar_sections: "DENEYSEL: Özel kenar çubuğu bölümlerini etkinleştirin"
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştiririn"
@@ -2642,6 +2644,28 @@ tr_TR:
         Ancak, gönderi topluluk tarafından ikinci kez gizlenirse personel tarafından ele alınana kadar gizli kalır.
 
         Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
+    reviewable_queued_post_revise_and_reject:
+      title: "Gönderinizle ilgili geri bildirim"
+      subject_template: "%{topic_title} başlığındaki gönderinizle ilgili geri bildirim"
+      text_body_template: |
+        Merhaba %{username},
+
+        [%{topic_title}](%{topic_url}) başlığındaki gönderinizi inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+
+        Sebep: %{reason}
+
+        Geribildirim: %{feedback}
+
+        Aşağıdaki orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Teşekkürler,
+        %{site_name} Moderatörleri
     post_hidden_again:
       title: "Gönderi Tekrar Gizlendi"
       subject_template: "Gönderi topluluk bayrakları tarafından gizlendi, personel bilgilendirildi"
@@ -4676,6 +4700,8 @@ tr_TR:
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
       disagree:
         title: "Hayır"
+      revise_and_reject_post:
+        title: "Gönderiyi gözden geçir..."
       ignore:
         title: "Yok say"
       ignore_and_do_nothing:
@@ -4749,6 +4775,7 @@ tr_TR:
       invalid_yaml: "geçerli bir YAML dizesi değil"
       invalid_type: "geçersiz bir şablon türü içeriyor: %{type} (geçerli türler şunlardır: %{valid_types})"
       missing_type: "bir alan türü eksik"
+      unsafe_description: "güvenli olmayan bir HTML açıklaması var"
   activemodel:
     errors:
       <<: *errors

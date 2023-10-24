@@ -3,7 +3,7 @@
   @title={{i18n @title}}
   @closeModal={{@closeModal}}
 >
-  <:headerBelowTitle>
+  <:belowModalTitle>
     <p class="sidebar__edit-navigation-menu__deselect-wrapper">
       <DButton
         @label="sidebar.edit_navigation_modal_form.deselect_button_text"
@@ -14,7 +14,7 @@
 
       {{@deselectAllText}}
     </p>
-  </:headerBelowTitle>
+  </:belowModalTitle>
 
   <:belowHeader>
     <div class="sidebar__edit-navigation-menu__filter">
@@ -40,7 +40,7 @@
           @value={{this.filterDropdownValue}}
           @content={{this.filterDropdownContent}}
           @onChange={{this.onFilterDropdownChange}}
-          @options={{hash showCaret=true}}
+          @options={{hash showCaret=true disabled=@loading}}
         />
       </div>
     </div>

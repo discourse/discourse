@@ -26,10 +26,19 @@ zh_CN:
             chat:
               create_message: "在指定频道创建聊天消息。"
       web_hooks:
-        chat_message_event:
-          name: "聊天消息事件"
-          details: "创建、编辑、删除或恢复聊天消息时。"
+        chat_event:
+          group_name: "聊天事件"
+          chat_message_created: "消息被创建"
+          chat_message_edited: "消息被编辑"
+          chat_message_trashed: "消息被删除"
+          chat_message_restored: "消息被恢复"
+    about:
+      chat_messages_count: "聊天消息"
+      chat_channels_count: "聊天频道"
+      chat_users_count: "聊天用户"
     chat:
+      text_copied: 文本已复制到剪贴板
+      link_copied: 链接已复制到剪贴板
       deleted_chat_username: 已删除
       dates:
         time_tiny: "h:mm"
@@ -229,6 +238,7 @@ zh_CN:
       reply: "回复"
       edit: "编辑"
       copy_link: "复制链接"
+      copy_text: "复制文本"
       rebake_message: "重建 HTML"
       retry_staged_message:
         title: "网络错误"
@@ -295,7 +305,6 @@ zh_CN:
         back_to_all_channels: "所有频道"
         back_to_channel: "返回"
         tabs:
-          about: 关于
           members: 成员
           settings: 设置
       new_message_modal:
@@ -412,6 +421,11 @@ zh_CN:
         saved: "已保存"
         unfollow: "离开"
         admin_title: "管理员"
+        settings_title: "设置"
+        info_title: "频道信息"
+        category_label: "类别"
+        history_label: "历史记录"
+        members_label: "成员"
       admin:
         title: "聊天"
         export_messages:
@@ -478,12 +492,12 @@ zh_CN:
         many_users:
           other: "%{commaSeparatedUsernames} 和其他 %{count} 人正在输入"
       retention_reminders:
-        public_none: "频道历史记录会被永久保留。"
-        public:
-          other: "频道历史记录保留 %{count} 天。"
-        dm_none: "个人聊天历史记录会被永久保留。"
-        dm:
-          other: "个人聊天历史记录保留 %{count} 天。"
+        indefinitely_short: "无限期地"
+        indefinitely_long: "聊天设置已设置为无限期保留频道信息。"
+        short:
+          other: "%{count} 天"
+        long:
+          other: "聊天设置已设置为将频道消息保留 %{count} 天。"
       flags:
         off_topic: "此消息与频道标题定义的当前讨论无关，可能应当移至其他地方。"
         inappropriate: "此消息包含理性的人会认为具有攻击性、辱骂性或违反<a href=\"%{basePath}/guidelines\">我们的社区准则</a>的内容。"

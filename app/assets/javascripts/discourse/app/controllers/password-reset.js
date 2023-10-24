@@ -9,7 +9,7 @@ import PasswordValidation from "discourse/mixins/password-validation";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(PasswordValidation, {
   isDeveloper: alias("model.is_developer"),

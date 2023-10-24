@@ -8,7 +8,7 @@ import { avatarFor } from "discourse/widgets/post";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
   const dt = new Date(createdAt);

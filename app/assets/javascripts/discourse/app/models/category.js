@@ -232,6 +232,7 @@ const Category = RestModel.extend({
         uploaded_logo_id: this.get("uploaded_logo.id"),
         uploaded_logo_dark_id: this.get("uploaded_logo_dark.id"),
         uploaded_background_id: this.get("uploaded_background.id"),
+        uploaded_background_dark_id: this.get("uploaded_background_dark.id"),
         allow_badges: this.allow_badges,
         category_setting_attributes: this.category_setting,
         custom_fields: this.custom_fields,
@@ -651,6 +652,27 @@ Category.reopenClass({
     }
 
     return data.sortBy("read_restricted");
+  },
+
+  async asyncSearch(term, opts) {
+    opts ||= {};
+
+    const result = await ajax("/categories/search", {
+      data: {
+        term,
+        parent_category_id: opts.parentCategoryId,
+        include_uncategorized: opts.includeUncategorized,
+        select_category_ids: opts.selectCategoryIds,
+        reject_category_ids: opts.rejectCategoryIds,
+        include_subcategories: opts.includeSubcategories,
+        prioritized_category_id: opts.prioritizedCategoryId,
+        limit: opts.limit,
+      },
+    });
+
+    return result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
   },
 });
 

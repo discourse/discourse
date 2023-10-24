@@ -366,6 +366,9 @@ nb_NO:
         type_bonus:
           name: "type bonus"
           title: "Visse typer som kan gjennomgås, kan tildeles en bonus av personalet for å gjøre dem til en høyere prioritet."
+      revise_and_reject_post:
+        reason: "Begrunnelse"
+        optional: "valgfritt"
       stale_help: "Denne vurderingen har blitt løst av <b>%{username}</b>."
       claim_help:
         optional: "Du kan gjøre krav på dette elementet for å hindre andre i å gjennomgå det."
@@ -1133,8 +1136,6 @@ nb_NO:
           Skann denne QR-koden i en støttet app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) og skriv inn autentiseringskoden.
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
         show_key_description: "Skriv inn manuelt"
-        short_description: |
-          Beskytt kontoen din med engangs sikkerhetskoder.
         extended_description: |
           To-faktor autentisering legger til ekstra sikkerhet på kontoen din ved å kreve en engangstoken i tillegg til passordet ditt. Tokens kan genereres på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> og <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> enheter.
         oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
@@ -1158,6 +1159,9 @@ nb_NO:
           already_added_error: "Du har allerede registrert denne sikkerhetsnøkkelen. Du trenger ikke å registrere den igjen."
           save: "Lagre"
           name_required_error: "Du må angi et navn for sikkerhetsnøkkelen."
+      passkeys:
+        save: "Lagre"
+        added_prefix: "La til"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -3576,35 +3580,8 @@ nb_NO:
         groups_filter_instructions: "Relevante webhooker vil bare bli utløst hvis hendelsene er relatert til valgte grupper. La være blank for å utløse webhooker for alle grupper."
         groups_filter: "Utløse grupper"
         delete_confirm: "Slette denne webhooken?"
-        topic_event:
-          name: "Hendelse for emne"
-          details: "Når det finnes et nytt, revidert, endret eller slettet emne."
-        post_event:
-          name: "Innleggshendelse"
-          details: "Når det er et nytt, redigert, slettet eller gjenopprettet innlegg."
-        user_event:
-          name: "Brukerhendelse"
-        group_event:
-          name: "Gruppehandling"
-          details: "Når en gruppe lages, oppdateres eller slettes."
-        category_event:
-          name: "Kategorihandling"
-          details: "Når en kategori lages, oppdateres eller slettes."
-        tag_event:
-          name: "Stikkordshandling"
-          details: "Når et stikkord lages, oppdateres eller slettes."
-        reviewable_event:
-          name: "Visbar hendelse"
-          details: "Når et nytt element er klar for gjennomgang og når dets status oppdateres."
-        notification_event:
-          name: "Varslingshendelse"
-          details: "Når en bruker mottar et varsel i feeden."
-        group_user_event:
-          name: "Gruppebrukerhendelse"
-          details: "Når en bruker er lagt til eller fjernet i en gruppe."
         like_event:
-          name: "Lik hendelsen"
-          details: "Når en bruker liker et innlegg."
+          post_liked: "Når en bruker liker et innlegg."
         delivery_status:
           title: "Sendingsstatus"
           inactive: "Inaktiv"
@@ -3788,6 +3765,7 @@ nb_NO:
           convert_theme_tooltip: "Konverter dette temaet til komponenten"
           inactive_themes: "Inaktive temaer:"
           inactive_components: "Ubrukte komponenter:"
+          cancel: "Avbryt"
           broken_theme_tooltip: "Dette temaet har feil i CSS, HTML eller YAML"
           disabled_component_tooltip: "Denne komponenten har blitt deaktivert"
           default_theme_tooltip: "Dette temaet er nettstedets standardtema"

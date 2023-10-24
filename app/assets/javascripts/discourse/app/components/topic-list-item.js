@@ -5,6 +5,7 @@ import { on } from "@ember/object/evented";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import $ from "jquery";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
@@ -14,7 +15,7 @@ import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export function showEntrance(e) {
   let target = $(e.target);

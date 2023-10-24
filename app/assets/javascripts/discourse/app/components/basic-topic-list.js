@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { alias, not } from "@ember/object/computed";
+import $ from "jquery";
 import discourseComputed, {
   bind,
   observes,

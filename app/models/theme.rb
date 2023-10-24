@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 76
+  BASE_COMPILER_VERSION = 77
 
   attr_accessor :child_components
 
@@ -697,6 +697,26 @@ class Theme < ActiveRecord::Base
       hash[field.name] = field.javascript_cache.local_url if field.javascript_cache
     end
     hash
+  end
+
+  # Retrieves a theme setting
+  #
+  # @param setting_name [String, Symbol] The name of the setting to retrieve.
+  #
+  # @return [Object] The value of the setting that matches the provided name.
+  #
+  # @raise [Discourse::NotFound] If no setting is found with the provided name.
+  #
+  # @example
+  #   theme.get_setting("some_boolean") => True
+  #   theme.get_setting("some_string") => "hello"
+  #   theme.get_setting(:some_boolean) => True
+  #   theme.get_setting(:some_string) => "hello"
+  #
+  def get_setting(setting_name)
+    target_setting = settings.find { |setting| setting.name == setting_name.to_sym }
+    raise Discourse::NotFound unless target_setting
+    target_setting.value
   end
 
   def update_setting(setting_name, new_value)

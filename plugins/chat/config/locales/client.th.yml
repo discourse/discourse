@@ -58,7 +58,6 @@ th:
       channel_info:
         back_to_channel: "กลับ"
         tabs:
-          about: เกี่ยวกับ
           members: สมาชิก
           settings: การตั้งค่า
       direct_message_creator:
@@ -85,6 +84,10 @@ th:
         saved: "บันทึกแล้ว"
         unfollow: "ออก"
         admin_title: "ผู้ดูแลระบบ"
+        settings_title: "การตั้งค่า"
+        category_label: "หมวดหมู่"
+        history_label: "ประวัติ"
+        members_label: "สมาชิก"
       incoming_webhooks:
         back: "กลับ"
         description: "รายละเอียด"
@@ -105,6 +108,9 @@ th:
           title: "ย้ายไปกระทู้ที่มีอยู่แล้ว"
         new_message:
           title: "ย้ายไปข้อความใหม่"
+      retention_reminders:
+        short:
+          other: "%{count} วัน"
       emoji_picker:
         objects: "วัตถุ"
         activities: "กิจกรรม"

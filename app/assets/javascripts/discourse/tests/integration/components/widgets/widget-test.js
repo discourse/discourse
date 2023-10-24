@@ -9,7 +9,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import { createWidget } from "discourse/widgets/widget";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | Widget | base", function (hooks) {
   setupRenderingTest(hooks);

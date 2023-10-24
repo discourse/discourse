@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export function formattedReminderTime(reminderAt, timezone) {
   let reminderAtDate = moment.tz(reminderAt, timezone);

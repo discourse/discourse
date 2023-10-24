@@ -84,7 +84,6 @@ ro:
       channel_info:
         back_to_channel: "Înapoi"
         tabs:
-          about: Despre
           members: Membri
           settings: Opțiuni
       direct_message_creator:
@@ -111,6 +110,10 @@ ro:
         saved: "Salvat"
         unfollow: "Părăsește"
         admin_title: "Administrator"
+        settings_title: "Opțiuni"
+        category_label: "Categorie"
+        history_label: "Istoric"
+        members_label: "Membri"
       incoming_webhooks:
         back: "Înapoi"
         description: "Descriere"
@@ -129,6 +132,11 @@ ro:
           title: "Mutare în subiect nou."
         existing_topic:
           title: "Mută în subiect deja existent"
+      retention_reminders:
+        short:
+          one: "%{count} zi"
+          few: "%{count} zile"
+          other: "%{count} de zile"
       emoji_picker:
         objects: "Obiecte"
         flags: "Marcaje de avertizare"

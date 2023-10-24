@@ -1,4 +1,4 @@
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export function stringToBuffer(str) {
   let buffer = new ArrayBuffer(str.length);
@@ -43,11 +43,10 @@ export function getWebauthnCredential(
       publicKey: {
         challenge: challengeBuffer,
         allowCredentials,
-        timeout: 60000,
-
-        // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
-        // default value of preferred is not necessarily what we want, it limits webauthn to only devices that support
-        // user verification, which usually requires entering a PIN
+        timeout: 60000, // this is just a hint
+        // in the backend, we don't check for user verification for 2FA
+        // therefore we should indicate to browser that it's not necessary
+        // (this is only a hint, though, browser may still prompt)
         userVerification: "discouraged",
       },
     })
@@ -93,4 +92,69 @@ export function getWebauthnCredential(
       }
       errorCallback(err);
     });
+}
+
+// The webauthn API only supports one auth attempt at a time
+// We need this service to cancel the previous attempt when a new one is started
+class WebauthnAbortService {
+  controller = undefined;
+
+  signal() {
+    if (this.controller) {
+      const abortError = new Error("Cancelling pending webauthn call");
+      abortError.name = "AbortError";
+      this.controller.abort(abortError);
+    }
+
+    this.controller = new AbortController();
+    return this.controller.signal;
+  }
+}
+
+// Need to use a singleton here to reset the active webauthn ceremony
+// Inspired by the BaseWebAuthnAbortService in https://github.com/MasterKale/SimpleWebAuthn
+const WebauthnAbortHandler = new WebauthnAbortService();
+
+export async function getPasskeyCredential(
+  challenge,
+  errorCallback,
+  mediation = "optional"
+) {
+  if (!isWebauthnSupported()) {
+    return errorCallback(I18n.t("login.security_key_support_missing_error"));
+  }
+
+  try {
+    const credential = await navigator.credentials.get({
+      publicKey: {
+        challenge: stringToBuffer(challenge),
+        // https://www.w3.org/TR/webauthn-2/#user-verification
+        // for passkeys (first factor), user verification should be marked as required
+        // it ensures browser requests PIN or biometrics before authenticating
+        // lib/discourse_webauthn/authentication_service.rb requires this flag too
+        userVerification: "required",
+      },
+      signal: WebauthnAbortHandler.signal(),
+      mediation,
+    });
+
+    return {
+      signature: bufferToBase64(credential.response.signature),
+      clientData: bufferToBase64(credential.response.clientDataJSON),
+      authenticatorData: bufferToBase64(credential.response.authenticatorData),
+      credentialId: bufferToBase64(credential.rawId),
+      userHandle: bufferToBase64(credential.response.userHandle),
+    };
+  } catch (error) {
+    if (error.name === "NotAllowedError") {
+      return errorCallback(I18n.t("login.security_key_not_allowed_error"));
+    } else if (error.name === "AbortError") {
+      // no need to show an error when the cancelling a pending ceremony
+      // this happens when switching from the conditional method (username input autofill)
+      // to the optional method (login button) or vice versa
+      return null;
+    } else {
+      return errorCallback(error);
+    }
+  }
 }

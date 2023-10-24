@@ -1,0 +1,5 @@
+en:
+  site_settings:
+    spoiler_enabled: 'Enable the spoiler plugin. If you change this, you must rebake all posts with: "rake posts:rebake".'
+  spoiler_alert:
+    excerpt_spoiler: "spoiler"

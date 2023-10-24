@@ -59,7 +59,6 @@ ca:
       channel_info:
         back_to_channel: "Enrere"
         tabs:
-          about: Quant a
           members: Membres
           settings: Configuració
       new_message_modal:
@@ -89,6 +88,10 @@ ca:
         saved: "Desat"
         unfollow: "Abandona"
         admin_title: "Administració"
+        settings_title: "Configuració"
+        category_label: "Categoria"
+        history_label: "Historial"
+        members_label: "Membres"
       incoming_webhooks:
         back: "Enrere"
         description: "Descripció"
@@ -109,6 +112,10 @@ ca:
           title: "Mou a un tema existent"
         new_message:
           title: "Mou a missatge nou"
+      retention_reminders:
+        short:
+          one: "%{count} dia"
+          other: "%{count} dies"
       emoji_picker:
         objects: "Objectes"
         activities: "Activitats"
