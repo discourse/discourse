@@ -971,6 +971,11 @@ class BulkImport::Generic < BulkImport::Base
   def import_votes
     puts "", "Importing votes for posts..."
 
+    unless defined?(::PostVoting)
+      puts "  Skipping import of votes for posts because the plugin is not installed."
+      return
+    end
+
     votes = query(<<~SQL)
       SELECT *
         FROM votes
