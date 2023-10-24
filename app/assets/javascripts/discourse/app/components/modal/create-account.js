@@ -1,7 +1,7 @@
 import { A } from "@ember/array";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
-import { notEmpty } from "@ember/object/computed";
+import { alias, notEmpty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
@@ -48,6 +48,11 @@ export default Component.extend(
     hasAuthOptions: notEmpty("model.authOptions"),
     canCreateLocal: setting("enable_local_logins"),
     requireInviteCode: setting("require_invite_code"),
+
+    // For UsernameValidation mixin
+    authOptions: alias("model.authOptions"),
+    accountEmail: alias("model.accountEmail"),
+    accountUsername: alias("model.accountUsername"),
 
     @discourseComputed(
       "hasAuthOptions",
