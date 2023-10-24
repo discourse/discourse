@@ -285,7 +285,7 @@ export default Component.extend(ComposerUploadUppy, {
         count: minimumPostLength,
       });
       const tl = this.get("currentUser.trust_level");
-      if (tl === 0 || tl === 1) {
+      if ((tl === 0 || tl === 1) && !this._newTopicState()) {
         reason +=
           "<br/>" +
           I18n.t("composer.error.try_like", {
@@ -303,6 +303,14 @@ export default Component.extend(ComposerUploadUppy, {
         lastShownAt: lastValidatedAt,
       });
     }
+  },
+
+  _newTopicState() {
+    return (
+      this.composer.creatingTopic ||
+      this.composer.editingFirstPost ||
+      this.composer.creatingSharedDraft
+    );
   },
 
   _resetShouldBuildScrollMap() {
