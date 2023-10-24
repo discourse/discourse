@@ -65,9 +65,10 @@ module PageObjects
       end
 
       def has_reviewable_with_rejection_reason?(reviewable, rejection_reason)
-        within(reviewable_by_id(reviewable.id)) do
-          page.has_css?(".reviewable-user-details.reject-reason .value", text: rejection_reason)
-        end
+        reviewable_by_id(reviewable.id).has_css?(
+          ".reviewable-user-details.reject-reason .value",
+          text: rejection_reason,
+        )
       end
 
       def has_error_dialog_visible?

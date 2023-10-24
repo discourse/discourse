@@ -1,5 +1,5 @@
 <DModal
-  @bodyClass="explain-reviewable"
+  @bodyClass="reject-reason-reviewable-modal__explain-reviewable"
   @closeModal={{@closeModal}}
   @title={{i18n "review.reject_reason.title"}}
   class="reject-reason-reviewable-modal"
@@ -8,7 +8,11 @@
     <Textarea @value={{this.rejectReason}} />
     <div class="control-group">
       <label>
-        <Input @type="checkbox" class="inline" @checked={{this.sendEmail}} />
+        <Input
+          @type="checkbox"
+          class="reject-reason-reviewable-modal__send_email--inline"
+          @checked={{this.sendEmail}}
+        />
         {{i18n "review.reject_reason.send_email"}}
       </label>
     </div>
