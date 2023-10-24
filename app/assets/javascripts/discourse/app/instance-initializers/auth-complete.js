@@ -3,7 +3,6 @@ import { next } from "@ember/runloop";
 import CreateAccount from "discourse/components/modal/create-account";
 import LoginModal from "discourse/components/modal/login";
 import cookie, { removeCookie } from "discourse/lib/cookie";
-import showModal from "discourse/lib/show-modal";
 import DiscourseUrl from "discourse/lib/url";
 import I18n from "discourse-i18n";
 
