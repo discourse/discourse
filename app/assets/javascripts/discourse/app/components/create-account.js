@@ -2,10 +2,7 @@ import Component from "@ember/component";
 import cookie from "discourse/lib/cookie";
 import { bind } from "discourse-common/utils/decorators";
 
-// TODO: restore in the create-account component
 export default Component.extend({
-  classNames: ["create-account-body"],
-
   // used for animating the label inside of inputs
   userInputFocus(event) {
     const userField = event.target.parentElement.parentElement;
@@ -27,10 +24,10 @@ export default Component.extend({
 
   @bind
   actionOnEnter(event) {
-    if (!this.disabled && event.key === "Enter") {
+    if (!this.submitDisabled && event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
-      this.action();
+      this.createAccount();
       return false;
     }
   },
@@ -48,7 +45,7 @@ export default Component.extend({
     this._super(...arguments);
 
     if (cookie("email")) {
-      this.set("email", cookie("email"));
+      this.set("model.accountEmail", cookie("email"));
     }
 
     let userTextFields = document.getElementsByClassName("user-fields")[0];
