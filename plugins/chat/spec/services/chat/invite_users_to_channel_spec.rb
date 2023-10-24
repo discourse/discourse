@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::InviteUsersToChannel do
+  subject(:result) { described_class.call(params) }
+
   describe described_class::Contract, type: :model do
     subject(:contract) { described_class.new }
 
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :user_ids }
   end
-
-  subject(:result) { described_class.call(params) }
 
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:user_1) { Fabricate(:user) }
