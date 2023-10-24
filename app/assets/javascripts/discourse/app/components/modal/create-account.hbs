@@ -1,4 +1,6 @@
 <DModal
+  {{on "keydown" this.actionOnEnter}}
+  {{on "click" this.selectKitFocus}}
   @closeModal={{@closeModal}}
   @bodyClass={{this.modalBodyClasses}}
   @flash={{this.flash}}

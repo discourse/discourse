@@ -76,16 +76,10 @@ export default Component.extend(
           element.addEventListener("focusout", this.userInputFocusOut);
         }
       }
-
-      this.element.addEventListener("keydown", this.actionOnEnter);
-      this.element.addEventListener("click", this.selectKitFocus);
     },
 
     willDestroyElement() {
       this._super(...arguments);
-
-      this.element.removeEventListener("keydown", this.actionOnEnter);
-      this.element.removeEventListener("click", this.selectKitFocus);
 
       const userTextFields = document
         .getElementsByClassName("user-fields")[0]
