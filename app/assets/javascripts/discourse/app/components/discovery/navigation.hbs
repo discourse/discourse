@@ -54,6 +54,14 @@
     @tagNotification={{@tagNotification}}
   />
 
+  {{#if @category}}
+    <PluginOutlet
+      @name="category-navigation"
+      @connectorTagName="div"
+      @outletArgs={{hash category=@category tag=@tag}}
+    />
+  {{/if}}
+
   {{#if @tag}}
     <PluginOutlet
       @name="tag-navigation"
