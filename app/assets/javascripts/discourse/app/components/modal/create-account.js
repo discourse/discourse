@@ -34,7 +34,6 @@ export default Component.extend(
   {
     modal: service(),
 
-    complete: false,
     accountChallenge: 0,
     accountHoneypot: 0,
     formSubmitted: false,
