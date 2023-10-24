@@ -157,7 +157,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   sendMessage(channelId, data = {}) {
-    return ajax(`/chat/api/channels/${channelId}/messages`, {
+    return ajax(`/chat/${channelId}`, {
       ignoreUnsent: false,
       type: "POST",
       data,

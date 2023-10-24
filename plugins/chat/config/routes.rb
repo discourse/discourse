@@ -20,7 +20,6 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"
     post "/channels/:channel_id/memberships/me" => "channels_current_user_membership#create"
-    post "/channels/:channel_id/messages" => "channel_messages#create"
     put "/channels/:channel_id/notifications-settings/me" =>
           "channels_current_user_notifications_settings#update"
 
@@ -81,6 +80,7 @@ Chat::Engine.routes.draw do
   post "/:chat_channel_id/quote" => "chat#quote_messages"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   post "/drafts" => "chat#set_draft"
+  post "/:chat_channel_id" => "api/channel_messages#create"
   put "/flag" => "chat#flag"
   get "/emojis" => "emojis#index"
 
