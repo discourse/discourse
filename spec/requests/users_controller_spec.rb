@@ -607,6 +607,7 @@ RSpec.describe UsersController do
       user = sign_in(Fabricate(:user))
       user.trust_level = 1
       user.save!
+      Group.refresh_automatic_groups!
 
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)

@@ -16,6 +16,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { AUTO_GROUPS } from "discourse-common/lib/auto-groups";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -30,7 +31,7 @@ acceptance("User menu", function (needs) {
 
   needs.settings({
     allow_anonymous_posting: true,
-    anonymous_posting_min_trust_level: 3,
+    anonymous_posting_allowed_groups: "3",
   });
 
   let requestHeaders = {};
@@ -564,6 +565,10 @@ acceptance("User menu", function (needs) {
       "Do Not Disturb button has the right icon when Do Not Disturb is enabled"
     );
 
+    assert.ok(
+      exists("#quick-access-profile ul li.enable-anonymous .btn"),
+      "toggle anon button is shown"
+    );
     let toggleAnonButton = query(
       "#quick-access-profile ul li.enable-anonymous .btn"
     );
@@ -602,7 +607,15 @@ acceptance("User menu", function (needs) {
     );
 
     await click("header.d-header"); // close the menu
-    updateCurrentUser({ is_anonymous: false, trust_level: 2 });
+    updateCurrentUser({
+      is_anonymous: false,
+      trust_level: 2,
+      groups: [
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
+      ],
+    });
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-profile");
 
@@ -616,9 +629,17 @@ acceptance("User menu", function (needs) {
     );
 
     await click("header.d-header"); // close the menu
-    updateCurrentUser({ is_anonymous: true, trust_level: 2 });
+    updateCurrentUser({
+      is_anonymous: true,
+      trust_level: 2,
+      groups: [
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
+      ],
+    });
     this.siteSettings.allow_anonymous_posting = false;
-    this.siteSettings.anonymous_posting_min_trust_level = 3;
+    this.siteSettings.anonymous_posting_allowed_groups = "3";
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-profile");
 
@@ -628,9 +649,19 @@ acceptance("User menu", function (needs) {
     );
 
     await click("header.d-header"); // close the menu
-    updateCurrentUser({ is_anonymous: false, trust_level: 4 });
+    updateCurrentUser({
+      is_anonymous: true,
+      trust_level: 4,
+      groups: [
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
+        AUTO_GROUPS.trust_level_3,
+        AUTO_GROUPS.trust_level_4,
+      ],
+    });
     this.siteSettings.allow_anonymous_posting = false;
-    this.siteSettings.anonymous_posting_min_trust_level = 3;
+    this.siteSettings.anonymous_posting_allowed_groups = "3";
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-profile");
 
@@ -640,9 +671,17 @@ acceptance("User menu", function (needs) {
     );
 
     await click("header.d-header"); // close the menu
-    updateCurrentUser({ is_anonymous: false, trust_level: 2 });
+    updateCurrentUser({
+      is_anonymous: false,
+      trust_level: 2,
+      groups: [
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
+      ],
+    });
     this.siteSettings.allow_anonymous_posting = true;
-    this.siteSettings.anonymous_posting_min_trust_level = 3;
+    this.siteSettings.anonymous_posting_allowed_groups = "3";
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-profile");
 

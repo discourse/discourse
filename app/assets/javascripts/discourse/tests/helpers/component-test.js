@@ -8,6 +8,7 @@ import Site from "discourse/models/site";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
+import { AUTO_GROUPS } from "discourse-common/lib/auto-groups";
 
 export function setupRenderingTest(hooks) {
   emberSetupRenderingTest(hooks);
@@ -27,20 +28,7 @@ export function setupRenderingTest(hooks) {
       name: "Robin Ward",
       admin: false,
       moderator: false,
-      groups: [
-        {
-          id: 10,
-          automatic: true,
-          name: "trust_level_0",
-          display_name: "trust_level_0",
-        },
-        {
-          id: 11,
-          automatic: true,
-          name: "trust_level_1",
-          display_name: "trust_level_1",
-        },
-      ],
+      groups: [AUTO_GROUPS.trust_level_0, AUTO_GROUPS.trust_level_1],
       user_option: {
         timezone: "Australia/Brisbane",
       },
