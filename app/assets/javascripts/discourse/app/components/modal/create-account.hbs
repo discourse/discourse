@@ -1,4 +1,8 @@
-<DModal @title="TODO" @closeModal={{@closeModal}}>
+<DModal
+  @closeModal={{@closeModal}}
+  @bodyClass={{this.modalBodyClasses}}
+  class="create-account"
+>
   {{!-- <CreateAccount
   @email={{this.accountEmail}}
   @disabled={{this.submitDisabled}}
@@ -8,7 +12,7 @@
     @name="create-account-before-modal-body"
     @connectorTagName="div"
   /> }}
-  <:body class={{this.modalBodyClasses}}>
+  <:body>
     <div
       class={{concat-class
         "create-account-form"
