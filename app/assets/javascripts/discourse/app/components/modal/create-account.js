@@ -124,7 +124,7 @@ export default Component.extend(
     @discourseComputed(
       "serverAccountEmail",
       "serverEmailValidation",
-      "accountEmail",
+      "model.accountEmail",
       "rejectedEmails.[]",
       "forceValidationReason"
     )
@@ -189,12 +189,12 @@ export default Component.extend(
     checkEmailAvailability() {
       if (
         !this.emailValidation.ok ||
-        this.serverAccountEmail === this.accountEmail
+        this.serverAccountEmail === this.model.accountEmail
       ) {
         return;
       }
 
-      return User.checkEmail(this.accountEmail)
+      return User.checkEmail(this.model.accountEmail)
         .then((result) => {
           if (this.isDestroying || this.isDestroyed) {
             return;
@@ -202,7 +202,7 @@ export default Component.extend(
 
           if (result.failed) {
             this.setProperties({
-              serverAccountEmail: this.accountEmail,
+              serverAccountEmail: this.model.accountEmail,
               serverEmailValidation: EmberObject.create({
                 failed: true,
                 element: document.querySelector("#new-account-email"),
@@ -211,7 +211,7 @@ export default Component.extend(
             });
           } else {
             this.setProperties({
-              serverAccountEmail: this.accountEmail,
+              serverAccountEmail: this.model.accountEmail,
               serverEmailValidation: EmberObject.create({
                 ok: true,
                 reason: I18n.t("user.email.ok"),
@@ -228,13 +228,13 @@ export default Component.extend(
     },
 
     @discourseComputed(
-      "accountEmail",
+      "model.accountEmail",
       "authOptions.email",
       "authOptions.email_valid"
     )
     emailDisabled() {
       return (
-        this.get("authOptions.email") === this.accountEmail &&
+        this.get("authOptions.email") === this.model.accountEmail &&
         this.get("authOptions.email_valid")
       );
     },
@@ -248,7 +248,7 @@ export default Component.extend(
         : providerName;
     },
 
-    @observes("emailValidation", "accountEmail")
+    @observes("emailValidation", "model.accountEmail")
     prefillUsername() {
       if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
@@ -318,7 +318,7 @@ export default Component.extend(
 
       const attrs = this.getProperties(
         "accountName",
-        "accountEmail",
+        "model.accountEmail",
         "accountPassword",
         "accountUsername",
         "accountChallenge",
