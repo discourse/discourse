@@ -299,7 +299,7 @@ export default class ChatChannel extends Component {
     let foundFirstNew = false;
     const hasNewest = this.messagesManager.messages.some((m) => m.newest);
 
-    result.messages.forEach((messageData, index) => {
+    result?.messages?.forEach((messageData, index) => {
       messageData.firstOfResults = index === 0;
 
       if (this.currentUser.ignored_users) {
@@ -526,7 +526,7 @@ export default class ChatChannel extends Component {
     this.pane.sending = true;
 
     const data = {
-      new_message: message.message,
+      message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 

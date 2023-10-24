@@ -18,6 +18,10 @@ body.wizard {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
 
+  .wrap {
+    max-width: 100%;
+  }
+
   #wizard-main {
     display: flex;
     flex-direction: column;

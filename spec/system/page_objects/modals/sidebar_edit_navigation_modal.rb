@@ -67,7 +67,9 @@ module PageObjects
       private
 
       def dropdown_filter
-        PageObjects::Components::SelectKit.new(".sidebar__edit-navigation-menu__filter-dropdown")
+        PageObjects::Components::SelectKit.new(
+          ".sidebar__edit-navigation-menu__filter-dropdown",
+        ).tap(&:is_not_disabled?)
       end
     end
   end

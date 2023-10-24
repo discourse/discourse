@@ -172,7 +172,7 @@ export default class ComposerService extends Service {
       return null;
     }
 
-    return this.model.category?.get("form_template_ids");
+    return this.model?.category?.get("form_template_ids");
   }
 
   get hasFormTemplate() {
@@ -1453,10 +1453,6 @@ export default class ComposerService extends Service {
       opts.topicTitle.length <= this.siteSettings.max_topic_title_length
     ) {
       this.model.set("title", opts.topicTitle);
-    }
-
-    if (opts.topicCategoryId) {
-      this.model.set("categoryId", opts.topicCategoryId);
     }
 
     if (opts.topicTags && this.site.can_tag_topics) {

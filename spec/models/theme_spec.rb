@@ -1040,6 +1040,37 @@ HTML
     end
   end
 
+  describe "get_setting" do
+    before do
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        enabled:
+          type: bool
+          default: false
+        some_value:
+          type: string
+          default: "hello"
+      YAML
+
+      ThemeSetting.create!(
+        theme: theme,
+        data_type: ThemeSetting.types[:bool],
+        name: "super_feature_enabled",
+      )
+
+      theme.save!
+    end
+
+    it "returns the value of the setting when given a string represeting the setting name" do
+      expect(theme.get_setting("enabled")).to eq(false)
+      expect(theme.get_setting("some_value")).to eq("hello")
+    end
+
+    it "returns the value of the setting when given a symbol represeting the setting name" do
+      expect(theme.get_setting(:enabled)).to eq(false)
+      expect(theme.get_setting(:some_value)).to eq("hello")
+    end
+  end
+
   describe "#update_setting" do
     it "requests clients to refresh if `refresh: true`" do
       theme.set_field(target: :settings, name: "yaml", value: <<~YAML)

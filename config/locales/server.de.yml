@@ -1417,6 +1417,7 @@ de:
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
     v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
+    category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil Website-Einstellung</a> ."
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1593,8 +1594,8 @@ de:
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
     include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Benutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Benutzern nur die Anzahl der Themen für ein Schlagwort angezeigt, die sich in öffentlichen Kategorien befinden."
     display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Schlagwort angezeigt."
-    top_menu: "Legt fest, welche Elemente in welcher Reihenfolge in der Navigationsleiste der Startseite auftauchen sollen. Beispiel: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Legt fest, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "Lege fest, welche Elemente in der Homepage-Navigation erscheinen und in welcher Reihenfolge."
+    post_menu: "Lege fest, welche Elemente im Beitragsmenü erscheinen und in welcher Reihenfolge."
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     allow_username_in_share_links: "Benutzernamen in Freigabelinks erlauben. Dies ist nützlich, um Abzeichen für einzelne Besucher zu vergeben."

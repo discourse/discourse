@@ -1568,8 +1568,6 @@ sv:
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
     display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
-    top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     allow_username_in_share_links: "Tillåt att användarnamn omfattas i delningslänkar. Detta är användbart för att tilldela utmärkelser baserat på unika besökare."

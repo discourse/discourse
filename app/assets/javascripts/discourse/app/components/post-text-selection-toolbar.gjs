@@ -178,7 +178,6 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     {{! template-lint-disable no-invalid-interactive }}
     {{! template-lint-disable no-pointer-down-event-binding }}
     <div

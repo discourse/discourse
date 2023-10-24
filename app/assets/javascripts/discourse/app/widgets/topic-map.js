@@ -408,7 +408,7 @@ export default createWidget("topic-map", {
       "section.information.toggle-summary",
       hbs`<SummaryBox
         @postAttrs={{@data.postAttrs}}
-        @topRepliesToggle={{@data.actionDispatchFunc}}
+        @actionDispatchFunc={{@data.actionDispatchFunc}} 
       />`,
       {
         postAttrs: attrs,
