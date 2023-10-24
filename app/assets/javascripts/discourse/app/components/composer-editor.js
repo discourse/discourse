@@ -285,7 +285,7 @@ export default Component.extend(ComposerUploadUppy, {
         count: minimumPostLength,
       });
       const tl = this.get("currentUser.trust_level");
-      if ((tl === 0 || tl === 1) && !this._newTopicState()) {
+      if ((tl === 0 || tl === 1) && !this._isNewTopic()) {
         reason +=
           "<br/>" +
           I18n.t("composer.error.try_like", {
@@ -305,7 +305,7 @@ export default Component.extend(ComposerUploadUppy, {
     }
   },
 
-  _newTopicState() {
+  get _isNewTopic() {
     return (
       this.composer.creatingTopic ||
       this.composer.editingFirstPost ||
