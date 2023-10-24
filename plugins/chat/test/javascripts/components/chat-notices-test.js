@@ -91,7 +91,7 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       .dom(".mention-without-membership-notice__body__link")
       .hasText(I18n.t("chat.mention_warning.invite"));
 
-    pretender.put(`/chat/${this.channel.id}/invite`, () => {
+    pretender.post(`/chat/api/channels/${this.channel.id}/invites`, () => {
       return [200, { "Content-Type": "application/json" }, {}];
     });
 
