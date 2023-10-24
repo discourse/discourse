@@ -18,32 +18,31 @@ export default {
           "chat_invitation",
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
+              linkTitle = I18n.t("notifications.titles.chat_invitation");
+              icon = "link";
+              description = I18n.t("notifications.chat_invitation");
+
               get linkHref() {
                 const slug = slugifyChannel({
                   title: this.notification.data.chat_channel_title,
                   slug: this.notification.data.chat_channel_slug,
                 });
-                return `/chat/c/${slug || "-"}/${
+
+                let url = `/chat/c/${slug || "-"}/${
                   this.notification.data.chat_channel_id
-                }/${this.notification.data.chat_message_id}`;
-              }
+                }`;
 
-              get linkTitle() {
-                return I18n.t("notifications.titles.chat_invitation");
-              }
+                if (this.notification.data.chat_message_id) {
+                  url += `/${this.notification.data.chat_message_id}`;
+                }
 
-              get icon() {
-                return "link";
+                return url;
               }
 
               get label() {
                 return formatUsername(
                   this.notification.data.invited_by_username
                 );
-              }
-
-              get description() {
-                return I18n.t("notifications.chat_invitation");
               }
             };
           }

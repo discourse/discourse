@@ -157,7 +157,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   sendMessage(channelId, data = {}) {
-    return ajax(`/chat/${channelId}`, {
+    return ajax(`/chat/api/channels/${channelId}/messages`, {
       ignoreUnsent: false,
       type: "POST",
       data,
@@ -473,9 +473,9 @@ export default class ChatApi extends Service {
    * @param {number} options.chat_message_id - A message ID to display in the invite.
    */
   invite(channelId, userIds, options = {}) {
-    return ajax(`/chat/${channelId}/invite`, {
-      type: "put",
-      data: { user_ids: userIds, chat_message_id: options.messageId },
+    return this.#postRequest(`/channels/${channelId}/invites`, {
+      user_ids: userIds,
+      message_id: options.messageId,
     });
   }
 
