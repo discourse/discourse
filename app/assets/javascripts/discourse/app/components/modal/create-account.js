@@ -55,22 +55,23 @@ export default Component.extend(
     accountEmail: alias("model.accountEmail"),
     accountUsername: alias("model.accountUsername"),
 
-    didInsertElement() {
+    init() {
       this._super(...arguments);
 
       if (cookie("email")) {
         this.set("model.accountEmail", cookie("email"));
       }
+    },
 
-      let userTextFields = document.getElementsByClassName("user-fields")[0];
+    didInsertElement() {
+      this._super(...arguments);
+
+      const userTextFields = document
+        .getElementsByClassName("user-fields")[0]
+        ?.getElementsByClassName("ember-text-field");
 
       if (userTextFields) {
-        userTextFields =
-          userTextFields.getElementsByClassName("ember-text-field");
-      }
-
-      if (userTextFields) {
-        for (let element of userTextFields) {
+        for (const element of userTextFields) {
           element.addEventListener("focus", this.userInputFocus);
           element.addEventListener("focusout", this.userInputFocusOut);
         }
@@ -86,15 +87,12 @@ export default Component.extend(
       this.element.removeEventListener("keydown", this.actionOnEnter);
       this.element.removeEventListener("click", this.selectKitFocus);
 
-      let userTextFields = document.getElementsByClassName("user-fields")[0];
+      const userTextFields = document
+        .getElementsByClassName("user-fields")[0]
+        ?.getElementsByClassName("ember-text-field");
 
       if (userTextFields) {
-        userTextFields =
-          userTextFields.getElementsByClassName("ember-text-field");
-      }
-
-      if (userTextFields) {
-        for (let element of userTextFields) {
+        for (const element of userTextFields) {
           element.removeEventListener("focus", this.userInputFocus);
           element.removeEventListener("focusout", this.userInputFocusOut);
         }
