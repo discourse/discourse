@@ -23,17 +23,16 @@ export default {
               description = I18n.t("notifications.chat_invitation");
 
               get linkHref() {
+                const data = this.notification.data;
                 const slug = slugifyChannel({
-                  title: this.notification.data.chat_channel_title,
-                  slug: this.notification.data.chat_channel_slug,
+                  title: data.chat_channel_title,
+                  slug: data.chat_channel_slug,
                 });
 
-                let url = `/chat/c/${slug || "-"}/${
-                  this.notification.data.chat_channel_id
-                }`;
+                let url = `/chat/c/${slug || "-"}/${data.chat_channel_id}`;
 
-                if (this.notification.data.chat_message_id) {
-                  url += `/${this.notification.data.chat_message_id}`;
+                if (data.chat_message_id) {
+                  url += `/${data.chat_message_id}`;
                 }
 
                 return url;

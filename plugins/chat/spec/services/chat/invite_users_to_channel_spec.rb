@@ -70,7 +70,7 @@ RSpec.describe Chat::InviteUsersToChannel do
         result
 
         data = JSON.parse(user_1.reload.notifications.last.data)
-        expect(data["chat_message_id"]).to eq(message_1.id)
+        expect(data["chat_message_id"]).to eq(message_id)
       end
     end
   end
