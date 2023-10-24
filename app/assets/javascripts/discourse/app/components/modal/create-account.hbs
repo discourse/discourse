@@ -9,7 +9,12 @@
     @connectorTagName="div"
   /> }}
   <:body class={{this.modalBodyClasses}}>
-    <div class="create-account-form {{this.authOptions.auth_provider}}">
+    <div
+      class={{concat-class
+        "create-account-form"
+        this.authOptions.auth_provider
+      }}
+    >
       <div class="login-welcome-header" id="create-account-title">
         <h1 class="login-title">{{i18n "create_account.header_title"}}</h1>
         <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
