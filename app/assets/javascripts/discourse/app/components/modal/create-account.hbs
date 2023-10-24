@@ -8,10 +8,7 @@
     @name="create-account-before-modal-body"
     @connectorTagName="div"
   /> }}
-  <DModalBody
-    @class={{this.modalBodyClasses}}
-    @preventModalAlertHiding={{true}}
-  >
+  <:body class={{this.modalBodyClasses}}>
     <div class="create-account-form {{this.authOptions.auth_provider}}">
       <div class="login-welcome-header" id="create-account-title">
         <h1 class="login-title">{{i18n "create_account.header_title"}}</h1>
@@ -22,8 +19,8 @@
           @outletArgs={{hash showLogin=(route-action "showLogin")}}
         />
       </div>
-      {{#if this.showCreateForm}}
 
+      {{#if this.showCreateForm}}
         <div class="login-form">
           <form>
             {{#if this.associateHtml}}
@@ -277,6 +274,6 @@
         {{loading-spinner size="large"}}
       {{/if}}
     </div>
-  </DModalBody>
+  </:body>
   {{! </CreateAccount> }}
 </DModal>
