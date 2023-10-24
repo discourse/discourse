@@ -75,6 +75,7 @@ class BulkImport::Generic < BulkImport::Base
     import_likes
     import_votes
     import_answers
+    import_gamification_scores
 
     import_badge_groupings
     import_badges
@@ -1100,6 +1101,48 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     solutions.close
+  end
+
+  def import_gamification_scores
+    puts "", "Importing gamification scores..."
+
+    unless defined?(::DiscourseGamification)
+      puts "  Skipping import of gamification scores because the plugin is not installed."
+      return
+    end
+
+    # TODO Make this configurable
+    from_date = Date.tomorrow
+    DiscourseGamification::GamificationLeaderboard.all.each do |leaderboard|
+      leaderboard.update!(from_date: from_date)
+    end
+
+    scores = query(<<~SQL)
+      SELECT *
+        FROM gamification_score_events
+       ORDER BY id
+    SQL
+
+    # TODO Better way of detecting existing scores?
+    existing_scores = DiscourseGamification::GamificationScoreEvent.pluck(:user_id, :date).to_set
+
+    create_gamification_score_events(scores) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next unless user_id
+
+      date = to_date(row["date"]) || from_date
+      next if existing_scores.include?([user_id, date])
+
+      {
+        user_id: user_id,
+        date: date,
+        points: row["points"],
+        description: row["description"],
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    scores.close
   end
 
   def import_tag_users

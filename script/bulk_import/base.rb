@@ -647,6 +647,8 @@ class BulkImport::Base
 
   USER_BADGE_COLUMNS ||= %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
 
+  GAMIFICATION_SCORE_EVENT_COLUMNS ||= %i[user_id date points description created_at updated_at]
+
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
   end
@@ -767,6 +769,10 @@ class BulkImport::Base
 
   def create_user_badges(rows, &block)
     create_records(rows, "user_badge", USER_BADGE_COLUMNS, &block)
+  end
+
+  def create_gamification_score_events(rows, &block)
+    create_records(rows, "gamification_score_event", GAMIFICATION_SCORE_EVENT_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1313,6 +1319,12 @@ class BulkImport::Base
     user_badge[:granted_by_id] ||= Discourse::SYSTEM_USER_ID
     user_badge[:created_at] ||= user_badge[:granted_at]
     user_badge
+  end
+
+  def process_gamification_score_event(score_event)
+    score_event[:created_at] ||= NOW
+    score_event[:updated_at] ||= NOW
+    score_event
   end
 
   def create_records(all_rows, name, columns, &block)
