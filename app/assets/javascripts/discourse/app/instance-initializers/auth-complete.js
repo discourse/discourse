@@ -37,7 +37,8 @@ export default {
     }
 
     if (lastAuthResult) {
-      const router = owner.lookup("service:router");
+      // eslint-disable-next-line ember/no-private-routing-service
+      const router = owner.lookup("router:main");
       router.one("didTransition", () => {
         next(() => {
           const options = JSON.parse(lastAuthResult);
