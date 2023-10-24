@@ -1013,6 +1013,10 @@ class UsersController < ApplicationController
     user_presence = user.present? && !user.staged
 
     if user
+      if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+        return render_json_error(I18n.t("email_login.bounce_score_too_high"))
+      end
+
       RateLimiter.new(nil, "email-login-hour-#{user.id}", 6, 1.hour).performed!
       RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!
 
