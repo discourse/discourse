@@ -126,11 +126,7 @@ export default class CreateAccount extends Component.extend(
 
   @discourseComputed("formSubmitted")
   submitDisabled() {
-    if (this.formSubmitted) {
-      return true;
-    }
-
-    return false;
+    return this.formSubmitted;
   }
 
   @discourseComputed()
