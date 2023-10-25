@@ -261,8 +261,8 @@ body.invite-page {
             text-overflow: ellipsis;
           }
         }
-        span.name,
-        span.formatted-selection {
+        details:not(.has-selection) span.name,
+        details:not(.has-selection) span.formatted-selection {
           color: var(--primary-medium);
         }
         .select-kit-row span.name {
