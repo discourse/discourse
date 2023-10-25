@@ -3,6 +3,7 @@ import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -16,7 +17,6 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { AUTO_GROUPS } from "discourse-common/lib/auto-groups";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 

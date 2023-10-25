@@ -15,10 +15,9 @@ export default class AdminRoute extends DiscourseRoute {
 
   activate() {
     if (
-      !this.currentUser.isInAnyGroups(
-        this.siteSettings.groupSettingArray(
-          "enable_experimental_admin_ui_groups"
-        )
+      !this.siteSettings.userInAnyGroups(
+        "enable_experimental_admin_ui_groups",
+        this.currentUser
       )
     ) {
       return DiscourseURL.redirectTo("/admin");

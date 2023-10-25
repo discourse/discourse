@@ -28,10 +28,9 @@ export default class UserMenuProfileTabContent extends Component {
   get showToggleAnonymousButton() {
     return (
       (this.siteSettings.allow_anonymous_posting &&
-        this.currentUser.isInAnyGroups(
-          this.siteSettings.groupSettingArray(
-            "anonymous_posting_allowed_groups"
-          )
+        this.siteSettings.userInAnyGroups(
+          "anonymous_posting_allowed_groups",
+          this.currentUser
         )) ||
       this.currentUser.is_anonymous
     );

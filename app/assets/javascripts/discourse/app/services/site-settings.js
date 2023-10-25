@@ -18,6 +18,11 @@ export function createSiteSettingsFromPreloaded(data) {
       .map((groupId) => parseInt(groupId, 10));
   };
 
+  settings.userInAnyGroups = (groupSetting, user) => {
+    const groupIds = settings.groupSettingArray(groupSetting);
+    return user.isInAnyGroups(groupIds);
+  };
+
   return settings;
 }
 

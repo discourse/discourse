@@ -1,7 +1,7 @@
 import { deepFreeze } from "discourse-common/lib/object";
 import {
   AUTO_GROUPS,
-} from "discourse-common/lib/auto-groups";
+} from "discourse/lib/constants";
 
 export default {
   "/session/current.json": deepFreeze({
