@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
@@ -44,7 +45,7 @@ export default class PostTextSelection extends Component {
   @service siteSettings;
   @service menu;
 
-  prevSelection;
+  prevSelectedText;
 
   runLoopHandlers = modifier(() => {
     return () => {
@@ -92,11 +93,15 @@ export default class PostTextSelection extends Component {
     // this can happen if you triple click text in firefox
     // it's also generally unecessary work to go
     // through this if the selection hasn't changed
-    if (this.menuInstance?.expanded && this.prevSelection === _selectedText) {
+    if (
+      this.menuInstance?.expanded &&
+      (this.prevSelectedText === _selectedText ||
+        this.isSameTextAnchor(this.prevSelectedText, _selectedText))
+    ) {
       return;
     }
 
-    this.prevSelection = _selectedText;
+    this.prevSelectedText = _selectedText;
 
     const selection = window.getSelection();
     if (selection.isCollapsed) {
@@ -182,18 +187,14 @@ export default class PostTextSelection extends Component {
       }
     }
 
-    // on Desktop, shows the button at the beginning of the selection
-    // on Mobile, shows the button at the end of the selection
-    const { isIOS, isAndroid, isOpera } = this.capabilities;
-    const showAtEnd = this.site.isMobileDevice || isIOS || isAndroid || isOpera;
     const options = {
       component: PostTextSelectionToolbar,
       inline: true,
-      placement: showAtEnd ? "bottom-start" : "top-start",
-      fallbackPlacements: showAtEnd
+      placement: this.shouldRenderUnder ? "bottom-start" : "top-start",
+      fallbackPlacements: this.shouldRenderUnder
         ? ["bottom-end", "top-start"]
         : ["bottom-start"],
-      offset: showAtEnd ? 25 : 3,
+      offset: this.shouldRenderUnder ? 25 : 3,
       trapTab: false,
       data: {
         canEditPost: this.canEditPost,
@@ -254,10 +255,35 @@ export default class PostTextSelection extends Component {
     return this.siteSettings.enable_fast_edit && this.post?.can_edit;
   }
 
+  // on Desktop, shows the bar at the beginning of the selection
+  // on Mobile, shows the bar at the end of the selection
+  @cached
+  get shouldRenderUnder() {
+    const { isIOS, isAndroid, isOpera } = this.capabilities;
+    return this.site.isMobileDevice || isIOS || isAndroid || isOpera;
+  }
+
   @action
   async insertQuote() {
     await this.args.selectText();
     await this.hideToolbar();
+  }
+
+  // the anchor is the first character of the selection used to determine
+  // the position of the bar, if the first char stays the same, we don't need
+  // to reposition the bar even if the length of the selection changes
+  // we can't use selection and anchorOffset/focusOffset as the selection can
+  // happen accross multiple nodes
+  isSameTextAnchor(prev, current) {
+    // on mobile we don't use mouse down event, but only selectionchange
+    // so we can consider we always have to recompute on this event
+    if (this.shouldRenderUnder) {
+      return false;
+    } else {
+      return prev?.length >= current.length
+        ? prev.startsWith(current)
+        : current.startsWith(prev);
+    }
   }
 
   <template>
