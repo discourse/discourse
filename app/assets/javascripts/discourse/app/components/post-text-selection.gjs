@@ -93,7 +93,6 @@ export default class PostTextSelection extends Component {
     // it's also generally unecessary work to go
     // through this if the selection hasn't changed
     if (this.menuInstance?.expanded && this.prevSelection === _selectedText) {
-      this.prevSelection = _selectedText;
       return;
     }
 
