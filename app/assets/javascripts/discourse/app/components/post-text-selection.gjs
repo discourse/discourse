@@ -213,6 +213,8 @@ export default class PostTextSelection extends Component {
       },
     };
 
+    await this.menuInstance?.destroy();
+
     this.menuInstance = await this.menu.show(
       virtualElementFromTextRange(),
       options
@@ -222,15 +224,12 @@ export default class PostTextSelection extends Component {
   @bind
   onSelectionChanged() {
     const { isIOS, isWinphone, isAndroid } = this.capabilities;
-    if (isIOS || isWinphone || isAndroid) {
-      this.selectionChangeHandler = discourseDebounce(
-        this,
-        this.selectionChanged,
-        INPUT_DELAY
-      );
-    } else {
-      this.selectionChanged();
-    }
+    const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
+    this.selectionChangeHandler = discourseDebounce(
+      this,
+      this.selectionChanged,
+      wait
+    );
   }
 
   @bind
