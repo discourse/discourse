@@ -25,7 +25,7 @@ class MigrateTlToGroupSettingsAnonymousPostingMinTl < ActiveRecord::Migration[7.
         end
 
       # Data_type 20 is group_list.
-      exec(<<~SQL, setting: anonymous_posting_allowed_groups)
+      DB.exec(<<~SQL, setting: anonymous_posting_allowed_groups)
         INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
         VALUES('anonymous_posting_allowed_groups', :setting, '20', NOW(), NOW())
       SQL
