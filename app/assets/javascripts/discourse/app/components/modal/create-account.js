@@ -114,7 +114,7 @@ export default Component.extend(
 
     @discourseComputed("site.desktopView", "hasAuthOptions")
     showExternalLoginButtons(desktopView, hasAuthOptions) {
-      return this.desktopView && !hasAuthOptions;
+      return desktopView && !hasAuthOptions;
     },
 
     @discourseComputed("formSubmitted")
