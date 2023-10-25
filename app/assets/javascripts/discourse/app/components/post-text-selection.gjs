@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
+import bodyClass from "discourse/helpers/body-class";
 import toMarkdown from "discourse/lib/to-markdown";
 import {
   selectedNode,
@@ -44,6 +45,8 @@ export default class PostTextSelection extends Component {
   @service site;
   @service siteSettings;
   @service menu;
+
+  @tracked isSelecting = false;
 
   prevSelectedText;
 
@@ -87,6 +90,10 @@ export default class PostTextSelection extends Component {
 
   @bind
   async selectionChanged() {
+    if (this.isSelecting) {
+      return;
+    }
+
     const _selectedText = selectedText();
 
     // avoid hard loops in quote selection unconditionally
@@ -95,8 +102,7 @@ export default class PostTextSelection extends Component {
     // through this if the selection hasn't changed
     if (
       this.menuInstance?.expanded &&
-      (this.prevSelectedText === _selectedText ||
-        this.isSameTextAnchor(this.prevSelectedText, _selectedText))
+      this.prevSelectedText === _selectedText
     ) {
       return;
     }
@@ -188,6 +194,7 @@ export default class PostTextSelection extends Component {
     }
 
     const options = {
+      identifier: "post-text-selection-toolbar",
       component: PostTextSelectionToolbar,
       inline: true,
       placement: this.shouldRenderUnder ? "bottom-start" : "top-start",
@@ -207,8 +214,6 @@ export default class PostTextSelection extends Component {
       },
     };
 
-    this.menuInstance?.destroy();
-
     this.menuInstance = await this.menu.show(
       virtualElementFromTextRange(),
       options
@@ -218,12 +223,15 @@ export default class PostTextSelection extends Component {
   @bind
   onSelectionChanged() {
     const { isIOS, isWinphone, isAndroid } = this.capabilities;
-    const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 100;
-    this.selectionChangeHandler = discourseDebounce(
-      this,
-      this.selectionChanged,
-      wait
-    );
+    if (isIOS || isWinphone || isAndroid) {
+      this.selectionChangeHandler = discourseDebounce(
+        this,
+        this.selectionChanged,
+        INPUT_DELAY
+      );
+    } else {
+      this.selectionChanged();
+    }
   }
 
   @bind
@@ -234,10 +242,14 @@ export default class PostTextSelection extends Component {
       this.validMouseDown = false;
       return;
     }
+
+    this.isSelecting = true;
   }
 
   @bind
   mouseup() {
+    this.isSelecting = false;
+
     if (!this.validMouseDown) {
       return;
     }
@@ -269,24 +281,8 @@ export default class PostTextSelection extends Component {
     await this.hideToolbar();
   }
 
-  // the anchor is the first character of the selection used to determine
-  // the position of the bar, if the first char stays the same, we don't need
-  // to reposition the bar even if the length of the selection changes
-  // we can't use selection and anchorOffset/focusOffset as the selection can
-  // happen accross multiple nodes
-  isSameTextAnchor(prev, current) {
-    // on mobile we don't use mouse down event, but only selectionchange
-    // so we can consider we always have to recompute on this event
-    if (this.shouldRenderUnder) {
-      return false;
-    } else {
-      return prev?.length >= current.length
-        ? prev.startsWith(current)
-        : current.startsWith(prev);
-    }
-  }
-
   <template>
+    {{bodyClass (if this.isSelecting "quote-selecting")}}
     <div
       {{this.documentListeners}}
       {{this.appEventsListeners}}

@@ -565,6 +565,13 @@ aside.quote {
   }
 }
 
+body.quote-selecting {
+  [data-identifier="post-text-selection-toolbar"][data-content] > * {
+    pointer-events: none;
+    @include user-select(none);
+  }
+}
+
 .quote-button {
   flex-direction: column;
 
