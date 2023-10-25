@@ -4,6 +4,7 @@ import loaderShim from "discourse-common/lib/loader-shim";
 // AMD shims for the app bunndle, see the comment in loader-shim.js
 // These effectively become public APIs for plugins, so add/remove them carefully
 loaderShim("@discourse/itsatrap", () => importSync("@discourse/itsatrap"));
+loaderShim("@ember/string", () => importSync("@ember/string"));
 loaderShim("@ember-compat/tracked-built-ins", () =>
   importSync("@ember-compat/tracked-built-ins")
 );
