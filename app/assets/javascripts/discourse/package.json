@@ -111,7 +111,7 @@
     "float-kit": "1.0.0",
     "html-entities": "^2.4.0",
     "imports-loader": "^4.0.1",
-    "jquery": "^3.5.0",
+    "jquery": "^3.7.1",
     "js-yaml": "^4.1.0",
     "jsdom": "^22.1.0",
     "loader.js": "^4.7.0",
