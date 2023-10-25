@@ -5,7 +5,6 @@ import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
-import bodyClass from "discourse/helpers/body-class";
 import toMarkdown from "discourse/lib/to-markdown";
 import {
   selectedNode,
@@ -282,7 +281,6 @@ export default class PostTextSelection extends Component {
   }
 
   <template>
-    {{bodyClass (if this.isSelecting "quote-selecting")}}
     <div
       {{this.documentListeners}}
       {{this.appEventsListeners}}
