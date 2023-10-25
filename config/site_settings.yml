@@ -682,6 +682,13 @@ users:
     default: 1
     enum: "TrustLevelSetting"
     client: true
+  anonymous_posting_allowed_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   anonymous_account_duration_minutes:
     default: 10080
     max: 99000
@@ -860,7 +867,7 @@ posting:
     client: true
     allow_any: false
     refresh: true
-    validator: "PersonalMessageEnabledGroupsValidator"
+    validator: "AtLeastOneGroupValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
