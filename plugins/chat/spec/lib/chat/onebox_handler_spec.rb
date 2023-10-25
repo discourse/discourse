@@ -191,7 +191,7 @@ describe Chat::OneboxHandler do
       end
     end
 
-    context "when thread does not exists" do
+    context "when thread does not exist" do
       it "creates a channel onebox" do
         public_channel.add(user)
         Chat::Channel.ensure_consistency!
