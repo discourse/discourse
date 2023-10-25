@@ -223,6 +223,10 @@ export default class PostTextSelection extends Component {
 
   @bind
   onSelectionChanged() {
+    if (this.isSelecting) {
+      return;
+    }
+
     const { isIOS, isWinphone, isAndroid } = this.capabilities;
     const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
     this.selectionChangeHandler = discourseDebounce(
@@ -233,25 +237,13 @@ export default class PostTextSelection extends Component {
   }
 
   @bind
-  mousedown(event) {
-    this.validMouseDown = true;
-
-    if (!event.target.closest(".cooked")) {
-      this.validMouseDown = false;
-      return;
-    }
-
+  mousedown() {
     this.isSelecting = true;
   }
 
   @bind
   mouseup() {
     this.isSelecting = false;
-
-    if (!this.validMouseDown) {
-      return;
-    }
-
     this.onSelectionChanged();
   }
 
