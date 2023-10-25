@@ -92,7 +92,7 @@ module Chat
       if target.is_a?(Message)
         message = target
       elsif target.is_a?(Thread)
-        message = Chat::Message.find_by(id: target.original_message_id)
+        message = Chat::Message.includes(:uploads).find_by(id: target.original_message_id)
       end
 
       return if !message
