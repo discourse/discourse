@@ -2,10 +2,10 @@ import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 acceptance("Create Account - User Fields", function (needs) {
   needs.site({
@@ -67,13 +67,11 @@ acceptance("Create Account - User Fields", function (needs) {
   test("can submit with enter", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
-    await triggerKeyEvent(".modal-footer .btn-primary", "keydown", "Enter");
+    await triggerKeyEvent("#new-account-email", "keydown", "Enter");
 
-    assert.strictEqual(
-      count("#modal-alert:visible"),
-      1,
-      "hitting Enter triggers action"
-    );
+    assert
+      .dom("#account-email-validation")
+      .hasText(I18n.t("user.email.required"), "hitting Enter triggers action");
   });
 
   test("shows validation error for user fields", async function (assert) {
