@@ -2038,12 +2038,6 @@ nl:
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
-      plus_subcategories_title:
-        one: "%{name} en één subcategorie"
-        other: "%{name} en %{count} subcategorieën"
-      plus_subcategories:
-        one: "+ %{count} subcategorie"
-        other: "+ %{count} subcategorieën"
     select_kit:
       delete_item: "%{name} verwijderen"
       filter_by: "Filteren op: %{name}"
@@ -4028,7 +4022,6 @@ nl:
           delete: "Verwijderen"
           delete_confirm: "Weet je zeker dat je deze sectie wilt verwijderen?"
           reset_confirm: "Weet je zeker dat je deze sectie wilt herstellen naar de standaardinstellingen?"
-          public: "Deze sectie openbaar en zichtbaar voor iedereen maken"
           always_public: "Content in deze sectie is altijd openbaar"
           more_menu: "Menu Meer"
           links:

@@ -114,37 +114,6 @@ module Chat
       render json: { chat_enabled: current_user.user_option.chat_enabled }
     end
 
-    def invite_users
-      params.require(:user_ids)
-
-      users =
-        User
-          .includes(:groups)
-          .joins(:user_option)
-          .where(user_options: { chat_enabled: true })
-          .not_suspended
-          .where(id: params[:user_ids])
-      users.each do |user|
-        if user.guardian.can_join_chat_channel?(@chat_channel)
-          data = {
-            message: "chat.invitation_notification",
-            chat_channel_id: @chat_channel.id,
-            chat_channel_title: @chat_channel.title(user),
-            chat_channel_slug: @chat_channel.slug,
-            invited_by_username: current_user.username,
-          }
-          data[:chat_message_id] = params[:chat_message_id] if params[:chat_message_id]
-          user.notifications.create(
-            notification_type: Notification.types[:chat_invitation],
-            high_priority: true,
-            data: data.to_json,
-          )
-        end
-      end
-
-      render json: success_json
-    end
-
     def dismiss_retention_reminder
       params.require(:chatable_type)
       guardian.ensure_can_chat!

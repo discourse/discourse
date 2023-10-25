@@ -2177,6 +2177,7 @@ en:
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     allow_anonymous_likes: "Allow anonymous users to like posts"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
+    anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
@@ -2488,7 +2489,7 @@ en:
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
-      personal_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send PMs, choose the staff group."
+      at_least_one_group_required: "You must specify at least one group for this setting."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."

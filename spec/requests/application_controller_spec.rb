@@ -153,6 +153,7 @@ RSpec.describe ApplicationController do
     it "should not redirect anonymous users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.allow_anonymous_posting = true
+      Group.refresh_automatic_groups!
       sign_in(user)
 
       post "/u/toggle-anon.json"

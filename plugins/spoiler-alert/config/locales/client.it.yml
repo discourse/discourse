@@ -7,7 +7,7 @@
 it:
   js:
     spoiler:
-      title: Rendi illeggibile spoiler
+      title: Sfuoca lo spoiler
       label:
         show: "Mostra contenuti nascosti"
     composer:

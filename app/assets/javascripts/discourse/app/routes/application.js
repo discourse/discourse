@@ -4,12 +4,11 @@ import CreateAccount from "discourse/components/modal/create-account";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import LoginModal from "discourse/components/modal/login";
-import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie from "discourse/lib/cookie";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { findAll } from "discourse/models/login-method";
@@ -66,12 +65,6 @@ const ApplicationRoute = DiscourseRoute.extend({
   },
 
   actions: {
-    toggleAnonymous() {
-      ajax(userPath("toggle-anon"), { type: "POST" }).then(() => {
-        window.location.reload();
-      });
-    },
-
     toggleMobileView() {
       mobile.toggleMobileView();
     },

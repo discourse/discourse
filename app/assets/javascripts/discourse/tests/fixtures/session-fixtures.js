@@ -1,4 +1,7 @@
 import { deepFreeze } from "discourse-common/lib/object";
+import {
+  AUTO_GROUPS,
+} from "discourse/lib/constants";
 
 export default {
   "/session/current.json": deepFreeze({
@@ -30,18 +33,12 @@ export default {
       can_review: true,
       ignored_users: [],
       groups: [
-        {
-          id: 10,
-          automatic: true,
-          name: "trust_level_0",
-          display_name: "trust_level_0",
-        },
-        {
-          id: 11,
-          automatic: true,
-          name: "trust_level_1",
-          display_name: "trust_level_1",
-        }
+        AUTO_GROUPS.admins,
+        AUTO_GROUPS.moderators,
+        AUTO_GROUPS.staff,
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
       ],
       user_option: {
         external_links_in_new_tab: false,

@@ -2038,12 +2038,6 @@ pt_BR:
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
-      plus_subcategories_title:
-        one: "%{name} e uma subcategoria"
-        other: "%{name} e %{count} subcategorias"
-      plus_subcategories:
-        one: "+%{count} subcategoria"
-        other: "+%{count} subcategorias"
     select_kit:
       delete_item: "Excluir %{name}"
       filter_by: "Filtrar por: %{name}"
@@ -4028,7 +4022,6 @@ pt_BR:
           delete: "Excluir"
           delete_confirm: "Tem certeza de que deseja excluir essa seção?"
           reset_confirm: "Tem certeza de que deseja redefinir esta seção para o padrão?"
-          public: "Tornar esta seção pública e visível para todos"
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
           links:

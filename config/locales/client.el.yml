@@ -1689,12 +1689,6 @@ el:
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"
-      plus_subcategories_title:
-        one: "%{name} και μία υποκατηγορία"
-        other: "%{name} και %{count} υποκατηγορίες"
-      plus_subcategories:
-        one: "+ %{count} υποκατηγορία"
-        other: "+ %{count} υποκατηγορίες"
     select_kit:
       delete_item: "Διαγραφή %{name}"
       no_content: Δεν βρέθηκαν αποτελέσματα

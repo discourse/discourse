@@ -2038,12 +2038,6 @@ fr:
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
-      plus_subcategories_title:
-        one: "%{name} et une sous-catégorie"
-        other: "%{name} et %{count} sous-catégories"
-      plus_subcategories:
-        one: "+ %{count} sous-catégorie"
-        other: "+ %{count} sous-catégories"
     select_kit:
       delete_item: "Supprimer %{name}"
       filter_by: "Filtrer par : %{name}"
@@ -4031,7 +4025,6 @@ fr:
           delete: "Supprimer"
           delete_confirm: "Voulez-vous vraiment supprimer cette section ?"
           reset_confirm: "Voulez-vous vraiment réinitialiser cette section par défaut ?"
-          public: "Rendre cette section publique et la rendre visible pour tous"
           always_public: "Le contenu de cette section est toujours public"
           more_menu: "Plus de menus"
           links:

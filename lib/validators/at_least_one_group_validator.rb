@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PersonalMessageEnabledGroupsValidator
+class AtLeastOneGroupValidator
   def initialize(opts = {})
     @opts = opts
   end
@@ -10,6 +10,6 @@ class PersonalMessageEnabledGroupsValidator
   end
 
   def error_message
-    I18n.t("site_settings.errors.personal_message_enabled_groups_invalid")
+    I18n.t("site_settings.errors.at_least_one_group_required")
   end
 end

@@ -1568,8 +1568,6 @@ fr:
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
-    top_menu: "Choisissez les éléments qui apparaissent dans la navigation de la page d'accueil, ainsi que leur ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Choisissez les éléments qui apparaissent dans le menu du message, ainsi que leur ordre. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront masqués par défaut jusqu'à extension du menu."
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
     allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."

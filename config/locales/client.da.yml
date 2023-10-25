@@ -1842,12 +1842,6 @@ da:
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategori"
-      plus_subcategories_title:
-        one: "%{name} og en underkategori"
-        other: "%{name} og %{count} underkategorier"
-      plus_subcategories:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
     select_kit:
       delete_item: "Slet %{name}"
       filter_by: "Filtrer efter: %{name}"
