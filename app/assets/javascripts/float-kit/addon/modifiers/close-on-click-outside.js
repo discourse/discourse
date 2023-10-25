@@ -16,10 +16,6 @@ export default class FloatKitCloseOnClickOutside extends Modifier {
     document.addEventListener("pointerdown", this.check, {
       passive: true,
     });
-
-    document.addEventListener("touchstart", this.check, {
-      passive: true,
-    });
   }
 
   @bind
@@ -40,6 +36,5 @@ export default class FloatKitCloseOnClickOutside extends Modifier {
 
   cleanup() {
     document.removeEventListener("pointerdown", this.check);
-    document.removeEventListener("touchstart", this.check);
   }
 }
