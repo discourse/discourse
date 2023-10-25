@@ -375,58 +375,25 @@ RSpec.describe CategoriesController do
 
     describe "with serialized category custom fields" do
       class CategoryPlugin < Plugin::Instance
-        attr_accessor :enabled
-        def enabled?
-          @enabled
-        end
       end
 
-      fab!(:plugin) { CategoryPlugin.new }
-
-      before do
-        plugin.enabled = false
-        category.clear_custom_fields
-      end
-
-      def add_custom_fields
-        plugin.enabled = true
+      let!(:plugin) do
+        plugin = CategoryPlugin.new
         plugin.add_to_serializer(:basic_category, :bob) { object.custom_fields["bob"] }
-        category.custom_fields["bob"] = "marley"
-        category.save
+        plugin
       end
 
-      def queries_without_custom_fields
-        track_sql_queries do
-          get "/categories.json"
-          expect(response.status).to eq(200)
-          expect(
-            response.parsed_body["category_list"]["categories"].map(&:keys).flatten,
-          ).not_to include("bob")
-        end
-      end
-
-      def queries_with_custom_fields
-        track_sql_queries do
-          get "/categories.json"
-          expect(response.status).to eq(200)
-          expect(
-            response.parsed_body["category_list"]["categories"].map(&:keys).flatten,
-          ).to include("bob")
-        end
-      end
+      before { category.upsert_custom_fields("bob" => "marley") }
+      after { CategoryList.preloaded_category_custom_fields = Set.new }
 
       context "when custom fields are not preloaded" do
-        before { CategoryList.preloaded_category_custom_fields = Set.new }
-
         it "increases the query count" do
-          # warmup
-          get "/categories.json"
-          expect(response.status).to eq(200)
+          queries = track_sql_queries { get "/categories.json" }
 
-          without_custom_fields = queries_without_custom_fields
-          add_custom_fields
-          with_custom_fields = queries_with_custom_fields
-          expect(with_custom_fields.count).to be > without_custom_fields.count
+          expect(response.status).to eq(200)
+          category = response.parsed_body["category_list"]["categories"][-1]
+          expect(category["bob"]).to eq("marley")
+          expect(queries.count).to eq(7)
         end
       end
 
@@ -434,14 +401,12 @@ RSpec.describe CategoriesController do
         before { CategoryList.preloaded_category_custom_fields << "bob" }
 
         it "does not increase the query count" do
-          # warmup
-          get "/categories.json"
-          expect(response.status).to eq(200)
+          queries = track_sql_queries { get "/categories.json" }
 
-          without_custom_fields = queries_without_custom_fields
-          add_custom_fields
-          with_custom_fields = queries_with_custom_fields
-          expect(with_custom_fields.count).to eq(without_custom_fields.count)
+          expect(response.status).to eq(200)
+          category = response.parsed_body["category_list"]["categories"][-1]
+          expect(category["bob"]).to eq("marley")
+          expect(queries.count).to eq(6)
         end
       end
     end
