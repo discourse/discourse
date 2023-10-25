@@ -1102,4 +1102,50 @@ RSpec.describe Users::OmniauthCallbacksController do
       Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
     end
   end
+
+  describe "with a fake provider" do
+    class FakeAuthenticator < Auth::ManagedAuthenticator
+      class Strategy
+        include OmniAuth::Strategy
+        def other_phase
+          [418, {}, "I am a teapot"]
+        end
+      end
+
+      def name
+        "fake"
+      end
+
+      def enabled?
+        false
+      end
+
+      def register_middleware(omniauth)
+        omniauth.provider Strategy, name: :fake
+      end
+    end
+
+    before do
+      DiscoursePluginRegistry.register_auth_provider(
+        Auth::AuthProvider.new(authenticator: FakeAuthenticator.new),
+      )
+      OmniAuth.config.test_mode = false
+    end
+
+    it "does not run 'other_phase' for disabled auth methods" do
+      get "/auth/fake/blah"
+      expect(response.status).to eq(404)
+    end
+
+    it "does not leak 'other_phase' for disabled auth methods onto other methods" do
+      get "/auth/twitter/blah"
+      expect(response.status).to eq(404)
+    end
+
+    it "runs 'other_phase' for enabled auth methods" do
+      FakeAuthenticator.any_instance.stubs(:enabled?).returns(true)
+      get "/auth/fake/blah"
+      expect(response.status).to eq(418)
+    end
+  end
 end
