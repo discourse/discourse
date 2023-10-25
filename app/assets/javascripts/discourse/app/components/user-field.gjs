@@ -1,4 +1,4 @@
-import Component from "@glimmer/component";
+import { get } from "@ember/helper";
 import UserFieldConfirm from "./user-fields/confirm";
 import UserFieldDropdown from "./user-fields/dropdown";
 import UserFieldMultiselect from "./user-fields/multiselect";
@@ -11,8 +11,15 @@ const COMPONENTS = {
   text: UserFieldText,
 };
 
-export default class UserFieldComponent extends Component {
-  get userFieldComponent() {
-    return COMPONENTS[this.args.field.field_type];
-  }
-}
+const UserField = <template>
+  {{#let (get COMPONENTS @field.field_type) as |Component|}}
+    <Component
+      @field={{@field}}
+      @value={{@value}}
+      @class={{@class}}
+      @validation={{@validation}}
+    />
+  {{/let}}
+</template>;
+
+export default UserField;

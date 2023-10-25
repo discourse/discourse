@@ -9,7 +9,7 @@ module Chat
   class CreateThread
     include Service::Base
 
-    # @!method call(thread_id:, channel_id:, guardian:, **params_to_edit)
+    # @!method call(thread_id:, channel_id:, guardian:, **params_to_create)
     #   @param [Integer] original_message_id
     #   @param [Integer] channel_id
     #   @param [Guardian] guardian

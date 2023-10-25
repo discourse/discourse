@@ -1774,12 +1774,6 @@ ur:
       topic_count:
         one: "اس زمرے میں %{count} موضوع"
         other: "اس زمرے میں %{count} موضوعات"
-      plus_subcategories_title:
-        one: "%{name} اور ایک ذیلی زمرہ"
-        other: "%{name} اور %{count} ذیلی زمرہ جات"
-      plus_subcategories:
-        one: "+ %{count} ذیلی زمرہ"
-        other: "+ %{count} ذیلی زمرہ جات"
     select_kit:
       delete_item: "%{name} مٹائیں"
       filter_by: "فلٹر بذریعہ: %{name}"

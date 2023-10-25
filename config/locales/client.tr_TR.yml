@@ -1401,8 +1401,6 @@ tr_TR:
           edit_description: "Fiziksel Güvenlik Anahtarı Adı"
           name_required_error: "Güvenlik anahtarınız için bir ad girmeniz gerekir."
       passkeys:
-        name:
-          google_password_manager: "Google Şifre Yöneticisi"
         save: "Kaydet"
         added_prefix: "Eklendi"
         last_used_prefix: "Son Kullanılan"
@@ -2059,12 +2057,6 @@ tr_TR:
       topic_count:
         one: "bu kategorideki %{count} konu"
         other: "bu kategorideki %{count} konu"
-      plus_subcategories_title:
-        one: "%{name} ve bir alt kategori"
-        other: "%{name} ve %{count} alt kategori"
-      plus_subcategories:
-        one: "+ %{count} alt kategori"
-        other: "+ %{count} alt kategori"
     select_kit:
       delete_item: "Şunu sil: %{name}"
       filter_by: "Şuna göre filtrele: %{name}"
@@ -4066,7 +4058,7 @@ tr_TR:
           delete: "Sil"
           delete_confirm: "Bu bölümü silmek istediğinizden emin misiniz?"
           reset_confirm: "Bu bölümü varsayılana sıfırlamak istediğinizden emin misiniz?"
-          public: "Bu bölümü herkese açık ve herkes tarafından görülebilir hale getirin"
+          public: "Herkese görünür"
           always_public: "Bu bölümdeki içerik her zaman herkese açıktır"
           more_menu: "Daha fazla menü"
           links:

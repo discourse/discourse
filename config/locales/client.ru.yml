@@ -2216,16 +2216,6 @@ ru:
         few: "%{count} темы в этой категории"
         many: "%{count} тем в этой категории"
         other: "%{count} темы в этой категории"
-      plus_subcategories_title:
-        one: "%{name} и %{count} подкатегория"
-        few: "%{name} и %{count} подкатегории"
-        many: "%{name} и %{count} подкатегорий"
-        other: "%{name} и %{count} подкатегории"
-      plus_subcategories:
-        one: "+ %{count} подкатегория"
-        few: "+ %{count} подкатегории"
-        many: "+ %{count} подкатегорий"
-        other: "+ %{count} подкатегории"
     select_kit:
       delete_item: "Удалить %{name}"
       filter_by: "Фильтровать по: %{name}"
@@ -4428,7 +4418,6 @@ ru:
           delete: "Удалить"
           delete_confirm: "Действительно удалить раздел?"
           reset_confirm: "Действительно сбросить раздел к состоянию по умолчанию?"
-          public: "Сделать раздел публичным и видимым для всех"
           always_public: "Контент в этом разделе всегда публичный"
           more_menu: "Меню «Еще»"
           links:

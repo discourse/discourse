@@ -2064,12 +2064,6 @@ es:
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
-      plus_subcategories_title:
-        one: "%{name} y una subcategoría"
-        other: "%{name} y %{count} subcategorías"
-      plus_subcategories:
-        one: "+ %{count} subcategoría"
-        other: "+ %{count} subcategorías"
     select_kit:
       delete_item: "Eliminar %{name}"
       filter_by: "Filtrar por: %{name}"
@@ -4110,7 +4104,6 @@ es:
           delete: "Eliminar"
           delete_confirm: "¿Seguro que quieres eliminar esta sección?"
           reset_confirm: "¿Seguro que quieres restablecer esta sección a los valores predeterminados?"
-          public: "Hacer que esta sección sea pública y visible para todos"
           always_public: "El contenido de esta sección es siempre público"
           more_menu: "Menú Más"
           links:
