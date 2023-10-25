@@ -13,7 +13,6 @@ import {
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 
@@ -50,19 +49,18 @@ export default class PostTextSelection extends Component {
   runLoopHandlers = modifier(() => {
     return () => {
       cancel(this.selectionChangeHandler);
-      cancel(this.holdingMouseDownHandle);
     };
   });
 
   documentListeners = modifier(() => {
     document.addEventListener("mousedown", this.mousedown, { passive: true });
     document.addEventListener("mouseup", this.mouseup, { passive: true });
-    document.addEventListener("selectionchange", this.selectionchange);
+    document.addEventListener("selectionchange", this.onSelectionChanged);
 
     return () => {
       document.removeEventListener("mousedown", this.mousedown);
       document.removeEventListener("mouseup", this.mouseup);
-      document.removeEventListener("selectionchange", this.selectionchange);
+      document.removeEventListener("selectionchange", this.onSelectionChanged);
     };
   });
 
@@ -78,7 +76,6 @@ export default class PostTextSelection extends Component {
     super.willDestroy(...arguments);
 
     this.menuInstance?.destroy();
-    cancel(this.selectionChangedHandler);
   }
 
   @bind
@@ -89,9 +86,19 @@ export default class PostTextSelection extends Component {
 
   @bind
   async selectionChanged() {
-    let supportsFastEdit = this.canEditPost;
-    const selection = window.getSelection();
+    const _selectedText = selectedText();
 
+    // avoid hard loops in quote selection unconditionally
+    // this can happen if you triple click text in firefox
+    // it's also generally unecessary work to go
+    // through this if the selection hasn't changed
+    if (this.menuInstance?.expanded && this.prevSelection === _selectedText) {
+      return;
+    }
+
+    this.prevSelection = _selectedText;
+
+    const selection = window.getSelection();
     if (selection.isCollapsed) {
       if (!this.menuInstance?.expanded) {
         this.args.quoteState.clear();
@@ -127,7 +134,6 @@ export default class PostTextSelection extends Component {
       selectedNode().nodeType === Node.ELEMENT_NODE
         ? selectedNode()
         : selectedNode().parentElement;
-    const _selectedText = selectedText();
     const cooked =
       _selectedElement.querySelector(".cooked") ||
       _selectedElement.closest(".cooked");
@@ -157,6 +163,7 @@ export default class PostTextSelection extends Component {
     const quoteState = this.args.quoteState;
     quoteState.selected(postId, _selectedText, opts);
 
+    let supportsFastEdit = this.canEditPost;
     if (this.canEditPost) {
       const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
       const matches = cooked.innerHTML.match(regexp);
@@ -174,14 +181,6 @@ export default class PostTextSelection extends Component {
         supportsFastEdit = true;
       }
     }
-
-    // avoid hard loops in quote selection unconditionally
-    // this can happen if you triple click text in firefox
-    if (this.menuInstance?.expanded && this.prevSelection === _selectedText) {
-      return;
-    }
-
-    this.prevSelection = _selectedText;
 
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
@@ -219,7 +218,7 @@ export default class PostTextSelection extends Component {
   onSelectionChanged() {
     const { isIOS, isWinphone, isAndroid } = this.capabilities;
     const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 100;
-    this.selectionChangedHandler = discourseDebounce(
+    this.selectionChangeHandler = discourseDebounce(
       this,
       this.selectionChanged,
       wait
@@ -228,36 +227,21 @@ export default class PostTextSelection extends Component {
 
   @bind
   mousedown(event) {
-    this.holdingMouseDown = false;
+    this.validMouseDown = true;
 
     if (!event.target.closest(".cooked")) {
+      this.validMouseDown = false;
+      return;
+    }
+  }
+
+  @bind
+  mouseup() {
+    if (!this.validMouseDown) {
       return;
     }
 
-    this.isMousedown = true;
-    this.holdingMouseDownHandler = discourseLater(() => {
-      this.holdingMouseDown = true;
-    }, 100);
-  }
-
-  @bind
-  async mouseup() {
-    this.prevSelection = null;
-    this.isMousedown = false;
-
-    if (this.holdingMouseDown) {
-      this.onSelectionChanged();
-    }
-  }
-
-  @bind
-  selectionchange() {
-    cancel(this.selectionChangeHandler);
-    this.selectionChangeHandler = discourseLater(() => {
-      if (!this.isMousedown) {
-        this.onSelectionChanged();
-      }
-    }, 100);
+    this.onSelectionChanged();
   }
 
   get post() {
