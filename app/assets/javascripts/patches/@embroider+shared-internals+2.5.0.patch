@@ -1,0 +1,21 @@
+diff --git a/node_modules/@embroider/shared-internals/src/ember-standard-modules.js b/node_modules/@embroider/shared-internals/src/ember-standard-modules.js
+index 8664bb2..e05ace9 100644
+--- a/node_modules/@embroider/shared-internals/src/ember-standard-modules.js
++++ b/node_modules/@embroider/shared-internals/src/ember-standard-modules.js
+@@ -25,9 +25,14 @@ exports.emberVirtualPackages = new Set(mappings_json_1.default.map((m) => m.modu
+ // a v1 addon in between the app and a v2 addon might not declare the peerDep,
+ // breaking the deeper v2 addon.
+ exports.emberVirtualPeerDeps = new Set(['@glimmer/component', '@glimmer/tracking']);
++
++// !! DANGER !!
+ // this is a real package, even though it's still listed in rfc176
+-exports.emberVirtualPackages.delete('@ember/string');
+-exports.emberVirtualPeerDeps.add('@ember/string');
++// exports.emberVirtualPackages.delete('@ember/string');
++// exports.emberVirtualPeerDeps.add('@ember/string');
++// ...except it is not a real package because we are on 3.28...
++// ...remove this patch when we upgrade...
++
+ // these can also appear in ember code and should get compiled away by babel,
+ // but we may need to tell a build tool that is inspecting pre-transpiled code
+ // (like snowpack) not to worry about these packages.
