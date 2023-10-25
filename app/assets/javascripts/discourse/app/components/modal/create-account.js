@@ -23,7 +23,6 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed, {
   bind,
   observes,
-  on,
 } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -55,12 +54,14 @@ export default class CreateAccount extends Component.extend(
   @alias("model.accountEmail") accountEmail;
   @alias("model.accountUsername") accountUsername;
 
-  constructor() {
-    super(...arguments);
+  init() {
+    super.init(...arguments);
 
     if (cookie("email")) {
       this.set("model.accountEmail", cookie("email"));
     }
+
+    this.fetchConfirmationValue();
 
     if (this.model.skipConfirmation) {
       this.performAccountCreation().finally(() =>
@@ -336,7 +337,6 @@ export default class CreateAccount extends Component.extend(
     return findAll().length > 0;
   }
 
-  @on("init")
   fetchConfirmationValue() {
     if (this._challengeDate === undefined && this._hpPromise) {
       // Request already in progress
