@@ -157,6 +157,7 @@ body.invite-page {
         min-height: 1.4em; // prevents height increase due to tips
       }
       label.alt-placeholder,
+      .user-field.text label.control-label,
       .user-field.dropdown label.control-label,
       .user-field.multiselect label.control-label {
         color: var(--primary-medium);
@@ -169,6 +170,7 @@ body.invite-page {
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
         transition: 0.2s ease all;
       }
+      .user-field.text label.control-label,
       .user-field.dropdown label.control-label,
       .user-field.multiselect label.control-label {
         z-index: 999;
@@ -178,9 +180,10 @@ body.invite-page {
         padding: 0 0.25em 0 0.25em;
         font-size: $font-down-1;
       }
+      .user-field.text:focus-within,
       .user-field.dropdown:focus-within,
       .user-field.multiselect:focus-within {
-        z-index: 1000; // this ensures the active dropdown is always on top of sibling dropdown labels
+        z-index: 1000; // ensures the active input is always on top of sibling input labels
       }
       input:focus + label.alt-placeholder,
       input.value-entered + label.alt-placeholder {
