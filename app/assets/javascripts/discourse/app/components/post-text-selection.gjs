@@ -95,6 +95,14 @@ export default class PostTextSelection extends Component {
 
     const _selectedText = selectedText();
 
+    const selection = window.getSelection();
+    if (selection.isCollapsed || _selectedText === "") {
+      if (!this.menuInstance?.expanded) {
+        this.args.quoteState.clear();
+      }
+      return;
+    }
+
     // avoid hard loops in quote selection unconditionally
     // this can happen if you triple click text in firefox
     // it's also generally unecessary work to go
@@ -107,14 +115,6 @@ export default class PostTextSelection extends Component {
     }
 
     this.prevSelectedText = _selectedText;
-
-    const selection = window.getSelection();
-    if (selection.isCollapsed) {
-      if (!this.menuInstance?.expanded) {
-        this.args.quoteState.clear();
-      }
-      return;
-    }
 
     // ensure we selected content inside 1 post *only*
     let postId;
