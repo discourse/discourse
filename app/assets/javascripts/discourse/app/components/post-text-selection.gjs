@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
@@ -44,7 +45,9 @@ export default class PostTextSelection extends Component {
   @service siteSettings;
   @service menu;
 
-  prevSelection;
+  @tracked isSelecting = false;
+
+  prevSelectedText;
 
   runLoopHandlers = modifier(() => {
     return () => {
@@ -86,17 +89,24 @@ export default class PostTextSelection extends Component {
 
   @bind
   async selectionChanged() {
+    if (this.isSelecting) {
+      return;
+    }
+
     const _selectedText = selectedText();
 
     // avoid hard loops in quote selection unconditionally
     // this can happen if you triple click text in firefox
     // it's also generally unecessary work to go
     // through this if the selection hasn't changed
-    if (this.menuInstance?.expanded && this.prevSelection === _selectedText) {
+    if (
+      this.menuInstance?.expanded &&
+      this.prevSelectedText === _selectedText
+    ) {
       return;
     }
 
-    this.prevSelection = _selectedText;
+    this.prevSelectedText = _selectedText;
 
     const selection = window.getSelection();
     if (selection.isCollapsed) {
@@ -182,18 +192,15 @@ export default class PostTextSelection extends Component {
       }
     }
 
-    // on Desktop, shows the button at the beginning of the selection
-    // on Mobile, shows the button at the end of the selection
-    const { isIOS, isAndroid, isOpera } = this.capabilities;
-    const showAtEnd = this.site.isMobileDevice || isIOS || isAndroid || isOpera;
     const options = {
+      identifier: "post-text-selection-toolbar",
       component: PostTextSelectionToolbar,
       inline: true,
-      placement: showAtEnd ? "bottom-start" : "top-start",
-      fallbackPlacements: showAtEnd
+      placement: this.shouldRenderUnder ? "bottom-start" : "top-start",
+      fallbackPlacements: this.shouldRenderUnder
         ? ["bottom-end", "top-start"]
         : ["bottom-start"],
-      offset: showAtEnd ? 25 : 3,
+      offset: this.shouldRenderUnder ? 25 : 3,
       trapTab: false,
       data: {
         canEditPost: this.canEditPost,
@@ -206,7 +213,7 @@ export default class PostTextSelection extends Component {
       },
     };
 
-    this.menuInstance?.destroy();
+    await this.menuInstance?.destroy();
 
     this.menuInstance = await this.menu.show(
       virtualElementFromTextRange(),
@@ -217,7 +224,7 @@ export default class PostTextSelection extends Component {
   @bind
   onSelectionChanged() {
     const { isIOS, isWinphone, isAndroid } = this.capabilities;
-    const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 100;
+    const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
     this.selectionChangeHandler = discourseDebounce(
       this,
       this.selectionChanged,
@@ -233,10 +240,14 @@ export default class PostTextSelection extends Component {
       this.validMouseDown = false;
       return;
     }
+
+    this.isSelecting = true;
   }
 
   @bind
   mouseup() {
+    this.isSelecting = false;
+
     if (!this.validMouseDown) {
       return;
     }
@@ -252,6 +263,14 @@ export default class PostTextSelection extends Component {
 
   get canEditPost() {
     return this.siteSettings.enable_fast_edit && this.post?.can_edit;
+  }
+
+  // on Desktop, shows the bar at the beginning of the selection
+  // on Mobile, shows the bar at the end of the selection
+  @cached
+  get shouldRenderUnder() {
+    const { isIOS, isAndroid, isOpera } = this.capabilities;
+    return this.site.isMobileDevice || isIOS || isAndroid || isOpera;
   }
 
   @action
