@@ -109,8 +109,14 @@ acceptance("flagging", function (needs) {
       exists("[data-value='agree_and_silence']"),
       "it shows the silence action option"
     );
-    await click("[data-value='agree_and_silence']");
-    assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
+    assert.ok(
+      exists("[data-value='agree_and_suspend']"),
+      "it shows the suspend action option"
+    );
+    assert.ok(
+      exists("[data-value='agree_and_hide']"),
+      "it shows the hide action option"
+    );
   });
 
   test("Can silence from take action", async function (assert) {
@@ -119,6 +125,7 @@ acceptance("flagging", function (needs) {
     await click("#radio_inappropriate");
     await selectKit(".reviewable-action-dropdown").expand();
     await click("[data-value='agree_and_silence']");
+    assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
