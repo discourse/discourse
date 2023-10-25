@@ -146,12 +146,19 @@ export async function getPasskeyCredential(
       userHandle: bufferToBase64(credential.response.userHandle),
     };
   } catch (error) {
+    if (error.name === "AbortError") {
+      // no need to show an error when the cancelling a pending ceremony
+      // this happens when switching from the conditional method (username input autofill)
+      // to the optional method (login button) or vice versa
+      return null;
+    }
+
     if (mediation === "conditional") {
       // The conditional method gets triggered in the background
       // it's not helpful to show errors for it in the UI
       // eslint-disable-next-line no-console
       console.error(error);
-      return;
+      return null;
     }
 
     if (error.name === "NotAllowedError") {
@@ -162,11 +169,6 @@ export async function getPasskeyCredential(
           message: error.message,
         })
       );
-    } else if (error.name === "AbortError") {
-      // no need to show an error when the cancelling a pending ceremony
-      // this happens when switching from the conditional method (username input autofill)
-      // to the optional method (login button) or vice versa
-      return null;
     } else {
       return errorCallback(error.message);
     }
