@@ -682,6 +682,7 @@ users:
     default: 1
     enum: "TrustLevelSetting"
     client: true
+    hidden: true
   anonymous_posting_allowed_groups:
     default: "11" # auto group trust_level_1
     type: group_list
