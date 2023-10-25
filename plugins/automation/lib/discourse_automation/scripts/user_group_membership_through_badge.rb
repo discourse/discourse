@@ -7,9 +7,15 @@ DiscourseAutomation::Scriptable::USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY
 DiscourseAutomation::Scriptable.add(
   DiscourseAutomation::Scriptable::USER_GROUP_MEMBERSHIP_THROUGH_BADGE,
 ) do
-  version 1
+  version 2
 
-  field :badge_name, component: :text, required: true
+  field :badge,
+        component: :choices,
+        extra: {
+          content:
+            Badge.order(:name).select(:id, :name).map { |b| { id: b.id, translated_name: b.name } },
+        },
+        required: true
   field :group, component: :group, required: true, extra: { ignore_automatic: true }
   field :update_user_title_and_flair, component: :boolean
   field :remove_members_without_badge, component: :boolean
@@ -17,7 +23,7 @@ DiscourseAutomation::Scriptable.add(
   triggerables %i[recurring user_first_logged_in]
 
   script do |context, fields|
-    badge_name = fields.dig("badge_name", "value").strip
+    badge_id = fields.dig("badge", "value")
     group_id = fields.dig("group", "value")
     update_user_title_and_flair = fields.dig("update_user_title_and_flair", "value")
     remove_members_without_badge = fields.dig("remove_members_without_badge", "value")
@@ -25,9 +31,9 @@ DiscourseAutomation::Scriptable.add(
     bulk_modify_start_count =
       DiscourseAutomation::Scriptable::USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT
 
-    badge = Badge.find_by(name: badge_name)
+    badge = Badge.find_by(id: badge_id)
     unless badge
-      Rails.logger.warn("[discourse-automation] Couldn’t find badge with name #{badge_name}")
+      Rails.logger.warn("[discourse-automation] Couldn’t find badge with id #{badge_id}")
       next
     end
 

@@ -5,6 +5,7 @@ describe "DiscourseAutomation | smoke test", type: :system, js: true do
 
   before do
     Fabricate(:group, name: "test")
+    Fabricate(:badge, name: "badge")
     SiteSetting.discourse_automation_enabled = true
     sign_in(admin)
   end
@@ -21,7 +22,9 @@ describe "DiscourseAutomation | smoke test", type: :system, js: true do
     select_kit = PageObjects::Components::SelectKit.new(".triggerables")
     select_kit.expand
     select_kit.select_row_by_value("user_first_logged_in")
-    fill_in("badge_name", with: "test")
+    select_kit = PageObjects::Components::SelectKit.new(".fields-section .combo-box")
+    select_kit.expand
+    select_kit.select_row_by_name("badge")
     select_kit = PageObjects::Components::SelectKit.new(".group-chooser")
     select_kit.expand
     select_kit.select_row_by_name("test")

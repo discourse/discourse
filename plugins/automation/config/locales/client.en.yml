@@ -265,6 +265,9 @@ en:
             remove_members_without_badge:
               label: Remove existing members without badge
               description: Optional, Remove existing group members without the specified badge
+            badge:
+              label: Badge
+              description: Select badge
         suspend_user_by_email:
           fields:
             suspend_until:

@@ -38,15 +38,10 @@ describe "UserGroupMembershipThroughBadge" do
     after { Rails.logger = @original_logger }
 
     context "with an unknown badge" do
-      let(:unknown_badge_name) { "Unknown Badge" }
+      let(:unknown_badge_id) { -1 }
 
       before do
-        automation.upsert_field!(
-          "badge_name",
-          "text",
-          { value: unknown_badge_name },
-          target: "script",
-        )
+        automation.upsert_field!("badge", "choices", { value: unknown_badge_id }, target: "script")
         automation.trigger!(
           "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
           "user" => user,
@@ -55,7 +50,7 @@ describe "UserGroupMembershipThroughBadge" do
 
       it "logs warning message and does nothing" do
         expect(@fake_logger.warnings).to include(
-          "[discourse-automation] Couldn’t find badge with name #{unknown_badge_name}",
+          "[discourse-automation] Couldn’t find badge with id #{unknown_badge_id}",
         )
         expect(user.reload.groups).to be_empty
       end
@@ -63,7 +58,7 @@ describe "UserGroupMembershipThroughBadge" do
 
     context "with a non-existent group" do
       before do
-        automation.upsert_field!("badge_name", "text", { value: badge.name }, target: "script")
+        automation.upsert_field!("badge", "choices", { value: badge.id }, target: "script")
         automation.upsert_field!("group", "group", { value: target_group.id }, target: "script")
       end
 
@@ -85,7 +80,7 @@ describe "UserGroupMembershipThroughBadge" do
 
   context "with valid field values" do
     before do
-      automation.upsert_field!("badge_name", "text", { value: badge.name }, target: "script")
+      automation.upsert_field!("badge", "choices", { value: badge.id }, target: "script")
       automation.upsert_field!("group", "group", { value: target_group.id }, target: "script")
     end
 
