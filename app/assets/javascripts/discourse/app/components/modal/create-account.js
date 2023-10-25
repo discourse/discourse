@@ -61,6 +61,12 @@ export default class CreateAccount extends Component.extend(
     if (cookie("email")) {
       this.set("model.accountEmail", cookie("email"));
     }
+
+    if (this.model.skipConfirmation) {
+      this.performAccountCreation().finally(() =>
+        this.set("model.skipConfirmation", false)
+      );
+    }
   }
 
   // used for animating the label inside of inputs
@@ -389,7 +395,7 @@ export default class CreateAccount extends Component.extend(
       cookie("destination_url", destinationUrl, { path: "/" });
     }
 
-    // Add the userfields to the data
+    // Add the userFields to the data
     if (!isEmpty(userFields)) {
       attrs.userFields = {};
       userFields.forEach(
@@ -454,15 +460,6 @@ export default class CreateAccount extends Component.extend(
     );
   }
 
-  // TODO
-  onShow() {
-    if (this.model.skipConfirmation) {
-      this.performAccountCreation().finally(() =>
-        this.set("model.skipConfirmation", false)
-      );
-    }
-  }
-
   @discourseComputed(
     "model.authOptions.associate_url",
     "model.authOptions.auth_provider"
@@ -498,6 +495,7 @@ export default class CreateAccount extends Component.extend(
   createAccount() {
     this.set("flash", "");
     this.set("forceValidationReason", true);
+
     const validation = [
       this.emailValidation,
       this.usernameValidation,
