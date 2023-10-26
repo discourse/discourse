@@ -91,12 +91,8 @@ module SiteSettingExtension
     @shadowed_settings ||= []
   end
 
-  def hidden_settings_provider
-    @hidden_settings_provider ||= SiteSettings::HiddenProvider.new
-  end
-
   def hidden_settings
-    hidden_settings_provider.all
+    @hidden_settings ||= []
   end
 
   def refresh_settings
@@ -588,14 +584,14 @@ module SiteSettingExtension
 
       categories[name] = opts[:category] || :uncategorized
 
-      hidden_settings_provider.add_hidden(name) if opts[:hidden]
+      hidden_settings << name if opts[:hidden]
 
       if GlobalSetting.respond_to?(name)
         val = GlobalSetting.public_send(name)
 
         unless val.nil? || (val == "")
           shadowed_val = val
-          hidden_settings_provider.add_hidden(name)
+          hidden_settings << name
           shadowed_settings << name
         end
       end
