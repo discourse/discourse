@@ -16,7 +16,7 @@ export default class AdminWebHooksIndexController extends Controller {
   @alias("adminWebHooks.model") model;
 
   @action
-  destroy(webhook) {
+  destroyWebhook(webhook) {
     return this.dialog.deleteConfirm({
       message: I18n.t("admin.web_hooks.delete_confirm"),
       didConfirm: async () => {
