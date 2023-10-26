@@ -65,7 +65,11 @@ module Chat
     end
 
     def groups_to_mention
-      @groups_to_mention = mentionable_groups - groups_with_too_many_members
+      @groups_to_mention ||=
+        mentionable_groups.where(
+          "user_count <= ?",
+          SiteSetting.max_users_notified_per_group_mention,
+        )
     end
 
     def groups_with_disabled_mentions
