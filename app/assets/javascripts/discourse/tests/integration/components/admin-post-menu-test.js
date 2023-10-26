@@ -20,6 +20,8 @@ module("Integration | Component | admin-post-menu", function (hooks) {
   });
 
   test("renders button from API", async function (assert) {
+    this.data = { transformedPost: { id: 1 } };
+
     withPluginApi("1.15.0", (api) => {
       api.addPostAdminMenuButton(() => {
         return {
@@ -29,7 +31,7 @@ module("Integration | Component | admin-post-menu", function (hooks) {
       });
     });
 
-    await render(hbs`<AdminPostMenu  />`);
+    await render(hbs`<AdminPostMenu  @data={{this.data}} />`);
 
     assert.dom(".test-button").hasText("test");
   });
