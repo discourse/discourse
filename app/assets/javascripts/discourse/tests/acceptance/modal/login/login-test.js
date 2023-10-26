@@ -112,6 +112,8 @@ acceptance("Modal - Login - Passkeys on mobile", function (needs) {
 
     await click(".passkey-login-button");
 
-    assert.dom(".dialog-body").exists("credentials.get is invoked");
+    // clicking the button triggers credentials.get
+    // but we can't really test that in frontend so an error is returned
+    assert.dom(".dialog-body").exists();
   });
 });
