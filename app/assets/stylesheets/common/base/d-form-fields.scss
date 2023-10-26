@@ -1,0 +1,129 @@
+.d-form-field {
+  margin-bottom: 1rem;
+
+  .d-form-field__set & {
+    margin-bottom: 0;
+  }
+
+  &__set {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    button {
+      //this is a lil bit hacky but best I can think of to align button with input, regardless of error message being multiline
+      align-self: flex-start;
+      margin-top: 1.4em;
+    }
+  }
+
+  &__label {
+    font-weight: bold;
+    align-items: center;
+    margin: 0;
+  }
+  &__label-optional {
+    color: var(--primary-medium);
+    font-weight: normal;
+    font-size: var(--font-down-1-rem);
+    margin-left: 0.25rem;
+  }
+
+  &__content {
+    width: min-content;
+  }
+  &__input-wrapper {
+    position: relative;
+
+    .--fixed-content.--error &,
+    .--fixed-content.--error-limit & {
+      border: 1px solid var(--danger);
+    }
+
+    .--fixed-content & {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--primary-low-mid);
+
+      &:focus-within {
+        @include default-focus();
+      }
+    }
+  }
+
+  &__input {
+    margin-bottom: 0 !important;
+    border-radius: var(--d-input-border-radius);
+    box-sizing: border-box;
+
+    .--error &,
+    .--error-limit & {
+      border: 1px solid var(--danger);
+    }
+
+    .--fixed-content & {
+      border: 0;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  &__input-fixed-before {
+    color: var(--primary-medium);
+    padding-left: 0.65em;
+    + .d-form-field__input {
+      padding-left: 0;
+    }
+  }
+  &__input-fixed-after {
+    button {
+      border-top-right-radius: var(--d-input-border-radius);
+      border-bottom-right-radius: var(--d-input-border-radius);
+    }
+  }
+
+  &__input-error-icon {
+    display: none;
+    color: var(--danger);
+    background: var(--secondary);
+
+    .--error & {
+      display: block;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    margin-top: 0.15rem;
+    width: 100%;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+  }
+  &__meta-text {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    .--error & {
+      color: var(--danger);
+    }
+  }
+  &__meta-count {
+    margin-left: auto;
+    .--error-limit & {
+      color: var(--danger);
+    }
+  }
+}
+
+//select-kit
+.select-kit .select-kit-header {
+  .d-form-field.--error & {
+    border: 1px solid var(--danger);
+  }
+
+  + .d-form-field__input-error-icon {
+    padding: 0.25rem;
+  }
+}

@@ -1,4 +1,303 @@
 <StyleguideExample @title="text-field">
+  <h4>Simple text fields</h4>
+  <div class="d-form-field">
+    <label class="d-form-field__label" for=" ">
+      <span class="d-form-field__label-text">Label</span>
+      <span class="d-form-field__label-optional">(Optional)</span>
+    </label>
+    <div class="d-form-field__content">
+      <div class="d-form-field__input-wrapper">
+        <input class="d-form-field__input" name=" " type="text" size="25" />
+      </div>
+      <div class="d-form-field__meta">
+        <span class="d-form-field__meta-text">
+          Some instructions on what to do.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-form-field">
+    <label class="d-form-field__label" for=" ">
+      <span class="d-form-field__label-text">Limited character field</span>
+    </label>
+    <div class="d-form-field__content">
+      <div class="d-form-field__input-wrapper">
+        <input class="d-form-field__input" name=" " type="text" size="25" />
+      </div>
+      <div class="d-form-field__meta">
+        <span class="d-form-field__meta-count">0/25</span>
+      </div>
+    </div>
+  </div>
+
+  <h4>Simple text fields with errors</h4>
+  <h5>Generic error</h5>
+  <div class="d-form-field --error">
+    <label class="d-form-field__label" for=" ">
+      <span class="d-form-field__label-text">Label</span>
+      <span class="d-form-field__label-optional">(Optional)</span>
+    </label>
+    <div class="d-form-field__content">
+      <div class="d-form-field__input-wrapper">
+        <input class="d-form-field__input" name=" " type="text" size="25" />
+      </div>
+      <div class="d-form-field__meta">
+        <span class="d-form-field__meta-text">
+          <span class="d-form-field__input-error-icon">{{d-icon
+              "info-circle"
+            }}</span>Error message
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <h5>Too many characters error</h5>
+  <div class="d-form-field --error-limit">
+    <label class="d-form-field__label" for=" ">
+      <span class="d-form-field__label-text">Limited character field</span>
+    </label>
+    <div class="d-form-field__content">
+      <div class="d-form-field__input-wrapper">
+        <input class="d-form-field__input" name=" " type="text" size="25" />
+      </div>
+      <div class="d-form-field__meta">
+        <span class="d-form-field__meta-count">0/25</span>
+      </div>
+    </div>
+  </div>
+
+  <h4>Inline text fields</h4>
+
+  <p>When fields belong together, place them on one line by wrapping them in a
+    <code>.fieldset</code>
+    class. All regular inputs should have labels, but especially in fieldsets
+    they are needed for correct alignment.</p>
+  <fieldset class="d-form-field__set">
+    <div class="d-form-field">
+      <label class="d-form-field__label" for=" ">
+        <span class="d-form-field__label-text">Streetname</span>
+      </label>
+      <div class="d-form-field__content">
+        <div class="d-form-field__input-wrapper">
+          <input class="d-form-field__input" name=" " type="text" size="30" />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for=" ">
+        <span class="d-form-field__label-text">Number</span>
+      </label>
+      <div class="d-form-field__content">
+        <div class="d-form-field__input-wrapper">
+          <input
+            class="d-form-field__input"
+            name=" "
+            type="text"
+            size="9"
+            maxlength="4"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for=" ">
+        <span class="d-form-field__label-text">Bus</span>
+        <span class="d-form-field__label-optional">(Optional)</span>
+      </label>
+      <div class="d-form-field__content">
+        <div class="d-form-field__input-wrapper">
+          <input class="d-form-field__input" name=" " type="text" size="9" />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for=" ">
+        <span class="d-form-field__label-text">Country</span>
+      </label>
+      <div class="d-form-field__content">
+        <div class="d-form-field__input-wrapper">
+          <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field__button">
+      <DButton @translatedLabel="Submit" type="submit" class="btn-primary" />
+    </div>
+  </fieldset>
+
+  <h5>With errors</h5>
+  <fieldset class="d-form-field__set">
+    <div class="d-form-field --error">
+      <label class="d-form-field__label" for=" ">
+        <span class="d-form-field__label-text">Streetname</span>
+      </label>
+      <div class="d-form-field__content">
+        <div class="d-form-field__input-wrapper">
+          <input class="d-form-field__input" name=" " type="text" size="30" />
+          <div class="d-form-field__meta">
+            <span class="d-form-field__meta-text">
+              <span class="d-form-field__input-error-icon">{{d-icon
+                  "info-circle"
+                }}</span>Error message
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field --error">
+      <label class="d-form-field__label" for=" ">
+        <span class="d-form-field__label-text">Number</span>
+      </label>
+      <div class="d-form-field__content">
+        <div class="d-form-field__input-wrapper">
+          <input
+            class="d-form-field__input"
+            name=" "
+            type="text"
+            size="9"
+            maxlength="4"
+          />
+          <div class="d-form-field__meta">
+            <span class="d-form-field__meta-text">
+              <span class="d-form-field__input-error-icon">{{d-icon
+                  "info-circle"
+                }}</span>Error message
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field --error">
+      <label class="d-form-field__label" for=" ">
+        <span class="d-form-field__label-text">Bus</span>
+        <span class="d-form-field__label-optional">(Optional)</span>
+      </label>
+      <div class="d-form-field__content">
+        <div class="d-form-field__input-wrapper">
+          <input class="d-form-field__input" name=" " type="text" size="9" />
+          <div class="d-form-field__meta">
+            <span class="d-form-field__meta-text">
+              <span class="d-form-field__input-error-icon">{{d-icon
+                  "info-circle"
+                }}</span>Error message
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field --error">
+      <label class="d-form-field__label" for=" ">
+        <span class="d-form-field__label-text">Country</span>
+      </label>
+      <div class="d-form-field__content">
+        <div class="d-form-field__input-wrapper">
+          <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
+        </div>
+        <div class="d-form-field__meta">
+          <span class="d-form-field__meta-text">
+            <span class="d-form-field__input-error-icon">{{d-icon
+                "info-circle"
+              }}</span>Error message
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field__button">
+      <DButton @translatedLabel="Submit" type="submit" class="btn-primary" />
+    </div>
+  </fieldset>
+
+  <h4>Complex text fields with fixed text or button inside</h4>
+  <p>Fixed text can be on the left only, a button on the right only.</p>
+
+  <div class="d-form-field --fixed-content">
+    <label class="d-form-field__label" for=" ">
+      <span class="d-form-field__label-text">Url</span>
+    </label>
+    <div class="d-form-field__content">
+      <div class="d-form-field__input-wrapper">
+        <span class="d-form-field__input-fixed-before">https://</span>
+        <input class="d-form-field__input" name=" " type="text" size="25" />
+      </div>
+    </div>
+  </div>
+
+  <div class="d-form-field --fixed-content">
+    <label class="d-form-field__label" for=" ">
+      <span class="d-form-field__label-text">Search</span>
+    </label>
+    <div class="d-form-field__content">
+      <div class="d-form-field__input-wrapper">
+        <input class="d-form-field__input" name=" " type="text" size="25" />
+        <span class="d-form-field__input-fixed-after">
+          <DButton
+            @translatedLabel="Search"
+            type="submit"
+            class="btn-primary"
+          />
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <h5>Complex text fields with errors</h5>
+
+  <div class="d-form-field --fixed-content --error">
+    <label class="d-form-field__label" for=" ">
+      <span class="d-form-field__label-text">Url</span>
+    </label>
+    <div class="d-form-field__content">
+      <div class="d-form-field__input-wrapper">
+        <span class="d-form-field__input-fixed-before">https://</span>
+        <input class="d-form-field__input" name=" " type="text" size="25" />
+      </div>
+      <div class="d-form-field__meta">
+        <span class="d-form-field__meta-text">
+          <span class="d-form-field__input-error-icon">{{d-icon
+              "info-circle"
+            }}</span>Error message
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-form-field --fixed-content --error">
+    <label class="d-form-field__label" for=" ">
+      <span class="d-form-field__label-text">Search</span>
+    </label>
+    <div class="d-form-field__content">
+      <div class="d-form-field__input-wrapper">
+        <input class="d-form-field__input" name=" " type="text" size="25" />
+        <span class="d-form-field__input-fixed-after">
+          <DButton
+            @translatedLabel="Search"
+            type="submit"
+            class="btn-primary"
+          />
+        </span>
+      </div>
+      <div class="d-form-field__meta">
+        <span class="d-form-field__meta-text">
+          <span class="d-form-field__input-error-icon">{{d-icon
+              "info-circle"
+            }}</span>Need a searchterm
+        </span>
+      </div>
+    </div>
+  </div>
+
+</StyleguideExample>
+
+<StyleguideExample @title="text-field">
   <TextField @placeholder="Placeholder" />
 </StyleguideExample>
 
