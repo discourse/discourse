@@ -31,7 +31,7 @@ export default class NavItem extends Component {
   }
 
   <template>
-    <li class={{if this.active "active"}}>
+    <li class={{concat-class (if this.active "active") @class}} ...attributes>
       {{#if @routeParam}}
         <LinkTo
           @route={{@route}}
