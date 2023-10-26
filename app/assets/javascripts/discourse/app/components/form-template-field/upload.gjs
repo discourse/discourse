@@ -1,16 +1,74 @@
-import Component from "@ember/component";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import { computed } from "@ember/object";
-import { htmlSafe } from "@ember/template";
 import { tracked } from "@glimmer/tracking";
+import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { dasherize } from "@ember/string";
-import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
+import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import icon from "discourse-common/helpers/d-icon";
 
 export default class FormTemplateFieldUpload extends Component.extend(
   UppyUploadMixin
 ) {
+  @tracked uploadValue;
+  @tracked uploadComplete = false;
+  @tracked uploadedFiles = [];
+  @tracked disabled = this.uploading;
+  @tracked fileUploadElementId = `${dasherize(this.id)}-uploader`;
+  @tracked fileInputSelector = `#${this.fileUploadElementId}`;
+
+  type = "composer";
+
+  @computed("uploading", "uploadValue")
+  get uploadStatusLabel() {
+    if (!this.uploading && !this.uploadValue) {
+      return "form_templates.upload_field.upload";
+    }
+
+    if (!this.uploading && this.uploadValue) {
+      this.uploadComplete = true;
+      return "form_templates.upload_field.upload";
+    }
+
+    return "form_templates.upload_field.uploading";
+  }
+
+  uploadDone(upload) {
+    // If re-uploading, clear the existing file if multiple aren't allowed
+    if (!this.attributes.allow_multiple && this.uploadComplete) {
+      this.uploadedFiles = [];
+      this.uploadValue = "";
+    }
+
+    const uploadMarkdown = this.buildMarkdown(upload);
+    this.uploadedFiles.pushObject(upload);
+
+    if (this.uploadValue && this.allowMultipleFiles) {
+      // multiple file upload
+      this.uploadValue = `${this.uploadValue}\n${uploadMarkdown}`;
+    } else {
+      // single file upload
+      this.uploadValue = uploadMarkdown;
+    }
+  }
+
+  buildMarkdown(upload) {
+    if (isImage(upload.url)) {
+      return `![${upload.file_name}|${upload.width}x${upload.height}](${upload.short_url})`;
+    }
+
+    if (isAudio(upload.url)) {
+      return `![${upload.file_name}|audio](${upload.short_url})`;
+    }
+
+    if (isVideo(upload.url)) {
+      return `![${upload.file_name}|video](${upload.short_url})`;
+    }
+
+    return `[${upload.file_name}|attachment](${upload.short_url}) (${upload.human_filesize})`;
+  }
+
   <template>
     <div class="control-group form-template-field" data-field-type="upload">
       {{#if @attributes.label}}
@@ -60,63 +118,4 @@ export default class FormTemplateFieldUpload extends Component.extend(
       {{/if}}
     </div>
   </template>
-
-  @tracked uploadValue;
-  @tracked uploadComplete = false;
-  @tracked uploadedFiles = [];
-  @tracked disabled = this.uploading;
-  @tracked fileUploadElementId = `${dasherize(this.id)}-uploader`;
-  @tracked fileInputSelector = `#${this.fileUploadElementId}`;
-
-  type = "composer";
-
-  @computed("uploading", "uploadValue")
-  get uploadStatusLabel() {
-    if (!this.uploading && !this.uploadValue) {
-      return "form_templates.upload_field.upload";
-    }
-
-    if (!this.uploading && this.uploadValue) {
-      this.uploadComplete = true;
-      return "form_templates.upload_field.upload";
-    }
-
-    return "form_templates.upload_field.uploading";
-  }
-
-  uploadDone(upload) {
-    // If re-uploading, clear the existing file if multiple aren't allowed
-    if (!this.attributes.allow_multiple && this.uploadComplete) {
-      this.uploadedFiles = [];
-      console.log("cleared the uploads list");
-      this.uploadValue = "";
-    }
-
-    const uploadMarkdown = this.buildMarkdown(upload);
-    this.uploadedFiles.pushObject(upload);
-
-    if (this.uploadValue && this.allowMultipleFiles) {
-      // multiple file upload
-      this.uploadValue = `${this.uploadValue}\n${uploadMarkdown}`;
-    } else {
-      // single file upload
-      this.uploadValue = uploadMarkdown;
-    }
-  }
-
-  buildMarkdown(upload) {
-    if (isImage(upload.url)) {
-      return `![${upload.file_name}|${upload.width}x${upload.height}](${upload.short_url})`;
-    }
-
-    if (isAudio(upload.url)) {
-      return `![${upload.file_name}|audio](${upload.short_url})`;
-    }
-
-    if (isVideo(upload.url)) {
-      return `![${upload.file_name}|video](${upload.short_url})`;
-    }
-
-    return `[${upload.file_name}|attachment](${upload.short_url}) (${upload.human_filesize})`;
-  }
 }
