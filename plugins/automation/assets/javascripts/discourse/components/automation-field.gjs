@@ -5,6 +5,7 @@ import DaCategoriesField from "./fields/da-categories-field";
 import DaCategoryField from "./fields/da-category-field";
 import DaCategoryNotificationlevelField from "./fields/da-category-notification-level-field";
 import DaChoicesField from "./fields/da-choices-field";
+import DaCustomField from "./fields/da-custom-field";
 import DaDateTimeField from "./fields/da-date-time-field";
 import DaEmailGroupUserField from "./fields/da-email-group-user-field";
 import DaGroupField from "./fields/da-group-field";
@@ -38,6 +39,7 @@ const FIELD_COMPONENTS = {
   choices: DaChoicesField,
   category_notification_level: DaCategoryNotificationlevelField,
   email_group_user: DaEmailGroupUserField,
+  custom_field: DaCustomField,
 };
 
 export default class AutomationField extends Component {

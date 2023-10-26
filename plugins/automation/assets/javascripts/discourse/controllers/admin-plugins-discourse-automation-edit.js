@@ -1,11 +1,11 @@
 import Controller from "@ember/controller";
 import { action, computed, set } from "@ember/object";
-import { extractError } from "discourse/lib/ajax-error";
-import { schedule } from "@ember/runloop";
 import { filterBy, reads } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
-import I18n from "I18n";
+import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
 
 export default class AutomationEdit extends Controller {
   @service dialog;

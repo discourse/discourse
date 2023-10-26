@@ -1,7 +1,7 @@
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
-import { makeArray } from "discourse-common/lib/helpers";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { makeArray } from "discourse-common/lib/helpers";
 
 let _lastCheckedByHandlers = {};
 

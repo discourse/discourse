@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
-import { extractError } from "discourse/lib/ajax-error";
 import EmberObject, { action } from "@ember/object";
+import { extractError } from "discourse/lib/ajax-error";
 
 export default class AutomationNew extends Controller {
   form = null;

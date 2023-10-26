@@ -5,8 +5,8 @@ styleguide to use them, and eventually to generate dummy data
 in a placeholder component. It should not be used for any other case.
 */
 
-import Field from "../admin/models/discourse-automation-field";
 import Automation from "../admin/models/discourse-automation-automation";
+import Field from "../admin/models/discourse-automation-field";
 
 let sequence = 0;
 

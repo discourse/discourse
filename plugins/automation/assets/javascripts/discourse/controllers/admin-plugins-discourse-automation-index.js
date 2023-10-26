@@ -1,9 +1,9 @@
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
-import escape from "discourse-common/lib/escape";
 import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import escape from "discourse-common/lib/escape";
+import I18n from "I18n";
 
 export default class AutomationIndex extends Controller {
   @service dialog;

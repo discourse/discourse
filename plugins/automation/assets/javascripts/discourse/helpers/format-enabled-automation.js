@@ -1,5 +1,5 @@
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default function formatEnabledAutomation(enabled, trigger) {
   if (enabled && trigger.id) {

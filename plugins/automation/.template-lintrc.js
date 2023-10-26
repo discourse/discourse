@@ -1,4 +1,1 @@
-module.exports = {
-  plugins: ["ember-template-lint-plugin-discourse"],
-  extends: "discourse:recommended",
-};
+module.exports = require("@discourse/lint-configs/template-lint");

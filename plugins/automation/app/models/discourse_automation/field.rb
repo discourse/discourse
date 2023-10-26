@@ -125,6 +125,11 @@ module DiscourseAutomation
           "type" => "integer",
         },
       },
+      "custom_field" => {
+        "value" => {
+          "type" => "integer",
+        },
+      },
       "user" => {
         "value" => {
           "type" => "string",

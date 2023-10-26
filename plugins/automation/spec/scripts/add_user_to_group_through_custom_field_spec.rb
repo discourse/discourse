@@ -6,6 +6,9 @@ describe "AddUserTogroupThroughCustomField" do
   fab!(:user_1) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:target_group) { Fabricate(:group, full_name: "Groupity Group") }
+  fab!(:user_field) do
+    Fabricate(:user_field, name: "groupity_group", field_type: "text", description: "a nice field")
+  end
 
   fab!(:automation) do
     Fabricate(
@@ -17,8 +20,8 @@ describe "AddUserTogroupThroughCustomField" do
   before do
     automation.upsert_field!(
       "custom_field_name",
-      "text",
-      { value: "groupity_group" },
+      "custom_field",
+      { value: user_field.id },
       target: "script",
     )
   end
@@ -39,7 +42,7 @@ describe "AddUserTogroupThroughCustomField" do
     before do
       UserCustomField.create!(
         user_id: user_1.id,
-        name: "groupity_group",
+        name: "user_field_#{user_field.id}",
         value: target_group.full_name,
       )
     end
@@ -79,8 +82,6 @@ describe "AddUserTogroupThroughCustomField" do
 
     context "with existing custom fields" do
       before do
-        user_field =
-          UserField.create!(name: "groupity_group", field_type: "text", description: "a nice field")
         UserCustomField.create!(
           user_id: user_1.id,
           name: "user_field_#{user_field.id}",
@@ -111,8 +112,6 @@ describe "AddUserTogroupThroughCustomField" do
 
     context "with non existing target group" do
       before do
-        user_field =
-          UserField.create!(name: "groupity_group", field_type: "text", description: "a nice field")
         UserCustomField.create!(
           user_id: user_1.id,
           name: "user_field_#{user_field.id}",

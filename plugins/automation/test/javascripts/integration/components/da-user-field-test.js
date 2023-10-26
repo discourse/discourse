@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
-import { hbs } from "ember-cli-htmlbars";
 import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import fabricators from "discourse/plugins/discourse-automation/discourse/lib/fabricators";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import fabricators from "discourse/plugins/discourse-automation/discourse/lib/fabricators";
 
 module("Integration | Component | da-user-field", function (hooks) {
   setupRenderingTest(hooks);

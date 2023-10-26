@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
-import { hbs } from "ember-cli-htmlbars";
 import { fillIn, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import fabricators from "discourse/plugins/discourse-automation/discourse/lib/fabricators";
 

@@ -12,7 +12,7 @@ DiscourseAutomation::Scriptable::ADD_USER_TO_GROUP_THROUGH_CUSTOM_FIELD =
 DiscourseAutomation::Scriptable.add(
   DiscourseAutomation::Scriptable::ADD_USER_TO_GROUP_THROUGH_CUSTOM_FIELD,
 ) do
-  field :custom_field_name, component: :text, required: true
+  field :custom_field_name, component: :custom_field, required: true
 
   version 1
 
@@ -23,12 +23,13 @@ DiscourseAutomation::Scriptable.add(
 
     case trigger["kind"]
     when DiscourseAutomation::Triggerable::API_CALL, DiscourseAutomation::Triggerable::RECURRING
-      query = DB.query(<<-SQL, custom_field_name)
+      query =
+        DB.query(<<-SQL, prefix: ::User::USER_FIELD_PREFIX, custom_field_name: custom_field_name)
         SELECT u.id as user_id, g.id as group_id
         FROM users u
         JOIN user_custom_fields ucf
           ON u.id = ucf.user_id
-          AND ucf.name = ?
+          AND ucf.name = CONCAT(:prefix, :custom_field_name)
         JOIN groups g
           on g.full_name ilike ucf.value
         FULL OUTER JOIN group_users gu
@@ -55,12 +56,10 @@ DiscourseAutomation::Scriptable.add(
       group_name =
         DB.query_single(
           <<-SQL,
-        SELECT ucf.value
-        FROM user_fields uf
-        JOIN user_custom_fields ucf
-        ON ucf.user_id = :user_id AND ucf.name = CONCAT(:prefix, uf.id)
-        WHERE uf.name = :custom_field_name
-      SQL
+          SELECT value
+          FROM user_custom_fields ucf
+          WHERE ucf.user_id = :user_id AND ucf.name = CONCAT(:prefix, :custom_field_name)
+        SQL
           prefix: ::User::USER_FIELD_PREFIX,
           custom_field_name: custom_field_name,
           user_id: trigger["user"].id,

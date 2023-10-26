@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { isPresent } from "@ember/utils";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 export default class DiscourseAutomationField {
   static create(template, target, json = {}) {
