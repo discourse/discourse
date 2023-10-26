@@ -3,7 +3,7 @@
 module SiteSettings
 end
 
-# A cache for providing default value based on site locale
+# A class to store and modify hidden site settings
 class SiteSettings::HiddenProvider
   def initialize
     @hidden_settings = Set.new
