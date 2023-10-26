@@ -194,3 +194,45 @@ ensure
   db&.remove
   redis&.remove
 end
+
+desc "Installs all official themes. This should only be used in the test environment."
+task "themes:install_all_official" => :environment do |task, args|
+  FileUtils.rm_rf("tmp/themes")
+
+  official_themes =
+    Set
+      .new(
+        %w[
+          discourse-brand-header
+          discourse-category-banners
+          discourse-clickable-topic
+          discourse-color-scheme-toggle
+          discourse-custom-header-links
+          Discourse-easy-footer
+          discourse-gifs
+          discourse-topic-thumbnails
+          discourse-search-banner
+          discourse-unanswered-filter
+          discourse-versatile-banner
+          DiscoTOC
+          unformatted-code-detector
+        ],
+      )
+      .each do |theme_name|
+        repo = "https://github.com/discourse/#{theme_name}"
+        path = File.expand_path("tmp/themes/#{theme_name}")
+
+        attempts = 0
+
+        begin
+          attempts += 1
+          system("git clone #{repo} #{path}", exception: true)
+        rescue StandardError
+          abort("Failed to clone #{repo}") if attempts >= 3
+          STDERR.puts "Failed to clone #{repo}... trying again..."
+          retry
+        end
+
+        RemoteTheme.import_theme_from_directory(path)
+      end
+end

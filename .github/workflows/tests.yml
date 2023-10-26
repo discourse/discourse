@@ -41,7 +41,7 @@ jobs:
 
       matrix:
         build_type: [backend, frontend, system, annotations]
-        target: [core, plugins]
+        target: [core, plugins, themes]
         ruby: ["3.2"]
         exclude:
           - build_type: annotations
@@ -108,6 +108,10 @@ jobs:
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
         run: bin/rake plugin:install_all_official
+
+      - name: Checkout official themes
+        if: matrix.target == 'themes'
+        run: bin/rake themes:install_all_official
 
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins'
@@ -237,10 +241,17 @@ jobs:
           LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
         timeout-minutes: 30
-      
+
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        timeout-minutes: 30
+
+      - name: Theme System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'themes'
+        run: |
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
+        shell: bash
         timeout-minutes: 30
 
       - name: Upload failed system test screenshots
