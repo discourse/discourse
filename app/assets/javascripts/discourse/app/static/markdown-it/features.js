@@ -15,7 +15,7 @@ export default function loadPluginFeatures() {
         if (module && module.setup) {
           const id = moduleName.split("/").reverse()[0];
           const { setup, priority = 0 } = module;
-          features.push({ id, setup, priority });
+          features.unshift({ id, setup, priority });
         }
       }
     }
