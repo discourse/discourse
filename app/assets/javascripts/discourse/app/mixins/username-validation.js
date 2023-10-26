@@ -4,7 +4,7 @@ import { isEmpty } from "@ember/utils";
 import { setting } from "discourse/lib/computed";
 import User from "discourse/models/user";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 function failedResult(attrs) {
@@ -22,6 +22,8 @@ function validResult(attrs) {
 }
 
 export default Mixin.create({
+  checkedUsername: null,
+  usernameValidationResult: null,
   uniqueUsernameValidation: null,
   maxUsernameLength: setting("max_username_length"),
   minUsernameLength: setting("min_username_length"),
@@ -41,13 +43,26 @@ export default Mixin.create({
     }
   },
 
-  @observes("accountUsername")
-  triggerValidation() {
+  @discourseComputed(
+    "usernameValidationResult",
+    "accountUsername",
+    "forceValidationReason"
+  )
+  usernameValidation() {
+    if (
+      this.usernameValidationResult &&
+      this.checkedUsername === this.accountUsername
+    ) {
+      return this.usernameValidationResult;
+    }
+
     const result = this.basicUsernameValidation(this.accountUsername);
+
     if (result.shouldCheck) {
       discourseDebounce(this, this.checkUsernameAvailability, 500);
     }
-    this.set("usernameValidation", result);
+
+    return result;
   },
 
   basicUsernameValidation(username) {
@@ -88,23 +103,24 @@ export default Mixin.create({
       return;
     }
 
+    this.set("checkedUsername", this.accountUsername);
     this.set("isDeveloper", !!result.is_developer);
 
     if (result.available) {
       this.set(
-        "usernameValidation",
+        "usernameValidationResult",
         validResult({ reason: I18n.t("user.username.available") })
       );
     } else if (result.suggestion) {
       this.set(
-        "usernameValidation",
+        "usernameValidationResult",
         failedResult({
           reason: I18n.t("user.username.not_available", result),
         })
       );
     } else {
       this.set(
-        "usernameValidation",
+        "usernameValidationResult",
         failedResult({
           reason: result.errors
             ? result.errors.join(" ")
