@@ -6,7 +6,6 @@ RSpec.describe SiteSettings::HiddenProvider do
   let(:hidden_provider) { SiteSettings::HiddenProvider.new }
 
   describe "all" do
-    before { DiscoursePluginRegistry.clear_modifiers! }
     after { DiscoursePluginRegistry.clear_modifiers! }
 
     it "can return defaults" do
