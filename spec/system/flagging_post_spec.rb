@@ -2,7 +2,7 @@
 
 # frozen_string_literal: true
 
-describe "Post flagging", type: :system, js: true do
+describe "Flagging post", type: :system, js: true do
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:first_post) { Fabricate(:post) }
   fab!(:post_to_flag) { Fabricate(:post, topic: first_post.topic) }
@@ -12,7 +12,7 @@ describe "Post flagging", type: :system, js: true do
 
   before { sign_in(current_user) }
 
-  describe "Flagging a post using Take Action" do
+  describe "Using Take Action" do
     it "can select the default action to hide the post, agree with other flags, and reach the flag threshold" do
       other_flag = Fabricate(:flag, post: post_to_flag, user: Fabricate(:moderator))
       expect(other_flag.reload.agreed_at).to be_nil
