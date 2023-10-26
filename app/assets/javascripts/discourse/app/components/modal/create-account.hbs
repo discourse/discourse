@@ -40,16 +40,16 @@
             {{/if}}
             <div class="input-group create-account-email">
               <Input
-                @type="email"
-                disabled={{this.emailDisabled}}
-                @value={{this.model.accountEmail}}
-                id="new-account-email"
-                name="email"
-                class={{value-entered this.model.accountEmail}}
-                autofocus="autofocus"
                 {{on "focusout" (action "checkEmailAvailability")}}
+                @type="email"
+                @value={{this.model.accountEmail}}
+                disabled={{this.emailDisabled}}
+                autofocus="autofocus"
                 aria-describedby="account-email-validation"
                 aria-invalid={{this.emailValidation.failed}}
+                name="email"
+                id="new-account-email"
+                class={{value-entered this.model.accountEmail}}
               />
               <label class="alt-placeholder" for="new-account-email">
                 {{i18n "user.email.title"}}
@@ -68,13 +68,13 @@
               <Input
                 @value={{this.model.accountUsername}}
                 disabled={{this.usernameDisabled}}
-                class={{value-entered this.model.accountUsername}}
-                id="new-account-username"
-                name="username"
                 maxlength={{this.maxUsernameLength}}
                 aria-describedby="username-validation"
                 aria-invalid={{this.usernameValidation.failed}}
                 autocomplete="off"
+                name="username"
+                id="new-account-username"
+                class={{value-entered this.model.accountUsername}}
               />
               <label class="alt-placeholder" for="new-account-username">
                 {{i18n "user.username.title"}}
@@ -136,11 +136,11 @@
                   @value={{this.accountPassword}}
                   @class={{value-entered this.accountPassword}}
                   @type={{if this.maskPassword "password" "text"}}
-                  id="new-account-password"
                   @autocomplete="current-password"
                   @capsLockOn={{this.capsLockOn}}
                   aria-describedby="password-validation"
                   aria-invalid={{this.passwordValidation.failed}}
+                  id="new-account-password"
                 />
                 <label class="alt-placeholder" for="new-account-password">
                   {{i18n "user.password.title"}}
@@ -193,8 +193,8 @@
               <div class="input-group create-account__invite-code">
                 <Input
                   @value={{this.inviteCode}}
-                  class={{value-entered this.inviteCode}}
                   id="inviteCode"
+                  class={{value-entered this.inviteCode}}
                 />
                 <label class="alt-placeholder" for="invite-code">
                   {{i18n "user.invite_code.title"}}
