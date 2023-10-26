@@ -4604,6 +4604,9 @@ en:
     form_template_chooser:
       select_template: "Select form templates"
     form_templates:
+      upload_field:
+        upload: "Upload"
+        uploading: "Uploading"
       errors:
         valueMissing:
           default: "Please fill out this field."
