@@ -52,7 +52,7 @@ module Chat
 
     def group_mentions
       group_ids = groups_to_mention.pluck(:id)
-      chat_users.includes(:groups).joins(:groups).where("groups.id IN (?)", group_ids)
+      chat_users.joins(:groups).where("groups.id IN (?)", group_ids)
     end
 
     def here_mentions
