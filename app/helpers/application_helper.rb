@@ -26,6 +26,7 @@ module ApplicationHelper
         },
         EXTEND_PROTOTYPES: {
           Date: false,
+          String: false,
         },
         _APPLICATION_TEMPLATE_WRAPPER: false,
         _DEFAULT_ASYNC_OBSERVERS: true,
