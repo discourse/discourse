@@ -323,7 +323,7 @@ task "assets:precompile:compress_js": "environment" do
   end
 end
 
-task "assets:precompile:theme_transpiler": "environment" do
+task "assets:precompile:theme_transpiler" do
   DiscourseJsProcessor::Transpiler.build_theme_transpiler
 end
 
