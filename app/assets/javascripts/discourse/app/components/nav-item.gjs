@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
@@ -31,7 +32,7 @@ export default class NavItem extends Component {
   }
 
   <template>
-    <li class={{if this.active "active"}}>
+    <li class={{concatClass (if this.active "active") @class}} ...attributes>
       {{#if @routeParam}}
         <LinkTo
           @route={{@route}}
