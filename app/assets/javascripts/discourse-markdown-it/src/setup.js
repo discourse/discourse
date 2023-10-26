@@ -191,9 +191,8 @@ class Setup {
     const options = this.#options;
 
     // the callback argument we pass to the callbacks
-    let callbackArg = (engineOptions, afterBuild) => {
-      afterBuild(this.#buildCookFunctions(engineOptions, options));
-    };
+    let callbackArg = (engineOptions, afterBuild) =>
+      afterBuild(this.#buildCookFunction(engineOptions, options));
 
     this.#drain(this.#customMarkdownCookFunctionCallbacks, ([, callback]) => {
       callback(options, callbackArg);
