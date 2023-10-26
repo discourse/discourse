@@ -20,7 +20,7 @@ module("Integration | Component | admin-post-menu", function (hooks) {
   });
 
   test("renders button from API", async function (assert) {
-    withPluginApi("1.16.0", (api) => {
+    withPluginApi("1.15.0", (api) => {
       api.addPostAdminMenuButton(() => {
         return {
           translatedLabel: "test",
