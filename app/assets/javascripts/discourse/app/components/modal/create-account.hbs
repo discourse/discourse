@@ -87,9 +87,9 @@
                 @validation={{this.usernameValidation}}
                 @id="username-validation"
               />
-              <span class="more-info">{{i18n
-                  "user.username.instructions"
-                }}</span>
+              <span class="more-info">
+                {{i18n "user.username.instructions"}}
+              </span>
             </div>
 
             <div class="input-group create-account__fullname">
@@ -148,6 +148,7 @@
                     <span class="required">*</span>
                   {{/if}}
                 </label>
+
                 <div class="create-account__password-info">
                   <div class="create-account__password-tip-validation">
                     <InputTip
@@ -156,8 +157,10 @@
                     />
                     <span class="more-info">{{this.passwordInstructions}}</span>
                     <div
-                      class="caps-lock-warning
-                        {{unless this.capsLockOn 'hidden'}}"
+                      class={{concat-class
+                        "caps-lock-warning"
+                        (unless this.capsLockOn "hidden")
+                      }}
                     >
                       {{d-icon "exclamation-triangle"}}
                       {{i18n "login.caps_lock_warning"}}
@@ -171,9 +174,9 @@
               {{/if}}
 
               <div class="password-confirmation">
-                <label for="new-account-password-confirmation">{{i18n
-                    "user.password_confirmation.title"
-                  }}</label>
+                <label for="new-account-password-confirmation">
+                  {{i18n "user.password_confirmation.title"}}
+                </label>
                 <HoneypotInput
                   @id="new-account-confirmation"
                   @autocomplete="new-password"
@@ -193,12 +196,12 @@
                   class={{value-entered this.inviteCode}}
                   id="inviteCode"
                 />
-                <label class="alt-placeholder" for="invite-code">{{i18n
-                    "user.invite_code.title"
-                  }}</label>
-                <span class="more-info">{{i18n
-                    "user.invite_code.instructions"
-                  }}</span>
+                <label class="alt-placeholder" for="invite-code">
+                  {{i18n "user.invite_code.title"}}
+                </label>
+                <span class="more-info">
+                  {{i18n "user.invite_code.instructions"}}
+                </span>
               </div>
             {{/if}}
 
