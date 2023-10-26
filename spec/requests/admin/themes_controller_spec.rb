@@ -235,29 +235,31 @@ RSpec.describe Admin::ThemesController do
         expect(response.status).to eq(201)
       end
 
-      # it "responds with suitable error message when a migration fails" do
-      #   repo_path = setup_git_repo(
-      #     "about.json" => { name: "test theme" }.to_json,
-      #     "settings.yaml" => "boolean_setting: true",
-      #     "migrations/0001-some-migration.js" => <<~JS,
-      #       export default function migrate(settings) {
-      #         settings.set("unknown_setting", "dsad");
-      #         return settings;
-      #       }
-      #     JS
-      #   )
-      #   repo_url = MockGitImporter.register("https://example.com/initial_repo.git", repo_path)
+      it "responds with suitable error message when a migration fails" do
+        repo_path =
+          setup_git_repo(
+            "about.json" => { name: "test theme" }.to_json,
+            "settings.yaml" => "boolean_setting: true",
+            "migrations/0001-some-migration.js" => <<~JS,
+            export default function migrate(settings) {
+              settings.set("unknown_setting", "dsad");
+              return settings;
+            }
+          JS
+          )
+        repo_url = MockGitImporter.register("https://example.com/initial_repo.git", repo_path)
 
-      #   post "/admin/themes/import.json",
-      #        params: {
-      #          remote: repo_url,
-      #        }
+        post "/admin/themes/import.json", params: { remote: repo_url }
 
-      #   expect(response.status).to eq(422)
-      #   expect(response.parsed_body["errors"]).to contain_exactly(
-      #     I18n.t("themes.import_error.migrations.unknown_setting_returned_by_migration", name: "0001-some-migration", setting_name: "unknown_setting")
-      #   )
-      # end
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t(
+            "themes.import_error.migrations.unknown_setting_returned_by_migration",
+            name: "0001-some-migration",
+            setting_name: "unknown_setting",
+          ),
+        )
+      end
 
       it "fails to import with a failing status" do
         post "/admin/themes/import.json", params: { remote: "non-existent" }
