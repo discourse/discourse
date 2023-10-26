@@ -160,14 +160,18 @@ module.exports = {
     });
   },
 
-  generatePluginsTree() {
+  generatePluginsTree(withTests) {
     if (!this.shouldLoadPlugins()) {
       return mergeTrees([]);
     }
-    const appTree = this._generatePluginAppTree();
-    const testTree = this._generatePluginTestTree();
-    const adminTree = this._generatePluginAdminTree();
-    return mergeTrees([appTree, testTree, adminTree]);
+    const trees = [
+      this._generatePluginAppTree(),
+      this._generatePluginAdminTree(),
+    ];
+    if (withTests) {
+      trees.push(this._generatePluginTestTree());
+    }
+    return mergeTrees(trees);
   },
 
   _generatePluginAppTree() {
