@@ -77,3 +77,6 @@ openapi/*
 
 # Cached License Data Files
 /.licenses
+
+# OS Specific Files
+.DS_Store
