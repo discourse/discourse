@@ -31,8 +31,9 @@
         @name="search-menu-results-top"
         @outletArgs={{hash
           inTopicContext=this.search.inTopicContext
-          onLinkClicked=@searchTermChanged
+          searchTermChanged=@searchTermChanged
           searchTopics=@searchTopics
+          closeSearchMenu=@closeSearchMenu
         }}
       />
 
@@ -68,7 +69,7 @@
       @name="search-menu-results-bottom"
       @outletArgs={{hash
         inTopicContext=this.search.inTopicContext
-        onLinkClicked=@searchTermChanged
+        searchTermChanged=@searchTermChanged
         searchTopics=@searchTopics
         closeSearchMenu=@closeSearchMenu
       }}
