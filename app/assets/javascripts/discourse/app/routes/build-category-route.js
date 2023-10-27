@@ -1,10 +1,6 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import {
-  queryParams,
-  resetParams,
-  routeControlledPropDefaults,
-} from "discourse/controllers/discovery/list";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import CategoryList from "discourse/models/category-list";
@@ -124,30 +120,22 @@ class AbstractCategoryRoute extends DiscourseRoute {
     });
   }
 
+  afterModel(model) {
+    this.searchService.searchContext = model.category.get("searchContext");
+    return super.afterModel(model);
+  }
+
   setupController(controller, model) {
-    const category = model.category;
-
-    const controllerOpts = {
-      ...routeControlledPropDefaults,
-      subcategoryList: model.subcategoryList,
-      model,
-      expandAllPinned: true,
-    };
-
-    const p = category.get("params");
-    if (p && Object.keys(p).length) {
-      if (p.order !== undefined) {
-        controllerOpts.order = p.order;
-      }
-      if (p.ascending !== undefined) {
-        controllerOpts.ascending = p.ascending;
-      }
-    }
-
-    this.searchService.searchContext = category.get("searchContext");
-
-    controller.setProperties(controllerOpts);
+    super.setupController(...arguments);
     controller.bulkSelectHelper.clear();
+
+    const p = model.category.params;
+    if (p?.order !== undefined) {
+      controller.order = p.order;
+    }
+    if (p?.ascending !== undefined) {
+      controller.ascending = p.ascending;
+    }
   }
 
   deactivate() {

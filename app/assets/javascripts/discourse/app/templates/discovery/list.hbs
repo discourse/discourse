@@ -6,23 +6,23 @@
     <Discovery::Navigation
       @category={{this.model.category}}
       @tag={{this.model.tag}}
-      @additionalTags={{this.additionalTags}}
+      @additionalTags={{this.model.additionalTags}}
       @filterType={{this.model.filterType}}
       @noSubcategories={{this.model.noSubcategories}}
       @canBulkSelect={{this.canBulkSelect}}
       @bulkSelectHelper={{this.bulkSelectHelper}}
       @createTopic={{this.createTopic}}
       @createTopicDisabled={{this.createTopicDisabled}}
-      @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
+      @canCreateTopicOnTag={{this.model.canCreateTopicOnTag}}
       @toggleTagInfo={{this.toggleTagInfo}}
-      @tagNotification={{this.tagNotification}}
+      @tagNotification={{this.model.tagNotification}}
     />
   </:navigation>
 
   <:header>
     {{#if this.subcategoriesComponent}}
       <this.subcategoriesComponent
-        @categories={{this.subcategoryList.categories}}
+        @categories={{this.model.subcategoryList.categories}}
       />
     {{/if}}
     {{#if this.showTagInfo}}
@@ -35,8 +35,6 @@
     <Discovery::Topics
       @period={{this.model.list.for_period}}
       @changePeriod={{this.changePeriod}}
-      @expandAllPinned={{this.expandAllPinned}}
-      @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
       @model={{this.model.list}}
       @canBulkSelect={{this.canBulkSelect}}
       @bulkSelectHelper={{this.bulkSelectHelper}}

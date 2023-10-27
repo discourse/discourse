@@ -1,10 +1,6 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import {
-  queryParams,
-  resetParams,
-  routeControlledPropDefaults,
-} from "discourse/controllers/discovery/list";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import PreloadStore from "discourse/lib/preload-store";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -143,15 +139,7 @@ export default class TagShowRoute extends DiscourseRoute {
     };
   }
 
-  setupController(controller, model) {
-    controller.setProperties({
-      ...routeControlledPropDefaults,
-      model,
-      additionalTags: model.additionalTags,
-      canCreateTopicOnTag: model.canCreateTopicOnTag,
-      tagNotification: model.tagNotification,
-    });
-
+  afterModel(model) {
     if (model.category || model.additionalTags) {
       const tagIntersectionSearchContext = {
         type: "tagIntersection",
@@ -166,6 +154,12 @@ export default class TagShowRoute extends DiscourseRoute {
     } else {
       this.searchService.searchContext = model.tag.searchContext;
     }
+    return super.afterModel(...arguments);
+  }
+
+  setupController(controller) {
+    super.setupController(...arguments);
+    controller.bulkSelectHelper.clear();
   }
 
   titleToken() {

@@ -1,11 +1,7 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import {
-  queryParams,
-  resetParams,
-  routeControlledPropDefaults,
-} from "discourse/controllers/discovery/list";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -134,14 +130,8 @@ class AbstractTopicRoute extends DiscourseRoute {
   }
 
   setupController(controller) {
-    controller.setProperties({
-      ...routeControlledPropDefaults,
-      expandAllPinned: false,
-      expandGloballyPinned: true,
-    });
-    controller.bulkSelectHelper.clear();
-
     super.setupController(...arguments);
+    controller.bulkSelectHelper.clear();
   }
 
   @action
