@@ -737,7 +737,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   def migration_filename_is_valid
-    if !name.match?(/\A\d{4}-.+/)
+    if !name.match?(/\A\d{4}-[a-zA-Z0-9]+/)
       self.errors.add(
         :base,
         I18n.t("themes.import_error.migrations.invalid_filename", filename: name),

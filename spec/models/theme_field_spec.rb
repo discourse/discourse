@@ -812,6 +812,16 @@ HTML
       expect(field.save).to eq(true)
     end
 
+    it "doesn't allow weird characters in the name" do
+      field = Fabricate(:migration_theme_field, theme: theme)
+      field.name = "0012-ëèard"
+
+      expect(field.save).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012-ëèard"),
+      )
+    end
+
     it "imposes a limit on the name part in the filename" do
       stub_const(ThemeField, "MIGRATION_NAME_PART_MAX_LENGTH", 10) do
         field = Fabricate(:migration_theme_field, theme: theme)
