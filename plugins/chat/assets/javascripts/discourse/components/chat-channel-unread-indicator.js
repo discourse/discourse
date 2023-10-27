@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+import { hasChatIndicator } from "../lib/chat-user-preferences";
 
 export default class ChatChannelUnreadIndicator extends Component {
   @service chat;
@@ -44,9 +45,6 @@ export default class ChatChannelUnreadIndicator extends Component {
   }
 
   #onlyMentions() {
-    return (
-      this.currentUser.user_option.chat_header_indicator_preference ===
-      "only_mentions"
-    );
+    return hasChatIndicator(this.currentUser).ONLY_MENTIONS;
   }
 }
