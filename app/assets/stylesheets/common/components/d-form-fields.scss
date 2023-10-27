@@ -16,6 +16,10 @@
       margin-top: 1.4em;
     }
   }
+  &__group {
+    display: flex;
+    gap: 1rem;
+  }
 
   &__label {
     font-weight: bold;

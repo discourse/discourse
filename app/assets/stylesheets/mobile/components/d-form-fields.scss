@@ -1,0 +1,19 @@
+.d-form-field {
+  width: 100%;
+  &__set {
+    // flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  // &:has(&__input[type="text"]),
+  // &:has(details.select-kit) {
+  //   width: 100%;
+  // }
+
+  &__content,
+  &__input[type="text"],
+  &__input[type="number"],
+  .select-kit {
+    width: 100%;
+  }
+}

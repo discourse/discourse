@@ -6,9 +6,7 @@
       <span class="d-form-field__label-optional">(Optional)</span>
     </label>
     <div class="d-form-field__content">
-      <div class="d-form-field__input-wrapper">
-        <input class="d-form-field__input" name=" " type="text" size="25" />
-      </div>
+      <input class="d-form-field__input" name=" " type="text" size="25" />
       <div class="d-form-field__meta">
         <span class="d-form-field__meta-text">
           Some instructions on what to do.
@@ -22,9 +20,7 @@
       <span class="d-form-field__label-text">Limited character field</span>
     </label>
     <div class="d-form-field__content">
-      <div class="d-form-field__input-wrapper">
-        <input class="d-form-field__input" name=" " type="text" size="25" />
-      </div>
+      <input class="d-form-field__input" name=" " type="text" size="25" />
       <div class="d-form-field__meta">
         <span class="d-form-field__meta-count">0/25</span>
       </div>
@@ -39,9 +35,7 @@
       <span class="d-form-field__label-optional">(Optional)</span>
     </label>
     <div class="d-form-field__content">
-      <div class="d-form-field__input-wrapper">
-        <input class="d-form-field__input" name=" " type="text" size="25" />
-      </div>
+      <input class="d-form-field__input" name=" " type="text" size="25" />
       <div class="d-form-field__meta">
         <span class="d-form-field__meta-text">
           <span class="d-form-field__input-error-icon">{{d-icon
@@ -58,9 +52,7 @@
       <span class="d-form-field__label-text">Limited character field</span>
     </label>
     <div class="d-form-field__content">
-      <div class="d-form-field__input-wrapper">
-        <input class="d-form-field__input" name=" " type="text" size="25" />
-      </div>
+      <input class="d-form-field__input" name=" " type="text" size="25" />
       <div class="d-form-field__meta">
         <span class="d-form-field__meta-count">0/25</span>
       </div>
@@ -79,37 +71,32 @@
         <span class="d-form-field__label-text">Streetname</span>
       </label>
       <div class="d-form-field__content">
-        <div class="d-form-field__input-wrapper">
-          <input class="d-form-field__input" name=" " type="text" size="30" />
-        </div>
+        <input class="d-form-field__input" name=" " type="text" size="30" />
       </div>
     </div>
 
-    <div class="d-form-field">
-      <label class="d-form-field__label" for=" ">
-        <span class="d-form-field__label-text">Number</span>
-      </label>
-      <div class="d-form-field__content">
-        <div class="d-form-field__input-wrapper">
+    <div class="d-form-field__group">
+      <div class="d-form-field">
+        <label class="d-form-field__label" for=" ">
+          <span class="d-form-field__label-text">Number</span>
+        </label>
+        <div class="d-form-field__content">
           <input
             class="d-form-field__input"
             name=" "
-            type="text"
-            size="9"
+            type="number"
+            size="4"
             maxlength="4"
           />
         </div>
       </div>
-    </div>
-
-    <div class="d-form-field">
-      <label class="d-form-field__label" for=" ">
-        <span class="d-form-field__label-text">Bus</span>
-        <span class="d-form-field__label-optional">(Optional)</span>
-      </label>
-      <div class="d-form-field__content">
-        <div class="d-form-field__input-wrapper">
-          <input class="d-form-field__input" name=" " type="text" size="9" />
+      <div class="d-form-field">
+        <label class="d-form-field__label" for=" ">
+          <span class="d-form-field__label-text">Bus</span>
+          <span class="d-form-field__label-optional">(Optional)</span>
+        </label>
+        <div class="d-form-field__content">
+          <input class="d-form-field__input" name=" " type="number" size="4" />
         </div>
       </div>
     </div>
@@ -119,9 +106,7 @@
         <span class="d-form-field__label-text">Country</span>
       </label>
       <div class="d-form-field__content">
-        <div class="d-form-field__input-wrapper">
-          <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
-        </div>
+        <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
       </div>
     </div>
 
@@ -137,29 +122,27 @@
         <span class="d-form-field__label-text">Streetname</span>
       </label>
       <div class="d-form-field__content">
-        <div class="d-form-field__input-wrapper">
-          <input class="d-form-field__input" name=" " type="text" size="30" />
-          <div class="d-form-field__meta">
-            <span class="d-form-field__meta-text">
-              <span class="d-form-field__input-error-icon">{{d-icon
-                  "info-circle"
-                }}</span>Error message
-            </span>
-          </div>
+        <input class="d-form-field__input" name=" " type="text" size="30" />
+        <div class="d-form-field__meta">
+          <span class="d-form-field__meta-text">
+            <span class="d-form-field__input-error-icon">{{d-icon
+                "info-circle"
+              }}</span>Error message
+          </span>
         </div>
       </div>
     </div>
 
-    <div class="d-form-field --error">
-      <label class="d-form-field__label" for=" ">
-        <span class="d-form-field__label-text">Number</span>
-      </label>
-      <div class="d-form-field__content">
-        <div class="d-form-field__input-wrapper">
+    <div class="d-form-field__group">
+      <div class="d-form-field --error">
+        <label class="d-form-field__label" for=" ">
+          <span class="d-form-field__label-text">Number</span>
+        </label>
+        <div class="d-form-field__content">
           <input
             class="d-form-field__input"
             name=" "
-            type="text"
+            type="number"
             size="9"
             maxlength="4"
           />
@@ -172,16 +155,14 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="d-form-field --error">
-      <label class="d-form-field__label" for=" ">
-        <span class="d-form-field__label-text">Bus</span>
-        <span class="d-form-field__label-optional">(Optional)</span>
-      </label>
-      <div class="d-form-field__content">
-        <div class="d-form-field__input-wrapper">
-          <input class="d-form-field__input" name=" " type="text" size="9" />
+      <div class="d-form-field --error">
+        <label class="d-form-field__label" for=" ">
+          <span class="d-form-field__label-text">Bus</span>
+          <span class="d-form-field__label-optional">(Optional)</span>
+        </label>
+        <div class="d-form-field__content">
+          <input class="d-form-field__input" name=" " type="number" size="9" />
           <div class="d-form-field__meta">
             <span class="d-form-field__meta-text">
               <span class="d-form-field__input-error-icon">{{d-icon
@@ -198,9 +179,7 @@
         <span class="d-form-field__label-text">Country</span>
       </label>
       <div class="d-form-field__content">
-        <div class="d-form-field__input-wrapper">
-          <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
-        </div>
+        <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
         <div class="d-form-field__meta">
           <span class="d-form-field__meta-text">
             <span class="d-form-field__input-error-icon">{{d-icon
