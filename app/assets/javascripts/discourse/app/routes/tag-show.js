@@ -148,8 +148,6 @@ export default class TagShowRoute extends DiscourseRoute {
       ...routeControlledPropDefaults,
       model,
       additionalTags: model.additionalTags,
-      filterType: model.filterType,
-      noSubcategories: this.noSubcategories,
       canCreateTopicOnTag: model.canCreateTopicOnTag,
       tagNotification: model.tagNotification,
     });

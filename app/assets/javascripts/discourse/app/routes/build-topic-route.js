@@ -118,6 +118,7 @@ class AbstractTopicRoute extends DiscourseRoute {
 
     return {
       list: await topicListPromise,
+      filterType: this.routeConfig.filter.split("/")[0],
     };
   }
 
@@ -133,13 +134,10 @@ class AbstractTopicRoute extends DiscourseRoute {
   }
 
   setupController(controller) {
-    const filterType = this.routeConfig.filter.split("/")[0];
     controller.setProperties({
       ...routeControlledPropDefaults,
-      filterType,
       expandAllPinned: false,
       expandGloballyPinned: true,
-      navigationArgs: { filterType },
     });
     controller.bulkSelectHelper.clear();
 
