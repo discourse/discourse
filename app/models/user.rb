@@ -6,12 +6,15 @@ class User < ActiveRecord::Base
   include HasCustomFields
   include SecondFactorManager
   include HasDestroyedWebHook
+  include HasDeprecatedColumns
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
 
   PASSWORD_SALT_LENGTH = 16
   TARGET_PASSWORD_ALGORITHM =
     "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
+
+  deprecate_column :flag_level, drop_from: "3.2"
 
   # not deleted on user delete
   has_many :posts
