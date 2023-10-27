@@ -1,5 +1,5 @@
 <div class="container">
-  <DiscourseBanner @user={{this.currentUser}} @banner={{this.site.banner}} />
+  <DiscourseBanner />
   {{#if @category}}
     <CategoryReadOnlyBanner
       @category={{@category}}
@@ -22,17 +22,11 @@
   </div>
 </div>
 
-<ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}} />
-
-{{#if this.loading}}
-  {{hide-application-footer}}
-{{/if}}
-
 <span>
   <PluginOutlet @name="discovery-above" @connectorTagName="div" />
 </span>
 
-<div class="container list-container {{if this.showLoadingSpinner 'hidden'}}">
+<div class="container list-container">
   <div class="row">
     <div class="full-width">
       <div id="header-list-area">
@@ -51,7 +45,7 @@
         <PluginOutlet
           @name="discovery-list-container-top"
           @connectorTagName="span"
-          @outletArgs={{hash category=@category listLoading=this.loading}}
+          @outletArgs={{hash category=@category}}
         />
         {{yield to="list"}}
       </div>
