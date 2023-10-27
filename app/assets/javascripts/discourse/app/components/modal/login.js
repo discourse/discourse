@@ -121,7 +121,11 @@ export default class Login extends Component {
       // without it, Firefox will throw console errors
       // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
       // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
-      if (mediation === "conditional" && this.capabilities.isFirefox) {
+      if (
+        mediation === "conditional" &&
+        this.capabilities.isFirefox &&
+        window.PublicKeyCredential
+      ) {
         const isCMA =
           // eslint-disable-next-line no-undef
           await PublicKeyCredential.isConditionalMediationAvailable();
