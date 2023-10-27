@@ -20,9 +20,10 @@
   </:navigation>
 
   <:header>
-    {{#if this.subcategoriesComponent}}
-      <this.subcategoriesComponent
+    {{#if this.model.subcategoryList}}
+      <Discovery::CategoriesDisplay
         @categories={{this.model.subcategoryList.categories}}
+        @parentCategory={{this.model.subcategoryList.parentCategory}}
       />
     {{/if}}
     {{#if this.showTagInfo}}
