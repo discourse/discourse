@@ -11,8 +11,6 @@ class Middleware::OmniauthBypassMiddleware
   def initialize(app, options = {})
     @app = app
 
-    Discourse.plugins.each(&:notify_before_auth)
-
     OmniAuth.config.before_request_phase do |env|
       request = ActionDispatch::Request.new(env)
 

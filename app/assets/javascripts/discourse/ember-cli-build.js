@@ -90,7 +90,7 @@ module.exports = function (defaults) {
 
   const discoursePluginsTree = app.project
     .findAddonByName("discourse-plugins")
-    .generatePluginsTree();
+    .generatePluginsTree(app.tests);
 
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 

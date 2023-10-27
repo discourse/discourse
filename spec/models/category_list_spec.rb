@@ -357,4 +357,21 @@ RSpec.describe CategoryList do
       DiscoursePluginRegistry.clear_modifiers!
     end
   end
+
+  describe "with custom fields" do
+    fab!(:category) { Fabricate(:category, user: admin) }
+
+    before { category.upsert_custom_fields("bob" => "marley") }
+    after { CategoryList.preloaded_category_custom_fields = Set.new }
+
+    it "can preloads custom fields" do
+      CategoryList.preloaded_category_custom_fields << "bob"
+
+      expect(category_list.categories[-1].custom_field_preloaded?("bob")).to eq(true)
+    end
+
+    it "does not preload fields that were not set for preloading" do
+      expect(category_list.categories[-1].custom_field_preloaded?("bob")).to be_falsey
+    end
+  end
 end

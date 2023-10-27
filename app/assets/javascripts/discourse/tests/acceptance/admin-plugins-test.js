@@ -33,7 +33,7 @@ acceptance("Admin - Plugins", function (needs) {
     );
 
     server.put("/admin/site_settings/testplugin_enabled", () =>
-      helper.response()
+      helper.response(200, {})
     );
   });
 

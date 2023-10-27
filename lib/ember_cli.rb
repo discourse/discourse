@@ -6,36 +6,7 @@ module EmberCli
   end
 
   def self.assets
-    @assets ||=
-      begin
-        assets = %w[
-          discourse.js
-          admin.js
-          wizard.js
-          ember_jquery.js
-          markdown-it-bundle.js
-          start-discourse.js
-          vendor.js
-        ]
-        assets +=
-          Dir.glob("app/assets/javascripts/discourse/scripts/*.js").map { |f| File.basename(f) }
-
-        if workbox_dir_name
-          assets +=
-            Dir
-              .glob("app/assets/javascripts/discourse/dist/assets/#{workbox_dir_name}/*")
-              .map { |f| "#{workbox_dir_name}/#{File.basename(f)}" }
-        end
-
-        Discourse
-          .find_plugin_js_assets(include_disabled: true)
-          .each do |file|
-            next if file.ends_with?("_extra") # these are still handled by sprockets
-            assets << "#{file}.js"
-          end
-
-        assets
-      end
+    @@assets ||= Dir.glob("**/*.{js,map,txt}", base: "#{dist_dir}/assets")
   end
 
   def self.script_chunks
@@ -106,5 +77,10 @@ module EmberCli
 
   def self.has_tests?
     File.exist?("#{dist_dir}/tests/index.html")
+  end
+
+  def self.clear_cache!
+    @@chunk_infos = nil
+    @@assets = nil
   end
 end

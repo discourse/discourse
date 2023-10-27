@@ -218,14 +218,14 @@ RSpec.describe Plugin::Instance do
     # No enabled_site_setting
     authenticator = SimpleAuthenticator.new
     plugin.auth_provider(authenticator: authenticator)
-    plugin.notify_before_auth
+    plugin.notify_after_initialize
     expect(authenticator.enabled?).to eq(true)
 
     # With enabled site setting
     plugin = Plugin::Instance.new
     authenticator = SimpleAuthenticator.new
     plugin.auth_provider(enabled_setting: "enable_badges", authenticator: authenticator)
-    plugin.notify_before_auth
+    plugin.notify_after_initialize
     expect(authenticator.enabled?).to eq(false)
 
     # Defines own method
@@ -241,7 +241,7 @@ RSpec.describe Plugin::Instance do
         end
         .new
     plugin.auth_provider(enabled_setting: "enable_badges", authenticator: authenticator)
-    plugin.notify_before_auth
+    plugin.notify_after_initialize
     expect(authenticator.enabled?).to eq(false)
   end
 
@@ -271,7 +271,7 @@ RSpec.describe Plugin::Instance do
       plugin = plugin_from_fixtures("my_plugin")
       plugin.activate!
       expect(DiscoursePluginRegistry.auth_providers.count).to eq(0)
-      plugin.notify_before_auth
+      plugin.notify_after_initialize
       expect(DiscoursePluginRegistry.auth_providers.count).to eq(1)
       auth_provider = DiscoursePluginRegistry.auth_providers.to_a[0]
       expect(auth_provider.authenticator.name).to eq("facebook")
