@@ -299,6 +299,19 @@ RSpec.describe TopicEmbed do
         response = TopicEmbed.find_remote(url)
         expect(response.title).to eq("Through the Looking Glass")
       end
+
+      it "doesn't follow redirect when making request" do
+        FinalDestination.any_instance.stubs(:resolve).returns(URI("https://redirect.com"))
+        stub_request(:get, "https://redirect.com/").to_return(
+          status: 301,
+          body: "<title>Moved permanently</title>",
+          headers: {
+            "Location" => "https://www.example.org/",
+          },
+        )
+        response = TopicEmbed.find_remote(url)
+        expect(response.title).to eq("Moved permanently")
+      end
     end
 
     context 'with post with allowed classes "foo" and "emoji"' do
