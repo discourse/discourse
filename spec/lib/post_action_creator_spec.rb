@@ -276,7 +276,7 @@ RSpec.describe PostActionCreator do
         .new(Fabricate(:moderator), post, PostActionType.types[:spam], take_action: true)
         .perform
         .reviewable
-      expect(post.reload.hidden).to eq(true)
+      expect(post.reload).to be_hidden
     end
 
     context "when there is another reviewable on the post" do
@@ -288,10 +288,8 @@ RSpec.describe PostActionCreator do
             .new(Fabricate(:moderator), post, PostActionType.types[:spam], take_action: true)
             .perform
             .reviewable
-        scores = reviewable.reviewable_scores
-        expect(scores[0]).to be_agreed
-        expect(scores[1]).to be_agreed
         expect(reviewable.reload).to be_approved
+        expect(reviewable.reviewable_scores).to all(be_agreed)
       end
     end
 
@@ -303,7 +301,7 @@ RSpec.describe PostActionCreator do
           .new(Fabricate(:moderator), post, PostActionType.types[:spam], take_action: true)
           .perform
           .reviewable
-        expect(post.reload.hidden).to eq(true)
+        expect(post.reload).to be_hidden
       end
     end
   end
@@ -329,7 +327,7 @@ RSpec.describe PostActionCreator do
 
       score = result.reviewable.reviewable_scores.last
       expect(score.reason).to eq("queued_by_staff")
-      expect(post.reload.hidden?).to eq(true)
+      expect(post.reload).to be_hidden
     end
 
     it "hides the topic even if it has replies" do
