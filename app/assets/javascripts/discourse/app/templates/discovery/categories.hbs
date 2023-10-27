@@ -17,7 +17,9 @@
       }}
     />
 
-    <DiscoveryCategories @refresh={{action "refresh"}}>
+    {{body-class "categories-list"}}
+
+    <div class="contents">
       {{#if (and this.topicTrackingState.hasIncoming this.isCategoriesRoute)}}
         <div class="show-more {{if this.hasTopics 'has-topics'}}">
           <div
@@ -34,22 +36,12 @@
         </div>
       {{/if}}
 
-      {{#if
-        (eq this.categoryPageStyle "categories-and-latest-topics-created-date")
-      }}
-        <CategoriesAndLatestTopics
-          @categories={{this.model.categories}}
-          @topics={{this.model.topics}}
-        />
-      {{else}}
-        {{component
-          this.categoryPageStyle
-          categories=this.model.categories
-          topics=this.model.topics
-        }}
-      {{/if}}
-
-    </DiscoveryCategories>
+      <Discovery::CategoriesDisplay
+        @categories={{this.model.categories}}
+        @topics={{this.model.topics}}
+        @parentCategory={{this.model.parentCategory}}
+      />
+    </div>
 
     <PluginOutlet
       @name="below-discovery-categories"

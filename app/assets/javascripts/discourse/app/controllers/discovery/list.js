@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -8,7 +7,6 @@ import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { defineTrackedProperty } from "discourse/lib/tracked-tools";
-import { categoriesComponent } from "./categories";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -54,7 +52,6 @@ export default class DiscoveryListController extends Controller {
   @service currentUser;
 
   @tracked model;
-  @tracked subcategoryList;
 
   queryParams = Object.keys(queryParams);
 
@@ -103,19 +100,6 @@ export default class DiscoveryListController extends Controller {
   get createTopicDisabled() {
     // We are in a category route, but user does not have permission for the category
     return this.model.category && !this.createTopicTargetCategory;
-  }
-
-  get subcategoriesComponent() {
-    if (this.model.subcategoryList) {
-      const componentName = categoriesComponent({
-        site: this.site,
-        siteSettings: this.siteSettings,
-        parentCategory: this.model.subcategoryList.parentCategory,
-      });
-
-      // Todo, the `categoriesComponent` function should return a component class instead of a string
-      return getOwner(this).resolveRegistration(`component:${componentName}`);
-    }
   }
 
   @action
