@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import CategoryList from "discourse/models/category-list";
@@ -12,9 +13,13 @@ import {
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
+@disableImplicitInjections
 class AbstractCategoryRoute extends DiscourseRoute {
   @service composer;
   @service router;
+  @service store;
+  @service topicTrackingState;
+  @service("search") searchService;
 
   queryParams = queryParams;
 

@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -16,10 +17,14 @@ import I18n from "discourse-i18n";
 const NONE = "none";
 const ALL = "all";
 
+@disableImplicitInjections
 export default class TagShowRoute extends DiscourseRoute {
   @service composer;
   @service router;
   @service currentUser;
+  @service store;
+  @service topicTrackingState;
+  @service("search") searchService;
 
   queryParams = queryParams;
   controllerName = "discovery/list";

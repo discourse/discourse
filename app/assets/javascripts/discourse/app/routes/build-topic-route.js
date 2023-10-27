@@ -2,10 +2,10 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepEqual } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
@@ -91,8 +91,13 @@ export async function findTopicList(
   return list;
 }
 
+@disableImplicitInjections
 class AbstractTopicRoute extends DiscourseRoute {
   @service screenTrack;
+  @service store;
+  @service topicTrackingState;
+  @service currentUser;
+
   queryParams = queryParams;
   templateName = "discovery/list";
   controllerName = "discovery/list";
@@ -141,10 +146,10 @@ class AbstractTopicRoute extends DiscourseRoute {
 
   @action
   willTransition() {
-    if (this.routeConfig.filter === "top") {
-      User.currentProp("user_option.should_be_redirected_to_top", false);
-      if (User.currentProp("user_option.redirected_to_top")) {
-        User.currentProp("user_option.redirected_to_top.reason", null);
+    if (this.routeConfig.filter === "top" && this.currentUser) {
+      this.currentUser.set("user_option.should_be_redirected_to_top", false);
+      if (this.currentUser.user_option?.redirected_to_top) {
+        this.currentUser.set("user_option.redirected_to_top.reason", null);
       }
     }
     return super.willTransition(...arguments);
