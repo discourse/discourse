@@ -2521,6 +2521,7 @@ en:
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     keywords:
+      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
 
     placeholder:
       discourse_connect_provider_secrets:
