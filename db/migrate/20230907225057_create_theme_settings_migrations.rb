@@ -8,7 +8,7 @@ class CreateThemeSettingsMigrations < ActiveRecord::Migration[7.0]
       t.bigint :version, null: false
       t.string :name, null: false, limit: 150
       t.json :diff, null: false
-      t.timestamps null: false
+      t.datetime :created_at, null: false
     end
 
     add_index :theme_settings_migrations, %i[theme_id version], unique: true
