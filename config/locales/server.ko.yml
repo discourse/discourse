@@ -504,7 +504,8 @@ ko:
             name:
               same_as_password: "비밀번호와 같습니다."
             ip_address:
-              signup_not_allowed: "이 계정으로는 가입할 수 없습니다."
+              blocked: "이 IP 주소에서는 신규 등록할 수 없습니다."
+              max_new_accounts_per_registration_ip: "이 IP 주소에서는 신규 등록할 수 없습니다(최대 한도에 도달함). 운영진에게 문의하세요."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2129,9 +2130,6 @@ ko:
       blocked: "는 허용되지 않습니다"
       revoked: "%{date}까지는 '%{email}' 주소로 이메일을 보내지 않습니다."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "이 IP 주소에서는 신규 등록할 수 없습니다."
-      max_new_accounts_per_registration_ip: "이 IP 주소에서는 신규 등록할 수 없습니다(최대 한도에 도달함). 운영진에게 문의하세요."
     website:
       domain_not_allowed: "유효하지 않은 웹사이트입니다. 허용되는 도메인: %{domains}"
     auto_rejected: "나이 때문에 자동으로 거부됩니다. auto_handle_queued_age 사이트 설정을 참조하세요."

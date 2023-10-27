@@ -621,7 +621,8 @@ pl_PL:
             name:
               same_as_password: "jest takie samo, jak twoje hasło."
             ip_address:
-              signup_not_allowed: "Rejestracja z tego konta jest niemożliwa."
+              blocked: "Z twojego adresu IP nowe rejestracje nie są możliwe."
+              max_new_accounts_per_registration_ip: "Z twojego adresu IP nowe rejestracje nie są możliwe (wyczerpany limit). Skonaktuj się z personelem."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2588,9 +2589,6 @@ pl_PL:
       blocked: "nie jest dozwolony."
       revoked: "Maile do \"%{email}\" do %{date} nie będą wysyłane."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Z twojego adresu IP nowe rejestracje nie są możliwe."
-      max_new_accounts_per_registration_ip: "Z twojego adresu IP nowe rejestracje nie są możliwe (wyczerpany limit). Skonaktuj się z personelem."
     website:
       domain_not_allowed: "Błędny adres strony internetowej. Dozwolone domeny: %{domains}"
     auto_rejected: "Odrzucono automatycznie ze względu na wiek. Zobacz ustawienia auto_handle_queued_age witryny."

@@ -194,7 +194,8 @@ sq:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
             ip_address:
-              signup_not_allowed: "Signup is not allowed from this account."
+              blocked: "New registrations are not allowed from your IP address."
+              max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
         color_scheme_color:
           attributes:
             hex:
@@ -883,9 +884,6 @@ sq:
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
-    ip_address:
-      blocked: "New registrations are not allowed from your IP address."
-      max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
   flag_reasons:

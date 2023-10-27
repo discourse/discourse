@@ -575,7 +575,8 @@ de:
             name:
               same_as_password: "ist mit deinem Passwort identisch."
             ip_address:
-              signup_not_allowed: "Eine Registrierung ist von diesem Konto nicht erlaubt."
+              blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
+              max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere ein Team-Mitglied."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2475,9 +2476,6 @@ de:
       blocked: "ist nicht erlaubt."
       revoked: "Es werden bis zum %{date} keine E-Mails an „%{email}“ verschickt."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
-      max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere ein Team-Mitglied."
     website:
       domain_not_allowed: "Website ist ungültig. Erlaubte Domains sind: %{domains}"
     auto_rejected: "Automatisch abgelehnt aufgrund des Alters. Siehe Website-Einstellung auto_handle_queued_age."

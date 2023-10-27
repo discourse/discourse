@@ -146,7 +146,7 @@ class User < ActiveRecord::Base
   validate :password_validator
   validate :name_validator, if: :will_save_change_to_name?
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
-  validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
+  validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
   validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
   validates_associated :primary_email,

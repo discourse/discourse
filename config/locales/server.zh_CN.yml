@@ -550,7 +550,8 @@ zh_CN:
             name:
               same_as_password: "与您的密码相同。"
             ip_address:
-              signup_not_allowed: "不允许从此帐户注册。"
+              blocked: "不允许从您的 IP 地址进行新注册。"
+              max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -2389,9 +2390,6 @@ zh_CN:
       blocked: "不被允许。"
       revoked: "在 %{date}之前不会向 '%{email}' 发送电子邮件。"
       does_not_exist: "不适用"
-    ip_address:
-      blocked: "不允许从您的 IP 地址进行新注册。"
-      max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
     website:
       domain_not_allowed: "网站无效。允许的网域包括：%{domains}"
     auto_rejected: "因时限被自动拒绝。查看 auto_handle_queued_age 站点设置。"

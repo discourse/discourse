@@ -569,7 +569,8 @@ fi:
             name:
               same_as_password: "on sama kuin salasanasi."
             ip_address:
-              signup_not_allowed: "Rekisteröityminen ei ole sallittu tälle tilille."
+              blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
+              max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2437,9 +2438,6 @@ fi:
       blocked: "ei ole sallittu."
       revoked: "Sähköpostia ei lähetetä osoitteeseen '%{email}' ennen %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
-      max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
     website:
       domain_not_allowed: "Verkkosivusto ei kelpaa. Sallitus verkkotunnukset ovat: %{domains}"
     auto_rejected: "Hylättiin automaattisesti iän perusteella. Katso auto_handle_queued_age-sivustoasetus."

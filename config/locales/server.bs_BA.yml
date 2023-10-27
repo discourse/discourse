@@ -218,7 +218,8 @@ bs_BA:
             password:
               common: "is one of the 10000 most common passwords. Please use a more secure password."
             ip_address:
-              signup_not_allowed: "Signup is not allowed from this account."
+              blocked: "New registrations are not allowed from your IP address."
+              max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
         color_scheme_color:
           attributes:
             hex:

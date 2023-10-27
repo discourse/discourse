@@ -406,7 +406,8 @@ ca:
             name:
               same_as_password: "és igual que la vostra contrasenya."
             ip_address:
-              signup_not_allowed: "No es permet el registre des d'aquest compte."
+              blocked: "No es permeten nous registres des de la vostra adreça IP."
+              max_new_accounts_per_registration_ip: "No es permeten registres nous des de la vostra adreça IP (s'ha arribat al límit màxim). Contacteu amb un membre de l'equip responsable."
         user_email:
           attributes:
             user_id:
@@ -1827,9 +1828,6 @@ ca:
       not_allowed: "no és permès d'aquest proveïdor de correu. Feu servir una altra adreça de correu."
       blocked: "no és permès"
       revoked: "No s'enviaran correus a '%{email}' fins a %{date}."
-    ip_address:
-      blocked: "No es permeten nous registres des de la vostra adreça IP."
-      max_new_accounts_per_registration_ip: "No es permeten registres nous des de la vostra adreça IP (s'ha arribat al límit màxim). Contacteu amb un membre de l'equip responsable."
     website:
       domain_not_allowed: "El lloc web no és vàlid. Els dominis permesos són: %{domains}"
     auto_rejected: "Rebutjat automàticament per edat. Vegeu el paràmetre de configuració auto_handle_queued_age."
