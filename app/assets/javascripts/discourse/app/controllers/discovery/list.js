@@ -46,26 +46,6 @@ export function addDiscoveryQueryParam(p, opts) {
   queryParams[p] = opts;
 }
 
-// TODO - having routes control all of these properties is very difficult to reason with
-// we should all route-controlled stuff under `model`
-export const routeControlledPropDefaults = {
-  additionalTags: null,
-  ascending: null,
-  canCreateTopicOnTag: null,
-  category: null,
-  expandAllPinned: null,
-  expandGloballyPinned: null,
-  filterType: null,
-  model: null,
-  navigationArgs: null,
-  noSubcategories: null,
-  noSubcategories: null,
-  order: null,
-  subcategoryList: null,
-  tag: null,
-  tagNotification: null,
-};
-
 @disableImplicitInjections
 export default class DiscoveryListController extends Controller {
   @service composer;
@@ -97,39 +77,40 @@ export default class DiscoveryListController extends Controller {
 
   get showDismissRead() {
     return (
-      filterTypeForMode(this.model?.filter) === "unread" &&
-      this.model.get("topics.length") > 0
+      filterTypeForMode(this.model.list?.filter) === "unread" &&
+      this.model.list.get("topics.length") > 0
     );
   }
 
   get showResetNew() {
     return (
-      filterTypeForMode(this.model?.filter) === "new" &&
-      this.model?.get("topics.length") > 0
+      filterTypeForMode(this.model.list?.filter) === "new" &&
+      this.model.list?.get("topics.length") > 0
     );
   }
 
   get createTopicTargetCategory() {
-    if (this.category?.canCreateTopic) {
-      return this.category;
+    const { category } = this.model;
+    if (category?.canCreateTopic) {
+      return category;
     }
 
     if (this.siteSettings.default_subcategory_on_read_only_category) {
-      return this.category?.subcategoryWithCreateTopicPermission;
+      return category?.subcategoryWithCreateTopicPermission;
     }
   }
 
   get createTopicDisabled() {
     // We are in a category route, but user does not have permission for the category
-    return this.category && !this.createTopicTargetCategory;
+    return this.model.category && !this.createTopicTargetCategory;
   }
 
   get subcategoriesComponent() {
-    if (this.subcategoryList) {
+    if (this.model.subcategoryList) {
       const componentName = categoriesComponent({
         site: this.site,
         siteSettings: this.siteSettings,
-        parentCategory: this.subcategoryList.parentCategory,
+        parentCategory: this.model.subcategoryList.parentCategory,
       });
 
       // Todo, the `categoriesComponent` function should return a component class instead of a string
@@ -141,7 +122,7 @@ export default class DiscoveryListController extends Controller {
   createTopic() {
     this.composer.openNewTopic({
       category: this.createTopicTargetCategory,
-      tags: [this.tag?.id, ...(this.additionalTags ?? [])]
+      tags: [this.model.tag?.id, ...(this.model.additionalTags ?? [])]
         .filter(Boolean)
         .reject((t) => ["none", "all"].includes(t))
         .join(","),
@@ -163,18 +144,18 @@ export default class DiscoveryListController extends Controller {
   changeSort(sortBy) {
     if (sortBy === this.order) {
       this.ascending = !this.ascending;
-      this.model.updateSortParams(sortBy, this.ascending);
+      this.model.list.updateSortParams(sortBy, this.ascending);
     } else {
       this.order = sortBy;
       this.ascending = false;
-      this.model.updateSortParams(sortBy, false);
+      this.model.list.updateSortParams(sortBy, false);
     }
   }
 
   @action
   changeNewListSubset(subset) {
     this.subset = subset;
-    this.model.updateNewListSubsetParam(subset);
+    this.model.list.updateNewListSubsetParam(subset);
   }
 
   @action

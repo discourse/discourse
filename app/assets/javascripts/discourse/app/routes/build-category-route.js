@@ -1,10 +1,6 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import {
-  queryParams,
-  resetParams,
-  routeControlledPropDefaults,
-} from "discourse/controllers/discovery/list";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import CategoryList from "discourse/models/category-list";
@@ -57,11 +53,16 @@ class AbstractCategoryRoute extends DiscourseRoute {
       params
     );
 
+    const noSubcategories = !!this.routeConfig?.no_subcategories;
+    const filterType = this.filter(category).split("/")[0];
+
     return {
       category,
       modelParams: params,
       subcategoryList: await subcategoryListPromise,
       list: await topicListPromise,
+      noSubcategories,
+      filterType,
     };
   }
 
@@ -69,18 +70,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
     return this.routeConfig?.filter === "default"
       ? category.get("default_view") || "latest"
       : this.routeConfig?.filter;
-  }
-
-  _navigationArgs(category) {
-    const noSubcategories =
-        this.routeConfig && !!this.routeConfig.no_subcategories,
-      filterType = this.filter(category).split("/")[0];
-
-    return {
-      category,
-      filterType,
-      noSubcategories,
-    };
   }
 
   async _createSubcategoryList(category) {
@@ -132,32 +121,17 @@ class AbstractCategoryRoute extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    const category = model.category;
-
-    const controllerOpts = {
-      ...routeControlledPropDefaults,
-      navigationArgs: this._navigationArgs(category),
-      subcategoryList: model.subcategoryList,
-      model: model.list,
-      category,
-      noSubcategories: !!this.routeConfig?.no_subcategories,
-      expandAllPinned: true,
-    };
-
-    const p = category.get("params");
-    if (p && Object.keys(p).length) {
-      if (p.order !== undefined) {
-        controllerOpts.order = p.order;
-      }
-      if (p.ascending !== undefined) {
-        controllerOpts.ascending = p.ascending;
-      }
-    }
-
-    this.searchService.searchContext = category.get("searchContext");
-
-    controller.setProperties(controllerOpts);
+    super.setupController(...arguments);
     controller.bulkSelectHelper.clear();
+    this.searchService.searchContext = model.category.get("searchContext");
+
+    const p = model.category.params;
+    if (p?.order !== undefined) {
+      controller.order = p.order;
+    }
+    if (p?.ascending !== undefined) {
+      controller.ascending = p.ascending;
+    }
   }
 
   deactivate() {

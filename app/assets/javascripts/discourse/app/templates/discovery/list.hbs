@@ -1,49 +1,47 @@
 <Discovery::Layout
-  @category={{this.category}}
+  @category={{this.model.category}}
   @createTopicDisabled={{this.createTopicDisabled}}
 >
   <:navigation>
     <Discovery::Navigation
-      @category={{this.navigationArgs.category}}
-      @tag={{this.navigationArgs.tag}}
-      @additionalTags={{this.additionalTags}}
-      @filterType={{this.navigationArgs.filterType}}
-      @noSubcategories={{this.navigationArgs.noSubcategories}}
+      @category={{this.model.category}}
+      @tag={{this.model.tag}}
+      @additionalTags={{this.model.additionalTags}}
+      @filterType={{this.model.filterType}}
+      @noSubcategories={{this.model.noSubcategories}}
       @canBulkSelect={{this.canBulkSelect}}
       @bulkSelectHelper={{this.bulkSelectHelper}}
       @createTopic={{this.createTopic}}
       @createTopicDisabled={{this.createTopicDisabled}}
-      @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
+      @canCreateTopicOnTag={{this.model.canCreateTopicOnTag}}
       @toggleTagInfo={{this.toggleTagInfo}}
-      @tagNotification={{this.tagNotification}}
+      @tagNotification={{this.model.tagNotification}}
     />
   </:navigation>
 
   <:header>
     {{#if this.subcategoriesComponent}}
       <this.subcategoriesComponent
-        @categories={{this.subcategoryList.categories}}
+        @categories={{this.model.subcategoryList.categories}}
       />
     {{/if}}
     {{#if this.showTagInfo}}
-      <TagInfo @tag={{this.tag}} @list={{this.model}} />
+      <TagInfo @tag={{this.model.tag}} @list={{this.model.list}} />
     {{/if}}
   </:header>
 
   <:list>
-    {{this.setTrackingTopicList this.model}}
+    {{this.setTrackingTopicList this.model.list}}
     <Discovery::Topics
-      @period={{this.model.for_period}}
+      @period={{this.model.list.for_period}}
       @changePeriod={{this.changePeriod}}
-      @expandAllPinned={{this.expandAllPinned}}
-      @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
-      @model={{this.model}}
+      @model={{this.model.list}}
       @canBulkSelect={{this.canBulkSelect}}
       @bulkSelectHelper={{this.bulkSelectHelper}}
       @showDismissRead={{this.showDismissRead}}
       @showResetNew={{this.showResetNew}}
-      @category={{this.category}}
-      @tag={{this.tag}}
+      @category={{this.model.category}}
+      @tag={{this.model.tag}}
       @changeSort={{this.changeSort}}
       @changeNewListSubset={{this.changeNewListSubset}}
     />

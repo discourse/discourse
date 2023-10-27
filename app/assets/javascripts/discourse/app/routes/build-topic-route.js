@@ -1,11 +1,7 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import {
-  queryParams,
-  resetParams,
-  routeControlledPropDefaults,
-} from "discourse/controllers/discovery/list";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -101,20 +97,25 @@ class AbstractTopicRoute extends DiscourseRoute {
   templateName = "discovery/list";
   controllerName = "discovery/list";
 
-  model(data, transition) {
+  async model(data, transition) {
     // attempt to stop early cause we need this to be called before .sync
     this.screenTrack.stop();
 
     const findOpts = filterQueryParams(data),
       findExtras = { cached: this.isPoppedState(transition) };
 
-    return findTopicList(
+    const topicListPromise = findTopicList(
       this.store,
       this.topicTrackingState,
       this.routeConfig.filter,
       findOpts,
       findExtras
     );
+
+    return {
+      list: await topicListPromise,
+      filterType: this.routeConfig.filter.split("/")[0],
+    };
   }
 
   titleToken() {
@@ -129,17 +130,8 @@ class AbstractTopicRoute extends DiscourseRoute {
   }
 
   setupController(controller) {
-    const filterType = this.routeConfig.filter.split("/")[0];
-    controller.setProperties({
-      ...routeControlledPropDefaults,
-      filterType,
-      expandAllPinned: false,
-      expandGloballyPinned: true,
-      navigationArgs: { filterType },
-    });
-    controller.bulkSelectHelper.clear();
-
     super.setupController(...arguments);
+    controller.bulkSelectHelper.clear();
   }
 
   @action

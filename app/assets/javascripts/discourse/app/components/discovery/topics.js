@@ -196,6 +196,14 @@ export default class DiscoveryTopics extends Component {
     );
   }
 
+  get expandAllGloballyPinned() {
+    return !this.expandAllPinned;
+  }
+
+  get expandAllPinned() {
+    return this.args.tag || this.args.category;
+  }
+
   @action
   dismissRead(dismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
