@@ -57,11 +57,16 @@ class AbstractCategoryRoute extends DiscourseRoute {
       params
     );
 
+    const noSubcategories = !!this.routeConfig?.no_subcategories;
+    const filterType = this.filter(category).split("/")[0];
+
     return {
       category,
       modelParams: params,
       subcategoryList: await subcategoryListPromise,
       list: await topicListPromise,
+      noSubcategories,
+      filterType,
     };
   }
 
@@ -69,18 +74,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
     return this.routeConfig?.filter === "default"
       ? category.get("default_view") || "latest"
       : this.routeConfig?.filter;
-  }
-
-  _navigationArgs(category) {
-    const noSubcategories =
-        this.routeConfig && !!this.routeConfig.no_subcategories,
-      filterType = this.filter(category).split("/")[0];
-
-    return {
-      category,
-      filterType,
-      noSubcategories,
-    };
   }
 
   async _createSubcategoryList(category) {
@@ -136,11 +129,8 @@ class AbstractCategoryRoute extends DiscourseRoute {
 
     const controllerOpts = {
       ...routeControlledPropDefaults,
-      navigationArgs: this._navigationArgs(category),
       subcategoryList: model.subcategoryList,
       model,
-      category,
-      noSubcategories: !!this.routeConfig?.no_subcategories,
       expandAllPinned: true,
     };
 

@@ -110,18 +110,19 @@ export default class DiscoveryListController extends Controller {
   }
 
   get createTopicTargetCategory() {
-    if (this.category?.canCreateTopic) {
-      return this.category;
+    const { category } = this.model;
+    if (category?.canCreateTopic) {
+      return category;
     }
 
     if (this.siteSettings.default_subcategory_on_read_only_category) {
-      return this.category?.subcategoryWithCreateTopicPermission;
+      return category?.subcategoryWithCreateTopicPermission;
     }
   }
 
   get createTopicDisabled() {
     // We are in a category route, but user does not have permission for the category
-    return this.category && !this.createTopicTargetCategory;
+    return this.model.category && !this.createTopicTargetCategory;
   }
 
   get subcategoriesComponent() {
@@ -141,7 +142,7 @@ export default class DiscoveryListController extends Controller {
   createTopic() {
     this.composer.openNewTopic({
       category: this.createTopicTargetCategory,
-      tags: [this.tag?.id, ...(this.additionalTags ?? [])]
+      tags: [this.model.tag?.id, ...(this.additionalTags ?? [])]
         .filter(Boolean)
         .reject((t) => ["none", "all"].includes(t))
         .join(","),

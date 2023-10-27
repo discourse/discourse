@@ -139,6 +139,7 @@ export default class TagShowRoute extends DiscourseRoute {
       canCreateTopic: list.can_create_topic,
       canCreateTopicOnCategory: category?.permission === PermissionType.FULL,
       canCreateTopicOnTag: !tag.staff || this.currentUser?.staff,
+      noSubcategories: this.noSubcategories,
     };
   }
 
@@ -146,17 +147,10 @@ export default class TagShowRoute extends DiscourseRoute {
     controller.setProperties({
       ...routeControlledPropDefaults,
       model,
-      tag: model.tag,
-      category: model.category,
       additionalTags: model.additionalTags,
       filterType: model.filterType,
       noSubcategories: this.noSubcategories,
       canCreateTopicOnTag: model.canCreateTopicOnTag,
-      navigationArgs: {
-        filterType: model.filterType,
-        category: model.category,
-        tag: model.tag,
-      },
       tagNotification: model.tagNotification,
     });
 

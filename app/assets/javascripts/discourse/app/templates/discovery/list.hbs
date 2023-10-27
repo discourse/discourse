@@ -1,14 +1,14 @@
 <Discovery::Layout
-  @category={{this.category}}
+  @category={{this.model.category}}
   @createTopicDisabled={{this.createTopicDisabled}}
 >
   <:navigation>
     <Discovery::Navigation
-      @category={{this.navigationArgs.category}}
-      @tag={{this.navigationArgs.tag}}
+      @category={{this.model.category}}
+      @tag={{this.model.tag}}
       @additionalTags={{this.additionalTags}}
-      @filterType={{this.navigationArgs.filterType}}
-      @noSubcategories={{this.navigationArgs.noSubcategories}}
+      @filterType={{this.model.filterType}}
+      @noSubcategories={{this.model.noSubcategories}}
       @canBulkSelect={{this.canBulkSelect}}
       @bulkSelectHelper={{this.bulkSelectHelper}}
       @createTopic={{this.createTopic}}
@@ -26,7 +26,7 @@
       />
     {{/if}}
     {{#if this.showTagInfo}}
-      <TagInfo @tag={{this.tag}} @list={{this.model.list}} />
+      <TagInfo @tag={{this.model.tag}} @list={{this.model.list}} />
     {{/if}}
   </:header>
 
@@ -42,8 +42,8 @@
       @bulkSelectHelper={{this.bulkSelectHelper}}
       @showDismissRead={{this.showDismissRead}}
       @showResetNew={{this.showResetNew}}
-      @category={{this.category}}
-      @tag={{this.tag}}
+      @category={{this.model.category}}
+      @tag={{this.model.tag}}
       @changeSort={{this.changeSort}}
       @changeNewListSubset={{this.changeNewListSubset}}
     />
