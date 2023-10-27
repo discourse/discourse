@@ -5,7 +5,7 @@ class CreateThemeSettingsMigrations < ActiveRecord::Migration[7.0]
     create_table :theme_settings_migrations do |t|
       t.integer :theme_id, null: false
       t.integer :theme_field_id, null: false
-      t.bigint :version, null: false
+      t.integer :version, null: false
       t.string :name, null: false, limit: 150
       t.json :diff, null: false
       t.datetime :created_at, null: false
