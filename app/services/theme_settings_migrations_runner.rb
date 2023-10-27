@@ -36,7 +36,7 @@ class ThemeSettingsMigrationsRunner
       )
   end
 
-  def initialize(theme, limit: 100, timeout: 100, memory: 100.megabytes)
+  def initialize(theme, limit: 100, timeout: 100, memory: 2.megabytes)
     @theme = theme
     @limit = limit
     @timeout = timeout
