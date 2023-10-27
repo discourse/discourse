@@ -26,6 +26,16 @@ class ThemeSettingsMigrationsRunner
 
   private_constant :Migration, :MIGRATION_ENTRY_POINT_JS
 
+  def self.loader_js_lib_content
+    @loader_js_lib_content ||=
+      File.read(
+        File.join(
+          Rails.root,
+          "app/assets/javascripts/node_modules/loader.js/dist/loader/loader.js",
+        ),
+      )
+  end
+
   def initialize(theme, limit: 100, timeout: 100, memory: 100.megabytes)
     @theme = theme
     @limit = limit
@@ -159,13 +169,14 @@ class ThemeSettingsMigrationsRunner
   def execute(migration, settings)
     context = MiniRacer::Context.new(timeout: @timeout, max_memory: @memory)
 
-    context.load(
-      File.join(Rails.root, "app/assets/javascripts/node_modules/loader.js/dist/loader/loader.js"),
+    context.eval(self.class.loader_js_lib_content, filename: "loader.js")
+
+    context.eval(
+      DiscourseJsProcessor.transpile(migration.code, "", "discourse/theme/migration"),
+      filename: "theme-#{@theme.id}-migration.js",
     )
 
-    context.eval(DiscourseJsProcessor.transpile(migration.code, "", "discourse/theme/migration"))
-
-    context.eval(MIGRATION_ENTRY_POINT_JS)
+    context.eval(MIGRATION_ENTRY_POINT_JS, filename: "migration-entrypoint.js")
     context.call("main", settings)
   ensure
     context&.dispose
