@@ -4,6 +4,13 @@ class ThemeSettingsMigration < ActiveRecord::Base
   belongs_to :theme
   belongs_to :theme_field
 
+  validates :theme_id, presence: true
+  validates :theme_field_id, presence: true
+
+  validates :version, presence: true
+  validates :name, presence: true
+  validates :diff, presence: true
+
   def calculate_diff(settings_before, settings_after)
     diff = { additions: [], deletions: [] }
 
