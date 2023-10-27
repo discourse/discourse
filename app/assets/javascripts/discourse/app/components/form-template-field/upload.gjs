@@ -12,7 +12,6 @@ export default class FormTemplateFieldUpload extends Component.extend(
   UppyUploadMixin
 ) {
   @tracked uploadValue;
-  @tracked uploadComplete = false;
   @tracked uploadedFiles = [];
   @tracked disabled = this.uploadingOrProcessing;
   @tracked fileUploadElementId = `${dasherize(this.id)}-uploader`;
@@ -50,7 +49,7 @@ export default class FormTemplateFieldUpload extends Component.extend(
 
   uploadDone(upload) {
     // If re-uploading, clear the existing file if multiple aren't allowed
-    if (!this.attributes.allow_multiple && this.uploadComplete) {
+    if (!this.attributes.allow_multiple && this.uploadValue) {
       this.uploadedFiles = [];
       this.uploadValue = "";
     }
