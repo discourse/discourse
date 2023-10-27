@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
 class ThemeSettingsMigrationsRunner
-  Migration =
-    Struct.new(:version, :name, :code, :theme_field_id) do
-      def original_name
-        "#{version.to_s.rjust(4, "0")}-#{name}"
-      end
-    end
+  Migration = Struct.new(:version, :name, :original_name, :code, :theme_field_id)
 
   MIGRATION_ENTRY_POINT_JS = <<~JS
     const migrate = require("discourse/theme/migration")?.default;
@@ -140,7 +135,15 @@ class ThemeSettingsMigrationsRunner
 
       version = match_data[:version].to_i
       name = match_data[:name]
-      Migration.new(version: version, name: name, code: field.value, theme_field_id: field.id)
+      original_name = field.name
+
+      Migration.new(
+        version: version,
+        name: name,
+        original_name: original_name,
+        code: field.value,
+        theme_field_id: field.id,
+      )
     end
   end
 
