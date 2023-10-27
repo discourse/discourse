@@ -139,7 +139,10 @@ export default class TagShowRoute extends DiscourseRoute {
     };
   }
 
-  afterModel(model) {
+  setupController(controller, model) {
+    super.setupController(...arguments);
+    controller.bulkSelectHelper.clear();
+
     if (model.category || model.additionalTags) {
       const tagIntersectionSearchContext = {
         type: "tagIntersection",
@@ -154,12 +157,6 @@ export default class TagShowRoute extends DiscourseRoute {
     } else {
       this.searchService.searchContext = model.tag.searchContext;
     }
-    return super.afterModel(...arguments);
-  }
-
-  setupController(controller) {
-    super.setupController(...arguments);
-    controller.bulkSelectHelper.clear();
   }
 
   titleToken() {

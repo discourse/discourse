@@ -120,14 +120,10 @@ class AbstractCategoryRoute extends DiscourseRoute {
     });
   }
 
-  afterModel(model) {
-    this.searchService.searchContext = model.category.get("searchContext");
-    return super.afterModel(model);
-  }
-
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.bulkSelectHelper.clear();
+    this.searchService.searchContext = model.category.get("searchContext");
 
     const p = model.category.params;
     if (p?.order !== undefined) {
