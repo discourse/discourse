@@ -124,6 +124,14 @@ export async function getPasskeyCredential(
     return errorCallback(I18n.t("login.security_key_support_missing_error"));
   }
 
+  if (mediation === "conditional") {
+    // eslint-disable-next-line no-undef
+    const isCMA = await PublicKeyCredential.isConditionalMediationAvailable();
+    if (!isCMA) {
+      return;
+    }
+  }
+
   try {
     const credential = await navigator.credentials.get({
       publicKey: {

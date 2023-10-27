@@ -36,15 +36,9 @@ export default class LocalLoginBody extends Component {
 
   @action
   passkeyConditionalLogin() {
-    if (
-      // eslint-disable-next-line no-undef
-      !PublicKeyCredential.isConditionalMediationAvailable ||
-      !this.args.canUsePasskeys
-    ) {
-      return;
+    if (this.args.canUsePasskeys) {
+      this.args.passkeyLogin("conditional");
     }
-
-    this.args.passkeyLogin("conditional");
   }
 
   @action
