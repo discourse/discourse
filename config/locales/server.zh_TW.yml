@@ -394,7 +394,8 @@ zh_TW:
             name:
               same_as_password: "與您的密碼相同"
             ip_address:
-              signup_not_allowed: "不能使用這個帳戶進行登入"
+              blocked: "不允許從你的 IP 地址註冊新使用者。"
+              max_new_accounts_per_registration_ip: "不允許從你的 IP 地址註冊新使用者（達到上限）。聯繫一個管理人員。"
         user_email:
           attributes:
             user_id:
@@ -1711,9 +1712,6 @@ zh_TW:
       not_allowed: "本站不允許使用該郵箱服務商提供的電子郵箱，請使用其它郵箱位址。"
       blocked: "不被允許。"
       revoked: "在%{date}之前不發送郵件至“%{email}”"
-    ip_address:
-      blocked: "不允許從你的 IP 地址註冊新使用者。"
-      max_new_accounts_per_registration_ip: "不允許從你的 IP 地址註冊新使用者（達到上限）。聯繫一個管理人員。"
     website:
       domain_not_allowed: "網站無效。允許的域名有：%{domains}"
     auto_rejected: "由於年齡而被系統自動拒絕，請參閱「auto_handle_queued_age」網站設定"

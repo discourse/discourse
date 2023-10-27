@@ -618,7 +618,8 @@ ru:
             name:
               same_as_password: "совпадает с паролем."
             ip_address:
-              signup_not_allowed: "Регистрация с данным аккаунтом запрещена."
+              blocked: "Регистрация новых аккаунтов с вашего IP-адреса запрещена."
+              max_new_accounts_per_registration_ip: "Регистрация новых аккаунтов с вашего IP-адреса запрещена (достигнут лимит). Обратитесь к персоналу."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2555,9 +2556,6 @@ ru:
       blocked: "не разрешён."
       revoked: "Отправка писем на адрес «%{email}» не будет осуществляться до %{date}."
       does_not_exist: "Н/Д"
-    ip_address:
-      blocked: "Регистрация новых аккаунтов с вашего IP-адреса запрещена."
-      max_new_accounts_per_registration_ip: "Регистрация новых аккаунтов с вашего IP-адреса запрещена (достигнут лимит). Обратитесь к персоналу."
     website:
       domain_not_allowed: "Адрес сайта недействителен. Допустимые домены: %{domains}"
     auto_rejected: "Отклонён в результате автоматической модерации. См. настройку `auto_handle_queued_age`."

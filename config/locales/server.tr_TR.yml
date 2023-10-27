@@ -563,7 +563,8 @@ tr_TR:
             name:
               same_as_password: "şifrenizle aynı."
             ip_address:
-              signup_not_allowed: "Bu hesaptan kayıt yapılmasına izin verilmiyor."
+              blocked: "IP adresinizden yeni kayıtlara izin verilmiyor."
+              max_new_accounts_per_registration_ip: "IP adresinizden yeni kayıtlara izin verilmiyor (maksimum limite ulaşıldı). Bir personelle iletişime geçin."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2436,9 +2437,6 @@ tr_TR:
       blocked: "için izin verilmiyor."
       revoked: "%{date} tarihine kadar \"%{email}\" adresine e-posta göndermeyecek."
       does_not_exist: "Geçersiz"
-    ip_address:
-      blocked: "IP adresinizden yeni kayıtlara izin verilmiyor."
-      max_new_accounts_per_registration_ip: "IP adresinizden yeni kayıtlara izin verilmiyor (maksimum limite ulaşıldı). Bir personelle iletişime geçin."
     website:
       domain_not_allowed: "Web sitesi geçersiz. İzin verilen alan adları şunlardır: %{domains}"
     auto_rejected: "Yaş nedeniyle otomatik olarak reddedildi. auto_handle_queued_age site ayarına bakın."

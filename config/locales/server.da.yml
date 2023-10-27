@@ -513,7 +513,8 @@ da:
             name:
               same_as_password: "er det samme som dit kodeord."
             ip_address:
-              signup_not_allowed: "Tilmelding er ikke tilladt fra denne konto."
+              blocked: "Nye registreringer er ikke tilladt fra din IP adresse."
+              max_new_accounts_per_registration_ip: "Nye kontoer kan ikke oprettes fra din IP-adresse (max antal er nået). Kontakt et medlem af hjælperteamet."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1806,9 +1807,6 @@ da:
       blocked: "er ikke tilladt."
       revoked: "Vil ikke sende e-mails til '%{email}' indtil %{date}."
       does_not_exist: "I/T"
-    ip_address:
-      blocked: "Nye registreringer er ikke tilladt fra din IP adresse."
-      max_new_accounts_per_registration_ip: "Nye kontoer kan ikke oprettes fra din IP-adresse (max antal er nået). Kontakt et medlem af hjælperteamet."
     website:
       domain_not_allowed: "Webstedet er ugyldigt. Tilladte domæner er: %{domains}"
     auto_rejected: "Afvist automatisk på grund af alder. Se auto_handle_queued_age webstedsindstilling."

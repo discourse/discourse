@@ -628,7 +628,8 @@ en:
             name:
               same_as_password: "is the same as your password."
             ip_address:
-              signup_not_allowed: "Signup is not allowed from this account."
+              blocked: "New registrations are not allowed from your IP address."
+              max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2749,9 +2750,6 @@ en:
       blocked: "is not allowed."
       revoked: "Won't be sending emails to '%{email}' until %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "New registrations are not allowed from your IP address."
-      max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
     website:
       domain_not_allowed: "Website is invalid. Allowed domains are: %{domains}"
     auto_rejected: "Rejected automatically due to age. See auto_handle_queued_age site setting."
