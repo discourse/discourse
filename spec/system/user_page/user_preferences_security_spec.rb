@@ -15,7 +15,7 @@ describe "User preferences for Security", type: :system do
     DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
   end
 
-  describe "Security keys" do
+  shared_examples "security keys" do
     it "adds a 2FA security key and logs in with it" do
       options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
       authenticator = page.driver.browser.add_virtual_authenticator(options)
@@ -48,7 +48,7 @@ describe "User preferences for Security", type: :system do
     end
   end
 
-  describe "Passkeys" do
+  shared_examples "passkeys" do
     before { SiteSetting.experimental_passkeys = true }
 
     it "adds a passkey and logs in with it" do
@@ -88,13 +88,24 @@ describe "User preferences for Security", type: :system do
       user_menu.sign_out
 
       # login with the key we just created
+      # this triggers the conditional UI for passkeys
+      # which uses the virtual authenticator
       find(".d-header .login-button").click
-      find(".passkey-login-button").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
 
       # clear authenticator (otherwise it will interfere with other tests)
       authenticator.remove!
     end
+  end
+
+  context "when desktop" do
+    include_examples "security keys"
+    include_examples "passkeys"
+  end
+
+  context "when mobile", mobile: true do
+    include_examples "security keys"
+    include_examples "passkeys"
   end
 end

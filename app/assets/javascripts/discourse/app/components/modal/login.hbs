@@ -15,7 +15,10 @@
         @createAccount={{this.createAccount}}
       />
       {{#if this.showLoginButtons}}
-        <LoginButtons @externalLogin={{this.externalLogin}} />
+        <LoginButtons
+          @externalLogin={{this.externalLogin}}
+          @passkeyLogin={{this.passkeyLogin}}
+        />
       {{/if}}
     {{/if}}
 
