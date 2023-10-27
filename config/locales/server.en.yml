@@ -628,7 +628,8 @@ en:
             name:
               same_as_password: "is the same as your password."
             ip_address:
-              signup_not_allowed: "Signup is not allowed from this account."
+              blocked: "New registrations are not allowed from your IP address."
+              max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2177,6 +2178,7 @@ en:
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     allow_anonymous_likes: "Allow anonymous users to like posts"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
+    anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
@@ -2488,7 +2490,7 @@ en:
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
-      personal_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send PMs, choose the staff group."
+      at_least_one_group_required: "You must specify at least one group for this setting."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
@@ -2748,9 +2750,6 @@ en:
       blocked: "is not allowed."
       revoked: "Won't be sending emails to '%{email}' until %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "New registrations are not allowed from your IP address."
-      max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
     website:
       domain_not_allowed: "Website is invalid. Allowed domains are: %{domains}"
     auto_rejected: "Rejected automatically due to age. See auto_handle_queued_age site setting."
@@ -2999,6 +2998,29 @@ en:
         Feedback: %{feedback}
 
         You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Thanks,
+        %{site_name} Moderators
+
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Feedback on your topic"
+      subject_template: "Feedback on new topic titled \"%{topic_title}\""
+      text_body_template: |
+        Hi %{username},
+
+        We've reviewed your new topic titled "%{topic_title}" and have some feedback for you.
+
+        Reason: %{reason}
+
+        Feedback: %{feedback}
+
+        You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
 
         --------
 

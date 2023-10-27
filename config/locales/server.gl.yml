@@ -504,7 +504,8 @@ gl:
             name:
               same_as_password: "é igual ca o seu contrasinal."
             ip_address:
-              signup_not_allowed: "Non esta permitido rexistrarse desde esta conta."
+              blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
+              max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o seu enderezo IP (alcanzouse o límite). Contacte cun membro do equipo."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2096,9 +2097,6 @@ gl:
       blocked: "non está permitido."
       revoked: "Non se enviarán máis correos electrónicos a '%{email}' ata %{date}."
       does_not_exist: "N/D"
-    ip_address:
-      blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
-      max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o seu enderezo IP (alcanzouse o límite). Contacte cun membro do equipo."
     website:
       domain_not_allowed: "O sitio web non é válido. Os dominios permitidos son: %{domains}"
     auto_rejected: "Rexeitouse automaticamente debido á idade. Véxase o axuste do sitio auto_handle_queued_age."

@@ -429,7 +429,8 @@ pt:
               same_as_current: "é a mesma que a sua palavra-passe atual."
               unique_characters: "tem demasiados carateres repetidos. Por favor, utilize uma palavra-passe mais segura."
             ip_address:
-              signup_not_allowed: "A inscrição não é permitida através desta conta."
+              blocked: "Novos registos não são permitidos a partir do seu endereço IP."
+              max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
         color_scheme_color:
           attributes:
             hex:
@@ -1404,9 +1405,6 @@ pt:
       blocked: "não é permitido."
       revoked: "Emails não serão enviados a '%{email}' até %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Novos registos não são permitidos a partir do seu endereço IP."
-      max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
     destroy_reasons:
       reviewable_reject_auto: "Gerir automaticamente itens de revisão pendentes"
       reviewable_reject: "Usuário em revisão rejeitado"

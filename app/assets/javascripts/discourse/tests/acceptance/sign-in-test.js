@@ -149,41 +149,6 @@ acceptance("Signing In", function () {
     assert.notOk(exists("#login-button:visible"), "hides the login button");
   });
 
-  test("create account", async function (assert) {
-    await visit("/");
-    await click("header .sign-up-button");
-
-    assert.ok(exists(".create-account"), "it shows the create account modal");
-
-    await fillIn("#new-account-name", "Dr. Good Tuna");
-    await fillIn("#new-account-password", "cool password bro");
-
-    // without this double fill, field will sometimes being empty
-    // got consistent repro by having browser search bar focused when starting test
-    await fillIn("#new-account-email", "good.tuna@test.com");
-    await fillIn("#new-account-email", "good.tuna@test.com");
-
-    // Check username
-    await fillIn("#new-account-username", "taken");
-    assert.ok(
-      exists("#username-validation.bad"),
-      "the username validation is bad"
-    );
-    await click(".modal-footer .btn-primary");
-
-    await fillIn("#new-account-username", "good-tuna");
-    assert.ok(
-      exists("#username-validation.good"),
-      "the username validation is good"
-    );
-
-    await click(".modal-footer .btn-primary");
-    assert.ok(
-      exists(".modal-footer .btn-primary:disabled"),
-      "create account is disabled"
-    );
-  });
-
   test("second factor backup - valid token", async function (assert) {
     await visit("/");
     await click("header .login-button");

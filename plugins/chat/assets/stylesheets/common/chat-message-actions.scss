@@ -17,7 +17,6 @@
 .chat-message-actions {
   background-color: var(--secondary);
   display: flex;
-  box-shadow: 0 0.75px 0px rgba(0, 0, 0, 0.15);
 
   .emoji-picker-anchor {
     position: absolute;
@@ -54,11 +53,6 @@
       .d-icon {
         color: var(--primary);
       }
-    }
-
-    &:first-child {
-      border-bottom-left-radius: 0.25em;
-      border-top-left-radius: 0.25em;
     }
 
     &:first-child:not(:hover) {

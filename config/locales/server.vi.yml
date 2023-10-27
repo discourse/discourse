@@ -453,7 +453,8 @@ vi:
             name:
               same_as_password: "là giống như mật khẩu hiện tại của bạn."
             ip_address:
-              signup_not_allowed: "Đăng ký không cho phép tài khoản này"
+              blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
+              max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1495,9 +1496,6 @@ vi:
       blocked: "không được chấp nhận."
       revoked: "Sẽ không gửi email đến '%{email}' cho đến %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
-      max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
     website:
       domain_not_allowed: "Trang web không hợp lệ. Các miền được phép là: %{domains}"
     auto_rejected: "Bị từ chối tự động do tuổi tác. Xem cài đặt trang auto_handle_queued_age."

@@ -133,6 +133,18 @@ end
 task "javascript:update_constants" => :environment do
   task_name = "update_constants"
 
+  auto_groups =
+    Group::AUTO_GROUPS.inject({}) do |result, (group_name, group_id)|
+      result.merge(
+        group_name => {
+          id: group_id,
+          automatic: true,
+          name: group_name,
+          display_name: group_name,
+        },
+      )
+    end
+
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
 
@@ -147,6 +159,8 @@ task "javascript:update_constants" => :environment do
     export const SIDEBAR_SECTION = {
       max_title_length: #{SidebarSection::MAX_TITLE_LENGTH},
     }
+
+    export const AUTO_GROUPS = #{auto_groups.to_json};
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")

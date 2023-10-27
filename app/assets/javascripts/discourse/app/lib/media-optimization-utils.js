@@ -40,10 +40,17 @@ function drawableToImageData(drawable) {
     sw = width,
     sh = height;
 
+  const offscreenCanvasSupported = typeof OffscreenCanvas !== "undefined";
+
   // Make canvas same size as image
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+  let canvas;
+  if (offscreenCanvasSupported) {
+    canvas = new OffscreenCanvas(width, height);
+  } else {
+    canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+  }
 
   // Draw image onto canvas
   const ctx = canvas.getContext("2d");
@@ -52,7 +59,11 @@ function drawableToImageData(drawable) {
   }
   ctx.drawImage(drawable, sx, sy, sw, sh, 0, 0, width, height);
   const imageData = ctx.getImageData(0, 0, width, height);
-  canvas.remove();
+
+  if (!offscreenCanvasSupported) {
+    canvas.remove();
+  }
+
   return imageData;
 }
 

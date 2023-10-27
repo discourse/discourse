@@ -300,7 +300,8 @@ ro:
               same_as_current: "este identică cu parola curentă."
               unique_characters: "are prea multe caractere repetate. Te rugăm să folosești o parolă mai sigură."
             ip_address:
-              signup_not_allowed: "Înscrierea de pe acest cont nu este permisă."
+              blocked: "Nu sunt permise noi înregistrări de la adresa ta de IP."
+              max_new_accounts_per_registration_ip: "Nu sunt permise noi înregistrări de la adresa ta de IP (limita maximă a fost atinsă). Contactează un membru al echipei."
         color_scheme_color:
           attributes:
             hex:
@@ -1250,9 +1251,6 @@ ro:
       not_allowed: "nu este permis din partea acelui furnizor de servicii email. Te rugăm folosește altă adresă email."
       blocked: "nu este permis."
       revoked: "No se vor trimite emailuri către '%{email}' până la data de %{date}."
-    ip_address:
-      blocked: "Nu sunt permise noi înregistrări de la adresa ta de IP."
-      max_new_accounts_per_registration_ip: "Nu sunt permise noi înregistrări de la adresa ta de IP (limita maximă a fost atinsă). Contactează un membru al echipei."
   unsubscribe_mailer:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
   invite_password_instructions:

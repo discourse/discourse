@@ -2203,6 +2203,7 @@ en:
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
       security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
       security_key_invalid_response_error: "The security key authentication process failed due to an invalid response."
+      passkey_security_error: "There was a security error: %{message}"
       email_placeholder: "Email / Username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
@@ -4603,6 +4604,9 @@ en:
     form_template_chooser:
       select_template: "Select form templates"
     form_templates:
+      upload_field:
+        upload: "Upload"
+        uploading: "Uploading"
       errors:
         valueMissing:
           default: "Please fill out this field."

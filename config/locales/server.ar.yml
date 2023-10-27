@@ -674,7 +674,8 @@ ar:
             name:
               same_as_password: "مطابقة لكلمة مرورك."
             ip_address:
-              signup_not_allowed: "الاشتراك غير مسموح به من هذا الحساب."
+              blocked: "عمليات التسجيل الجديدة غير مسموح بها من عنوان IP الخاص بك."
+              max_new_accounts_per_registration_ip: "عمليات التسجيل الجديدة غير مسموح بها من عنوان IP الخاص بك (تم الوصول إلى الحد الأقصى). تواصل مع أحد أعضاء فريق العمل."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2749,9 +2750,6 @@ ar:
       blocked: "غير مسموح به."
       revoked: "لن يتم إرسال الرسائل الإلكترونية إلى \"%{email}\" حتى %{date}."
       does_not_exist: "غير موجود"
-    ip_address:
-      blocked: "عمليات التسجيل الجديدة غير مسموح بها من عنوان IP الخاص بك."
-      max_new_accounts_per_registration_ip: "عمليات التسجيل الجديدة غير مسموح بها من عنوان IP الخاص بك (تم الوصول إلى الحد الأقصى). تواصل مع أحد أعضاء فريق العمل."
     website:
       domain_not_allowed: "الموقع الإلكتروني غير صالح. النطاقات المسموح بها هي: %{domains}"
     auto_rejected: "تم الرفض تلقائيًا بسبب العمر. راجع إعداد الموقع `auto_handle_queued_age`."

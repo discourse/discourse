@@ -26,6 +26,7 @@ module Chat
       step :associate_thread_to_message
       step :fetch_membership
       step :publish_new_thread
+      step :trigger_chat_thread_created_event
     end
 
     # @!visibility private
@@ -83,6 +84,10 @@ module Chat
 
     def publish_new_thread(channel:, original_message:, **)
       ::Chat::Publisher.publish_thread_created!(channel, original_message, context.thread.id)
+    end
+
+    def trigger_chat_thread_created_event
+      ::DiscourseEvent.trigger(:chat_thread_created, context.thread)
     end
   end
 end

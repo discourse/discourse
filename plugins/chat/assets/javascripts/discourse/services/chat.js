@@ -67,8 +67,9 @@ export default class Chat extends Service {
 
     return (
       this.currentUser.staff ||
-      this.currentUser.isInAnyGroups(
-        this.siteSettings.groupSettingArray("direct_message_enabled_groups")
+      this.siteSettings.userInAnyGroups(
+        "direct_message_enabled_groups",
+        this.currentUser
       )
     );
   }

@@ -625,7 +625,8 @@ uk:
             name:
               same_as_password: "збігається з вашим паролем."
             ip_address:
-              signup_not_allowed: "Реєстрація з цього облікового запису не дозволена."
+              blocked: "Нові реєстрації з вашої IP-адреси заборонені."
+              max_new_accounts_per_registration_ip: "Нові реєстрації з вашої IP-адреси заборонено (досягнуто максимального ліміту). Зверніться до команди обслуговування."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2621,9 +2622,6 @@ uk:
       blocked: "не допускається."
       revoked: "Не буде надсилати електронні листи на \"%{email}\" до %{date}."
       does_not_exist: "Н/Д"
-    ip_address:
-      blocked: "Нові реєстрації з вашої IP-адреси заборонені."
-      max_new_accounts_per_registration_ip: "Нові реєстрації з вашої IP-адреси заборонено (досягнуто максимального ліміту). Зверніться до команди обслуговування."
     website:
       domain_not_allowed: "Вебсайт недійсний. Дозволені домени: %{domains}"
     auto_rejected: "Відхилено автоматично через вік. Перегляньте налаштування сайту auto_handle_queued_age."

@@ -146,15 +146,31 @@ export async function getPasskeyCredential(
       userHandle: bufferToBase64(credential.response.userHandle),
     };
   } catch (error) {
-    if (error.name === "NotAllowedError") {
-      return errorCallback(I18n.t("login.security_key_not_allowed_error"));
-    } else if (error.name === "AbortError") {
+    if (error.name === "AbortError") {
       // no need to show an error when the cancelling a pending ceremony
       // this happens when switching from the conditional method (username input autofill)
       // to the optional method (login button) or vice versa
       return null;
+    }
+
+    if (mediation === "conditional") {
+      // The conditional method gets triggered in the background
+      // it's not helpful to show errors for it in the UI
+      // eslint-disable-next-line no-console
+      console.error(error);
+      return null;
+    }
+
+    if (error.name === "NotAllowedError") {
+      return errorCallback(I18n.t("login.security_key_not_allowed_error"));
+    } else if (error.name === "SecurityError") {
+      return errorCallback(
+        I18n.t("login.passkey_security_error", {
+          message: error.message,
+        })
+      );
     } else {
-      return errorCallback(error);
+      return errorCallback(error.message);
     }
   }
 }
