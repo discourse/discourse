@@ -89,6 +89,7 @@ export default class AdminSiteSettingsController extends Controller {
             setting.includes(filter) ||
             setting.replace(/_/g, " ").includes(filter) ||
             item.get("description").toLowerCase().includes(filter) ||
+            (item.get("keywords") || "").toLowerCase().includes(filter) ||
             (item.get("value") || "").toString().toLowerCase().includes(filter);
           if (!filterResult && fuzzyRegex && fuzzyRegex.test(setting)) {
             // Tightens up fuzzy search results a bit.
