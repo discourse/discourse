@@ -1,9 +1,12 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { readOnly } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   hide: false,
+
+  banner: readOnly("site.banner"),
 
   @discourseComputed("banner.html")
   content(bannerHtml) {
