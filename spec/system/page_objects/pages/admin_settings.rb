@@ -4,12 +4,12 @@ module PageObjects
   module Pages
     class AdminSettings < PageObjects::Pages::Base
       def visit_filtered_plugin_setting(filter)
-        visit("/admin/site_settings/category/plugins?filter=#{filter}")
+        page.visit("/admin/site_settings/category/plugins?filter=#{filter}")
         self
       end
 
       def visit
-        page.visit("/admin/site_settings/")
+        page.visit("/admin/site_settings")
         self
       end
 
