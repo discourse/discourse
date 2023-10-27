@@ -26,18 +26,18 @@
       />
     {{/if}}
     {{#if this.showTagInfo}}
-      <TagInfo @tag={{this.tag}} @list={{this.model}} />
+      <TagInfo @tag={{this.tag}} @list={{this.model.list}} />
     {{/if}}
   </:header>
 
   <:list>
-    {{this.setTrackingTopicList this.model}}
+    {{this.setTrackingTopicList this.model.list}}
     <Discovery::Topics
-      @period={{this.model.for_period}}
+      @period={{this.model.list.for_period}}
       @changePeriod={{this.changePeriod}}
       @expandAllPinned={{this.expandAllPinned}}
       @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
-      @model={{this.model}}
+      @model={{this.model.list}}
       @canBulkSelect={{this.canBulkSelect}}
       @bulkSelectHelper={{this.bulkSelectHelper}}
       @showDismissRead={{this.showDismissRead}}

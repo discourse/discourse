@@ -97,15 +97,15 @@ export default class DiscoveryListController extends Controller {
 
   get showDismissRead() {
     return (
-      filterTypeForMode(this.model?.filter) === "unread" &&
-      this.model.get("topics.length") > 0
+      filterTypeForMode(this.model.list?.filter) === "unread" &&
+      this.model.list.get("topics.length") > 0
     );
   }
 
   get showResetNew() {
     return (
-      filterTypeForMode(this.model?.filter) === "new" &&
-      this.model?.get("topics.length") > 0
+      filterTypeForMode(this.model.list?.filter) === "new" &&
+      this.model.list?.get("topics.length") > 0
     );
   }
 
@@ -163,18 +163,18 @@ export default class DiscoveryListController extends Controller {
   changeSort(sortBy) {
     if (sortBy === this.order) {
       this.ascending = !this.ascending;
-      this.model.updateSortParams(sortBy, this.ascending);
+      this.model.list.updateSortParams(sortBy, this.ascending);
     } else {
       this.order = sortBy;
       this.ascending = false;
-      this.model.updateSortParams(sortBy, false);
+      this.model.list.updateSortParams(sortBy, false);
     }
   }
 
   @action
   changeNewListSubset(subset) {
     this.subset = subset;
-    this.model.updateNewListSubsetParam(subset);
+    this.model.list.updateNewListSubsetParam(subset);
   }
 
   @action

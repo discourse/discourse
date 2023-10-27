@@ -101,20 +101,24 @@ class AbstractTopicRoute extends DiscourseRoute {
   templateName = "discovery/list";
   controllerName = "discovery/list";
 
-  model(data, transition) {
+  async model(data, transition) {
     // attempt to stop early cause we need this to be called before .sync
     this.screenTrack.stop();
 
     const findOpts = filterQueryParams(data),
       findExtras = { cached: this.isPoppedState(transition) };
 
-    return findTopicList(
+    const topicListPromise = findTopicList(
       this.store,
       this.topicTrackingState,
       this.routeConfig.filter,
       findOpts,
       findExtras
     );
+
+    return {
+      list: await topicListPromise,
+    };
   }
 
   titleToken() {

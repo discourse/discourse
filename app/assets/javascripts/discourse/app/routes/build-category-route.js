@@ -138,7 +138,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
       ...routeControlledPropDefaults,
       navigationArgs: this._navigationArgs(category),
       subcategoryList: model.subcategoryList,
-      model: model.list,
+      model,
       category,
       noSubcategories: !!this.routeConfig?.no_subcategories,
       expandAllPinned: true,

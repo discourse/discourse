@@ -145,7 +145,7 @@ export default class TagShowRoute extends DiscourseRoute {
   setupController(controller, model) {
     controller.setProperties({
       ...routeControlledPropDefaults,
-      model: model.list,
+      model,
       tag: model.tag,
       category: model.category,
       additionalTags: model.additionalTags,
