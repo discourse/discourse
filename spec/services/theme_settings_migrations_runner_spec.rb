@@ -46,7 +46,7 @@ describe ThemeSettingsMigrationsRunner do
         }
       JS
 
-      another_migratio_field =
+      another_migration_field =
         Fabricate(:migration_theme_field, theme: theme, version: 2, value: <<~JS)
         export default function migrate(settings) {
           if (settings.get("integer_setting") !== 111) {
@@ -62,7 +62,7 @@ describe ThemeSettingsMigrationsRunner do
       expect(results.size).to eq(2)
 
       expect(results[0][:theme_field_id]).to eq(migration_field.id)
-      expect(results[1][:theme_field_id]).to eq(another_migratio_field.id)
+      expect(results[1][:theme_field_id]).to eq(another_migration_field.id)
 
       expect(results[0][:settings_before]).to eq({})
       expect(results[0][:settings_after]).to eq({ "integer_setting" => 111 })
