@@ -24,6 +24,7 @@ export default class TagShowRoute extends DiscourseRoute {
   @service currentUser;
   @service store;
   @service topicTrackingState;
+  @service("search") searchService;
 
   queryParams = queryParams;
   controllerName = "discovery/list";
