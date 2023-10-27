@@ -10,7 +10,7 @@ module EmberCli
   end
 
   def self.script_chunks
-    return @chunk_infos if defined?(@chunk_infos)
+    return @chunk_infos if @chunk_infos
 
     chunk_infos = {}
 
@@ -80,7 +80,7 @@ module EmberCli
   end
 
   def self.clear_cache!
-    remove_instance_variable :@chunk_infos
-    remove_instance_variable :@assets
+    @chunk_infos = nil
+    @assets = nil
   end
 end
