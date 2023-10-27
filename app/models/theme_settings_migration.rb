@@ -42,11 +42,10 @@ end
 #  id             :bigint           not null, primary key
 #  theme_id       :integer          not null
 #  theme_field_id :integer          not null
-#  version        :bigint           not null
+#  version        :integer          not null
 #  name           :string(150)      not null
 #  diff           :json             not null
 #  created_at     :datetime         not null
-#  updated_at     :datetime         not null
 #
 # Indexes
 #
