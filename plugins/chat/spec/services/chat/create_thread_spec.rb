@@ -51,6 +51,12 @@ RSpec.describe Chat::CreateThread do
         expect(message.data["type"]).to eq("thread_created")
       end
 
+      it "triggers a discourse event `chat_thread_created`" do
+        event = DiscourseEvent.track_events(:chat_thread_created) { result }.first
+
+        expect(event[:params][0]).to eq(result.thread)
+      end
+
       it "sets the title when existing" do
         params[:title] = "Restaurant for Saturday"
         result
