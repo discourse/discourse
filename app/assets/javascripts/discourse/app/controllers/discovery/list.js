@@ -106,11 +106,11 @@ export default class DiscoveryListController extends Controller {
   }
 
   get subcategoriesComponent() {
-    if (this.subcategoryList) {
+    if (this.model.subcategoryList) {
       const componentName = categoriesComponent({
         site: this.site,
         siteSettings: this.siteSettings,
-        parentCategory: this.subcategoryList.parentCategory,
+        parentCategory: this.model.subcategoryList.parentCategory,
       });
 
       // Todo, the `categoriesComponent` function should return a component class instead of a string
