@@ -15,7 +15,7 @@ export default Component.extend({
     return newDiv.innerHTML;
   },
 
-  @discourseComputed("user.dismissed_banner_key", "banner.key", "hide")
+  @discourseComputed("currentUser.dismissed_banner_key", "banner.key", "hide")
   visible(dismissedBannerKey, bannerKey, hide) {
     dismissedBannerKey =
       dismissedBannerKey || this.keyValueStore.get("dismissed_banner_key");
@@ -32,8 +32,8 @@ export default Component.extend({
 
   @action
   dismiss() {
-    if (this.user) {
-      this.user.dismissBanner(this.get("banner.key"));
+    if (this.currentUser) {
+      this.currentUser.dismissBanner(this.get("banner.key"));
     } else {
       this.set("hide", true);
       this.keyValueStore.set({
