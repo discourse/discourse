@@ -163,7 +163,7 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_revise_and_reject_post(performed_by, args)
     pm_translation_args = {
-      topic_title: self.topic.blank? ? self.payload["title"] : self.topic.title,
+      topic_title: self.topic&.title || self.payload["title"],
       topic_url: self.topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],
       feedback: args[:revise_feedback],
