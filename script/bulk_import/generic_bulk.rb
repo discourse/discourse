@@ -38,52 +38,56 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    import_uploads
-
-    # needs to happen before users, because keeping group names is more important than usernames
-    import_groups
-
-    import_users
-    import_user_emails
-    import_user_profiles
-    import_user_options
-    import_user_fields
-    import_user_custom_field_values
-    import_single_sign_on_records
-    import_muted_users
-    import_user_histories
-
-    import_user_avatars
-    update_uploaded_avatar_id
-
-    import_group_members
-
-    import_tag_groups
-    import_tags
-    import_tag_users
-
-    import_categories
-    import_category_tag_groups
-    import_category_permissions
+    # import_uploads
+    #
+    # # needs to happen before users, because keeping group names is more important than usernames
+    # import_groups
+    #
+    # import_users
+    # import_user_emails
+    # import_user_profiles
+    # import_user_options
+    # import_user_fields
+    # import_user_custom_field_values
+    # import_single_sign_on_records
+    # import_muted_users
+    # import_user_histories
+    #
+    # import_user_avatars
+    # update_uploaded_avatar_id
+    #
+    # import_group_members
+    #
+    # import_tag_groups
+    # import_tags
+    # import_tag_users
+    #
+    # import_categories
+    # import_category_tag_groups
+    # import_category_permissions
 
     import_topics
     import_posts
 
-    import_topic_tags
-    import_topic_allowed_users
+    import_polls
+    import_poll_options
+    import_poll_votes
 
-    import_likes
-    import_votes
-    import_answers
-    import_gamification_scores
-
-    import_badge_groupings
-    import_badges
-    import_user_badges
-
-    import_upload_references
-    import_user_stats
-    enable_category_settings
+    # import_topic_tags
+    # import_topic_allowed_users
+    #
+    # import_likes
+    # import_votes
+    # import_answers
+    # import_gamification_scores
+    #
+    # import_badge_groupings
+    # import_badges
+    # import_user_badges
+    #
+    # import_upload_references
+    # import_user_stats
+    # enable_category_settings
   end
 
   def execute_after
@@ -564,6 +568,36 @@ class BulkImport::Generic < BulkImport::Base
   def post_raw(row, group_names)
     raw = row["raw"]
 
+    if row["polls"].present?
+      poll_mapping =
+        JSON.parse(row["polls"]).map { |poll| [poll["poll_id"], poll["placeholder"]] }.to_h
+
+      polls = query(<<~SQL, { post_id: row["id"] })
+        SELECT p.*, ROW_NUMBER() OVER (PARTITION BY p.post_id, p.name ORDER BY p.id) AS seq,
+               JSON_GROUP_ARRAY(DISTINCT TRIM(po.text)) AS options
+          FROM polls p
+               JOIN poll_options po ON p.id = po.poll_id
+         WHERE p.post_id = :post_id
+         ORDER BY p.id, po.position, po.id
+      SQL
+
+      polls.each do |poll|
+        if (placeholder = poll_mapping[poll["id"]])
+          raw.gsub!(placeholder, poll_bbcode(poll))
+        end
+      end
+
+      polls.close
+
+      polls = JSON.parse(row["polls"])
+
+      polls.each do |poll|
+        poll_id = poll_id_from_original_id(poll["id"])
+        poll_name = poll["name"]
+        raw.gsub!(poll["placeholder"], "[poll name=#{poll_name} poll=#{poll_id}]")
+      end
+    end
+
     if row["mentions"].present?
       mentions = JSON.parse(row["mentions"])
 
@@ -579,18 +613,16 @@ class BulkImport::Generic < BulkImport::Base
 
     if row["upload_ids"].present? && @uploads_db
       upload_ids = JSON.parse(row["upload_ids"])
-
       placeholders = (["?"] * upload_ids.size).join(",")
-      sql = "SELECT id, markdown FROM uploads WHERE id IN (#{placeholders})"
-      @uploads_db
-        .prepare(sql)
-        .execute(upload_ids)
-        .tap do |result_set|
-          result_set.each do |upload|
-            raw.gsub!("[upload|#{upload["id"]}]", upload["markdown"] || "")
-          end
-          result_set.close
-        end
+
+      query(
+        "SELECT id, markdown FROM uploads WHERE id IN (#{placeholders})",
+        upload_ids,
+        db: @uploads_db,
+      ).tap do |result_set|
+        result_set.each { |upload| raw.gsub!("[upload|#{upload["id"]}]", upload["markdown"] || "") }
+        result_set.close
+      end
     end
 
     raw
@@ -598,6 +630,136 @@ class BulkImport::Generic < BulkImport::Base
 
   def process_raw(original_raw)
     original_raw
+  end
+
+  def poll_name(row)
+    name = +(row["name"] || "poll")
+    name << "-#{row["seq"]}" if row["seq"] > 1
+    name
+  end
+
+  def poll_bbcode(row)
+    name = poll_name(row)
+    type = Poll.types.key(row["type"])
+    regular_type = type == Poll.types[:regular]
+    number_type = type == Poll.types[:number]
+    result_visibility = Poll.results.key(row["results"])
+    min = row["min"]
+    max = row["max"]
+    step = row["step"]
+    visibility = Poll.visibilities.key(row["visibility"])
+    chart_type = Poll.chart_types.key(row["chart_type"])
+    groups = row["groups"]
+    auto_close = to_datetime(row["close_at"])
+    title = row["title"]
+    options = JSON.parse(row["options"])
+
+    text = +"[poll"
+    text << " name=#{name}" if name != "poll"
+    text << " type=#{type}"
+    text << " results=#{result_visibility}"
+    text << " min=#{min}" if min && !regular_type
+    text << " max=#{max}" if max && !regular_type
+    text << " step=#{step}" if step && !number_type
+    text << " public=true" if visibility == Poll.visibilities[:everyone]
+    text << " chartType=#{chart_type}" if chart_type.present? && !regular_type
+    text << " groups=#{groups.join(",")}" if groups.present?
+    text << " close=#{auto_close.utc.iso8601}" if auto_close
+    text << "]\n"
+    text << "# #{title}\n" if title.present?
+    text << options.map { |o| "* #{o}" }.join("\n") if options.present? && !number_type
+    text << "\n[/poll]\n"
+    text
+  end
+
+  def import_polls
+    puts "", "Importing polls..."
+
+    polls = query(<<~SQL)
+      SELECT *, ROW_NUMBER() OVER (PARTITION BY post_id, name ORDER BY id) AS seq
+        FROM polls
+       ORDER BY id
+    SQL
+
+    create_polls(polls) do |row|
+      next if poll_id_from_original_id(row["id"]).present?
+
+      post_id = post_id_from_imported_id(row["post_id"])
+      next unless post_id
+
+      {
+        original_id: row["id"],
+        post_id: post_id,
+        name: poll_name(row),
+        closed_at: to_datetime(row["closed_at"]),
+        type: row["type"],
+        status: row["status"],
+        results: row["results"],
+        visibility: row["visibility"],
+        min: row["min"],
+        max: row["max"],
+        step: row["step"],
+        anonymous_voters: row["anonymous_voters"],
+        created_at: to_datetime(row["created_at"]),
+        chart_type: row["chart_type"],
+        groups: row["groups"],
+        title: row["title"],
+      }
+    end
+
+    polls.close
+  end
+
+  def import_poll_options
+    puts "", "Importing poll options..."
+
+    poll_options = query(<<~SQL)
+      SELECT poll_id, TRIM(text) AS text, MIN(created_at) AS created_at, GROUP_CONCAT(id) AS option_ids
+        FROM poll_options
+       GROUP BY 1, 2
+       ORDER BY poll_id, position, id
+    SQL
+
+    create_poll_options(poll_options) do |row|
+      poll_id = poll_id_from_original_id(row["poll_id"])
+      next unless poll_id
+
+      {
+        original_ids: row["option_ids"].split(","),
+        poll_id: poll_id,
+        html: row["text"],
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    poll_options.close
+  end
+
+  def import_poll_votes
+    puts "", "Importing poll votes..."
+
+    poll_votes = query(<<~SQL)
+      SELECT po.poll_id, pv.poll_option_id, pv.user_id, pv.created_at
+        FROM poll_votes pv
+             JOIN poll_options po ON pv.poll_option_id = po.id
+       ORDER BY pv.poll_option_id, pv.user_id
+    SQL
+
+    create_poll_votes(poll_votes) do |row|
+      poll_id = poll_id_from_original_id(row["poll_id"])
+      poll_option_id = poll_option_id_from_original_id(row["poll_option_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+      next unless poll_id && poll_option_id && user_id
+
+      {
+        poll_id: poll_id,
+        poll_option_id: poll_option_id,
+        user_id: user_id,
+        created_at: row["created_at"],
+      }
+    end
+
+    poll_votes.close
   end
 
   def import_likes
@@ -1299,8 +1461,8 @@ class BulkImport::Generic < BulkImport::Base
     sqlite
   end
 
-  def query(sql, db: @source_db)
-    db.prepare(sql).execute
+  def query(sql, *bind_vars, db: @source_db)
+    db.prepare(sql).execute(*bind_vars)
   end
 
   def to_date(text)

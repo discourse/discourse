@@ -115,7 +115,7 @@ class BulkImport::Base
     ActiveSupport::Inflector.transliterate("test")
   end
 
-  MAPPING_TYPES = Enum.new(upload: 1, badge: 2)
+  MAPPING_TYPES = Enum.new(upload: 1, badge: 2, poll: 3, poll_option: 4)
 
   def create_migration_mappings_table
     puts "Creating migration mappings table..."
@@ -284,6 +284,12 @@ class BulkImport::Base
     puts "Loading badge indexes..."
     @badge_mapping = load_index(MAPPING_TYPES[:badge])
     @last_badge_id = last_id(Badge)
+
+    puts "Loading poll indexes..."
+    @poll_mapping = load_index(MAPPING_TYPES[:poll])
+    @poll_option_mapping = load_index(MAPPING_TYPES[:poll_option])
+    @last_poll_id = last_id(Poll)
+    @last_poll_option_id = last_id(PollOption)
   end
 
   def use_bbcode_to_md?
@@ -347,6 +353,12 @@ class BulkImport::Base
     if @last_badge_id > 0
       @raw_connection.exec("SELECT setval('#{Badge.sequence_name}', #{@last_badge_id})")
     end
+    if @last_poll_id > 0
+      @raw_connection.exec("SELECT setval('#{Poll.sequence_name}', #{@last_poll_id})")
+    end
+    if @last_poll_option_id > 0
+      @raw_connection.exec("SELECT setval('#{PollOption.sequence_name}', #{@last_poll_option_id})")
+    end
   end
 
   def group_id_from_imported_id(id)
@@ -393,6 +405,14 @@ class BulkImport::Base
 
   def badge_id_from_original_id(id)
     @badge_mapping[id.to_s]&.to_i
+  end
+
+  def poll_id_from_original_id(id)
+    @poll_mapping[id.to_s]&.to_i
+  end
+
+  def poll_option_id_from_original_id(id)
+    @poll_option_mapping[id.to_s]&.to_i
   end
 
   GROUP_COLUMNS ||= %i[
@@ -649,6 +669,30 @@ class BulkImport::Base
 
   GAMIFICATION_SCORE_EVENT_COLUMNS ||= %i[user_id date points description created_at updated_at]
 
+  POLL_COLUMNS ||= %i[
+    id
+    post_id
+    name
+    close_at
+    type
+    status
+    results
+    visibility
+    min
+    max
+    step
+    anonymous_voters
+    created_at
+    updated_at
+    chart_type
+    groups
+    title
+  ]
+
+  POLL_OPTION_COLUMNS ||= %i[id poll_id digest html anonymous_votes created_at updated_at]
+
+  POLL_VOTE_COLUMNS ||= %i[poll_id poll_option_id user_id created_at updated_at]
+
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
   end
@@ -773,6 +817,18 @@ class BulkImport::Base
 
   def create_gamification_score_events(rows, &block)
     create_records(rows, "gamification_score_event", GAMIFICATION_SCORE_EVENT_COLUMNS, &block)
+  end
+
+  def create_polls(rows, &block)
+    create_records_with_mapping(rows, "poll", POLL_COLUMNS, &block)
+  end
+
+  def create_poll_options(rows, &block)
+    create_records_with_mapping(rows, "poll_option", POLL_OPTION_COLUMNS, &block)
+  end
+
+  def create_poll_votes(rows, &block)
+    create_records(rows, "poll_vote", POLL_VOTE_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1325,6 +1381,41 @@ class BulkImport::Base
     score_event[:created_at] ||= NOW
     score_event[:updated_at] ||= NOW
     score_event
+  end
+
+  def process_poll(poll)
+    poll[:id] = @last_poll_id += 1
+    poll[:created_at] ||= NOW
+    poll[:updated_at] ||= NOW
+
+    @imported_records[poll[:original_id].to_s] = poll[:id]
+    @poll_mapping[poll[:original_id].to_s] = poll[:id]
+
+    poll
+  end
+
+  def process_poll_option(poll_option)
+    poll_option[:id] = id = @last_poll_option_id += 1
+    poll_option[:created_at] ||= NOW
+    poll_option[:updated_at] ||= NOW
+    poll_option[:anonymous_votes] ||= nil
+
+    poll_option[:digest] = Digest::MD5.hexdigest([poll_option[:html]].to_json)
+
+    poll_option[:original_ids]
+      .map(&:to_s)
+      .each do |original_id|
+        @imported_records[original_id] = id
+        @poll_option_mapping[original_id] = id
+      end
+
+    poll_option
+  end
+
+  def process_poll_vote(poll_vote)
+    poll_vote[:created_at] ||= NOW
+    poll_vote[:updated_at] ||= NOW
+    poll_vote
   end
 
   def create_records(all_rows, name, columns, &block)
