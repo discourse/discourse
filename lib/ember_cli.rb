@@ -6,11 +6,11 @@ module EmberCli
   end
 
   def self.assets
-    @@assets ||= Dir.glob("**/*.{js,map,txt}", base: "#{dist_dir}/assets")
+    @assets ||= Dir.glob("**/*.{js,map,txt}", base: "#{dist_dir}/assets")
   end
 
   def self.script_chunks
-    return @@chunk_infos if defined?(@@chunk_infos)
+    return @chunk_infos if defined?(@chunk_infos)
 
     chunk_infos = {}
 
@@ -24,7 +24,7 @@ module EmberCli
     index_html = File.read("#{dist_dir}/index.html")
     chunk_infos.merge! parse_chunks_from_html(index_html)
 
-    @@chunk_infos = chunk_infos if Rails.env.production?
+    @chunk_infos = chunk_infos if Rails.env.production?
     chunk_infos
   rescue Errno::ENOENT
     {}
@@ -80,7 +80,7 @@ module EmberCli
   end
 
   def self.clear_cache!
-    @@chunk_infos = nil
-    @@assets = nil
+    remove_instance_variable :@chunk_infos
+    remove_instance_variable :@assets
   end
 end
