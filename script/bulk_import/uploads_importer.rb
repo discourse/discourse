@@ -34,12 +34,24 @@ module BulkImport
         @source_db = create_connection(@settings[:source_db_path])
 
         puts "Uploading uploads..."
-        upload
+        upload_files
+
+        if @settings[:create_optimized_images]
+          begin
+            @source_db.execute("ATTACH DATABASE '?' AS discourse", @settings[:output_db_path])
+
+            create_optimized_avatars
+          ensure
+            @source_db.execute("DETACH DATABASE discourse", @settings[:output_db_path])
+          end
+        end
       end
       puts ""
+    ensure
+      close
     end
 
-    def upload
+    def upload_files
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
@@ -224,8 +236,6 @@ module BulkImport
       consumer_threads.each(&:join)
       status_queue.close
       status_thread.join
-    ensure
-      close
     end
 
     def fix_missing
@@ -314,8 +324,104 @@ module BulkImport
       consumer_threads.each(&:join)
       status_queue.close
       status_thread.join
-    ensure
-      close
+    end
+
+    def create_optimized_avatars
+      puts "", "Creating optimized images..."
+
+      queue = SizedQueue.new(QUEUE_SIZE)
+      consumer_threads = []
+
+      max_count = @source_db.get_first_value(<<~SQL)
+        SELECT COUNT(*)
+          FROM users u
+               JOIN discourse.uploads du ON u.avatar_upload_id = du.id
+         WHERE u.avatar_upload_id
+           AND du.upload IS NOT NULL
+           AND NOT EXISTS (
+                            SELECT 1
+                              FROM discourse.optimized_images oi
+                             WHERE oi.id = du.id
+                          )
+      SQL
+
+      producer_thread =
+        Thread.new do
+          sql = <<~SQL
+            SELECT du.*
+              FROM users u
+                   JOIN discourse.uploads du ON u.avatar_upload_id = du.id
+             WHERE u.avatar_upload_id
+               AND du.upload IS NOT NULL
+               AND NOT EXISTS (
+                                SELECT 1
+                                  FROM discourse.optimized_images oi
+                                 WHERE oi.id = du.id
+                              )
+             ORDER BY du.rowid
+          SQL
+
+          query(sql, @source_db).tap do |result_set|
+            result_set.each { |row| queue << row }
+            result_set.close
+          end
+        end
+
+      status_queue = SizedQueue.new(QUEUE_SIZE)
+      status_thread =
+        Thread.new do
+          error_count = 0
+          current_count = 0
+          missing_count = 0
+
+          while !(result = status_queue.pop).nil?
+            current_count += 1
+
+            case result[:status]
+            when :ok
+              result[:optimized_images].each do |optimized_image|
+                params = { id: result[:id], optimized_image: optimized_image }
+
+                @output_db.execute(<<~SQL, params)
+                  INSERT INTO optimized_images (id, optimized_image)
+                  VALUES (:id, :optimized_image)
+                SQL
+              end
+            when :error
+              error_count += 1
+            end
+
+            error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
+
+            print "\r%7d / %7d (%s, %s missing)" %
+                    [current_count, max_count, error_count_text, missing_count]
+          end
+        end
+
+      avatar_sizes = Discourse.avatar_sizes
+
+      (Etc.nprocessors * @settings[:thread_count_factor]).to_i.times do |index|
+        consumer_threads << Thread.new do
+          Thread.current.name = "worker-#{index}"
+          while (row = queue.pop)
+            begin
+              upload = JSON.parse(row["upload"])
+              optimized_images =
+                avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
+
+              status_queue << { id: row["id"], optimized_images: optimized_images, status: :ok }
+            rescue StandardError
+              status_queue << { id: row["id"], status: :error }
+            end
+          end
+        end
+      end
+
+      producer_thread.join
+      queue.close
+      consumer_threads.each(&:join)
+      status_queue.close
+      status_thread.join
     end
 
     private
@@ -340,6 +446,14 @@ module BulkImport
           id TEXT PRIMARY KEY,
           upload JSON_TEXT,
           markdown TEXT,
+          skip_reason TEXT
+        )
+      SQL
+
+      @output_db.execute(<<~SQL)
+        CREATE TABLE IF NOT EXISTS optimized_images (
+          id TEXT PRIMARY KEY,
+          optimized_image JSON_TEXT,
           skip_reason TEXT
         )
       SQL
@@ -386,6 +500,7 @@ module BulkImport
     def configure_site_settings
       settings = @settings[:site_settings]
 
+      SiteSetting.clean_up_uploads = false
       SiteSetting.authorized_extensions = settings[:authorized_extensions]
       SiteSetting.max_attachment_size_kb = settings[:max_attachment_size_kb]
       SiteSetting.max_image_size_kb = settings[:max_image_size_kb]
@@ -421,5 +536,5 @@ module BulkImport
   end
 end
 
-# bundle exec ruby script/bulk_import/uploads_importer.rb /path/to/settings.yml
+# bundle exec ruby script/bulk_import/uploads_importer.rb /path/to/uploads_importer.yml
 BulkImport::UploadsImporter.new(ARGV.first).run

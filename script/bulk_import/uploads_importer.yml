@@ -13,7 +13,12 @@ delete_surplus_uploads: false
 # Delete uploads from the output database that do not have a Discourse upload record.
 delete_missing_uploads: false
 
+# Check if files are missing in the upload store and update the database accordingly.
+# Set to false and re-run the script afterwards if you want to create new uploads for missing files.
 fix_missing: false
+
+# Create optimized images for post uploads and avatars.
+create_optimized_images: false
 
 site_settings:
   authorized_extensions: "*"
