@@ -153,8 +153,11 @@ class BulkImport::Generic < BulkImport::Base
 
     categories.each do |row|
       if (about_topic_title = row["about_topic_title"]).present?
-        category_id = category_id_from_imported_id(row["id"])
-        Category.find(category_id).topic.update!(title: about_topic_title) if category_id
+        if (category_id = category_id_from_imported_id(row["id"]))
+          topic = Category.find(category_id).topic
+          topic.title = about_topic_title
+          topic.save!(validate: false)
+        end
       end
     end
 
