@@ -1606,15 +1606,16 @@ class BulkImport::Base
       %{<img src="#{cdn_url}" data-base62-sha1="#{upload_base62} #{attributes}>}
     end
 
-    # TODO Make this work for usernames as well
     cooked.gsub!(/@(\w+)/) do
-      group_name = $1
-      lower_group_name = $1.downcase
+      name = $1
+      lower_name = $1.downcase
 
-      if Group.where("LOWER(name) = ?", lower_group_name).exists?
-        %|<a class="mention-group" href="/groups/#{lower_group_name}">@#{group_name}</a>|
+      if User.where(username: name).exists?
+        %|<a class="mention" href="/u/#{lower_name}">@#{name}</a>|
+      elsif Group.where("LOWER(name) = ?", lower_name).exists?
+        %|<a class="mention-group" href="/groups/#{lower_name}">@#{name}</a>|
       else
-        "@#{group_name}"
+        "@#{name}"
       end
     end
 

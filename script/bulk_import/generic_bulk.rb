@@ -541,6 +541,8 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     group_names = Group.pluck(:id, :name).to_h
+    # TODO: Investigate feasibility of loading all users on large sites
+    user_names = User.pluck(:id, :username).to_h
 
     create_posts(posts) do |row|
       next if row["raw"].blank?
@@ -555,7 +557,7 @@ class BulkImport::Generic < BulkImport::Base
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
-        raw: post_raw(row, group_names),
+        raw: post_raw(row, group_names, user_names),
         like_count: row["like_count"],
         reply_to_post_number:
           row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
@@ -565,7 +567,7 @@ class BulkImport::Generic < BulkImport::Base
     posts.close
   end
 
-  def post_raw(row, group_names)
+  def post_raw(row, group_names, user_names)
     raw = row["raw"]
 
     if row["polls"].present?
@@ -601,13 +603,16 @@ class BulkImport::Generic < BulkImport::Base
     if row["mentions"].present?
       mentions = JSON.parse(row["mentions"])
 
-      # TODO Implement mentions for types other than groups
-
       mentions.each do |mention|
-        group_id = group_id_from_imported_id(mention["id"])
-        group_name = group_names[group_id]
-        puts "group not found -- #{mention["id"]}" unless group_name
-        raw.gsub!(mention["placeholder"], "@#{group_name}")
+        name =
+          if mention["type"] == "user"
+            user_names[user_id_from_imported_id(mention["id"])]
+          elsif mention["type"] == "group"
+            group_names[group_id_from_imported_id(mention["id"])]
+          end
+
+        puts "#{mention["type"]} not found -- #{mention["id"]}" unless name
+        raw.gsub!(mention["placeholder"], "@#{name}")
       end
     end
 
