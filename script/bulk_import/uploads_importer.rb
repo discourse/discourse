@@ -404,7 +404,7 @@ module BulkImport
             retry_count = 0
 
             loop do
-              upload = Upload.new(JSON.parse(row["upload"])["sha1"])
+              upload = Upload.find_by(sha1: JSON.parse(row["upload"])["sha1"])
 
               optimized_images =
                 begin
@@ -438,7 +438,8 @@ module BulkImport
 
               optimized_images_okay =
                 optimized_images.present? && optimized_images.all?(&:present?) &&
-                  optimized_images.all?(&:persisted?) && optimized_images.all?(&:errors).blank?
+                  optimized_images.all?(&:persisted?) &&
+                  optimized_images.all? { |o| o.errors.blank? }
 
               if optimized_images_okay
                 status_queue << { id: row["id"], optimized_images: optimized_images, status: :ok }
@@ -480,21 +481,20 @@ module BulkImport
       @statement_counter = 0
 
       @output_db.execute(<<~SQL)
-      CREATE TABLE IF NOT EXISTS uploads (
-        id TEXT PRIMARY KEY,
-        upload JSON_TEXT,
-        markdown TEXT,
-        skip_reason TEXT
-      )
-    SQL
+        CREATE TABLE IF NOT EXISTS uploads (
+          id TEXT PRIMARY KEY,
+          upload JSON_TEXT,
+          markdown TEXT,
+          skip_reason TEXT
+        )
+      SQL
 
       @output_db.execute(<<~SQL)
-      CREATE TABLE IF NOT EXISTS optimized_images (
-        id TEXT PRIMARY KEY,
-        optimized_images JSON_TEXT,
-        skip_reason TEXT
-      )
-    SQL
+        CREATE TABLE IF NOT EXISTS optimized_images (
+          id TEXT PRIMARY KEY,
+          optimized_images JSON_TEXT
+        )
+      SQL
     end
 
     def insert(sql, bind_vars = [])
