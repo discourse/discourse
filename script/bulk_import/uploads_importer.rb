@@ -393,8 +393,8 @@ module BulkImport
 
           query(sql, @source_db).tap do |result_set|
             result_set.each do |row|
-              if optimized_upload_ids.include?(row["id"])
-                status_queue << { id: row["id"], status: :skipped }
+              if optimized_upload_ids.include?(row["upload_id"])
+                status_queue << { id: row["upload_id"], status: :skipped }
               else
                 queue << row
               end
@@ -430,7 +430,7 @@ module BulkImport
               upload = Upload.find_by(sha1: row["upload_sha1"])
 
               if !row["markdown"].start_with?("![")
-                status_queue << { id: row["id"], status: :skipped }
+                status_queue << { id: row["upload_id"], status: :skipped }
                 next
               end
 
@@ -479,13 +479,13 @@ module BulkImport
 
               if optimized_images_okay
                 status_queue << {
-                  id: row["id"],
+                  id: row["upload_id"],
                   optimized_images: optimized_images.to_json,
                   status: :ok,
                 }
                 break
               elsif retry_count >= 3
-                status_queue << { id: row["id"], status: :error }
+                status_queue << { id: row["upload_id"], status: :error }
                 break
               end
 
@@ -522,7 +522,7 @@ module BulkImport
 
       @output_db.execute(<<~SQL)
         CREATE TABLE IF NOT EXISTS uploads (
-          id TEXT PRIMARY KEY,
+          id TEXT PRIMARY KEY NOT NULL,
           upload JSON_TEXT,
           markdown TEXT,
           skip_reason TEXT
@@ -531,7 +531,7 @@ module BulkImport
 
       @output_db.execute(<<~SQL)
         CREATE TABLE IF NOT EXISTS optimized_images (
-          id TEXT PRIMARY KEY,
+          id TEXT PRIMARY KEY NOT NULL
           optimized_images JSON_TEXT
         )
       SQL
