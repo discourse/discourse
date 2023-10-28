@@ -404,17 +404,20 @@ module BulkImport
             retry_count = 0
 
             loop do
-              upload = JSON.parse(row["upload"])
+              upload = Upload.new(JSON.parse(row["upload"])["sha1"])
 
               optimized_images =
                 begin
                   avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
                 rescue StandardError => e
+                  puts e.message
+                  puts e.stacktrace
                   nil
                 end
 
               if optimized_images.present?
                 optimized_images.map! do |optimized_image|
+                  next unless optimized_image.present?
                   optimized_image_path = store.get_path_for_optimized_image(optimized_image)
 
                   file_exists =
