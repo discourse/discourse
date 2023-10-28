@@ -340,11 +340,21 @@ module BulkImport
       consumer_threads = []
 
       max_count = @source_db.get_first_value(<<~SQL)
+          WITH
+            upload_ids AS (
+                            SELECT pu.value AS upload_id
+                              FROM posts p,
+                                   JSON_EACH(p.upload_ids) pu
+                             WHERE p.upload_ids IS NOT NULL
+                             UNION
+                            SELECT u.avatar_upload_id AS upload_id
+                              FROM users u
+                             WHERE u.avatar_upload_id IS NOT NULL
+                          )
         SELECT COUNT(*)
-          FROM users u
-               JOIN discourse.uploads du ON u.avatar_upload_id = du.id
-         WHERE u.avatar_upload_id
-           AND du.upload IS NOT NULL
+          FROM upload_ids ui
+               JOIN discourse.uploads du ON ui.upload_id = du.id
+         WHERE du.upload IS NOT NULL
            AND NOT EXISTS (
                             SELECT 1
                               FROM discourse.optimized_images oi
@@ -355,11 +365,21 @@ module BulkImport
       producer_thread =
         Thread.new do
           sql = <<~SQL
-            SELECT du.*
-              FROM users u
-                   JOIN discourse.uploads du ON u.avatar_upload_id = du.id
-             WHERE u.avatar_upload_id
-               AND du.upload IS NOT NULL
+              WITH
+                upload_ids AS (
+                                SELECT pu.value AS upload_id, 'post' AS type
+                                  FROM posts p,
+                                       JSON_EACH(p.upload_ids) pu
+                                 WHERE p.upload_ids IS NOT NULL
+                                 UNION
+                                SELECT u.avatar_upload_id AS upload_id, 'avatar' AS type
+                                  FROM users u
+                                 WHERE u.avatar_upload_id IS NOT NULL
+                              )
+            SELECT du.id, du.upload -> 'sha1' AS upload_sha1, ui.type, du.markdown
+              FROM upload_ids ui
+                   JOIN discourse.uploads du ON ui.upload_id = du.id
+             WHERE du.upload IS NOT NULL
                AND NOT EXISTS (
                                 SELECT 1
                                   FROM discourse.optimized_images oi
@@ -404,18 +424,40 @@ module BulkImport
       avatar_sizes = Discourse.avatar_sizes
       store = Discourse.store
 
+      Jobs.run_immediately!
+
       (Etc.nprocessors * @settings[:thread_count_factor]).to_i.times do |index|
         consumer_threads << Thread.new do
           Thread.current.name = "worker-#{index}"
+
+          post =
+            PostCreator.new(
+              Discourse.system_user,
+              raw: "Topic created by uploads_importer",
+              acting_user: Discourse.system_user,
+              skip_validations: true,
+              title: "Topic created by uploads_importer - #{SecureRandom.hex}",
+              archetype: Archetype.default,
+              category: Category.last.id,
+            ).create!
+
           while (row = queue.pop)
             retry_count = 0
 
             loop do
-              upload = Upload.find_by(sha1: JSON.parse(row["upload"])["sha1"])
+              upload = Upload.find_by(sha1: row["upload_sha1"])
 
               optimized_images =
                 begin
-                  avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
+                  case row["type"]
+                  when "post"
+                    post.update_columns(baked_at: nil, cooked: "", raw: row["markdown"])
+                    post.reload
+                    post.rebake!
+                    OptimizedImage.where(upload_id: upload.id)
+                  when "avatar"
+                    avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
+                  end
                 rescue StandardError => e
                   puts e.message
                   puts e.stacktrace
