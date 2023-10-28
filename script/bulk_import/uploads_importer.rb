@@ -343,31 +343,32 @@ module BulkImport
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
-      max_count = @source_db.get_first_value(<<~SQL)
-        SELECT (
-                 SELECT COUNT(*)
-                   FROM posts p,
-                        JSON_EACH(p.upload_ids) pu
-                  WHERE p.upload_ids IS NOT NULL
-               ) + (
-                     SELECT COUNT(*)
-                       FROM users u
-                      WHERE u.avatar_upload_id IS NOT NULL
-                   ) - (
-                         SELECT COUNT(*)
-                           FROM discourse.optimized_images
-                       ) AS count
-      SQL
+      max_count = 1
+      # max_count = @source_db.get_first_value(<<~SQL)
+      #   SELECT (
+      #            SELECT COUNT(*)
+      #              FROM posts p,
+      #                   JSON_EACH(p.upload_ids) pu
+      #             WHERE p.upload_ids IS NOT NULL
+      #          ) + (
+      #                SELECT COUNT(*)
+      #                  FROM users u
+      #                 WHERE u.avatar_upload_id IS NOT NULL
+      #              ) - (
+      #                    SELECT COUNT(*)
+      #                      FROM discourse.optimized_images
+      #                  ) AS count
+      # SQL
 
       producer_thread =
         Thread.new do
           sql = <<~SQL
-            SELECT u.avatar_upload_id AS upload_id, du.upload -> 'sha1' AS upload_sha1, du.markdown, 'avatar' AS type
+            SELECT u.avatar_upload_id AS upload_id, du.upload ->> 'sha1' AS upload_sha1, du.markdown, 'avatar' AS type
               FROM users u
                    JOIN discourse.uploads du ON u.avatar_upload_id = du.id
              WHERE u.avatar_upload_id IS NOT NULL
              UNION ALL
-            SELECT pu.value AS upload_id, du.upload -> 'sha1' AS upload_sha1, du.markdown, 'post' AS type
+            SELECT pu.value AS upload_id, du.upload ->> 'sha1' AS upload_sha1, du.markdown, 'post' AS type
               FROM posts p,
                    JSON_EACH(p.upload_ids) pu,
                    discourse.uploads du
