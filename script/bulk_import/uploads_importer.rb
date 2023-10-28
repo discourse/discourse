@@ -334,62 +334,46 @@ module BulkImport
     end
 
     def create_optimized_images
+      optimized_upload_ids = Set.new
+      query("SELECT id FROM optimized_images", @source_db).tap do |result_set|
+        result_set.each { |row| optimized_upload_ids << row["id"] }
+        result_set.close
+      end
+
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
       max_count = @source_db.get_first_value(<<~SQL)
-          WITH
-            upload_ids AS (
-                            SELECT pu.value AS upload_id, 'post' AS type
-                              FROM posts p,
-                                   JSON_EACH(p.upload_ids) pu
-                             WHERE p.upload_ids IS NOT NULL
-                             UNION
-                            SELECT u.avatar_upload_id AS upload_id, 'avatar' AS type
-                              FROM users u
-                             WHERE u.avatar_upload_id IS NOT NULL
-                          )
-        SELECT COUNT(*)
-          FROM upload_ids ui
-               JOIN discourse.uploads du ON ui.upload_id = du.id
-         WHERE du.upload IS NOT NULL
-           AND (ui.type = 'avatar' OR du.markdown LIKE '![%')
-           AND NOT EXISTS (
-                            SELECT 1
-                              FROM discourse.optimized_images oi
-                             WHERE oi.id = du.id
-                          )
+        SELECT (
+                 SELECT COUNT(*)
+                   FROM posts p,
+                        JSON_EACH(p.upload_ids) pu
+                  WHERE p.upload_ids IS NOT NULL
+               ) + (
+                     SELECT COUNT(*)
+                       FROM users u
+                      WHERE u.avatar_upload_id IS NOT NULL
+                   ) - (
+                         SELECT COUNT(*)
+                           FROM discourse.optimized_images
+                       ) AS count
       SQL
 
       producer_thread =
         Thread.new do
           sql = <<~SQL
-              WITH
-                upload_ids AS (
-                                SELECT pu.value AS upload_id, 'post' AS type
-                                  FROM posts p,
-                                       JSON_EACH(p.upload_ids) pu
-                                 WHERE p.upload_ids IS NOT NULL
-                                 UNION
-                                SELECT u.avatar_upload_id AS upload_id, 'avatar' AS type
-                                  FROM users u
-                                 WHERE u.avatar_upload_id IS NOT NULL
-                              )
-            SELECT du.id, du.upload -> 'sha1' AS upload_sha1, ui.type, du.markdown
-              FROM upload_ids ui
-                   JOIN discourse.uploads du ON ui.upload_id = du.id
-             WHERE du.upload IS NOT NULL
-               AND (ui.type = 'avatar' OR du.markdown LIKE '![%')
-               AND NOT EXISTS (
-                                SELECT 1
-                                  FROM discourse.optimized_images oi
-                                 WHERE oi.id = du.id
-                              )
-             ORDER BY du.rowid
+            SELECT u.avatar_upload_id AS upload_id, 'avatar' AS type
+              FROM users u
+             WHERE u.avatar_upload_id IS NOT NULL
+             UNION ALL
+            SELECT pu.value AS upload_id, 'post' AS type
+              FROM posts p,
+                   JSON_EACH(p.upload_ids) pu
+             WHERE p.upload_ids IS NOT NULL
           SQL
 
           query(sql, @source_db).tap do |result_set|
-            result_set.each { |row| queue << row }
+            result_set.each { |row| queue << row unless optimized_upload_ids.include?(row["id"]) }
             result_set.close
           end
         end
@@ -446,12 +430,18 @@ module BulkImport
 
             loop do
               upload = Upload.find_by(sha1: row["upload_sha1"])
+              markdown = UploadMarkdown.new(upload).to_markdown
+
+              if !markdown.start_with?("![")
+                status_queue << { id: row["id"], status: :skipped }
+                next
+              end
 
               optimized_images =
                 begin
                   case row["type"]
                   when "post"
-                    post.update_columns(baked_at: nil, cooked: "", raw: row["markdown"])
+                    post.update_columns(baked_at: nil, cooked: "", raw: markdown)
                     post.reload
                     post.rebake!
                     OptimizedImage.where(upload_id: upload.id)
