@@ -344,7 +344,7 @@ module BulkImport
       consumer_threads = []
 
       max_count =
-        @source_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL") -
+        @output_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL") -
           optimized_upload_ids.size
       # max_count = @source_db.get_first_value(<<~SQL)
       #   SELECT SUM(count)
