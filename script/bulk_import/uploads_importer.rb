@@ -344,8 +344,9 @@ module BulkImport
       consumer_threads = []
 
       max_count =
-        @output_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL") -
-          status_queue = SizedQueue.new(QUEUE_SIZE)
+        @output_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL")
+
+      status_queue = SizedQueue.new(QUEUE_SIZE)
       status_thread =
         Thread.new do
           error_count = 0
