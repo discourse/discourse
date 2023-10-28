@@ -6,6 +6,13 @@ require "etc"
 require "sqlite3"
 require "colored2"
 
+# hack so that OptimizedImage.lock beliefs that it's running in a Sidekiq job
+module Sidekiq
+  def self.server?
+    true
+  end
+end
+
 module BulkImport
   class UploadsImporter
     TRANSACTION_SIZE = 1000
