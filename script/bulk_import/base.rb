@@ -1607,13 +1607,13 @@ class BulkImport::Base
     end
 
     cooked.gsub!(/@(\w+)/) do
-      name = $1
-      lower_name = $1.downcase
+      name = @mapped_usernames[$1] || $1
+      normalized_name = User.normalize_username(name)
 
-      if User.where(username: name).exists?
-        %|<a class="mention" href="/u/#{lower_name}">@#{name}</a>|
-      elsif Group.where("LOWER(name) = ?", lower_name).exists?
-        %|<a class="mention-group" href="/groups/#{lower_name}">@#{name}</a>|
+      if User.where(username_lower: normalized_name).exists?
+        %|<a class="mention" href="/u/#{normalized_name}">@#{name}</a>|
+      elsif Group.where("LOWER(name) = ?", normalized_name).exists?
+        %|<a class="mention-group" href="/groups/#{normalized_name}">@#{name}</a>|
       else
         "@#{name}"
       end
