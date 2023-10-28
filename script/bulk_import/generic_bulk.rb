@@ -732,8 +732,11 @@ class BulkImport::Generic < BulkImport::Base
       poll_id = poll_id_from_original_id(row["poll_id"])
       next unless poll_id
 
+      option_ids = row["option_ids"].split(",")
+      option_ids.each { |option_id| next if poll_option_id_from_original_id(option_id).present? }
+
       {
-        original_ids: row["option_ids"].split(","),
+        original_ids: option_ids,
         poll_id: poll_id,
         html: row["text"],
         created_at: to_datetime(row["created_at"]),
@@ -753,11 +756,15 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY pv.poll_option_id, pv.user_id
     SQL
 
+    existing_poll_votes = PollVote.pluck(:poll_option_id, :user_id).to_set
+
     create_poll_votes(poll_votes) do |row|
       poll_id = poll_id_from_original_id(row["poll_id"])
       poll_option_id = poll_option_id_from_original_id(row["poll_option_id"])
       user_id = user_id_from_imported_id(row["user_id"])
       next unless poll_id && poll_option_id && user_id
+
+      next unless existing_poll_votes.add?([poll_option_id, user_id])
 
       {
         poll_id: poll_id,
