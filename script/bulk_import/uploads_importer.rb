@@ -442,7 +442,11 @@ module BulkImport
                   optimized_images.all? { |o| o.errors.blank? }
 
               if optimized_images_okay
-                status_queue << { id: row["id"], optimized_images: optimized_images, status: :ok }
+                status_queue << {
+                  id: row["id"],
+                  optimized_images: optimized_images.to_json,
+                  status: :ok,
+                }
                 break
               elsif retry_count >= 3
                 status_queue << { id: row["id"], status: :error }
