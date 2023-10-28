@@ -531,7 +531,7 @@ module BulkImport
 
       @output_db.execute(<<~SQL)
         CREATE TABLE IF NOT EXISTS optimized_images (
-          id TEXT PRIMARY KEY NOT NULL
+          id TEXT PRIMARY KEY NOT NULL,
           optimized_images JSON_TEXT
         )
       SQL
