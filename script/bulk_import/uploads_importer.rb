@@ -362,14 +362,17 @@ module BulkImport
       producer_thread =
         Thread.new do
           sql = <<~SQL
-            SELECT u.avatar_upload_id AS upload_id, 'avatar' AS type
+            SELECT u.avatar_upload_id AS upload_id, du.upload -> 'sha1' AS upload_sha1, du.markdown, 'avatar' AS type
               FROM users u
+                   JOIN discourse.uploads du ON u.avatar_upload_id = du.id
              WHERE u.avatar_upload_id IS NOT NULL
              UNION ALL
-            SELECT pu.value AS upload_id, 'post' AS type
+            SELECT pu.value AS upload_id, du.upload -> 'sha1' AS upload_sha1, du.markdown, 'post' AS type
               FROM posts p,
-                   JSON_EACH(p.upload_ids) pu
+                   JSON_EACH(p.upload_ids) pu,
+                   discourse.uploads du
              WHERE p.upload_ids IS NOT NULL
+               AND pu.value = du.id
           SQL
 
           query(sql, @source_db).tap do |result_set|
@@ -430,9 +433,8 @@ module BulkImport
 
             loop do
               upload = Upload.find_by(sha1: row["upload_sha1"])
-              markdown = UploadMarkdown.new(upload).to_markdown
 
-              if !markdown.start_with?("![")
+              if !row["markdown"].start_with?("![")
                 status_queue << { id: row["id"], status: :skipped }
                 next
               end
@@ -441,7 +443,7 @@ module BulkImport
                 begin
                   case row["type"]
                   when "post"
-                    post.update_columns(baked_at: nil, cooked: "", raw: markdown)
+                    post.update_columns(baked_at: nil, cooked: "", raw: row["markdown"])
                     post.reload
                     post.rebake!
                     OptimizedImage.where(upload_id: upload.id)
