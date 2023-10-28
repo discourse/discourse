@@ -121,6 +121,8 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_categories(categories) do |row|
+      next if category_id_from_imported_id(row["id"]).present?
+
       {
         imported_id: row["id"],
         existing_id: row["existing_id"],
