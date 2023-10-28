@@ -345,7 +345,34 @@ module BulkImport
 
       max_count =
         @output_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL") -
-          optimized_upload_ids.size
+          status_queue = SizedQueue.new(QUEUE_SIZE)
+      status_thread =
+        Thread.new do
+          error_count = 0
+          current_count = 0
+          skipped_count = 0
+
+          while !(params = status_queue.pop).nil?
+            current_count += 1
+
+            case params.delete(:status)
+            when :ok
+              @output_db.execute(<<~SQL, params)
+                INSERT INTO optimized_images (id, optimized_images)
+                VALUES (:id, :optimized_images)
+              SQL
+            when :error
+              error_count += 1
+            when :skipped
+              skipped_count += 1
+            end
+
+            error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
+
+            print "\r%7d / %7d (%s, %d skipped)" %
+                    [current_count, max_count, error_count_text, skipped_count]
+          end
+        end
 
       producer_thread =
         Thread.new do
@@ -364,35 +391,14 @@ module BulkImport
           SQL
 
           query(sql, @source_db).tap do |result_set|
-            result_set.each { |row| queue << row unless optimized_upload_ids.include?(row["id"]) }
-            result_set.close
-          end
-        end
-
-      status_queue = SizedQueue.new(QUEUE_SIZE)
-      status_thread =
-        Thread.new do
-          error_count = 0
-          current_count = 0
-          missing_count = 0
-
-          while !(params = status_queue.pop).nil?
-            current_count += 1
-
-            case params.delete(:status)
-            when :ok
-              @output_db.execute(<<~SQL, params)
-                INSERT INTO optimized_images (id, optimized_images)
-                VALUES (:id, :optimized_images)
-              SQL
-            when :error
-              error_count += 1
+            result_set.each do |row|
+              if optimized_upload_ids.include?(row["id"])
+                queue << row
+              else
+                status_queue << { id: row["id"], status: :skipped }
+              end
             end
-
-            error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
-
-            print "\r%7d / %7d (%s, %s missing)" %
-                    [current_count, max_count, error_count_text, missing_count]
+            result_set.close
           end
         end
 
