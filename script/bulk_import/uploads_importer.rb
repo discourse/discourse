@@ -38,7 +38,7 @@ module BulkImport
 
         if @settings[:create_optimized_images]
           begin
-            @source_db.execute("ATTACH DATABASE '?' AS discourse", @settings[:output_db_path])
+            @source_db.execute("ATTACH DATABASE ? AS discourse", @settings[:output_db_path])
 
             create_optimized_avatars
           ensure
