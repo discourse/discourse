@@ -355,6 +355,7 @@ module BulkImport
           FROM upload_ids ui
                JOIN discourse.uploads du ON ui.upload_id = du.id
          WHERE du.upload IS NOT NULL
+           AND (ui.type = 'avatar' OR du.markdown LIKE '![%')
            AND NOT EXISTS (
                             SELECT 1
                               FROM discourse.optimized_images oi
@@ -380,6 +381,7 @@ module BulkImport
               FROM upload_ids ui
                    JOIN discourse.uploads du ON ui.upload_id = du.id
              WHERE du.upload IS NOT NULL
+               AND (ui.type = 'avatar' OR du.markdown LIKE '![%')
                AND NOT EXISTS (
                                 SELECT 1
                                   FROM discourse.optimized_images oi
@@ -486,7 +488,7 @@ module BulkImport
               end
 
               optimized_images_okay =
-                optimized_images.present? && optimized_images.all?(&:present?) &&
+                !optimized_images.nil? && optimized_images.all?(&:present?) &&
                   optimized_images.all?(&:persisted?) &&
                   optimized_images.all? { |o| o.errors.blank? }
 
