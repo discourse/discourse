@@ -394,9 +394,9 @@ module BulkImport
           query(sql, @source_db).tap do |result_set|
             result_set.each do |row|
               if optimized_upload_ids.include?(row["id"])
-                queue << row
-              else
                 status_queue << { id: row["id"], status: :skipped }
+              else
+                queue << row
               end
             end
             result_set.close
