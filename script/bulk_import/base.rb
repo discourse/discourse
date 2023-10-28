@@ -650,6 +650,21 @@ class BulkImport::Base
 
   UPLOAD_REFERENCE_COLUMNS ||= %i[upload_id target_type target_id created_at updated_at]
 
+  OPTIMIZED_IMAGE_COLUMNS ||= %i[
+    id
+    sha1
+    extension
+    width
+    height
+    upload_id
+    url
+    filesize
+    etag
+    version
+    created_at
+    updated_at
+  ]
+
   POST_VOTING_VOTE_COLUMNS ||= %i[user_id votable_type votable_id direction created_at]
 
   BADGE_COLUMNS ||= %i[
@@ -789,6 +804,10 @@ class BulkImport::Base
 
   def create_upload_references(rows, &block)
     create_records(rows, "upload_reference", UPLOAD_REFERENCE_COLUMNS, &block)
+  end
+
+  def create_optimized_images(rows, &block)
+    create_records(rows, "optimized_image", OPTIMIZED_IMAGE_COLUMNS, &block)
   end
 
   def create_post_voting_votes(rows, &block)
@@ -1172,6 +1191,13 @@ class BulkImport::Base
     upload_reference[:created_at] ||= NOW
     upload_reference[:updated_at] ||= NOW
     upload_reference
+  end
+
+  def process_optimized_image(optimized_image)
+    optimized_image[:user_id] ||= Discourse::SYSTEM_USER_ID
+    optimized_image[:created_at] ||= NOW
+    optimized_image[:updated_at] ||= NOW
+    optimized_image
   end
 
   def process_post_voting_vote(vote)

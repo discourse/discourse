@@ -86,6 +86,8 @@ class BulkImport::Generic < BulkImport::Base
     import_user_badges
 
     import_upload_references
+    import_optimized_images
+
     import_user_stats
     enable_category_settings
   end
@@ -940,6 +942,39 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     uploads.close
+  end
+
+  def import_optimized_images
+    return if !@uploads_db
+
+    puts "", "Importing optimized images..."
+
+    optimized_images = query(<<~SQL, db: @uploads_db)
+      SELECT oi.id AS upload_id, x.value AS optimized_image
+        FROM optimized_images oi,
+             JSON_EACH(oi.optimized_images) x
+       WHERE optimized_images IS NOT NULL
+       ORDER BY oi.rowid, x.value -> 'id'
+    SQL
+
+    DB.exec(<<~SQL)
+      DELETE
+        FROM optimized_images oi
+       WHERE EXISTS (
+                      SELECT 1
+                        FROM migration_mappings mm
+                       WHERE mm.type = 1
+                         AND mm.discourse_id::BIGINT = oi.upload_id
+                    )
+    SQL
+
+    create_optimized_images(optimized_images) do |row|
+      optimized_image = JSON.parse(row["optimized_image"], symbolize_names: true)
+      optimized_image[:upload_id] = upload_id_from_original_id(row["upload_id"])
+      optimized_image
+    end
+
+    optimized_images.close
   end
 
   def import_user_avatars
