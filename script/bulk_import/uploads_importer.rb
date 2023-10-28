@@ -379,14 +379,10 @@ module BulkImport
 
             case result[:status]
             when :ok
-              result[:optimized_images].each do |optimized_image|
-                params = { id: result[:id], optimized_image: optimized_image }
-
-                @output_db.execute(<<~SQL, params)
-                  INSERT INTO optimized_images (id, optimized_image)
-                  VALUES (:id, :optimized_image)
-                SQL
-              end
+              @output_db.execute(<<~SQL, params)
+                INSERT INTO optimized_images (id, optimized_images)
+                VALUES (:id, :optimized_images)
+              SQL
             when :error
               error_count += 1
             end
@@ -399,19 +395,58 @@ module BulkImport
         end
 
       avatar_sizes = Discourse.avatar_sizes
+      store = Discourse.store
 
       (Etc.nprocessors * @settings[:thread_count_factor]).to_i.times do |index|
         consumer_threads << Thread.new do
           Thread.current.name = "worker-#{index}"
           while (row = queue.pop)
-            begin
-              upload = JSON.parse(row["upload"])
-              optimized_images =
-                avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
+            retry_count = 0
 
-              status_queue << { id: row["id"], optimized_images: optimized_images, status: :ok }
-            rescue StandardError
-              status_queue << { id: row["id"], status: :error }
+            loop do
+              upload = JSON.parse(row["upload"])
+
+              optimized_images =
+                begin
+                  avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
+                rescue StandardError => e
+                  nil
+                end
+
+              if optimized_images.present?
+                optimized_images.map! do |optimized_image|
+                  optimized_image_path = store.get_path_for_optimized_image(optimized_image)
+
+                  file_exists =
+                    if store.external?
+                      store.object_from_path(optimized_image_path).exists?
+                    else
+                      File.exist?(File.join(store.public_dir, optimized_image_path))
+                    end
+
+                  unless file_exists
+                    optimized_image.destroy
+                    optimized_image = nil
+                  end
+
+                  optimized_image
+                end
+              end
+
+              optimized_images_okay =
+                optimized_images.present? && optimized_images.all?(&:present?) &&
+                  optimized_images.all?(&:persisted?) && optimized_images.all?(&:errors).blank?
+
+              if optimized_images_okay
+                status_queue << { id: row["id"], optimized_images: optimized_images, status: :ok }
+                break
+              elsif retry_count >= 3
+                status_queue << { id: row["id"], status: :error }
+                break
+              end
+
+              retry_count += 1
+              sleep 0.25 * retry_count
             end
           end
         end
@@ -442,21 +477,21 @@ module BulkImport
       @statement_counter = 0
 
       @output_db.execute(<<~SQL)
-        CREATE TABLE IF NOT EXISTS uploads (
-          id TEXT PRIMARY KEY,
-          upload JSON_TEXT,
-          markdown TEXT,
-          skip_reason TEXT
-        )
-      SQL
+      CREATE TABLE IF NOT EXISTS uploads (
+        id TEXT PRIMARY KEY,
+        upload JSON_TEXT,
+        markdown TEXT,
+        skip_reason TEXT
+      )
+    SQL
 
       @output_db.execute(<<~SQL)
-        CREATE TABLE IF NOT EXISTS optimized_images (
-          id TEXT PRIMARY KEY,
-          optimized_image JSON_TEXT,
-          skip_reason TEXT
-        )
-      SQL
+      CREATE TABLE IF NOT EXISTS optimized_images (
+        id TEXT PRIMARY KEY,
+        optimized_images JSON_TEXT,
+        skip_reason TEXT
+      )
+    SQL
     end
 
     def insert(sql, bind_vars = [])
