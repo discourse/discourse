@@ -374,10 +374,10 @@ module BulkImport
           current_count = 0
           missing_count = 0
 
-          while !(result = status_queue.pop).nil?
+          while !(params = status_queue.pop).nil?
             current_count += 1
 
-            case result[:status]
+            case params[:status]
             when :ok
               @output_db.execute(<<~SQL, params)
                 INSERT INTO optimized_images (id, optimized_images)
