@@ -343,22 +343,21 @@ module BulkImport
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
-      max_count = 1
-      # max_count = @source_db.get_first_value(<<~SQL)
-      #   SELECT (
-      #            SELECT COUNT(*)
-      #              FROM posts p,
-      #                   JSON_EACH(p.upload_ids) pu
-      #             WHERE p.upload_ids IS NOT NULL
-      #          ) + (
-      #                SELECT COUNT(*)
-      #                  FROM users u
-      #                 WHERE u.avatar_upload_id IS NOT NULL
-      #              ) - (
-      #                    SELECT COUNT(*)
-      #                      FROM discourse.optimized_images
-      #                  ) AS count
-      # SQL
+      max_count = @source_db.get_first_value(<<~SQL)
+        SELECT SUM(count)
+          FROM (
+                 SELECT COUNT(*) AS count
+                   FROM users u
+                  WHERE u.avatar_upload_id IS NOT NULL
+                  UNION ALL
+                 SELECT SUM(JSON_ARRAY_LENGTH(upload_ids)) AS count
+                   FROM posts
+                  WHERE upload_ids IS NOT NULL
+                  UNION ALL
+                 SELECT COUNT(*) * -1 AS count
+                   FROM discourse.optimized_images
+               ) x
+      SQL
 
       producer_thread =
         Thread.new do
