@@ -340,12 +340,12 @@ module BulkImport
       max_count = @source_db.get_first_value(<<~SQL)
           WITH
             upload_ids AS (
-                            SELECT pu.value AS upload_id
+                            SELECT pu.value AS upload_id, 'post' AS type
                               FROM posts p,
                                    JSON_EACH(p.upload_ids) pu
                              WHERE p.upload_ids IS NOT NULL
                              UNION
-                            SELECT u.avatar_upload_id AS upload_id
+                            SELECT u.avatar_upload_id AS upload_id, 'avatar' AS type
                               FROM users u
                              WHERE u.avatar_upload_id IS NOT NULL
                           )
