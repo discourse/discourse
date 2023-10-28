@@ -335,7 +335,7 @@ module BulkImport
 
     def create_optimized_images
       optimized_upload_ids = Set.new
-      query("SELECT id FROM optimized_images", @source_db).tap do |result_set|
+      query("SELECT id FROM optimized_images", @output_db).tap do |result_set|
         result_set.each { |row| optimized_upload_ids << row["id"] }
         result_set.close
       end
@@ -346,21 +346,6 @@ module BulkImport
       max_count =
         @output_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL") -
           optimized_upload_ids.size
-      # max_count = @source_db.get_first_value(<<~SQL)
-      #   SELECT SUM(count)
-      #     FROM (
-      #            SELECT COUNT(*) AS count
-      #              FROM users u
-      #             WHERE u.avatar_upload_id IS NOT NULL
-      #             UNION ALL
-      #            SELECT SUM(JSON_ARRAY_LENGTH(upload_ids)) AS count
-      #              FROM posts
-      #             WHERE upload_ids IS NOT NULL
-      #             UNION ALL
-      #            SELECT COUNT(*) * -1 AS count
-      #              FROM discourse.optimized_images
-      #          ) x
-      # SQL
 
       producer_thread =
         Thread.new do
