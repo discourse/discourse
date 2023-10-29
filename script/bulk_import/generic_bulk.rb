@@ -52,6 +52,8 @@ class BulkImport::Generic < BulkImport::Base
     import_single_sign_on_records
     import_muted_users
     import_user_histories
+    import_user_notes
+    import_user_note_counts
 
     import_user_avatars
     update_uploaded_avatar_id
@@ -919,6 +921,86 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     user_histories.close
+  end
+
+  def import_user_notes
+    puts "", "Importing user notes..."
+
+    unless defined?(::DiscourseUserNotes)
+      puts "  Skipping import of user notes because the plugin is not installed."
+      return
+    end
+
+    user_notes = query(<<~SQL)
+      SELECT user_id,
+             JSON_GROUP_ARRAY(JSON_OBJECT('raw', raw, 'created_by', created_by_user_id, 'created_at',
+                                          created_at)) AS note_json_text
+        FROM user_notes
+       GROUP BY user_id
+       ORDER BY user_id, id
+    SQL
+
+    existing_user_ids =
+      PluginStoreRow
+        .where(plugin_name: "user_notes")
+        .pluck(:key)
+        .map { |key| key.delete_prefix("notes:").to_i }
+        .to_set
+
+    create_plugin_store_rows(user_notes) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if !user_id || existing_user_ids.include?(user_id)
+
+      notes = JSON.parse(row["note_json_text"], symbolize_names: true)
+      notes.each do |note|
+        note[:id] = SecureRandom.hex(16)
+        note[:user_id] = user_id
+        note[:created_by] = (
+          if note[:created_by]
+            user_id_from_imported_id(note[:created_by])
+          else
+            Discourse::SYSTEM_USER_ID
+          end
+        )
+        note[:created_at] = to_datetime(note[:created_at])
+      end
+
+      {
+        plugin_name: "user_notes",
+        key: "notes:#{user_id}",
+        type_name: "JSON",
+        value: notes.to_json,
+      }
+    end
+
+    user_notes.close
+  end
+
+  def import_user_note_counts
+    puts "", "Importing user note counts..."
+
+    unless defined?(::DiscourseUserNotes)
+      puts "  Skipping import of user notes because the plugin is not installed."
+      return
+    end
+
+    user_note_counts = query(<<~SQL)
+      SELECT user_id, COUNT(*) AS count
+        FROM user_notes
+       GROUP BY user_id
+       ORDER BY user_id
+    SQL
+
+    existing_user_ids = UserCustomField.where(name: "user_notes_count").pluck(:user_id).to_set
+
+    create_user_custom_fields(user_note_counts) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if !user_id || existing_user_ids.include?(user_id)
+
+      { user_id: user_id, name: "user_notes_count", value: row["count"].to_s }
+    end
+
+    user_note_counts.close
   end
 
   def import_uploads

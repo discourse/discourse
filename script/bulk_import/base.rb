@@ -708,6 +708,8 @@ class BulkImport::Base
 
   POLL_VOTE_COLUMNS ||= %i[poll_id poll_option_id user_id created_at updated_at]
 
+  PLUGIN_STORE_ROW_COLUMNS ||= %i[plugin_name key type_name value]
+
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
   end
@@ -848,6 +850,10 @@ class BulkImport::Base
 
   def create_poll_votes(rows, &block)
     create_records(rows, "poll_vote", POLL_VOTE_COLUMNS, &block)
+  end
+
+  def create_plugin_store_rows(rows, &block)
+    create_records(rows, "plugin_store_row", PLUGIN_STORE_ROW_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1442,6 +1448,10 @@ class BulkImport::Base
     poll_vote[:created_at] ||= NOW
     poll_vote[:updated_at] ||= NOW
     poll_vote
+  end
+
+  def process_plugin_store_row(plugin_store_row)
+    plugin_store_row
   end
 
   def create_records(all_rows, name, columns, &block)
