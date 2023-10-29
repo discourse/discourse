@@ -3,10 +3,11 @@ import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import Service, { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
+import $ from "jquery";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import deprecated from "discourse-common/lib/deprecated";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // Known legacy modals in core. Silence deprecation warnings for these so the messages
 // don't cause unnecessary noise.

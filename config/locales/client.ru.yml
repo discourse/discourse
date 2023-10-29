@@ -493,6 +493,9 @@ ru:
         type_bonus:
           name: "тип бонуса"
           title: "Некоторым проверяемым элементам сотрудник может назначить бонус, чтобы сделать их более приоритетными."
+      revise_and_reject_post:
+        reason: "Причина"
+        optional: "опционально"
       stale_help: "Проверка уже была выполнена пользователем <b>%{username}</b>."
       claim_help:
         optional: "Вы можете зарезервировать этот контент за собой, чтобы другие не могли заняться его модерацией."
@@ -1497,8 +1500,6 @@ ru:
           Сканируйте этот QR-код в поддерживаемых приложениях (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) и введите код аутентификации.
         disable_description: "Введите код аутентификации из приложения"
         show_key_description: "Введите вручную"
-        short_description: |
-          Защитите свой аккаунт одноразовыми кодами безопасности.
         extended_description: |
           Двухфакторная аутентификация повышает безопасность аккаунта: в дополнение к паролю необходимо указывать одноразовый токен. Токены могут быть сгенерированы на устройствах <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> и <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Внимание: после включения двухфакторной аутентификации в аккаунте вход через соцсети будет отключен."
@@ -1537,6 +1538,10 @@ ru:
           save: "Сохранить"
           edit_description: "Название ключа физической безопасности"
           name_required_error: "Укажите название электронного ключа."
+      passkeys:
+        save: "Сохранить"
+        added_prefix: "Добавлено"
+        last_used_prefix: "Последнее использование"
       change_about:
         title: "Изменить информацию обо мне"
         error: "При изменении значения произошла ошибка."
@@ -1824,6 +1829,7 @@ ru:
         ok: "Допустимый пароль."
         instructions: "минимум символов: %{count}"
         required: "Введите пароль"
+        confirm: "Да"
       summary:
         title: "Сводка"
         stats: "Статистика"
@@ -2210,16 +2216,6 @@ ru:
         few: "%{count} темы в этой категории"
         many: "%{count} тем в этой категории"
         other: "%{count} темы в этой категории"
-      plus_subcategories_title:
-        one: "%{name} и %{count} подкатегория"
-        few: "%{name} и %{count} подкатегории"
-        many: "%{name} и %{count} подкатегорий"
-        other: "%{name} и %{count} подкатегории"
-      plus_subcategories:
-        one: "+ %{count} подкатегория"
-        few: "+ %{count} подкатегории"
-        many: "+ %{count} подкатегорий"
-        other: "+ %{count} подкатегории"
     select_kit:
       delete_item: "Удалить %{name}"
       filter_by: "Фильтровать по: %{name}"
@@ -4422,7 +4418,6 @@ ru:
           delete: "Удалить"
           delete_confirm: "Действительно удалить раздел?"
           reset_confirm: "Действительно сбросить раздел к состоянию по умолчанию?"
-          public: "Сделать раздел публичным и видимым для всех"
           always_public: "Контент в этом разделе всегда публичный"
           more_menu: "Меню «Еще»"
           links:

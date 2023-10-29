@@ -27,7 +27,7 @@ const ExampleClassicButton = ClassicComponent.extend({
     this.onClick?.(event);
   },
 });
-const exampleClassicButtonTemplate = hbs`{{yield}}`;
+const exampleClassicButtonTemplate = hbs`{{! template-lint-disable no-yield-only }}{{yield}}`;
 
 class ExampleGlimmerButton extends GlimmerComponent {
   @action

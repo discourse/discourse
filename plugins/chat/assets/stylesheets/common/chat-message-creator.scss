@@ -44,7 +44,7 @@
     display: flex;
     padding-inline: 0.25rem;
     align-items: center;
-    border-radius: 5px;
+    border-radius: var(--d-border-radius);
     height: var(--row-height);
 
     .unread-indicator {
@@ -109,6 +109,15 @@
       justify-content: center;
     }
 
+    .chat-channel-title {
+      &__users-count {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        justify-content: center;
+      }
+    }
+
     .chat-channel-title__name,
     .chat-user-display-name {
       @include ellipsis;
@@ -169,7 +178,7 @@
     height: 44px;
     width: 44px;
     min-width: 44px;
-    border-radius: 5px;
+    border-radius: var(--d-button-border-radius);
   }
 
   &__selection {
@@ -178,7 +187,7 @@
     flex-wrap: wrap;
     display: flex;
     background: var(--secondary-very-high);
-    border-radius: 5px;
+    border-radius: var(--d-input-border-radius);
     padding: 3px;
     position: relative;
 
@@ -225,7 +234,7 @@
     cursor: pointer;
     display: inline-flex;
     background: var(--primary-very-low);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     border: 1px solid var(--primary-low);
     height: calc(var(--row-height) - 6);
     padding-inline: 0.25rem;

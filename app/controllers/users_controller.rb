@@ -17,6 +17,8 @@ class UsersController < ApplicationController
                    enable_second_factor_totp
                    disable_second_factor
                    list_second_factors
+                   confirm_session
+                   trusted_session
                    update_second_factor
                    create_second_factor_backup
                    select_avatar
@@ -24,6 +26,10 @@ class UsersController < ApplicationController
                    revoke_auth_token
                    register_second_factor_security_key
                    create_second_factor_security_key
+                   create_passkey
+                   register_passkey
+                   rename_passkey
+                   delete_passkey
                    feature_topic
                    clear_featured_topic
                    bookmarks
@@ -60,7 +66,7 @@ class UsersController < ApplicationController
                        user_menu_messages
                      ]
 
-  before_action :second_factor_check_confirmed_password,
+  before_action :check_confirmed_session,
                 only: %i[
                   create_second_factor_totp
                   enable_second_factor_totp
@@ -69,6 +75,8 @@ class UsersController < ApplicationController
                   create_second_factor_backup
                   register_second_factor_security_key
                   create_second_factor_security_key
+                  register_passkey
+                  delete_passkey
                 ]
 
   before_action :respond_to_suspicious_request, only: [:create]
@@ -106,9 +114,7 @@ class UsersController < ApplicationController
   end
 
   def show(for_card: false)
-    if SiteSetting.hide_user_profiles_from_public && !current_user
-      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
-    end
+    guardian.ensure_public_can_see_profiles!
 
     @user =
       fetch_user_from_params(
@@ -157,9 +163,7 @@ class UsersController < ApplicationController
 
   # This route is not used in core, but is used by theme components (e.g. https://meta.discourse.org/t/144479)
   def cards
-    if SiteSetting.hide_user_profiles_from_public && !current_user
-      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
-    end
+    guardian.ensure_public_can_see_profiles!
 
     user_ids = params.require(:user_ids).split(",").map(&:to_i)
     raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
@@ -488,6 +492,8 @@ class UsersController < ApplicationController
   end
 
   def summary
+    guardian.ensure_public_can_see_profiles!
+
     @user =
       fetch_user_from_params(
         include_inactive:
@@ -1195,7 +1201,10 @@ class UsersController < ApplicationController
   SEARCH_USERS_LIMIT = 50
 
   def search_users
+    # the search can specify the parameter term or usernames, term will perform the classic user search algorithm while
+    # usernames will perform an exact search on the usernames passed as parameter
     term = params[:term].to_s.strip
+    usernames = params[:usernames]&.split(",")&.map { |username| username.downcase.strip }
 
     topic_id = params[:topic_id].to_i if params[:topic_id].present?
     category_id = params[:category_id].to_i if params[:category_id].present?
@@ -1224,13 +1233,18 @@ class UsersController < ApplicationController
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
 
-    results = UserSearch.new(term, options).search
+    results =
+      if usernames.blank?
+        UserSearch.new(term, options).search
+      else
+        User.where(username_lower: usernames).limit(limit)
+      end
     to_render = serialize_found_users(results)
 
     # blank term is only handy for in-topic search of users after @
     # we do not want group results ever if term is blank
     groups =
-      if term.present? && current_user
+      if (term.present? || usernames.present?) && current_user
         if params[:include_groups] == "true"
           Group.visible_groups(current_user)
         elsif params[:include_mentionable_groups] == "true"
@@ -1252,7 +1266,12 @@ class UsersController < ApplicationController
       # register_modifier(:groups_for_users_search) will be evaluated without needing the
       # param.
       groups = DiscoursePluginRegistry.apply_modifier(:groups_for_users_search, groups)
-      groups = Group.search_groups(term, groups: groups, sort: :auto)
+      groups =
+        if usernames.blank?
+          Group.search_groups(term, groups: groups, sort: :auto)
+        else
+          groups.where(name: usernames).limit(limit)
+        end
 
       to_render[:groups] = groups.map { |m| { name: m.name, full_name: m.full_name } }
     end
@@ -1490,28 +1509,34 @@ class UsersController < ApplicationController
     end
   end
 
+  def confirm_session
+    # TODO(pmusaraj): add support for confirming via passkey, 2FA
+    params.require(:password)
+
+    if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
+      raise Discourse::NotFound
+    end
+
+    if confirm_secure_session
+      render json: success_json
+    else
+      render json: failed_json.merge(error: I18n.t("login.incorrect_password"))
+    end
+  end
+
+  def trusted_session
+    render json: secure_session_confirmed? ? success_json : failed_json
+  end
+
   def list_second_factors
     if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
       raise Discourse::NotFound
     end
 
-    unless params[:password].empty?
-      RateLimiter.new(
-        nil,
-        "login-hr-#{request.remote_ip}",
-        SiteSetting.max_logins_per_ip_per_hour,
-        1.hour,
-      ).performed!
-      RateLimiter.new(
-        nil,
-        "login-min-#{request.remote_ip}",
-        SiteSetting.max_logins_per_ip_per_minute,
-        1.minute,
-      ).performed!
-      unless current_user.confirm_password?(params[:password])
+    if params[:password].present?
+      if !confirm_secure_session
         return render json: failed_json.merge(error: I18n.t("login.incorrect_password"))
       end
-      confirm_secure_session
     end
 
     if secure_session_confirmed?
@@ -1587,6 +1612,62 @@ class UsersController < ApplicationController
     render json: success_json
   rescue ::DiscourseWebauthn::SecurityKeyError => err
     render json: failed_json.merge(error: err.message)
+  end
+
+  def create_passkey
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
+    challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
+    render json:
+             success_json.merge(
+               challenge: challenge_session.challenge,
+               rp_id: DiscourseWebauthn.rp_id,
+               rp_name: DiscourseWebauthn.rp_name,
+               supported_algorithms: ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
+               user_secure_id: current_user.create_or_fetch_secure_identifier,
+               existing_passkey_credential_ids: current_user.passkey_credential_ids,
+             )
+  end
+
+  def register_passkey
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
+    params.require(:name)
+    params.require(:attestation)
+    params.require(:clientData)
+
+    key =
+      ::DiscourseWebauthn::RegistrationService.new(
+        current_user,
+        params,
+        session: secure_session,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+      ).register_security_key
+
+    render json: success_json.merge(id: key.id, name: key.name)
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
+    render_json_error(err.message, status: 401)
+  end
+
+  def delete_passkey
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
+    current_user.security_keys.find_by(id: params[:id].to_i)&.destroy!
+
+    render json: success_json
+  end
+
+  def rename_passkey
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
+    params.require(:id)
+    params.require(:name)
+
+    passkey = current_user.security_keys.find_by(id: params[:id].to_i)
+    raise Discourse::InvalidParameters.new(:id) unless passkey
+
+    passkey.update!(name: params[:name])
+    render json: success_json
   end
 
   def update_security_key
@@ -1671,7 +1752,7 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  def second_factor_check_confirmed_password
+  def check_confirmed_session
     if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
       raise Discourse::NotFound
     end
@@ -2100,6 +2181,20 @@ class UsersController < ApplicationController
   end
 
   def confirm_secure_session
+    RateLimiter.new(
+      nil,
+      "login-hr-#{request.remote_ip}",
+      SiteSetting.max_logins_per_ip_per_hour,
+      1.hour,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "login-min-#{request.remote_ip}",
+      SiteSetting.max_logins_per_ip_per_minute,
+      1.minute,
+    ).performed!
+    return false if !current_user.confirm_password?(params[:password])
+
     secure_session["confirmed-password-#{current_user.id}"] = "true"
   end
 

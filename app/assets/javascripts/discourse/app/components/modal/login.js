@@ -4,16 +4,22 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { escape } from "pretty-text/sanitizer";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
+import {
+  getPasskeyCredential,
+  isWebauthnSupported,
+} from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import I18n from "I18n";
+import escape from "discourse-common/lib/escape";
+import I18n from "discourse-i18n";
 
 export default class Login extends Component {
+  @service capabilities;
   @service dialog;
   @service siteSettings;
   @service site;
@@ -86,8 +92,16 @@ export default class Login extends Component {
     return classes.join(" ");
   }
 
+  get canUsePasskeys() {
+    return (
+      this.siteSettings.enable_local_logins &&
+      this.siteSettings.experimental_passkeys &&
+      isWebauthnSupported()
+    );
+  }
+
   get hasAtLeastOneLoginButton() {
-    return findAll().length > 0;
+    return findAll().length > 0 || this.canUsePasskeys;
   }
 
   get loginButtonLabel() {
@@ -98,6 +112,50 @@ export default class Login extends Component {
     return (
       this.args.model.canSignUp && !this.loggingIn && !this.showSecondFactor
     );
+  }
+
+  @action
+  async passkeyLogin(mediation = "optional") {
+    try {
+      // we need to check isConditionalMediationAvailable for Firefox
+      // without it, Firefox will throw console errors
+      // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
+      // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
+      if (
+        mediation === "conditional" &&
+        this.capabilities.isFirefox &&
+        window.PublicKeyCredential
+      ) {
+        const isCMA =
+          // eslint-disable-next-line no-undef
+          await PublicKeyCredential.isConditionalMediationAvailable();
+        if (!isCMA) {
+          return;
+        }
+      }
+      const response = await ajax("/session/passkey/challenge.json");
+
+      const publicKeyCredential = await getPasskeyCredential(
+        response.challenge,
+        (errorMessage) => this.dialog.alert(errorMessage),
+        mediation
+      );
+
+      if (publicKeyCredential) {
+        const authResult = await ajax("/session/passkey/auth.json", {
+          type: "POST",
+          data: { publicKeyCredential },
+        });
+
+        if (authResult && !authResult.error) {
+          window.location.reload();
+        } else {
+          this.dialog.alert(authResult.error);
+        }
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   @action

@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-task "assets:precompile:before": "environment" do
-  require "uglifier"
-  require "open3"
-
+task "assets:precompile:prereqs" do
   unless %w[profile production].include? Rails.env
     raise "rake assets:precompile should only be run in RAILS_ENV=production, you are risking unminified assets"
   end
+end
 
-  if ENV["EMBER_CLI_COMPILE_DONE"] != "1"
+task "assets:precompile:build" do
+  if ENV["SKIP_EMBER_CLI_COMPILE"] != "1"
     compile_command = "yarn --cwd app/assets/javascripts/discourse run ember build"
 
     heap_size_limit = check_node_heap_size_limit
@@ -25,15 +24,28 @@ task "assets:precompile:before": "environment" do
 
     compile_command = "EMBER_ENV=production #{compile_command}" if ENV["EMBER_ENV"].nil?
 
+    only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
 
-    if only_assets_precompile_remaining
-      # Using exec to free up Rails app memory during ember build
-      exec "#{compile_command} && EMBER_CLI_COMPILE_DONE=1 bin/rake assets:precompile"
+    # Using exec to free up Rails app memory during ember build
+    if only_ember_precompile_build_remaining
+      exec "#{compile_command}"
+    elsif only_assets_precompile_remaining
+      exec "#{compile_command} && SKIP_EMBER_CLI_COMPILE=1 bin/rake assets:precompile"
     else
       system compile_command, exception: true
+      EmberCli.clear_cache!
     end
   end
+end
+
+task "assets:precompile:before": %w[
+       environment
+       assets:precompile:prereqs
+       assets:precompile:build
+     ] do
+  require "uglifier"
+  require "open3"
 
   # Ensure we ALWAYS do a clean build
   # We use many .erbs that get out of date quickly, especially with plugins
@@ -60,11 +72,6 @@ task "assets:precompile:before": "environment" do
 
   require "sprockets"
   require "digest/sha1"
-
-  # Add ember cli chunks
-  chunk_files = EmberCli.script_chunks.values.flatten.map { |name| "#{name}.js" }
-  map_files = chunk_files.map { |file| EmberCli.parse_source_map_path(file) }
-  Rails.configuration.assets.precompile.push(*chunk_files, *map_files)
 end
 
 task "assets:precompile:css" => "environment" do
@@ -214,11 +221,7 @@ def max_compress?(path, locales)
 end
 
 def compress(from, to)
-  if $node_compress
-    compress_node(from, to)
-  else
-    compress_ruby(from, to)
-  end
+  $node_compress ? compress_node(from, to) : compress_ruby(from, to)
 end
 
 def concurrent?
@@ -266,7 +269,14 @@ task "assets:precompile:compress_js": "environment" do
           .reject { |k, v| k =~ %r{/workbox-.*'/} }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
-            _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
+            _file =
+              (
+                if (d = File.dirname(file)) == "."
+                  "_#{file}"
+                else
+                  "#{d}/_#{File.basename(file)}"
+                end
+              )
             _path = "#{assets_path}/#{_file}"
             max_compress = max_compress?(info["logical_path"], locales)
             if File.exist?(_path)
@@ -310,8 +320,7 @@ task "assets:precompile:compress_js": "environment" do
 end
 
 task "assets:precompile:theme_transpiler": "environment" do
-  path = DiscourseJsProcessor::Transpiler.build_theme_transpiler
-  puts "Compiled theme-transpiler: #{path}"
+  DiscourseJsProcessor::Transpiler.build_theme_transpiler
 end
 
 # Run these tasks **before** Rails' "assets:precompile" task

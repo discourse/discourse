@@ -498,10 +498,7 @@ pt_BR:
           one: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
           other: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
       retention_reminders:
-        public:
-          one: "%{count} dia"
-          other: "%{count} dias"
-        dm:
+        short:
           one: "%{count} dia"
           other: "%{count} dias"
       flags:

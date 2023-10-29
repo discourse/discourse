@@ -118,6 +118,7 @@ en:
         title: "Show activity indicator in header"
         all_new: "All New Messages"
         dm_and_mentions: "Direct Messages and Mentions"
+        only_mentions: "Only Mentions"
         never: "Never"
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
@@ -542,14 +543,14 @@ en:
           other: "%{commaSeparatedUsernames} and %{count} others are typing"
 
       retention_reminders:
-        public_none: "indefinitely"
-        public:
+        indefinitely_short: "indefinitely"
+        indefinitely_long: "Chat settings have been set to retain channel messages indefinitely."
+        short:
           one: "%{count} day"
           other: "%{count} days"
-        dm_none: "indefinitely"
-        dm:
-          one: "%{count} day"
-          other: "%{count} days"
+        long:
+          one: "Chat settings have been set to retain channel messages for %{count} day."
+          other: "Chat settings have been set to retain channel messages for %{count} days."
 
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."

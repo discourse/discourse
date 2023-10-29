@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function initTags(context) {
   const categories = context.site.categoriesList;

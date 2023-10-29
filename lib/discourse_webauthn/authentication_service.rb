@@ -33,7 +33,7 @@ module DiscourseWebauthn
       #     verify that response.userHandle is present. Verify that the user account identified by response.userHandle
       #     contains a credential record whose id equals credential.rawId
       if @factor_type == UserSecurityKey.factor_types[:first_factor] &&
-           Base64.decode64(@params[:userHandle]) != @current_user.secure_identifier
+           Base64.decode64(@params[:userHandle]) != security_key.user.secure_identifier
         raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
       end
 

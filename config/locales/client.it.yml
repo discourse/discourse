@@ -430,6 +430,14 @@ it:
         type_bonus:
           name: "tipo di bonus"
           title: "Ad alcune tipologie revisionabili può essere assegnato un bonus dallo staff, per aumentare la loro priorità."
+      revise_and_reject_post:
+        title: "Revisione"
+        reason: "Motivo"
+        send_pm: "Invia PM"
+        feedback: "Feedback"
+        custom_reason: "Fornire una chiara descrizione del motivo"
+        other_reason: "Altro..."
+        optional: "facoltativo"
       stale_help: "La revisione di questo elemento è stata condotta da <b>%{username}</b>."
       claim_help:
         optional: "Puoi rivendicare questo elemento per evitare che altri lo revisionino."
@@ -1363,7 +1371,7 @@ it:
         disable_description: "Inserisci il codice di autenticazione dalla tua app"
         show_key_description: "Inserisci manualmente"
         short_description: |
-          Proteggi il tuo account con un codice di sicurezza usa e getta.
+          Proteggi il tuo account con codici di sicurezza monouso o chiavi di sicurezza fisiche.
         extended_description: |
           L'autenticazione a due fattori aggiunge ulteriore sicurezza al tuo account richiedendo un token usa e getta oltre alla tua password. I token possono essere generati su dispositivi <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
         oauth_enabled_warning: "Tieni presente che gli accessi ai social saranno disabilitati dopo aver attivato l'autenticazione a due fattori sul tuo account."
@@ -1402,6 +1410,21 @@ it:
           save: "Salva"
           edit_description: "Nome della chiave di sicurezza fisica"
           name_required_error: "Devi fornire un nome per la Chiave di Sicurezza"
+      passkeys:
+        rename_passkey: "Rinomina passkey"
+        add_passkey: "Aggiungi passkey"
+        confirm_delete_passkey: "Sei sicuro di voler eliminare questa passkey?"
+        passkey_successfully_created: "Successo! La tua nuova passkey è stata creata."
+        rename_passkey_instructions: "Scegli un nome per la passkey che la identificherà facilmente, ad esempio utilizza il nome del tuo gestore di password."
+        name:
+          default: "Passkey principale"
+        save: "Salva"
+        title: "Passkey"
+        short_description: "Le passkey sostituiscono le password e convalidano la tua identità biometricamente (ad esempio touch, faceID) o tramite un PIN/password del dispositivo."
+        added_prefix: "Aggiunto"
+        last_used_prefix: "Ultimo uso"
+        never_used: "Mai usata"
+        already_added_error: "Hai già registrato questa passkey. Non devi registrarla di nuovo."
       change_about:
         title: "Modifica i dati personali"
         error: "Si è verificato un errore durante la modifica del valore."
@@ -1512,6 +1535,7 @@ it:
         instructions: "La registrazione dell'account richiede un codice di invito"
       auth_tokens:
         title: "Dispositivi utilizzati di recente"
+        short_description: "Questo è un elenco di dispositivi che hanno recentemente effettuato l'accesso al tuo account."
         details: "Dettagli"
         log_out_all: "Disconnetti tutti"
         not_you: "Non sei tu?"
@@ -1680,6 +1704,12 @@ it:
           progress: "Caricato al %{progress}%…"
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
           error: "Spiacenti, il file deve essere in formato CSV."
+      confirm_access:
+        title: "Conferma accesso"
+        incorrect_password: "La password inserita non è corretta."
+        logged_in_as: "Hai effettuato l'accesso come: "
+        instructions: "Conferma la tua identità per completare questa azione."
+        fine_print: "Ti chiediamo di confermare la tua identità perché si tratta di un'azione potenzialmente sensibile. Una volta autenticato, ti verrà chiesto di riautenticarti solo dopo alcune ore di inattività."
       password:
         title: "Password"
         too_short: "La password è troppo breve."
@@ -1689,6 +1719,8 @@ it:
         ok: "La password è adeguata"
         instructions: "almeno %{count} caratteri"
         required: "Inserisci una password"
+        confirm: "Conferma"
+        incorrect_password: "La password inserita non è corretta."
       summary:
         title: "Riepilogo"
         stats: "Statistiche"
@@ -2018,6 +2050,8 @@ it:
         name: "Discord"
         title: "Accedi con Discord"
         sr_title: "Accedi con Discord"
+      passkey:
+        name: "Accedi con una passkey"
       second_factor_toggle:
         totp: "Utilizzare un'app di autenticazione"
         backup_code: "Utilizza un codice di backup"
@@ -2062,12 +2096,6 @@ it:
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
-      plus_subcategories_title:
-        one: "%{name} e una sottocategoria"
-        other: "%{name} e %{count} sottocategorie"
-      plus_subcategories:
-        one: "+ %{count} sottocategoria"
-        other: "+ %{count} sottocategorie"
     select_kit:
       delete_item: "Cancella %{name}"
       filter_by: "Filtra per: %{name}"
@@ -2269,6 +2297,7 @@ it:
           desc: I Sussurri sono visibili solo ai membri dello staff
         create_topic:
           label: "Nuovo Argomento"
+          desc: Crea un nuovo argomento
         shared_draft:
           label: "Bozza Condivisa"
           desc: "Crea una bozza di argomento che sarà visibile solo agli utenti autorizzati"
@@ -3397,6 +3426,7 @@ it:
       logo: "Immagine Categoria"
       logo_dark: "Immagine del logo della categoria Modalità scura"
       background_image: "Immagine di sfondo della categoria"
+      background_image_dark: "Immagine di sfondo della categoria per il tema scuro"
       badge_colors: "Colori dei distintivi"
       background_color: "Colore di sfondo"
       foreground_color: "Colore in primo piano"
@@ -4106,7 +4136,6 @@ it:
           delete: "Elimina"
           delete_confirm: "Vuoi davvero eliminare questa sezione?"
           reset_confirm: "Vuoi davvero ripristinare questa sezione ai valori predefiniti?"
-          public: "Rendi questa sezione pubblica e visibile a tutti"
           always_public: "Il contenuto di questa sezione è sempre pubblico"
           more_menu: "Menu Altro"
           links:
@@ -4716,7 +4745,7 @@ it:
         install: "Installa"
         delete: "Cancella"
         delete_confirm: 'Sei sicuro di voler eliminare "%{theme_name}"?'
-        bulk_delete: 'Sei sicuro?'
+        bulk_delete: "Sei sicuro?"
         bulk_themes_delete_confirm: "Ciò disinstallerà i seguenti temi e non saranno più utilizzabili da nessun utente sul tuo sito:"
         bulk_components_delete_confirm: "I seguenti componenti verranno disinstallati e non saranno più utilizzabili dagli utenti del tuo sito:"
         color: "Colore"

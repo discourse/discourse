@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminWebHooksIndexController extends Controller {
   @service dialog;
@@ -16,7 +16,7 @@ export default class AdminWebHooksIndexController extends Controller {
   @alias("adminWebHooks.model") model;
 
   @action
-  destroy(webhook) {
+  destroyWebhook(webhook) {
     return this.dialog.deleteConfirm({
       message: I18n.t("admin.web_hooks.delete_confirm"),
       didConfirm: async () => {

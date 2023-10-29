@@ -1,9 +1,10 @@
 import { getOwner } from "@ember/application";
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { next, schedule, throttle } from "@ember/runloop";
 import { BasePlugin } from "@uppy/core";
+import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -42,7 +43,7 @@ import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
 // group 1 `image|foo=bar`
@@ -284,7 +285,7 @@ export default Component.extend(ComposerUploadUppy, {
         count: minimumPostLength,
       });
       const tl = this.get("currentUser.trust_level");
-      if (tl === 0 || tl === 1) {
+      if ((tl === 0 || tl === 1) && !this._isNewTopic) {
         reason +=
           "<br/>" +
           I18n.t("composer.error.try_like", {
@@ -302,6 +303,15 @@ export default Component.extend(ComposerUploadUppy, {
         lastShownAt: lastValidatedAt,
       });
     }
+  },
+
+  @computed("composer.{creatingTopic,editingFirstPost,creatingSharedDraft}")
+  get _isNewTopic() {
+    return (
+      this.composer.creatingTopic ||
+      this.composer.editingFirstPost ||
+      this.composer.creatingSharedDraft
+    );
   },
 
   _resetShouldBuildScrollMap() {

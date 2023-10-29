@@ -145,10 +145,7 @@ bg:
         existing_topic:
           title: "Преместете в съществуваща тема."
       retention_reminders:
-        public:
-          one: "%{count} ден"
-          other: "%{count} дни"
-        dm:
+        short:
           one: "%{count} ден"
           other: "%{count} дни"
       emoji_picker:

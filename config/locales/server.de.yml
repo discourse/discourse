@@ -575,7 +575,8 @@ de:
             name:
               same_as_password: "ist mit deinem Passwort identisch."
             ip_address:
-              signup_not_allowed: "Eine Registrierung ist von diesem Konto nicht erlaubt."
+              blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
+              max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere ein Team-Mitglied."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1417,6 +1418,7 @@ de:
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
     v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
+    category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil Website-Einstellung</a> ."
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1563,7 +1565,7 @@ de:
     must_approve_users: "Team-Mitglieder müssen alle neuen Benutzerkonten genehmigen, bevor sie auf die Website zugreifen dürfen."
     invite_code: "Der Benutzer muss diesen Code eingeben, damit die Kontoregistrierung zugelassen wird. Wird ignoriert, wenn leer (Groß-/Kleinschreibung wird nicht beachtet)"
     approve_suspect_users: "Füge verdächtige Benutzer zur Warteschlange zur Überprüfung hinzu. Verdächtige Benutzer haben eine Bio/Website eingegeben, aber keine Leseaktivität."
-    review_every_post: "Alle Beiträge müssen überprüft werden. WARNUNG! NICHT FÜR STARK FREQUENTIERTE WEBSITES EMPFOHLEN."
+    review_every_post: "Sende jeden neuen Beitrag zur Moderation an die Warteschlange für die Überprüfung. Die Beiträge werden trotzdem sofort veröffentlicht und sind für alle Nutzer sichtbar. WARNUNG! Nicht empfohlen für Websites mit hohem Besucheraufkommen, da die Anzahl der zu prüfenden Beiträge sehr hoch sein kann."
     pending_users_reminder_delay_minutes: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Minuten auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben n Stunden nach ihrem letzten Besuch angemeldet"
@@ -1593,8 +1595,8 @@ de:
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
     include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Benutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Benutzern nur die Anzahl der Themen für ein Schlagwort angezeigt, die sich in öffentlichen Kategorien befinden."
     display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Schlagwort angezeigt."
-    top_menu: "Legt fest, welche Elemente in welcher Reihenfolge in der Navigationsleiste der Startseite auftauchen sollen. Beispiel: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Legt fest, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "Lege fest, welche Elemente in der Homepage-Navigation erscheinen und in welcher Reihenfolge."
+    post_menu: "Lege fest, welche Elemente im Beitragsmenü erscheinen und in welcher Reihenfolge."
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     allow_username_in_share_links: "Benutzernamen in Freigabelinks erlauben. Dies ist nützlich, um Abzeichen für einzelne Besucher zu vergeben."
@@ -2077,6 +2079,7 @@ de:
     approve_new_topics_unless_trust_level: "Neue Themen von Benutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     approve_unless_staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl an Stunden auf ihre Überprüfung warten, sende eine Benachrichtigung an alle Moderatoren. Setze die Einstellung auf 0, um diese Benachrichtigungen zu deaktivieren."
+    reviewable_revision_reasons: "Liste der Gründe, die ausgewählt werden können, wenn ein überprüfbarer Beitrag in der Warteschlange mit einer Revision abgelehnt wird. Andere ist auch immer verfügbar, damit ein benutzerdefinierter Grund eingegeben werden kann."
     auto_close_messages_post_count: "Maximale Anzahl von Beiträgen, die in einer Nachricht erlaubt sind, bevor sie automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_post_count: "Maximale Anzahl von Beiträgen, die in einem Thema erlaubt sind, bevor es automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_create_linked_topic: "Erstelle ein neues verknüpftes Thema, wenn ein Thema basierend auf der Einstellung „auto close topics post count“ automatisch geschlossen wird"
@@ -2159,6 +2162,7 @@ de:
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Einen kleinen Aktionsbeitrag erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern"
+    automatically_clean_unused_tags: "Lösche täglich automatisch Schlagwörter, die nicht in Themen oder privaten Nachrichten verwendet werden."
     watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
     company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
     governing_law: "Anzuwendendes Recht"
@@ -2193,7 +2197,6 @@ de:
     navigation_menu: "Legt fest, welches Navigationsmenü verwendet werden soll. Die Seitenleisten- und Kopfzeilennavigation kann von den Benutzern angepasst werden. Die Legacy-Option ist zur Abwärtskompatibilität verfügbar."
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
-    enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     experimental_new_new_view_groups: 'EXPERIMENTELL: Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
     enable_custom_sidebar_sections: "EXPERIMENTELL: Benutzerdefinierte Seitenleistenabschnitte aktivieren"
     experimental_topics_filter: "EXPERIMENTELL: Experimentelle Filterroute für Themen unter /filter aktivieren"
@@ -2473,9 +2476,6 @@ de:
       blocked: "ist nicht erlaubt."
       revoked: "Es werden bis zum %{date} keine E-Mails an „%{email}“ verschickt."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
-      max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere ein Team-Mitglied."
     website:
       domain_not_allowed: "Website ist ungültig. Erlaubte Domains sind: %{domains}"
     auto_rejected: "Automatisch abgelehnt aufgrund des Alters. Siehe Website-Einstellung auto_handle_queued_age."
@@ -2693,6 +2693,28 @@ de:
         Falls er jedoch noch einmal von der Community verborgen wird, bleibt er dies, bis ein Team-Mitglied ihn prüft.
 
         Weitere Informationen findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+    reviewable_queued_post_revise_and_reject:
+      title: "Feedback zu deinem Beitrag"
+      subject_template: "Feedback zu deinem Beitrag in %{topic_title}"
+      text_body_template: |
+        Hallo %{username},
+
+        Wir haben uns deinen Beitrag in [%{topic_title}](%{topic_url}) angesehen und haben einige Rückmeldungen für dich.
+
+        Grund: %{reason}
+
+        Feedback: %{feedback}
+
+        Du kannst deinen ursprünglichen Beitrag unten bearbeiten und erneut abschicken, um die vorgeschlagenen Änderungen vorzunehmen, oder auf diese Nachricht antworten, wenn du Fragen hast.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Danke,
+        %{site_name} Moderatoren
     post_hidden_again:
       title: "Beitrag wieder ausgeblendet"
       subject_template: "Beitrag ausgeblendet wegen Community-Meldungen, Team wurde informiert"
@@ -4758,6 +4780,8 @@ de:
         title: "Nein"
       discard_post:
         title: "Beitrag verwerfen"
+      revise_and_reject_post:
+        title: "Beitrag überarbeiten..."
       ignore:
         title: "Ignorieren"
       ignore_and_do_nothing:

@@ -327,7 +327,8 @@ cs:
               same_as_current: "je stejné jako vaše současné heslo."
               unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
             ip_address:
-              signup_not_allowed: "Registrace z této adresy není povolena."
+              blocked: "New registrations are not allowed from your IP address."
+              max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
         user_email:
           attributes:
             user_id:
@@ -846,7 +847,6 @@ cs:
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
     content_security_policy: "Povolit Content-Security-Policy (CSP)"
     content_security_policy_report_only: "Povolit Content-Security-Policy-Report-Only (CSP)"
-    post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
     enable_badges: "Povolit odznaky"
     version_checks: "Odešlete příkaz ping na Discourse Hub pro aktualizace verzí a zobrazte zprávy o nových verzích na <a href='%{base_path}/admin' target='_blank'>/admin</a> nástěnce"

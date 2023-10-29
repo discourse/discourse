@@ -419,6 +419,9 @@ sv:
         type_bonus:
           name: "typ bonus"
           title: "Vissa granskningsärenden kan tilldelas en bonus av personal för att ge dem en högre prioritet."
+      revise_and_reject_post:
+        reason: "Anledning"
+        optional: "valfritt"
       stale_help: "Detta granskningsbara objekt har lösts av <b>%{username}</b>."
       claim_help:
         optional: "Du kan göra anspråk på detta för att förhindra andra från att granska det."
@@ -1345,8 +1348,6 @@ sv:
           Skanna denna QR-kod i en app som stöds (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) och ange din autentiseringskod.
         disable_description: "Ange din autentiseringskod från din app"
         show_key_description: "Ange manuellt"
-        short_description: |
-          Skydda ditt konto med engångssäkerhetskoder.
         extended_description: |
           Tvåfaktorsautentisering lägger till extra säkerhet till ditt konto genom att begära ett engångsbevis utöver ditt lösenord.
           Bevis kan skapas på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- och <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-enheter.
@@ -1386,6 +1387,10 @@ sv:
           save: "Spara"
           edit_description: "Namn på fysisk säkerhetsnyckel"
           name_required_error: "Du måste ge din säkerhetsnyckel ett namn."
+      passkeys:
+        save: "Spara"
+        added_prefix: "Tillagd"
+        last_used_prefix: "Senast använd"
       change_about:
         title: "Ändra Om mig"
         error: "Ett fel inträffade vid ändringen av det här värdet."
@@ -1669,6 +1674,7 @@ sv:
         ok: "Ditt lösenord ser bra ut."
         instructions: "minst %{count} tecken"
         required: "Ange ett lösenord"
+        confirm: "Bekräfta"
       summary:
         title: "Sammanfattning"
         stats: "Statistik"
@@ -2031,12 +2037,6 @@ sv:
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
-      plus_subcategories_title:
-        one: "%{name} och en underkategori"
-        other: "%{name} och %{count} underkategorier"
-      plus_subcategories:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
     select_kit:
       delete_item: "Radera %{name}"
       filter_by: "Filtrera efter: %{name}"
@@ -4021,7 +4021,6 @@ sv:
           delete: "Radera"
           delete_confirm: "Är du säker på att du vill radera det här avsnittet?"
           reset_confirm: "Är du säker på att du vill återställa den här sektionen till standardvärdet?"
-          public: "Gör denna sektion offentligt och synligt för alla"
           always_public: "Innehållet i det här avsnittet är alltid offentligt"
           more_menu: "Menyn Mer"
           links:

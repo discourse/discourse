@@ -382,6 +382,9 @@ ur:
         type_bonus:
           name: "قِسم بَونَس"
           title: "سٹاف کی طرف سے کچھ قابل تجدید اقسام کو بَونَس تفویض کیا جاسکتا ہے تاکہ ان کو اعلیٰ ترجیح بنایا جاسکے۔"
+      revise_and_reject_post:
+        reason: "وجہ"
+        optional: "اختیاری"
       stale_help: "اس نظر ثانی کا حل <b>%{username}</b>نے کیا ہے۔"
       claim_help:
         optional: "آپ اس چیز کو کََلیم کرسکتے ہیں کہ دوسروں کو اِسکا جائزہ لینے سے روکا جا سکے۔"
@@ -1180,8 +1183,6 @@ ur:
           اِس QR کَوڈ کو کسی قابل اَیپ (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">اینڈرائڈ</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) میں اسکَین کریں اور اپنا توثیقی کَوڈ جمع کریں۔
         disable_description: "براہ مہربانی اپنی اَیپ میں سے توثیقی کَوڈ درج کریں"
         show_key_description: "دستی طور پر درج کریں"
-        short_description: |
-          ایک بار استعمال والے سیکورٹی کوڈز کے ساتھ اپنے اکاؤنٹ کی حفاظت کریں۔
         extended_description: |
           دو عنصر کی توثیق آپ کے اکاؤنٹ میں آپ کے پاس ورڈ کے علاوہ ون ٹائم ٹوکن کی ضرورت کے ذریعے اضافی سیکیورٹی کا اضافہ کرتی ہے۔ ٹوکنز <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> اور <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> آلات پر بنائے جا سکتے ہیں۔
         oauth_enabled_warning: "براہ کرم نوٹ کریں کہ آپ کے اکاؤنٹ پر دو فیکٹر تصدیق کے فعال ہونے کے بعد سوشل لاگ ان کو غیر فعال کر دیا جائے گا۔"
@@ -1207,6 +1208,10 @@ ur:
           already_added_error: "آپ نے پہلے ہی یہ سسیکیورٹی کیز رجسٹر کرلی ہے۔ آپ کو اسے دوبارہ رجسٹر کرنے کی ضرورت نہیں ہے۔"
           save: "محفوظ کریں"
           name_required_error: "آپ کو اپنی سیکیورٹی کی کا نام دینا ضروری ہے۔"
+      passkeys:
+        save: "محفوظ کریں"
+        added_prefix: "شامل کر دیا گیا"
+        last_used_prefix: "آخری بار استعمال"
       change_about:
         title: "\"میرے بارے میں\" تبدیل کریں"
         error: "اِس چیز کو تبدیل کرنے میں ایک خرابی کا سامنا کرنا پڑا۔"
@@ -1487,6 +1492,7 @@ ur:
         ok: "آپ کا پاسورڈ صحیح لگ رہا ہے"
         instructions: "کم از کم %{count} حروف"
         required: "براہ کرم پاس ورڈ درج کریں"
+        confirm: "تصدیق کریں"
       summary:
         title: "خلاصہ"
         stats: "اعدادوشمار"
@@ -1768,12 +1774,6 @@ ur:
       topic_count:
         one: "اس زمرے میں %{count} موضوع"
         other: "اس زمرے میں %{count} موضوعات"
-      plus_subcategories_title:
-        one: "%{name} اور ایک ذیلی زمرہ"
-        other: "%{name} اور %{count} ذیلی زمرہ جات"
-      plus_subcategories:
-        one: "+ %{count} ذیلی زمرہ"
-        other: "+ %{count} ذیلی زمرہ جات"
     select_kit:
       delete_item: "%{name} مٹائیں"
       filter_by: "فلٹر بذریعہ: %{name}"

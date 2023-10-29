@@ -1,30 +1,8 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatThreadParticipants extends Component {
-  <template>
-    {{#if this.showParticipants}}
-      <div class="chat-thread-participants" ...attributes>
-        <div class="chat-thread-participants__avatar-group">
-          {{#each this.participantsUsers as |user|}}
-            <ChatUserAvatar
-              @user={{user}}
-              @avatarSize="tiny"
-              @showPresence={{false}}
-              @interactive={{false}}
-            />
-          {{/each}}
-        </div>
-        {{#if @thread.preview.otherParticipantCount}}
-          <div class="chat-thread-participants__other-count">
-            {{this.otherCountLabel}}
-          </div>
-        {{/if}}
-      </div>
-    {{/if}}
-  </template>
-
   get showParticipants() {
     if (this.includeOriginalMessageUser) {
       return this.participantsUsers.length > 1;
@@ -58,4 +36,26 @@ export default class ChatThreadParticipants extends Component {
       count: this.args.thread.preview.otherParticipantCount,
     });
   }
+
+  <template>
+    {{#if this.showParticipants}}
+      <div class="chat-thread-participants" ...attributes>
+        <div class="chat-thread-participants__avatar-group">
+          {{#each this.participantsUsers as |user|}}
+            <ChatUserAvatar
+              @user={{user}}
+              @avatarSize="tiny"
+              @showPresence={{false}}
+              @interactive={{false}}
+            />
+          {{/each}}
+        </div>
+        {{#if @thread.preview.otherParticipantCount}}
+          <div class="chat-thread-participants__other-count">
+            {{this.otherCountLabel}}
+          </div>
+        {{/if}}
+      </div>
+    {{/if}}
+  </template>
 }

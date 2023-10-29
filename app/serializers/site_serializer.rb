@@ -278,7 +278,7 @@ class SiteSerializer < ApplicationSerializer
           SiteSetting.default_navigation_menu_tags.split("|") -
             DiscourseTagging.hidden_tag_names(scope)
 
-        serialize_tags(Tag.where(name: tag_names))
+        serialize_tags(Tag.where(name: tag_names).order(:name))
       end
   end
 

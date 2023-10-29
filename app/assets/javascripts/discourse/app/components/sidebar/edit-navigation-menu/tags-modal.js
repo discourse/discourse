@@ -15,7 +15,7 @@ export default class extends Component {
   @tracked onlySelected = false;
   @tracked onlyUnSelected = false;
   @tracked tags = [];
-  @tracked tagsLoading = true;
+  @tracked tagsLoading;
   @tracked selectedTags = [...this.currentUser.sidebarTagNames];
 
   constructor() {
@@ -43,11 +43,13 @@ export default class extends Component {
     await this.store
       .findAll("listTag", findArgs)
       .then((tags) => {
-        this.tagsLoading = false;
         this.tags = tags;
       })
       .catch((error) => {
         popupAjaxError(error);
+      })
+      .finally(() => {
+        this.tagsLoading = false;
       });
   }
 

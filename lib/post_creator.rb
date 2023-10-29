@@ -50,7 +50,6 @@ class PostCreator
   #     category              - Category to assign to topic
   #     target_usernames      - comma delimited list of usernames for membership (private message)
   #     target_group_names    - comma delimited list of groups for membership (private message)
-  #     meta_data             - Topic meta data hash
   #     created_at            - Topic creation time (optional)
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)
@@ -194,7 +193,6 @@ class PostCreator
         update_user_counts
         create_embedded_topic
         @post.link_post_uploads
-        @post.update_uploads_secure_status(source: "post creator")
         delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message if !@opts[:import_mode]

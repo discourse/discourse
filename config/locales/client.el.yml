@@ -381,6 +381,9 @@ el:
         type_bonus:
           name: "τύπος μπόνους"
           title: "Ορισμένοι τύποι που μπορούν να αναθεωρηθούν μπορούν να λάβουν ένα μπόνους από το προσωπικό για να τους δώσουν υψηλότερη προτεραιότητα."
+      revise_and_reject_post:
+        reason: "Αιτία"
+        optional: "προεραιτικό"
       claim_help:
         optional: "Μπορείτε να υποβάλετε αξίωση για αυτό το στοιχείο για να αποτρέψετε την αξιολόγηση από άλλους."
         required: "Πρέπει να διεκδικήσετε στοιχεία για να μπορέσετε να τα ελέγξετε."
@@ -1119,8 +1122,6 @@ el:
           Σαρώστε αυτόν τον κωδικό QR σε μια υποστηριζόμενη εφαρμογή (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) και εισαγάγετε τον κωδικό ελέγχου ταυτότητας.
         disable_description: "Παρακαλώ εισαγάγετε τον κωδικό ελέγχου ταυτότητας από την εφαρμογή σας"
         show_key_description: "Εισαγάγετε χειροκίνητα"
-        short_description: |
-          Προστατέψτε τον λογαριασμό σας με κωδικούς ασφαλείας μίας χρήσης.
         use: "Χρησιμοποιήστε την εφαρμογή Authenticator"
         disable: "Απενεργοποίηση"
         delete: "Διαγραφή"
@@ -1140,6 +1141,10 @@ el:
           already_added_error: "Έχετε ήδη καταχωρίσει αυτό το κλειδί ασφαλείας. Δε χρειάζεται να το καταχωρίσετε ξανά."
           save: "Αποθήκευση"
           name_required_error: "Πρέπει να δώσετε ένα όνομα για το κλειδί ασφαλείας σας."
+      passkeys:
+        save: "Αποθήκευση"
+        added_prefix: "Προστέθηκε"
+        last_used_prefix: "Τελευταία χρήση"
       change_about:
         title: "Άλλαξε τα «σχετικά με εμένα»"
         error: "Προέκυψε σφάλμα στην αλλαγή της αξίας."
@@ -1684,12 +1689,6 @@ el:
       topic_count:
         one: "%{count} θέμα σε αυτήν την κατηγορία"
         other: "%{count} θέματα σε αυτήν την κατηγορία"
-      plus_subcategories_title:
-        one: "%{name} και μία υποκατηγορία"
-        other: "%{name} και %{count} υποκατηγορίες"
-      plus_subcategories:
-        one: "+ %{count} υποκατηγορία"
-        other: "+ %{count} υποκατηγορίες"
     select_kit:
       delete_item: "Διαγραφή %{name}"
       no_content: Δεν βρέθηκαν αποτελέσματα

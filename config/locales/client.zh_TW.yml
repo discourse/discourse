@@ -366,6 +366,9 @@ zh_TW:
           title: "由信任等級較高的使用者建立的可審閱項目的分數較高。"
         type_bonus:
           name: "類型獎金"
+      revise_and_reject_post:
+        reason: "原因"
+        optional: "選擇性"
       claim_help:
         optional: "您可以聲明此項目以防止其他人審核。"
         required: "您必須先審核項目才能查看它們。"
@@ -1062,8 +1065,6 @@ zh_TW:
           使用可支援的 app 掃描此 QR Code（<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">安卓</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>）並輸入您的認證碼。
         disable_description: "請從您的應用程式輸入驗證碼"
         show_key_description: "手動輸入"
-        short_description: |
-          以一次性安全碼保護您的帳號
         disable: "禁用"
         delete: "刪除"
         save: "儲存"
@@ -1074,6 +1075,9 @@ zh_TW:
           android_default_name: "安卓"
           save: "儲存"
           name_required_error: "您必須提供安全金鑰名稱"
+      passkeys:
+        save: "保存"
+        added_prefix: "已新增"
       change_about:
         title: "修改關於我"
         error: "修改設定值時發生錯誤"

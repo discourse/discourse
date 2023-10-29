@@ -56,6 +56,39 @@ describe "Reviewables", type: :system do
     end
   end
 
+  describe "when there is a reviewable user" do
+    fab!(:user) { Fabricate(:user) }
+    let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
+
+    before do
+      SiteSetting.must_approve_users = true
+      Jobs.run_immediately!
+      user.update!(approved: false)
+      user.activate
+    end
+
+    it "Rejecting user sends rejection email and updates reviewable with rejection reason" do
+      rejection_reason = "user is spamming"
+      reviewable = ReviewableUser.find_by_target_id(user.id)
+      # cache it for later assertion instead of querying UserHistory
+      user_email = user.email
+
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "user-delete_user")
+      rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
+      rejection_reason_modal.select_send_rejection_email_checkbox
+      rejection_reason_modal.delete_user
+
+      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
+      expect(review_page).to have_reviewable_with_rejection_reason(reviewable, rejection_reason)
+
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.to).to eq([user_email])
+      expect(mail.subject).to match(/You've been rejected on Discourse/)
+      expect(mail.body.raw_source).to include rejection_reason
+    end
+  end
+
   context "when performing a review action from the show route" do
     context "with a ReviewableQueuedPost" do
       fab!(:queued_post_reviewable) { Fabricate(:reviewable_queued_post) }
@@ -75,6 +108,55 @@ describe "Reviewables", type: :system do
         expect(review_page).to have_no_reviewable_action_dropdown
         expect(queued_post_reviewable.reload).to be_rejected
         expect(queued_post_reviewable.target_created_by).to be_nil
+      end
+
+      it "allows revising and rejecting to send a PM to the user" do
+        revise_modal = PageObjects::Modals::Base.new
+
+        review_page.visit_reviewable(queued_post_reviewable)
+
+        expect(queued_post_reviewable).to be_pending
+        expect(queued_post_reviewable.target_created_by).to be_present
+
+        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+
+        expect(revise_modal).to be_open
+
+        reason_dropdown =
+          PageObjects::Components::SelectKit.new(".revise-and-reject-reviewable__reason")
+        reason_dropdown.select_row_by_value(SiteSetting.reviewable_revision_reasons_map.first)
+        find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
+        revise_modal.click_primary_button
+
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(queued_post_reviewable.reload).to be_rejected
+        expect(Topic.where(archetype: Archetype.private_message).last.title).to eq(
+          I18n.t(
+            "system_messages.reviewable_queued_post_revise_and_reject.subject_template",
+            topic_title: queued_post_reviewable.topic.title,
+          ),
+        )
+      end
+
+      it "allows selecting a custom reason for revise and reject" do
+        revise_modal = PageObjects::Modals::Base.new
+
+        review_page.visit_reviewable(queued_post_reviewable)
+
+        expect(queued_post_reviewable).to be_pending
+        expect(queued_post_reviewable.target_created_by).to be_present
+
+        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        expect(revise_modal).to be_open
+
+        reason_dropdown =
+          PageObjects::Components::SelectKit.new(".revise-and-reject-reviewable__reason")
+        reason_dropdown.select_row_by_value("other_reason")
+        find(".revise-and-reject-reviewable__custom-reason").fill_in(with: "I felt like it")
+        find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
+        revise_modal.click_primary_button
+
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
       end
     end
   end

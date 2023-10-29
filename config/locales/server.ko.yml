@@ -504,7 +504,8 @@ ko:
             name:
               same_as_password: "비밀번호와 같습니다."
             ip_address:
-              signup_not_allowed: "이 계정으로는 가입할 수 없습니다."
+              blocked: "이 IP 주소에서는 신규 등록할 수 없습니다."
+              max_new_accounts_per_registration_ip: "이 IP 주소에서는 신규 등록할 수 없습니다(최대 한도에 도달함). 운영진에게 문의하세요."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1381,7 +1382,6 @@ ko:
     must_approve_users: "운영진은 모든 신규 사용자가 사이트에 액세스할 수 있기 전에 해당 계정을 승인해야 합니다."
     invite_code: "계정 등록을 하려면 이 코드를 입력해야 합니다(대소문자 구분). 비어 있으면 무시합니다."
     approve_suspect_users: "검토 대기열에 의심스러운 사용자를 추가합니다. 의심스러운 사용자가 소개/웹사이트를 방문했지만 읽기 활동은 없습니다."
-    review_every_post: "모든 게시물을 검토해야 합니다. 경고! 사용량이 많은 사이트에는 권장되지 않습니다."
     pending_users_reminder_delay_minutes: "신규 사용자가 이 시간(분) 이상 승인을 기다리는 경우 운영자에게 알립니다. 알림을 비활성화하려면 -1로 설정합니다."
     persistent_sessions: "사용자는 웹 브라우저를 닫아도 로그인 상태를 유지합니다."
     maximum_session_age: "마지막 방문 이후 n시간 사용자의 로그인이 유지됩니다"
@@ -1403,8 +1403,6 @@ ko:
     content_security_policy_collect_reports: "/csp_reports에서 CSP 위반 리포트 수집 활성화"
     content_security_policy_frame_ancestors: "CSP를 통해 iframe에 이 사이트를 임베드할 수 있는 사용자를 제한합니다. <a href='%{base_path}/admin/customize/embedding'>임베딩</a>에서 허용된 호스트를 제어합니다."
     invalidate_inactive_admin_email_after_days: "이 기간에 사이트를 방문하지 않은 관리자 계정은 로그인하기 전에 이메일 주소를 다시 확인해야 합니다. 비활성화하려면 0으로 설정하세요."
-    top_menu: "홈페이지 메뉴에 표시할 항목과 순서를 결정합니다. 예: 최신|신규|읽지 않음|카테고리|주요|읽음|게시함|북마크"
-    post_menu: "게시물 메뉴에 표시할 항목과 순서를 결정합니다. 예: 좋아요|편집|신고|삭제|공유|북마크|댓글"
     post_menu_hidden_items: "펼치기 아이콘을 클릭하지 않을 경우 게시물 메뉴에서 기본적으로 숨길 메뉴 항목입니다."
     share_links: "공유 대화창에 표시할 항목과 순서를 결정합니다."
     site_contact_username: "모든 자동 메시지를 보낼 유효한 운영진 아이디입니다. 비워 두면 기본 시스템 계정이 사용됩니다."
@@ -2132,9 +2130,6 @@ ko:
       blocked: "는 허용되지 않습니다"
       revoked: "%{date}까지는 '%{email}' 주소로 이메일을 보내지 않습니다."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "이 IP 주소에서는 신규 등록할 수 없습니다."
-      max_new_accounts_per_registration_ip: "이 IP 주소에서는 신규 등록할 수 없습니다(최대 한도에 도달함). 운영진에게 문의하세요."
     website:
       domain_not_allowed: "유효하지 않은 웹사이트입니다. 허용되는 도메인: %{domains}"
     auto_rejected: "나이 때문에 자동으로 거부됩니다. auto_handle_queued_age 사이트 설정을 참조하세요."

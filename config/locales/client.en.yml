@@ -484,6 +484,14 @@ en:
         type_bonus:
           name: "type bonus"
           title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
+      revise_and_reject_post:
+        title: "Revise"
+        reason: "Reason"
+        send_pm: "Send PM"
+        feedback: "Feedback"
+        custom_reason: "Give a clear description of the reason"
+        other_reason: "Other..."
+        optional: "optional"
       stale_help: "This reviewable has been resolved by <b>%{username}</b>."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
@@ -1463,7 +1471,7 @@ en:
         disable_description: "Please enter the authentication code from your app"
         show_key_description: "Enter manually"
         short_description: |
-          Protect your account with one-time use security codes.
+          Protect your account with one-time use security codes or physical security keys.
         extended_description: |
           Two-factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two-factor authentication has been enabled on your account."
@@ -1502,6 +1510,22 @@ en:
           save: "Save"
           edit_description: "Physical Security Key Name"
           name_required_error: "You must provide a name for your security key."
+      passkeys:
+        rename_passkey: "Rename Passkey"
+        add_passkey: "Add Passkey"
+        confirm_delete_passkey: "Are you sure you want to delete this passkey?"
+        passkey_successfully_created: "Success! Your new passkey was created."
+        rename_passkey_instructions: "Pick a passkey name that will easily identify it for you, for example, use the name of your password manager."
+        name:
+          default: "Main Passkey"
+        save: "Save"
+        title: "Passkeys"
+        short_description: "Passkeys are password replacements that validate your identity biometrically (e.g. touch, faceID) or via a device PIN/password."
+        added_prefix: "Added"
+        last_used_prefix: "Last Used"
+        never_used: "Never Used"
+        not_allowed_error: "The passkey registration process either timed out, was cancelled or is not allowed."
+        already_added_error: "You have already registered this passkey. You don’t have to register it again."
 
       change_about:
         title: "Change About Me"
@@ -1627,6 +1651,7 @@ en:
 
       auth_tokens:
         title: "Recently Used Devices"
+        short_description: "This is a list of devices that have recently logged into your account."
         details: "Details"
         log_out_all: "Log out all"
         not_you: "Not you?"
@@ -1817,6 +1842,12 @@ en:
           success: "File uploaded successfully. You will be notified via message when the process is complete."
           error: "Sorry, file should be CSV format."
 
+      confirm_access:
+        title: "Confirm access"
+        incorrect_password: "The entered password is incorrect."
+        logged_in_as: "You are logged in as: "
+        instructions: "Please confirm your identity in order to complete this action."
+        fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
       password:
         title: "Password"
         too_short: "Your password is too short."
@@ -1826,6 +1857,8 @@ en:
         ok: "Your password looks good."
         instructions: "at least %{count} characters"
         required: "Please enter a password"
+        confirm: "Confirm"
+        incorrect_password: "The entered password is incorrect."
 
       summary:
         title: "Summary"
@@ -2170,6 +2203,7 @@ en:
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
       security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
       security_key_invalid_response_error: "The security key authentication process failed due to an invalid response."
+      passkey_security_error: "There was a security error: %{message}"
       email_placeholder: "Email / Username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
@@ -2225,6 +2259,8 @@ en:
         name: "Discord"
         title: "Log in with Discord"
         sr_title: "Log in with Discord"
+      passkey:
+        name: "Login with a passkey"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
@@ -2275,12 +2311,6 @@ en:
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
-      plus_subcategories_title:
-        one: "%{name} and one subcategory"
-        other: "%{name} and %{count} subcategories"
-      plus_subcategories:
-        one: "+ %{count} subcategory"
-        other: "+ %{count} subcategories"
 
     select_kit:
       delete_item: "Delete %{name}"
@@ -3705,6 +3735,7 @@ en:
       logo: "Category Logo Image"
       logo_dark: "Dark Mode Category Logo Image"
       background_image: "Category Background Image"
+      background_image_dark: "Dark Category Background Image"
       badge_colors: "Badge colors"
       background_color: "Background color"
       foreground_color: "Foreground color"
@@ -4464,7 +4495,7 @@ en:
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
           reset_confirm: "Are you sure you want to reset this section to default?"
-          public: "Make this section public and visible to everyone"
+          public: "Visible to everyone"
           always_public: "Content in this section is always public"
           more_menu: "More menu"
           links:
@@ -4573,6 +4604,9 @@ en:
     form_template_chooser:
       select_template: "Select form templates"
     form_templates:
+      upload_field:
+        upload: "Upload"
+        uploading: "Uploading"
       errors:
         valueMissing:
           default: "Please fill out this field."
@@ -5137,7 +5171,7 @@ en:
         install: "Install"
         delete: "Delete"
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
-        bulk_delete: 'Are you sure?'
+        bulk_delete: "Are you sure?"
         bulk_themes_delete_confirm: "This will uninstall the following themes, they will no longer be useable by any users on your site:"
         bulk_components_delete_confirm: "This will uninstall the following components, they will no longer be useable by any users on your site:"
         color: "Color"

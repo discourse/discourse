@@ -7,7 +7,7 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;
@@ -387,6 +387,8 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
+
     if (!this.args.mobileView) {
       this.intersectionObserver?.disconnect();
       this.intersectionObserver = null;

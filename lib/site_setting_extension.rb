@@ -199,6 +199,7 @@ module SiteSettingExtension
         opts = {
           setting: s,
           description: description(s),
+          keywords: keywords(s),
           default: default,
           value: value.to_s,
           category: categories[s],
@@ -216,6 +217,10 @@ module SiteSettingExtension
 
   def description(setting)
     I18n.t("site_settings.#{setting}", base_path: Discourse.base_path)
+  end
+
+  def keywords(setting)
+    I18n.t("site_settings.keywords.#{setting}", default: "")
   end
 
   def placeholder(setting)

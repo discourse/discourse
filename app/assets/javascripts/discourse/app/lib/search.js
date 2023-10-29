@@ -14,7 +14,7 @@ import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const translateResultsCallbacks = [];
 const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name

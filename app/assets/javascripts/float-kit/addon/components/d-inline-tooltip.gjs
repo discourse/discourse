@@ -9,7 +9,6 @@ export default class DInlineTooltip extends Component {
   @service tooltip;
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <div
       id={{TOOLTIP.portalOutletId}}
       {{didInsert this.tooltip.registerPortalOutletElement}}

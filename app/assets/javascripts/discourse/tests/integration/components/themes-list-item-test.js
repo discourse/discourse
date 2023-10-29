@@ -3,8 +3,8 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 import Theme from "admin/models/theme";
-import I18n from "I18n";
 
 module("Integration | Component | themes-list-item", function (hooks) {
   setupRenderingTest(hooks);

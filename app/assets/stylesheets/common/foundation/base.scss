@@ -180,7 +180,8 @@ input[type="submit"] {
   }
 
   > input[type="text"],
-  > input[type="search"] {
+  > input[type="search"],
+  > input[type="password"] {
     display: inline-flex;
     flex: 1;
   }
@@ -188,6 +189,7 @@ input[type="submit"] {
   > .select-kit,
   > input[type="text"],
   > input[type="search"],
+  > input[type="password"],
   > label,
   > .btn,
   > .d-date-input {

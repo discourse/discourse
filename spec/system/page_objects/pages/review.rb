@@ -18,6 +18,12 @@ module PageObjects
         end
       end
 
+      def select_action(reviewable, value)
+        within(reviewable_by_id(reviewable.id)) do
+          find(".reviewable-action.#{value.dasherize}").click
+        end
+      end
+
       def reviewable_by_id(id)
         find(".reviewable-item[data-reviewable-id=\"#{id}\"]")
       end
@@ -56,6 +62,13 @@ module PageObjects
 
       def has_reviewable_with_rejected_status?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".status .rejected") }
+      end
+
+      def has_reviewable_with_rejection_reason?(reviewable, rejection_reason)
+        reviewable_by_id(reviewable.id).has_css?(
+          ".reviewable-user-details.reject-reason .value",
+          text: rejection_reason,
+        )
       end
 
       def has_error_dialog_visible?

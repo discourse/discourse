@@ -9,7 +9,7 @@ import {
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Topic - Quote button - logged in", function (needs) {
   needs.user();

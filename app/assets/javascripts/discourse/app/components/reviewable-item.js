@@ -4,18 +4,25 @@ import { action, set } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
+import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
+import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import optionalService from "discourse/lib/optional-service";
-import showModal from "discourse/lib/show-modal";
 import Category from "discourse/models/category";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _components = {};
 
 const pluginReviewableParams = {};
-const actionModalClassMap = {};
+
+// The mappings defined here are default core mappings, and cannot be overridden
+// by plugins.
+const defaultActionModalClassMap = {
+  revise_and_reject_post: ReviseAndRejectPostReviewable,
+};
+const actionModalClassMap = { ...defaultActionModalClassMap };
 
 export function addPluginReviewableParam(reviewableType, param) {
   pluginReviewableParams[reviewableType]
@@ -24,6 +31,11 @@ export function addPluginReviewableParam(reviewableType, param) {
 }
 
 export function registerReviewableActionModal(actionName, modalClass) {
+  if (Object.keys(defaultActionModalClassMap).includes(actionName)) {
+    throw new Error(
+      `Cannot override default action modal class for ${actionName} (mapped to ${defaultActionModalClassMap[actionName].name})!`
+    );
+  }
   actionModalClassMap[actionName] = modalClass;
 }
 
@@ -135,7 +147,7 @@ export default Component.extend({
   },
 
   @bind
-  _performConfirmed(performableAction) {
+  _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.reviewable;
 
     let performAction = () => {
@@ -145,6 +157,7 @@ export default Component.extend({
       const data = {
         send_email: reviewable.sendEmail,
         reject_reason: reviewable.rejectReason,
+        ...additionalData,
       };
 
       (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
@@ -286,21 +299,14 @@ export default Component.extend({
       const requireRejectReason = performableAction.get(
         "require_reject_reason"
       );
-      const actionModalClass =
-        actionModalClassMap[performableAction.server_action];
+      const actionModalClass = requireRejectReason
+        ? RejectReasonReviewableModal
+        : actionModalClassMap[performableAction.server_action];
 
       if (message) {
         this.dialog.confirm({
           message,
           didConfirm: () => this._performConfirmed(performableAction),
-        });
-      } else if (requireRejectReason) {
-        showModal("reject-reason-reviewable", {
-          title: "review.reject_reason.title",
-          model: this.reviewable,
-        }).setProperties({
-          performConfirmed: this._performConfirmed,
-          action: performableAction,
         });
       } else if (actionModalClass) {
         this.modal.show(actionModalClass, {

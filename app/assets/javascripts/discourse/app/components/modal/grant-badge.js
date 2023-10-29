@@ -9,7 +9,7 @@ import {
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class GrantBadgeModal extends Component {
   @tracked loading = true;

@@ -568,7 +568,8 @@ es:
             name:
               same_as_password: "es igual a tu contraseña."
             ip_address:
-              signup_not_allowed: "No se permite el registro desde esta cuenta."
+              blocked: "No se permiten nuevos registros desde tu dirección IP."
+              max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (se alcanzó el límite máximo). Contacta con un miembro del equipo."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1529,7 +1530,6 @@ es:
     must_approve_users: "El personal debe aprobar todas las cuentas nuevas antes de que se les permita acceder al sitio."
     invite_code: "El usuario debe introducir este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
     approve_suspect_users: "Mandar usuarios sospechosos a la lista de revisión. Se consideran usuarios sospechosos aquellos que hayan introducido una biografía o página web, pero que no hayan registrado ninguna actividad de lectura."
-    review_every_post: "Todas las publicaciones deben ser revisadas. ¡ADVERTENCIA! NO SE RECOMIENDA PARA SITIOS CON MUCHA ACTIVIDAD."
     pending_users_reminder_delay_minutes: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de minutos. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
@@ -1555,8 +1555,6 @@ es:
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
     include_secure_categories_in_tag_counts: "Si está activada, el recuento de temas de una etiqueta incluirá los temas que estén en categorías de lectura restringida para todos los usuarios. Si está desactivada, a los usuarios normales solo se les mostrará un recuento de temas para una etiqueta en la que todos los temas estén en categorías públicas."
     display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
-    top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
-    post_menu: "Determinar los elementos que aparecen en el menú de publicación y su orden. Ejemplo: me gusta|editar|denunciar|eliminar|compartir|guardar en marcadores|responder"
     post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."
     allow_username_in_share_links: "Permitir que los nombres de usuario se incluyan en los enlaces compartidos. Esto es útil para premiar medallas basadas en visitantes únicos."
@@ -2149,7 +2147,6 @@ es:
     navigation_menu: "Determina qué menú de navegación utilizar. La barra lateral y la navegación del encabezado son personalizables por los usuarios. La opción heredada está disponible para compatibilidad con versiones anteriores."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
-    enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Utiliza el nuevo sistema de autocompletado #hashtag para categorías y etiquetas que muestra el elemento seleccionado de forma diferente y ha mejorado la búsqueda"
     experimental_new_new_view_groups: 'EXPERIMENTAL: Habilita una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Habilita secciones personalizadas de la barra lateral"
     experimental_topics_filter: "EXPERIMENTAL: Habilita la ruta del filtro de temas experimentales en /filter"
@@ -2413,9 +2410,6 @@ es:
       blocked: "no está permitido."
       revoked: "No se enviarán más correos electrónicos a «%{email}» hasta %{date}."
       does_not_exist: "N/D"
-    ip_address:
-      blocked: "No se permiten nuevos registros desde tu dirección IP."
-      max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (se alcanzó el límite máximo). Contacta con un miembro del equipo."
     website:
       domain_not_allowed: "El sitio web no es válido. Los dominios permitidos son: %{domains}"
     auto_rejected: "Rechazo automáticamente debido a la antigüedad. Ver configuración auto_handle_queued_age"

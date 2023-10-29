@@ -628,7 +628,8 @@ en:
             name:
               same_as_password: "is the same as your password."
             ip_address:
-              signup_not_allowed: "Signup is not allowed from this account."
+              blocked: "New registrations are not allowed from your IP address."
+              max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1502,6 +1503,7 @@ en:
     unreachable_themes: "We were unable to check for updates on the following themes:"
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
+    category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1660,7 +1662,7 @@ en:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
-    review_every_post: "All posts must be reviewed. WARNING! NOT RECOMMENDED FOR BUSY SITES."
+    review_every_post: "Send every new post to the review queue for moderation. Posts are still published immediately and are visible to all users. WARNING! Not recommended for high-traffic sites due to the potential volume of posts needing review."
     pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
@@ -1690,8 +1692,8 @@ en:
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "Determine which items appear in the homepage navigation, and in what order."
+    post_menu: "Determine which items appear on the post menu, and in what order."
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     allow_username_in_share_links: "Allow usernames to be included in share links. This is useful to reward badges based on unique visitors."
@@ -2176,6 +2178,7 @@ en:
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     allow_anonymous_likes: "Allow anonymous users to like posts"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
+    anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
@@ -2302,6 +2305,7 @@ en:
     approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
     approve_unless_staged: "New topics and posts for staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
+    reviewable_revision_reasons: "List of reasons that can be selected when rejecting a reviewable queued post with a revision. Other is always available as well, which allows for a custom reason to be entered."
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
     auto_close_topics_create_linked_topic: "Create a new linked topic when a topic is auto-closed based on 'auto close topics post count' setting"
@@ -2401,6 +2405,7 @@ en:
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
     create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
+    automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or private messages on a daily basis."
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
     company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
@@ -2448,7 +2453,6 @@ en:
     navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
-    enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
@@ -2486,7 +2490,7 @@ en:
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
-      personal_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send PMs, choose the staff group."
+      at_least_one_group_required: "You must specify at least one group for this setting."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
@@ -2516,6 +2520,9 @@ en:
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
+
+    keywords:
+      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2746,9 +2753,6 @@ en:
       blocked: "is not allowed."
       revoked: "Won't be sending emails to '%{email}' until %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "New registrations are not allowed from your IP address."
-      max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
     website:
       domain_not_allowed: "Website is invalid. Allowed domains are: %{domains}"
     auto_rejected: "Rejected automatically due to age. See auto_handle_queued_age site setting."
@@ -2983,6 +2987,52 @@ en:
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+
+    reviewable_queued_post_revise_and_reject:
+      title: "Feedback on your post"
+      subject_template: "Feedback on your post in %{topic_title}"
+      text_body_template: |
+        Hi %{username},
+
+        We've reviewed your post in [%{topic_title}](%{topic_url}) and have some feedback for you.
+
+        Reason: %{reason}
+
+        Feedback: %{feedback}
+
+        You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Thanks,
+        %{site_name} Moderators
+
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Feedback on your topic"
+      subject_template: "Feedback on new topic titled \"%{topic_title}\""
+      text_body_template: |
+        Hi %{username},
+
+        We've reviewed your new topic titled "%{topic_title}" and have some feedback for you.
+
+        Reason: %{reason}
+
+        Feedback: %{feedback}
+
+        You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Thanks,
+        %{site_name} Moderators
 
     post_hidden_again:
       title: "Post Hidden again"
@@ -5226,6 +5276,8 @@ en:
         title: "No"
       discard_post:
         title: "Discard Post"
+      revise_and_reject_post:
+        title: "Revise Post..."
       ignore:
         title: "Ignore"
       ignore_and_do_nothing:

@@ -244,6 +244,10 @@
           </div>
 
           <div class="modal-footer">
+            <div class="disclaimer">
+              {{html-safe this.disclaimerHtml}}
+            </div>
+
             <DButton
               @action={{action "createAccount"}}
               @disabled={{this.submitDisabled}}
@@ -262,9 +266,6 @@
               />
             {{/unless}}
 
-            <div class="disclaimer">
-              {{html-safe this.disclaimerHtml}}
-            </div>
           </div>
 
           <PluginOutlet
@@ -273,12 +274,13 @@
           />
 
         {{/if}}
-        {{#unless this.hasAuthOptions}}
-          <div class="create-account-login-buttons">
-            <LoginButtons @externalLogin={{action "externalLogin"}} />
-          </div>
-        {{/unless}}
-
+        {{#if this.site.desktopView}}
+          {{#unless this.hasAuthOptions}}
+            <div class="create-account-login-buttons">
+              <LoginButtons @externalLogin={{action "externalLogin"}} />
+            </div>
+          {{/unless}}
+        {{/if}}
         {{#if this.skipConfirmation}}
           {{loading-spinner size="large"}}
         {{/if}}

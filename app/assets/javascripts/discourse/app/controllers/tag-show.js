@@ -11,7 +11,7 @@ import DismissTopics from "discourse/mixins/dismiss-topics";
 import NavItem from "discourse/models/nav-item";
 import Topic from "discourse/models/topic";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class TagShowController extends DiscoverySortableController.extend(
   DismissTopics

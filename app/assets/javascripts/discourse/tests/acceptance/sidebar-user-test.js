@@ -7,7 +7,7 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Mobile view - Header dropdown navigation menu enabled",

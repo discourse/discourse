@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { action, get } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
+import $ from "jquery";
 import { searchForTerm } from "discourse/lib/search";
 import { debounce, observes } from "discourse-common/utils/decorators";
 

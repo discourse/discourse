@@ -6,6 +6,9 @@ class CategoryList
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
+  cattr_accessor :preloaded_category_custom_fields
+  self.preloaded_category_custom_fields = Set.new
+
   attr_accessor :categories, :uncategorized
 
   def self.register_included_association(association)
@@ -16,6 +19,7 @@ class CategoryList
   def self.included_associations
     [
       :uploaded_background,
+      :uploaded_background_dark,
       :uploaded_logo,
       :uploaded_logo_dark,
       :topic_only_relative_url,
@@ -137,6 +141,10 @@ class CategoryList
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
     @categories = query.to_a
+
+    if preloaded_category_custom_fields.any?
+      Category.preload_custom_fields(@categories, preloaded_category_custom_fields)
+    end
 
     include_subcategories = @options[:include_subcategories] == true
 

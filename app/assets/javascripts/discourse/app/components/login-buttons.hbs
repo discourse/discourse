@@ -15,4 +15,9 @@
     {{b.title}}
   </button>
 {{/each}}
+
+{{#if this.canUsePasskeys}}
+  <PasskeyLoginButton @passkeyLogin={{this.passkeyLogin}} />
+{{/if}}
+
 <PluginOutlet @name="after-login-buttons" />

@@ -568,12 +568,7 @@ ru:
           many: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
           other: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
       retention_reminders:
-        public:
-          one: "%{count} день"
-          few: "%{count} дней"
-          many: "%{count} дня"
-          other: "%{count} дня"
-        dm:
+        short:
           one: "%{count} день"
           few: "%{count} дней"
           many: "%{count} дня"

@@ -498,10 +498,7 @@ sv:
           one: "%{commaSeparatedUsernames} och %{count} skriver"
           other: "%{commaSeparatedUsernames} och %{count} andra skriver"
       retention_reminders:
-        public:
-          one: "%{count} dag"
-          other: "%{count} dagar"
-        dm:
+        short:
           one: "%{count} dag"
           other: "%{count} dagar"
       flags:

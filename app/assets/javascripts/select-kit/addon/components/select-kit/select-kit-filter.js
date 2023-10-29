@@ -3,7 +3,7 @@ import { action, computed } from "@ember/object";
 import { not } from "@ember/object/computed";
 import { isPresent } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import UtilsMixin from "select-kit/mixins/utils";
 
 export default Component.extend(UtilsMixin, {

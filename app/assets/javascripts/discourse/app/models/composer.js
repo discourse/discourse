@@ -20,7 +20,7 @@ import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _customizations = [];
 export function registerCustomizationCallback(cb) {
@@ -824,7 +824,10 @@ const Composer = RestModel.extend({
     });
 
     // We set the category id separately for topic templates on opening of composer
-    this.set("categoryId", opts.categoryId || this.get("topic.category.id"));
+    this.set(
+      "categoryId",
+      opts.topicCategoryId || opts.categoryId || this.get("topic.category.id")
+    );
 
     if (!this.categoryId && this.creatingTopic) {
       const categories = this.site.categories;

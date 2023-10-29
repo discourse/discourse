@@ -518,14 +518,14 @@ de:
           one: "%{commaSeparatedUsernames} und %{count} andere Person schreiben"
           other: "%{commaSeparatedUsernames} und %{count} andere Personen schreiben"
       retention_reminders:
-        public_none: "unbegrenzt"
-        public:
+        indefinitely_short: "unbegrenzt"
+        indefinitely_long: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten auf unbestimmte Zeit gespeichert werden."
+        short:
           one: "%{count} Tag"
           other: "%{count} Tage"
-        dm_none: "unbegrenzt"
-        dm:
-          one: "%{count} Tag"
-          other: "%{count} Tage"
+        long:
+          one: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tag aufbewahrt werden."
+          other: "Die Chat-Einstellungen wurden so eingestellt, dass Channel-Nachrichten für %{count} Tage aufbewahrt werden."
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."

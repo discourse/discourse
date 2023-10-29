@@ -380,6 +380,9 @@ id:
         type_bonus:
           name: "jenis bonus"
           title: "Jenis tertentu yang dapat ditinjau akan diberikan bonus oleh staf untuk menjadikannya prioritas yang lebih tinggi."
+      revise_and_reject_post:
+        reason: "Alasan"
+        optional: "opsional"
       stale_help: "Butir tinjauan ini telah diselesaikan oleh <b>%{username}</b>."
       claim_help:
         optional: "Anda dapat mengklaim item ini untuk mencegah orang lain meninjaunya."
@@ -1105,6 +1108,9 @@ id:
         edit: "Ubah"
         security_key:
           save: "Simpan"
+      passkeys:
+        save: "Simpan"
+        added_prefix: "Ditambahkan"
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"
@@ -1267,6 +1273,7 @@ id:
         same_as_email: "Password dan email kamu sama"
         ok: "Kata sandi Anda terlihat baik."
         instructions: "paling tidak %{count} karakter"
+        confirm: "Konfirmasi"
       summary:
         title: "Ringkasan"
         stats: "Statistik"
@@ -1768,6 +1775,7 @@ id:
       required_tag_group:
         delete: "Hapus"
       name: "Nama Kategori"
+      background_image_dark: "Gambar Latar Belakang Kategori Gelap"
       permissions:
         reply: "Balas"
       review_group_name: "nama grup"

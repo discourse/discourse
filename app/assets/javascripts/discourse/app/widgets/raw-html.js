@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 export default class RawHtml {
   constructor(attrs) {
     this.html = attrs.html;

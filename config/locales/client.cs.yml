@@ -466,6 +466,9 @@ cs:
         type_bonus:
           name: "bonus za psaní"
           title: "Některým revidovatelným typům mohou redaktoři přidělit bonus, aby měly vyšší prioritu."
+      revise_and_reject_post:
+        reason: "Reason"
+        optional: "volitelné"
       stale_help: "Tuto revizi vyřešil/a <b>%{username}</b>."
       claim_help:
         optional: "Tuto položku si můžete nárokovat, abyste zabránili ostatním v její kontrole."
@@ -1278,8 +1281,6 @@ cs:
           Naskenujte tento QR kód v podporované aplikaci (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) a zadejte ověřovací kód.
         disable_description: "Zadejte prosím ověřovací kód z vaší aplikace"
         show_key_description: "Vložit ručně"
-        short_description: |
-          Chraňte svůj účet jednorázovými bezpečnostními kódy.
         extended_description: |
           Dvoufaktorové ověření zvyšuje zabezpečení vašeho účtu tím, že vyžaduje jednorázový kód navíc k vašemu heslu. Kódy mohou být generovány na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> zařízeních.
         oauth_enabled_warning: "Vezměte prosím na vědomí, že přihlášení pomocí sociálních sítí bude zakázáno, jakmile bude dvoufaktorové ověřování na vašem účtu povoleno."
@@ -1315,6 +1316,10 @@ cs:
           save: "Uložit"
           edit_description: "Název fyzického bezpečnostního klíče"
           name_required_error: "Musíte zadat název bezpečnostního klíče."
+      passkeys:
+        save: "Uložit"
+        added_prefix: "Přidáno"
+        last_used_prefix: "Naposledy použito"
       change_about:
         title: "Změna o mně"
         error: "Došlo k chybě při pokusu změnit tuto hodnotu."
@@ -3621,7 +3626,6 @@ cs:
           delete: "Smazat"
           delete_confirm: "Opravdu chcete odstranit tuto sekci?"
           reset_confirm: "Jste si jisti, že chcete resetovat tuto sekci na výchozí?"
-          public: "Zveřejnit tuto sekci a zobrazit pro všechny"
           always_public: "Obsah v této sekci je vždy veřejný"
           more_menu: "Další menu"
           links:

@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -314,7 +314,9 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("ellipses", async function (assert) {
-    await render(hbs`<DButton @translatedLabel="test label" @ellipsis=true />`);
+    await render(
+      hbs`<DButton @translatedLabel="test label" @ellipsis={{true}} />`
+    );
 
     assert.dom(".d-button-label").hasText("test label…");
   });

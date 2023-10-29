@@ -5,8 +5,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
-import discourseLater from "discourse-common/lib/later";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const flatten = (array) => [].concat.apply([], array);
 
@@ -361,36 +360,8 @@ export default createWidget("hamburger-menu", {
     });
   },
 
-  clickOutsideMobile(e) {
-    const centeredElement = document.elementFromPoint(e.clientX, e.clientY);
-    const parents = document
-      .elementsFromPoint(e.clientX, e.clientY)
-      .some((ele) => ele.classList.contains("panel"));
-    if (!centeredElement.classList.contains("header-cloak") && parents) {
-      this.sendWidgetAction("toggleHamburger");
-    } else {
-      const windowWidth = document.body.offsetWidth;
-      const panel = document.querySelector(".menu-panel");
-      panel.classList.add("animate");
-      let offsetDirection = this.site.mobileView ? -1 : 1;
-      offsetDirection =
-        document.querySelector("html").classList["direction"] === "rtl"
-          ? -offsetDirection
-          : offsetDirection;
-      panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
-      const headerCloak = document.querySelector(".header-cloak");
-      headerCloak.classList.add("animate");
-      headerCloak.style.setProperty("--opacity", 0);
-      discourseLater(() => this.sendWidgetAction("toggleHamburger"), 200);
-    }
-  },
-
-  clickOutside(e) {
-    if (this.site.mobileView) {
-      this.clickOutsideMobile(e);
-    } else {
-      this.sendWidgetAction("toggleHamburger");
-    }
+  clickOutside() {
+    this.sendWidgetAction("toggleHamburger");
   },
 
   keyDown(e) {

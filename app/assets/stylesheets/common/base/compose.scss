@@ -21,11 +21,17 @@ html.composer-open {
     max-width: 740px;
   }
 
-  &:has(.has-form-template) {
+  &:has(.with-form-template) {
     max-width: 740px;
 
-    .toggle-preview {
+    .toggle-preview,
+    .submit-panel .mobile-preview,
+    .submit-panel .mobile-file-upload:not(.hidden) {
       display: none;
+    }
+    .d-editor-preview-wrapper {
+      display: none;
+      flex: 0;
     }
   }
 
@@ -41,6 +47,11 @@ html.composer-open {
   .reply-area {
     display: flex;
     flex-direction: column;
+
+    &.with-form-template {
+      max-height: 100%;
+      box-sizing: border-box;
+    }
   }
 
   .saving-text,

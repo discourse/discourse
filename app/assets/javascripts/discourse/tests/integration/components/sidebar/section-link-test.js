@@ -16,7 +16,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default class attribute for link", async function (assert) {
-    const template = hbs`<Sidebar::SectionLink @linkName="Test   Meta" @route="discovery.latest" />`;
+    const template = hbs`<Sidebar::SectionLink @linkName="Test Meta" @route="discovery.latest" />`;
 
     await render(template);
 
@@ -29,7 +29,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   });
 
   test("custom class attribute for link", async function (assert) {
-    const template = hbs`<Sidebar::SectionLink @linkName="Test   Meta" @route="discovery.latest" @class="123 abc" />`;
+    const template = hbs`<Sidebar::SectionLink @linkName="Test Meta" @route="discovery.latest" @class="123 abc" />`;
 
     await render(template);
 

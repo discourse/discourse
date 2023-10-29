@@ -40,20 +40,11 @@ RSpec.describe TopicCreator do
         expect(TopicCreator.create(moderator, Guardian.new(moderator), valid_attrs)).to be_valid
       end
 
-      it "supports both meta_data and custom_fields" do
-        opts =
-          valid_attrs.merge(
-            meta_data: {
-              import_topic_id: "foo",
-            },
-            custom_fields: {
-              import_id: "bar",
-            },
-          )
+      it "supports custom_fields that has been registered to the DiscoursePluginRegistry" do
+        opts = valid_attrs.merge(custom_fields: { import_id: "bar" })
 
         topic = TopicCreator.create(admin, Guardian.new(admin), opts)
 
-        expect(topic.custom_fields["import_topic_id"]).to eq("foo")
         expect(topic.custom_fields["import_id"]).to eq("bar")
       end
 

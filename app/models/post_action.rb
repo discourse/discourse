@@ -136,16 +136,6 @@ class PostAction < ActiveRecord::Base
     target_post.post_actions.each { |post_action| post_action.update_counters }
   end
 
-  def self.remove_act(user, post, post_action_type_id)
-    Discourse.deprecate(
-      "PostAction.remove_act is deprecated. Use `PostActionDestroyer` instead.",
-      output_in_test: true,
-      drop_from: "2.9.0",
-    )
-
-    PostActionDestroyer.new(user, post, post_action_type_id).perform
-  end
-
   def remove_act!(user)
     trash!(user)
     # NOTE: save is called to ensure all callbacks are called

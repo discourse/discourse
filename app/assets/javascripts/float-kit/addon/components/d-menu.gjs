@@ -53,7 +53,6 @@ export default class DMenu extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <DButton
       class={{concatClass
         "fk-d-menu__trigger"

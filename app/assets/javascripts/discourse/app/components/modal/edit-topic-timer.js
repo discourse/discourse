@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";

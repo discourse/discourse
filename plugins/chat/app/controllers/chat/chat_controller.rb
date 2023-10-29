@@ -12,7 +12,7 @@ module Chat
     # these endpoints require a standalone find because they need to be
     # able to get deleted channels and recover them.
     before_action :find_chatable, only: %i[enable_chat disable_chat]
-    before_action :find_chat_message, only: %i[edit_message rebake message_link]
+    before_action :find_chat_message, only: %i[rebake message_link]
     before_action :set_channel_and_chatable_with_access_check,
                   except: %i[
                     respond
@@ -77,20 +77,6 @@ module Chat
       end
     end
 
-    def edit_message
-      chat_message_updater =
-        Chat::MessageUpdater.update(
-          guardian: guardian,
-          chat_message: @message,
-          new_content: params[:new_message],
-          upload_ids: params[:upload_ids] || [],
-        )
-
-      return render_json_error(chat_message_updater.error) if chat_message_updater.failed?
-
-      render json: success_json
-    end
-
     def react
       params.require(%i[message_id emoji react_action])
       guardian.ensure_can_react!
@@ -126,37 +112,6 @@ module Chat
 
       current_user.user_option.update(chat_enabled: params[:chat_enabled])
       render json: { chat_enabled: current_user.user_option.chat_enabled }
-    end
-
-    def invite_users
-      params.require(:user_ids)
-
-      users =
-        User
-          .includes(:groups)
-          .joins(:user_option)
-          .where(user_options: { chat_enabled: true })
-          .not_suspended
-          .where(id: params[:user_ids])
-      users.each do |user|
-        if user.guardian.can_join_chat_channel?(@chat_channel)
-          data = {
-            message: "chat.invitation_notification",
-            chat_channel_id: @chat_channel.id,
-            chat_channel_title: @chat_channel.title(user),
-            chat_channel_slug: @chat_channel.slug,
-            invited_by_username: current_user.username,
-          }
-          data[:chat_message_id] = params[:chat_message_id] if params[:chat_message_id]
-          user.notifications.create(
-            notification_type: Notification.types[:chat_invitation],
-            high_priority: true,
-            data: data.to_json,
-          )
-        end
-      end
-
-      render json: success_json
     end
 
     def dismiss_retention_reminder

@@ -157,7 +157,9 @@ body.invite-page {
         min-height: 1.4em; // prevents height increase due to tips
       }
       label.alt-placeholder,
-      .user-field.dropdown label.control-label {
+      .user-field.text label.control-label,
+      .user-field.dropdown label.control-label,
+      .user-field.multiselect label.control-label {
         color: var(--primary-medium);
         font-size: 16px;
         font-weight: normal;
@@ -168,7 +170,9 @@ body.invite-page {
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
         transition: 0.2s ease all;
       }
-      .user-field.dropdown label.control-label {
+      .user-field.text label.control-label,
+      .user-field.dropdown label.control-label,
+      .user-field.multiselect label.control-label {
         z-index: 999;
         top: -8px;
         left: calc(1em - 0.25em);
@@ -176,8 +180,10 @@ body.invite-page {
         padding: 0 0.25em 0 0.25em;
         font-size: $font-down-1;
       }
-      .user-field.dropdown:focus-within {
-        z-index: 1000; // this ensures the active dropdown is always on top of sibling dropdown labels
+      .user-field.text:focus-within,
+      .user-field.dropdown:focus-within,
+      .user-field.multiselect:focus-within {
+        z-index: 1000; // ensures the active input is always on top of sibling input labels
       }
       input:focus + label.alt-placeholder,
       input.value-entered + label.alt-placeholder {
@@ -255,7 +261,8 @@ body.invite-page {
             text-overflow: ellipsis;
           }
         }
-        span.name {
+        details:not(.has-selection) span.name,
+        details:not(.has-selection) span.formatted-selection {
           color: var(--primary-medium);
         }
         .select-kit-row span.name {
@@ -287,7 +294,7 @@ body.invite-page {
 .create-account {
   .disclaimer {
     color: var(--primary-medium);
-    margin-top: 0.5em;
+    margin-bottom: 0.5em;
   }
 
   @media screen and (min-width: 701px) {
@@ -333,6 +340,12 @@ body.invite-page {
 .toggle-password-mask {
   align-self: start;
   line-height: 1.4; // aligns with input description text
+  .ios-device & {
+    // reset form-item-sizing mixin styles
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: var(--font-0);
+  }
 }
 
 // admin invite page

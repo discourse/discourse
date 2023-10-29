@@ -450,7 +450,8 @@ lt:
             name:
               same_as_password: "yra toks pats kaip jūsų slaptažodis."
             ip_address:
-              signup_not_allowed: "Registracijos nėra galimos iš šios paskyros."
+              blocked: "Naujos registracijos neleidžiamos iš jūsų IP adreso."
+              max_new_accounts_per_registration_ip: "Naujos registracijos neleidžiamos iš jūsų IP adreso (pasiekta maksimali riba). Susisiekite su administracija."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1273,8 +1274,6 @@ lt:
     moderators_change_post_ownership: "Leisti moderatoriams pakeisti įrašo nuosavybę"
     use_admin_ip_allowlist: "Administratoriai gali prisijungti tik tuo atveju, jei yra IP adresas, apibrėžtas sąraše „Tikrinami IP“ (Administratorius> Žurnalai> Tikrinami IP)."
     blocked_ip_blocks: "Sąrašas privačių IP blokų, kurių niekada neturėtų tikrinti „Discourse“"
-    top_menu: "Nustatykite, kurie elementai rodomi pagrindinio puslapio navigacijoje ir kokia tvarka. Pavyzdys naujausios | naujos | neskaitytos | kategorijos | viršuje | skaityti | paskelbta | žymos"
-    post_menu: "Nustatykite, kurie elementai rodomi įrašų meniu ir kokia tvarka. Pavyzdys kaip | redaguoti | vėliava | ištrinti | bendrinti | žymėti | atsakyti"
     share_links: "Nustatykite, kurie elementai rodomi bendrinimo dialogo lange ir kokia tvarka."
     site_contact_username: "Tinkamas personalo vartotojo vardas, iš kurio siunčiami visi automatiniai pranešimai. Jei jis paliekamas tuščias, bus naudojama numatytoji sistemos paskyra."
     site_contact_group_name: "Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes."
@@ -1590,9 +1589,6 @@ lt:
       not_allowed: "neleidžiama iš šio el. pašto teikėjo. Prašome naudoti kitą el. pašto adresą."
       blocked: "negalimas."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Naujos registracijos neleidžiamos iš jūsų IP adreso."
-      max_new_accounts_per_registration_ip: "Naujos registracijos neleidžiamos iš jūsų IP adreso (pasiekta maksimali riba). Susisiekite su administracija."
     website:
       domain_not_allowed: "Svetainė netinkama. Leidžiami domenai yra: %{domains}"
     destroy_reasons:

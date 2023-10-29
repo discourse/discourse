@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const _additionalAttributes = [];
 
@@ -220,6 +220,10 @@ export default function transformPost(
     postAtts.topicWordCount = topic.word_count;
     postAtts.hasTopRepliesSummary = topic.has_summary;
     postAtts.summarizable = topic.summarizable;
+
+    if (post.post_number === 1) {
+      postAtts.summary = postStream.topicSummary;
+    }
   }
 
   if (postAtts.isDeleted) {

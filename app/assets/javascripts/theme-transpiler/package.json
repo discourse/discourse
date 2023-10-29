@@ -7,7 +7,7 @@
   "license": "GPL-2.0-only",
   "keywords": [],
   "dependencies": {
-    "@babel/standalone": "^7.23.1",
+    "@babel/standalone": "^7.23.2",
     "@zxing/text-encoding": "^0.9.0",
     "babel-plugin-ember-template-compilation": "^2.2.0",
     "content-tag": "^1.1.2",
@@ -15,11 +15,11 @@
     "discourse-widget-hbs": "1.0.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-source": "~3.28.12",
-    "ember-this-fallback": "^0.3.1",
+    "ember-this-fallback": "^0.4.0",
     "handlebars": "^4.7.8",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "terser": "^5.21.0"
+    "terser": "^5.22.0"
   },
   "engines": {
     "node": "16.* || >= 18",

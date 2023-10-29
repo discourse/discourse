@@ -1,7 +1,7 @@
 import jQuery from "jquery";
 import deprecated from "discourse-common/lib/deprecated";
 import { helperContext, makeArray } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));

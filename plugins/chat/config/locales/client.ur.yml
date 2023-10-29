@@ -114,10 +114,7 @@ ur:
         new_message:
           title: "نئے پیغام پر منتقل کریں"
       retention_reminders:
-        public:
-          one: "%{count} دن"
-          other: "%{count} دن"
-        dm:
+        short:
           one: "%{count} دن"
           other: "%{count} دن"
       emoji_picker:

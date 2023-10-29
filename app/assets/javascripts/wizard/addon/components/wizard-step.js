@@ -2,8 +2,9 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import $ from "jquery";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const alreadyWarned = {};
 

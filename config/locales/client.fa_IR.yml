@@ -390,6 +390,9 @@ fa_IR:
         type_bonus:
           name: "امتیاز را وارد کنید"
           title: "موارد قابل بررسی خاص می توانند کارمندان دارای امتیاز شوند تا اولویت آن ها را بیشتر کند."
+      revise_and_reject_post:
+        reason: "دلیل"
+        optional: "اختیاری"
       stale_help: "این موردِ قابل بررسی توسط <b>%{username}</b> حل شده است."
       claim_help:
         optional: "می‌توانید این مورد را درخواست کنید تا دیگران را از بازنگری آن بازنگه دارید."
@@ -1158,8 +1161,6 @@ fa_IR:
           این کد QR را در یک اپلیکیشن مورد تایید (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">آندروید</a> -- <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">IOS</a>) و کد احراز هویت خود را وارد کنید.
         disable_description: "لطفا کد احراز هویت را از اپلیکیشن خود وارد کنید"
         show_key_description: "دستی وارد کنید"
-        short_description: |
-          حساب کاربری خود را با کد امنیتی یک بار مصرف محافظت کنید
         extended_description: |
           احراز هویت دو عامله امنیت بیشتری به حساب کاربری شما میدهد، چرا که یک توکن یک بار مصرف علاوه بر رمز عبور خود خواهید داشت. توکن ها در ابزارهای <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اندروید</a> و <a href="https://www.google.com/search?q=authenticator+apps+for+ios">IOS</a> قابل تولید هستند.
         oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
@@ -1188,6 +1189,9 @@ fa_IR:
           save: "ذخیره"
           edit_description: "نام کلیدهای امنیتی فیزیکی"
           name_required_error: "شما باید یک نام برای کلید امنیتی خود انتخاب کنید."
+      passkeys:
+        save: "ذخیره"
+        added_prefix: "اضافه شده"
       change_about:
         title: "تغییر «درباره‌ی من»"
         error: "در فرآیند تغییر این مقدار خطایی روی داد."
@@ -1453,6 +1457,7 @@ fa_IR:
         ok: "رمز عبور خوبی است."
         instructions: "حداقل %{count} نویسه"
         required: "لطفاً یک کلمه عبور وارد کنید"
+        confirm: "تایید"
       summary:
         title: "خلاصه"
         stats: "آمار"
@@ -1786,10 +1791,6 @@ fa_IR:
       enter: "وارد شدن "
     conditional_loading_section:
       loading: در حال بارگیری…
-    category_row:
-      plus_subcategories_title:
-        one: "%{name} و یک زیرشاخه"
-        other: "%{name} و %{count} زیر‌شاخه"
     select_kit:
       delete_item: "حذف %{name}"
       filter_by: "فیلتر توسط: %{name}"

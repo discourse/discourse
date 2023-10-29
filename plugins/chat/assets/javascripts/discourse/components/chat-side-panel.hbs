@@ -5,7 +5,7 @@
     {{chat/resizable-node
       ".chat-side-panel-resizer"
       this.didResize
-      (hash position=false vertical=false mutate=false)
+      (hash position=false vertical=false mutate=false resetOnWindowResize=true)
     }}
     style={{if
       (and this.site.desktopView this.chatStateManager.isFullPageActive)

@@ -568,7 +568,8 @@ fr:
             name:
               same_as_password: "est identique à votre mot de passe."
             ip_address:
-              signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
+              blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
+              max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1543,7 +1544,6 @@ fr:
     must_approve_users: "Un responsable doit approuver tous les nouveaux utilisateurs avant qu'ils aient accès au site."
     invite_code: "Les utilisateurs doivent saisir ce code pour pouvoir créer un compte (cette obligation est ignorée si le champ est laissé vide, insensible à la casse)"
     approve_suspect_users: "Ajouter les utilisateurs suspects à la file des éléments en attente d'examen. Les utilisateurs qui ont renseigné une biographie ou un site Web sur leur profil mais n'ont pas parcouru le forum sont définis comme suspects."
-    review_every_post: "Chaque message doit être examiné par un responsable avant sa publication. AVERTISSEMENT : DÉCONSEILLÉ POUR UN SITE À FORTE FRÉQUENTATION."
     pending_users_reminder_delay_minutes: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre de minutes. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur Web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
@@ -1569,8 +1569,6 @@ fr:
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
-    top_menu: "Choisissez les éléments qui apparaissent dans la navigation de la page d'accueil, ainsi que leur ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Choisissez les éléments qui apparaissent dans le menu du message, ainsi que leur ordre. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront masqués par défaut jusqu'à extension du menu."
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
     allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."
@@ -2163,7 +2161,6 @@ fr:
     navigation_menu: "Déterminer le menu de navigation à utiliser. La navigation dans la barre latérale et l'en-tête sont personnalisables par les utilisateurs. L'option Legacy est disponible pour des raisons de rétrocompatibilité."
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
-    enable_experimental_hashtag_autocomplete: "EXPÉRIMENTAL : utilisez le nouveau système de saisie semi-automatique #hashtag pour les catégories et les balises, il affiche différemment l'élément sélectionné et améliore la recherche"
     experimental_new_new_view_groups: 'EXPÉRIMENTAL : activer une nouvelle liste de sujets qui combine les sujets non lus et les nouveaux sujets, et faire en sorte que le lien « Tout » de la barre latérale y renvoie l''utilisateur.'
     enable_custom_sidebar_sections: "EXPÉRIMENTAL : activer les sections personnalisées de la barre latérale"
     experimental_topics_filter: "EXPÉRIMENTAL : activer l'itinéraire de filtrage des sujets expérimentaux dans /filter"
@@ -2427,9 +2424,6 @@ fr:
       blocked: "n'est pas autorisé."
       revoked: "N'enverra plus d'e-mails à « %{email} » jusqu'au %{date}."
       does_not_exist: "S.O."
-    ip_address:
-      blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
-      max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
     website:
       domain_not_allowed: "Site Web invalide. Les domaines autorisés sont : %{domains}"
     auto_rejected: "Refusé automatiquement en raison de l'âge. Voir le paramètre de site « auto_handle_queued_age »."

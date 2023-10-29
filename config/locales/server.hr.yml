@@ -428,7 +428,8 @@ hr:
             name:
               same_as_password: "je ista kao vaša lozinka."
             ip_address:
-              signup_not_allowed: "Prijava nije dopuštena ovom računu."
+              blocked: "Nove registracije nisu dopuštene s vaše IP adrese."
+              max_new_accounts_per_registration_ip: "Nove registracije nisu dopuštene s vaše IP adrese (dostignuto je maksimalno ograničenje). Kontaktirajte člana osoblja."
         color_scheme_color:
           attributes:
             hex:
@@ -1153,7 +1154,6 @@ hr:
     must_approve_users: "Osoblje mora odobriti sve nove korisničke račune prije nego im se dopusti pristup stranici."
     invite_code: "Korisnik mora upisati ovaj kod kako bi mu se omogućila registracija računa, zanemaruje se kada je prazan (neosjetljivo je na velika i mala slova)"
     approve_suspect_users: "Dodajte sumnjive korisnike u red čekanja za pregled. Sumnjivi korisnici ušli su u biografiju/web stranicu, ali nemaju aktivnosti čitanja."
-    review_every_post: "Sve objave moraju biti pregledane. UPOZORENJE! NE PREPORUČUJE SE ZA PROMETNA MJESTA."
     pending_users_reminder_delay_minutes: "Obavijesti moderatore ako novi korisnici čekaju na odobrenje dulje od ovoliko minuta. Postavite na -1 da biste onemogućili obavijesti."
     persistent_sessions: "Korisnici će ostati prijavljeni kada se web preglednik zatvori"
     maximum_session_age: "Korisnik će ostati prijavljen n sati od zadnje posjete"
@@ -1446,7 +1446,6 @@ hr:
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
     splash_screen: "Prikazuje privremeni zaslon za učitavanje dok se sredstva web-mjesta učitavaju"
     navigation_menu: "Odredite koji navigacijski izbornik koristiti. Bočnu traku i navigaciju u zaglavlju korisnici mogu prilagoditi. Naslijeđena opcija dostupna je za kompatibilnost s prethodnim verzijama."
-    enable_experimental_hashtag_autocomplete: "EKSPERIMENTALNO: Upotrijebite novi #hashtag sustav automatskog dovršavanja za kategorije i oznake koji drugačije prikazuje odabranu stavku i ima poboljšano pretraživanje"
     errors:
       invalid_css_color: "Nevažeća boja. Unesite naziv boje ili hex vrijednost."
       invalid_email: "Nevažeća adresa e-pošte."
@@ -1622,9 +1621,6 @@ hr:
       blocked: "nije dopušteno."
       revoked: "Neće slati e-poštu na '%{email}' do %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Nove registracije nisu dopuštene s vaše IP adrese."
-      max_new_accounts_per_registration_ip: "Nove registracije nisu dopuštene s vaše IP adrese (dostignuto je maksimalno ograničenje). Kontaktirajte člana osoblja."
     website:
       domain_not_allowed: "Web stranica nije važeća. Dopuštene domene su: %{domains}"
     auto_rejected: "Automatski odbijeno zbog starosti. Pogledajte postavku web mjesta auto_handle_queued_age."
