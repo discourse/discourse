@@ -44,14 +44,7 @@ module BulkImport
         upload_files
 
         puts "", "Creating optimized images..."
-        if @settings[:create_optimized_images]
-          begin
-            @source_db.execute("ATTACH DATABASE ? AS discourse", @settings[:output_db_path])
-            create_optimized_images
-          ensure
-            @source_db.execute("DETACH DATABASE discourse", @settings[:output_db_path])
-          end
-        end
+        create_optimized_images if @settings[:create_optimized_images]
       end
       puts ""
     ensure
