@@ -340,11 +340,60 @@ module BulkImport
         result_set.close
       end
 
+      post_upload_ids = Set.new
+      sql = <<~SQL
+        SELECT upload_ids
+          FROM posts
+         WHERE upload_ids IS NOT NULL
+      SQL
+      query(sql, @source_db).tap do |result_set|
+        result_set.each { |row| JSON.parse(row["upload_ids"]).each { |id| post_upload_ids << id } }
+        result_set.close
+      end
+
+      avatar_upload_ids = Set.new
+      sql = <<~SQL
+        SELECT avatar_upload_id
+          FROM users
+         WHERE avatar_upload_id IS NOT NULL
+      SQL
+      query(sql, @source_db).tap do |result_set|
+        result_set.each { |row| avatar_upload_ids << row["avatar_upload_id"] }
+        result_set.close
+      end
+
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
-      max_count =
-        @output_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL")
+      producer_thread =
+        Thread.new do
+          sql = <<~SQL
+            SELECT id AS upload_id, upload ->> 'sha1' AS upload_sha1, markdown
+              FROM uploads
+             WHERE upload IS NOT NULL
+             ORDER BY rowid
+          SQL
+
+          query(sql, @output_db).tap do |result_set|
+            result_set.each do |row|
+              upload_id = row["upload_id"]
+              next if optimized_upload_ids.include?(upload_id)
+
+              if post_upload_ids.include?(upload_id)
+                row["type"] = "post"
+              elsif avatar_upload_ids.include?(upload_id)
+                row["type"] = "avatar"
+              else
+                next
+              end
+
+              queue << row
+            end
+            result_set.close
+          end
+        end
+
+      max_count = post_upload_ids.size + avatar_upload_ids.size - optimized_upload_ids.size
 
       status_queue = SizedQueue.new(QUEUE_SIZE)
       status_thread =
@@ -372,34 +421,6 @@ module BulkImport
 
             print "\r%7d / %7d (%s, %d skipped)" %
                     [current_count, max_count, error_count_text, skipped_count]
-          end
-        end
-
-      producer_thread =
-        Thread.new do
-          sql = <<~SQL
-            SELECT u.avatar_upload_id AS upload_id, du.upload ->> 'sha1' AS upload_sha1, du.markdown, 'avatar' AS type
-              FROM users u
-                   JOIN discourse.uploads du ON u.avatar_upload_id = du.id
-             WHERE u.avatar_upload_id IS NOT NULL
-             UNION ALL
-            SELECT pu.value AS upload_id, du.upload ->> 'sha1' AS upload_sha1, du.markdown, 'post' AS type
-              FROM posts p,
-                   JSON_EACH(p.upload_ids) pu,
-                   discourse.uploads du
-             WHERE p.upload_ids IS NOT NULL
-               AND pu.value = du.id
-          SQL
-
-          query(sql, @source_db).tap do |result_set|
-            result_set.each do |row|
-              if optimized_upload_ids.include?(row["upload_id"])
-                status_queue << { id: row["upload_id"], status: :skipped }
-              else
-                queue << row
-              end
-            end
-            result_set.close
           end
         end
 
