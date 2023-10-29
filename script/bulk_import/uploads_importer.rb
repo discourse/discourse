@@ -338,36 +338,51 @@ module BulkImport
     end
 
     def create_optimized_images
+      init_threads = []
       optimized_upload_ids = Set.new
-      query("SELECT id FROM optimized_images", @output_db).tap do |result_set|
-        result_set.each { |row| optimized_upload_ids << row["id"] }
-        result_set.close
+      post_upload_ids = Set.new
+      avatar_upload_ids = Set.new
+      max_count = 0
+
+      init_threads << Thread.new do
+        query("SELECT id FROM optimized_images", @output_db).tap do |result_set|
+          result_set.each { |row| optimized_upload_ids << row["id"] }
+          result_set.close
+        end
       end
 
-      post_upload_ids = Set.new
-      sql = <<~SQL
+      init_threads << Thread.new do
+        sql = <<~SQL
         SELECT upload_ids
           FROM posts
          WHERE upload_ids IS NOT NULL
       SQL
-      query(sql, @source_db).tap do |result_set|
-        result_set.each { |row| JSON.parse(row["upload_ids"]).each { |id| post_upload_ids << id } }
-        result_set.close
+        query(sql, @source_db).tap do |result_set|
+          result_set.each do |row|
+            JSON.parse(row["upload_ids"]).each { |id| post_upload_ids << id }
+          end
+          result_set.close
+        end
       end
 
-      avatar_upload_ids = Set.new
-      sql = <<~SQL
+      init_threads << Thread.new do
+        sql = <<~SQL
         SELECT avatar_upload_id
           FROM users
          WHERE avatar_upload_id IS NOT NULL
       SQL
-      query(sql, @source_db).tap do |result_set|
-        result_set.each { |row| avatar_upload_ids << row["avatar_upload_id"] }
-        result_set.close
+        query(sql, @source_db).tap do |result_set|
+          result_set.each { |row| avatar_upload_ids << row["avatar_upload_id"] }
+          result_set.close
+        end
       end
 
-      max_count =
-        @output_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL")
+      init_threads << Thread.new do
+        max_count =
+          @output_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL")
+      end
+
+      init_threads.each(&:join)
 
       status_queue = SizedQueue.new(QUEUE_SIZE)
       status_thread =
