@@ -450,10 +450,11 @@ module BulkImport
 
       avatar_sizes = Discourse.avatar_sizes
       store = Discourse.store
+      remote_factor = store.external? ? 2 : 1
 
       Jobs.run_immediately!
 
-      (Etc.nprocessors * @settings[:thread_count_factor]).to_i.times do |index|
+      (Etc.nprocessors * @settings[:thread_count_factor] * remote_factor).to_i.times do |index|
         consumer_threads << Thread.new do
           Thread.current.name = "worker-#{index}"
 
