@@ -492,25 +492,29 @@ module BulkImport
                   nil
                 end
 
-              if optimized_images.present?
-                optimized_images.map! do |optimized_image|
-                  next unless optimized_image.present?
-                  optimized_image_path = store.get_path_for_optimized_image(optimized_image)
+              begin
+                if optimized_images.present?
+                  optimized_images.map! do |optimized_image|
+                    next unless optimized_image.present?
+                    optimized_image_path = store.get_path_for_optimized_image(optimized_image)
 
-                  file_exists =
-                    if store.external?
-                      store.object_from_path(optimized_image_path).exists?
-                    else
-                      File.exist?(File.join(store.public_dir, optimized_image_path))
+                    file_exists =
+                      if store.external?
+                        store.object_from_path(optimized_image_path).exists?
+                      else
+                        File.exist?(File.join(store.public_dir, optimized_image_path))
+                      end
+
+                    unless file_exists
+                      optimized_image.destroy
+                      optimized_image = nil
                     end
 
-                  unless file_exists
-                    optimized_image.destroy
-                    optimized_image = nil
+                    optimized_image
                   end
-
-                  optimized_image
                 end
+              rescue StandardError
+                optimized_images = nil
               end
 
               optimized_images_okay =
