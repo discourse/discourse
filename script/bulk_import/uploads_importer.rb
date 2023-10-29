@@ -482,7 +482,7 @@ module BulkImport
                     post.update_columns(baked_at: nil, cooked: "", raw: row["markdown"])
                     post.reload
                     post.rebake!
-                    OptimizedImage.where(upload_id: upload.id)
+                    OptimizedImage.where(upload_id: upload.id).to_a
                   when "avatar"
                     avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
                   end
