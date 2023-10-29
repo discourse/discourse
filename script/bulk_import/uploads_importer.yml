@@ -31,3 +31,10 @@ site_settings:
   s3_access_key_id: "your-access-key-id"
   s3_secret_access_key: "your-secret-access-key"
   s3_cdn_url: "https://your-cdn-url.com"
+
+# Sometimes a file can be found at one of many locations. Here's a list of transformations that can
+# be applied to the path to try and find the file. The first transformation that results in a file
+# being found will be used.
+path_replacements:
+#  - ["/foo/", "/bar"]
+#  - ["/foo/", "/bar/baz/"]

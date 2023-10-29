@@ -20,6 +20,7 @@ module BulkImport
 
     def initialize(settings_path)
       @settings = YAML.load_file(settings_path, symbolize_names: true)
+      @settings[:path_replacements] ||= []
 
       @root_path = @settings[:root_path]
       @output_db = create_connection(@settings[:output_db_path])
@@ -149,9 +150,19 @@ module BulkImport
 
           while (row = queue.pop)
             begin
-              path = File.join(@root_path, row["relative_path"], row["filename"])
+              relative_path = row["relative_path"]
+              path = File.join(@root_path, relative_path, row["filename"])
+              file_exists = File.exist?(path)
 
-              if !File.exist?(path)
+              if !file_exists
+                @settings[:path_replacements].each do |from, to|
+                  from, to = replacement
+                  path = File.join(@root_path, relative_path.sub(from, to), row["filename"])
+                  break if (file_exists = File.exist?(path))
+                end
+              end
+
+              if !file_exists
                 status_queue << {
                   id: row["id"],
                   upload: nil,
