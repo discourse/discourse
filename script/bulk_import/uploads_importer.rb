@@ -417,13 +417,13 @@ module BulkImport
 
               if post_upload_ids.include?(upload_id)
                 row["type"] = "post"
+                queue << row
               elsif avatar_upload_ids.include?(upload_id)
                 row["type"] = "avatar"
+                queue << row
               else
                 status_queue << { id: row["upload_id"], status: :skipped }
               end
-
-              queue << row
             end
             result_set.close
           end
