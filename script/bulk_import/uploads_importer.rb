@@ -410,7 +410,7 @@ module BulkImport
             result_set.each do |row|
               upload_id = row["upload_id"]
 
-              if optimized_upload_ids.include?(upload_id)
+              if optimized_upload_ids.include?(upload_id) || !row["markdown"].start_with?("![")
                 status_queue << { id: row["upload_id"], status: :skipped }
                 next
               end
@@ -454,11 +454,6 @@ module BulkImport
 
             loop do
               upload = Upload.find_by(sha1: row["upload_sha1"])
-
-              if !row["markdown"].start_with?("![")
-                status_queue << { id: row["upload_id"], status: :skipped }
-                next
-              end
 
               optimized_images =
                 begin
