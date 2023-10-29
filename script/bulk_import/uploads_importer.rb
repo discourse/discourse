@@ -525,7 +525,7 @@ module BulkImport
               if optimized_images_okay
                 status_queue << {
                   id: row["upload_id"],
-                  optimized_images: optimized_images.to_json,
+                  optimized_images: optimized_images.presence&.to_json,
                   status: :ok,
                 }
                 break
