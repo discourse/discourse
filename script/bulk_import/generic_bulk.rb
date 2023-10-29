@@ -54,6 +54,7 @@ class BulkImport::Generic < BulkImport::Base
     import_user_histories
     import_user_notes
     import_user_note_counts
+    import_user_followers
 
     import_user_avatars
     update_uploaded_avatar_id
@@ -1001,6 +1002,40 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     user_note_counts.close
+  end
+
+  def import_user_followers
+    puts "", "Importing user followers..."
+
+    unless defined?(::Follow)
+      puts "  Skipping import of user followers because the plugin is not installed."
+      return
+    end
+
+    user_followers = query(<<~SQL)
+      SELECT *
+        FROM user_followers
+       ORDER BY user_id, follower_id
+    SQL
+
+    existing_followers = UserFollower.pluck(:user_id, :follower_id).to_set
+    notification_level = Follow::Notification.levels[:watching]
+
+    create_user_followers(user_followers) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      follower_id = user_id_from_imported_id(row["follower_id"])
+
+      next if !user_id || !follower_id || existing_followers.include?([user_id, follower_id])
+
+      {
+        user_id: user_id,
+        follower_id: follower_id,
+        level: notification_level,
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    user_followers.close
   end
 
   def import_uploads

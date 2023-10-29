@@ -518,6 +518,8 @@ class BulkImport::Base
     timezone
   ]
 
+  USER_FOLLOWER_COLUMNS ||= %i[user_id follower_id level created_at updated_at]
+
   GROUP_USER_COLUMNS ||= %i[group_id user_id created_at updated_at]
 
   USER_CUSTOM_FIELD_COLUMNS ||= %i[user_id name value created_at updated_at]
@@ -746,6 +748,10 @@ class BulkImport::Base
 
   def create_user_options(rows, &block)
     create_records(rows, "user_option", USER_OPTION_COLUMNS, &block)
+  end
+
+  def create_user_followers(rows, &block)
+    create_records(rows, "user_follower", USER_FOLLOWER_COLUMNS, &block)
   end
 
   def create_single_sign_on_records(rows, &block)
@@ -1016,6 +1022,12 @@ class BulkImport::Base
   def process_user_option(user_option)
     USER_OPTION_DEFAULTS.each { |key, value| user_option[key] = value if user_option[key].nil? }
     user_option
+  end
+
+  def process_user_follower(user_follower)
+    user_follower[:created_at] ||= NOW
+    user_follower[:updated_at] ||= NOW
+    user_follower
   end
 
   def process_single_sign_on_record(sso_record)
