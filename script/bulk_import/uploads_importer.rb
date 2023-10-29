@@ -156,7 +156,6 @@ module BulkImport
 
               if !file_exists
                 @settings[:path_replacements].each do |from, to|
-                  from, to = replacement
                   path = File.join(@root_path, relative_path.sub(from, to), row["filename"])
                   break if (file_exists = File.exist?(path))
                 end
