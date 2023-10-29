@@ -187,7 +187,7 @@ module BulkImport
                     end
                   end
 
-                if upload.present?
+                if (upload_okay = upload.present? && upload.persisted? && upload.errors.blank?)
                   upload_path = store.get_path_for_upload(upload)
 
                   file_exists =
@@ -200,10 +200,9 @@ module BulkImport
                   unless file_exists
                     upload.destroy
                     upload = nil
+                    upload_okay = false
                   end
                 end
-
-                upload_okay = upload.present? && upload.persisted? && upload.errors.blank?
 
                 if upload_okay
                   status_queue << {
