@@ -1071,6 +1071,7 @@ class BulkImport::Generic < BulkImport::Base
         FROM optimized_images oi,
              JSON_EACH(oi.optimized_images) x
        WHERE optimized_images IS NOT NULL
+       GROUP BY x.value -> 'url'
        ORDER BY oi.rowid, x.value -> 'id'
     SQL
 
@@ -1086,8 +1087,11 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_optimized_images(optimized_images) do |row|
+      upload_id = upload_id_from_original_id(row["upload_id"])
+      next unless upload_id
+
       optimized_image = JSON.parse(row["optimized_image"], symbolize_names: true)
-      optimized_image[:upload_id] = upload_id_from_original_id(row["upload_id"])
+      optimized_image[:upload_id] = upload_id
       optimized_image
     end
 
