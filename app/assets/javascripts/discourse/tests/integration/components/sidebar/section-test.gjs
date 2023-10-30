@@ -1,4 +1,5 @@
-import { click, render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Section from "discourse/components/sidebar/section";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -28,6 +29,11 @@ module("Integration | Component | sidebar | section", function (hooks) {
   });
 
   test("displaySection is dynamic based on argument", async function (assert) {
+    class State {
+      @tracked displaySection = false;
+    }
+    const state = new State();
+
     const template = <template>
       <Section
         @sectionName="test"
@@ -35,11 +41,9 @@ module("Integration | Component | sidebar | section", function (hooks) {
         @headerLinkTitle="some title"
         @headerActionsIcon="plus"
         @headerActions={{this.headerActions}}
-        @displaySection={{this.displaySection}}
+        @displaySection={{state.displaySection}}
       />
     </template>;
-
-    this.displaySection = false;
     this.headerActions = [];
     await render(template);
 
@@ -48,7 +52,8 @@ module("Integration | Component | sidebar | section", function (hooks) {
       "section is not displayed"
     );
 
-    this.set("displaySection", true);
+    state.displaySection = true;
+    await settled();
     assert.ok(exists(".sidebar-section-wrapper"), "section is displayed");
   });
 
