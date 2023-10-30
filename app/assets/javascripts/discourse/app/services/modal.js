@@ -16,7 +16,6 @@ const KNOWN_LEGACY_MODALS = [
   "avatar-selector",
   "change-owner",
   "change-post-notice",
-  "create-account",
   "create-invite-bulk",
   "create-invite",
   "grant-badge",
