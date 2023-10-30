@@ -1223,6 +1223,40 @@ HTML
         ],
       )
     end
+
+    it "allows removing an old setting that no longer exists" do
+      settings_field.update!(value: <<~YAML)
+        setting_that_will_be_removed: 1
+      YAML
+      theme.update_setting(:setting_that_will_be_removed, 1023)
+      theme.save!
+
+      settings_field.update!(value: <<~YAML)
+        new_setting: 1
+      YAML
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          if (settings.get("setting_that_will_be_removed") !== 1023) {
+            throw new Error(`expected setting_that_will_be_removed to be 1023, but it was instead ${settings.get("setting_that_will_be_removed")}.`);
+          }
+          settings.delete("setting_that_will_be_removed");
+          return settings;
+        }
+      JS
+      theme.reload
+      theme.migrate_settings
+      theme.reload
+
+      expect(theme.theme_settings.count).to eq(0)
+
+      records = theme.theme_settings_migrations
+      expect(records.size).to eq(1)
+
+      expect(records[0].diff).to eq(
+        "additions" => [],
+        "deletions" => [{ "key" => "setting_that_will_be_removed", "val" => 1023 }],
+      )
+    end
   end
 
   describe "development experience" do
