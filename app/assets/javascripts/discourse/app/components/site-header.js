@@ -9,8 +9,8 @@ import SwipeEvents from "discourse/lib/swipe-events";
 import Docking from "discourse/mixins/docking";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { isTesting } from "discourse-common/config/environment";
-import { bind, observes } from "discourse-common/utils/decorators";
 import discourseLater from "discourse-common/lib/later";
+import { bind, observes } from "discourse-common/utils/decorators";
 
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
