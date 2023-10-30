@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import { registerTemporaryModule } from "../../helpers/temporary-module-helper";
 
@@ -44,8 +44,8 @@ module("Plugin Outlet - Decorator", function (hooks) {
     const barConnector = query(".my-outlet-name-outlet.bar");
 
     assert.dom(fooConnector).exists();
-    assert.dom(fooConnector).hasStyle({ backgroundColor: "yellow"});
-    assert.dom(barConnector).doesNotHaveStyle({ backgroundColor: "yellow" });
+    assert.strictEqual(fooConnector.style.backgroundColor, "yellow");
+    assert.strictEqual(barConnector.style.backgroundColor, "");
 
     await render(<template>
       <PluginOutlet
