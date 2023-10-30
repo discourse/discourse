@@ -15,8 +15,8 @@
     >
       <div class="chat-thread-list-item__header">
         <div class="chat-thread-list-item__title">
-          {{#if this.title}}
-            {{replace-emoji this.title}}
+          {{#if @thread.title}}
+            {{replace-emoji @thread.title}}
           {{else}}
             {{replace-emoji @thread.originalMessage.excerpt}}
           {{/if}}
