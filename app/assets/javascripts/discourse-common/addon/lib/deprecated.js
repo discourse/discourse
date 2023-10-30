@@ -39,7 +39,7 @@ export default function deprecated(msg, options = {}) {
   msg = msg.join(" ");
 
   let consolePrefix = "";
-  if (window.Discourse) {
+  if (require.has("discourse/lib/source-identifier")) {
     // This module doesn't exist in pretty-text/wizard/etc.
     consolePrefix =
       require("discourse/lib/source-identifier").consolePrefix() || "";
