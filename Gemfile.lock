@@ -647,7 +647,7 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
-  selenium-webdriver (~> 4.11)
+  selenium-webdriver (~> 4.14)
   shoulda-matchers!
   sidekiq
   simplecov
