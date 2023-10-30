@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
-import { escapeExpression } from "discourse/lib/utilities";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -72,9 +71,5 @@ export default class ChatThread {
 
   get routeModels() {
     return [...this.channel.routeModels, this.id];
-  }
-
-  get escapedTitle() {
-    return escapeExpression(this.title);
   }
 }
