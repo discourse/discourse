@@ -26,11 +26,7 @@ module("Plugin Outlet - Decorator", function (hooks) {
             if (elem.classList.contains("foo")) {
               elem.style.backgroundColor = "yellow";
 
-              if (args.value) {
-                elem.classList.add("has-value");
-              } else {
-                elem.classList.remove("has-value");
-              }
+              elem.classList.toggle("has-value", args.value);
             }
           },
           { id: "yellow-decorator" }
@@ -44,12 +40,12 @@ module("Plugin Outlet - Decorator", function (hooks) {
       <PluginOutlet @connectorTagName="div" @name="my-outlet-name" />
     </template>);
 
-    const fooConnector = query(".my-outlet-name-outlet.foo ");
-    const barConnector = query(".my-outlet-name-outlet.bar ");
+    const fooConnector = query(".my-outlet-name-outlet.foo");
+    const barConnector = query(".my-outlet-name-outlet.bar");
 
-    assert.ok(exists(fooConnector));
-    assert.strictEqual(fooConnector.style.backgroundColor, "yellow");
-    assert.strictEqual(barConnector.style.backgroundColor, "");
+    assert.dom(fooConnector).exists();
+    assert.dom(fooConnector).hasStyle({ backgroundColor: "yellow"});
+    assert.dom(barConnector).doesNotHaveStyle({ backgroundColor: "yellow" });
 
     await render(<template>
       <PluginOutlet
@@ -59,12 +55,12 @@ module("Plugin Outlet - Decorator", function (hooks) {
       />
     </template>);
 
-    assert.dom(".my-outlet-name-outlet.foo ").hasClass("has-value");
+    assert.dom(".my-outlet-name-outlet.foo").hasClass("has-value");
 
     await render(<template>
       <PluginOutlet @connectorTagName="div" @name="my-outlet-name" />
     </template>);
 
-    assert.dom(".my-outlet-name-outlet.foo ").doesNotHaveClass("has-value");
+    assert.dom(".my-outlet-name-outlet.foo").doesNotHaveClass("has-value");
   });
 });

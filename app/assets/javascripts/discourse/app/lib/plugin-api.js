@@ -1630,7 +1630,7 @@ class PluginApi {
    * );
    * ```
    *
-   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS our plugin outlet connectors instead
+   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead
    *
    **/
   decoratePluginOutlet(outletName, callback, opts) {
