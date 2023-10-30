@@ -37,10 +37,6 @@ export default class ChatThreadHeader extends Component {
     };
   }
 
-  get label() {
-    return htmlSafe(this.args.thread.escapedTitle);
-  }
-
   get canChangeThreadSettings() {
     if (!this.args.thread) {
       return false;

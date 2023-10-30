@@ -6,10 +6,6 @@ import { htmlSafe } from "@ember/template";
 export default class ChatThreadListItem extends Component {
   @service router;
 
-  get title() {
-    return htmlSafe(this.args.thread.escapedTitle);
-  }
-
   @action
   openThread(thread) {
     this.router.transitionTo("chat.channel.thread", ...thread.routeModels);
