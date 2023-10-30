@@ -1,5 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
+import LoginMethod from "discourse/models/login-method";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
@@ -46,5 +48,18 @@ acceptance("Create Account", function () {
     assert
       .dom("#username-validation")
       .hasText(I18n.t("user.username.required"), "shows signup error");
+  });
+
+  test("can sign in using a third-party auth", async function (assert) {
+    sinon.stub(LoginMethod, "buildPostForm").callsFake((url) => {
+      assert.step("buildPostForm");
+      assert.strictEqual(url, "/auth/facebook?signup=true");
+    });
+
+    await visit("/");
+    await click("header .sign-up-button");
+    await click("#login-buttons button");
+
+    assert.verifySteps(["buildPostForm"]);
   });
 });
