@@ -3,9 +3,8 @@
 .link-share-container,
 .notify-user-input {
   display: flex;
-  .btn {
-    margin-left: 0.5em;
-  }
+  gap: 0.5em;
+
   input,
   .select-kit {
     cursor: auto;
