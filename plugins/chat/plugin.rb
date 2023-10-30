@@ -253,6 +253,12 @@ after_initialize do
     object.chat_separate_sidebar_mode
   end
 
+  add_to_serializer(
+    :upload,
+    :thumbnail,
+    include_condition: -> { SiteSetting.chat_enabled && SiteSetting.create_thumbnails },
+  ) { object.thumbnail }
+
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
     chat_channel_retention_days: :dismissed_channel_retention_reminder,
     chat_dm_retention_days: :dismissed_dm_retention_reminder,

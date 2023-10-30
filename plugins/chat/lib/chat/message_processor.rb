@@ -17,7 +17,37 @@ module Chat
 
     def run!
       post_process_oneboxes
+      process_thumbnails
       DiscourseEvent.trigger(:chat_message_processed, @doc, @model)
+    end
+
+    def process_thumbnails
+      @model.uploads.each do |upload|
+        if upload.width <= SiteSetting.max_image_width &&
+             upload.height <= SiteSetting.max_image_heigh
+          return false
+        end
+
+        crop =
+          SiteSetting.min_ratio_to_crop > 0 &&
+            upload.width.to_f / upload.height.to_f < SiteSetting.min_ratio_to_crop
+
+        width = upload.thumbnail_width
+        height = upload.thumbnail_height
+
+        # create the main thumbnail
+        upload.create_thumbnail!(width, height, crop: crop)
+
+        # create additional responsive thumbnails
+        each_responsive_ratio do |ratio|
+          resized_w = (width * ratio).to_i
+          resized_h = (height * ratio).to_i
+
+          if upload.width && resized_w <= upload.width
+            upload.create_thumbnail!(resized_w, resized_h, crop: crop)
+          end
+        end
+      end
     end
 
     def large_images

@@ -222,15 +222,6 @@ class CookedPostProcessor
     end
   end
 
-  def each_responsive_ratio
-    SiteSetting
-      .responsive_post_image_sizes
-      .split("|")
-      .map(&:to_f)
-      .sort
-      .each { |r| yield r if r > 1 }
-  end
-
   def optimize_image!(img, upload, cropped: false)
     w, h = img["width"].to_i, img["height"].to_i
     onebox = img.ancestors(".onebox, .onebox-body").first
