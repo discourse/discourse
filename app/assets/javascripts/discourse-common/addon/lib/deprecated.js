@@ -3,6 +3,8 @@ const disabledDeprecations = new Set();
 const emberCliDeprecationWorkflows =
   window.deprecationWorkflow?.config?.workflow;
 
+let emberDeprecationSilencer;
+
 /**
  * Display a deprecation warning with the provided message. The warning will be prefixed with the theme/plugin name
  * if it can be automatically determined based on the current stack.
@@ -72,6 +74,7 @@ export function registerDeprecationHandler(callback) {
  * @param {function} callback The function to call while deprecations are silenced.
  */
 export function withSilencedDeprecations(deprecationIds, callback) {
+  ensureEmberDeprecationSilencer();
   const idArray = [].concat(deprecationIds);
   try {
     idArray.forEach((id) => disabledDeprecations.add(id));
@@ -94,11 +97,32 @@ export function withSilencedDeprecations(deprecationIds, callback) {
  * @param {function} callback The asynchronous function to call while deprecations are silenced.
  */
 export async function withSilencedDeprecationsAsync(deprecationIds, callback) {
+  ensureEmberDeprecationSilencer();
   const idArray = [].concat(deprecationIds);
   try {
     idArray.forEach((id) => disabledDeprecations.add(id));
     return await callback();
   } finally {
     idArray.forEach((id) => disabledDeprecations.delete(id));
+  }
+}
+
+function ensureEmberDeprecationSilencer() {
+  if (emberDeprecationSilencer) {
+    return;
+  }
+
+  emberDeprecationSilencer = (message, options, next) => {
+    if (options?.id && disabledDeprecations.has(options.id)) {
+      return;
+    } else {
+      next(message, options);
+    }
+  };
+
+  if (require.has("@ember/debug")) {
+    require("@ember/debug").registerDeprecationHandler(
+      emberDeprecationSilencer
+    );
   }
 }
