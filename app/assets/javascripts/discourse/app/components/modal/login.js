@@ -30,8 +30,8 @@ export default class Login extends Component {
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
-  @tracked flash = this.args.model?.flash;
-  @tracked flashType = this.args.model?.flashType;
+  @tracked flash = this.args.model.flash;
+  @tracked flashType = this.args.model.flashType;
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked
   canLoginLocalWithEmail = this.siteSettings.enable_local_logins_via_email;
@@ -48,7 +48,8 @@ export default class Login extends Component {
 
   constructor() {
     super(...arguments);
-    if (this.args.model?.isExternalLogin) {
+
+    if (this.args.model.isExternalLogin) {
       this.externalLogin(this.args.model.externalLoginMethod, {
         signup: this.args.model.signup,
       });
@@ -57,7 +58,7 @@ export default class Login extends Component {
 
   get awaitingApproval() {
     return (
-      this.args.model?.awaitingApproval &&
+      this.args.model.awaitingApproval &&
       !this.canLoginLocal &&
       !this.canLoginLocalWithEmail
     );
@@ -332,12 +333,7 @@ export default class Login extends Component {
     }
   }
 
-  @action
-  async externalLogin(loginMethod, { signup = false } = {}) {
-    if (this.loginDisabled) {
-      return;
-    }
-
+  async externalLogin(loginMethod, { signup }) {
     try {
       this.loggingIn = true;
       await loginMethod.doLogin({ signup });
@@ -345,6 +341,15 @@ export default class Login extends Component {
     } catch {
       this.loggingIn = false;
     }
+  }
+
+  @action
+  async externalLoginAction(loginMethod) {
+    if (this.loginDisabled) {
+      return;
+    }
+
+    await this.externalLogin(loginMethod, { signup: false });
   }
 
   @action
