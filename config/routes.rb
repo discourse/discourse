@@ -1025,7 +1025,6 @@ Discourse::Application.routes.draw do
     get "posts/by-date/:topic_id/:date" => "posts#by_date"
     get "posts/:id/reply-history" => "posts#reply_history"
     get "posts/:id/reply-ids" => "posts#reply_ids"
-    get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
     get "posts/:username/deleted" => "posts#deleted_posts",
         :constraints => {
           username: RouteFormat.username,

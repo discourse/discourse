@@ -543,7 +543,8 @@ ja:
             name:
               same_as_password: "はあなたのパスワードと同じです。"
             ip_address:
-              signup_not_allowed: "このアカウントから登録できません。"
+              blocked: "あなたの IP アドレスからの新規登録は許可されていません。"
+              max_new_accounts_per_registration_ip: "あなたの IP アドレスからの新規登録は許可されていません (登録可能な数を超えています)。スタッフメンバーにお問い合わせください。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -2336,9 +2337,6 @@ ja:
       blocked: "は許可されていません。"
       revoked: "%{date} まで '%{email}' にメールは送信されません。"
       does_not_exist: "該当なし"
-    ip_address:
-      blocked: "あなたの IP アドレスからの新規登録は許可されていません。"
-      max_new_accounts_per_registration_ip: "あなたの IP アドレスからの新規登録は許可されていません (登録可能な数を超えています)。スタッフメンバーにお問い合わせください。"
     website:
       domain_not_allowed: "ウェブサイトは無効です。許可されるドメイン: %{domains}"
     auto_rejected: "年齢により自動的に拒否されました。auto_handle_queued_age サイト設定をご覧ください。"

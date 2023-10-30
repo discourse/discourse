@@ -520,7 +520,8 @@ id:
             name:
               same_as_password: "sama dengan kata sandi Anda."
             ip_address:
-              signup_not_allowed: "Pendaftaran tidak diperbolehkan dari akun ini."
+              blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
+              max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1295,9 +1296,6 @@ id:
       blank: "tidak boleh kosong."
       not_allowed: "tidak diijinkan dari penyedia layanan email ini. Silahkan gunakan alamat email yang lain."
       blocked: "tidak diperbolehkan."
-    ip_address:
-      blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
-      max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
   system_messages:
     queued_by_staff:
       title: "Pesan Membutuhkan Persetujuan"

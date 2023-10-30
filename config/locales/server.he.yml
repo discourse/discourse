@@ -625,7 +625,8 @@ he:
             name:
               same_as_password: "זהה לסיסמה שלך."
             ip_address:
-              signup_not_allowed: "אסור להירשם מהחשבון הזה."
+              blocked: "הרשמות חדשות אסורות מכתובת ה-IP שלך."
+              max_new_accounts_per_registration_ip: "הרשמות חדשות אסורות מכתובת ה-IP שלך. (עברת את הסף המותר) צרו קשר עם איש צוות."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2621,9 +2622,6 @@ he:
       blocked: "לא מורשה."
       revoked: "לא יישלחו הודעות דוא״ל אל ‚%{email}’ עד %{date}."
       does_not_exist: "לא זמין"
-    ip_address:
-      blocked: "הרשמות חדשות אסורות מכתובת ה-IP שלך."
-      max_new_accounts_per_registration_ip: "הרשמות חדשות אסורות מכתובת ה-IP שלך. (עברת את הסף המותר) צרו קשר עם איש צוות."
     website:
       domain_not_allowed: "אתר לא תקין. מתחמים מותרים: %{domains}"
     auto_rejected: "נדחה אוטומטית מפאת ותק. יש לעיין בהגדרת האתר auto_handle_queued_age (טיפול אוטומטי בוותיקי התור)."

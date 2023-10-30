@@ -568,7 +568,8 @@ pt_BR:
             name:
               same_as_password: "é igual à sua senha."
             ip_address:
-              signup_not_allowed: "Não é permitido cadastrar esta conta."
+              blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
+              max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Entre em contato com um membro da equipe."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2423,9 +2424,6 @@ pt_BR:
       blocked: "não é permitido."
       revoked: "Não enviará e-mails para \"%{email}\" até %{date}."
       does_not_exist: "N/D"
-    ip_address:
-      blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
-      max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Entre em contato com um membro da equipe."
     website:
       domain_not_allowed: "O site é inválido. Os domínios permitidos são: %{domains}"
     auto_rejected: "Rejeitado automaticamente devido à idade. Veja a configuração do site auto_handle_queued_age."

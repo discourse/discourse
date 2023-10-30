@@ -568,7 +568,8 @@ fr:
             name:
               same_as_password: "est identique à votre mot de passe."
             ip_address:
-              signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
+              blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
+              max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2423,9 +2424,6 @@ fr:
       blocked: "n'est pas autorisé."
       revoked: "N'enverra plus d'e-mails à « %{email} » jusqu'au %{date}."
       does_not_exist: "S.O."
-    ip_address:
-      blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
-      max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
     website:
       domain_not_allowed: "Site Web invalide. Les domaines autorisés sont : %{domains}"
     auto_rejected: "Refusé automatiquement en raison de l'âge. Voir le paramètre de site « auto_handle_queued_age »."

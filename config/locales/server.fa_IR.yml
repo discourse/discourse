@@ -340,7 +340,8 @@ fa_IR:
               same_as_current: "رمز انتخابی مشابه رمز فعلی شما است."
               unique_characters: "تعداد نویسه تکراری زیاد است. لطفا یک رمز قوی‌تر انتخاب کنید."
             ip_address:
-              signup_not_allowed: "ثبت نام با این حساب‌کاربری ممنوع می باشد."
+              blocked: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است."
+              max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
         color_scheme_color:
           attributes:
             hex:
@@ -1390,9 +1391,6 @@ fa_IR:
       not_allowed: "این ارائه کننده ایمیل پشتیبانی نمی‌شود. لطفا از ایمیل دیگری استفاده کنید."
       blocked: "مجاز نیست."
       revoked: "تا %{date} ایمیلی به '%{email}' ارسال نخواهد شد."
-    ip_address:
-      blocked: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است."
-      max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
     website:
       domain_not_allowed: "سایت نامعتبر است. دامنه‌های مجاز: %{domains}"
   unsubscribe_mailer:

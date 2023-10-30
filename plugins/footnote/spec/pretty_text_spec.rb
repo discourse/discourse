@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe PrettyText do
-  before { SiteSetting.queue_jobs = false }
+  before { Jobs.run_immediately! }
 
   it "can be disabled" do
     SiteSetting.enable_markdown_footnotes = false

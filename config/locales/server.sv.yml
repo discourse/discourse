@@ -568,7 +568,8 @@ sv:
             name:
               same_as_password: "är samma som ditt lösenord."
             ip_address:
-              signup_not_allowed: "Registrering är inte tillåtet från detta konto."
+              blocked: "Nya registreringar är inte tillåtna från din IP-adress."
+              max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2422,9 +2423,6 @@ sv:
       blocked: "är inte tillåtet."
       revoked: "Kommer inte att skicka e-post till '%{email}' förrän %{date}."
       does_not_exist: "---"
-    ip_address:
-      blocked: "Nya registreringar är inte tillåtna från din IP-adress."
-      max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
     website:
       domain_not_allowed: "Webbsida är ogiltig. Tillåtna domäner är: %{domains}"
     auto_rejected: "Avvisas automatiskt på grund av ålder. Se webbplatsinställning auto_handle_queued_age ."

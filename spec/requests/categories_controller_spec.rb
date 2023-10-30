@@ -372,44 +372,6 @@ RSpec.describe CategoriesController do
         response.parsed_body["category_list"]["categories"].map { |x| x["id"] },
       ).not_to include(uncategorized.id)
     end
-
-    describe "with serialized category custom fields" do
-      class CategoryPlugin < Plugin::Instance
-      end
-
-      let!(:plugin) do
-        plugin = CategoryPlugin.new
-        plugin.add_to_serializer(:basic_category, :bob) { object.custom_fields["bob"] }
-        plugin
-      end
-
-      before { category.upsert_custom_fields("bob" => "marley") }
-      after { CategoryList.preloaded_category_custom_fields = Set.new }
-
-      context "when custom fields are not preloaded" do
-        it "increases the query count" do
-          queries = track_sql_queries { get "/categories.json" }
-
-          expect(response.status).to eq(200)
-          category = response.parsed_body["category_list"]["categories"][-1]
-          expect(category["bob"]).to eq("marley")
-          expect(queries.count).to eq(7)
-        end
-      end
-
-      context "when custom fields are preloaded" do
-        before { CategoryList.preloaded_category_custom_fields << "bob" }
-
-        it "does not increase the query count" do
-          queries = track_sql_queries { get "/categories.json" }
-
-          expect(response.status).to eq(200)
-          category = response.parsed_body["category_list"]["categories"][-1]
-          expect(category["bob"]).to eq("marley")
-          expect(queries.count).to eq(6)
-        end
-      end
-    end
   end
 
   describe "extensibility event" do
