@@ -3,20 +3,21 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import I18n from "discourse-i18n";
 
-module("Unit | Controller | create-account", function (hooks) {
+module("Unit | Component | create-account", function (hooks) {
   setupTest(hooks);
 
   test("basicUsernameValidation", function (assert) {
     const testInvalidUsername = (username, expectedReason) => {
-      const controller = this.owner.lookup("controller:create-account");
-      controller.set("accountUsername", username);
+      const component = this.owner
+        .factoryFor("component:modal/create-account")
+        .create({ model: { accountUsername: username } });
 
-      let validation = controller.basicUsernameValidation(username);
-      assert.ok(validation.failed, "username should be invalid: " + username);
+      const validation = component.basicUsernameValidation(username);
+      assert.true(validation.failed, `username should be invalid: ${username}`);
       assert.strictEqual(
         validation.reason,
         expectedReason,
-        "username validation reason: " + username + ", " + expectedReason
+        `username validation reason: ${username}, ${expectedReason}`
       );
     };
 
@@ -27,14 +28,13 @@ module("Unit | Controller | create-account", function (hooks) {
       I18n.t("user.username.too_long")
     );
 
-    const controller = this.owner.lookup("controller:create-account");
-    controller.setProperties({
-      accountUsername: "porkchops",
-      prefilledUsername: "porkchops",
-    });
+    const component = this.owner
+      .factoryFor("component:modal/create-account")
+      .create({ model: { accountUsername: "porkchops" } });
+    component.set("prefilledUsername", "porkchops");
 
-    let validation = controller.basicUsernameValidation("porkchops");
-    assert.ok(validation.ok, "Prefilled username is valid");
+    const validation = component.basicUsernameValidation("porkchops");
+    assert.true(validation.ok, "Prefilled username is valid");
     assert.strictEqual(
       validation.reason,
       I18n.t("user.username.prefilled"),
@@ -43,35 +43,33 @@ module("Unit | Controller | create-account", function (hooks) {
   });
 
   test("passwordValidation", async function (assert) {
-    const controller = this.owner.lookup("controller:create-account");
+    const component = this.owner
+      .factoryFor("component:modal/create-account")
+      .create({
+        model: {
+          accountEmail: "pork@chops.com",
+          accountUsername: "porkchops123",
+        },
+      });
 
-    controller.set("authProvider", "");
-    controller.set("accountEmail", "pork@chops.com");
-    controller.set("accountUsername", "porkchops123");
-    controller.set("prefilledUsername", "porkchops123");
-    controller.set("accountPassword", "b4fcdae11f9167");
-
+    component.set("prefilledUsername", "porkchops123");
+    component.set("accountPassword", "b4fcdae11f9167");
+    assert.true(component.passwordValidation.ok, "Password is ok");
     assert.strictEqual(
-      controller.passwordValidation.ok,
-      true,
-      "Password is ok"
-    );
-    assert.strictEqual(
-      controller.passwordValidation.reason,
+      component.passwordValidation.reason,
       I18n.t("user.password.ok"),
       "Password is valid"
     );
 
     const testInvalidPassword = (password, expectedReason) => {
-      controller.set("accountPassword", password);
+      component.set("accountPassword", password);
 
-      assert.strictEqual(
-        controller.passwordValidation.failed,
-        true,
+      assert.true(
+        component.passwordValidation.failed,
         `password should be invalid: ${password}`
       );
       assert.strictEqual(
-        controller.passwordValidation.reason,
+        component.passwordValidation.reason,
         expectedReason,
         `password validation reason: ${password}, ${expectedReason}`
       );
@@ -93,17 +91,19 @@ module("Unit | Controller | create-account", function (hooks) {
   });
 
   test("authProviderDisplayName", function (assert) {
-    const controller = this.owner.lookup("controller:create-account");
+    const component = this.owner
+      .factoryFor("component:modal/create-account")
+      .create({ model: {} });
 
     assert.strictEqual(
-      controller.authProviderDisplayName("facebook"),
+      component.authProviderDisplayName("facebook"),
       I18n.t("login.facebook.name"),
       "provider name is translated correctly"
     );
 
     assert.strictEqual(
-      controller.authProviderDisplayName("idontexist"),
-      "idontexist",
+      component.authProviderDisplayName("does-not-exist"),
+      "does-not-exist",
       "provider name falls back if not found"
     );
   });

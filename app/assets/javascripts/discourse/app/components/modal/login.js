@@ -19,6 +19,7 @@ import escape from "discourse-common/lib/escape";
 import I18n from "discourse-i18n";
 
 export default class Login extends Component {
+  @service capabilities;
   @service dialog;
   @service siteSettings;
   @service site;
@@ -116,6 +117,22 @@ export default class Login extends Component {
   @action
   async passkeyLogin(mediation = "optional") {
     try {
+      // we need to check isConditionalMediationAvailable for Firefox
+      // without it, Firefox will throw console errors
+      // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
+      // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
+      if (
+        mediation === "conditional" &&
+        this.capabilities.isFirefox &&
+        window.PublicKeyCredential
+      ) {
+        const isCMA =
+          // eslint-disable-next-line no-undef
+          await PublicKeyCredential.isConditionalMediationAvailable();
+        if (!isCMA) {
+          return;
+        }
+      }
       const response = await ajax("/session/passkey/challenge.json");
 
       const publicKeyCredential = await getPasskeyCredential(

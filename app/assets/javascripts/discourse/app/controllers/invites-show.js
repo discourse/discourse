@@ -1,4 +1,4 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { alias, bool, not, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
@@ -23,8 +23,6 @@ export default Controller.extend(
   UserFieldsValidation,
   {
     queryParams: ["t"],
-
-    createAccount: controller(),
 
     invitedBy: readOnly("model.invited_by"),
     email: alias("model.email"),
@@ -222,7 +220,7 @@ export default Controller.extend(
       }
 
       if (externalAuthEmail && externalAuthEmailValid) {
-        const provider = this.createAccount.authProviderDisplayName(
+        const provider = this.authProviderDisplayName(
           this.get("authOptions.auth_provider")
         );
 
@@ -261,6 +259,15 @@ export default Controller.extend(
         failed: true,
         reason: I18n.t("user.email.invalid"),
       });
+    },
+
+    authProviderDisplayName(providerName) {
+      const matchingProvider = findLoginMethods().find((provider) => {
+        return provider.name === providerName;
+      });
+      return matchingProvider
+        ? matchingProvider.get("prettyName")
+        : providerName;
     },
 
     @discourseComputed
