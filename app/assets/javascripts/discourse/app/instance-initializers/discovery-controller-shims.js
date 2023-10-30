@@ -3,31 +3,50 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { inject as service } from "@ember/service";
 import deprecated from "discourse-common/lib/deprecated";
 
+function printDeprecation(name, id) {
+  deprecated(
+    `${name} no longer exists, and this shim will eventually be removed. Use the discovery service instead.`,
+    {
+      id,
+    }
+  );
+}
+
 class NavigationCategoryControllerShim extends EmberObject {
+  static reopen() {
+    printDeprecation(
+      "controller:navigation/category",
+      "discourse.navigation-category-controller"
+    );
+  }
+
   @service discovery;
 
   @dependentKeyCompat
   get category() {
-    deprecated(
-      "controller:navigation/category no longer exists, and this shim will eventually be removed. Use the discovery service instead.",
-      {
-        id: "discourse.navigation-category-controller",
-      }
+    printDeprecation(
+      "controller:navigation/category",
+      "discourse.navigation-category-controller"
     );
     return this.discovery.category;
   }
 }
 
 class DiscoveryTopicsControllerShim extends EmberObject {
+  static reopen() {
+    printDeprecation(
+      "controller:discovery/topics",
+      "discourse.discovery-topics-controller"
+    );
+  }
+
   @service discovery;
 
   @dependentKeyCompat
   get model() {
-    deprecated(
-      "controller:navigation/category no longer exists, and this shim will eventually be removed. Use the discovery service instead.",
-      {
-        id: "discourse.navigation-category-controller",
-      }
+    printDeprecation(
+      "controller:discovery/topics",
+      "discourse.discovery-topics-controller"
     );
     if (this.discovery.onDiscoveryRoute) {
       return this.discovery.currentTopicList;
@@ -36,16 +55,15 @@ class DiscoveryTopicsControllerShim extends EmberObject {
 }
 
 class TagShowControllerShim extends EmberObject {
+  static reopen() {
+    printDeprecation("controller:tag-show", "discourse.tag-show-controller");
+  }
+
   @service discovery;
 
   @dependentKeyCompat
   get tag() {
-    deprecated(
-      "controller:tag-show no longer exists, and this shim will eventually be removed. Use the discovery service instead.",
-      {
-        id: "discourse.tag-show-controller",
-      }
-    );
+    printDeprecation("controller:tag-show", "discourse.tag-show-controller");
     return this.discovery.tag;
   }
 }
