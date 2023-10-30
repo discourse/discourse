@@ -653,7 +653,6 @@ class BulkImport::Base
   UPLOAD_REFERENCE_COLUMNS ||= %i[upload_id target_type target_id created_at updated_at]
 
   OPTIMIZED_IMAGE_COLUMNS ||= %i[
-    id
     sha1
     extension
     width

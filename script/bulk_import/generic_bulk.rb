@@ -38,57 +38,57 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    import_uploads
-
-    # needs to happen before users, because keeping group names is more important than usernames
-    import_groups
-
-    import_users
-    import_user_emails
-    import_user_profiles
-    import_user_options
-    import_user_fields
-    import_user_custom_field_values
-    import_single_sign_on_records
-    import_muted_users
-    import_user_histories
-    import_user_notes
-    import_user_note_counts
-    import_user_followers
-
-    import_user_avatars
-    update_uploaded_avatar_id
-
-    import_group_members
-
-    import_tag_groups
-    import_tags
-    import_tag_users
-
-    import_categories
-    import_category_tag_groups
-    import_category_permissions
-
-    import_topics
-    import_posts
-
-    import_polls
-    import_poll_options
-    import_poll_votes
-
-    import_topic_tags
-    import_topic_allowed_users
-
-    import_likes
-    import_votes
-    import_answers
-    import_gamification_scores
-
-    import_badge_groupings
-    import_badges
-    import_user_badges
-
-    import_upload_references
+    # import_uploads
+    #
+    # # needs to happen before users, because keeping group names is more important than usernames
+    # import_groups
+    #
+    # import_users
+    # import_user_emails
+    # import_user_profiles
+    # import_user_options
+    # import_user_fields
+    # import_user_custom_field_values
+    # import_single_sign_on_records
+    # import_muted_users
+    # import_user_histories
+    # import_user_notes
+    # import_user_note_counts
+    # import_user_followers
+    #
+    # import_user_avatars
+    # update_uploaded_avatar_id
+    #
+    # import_group_members
+    #
+    # import_tag_groups
+    # import_tags
+    # import_tag_users
+    #
+    # import_categories
+    # import_category_tag_groups
+    # import_category_permissions
+    #
+    # import_topics
+    # import_posts
+    #
+    # import_polls
+    # import_poll_options
+    # import_poll_votes
+    #
+    # import_topic_tags
+    # import_topic_allowed_users
+    #
+    # import_likes
+    # import_votes
+    # import_answers
+    # import_gamification_scores
+    #
+    # import_badge_groupings
+    # import_badges
+    # import_user_badges
+    #
+    # import_upload_references
     import_optimized_images
 
     import_user_stats
