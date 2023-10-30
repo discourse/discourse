@@ -1,5 +1,5 @@
+import Section from 'discourse/components/sidebar/section';
 import { click, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
@@ -8,13 +8,13 @@ module("Integration | Component | sidebar | section", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default displaySection value for section", async function (assert) {
-    const template = hbs`
-      <Sidebar::Section
-        @sectionName="test"
-        @headerLinkText="test header"
-        @headerLinkTitle="some title"
-        @headerActionsIcon="plus"
-        @headerActions={{this.headerActions}} />`;
+    const template = <template>
+          <Section
+            @sectionName="test"
+            @headerLinkText="test header"
+            @headerLinkTitle="some title"
+            @headerActionsIcon="plus"
+            @headerActions={{this.headerActions}} /></template>;
 
     this.headerActions = [];
     await render(template);
@@ -26,14 +26,14 @@ module("Integration | Component | sidebar | section", function (hooks) {
   });
 
   test("displaySection is dynamic based on argument", async function (assert) {
-    const template = hbs`
-      <Sidebar::Section
-        @sectionName="test"
-        @headerLinkText="test header"
-        @headerLinkTitle="some title"
-        @headerActionsIcon="plus"
-        @headerActions={{this.headerActions}}
-        @displaySection={{this.displaySection}}/>`;
+    const template = <template>
+          <Section
+            @sectionName="test"
+            @headerLinkText="test header"
+            @headerLinkTitle="some title"
+            @headerActionsIcon="plus"
+            @headerActions={{this.headerActions}}
+            @displaySection={{this.displaySection}}/></template>;
 
     this.displaySection = false;
     this.headerActions = [];
@@ -49,14 +49,14 @@ module("Integration | Component | sidebar | section", function (hooks) {
   });
 
   test("can expand and collapse content when section is collapsible", async function (assert) {
-    const template = hbs`
-      <Sidebar::Section
-        @sectionName="test"
-        @headerLinkText="test header"
-        @headerLinkTitle="some title"
-        @headerActionsIcon="plus"
-        @headerActions={{this.headerActions}}
-        @collapsable={{true}} />`;
+    const template = <template>
+          <Section
+            @sectionName="test"
+            @headerLinkText="test header"
+            @headerLinkTitle="some title"
+            @headerActionsIcon="plus"
+            @headerActions={{this.headerActions}}
+            @collapsable={{true}} /></template>;
 
     this.headerActions = [];
     await render(template);

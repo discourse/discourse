@@ -1,5 +1,5 @@
+import SectionLink from 'discourse/components/sidebar/section-link';
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
@@ -16,7 +16,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default class attribute for link", async function (assert) {
-    const template = hbs`<Sidebar::SectionLink @linkName="Test Meta" @route="discovery.latest" />`;
+    const template = <template><SectionLink @linkName="Test Meta" @route="discovery.latest" /></template>;
 
     await render(template);
 
@@ -29,7 +29,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   });
 
   test("custom class attribute for link", async function (assert) {
-    const template = hbs`<Sidebar::SectionLink @linkName="Test Meta" @route="discovery.latest" @class="123 abc" />`;
+    const template = <template><SectionLink @linkName="Test Meta" @route="discovery.latest" @class="123 abc" /></template>;
 
     await render(template);
 
@@ -42,7 +42,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
   });
 
   test("target attribute for link", async function (assert) {
-    const template = hbs`<Sidebar::SectionLink @linkName="test" @href="https://discourse.org" />`;
+    const template = <template><SectionLink @linkName="test" @href="https://discourse.org" /></template>;
     await render(template);
 
     assert.strictEqual(query("a").target, "_self");
@@ -50,7 +50,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
 
   test("target attribute for link when user set external links in new tab", async function (assert) {
     this.currentUser.user_option.external_links_in_new_tab = true;
-    const template = hbs`<Sidebar::SectionLink @linkName="test" @href="https://discourse.org" />`;
+    const template = <template><SectionLink @linkName="test" @href="https://discourse.org" /></template>;
     await render(template);
 
     assert.strictEqual(query("a").target, "_blank");
