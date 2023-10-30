@@ -695,7 +695,6 @@ module ApplicationHelper
       base_uri: Discourse.base_path,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,
-      markdown_it_url: script_asset_path("markdown-it-bundle"),
       service_worker_url: "service-worker.js",
       default_locale: SiteSetting.default_locale,
       asset_version: Discourse.assets_digest,
