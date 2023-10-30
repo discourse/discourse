@@ -1654,7 +1654,7 @@ class BulkImport::Base
       %{<img src="#{cdn_url}" data-base62-sha1="#{upload_base62} #{attributes}>}
     end
 
-    cooked.gsub!(/@(\w+)/) do
+    cooked.gsub!(/@([-_.\w]+)/) do
       name = @mapped_usernames[$1] || $1
       normalized_name = User.normalize_username(name)
 
