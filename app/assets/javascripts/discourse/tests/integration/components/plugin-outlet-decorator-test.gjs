@@ -25,8 +25,7 @@ module("Plugin Outlet - Decorator", function (hooks) {
           (elem, args) => {
             if (elem.classList.contains("foo")) {
               elem.style.backgroundColor = "yellow";
-
-              elem.classList.toggle("has-value", args.value);
+              elem.classList.toggle("has-value", !!args.value);
             }
           },
           { id: "yellow-decorator" }
