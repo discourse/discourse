@@ -136,6 +136,9 @@ module.exports = function (defaults) {
     packagerOptions: {
       webpackConfig: {
         devtool: "source-map",
+        output: {
+          publicPath: "auto",
+        },
         entry: {
           "assets/discourse.js/features/markdown-it.js": {
             import: "./static/markdown-it",
