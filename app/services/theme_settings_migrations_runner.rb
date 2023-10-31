@@ -55,7 +55,7 @@ class ThemeSettingsMigrationsRunner
     migrations.sort_by!(&:version)
 
     current_migration_version =
-      @theme.theme_settings_migrations.order(version: :desc).pluck_first(:version)
+      @theme.theme_settings_migrations.order(version: :desc).pick(:version)
     current_migration_version ||= -Float::INFINITY
 
     current_settings = lookup_overriden_settings
