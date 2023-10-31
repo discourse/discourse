@@ -54,7 +54,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
    *
    * @returns {boolean}
    */
-  validateUploadedFile() {
+  isUploadedFileAllowed() {
     return true;
   },
 
@@ -125,7 +125,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
         );
         const isValid =
           validateUploadedFile(currentFile, validationOpts) &&
-          this.validateUploadedFile(currentFile);
+          this.isUploadedFileAllowed(currentFile);
         this.setProperties({
           uploadProgress: 0,
           uploading: isValid && this.autoStartUploads,

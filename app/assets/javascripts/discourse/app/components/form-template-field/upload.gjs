@@ -35,7 +35,7 @@ export default class FormTemplateFieldUpload extends Component.extend(
    * @param file
    * @returns {boolean}
    */
-  validateUploadedFile(file) {
+  isUploadedFileAllowed(file) {
     // same logic from PickFilesButton._hasAcceptedExtensionOrType
     const fileTypes = this.attributes.file_types;
     const extension = file.name.split(".").pop();
