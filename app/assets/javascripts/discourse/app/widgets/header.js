@@ -15,6 +15,7 @@ import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
+import { isTesting } from "discourse-common/config/environment";
 
 const SEARCH_BUTTON_ID = "search-button";
 
@@ -368,7 +369,11 @@ createWidget("revamped-hamburger-menu-wrapper", {
           easing: "ease-in",
         })
         .finished.then(() => {
-          discourseLater(() => this.sendWidgetAction("toggleHamburger"));
+          if (isTesting()) {
+            this.sendWidgetAction("toggleHamburger");
+          } else {
+            discourseLater(() => this.sendWidgetAction("toggleHamburger"));
+          }
         });
       headerCloak.animate([{ opacity: 0 }], {
         duration: 200,
@@ -421,7 +426,11 @@ createWidget("revamped-user-menu-wrapper", {
           easing: "ease-in",
         })
         .finished.then(() => {
-          discourseLater(() => this.closeUserMenu());
+          if (isTesting) {
+            this.closeUserMenu();
+          } else {
+            discourseLater(() => this.closeUserMenu());
+          }
         });
       headerCloak.animate([{ opacity: 0 }], {
         duration: 200,
