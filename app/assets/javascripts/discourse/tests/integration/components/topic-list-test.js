@@ -32,7 +32,7 @@ module("Integration | Component | topic-list", function (hooks) {
       "defaults to 0"
     );
     await click("button.bulk-select");
-    assert.ok(
+    assert.true(
       this.bulkSelectHelper.bulkSelectEnabled,
       "bulk select is enabled"
     );
