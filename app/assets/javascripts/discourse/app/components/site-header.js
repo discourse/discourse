@@ -393,9 +393,13 @@ const SiteHeaderComponent = MountWidget.extend(
           headerCloak.animate([{ opacity: 0 }], { fill: "forwards" });
           headerCloak.style.display = "block";
 
-          animationFinished.then(() =>
-            discourseLater(() => this._animateOpening(panel))
-          );
+          animationFinished.then(() => {
+            if (isTesting()) {
+              this._animateOpening(panel);
+            } else {
+              discourseLater(() => this._animateOpening(panel));
+            }
+          });
         }
 
         this._animate = false;
