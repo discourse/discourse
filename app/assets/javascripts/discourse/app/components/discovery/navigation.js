@@ -37,7 +37,7 @@ export default class DiscoveryNavigation extends Component {
         .join(" ");
     } else if (this.filterMode === "categories") {
       return "navigation-categories";
-    } else if (this.category) {
+    } else if (this.args.category) {
       return "navigation-category";
     } else {
       return "navigation-topics";
