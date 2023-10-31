@@ -306,11 +306,19 @@
     color: var(--primary-low-mid);
     transition: color 0.25s;
   }
-  @include hover {
-    background: transparent;
-    color: var(--primary);
-    .d-icon {
+  .discourse-no-touch & {
+    &:hover,
+    &:focus {
       color: var(--primary);
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+    &:hover {
+      background: transparent;
+    }
+    &:focus {
+      background: var(--primary-low);
     }
   }
   &.close {
@@ -320,10 +328,13 @@
     .d-icon {
       color: var(--primary-high);
     }
-    @include hover {
-      background: transparent;
-      .d-icon {
-        color: var(--primary);
+    .discourse-no-touch & {
+      &:hover,
+      &:focus {
+        background: transparent;
+        .d-icon {
+          color: var(--primary);
+        }
       }
     }
   }

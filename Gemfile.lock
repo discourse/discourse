@@ -89,7 +89,7 @@ GEM
       rouge (>= 1.0.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
-    bootsnap (1.16.0)
+    bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
     bullet (7.1.2)
@@ -248,7 +248,7 @@ GEM
     mustache (1.1.1)
     net-http (0.3.2)
       uri
-    net-imap (0.4.2)
+    net-imap (0.4.3)
       date
       net-protocol
     net-pop (0.1.2)
@@ -359,7 +359,7 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     raindrops (0.20.1)
-    rake (13.0.6)
+    rake (13.1.0)
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -435,8 +435,8 @@ GEM
       rubocop-rspec (>= 2.0.0)
     rubocop-factory_bot (2.24.0)
       rubocop (~> 1.33)
-    rubocop-rspec (2.24.1)
-      rubocop (~> 1.33)
+    rubocop-rspec (2.25.0)
+      rubocop (~> 1.40)
       rubocop-capybara (~> 2.17)
       rubocop-factory_bot (~> 2.22)
     ruby-prof (1.6.3)
@@ -647,7 +647,7 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
-  selenium-webdriver (~> 4.11)
+  selenium-webdriver (~> 4.14)
   shoulda-matchers!
   sidekiq
   simplecov

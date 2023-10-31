@@ -1,5 +1,6 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import CreateAccount from "discourse/components/modal/create-account";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import LoginModal from "discourse/components/modal/login";
@@ -7,7 +8,6 @@ import { setting } from "discourse/lib/computed";
 import cookie from "discourse/lib/cookie";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
-import showModal from "discourse/lib/show-modal";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
@@ -258,11 +258,7 @@ const ApplicationRoute = DiscourseRoute.extend({
           },
         });
       } else {
-        const createAccount = showModal("create-account", {
-          modalClass: "create-account",
-          titleAriaElementId: "create-account-title",
-        });
-        createAccount.setProperties(createAccountProps);
+        this.modal.show(CreateAccount, { model: createAccountProps });
       }
     }
   },

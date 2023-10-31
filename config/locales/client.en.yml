@@ -3855,8 +3855,8 @@ en:
       take_action: "Take Action…"
       take_action_options:
         default:
-          title: "Take Action"
-          details: "Reach the flag threshold immediately, rather than waiting for more community flags"
+          title: "Hide Post"
+          details: "Reach the flag threshold immediately, hide the post, and agree with all pending flags"
         suspend:
           title: "Suspend User"
           details: "Reach the flag threshold, and suspend the user"
@@ -3882,7 +3882,7 @@ en:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
       submit_tooltip: "Submit the private flag"
-      take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
+      take_action_tooltip: "Reach the flag threshold immediately, hide the post, and agree with all pending flags"
       cant: "Sorry, you can't flag this post at this time."
       notify_staff: "Notify staff privately"
       formatted_name:
@@ -4610,7 +4610,6 @@ en:
       errors:
         valueMissing:
           default: "Please fill out this field."
-          text: "Please fill out this field."
           select-one: "Please select an item in the list."
           select-multiple: "Please select at least one item in the list."
           checkbox: "Please check this box if you want to proceed."

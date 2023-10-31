@@ -1610,7 +1610,9 @@ class PluginApi {
   addDocumentTitleCounter(counterFunction) {
     addPluginDocumentTitleCounter(counterFunction);
   }
+
   /**
+   *
    * Used for decorating the rendered HTML content of a plugin-outlet after it's been rendered
    *
    * `callback` will be called when it is time to decorate it.
@@ -1628,8 +1630,14 @@ class PluginApi {
    * );
    * ```
    *
+   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead
+   *
    **/
   decoratePluginOutlet(outletName, callback, opts) {
+    deprecated(
+      "decoratePluginOutlet is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead",
+      { id: "discourse.decorate-plugin-outlet" }
+    );
     addPluginOutletDecorator(outletName, callback, opts || {});
   }
 

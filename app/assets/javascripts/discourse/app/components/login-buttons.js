@@ -29,10 +29,4 @@ export default Component.extend({
       isWebauthnSupported()
     );
   },
-
-  actions: {
-    externalLogin(provider) {
-      this.externalLogin(provider);
-    },
-  },
 });
