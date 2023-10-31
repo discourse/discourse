@@ -10,7 +10,6 @@ import Category from "discourse/models/category";
 export default class DiscoveryNavigation extends Component {
   @service router;
   @service currentUser;
-  @service composer;
 
   get filterMode() {
     return calculateFilterMode({
