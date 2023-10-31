@@ -33,11 +33,11 @@ export const queryParams = {
 };
 
 export function resetParams(skipParams = []) {
-  Object.keys(queryParams).forEach((p) => {
-    if (!skipParams.includes(p)) {
-      this.controller.set(p, queryParams[p].default);
+  for (const [param, value] of Object.entries(queryParams)) {
+    if (!skipParams.includes(param)) {
+      this.controller.set(param, value.default);
     }
-  });
+  }
 }
 
 export function addDiscoveryQueryParam(p, opts) {

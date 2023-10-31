@@ -21,7 +21,9 @@
 
     <div class="contents">
       {{#if (and this.topicTrackingState.hasIncoming this.isCategoriesRoute)}}
-        <div class="show-more {{if this.hasTopics 'has-topics'}}">
+        <div
+          class={{concat-class "show-more" (if this.hasTopics "has-topics")}}
+        >
           <div
             role="button"
             class="alert alert-info clickable"
