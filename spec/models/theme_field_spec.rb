@@ -829,7 +829,7 @@ HTML
 
         expect(field.valid?).to eq(false)
         expect(field.errors.full_messages).to contain_exactly(
-          I18n.t("themes.import_error.migrations.name_too_long"),
+          I18n.t("themes.import_error.migrations.name_too_long", count: 10),
         )
 
         field.name = "0012-#{"a" * 10}"

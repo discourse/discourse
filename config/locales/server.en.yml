@@ -94,7 +94,9 @@ en:
       too_many_files: "The number of files (%{count}) in the theme has exceeded the maximum allowed number of files (%{limit})"
       migrations:
         invalid_filename: "Invalid filename for migration file: %{filename}. Filenames must begin with 4 digits followed by a hyphen and then a name that only contains alphanumeric characters with hyphens."
-        name_too_long: "Migration name is too long. It shouldn't exceed 150 characters."
+        name_too_long:
+          one: "Migration name is too long. It shouldn't exceed %{count} character."
+          other: "Migration name is too long. It shouldn't exceed %{count} characters."
         too_many_pending_migrations: "There are too many pending migrations in this theme. Themes are not allowed to introduce more than 100 migrations in a single update"
         out_of_sequence: "Migration '%{name}' is out of sequence. The last migration for this theme had version number %{current} which is higher than the new migration"
         syntax_error: "Failed to run migration '%{name}' because it has a syntax error: %{error}"

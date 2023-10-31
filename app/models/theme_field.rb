@@ -748,7 +748,13 @@ class ThemeField < ActiveRecord::Base
     # the 5 here is the length of the first 4 digits and the dash that follows
     # them
     if name.size - 5 > MIGRATION_NAME_PART_MAX_LENGTH
-      self.errors.add(:base, I18n.t("themes.import_error.migrations.name_too_long"))
+      self.errors.add(
+        :base,
+        I18n.t(
+          "themes.import_error.migrations.name_too_long",
+          count: MIGRATION_NAME_PART_MAX_LENGTH,
+        ),
+      )
     end
   end
 end
