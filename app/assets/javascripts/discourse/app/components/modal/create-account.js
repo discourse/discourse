@@ -53,6 +53,8 @@ export default class CreateAccount extends Component.extend(
   @alias("model.authOptions") authOptions;
   @alias("model.accountEmail") accountEmail;
   @alias("model.accountUsername") accountUsername;
+  // For NameValidation mixin
+  @alias("model.accountName") accountName;
 
   init() {
     super.init(...arguments);
