@@ -99,7 +99,7 @@ module Chat
 
     def chat_users
       User
-        .includes(:user_chat_channel_memberships, :group_users)
+        .includes(:user_chat_channel_memberships)
         .distinct
         .joins(:user_option)
         .real
