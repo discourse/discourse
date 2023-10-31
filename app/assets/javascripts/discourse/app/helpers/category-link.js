@@ -80,9 +80,6 @@ export function categoryLinkHTML(category, options) {
     if (options.hideParent) {
       categoryOptions.hideParent = true;
     }
-    if (options.categoryStyle) {
-      categoryOptions.categoryStyle = options.categoryStyle;
-    }
     if (options.recursive) {
       categoryOptions.recursive = true;
     }
@@ -108,10 +105,10 @@ export function defaultCategoryLinkRenderer(category, opts) {
     : getURL(`/c/${Category.slugFor(category)}/${get(category, "id")}`);
   let href = opts.link === false ? "" : url;
   let tagName = opts.link === false || opts.link === "false" ? "span" : "a";
-  let extraClasses = opts.extraClasses ? " " + opts.extraClasses : "";
   let html = "";
   let parentCat = null;
   let categoryDir = "";
+  let dataAttributes = `data-category="${category.id}"`;
 
   if (!opts.hideParent) {
     parentCat = Category.findById(get(category, "parent_category_id"));
@@ -119,24 +116,22 @@ export function defaultCategoryLinkRenderer(category, opts) {
 
   let siteSettings = helperContext().siteSettings;
 
-  const categoryStyle = opts.categoryStyle;
-
-  let classNames = `badge-category badge-category-${category.id}`;
+  let classNames = `badge-category`;
   if (restricted) {
     classNames += " restricted";
   }
 
   if (parentCat) {
-    classNames += ` badge-subcategory-${parentCat.id}`;
+    classNames += ` --has-parent`;
+    dataAttributes += ` data-parent-category="${parentCat.id}"`;
   }
 
-  html +=
-    `<span ` +
-    'data-drop-close="true" class="' +
-    classNames +
-    '"' +
-    (descriptionText ? 'title="' + descriptionText + '" ' : "") +
-    ">";
+  html += `<span 
+    ${dataAttributes} 
+    data-drop-close="true" 
+    class="${classNames}" 
+    ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
+  >`;
 
   let categoryName = escapeExpression(get(category, "name"));
 
@@ -153,7 +148,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
       html += iconHTML(iconName);
     }
   });
-  html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
+  html += `<span class="badge-category__name" ${categoryDir}>${categoryName}</span>`;
   html += "</span>";
 
   if (opts.topicCount) {
@@ -164,11 +159,14 @@ export function defaultCategoryLinkRenderer(category, opts) {
     href = ` href="${href}" `;
   }
 
-  extraClasses = categoryStyle ? categoryStyle + extraClasses : extraClasses;
-
   let afterBadgeWrapper = "";
-  if (opts.topicCount && categoryStyle === "box") {
-    afterBadgeWrapper += buildTopicCount(opts.topicCount);
+
+  if (opts.plusSubcategories && opts.lastSubcategory) {
+    afterBadgeWrapper += `<span class="plus-subcategories">
+      ${I18n.t("category_row.plus_subcategories", {
+        count: opts.plusSubcategories,
+      })}
+      </span>`;
   }
-  return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
+  return `<${tagName} class="badge-category__wrapper" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }

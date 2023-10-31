@@ -91,6 +91,7 @@ export default buildCategoryPanel("general", {
     const c = Category.create({
       name,
       color,
+      id: category.id,
       text_color: textColor,
       parent_category_id: parseInt(parentCategoryId, 10),
       read_restricted: category.get("read_restricted"),

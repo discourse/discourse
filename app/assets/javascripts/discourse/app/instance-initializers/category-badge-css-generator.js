@@ -4,10 +4,7 @@ import Category from "discourse/models/category";
 export default {
   after: "category-color-css-generator",
 
-  /**
-   * This generates badge CSS classes for each category,
-   * which can be used in themes to render category-specific elements.
-   */
+  // This generates badge CSS for each category, which is used to render category-specific elements.
   initialize(owner) {
     this.site = owner.lookup("service:site");
 
@@ -16,19 +13,21 @@ export default {
       return;
     }
 
-    const generatedCssClasses = this.site.categories.map((category) => {
-      let parentCat = Category.findById(get(category, "parent_category_id"));
-      let badgeClass = `.badge-category.badge-category-${category.id} { --category-badge-color: var(--category-${category.id}-color); --category-badge-text-color: #${category.text_color} }`;
-      if (parentCat) {
-        badgeClass += `.badge-category.badge-subcategory-${parentCat.id} { --parent-category-badge-color: var(--category-${parentCat.id}-color); }`;
+    const generatedCss = this.site.categories.map((category) => {
+      let parentCategory = Category.findById(
+        get(category, "parent_category_id")
+      );
+      let badgeCss = `.badge-category[data-category="${category.id}"] { --category-badge-color: var(--category-${category.id}-color); --category-badge-text-color: #${category.text_color}; }`;
+      if (parentCategory) {
+        badgeCss += `.badge-category[data-parent-category="${parentCategory.id}"] { --parent-category-badge-color: var(--category-${parentCategory.id}-color); }`;
       }
-      return badgeClass;
+      return badgeCss;
     });
 
     const cssTag = document.createElement("style");
     cssTag.type = "text/css";
     cssTag.id = "category-badge-css-generator";
-    cssTag.innerHTML = generatedCssClasses.join("\n");
+    cssTag.innerHTML = generatedCss.join("\n");
     document.head.appendChild(cssTag);
   },
 };
