@@ -148,7 +148,13 @@ export default class Login extends Component {
         });
 
         if (authResult && !authResult.error) {
-          window.location.reload();
+          const destinationUrl = cookie("destination_url");
+          if (destinationUrl) {
+            removeCookie("destination_url");
+            window.location.assign(destinationUrl);
+          } else {
+            window.location.reload();
+          }
         } else {
           this.dialog.alert(authResult.error);
         }
