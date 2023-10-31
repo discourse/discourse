@@ -290,7 +290,7 @@
       "categories extra";
     grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
     align-items: baseline;
-    gap: 0 1em;
+    gap: 0 0.5em;
     .header-title {
       grid-area: title;
     }
