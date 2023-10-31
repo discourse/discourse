@@ -361,7 +361,7 @@ class RemoteTheme < ActiveRecord::Base
       else
         raise ActiveRecord::Rollback if !theme.save
       end
-      theme.migrate_settings
+      theme.migrate_settings(start_transaction: false)
     end
 
     if already_in_transaction

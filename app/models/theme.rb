@@ -836,44 +836,52 @@ class Theme < ActiveRecord::Base
     contents
   end
 
-  def migrate_settings
-    runner = ThemeSettingsMigrationsRunner.new(self)
-    results = runner.run
+  def migrate_settings(start_transaction: true)
+    block = -> do
+      runner = ThemeSettingsMigrationsRunner.new(self)
+      results = runner.run
 
-    return if results.blank?
+      next if results.blank?
 
-    old_settings = self.theme_settings.pluck(:name)
-    self.theme_settings.destroy_all
+      old_settings = self.theme_settings.pluck(:name)
+      self.theme_settings.destroy_all
 
-    final_result = results.last
-    final_result[:settings_after].each do |key, val|
-      self.update_setting(key.to_sym, val)
-    rescue Discourse::NotFound
-      if old_settings.include?(key)
-        final_result[:settings_after].delete(key)
-      else
-        raise Theme::SettingsMigrationError.new(
-                I18n.t(
-                  "themes.import_error.migrations.unknown_setting_returned_by_migration",
-                  name: final_result[:original_name],
-                  setting_name: key,
-                ),
-              )
+      final_result = results.last
+      final_result[:settings_after].each do |key, val|
+        self.update_setting(key.to_sym, val)
+      rescue Discourse::NotFound
+        if old_settings.include?(key)
+          final_result[:settings_after].delete(key)
+        else
+          raise Theme::SettingsMigrationError.new(
+                  I18n.t(
+                    "themes.import_error.migrations.unknown_setting_returned_by_migration",
+                    name: final_result[:original_name],
+                    setting_name: key,
+                  ),
+                )
+        end
       end
+
+      results.each do |res|
+        record =
+          ThemeSettingsMigration.new(
+            theme_id: self.id,
+            version: res[:version],
+            name: res[:name],
+            theme_field_id: res[:theme_field_id],
+          )
+        record.calculate_diff(res[:settings_before], res[:settings_after])
+        record.save!
+      end
+      self.save!
     end
 
-    results.each do |res|
-      record =
-        ThemeSettingsMigration.new(
-          theme_id: self.id,
-          version: res[:version],
-          name: res[:name],
-          theme_field_id: res[:theme_field_id],
-        )
-      record.calculate_diff(res[:settings_before], res[:settings_after])
-      record.save!
+    if start_transaction
+      self.transaction(&block)
+    else
+      block.call
     end
-    self.save!
   end
 
   def convert_list_to_json_schema(setting_row, setting)
