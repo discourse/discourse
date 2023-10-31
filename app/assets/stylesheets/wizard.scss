@@ -27,7 +27,7 @@ body.wizard {
     flex-direction: column;
     align-items: center;
     padding-top: 1.5em;
-    background-image: url(../assets/bubbles-bg.png);
+    background-image: absolute-image-url("/bubbles-bg.png");
     height: 100%;
   }
 
