@@ -1,3 +1,7 @@
+body {
+  background: unset !important;
+}
+
 #ember-testing-container {
   position: fixed;
   background: #fff;
@@ -53,7 +57,8 @@
   }
 
   #qunit-filter-input,
-  #qunit-urlconfig-qunit_single_plugin {
+  #qunit-urlconfig-qunit_single_plugin,
+  #qunit-urlconfig-target {
     background-color: var(--primary);
     border: 1px solid var(--secondary-medium);
     color: var(--secondary);
@@ -135,5 +140,16 @@
 
   #ember-testing {
     background: #000;
+  }
+
+  #qunit-modulefilter-dropdown {
+    background-color: var(--primary);
+    border: 1px solid var(--secondary-medium);
+    color: var(--secondary);
+
+    .clickable:hover {
+      background-color: #222;
+      color: #f8f8f8;
+    }
   }
 }
