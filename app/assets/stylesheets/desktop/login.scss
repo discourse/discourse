@@ -345,12 +345,12 @@
   .user-field {
     &.text {
       label.control-label {
-        left: 3em !important;
+        left: 0.75em !important;
         max-width: calc(100% - 6em) !important;
       }
       &.value-entered label.control-label,
       label.control-label.value-entered {
-        left: calc(3em - 0.25em) !important;
+        left: calc(0.75em - 0.25em) !important;
       }
     }
     display: flex;

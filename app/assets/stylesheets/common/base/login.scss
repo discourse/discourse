@@ -594,9 +594,9 @@ button#new-account-link {
   .create-account-content .login-welcome-header,
   .create-account-form .create-account-content .login-form {
     max-width: 100%;
-    padding: 0;
+    max-height: 500px;
+    padding: 10px;
     margin-bottom: 1.5em;
-    overflow: unset;
     .input-group {
       padding: 0;
     }
@@ -698,10 +698,11 @@ button#new-account-link {
 }
 
 .waving-hand {
-  animation-name: wave-animation; /* Refers to the name of your @keyframes element below */
-  animation-duration: 2.5s; /* Change to speed up or slow down */
-  animation-iteration-count: infinite; /* Never stop waving :) */
-  transform-origin: 70% 70%; /* Pivot around the bottom-left palm */
+  animation-name: wave-animation;
+  animation-delay: 0.5s;
+  animation-duration: 2.5s;
+  animation-iteration-count: infinite;
+  transform-origin: 70% 70%;
   display: inline-block;
 }
 
@@ -711,7 +712,7 @@ button#new-account-link {
   }
   10% {
     transform: rotate(14deg);
-  } /* The following five values can be played with to make the waving more or less extreme */
+  }
   20% {
     transform: rotate(-8deg);
   }
