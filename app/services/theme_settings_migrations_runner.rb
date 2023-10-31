@@ -159,10 +159,7 @@ class ThemeSettingsMigrationsRunner
 
   def lookup_overriden_settings
     hash = {}
-    @theme.theme_settings.each do |row|
-      type_object = ThemeSettingsManager.create(row.name, nil, row.data_type, @theme)
-      hash[row.name] = type_object.value
-    end
+    @theme.theme_settings.each { |row| hash[row.name] = ThemeSettingsManager.cast_row_value(row) }
     hash
   end
 
