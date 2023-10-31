@@ -10,7 +10,6 @@
     max-width: 350px;
     max-height: 90vh;
     position: relative;
-    overflow: hidden;
   }
 
   .close {
@@ -186,7 +185,6 @@
 .d-modal.create-account {
   .modal-body {
     max-height: 60vh !important;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
 
@@ -205,7 +203,6 @@
   }
 
   .create-account-form {
-    overflow-y: auto;
     .login-welcome-header {
       width: calc(100% - 2em);
       position: sticky;

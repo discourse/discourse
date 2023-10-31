@@ -305,12 +305,12 @@
       }
       input:not(.value-entered):not(:focus) + label.alt-placeholder {
         top: 12px;
-        left: 3em;
+        left: 1em;
       }
       input:focus + label.alt-placeholder,
       input.value-entered + label.alt-placeholder {
         top: -8px;
-        left: calc(3em - 0.25em);
+        left: calc(1em - 0.25em);
       }
     }
     .password-confirmation {
@@ -420,56 +420,6 @@
 .password-reset {
   .col-form {
     padding-top: 40px;
-  }
-}
-
-// styling for small-width desktop screens
-// when editing, test with DiscourseHub auth window on iPadOS
-// it has a window width of ~650px
-@media screen and (max-width: 700px) {
-  .d-modal.create-account,
-  .d-modal.login-modal {
-    .modal-inner-container {
-      width: 100%;
-    }
-
-    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(
-        .poll-breakdown
-      ) {
-      max-height: 90vh !important; // overrides base/modal.scss
-    }
-    .login-welcome-header,
-    .login-left-side .login-welcome-header {
-      padding-top: 1em;
-      .login-title {
-        font-size: var(--font-up-4);
-      }
-      p.login-subheader {
-        font-size: var(--font-0);
-      }
-    }
-
-    .modal-footer .btn:last-of-type {
-      margin-right: 0;
-    }
-  }
-
-  .d-modal.login-modal .login-modal-body.has-alt-auth {
-    .login-left-side {
-      padding-left: 1.5em;
-      padding-right: 1em;
-      padding-top: 1em;
-      .modal-footer {
-        width: auto;
-        .btn-large {
-          padding-left: 12px;
-          padding-right: 12px;
-        }
-      }
-    }
-    .login-right-side {
-      padding: 1em;
-    }
   }
 }
 

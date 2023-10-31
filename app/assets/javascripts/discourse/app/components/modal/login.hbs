@@ -23,45 +23,47 @@
     {{/if}}
 
     {{#if this.canLoginLocal}}
-      <div class={{if this.site.desktopView "login-left-side"}}>
-        {{#if this.site.desktopView}}
-          <Modal::Login::WelcomeHeader
-            @wavingHandURL={{this.wavingHandURL}}
-            @createAccount={{this.createAccount}}
+      <div class={{if this.site.desktopView "login-left-side" "mobile-login"}}>
+        <div class={{if this.site.desktopView "login-left-side-container" "mobile-login-container"}}>
+          {{#if this.site.desktopView}}
+            <Modal::Login::WelcomeHeader
+              @wavingHandURL={{this.wavingHandURL}}
+              @createAccount={{this.createAccount}}
+            />
+          {{/if}}
+          <Modal::Login::LocalLoginForm
+            @loginName={{this.loginName}}
+            @loginNameChanged={{this.loginNameChanged}}
+            @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
+            @canUsePasskeys={{this.canUsePasskeys}}
+            @passkeyLogin={{this.passkeyLogin}}
+            @loginPassword={{this.loginPassword}}
+            @secondFactorMethod={{this.secondFactorMethod}}
+            @secondFactorToken={{this.secondFactorToken}}
+            @backupEnabled={{this.backupEnabled}}
+            @securityKeyAllowedCredentialIds={{this.securityKeyAllowedCredentialIds}}
+            @securityKeyChallenge={{this.securityKeyChallenge}}
+            @showSecurityKey={{this.showSecurityKey}}
+            @otherMethodAllowed={{this.otherMethodAllowed}}
+            @showSecondFactor={{this.showSecondFactor}}
+            @handleForgotPassword={{this.handleForgotPassword}}
+            @login={{this.login}}
+            @flashChanged={{this.flashChanged}}
+            @flashTypeChanged={{this.flashTypeChanged}}
+            @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
           />
-        {{/if}}
-        <Modal::Login::LocalLoginForm
-          @loginName={{this.loginName}}
-          @loginNameChanged={{this.loginNameChanged}}
-          @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
-          @canUsePasskeys={{this.canUsePasskeys}}
-          @passkeyLogin={{this.passkeyLogin}}
-          @loginPassword={{this.loginPassword}}
-          @secondFactorMethod={{this.secondFactorMethod}}
-          @secondFactorToken={{this.secondFactorToken}}
-          @backupEnabled={{this.backupEnabled}}
-          @securityKeyAllowedCredentialIds={{this.securityKeyAllowedCredentialIds}}
-          @securityKeyChallenge={{this.securityKeyChallenge}}
-          @showSecurityKey={{this.showSecurityKey}}
-          @otherMethodAllowed={{this.otherMethodAllowed}}
-          @showSecondFactor={{this.showSecondFactor}}
-          @handleForgotPassword={{this.handleForgotPassword}}
-          @login={{this.login}}
-          @flashChanged={{this.flashChanged}}
-          @flashTypeChanged={{this.flashTypeChanged}}
-          @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
-        />
-        <Modal::Login::Footer
-          @canLoginLocal={{this.canLoginLocal}}
-          @showSecurityKey={{this.showSecurityKey}}
-          @login={{this.login}}
-          @loginButtonLabel={{this.loginButtonLabel}}
-          @loginDisabled={{this.loginDisabled}}
-          @showSignupLink={{this.showSignupLink}}
-          @createAccount={{this.createAccount}}
-          @loggingIn={{this.loggingIn}}
-          @showSecondFactor={{this.showSecondFactor}}
-        />
+          <Modal::Login::Footer
+            @canLoginLocal={{this.canLoginLocal}}
+            @showSecurityKey={{this.showSecurityKey}}
+            @login={{this.login}}
+            @loginButtonLabel={{this.loginButtonLabel}}
+            @loginDisabled={{this.loginDisabled}}
+            @showSignupLink={{this.showSignupLink}}
+            @createAccount={{this.createAccount}}
+            @loggingIn={{this.loggingIn}}
+            @showSecondFactor={{this.showSecondFactor}}
+          />
+        </div>
       </div>
     {{/if}}
 

@@ -143,6 +143,7 @@ body.invite-page {
         box-shadow: none;
         margin-bottom: 0.25em;
         width: 100%;
+        font-size: 17px;
       }
       input:focus {
         outline: none;
@@ -161,12 +162,12 @@ body.invite-page {
       .user-field.dropdown label.control-label,
       .user-field.multiselect label.control-label {
         color: var(--primary-medium);
-        font-size: 16px;
+        font-size: 17px;
         font-weight: normal;
         position: absolute;
         pointer-events: none;
         left: 1em;
-        top: 10px;
+        top: 12px;
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
         transition: 0.2s ease all;
       }
@@ -178,7 +179,7 @@ body.invite-page {
         left: calc(1em - 0.25em);
         background-color: var(--secondary);
         padding: 0 0.25em 0 0.25em;
-        font-size: $font-down-1;
+        font-size: 13px;
       }
       .user-field.text:focus-within,
       .user-field.dropdown:focus-within,
@@ -511,11 +512,51 @@ button#new-account-link {
   justify-content: space-between;
 }
 
-:root {
-  --left-content-width: 30%;
+// Full Page Login SCSS
+
+.mobile-view {
+  .modal-body.login-modal-body,
+  .modal-body.has-user-fields {
+    overflow-y: unset;
+  }
+  .d-modal.create-account:not(.hidden).fixed-modal .modal-inner-container,
+  .d-modal.login-modal:not(.hidden).fixed-modal .modal-inner-container {
+    max-height: 100vh;
+    max-width: 100vw;
+    padding: 1.5em;
+    .create-account-form {
+      display: inline;
+      .create-account-content {
+        padding: 0;
+      }
+    }
+    .login-welcome-header {
+      font-size: var(--font-up-2);
+      width: 100%;
+      padding: 0;
+      margin: 0 0 1.5em 0;
+    }
+    .login-form,
+    #login-form,
+    #login-buttons {
+      width: 100%;
+      padding: 0;
+      margin: 0 0 1.5em 0;
+    }
+    .modal-footer {
+      width: 100%;
+      padding: 0;
+      border: none;
+      .btn {
+        font-size: var(--font-up-2);
+      }
+    }
+    .mobile-login-container {
+      margin-top: 1em;
+    }
+  }
 }
 
-// Full Page Login SCSS
 .d-modal.login-modal,
 .d-modal.create-account {
   .modal-inner-container {
@@ -525,15 +566,23 @@ button#new-account-link {
     margin: 0;
   }
   &:not(.hidden) .login-left-side {
-    width: calc(70% - 5em);
+    width: 70%;
+    padding: 0;
     justify-content: center;
     align-items: center;
-    .modal-footer {
-      width: var(--left-content-width);
+  }
+  .login-welcome-header {
+    font-size: 1.5em;
+    padding: 0;
+    .waving-hand {
+      width: 45px;
+      height: 45px;
+      margin-left: 1em;
     }
   }
   .login-modal-body.has-alt-auth .login-right-side {
-    width: calc(30% - 6em);
+    width: 30%;
+    padding: 0 !important;
   }
   .login-modal-body.has-alt-auth .login-right-side,
   .create-account-login-buttons {
@@ -541,57 +590,68 @@ button#new-account-link {
       font-size: var(--font-up-2);
     }
   }
-  .login-welcome-header {
+  .create-account-content .login-welcome-header,
+  .create-account-form .create-account-content .login-form {
     max-width: 100%;
-    width: var(--left-content-width);
+    padding: 0;
+    margin-bottom: 1.5em;
+    overflow: unset;
+    .input-group {
+      padding: 0;
+    }
   }
   #login-form {
-    width: var(--left-content-width);
     .input-group {
       width: 100%;
     }
   }
 }
 
-.d-modal.create-account .has-alt-auth .create-account-form {
-  display: grid;
-  grid-template-columns: 70% 30% !important;
-  grid-template-rows: 1fr 1fr auto 1fr 1fr !important;
+.d-modal.create-account .modal-body.has-alt-auth .create-account-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+    .create-account-content {
+      height: 85%;
+    }
+    .create-account-login-buttons {
+      width: 100%;
+      height: 15%;
+      #login-buttons {
+        flex-direction: row;
+        min-height: 50px;
+        gap: 1em;
+        .btn {
+          margin: 0;
+        }
+      }
+    }
+  }
 }
 
-.d-modal.create-account .login-welcome-header,
-.d-modal.create-account .has-alt-auth .login-form,
-.d-modal.create-account .login-form,
-.d-modal.create-account .modal-footer {
+.login-left-side-container,
+.create-account-content {
+  width: auto;
   margin: 0 auto;
-}
-
-.d-modal.create-account .login-welcome-header {
-  grid-row-start: 2 !important;
-  width: calc(var(--left-content-width) - 4em);
-  padding: 3em 2em 1em;
-}
-
-.d-modal.create-account .has-alt-auth .login-form,
-.d-modal.create-account .login-form {
-  grid-row-start: 3 !important;
-  width: var(--left-content-width);
+  padding: 4em;
 }
 
 .d-modal.create-account .modal-footer {
   border: none;
-  grid-row-start: 4 !important;
-  width: calc(var(--left-content-width) - 4em);
-  padding: 0 2em;
+  padding: 0;
 }
 
 .create-account .modal-body.has-alt-auth {
   background-color: var(--secondary) !important;
 }
 
-.d-modal.create-account .has-alt-auth .create-account-login-buttons {
-  grid-row-end: 6 !important;
+.d-modal.create-account .modal-body.has-alt-auth .create-account-login-buttons {
+  width: 30%;
   background: var(--tertiary);
+  align-self: stretch;
+  padding: 0;
 }
 
 .fixed-modal.login-modal:not(.bookmark-reminder-modal):not(.history-modal):not(
@@ -602,6 +662,28 @@ button#new-account-link {
   ):not(.poll-breakdown) {
   height: 100%;
   max-height: 100% !important;
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+    .login-left-side {
+      width: 100%;
+      height: 85%;
+    }
+    .login-right-side {
+      width: 100%;
+      height: 15%;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      #login-buttons {
+        gap: 1em;
+        flex-direction: row;
+        min-height: 50px;
+        .btn {
+          margin: 0;
+        }
+      }
+    }
+  }
 }
 
 .fixed-modal.create-account:not(.bookmark-reminder-modal):not(
