@@ -4,7 +4,7 @@
 .login-modal,
 .create-account {
   .modal-body {
-    &.has-alt-auth {
+    .login-right-side {
       background: var(--tertiary-or-tertiary-low);
     }
   }
