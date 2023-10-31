@@ -143,22 +143,22 @@ export default Component.extend({
   },
 
   @action
-  changeTagNotificationLevel(notificationLevel) {
-    this.tagNotification
-      .update({ notification_level: notificationLevel })
-      .then((response) => {
-        const payload = response.responseJson;
+  async changeTagNotificationLevel(notificationLevel) {
+    const response = await this.tagNotification.update({
+      notification_level: notificationLevel,
+    });
 
-        this.tagNotification.set("notification_level", notificationLevel);
+    const payload = response.responseJson;
 
-        this.currentUser.setProperties({
-          watched_tags: payload.watched_tags,
-          watching_first_post_tags: payload.watching_first_post_tags,
-          tracked_tags: payload.tracked_tags,
-          muted_tags: payload.muted_tags,
-          regular_tags: payload.regular_tags,
-        });
-      });
+    this.tagNotification.set("notification_level", notificationLevel);
+
+    this.currentUser.setProperties({
+      watched_tags: payload.watched_tags,
+      watching_first_post_tags: payload.watching_first_post_tags,
+      tracked_tags: payload.tracked_tags,
+      muted_tags: payload.muted_tags,
+      regular_tags: payload.regular_tags,
+    });
   },
 
   actions: {
