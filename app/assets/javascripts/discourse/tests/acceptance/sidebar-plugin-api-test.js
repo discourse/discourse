@@ -16,7 +16,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({});
@@ -1083,5 +1083,119 @@ acceptance("Sidebar - Plugin API", function (needs) {
     });
     await visit("/");
     assert.dom(".sidebar__panel-switch-button").exists();
+  });
+
+  test("New hidden custom sidebar panel", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        const AdminSidebarPanel = class extends BaseCustomSidebarPanel {
+          get key() {
+            return "admin-panel";
+          }
+
+          get hidden() {
+            return true;
+          }
+        };
+        return AdminSidebarPanel;
+      });
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            get name() {
+              return "test-admin-section";
+            }
+
+            get text() {
+              return "test admin section";
+            }
+
+            get actionsIcon() {
+              return "cog";
+            }
+
+            get links() {
+              return [
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return "admin-link";
+                  }
+
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
+                  get route() {
+                    return "topic";
+                  }
+
+                  get models() {
+                    return ["some-slug", 1];
+                  }
+
+                  get title() {
+                    return "admin link";
+                  }
+
+                  get text() {
+                    return "admin link";
+                  }
+
+                  get prefixType() {
+                    return "icon";
+                  }
+
+                  get prefixValue() {
+                    return "cog";
+                  }
+
+                  get prefixColor() {
+                    return "FF0000";
+                  }
+
+                  get prefixBadge() {
+                    return "lock";
+                  }
+
+                  get suffixType() {
+                    return "icon";
+                  }
+
+                  get suffixValue() {
+                    return "circle";
+                  }
+
+                  get suffixCSSClass() {
+                    return "unread";
+                  }
+                })(),
+              ];
+            }
+          };
+        },
+        "admin-panel"
+      );
+      api.setSidebarPanel("admin-panel");
+      api.setSeparatedSidebarMode();
+    });
+
+    await visit("/");
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section[data-section-name='test-admin-section'] .sidebar-section-header-text"
+      ).textContent.trim(),
+      "test admin section",
+      "displays header with correct text"
+    );
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setSidebarPanel("main-panel");
+      api.setCombinedSidebarMode();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").doesNotExist();
+    assert
+      .dom(".sidebar-section[data-section-name='test-admin-section']")
+      .doesNotExist();
   });
 });

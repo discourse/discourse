@@ -3,7 +3,7 @@ import { number } from "discourse/lib/formatter";
 import Category from "discourse/models/category";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 createWidget("hamburger-category", {
   tagName: "li.category-link",

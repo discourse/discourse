@@ -5,7 +5,7 @@ import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
 import ChatThreadListHeader from "discourse/plugins/chat/discourse/components/chat/thread-list/header";
 import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
@@ -179,7 +179,6 @@ export default class ChatThreadList extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     {{#if this.shouldRender}}
       <div class="chat-thread-list" {{this.subscribe @channel}}>
         {{#if @includeHeader}}

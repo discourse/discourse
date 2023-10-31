@@ -51,7 +51,8 @@ module Chat
     end
 
     def group_mentions
-      chat_users.includes(:groups).joins(:groups).where(groups: mentionable_groups)
+      mentionable_groups_ids = mentionable_groups.pluck(:id)
+      chat_users.includes(:groups).joins(:groups).where("groups.id IN (?)", mentionable_groups_ids)
     end
 
     def here_mentions

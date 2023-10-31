@@ -492,12 +492,12 @@ zh_CN:
         many_users:
           other: "%{commaSeparatedUsernames} 和其他 %{count} 人正在输入"
       retention_reminders:
-        public_none: "无限期地"
-        public:
+        indefinitely_short: "无限期地"
+        indefinitely_long: "聊天设置已设置为无限期保留频道信息。"
+        short:
           other: "%{count} 天"
-        dm_none: "无限期地"
-        dm:
-          other: "%{count} 天"
+        long:
+          other: "聊天设置已设置为将频道消息保留 %{count} 天。"
       flags:
         off_topic: "此消息与频道标题定义的当前讨论无关，可能应当移至其他地方。"
         inappropriate: "此消息包含理性的人会认为具有攻击性、辱骂性或违反<a href=\"%{basePath}/guidelines\">我们的社区准则</a>的内容。"

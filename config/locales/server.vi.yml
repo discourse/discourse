@@ -453,7 +453,8 @@ vi:
             name:
               same_as_password: "là giống như mật khẩu hiện tại của bạn."
             ip_address:
-              signup_not_allowed: "Đăng ký không cho phép tài khoản này"
+              blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
+              max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1047,8 +1048,8 @@ vi:
     use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     content_security_policy_frame_ancestors: "Hạn chế người có thể nhúng trang web này vào iframe thông qua CSP. Kiểm soát các máy chủ được phép trên <a href='%{base_path}/admin/customize/embedding'>Nhúng</a>"
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
-    top_menu: "Xác định các mục nào hiển thị trong thanh điều hướng trang chủ, và theo thứ tự nào. Ví dụ latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Xác định các mục nào hiển thị trên menu bài viết, và theo thứ tự nào. Ví dụ like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "Xác định các mục nào hiển thị trong các điều khiển điều hướng trên trang chủ, và theo thứ tự nào."
+    post_menu: "Xác định các mục nào hiển thị trong bảng chọn bài đăng, và theo thứ tự nào."
     post_menu_hidden_items: "Các mục được để ẩn theo mặc định trong menu bài viết trừ khi click vào dấu '...' để mở rộng."
     share_links: "Xác định các mục nào hiển thị trên hộp thoại chia sẻ, và theo thứ tự nào."
     site_contact_username: "Tên tài khoản quản trị viên hợp lệ để gửi tất cả các thông báo tự động. Nếu để trống, tài khoản mặc định của hệ thống sẽ được sử dụng."
@@ -1495,9 +1496,6 @@ vi:
       blocked: "không được chấp nhận."
       revoked: "Sẽ không gửi email đến '%{email}' cho đến %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
-      max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
     website:
       domain_not_allowed: "Trang web không hợp lệ. Các miền được phép là: %{domains}"
     auto_rejected: "Bị từ chối tự động do tuổi tác. Xem cài đặt trang auto_handle_queued_age."

@@ -414,6 +414,9 @@ bg:
         type_bonus:
           name: "тип бонус"
           title: "Определени типове, подлежащи на преглед, могат да получат бонус от персонала, за да бъдат с по-висок приоритет."
+      revise_and_reject_post:
+        reason: "Причина"
+        optional: "по избор"
       stale_help: "Този преглед е разрешен от <b>%{username}</b>."
       claim_help:
         optional: "Можете да заявите този артикул, за да попречите на други да го преглеждат."
@@ -1336,8 +1339,6 @@ bg:
           Сканирайте този QR код в поддържано приложение (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) и въведете своя код за удостоверяване.
         disable_description: "Моля, въведете кода за удостоверяване от вашето приложение"
         show_key_description: "Въведете ръчно"
-        short_description: |
-          Защитете акаунта си с кодове за сигурност за еднократна употреба.
         extended_description: |
           Двуфакторното удостоверяване добавя допълнителна сигурност към вашия акаунт, като изисква еднократен токен в допълнение към вашата парола. Токените могат да се генерират на <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>устройства с Android</a> и <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Моля, имайте предвид, че влизане чрез социална мрежа, ще бъдат деактивирани, след като двуфакторното удостоверяване е активирано във вашия акаунт."
@@ -1376,6 +1377,9 @@ bg:
           save: "Запази"
           edit_description: "Име на физическия ключ за сигурност"
           name_required_error: "Трябва да посочите име за вашия ключ за сигурност."
+      passkeys:
+        save: "Запази "
+        added_prefix: "Добавено"
       change_about:
         title: "Смяна на За мен"
         error: "Имаше грешка при промяна на тази стойност."
@@ -2017,12 +2021,6 @@ bg:
       topic_count:
         one: "%{count} тема в тази категория"
         other: "%{count} теми в тази категория"
-      plus_subcategories_title:
-        one: "%{name} и една подкатегория"
-        other: "%{name} и %{count} подкатегории"
-      plus_subcategories:
-        one: "+ %{count} подкатегория"
-        other: "+ %{count} подкатегории"
     select_kit:
       delete_item: "Изтрий %{name}"
       filter_by: "Филтриране по: %{name}"
@@ -3336,7 +3334,6 @@ bg:
           save: "Запази"
           delete: "Изтрий"
           delete_confirm: "Сигурни ли сте, че искате да изтриете този раздел?"
-          public: "Направете този раздел публичен и видим от всички"
           links:
             add: "Добавете друга връзка"
             delete: "Изтриване на връзката"

@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default function userStatus(user, { currentUser } = {}) {
   if (!user) {

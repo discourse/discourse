@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
@@ -34,7 +34,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get showCount() {
-    return this.currentUser.sidebarShowCountOfNewItems;
+    return this.currentUser?.sidebarShowCountOfNewItems;
   }
 
   get name() {

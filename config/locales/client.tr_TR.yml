@@ -425,6 +425,14 @@ tr_TR:
         type_bonus:
           name: "tür bonusu"
           title: "Bazı incelenebilir türlere daha yüksek öncelikli olmaları için personel tarafından bonus atanabilir."
+      revise_and_reject_post:
+        title: "Gözden Geçir"
+        reason: "Sebep"
+        send_pm: "Özel Mesaj gönder"
+        feedback: "Geri bildirim"
+        custom_reason: "Nedenini net bir şekilde açıklayın"
+        other_reason: "Diğer..."
+        optional: "i̇steğe bağlı"
       stale_help: "Bu incelenebilir, <b>%{username}</b> tarafından çözüldü."
       claim_help:
         optional: "Başkalarının incelemesini engellemek için bu ögeyi talep edebilirsiniz."
@@ -1354,8 +1362,6 @@ tr_TR:
           Bu QR kodunu desteklenen bir uygulamada tarayın (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) ve doğrulama kodunuzu girin.
         disable_description: "Lütfen uygulamanızdan kimlik doğrulama kodunu girin"
         show_key_description: "Manuel olarak girin"
-        short_description: |
-          Hesabınızı tek kullanımlık güvenlik kodlarıyla koruyun.
         extended_description: |
           İki adımlı kimlik doğrulama, şifrenize ek olarak tek seferlik belirteç gerektirerek hesabınıza ekstra güvenlik ekler. Belirteçler <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ve <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> cihazlarında oluşturulabilir.
         oauth_enabled_warning: "Hesabınızda iki adımlı kimlik doğrulama etkinleştirildikten sonra sosyal giriş yapma işlemlerinin devre dışı bırakılacağını lütfen dikkate alın."
@@ -1394,6 +1400,10 @@ tr_TR:
           save: "Kaydet"
           edit_description: "Fiziksel Güvenlik Anahtarı Adı"
           name_required_error: "Güvenlik anahtarınız için bir ad girmeniz gerekir."
+      passkeys:
+        save: "Kaydet"
+        added_prefix: "Eklendi"
+        last_used_prefix: "Son Kullanılan"
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
         error: "Bu değeri değiştirirken bir hata oluştu."
@@ -1668,6 +1678,10 @@ tr_TR:
             <p>Yüklediğiniz CSV dosyanızdaki her e-posta adresine bir davetiye gönderilir ve bu davetiyeleri daha sonra yönetebilirsiniz.</p>
           success: "Dosya başarıyla yüklendi. İşlem tamamlandığında mesaj yoluyla bildirim alacaksınız."
           error: "Üzgünüz, dosya CSV biçiminde olmalı."
+      confirm_access:
+        title: "Erişimi onaylayın"
+        incorrect_password: "Girilen şifre yanlış."
+        logged_in_as: "Şu kullanıcı ile giriş yaptınız: "
       password:
         title: "Şifre"
         too_short: "Şifreniz çok kısa."
@@ -1677,6 +1691,8 @@ tr_TR:
         ok: "Şifreniz iyi görünüyor."
         instructions: "en az %{count} karakter"
         required: "lütfen bir şifre girin"
+        confirm: "Onayla"
+        incorrect_password: "Girilen şifre yanlış."
       summary:
         title: "Özet"
         stats: "İstatistikler"
@@ -2041,12 +2057,6 @@ tr_TR:
       topic_count:
         one: "bu kategorideki %{count} konu"
         other: "bu kategorideki %{count} konu"
-      plus_subcategories_title:
-        one: "%{name} ve bir alt kategori"
-        other: "%{name} ve %{count} alt kategori"
-      plus_subcategories:
-        one: "+ %{count} alt kategori"
-        other: "+ %{count} alt kategori"
     select_kit:
       delete_item: "Şunu sil: %{name}"
       filter_by: "Şuna göre filtrele: %{name}"
@@ -2240,6 +2250,7 @@ tr_TR:
           desc: Fısıltılar yalnızca personel tarafından görülebilir
         create_topic:
           label: "Yeni Konu"
+          desc: Yeni bir konu oluşturun
         shared_draft:
           label: "Paylaşılan Taslak"
           desc: "Yalnızca izin verilen kullanıcılar tarafından görülebilecek bir konu taslağı oluşturun"
@@ -4047,7 +4058,7 @@ tr_TR:
           delete: "Sil"
           delete_confirm: "Bu bölümü silmek istediğinizden emin misiniz?"
           reset_confirm: "Bu bölümü varsayılana sıfırlamak istediğinizden emin misiniz?"
-          public: "Bu bölümü herkese açık ve herkes tarafından görülebilir hale getirin"
+          public: "Herkese görünür"
           always_public: "Bu bölümdeki içerik her zaman herkese açıktır"
           more_menu: "Daha fazla menü"
           links:
@@ -4693,7 +4704,7 @@ tr_TR:
         install: "Yükle"
         delete: "Sil"
         delete_confirm: '"%{theme_name}" adlı temayı silmek istediğinizden emin misiniz?'
-        bulk_delete: 'Emin misiniz?'
+        bulk_delete: "Emin misiniz?"
         bulk_themes_delete_confirm: "Bu işlem aşağıdaki temaları kaldıracak ve artık bu temalar sitenizdeki hiçbir kullanıcı tarafından kullanılamayacak:"
         bulk_components_delete_confirm: "Bu işlem aşağıdaki bileşenleri kaldıracak ve artık bu bileşenler sitenizdeki hiçbir kullanıcı tarafından kullanılamayacak:"
         color: "Renk"

@@ -396,6 +396,14 @@ zh_CN:
         type_bonus:
           name: "奖励加分"
           title: "某些可审核类型可以由管理人员分配加分，以使其具有更高的优先级。"
+      revise_and_reject_post:
+        title: "修订"
+        reason: "原因"
+        send_pm: "发送私信"
+        feedback: "反馈意见"
+        custom_reason: "清楚地描述原因"
+        other_reason: "其他..."
+        optional: "可选"
       stale_help: "此可审核条目已被 <b>%{username}</b> 解决。"
       claim_help:
         optional: "您可以认领此条目以避免被他人审核。"
@@ -1292,7 +1300,7 @@ zh_CN:
         disable_description: "请输入应用中的身份验证代码"
         show_key_description: "手动输入"
         short_description: |
-          使用一次性安全码保护您的帐户。
+          使用一次性安全代码或物理安全密钥保护你的账户。
         extended_description: |
           双重身份验证会要求您提供除密码之外的一次性令牌，从而为您的帐户增加额外的安全性。可以在 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 和 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 设备上生成令牌。
         oauth_enabled_warning: "请注意，一旦您为帐户启用双重身份验证，社交登录将被禁用。"
@@ -1331,6 +1339,22 @@ zh_CN:
           save: "保存"
           edit_description: "实物安全密钥名称"
           name_required_error: "您必须为您的安全密钥提供一个名称。"
+      passkeys:
+        rename_passkey: "重命名 Passkey"
+        add_passkey: "添加 Passkey"
+        confirm_delete_passkey: "确定要删除这个 Passkey 吗？"
+        passkey_successfully_created: "成功！您的新 Passkey 已创建。"
+        rename_passkey_instructions: "选择一个易于识别的 Passkey 名称，例如，使用密码管理器的名称。"
+        name:
+          default: "主 Passkey"
+        save: "保存"
+        title: "Passkeys"
+        short_description: "Passkeys 是密码替代品，可通过生物特征识别 (例如触摸、faceID) 或通过设备 PIN/密码验证你的身份。"
+        added_prefix: "已添加"
+        last_used_prefix: "最后使用"
+        never_used: "从未使用过"
+        not_allowed_error: "Passkey 注册过程超时、被取消或不允许。"
+        already_added_error: "你已经注册了此 Passkeys。无需再次注册。"
       change_about:
         title: "更改自我介绍"
         error: "更改此值时出错。"
@@ -1440,6 +1464,7 @@ zh_CN:
         instructions: "注册帐户需要邀请码"
       auth_tokens:
         title: "最近使用的设备"
+        short_description: "这是最近登录过你账户的设备列表。"
         details: "详细信息"
         log_out_all: "全部退出"
         not_you: "不是您？"
@@ -1607,6 +1632,12 @@ zh_CN:
           progress: "已上传 %{progress}%…"
           success: "文件上传成功。该过程完成后，您将收到消息通知。"
           error: "抱歉，文件应为 CSV 格式。"
+      confirm_access:
+        title: "确认访问"
+        incorrect_password: "输入的密码不正确。"
+        logged_in_as: "您的登录身份为： "
+        instructions: "请确认你的身份以便完成此操作。"
+        fine_print: "我们要求确认你的身份，因为这是一项潜在的敏感操作。一旦通过身份验证，只有在几个小时不活动后才会要求重新进行身份验证。"
       password:
         title: "密码"
         too_short: "您的密码过短。"
@@ -1616,6 +1647,8 @@ zh_CN:
         ok: "您的密码没有问题。"
         instructions: "至少 %{count} 个字符"
         required: "请输入密码"
+        confirm: "确认"
+        incorrect_password: "输入的密码不正确。"
       summary:
         title: "总结"
         stats: "统计信息"
@@ -1935,6 +1968,8 @@ zh_CN:
         name: "Discord"
         title: "使用 Discord 登录"
         sr_title: "使用 Discord 登录"
+      passkey:
+        name: "使用 Passkey 登录"
       second_factor_toggle:
         totp: "改用身份验证器应用"
         backup_code: "改用备份代码"
@@ -1978,10 +2013,6 @@ zh_CN:
     category_row:
       topic_count:
         other: "此类别下有 %{count} 个话题"
-      plus_subcategories_title:
-        other: "%{name} 和 %{count} 个子类别"
-      plus_subcategories:
-        other: "+ %{count} 个子类别"
     select_kit:
       delete_item: "删除 %{name}"
       filter_by: "筛选条件：%{name}"
@@ -2173,6 +2204,7 @@ zh_CN:
           desc: 密语仅对管理人员可见
         create_topic:
           label: "新建话题"
+          desc: 创建新话题
         shared_draft:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
@@ -3230,6 +3262,7 @@ zh_CN:
       logo: "类别徽标图片"
       logo_dark: "深色模式类别徽标图片"
       background_image: "类别背景图片"
+      background_image_dark: "深色类别背景图像"
       badge_colors: "徽章颜色"
       background_color: "背景色"
       foreground_color: "前景色"
@@ -3817,7 +3850,7 @@ zh_CN:
       approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "嘿，您应该加入此论坛！"
       custom_message_template_topic: "嘿，我想您可能会喜欢此话题！"
-    forced_anonymous: "由于负载过大，这会暂时向所有人显示，因此退出登录的用户会看到它。"
+    forced_anonymous: "由于负载过大，暂时对所有用户都显示登出用户所见的内容。"
     forced_anonymous_login_required: "该站点正处于极端负载状态，当前无法加载，请在几分钟后再试。"
     footer_nav:
       back: "返回"
@@ -3908,7 +3941,6 @@ zh_CN:
           delete: "删除"
           delete_confirm: "确定要删除此版块吗？"
           reset_confirm: "确定要将此版块重置为默认值吗？"
-          public: "将此版块设为公开并对所有人可见"
           always_public: "此版块中的内容始终公开"
           more_menu: "“更多”菜单"
           links:
@@ -4549,7 +4581,7 @@ zh_CN:
         install: "安装"
         delete: "删除"
         delete_confirm: '确定要删除“%{theme_name}”吗？'
-        bulk_delete: '你确定吗？'
+        bulk_delete: "你确定吗？"
         bulk_themes_delete_confirm: "这将卸载以下主题，您网站上的任何用户将无法再使用它们："
         bulk_components_delete_confirm: "这将卸载以下主题组件，您网站上的任何用户将无法再使用它们："
         color: "颜色"

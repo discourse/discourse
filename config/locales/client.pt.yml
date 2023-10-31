@@ -394,6 +394,9 @@ pt:
         type_bonus:
           name: "tipo de bónus"
           title: "Determinado tipo de revisões podem receber um bónus por parte da equipa para terem uma prioridade mais elevada."
+      revise_and_reject_post:
+        reason: "Motivo"
+        optional: "opcional"
       claim_help:
         optional: "Pode reivindicar este item para prevenir que outras pessoas o revejam."
         required: "Deve reivindicar items antes de as poder rever."
@@ -1187,8 +1190,6 @@ pt:
           Leia este código QR numa aplicação compatível (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> — <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e insira o seu código de autenticação.
         disable_description: "Por favor introduza o código de autenticação a partir da sua aplicação"
         show_key_description: "Inserir manualmente"
-        short_description: |
-          Proteja a sua conta com códigos de segurança de utilização única.
         extended_description: |
           A autenticação em dois passos adiciona segurança à sua conta ao pedir um código de utilização única além da sua palavra-passe. Os códigos podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Tenha em consideração que os logins sociais serão desativados assim que a autenticação em dois passos for ativada na sua conta."
@@ -1216,6 +1217,10 @@ pt:
           already_added_error: "Já registou esta chave de segurança. Não precisa de a registar novamente."
           save: "Guardar"
           name_required_error: "Tem de fornecer um nome para a sua chave de segurança."
+      passkeys:
+        save: "Guardar"
+        added_prefix: "Adicionado(a)"
+        last_used_prefix: "Último Uso"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -1788,12 +1793,6 @@ pt:
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
-      plus_subcategories_title:
-        one: "%{name} e uma subcategoria"
-        other: "%{name} e %{count} subcategorias"
-      plus_subcategories:
-        one: "+ %{count} subcategoria"
-        other: "+ %{count} subcategorias"
     select_kit:
       delete_item: "Apagar %{name}"
       filter_by: "Filtrar por: %{name}"

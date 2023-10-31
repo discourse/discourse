@@ -568,7 +568,8 @@ nl:
             name:
               same_as_password: "is hetzelfde als je wachtwoord."
             ip_address:
-              signup_not_allowed: "Registratie vanaf dit account is niet toegestaan."
+              blocked: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan."
+              max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan (maximumlimiet bereikt). Neem contact op met een medewerker."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1543,7 +1544,6 @@ nl:
     must_approve_users: "Medewerkers moeten alle nieuwe gebruikersaccounts goedkeuren voordat deze de website mogen bezoeken."
     invite_code: "Gebruiker moet deze code intypen voor accountregistratie, genegeerd wanneer leeg (niet hoofdlettergevoelig)"
     approve_suspect_users: "Verdachte gebruikers toevoegen aan de wachtrij voor beoordeling. Verdachte gebruikers hebben een bio/website ingevoerd, maar hebben geen leesactiviteit."
-    review_every_post: "Alle berichten moeten worden beoordeeld. WAARSCHUWING! NIET AANBEVOLEN VOOR DRUKKE WEBSITES."
     pending_users_reminder_delay_minutes: "Moderators informeren wanneer nieuwe gebruikers langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
     persistent_sessions: "Gebruikers blijven aangemeld wanneer de webbrowser wordt gesloten"
     maximum_session_age: "Gebruikers blijven (n) uur na hun laatste bezoek aangemeld"
@@ -1569,8 +1569,6 @@ nl:
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."
-    top_menu: "Bepaal welke items in de navigatie op de startpagina worden weergegeven en in welke volgorde. Voorbeeld: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Bepaal welke items in het berichtmenu worden weergegeven en in welke volgorde. Voorbeeld: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "De menu-items die standaard in het berichtmenu moeten worden verborgen, totdat er op een uitvouw-ellipsis wordt geklikt."
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."
     allow_username_in_share_links: "Sta toe dat gebruikersnamen worden opgenomen in gedeelde links. Dit is handig om badges toe te kennen op basis van unieke bezoekers."
@@ -2163,7 +2161,6 @@ nl:
     navigation_menu: "Bepaal welk navigatiemenu u wilt gebruiken. Zijbalk- en kopnavigatie kunnen door gebruikers worden aangepast. Een legacyoptie is beschikbaar voor terugwaartse compatibiliteit."
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
-    enable_experimental_hashtag_autocomplete: "EXPERIMENTEEL: gebruik het nieuwe automatische #hashtag-aanvulsysteem voor categorieën en tags dat het geselecteerde item anders weergeeft en de zoekfunctie verbetert"
     experimental_new_new_view_groups: 'EXPERIMENTEEL: schakelt een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en maak de link "Alles" ernaartoe in de zijbalk.'
     enable_custom_sidebar_sections: "EXPERIMENTEEL: schakelt aangepaste zijbalksecties in"
     experimental_topics_filter: "EXPERIMENTEEL: schakelt de filterroute voor experimentele topics in op /filter"
@@ -2427,9 +2424,6 @@ nl:
       blocked: "is niet toegestaan."
       revoked: "Stuurt geen e-mails naar '%{email}' tot %{date}."
       does_not_exist: "N.v.t."
-    ip_address:
-      blocked: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan."
-      max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan (maximumlimiet bereikt). Neem contact op met een medewerker."
     website:
       domain_not_allowed: "Website is ongeldig. Toegestane domeinnamen zijn: %{domains}"
     auto_rejected: "Automatisch geweigerd vanwege leeftijd. Zie de website-instelling auto_handle_queued_age."

@@ -1,8 +1,0 @@
-{
-  "extends": "eslint-config-discourse",
-  "rules": {
-    "discourse-ember/global-ember": "error",
-    "eol-last": "error",
-    "no-restricted-globals": "off"
-  }
-}

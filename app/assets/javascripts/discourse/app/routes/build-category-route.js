@@ -16,7 +16,7 @@ import {
   findTopicList,
 } from "discourse/routes/build-topic-route";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 class AbstractCategoryRoute extends DiscourseRoute {
   @service composer;

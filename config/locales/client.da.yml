@@ -395,6 +395,9 @@ da:
         type_bonus:
           name: "skriv bonus"
           title: "Visse gennemgåelige typer kan tildeles en bonus af medarbejdere, for at give dem til en højere prioritet."
+      revise_and_reject_post:
+        reason: "Begrundelse"
+        optional: "valgfri"
       claim_help:
         optional: "Du kan gøre krav på dette punkt, for at forhindre andre i at gennemgå det."
         required: "Du skal kræve punkter, før du kan gennemgå dem."
@@ -1200,8 +1203,6 @@ da:
           Scan denne QR-kode i en understøttet app ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>), og indtast din godkendelseskode.
         disable_description: "Indtast godkendelseskoden fra din app"
         show_key_description: "Indtast manuelt"
-        short_description: |
-          Beskyt din konto med engangs-sikkerhedskoder.
         extended_description: |
           To-faktor godkendelse tilføjer ekstra sikkerhed til din konto ved at kræve en engangstoken ud over dit adgangskode. Tokens kan genereres på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> og <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a> enheder.
         oauth_enabled_warning: "Bemærk, at sociale logins deaktiveres, når To-faktor godkendelse er aktiveret på din konto."
@@ -1229,6 +1230,10 @@ da:
           edit: "Rediger Fysisk Sikkerhedsnøgle"
           save: "Gem"
           name_required_error: "Du skal angive et navn til din sikkerhedsnøgle."
+      passkeys:
+        save: "Gem"
+        added_prefix: "Tilføjet"
+        last_used_prefix: "Sidst Brugt"
       change_about:
         title: "Skift “Om mig”"
         error: "Der opstod en fejl ved ændringen af denne værdi."
@@ -1507,6 +1512,7 @@ da:
         ok: "Din adgangskode ser fin ud."
         instructions: "mindst %{count} tegn"
         required: "Indtast venligst en adgangskode"
+        confirm: "Bekræft"
       summary:
         title: "Statistik"
         stats: "Statistik"
@@ -1836,12 +1842,6 @@ da:
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategori"
-      plus_subcategories_title:
-        one: "%{name} og en underkategori"
-        other: "%{name} og %{count} underkategorier"
-      plus_subcategories:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
     select_kit:
       delete_item: "Slet %{name}"
       filter_by: "Filtrer efter: %{name}"

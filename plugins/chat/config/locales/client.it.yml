@@ -507,12 +507,9 @@ it:
           one: "%{commaSeparatedUsernames} e %{count} altro stanno scrivendo"
           other: "%{commaSeparatedUsernames} e altri %{count} stanno scrivendo"
       retention_reminders:
-        public_none: "indefinitamente"
-        public:
-          one: "%{count} giorno"
-          other: "%{count} giorni"
-        dm_none: "indefinitamente"
-        dm:
+        indefinitely_short: "indefinitamente"
+        indefinitely_long: "Le impostazioni della chat sono state configurate per conservare i messaggi del canale a tempo indeterminato."
+        short:
           one: "%{count} giorno"
           other: "%{count} giorni"
       flags:

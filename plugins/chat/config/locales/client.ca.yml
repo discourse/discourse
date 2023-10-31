@@ -113,10 +113,7 @@ ca:
         new_message:
           title: "Mou a missatge nou"
       retention_reminders:
-        public:
-          one: "%{count} dia"
-          other: "%{count} dies"
-        dm:
+        short:
           one: "%{count} dia"
           other: "%{count} dies"
       emoji_picker:

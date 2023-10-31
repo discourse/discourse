@@ -11,7 +11,7 @@ import { avatarFor } from "discourse/widgets/post";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import evenRound from "discourse/plugins/poll/lib/even-round";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
@@ -541,7 +541,7 @@ createWidget("discourse-poll-info", {
       instructions.push(
         new RawHtml({
           html: `<li>
-                  ${iconHTML("far-eye")} 
+                  ${iconHTML("far-eye")}
                   <span>${I18n.t("poll.public.title")}</span>
                  </li>`,
         })

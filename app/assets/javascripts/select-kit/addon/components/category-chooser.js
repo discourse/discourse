@@ -5,7 +5,7 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
@@ -76,6 +76,13 @@ export default ComboBoxComponent.extend({
   },
 
   search(filter) {
+    if (this.siteSettings.lazy_load_categories) {
+      return Category.asyncSearch(this._normalize(filter), {
+        scopedCategoryId: this.selectKit.options?.scopedCategoryId,
+        prioritizedCategoryId: this.selectKit.options?.prioritizedCategoryId,
+      });
+    }
+
     if (filter) {
       filter = this._normalize(filter);
       return this.content.filter((item) => {

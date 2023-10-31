@@ -18,7 +18,7 @@ globalThis.console = {
 
 import { transform as babelTransform } from "@babel/standalone";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
-import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
+import { Preprocessor } from "content-tag";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
 import EmberThisFallback from "ember-this-fallback";
@@ -28,9 +28,8 @@ import Handlebars from "handlebars";
 import getRandomValues from "polyfill-crypto.getrandomvalues";
 import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
+import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 globalThis.crypto = { getRandomValues };
-
-import { Preprocessor } from "content-tag";
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
   enableLogging: false,

@@ -1,5 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { compile } from "handlebars";
+import $ from "jquery";
 import { module, test } from "qunit";
 import autocomplete from "discourse/lib/autocomplete";
 

@@ -569,7 +569,8 @@ fi:
             name:
               same_as_password: "on sama kuin salasanasi."
             ip_address:
-              signup_not_allowed: "Rekisteröityminen ei ole sallittu tälle tilille."
+              blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
+              max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1406,6 +1407,7 @@ fi:
     unreachable_themes: "Näille teemoille ei voitu tarkistaa päivityksiä:"
     watched_word_regexp_error: "Säännöllinen lauseke %{action}-tyypin tarkkailuille sanoille ei kelpaa. Tarkista <a href='%{base_path}/admin/customize/watched_words'>tarkkailtujen sanojen asetukset</a> tai poista käytöstä \"watched words regular expressions\" -sivustoasetus."
     v3_analytics_deprecated: "Discoursesi käyttää tällä hetkellä Google Analytics 3:a, jota ei enää tueta heinäkuun 2023 jälkeen. <a href='https://meta.discourse.org/t/260498'>Päivitä Google Analytics 4:ään</a> nyt, jotta saat jatkossakin arvokkaita tietoja ja analytiikkaa verkkosivustosi suoriutumisesta."
+    category_style_deprecated: "Discourse käyttää tällä hetkellä vanhentunutta kategoriatyyliä, joka poistuu ennen Discourse 3.2:n lopullista beta-julkaisua. Löydät <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> -artikkelista tietoja siitä, miten voit säilyttää valitsemasi kategoriatyylin."
   site_settings:
     allow_bulk_invite: "Salli joukkokutsut lataamalla CSV-tiedosto"
     disabled: "poistettu käytöstä"
@@ -1548,7 +1550,7 @@ fi:
     must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki tilit ennen uusien käyttäjien päästämistä sivustolle."
     invite_code: "Käyttäjän on kirjoitettava tämä koodi, jotta tilin rekisteröinti sallitaan, ohitetaan, kun se on tyhjä (ei huomioi kirjainkokoa)"
     approve_suspect_users: "Lisää epäilyttävät käyttäjät tarkastusjonoon. Epäilyttävät käyttäjät ovat täydentäneet kuvauksen tai sivuston käyttäjäprofiiliin, mutta heillä ei ole lukuaktiivisuutta."
-    review_every_post: "Kaikki viestit on tarkastettava. VAROITUS! EI SUOSITELLA RUUHKAISILLE SIVUSTOILLE."
+    review_every_post: "Lisää jokainen uusi julkaisu ylläpidon tarkistusjonoon. Viestit julkaistaan silti välittömästi ja ne näkyvät kaikille käyttäjille. VAROITUS! Ei suositella suuren käyttäjämärän sivustoilla, koska tarkistettavien viestien määrä voi olla todella suuri."
     pending_users_reminder_delay_minutes: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta minuuttia. Aseta -1, jos haluat poistaa ilmoitukset käytöstä."
     persistent_sessions: "Käyttäjät pysyvät sisäänkirjautuneena, vaikka selain on suljettuna"
     maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
@@ -1577,8 +1579,6 @@ fi:
     invalidate_inactive_admin_email_after_days: "Ylläpitäjätilit, jotka eivät ole vierailleet sivustolla näin moneen päivään, joutuvat vahvistamaan sähköpostiosoitteensa uudelleen ennen sisäänkirjautumista. Aseta 0 poistaaksesi käytöstä."
     include_secure_categories_in_tag_counts: "Kun tämä on käytössä, tunnisteen ketjujen määrä sisältää ketjut, jotka kuuluvat kaikkien käyttäjien lukurajoitetuille alueille. Kun tämä ei ole käytössä, normaaleille käyttäjille näytetään vain ketjujen määrä tunnisteelle, joissa kaikki ketjut ovat julkisilla alueilla."
     display_personal_messages_tag_counts: "Kun tämä on käytössä, tietyllä tunnisteella merkittyjen yksityisviestien määrä näytetään."
-    top_menu: "Mitkä painikkeet näytetään aloitussivun navigointipalkissa ja missä järjestyksessä. Esimerkiksi latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Mitkä painikkeet näytetään viestin valikossa ja missä järjestyksessä. Esimerkiksi like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Viestivalikossa piilotettavat valikon vaihtoehdot, ellei laajentavaa kolmea pistettä klikata."
     share_links: "Mitkä kohteet näytetään jakamisvalintaikkunassa ja missä järjestyksessä."
     allow_username_in_share_links: "Salli käyttäjätunnusten sisällyttäminen jakolinkkeihin. Tämä on hyödyllistä kunniamerkkien antamiseksi yksilöllisten vierailijoiden perusteella."
@@ -2061,6 +2061,7 @@ fi:
     approve_new_topics_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien aloittamat ketjut täytyy hyväksyä"
     approve_unless_staged: "Esikäyttäjien uudet ketjut ja viestit täytyy hyväksyä"
     notify_about_queued_posts_after: "Jos viestejä on ollut hyväksymättä näin monen tunnin ajan, lähetä ilmoitus valvojille. Poista ilmoitukset käytöstä asettamalla 0."
+    reviewable_revision_reasons: "Listaus käytettävissä olevista hylättäessä tarkistusjonon viestejä korjauksella. Myös \"Muu\" on aina käytettävissä, jolloin syy voidaan syöttää itse."
     auto_close_messages_post_count: "Maksimimäärä viestejä viestissä, kunnes se suljetaan automaattisesti (aseta 0 poistaaksesi käytöstä)"
     auto_close_topics_post_count: "Maksimimäärä viestejä ketjussa, kunnes se suljetaan automaattisesti (aseta 0 poistaaksesi käytöstä)"
     auto_close_topics_create_linked_topic: "Luo uusi liittyvä ketju, kun ketju suljetaan automaattisesti \"auto close topics post count\" -asetuksen perusteella"
@@ -2139,7 +2140,9 @@ fi:
     remove_muted_tags_from_latest: "Jos ketjulla on vain vaimennettuja tunnisteita, älä näytä ketjua Tuoreimmat-ketjuluettelossa."
     force_lowercase_tags: "Salli vain pienet kirjaimet uusissa tunnisteissa."
     create_post_for_category_and_tag_changes: "Luo pieni tapahtumaviesti ketjun alueiden tai tunnisteiden muuttuessa"
+    automatically_clean_unused_tags: "Poista automaattisesti tunnisteet, joita ei käytetä missään aiheissa tai yksityisviesteissä päivittäin."
     watched_precedence_over_muted: "Ilmoita minulle ketjuista alueilla tai tunnisteissa, joita tarkkailen, jotka kuuluvat myös sellaiseen, jonka olen vaimentanut"
+    company_name: "Yrityksesi tai organisaatiosi nimi. Jos tyhjä, ei yleisiä palveluehtojen ja tietosuojailmoituksen pohjaa tarjota."
     governing_law: "Sovellettava lainsäädäntö"
     city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
     shared_drafts_category: "Ota käyttöön jaetut luonnokset -toiminto määrittämällä alue, joka on ketjuluonnoksille varattu. Alueen ketjut eivät näy ketjuluetteloissa henkilökunnan jäsenille."
@@ -2172,7 +2175,6 @@ fi:
     navigation_menu: "Määritä käytettävä navigointivalikko. Sivupalkin ja yläpalkin navigointi ovat käyttäjien mukautettavissa. Vanha vaihtoehto on käytettävissä yhteensopivuuden varmistamiseksi vanhojen versioiden kanssa."
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
-    enable_experimental_hashtag_autocomplete: "KOKEELLINEN: käytä alueille ja tunnisteille uutta automaattista #hashtag-täydennysjärjestelmää, jotka hahmontaa valitun kohteen eri tavalla ja on parantanut hakua"
     experimental_new_new_view_groups: 'KOKEELLINEN: ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
     enable_custom_sidebar_sections: "KOKEELLINEN: ota mukautetut sivupalkin osiot käyttöön"
     experimental_topics_filter: "KOKEELLINEN: ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
@@ -2436,9 +2438,6 @@ fi:
       blocked: "ei ole sallittu."
       revoked: "Sähköpostia ei lähetetä osoitteeseen '%{email}' ennen %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
-      max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
     website:
       domain_not_allowed: "Verkkosivusto ei kelpaa. Sallitus verkkotunnukset ovat: %{domains}"
     auto_rejected: "Hylättiin automaattisesti iän perusteella. Katso auto_handle_queued_age-sivustoasetus."
@@ -2655,6 +2654,28 @@ fi:
         Jos viesti kuitenkin piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen.
 
         Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
+    reviewable_queued_post_revise_and_reject:
+      title: "Palaute julkaisustasi"
+      subject_template: "Palaute julkaisuusi ketjussa %{topic_title}"
+      text_body_template: |
+        Hei %{username},
+
+        Olemme tarkistaneet julkaisusi ketjussa [%{topic_title}](%{topic_url}) ja meillä on siihen liittyvää palautetta.
+
+        Syy: %{reason}
+
+        Palaute: %{feedback}
+
+        Voit muokata alkuperäistä viestiäsi alla ja lähettää sen uudelleen ehdotetuilla muutoksilla, tai vastata tähän viestiin, jos sinulla on kysyttävää.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Terveisin,
+        %{site_name} Ylläpito
     post_hidden_again:
       title: "Viesti piilotettiin jälleen"
       subject_template: "Yhteisön merkinnät piilottivat viestin, henkilökunnalle ilmoitettiin"
@@ -4710,6 +4731,8 @@ fi:
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       disagree:
         title: "Ei"
+      revise_and_reject_post:
+        title: "Korjaa julkaisua..."
       ignore:
         title: "Sivuuta"
       ignore_and_do_nothing:

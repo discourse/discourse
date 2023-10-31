@@ -13,7 +13,7 @@ import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fi
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function getNotification(currentUser, siteSettings, site, overrides = {}) {
   const notification = Notification.create(

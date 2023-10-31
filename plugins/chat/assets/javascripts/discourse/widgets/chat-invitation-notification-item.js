@@ -4,7 +4,7 @@ import { DefaultNotificationItem } from "discourse/widgets/default-notification-
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidgetFrom } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
 createWidgetFrom(DefaultNotificationItem, "chat-invitation-notification-item", {
@@ -38,8 +38,13 @@ createWidgetFrom(DefaultNotificationItem, "chat-invitation-notification-item", {
       title: data.chat_channel_title,
       slug: data.chat_channel_slug,
     });
-    return `/chat/c/${slug || "-"}/${data.chat_channel_id}/${
-      data.chat_message_id
-    }`;
+
+    let url = `/chat/c/${slug || "-"}/${data.chat_channel_id}`;
+
+    if (data.chat_message_id) {
+      url += `/${data.chat_message_id}`;
+    }
+
+    return url;
   },
 });

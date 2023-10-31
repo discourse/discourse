@@ -382,6 +382,9 @@ ja:
         type_bonus:
           name: "タイプボーナス"
           title: "特定のレビュー待ち項目タイプには、スタッフがボーナスを割り当てて優先順位を上げられます。"
+      revise_and_reject_post:
+        reason: "理由"
+        optional: "オプション"
       stale_help: "このレビュー待ち項目は <b>%{username}</b> によって解決されました。"
       claim_help:
         optional: "この項目を自分に割り当ててほかのユーザーがレビューしないようにできます。"
@@ -1272,8 +1275,6 @@ ja:
           サポートされているアプリ (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) でこの QR コードをスキャンし、認証コードを入力します。
         disable_description: "アプリから認証コードを入力してください"
         show_key_description: "手動で入力する"
-        short_description: |
-          1 回限りのセキュリティコードでアカウントを保護します。
         extended_description: |
           二要素認証は、パスワードに加えてワンタイムトークンを必要とすることで、アカウントにさらにセキュリティを追加します。トークンは <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> および <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> デバイスで生成できます。
         oauth_enabled_warning: "アカウントで二要素認証が有効になると、ソーシャルログインは無効になります。"
@@ -1312,6 +1313,10 @@ ja:
           save: "保存"
           edit_description: "物理的なセキュリティキーの名前"
           name_required_error: "セキュリティキーの名前を入力する必要があります。"
+      passkeys:
+        save: "保存"
+        added_prefix: "追加済み"
+        last_used_prefix: "最後の使用"
       change_about:
         title: "自己紹介を変更"
         error: "この値を変更中にエラーが発生しました。"
@@ -1593,6 +1598,7 @@ ja:
         ok: "そのパスワードで良さそうです。"
         instructions: "%{count} 文字以上"
         required: "パスワードを入力してください"
+        confirm: "確認"
       summary:
         title: "要約"
         stats: "統計"
@@ -1943,10 +1949,6 @@ ja:
     category_row:
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
-      plus_subcategories_title:
-        other: "%{name} および %{count} 個のサブカテゴリ"
-      plus_subcategories:
-        other: "+ %{count} 個のサブカテゴリ"
     select_kit:
       delete_item: "%{name} を削除"
       filter_by: "フィルタ: %{name}"
@@ -3822,7 +3824,6 @@ ja:
           delete: "削除"
           delete_confirm: "このセクションを削除してもよろしいですか？"
           reset_confirm: "このセクションをデフォルトにリセットしてもよろしいですか？"
-          public: "このセクションを公開し、全員が閲覧できるようにする"
           always_public: "このセクションのコンテンツは常に公開される"
           more_menu: "その他のメニュー"
           links:

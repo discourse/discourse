@@ -31,7 +31,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     await render(hbs`
       <UserStatusMessage
        @status={{this.status}}
-       @showDescription=true/>
+       @showDescription={{true}} />
     `);
 
     assert

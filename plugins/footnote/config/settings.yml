@@ -1,0 +1,7 @@
+plugins:
+  enable_markdown_footnotes:
+    default: true
+    client: true
+  display_footnotes_inline:
+    default: true
+    client: true

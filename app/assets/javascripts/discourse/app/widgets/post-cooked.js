@@ -13,7 +13,7 @@ import escape from "discourse-common/lib/escape";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 

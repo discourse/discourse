@@ -543,7 +543,8 @@ ja:
             name:
               same_as_password: "はあなたのパスワードと同じです。"
             ip_address:
-              signup_not_allowed: "このアカウントから登録できません。"
+              blocked: "あなたの IP アドレスからの新規登録は許可されていません。"
+              max_new_accounts_per_registration_ip: "あなたの IP アドレスからの新規登録は許可されていません (登録可能な数を超えています)。スタッフメンバーにお問い合わせください。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -1476,7 +1477,6 @@ ja:
     must_approve_users: "すべての新規ユーザーアカウントがアクセスを許可される前に、スタッフがアカウントを承認する必要がある"
     invite_code: "ユーザーはこのコードを入力してアカウント登録の許可を得る必要があります。空の場合は無視されます (大文字と小文字は区別されません)"
     approve_suspect_users: "不審なユーザーをレビューキューに追加します。不審なユーザーは略歴/ウェブサイトにアクセスしましたが閲覧アクティビティはありません。"
-    review_every_post: "すべての投稿をレビューする必要があります。警告！アクセスの多いサイトには推奨されません。"
     pending_users_reminder_delay_minutes: "モデレーターに新しいユーザーがこの時間以上承認待ちであることを通知します。-1 に設定すると、通知は無効になります。"
     persistent_sessions: "ユーザーはブラウザが閉じられてもログインのままになる"
     maximum_session_age: "ユーザーは最後の訪問から n 時間以内はログインしたままになる"
@@ -1502,8 +1502,6 @@ ja:
     invalidate_inactive_admin_email_after_days: "この日数以上サイトを訪問していない管理者アカウントは、ログインする前にメールアドレスを再確認する必要があります。0 に設定すると無効になります。"
     include_secure_categories_in_tag_counts: "有効にすると、タグのトピック数には、すべてのユーザーに対して読み取りが制限されたカテゴリにあるトピックが含まれます。無効にすると、通常のユーザーは、すべてのトピックが公開カテゴリにあるタグのトピック数のみが表示されます。"
     display_personal_messages_tag_counts: "有効にすると、指定されたタグが付けられた個人メッセージの数が表示されます。"
-    top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "投稿メニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "展開ボタンがクリックされるまで、デフォルトで非表示にする投稿のメニュー項目。"
     share_links: "共有ダイアログに表示する項目、表示順を指定。"
     allow_username_in_share_links: "ユーザー名を共有リンクに含めることを許可します。これは、ユニークビジター数に応じてバッジを与えるのに役立ちます。"
@@ -2096,7 +2094,6 @@ ja:
     navigation_menu: "使用するナビゲーションメニューを決定します。サイドバーとヘッダーナビゲーションはユーザーがカスタマイズできます。下位互換性を得るには、レガシーオプションを使用できます。"
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
-    enable_experimental_hashtag_autocomplete: "実験的: 選択した項目を異なる方法で表示し、改善された検索機能を備えた新しい #hashtag 自動補完システムをカテゴリとタグに使用します。"
     experimental_new_new_view_groups: '実験的: 未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクします。'
     enable_custom_sidebar_sections: "実験的: カスタムサイドバーセクションを有効にする"
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
@@ -2340,9 +2337,6 @@ ja:
       blocked: "は許可されていません。"
       revoked: "%{date} まで '%{email}' にメールは送信されません。"
       does_not_exist: "該当なし"
-    ip_address:
-      blocked: "あなたの IP アドレスからの新規登録は許可されていません。"
-      max_new_accounts_per_registration_ip: "あなたの IP アドレスからの新規登録は許可されていません (登録可能な数を超えています)。スタッフメンバーにお問い合わせください。"
     website:
       domain_not_allowed: "ウェブサイトは無効です。許可されるドメイン: %{domains}"
     auto_rejected: "年齢により自動的に拒否されました。auto_handle_queued_age サイト設定をご覧ください。"

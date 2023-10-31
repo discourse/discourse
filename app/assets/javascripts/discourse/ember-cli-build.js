@@ -11,6 +11,8 @@ const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("deprecation-silencer");
 const generateWorkboxTree = require("./lib/workbox-tree-builder");
+const { compatBuild } = require("@embroider/compat");
+const { Webpack } = require("@embroider/webpack");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -22,27 +24,7 @@ module.exports = function (defaults) {
   DeprecationSilencer.silence(console, "warn");
   DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
-  const isEmbroider = process.env.USE_EMBROIDER !== "0";
   const isProduction = EmberApp.env().includes("production");
-
-  // This is more or less the same as the one in @embroider/test-setup
-  const maybeEmbroider = (app, options) => {
-    if (isEmbroider) {
-      const { compatBuild } = require("@embroider/compat");
-      const { Webpack } = require("@embroider/webpack");
-
-      // https://github.com/embroider-build/embroider/issues/1581
-      if (Array.isArray(options?.extraPublicTrees)) {
-        options.extraPublicTrees = [
-          app.addonPostprocessTree("all", mergeTrees(options.extraPublicTrees)),
-        ];
-      }
-
-      return compatBuild(app, Webpack, options);
-    } else {
-      return app.toTree(options?.extraPublicTrees);
-    }
-  };
 
   const app = new EmberApp(defaults, {
     autoRun: false,
@@ -54,43 +36,6 @@ module.exports = function (defaults) {
       // that causes the `app.import` statements below to fail in production mode.
       // This forces the use of `fast-sourcemap-concat` which works in production.
       enabled: true,
-    },
-    autoImport: {
-      forbidEval: true,
-      insertScriptsAt: "ember-auto-import-scripts",
-      watchDependencies: ["discourse-i18n"],
-      webpack: {
-        // Workarounds for https://github.com/ef4/ember-auto-import/issues/519 and https://github.com/ef4/ember-auto-import/issues/478
-        devtool: isProduction ? false : "source-map", // Sourcemaps contain reference to the ephemeral broccoli cache dir, which changes on every deploy
-        optimization: {
-          moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
-        },
-        resolve: {
-          fallback: {
-            // Sinon needs a `util` polyfill
-            util: require.resolve("util/"),
-            // Also for sinon
-            timers: false,
-          },
-        },
-        module: {
-          rules: [
-            // Sinon/`util` polyfill accesses the `process` global,
-            // so we need to provide a mock
-            {
-              test: require.resolve("util/"),
-              use: [
-                {
-                  loader: "imports-loader",
-                  options: {
-                    additionalCode: "var process = { env: {} };",
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      },
     },
     fingerprint: {
       // Handled by Rails asset pipeline
@@ -107,9 +52,7 @@ module.exports = function (defaults) {
 
     "ember-cli-terser": {
       enabled: isProduction,
-      exclude:
-        ["**/highlightjs/*", "**/javascripts/*"] +
-        (isEmbroider ? [] : ["**/test-*.js", "**/core-tests*.js"]),
+      exclude: ["**/highlightjs/*", "**/javascripts/*"],
     },
 
     "ember-cli-babel": {
@@ -120,10 +63,6 @@ module.exports = function (defaults) {
       plugins: [require.resolve("deprecation-silencer")],
     },
 
-    // Was previously true so that we could run theme tests in production
-    // but we're moving away from that as part of the Embroider migration
-    tests: isEmbroider ? !isProduction : true,
-
     vendorFiles: {
       // Freedom patch - includes bug fix and async stack support
       // https://github.com/discourse/backburner.js/commits/discourse-patches
@@ -132,11 +71,13 @@ module.exports = function (defaults) {
     },
   });
 
+  // TODO: remove me
+  // Ember 3.28 still has some internal dependency on jQuery being a global,
+  // for the time being we will bring it in vendor.js
+  app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
+
   // WARNING: We should only import scripts here if they are not in NPM.
-  // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
-  app.import("node_modules/bootstrap/js/modal.js");
-  app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
   });
@@ -149,7 +90,7 @@ module.exports = function (defaults) {
 
   const discoursePluginsTree = app.project
     .findAddonByName("discourse-plugins")
-    .generatePluginsTree();
+    .generatePluginsTree(app.tests);
 
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
@@ -168,7 +109,10 @@ module.exports = function (defaults) {
   ]);
   app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
-  const extraPublicTrees = [
+  const terserPlugin = app.project.findAddonByName("ember-cli-terser");
+  const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
+
+  let extraPublicTrees = [
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -194,23 +138,17 @@ module.exports = function (defaults) {
     testStylesheetTree,
   ];
 
-  return maybeEmbroider(app, {
-    extraPublicTrees,
+  const appTree = compatBuild(app, Webpack, {
     packagerOptions: {
       webpackConfig: {
         devtool: "source-map",
-        resolve: {
-          alias: {
-            // This is a build-time alias is for code in core only – plugins
-            // and legacy bundles go through the runtime loader.js shim
-            I18n: "discourse-i18n",
-          },
-        },
         externals: [
           function ({ request }, callback) {
             if (
               !request.includes("-embroider-implicit") &&
-              (request.startsWith("admin/") ||
+              // TODO: delete special case for jquery when removing app.import() above
+              (request === "jquery" ||
+                request.startsWith("admin/") ||
                 request.startsWith("wizard/") ||
                 (request.startsWith("pretty-text/engines/") &&
                   request !== "pretty-text/engines/discourse-markdown-it") ||
@@ -229,8 +167,26 @@ module.exports = function (defaults) {
               exportsPresence: "error",
             },
           },
+          rules: [
+            {
+              test: require.resolve("bootstrap/js/modal"),
+              use: [
+                {
+                  loader: "imports-loader",
+                  options: {
+                    imports: {
+                      moduleName: "jquery",
+                      name: "jQuery",
+                    },
+                  },
+                },
+              ],
+            },
+          ],
         },
       },
     },
   });
+
+  return mergeTrees([appTree, applyTerser(mergeTrees(extraPublicTrees))]);
 };

@@ -118,6 +118,7 @@ en:
         title: "Show activity indicator in header"
         all_new: "All New Messages"
         dm_and_mentions: "Direct Messages and Mentions"
+        only_mentions: "Only Mentions"
         never: "Never"
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"

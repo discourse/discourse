@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export function buildPermissionDescription(id) {
   return I18n.t("permission_types." + PermissionType.DESCRIPTION_KEYS[id]);

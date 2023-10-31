@@ -3,7 +3,7 @@ import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   dialog: service(),

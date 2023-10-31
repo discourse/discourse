@@ -40,6 +40,7 @@ module("Integration | Helper | raw", function (hooks) {
       </template>
 
       willDestroy() {
+        super.willDestroy(...arguments);
         willDestroyCalled = true;
       }
     }

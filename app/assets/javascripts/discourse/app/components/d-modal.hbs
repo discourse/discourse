@@ -15,7 +15,7 @@
     ...attributes
     {{did-insert this.setupListeners}}
     {{will-destroy this.cleanupListeners}}
-    {{trap-tab (hash preventScroll=false)}}
+    {{trap-tab preventScroll=false}}
   >
     <div class="d-modal__wrapper">
       <div class="d-modal__container">
@@ -43,6 +43,8 @@
                 {{#if @subtitle}}
                   <p class="d-modal__subtitle-text">{{@subtitle}}</p>
                 {{/if}}
+
+                {{yield to="belowModalTitle"}}
               </div>
             {{/if}}
             {{yield to="headerBelowTitle"}}

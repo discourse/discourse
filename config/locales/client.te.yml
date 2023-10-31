@@ -177,6 +177,8 @@ te:
     review:
       explain:
         total: "మొత్తం"
+      revise_and_reject_post:
+        reason: "కారణం"
       delete: "తొలగించు"
       settings:
         save_changes: "మార్పులను భద్రపరచు"
@@ -456,6 +458,8 @@ te:
         edit: "సవరించు"
         security_key:
           save: "భద్రపరచు"
+      passkeys:
+        save: "భద్రపరుచు"
       change_about:
         title: "నా గురించి మార్చు"
       change_username:

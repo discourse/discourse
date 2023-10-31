@@ -1,4 +1,4 @@
-import { click, render, settled } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupLightboxes } from "discourse/lib/lightbox";
@@ -34,8 +34,6 @@ module("Integration | Component | d-lightbox", function (hooks) {
     );
     await click(lightboxedElement);
 
-    await settled();
-
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-visible");
 
     assert
@@ -70,7 +68,6 @@ module("Integration | Component | d-lightbox", function (hooks) {
     assert.dom(SELECTORS.FOCUS_TRAP).exists();
 
     await click(SELECTORS.CLOSE_BUTTON);
-    await settled();
 
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-visible");
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();

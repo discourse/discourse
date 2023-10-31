@@ -351,6 +351,9 @@ lv:
         type_bonus:
           name: "tipa bonuss"
           title: "Atsevišķiem pārskatāmiem veidiem darbinieki var piešķirt prēmiju, lai tie būtu augstāka prioritāte."
+      revise_and_reject_post:
+        reason: "Iemesls"
+        optional: "pēc izvēles"
       stale_help: "Šo pārskatāmo jautājumu ir atrisinājis <b>%{username}</b>."
       claim_help:
         optional: "Jūs varat pieprasīt šo vienumu, lai citi to nevarētu pārskatīt."
@@ -1081,8 +1084,6 @@ lv:
           Skenējiet šo QR kodu atbalstītā lietotnē (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) un ievadiet savu autentifikācijas kodu.
         disable_description: "Lūdzu, ievadiet lietotnes autentifikācijas kodu"
         show_key_description: "Ievadiet manuāli"
-        short_description: |
-          Aizsargājiet savu kontu, izmantojot vienreizējus drošības kodus.
         extended_description: |
           Divu faktoru autentifikācija jūsu kontam piešķir papildu drošību, papildus parolei pieprasot vienreizēju marķieri. Žetonus var ģenerēt <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> un <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> ierīcēs.
         oauth_enabled_warning: "Lūdzu, ņemiet vērā, ka sociālā pieteikšanās tiks atspējota līdz jūsu kontā būs iespējota divu faktoru autentifikācija."
@@ -1106,6 +1107,9 @@ lv:
           already_added_error: "Jūs jau esat reģistrējis šo drošības atslēgu. Jums tā nav jāreģistrē vēlreiz."
           save: "Saglabāt"
           name_required_error: "Jums ir jānorāda drošības atslēgas nosaukums."
+      passkeys:
+        save: "Saglabāt"
+        added_prefix: "Pievienots"
       change_about:
         title: "Mainīt aprakstu par mani"
         error: "Mainot šo vērtību, notika kļūda."

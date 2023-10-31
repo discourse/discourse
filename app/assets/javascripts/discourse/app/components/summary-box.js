@@ -1,69 +1,19 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { shortDateNoYear } from "discourse/lib/formatter";
-import { cook } from "discourse/lib/text";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const MIN_POST_READ_TIME = 4;
 
 export default class SummaryBox extends Component {
   @service siteSettings;
-  @service messageBus;
-  @service currentUser;
 
-  @tracked summary = "";
-  @tracked summarizedOn = null;
-  @tracked summarizedBy = null;
-  @tracked newPostsSinceSummary = null;
-  @tracked outdated = false;
-  @tracked canRegenerate = false;
-
-  @tracked regenerated = false;
-  @tracked showSummaryBox = false;
-  @tracked canCollapseSummary = false;
-  @tracked loadingSummary = false;
-
-  @bind
-  subscribe() {
-    const channel = `/summaries/topic/${this.args.postAttrs.topicId}`;
-    this.messageBus.subscribe(channel, this._updateSummary);
-  }
-
-  @bind
-  unsubscribe() {
-    this.messageBus.unsubscribe("/summaries/topic/*", this._updateSummary);
-  }
-
-  @bind
-  _updateSummary(update) {
-    const topicSummary = update.topic_summary;
-
-    if (topicSummary.summarized_text) {
-      cook(topicSummary.summarized_text).then((cooked) => {
-        this.summary = cooked;
-      });
-    }
-
-    if (update.done) {
-      this.summarizedOn = shortDateNoYear(topicSummary.summarized_on);
-      this.summarizedBy = topicSummary.algorithm;
-      this.newPostsSinceSummary = topicSummary.new_posts_since_summary;
-      this.outdated = topicSummary.outdated;
-      this.newPostsSinceSummary = topicSummary.new_posts_since_summary;
-      this.canRegenerate = topicSummary.outdated && topicSummary.can_regenerate;
-
-      this.canCollapseSummary = !this.canRegenerate;
-      this.loadingSummary = false;
-    }
+  get summary() {
+    return this.args.postAttrs.summary;
   }
 
   get generateSummaryTitle() {
-    const title = this.canRegenerate
+    const title = this.summary.canRegenerate
       ? "summary.buttons.regenerate"
       : "summary.buttons.generate";
 
@@ -71,7 +21,7 @@ export default class SummaryBox extends Component {
   }
 
   get generateSummaryIcon() {
-    return this.canRegenerate ? "sync" : "magic";
+    return this.summary.canRegenerate ? "sync" : "discourse-sparkles";
   }
 
   get outdatedSummaryWarningText() {
@@ -79,11 +29,11 @@ export default class SummaryBox extends Component {
 
     if (
       !this.args.postAttrs.hasTopRepliesSummary &&
-      this.newPostsSinceSummary > 0
+      this.summary.newPostsSinceSummary > 0
     ) {
       outdatedText += " ";
       outdatedText += I18n.t("summary.outdated_posts", {
-        count: this.newPostsSinceSummary,
+        count: this.summary.newPostsSinceSummary,
       });
     }
 
@@ -147,43 +97,16 @@ export default class SummaryBox extends Component {
       ? "cancelFilter"
       : "showTopReplies";
 
-    this.args.topRepliesToggle(filterFunction);
+    this.args.actionDispatchFunc(filterFunction);
   }
 
   @action
   collapseSummary() {
-    this.showSummaryBox = false;
-    this.canCollapseSummary = false;
+    this.args.actionDispatchFunc("collapseSummary");
   }
 
   @action
   generateSummary() {
-    this.showSummaryBox = true;
-
-    if (this.summary && !this.canRegenerate) {
-      this.canCollapseSummary = true;
-      return;
-    } else {
-      this.loadingSummary = true;
-    }
-
-    let fetchURL = `/t/${this.args.postAttrs.topicId}/strategy-summary?`;
-
-    if (this.currentUser) {
-      fetchURL += `stream=true`;
-
-      if (this.canRegenerate) {
-        fetchURL += "&skip_age_check=true";
-      }
-    }
-
-    ajax(fetchURL)
-      .then((data) => {
-        if (!this.currentUser) {
-          data.done = true;
-          this._updateSummary(data);
-        }
-      })
-      .catch(popupAjaxError);
+    this.args.actionDispatchFunc("showSummary");
   }
 }

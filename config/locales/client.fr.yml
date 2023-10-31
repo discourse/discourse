@@ -419,6 +419,9 @@ fr:
         type_bonus:
           name: "indiquer le bonus"
           title: "Certains types d'éléments à examiner peuvent se voir attribuer un bonus par les responsables pour en élever la priorité."
+      revise_and_reject_post:
+        reason: "Motif d'attribution"
+        optional: "facultatif"
       stale_help: "Cet élément a fait l'objet d'une décision prise par <b>%{username}</b>."
       claim_help:
         optional: "Vous pouvez vous réserver cet élément pour empêcher d'autres responsables de l'examiner."
@@ -1347,8 +1350,6 @@ fr:
           Scannez ce code QR en utilisant une application compatible (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a>– <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) et saisissez votre code d'authentification.
         disable_description: "Veuillez saisir le code d'authentification généré par l'application"
         show_key_description: "Saisir manuellement"
-        short_description: |
-          Protéger votre compte avec des codes de sécurité à usage unique.
         extended_description: |
           L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> et <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Veuillez noter que les connexions aux réseaux sociaux seront désactivées une fois l'authentification à deux facteurs activée sur votre compte."
@@ -1387,6 +1388,10 @@ fr:
           save: "Enregistrer"
           edit_description: "Nom de la clé de sécurité physique"
           name_required_error: "Vous devez donner un nom à votre clé de sécurité."
+      passkeys:
+        save: "Enregistrer"
+        added_prefix: "Ajouté"
+        last_used_prefix: "Dernière utilisation"
       change_about:
         title: "Modifier la rubrique « À propos de moi »"
         error: "Une erreur s'est produite lors de la modification de cette valeur."
@@ -1670,6 +1675,7 @@ fr:
         ok: "Votre mot de passe semble correct."
         instructions: "au moins %{count} caractères"
         required: "Veuillez saisir un mot de passe"
+        confirm: "Confirmer"
       summary:
         title: "Résumé"
         stats: "Statistiques"
@@ -2032,12 +2038,6 @@ fr:
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
-      plus_subcategories_title:
-        one: "%{name} et une sous-catégorie"
-        other: "%{name} et %{count} sous-catégories"
-      plus_subcategories:
-        one: "+ %{count} sous-catégorie"
-        other: "+ %{count} sous-catégories"
     select_kit:
       delete_item: "Supprimer %{name}"
       filter_by: "Filtrer par : %{name}"
@@ -4025,7 +4025,6 @@ fr:
           delete: "Supprimer"
           delete_confirm: "Voulez-vous vraiment supprimer cette section ?"
           reset_confirm: "Voulez-vous vraiment réinitialiser cette section par défaut ?"
-          public: "Rendre cette section publique et la rendre visible pour tous"
           always_public: "Le contenu de cette section est toujours public"
           more_menu: "Plus de menus"
           links:

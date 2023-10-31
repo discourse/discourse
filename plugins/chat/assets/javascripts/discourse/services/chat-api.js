@@ -386,10 +386,10 @@ export default class ChatApi extends Service {
    * @param {Array<number>} data.upload_ids - The uploads attached to the message after editing.
    */
   editMessage(channelId, messageId, data) {
-    return ajax(`/chat/${channelId}/edit/${messageId}`, {
-      type: "PUT",
-      data,
-    });
+    return this.#putRequest(
+      `/channels/${channelId}/messages/${messageId}`,
+      data
+    );
   }
 
   /**
@@ -473,9 +473,9 @@ export default class ChatApi extends Service {
    * @param {number} options.chat_message_id - A message ID to display in the invite.
    */
   invite(channelId, userIds, options = {}) {
-    return ajax(`/chat/${channelId}/invite`, {
-      type: "put",
-      data: { user_ids: userIds, chat_message_id: options.messageId },
+    return this.#postRequest(`/channels/${channelId}/invites`, {
+      user_ids: userIds,
+      message_id: options.messageId,
     });
   }
 

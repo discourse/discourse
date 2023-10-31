@@ -6,7 +6,7 @@ import { htmlSafe } from "@ember/template";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminEmailIndexController extends Controller {
   @service dialog;

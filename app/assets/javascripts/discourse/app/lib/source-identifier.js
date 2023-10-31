@@ -1,5 +1,5 @@
+import DEBUG from "@glimmer/env";
 import PreloadStore from "discourse/lib/preload-store";
-import { isDevelopment } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
 
 export default function identifySource(error) {
@@ -30,20 +30,20 @@ export default function identifySource(error) {
 
   let plugin;
 
-  // Source-mapped:
-  plugin = plugin || error.stack.match(/plugins\/([\w-]+)\//)?.[1];
+  if (DEBUG) {
+    // Development (no fingerprinting)
+    plugin ??= error.stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
 
-  if (isDevelopment()) {
-    // Un-source-mapped:
-    plugin = plugin || error.stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
+    // Test files:
+    plugin ??= error.stack.match(
+      /assets\/plugins\/test\/([\w-]+)_tests\.js/
+    )?.[1];
   }
 
-  // Production mode
-  plugin =
-    plugin ||
-    error.stack.match(
-      /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.br)?\.js/
-    )?.[1];
+  // Production (with fingerprints)
+  plugin ??= error.stack.match(
+    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.br)?\.js/
+  )?.[1];
 
   if (plugin) {
     return {

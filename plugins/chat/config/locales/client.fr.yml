@@ -498,10 +498,7 @@ fr:
           one: "%{commaSeparatedUsernames} et %{count} autre utilisateur sont en train d'écrire"
           other: "%{commaSeparatedUsernames} et %{count} autres utilisateurs sont en train d'écrire"
       retention_reminders:
-        public:
-          one: "%{count} jour"
-          other: "%{count} jours"
-        dm:
+        short:
           one: "%{count} jour"
           other: "%{count} jours"
       flags:

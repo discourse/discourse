@@ -563,7 +563,8 @@ tr_TR:
             name:
               same_as_password: "şifrenizle aynı."
             ip_address:
-              signup_not_allowed: "Bu hesaptan kayıt yapılmasına izin verilmiyor."
+              blocked: "IP adresinizden yeni kayıtlara izin verilmiyor."
+              max_new_accounts_per_registration_ip: "IP adresinizden yeni kayıtlara izin verilmiyor (maksimum limite ulaşıldı). Bir personelle iletişime geçin."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1546,7 +1547,7 @@ tr_TR:
     must_approve_users: "Personel, siteye erişmelerine izin verilmeden önce tüm yeni kullanıcı hesaplarını onaylamalıdır."
     invite_code: "Kullanıcının hesap kaydına izin verilmesi için bu kodu yazması gerekir, boş olduğunda yok sayılır (büyük/küçük harfe duyarlı değildir)"
     approve_suspect_users: "Şüpheli kullanıcıları inceleme kuyruğuna ekleyin. Şüpheli kullanıcılar bir biyografi/web sitesi girmiş ancak okuma etkinliği yok."
-    review_every_post: "Tüm gönderiler gözden geçirilmelidir. UYARI! YOĞUN SİTELER İÇİN TAVSİYE EDİLMEZ."
+    review_every_post: "Her yeni gönderiyi moderasyon için inceleme kuyruğuna ekle. Gönderiler yine de hemen yayınlanır ve tüm kullanıcılar tarafından görülebilir. UYARI! İncelenmesi gereken gönderilerin potansiyel hacmi nedeniyle yüksek trafikli siteler için önerilmez."
     pending_users_reminder_delay_minutes: "Yeni kullanıcılar şu kadar dakikadan uzun süredir onay bekliyorsa moderatörleri bilgilendirin. Bildirimleri devre dışı bırakmak için -1 olarak ayarlayın."
     persistent_sessions: "Web tarayıcısı kapatıldığında kullanıcıların oturumları açık kalır"
     maximum_session_age: "Kullanıcı, son ziyaretinden bu yana n saat süreyle oturum açmış durumda kalır"
@@ -1575,8 +1576,6 @@ tr_TR:
     invalidate_inactive_admin_email_after_days: "Bu kadar gün içinde siteyi ziyaret etmemiş olan yönetici hesaplarının oturum açmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
     include_secure_categories_in_tag_counts: "Etkinleştirildiğinde, bir etiket için konu sayısı, tüm kullanıcılar için okuma kısıtlamalı kategorilerdeki konuları içerecektir. Devre dışı bırakıldığında, normal kullanıcılara yalnızca tüm konuların herkese açık kategorilerde olduğu bir etiket için konu sayısı gösterilir."
     display_personal_messages_tag_counts: "Etkinleştirildiğinde, belirli bir etiketle etiketlenmiş kişisel mesajların sayısı görüntülenir."
-    top_menu: "Ana sayfa gezintisinde hangi ögelerin hangi sırada görüneceğini belirleyin. Örnek en son|yeni|okunmamış|kategoriler|popüler|okunmuş|gönderilmiş|yer imleri"
-    post_menu: "Gönderi menüsünde hangi ögelerin hangi sırayla görüneceğini belirleyin. Örnek beğen|düzenle|etiketle|sil|paylaş|yer imi ekle|yanıtla"
     post_menu_hidden_items: "Bir genişletme üç noktasına tıklanmadığı sürece yazı menüsünde varsayılan olarak gizlenecek menü ögeleri."
     share_links: "Paylaş iletişim kutusunda hangi ögelerin ve hangi sırada görüneceğini belirleyin."
     allow_username_in_share_links: "Kullanıcı adlarının paylaşım bağlantılarına dahil edilmesine izin verin. Bu, benzersiz ziyaretçilere dayalı rozetleri ödüllendirmek için kullanışlıdır."
@@ -2059,6 +2058,7 @@ tr_TR:
     approve_new_topics_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcılar için yeni konular onaylanmalıdır"
     approve_unless_staged: "Aşamalı kullanıcılar için yeni konular ve gönderiler onaylanmalıdır"
     notify_about_queued_posts_after: "Şu kadar saatten uzun süredir incelenmeyi bekleyen gönderiler varsa tüm moderatörlere bir bildirim gönderin. Bu bildirimleri devre dışı bırakmak için 0 olarak ayarlayın."
+    reviewable_revision_reasons: "İncelenmek üzere sıraya alınmış bir gönderiyi revizyonla reddederken seçilebilecek nedenler listesi. Diğer seçeneğini de her zaman kullanabilirsiniz, ki bunu yaparsanız özel bir neden de girebilirsiniz."
     auto_close_messages_post_count: "Otomatik olarak kapatılmadan önce bir mesajda izin verilen maksimum gönderi sayısı (devre dışı bırakmak için 0)"
     auto_close_topics_post_count: "Otomatik olarak kapatılmadan önce bir konuda izin verilen maksimum gönderi sayısı (devre dışı bırakmak için 0)"
     auto_close_topics_create_linked_topic: "\"Konuları otomatik kapat gönderi sayısı\" ayarına göre bir konu otomatik olarak kapatıldığında yeni bir bağlantılı konu oluşturun"
@@ -2137,7 +2137,9 @@ tr_TR:
     remove_muted_tags_from_latest: "En son konu listesinde yalnızca sessize alınmış etiketlerle etiketlenmiş konuları göstermeyin."
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
     create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde küçük bir bilgi gönderisi oluşturun"
+    automatically_clean_unused_tags: "Herhangi bir konuda veya özel mesajda kullanılmayan etiketleri günlük olarak otomatik olarak sil."
     watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendirin"
+    company_name: "Şirketinizin veya kuruluşunuzun adı. Boş bırakılırsa, Hizmet Şartları veya Gizlilik Bildirimi'ne ilişkin ortak metin sağlanmayacak."
     governing_law: "Geçerli Kanun"
     city_for_disputes: "Anlaşmazlıklar için şehir"
     shared_drafts_category: "Konu taslakları için bir kategori belirleyerek Paylaşılan Taslaklar özelliğini etkinleştirin. Bu kategorideki konular, personel kullanıcılar için konu listelerinden bastırılır."
@@ -2170,7 +2172,6 @@ tr_TR:
     navigation_menu: "Hangi gezinme menüsünün kullanılacağını belirleyin. Kenar çubuğu ve başlık gezinmesi, kullanıcılar tarafından özelleştirilebilir. Geriye dönük uyumluluk için eski seçenek mevcuttur."
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
-    enable_experimental_hashtag_autocomplete: "DENEYSEL: Seçilen ögeyi farklı şekilde işleyen ve aramayı iyileştiren kategoriler ve etiketler için yeni #hashtag otomatik tamamlama sistemini kullanın"
     experimental_new_new_view_groups: 'DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     enable_custom_sidebar_sections: "DENEYSEL: Özel kenar çubuğu bölümlerini etkinleştirin"
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştiririn"
@@ -2436,9 +2437,6 @@ tr_TR:
       blocked: "için izin verilmiyor."
       revoked: "%{date} tarihine kadar \"%{email}\" adresine e-posta göndermeyecek."
       does_not_exist: "Geçersiz"
-    ip_address:
-      blocked: "IP adresinizden yeni kayıtlara izin verilmiyor."
-      max_new_accounts_per_registration_ip: "IP adresinizden yeni kayıtlara izin verilmiyor (maksimum limite ulaşıldı). Bir personelle iletişime geçin."
     website:
       domain_not_allowed: "Web sitesi geçersiz. İzin verilen alan adları şunlardır: %{domains}"
     auto_rejected: "Yaş nedeniyle otomatik olarak reddedildi. auto_handle_queued_age site ayarına bakın."
@@ -2642,6 +2640,28 @@ tr_TR:
         Ancak, gönderi topluluk tarafından ikinci kez gizlenirse personel tarafından ele alınana kadar gizli kalır.
 
         Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
+    reviewable_queued_post_revise_and_reject:
+      title: "Gönderinizle ilgili geri bildirim"
+      subject_template: "%{topic_title} başlığındaki gönderinizle ilgili geri bildirim"
+      text_body_template: |
+        Merhaba %{username},
+
+        [%{topic_title}](%{topic_url}) başlığındaki gönderinizi inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+
+        Sebep: %{reason}
+
+        Geribildirim: %{feedback}
+
+        Aşağıdaki orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Teşekkürler,
+        %{site_name} Moderatörleri
     post_hidden_again:
       title: "Gönderi Tekrar Gizlendi"
       subject_template: "Gönderi topluluk bayrakları tarafından gizlendi, personel bilgilendirildi"
@@ -4676,6 +4696,8 @@ tr_TR:
         description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
       disagree:
         title: "Hayır"
+      revise_and_reject_post:
+        title: "Gönderiyi gözden geçir..."
       ignore:
         title: "Yok say"
       ignore_and_do_nothing:

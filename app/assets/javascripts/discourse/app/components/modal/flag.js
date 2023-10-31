@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const NOTIFY_MODERATORS_KEY = "notify_moderators";
 
@@ -36,7 +36,7 @@ export default class Flag extends Component {
       label: I18n.t("flagging.take_action"),
       actions: [
         {
-          id: "agree_and_keep",
+          id: "agree_and_hide",
           icon: "thumbs-up",
           label: I18n.t("flagging.take_action_options.default.title"),
           description: I18n.t("flagging.take_action_options.default.details"),

@@ -373,7 +373,8 @@ fi:
         unfollow: "Poistu"
         admin_title: "Ylläpitäjä"
         settings_title: "Asetukset"
-        category_label: "Luokka"
+        info_title: "Kanavan tiedot"
+        category_label: "Kategoria"
         history_label: "Historia"
         members_label: "Jäsenet"
       admin:
@@ -445,12 +446,14 @@ fi:
           one: "%{commaSeparatedUsernames} ja %{count} muu kirjoittavat"
           other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
       retention_reminders:
-        public:
+        indefinitely_short: "toistaiseksi"
+        indefinitely_long: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit pysyvästi."
+        short:
           one: "%{count} päivä"
           other: "%{count} päivää"
-        dm:
-          one: "%{count} päivä"
-          other: "%{count} päivää"
+        long:
+          one: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit %{count} päivän ajan."
+          other: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit %{count} päivän ajan."
       flags:
         off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
         inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."

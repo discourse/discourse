@@ -20,9 +20,8 @@ export default class SectionLink extends Component {
   @service currentUser;
 
   willDestroy() {
-    if (this.args.willDestroy) {
-      this.args.willDestroy();
-    }
+    super.willDestroy(...arguments);
+    this.args.willDestroy?.();
   }
 
   didInsert(_element, [args]) {

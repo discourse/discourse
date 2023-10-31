@@ -9,7 +9,7 @@ import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   dialog: service(),

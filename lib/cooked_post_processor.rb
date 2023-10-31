@@ -37,6 +37,7 @@ class CookedPostProcessor
   def post_process(new_post: false)
     DistributedMutex.synchronize("post_process_#{@post.id}", validity: 10.minutes) do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
+      update_uploads_secure_status
       remove_full_quote_on_direct_reply if new_post
       post_process_oneboxes
       post_process_images
@@ -82,6 +83,10 @@ class CookedPostProcessor
           q["class"] = ((q["class"] || "") + " quote-modified").strip if comparer.modified?
         end
       end
+  end
+
+  def update_uploads_secure_status
+    @post.update_uploads_secure_status(source: "post processor")
   end
 
   def remove_full_quote_on_direct_reply
@@ -276,7 +281,8 @@ class CookedPostProcessor
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    src = UrlHelper.cook_url(img["src"], secure: @post.with_secure_uploads?)
+    src_url = Upload.secure_uploads_url?(img["src"]) ? upload&.url : img["src"]
+    src = UrlHelper.cook_url(src_url || img["src"], secure: @post.with_secure_uploads?)
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 

@@ -34,7 +34,6 @@ class Plugin::Metadata
         discourse-encrypt
         discourse-follow
         discourse-fontawesome-pro
-        discourse-footnote
         discourse-gamification
         discourse-geoblocking
         discourse-github
@@ -76,7 +75,6 @@ class Plugin::Metadata
         discourse-signatures
         discourse-sitemap
         discourse-solved
-        discourse-spoiler-alert
         discourse-staff-alias
         discourse-steam-login
         discourse-subscriptions
@@ -98,6 +96,8 @@ class Plugin::Metadata
         poll
         styleguide
         checklist
+        footnote
+        spoiler-alert
       ],
     )
 

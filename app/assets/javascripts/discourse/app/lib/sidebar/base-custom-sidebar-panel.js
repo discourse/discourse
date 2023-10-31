@@ -5,6 +5,15 @@ export default class BaseCustomSidebarPanel {
   sections = [];
 
   /**
+   * @returns {boolean} Controls whether the panel is hidden, which means that
+   * it will not show up in combined sidebar mode, and its switch button will
+   * never show either.
+   */
+  get hidden() {
+    return false;
+  }
+
+  /**
    * @returns {string} Identifier for sidebar panel
    */
   get key() {
@@ -12,24 +21,24 @@ export default class BaseCustomSidebarPanel {
   }
 
   /**
-   * @returns {string} Text for the switch button
+   * @returns {string} Text for the switch button. Obsolete when panel is hidden.
    */
   get switchButtonLabel() {
-    this.#notImplemented();
+    this.hidden || this.#notImplemented();
   }
 
   /**
-   * @returns {string} Icon for the switch button
+   * @returns {string} Icon for the switch button. Obsolete when panel is hidden.
    */
   get switchButtonIcon() {
-    this.#notImplemented();
+    this.hidden || this.#notImplemented();
   }
 
   /**
-   * @returns {string} Default path to panel
+   * @returns {string} Default path to panel. Obsolete when panel is hidden.
    */
   get switchButtonDefaultUrl() {
-    this.#notImplemented();
+    this.hidden || this.#notImplemented();
   }
 
   #notImplemented() {

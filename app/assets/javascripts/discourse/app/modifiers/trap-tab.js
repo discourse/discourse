@@ -13,8 +13,9 @@ export default class TrapTabModifier extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(element, [options]) {
-    this.preventScroll = options?.preventScroll ?? true;
+  modify(element, _, { preventScroll, autofocus }) {
+    autofocus ??= true;
+    this.preventScroll = preventScroll ?? true;
     this.orignalElement = element;
     this.element = element.querySelector(".modal-inner-container") || element;
     this.orignalElement.addEventListener("keydown", this.trapTab);
@@ -23,7 +24,10 @@ export default class TrapTabModifier extends Modifier {
     // and apply manual focus only if we don't have any autofocus element
     const autofocusedElement = this.element.querySelector("[autofocus]");
 
-    if (!autofocusedElement || document.activeElement !== autofocusedElement) {
+    if (
+      autofocus &&
+      (!autofocusedElement || document.activeElement !== autofocusedElement)
+    ) {
       // if there's not autofocus, or the activeElement, is not the autofocusable element
       // attempt to focus the first of the focusable elements or just the modal-body
       // to make it possible to scroll with arrow down/up

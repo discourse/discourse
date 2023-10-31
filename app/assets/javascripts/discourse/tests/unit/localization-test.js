@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import LocalizationInitializer from "discourse/instance-initializers/localization";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("initializer:localization", function (hooks) {
   setupTest(hooks);

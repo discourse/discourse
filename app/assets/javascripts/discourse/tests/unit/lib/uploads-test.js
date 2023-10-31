@@ -12,7 +12,7 @@ import {
   isImage,
   validateUploadedFiles,
 } from "discourse/lib/uploads";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Unit | Utility | uploads", function (hooks) {
   setupTest(hooks);

@@ -115,12 +115,7 @@ lt:
         new_message:
           title: "Pereiti prie naujos žinutės"
       retention_reminders:
-        public:
-          one: "%{count} diena"
-          few: "%{count} dienos"
-          many: "%{count} dienų"
-          other: "%{count} dienų"
-        dm:
+        short:
           one: "%{count} diena"
           few: "%{count} dienos"
           many: "%{count} dienų"

@@ -500,6 +500,9 @@ pl_PL:
         type_bonus:
           name: "bonus typu"
           title: "Niektóre rodzaje przeglądalne mogą otrzymać premię od pracowników, aby nadać im wyższy priorytet."
+      revise_and_reject_post:
+        reason: "Powód"
+        optional: "opcjonalnie"
       stale_help: "Wiadomość została już zweryfikowana przez <b>%{username}</b>."
       claim_help:
         optional: "Możesz zgłosić roszczenie do tego elementu, aby uniemożliwić innym jego sprawdzenie."
@@ -1507,8 +1510,6 @@ pl_PL:
           Zeskanuj ten kod QR w obsługiwanej aplikacji ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> ) i wprowadź kod uwierzytelniający
         disable_description: "Podaj kod uwierzytelniający ze swojej aplikacji"
         show_key_description: "Wpisz ręcznie"
-        short_description: |
-          Chroń swoje konto za pomocą jednorazowych kodów bezpieczeństwa.
         extended_description: |
           Uwierzytelnianie dwuskładnikowe zapewnia dodatkowe bezpieczeństwo konta, wymagając jednorazowego tokena oprócz hasła. Tokeny można generować na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>urządzeniach z systemem Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">systemem iOS</a>.
         oauth_enabled_warning: "Pamiętaj, że logowanie kontem społecznościowym zostanie wyłączone po włączeniu uwierzytelniania dwuskładnikowego na Twoim koncie."
@@ -1547,6 +1548,10 @@ pl_PL:
           save: "Zapisz"
           edit_description: "Nazwa fizycznego klucza bezpieczeństwa"
           name_required_error: "Musisz podać nazwę swojego klucza bezpieczeństwa."
+      passkeys:
+        save: "Zapisz"
+        added_prefix: "Dodano"
+        last_used_prefix: "Ostatnio używane"
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -1838,6 +1843,7 @@ pl_PL:
         ok: "Twoje hasło wygląda na poprawne."
         instructions: "przynajmniej %{count} znaków"
         required: "Wprowadź hasło"
+        confirm: "Potwierdź"
       summary:
         title: "Podsumowanie"
         stats: "Statystyki"
@@ -2234,16 +2240,6 @@ pl_PL:
         few: "%{count} tematy w tej kategorii"
         many: "%{count} tematów w tej kategorii"
         other: "%{count} tematów w tej kategorii"
-      plus_subcategories_title:
-        one: "%{name} i jedna podkategoria"
-        few: "%{name} i %{count} podkategorie"
-        many: "%{name} i %{count} podkategorii"
-        other: "%{name} i %{count} podkategorii"
-      plus_subcategories:
-        one: "+ %{count} podkategoria"
-        few: "+ %{count} podkategorie"
-        many: "+ %{count} podkategorii"
-        other: "+ %{count} podkategorii"
     select_kit:
       delete_item: "Usuń %{name}"
       filter_by: "Filtruj według: %{name}"
@@ -4492,7 +4488,7 @@ pl_PL:
           delete: "Usuń"
           delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
           reset_confirm: "Czy na pewno chcesz przywrócić tę sekcję do ustawień domyślnych?"
-          public: "Ustaw tę sekcję jako publiczną i widoczną dla wszystkich"
+          public: "Widoczne dla każdego"
           always_public: "Treść w tej sekcji jest zawsze publiczna"
           more_menu: "Menu więcej"
           links:

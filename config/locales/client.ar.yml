@@ -575,6 +575,9 @@ ar:
         type_bonus:
           name: "مكافأة النوع"
           title: "يمكن لفريق العمل تخصيص مكافأة لبعض الأنواع القابلة للمراجعة لمنحها أولوية أعلى."
+      revise_and_reject_post:
+        reason: "السبب"
+        optional: "اختياري"
       stale_help: "تم إجراء هذه المراجعة بواسطة <b>%{username}</b>."
       claim_help:
         optional: "يمكنك المطالبة بهذا العنصر لمنع الآخرين من مراجعته."
@@ -1651,8 +1654,6 @@ ar:
           امسح رمز QR ضوئيًا في أحد التطبيقات المدعومة (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> و<a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) وأدخِل رمز المصادقة.
         disable_description: "يُرجى إدخال رمز المصادقة من تطبيقك"
         show_key_description: "الإدخال يدويًا"
-        short_description: |
-          احمِ حسابك برموز أمان تُستخدَم لمرة واحدة.
         extended_description: |
           تضيف المصادقة الثنائية أمانًا إضافيًا إلى حسابك من خلال طلب رمز مميز لمرة واحدة بالإضافة إلى كلمة مرورك. يمكن إنشاء الرموز المميزة على الأجهزة التي تعمل بنظام التشغيل <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> و<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "يُرجى العلم بأنه سيتم إيقاف تسجيل الدخول بحسابات التواصل الاجتماعي بعد تفعيل المصادقة الثنائية على حسابك."
@@ -1691,6 +1692,10 @@ ar:
           save: "حفظ"
           edit_description: "اسم مفتاح الأمان المادي"
           name_required_error: "يجب عليك إدخال اسم لمفتاح الأمان."
+      passkeys:
+        save: "حفظ"
+        added_prefix: "تمت الإضافة"
+        last_used_prefix: "آخر استخدام"
       change_about:
         title: "تغيير \"نبذة عني\""
         error: "حدث خطأ في أثناء تغيير هذه القيمة."
@@ -1986,6 +1991,7 @@ ar:
         ok: "تبدو كلمة مرورك جيدة."
         instructions: "يجب ألا يقل عن %{count} حرف"
         required: "يُرجى إدخال كلمة المرور"
+        confirm: "تأكيد"
       summary:
         title: "الملخص"
         stats: "الإحصاءات"
@@ -2406,20 +2412,6 @@ ar:
         few: "%{count} موضوعات في هذه الفئة"
         many: "%{count} موضوعًا في هذه الفئة"
         other: "%{count} موضوع في هذه الفئة"
-      plus_subcategories_title:
-        zero: "%{name} و%{count} فئة فرعية"
-        one: "%{name} وفئة فرعية واحدة (%{count})"
-        two: "%{name} وفئتان فرعيتان (%{count})"
-        few: "%{name} و%{count} فئات فرعية"
-        many: "%{name} و%{count} فئة فرعية"
-        other: "%{name} و%{count} فئة فرعية"
-      plus_subcategories:
-        zero: "تصنيف فرعي + %{count} و تصنيفات فرعية"
-        one: "+ %{count} تصنيفات فرعية"
-        two: "+ %{count} تصنيف فرعي واحد و تصنيفات فرعية"
-        few: "+ %{count} فئات فرعية"
-        many: "+ %{count} فئة فرعية"
-        other: "+ %{count} فئة فرعية"
     select_kit:
       delete_item: "حذف %{name}"
       filter_by: "التصفية حسب: %{name}"
@@ -4908,7 +4900,6 @@ ar:
           delete: "حذف"
           delete_confirm: "هل تريد بالتأكيد حذف هذا القسم؟"
           reset_confirm: "هل تريد بالتأكيد إعادة تعيين هذا القسم إلى الإعداد الافتراضي؟"
-          public: "جعل هذا القسم عامًا ومرئيًا للجميع"
           always_public: "دائمًا ما يكون المحتوى في هذا القسم عامًا"
           more_menu: "قائمة \"المزيد\""
           links:

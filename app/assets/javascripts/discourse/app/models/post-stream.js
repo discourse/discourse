@@ -5,6 +5,7 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
+import TopicSummary from "discourse/lib/topic-summary";
 import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
@@ -13,7 +14,7 @@ import User from "discourse/models/user";
 import deprecated from "discourse-common/lib/deprecated";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _lastEditNotificationClick = null;
 export function setLastEditNotificationClick(
@@ -48,6 +49,7 @@ export default RestModel.extend({
   filterRepliesToPostNumber: null,
   filterUpwardsPostID: null,
   filter: null,
+  topicSummary: null,
 
   init() {
     this._identityMap = {};
@@ -71,6 +73,7 @@ export default RestModel.extend({
       loadingFilter: false,
       stagingPost: false,
       timelineLookup: [],
+      topicSummary: new TopicSummary(),
     });
   },
 
@@ -1258,6 +1261,18 @@ export default RestModel.extend({
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
       topic.set("noRetry", error.jqXHR.status === 403);
     }
+  },
+
+  collapseSummary() {
+    this.topicSummary.collapse();
+  },
+
+  showSummary(currentUser) {
+    this.topicSummary.generateSummary(currentUser, this.get("topic.id"));
+  },
+
+  processSummaryUpdate(update) {
+    this.topicSummary.processUpdate(update);
   },
 
   _initUserModels(post) {

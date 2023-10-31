@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { escapeExpression } from "discourse/lib/utilities";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class BadgePreview extends Component {
   get processedSample() {

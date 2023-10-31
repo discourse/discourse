@@ -19,7 +19,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import i18n from "I18n";
+import i18n from "discourse-i18n";
 
 async function waitForLoad() {
   return await waitFor(".d-lightbox.is-finished-loading", {

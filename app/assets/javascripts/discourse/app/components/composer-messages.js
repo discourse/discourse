@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import LinkLookup from "discourse/lib/link-lookup";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { debounce } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _messagesCache = {};
 

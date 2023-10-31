@@ -1,5 +1,8 @@
+import "bootstrap/js/modal";
 import bootbox from "bootbox";
+import $ from "jquery";
 import autocomplete from "discourse/lib/autocomplete";
+import { caret, caretPosition } from "discourse/lib/caret-position";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
@@ -51,6 +54,10 @@ export default {
 
     // Initialize the autocomplete tool
     $.fn.autocomplete = autocomplete;
+
+    // Initialize caretPosition
+    $.fn.caret = caret;
+    $.fn.caretPosition = caretPosition;
 
     jqueryPluginsConfigured = true;
   },

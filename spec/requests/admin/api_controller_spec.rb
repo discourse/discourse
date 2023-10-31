@@ -464,6 +464,21 @@ RSpec.describe Admin::ApiController do
 
         expect(scopes["posts"].any? { |h| h["urls"].include?("/posts (GET)") }).to be_truthy
         expect(scopes["posts"].any? { |h| h["urls"].include?("/private-posts (GET)") }).to be_truthy
+
+        expect(scopes["users"].find { _1["key"] == "update" }["urls"]).to contain_exactly(
+          "/users/:username (PUT)",
+          "/users/:username/preferences/badge_title (PUT)",
+          "/users/:username/preferences/avatar/pick (PUT)",
+          "/users/:username/preferences/avatar/select (PUT)",
+          "/users/:username/feature-topic (PUT)",
+          "/users/:username/clear-featured-topic (PUT)",
+          "/u/:username (PUT)",
+          "/u/:username/preferences/badge_title (PUT)",
+          "/u/:username/preferences/avatar/pick (PUT)",
+          "/u/:username/preferences/avatar/select (PUT)",
+          "/u/:username/feature-topic (PUT)",
+          "/u/:username/clear-featured-topic (PUT)",
+        )
       end
     end
 

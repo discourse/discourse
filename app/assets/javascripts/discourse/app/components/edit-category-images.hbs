@@ -32,3 +32,14 @@
     @id="category-background-uploader"
   />
 </section>
+
+<section class="field category-background-image">
+  <label>{{i18n "category.background_image_dark"}}</label>
+  <UppyImageUploader
+    @imageUrl={{this.backgroundDarkImageUrl}}
+    @onUploadDone={{action "backgroundDarkUploadDone"}}
+    @onUploadDeleted={{action "backgroundDarkUploadDeleted"}}
+    @type="category_background_dark"
+    @id="category-dark-background-uploader"
+  />
+</section>

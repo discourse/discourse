@@ -366,6 +366,9 @@ ko:
         type_bonus:
           name: "유형 보너스"
           title: "특정 검토 가능 유형에는 운영진이 보너스를 할당하여 우선순위를 높일 수 있습니다."
+      revise_and_reject_post:
+        reason: "이유"
+        optional: "선택 사항"
       stale_help: "이 검토 가능 항목은 <b>%{username}</b> 님이 해결했습니다."
       claim_help:
         optional: "다른 사용자가 검토하지 못하도록 이 항목을 독점할 수 있습니다."
@@ -1162,8 +1165,6 @@ ko:
           지원되는 앱(<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>)에서 이 QR 코드를 스캔하고 인증 코드를 입력하세요.
         disable_description: "앱의 인증 코드를 입력하세요"
         show_key_description: "수동으로 입력"
-        short_description: |
-          일회용 보안 코드로 계정을 보호하세요.
         extended_description: |
           2단계 인증은 암호 외에 일회성 토큰을 요구하여 계정에 보안을 강화합니다. 토큰은 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 및 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 디바이스에서 생성될 수 있습니다.
         oauth_enabled_warning: "계정에서 2단계 인증이 활성화되면 소셜 로그인이 비활성화됩니다."
@@ -1193,6 +1194,10 @@ ko:
           save: "저장"
           edit_description: "물리적 보안 키 이름"
           name_required_error: "보안 키의 이름을 제공해야 합니다."
+      passkeys:
+        save: "저장"
+        added_prefix: "추가됨"
+        last_used_prefix: "마지막 사용"
       change_about:
         title: "내 정보 변경"
         error: "이 값을 변경하는 중에 오류가 발생했습니다."
@@ -1469,6 +1474,7 @@ ko:
         ok: "올바른 비밀번호입니다."
         instructions: "%{count}자 이상"
         required: "비밀번호를 입력하세요"
+        confirm: "확인"
       summary:
         title: "요약"
         stats: "통계"
@@ -1765,10 +1771,6 @@ ko:
     category_row:
       topic_count:
         other: "이 카테고리에는 %{count}개의 주제가 있습니다"
-      plus_subcategories_title:
-        other: "%{name} 및 %{count}개의 서브카테고리"
-      plus_subcategories:
-        other: "+ %{count}개의 서브카테고리"
     select_kit:
       delete_item: "%{name} 삭제"
       filter_by: "필터링 기준: %{name}"

@@ -5,6 +5,7 @@ import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import $ from "jquery";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const LEGACY_ERROR =
@@ -65,6 +66,7 @@ export default class DModalBody extends Component {
 
   @action
   willDestroy() {
+    super.willDestroy(...arguments);
     this.appEvents.trigger("modal:body-dismissed");
   }
 }

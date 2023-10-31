@@ -6,12 +6,15 @@ class User < ActiveRecord::Base
   include HasCustomFields
   include SecondFactorManager
   include HasDestroyedWebHook
+  include HasDeprecatedColumns
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
 
   PASSWORD_SALT_LENGTH = 16
   TARGET_PASSWORD_ALGORITHM =
     "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
+
+  deprecate_column :flag_level, drop_from: "3.2"
 
   # not deleted on user delete
   has_many :posts
@@ -146,7 +149,7 @@ class User < ActiveRecord::Base
   validate :password_validator
   validate :name_validator, if: :will_save_change_to_name?
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
-  validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
+  validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
   validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
   validates_associated :primary_email,
@@ -1194,6 +1197,13 @@ class User < ActiveRecord::Base
     user_warnings.count
   end
 
+  def flags_received_count
+    posts
+      .includes(:post_actions)
+      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
+      .count
+  end
+
   def private_topics_count
     topics_allowed.where(archetype: Archetype.private_message).count
   end
@@ -1520,14 +1530,8 @@ class User < ActiveRecord::Base
   end
 
   def number_of_flagged_posts
-    posts
-      .with_deleted
-      .includes(:post_actions)
-      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
-      .where("post_actions.agreed_at IS NOT NULL")
-      .count
+    ReviewableFlaggedPost.where(target_created_by: self.id).count
   end
-  alias_method :flags_received_count, :number_of_flagged_posts
 
   def number_of_rejected_posts
     ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count

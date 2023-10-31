@@ -934,6 +934,17 @@ aside.onebox.mixcloud-preview {
     background-repeat: no-repeat;
     background-position: center;
     max-width: 30%;
+    .d-icon {
+      color: white;
+      height: 2em;
+      width: 2em;
+      transition: width 0.15s, height 0.15s;
+    }
+  }
+
+  &:hover .video-placeholder-overlay .d-icon {
+    height: 3em;
+    width: 3em;
   }
 }
 

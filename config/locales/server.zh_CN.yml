@@ -550,7 +550,8 @@ zh_CN:
             name:
               same_as_password: "与您的密码相同。"
             ip_address:
-              signup_not_allowed: "不允许从此帐户注册。"
+              blocked: "不允许从您的 IP 地址进行新注册。"
+              max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -1351,6 +1352,7 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
     v3_analytics_deprecated: "您的 Discourse 目前使用的是 Google Analytics（分析）3，2023 年 7 月后该版本将不受支持。立即<a href='https://meta.discourse.org/t/260498'>升级到Google Analytics（分析）4</a> ，以继续接收有价值的见解和分析，了解您的网站性能。"
+    category_style_deprecated: "你的 Discourse 目前使用的是过时的分类样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅 <a href='https://meta.discourse.org/t/282441'>移至单一类别风格网站设置</a> ，了解如何保留所选类别风格。"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1497,7 +1499,7 @@ zh_CN:
     must_approve_users: "管理人员必须先批准所有新用户帐户，然后他们才能访问该站点。"
     invite_code: "用户必须输入此代码才能注册帐户，为空时将被忽略（不区分大小写）"
     approve_suspect_users: "将可疑用户添加到审核队列中。可疑用户已进入个人简介/网站，但没有阅读活动。"
-    review_every_post: "所有帖子都必须经过审核。警告！不建议用于繁忙的站点。"
+    review_every_post: "将每个新帖发送到审核队列进行审核。帖子仍会立即发布，并对所有用户可见。警告！由于需要审核的帖子数量可能很大，因此不建议大流量网站使用。"
     pending_users_reminder_delay_minutes: "如果新用户等待批准的时间超过此分钟数则通知版主。设置为 -1 可禁用通知。"
     persistent_sessions: "当网络浏览器关闭后，用户将保持登录状态"
     maximum_session_age: "自上次访问以来，用户将保持登录状态 n 小时"
@@ -1527,8 +1529,8 @@ zh_CN:
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
-    top_menu: "确定主页导航中显示的条目以及显示顺序。示例：latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "确定帖子菜单中显示的条目以及显示顺序。示例：like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "确定主页导航中显示的条目，以及出现的顺序。"
+    post_menu: "确定帖子菜单中显示的条目，以及出现的顺序。"
     post_menu_hidden_items: "除非点击扩展省略号，否则在帖子菜单中默认隐藏的菜单项。"
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
@@ -2011,6 +2013,7 @@ zh_CN:
     approve_new_topics_unless_trust_level: "低于此信任级别的用户的新话题必须接受审批"
     approve_unless_staged: "暂存用户的新话题和帖子必须接受审批"
     notify_about_queued_posts_after: "如果有帖子等待审核的小时超过此数值，向所有版主发送通知。设置为 0 将禁用这些通知。"
+    reviewable_revision_reasons: "拒绝带有修订的可审查队列帖子时，可以选择的原因列表。其他也始终可用，允许输入自定义原因。"
     auto_close_messages_post_count: "消息被自动关闭前允许的最大帖子数（设置为 0 将禁用）"
     auto_close_topics_post_count: "话题被自动关闭前允许的最大帖子数（设置为 0 将禁用）"
     auto_close_topics_create_linked_topic: "在话题根据 'auto close topics post count' 设置被自动关闭后，创建一个新的链接话题"
@@ -2093,6 +2096,7 @@ zh_CN:
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
     force_lowercase_tags: "强制所有新标签完全小写。"
     create_post_for_category_and_tag_changes: "当话题的类别或标签发生变化时创建一篇小的行动帖子"
+    automatically_clean_unused_tags: "每天自动删除未在任何主题或私信中使用的标签。"
     watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已设为免打扰的话题，请通知我。"
     company_name: "您的公司或组织的名称。如果留空，则不会按照模板提供服务条款或隐私声明。"
     governing_law: "适用法律"
@@ -2127,7 +2131,6 @@ zh_CN:
     navigation_menu: "确定要使用的导航菜单。边栏和标题导航可由用户自定义。旧版选项用于向后兼容。"
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
-    enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     experimental_new_new_view_groups: '实验性：启用一个新的话题列表，将未读话题和新话题合并，并使边栏中的“一切”链接指向它。'
     enable_custom_sidebar_sections: "实验性：启用自定义边栏版块"
     experimental_topics_filter: "实验性：在 /filter 下启用实验性话题筛选路由"
@@ -2387,9 +2390,6 @@ zh_CN:
       blocked: "不被允许。"
       revoked: "在 %{date}之前不会向 '%{email}' 发送电子邮件。"
       does_not_exist: "不适用"
-    ip_address:
-      blocked: "不允许从您的 IP 地址进行新注册。"
-      max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
     website:
       domain_not_allowed: "网站无效。允许的网域包括：%{domains}"
     auto_rejected: "因时限被自动拒绝。查看 auto_handle_queued_age 站点设置。"
@@ -2601,6 +2601,28 @@ zh_CN:
         不过，如果帖子再次由于社区举报而被隐藏，它将保持隐藏至管理人员介入。
 
         有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
+    reviewable_queued_post_revise_and_reject:
+      title: "对你的帖子的反馈"
+      subject_template: "对你在 %{topic_title} 上发表的帖子的反馈意见"
+      text_body_template: |
+        您好 %{username},
+
+        我们查看了你在 [%{topic_title}](%{topic_url}) 发表的帖子，有一些反馈意见要给你。
+
+        原因： %{reason}
+
+        反馈： %{feedback}
+
+        你可以在下面编辑你的原帖，然后重新提交，做出建议的修改，如果你有任何问题，也可以回复此信息。
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        谢谢，
+        %{site_name} 版主
     post_hidden_again:
       title: "帖子被再次隐藏"
       subject_template: "帖子因社区举报而被隐藏，已通知管理人员"
@@ -4654,6 +4676,8 @@ zh_CN:
         title: "否"
       discard_post:
         title: "丢弃帖子"
+      revise_and_reject_post:
+        title: "修订帖子..."
       ignore:
         title: "忽略"
       ignore_and_do_nothing:

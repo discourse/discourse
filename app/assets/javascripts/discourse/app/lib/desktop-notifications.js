@@ -5,7 +5,7 @@ import { formatUsername } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let primaryTab = false;
 let liveEnabled = false;

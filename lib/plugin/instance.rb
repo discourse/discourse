@@ -50,7 +50,6 @@ class Plugin::Instance
   %i[
     assets
     color_schemes
-    before_auth_initializers
     initializers
     javascripts
     locales
@@ -291,6 +290,13 @@ class Plugin::Instance
     Upload.add_in_use_callback(&block)
   end
 
+  # Registers a category custom field to be loaded when rendering a category list
+  # Example usage:
+  #   register_category_list_preloaded_category_custom_fields("custom_field")
+  def register_category_list_preloaded_category_custom_fields(field)
+    CategoryList.preloaded_category_custom_fields << field
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       UserLookup.lookup_columns << column
@@ -510,13 +516,6 @@ class Plugin::Instance
     @git_repo ||= GitRepo.new(directory, name)
   end
 
-  def before_auth(&block)
-    if @before_auth_complete
-      raise "Auth providers must be registered before omniauth middleware. after_initialize is too late!"
-    end
-    before_auth_initializers << block
-  end
-
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
   def on(event_name, &block)
     DiscourseEvent.on(event_name) { |*args, **kwargs| block.call(*args, **kwargs) if enabled? }
@@ -539,11 +538,6 @@ class Plugin::Instance
         raise e unless e.message.try(:include?, "PG::UndefinedTable")
       end
     end
-  end
-
-  def notify_before_auth
-    before_auth_initializers.each { |callback| callback.call(self) }
-    @before_auth_complete = true
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -793,7 +787,7 @@ class Plugin::Instance
   end
 
   def auth_provider(opts)
-    before_auth do
+    after_initialize do
       provider = Auth::AuthProvider.new
 
       Auth::AuthProvider.auth_attributes.each do |sym|
