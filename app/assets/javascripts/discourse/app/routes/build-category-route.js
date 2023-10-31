@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 import Category from "discourse/models/category";
 import CategoryList from "discourse/models/category-list";
 import TopicList from "discourse/models/topic-list";
@@ -129,6 +130,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
     super.setupController(...arguments);
     controller.bulkSelectHelper.clear();
     this.searchService.searchContext = model.category.get("searchContext");
+    setTopicList(model.list);
 
     const p = model.category.params;
     if (p?.order !== undefined) {

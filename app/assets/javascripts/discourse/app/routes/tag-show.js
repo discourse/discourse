@@ -4,6 +4,7 @@ import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
@@ -147,6 +148,7 @@ export default class TagShowRoute extends DiscourseRoute {
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.bulkSelectHelper.clear();
+    setTopicList(model.list);
 
     if (model.category || model.additionalTags) {
       const tagIntersectionSearchContext = {

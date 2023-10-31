@@ -5,7 +5,6 @@ import { inject as service } from "@ember/service";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 
 // Just add query params here to have them automatically passed to topic list filters.
@@ -112,11 +111,6 @@ export default class DiscoveryListController extends Controller {
         .join(","),
       preferDraft: true,
     });
-  }
-
-  @action
-  setTrackingTopicList(model) {
-    setTopicList(model);
   }
 
   @action

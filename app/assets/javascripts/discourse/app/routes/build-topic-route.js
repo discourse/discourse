@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -134,9 +135,10 @@ class AbstractTopicRoute extends DiscourseRoute {
     return I18n.t("filters.with_topics", { filter: filterText });
   }
 
-  setupController(controller) {
+  setupController(controller, model) {
     super.setupController(...arguments);
     controller.bulkSelectHelper.clear();
+    setTopicList(model.list);
   }
 
   @action
