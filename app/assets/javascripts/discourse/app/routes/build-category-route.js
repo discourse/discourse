@@ -18,6 +18,7 @@ import I18n from "discourse-i18n";
 class AbstractCategoryRoute extends DiscourseRoute {
   @service composer;
   @service router;
+  @service siteSettings;
   @service store;
   @service topicTrackingState;
   @service("search") searchService;
@@ -29,9 +30,11 @@ class AbstractCategoryRoute extends DiscourseRoute {
   controllerName = "discovery/list";
 
   async model(params, transition) {
-    const category = Category.findBySlugPathWithID(
-      params.category_slug_path_with_id
-    );
+    const category = this.siteSettings.lazy_load_categories
+      ? await Category.asyncFindBySlugPathWithID(
+          params.category_slug_path_with_id
+        )
+      : Category.findBySlugPathWithID(params.category_slug_path_with_id);
 
     if (!category) {
       this.router.replaceWith("/404");
