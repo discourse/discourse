@@ -373,16 +373,15 @@ export default class CreateAccount extends Component.extend(
       );
     }
 
-    const attrs = this.getProperties(
-      "model.accountName",
-      "model.accountEmail",
-      "accountPassword",
-      "model.accountUsername",
-      "accountChallenge",
-      "inviteCode"
-    );
-
-    attrs["accountPasswordConfirm"] = this.accountHoneypot;
+    const attrs = {
+      accountName: this.model.accountName,
+      accountEmail: this.model.accountEmail,
+      accountPassword: this.accountPassword,
+      accountUsername: this.model.accountUsername,
+      accountChallenge: this.accountChallenge,
+      inviteCode: this.inviteCode,
+      accountPasswordConfirm: this.accountHoneypot,
+    };
 
     const userFields = this.userFields;
     const destinationUrl = this.get("model.authOptions.destination_url");
