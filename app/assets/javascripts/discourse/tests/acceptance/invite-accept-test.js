@@ -538,7 +538,7 @@ acceptance("Associate link", function (needs) {
       .exists("shows the associate account link");
 
     await click(".create-account-associate-link a");
-    assert.dom(".associate-account-confirm-modal").exists();
+    assert.dom(".d-modal").exists();
 
     await click(".d-modal .btn-primary");
     assert.strictEqual(currentURL(), "/u/eviltrout/preferences/account");
