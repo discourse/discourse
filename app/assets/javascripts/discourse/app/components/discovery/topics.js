@@ -47,25 +47,33 @@ export default class DiscoveryTopics extends Component {
     return filterTypeForMode(this.args.model.filter) === "new";
   }
 
-  callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
+  async callResetNew(
+    dismissPosts = false,
+    dismissTopics = false,
+    untrack = false
+  ) {
     const tracked =
       (this.router.currentRoute.queryParams["f"] ||
         this.router.currentRoute.queryParams["filter"]) === "tracked";
 
     let topicIds = this.args.bulkSelectHelper.selected.map((topic) => topic.id);
-    Topic.resetNew(this.args.category, !this.args.noSubcategories, {
-      tracked,
-      tag: this.args.tag,
-      topicIds,
-      dismissPosts,
-      dismissTopics,
-      untrack,
-    }).then((result) => {
-      if (result.topic_ids) {
-        this.topicTrackingState.removeTopics(result.topic_ids);
+    const result = await Topic.resetNew(
+      this.args.category,
+      !this.args.noSubcategories,
+      {
+        tracked,
+        tag: this.args.tag,
+        topicIds,
+        dismissPosts,
+        dismissTopics,
+        untrack,
       }
-      this.router.refresh();
-    });
+    );
+
+    if (result.topic_ids) {
+      this.topicTrackingState.removeTopics(result.topic_ids);
+    }
+    this.router.refresh();
   }
 
   @action
@@ -133,9 +141,8 @@ export default class DiscoveryTopics extends Component {
   }
 
   get footerMessage() {
-    const allLoaded = this.allLoaded;
     const topicsLength = this.args.model.get("topics.length");
-    if (!allLoaded) {
+    if (!this.allLoaded) {
       return;
     }
 

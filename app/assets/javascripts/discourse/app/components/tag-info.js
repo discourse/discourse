@@ -160,11 +160,13 @@ export default Component.extend({
 
       this.dialog.deleteConfirm({
         message: confirmText,
-        didConfirm: () => {
-          return this.tag
-            .destroyRecord()
-            .then(() => this.router.transitionTo("tags.index"))
-            .catch(() => this.dialog.alert(I18n.t("generic_error")));
+        didConfirm: async () => {
+          try {
+            await this.tag.destroyRecord();
+            this.router.transitionTo("tags.index");
+          } catch {
+            this.dialog.alert(I18n.t("generic_error"));
+          }
         },
       });
     },
