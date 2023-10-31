@@ -29,7 +29,29 @@ function getOrCreateState(map, instance) {
   return state;
 }
 
+/**
+ * @decorator
+ *
+ * Marks a field as tracked. Its initializer will be re-run whenever upstream state changes.
+ *
+ * @example
+ *
+ * ```js
+ * class UserRenameForm {
+ *   ⁣@resettableTracked fullName = this.args.fullName;
+ *
+ *   updateName(newName){
+ *     this.fullName = newName;
+ *   }
+ * }
+ * ```
+ *
+ * this.fullName will be updated whenever `updateName()` is called, or there is a change to
+ * this.args.fullName.
+ *
+ */
 export function resettableTracked(prototype, key, descriptor) {
+  // One WeakMap per-property-per-class. Keys are instances of the class
   const states = new WeakMap();
 
   return {
