@@ -3,7 +3,7 @@
 .list-controls {
   background: var(--d-content-background);
 
-  a.badge-category {
+  .badge-category {
     padding: 3px 12px;
     font-size: var(--font-up-1);
   }
@@ -129,10 +129,10 @@
   a.title:not(.badge-notification) {
     color: var(--primary-medium);
   }
-  span.badge-category {
+  .badge-category {
     color: var(--primary-medium);
   }
-  a.discourse-tag {
+  .discourse-tag {
     color: var(--primary-medium);
   }
 }
@@ -258,6 +258,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    gap: 0.5em;
     .discourse-tags {
       flex-wrap: wrap;
     }

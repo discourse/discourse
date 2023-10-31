@@ -15,78 +15,55 @@
 // Category badges
 // --------------------------------------------------
 
-.badge-wrapper {
+.badge-category__wrapper {
+  color: var(--primary-high);
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: var(--font-down-1);
   white-space: nowrap;
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  + * {
-    margin-left: 0.666em;
-  }
 
   .badge-category {
     display: inline-flex;
     align-items: baseline;
+    gap: 0.4em;
+    color: var(--primary-high);
+
     &:before {
       content: "";
+      background: var(--category-badge-color);
       flex: 0 0 auto;
-      width: 0.666rem;
-      height: 0.666rem;
-      margin-right: 0.4em;
+      width: 0.67rem; // fixed dimensions because otherwise they may not be square
+      height: 0.67rem;
     }
 
-    .category-name {
+    &__name {
+      color: currentColor;
       text-overflow: ellipsis;
       overflow: hidden;
     }
-    .d-icon {
-      margin-right: 3px;
-      width: 0.74em;
-      height: 0.74em;
-      color: var(--primary-medium);
-    }
-  }
 
-  span.badge-category {
-    color: var(--primary-high);
-    overflow: hidden;
-    text-overflow: ellipsis;
+    &.--has-parent {
+      &:before {
+        background: linear-gradient(
+          90deg,
+          var(--parent-category-badge-color) 50%,
+          var(--category-badge-color) 50%
+        );
+      }
+    }
+
     .extra-info-wrapper & {
       color: var(--header_primary-high);
     }
   }
-  .badge-category-parent-bg,
-  .badge-category-bg {
-    flex: 0 0 auto;
-    width: 9px;
-    height: 9px;
-    margin-right: 5px;
-    display: inline-block;
-  }
-  .badge-category-parent-bg {
-    // Subcategories
-    width: 5px;
-    margin-right: 0;
-    + .badge-category-bg {
-      width: 5px;
-    }
-  }
+
   .d-icon {
+    width: 0.74em;
+    height: 0.74em;
     color: var(--primary-medium);
-  }
-}
-
-// Category badge dropdown
-// --------------------------------------------------
-
-.list-controls {
-  .category-breadcrumb {
-    a.badge-category {
-      display: inline-block;
-      padding: 6px 8px;
-      line-height: var(--line-height-medium);
-    }
   }
 }
 
