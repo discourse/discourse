@@ -11,11 +11,11 @@ import { scrollTop } from "discourse/mixins/scroll-top";
 import { avatarImg } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
+import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
-import { isTesting } from "discourse-common/config/environment";
 
 const SEARCH_BUTTON_ID = "search-button";
 
