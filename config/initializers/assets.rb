@@ -16,12 +16,15 @@ Rails.application.config.assets.paths << "#{Rails.root}/public/javascripts"
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 
-# explicitly precompile any images in plugins ( /assets/images ) path
-Rails.application.config.assets.precompile += [
-  lambda do |filename, path|
-    path =~ %r{assets/images} && !%w[.js .css].include?(File.extname(filename))
-  end,
-]
+# Core images
+Rails.application.config.assets.precompile << lambda do |logical_path, path|
+  path.start_with?("#{Rails.root}/assets/images")
+end
+
+# Plugin images
+Rails.application.config.assets.precompile << lambda do |logical_path, path|
+  path =~ %r{assets/images} && !%w[.js .css].include?(File.extname(logical_path))
+end
 
 Rails.application.config.assets.precompile += %w[
   break_string.js
