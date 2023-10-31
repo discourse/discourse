@@ -1,3 +1,5 @@
+// Add more imports here if you want to add different nav layouts.
+import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import {
   addSidebarPanel,
   addSidebarSection,
@@ -90,6 +92,38 @@ function defineAdminSection(
   return AdminNavSection;
 }
 
+function useNavConfig(navMap) {
+  const adminNavSections = [
+    {
+      text: "",
+      name: "root",
+      hideSectionHeader: true,
+      links: [
+        {
+          name: "Back to Forum",
+          route: "discovery.latest",
+          text: "Back to Forum",
+          icon: "arrow-left",
+        },
+        {
+          name: "Lobby",
+          route: "admin-revamp.lobby",
+          text: "Lobby",
+          icon: "home",
+        },
+        {
+          name: "legacy",
+          route: "admin",
+          text: "Legacy Admin",
+          icon: "wrench",
+        },
+      ],
+    },
+  ];
+
+  return adminNavSections.concat(navMap);
+}
+
 export default {
   initialize(owner) {
     this.currentUser = owner.lookup("service:currentUser");
@@ -108,54 +142,26 @@ export default {
 
     let adminSectionLinkClass = null;
 
-    // HACK: This is just an example, we need a better way of defining this data.
-    const adminNavSections = [
-      {
-        text: "",
-        name: "root",
-        hideSectionHeader: true,
-        links: [
-          {
-            name: "Back to Forum",
-            route: "discovery.latest",
-            text: "Back to Forum",
-            icon: "arrow-left",
-          },
-          {
-            name: "Lobby",
-            route: "admin-revamp.lobby",
-            text: "Lobby",
-            icon: "home",
-          },
-          {
-            name: "legacy",
-            route: "admin",
-            text: "Legacy Admin",
-            icon: "wrench",
-          },
-        ],
-      },
-      {
-        text: "Community",
-        name: "community",
-        links: [
-          {
-            name: "Item 1",
-            route: "admin-revamp.config.area",
-            routeModels: [{ area: "item-1" }],
-            text: "Item 1",
-          },
-          {
-            name: "Item 2",
-            route: "admin-revamp.config.area",
-            routeModels: [{ area: "item-2" }],
-            text: "Item 2",
-          },
-        ],
-      },
-    ];
+    // NOTE: To make your own structure, simply copy different sections and links
+    // from the ADMIN_NAV_MAP inside of discourse/lib/sidebar/admin-nav-map.js
+    // into a new file under discourse/lib/sidebar/ , then import it above. Then,
+    // add a line `const yourConfigName = useNavConfig(yourNavMap);`, then change
+    // `defaultConfig.forEach` to `yourConfig.forEach`.
+    //
+    // You can also add unlimited new admin "config area" links, which are in this
+    // format, and are meant to be used to render custom UIs for experimentation.
+    // You just need to alter admin-revamp-config-area.hbs to render the component
+    // you need based on the `@model.area` argument.
+    //
+    // {
+    //   name: "Item 1",
+    //   route: "admin-revamp.config.area",
+    //   routeModels: [{ area: "item-1" }],
+    //   text: "Item 1",
+    // },
 
-    adminNavSections.forEach((adminNavSectionData) => {
+    const defaultConfig = useNavConfig(ADMIN_NAV_MAP);
+    defaultConfig.forEach((adminNavSectionData) => {
       addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           // We only want to define the link class once even though we have many different sections.
