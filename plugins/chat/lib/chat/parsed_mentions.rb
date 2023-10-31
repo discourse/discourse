@@ -101,7 +101,6 @@ module Chat
       User
         .includes(:user_chat_channel_memberships, :group_users)
         .distinct
-        .joins("LEFT OUTER JOIN user_chat_channel_memberships uccm ON uccm.user_id = users.id")
         .joins(:user_option)
         .real
         .where(user_options: { chat_enabled: true })
