@@ -25,7 +25,7 @@ class About
   end
 
   def self.fetch_stats
-    Stat.exposable_stats
+    Stat.api_stats
   end
 
   def initialize(user = nil)

@@ -26,8 +26,8 @@ class Stat
     calculate(_all_stats)
   end
 
-  def self.exposable_stats
-    calculate(_exposable_stats)
+  def self.api_stats
+    calculate(_api_stats)
   end
 
   private
@@ -54,7 +54,7 @@ class Stat
     ]
   end
 
-  def self._exposable_stats
+  def self._api_stats
     _all_stats.select { |stat| stat.expose_via_api }
   end
 
@@ -62,5 +62,5 @@ class Stat
     DiscoursePluginRegistry.stats
   end
 
-  private_class_method :_all_stats, :calculate, :core_stats, :_exposable_stats, :plugin_stats
+  private_class_method :_all_stats, :calculate, :core_stats, :_api_stats, :plugin_stats
 end
