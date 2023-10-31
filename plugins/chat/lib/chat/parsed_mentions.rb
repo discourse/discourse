@@ -51,8 +51,9 @@ module Chat
     end
 
     def group_mentions
-      mentionable_groups_ids = mentionable_groups.pluck(:id)
-      chat_users.includes(:groups).joins(:groups).where("groups.id IN (?)", mentionable_groups_ids)
+      group_ids = groups_to_mention.pluck(:id)
+      group_user_ids = GroupUser.where(group_id: group_ids).pluck(:user_id)
+      chat_users.where(id: group_user_ids)
     end
 
     def here_mentions
@@ -64,7 +65,11 @@ module Chat
     end
 
     def groups_to_mention
-      @groups_to_mention = mentionable_groups - groups_with_too_many_members
+      @groups_to_mention ||=
+        mentionable_groups.where(
+          "user_count <= ?",
+          SiteSetting.max_users_notified_per_group_mention,
+        )
     end
 
     def groups_with_disabled_mentions

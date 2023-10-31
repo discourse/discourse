@@ -2,6 +2,10 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import LoginMethod from "discourse/models/login-method";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
@@ -32,10 +36,22 @@ acceptance("Create Account", function () {
       .dom("#username-validation.good")
       .exists("the username validation is good");
 
+    pretender.post("/u", (request) => {
+      assert.step("request");
+      const data = parsePostData(request.requestBody);
+      assert.strictEqual(data.name, "Dr. Good Tuna");
+      assert.strictEqual(data.password, "cool password bro");
+      assert.strictEqual(data.email, "good.tuna@test.com");
+      assert.strictEqual(data.username, "good-tuna");
+      return response({ success: true });
+    });
+
     await click(".modal-footer .btn-primary");
     assert
       .dom(".modal-footer .btn-primary:disabled")
       .exists("create account is disabled");
+
+    assert.verifySteps(["request"]);
   });
 
   test("validate username", async function (assert) {
@@ -61,5 +77,40 @@ acceptance("Create Account", function () {
     await click("#login-buttons button");
 
     assert.verifySteps(["buildPostForm"]);
+  });
+});
+
+acceptance("Create Account - full_name_required", function (needs) {
+  needs.settings({ full_name_required: true });
+
+  test("full_name_required", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+
+    await fillIn("#new-account-email", "z@z.co");
+    await fillIn("#new-account-username", "good-tuna");
+    await fillIn("#new-account-password", "cool password bro");
+
+    await click(".modal-footer .btn-primary");
+    assert.dom("#fullname-validation").hasText(I18n.t("user.name.required"));
+
+    await fillIn("#new-account-name", "Full Name");
+
+    pretender.post("/u", (request) => {
+      assert.step("request");
+      const data = parsePostData(request.requestBody);
+      assert.strictEqual(data.name, "Full Name");
+      assert.strictEqual(data.password, "cool password bro");
+      assert.strictEqual(data.email, "z@z.co");
+      assert.strictEqual(data.username, "good-tuna");
+      return response({ success: true });
+    });
+
+    await click(".modal-footer .btn-primary");
+    assert
+      .dom(".modal-footer .btn-primary:disabled")
+      .exists("create account is disabled");
+
+    assert.verifySteps(["request"]);
   });
 });

@@ -276,6 +276,16 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.suggested_topics).to eq(1000)
       end
 
+      it "sanitizes negative integer values correctly" do
+        put "/admin/site_settings/pending_users_reminder_delay_minutes.json",
+            params: {
+              pending_users_reminder_delay_minutes: "-1",
+            }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(-1)
+      end
+
       context "with default user options" do
         let!(:user1) { Fabricate(:user) }
         let!(:user2) { Fabricate(:user) }
