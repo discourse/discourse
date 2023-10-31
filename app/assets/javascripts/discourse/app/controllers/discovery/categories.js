@@ -6,6 +6,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default class CategoriesController extends Controller {
   @service router;
+  @service composer;
 
   @reads("currentUser.staff") canEdit;
 
@@ -21,6 +22,13 @@ export default class CategoriesController extends Controller {
     // Move inserted into topics
     this.model.loadBefore(tracker.get("newIncoming"), true);
     tracker.resetTracking();
+  }
+
+  @action
+  createTopic() {
+    this.composer.openNewTopic({
+      preferDraft: true,
+    });
   }
 
   @action
