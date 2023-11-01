@@ -48,25 +48,6 @@ RSpec.describe AdminDashboardData do
   end
 
   describe "adding scheduled checks" do
-    it "adds the passed block to the scheduled checks" do
-      called = false
-      AdminDashboardData.add_scheduled_problem_check(:test_identifier) { called = true }
-
-      AdminDashboardData.execute_scheduled_checks
-      expect(called).to eq(true)
-    end
-
-    it "adds a found problem from a scheduled check" do
-      AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
-        AdminDashboardData::Problem.new("test problem")
-      end
-
-      AdminDashboardData.execute_scheduled_checks
-      problems = AdminDashboardData.load_found_scheduled_check_problems
-      expect(problems.first).to be_a(AdminDashboardData::Problem)
-      expect(problems.first.message).to eq("test problem")
-    end
-
     it "does not add duplicate problems with the same identifier" do
       prob1 = AdminDashboardData::Problem.new("test problem", identifier: "test")
       prob2 = AdminDashboardData::Problem.new("test problem 2", identifier: "test")
@@ -99,6 +80,19 @@ RSpec.describe AdminDashboardData do
 
   describe "stats cache" do
     include_examples "stats cacheable"
+  end
+
+  describe ".execute_scheduled_checks" do
+    let(:blk) { -> {} }
+
+    before { AdminDashboardData.add_scheduled_problem_check(:foo, &blk) }
+    after { AdminDashboardData.reset_problem_checks }
+
+    it do
+      expect_enqueued_with(job: :problem_check, args: { check_identifier: :foo }) do
+        AdminDashboardData.execute_scheduled_checks
+      end
+    end
   end
 
   describe ".execute_scheduled_check" do

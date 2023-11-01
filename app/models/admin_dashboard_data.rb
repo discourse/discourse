@@ -145,27 +145,8 @@ class AdminDashboardData
   end
 
   def self.execute_scheduled_checks
-    found_problems = []
-    problem_scheduled_check_blocks.each do |check_identifier, blk|
-      problems = nil
-
-      begin
-        problems = instance_exec(&blk)
-      rescue StandardError => err
-        Discourse.warn_exception(
-          err,
-          message: "A scheduled admin dashboard problem check (#{check_identifier}) errored.",
-        )
-        # we don't want to hold up other checks because this one errored
-        next
-      end
-
-      found_problems += Array.wrap(problems)
-    end
-
-    found_problems.compact.each do |problem|
-      next if !problem.is_a?(Problem)
-      add_found_scheduled_check_problem(problem)
+    problem_scheduled_check_blocks.keys.each do |check_identifier|
+      Jobs.enqueue(:problem_check, check_identifier:)
     end
   end
 
