@@ -3700,8 +3700,6 @@ da:
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         new_features:
           title: "\U0001F381 Nye Funktioner"
-          dismiss: "Skjul"
-          learn_more: "Lær mere"
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
         no_problems: "Ingen problemer fundet."

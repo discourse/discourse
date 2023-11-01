@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { action, computed } from "@ember/object";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 
@@ -7,7 +6,6 @@ import { ajax } from "discourse/lib/ajax";
 @classNameBindings("hasUnseenFeatures:ordered-first")
 export default class DashboardNewFeatures extends Component {
   newFeatures = null;
-  releaseNotesLink = null;
 
   constructor() {
     super(...arguments);
@@ -20,20 +18,7 @@ export default class DashboardNewFeatures extends Component {
       this.setProperties({
         newFeatures: json.new_features,
         hasUnseenFeatures: json.has_unseen_features,
-        releaseNotesLink: json.release_notes_link,
       });
     });
-  }
-
-  @computed("newFeatures")
-  get columnCountClass() {
-    return this.newFeatures.length > 2 ? "three-or-more-items" : "";
-  }
-
-  @action
-  dismissNewFeatures() {
-    ajax("/admin/dashboard/mark-new-features-as-seen.json", {
-      type: "PUT",
-    }).then(() => this.set("hasUnseenFeatures", false));
   }
 }

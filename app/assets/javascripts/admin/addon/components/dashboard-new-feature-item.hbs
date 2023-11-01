@@ -1,17 +1,16 @@
 <div class="admin-new-feature-item">
-  <div class="new-feature-emoji">{{this.item.emoji}}</div>
   <div class="new-feature-content">
     <div class="header">
-      {{#if this.item.link}}
-        <a
-          href={{this.item.link}}
-          target="_blank"
-          rel="noopener noreferrer"
-        >{{this.item.title}}</a>
-      {{else}}
-        {{this.item.title}}
+      <h3>{{this.item.title}}</h3>
+      {{#if this.item.emoji}}
+        <div class="new-feature-emoji">{{this.item.emoji}}</div>
       {{/if}}
     </div>
-    <div class="feature-description">{{this.item.description}}</div>
+    {{#if this.item.screenshot_url}}
+      <img src={{this.item.screenshot_url}} class="screenshot" />
+    {{/if}}
+    <div class="feature-description">
+      <CookText @rawText={{this.item.description}} />
+    </div>
   </div>
 </div>

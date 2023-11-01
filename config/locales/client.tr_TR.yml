@@ -4224,8 +4224,6 @@ tr_TR:
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
         new_features:
           title: "\U0001F381 Yeni Özellikler"
-          dismiss: "Kapat"
-          learn_more: "Daha fazla bilgi"
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Hiçbir sorun bulunamadı."

@@ -2801,9 +2801,6 @@ lv:
         version_check_pending: "Izskatās, ka nesen esat veicies atjauninājumus. Lieliski!"
         installed_version: "Uzinstalēts"
         latest_version: "Pēdējais"
-        new_features:
-          dismiss: "Nerādīt"
-          learn_more: "Uzzināt vairāk"
         last_checked: "Pēdējā pārbaude"
         refresh_problems: "Pārlādēt"
         no_problems: "Problēmas nav atrastas."

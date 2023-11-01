@@ -3551,8 +3551,6 @@ ko:
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
         new_features:
           title: "\U0001F381 새 기능"
-          dismiss: "무시"
-          learn_more: "더 알아보기"
         last_checked: "마지막으로 확인함"
         refresh_problems: "새로고침"
         no_problems: "문제가 발견되지 않았습니다."

@@ -4177,8 +4177,6 @@ sv:
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         new_features:
           title: "\U0001F381 Nya funktioner"
-          dismiss: "Avfärda"
-          learn_more: "Läs mer"
         last_checked: "Senast kollad"
         refresh_problems: "Uppdatera"
         no_problems: "Inga problem upptäcktes."

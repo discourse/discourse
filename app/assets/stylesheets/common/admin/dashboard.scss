@@ -45,6 +45,10 @@
     @include active-navigation-item;
   }
 
+  &.dashboard-new-features .navigation-item.new-features {
+    @include active-navigation-item;
+  }
+
   &.general .navigation-item.general {
     @include active-navigation-item;
   }
@@ -651,21 +655,8 @@
   }
 
   &:not(.ordered-first) {
-    .section-title {
-      margin-top: 1.5em;
-    }
-
     .new-features-dismiss {
       display: none;
-    }
-  }
-
-  .section-body {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    grid-gap: 1.5em;
-    &.three-or-more-items {
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
   }
 
@@ -683,22 +674,31 @@
 .admin-new-feature-item {
   display: flex;
   align-items: flex-start;
+  margin-bottom: 1.5em;
+  background-color: var(--primary-very-low);
+  padding: 1em;
 
   .new-feature-emoji {
     font-size: 3.5em;
-    padding-right: 0.5em;
     padding-left: 0.5em;
-    width: 25%;
-    text-align: center;
   }
 
   .new-feature-content {
     padding-right: 0.5em;
-    width: 75%;
+    width: 100%;
+    .feature-description {
+      padding-top: 1em;
+    }
     .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
       font-size: var(--font-up-1);
       font-weight: bold;
       margin-bottom: 0.5em;
+    }
+    .screenshot {
+      width: 100%;
     }
   }
 }

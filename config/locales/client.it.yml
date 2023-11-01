@@ -4298,8 +4298,6 @@ it:
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
         new_features:
           title: "\U0001F381 Nuove funzionalità"
-          dismiss: "Ignora"
-          learn_more: "Scopri di più"
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."

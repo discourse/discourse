@@ -4312,8 +4312,6 @@ de:
         problems_found: "Ein paar Ratschläge basierend auf deinen aktuellen Website-Einstellungen"
         new_features:
           title: "\U0001F381 Neue Funktionen"
-          dismiss: "Verwerfen"
-          learn_more: "Mehr erfahren"
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."

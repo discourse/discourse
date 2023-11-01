@@ -5082,8 +5082,6 @@ ar:
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         new_features:
           title: "\U0001F381 الميزات الجديدة"
-          dismiss: "تجاهل"
-          learn_more: "معرفة المزيد"
         last_checked: "تاريخ آخر تحقُّق"
         refresh_problems: "تحديث"
         no_problems: "لم يتم العثور على مشكلات."

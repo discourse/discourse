@@ -3347,8 +3347,6 @@ gl:
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
         new_features:
           title: "Novas funcionalidades"
-          dismiss: "Desbotar"
-          learn_more: "Saber máis"
         last_checked: "Última comprobación"
         refresh_problems: "Actualizar"
         no_problems: "Non se atoparon problemas."

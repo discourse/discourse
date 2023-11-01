@@ -4718,8 +4718,6 @@ he:
         problems_found: "עצה שמבוססת על הגדרות האתר הנוכחיות שלך"
         new_features:
           title: "\U0001F381 תכונות חדשות"
-          dismiss: "התעלמות"
-          learn_more: "מידע נוסף"
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"
         no_problems: "לא נמצאו בעיות."
