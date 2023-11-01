@@ -12,7 +12,9 @@ import {
   getSearchKey,
   isValidSearchTerm,
   logSearchLinkClick,
+  reciprocalRankingAlgorithm,
   searchContextDescription,
+  sortByReciprocalRanking,
   translateResults,
   updateRecentSearches,
 } from "discourse/lib/search";
@@ -42,6 +44,7 @@ export const SEARCH_TYPE_USERS = "users";
 const PAGE_LIMIT = 10;
 
 const customSearchTypes = [];
+let additionalSearchResults = [];
 
 export function registerFullPageSearchType(
   translationKey,
@@ -49,6 +52,10 @@ export function registerFullPageSearchType(
   searchFunc
 ) {
   customSearchTypes.push({ translationKey, searchTypeId, searchFunc });
+}
+
+export function addAdditionalResults(updatedResults) {
+  additionalSearchResults = updatedResults;
 }
 
 export default Controller.extend({
@@ -252,7 +259,7 @@ export default Controller.extend({
     return I18n.t("search.result_count", { count, plus, term });
   },
 
-  @observes("model.[posts,categories,tags,users].length")
+  @observes("model.[posts,categories,tags,users].length", "searchResultPosts")
   resultCountChanged() {
     if (!this.model.posts) {
       return 0;
@@ -260,7 +267,7 @@ export default Controller.extend({
 
     this.set(
       "resultCount",
-      this.model.posts.length +
+      this.searchResultPosts.length +
         this.model.categories.length +
         this.model.tags.length +
         this.model.users.length
@@ -274,7 +281,7 @@ export default Controller.extend({
 
   hasSelection: gt("selected.length", 0),
 
-  @discourseComputed("selected.length", "model.posts.length")
+  @discourseComputed("selected.length", "searchResultPosts.length")
   hasUnselectedResults(selectionCount, postsCount) {
     return selectionCount < postsCount;
   },
@@ -306,6 +313,34 @@ export default Controller.extend({
     return bulkSelectEnabled
       ? "search-info bulk-select-visible"
       : "search-info";
+  },
+
+  @discourseComputed("model.posts")
+  searchResultPosts(posts) {
+    if (additionalSearchResults.length > 0) {
+      // Apply RRF to results from each source:
+      const mixedResults = [
+        ...reciprocalRankingAlgorithm(posts),
+        ...reciprocalRankingAlgorithm(additionalSearchResults),
+      ];
+
+      // Sort results by RRF
+      const sortedResults = sortByReciprocalRanking(mixedResults);
+
+      // Remove duplicate results
+      const seenResults = new Map();
+      sortedResults.forEach((result) => {
+        if (!seenResults.has(result.id)) {
+          seenResults.set(result.id, result);
+        }
+      });
+
+      // Convert the map back to an array of unique results
+      const uniqueResults = Array.from(seenResults.values());
+      return uniqueResults;
+    } else {
+      return posts;
+    }
   },
 
   searchButtonDisabled: or("searching", "loading"),
@@ -464,9 +499,14 @@ export default Controller.extend({
     });
   },
 
+  @action
+  recheckSearchResults() {
+    this.notifyPropertyChange("searchResultPosts");
+  },
+
   actions: {
     selectAll() {
-      this.selected.addObjects(this.get("model.posts").mapBy("topic"));
+      this.selected.addObjects(this.get("searchResultPosts").mapBy("topic"));
 
       // Doing this the proper way is a HUGE pain,
       // we can hack this to work by observing each on the array

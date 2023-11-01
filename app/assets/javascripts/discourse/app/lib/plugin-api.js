@@ -22,7 +22,10 @@ import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTIO
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
-import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
+import {
+  addAdditionalResults,
+  registerFullPageSearchType,
+} from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import {
@@ -136,7 +139,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.15.0";
+export const PLUGIN_API_VERSION = "1.16.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2558,6 +2561,24 @@ class PluginApi {
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
+  }
+
+  /**
+   * Allows you add additional search results to the full page search results.
+   * Search results added through this API will be mixed with initial search results
+   * and ranked using the reciprocal ranking fusion algorithm.
+   *
+   * (See `reciprocalRankingAlgorithm()` in `discourse/app/lib/search.js` for more
+   * details on how reciprocal ranking works)
+   *
+   * Full page must be refreshed using `recheckSearchResults()` to see the new results.
+   *
+   * Example:
+   *
+   * api.addAdditionalSearchResults(newPostArray);
+   */
+  addAdditionalSearchResults(results) {
+    addAdditionalResults(results);
   }
 }
 

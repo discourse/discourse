@@ -7,6 +7,12 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.0] - 2023-11-01
+
+### Added
+
+- Added `addAdditionalSearchResults` API method foor adding additional search results to be mixed in with results in full page search.
+
 ## [1.15.0] - 2023-10-18
 
 ### Added
