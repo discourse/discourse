@@ -1,4 +1,3 @@
-// Add more imports here if you want to add different nav layouts.
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import {
   addSidebarPanel,
@@ -23,6 +22,10 @@ function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
 
     get route() {
       return this.adminSidebarNavLink.route;
+    }
+
+    get href() {
+      return this.adminSidebarNavLink.href;
     }
 
     get models() {
@@ -92,7 +95,7 @@ function defineAdminSection(
   return AdminNavSection;
 }
 
-function useNavConfig(navMap) {
+export function useAdminNavConfig(navMap) {
   const adminNavSections = [
     {
       text: "",
@@ -124,13 +127,48 @@ function useNavConfig(navMap) {
   return adminNavSections.concat(navMap);
 }
 
+let adminSectionLinkClass = null;
+export function buildAdminSidebar(navConfig) {
+  navConfig.forEach((adminNavSectionData) => {
+    addSidebarSection(
+      (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+        // We only want to define the link class once even though we have many different sections.
+        adminSectionLinkClass =
+          adminSectionLinkClass ||
+          defineAdminSectionLink(BaseCustomSidebarSectionLink);
+
+        return defineAdminSection(
+          adminNavSectionData,
+          BaseCustomSidebarSection,
+          adminSectionLinkClass
+        );
+      },
+      ADMIN_PANEL
+    );
+  });
+}
+
 export default {
   initialize(owner) {
     this.currentUser = owner.lookup("service:currentUser");
+    this.siteSettings = owner.lookup("service:site-settings");
 
     if (!this.currentUser?.staff) {
       return;
     }
+
+    if (
+      !this.siteSettings.userInAnyGroups(
+        "enable_experimental_admin_ui_groups",
+        this.currentUser
+      )
+    ) {
+      return;
+    }
+
+    this.adminSidebarExperimentStateManager = owner.lookup(
+      "service:admin-sidebar-experiment-state-manager"
+    );
 
     addSidebarPanel(
       (BaseCustomSidebarPanel) =>
@@ -140,43 +178,8 @@ export default {
         }
     );
 
-    let adminSectionLinkClass = null;
-
-    // NOTE: To make your own structure, simply copy different sections and links
-    // from the ADMIN_NAV_MAP inside of discourse/lib/sidebar/admin-nav-map.js
-    // into a new file under discourse/lib/sidebar/ , then import it above. Then,
-    // add a line `const yourConfigName = useNavConfig(yourNavMap);`, then change
-    // `defaultConfig.forEach` to `yourConfig.forEach`.
-    //
-    // You can also add unlimited new admin "config area" links, which are in this
-    // format, and are meant to be used to render custom UIs for experimentation.
-    // You just need to alter admin-revamp-config-area.hbs to render the component
-    // you need based on the `@model.area` argument.
-    //
-    // {
-    //   name: "Item 1",
-    //   route: "admin-revamp.config.area",
-    //   routeModels: [{ area: "item-1" }],
-    //   text: "Item 1",
-    // },
-
-    const defaultConfig = useNavConfig(ADMIN_NAV_MAP);
-    defaultConfig.forEach((adminNavSectionData) => {
-      addSidebarSection(
-        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-          // We only want to define the link class once even though we have many different sections.
-          adminSectionLinkClass =
-            adminSectionLinkClass ||
-            defineAdminSectionLink(BaseCustomSidebarSectionLink);
-
-          return defineAdminSection(
-            adminNavSectionData,
-            BaseCustomSidebarSection,
-            adminSectionLinkClass
-          );
-        },
-        ADMIN_PANEL
-      );
-    });
+    const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
+    const navConfig = useAdminNavConfig(savedConfig || ADMIN_NAV_MAP);
+    buildAdminSidebar(navConfig, adminSectionLinkClass);
   },
 };
