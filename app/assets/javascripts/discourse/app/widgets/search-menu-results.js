@@ -1,5 +1,7 @@
+import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
+import { topicTitleDecorators } from "discourse/components/topic-title";
 import { dateNode } from "discourse/helpers/node";
 import highlightSearch from "discourse/lib/highlight-search";
 import renderTag from "discourse/lib/render-tag";
@@ -106,6 +108,21 @@ function createSearchResult({ type, linkField, builder }) {
       };
     },
 
+    init() {
+      schedule("afterRender", () => {
+        this.attrs.results.map((r) => {
+          const topicTitle = document.querySelector(
+            `.fancy-title-${r.topic_id}`
+          );
+          if (type === "topic" && topicTitle && r.topic) {
+            topicTitleDecorators.forEach((cb) =>
+              cb(r.topic, topicTitle, "search-dropdown-topic-title")
+            );
+          }
+        });
+      });
+    },
+
     html(attrs) {
       return attrs.results.map((r) => {
         let searchResultId;
@@ -121,7 +138,7 @@ function createSearchResult({ type, linkField, builder }) {
           this.attach("link", {
             href: r[linkField],
             contents: () => builder.call(this, r, attrs.term),
-            className: "search-link",
+            className: `search-link fancy-title-${r.topic_id}`,
             searchResultId,
             searchResultType: type,
             searchLogId: attrs.searchLogId,
