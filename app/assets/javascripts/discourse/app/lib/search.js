@@ -261,7 +261,8 @@ export function logSearchLinkClick(params) {
 }
 
 /**
- * Reciprocal Ranking Fusion Algorithm (RRF)
+ * reciprocallyRankedList() makes use of the Reciprocal Ranking Fusion Algorithm (RRF)
+ *
  * A method used to combine rankings from multiple sources
  * to aggregate them to provide a single improved ranking
  *
@@ -270,29 +271,35 @@ export function logSearchLinkClick(params) {
  * k = a constant, small positive value to avoid division by zero
  * r(d) = the reciprocal rank of the item in the ranking list
  *
- * @param {Array} results - an array of search results
+ * @param {Array} lists - an array of arrays containing the results from each source
  *
- * Provide a single result array to assign a reciprocal rank to each result
- * Then use _sortByReciprocalRanking() to sort the results by their reciprocal rank
+ * Example Usage: reciprocalRankingAlgorithm([list1, list2, list3]) (where each list is an array itself)
+ *
  **/
-export function reciprocalRankingAlgorithm(results) {
+export function reciprocallyRankedList(lists) {
   const k = 5;
 
-  results.forEach((result, index) => {
-    result.reciprocalRank = 1 / (index + k);
+  // Assign a reciprocal rank to each result
+  lists.forEach((list) => {
+    list.forEach((listItem, index) => {
+      listItem.reciprocalRank = 1 / (index + k);
+    });
   });
 
-  return results;
-}
+  // Combine lists into a single list
+  const combinedList = [].concat(...lists);
 
-/**
+  // Remove duplicates
+  const uniqueResults = Array.from(
+    new Set(combinedList.map((result) => result.id))
+  ).map((id) => {
+    return combinedList.find((result) => result.id === id);
+  });
 
- * Sorts an array of mixed search results by their reciprocal rank
- * Before sorting, use reciprocalRankingAlgorithm() to assign a reciprocal rank to each result
- *
- * @param {Array} results - an combined array of search results from multiple sources
- *
- **/
-export function sortByReciprocalRanking(results) {
-  return results.sort((a, b) => b.reciprocalRank - a.reciprocalRank);
+  // Sort the results by reciprocal ranking
+  const sortedResults = uniqueResults.sort(
+    (a, b) => b.reciprocalRank - a.reciprocalRank
+  );
+
+  return sortedResults;
 }

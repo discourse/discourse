@@ -12,9 +12,8 @@ import {
   getSearchKey,
   isValidSearchTerm,
   logSearchLinkClick,
-  reciprocalRankingAlgorithm,
+  reciprocallyRankedList,
   searchContextDescription,
-  sortByReciprocalRanking,
   translateResults,
   updateRecentSearches,
 } from "discourse/lib/search";
@@ -318,26 +317,7 @@ export default Controller.extend({
   @discourseComputed("model.posts")
   searchResultPosts(posts) {
     if (additionalSearchResults.length > 0) {
-      // Apply RRF to results from each source:
-      const mixedResults = [
-        ...reciprocalRankingAlgorithm(posts),
-        ...reciprocalRankingAlgorithm(additionalSearchResults),
-      ];
-
-      // Sort results by RRF
-      const sortedResults = sortByReciprocalRanking(mixedResults);
-
-      // Remove duplicate results
-      const seenResults = new Map();
-      sortedResults.forEach((result) => {
-        if (!seenResults.has(result.id)) {
-          seenResults.set(result.id, result);
-        }
-      });
-
-      // Convert the map back to an array of unique results
-      const uniqueResults = Array.from(seenResults.values());
-      return uniqueResults;
+      return reciprocallyRankedList([posts, additionalSearchResults]);
     } else {
       return posts;
     }
