@@ -315,7 +315,6 @@ export default function setupTests(config) {
     if (setupData) {
       const session = Session.current();
       session.markdownItURL = setupData.markdownItUrl;
-      session.highlightJsPath = setupData.highlightJsPath;
     }
     User.resetCurrent();
 

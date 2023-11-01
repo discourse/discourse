@@ -10,8 +10,6 @@ module("Integration | Component | highlighted-code", function (hooks) {
   setupRenderingTest(hooks);
 
   test("highlighting code", async function (assert) {
-    this.session.highlightJsPath =
-      "/assets/highlightjs/highlight-test-bundle.min.js";
     this.set("code", "def test; end");
 
     await render(hbs`<HighlightedCode @lang="ruby" @code={{this.code}} />`);
@@ -23,8 +21,6 @@ module("Integration | Component | highlighted-code", function (hooks) {
   });
 
   test("large code blocks are not highlighted", async function (assert) {
-    this.session.highlightJsPath =
-      "/assets/highlightjs/highlight-test-bundle.min.js";
     this.set("code", LONG_CODE_BLOCK);
 
     await render(hbs`<HighlightedCode @lang="ruby" @code={{this.code}} />`);

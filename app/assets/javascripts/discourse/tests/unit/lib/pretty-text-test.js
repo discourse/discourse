@@ -1666,7 +1666,7 @@ var bar = 'bar';
     // "js" is an alias of "javascript"
     assert.cooked(
       "```js\nvar foo ='foo';\nvar bar = 'bar';\n```",
-      `<pre><code class=\"lang-js\">var foo ='foo';
+      `<pre data-code-wrap="js"><code class=\"lang-js\">var foo ='foo';
 var bar = 'bar';
 </code></pre>`,
       "code block with js alias works"
@@ -1675,7 +1675,7 @@ var bar = 'bar';
     // "html" is an alias of "xml"
     assert.cooked(
       "```html\n<strong>fun</strong> times\n```",
-      `<pre><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
+      `<pre data-code-wrap="html"><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
 </code></pre>`,
       "code block with html alias work"
     );
