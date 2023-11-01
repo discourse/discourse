@@ -389,8 +389,8 @@ export default class SidebarSectionForm extends Component {
   }
 
   @bind
-  reorder(linkTo, above) {
-    if (this.draggedLink === linkTo) {
+  reorder(targetLink, above) {
+    if (this.draggedLink === targetLink) {
       return;
     }
 
@@ -400,8 +400,8 @@ export default class SidebarSectionForm extends Component {
       this.transformedModel.secondaryLinks?.removeObject(this.draggedLink);
     }
 
-    if (linkTo.isPrimary) {
-      const toPosition = this.transformedModel.links.indexOf(linkTo);
+    if (targetLink.isPrimary) {
+      const toPosition = this.transformedModel.links.indexOf(targetLink);
       this.draggedLink.segment = "primary";
       this.transformedModel.links.insertAt(
         above ? toPosition : toPosition + 1,
@@ -409,7 +409,8 @@ export default class SidebarSectionForm extends Component {
       );
     } else {
       this.draggedLink.segment = "secondary";
-      const toPosition = this.transformedModel.secondaryLinks.indexOf(linkTo);
+      const toPosition =
+        this.transformedModel.secondaryLinks.indexOf(targetLink);
       this.transformedModel.secondaryLinks.insertAt(
         above ? toPosition : toPosition + 1,
         this.draggedLink
