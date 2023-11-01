@@ -60,7 +60,6 @@ RSpec.describe PostAlerter do
   end
 
   def setup_push_notification_subscription_for(user:)
-    SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
     2.times do |i|
       UserApiKey.create!(
         user_id: user.id,
@@ -1183,7 +1182,10 @@ RSpec.describe PostAlerter do
     let(:mention_post) { create_post_with_alerts(user: user, raw: "Hello @eviltrout :heart:") }
     let(:topic) { mention_post.topic }
 
-    before { setup_push_notification_subscription_for(user: evil_trout) }
+    before do
+      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
+      setup_push_notification_subscription_for(user: evil_trout)
+    end
 
     describe "DiscoursePluginRegistry#push_notification_filters" do
       it "sends push notifications when all filters pass" do
