@@ -131,7 +131,8 @@
   .badge-category {
     color: var(--primary-medium);
   }
-  .discourse-tag {
+  .discourse-tag,
+  .discourse-tag:visited {
     color: var(--primary-medium);
   }
 }

@@ -141,7 +141,9 @@ export default createWidget("header-topic-info", {
             this.attach("category-link", { category: parentCategory })
           );
         }
-        categories.push(this.attach("category-link", { category }));
+        categories.push(
+          this.attach("category-link", { category, hideParent: true })
+        );
 
         this.headerElements.push(h("div.categories-wrapper", categories));
       }

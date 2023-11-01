@@ -190,9 +190,15 @@
   .topic-item-stats__category-tags {
     margin-right: 0.5em;
     max-width: 90%;
+    line-height: var(--line-height-medium);
 
     .discourse-tags {
       display: inline;
+    }
+
+    .badge-category__wrapper {
+      vertical-align: bottom;
+      margin-right: 0.5em;
     }
 
     .badge-wrapper,
