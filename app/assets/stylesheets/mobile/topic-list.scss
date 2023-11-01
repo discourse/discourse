@@ -215,23 +215,6 @@
       max-width: 100%;
       vertical-align: bottom;
     }
-
-    .badge-wrapper {
-      &.bullet {
-        + .discourse-tags {
-          .discourse-tag {
-            vertical-align: bottom;
-          }
-        }
-      }
-      &.box {
-        + .discourse-tags {
-          .discourse-tag {
-            vertical-align: text-bottom;
-          }
-        }
-      }
-    }
   }
 
   .age {

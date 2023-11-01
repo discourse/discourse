@@ -366,22 +366,6 @@
       font-size: var(--font-down-1);
       line-height: var(--line-height-large);
     }
-    .badge-wrapper {
-      &.bar,
-      &.bullet {
-        color: var(--primary);
-        padding: 0 0 0 0.15em;
-      }
-      &.box {
-        color: var(--secondary);
-        + a.badge.badge-notification {
-          padding-top: 2px;
-        }
-        span {
-          z-index: z("base") * -1;
-        }
-      }
-    }
   }
 
   // note these topic counts only appear for anons in the category hamburger drop down
