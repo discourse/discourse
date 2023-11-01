@@ -6,7 +6,7 @@ import { modKeysPressed } from "discourse/lib/utilities";
 export default Component.extend({
   tagName: "div",
   classNames: ["fps-result"],
-  classNameBindings: ["bulkSelectEnabled", "post.generatedByAI:ai-result"],
+  classNameBindings: ["bulkSelectEnabled"],
   attributeBindings: ["role"],
   role: "listitem",
 
