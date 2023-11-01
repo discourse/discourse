@@ -4,7 +4,10 @@
     @value={{this.value}}
     maxlength={{this.site.user_field_max_length}}
   />
-  <label class="control-label alt-placeholder" for={{concat "user-" this.elementId}}>
+  <label
+    class="control-label alt-placeholder"
+    for={{concat "user-" this.elementId}}
+  >
     {{this.field.name}}
     {{#if this.field.required}}<span class="required">*</span>{{/if}}
   </label>
