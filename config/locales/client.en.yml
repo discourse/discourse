@@ -4610,7 +4610,6 @@ en:
       errors:
         valueMissing:
           default: "Please fill out this field."
-          text: "Please fill out this field."
           select-one: "Please select an item in the list."
           select-multiple: "Please select at least one item in the list."
           checkbox: "Please check this box if you want to proceed."

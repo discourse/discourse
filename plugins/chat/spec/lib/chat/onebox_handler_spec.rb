@@ -93,7 +93,7 @@ describe Chat::OneboxHandler do
               </div>
               <div class="chat-transcript-username">#{user.username}</div>
               <div class="chat-transcript-datetime">
-                <a href="/chat/c/-/#{public_channel.id}" title="#{public_message.created_at}">#{public_message.created_at}</a>
+                <a href="/chat/c/-/#{public_channel.id}/#{public_message.id}" title="#{public_message.created_at}">#{public_message.created_at}</a>
               </div>
               <a class="chat-transcript-channel" href="/chat/c/-/#{public_channel.id}">
                 <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">

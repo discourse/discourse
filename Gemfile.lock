@@ -89,7 +89,7 @@ GEM
       rouge (>= 1.0.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
-    bootsnap (1.16.0)
+    bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
     bullet (7.1.2)
@@ -212,7 +212,7 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.13.0)
+    logster (2.13.1)
     loofah (2.21.4)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -248,7 +248,7 @@ GEM
     mustache (1.1.1)
     net-http (0.3.2)
       uri
-    net-imap (0.4.2)
+    net-imap (0.4.3)
       date
       net-protocol
     net-pop (0.1.2)
@@ -647,7 +647,7 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
-  selenium-webdriver (~> 4.11)
+  selenium-webdriver (~> 4.14)
   shoulda-matchers!
   sidekiq
   simplecov
