@@ -7,9 +7,15 @@ acceptance("CSS Generator", function (needs) {
 
   needs.site({
     categories: [
-      { id: 1, color: "ff0000", name: "category1" },
-      { id: 2, color: "333", name: "category2" },
-      { id: 4, color: "2B81AF", parentCategory: { id: 1 }, name: "category3" },
+      { id: 1, color: "ff0000", text_color: "ffffff", name: "category1" },
+      { id: 2, color: "333", text_color: "ffffff", name: "category2" },
+      {
+        id: 4,
+        color: "2B81AF",
+        text_color: "ffffff",
+        parentCategory: { id: 1 },
+        name: "category3",
+      },
     ],
   });
 
@@ -36,7 +42,7 @@ acceptance("CSS Generator", function (needs) {
     const cssTag = document.querySelector("style#category-badge-css-generator");
     assert.equal(
       cssTag.innerHTML,
-      ".badge-category.badge-category-1:before { background: var(--category-1-color); }\n.badge-category.badge-category-2:before { background: var(--category-2-color); }\n.badge-category.badge-category-4:before { background: var(--category-4-color); }"
+      '.badge-category[data-category="1"] { --category-badge-color: var(--category-1-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category="2"] { --category-badge-color: var(--category-2-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category="4"] { --category-badge-color: var(--category-4-color); --category-badge-text-color: #ffffff; }'
     );
   });
 });

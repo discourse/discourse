@@ -77,7 +77,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
     it "shows channel info" do
       chat_page.visit_channel_settings(channel_1)
 
-      expect(page.find(".category-name")).to have_content(channel_1.chatable.name)
+      expect(page.find(".badge-category__name")).to have_content(channel_1.chatable.name)
       expect(page.find(".chat-channel-settings__name")).to have_content(channel_1.title)
       expect(page.find(".chat-channel-settings__slug")).to have_content(channel_1.slug)
     end
