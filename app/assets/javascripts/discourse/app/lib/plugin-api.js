@@ -23,7 +23,7 @@ import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
 import {
-  addAdditionalResults,
+  additionalResults,
   registerFullPageSearchType,
 } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
@@ -2577,8 +2577,8 @@ class PluginApi {
    *
    * api.addAdditionalSearchResults(newPostArray);
    */
-  addAdditionalSearchResults(results) {
-    addAdditionalResults(results);
+  addSearchResults(results) {
+    additionalResults(results);
   }
 }
 

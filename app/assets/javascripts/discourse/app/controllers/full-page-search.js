@@ -53,7 +53,7 @@ export function registerFullPageSearchType(
   customSearchTypes.push({ translationKey, searchTypeId, searchFunc });
 }
 
-export function addAdditionalResults(updatedResults) {
+export function additionalResults(updatedResults) {
   additionalSearchResults = updatedResults;
 }
 
