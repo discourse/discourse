@@ -47,7 +47,7 @@ export default class ChatThreadListHeader extends Component {
           {{replaceEmoji this.threadListTitle}}
         </span>
 
-        {{#if @channel}}
+        {{#if this.site.mobileView}}
           <div class="chat-thread-list-header__label_channel">
             {{replaceEmoji @channel.title}}
           </div>

@@ -29,12 +29,13 @@ export default class ChatThreadHeader extends Component {
   closeThreadTitle = I18n.t("chat.thread.close");
 
   get backLink() {
+    const prevPage = this.chatHistory.previousRoute?.name;
     let route, title;
 
-    if (
-      this.chatHistory.previousRoute?.name === "chat.channel.threads" &&
-      this.site.mobileView
-    ) {
+    if (prevPage === "chat.channel.threads") {
+      route = "chat.channel.threads";
+      title = I18n.t("chat.return_to_threads_list");
+    } else if (prevPage === "chat.channel.index" && !this.site.mobileView) {
       route = "chat.channel.threads";
       title = I18n.t("chat.return_to_threads_list");
     } else {
@@ -66,6 +67,10 @@ export default class ChatThreadHeader extends Component {
 
   get membership() {
     return this.args.thread.currentUserMembership;
+  }
+
+  get headerTitle() {
+    return this.args.thread?.title ?? I18n.t("chat.thread.label");
   }
 
   @action
@@ -124,7 +129,7 @@ export default class ChatThreadHeader extends Component {
       </div>
 
       <span class="chat-thread-header__label overflow-ellipsis">
-        {{replaceEmoji @thread.title}}
+        {{replaceEmoji this.headerTitle}}
       </span>
 
       <div
