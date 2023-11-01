@@ -7,11 +7,6 @@
     @include ellipsis;
   }
 
-  // category badge margin reset
-  .badge-wrapper.bullet {
-    margin-right: 0;
-  }
-
   .chat-retention-reminder-text {
     color: var(--primary-medium);
   }
