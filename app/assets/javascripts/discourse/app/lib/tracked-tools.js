@@ -46,8 +46,8 @@ function getOrCreateState(map, instance) {
  * }
  * ```
  *
- * this.fullName will be updated whenever `updateName()` is called, or there is a change to
- * this.args.fullName.
+ * `this.fullName` will be updated whenever `updateName()` is called, or there is a change to
+ * `this.args.fullName`.
  *
  */
 export function resettableTracked(prototype, key, descriptor) {
