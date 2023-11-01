@@ -1530,7 +1530,6 @@ RSpec.describe PostAlerter do
       _post = Fabricate(:post, user: user, topic: topic)
       reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
       events = DiscourseEvent.track_events { PostAlerter.post_created(reply) }
-
       expect(events).to include(
         event_name: :before_create_notifications_for_users,
         params: [[user], reply],
