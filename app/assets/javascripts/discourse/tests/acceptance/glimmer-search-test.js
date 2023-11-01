@@ -209,7 +209,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     );
 
     assert.ok(
-      exists(`${contextSelector} span.badge-wrapper`),
+      exists(`${contextSelector} span.badge-category__wrapper`),
       "category badge is a span (i.e. not a link)"
     );
   });
@@ -706,7 +706,7 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
       query(
         ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
       ).textContent.trim(),
-      "dev slow",
+      "devslow",
       "tags displayed in search results"
     );
   });

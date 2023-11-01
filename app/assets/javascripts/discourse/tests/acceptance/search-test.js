@@ -584,7 +584,7 @@ acceptance("Search - with tagging enabled", function (needs) {
       query(
         ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
       ).textContent.trim(),
-      "dev slow",
+      "devslow",
       "tags displayed in search results"
     );
   });
