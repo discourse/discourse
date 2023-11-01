@@ -89,7 +89,7 @@ module Chat
     private
 
     def channel_members
-      chat_users.where(
+      chat_users.includes(:user_chat_channel_memberships).where(
         user_chat_channel_memberships: {
           following: true,
           chat_channel_id: @message.chat_channel.id,
@@ -98,13 +98,7 @@ module Chat
     end
 
     def chat_users
-      User
-        .includes(:user_chat_channel_memberships, :group_users)
-        .distinct
-        .joins("LEFT OUTER JOIN user_chat_channel_memberships uccm ON uccm.user_id = users.id")
-        .joins(:user_option)
-        .real
-        .where(user_options: { chat_enabled: true })
+      User.distinct.joins(:user_option).real.where(user_options: { chat_enabled: true })
     end
 
     def mentionable_groups
