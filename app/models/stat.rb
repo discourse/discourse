@@ -11,14 +11,9 @@ class Stat
   attr_reader :name, :expose_via_api, :show_in_ui
 
   def calculate
-    begin
-      return @block.call.transform_keys { |key| build_key(key) }
-    rescue StandardError => err
-      Discourse.warn_exception(
-        err,
-        message: "Unexpected error when collecting #{@name} About stats.",
-      )
-    end
+    @block.call.transform_keys { |key| build_key(key) }
+  rescue StandardError => err
+    Discourse.warn_exception(err, message: "Unexpected error when collecting #{@name} About stats.")
     {}
   end
 
