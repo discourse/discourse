@@ -30,7 +30,7 @@ module("Unit | Utility | category-badge", function (hooks) {
       "it has the correct class"
     );
 
-    const label = tag.children[1];
+    const label = tag.children[0];
     assert.strictEqual(
       label.title,
       "cool description",
