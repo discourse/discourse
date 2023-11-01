@@ -40,7 +40,7 @@ function getOrCreateState(map, instance) {
  * class UserRenameForm {
  *   ⁣@resettableTracked fullName = this.args.fullName;
  *
- *   updateName(newName){
+ *   updateName(newName) {
  *     this.fullName = newName;
  *   }
  * }
