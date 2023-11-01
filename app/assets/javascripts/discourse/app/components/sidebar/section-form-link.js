@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import discourseDebounce from "discourse-common/lib/debounce";
+import discourseLater from "discourse-common/lib/later";
 
 export default class SectionFormLink extends Component {
   @tracked dragCssClass;
@@ -45,13 +45,9 @@ export default class SectionFormLink extends Component {
       this.dragCount === 0 &&
       (this.dragCssClass === "drag-above" || this.dragCssClass === "drag-below")
     ) {
-      discourseDebounce(
-        this,
-        () => {
-          this.dragCssClass = null;
-        },
-        10
-      );
+      discourseLater(() => {
+        this.dragCssClass = null;
+      }, 10);
     }
   }
 
