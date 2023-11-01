@@ -1,11 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { LinkTo } from "@ember/routing";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import ChatModalThreadSettings from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
+import ChatThreadHeaderUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/thread/header-unread-indicator";
+import ThreadNotificationsButton from "discourse/plugins/chat/select-kit/addons/components/thread-notifications-button";
+import DButton from "discourse/components/d-button";
+import replaceEmoji from "discourse/helpers/replace-emoji";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
+import I18n from "discourse-i18n";
 
 export default class ChatThreadHeader extends Component {
   @service currentUser;
@@ -18,21 +26,26 @@ export default class ChatThreadHeader extends Component {
 
   @tracked persistedNotificationLevel = true;
 
+  closeThreadTitle = I18n.t("chat.thread.close");
+
   get backLink() {
-    let route;
+    let route, title;
 
     if (
-      this.chatHistory.previousRoute?.name === "chat.channel.index" &&
+      this.chatHistory.previousRoute?.name === "chat.channel.threads" &&
       this.site.mobileView
     ) {
-      route = "chat.channel.index";
-    } else {
       route = "chat.channel.threads";
+      title = I18n.t("chat.return_to_threads_list");
+    } else {
+      route = "chat.channel.index";
+      title = I18n.t("chat.return_to_channel");
     }
 
     return {
       route,
       models: this.args.channel.routeModels,
+      title: title,
     };
   }
 
@@ -93,4 +106,56 @@ export default class ChatThreadHeader extends Component {
         popupAjaxError(err);
       });
   }
+
+  <template>
+    <div class="chat-thread-header">
+      <div class="chat-thread-header__left-buttons">
+        {{#if @thread}}
+          <LinkTo
+            class="chat-thread__back-to-previous-route btn-flat btn btn-icon no-text"
+            @route={{this.backLink.route}}
+            @models={{this.backLink.models}}
+            title={{this.backLink.title}}
+          >
+            <ChatThreadHeaderUnreadIndicator @channel={{@thread.channel}} />
+            {{icon "chevron-left"}}
+          </LinkTo>
+        {{/if}}
+      </div>
+
+      <span class="chat-thread-header__label overflow-ellipsis">
+        {{replaceEmoji @thread.title}}
+      </span>
+
+      <div
+        class={{concatClass
+          "chat-thread-header__buttons"
+          (if this.persistedNotificationLevel "-persisted")
+        }}
+      >
+        <ThreadNotificationsButton
+          @value={{this.threadNotificationLevel}}
+          @onChange={{this.updateThreadNotificationLevel}}
+        />
+        {{#if this.canChangeThreadSettings}}
+          <DButton
+            @action={{this.openThreadSettings}}
+            @icon="cog"
+            @title="chat.thread.settings"
+            class="btn-flat chat-thread-header__settings"
+          />
+        {{/if}}
+        {{#unless this.site.mobileView}}
+          <LinkTo
+            class="chat-thread__close btn-flat btn btn-icon no-text"
+            @route="chat.channel"
+            @models={{@thread.channel.routeModels}}
+            title={{this.closeThreadTitle}}
+          >
+            {{icon "times"}}
+          </LinkTo>
+        {{/unless}}
+      </div>
+    </div>
+  </template>
 }
