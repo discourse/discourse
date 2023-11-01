@@ -10,7 +10,7 @@ module Scheduler
       @async = !Rails.env.test?
       @queue =
         WorkQueue::ThreadSafeWrapper.new(
-          WorkQueue::FairQueue.new(500) { WorkQueue::BoundedQueue.new(10) },
+          WorkQueue::FairQueue.new(500) { WorkQueue::BoundedQueue.new(100) },
         )
 
       @mutex = Mutex.new
