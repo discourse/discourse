@@ -831,7 +831,7 @@ acceptance("Search - assistant", function (needs) {
     assert.ok(exists(query(firstCategory)));
 
     const firstResultSlug = query(
-      `${firstCategory} .category-name`
+      `${firstCategory} .badge-category__name`
     ).textContent.trim();
 
     await click(firstCategory);
@@ -857,8 +857,9 @@ acceptance("Search - assistant", function (needs) {
     await click("#search-button");
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug",
       "Category is displayed"
     );
@@ -885,8 +886,9 @@ acceptance("Search - assistant", function (needs) {
     );
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug"
     );
 
