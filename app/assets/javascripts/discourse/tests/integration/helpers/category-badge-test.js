@@ -26,7 +26,7 @@ module("Integration | Helper | category-badge", function (hooks) {
 
     assert.ok(
       exists(
-        `a.badge-wrapper[href="/c/${this.category.slug}/${this.category.id}"]`
+        `a.badge-category__wrapper[href="/c/${this.category.slug}/${this.category.id}"]`
       )
     );
   });

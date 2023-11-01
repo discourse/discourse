@@ -154,7 +154,7 @@ acceptance("Search - Anonymous", function (needs) {
     );
 
     assert.ok(
-      exists(`${contextSelector} span.badge-wrapper`),
+      exists(`${contextSelector} span.badge-category__wrapper`),
       "category badge is a span (i.e. not a link)"
     );
 
