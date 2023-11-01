@@ -169,6 +169,26 @@ class AdminDashboardData
     end
   end
 
+  def self.execute_scheduled_check(identifier)
+    check = problem_scheduled_check_blocks[identifier]
+
+    problems = instance_exec(&check)
+
+    Array
+      .wrap(problems)
+      .compact
+      .each do |problem|
+        next if !problem.is_a?(Problem)
+
+        add_found_scheduled_check_problem(problem)
+      end
+  rescue StandardError => err
+    Discourse.warn_exception(
+      err,
+      message: "A scheduled admin dashboard problem check (#{identifier}) errored.",
+    )
+  end
+
   ##
   # We call this method in the class definition below
   # so all of the problem checks in this class are registered on
