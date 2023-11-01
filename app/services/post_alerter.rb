@@ -392,6 +392,7 @@ class PostAlerter
       private_message
       group_mentioned
       watching_first_post
+      watching_category_or_tag
       event_reminder
       event_invitation
     ].map { |t| Notification.types[t] }
