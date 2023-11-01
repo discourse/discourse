@@ -1516,11 +1516,14 @@ RSpec.describe PostAlerter do
 
       level = CategoryUser.notification_levels[:watching_first_post]
       CategoryUser.set_notification_level_for_category(user, level, category.id)
-      events = DiscourseEvent.track_events { PostAlerter.new.after_save_post(post, true) }
+      events =
+        DiscourseEvent.track_events(:push_notification) do
+          PostAlerter.new.after_save_post(post, true)
+        end
 
       expect(
         events.detect do |e|
-          e[:event_name] == :push_notification && e[:params][0] == user &&
+          e[:params][0] == user &&
             e[:params][1][:notification_type] == Notification.types[:watching_first_post]
         end,
       ).to be_present
@@ -1855,11 +1858,11 @@ RSpec.describe PostAlerter do
         post = Fabricate(:post, topic: topic)
         level = CategoryUser.notification_levels[:watching]
         CategoryUser.set_notification_level_for_category(user, level, category.id)
-        events = DiscourseEvent.track_events { PostAlerter.post_created(post) }
+        events = DiscourseEvent.track_events(:push_notification) { PostAlerter.post_created(post) }
 
         expect(
           events.detect do |e|
-            e[:event_name] == :push_notification && e[:params][0] == user &&
+            e[:params][0] == user &&
               e[:params][1][:notification_type] == Notification.types[:watching_category_or_tag]
           end,
         ).to be_present
