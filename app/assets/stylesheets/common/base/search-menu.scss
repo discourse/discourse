@@ -106,12 +106,10 @@ $search-pad-horizontal: 0.5em;
         display: flex;
         flex-wrap: wrap;
         align-items: baseline;
+        gap: 0 0.5em;
 
         .badge-wrapper {
           margin-right: 0.5em;
-        }
-        .discourse-tags .discourse-tag {
-          margin-right: 0.35em;
         }
       }
     }
