@@ -43,17 +43,17 @@ export default class ReorderCategories extends Component {
   reorder() {
     this.reorderChildren(null, 0, 0);
 
-    this.categoriesBuffered.forEach((bc) => {
+    for (const bc of this.categoriesBuffered) {
       if (bc.get("hasBufferedChanges")) {
         bc.applyBufferedChanges();
       }
-    });
+    }
 
     this.notifyPropertyChange("categoriesBuffered");
   }
 
   reorderChildren(categoryId, depth, index) {
-    this.categoriesOrdered.forEach((category) => {
+    for (const category of this.categoriesOrdered) {
       if (
         (categoryId === null && !category.get("parent_category_id")) ||
         category.get("parent_category_id") === categoryId
@@ -61,7 +61,7 @@ export default class ReorderCategories extends Component {
         category.setProperties({ depth, position: index++ });
         index = this.reorderChildren(category.get("id"), depth + 1, index);
       }
-    });
+    }
 
     return index;
   }
@@ -174,9 +174,9 @@ export default class ReorderCategories extends Component {
     this.reorder();
 
     const data = {};
-    this.categoriesBuffered.forEach((cat) => {
-      data[cat.get("id")] = cat.get("position");
-    });
+    for (const category of this.categoriesBuffered) {
+      data[category.get("id")] = category.get("position");
+    }
 
     try {
       await ajax("/categories/reorder", {
