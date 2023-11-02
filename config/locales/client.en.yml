@@ -1617,14 +1617,14 @@ en:
 
       name:
         title: "Name"
-        instructions: "your full name (optional)"
-        instructions_required: "Your full name"
+        instructions: "Your full name (optional)."
+        instructions_required: "Your full name."
         required: "Please enter a name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "unique, no spaces, short"
+        instructions: "Unique, no spaces, short."
         short_instructions: "People can mention you as @%{username}"
         available: "Your username is available"
         not_available: "Not available. Try %{suggestion}?"
@@ -1855,7 +1855,7 @@ en:
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
-        instructions: "at least %{count} characters"
+        instructions: "At least %{count} characters."
         required: "Please enter a password"
         confirm: "Confirm"
         incorrect_password: "The entered password is incorrect."
