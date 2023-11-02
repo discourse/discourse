@@ -77,6 +77,7 @@ export default class ReorderCategories extends Component {
       : 0;
   }
 
+  @action
   move(category, direction) {
     let targetPosition = category.get("position") + direction;
 
@@ -157,16 +158,6 @@ export default class ReorderCategories extends Component {
         : Math.floor(newPosition);
     const direction = newPosition - category.get("position");
     this.move(category, direction);
-  }
-
-  @action
-  moveUp(category) {
-    this.move(category, -1);
-  }
-
-  @action
-  moveDown(category) {
-    this.move(category, 1);
   }
 
   @action

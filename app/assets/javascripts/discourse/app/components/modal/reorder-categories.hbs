@@ -25,12 +25,12 @@
                 @min="0"
               />
               <DButton
-                @action={{fn this.moveUp cat}}
+                @action={{fn this.move cat -1}}
                 @icon="arrow-up"
                 class="btn-default no-text"
               />
               <DButton
-                @action={{fn this.moveDown cat}}
+                @action={{fn this.move cat 1}}
                 @icon="arrow-down"
                 class="btn-default no-text"
               />
