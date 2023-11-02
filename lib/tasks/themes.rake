@@ -70,8 +70,7 @@ def update_themes
         remote_theme.update_remote_version
         if remote_theme.out_of_date?
           puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
-          remote_theme.update_from_remote
-          theme.save!
+          remote_theme.update_from_remote(already_in_transaction: true)
         else
           puts "up to date"
         end
