@@ -2568,17 +2568,17 @@ class PluginApi {
    * Search results added through this API will be mixed with initial search results
    * and ranked using the reciprocal ranking fusion algorithm.
    *
-   * (See `reciprocalRankingAlgorithm()` in `discourse/app/lib/search.js` for more
+   * (See `reciprocallyRankedList()` in `discourse/app/lib/search.js` for more
    * details on how reciprocal ranking works)
    *
-   * Full page must be refreshed using `recheckSearchResults()` to see the new results.
    *
    * Example:
    *
-   * api.addAdditionalSearchResults(newPostArray);
+   * api.addSearchResults(newPostArray);
    */
   addSearchResults(results) {
     additionalResults(results);
+    this.container.lookup("controller:full-page-search").recheckSearchResults();
   }
 }
 
