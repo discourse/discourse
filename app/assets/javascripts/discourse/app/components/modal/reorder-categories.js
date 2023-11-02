@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { sort } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
@@ -8,10 +7,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class ReorderCategories extends Component {
   @service site;
-
-  categoriesSorting = ["position"];
-
-  @sort("categoriesBuffered", "categoriesSorting") categoriesOrdered;
 
   init() {
     super.init(...arguments);
@@ -22,6 +17,10 @@ export default class ReorderCategories extends Component {
     return this.site.categories.map((c) =>
       BufferedProxy.create({ content: c })
     );
+  }
+
+  get categoriesOrdered() {
+    return this.categoriesBuffered.sort((a, b) => a.position - b.position);
   }
 
   /**
