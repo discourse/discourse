@@ -74,8 +74,7 @@ class ThemesInstallTask
   end
 
   def update
-    @remote_theme.update_from_remote
-    @theme.save
+    @remote_theme.update_from_remote(raise_if_theme_save_fails: false)
     add_component_to_all_themes
     @remote_theme.last_error_text.nil?
   end
