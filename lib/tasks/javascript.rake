@@ -147,23 +147,27 @@ def generate_admin_sidebar_nav_map
       end
       .compact
 
-  engine_routes =
-    Rails::Engine
-      .subclasses
-      .map do |engine|
-        engine
-          .routes
-          .routes
-          .map do |route|
-            next if route.verb != "GET"
-            path = route.path.spec.to_s.gsub("(.:format)", "")
-            next if !path.include?("admin")
-            next if path.include?("/:") || path.include?("admin-login")
-            path
-          end
-          .compact
-      end
-      .flatten
+  # TODO (martin): This will generate the engine routes based on installed plugins,
+  # so it is not generic enough to use here. Need to think of another way to do
+  # this and reconcile with the Ember routes from the client; maybe some button
+  # that does it at runtime for this experiment?
+  engine_routes = []
+  # engine_routes =  Rails::Engine
+  #     .subclasses
+  #     .map do |engine|
+  #       engine
+  #         .routes
+  #         .routes
+  #         .map do |route|
+  #           next if route.verb != "GET"
+  #           path = route.path.spec.to_s.gsub("(.:format)", "")
+  #           next if !path.include?("admin")
+  #           next if path.include?("/:") || path.include?("admin-login")
+  #           path
+  #         end
+  #         .compact
+  #     end
+  #     .flatten
 
   admin_routes = admin_routes.concat(engine_routes)
 
@@ -209,7 +213,7 @@ JS
   # Paste the output below between ROUTE_MAP.
   #
   ember_route_map = <<~ROUTE_MAP
-    {"admin.dashboard.general":"/admin/","admin.dashboard":"/admin/","admin":"/admin/","admin.dashboardModeration":"/admin/dashboard/moderation","admin.dashboardSecurity":"/admin/dashboard/security","admin.dashboardReports":"/admin/dashboard/reports","adminSiteSettings.index":"/admin/site_settings/","adminSiteSettings":"/admin/site_settings/","adminEmail.sent":"/admin/email/sent","adminEmail.skipped":"/admin/email/skipped","adminEmail.bounced":"/admin/email/bounced","adminEmail.received":"/admin/email/received","adminEmail.rejected":"/admin/email/rejected","adminEmail.previewDigest":"/admin/email/preview-digest","adminEmail.advancedTest":"/admin/email/advanced-test","adminEmail.index":"/admin/email/","adminEmail":"/admin/email/","adminCustomize.colors.index":"/admin/customize/colors/","adminCustomize.colors":"/admin/customize/colors/","adminCustomizeThemes.index":"/admin/customize/themes/","adminCustomizeThemes":"/admin/customize/themes/","adminSiteText.edit":"/admin/customize/site_texts/id","adminSiteText.index":"/admin/customize/site_texts/","adminSiteText":"/admin/customize/site_texts/","adminUserFields":"/admin/customize/user_fields","adminEmojis":"/admin/customize/emojis","adminPermalinks":"/admin/customize/permalinks","adminEmbedding":"/admin/customize/embedding","adminCustomizeEmailTemplates.edit":"/admin/customize/email_templates/id","adminCustomizeEmailTemplates.index":"/admin/customize/email_templates/","adminCustomizeEmailTemplates":"/admin/customize/email_templates/","adminCustomizeRobotsTxt":"/admin/customize/robots","adminCustomizeEmailStyle.edit":"/admin/customize/email_style/field_name","adminCustomizeEmailStyle.index":"/admin/customize/email_style/","adminCustomizeEmailStyle":"/admin/customize/email_style/","adminCustomizeFormTemplates.new":"/admin/customize/form-templates/new","adminCustomizeFormTemplates.edit":"/admin/customize/form-templates/id","adminCustomizeFormTemplates.index":"/admin/customize/form-templates/","adminCustomizeFormTemplates":"/admin/customize/form-templates/","adminWatchedWords.index":"/admin/customize/watched_words/","adminWatchedWords":"/admin/customize/watched_words/","adminCustomize.index":"/admin/customize/","adminCustomize":"/admin/customize/","adminApiKeys.new":"/admin/api/keys/new","adminApiKeys.index":"/admin/api/keys/","adminApiKeys":"/admin/api/keys/","adminWebHooks.index":"/admin/api/web_hooks/","adminWebHooks":"/admin/api/web_hooks/","adminApi.index":"/admin/api/","adminApi":"/admin/api/","admin.backups.logs":"/admin/backups/logs","admin.backups.index":"/admin/backups/","admin.backups":"/admin/backups/","adminReports.show":"/admin/reports/type","adminReports.index":"/admin/reports/","adminReports":"/admin/reports/","adminLogs.staffActionLogs":"/admin/logs/staff_action_logs","adminLogs.screenedEmails":"/admin/logs/screened_emails","adminLogs.screenedIpAddresses":"/admin/logs/screened_ip_addresses","adminLogs.screenedUrls":"/admin/logs/screened_urls","adminSearchLogs.index":"/admin/logs/search_logs/","adminSearchLogs":"/admin/logs/search_logs/","adminSearchLogs.term":"/admin/logs/search_logs/term","adminLogs.index":"/admin/logs/","adminLogs":"/admin/logs/","adminUsersList.show":"/admin/users/list/filter","adminUsersList.index":"/admin/users/list/","adminUsersList":"/admin/users/list/","adminUsers.index":"/admin/users/","adminUsers":"/admin/users/","adminBadges.index":"/admin/badges/","adminBadges":"/admin/badges/","adminPlugins.index":"/admin/plugins/","adminPlugins":"/admin/plugins/","adminPlugins.chat":"/admin/plugins/chat","adminPlugins.discourse-automation.new":"/admin/plugins/discourse-automation/new","adminPlugins.discourse-automation.edit":"/admin/plugins/discourse-automation/id","adminPlugins.discourse-automation.index":"/admin/plugins/discourse-automation/","adminPlugins.discourse-automation":"/admin/plugins/discourse-automation/","admin-revamp.lobby":"/admin-revamp/","admin-revamp":"/admin-revamp/","admin-revamp.config.area":"/admin-revamp/config/area","admin-revamp.config.index":"/admin-revamp/config/","admin-revamp.config":"/admin-revamp/config/"}
+    {"admin.dashboard.general":"/admin/","admin.dashboard":"/admin/","admin":"/admin/","admin.dashboardModeration":"/admin/dashboard/moderation","admin.dashboardSecurity":"/admin/dashboard/security","admin.dashboardReports":"/admin/dashboard/reports","adminSiteSettings.index":"/admin/site_settings/","adminSiteSettings":"/admin/site_settings/","adminEmail.sent":"/admin/email/sent","adminEmail.skipped":"/admin/email/skipped","adminEmail.bounced":"/admin/email/bounced","adminEmail.received":"/admin/email/received","adminEmail.rejected":"/admin/email/rejected","adminEmail.previewDigest":"/admin/email/preview-digest","adminEmail.advancedTest":"/admin/email/advanced-test","adminEmail.index":"/admin/email/","adminEmail":"/admin/email/","adminCustomize.colors.index":"/admin/customize/colors/","adminCustomize.colors":"/admin/customize/colors/","adminCustomizeThemes.index":"/admin/customize/themes/","adminCustomizeThemes":"/admin/customize/themes/","adminSiteText.edit":"/admin/customize/site_texts/id","adminSiteText.index":"/admin/customize/site_texts/","adminSiteText":"/admin/customize/site_texts/","adminUserFields":"/admin/customize/user_fields","adminEmojis":"/admin/customize/emojis","adminPermalinks":"/admin/customize/permalinks","adminEmbedding":"/admin/customize/embedding","adminCustomizeEmailTemplates.edit":"/admin/customize/email_templates/id","adminCustomizeEmailTemplates.index":"/admin/customize/email_templates/","adminCustomizeEmailTemplates":"/admin/customize/email_templates/","adminCustomizeRobotsTxt":"/admin/customize/robots","adminCustomizeEmailStyle.edit":"/admin/customize/email_style/field_name","adminCustomizeEmailStyle.index":"/admin/customize/email_style/","adminCustomizeEmailStyle":"/admin/customize/email_style/","adminCustomizeFormTemplates.new":"/admin/customize/form-templates/new","adminCustomizeFormTemplates.edit":"/admin/customize/form-templates/id","adminCustomizeFormTemplates.index":"/admin/customize/form-templates/","adminCustomizeFormTemplates":"/admin/customize/form-templates/","adminWatchedWords.index":"/admin/customize/watched_words/","adminWatchedWords":"/admin/customize/watched_words/","adminCustomize.index":"/admin/customize/","adminCustomize":"/admin/customize/","adminApiKeys.new":"/admin/api/keys/new","adminApiKeys.index":"/admin/api/keys/","adminApiKeys":"/admin/api/keys/","adminWebHooks.index":"/admin/api/web_hooks/","adminWebHooks":"/admin/api/web_hooks/","adminApi.index":"/admin/api/","adminApi":"/admin/api/","admin.backups.logs":"/admin/backups/logs","admin.backups.index":"/admin/backups/","admin.backups":"/admin/backups/","adminReports.show":"/admin/reports/type","adminReports.index":"/admin/reports/","adminReports":"/admin/reports/","adminLogs.staffActionLogs":"/admin/logs/staff_action_logs","adminLogs.screenedEmails":"/admin/logs/screened_emails","adminLogs.screenedIpAddresses":"/admin/logs/screened_ip_addresses","adminLogs.screenedUrls":"/admin/logs/screened_urls","adminSearchLogs.index":"/admin/logs/search_logs/","adminSearchLogs":"/admin/logs/search_logs/","adminSearchLogs.term":"/admin/logs/search_logs/term","adminLogs.index":"/admin/logs/","adminLogs":"/admin/logs/","adminUsersList.show":"/admin/users/list/filter","adminUsersList.index":"/admin/users/list/","adminUsersList":"/admin/users/list/","adminUsers.index":"/admin/users/","adminUsers":"/admin/users/","adminBadges.index":"/admin/badges/","adminBadges":"/admin/badges/","adminPlugins.index":"/admin/plugins/","adminPlugins":"/admin/plugins/","admin-revamp.lobby":"/admin-revamp/","admin-revamp":"/admin-revamp/","admin-revamp.config.area":"/admin-revamp/config/area","admin-revamp.config.index":"/admin-revamp/config/","admin-revamp.config":"/admin-revamp/config/"}
   ROUTE_MAP
   ember_route_map = JSON.parse(ember_route_map)
 

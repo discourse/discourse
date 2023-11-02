@@ -13,20 +13,7 @@ export const ADMIN_NAV_MAP = [
   {
     name: "plugins",
     text: "Plugins",
-    links: [
-      { name: "admin_plugins", route: "adminPlugins", text: "Plugins" },
-      { name: "admin_plugins_chat", route: "adminPlugins.chat", text: "Chat" },
-      {
-        name: "admin_plugins_discourse-automation",
-        route: "adminPlugins.discourse-automation",
-        text: "Discourse Automation",
-      },
-      {
-        name: "admin_plugins_discourse-automation_new",
-        route: "adminPlugins.discourse-automation.new",
-        text: "Discourse Automation New",
-      },
-    ],
+    links: [{ name: "admin_plugins", route: "adminPlugins", text: "Plugins" }],
   },
   {
     name: "site_settings",
