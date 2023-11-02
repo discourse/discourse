@@ -27,7 +27,7 @@ export function extraConnectorClass(name, obj) {
   _extraConnectorClasses[name] = obj;
 }
 
-export function extraConnectorComponent(outletName, klass) {
+export function extraConnectorComponent(outletName, klass, opts = {}) {
   if (!hasInternalComponentManager(klass)) {
     throw new Error("klass is not an Ember component");
   }
@@ -35,7 +35,7 @@ export function extraConnectorComponent(outletName, klass) {
     throw new Error("invalid outlet name");
   }
   _extraConnectorComponents[outletName] ??= [];
-  _extraConnectorComponents[outletName].push(klass);
+  _extraConnectorComponents[outletName].push({ klass, opts });
 }
 
 const OUTLET_REGEX =
@@ -192,9 +192,24 @@ function buildConnectorCache() {
   for (const [outletName, components] of Object.entries(
     _extraConnectorComponents
   )) {
-    for (const klass of components) {
+    for (const { klass, opts } of components) {
       const info = new ConnectorInfo(outletName);
       info.classModule = klass;
+
+      info.willOverwrite = !opts?.insert;
+      info.willInsertBefore = opts?.insert === "before";
+      info.willInsertAfter = opts?.insert === "after";
+
+      if (
+        !info.willOverwrite &&
+        !info.willInsertBefore &&
+        !info.willInsertAfter
+      ) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `The connector ${info.humanReadableName} was registered for the ${outletName} outlet with an invalid insert position: ${opts?.insert}.\nValid values are: "before", "after", or undefined.`
+        );
+      }
 
       _connectorCache[info.outletName] ??= [];
       _connectorCache[info.outletName].push(info);

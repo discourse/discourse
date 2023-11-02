@@ -89,16 +89,41 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
       this.outletArgsWithDeprecations,
       this.context
     );
-    if (connectors.length > 1 && hasBlock) {
-      const message = `Multiple connectors were registered for the ${this.args.name} outlet. Using the first.`;
-      this.clientErrorHandler.displayErrorNotice(message);
-      // eslint-disable-next-line no-console
-      console.error(
-        message,
-        connectors.map((c) => c.humanReadableName)
-      );
-      return [connectors[0]];
+
+    if (connectors.length && hasBlock) {
+      const beforeConnectors = connectors.filter((c) => c.willInsertBefore);
+      const overwritingConnectors = connectors.filter((c) => c.willOverwrite);
+      if (overwritingConnectors.length === 0) {
+        // in case there is no overwriting connectors registered, we need to force the block to be rendered
+        // inserting a POJO with a yieldPlaceholder property that will be tested in the template
+        // we need to that because it is possible that there are only before/after connectors registered and because
+        // of this the using {{else}} in the {{#each}} would not work properly
+        overwritingConnectors.push({ yieldPlaceholder: true });
+      }
+      const afterConnectors = connectors.filter((c) => c.willInsertAfter);
+
+      if (overwritingConnectors.length > 1) {
+        const message = `Multiple overwriting connectors were registered for the ${this.args.name} outlet. Using the first.`;
+        this.clientErrorHandler.displayErrorNotice(message);
+        // eslint-disable-next-line no-console
+        console.error(
+          message,
+          overwritingConnectors.map((c) => c.humanReadableName)
+        );
+        return [
+          ...beforeConnectors,
+          overwritingConnectors[0],
+          ...afterConnectors,
+        ];
+      }
+
+      return [
+        ...beforeConnectors,
+        ...overwritingConnectors,
+        ...afterConnectors,
+      ];
     }
+
     return connectors;
   }
 

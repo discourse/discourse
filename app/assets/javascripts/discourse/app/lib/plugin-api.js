@@ -787,8 +787,8 @@ class PluginApi {
 
    ```javascript
    api.onPageChange((url, title) => {
-        console.log('the page changed to: ' + url + ' and title ' + title);
-      });
+   console.log('the page changed to: ' + url + ' and title ' + title);
+   });
    ```
    **/
   onPageChange(fn) {
@@ -800,8 +800,8 @@ class PluginApi {
 
    ```javascript
    api.onAppEvent('inserted-custom-html', () => {
-        console.log('a custom footer was rendered');
-      });
+   console.log('a custom footer was rendered');
+   });
    ```
    **/
   onAppEvent(name, fn) {
@@ -818,10 +818,10 @@ class PluginApi {
 
    ```javascript
    api.customUserAvatarClasses(user => {
-      if (get(user, 'primary_group_name') === 'managers') {
-        return ['managers'];
-      }
-    });
+   if (get(user, 'primary_group_name') === 'managers') {
+   return ['managers'];
+   }
+   });
    **/
   customUserAvatarClasses(fn) {
     registerCustomAvatarHelper(fn);
@@ -988,16 +988,30 @@ class PluginApi {
    * api.renderInOutlet('user-profile-primary', <template>Hello world</template>);
    * ```
    *
+   * For wrapping outlets, you can pass an `insert` option to insert the rendered
+   * component before or after the content of the outlet, instead of overwriting it.
+   *
+   * ```javascript
+   * // Render a component before the content of the outlet
+   * api.renderInOutlet('bookmark-list-table-header', <template>before</template>, { insert: "before" });
+   *
+   * // Render a component after the content of the outlet
+   * api.renderInOutlet('bookmark-list-table-header', <template>after</template>, { insert: "after" });
+   * ```
+   *
    * Note that when passing a component definition to an outlet like this, the default
    * `@connectorTagName` of the outlet is not used. If you need a wrapper element, you'll
    * need to add it to your component's template.
    *
    * @param {string} outletName - Name of plugin outlet to render into
    * @param {Component} klass - Component class definition to be rendered
-   *
+   * @param {object} [options] - Rendering options
+   * @param {("before"|"after")} [options.insert] - WHen defined this flag switches the
+   * rendering behavior of wrapping outlets and inserts the component rendered before or
+   * after the outlet, instead of overwriting the content.
    */
-  renderInOutlet(outletName, klass) {
-    extraConnectorComponent(outletName, klass);
+  renderInOutlet(outletName, klass, options) {
+    extraConnectorComponent(outletName, klass, options);
   }
 
   /**
@@ -1576,10 +1590,10 @@ class PluginApi {
    * Example:
    *
    * let aPlugin = {
-       'after:highlightElement': ({ el, result, text }) => {
-         console.log(el);
-       }
-     }
+   'after:highlightElement': ({ el, result, text }) => {
+   console.log(el);
+   }
+   }
    * api.registerHighlightJSPlugin(aPlugin);
    **/
   registerHighlightJSPlugin(plugin) {
@@ -1665,8 +1679,8 @@ class PluginApi {
    * ```
    * api.addCategoryLinkIcon((category) => {
    *  if (category.someProperty) {
-        return "eye"
-      }
+   return "eye"
+   }
    * });
    * ```
    *
@@ -1674,6 +1688,7 @@ class PluginApi {
   addCategoryLinkIcon(renderer) {
     addExtraIconRenderer(renderer);
   }
+
   /**
    * Adds a widget to the header-icon ul. The widget must already be created. You can create new widgets
    * in a theme or plugin via an initializer prior to calling this function.
@@ -1735,6 +1750,7 @@ class PluginApi {
   addSaveableUserField(fieldName) {
     addSaveableUserField(fieldName);
   }
+
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
@@ -1826,9 +1842,9 @@ class PluginApi {
    * ```
    * api.downloadCalendar("title of the event", [
    * {
-        startsAt: "2021-10-12T15:00:00.000Z",
-        endsAt: "2021-10-12T16:00:00.000Z",
-      },
+   startsAt: "2021-10-12T15:00:00.000Z",
+   endsAt: "2021-10-12T16:00:00.000Z",
+   },
    * ]);
    * ```
    *

@@ -25,14 +25,20 @@
 {{else if this.connectorsExist}}
   {{! The modern path: no wrapper element = no classic component }}
   {{#each (this.getConnectors hasBlock=(has-block)) as |c|}}
-    {{#if c.componentClass}}
-      <c.componentClass
-        @outletArgs={{this.outletArgsWithDeprecations}}
-      >{{yield}}</c.componentClass>
+    {{#if c.yieldPlaceholder}}
+      {{yield}}
+    {{else if c.componentClass}}
+      <c.componentClass @outletArgs={{this.outletArgsWithDeprecations}}>
+        {{#if c.willOverwrite}}
+          {{yield}}
+        {{/if}}
+      </c.componentClass>
     {{else if @defaultGlimmer}}
-      <c.templateOnly
-        @outletArgs={{this.outletArgsWithDeprecations}}
-      >{{yield}}</c.templateOnly>
+      <c.templateOnly @outletArgs={{this.outletArgsWithDeprecations}}>
+        {{#if c.willOverwrite}}
+          {{yield}}
+        {{/if}}
+      </c.templateOnly>
     {{else}}
       <PluginConnector
         @connector={{c}}
@@ -42,10 +48,12 @@
         @class={{c.classicClassNames}}
         @tagName={{or @connectorTagName ""}}
         @layout={{c.template}}
-      >{{yield}}</PluginConnector>
+      >
+        {{#if c.willOverwrite}}
+          {{yield}}
+        {{/if}}
+      </PluginConnector>
     {{/if}}
-  {{else}}
-    {{yield}}
   {{/each}}
 {{else}}
   {{yield}}
