@@ -49,7 +49,6 @@ export default class ReorderCategories extends Component {
   }
 
   countDescendants(category) {
-    // TODO: is it ever possible?
     if (!category.get("subcategories")) {
       return 0;
     }
