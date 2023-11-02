@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { sort } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
@@ -16,7 +17,7 @@ export default class ReorderCategories extends Component {
 
   init() {
     super.init(...arguments);
-    this.reorder();
+    next(() => this.reorder());
   }
 
   @discourseComputed("site.categories.[]")
