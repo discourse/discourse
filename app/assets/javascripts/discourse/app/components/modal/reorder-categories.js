@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -13,7 +12,7 @@ export default class ReorderCategories extends Component {
 
   categoriesSorting = ["position"];
 
-  @sort("categoriesBuffered", "categoriesSorting") categoriesOrdered;
+  @sort("categories", "categoriesSorting") categoriesOrdered;
 
   init() {
     super.init(...arguments);
@@ -21,8 +20,8 @@ export default class ReorderCategories extends Component {
   }
 
   @discourseComputed("site.categories.[]")
-  categoriesBuffered(categories) {
-    return (categories || []).map((c) => BufferedProxy.create({ content: c }));
+  categories() {
+    return this.site.categories;
   }
 
   /**
@@ -39,14 +38,6 @@ export default class ReorderCategories extends Component {
    **/
   reorder() {
     this.reorderChildren(null, 0, 0);
-
-    for (const bc of this.categoriesBuffered) {
-      if (bc.get("hasBufferedChanges")) {
-        bc.applyBufferedChanges();
-      }
-    }
-
-    this.notifyPropertyChange("categoriesBuffered");
   }
 
   reorderChildren(categoryId, depth, index) {
@@ -165,7 +156,7 @@ export default class ReorderCategories extends Component {
     this.reorder();
 
     const data = {};
-    for (const category of this.categoriesBuffered) {
+    for (const category of this.categories) {
       data[category.get("id")] = category.get("position");
     }
 
