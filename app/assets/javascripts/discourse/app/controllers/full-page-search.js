@@ -481,6 +481,7 @@ export default Controller.extend({
 
   @action
   recheckSearchResults() {
+    // Note: Action is called by pluginAPI method `addSearchResults()`
     this.notifyPropertyChange("searchResultPosts");
   },
 
