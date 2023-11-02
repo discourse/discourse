@@ -94,7 +94,7 @@ module("Unit | Component | reorder-categories", function (hooks) {
     site.set("categories", [elem1, elem2, elem3]);
 
     // Move category 'foo' from position 0 to position 2
-    component.send("change", elem1, { target: { value: "2" } });
+    component.change(elem1, { target: { value: "2" } });
 
     assert.deepEqual(component.categoriesOrdered.mapBy("slug"), [
       "bar",
@@ -137,7 +137,7 @@ module("Unit | Component | reorder-categories", function (hooks) {
     const site = getOwner(this).lookup("service:site");
     site.set("categories", [elem1, child1, elem2, elem3]);
 
-    component.send("change", elem1, { target: { value: 3 } });
+    component.change(elem1, { target: { value: 3 } });
 
     assert.deepEqual(component.categoriesOrdered.mapBy("slug"), [
       "bar",
@@ -192,7 +192,7 @@ module("Unit | Component | reorder-categories", function (hooks) {
 
     component.reorder();
 
-    component.send("moveDown", elem1);
+    component.move(elem1, 1);
 
     assert.deepEqual(component.categoriesOrdered.mapBy("slug"), [
       "bar",
