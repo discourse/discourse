@@ -221,6 +221,8 @@ en:
 
     broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
 
+    broken_plugin_alert: "Caused by plugin '%{name}'"
+
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
