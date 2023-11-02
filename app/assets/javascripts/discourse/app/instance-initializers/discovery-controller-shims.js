@@ -3,67 +3,61 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { inject as service } from "@ember/service";
 import deprecated from "discourse-common/lib/deprecated";
 
-function printDeprecation(name, id) {
-  deprecated(
-    `${name} no longer exists, and this shim will eventually be removed. Use the discovery service instead.`,
-    {
-      id,
+function ControllerShim(resolverName, deprecationId) {
+  return class AbstractControllerShim extends EmberObject {
+    static printDeprecation() {
+      deprecated(
+        `${resolverName} no longer exists, and this shim will eventually be removed. To fetch information about the current discovery route, use the discovery service instead.`,
+        {
+          deprecationId,
+        }
+      );
     }
-  );
+
+    static reopen() {
+      this.printDeprecation();
+    }
+
+    @service discovery;
+
+    constructor() {
+      super(...arguments);
+      this.constructor.printDeprecation();
+    }
+  };
 }
 
-class NavigationCategoryControllerShim extends EmberObject {
-  static reopen() {
-    printDeprecation(
-      "controller:navigation/category",
-      "discourse.navigation-category-controller"
-    );
-  }
-
-  @service discovery;
-
+class NavigationCategoryControllerShim extends ControllerShim(
+  "controller:navigation/category",
+  "discourse.navigation-category-controller"
+) {
   @dependentKeyCompat
   get category() {
-    printDeprecation(
-      "controller:navigation/category",
-      "discourse.navigation-category-controller"
-    );
+    this.constructor.printDeprecation();
     return this.discovery.category;
   }
 }
 
-class DiscoveryTopicsControllerShim extends EmberObject {
-  static reopen() {
-    printDeprecation(
-      "controller:discovery/topics",
-      "discourse.discovery-topics-controller"
-    );
-  }
-
-  @service discovery;
-
+class DiscoveryTopicsControllerShim extends ControllerShim(
+  "controller:discovery/topics",
+  "discourse.discovery-topics-controller"
+) {
   @dependentKeyCompat
   get model() {
-    printDeprecation(
-      "controller:discovery/topics",
-      "discourse.discovery-topics-controller"
-    );
+    this.constructor.printDeprecation();
     if (this.discovery.onDiscoveryRoute) {
       return this.discovery.currentTopicList;
     }
   }
 }
 
-class TagShowControllerShim extends EmberObject {
-  static reopen() {
-    printDeprecation("controller:tag-show", "discourse.tag-show-controller");
-  }
-
-  @service discovery;
-
+class TagShowControllerShim extends ControllerShim(
+  "controller:tag-show",
+  "discourse.tag-show-controller"
+) {
   @dependentKeyCompat
   get tag() {
-    printDeprecation("controller:tag-show", "discourse.tag-show-controller");
+    this.constructor.printDeprecation();
     return this.discovery.tag;
   }
 }
