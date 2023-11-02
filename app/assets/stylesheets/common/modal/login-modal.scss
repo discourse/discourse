@@ -27,6 +27,7 @@
 
       .login-subheader {
         font-size: var(--font-up-1);
+        margin: 0;
       }
 
       .login-left-side {
@@ -37,14 +38,11 @@
         display: grid;
         grid-template-columns: auto 1fr;
         grid-template-rows: auto 1fr;
-        overflow-wrap: break-all;
+        overflow-wrap: anywhere;
       }
 
       .login-title {
         font-size: var(--font-up-6);
-        margin: 0;
-      }
-      .login-subheader {
         margin: 0;
       }
 
