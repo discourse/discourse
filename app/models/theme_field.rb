@@ -616,11 +616,11 @@ class ThemeField < ActiveRecord::Base
       canonical: ->(h) { "assets/#{h[:name]}#{File.extname(h[:filename])}" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{\Amigrations/(?<name>[^/]+)\.js\z},
+      regex: %r{\Amigrations/settings/(?<name>[^/]+)\.js\z},
       names: nil,
       types: :js,
       targets: :migrations,
-      canonical: ->(h) { "migrations/#{h[:name]}.js" },
+      canonical: ->(h) { "migrations/settings/#{h[:name]}.js" },
     ),
   ]
 

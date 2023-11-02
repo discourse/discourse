@@ -57,7 +57,7 @@ RSpec.describe RemoteTheme do
         "assets/font.woff2" => "FAKE FONT",
         "settings.yaml" => "boolean_setting: true",
         "locales/en.yml" => "sometranslations",
-        "migrations/0001-some-migration.js" => migration_js,
+        "migrations/settings/0001-some-migration.js" => migration_js,
       )
     end
 
@@ -70,7 +70,7 @@ RSpec.describe RemoteTheme do
     around(:each) { |group| MockGitImporter.with_mock { group.run } }
 
     it "run pending theme settings migrations" do
-      add_to_git_repo(initial_repo, "migrations/0002-another-migration.js" => <<~JS)
+      add_to_git_repo(initial_repo, "migrations/settings/0002-another-migration.js" => <<~JS)
         export default function migrate(settings) {
           settings.set("boolean_setting", false);
           return settings;
@@ -112,7 +112,7 @@ RSpec.describe RemoteTheme do
     end
 
     it "doesn't create theme if a migration fails" do
-      add_to_git_repo(initial_repo, "migrations/0002-another-migration.js" => <<~JS)
+      add_to_git_repo(initial_repo, "migrations/settings/0002-another-migration.js" => <<~JS)
         export default function migrate(s) {
           return null;
         }
@@ -134,7 +134,7 @@ RSpec.describe RemoteTheme do
             .to_json,
         "stylesheets/file.scss" => ".class3 { color: green; }",
         "common/header.html" => "I AM UPDATED HEADER",
-        "migrations/0002-new-failing-migration.js" => <<~JS,
+        "migrations/settings/0002-new-failing-migration.js" => <<~JS,
           export default function migrate(settings) {
             null.toString();
             return settings;
@@ -297,7 +297,7 @@ RSpec.describe RemoteTheme do
         first_integer_setting: 1
         second_integer_setting: 2
       YAML
-      add_to_git_repo(initial_repo, "migrations/0002-another-migration.js" => <<~JS)
+      add_to_git_repo(initial_repo, "migrations/settings/0002-another-migration.js" => <<~JS)
         export default function migrate(settings) {
           settings.set("first_integer_setting", 101);
           return settings;
@@ -311,7 +311,7 @@ RSpec.describe RemoteTheme do
 
       theme.update_setting(:first_integer_setting, 110)
 
-      add_to_git_repo(initial_repo, "migrations/0003-yet-another-migration.js" => <<~JS)
+      add_to_git_repo(initial_repo, "migrations/settings/0003-yet-another-migration.js" => <<~JS)
         export default function migrate(settings) {
           settings.set("second_integer_setting", 201);
           return settings;

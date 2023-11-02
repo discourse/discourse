@@ -240,7 +240,7 @@ RSpec.describe Admin::ThemesController do
           setup_git_repo(
             "about.json" => { name: "test theme" }.to_json,
             "settings.yaml" => "boolean_setting: true",
-            "migrations/0001-some-migration.js" => <<~JS,
+            "migrations/settings/0001-some-migration.js" => <<~JS,
             export default function migrate(settings) {
               settings.set("unknown_setting", "dsad");
               return settings;

@@ -113,7 +113,7 @@ RSpec.describe ThemeStore::ZipExporter do
         "locales/en.yml",
         "mobile/mobile.scss",
         "settings.yml",
-        "migrations/0201-some-migration.js",
+        "migrations/settings/0201-some-migration.js",
       )
 
       expect(JSON.parse(File.read("about.json")).deep_symbolize_keys).to eq(
@@ -154,7 +154,7 @@ RSpec.describe ThemeStore::ZipExporter do
       expect(File.read("locales/en.yml")).to eq(
         { en: { key: "value" } }.deep_stringify_keys.to_yaml,
       )
-      expect(File.read("migrations/0201-some-migration.js")).to eq(<<~JS)
+      expect(File.read("migrations/settings/0201-some-migration.js")).to eq(<<~JS)
         export default function migrate(settings) {
           settings.set("aa", 1);
           return settings;
