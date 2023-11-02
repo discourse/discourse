@@ -41,7 +41,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1.25rem 0 2rem; //offset for close button padding
+    padding: 0.5rem 0.75rem 0.5rem 1.5rem; //offset for close button padding
     border-bottom: 1px solid var(--primary-low);
   }
 
@@ -52,7 +52,7 @@
 
   &__body {
     overflow-y: auto;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem;
 
     input {
       width: auto;
@@ -74,7 +74,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem;
     border-top: 1px solid var(--primary-low);
     gap: 0.5rem;
   }
