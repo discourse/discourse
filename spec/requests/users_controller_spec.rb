@@ -6322,55 +6322,40 @@ RSpec.describe UsersController do
         SiteSetting.enable_discourse_connect = false
       end
 
-      context "when the password parameter is not provided" do
-        let(:password) { "" }
+      context "when the session is unconfirmed" do
+        it "returns unconfirmed session response" do
+          post "/u/second_factors.json"
 
-        before { post "/u/second_factors.json", params: { password: password } }
-
-        it "returns password required response" do
           expect(response.status).to eq(200)
           response_body = response.parsed_body
-          expect(response_body["password_required"]).to eq(true)
+          expect(response_body["unconfirmed_session"]).to eq(true)
         end
       end
 
-      context "when the password is provided" do
-        fab!(:user) { Fabricate(:user, password: "8555039dd212cc66ec68") }
+      context "when the session is confirmed" do
+        fab!(:user) { Fabricate(:user, password: "acoolpassword") }
 
-        context "when the password is correct" do
-          let(:password) { "8555039dd212cc66ec68" }
-
-          it "returns a list of enabled totps and security_key second factors" do
-            totp_second_factor = Fabricate(:user_second_factor_totp, user: user)
-            security_key_second_factor =
-              Fabricate(
-                :user_security_key,
-                user: user,
-                factor_type: UserSecurityKey.factor_types[:second_factor],
-              )
-
-            post "/u/second_factors.json", params: { password: password }
-
-            expect(response.status).to eq(200)
-            response_body = response.parsed_body
-            expect(response_body["totps"].map { |second_factor| second_factor["id"] }).to include(
-              totp_second_factor.id,
+        it "returns a list of enabled totps and security_key second factors" do
+          totp_second_factor = Fabricate(:user_second_factor_totp, user: user)
+          security_key_second_factor =
+            Fabricate(
+              :user_security_key,
+              user: user,
+              factor_type: UserSecurityKey.factor_types[:second_factor],
             )
-            expect(
-              response_body["security_keys"].map { |second_factor| second_factor["id"] },
-            ).to include(security_key_second_factor.id)
-          end
-        end
 
-        context "when the password is not correct" do
-          let(:password) { "wrongpassword" }
+          post "/u/confirm-session.json", params: { password: "acoolpassword" }
 
-          it "returns the incorrect password response" do
-            post "/u/second_factors.json", params: { password: password }
+          post "/u/second_factors.json"
 
-            response_body = response.parsed_body
-            expect(response_body["error"]).to eq(I18n.t("login.incorrect_password"))
-          end
+          expect(response.status).to eq(200)
+          response_body = response.parsed_body
+          expect(response_body["totps"].map { |second_factor| second_factor["id"] }).to include(
+            totp_second_factor.id,
+          )
+          expect(
+            response_body["security_keys"].map { |second_factor| second_factor["id"] },
+          ).to include(security_key_second_factor.id)
         end
       end
     end
