@@ -35,7 +35,7 @@ class AdminDashboardData
   GLOBAL_REPORTS ||= []
 
   PROBLEM_MESSAGE_PREFIX = "admin-problem:"
-  SCHEDULED_PROBLEM_STORAGE_KEY = "admin-found-scheduled-problems"
+  SCHEDULED_PROBLEM_STORAGE_KEY = "admin-found-scheduled-problems-list"
 
   def initialize(opts = {})
     @opts = opts
@@ -89,12 +89,11 @@ class AdminDashboardData
     if problem.identifier.present?
       return if problems.find { |p| p.identifier == problem.identifier }
     end
-    problems << problem
-    set_found_scheduled_check_problems(problems)
+    set_found_scheduled_check_problem(problem)
   end
 
-  def self.set_found_scheduled_check_problems(problems)
-    Discourse.redis.setex(SCHEDULED_PROBLEM_STORAGE_KEY, 300, JSON.dump(problems.map(&:to_h)))
+  def self.set_found_scheduled_check_problem(problem)
+    Discourse.redis.rpush(SCHEDULED_PROBLEM_STORAGE_KEY, JSON.dump(problem.to_h))
   end
 
   def self.clear_found_scheduled_check_problems
@@ -103,21 +102,25 @@ class AdminDashboardData
 
   def self.clear_found_problem(identifier)
     problems = load_found_scheduled_check_problems
-    problems.reject! { |p| p.identifier == identifier }
-    set_found_scheduled_check_problems(problems)
+    problem = problems.find { |p| p.identifier == identifier }
+    Discourse.redis.lrem(SCHEDULED_PROBLEM_STORAGE_KEY, 1, JSON.dump(problem.to_h))
   end
 
   def self.load_found_scheduled_check_problems
-    found_problems_json = Discourse.redis.get(SCHEDULED_PROBLEM_STORAGE_KEY)
-    return [] if found_problems_json.blank?
-    begin
-      JSON.parse(found_problems_json).map { |problem| Problem.from_h(problem) }
-    rescue JSON::ParserError => err
-      Discourse.warn_exception(
-        err,
-        message: "Error parsing found problem JSON in admin dashboard: #{found_problems_json}",
-      )
-      []
+    found_problems = Discourse.redis.lrange(SCHEDULED_PROBLEM_STORAGE_KEY, 0, -1)
+
+    return [] if found_problems.blank?
+
+    found_problems.filter_map do |problem|
+      begin
+        Problem.from_h(JSON.parse(problem))
+      rescue JSON::ParserError => err
+        Discourse.warn_exception(
+          err,
+          message: "Error parsing found problem JSON in admin dashboard: #{problem}",
+        )
+        nil
+      end
     end
   end
 
@@ -146,7 +149,7 @@ class AdminDashboardData
 
   def self.execute_scheduled_checks
     problem_scheduled_check_blocks.keys.each do |check_identifier|
-      Jobs.enqueue(:problem_check, check_identifier:)
+      Jobs.enqueue(:problem_check, check_identifier: check_identifier.to_s)
     end
   end
 

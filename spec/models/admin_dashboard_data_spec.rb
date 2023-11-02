@@ -59,7 +59,7 @@ RSpec.describe AdminDashboardData do
     end
 
     it "does not error when loading malformed problems saved in redis" do
-      Discourse.redis.set(AdminDashboardData::SCHEDULED_PROBLEM_STORAGE_KEY, "{ 'badjson")
+      Discourse.redis.rpush(AdminDashboardData::SCHEDULED_PROBLEM_STORAGE_KEY, "{ 'badjson")
       expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
     end
 
