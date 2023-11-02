@@ -4,6 +4,7 @@ import {
   DOCUMENT_ELEMENT_LIGHTBOX_OPEN_CLASS,
   LIGHTBOX_APP_EVENT_NAMES,
   MIN_CAROUSEL_ARROW_ITEM_COUNT,
+  MIN_CAROUSEL_ITEM_COUNT,
   SELECTORS,
 } from "discourse/lib/lightbox/constants";
 import {
@@ -44,6 +45,7 @@ export default class LightboxService extends Service {
     this.options = {
       isMobile: this.site.mobileView,
       isRTL: isDocumentRTL(),
+      minCarouselItemCount: MIN_CAROUSEL_ITEM_COUNT,
       minCarouselArrowItemCount: MIN_CAROUSEL_ARROW_ITEM_COUNT,
       zoomOnOpen: false,
       canDownload:
