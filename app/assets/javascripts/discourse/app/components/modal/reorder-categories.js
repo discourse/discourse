@@ -1,4 +1,3 @@
-import { cached } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -14,14 +13,12 @@ export default class ReorderCategories extends Component {
     this.reorder();
   }
 
-  @cached
   get categoriesBuffered() {
     return this.site.categories.map((c) =>
       BufferedProxy.create({ content: c })
     );
   }
 
-  @cached
   get categoriesOrdered() {
     return this.categoriesBuffered.sort(
       (a, b) => a.get("position") - b.get("position")
