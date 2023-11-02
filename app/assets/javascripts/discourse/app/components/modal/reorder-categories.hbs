@@ -21,16 +21,16 @@
             <td>
               <NumberField
                 @number={{readonly cat.position}}
-                @change={{action "change" cat}}
+                @change={{fn this.change cat}}
                 @min="0"
               />
               <DButton
-                @action={{fn (action "moveUp") cat}}
+                @action={{fn this.moveUp cat}}
                 @icon="arrow-up"
                 class="btn-default no-text"
               />
               <DButton
-                @action={{fn (action "moveDown") cat}}
+                @action={{fn this.moveDown cat}}
                 @icon="arrow-down"
                 class="btn-default no-text"
               />
@@ -43,7 +43,7 @@
 
   <:footer>
     <DButton
-      @action={{action "save"}}
+      @action={{this.save}}
       @label="categories.reorder.save"
       class="btn-primary"
     />
