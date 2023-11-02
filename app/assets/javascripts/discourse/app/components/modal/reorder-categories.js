@@ -124,7 +124,7 @@ export default class ReorderCategories extends Component {
     }
 
     // Update other categories between current and target position
-    this.categoriesOrdered.map((c) => {
+    for (const c of this.categoriesOrdered) {
       if (direction < 0) {
         // Moving up (position gets smaller)
         if (
@@ -144,7 +144,7 @@ export default class ReorderCategories extends Component {
           c.set("position", newPosition);
         }
       }
-    });
+    }
 
     // Update this category's position to target position
     category.set("position", targetPosition);
