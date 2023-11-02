@@ -67,14 +67,17 @@ export default class ReorderCategories extends Component {
   }
 
   countDescendants(category) {
-    return category.get("subcategories")
-      ? category
-          .get("subcategories")
-          .reduce(
-            (count, subcategory) => count + this.countDescendants(subcategory),
-            category.get("subcategories").length
-          )
-      : 0;
+    // TODO: is it ever possible?
+    if (!category.get("subcategories")) {
+      return 0;
+    }
+
+    return category
+      .get("subcategories")
+      .reduce(
+        (count, subcategory) => count + this.countDescendants(subcategory),
+        category.get("subcategories").length
+      );
   }
 
   @action
