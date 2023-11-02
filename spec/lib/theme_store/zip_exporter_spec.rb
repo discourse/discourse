@@ -107,6 +107,7 @@ RSpec.describe ThemeStore::ZipExporter do
         "common",
         "locales",
         "mobile",
+        "migrations",
         "migrations/settings",
       )
 
