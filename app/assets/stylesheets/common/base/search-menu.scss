@@ -45,6 +45,10 @@ $search-pad-horizontal: 0.5em;
       margin: 2px;
       margin-right: 0;
       white-space: nowrap;
+      background-color: var(--primary-300);
+      &:hover {
+        background-color: var(--primary-medium);
+      }
     }
     &:focus-within {
       @include default-focus;
@@ -328,7 +332,7 @@ $search-pad-horizontal: 0.5em;
       display: inline-block;
       background-color: transparent;
       .d-icon {
-        color: var(--primary-low-mid);
+        color: var(--primary-medium);
       }
       &:focus,
       &:hover {
