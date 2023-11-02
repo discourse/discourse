@@ -168,7 +168,7 @@ export default class ReorderCategories extends Component.extend(Evented) {
   }
 
   @action
-  save() {
+  async save() {
     this.reorder();
 
     const data = {};
@@ -176,11 +176,14 @@ export default class ReorderCategories extends Component.extend(Evented) {
       data[cat.get("id")] = cat.get("position");
     });
 
-    ajax("/categories/reorder", {
-      type: "POST",
-      data: { mapping: JSON.stringify(data) },
-    })
-      .then(() => window.location.reload())
-      .catch(popupAjaxError);
+    try {
+      await ajax("/categories/reorder", {
+        type: "POST",
+        data: { mapping: JSON.stringify(data) },
+      });
+      window.location.reload();
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 }
