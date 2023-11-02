@@ -55,7 +55,9 @@ export async function processHTML({ container, selector, clickTarget }) {
           ?.innerText.trim() || null;
 
       const _dominantColor =
-        item.dataset?.dominantColor ?? innerImage.dataset?.dominantColor;
+        item.dataset?.dominantColor ??
+        innerImage.dataset?.dominantColor ??
+        null;
 
       const _cssVars = [
         _dominantColor && `--dominant-color: #${_dominantColor};`,
