@@ -122,7 +122,9 @@ const ApplicationRoute = DiscourseRoute.extend({
       const themeOrPluginSource = identifySource(err);
 
       // eslint-disable-next-line no-console
-      console.error(consolePrefix(err, themeOrPluginSource), xhrOrErr);
+      console.error(
+        ...[consolePrefix(err, themeOrPluginSource), xhrOrErr].filter(Boolean)
+      );
 
       if (xhrOrErr && xhrOrErr.status === 404) {
         return this.router.transitionTo("exception-unknown");
