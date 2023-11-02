@@ -126,7 +126,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
 
   if (parentCat) {
     classNames += ` --has-parent`;
-    dataAttributes += ` data-parent-category="${parentCat.id}"`;
+    dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
   html += `<span 
