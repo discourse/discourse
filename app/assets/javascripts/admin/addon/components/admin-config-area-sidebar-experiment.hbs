@@ -1,0 +1,35 @@
+<div
+  class="admin-config-area-sidebar-experiment"
+  {{did-insert this.loadDefaultNavConfig}}
+>
+  <h4>Sidebar Experiment</h4>
+  <p>Changes you make here will be applied to the admin sidebar and persist
+    between reloads
+    <em>on this device only</em>. Note that in addition to the
+    <code>text</code>
+    and
+    <code>route</code>
+    options, you can also specify a
+    <code>icon</code>
+    or a
+    <code>href</code>, if you want to link to a specific page but don't know the
+    Ember route.</p>
+
+  <DButton
+    @action={{this.resetToDefault}}
+    @translatedLabel="Reset to Default"
+  />
+  <DButton
+    class="btn-primary"
+    @action={{this.applyConfig}}
+    @translatedLabel="Apply Config"
+  />
+
+  <div class="admin-config-area-sidebar-experiment__editor">
+    <AceEditor
+      @content={{this.editedNavConfig}}
+      @editorId="admin-config-area-sidebar-experiment"
+      @save={{this.applyNav}}
+    />
+  </div>
+</div>
