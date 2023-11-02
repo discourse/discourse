@@ -1,14 +1,13 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { sort } from "@ember/object/computed";
-import Evented from "@ember/object/evented";
 import { inject as service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default class ReorderCategories extends Component.extend(Evented) {
+export default class ReorderCategories extends Component {
   @service site;
 
   categoriesSorting = ["position"];
