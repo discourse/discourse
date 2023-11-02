@@ -25,14 +25,14 @@ export default class ChatDrawerHeaderTitle extends Component {
       <div class="chat-drawer-header__top-line">
         <div>
           {{#if showIcon}}
-            {{icon this.args.icon}}
+            {{icon @icon}}
           {{/if}}
 
           {{this.headerTitle}}
 
           {{#if showChannel}}
             -
-            {{this.args.channelName}}
+            {{@channelName}}
           {{/if}}
         </div>
       </div>
