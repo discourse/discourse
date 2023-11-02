@@ -4,7 +4,7 @@ import { notEmpty } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const DEFAULT_GROUP = "default";
 

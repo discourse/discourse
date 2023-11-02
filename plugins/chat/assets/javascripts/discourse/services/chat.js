@@ -67,10 +67,9 @@ export default class Chat extends Service {
 
     return (
       this.currentUser.staff ||
-      this.currentUser.isInAnyGroups(
-        (this.siteSettings.direct_message_enabled_groups || "11") // trust level 1 auto group
-          .split("|")
-          .map((groupId) => parseInt(groupId, 10))
+      this.siteSettings.userInAnyGroups(
+        "direct_message_enabled_groups",
+        this.currentUser
       )
     );
   }

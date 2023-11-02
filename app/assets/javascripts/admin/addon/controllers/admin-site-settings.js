@@ -6,7 +6,7 @@ import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { debounce } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminSiteSettingsController extends Controller {
   @service router;
@@ -89,6 +89,10 @@ export default class AdminSiteSettingsController extends Controller {
             setting.includes(filter) ||
             setting.replace(/_/g, " ").includes(filter) ||
             item.get("description").toLowerCase().includes(filter) ||
+            (item.get("keywords") || "")
+              .replace(/_/g, " ")
+              .toLowerCase()
+              .includes(filter.replace(/_/g, " ")) ||
             (item.get("value") || "").toString().toLowerCase().includes(filter);
           if (!filterResult && fuzzyRegex && fuzzyRegex.test(setting)) {
             // Tightens up fuzzy search results a bit.

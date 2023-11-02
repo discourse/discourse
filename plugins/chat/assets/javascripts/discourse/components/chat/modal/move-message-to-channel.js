@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ChatModalMoveMessageToChannel extends Component {
   @service chat;

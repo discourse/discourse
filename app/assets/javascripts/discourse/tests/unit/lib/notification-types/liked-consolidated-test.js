@@ -4,7 +4,7 @@ import Notification from "discourse/models/notification";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function getNotification(overrides = {}) {
   return Notification.create(

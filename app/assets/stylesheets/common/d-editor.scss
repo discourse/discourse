@@ -2,13 +2,6 @@
   display: flex;
   flex-grow: 1;
   max-width: 100%;
-
-  &.has-form-template {
-    .d-editor-preview-wrapper {
-      display: none;
-      flex: 0;
-    }
-  }
 }
 
 .d-editor {
@@ -31,7 +24,7 @@
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
-  border: 1px solid var(--primary-medium);
+  border: 1px solid var(--primary-400);
   border-radius: var(--d-input-border-radius);
   min-height: 0;
 
@@ -369,4 +362,5 @@
   background: var(--primary-very-low);
   padding: 1rem;
   border: 1px solid var(--primary-medium);
+  margin-bottom: 0;
 }

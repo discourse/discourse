@@ -419,6 +419,9 @@ nl:
         type_bonus:
           name: "typebonus"
           title: "Aan bepaalde beoordeelbare typen kan door medewerkers een bonus worden toegekend om ze hogere prioriteit te geven."
+      revise_and_reject_post:
+        reason: "Reden"
+        optional: "optioneel"
       stale_help: "Dit beoordeelbare item is afgehandeld door <b>%{username}</b>."
       claim_help:
         optional: "Je kunt dit item claimen om te voorkomen dat anderen het beoordelen."
@@ -1347,8 +1350,6 @@ nl:
           Scan deze QR-code in een ondersteunde app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) en voer je verificatiecode in.
         disable_description: "Voer de verificatiecode van je app in"
         show_key_description: "Voer handmatig in"
-        short_description: |
-          Bescherm je account met eenmalige beveiligingscodes.
         extended_description: |
           Tweeledige verificatie voegt extra beveiliging toe aan je account door naast je wachtwoord een eenmalige code te vereisen. Tokens kunnen worden gegenereerd op <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- en <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> -apparaten.
         oauth_enabled_warning: "Houd er rekening mee dat sociale aanmeldingen worden uitgeschakeld zodra tweeledige verificatie is ingeschakeld op je account."
@@ -1387,6 +1388,10 @@ nl:
           save: "Opslaan"
           edit_description: "Naam fysieke beveiligingssleutel"
           name_required_error: "Je moet een naam voor je beveiligingssleutel opgeven."
+      passkeys:
+        save: "Opslaan"
+        added_prefix: "Toegevoegd"
+        last_used_prefix: "Laatst gebruikt"
       change_about:
         title: "Over mij wijzigen"
         error: "Er is een fout opgetreden bij het wijzigen van deze waarde."
@@ -1670,6 +1675,7 @@ nl:
         ok: "Je wachtwoord ziet er goed uit."
         instructions: "minimaal %{count} tekens"
         required: "Voer een wachtwoord in"
+        confirm: "Bevestigen"
       summary:
         title: "Samenvatting"
         stats: "Statistieken"
@@ -2032,12 +2038,6 @@ nl:
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
-      plus_subcategories_title:
-        one: "%{name} en één subcategorie"
-        other: "%{name} en %{count} subcategorieën"
-      plus_subcategories:
-        one: "+ %{count} subcategorie"
-        other: "+ %{count} subcategorieën"
     select_kit:
       delete_item: "%{name} verwijderen"
       filter_by: "Filteren op: %{name}"
@@ -4022,7 +4022,6 @@ nl:
           delete: "Verwijderen"
           delete_confirm: "Weet je zeker dat je deze sectie wilt verwijderen?"
           reset_confirm: "Weet je zeker dat je deze sectie wilt herstellen naar de standaardinstellingen?"
-          public: "Deze sectie openbaar en zichtbaar voor iedereen maken"
           always_public: "Content in deze sectie is altijd openbaar"
           more_menu: "Menu Meer"
           links:

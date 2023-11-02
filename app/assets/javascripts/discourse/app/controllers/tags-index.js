@@ -6,13 +6,14 @@ import TagUpload from "discourse/components/modal/tag-upload";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   dialog: service(),
   modal: service(),
   sortedByCount: true,
   sortedByName: false,
+  sortAlphabetically: alias("siteSettings.tags_sort_alphabetically"),
   canAdminTags: alias("currentUser.staff"),
   groupedByCategory: notEmpty("model.extras.categories"),
   groupedByTagGroup: notEmpty("model.extras.tag_groups"),
@@ -20,7 +21,13 @@ export default Controller.extend({
   init() {
     this._super(...arguments);
 
-    this.sortProperties = ["totalCount:desc", "id"];
+    const isAlphaSort = this.sortAlphabetically;
+
+    this.setProperties({
+      sortedByCount: isAlphaSort ? false : true,
+      sortedByName: isAlphaSort ? true : false,
+      sortProperties: isAlphaSort ? ["id"] : ["totalCount:desc", "id"],
+    });
   },
 
   @discourseComputed("groupedByCategory", "groupedByTagGroup")

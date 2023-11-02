@@ -4,7 +4,7 @@ import { next } from "@ember/runloop";
 import { fmt } from "discourse/lib/computed";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminThemeEditor extends Component {
   warning = null;

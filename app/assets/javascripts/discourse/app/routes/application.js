@@ -1,15 +1,14 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import CreateAccount from "discourse/components/modal/create-account";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import LoginModal from "discourse/components/modal/login";
-import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie from "discourse/lib/cookie";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
-import showModal from "discourse/lib/show-modal";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { findAll } from "discourse/models/login-method";
@@ -17,7 +16,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import NotActivatedModal from "../components/modal/not-activated";
 
 function unlessStrictlyReadOnly(method, message) {
@@ -66,12 +65,6 @@ const ApplicationRoute = DiscourseRoute.extend({
   },
 
   actions: {
-    toggleAnonymous() {
-      ajax(userPath("toggle-anon"), { type: "POST" }).then(() => {
-        window.location.reload();
-      });
-    },
-
     toggleMobileView() {
       mobile.toggleMobileView();
     },
@@ -265,11 +258,7 @@ const ApplicationRoute = DiscourseRoute.extend({
           },
         });
       } else {
-        const createAccount = showModal("create-account", {
-          modalClass: "create-account",
-          titleAriaElementId: "create-account-title",
-        });
-        createAccount.setProperties(createAccountProps);
+        this.modal.show(CreateAccount, { model: createAccountProps });
       }
     }
   },

@@ -1,6 +1,6 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
 import { userPath } from "discourse/lib/url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
   get linkHref() {

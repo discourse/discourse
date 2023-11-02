@@ -1,6 +1,6 @@
 import { getOwner } from "@ember/application";
 import EmberObject from "@ember/object";
-import { click, render } from "@ember/test-helpers";
+import { click, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -10,7 +10,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | Widget | post", function (hooks) {
   setupRenderingTest(hooks);
@@ -574,7 +574,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     assert.dom("[data-content][data-identifier='admin-post-menu']").exists();
 
-    await click(".post-menu-area");
+    await triggerEvent(".post-menu-area", "pointerdown");
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")
       .doesNotExist("clicking outside clears the popup");

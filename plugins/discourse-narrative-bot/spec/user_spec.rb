@@ -128,6 +128,7 @@ RSpec.describe User do
 
       it "should initiate bot for real user only" do
         user = Fabricate(:user, trust_level: 1)
+        Group.refresh_automatic_groups!
         shadow = AnonymousShadowCreator.get(user)
 
         expect(TopicAllowedUser.where(user_id: shadow.id).count).to eq(0)

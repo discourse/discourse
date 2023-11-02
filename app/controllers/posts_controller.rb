@@ -310,13 +310,6 @@ class PostsController < ApplicationController
     render json: post.reply_ids(guardian).to_json
   end
 
-  def all_reply_ids
-    Discourse.deprecate("/posts/:id/reply-ids/all is deprecated.", drop_from: "3.0")
-
-    post = find_post_from_params
-    render json: post.reply_ids(guardian, only_replies_to_single_post: false).to_json
-  end
-
   def destroy
     post = find_post_from_params
     force_destroy = ActiveModel::Type::Boolean.new.cast(params[:force_destroy])
@@ -647,11 +640,7 @@ class PostsController < ApplicationController
     guardian.ensure_can_rebake!
 
     post = find_post_from_params
-    post.rebake!(
-      invalidate_oneboxes: true,
-      invalidate_broken_images: true,
-      update_upload_security: true,
-    )
+    post.rebake!(invalidate_oneboxes: true, invalidate_broken_images: true)
 
     render body: nil
   end

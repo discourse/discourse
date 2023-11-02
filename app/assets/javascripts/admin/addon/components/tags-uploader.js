@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class TagsUploader extends Component.extend(UppyUploadMixin) {
   @service dialog;

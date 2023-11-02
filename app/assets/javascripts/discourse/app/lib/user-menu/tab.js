@@ -1,4 +1,4 @@
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 /**
  * abstract class representing a tab in the user menu

@@ -7,7 +7,7 @@ import { next, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 @disableImplicitInjections
 export default class DModal extends Component {

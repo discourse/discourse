@@ -513,7 +513,8 @@ da:
             name:
               same_as_password: "er det samme som dit kodeord."
             ip_address:
-              signup_not_allowed: "Tilmelding er ikke tilladt fra denne konto."
+              blocked: "Nye registreringer er ikke tilladt fra din IP adresse."
+              max_new_accounts_per_registration_ip: "Nye kontoer kan ikke oprettes fra din IP-adresse (max antal er nået). Kontakt et medlem af hjælperteamet."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1358,8 +1359,6 @@ da:
     slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
     content_security_policy_collect_reports: "Aktivér CSP-overtrædelsesrapportindsamling på /csp_reports"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
-    top_menu: "Afklar hvilke ting fremgår af sidens navigations bar, og i hvilken rækkefølge. Eksempel: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: 'Synes godt om'|rediger|anmeld|slet|del|bogmærke|svar."
     post_menu_hidden_items: "Menuen vil automatisk gemme disse elementer i indlægs menuen, med mindre en udvidelse er tilvalgt."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     site_contact_username: "Et gyldigt personale-brugernavn, som alle automatiske meddelelser skal sendes fra. Hvis den er tom, bruges standard systemkontoen."
@@ -1808,9 +1807,6 @@ da:
       blocked: "er ikke tilladt."
       revoked: "Vil ikke sende e-mails til '%{email}' indtil %{date}."
       does_not_exist: "I/T"
-    ip_address:
-      blocked: "Nye registreringer er ikke tilladt fra din IP adresse."
-      max_new_accounts_per_registration_ip: "Nye kontoer kan ikke oprettes fra din IP-adresse (max antal er nået). Kontakt et medlem af hjælperteamet."
     website:
       domain_not_allowed: "Webstedet er ugyldigt. Tilladte domæner er: %{domains}"
     auto_rejected: "Afvist automatisk på grund af alder. Se auto_handle_queued_age webstedsindstilling."

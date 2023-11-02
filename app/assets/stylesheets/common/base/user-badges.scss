@@ -228,11 +228,9 @@
 }
 
 .badges-granted {
-  display: flex;
-  flex-wrap: wrap;
-  @media screen and (max-width: $small-width) {
-    justify-content: space-between;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+  gap: 3em 2em;
 }
 
 .container.badges {

@@ -56,6 +56,39 @@ describe "Reviewables", type: :system do
     end
   end
 
+  describe "when there is a reviewable user" do
+    fab!(:user) { Fabricate(:user) }
+    let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
+
+    before do
+      SiteSetting.must_approve_users = true
+      Jobs.run_immediately!
+      user.update!(approved: false)
+      user.activate
+    end
+
+    it "Rejecting user sends rejection email and updates reviewable with rejection reason" do
+      rejection_reason = "user is spamming"
+      reviewable = ReviewableUser.find_by_target_id(user.id)
+      # cache it for later assertion instead of querying UserHistory
+      user_email = user.email
+
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "user-delete_user")
+      rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
+      rejection_reason_modal.select_send_rejection_email_checkbox
+      rejection_reason_modal.delete_user
+
+      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
+      expect(review_page).to have_reviewable_with_rejection_reason(reviewable, rejection_reason)
+
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.to).to eq([user_email])
+      expect(mail.subject).to match(/You've been rejected on Discourse/)
+      expect(mail.body.raw_source).to include rejection_reason
+    end
+  end
+
   context "when performing a review action from the show route" do
     context "with a ReviewableQueuedPost" do
       fab!(:queued_post_reviewable) { Fabricate(:reviewable_queued_post) }

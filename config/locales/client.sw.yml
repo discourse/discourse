@@ -263,6 +263,9 @@ sw:
     review:
       explain:
         total: "Jumla"
+      revise_and_reject_post:
+        reason: "Sababu"
+        optional: "sio muhimu"
       delete: "Futa"
       settings:
         saved: "Imehifadhiwa"
@@ -746,6 +749,8 @@ sw:
         security_key:
           register: "Jisajili"
           save: "hifadhi"
+      passkeys:
+        save: "Hifadhi"
       change_about:
         title: "Badilisha Taarifa Zangu"
         error: "Hitilafu imetokea wakati wa kubadilisha namba hii."

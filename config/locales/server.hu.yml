@@ -384,7 +384,8 @@ hu:
               same_as_email: "azonos az e-mail címével. Használjon biztonságosabb jelszót."
               same_as_current: "azonos a jelenlegi jelszavával."
             ip_address:
-              signup_not_allowed: "A regisztráció nem lehetséges ezzel a fiókkal."
+              blocked: "Új regisztrációk nem engedélyezettek az te IP-címedről."
+              max_new_accounts_per_registration_ip: "Új regisztráció az Ön IP-címéről nem engedélyezett (elérte a maximális korlátot). Vegye fel a kapcsolatot egy munkatársával."
         user_profile:
           attributes:
             featured_topic_id:
@@ -956,7 +957,6 @@ hu:
     blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
     apple_touch_icon: "Az Apple érintőképernyős készülékekhez használt ikon. Az átlátszó háttér nem ajánlott. Automatikusan átméreteződik 180x180-ra. Ha üresen hagyja, a large_icon lesz használva."
     enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
-    review_every_post: "Minden bejegyzést jóvá kell hagyni. FIGYELEM! FORGALMAS OLDALAKON NEM AJÁNLOTT."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
     content_security_policy_collect_reports: "Engedélyezze a CSP-szabálysértési jelentések gyűjtését /csp_reports címen."
@@ -1010,7 +1010,6 @@ hu:
     default_other_like_notification_frequency: "A felhasználók értesítése a kedvelésekről alapértelmezett esetben."
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét a felhasználónév- és névjavaslatokhoz. Vegye figyelembe, hogy ez megkönnyíti a nyilvánosság számára a teljes felhasználói e-mail címek kitalálását (mivel az emberek nagy része olyan gyakori szolgáltatásokat használ, mint a „gmail.com”)."
     navigation_menu: "Határozza meg, melyik navigációs menüt használja. Az oldalsáv és a fejléc navigációja a felhasználók által testreszabható. A visszamenőleges kompatibilitás érdekében a régebbi opció is elérhető."
-    enable_experimental_hashtag_autocomplete: "KÍSÉRLETI: Használja az új #hashtag automatikus kiegészítési rendszert a kategóriákhoz és címkékhez, amelyek másképp jelenítik meg a kiválasztott elemet, és javítják a keresést"
     experimental_new_new_view_groups: 'Kísérleti: Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és az új témákat, és az oldalsávban lévő "Minden" linket kapcsolja rá.'
     enable_custom_sidebar_sections: "Kísérleti: Egyéni oldalsáv szekciók engedélyezése"
     experimental_form_templates: "KÍSÉRLETI: Az űrlapsablonok szolgáltatás engedélyezése. <b>Az engedélyezés után</b> a sablonokat a <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a> menüpont alatt kezelheti."
@@ -1118,9 +1117,6 @@ hu:
     email:
       invalid: "érvénytelen."
       blocked: "nem engedélyezett."
-    ip_address:
-      blocked: "Új regisztrációk nem engedélyezettek az te IP-címedről."
-      max_new_accounts_per_registration_ip: "Új regisztráció az Ön IP-címéről nem engedélyezett (elérte a maximális korlátot). Vegye fel a kapcsolatot egy munkatársával."
   unsubscribe_mailer:
     subject_template: "Erősítsd meg, hogy a továbbiakban nem szeretnél e-mailes frissítéseket kapni a %{site_title} oldalról."
     text_body_template: |

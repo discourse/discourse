@@ -3,19 +3,20 @@ import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import Service, { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
+import $ from "jquery";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import deprecated from "discourse-common/lib/deprecated";
-import I18n from "I18n";
+import deprecated, {
+  withSilencedDeprecations,
+} from "discourse-common/lib/deprecated";
+import I18n from "discourse-i18n";
 
 // Known legacy modals in core. Silence deprecation warnings for these so the messages
 // don't cause unnecessary noise.
 const KNOWN_LEGACY_MODALS = [
-  "associate-account-confirm",
   "avatar-selector",
   "change-owner",
   "change-post-notice",
-  "create-account",
   "create-invite-bulk",
   "create-invite",
   "grant-badge",
@@ -177,7 +178,12 @@ export default class ModalServiceWithLegacySupport extends ModalService {
 
     const modalName = `modal/${templateName}`;
     const fullName = opts.admin ? `admin/templates/${modalName}` : modalName;
-    route.render(fullName, renderArgs);
+
+    // Any use of the legacy modal system will trigger Discourse's own deprecation message
+    // so we can silence Ember's message here.
+    withSilencedDeprecations("route-render-template", () => {
+      route.render(fullName, renderArgs);
+    });
 
     if (opts.panels) {
       if (controller.actions.onSelectPanel) {
@@ -213,9 +219,16 @@ export default class ModalServiceWithLegacySupport extends ModalService {
       return;
     }
 
-    getOwner(this)
-      .lookup("route:application")
-      .render("hide-modal", { into: "application", outlet: "modalBody" });
+    const applicationRoute = getOwner(this).lookup("route:application");
+
+    // Any use of the legacy modal system will trigger Discourse's own deprecation message
+    // so we can silence Ember's message here.
+    withSilencedDeprecations("route-render-template", () => {
+      applicationRoute.render("hide-modal", {
+        into: "application",
+        outlet: "modalBody",
+      });
+    });
     $(".d-modal.fixed-modal").modal("hide");
 
     if (controller) {

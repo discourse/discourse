@@ -366,6 +366,9 @@ nb_NO:
         type_bonus:
           name: "type bonus"
           title: "Visse typer som kan gjennomgås, kan tildeles en bonus av personalet for å gjøre dem til en høyere prioritet."
+      revise_and_reject_post:
+        reason: "Begrunnelse"
+        optional: "valgfritt"
       stale_help: "Denne vurderingen har blitt løst av <b>%{username}</b>."
       claim_help:
         optional: "Du kan gjøre krav på dette elementet for å hindre andre i å gjennomgå det."
@@ -1133,8 +1136,6 @@ nb_NO:
           Skann denne QR-koden i en støttet app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) og skriv inn autentiseringskoden.
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
         show_key_description: "Skriv inn manuelt"
-        short_description: |
-          Beskytt kontoen din med engangs sikkerhetskoder.
         extended_description: |
           To-faktor autentisering legger til ekstra sikkerhet på kontoen din ved å kreve en engangstoken i tillegg til passordet ditt. Tokens kan genereres på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> og <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> enheter.
         oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
@@ -1158,6 +1159,9 @@ nb_NO:
           already_added_error: "Du har allerede registrert denne sikkerhetsnøkkelen. Du trenger ikke å registrere den igjen."
           save: "Lagre"
           name_required_error: "Du må angi et navn for sikkerhetsnøkkelen."
+      passkeys:
+        save: "Lagre"
+        added_prefix: "La til"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -1711,12 +1715,6 @@ nb_NO:
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategorien"
-      plus_subcategories_title:
-        one: "%{name} og en underkategori"
-        other: "%{name} og %{count} underkategorier"
-      plus_subcategories:
-        one: "+ %{count} underkategori"
-        other: "+ %{count} underkategorier"
     select_kit:
       delete_item: "Slett %{name}"
       filter_by: "Filtrer etter %{name}"

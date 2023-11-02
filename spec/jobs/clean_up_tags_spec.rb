@@ -43,6 +43,16 @@ describe Jobs::CleanUpTags do
       created_at: 10.minutes.ago,
     )
   end
+  fab!(:unused_tag_2) do
+    Fabricate(
+      :tag,
+      name: "unused2",
+      staff_topic_count: 0,
+      public_topic_count: 0,
+      pm_topic_count: 0,
+      created_at: 10.minutes.ago,
+    )
+  end
 
   fab!(:tag_in_group) do
     Fabricate(
@@ -57,8 +67,17 @@ describe Jobs::CleanUpTags do
 
   it "deletes unused tags" do
     SiteSetting.automatically_clean_unused_tags = true
-    expect { job.execute({}) }.to change { Tag.count }.by(-1)
+    expect { job.execute({}) }.to change { Tag.count }.by(-2)
     expect { unused_tag.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    expect { unused_tag_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+  end
+
+  it "logs action" do
+    SiteSetting.automatically_clean_unused_tags = true
+    expect { job.execute({}) }.to change { UserHistory.count }.by(1)
+    log = UserHistory.last
+    expect(log.acting_user_id).to eq(-1)
+    expect(log.details).to eq('tags: ["unused1", "unused2"]')
   end
 
   it "does nothing when site setting is disabled by default" do

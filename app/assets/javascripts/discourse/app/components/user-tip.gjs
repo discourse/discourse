@@ -6,7 +6,7 @@ import { modifier } from "ember-modifier";
 import UserTipContainer from "discourse/components/user-tip-container";
 import escape from "discourse-common/lib/escape";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 export default class UserTip extends Component {
@@ -75,7 +75,6 @@ export default class UserTip extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <div {{this.registerTip}}>
       {{#if this.shouldRenderTip}}
         <span {{this.tip}}></span>

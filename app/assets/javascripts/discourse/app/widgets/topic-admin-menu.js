@@ -1,4 +1,6 @@
+import $ from "jquery";
 import { h } from "virtual-dom";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 
 createWidget("admin-menu-button", {
@@ -327,6 +329,7 @@ export default createWidget("topic-admin-menu", {
   buildAttributes(attrs) {
     let { top, left, outerHeight } = attrs.position;
     const position = this.site.mobileView ? "fixed" : "absolute";
+    const approxMenuHeight = attrs.actionButtons.length * 42;
 
     if (attrs.rightSide) {
       return;
@@ -340,6 +343,11 @@ export default createWidget("topic-admin-menu", {
 
       if (documentHeight > mainHeight) {
         bottom = bottom - (documentHeight - mainHeight) - outerHeight;
+      }
+
+      if (top < approxMenuHeight) {
+        bottom =
+          bottom - (approxMenuHeight - outerHeight - top) - headerOffset();
       }
 
       if (this.site.mobileView) {

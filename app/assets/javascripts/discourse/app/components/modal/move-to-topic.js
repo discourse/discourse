@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DiscourseURL from "discourse/lib/url";
 import { mergeTopic, movePosts } from "discourse/models/topic";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class MoveToTopic extends Component {
   @service currentUser;

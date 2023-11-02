@@ -12,7 +12,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("User Routes", function (needs) {
   needs.user();

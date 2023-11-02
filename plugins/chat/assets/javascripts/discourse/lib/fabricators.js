@@ -127,6 +127,7 @@ function threadFabricator(args = {}) {
   const channel = args.channel || channelFabricator();
   return ChatThread.create(channel, {
     id: args.id || sequence++,
+    title: args.title,
     original_message: args.original_message || messageFabricator({ channel }),
     preview: args.preview || threadPreviewFabricator({ channel }),
   });

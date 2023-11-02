@@ -556,14 +556,9 @@ he:
           many: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
           other: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
       retention_reminders:
-        public_none: "ללא הגבלת זמן"
-        public:
-          one: "יום"
-          two: "יומיים"
-          many: "%{count} יום"
-          other: "%{count} ימים"
-        dm_none: "ללא הגבלת זמן"
-        dm:
+        indefinitely_short: "ללא הגבלת זמן"
+        indefinitely_long: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ לעד."
+        short:
           one: "יום"
           two: "יומיים"
           many: "%{count} יום"

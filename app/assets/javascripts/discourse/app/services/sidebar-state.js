@@ -8,7 +8,8 @@ import {
 
 const COMBINED_MODE = "combined";
 const SEPARATED_MODE = "separated";
-const MAIN_PANEL = "main";
+export const MAIN_PANEL = "main";
+export const ADMIN_PANEL = "admin";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {

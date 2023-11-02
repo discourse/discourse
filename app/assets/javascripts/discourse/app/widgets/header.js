@@ -1,5 +1,6 @@
 import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
+import $ from "jquery";
 import { h } from "virtual-dom";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -10,9 +11,11 @@ import { scrollTop } from "discourse/mixins/scroll-top";
 import { avatarImg } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
+import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import discourseLater from "discourse-common/lib/later";
+import I18n from "discourse-i18n";
 
 const SEARCH_BUTTON_ID = "search-button";
 
@@ -357,15 +360,21 @@ createWidget("revamped-hamburger-menu-wrapper", {
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition =
         document.querySelector("html").classList["direction"] === "rtl"
-          ? "320px"
-          : "-320px";
+          ? "340px"
+          : "-340px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,
           fill: "forwards",
           easing: "ease-in",
         })
-        .finished.then(() => this.sendWidgetAction("toggleHamburger"));
+        .finished.then(() => {
+          if (isTesting()) {
+            this.sendWidgetAction("toggleHamburger");
+          } else {
+            discourseLater(() => this.sendWidgetAction("toggleHamburger"));
+          }
+        });
       headerCloak.animate([{ opacity: 0 }], {
         duration: 200,
         fill: "forwards",
@@ -408,15 +417,21 @@ createWidget("revamped-user-menu-wrapper", {
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition =
         document.querySelector("html").classList["direction"] === "rtl"
-          ? "-320px"
-          : "320px";
+          ? "-340px"
+          : "340px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,
           fill: "forwards",
           easing: "ease-in",
         })
-        .finished.then(() => this.closeUserMenu());
+        .finished.then(() => {
+          if (isTesting) {
+            this.closeUserMenu();
+          } else {
+            discourseLater(() => this.closeUserMenu());
+          }
+        });
       headerCloak.animate([{ opacity: 0 }], {
         duration: 200,
         fill: "forwards",

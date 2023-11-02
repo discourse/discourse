@@ -20,6 +20,10 @@ export function resetExtraClasses() {
 // Note: In plugins, define a class by path and it will be wired up automatically
 // eg: discourse/connectors/<OUTLET NAME>/<CONNECTOR NAME>
 export function extraConnectorClass(name, obj) {
+  deprecated(
+    "Defining connector classes via registerConnectorClass is deprecated. See https://meta.discourse.org/t/32727 for more modern patterns.",
+    { id: "discourse.register-connector-class-legacy" }
+  );
   _extraConnectorClasses[name] = obj;
 }
 

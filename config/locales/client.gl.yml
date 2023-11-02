@@ -357,6 +357,9 @@ gl:
         type_bonus:
           name: "tipo de bonificación"
           title: "O equipo pode asignar unha bonificación a certos tipos revisábeis para facelos de maior prioridade."
+      revise_and_reject_post:
+        reason: "Motivo"
+        optional: "opcional"
       claim_help:
         optional: "Podes reclamar este elemento para evitar que outros o revisen."
         required: "Debes reclamar os elementos antes de revisalos."
@@ -1103,8 +1106,6 @@ gl:
           Escanee este código QR nunha aplicación compatíbel (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e escriba o código de autenticación.
         disable_description: "Escriba o código de autenticación da súa aplicación"
         show_key_description: "Introducilo manualmente"
-        short_description: |
-          Protexa a súa conta con códigos de seguranza dun só uso.
         extended_description: |
           A autenticación de dobre paso reforza a seguranza da sús conta, ao requirir un código dun só uso ademais do contrasinal. Os tokens pódense xear en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Repare en que a activación na súa conta da autenticación de dobre paso implica a desactivación do inicio de sesión a través de redes sociais."
@@ -1130,6 +1131,10 @@ gl:
           already_added_error: "Xa rexistrou esta clave de seguranza. Non precisa volver rexistrala."
           save: "Gardar"
           name_required_error: "Debe escribir un nome para a clave de seguranza."
+      passkeys:
+        save: "Gardar"
+        added_prefix: "Engadido"
+        last_used_prefix: "Último utilizado"
       change_about:
         title: "Cambiar «Verbo de min»"
         error: "Produciuse un erro ao cambiar este valor."
@@ -1395,6 +1400,7 @@ gl:
         ok: "O contrasinal semella bo."
         instructions: "como mínimo %{count} caracteres"
         required: "Escriba un contrasinal"
+        confirm: "Confirmar"
       summary:
         title: "Resumo"
         stats: "Estatísticas"
@@ -1675,12 +1681,6 @@ gl:
       topic_count:
         one: "%{count} tema nesta categoría"
         other: "%{count} temas nesta categoría"
-      plus_subcategories_title:
-        one: "%{name} e unha subcategoría"
-        other: "%{name} e %{count} subcategorías"
-      plus_subcategories:
-        one: "+ %{count} subcategoría"
-        other: "+ %{count} subcategorías"
     select_kit:
       delete_item: "Eliminar %{name}"
       filter_by: "Filtrado por: %{name}"

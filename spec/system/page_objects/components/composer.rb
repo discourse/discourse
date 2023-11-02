@@ -10,6 +10,10 @@ module PageObjects
         page.has_css?("#{COMPOSER_ID}.open")
       end
 
+      def closed?
+        page.has_css?("#{COMPOSER_ID}.closed", visible: :all)
+      end
+
       def open_composer_actions
         find(".composer-action-title .btn").click
         self
@@ -27,6 +31,12 @@ module PageObjects
 
       def fill_content(content)
         composer_input.fill_in(with: content)
+        self
+      end
+
+      def append_content(content)
+        current_content = composer_input.value
+        composer_input.set(current_content + content)
         self
       end
 
@@ -88,6 +98,10 @@ module PageObjects
 
       def preview
         find("#{COMPOSER_ID} .d-editor-preview-wrapper")
+      end
+
+      def has_discard_draft_modal?
+        page.has_css?(".discard-draft-modal")
       end
 
       def has_emoji_autocomplete?
@@ -176,6 +190,14 @@ module PageObjects
 
       def has_form_template_field_description?(description)
         page.has_css?(".form-template-field__description", text: description)
+      end
+
+      def has_post_error?(error)
+        page.has_css?(".popup-tip", text: error, visible: all)
+      end
+
+      def has_no_post_error?(error)
+        page.has_no_css?(".popup-tip", text: error, visible: all)
       end
 
       def composer_input

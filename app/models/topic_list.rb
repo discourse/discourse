@@ -76,6 +76,11 @@ class TopicList
     @topics ||= load_topics
   end
 
+  def categories
+    @categories ||=
+      topics.map { |t| [t.category, t.category&.parent_category] }.uniq.flatten.compact
+  end
+
   def load_topics
     @topics = @topics_input
 
@@ -128,7 +133,12 @@ class TopicList
       ft.topic_list = self
     end
 
-    topic_preloader_associations = [:image_upload, { topic_thumbnails: :optimized_image }]
+    topic_preloader_associations = [
+      :image_upload,
+      { topic_thumbnails: :optimized_image },
+      { category: :parent_category },
+    ]
+
     topic_preloader_associations.concat(DiscoursePluginRegistry.topic_preloader_associations.to_a)
 
     ActiveRecord::Associations::Preloader.new(

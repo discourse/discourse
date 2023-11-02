@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import AppendTags from "../bulk-actions/append-tags";
 import ChangeCategory from "../bulk-actions/change-category";
 import ChangeTags from "../bulk-actions/change-tags";

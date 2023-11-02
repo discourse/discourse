@@ -1,5 +1,10 @@
 <AddCategoryTagClasses @category={{this.category}} />
 
+<PluginOutlet
+  @name="above-category-heading"
+  @outletArgs={{hash category=this.category}}
+/>
+
 <section class="category-heading">
   {{#if this.category.uploaded_logo.url}}
     <CategoryLogo @category={{this.category}} />

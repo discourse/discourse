@@ -507,6 +507,13 @@ he:
         type_bonus:
           name: "בונוס סוג"
           title: "לסוגים מסוימים של פריטים לסקירה ניתן להקצות בונוס על ידי הסגל כדי שהעדיפות שלהם תעלה."
+      revise_and_reject_post:
+        reason: "סיבה"
+        send_pm: "שליחת הודעה פרטית"
+        feedback: "משוב"
+        custom_reason: "הוספת תיאור ברור של הסיבה"
+        other_reason: "אחר…"
+        optional: "רשות"
       stale_help: "הפריט לסקירה נפתר על ידי <b>%{username}</b>."
       claim_help:
         optional: "באפשרותך לדרוש את הפריט כדי למנוע מאחרים לסקור אותו."
@@ -1517,7 +1524,7 @@ he:
         disable_description: "נא למלא את קוד האישור מהיישומון שלך"
         show_key_description: "הכנס ידנית"
         short_description: |
-          הגנה על החשבון שלך עם קודים חד־פעמיים לאבטחה.
+          הגנה על החשבון שלך עם קודים חד־פעמיים לאבטחה או במפתחות אבטחה פיזיים.
         extended_description: |
           אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לסיסמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות יושבתו לאחר הפעלת אימות דו־שלבי בחשבונך."
@@ -1556,6 +1563,11 @@ he:
           save: "שמירה"
           edit_description: "שם מפתח אבטחה פיזי"
           name_required_error: "עליך לציין שם למפתח האבטחה שלך."
+      passkeys:
+        save: "שמירה"
+        added_prefix: "הוסיף"
+        last_used_prefix: "שימוש אחרון"
+        never_used: "אף פעם לא היה בשימוש"
       change_about:
         title: "שינוי בנוגע אליי"
         error: "ארעה שגיאה בשינוי ערך זה."
@@ -1668,6 +1680,7 @@ he:
         instructions: "רישום חשבון דורש קוד הזמנה"
       auth_tokens:
         title: "מכשירים שהיו בשימוש לאחרונה"
+        short_description: "זאת רשימת המכשירים שנכנסו לחשבון שלך לאחרונה"
         details: "פרטים"
         log_out_all: "להוציא את כולם"
         not_you: "לא אתה?"
@@ -1840,6 +1853,12 @@ he:
           progress: "הועלו %{progress}%…"
           success: "הקובץ נשלח בהצלחה. תישלח אליך הודעה כשהתהליך יושלם."
           error: "הקובץ אמור להיות בתצורת CSV, עמך הסליחה."
+      confirm_access:
+        title: "אישור גישה"
+        incorrect_password: "הסיסמה שמילאת שגויה."
+        logged_in_as: "נכנסת בשם: "
+        instructions: "נא לאשר את הזהות שלך כדי להשלים את הפעולה הזאת."
+        fine_print: "אנו מבקשים ממך לאשר את הזהות שלך כיוון שזאת פעולה שעלולה להיות רגישה. לאחר האימות, נבקש ממך לעבור אימות שוב רק כעבור כמה שעות של חוסר פעילות."
       password:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."
@@ -1849,6 +1868,8 @@ he:
         ok: "הסיסמה שלך נראית טוב."
         instructions: "לפחות %{count} תווים"
         required: "נא למלא סיסמה"
+        confirm: "אישור"
+        incorrect_password: "הסיסמה שמילאת שגויה."
       summary:
         title: "סיכום"
         stats: "סטטיסטיקות"
@@ -2247,16 +2268,6 @@ he:
         two: "%{count} נושאים בקטגוריה הזו"
         many: "%{count} נושאים בקטגוריה הזו"
         other: "%{count} נושאים בקטגוריה הזו"
-      plus_subcategories_title:
-        one: "%{name} ותת־קטגוריה נוספת"
-        two: "%{name} ו־%{count} תת־קטגוריות"
-        many: "%{name} ו־%{count} תת־קטגוריות"
-        other: "%{name} ו־%{count} תת־קטגוריות"
-      plus_subcategories:
-        one: "+ תת־קטגוריה %{count}"
-        two: "+ %{count} תת־קטגוריות"
-        many: "+ %{count} תת־קטגוריות"
-        other: "+ %{count} תת־קטגוריות"
     select_kit:
       delete_item: "למחוק את %{name}"
       filter_by: "סינון לפי: %{name}"
@@ -2481,6 +2492,7 @@ he:
           desc: לחישות גלויות לחברי סגל בלבד
         create_topic:
           label: "נושא חדש"
+          desc: יצירת נושא חדש
         shared_draft:
           label: "טיוטה משותפת"
           desc: "יצירת טיוטה לנושא שרק משתמשים מורשים יוכלו לראות"
@@ -3757,6 +3769,7 @@ he:
       logo: "תמונת לוגו לקטגוריה"
       logo_dark: "תמונת לוגו של קטגוריה במצב כהה"
       background_image: "תמונת רקע לקטגוריה"
+      background_image_dark: "תמונת רקע כהה לקטגוריה"
       badge_colors: "צבעי העיטורים"
       background_color: "צבע רקע"
       foreground_color: "צבע קדמי"
@@ -4528,7 +4541,7 @@ he:
           delete: "מחיקה"
           delete_confirm: "למחוק את המקטע הזה?"
           reset_confirm: "לאפס את המקטע הזה לברירת המחדל?"
-          public: "להפוך את הסעיף הזה לציבורי וגלוי לכולם"
+          public: "גלוי לכולם"
           always_public: "התוכן בסעיף הזה הוא תמיד ציבורי"
           more_menu: "תפריט נוסף"
           links:
@@ -5202,7 +5215,7 @@ he:
         install: "התקנה"
         delete: "מחיקה"
         delete_confirm: 'למחוק את „%{theme_name}”?'
-        bulk_delete: 'להמשיך?'
+        bulk_delete: "להמשיך?"
         bulk_themes_delete_confirm: "פעולה זו תסיר את ערכות העיצוב הבאות, הן לא תהיינה זמינות לשימוש על ידי משתמשים באתר שלך:"
         bulk_components_delete_confirm: "פעולה זו תסיר את הרכיבים הבאים, הם לא יהיו זמינים לשימוש על ידי משתמשים באתר שלך:"
         color: "צבע"

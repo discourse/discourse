@@ -1,7 +1,8 @@
 import { click, fillIn, tab, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Modal - Login", function () {
   test("You can tab to the login button", async function (assert) {
@@ -41,5 +42,78 @@ acceptance("Modal - Login - With 2FA", function (needs) {
     assert.dom("#login-second-factor").isFocused();
     await tab();
     assert.dom("#login-button").isFocused();
+  });
+});
+
+acceptance("Modal - Login - With Passkeys enabled", function (needs) {
+  needs.settings({
+    experimental_passkeys: true,
+  });
+
+  needs.pretender((server, helper) => {
+    server.get(`/session/passkey/challenge.json`, () =>
+      helper.response({
+        challenge: "some-challenge",
+      })
+    );
+  });
+
+  test("Includes passkeys button and conditional UI", async function (assert) {
+    await visit("/");
+    await click("header .login-button");
+
+    assert.dom(".passkey-login-button").exists();
+
+    assert
+      .dom("#login-account-name")
+      .hasAttribute("autocomplete", "username webauthn");
+  });
+});
+
+acceptance("Modal - Login - With Passkeys disabled", function (needs) {
+  needs.settings({
+    experimental_passkeys: false,
+  });
+
+  test("Excludes passkeys button and conditional UI", async function (assert) {
+    await visit("/");
+    await click("header .login-button");
+
+    assert.dom(".passkey-login-button").doesNotExist();
+    assert.dom("#login-account-name").hasAttribute("autocomplete", "username");
+  });
+});
+
+acceptance("Modal - Login - Passkeys on mobile", function (needs) {
+  needs.mobileView();
+  needs.settings({
+    experimental_passkeys: true,
+  });
+
+  needs.pretender((server, helper) => {
+    server.get(`/session/passkey/challenge.json`, () =>
+      helper.response({
+        challenge: "some-challenge",
+      })
+    );
+  });
+
+  test("Includes passkeys button and conditional UI", async function (assert) {
+    await visit("/");
+    await click("header .login-button");
+
+    sinon.stub(navigator.credentials, "get").callsFake(function () {
+      return Promise.reject(new Error("credentials.get got called"));
+    });
+
+    assert
+      .dom("#login-account-name")
+      .hasAttribute("autocomplete", "username webauthn");
+
+    await click(".passkey-login-button");
+
+    // clicking the button triggers credentials.get
+    // but we can't really test that in frontend so an error is returned
+    assert.dom(".dialog-body").exists();
   });
 });

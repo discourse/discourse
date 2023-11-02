@@ -56,7 +56,7 @@ module("Integration | Component | sidebar | section", function (hooks) {
         @headerLinkTitle="some title"
         @headerActionsIcon="plus"
         @headerActions={{this.headerActions}}
-        @collapsable=true />`;
+        @collapsable={{true}} />`;
 
     this.headerActions = [];
     await render(template);

@@ -6,8 +6,8 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
-import I18n from "I18n";
 
 export default class AdminUsersListShowController extends Controller.extend(
   CanCheckEmails

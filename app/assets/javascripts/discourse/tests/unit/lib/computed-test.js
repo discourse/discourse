@@ -13,7 +13,7 @@ import {
   url,
 } from "discourse/lib/computed";
 import { setPrefix } from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Unit | Utility | computed", function (hooks) {
   setupTest(hooks);

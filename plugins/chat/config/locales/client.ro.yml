@@ -133,11 +133,7 @@ ro:
         existing_topic:
           title: "Mută în subiect deja existent"
       retention_reminders:
-        public:
-          one: "%{count} zi"
-          few: "%{count} zile"
-          other: "%{count} de zile"
-        dm:
+        short:
           one: "%{count} zi"
           few: "%{count} zile"
           other: "%{count} de zile"

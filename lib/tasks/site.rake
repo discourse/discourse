@@ -220,6 +220,7 @@ task "site:export_structure", [:zip_path] => :environment do |task, args|
       uploaded_logo_id: data.set_upload(c.uploaded_logo_id),
       uploaded_logo_dark_id: data.set_upload(c.uploaded_logo_dark_id),
       uploaded_background_id: data.set_upload(c.uploaded_background_id),
+      uploaded_background_dark_id: data.set_upload(c.uploaded_background_dark_id),
       topic_featured_link_allowed: c.topic_featured_link_allowed,
       all_topics_wiki: c.all_topics_wiki,
       show_subcategory_list: c.show_subcategory_list,

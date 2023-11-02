@@ -26,7 +26,7 @@ import {
 } from "discourse/widgets/hooks";
 import { isProduction } from "discourse-common/config/environment";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const _registry = {};
 
@@ -40,9 +40,17 @@ export function deleteFromRegistry(name) {
 
 const _decorators = {};
 
-export function decorateWidget(widgetName, cb) {
-  _decorators[widgetName] = _decorators[widgetName] || [];
-  _decorators[widgetName].push(cb);
+export function decorateWidget(decorateIdentifier, cb) {
+  const widgetName = decorateIdentifier.split(":")[0];
+  if (!_registry[widgetName]) {
+    // eslint-disable-next-line no-console
+    console.error(
+      consolePrefix(),
+      `decorateWidget: Could not find widget '${widgetName}' in registry`
+    );
+  }
+  _decorators[decorateIdentifier] ??= [];
+  _decorators[decorateIdentifier].push(cb);
 }
 
 export function traverseCustomWidgets(tree, callback) {

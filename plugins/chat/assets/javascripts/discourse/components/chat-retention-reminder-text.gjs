@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ChatRetentionReminderText extends Component {
   @service siteSettings;

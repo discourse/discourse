@@ -12,7 +12,8 @@ export default class FloatKitCloseOnClickOutside extends Modifier {
     this.closeFn = closeFn;
     this.trigger = trigger;
     this.element = element;
-    document.addEventListener("click", this.check, {
+
+    document.addEventListener("pointerdown", this.check, {
       passive: true,
     });
   }
@@ -22,6 +23,7 @@ export default class FloatKitCloseOnClickOutside extends Modifier {
     if (this.element.contains(event.target)) {
       return;
     }
+
     if (
       this.trigger instanceof HTMLElement &&
       this.trigger.contains(event.target)
@@ -33,6 +35,6 @@ export default class FloatKitCloseOnClickOutside extends Modifier {
   }
 
   cleanup() {
-    document.removeEventListener("click", this.check);
+    document.removeEventListener("pointerdown", this.check);
   }
 }

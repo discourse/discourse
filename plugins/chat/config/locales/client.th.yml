@@ -109,9 +109,7 @@ th:
         new_message:
           title: "ย้ายไปข้อความใหม่"
       retention_reminders:
-        public:
-          other: "%{count} วัน"
-        dm:
+        short:
           other: "%{count} วัน"
       emoji_picker:
         objects: "วัตถุ"

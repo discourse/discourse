@@ -427,6 +427,9 @@ es:
         type_bonus:
           name: "tipo de bonificación"
           title: "Algunos tipos revisables pueden recibir una bonificación por parte del personal para que tengan mayor prioridad."
+      revise_and_reject_post:
+        reason: "Motivo"
+        optional: "opcional"
       stale_help: "Este revisable ha sido resuelto por <b>%{username}</b>."
       claim_help:
         optional: "Puedes reclamar este elemento para evitar que otros lo revisen."
@@ -1359,8 +1362,6 @@ es:
           Escanea este código QR en una aplicación que lo soporte (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e introduce el código de autenticación.
         disable_description: "Introduce el código de autenticación que aparece en tu aplicación"
         show_key_description: "Introducir manualmente"
-        short_description: |
-          Protege tu cuenta mediante códigos de respaldo de un solo uso.
         extended_description: |
           La autenticación de dos factores añade una capa extra de seguridad a tu cuenta al pedirte un código de un solo uso además de tu contraseña. Los códigos se pueden generar en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Ten en cuenta que los inicios de sesión con redes sociales y páginas de terceros se desactivarán para tu cuenta una vez que actives la autenticación de dos factores."
@@ -1399,6 +1400,10 @@ es:
           save: "Guardar"
           edit_description: "Nombre de la clave de seguridad física"
           name_required_error: "Debes introducir un nombre para tu clave de seguridad."
+      passkeys:
+        save: "Guardar"
+        added_prefix: "Añadido"
+        last_used_prefix: "Usada por última vez"
       change_about:
         title: "Cambiar «Acerca de mí»"
         error: "Ha ocurrido un error al cambiar este valor."
@@ -1686,6 +1691,7 @@ es:
         ok: "Tu contraseña es válida."
         instructions: "debe tener al menos %{count} caracteres"
         required: "Introduce una contraseña"
+        confirm: "Confirmar"
       summary:
         title: "Resumen"
         stats: "Estadísticas"
@@ -2058,12 +2064,6 @@ es:
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
-      plus_subcategories_title:
-        one: "%{name} y una subcategoría"
-        other: "%{name} y %{count} subcategorías"
-      plus_subcategories:
-        one: "+ %{count} subcategoría"
-        other: "+ %{count} subcategorías"
     select_kit:
       delete_item: "Eliminar %{name}"
       filter_by: "Filtrar por: %{name}"
@@ -4104,7 +4104,6 @@ es:
           delete: "Eliminar"
           delete_confirm: "¿Seguro que quieres eliminar esta sección?"
           reset_confirm: "¿Seguro que quieres restablecer esta sección a los valores predeterminados?"
-          public: "Hacer que esta sección sea pública y visible para todos"
           always_public: "El contenido de esta sección es siempre público"
           more_menu: "Menú Más"
           links:

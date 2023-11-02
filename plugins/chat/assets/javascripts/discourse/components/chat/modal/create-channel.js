@@ -9,7 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const DEFAULT_HINT = htmlSafe(
   I18n.t("chat.create_channel.choose_category.default_hint", {

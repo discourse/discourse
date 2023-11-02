@@ -571,7 +571,8 @@ it:
             name:
               same_as_password: "è uguale alla tua password."
             ip_address:
-              signup_not_allowed: "L'iscrizione non è permessa da questo account."
+              blocked: "Le nuove iscrizioni non sono consentite dal tuo indirizzo IP."
+              max_new_accounts_per_registration_ip: "Le nuove iscrizioni non sono consentite dal tuo indirizzo IP (limite massimo raggiunto). Contatta un membro dello staff."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1408,6 +1409,7 @@ it:
     unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
     watched_word_regexp_error: "L'espressione regolare per le parole osservate %{action} non è valida. Per favore verifica le tue <a href='%{base_path}/admin/customize/watched_words'>Impostazioni sulle Parole Osservate</a>, o disabilita l'impostazione del sito 'watched words regular expressions'."
     v3_analytics_deprecated: "Il tuo Discourse utilizza attualmente Google Analytics 3, che non sarà più supportato dopo luglio 2023. <a href='https://meta.discourse.org/t/260498'>Passa a Google Analytics 4</a> ora per continuare a ricevere preziose informazioni e analisi per le prestazioni del tuo sito web."
+    category_style_deprecated: "Your Discourse utilizza attualmente uno stile di categoria deprecato che verrà rimosso prima della versione beta finale di Discourse 3.2. Fare riferimento a <a href='https://meta.discourse.org/t/282441'>Passaggio a un'impostazione del sito con stile di categoria singola</a> per istruzioni su come mantenere lo stile di categoria selezionato."
   site_settings:
     allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"
     disabled: "disabilitato"
@@ -1551,7 +1553,7 @@ it:
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito."
     invite_code: "L'utente deve digitare questo codice per consentire la registrazione dell'account (senza distinzione tra maiuscole e minuscole), se lasciato vuoto sarà ignorato"
     approve_suspect_users: "Aggiungi utenti sospetti alla coda di revisione. Gli utenti sospetti sono quelli che hanno inserito una biografia o un sito web ma non svolgono attività di lettura."
-    review_every_post: "Tutti i messaggi devono essere revisionati. ATTENZIONE! NON CONSIGLIATO PER SITI MOLTO ATTIVI."
+    review_every_post: "Invia ogni nuovo messaggio alla coda di revisione per la moderazione. I messaggi vengono comunque pubblicati immediatamente e sono visibili a tutti gli utenti. AVVERTIMENTO! Non consigliato per siti ad alto traffico a causa del potenziale volume di messaggi che necessitano di revisione."
     pending_users_reminder_delay_minutes: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di questo numero di minuti. Imposta il valore a -1 per disabilitare le notifiche."
     persistent_sessions: "Gli utenti rimarranno connessi alla chiusura del browser"
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
@@ -1580,8 +1582,6 @@ it:
     invalidate_inactive_admin_email_after_days: "Gli account amministratore che non hanno visitato il sito in questo numero di giorni dovranno riconvalidare il proprio indirizzo email prima di accedere. Impostare su 0 per disabilitare."
     include_secure_categories_in_tag_counts: "Se abilitato, il conteggio degli argomenti per un tag includerà gli argomenti che si trovano nelle categorie con restrizioni di lettura per tutti gli utenti. Se disabilitato, agli utenti normali viene mostrato solo un conteggio degli argomenti per un tag in cui tutti gli argomenti sono nelle categorie pubbliche."
     display_personal_messages_tag_counts: "Se abilitato, verrà visualizzato il conteggio dei messaggi personali contrassegnati con un determinato tag."
-    top_menu: "Determina quali oggetti appaiono nella navigazione della pagina iniziale, e in quale ordine. Esempio latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Determina quali elementi vengono mostrati nel menu del messaggio, e in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Le voci di menu da nascondere per impostazione predefinita nel menu di composizione del messaggio, a meno che non vengano premuti i punti di sospensione per espanderle."
     share_links: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."
     allow_username_in_share_links: "Consenti ai nomi utente di essere inclusi nei link di condivisione. Questo permette di assegnare i distintivi in base ai visitatori unici."
@@ -2064,6 +2064,7 @@ it:
     approve_new_topics_unless_trust_level: "I nuovi argomenti degli utenti al di sotto di questo livello di attendibilità devono essere approvati"
     approve_unless_staged: "Nuovi argomenti e messaggi per gli utenti temporanei devono essere approvati"
     notify_about_queued_posts_after: "Se ci sono messaggi che sono in attesa di essere revisionati per più di questo numero di ore, invia una notifica a tutti i moderatori. Impostare su 0 per disabilitare queste notifiche."
+    reviewable_revision_reasons: "Elenco di motivi che possono essere selezionati quando si rifiuta un messaggio in coda di revisione con una revisione. È sempre disponibile anche Altro, che consente di inserire un motivo personalizzato."
     auto_close_messages_post_count: "Numero massimo di messaggi consentiti in un messaggio privato prima di essere automaticamente chiuso (0 per disabilitare)"
     auto_close_topics_post_count: "Numero massimo di messaggi consentiti in un argomento prima di essere automaticamente chiuso (0 per disabilitare)"
     auto_close_topics_create_linked_topic: "Quando un argomento viene chiuso in base all'impostazione \"chiudi automaticamente argomenti per il numero dei post\", creane un altro collegato."
@@ -2179,7 +2180,6 @@ it:
     navigation_menu: "Determina quale menu di navigazione utilizzare. La barra laterale e la navigazione dell'intestazione sono personalizzabili dagli utenti. L'opzione Compatibile è disponibile per la compatibilità con le versioni precedenti."
     default_navigation_menu_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie del menu di navigazione."
     default_navigation_menu_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette del menu di navigazione."
-    enable_experimental_hashtag_autocomplete: "SPERIMENTALE: utilizza il nuovo sistema di completamento automatico degli #hashtag per categorie ed etichette che rende l'elemento selezionato in modo diverso e con ricerca migliorata"
     experimental_new_new_view_groups: 'SPERIMENTALE: abilita un nuovo elenco di argomenti che combini argomenti non letti e nuovi e crea il link "Tutto" nella barra laterale ad esso.'
     enable_custom_sidebar_sections: "SPERIMENTALE: abilita le sezioni della barra laterale personalizzate"
     experimental_topics_filter: "SPERIMENTALE: abilita il percorso del filtro degli argomenti sperimentali in /filter"
@@ -2456,9 +2456,6 @@ it:
       blocked: "non è permesso."
       revoked: "Non ti verranno inviate email a '%{email}' fino a %{date}."
       does_not_exist: "N/D"
-    ip_address:
-      blocked: "Le nuove iscrizioni non sono consentite dal tuo indirizzo IP."
-      max_new_accounts_per_registration_ip: "Le nuove iscrizioni non sono consentite dal tuo indirizzo IP (limite massimo raggiunto). Contatta un membro dello staff."
     website:
       domain_not_allowed: "Il sito web non è valido. I domini consentiti sono: %{domains}"
     auto_rejected: "Rifiutato automaticamente a causa dell'età. Vedi l'impostazione del sito auto_handle_queued_age."
@@ -2661,6 +2658,28 @@ it:
         Tuttavia, se il messaggio verrà nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che non interverrà lo staff.
 
         Per ulteriori informazioni, fai riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
+    reviewable_queued_post_revise_and_reject:
+      title: "Feedback sul tuo messaggio"
+      subject_template: "Feedback sul tuo messaggio in %{topic_title}"
+      text_body_template: |
+        Ciao %{username},
+
+        Abbiamo esaminato il tuo messaggio in [%{topic_title}](%{topic_url}) e abbiamo un feedback per te.
+
+        Motivo: %{reason}
+
+        Feedback: %{feedback}
+
+        Puoi modificare il tuo post originale qui sotto e riinviarlo con le modifiche suggerite, o rispondi a questo messaggio se hai domande.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Grazie,
+        Moderatori%{site_name}
     post_hidden_again:
       title: "Messaggio nascosto nuovamente"
       subject_template: "Messaggio nascosto dalle segnalazioni della comunità. Lo staff è stato informato"
@@ -4246,6 +4265,8 @@ it:
         title: "No"
       discard_post:
         title: "Annulla messaggio"
+      revise_and_reject_post:
+        title: "Revisiona il messaggio..."
       ignore:
         title: "Ignora"
       ignore_and_do_nothing:

@@ -621,7 +621,8 @@ pl_PL:
             name:
               same_as_password: "jest takie samo, jak twoje hasło."
             ip_address:
-              signup_not_allowed: "Rejestracja z tego konta jest niemożliwa."
+              blocked: "Z twojego adresu IP nowe rejestracje nie są możliwe."
+              max_new_accounts_per_registration_ip: "Z twojego adresu IP nowe rejestracje nie są możliwe (wyczerpany limit). Skonaktuj się z personelem."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1659,7 +1660,6 @@ pl_PL:
     must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu."
     invite_code: "Użytkownik musi wpisać ten kod, aby zezwolić na rejestrację konta, ignorowany, gdy jest pusty (bez rozróżniania wielkości liter)"
     approve_suspect_users: "Dodaj podejrzanych użytkowników do kolejki recenzji. Podejrzani użytkownicy weszli do biografii / witryny, ale nie czytali."
-    review_every_post: "Wszystkie posty muszą zostać sprawdzone. OSTRZEŻENIE! NIE ZALECA SIĘ DLA RUCHLIWYCH WITRYN."
     pending_users_reminder_delay_minutes: "Powiadom moderatorów, jeśli nowi użytkownicy czekają na zatwierdzenie dłużej niż tyle minut. Ustaw na -1, aby wyłączyć powiadomienia."
     persistent_sessions: "Użytkownicy pozostaną zalogowani po zamknięciu przeglądarki internetowej"
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
@@ -1688,8 +1688,6 @@ pl_PL:
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
     display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba wiadomości osobistych oznaczonych danym tagiem."
-    top_menu: "Określ które elementy nawigacyjne serwisu powinny być widoczne i w jakiej kolejności. Przykład aktualne|nowe|nieodczytane|kategorie|top|przeczytane|wysłane|zakładki"
-    post_menu: "Określ które elementy menu wpisu powinny być widoczne i w jakiej kolejności. Przykład like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Elementy w menu, które w menu wpisu będą ukryte, chyba że kliknięty zostanie przycisk rozwijania."
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
     allow_username_in_share_links: "Zezwalaj na umieszczanie nazw użytkowników w linkach do udostępniania. Jest to przydatne, aby nagradzać odznaki na podstawie unikalnych odwiedzających."
@@ -2283,7 +2281,6 @@ pl_PL:
     navigation_menu: "Określ, którego menu nawigacyjnego użyć. Pasek boczny i nawigacja z nagłówka są konfigurowalne przez użytkowników. Opcja przestarzała jest dostępna dla kompatybilności wstecznej."
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
-    enable_experimental_hashtag_autocomplete: "EKSPERYMENTALNIE: Użyj nowego systemu autouzupełniania #hashtagów dla kategorii i tagów, który inaczej renderuje wybrany element i usprawnia wyszukiwanie"
     experimental_new_new_view_groups: 'EKSPERYMENTALNE: Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i utwórz link "Wszystko" na pasku bocznym.'
     enable_custom_sidebar_sections: "EKSPERYMENTALNIE: Włącz niestandardowe sekcje paska bocznego"
     experimental_topics_filter: "EKSPERYMENTALNE: Włącza eksperymentalną ścieżkę filtrowania tematów w /filter"
@@ -2592,9 +2589,6 @@ pl_PL:
       blocked: "nie jest dozwolony."
       revoked: "Maile do \"%{email}\" do %{date} nie będą wysyłane."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Z twojego adresu IP nowe rejestracje nie są możliwe."
-      max_new_accounts_per_registration_ip: "Z twojego adresu IP nowe rejestracje nie są możliwe (wyczerpany limit). Skonaktuj się z personelem."
     website:
       domain_not_allowed: "Błędny adres strony internetowej. Dozwolone domeny: %{domains}"
     auto_rejected: "Odrzucono automatycznie ze względu na wiek. Zobacz ustawienia auto_handle_queued_age witryny."

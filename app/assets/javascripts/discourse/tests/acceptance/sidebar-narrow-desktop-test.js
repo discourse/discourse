@@ -1,4 +1,5 @@
-import { click, settled, visit, waitFor } from "@ember/test-helpers";
+import { click, visit, waitFor } from "@ember/test-helpers";
+import $ from "jquery";
 import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
@@ -11,7 +12,6 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
   test("wide sidebar is changed to cloak when resize to narrow screen", async function (assert) {
     await visit("/");
-    await settled();
     assert.ok(exists("#d-sidebar"), "wide sidebar is displayed");
 
     await click(".header-sidebar-toggle .btn");
@@ -52,7 +52,6 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
   test("transition from narrow screen to wide screen", async function (assert) {
     await visit("/");
-    await settled();
 
     const bodyElement = document.querySelector("body");
     bodyElement.style.width = "767px";

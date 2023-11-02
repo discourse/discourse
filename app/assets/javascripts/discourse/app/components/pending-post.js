@@ -6,6 +6,7 @@ import { afterRender } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   didRender() {
+    this._super(...arguments);
     this._loadOneboxes();
     this._resolveUrls();
   },

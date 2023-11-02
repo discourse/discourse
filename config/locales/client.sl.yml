@@ -399,6 +399,9 @@ sl:
         total: "Skupaj"
         trust_level_bonus:
           name: "nivo zaupanja"
+      revise_and_reject_post:
+        reason: "Razlog"
+        optional: "neobvezno"
       awaiting_approval: "Čaka odobritev"
       delete: "Izbriši"
       settings:
@@ -1133,8 +1136,6 @@ sl:
           Skeniraj to QR kodo v podprti aplikaciji (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) in vnesi vašo potrditveno kodo.
         disable_description: "Vnesite potrditveno kodo iz vaše aplikacije"
         show_key_description: "Vnesite ročno"
-        short_description: |
-          Zaščitite svoj račun z varnostnimi kodami za enkratno uporabo.
         oauth_enabled_warning: "Preverjanje v dveh korakih bo onemogočilo prijavo z družabnimi omrežji."
         use: "Uporabite aplikacijo Authenticator"
         enforced_notice: "Obvezno morate vklopiti preverjanje v dveh korakih za dostop to tega spletnega mesta."
@@ -1158,6 +1159,9 @@ sl:
           already_added_error: "Ta varnostni ključ ste že registrirali. Ni ga treba ponovno registrirati."
           save: "Shrani"
           name_required_error: "Navesti morate ime varnostnega ključa."
+      passkeys:
+        save: "Shrani"
+        added_prefix: "Dodano"
       change_about:
         title: "Spremeni O meni"
         error: "Prišlo je do napake pri spreminjanju te vrednosti"

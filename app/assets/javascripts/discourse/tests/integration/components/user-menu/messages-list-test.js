@@ -7,7 +7,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function getMessage(overrides = {}) {
   return deepMerge(

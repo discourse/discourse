@@ -109,10 +109,7 @@ et:
         new_message:
           title: "Liiguta uude sõnumisse"
       retention_reminders:
-        public:
-          one: "%{count} päev"
-          other: "%{count} päeva"
-        dm:
+        short:
           one: "%{count} päev"
           other: "%{count} päeva"
       emoji_picker:

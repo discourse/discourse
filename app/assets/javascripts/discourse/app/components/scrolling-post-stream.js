@@ -365,6 +365,7 @@ export default MountWidget.extend({
   },
 
   didUpdateAttrs() {
+    this._super(...arguments);
     this._refresh({ force: true });
   },
 

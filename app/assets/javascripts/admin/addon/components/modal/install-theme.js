@@ -5,8 +5,8 @@ import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
+import I18n from "discourse-i18n";
 import { COMPONENTS, THEMES } from "admin/models/theme";
-import I18n from "I18n";
 
 const MIN_NAME_LENGTH = 4;
 
@@ -117,6 +117,7 @@ export default class InstallTheme extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.args.model.clearParams?.();
   }
 

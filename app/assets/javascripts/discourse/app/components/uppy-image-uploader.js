@@ -4,6 +4,7 @@ import { or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import $ from "jquery";
 import lightbox, {
   cleanupLightboxes,
   setupLightboxes,
@@ -12,7 +13,7 @@ import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend(UppyUploadMixin, {
   classNames: ["image-uploader"],

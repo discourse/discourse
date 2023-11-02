@@ -7,8 +7,8 @@ import { isEmpty } from "@ember/utils";
 import { classNames, tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import WatchedWord from "admin/models/watched-word";
-import I18n from "I18n";
 
 @tagName("form")
 @classNames("watched-word-form")

@@ -113,10 +113,7 @@ nb_NO:
         new_message:
           title: "Flytt til ny melding"
       retention_reminders:
-        public:
-          one: "%{count} dag"
-          other: "%{count} dager"
-        dm:
+        short:
           one: "%{count} dag"
           other: "%{count} dager"
       emoji_picker:

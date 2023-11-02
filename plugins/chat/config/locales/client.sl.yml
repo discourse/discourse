@@ -109,12 +109,7 @@ sl:
         new_message:
           title: "Prestavi v novo ZS"
       retention_reminders:
-        public:
-          one: "%{count} dan"
-          two: "%{count} dneva"
-          few: "%{count} dnevi"
-          other: "%{count} dni"
-        dm:
+        short:
           one: "%{count} dan"
           two: "%{count} dneva"
           few: "%{count} dnevi"

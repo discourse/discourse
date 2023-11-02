@@ -1,6 +1,6 @@
 import Service, { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatChannelArchive from "../models/chat-channel-archive";
 
@@ -25,9 +25,9 @@ export default class ChatSubscriptionsManager extends Service {
     }
 
     this._channelSubscriptions.add(channel.id);
+    this._startChannelMentionsSubscription(channel);
 
     if (!channel.isDirectMessageChannel) {
-      this._startChannelMentionsSubscription(channel);
       this._startKickFromChannelSubscription(channel);
     }
 

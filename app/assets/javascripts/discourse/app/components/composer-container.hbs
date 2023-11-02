@@ -7,7 +7,6 @@
   @save={{this.composer.saveAction}}
 >
   <div class="grippie"></div>
-
   {{#if this.composer.visible}}
     <ComposerMessages
       @composer={{this.composer.model}}
@@ -27,6 +26,11 @@
         aria-label={{I18n this.composer.saveLabel}}
         class="reply-area
           {{if this.composer.canEditTags 'with-tags' 'without-tags'}}
+          {{if
+            this.composer.hasFormTemplate
+            'with-form-template'
+            'without-form-template'
+          }}
           {{if
             this.composer.model.showCategoryChooser
             'with-category'

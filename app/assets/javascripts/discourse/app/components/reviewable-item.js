@@ -4,14 +4,14 @@ import { action, set } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
+import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import optionalService from "discourse/lib/optional-service";
-import showModal from "discourse/lib/show-modal";
 import Category from "discourse/models/category";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _components = {};
 
@@ -299,21 +299,14 @@ export default Component.extend({
       const requireRejectReason = performableAction.get(
         "require_reject_reason"
       );
-      const actionModalClass =
-        actionModalClassMap[performableAction.server_action];
+      const actionModalClass = requireRejectReason
+        ? RejectReasonReviewableModal
+        : actionModalClassMap[performableAction.server_action];
 
       if (message) {
         this.dialog.confirm({
           message,
           didConfirm: () => this._performConfirmed(performableAction),
-        });
-      } else if (requireRejectReason) {
-        showModal("reject-reason-reviewable", {
-          title: "review.reject_reason.title",
-          model: this.reviewable,
-        }).setProperties({
-          performConfirmed: this._performConfirmed,
-          action: performableAction,
         });
       } else if (actionModalClass) {
         this.modal.show(actionModalClass, {

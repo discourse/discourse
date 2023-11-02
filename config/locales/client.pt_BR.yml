@@ -419,6 +419,9 @@ pt_BR:
         type_bonus:
           name: "bônus de tipo"
           title: "Certos tipos revisáveis podem receber um bônus da equipe para aumentar sua prioridade."
+      revise_and_reject_post:
+        reason: "Motivo"
+        optional: "opcional"
       stale_help: "Este revisável foi encerrado por <b>%{username}</b>."
       claim_help:
         optional: "Você pode reivindicar este item para impedir que outras pessoas o revisem."
@@ -1347,8 +1350,6 @@ pt_BR:
           Digitalize este código QR em um aplicativo compatível (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e digite seu código de autenticação.
         disable_description: "Insira o código de autenticação do seu aplicativo"
         show_key_description: "Inserir manualmente"
-        short_description: |
-          Proteja sua conta com códigos de segurança de uso único.
         extended_description: |
           A autenticação de dois fatores adiciona segurança extra à sua conta, exigindo um token único além da sua senha. Tokens podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Observe que as entradas com rede social serão desativadas após a ativação da autenticação de dois fatores na sua conta."
@@ -1387,6 +1388,10 @@ pt_BR:
           save: "Salvar"
           edit_description: "Nome de chaves de segurança física"
           name_required_error: "Você deve informar um nome para sua chave de segurança."
+      passkeys:
+        save: "Salvar"
+        added_prefix: "Adicionado"
+        last_used_prefix: "Usados(as) por último"
       change_about:
         title: "Alterar Sobre mim"
         error: "Houve um erro ao alterar este valor."
@@ -1670,6 +1675,7 @@ pt_BR:
         ok: "A sua senha parece boa."
         instructions: "pelo menos %{count} caracteres"
         required: "Digite uma senha"
+        confirm: "Confirmar"
       summary:
         title: "Resumo"
         stats: "Estatísticas"
@@ -2032,12 +2038,6 @@ pt_BR:
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
-      plus_subcategories_title:
-        one: "%{name} e uma subcategoria"
-        other: "%{name} e %{count} subcategorias"
-      plus_subcategories:
-        one: "+%{count} subcategoria"
-        other: "+%{count} subcategorias"
     select_kit:
       delete_item: "Excluir %{name}"
       filter_by: "Filtrar por: %{name}"
@@ -4022,7 +4022,6 @@ pt_BR:
           delete: "Excluir"
           delete_confirm: "Tem certeza de que deseja excluir essa seção?"
           reset_confirm: "Tem certeza de que deseja redefinir esta seção para o padrão?"
-          public: "Tornar esta seção pública e visível para todos"
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
           links:

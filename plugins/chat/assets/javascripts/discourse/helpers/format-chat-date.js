@@ -1,10 +1,9 @@
 import { htmlSafe } from "@ember/template";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
-import { registerUnbound } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
-registerUnbound("format-chat-date", function (message, mode) {
+export default function formatChatDate(message, mode) {
   const currentUser = User.current();
   const tz = currentUser ? currentUser.user_option.timezone : moment.tz.guess();
   const date = moment(new Date(message.createdAt), tz);
@@ -25,4 +24,4 @@ registerUnbound("format-chat-date", function (message, mode) {
       `<a title='${title}' tabindex="-1" class='chat-time' href='${url}'>${display}</a>`
     );
   }
-});
+}

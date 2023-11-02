@@ -433,6 +433,14 @@ de:
         type_bonus:
           name: "Bonustyp"
           title: "Bestimmte überprüfbare Typen können vom Team mit einem Bonus ausgestattet werden, damit sie höher priorisiert sind."
+      revise_and_reject_post:
+        title: "Überarbeite"
+        reason: "Grund"
+        send_pm: "PM senden"
+        feedback: "Feedback"
+        custom_reason: "Gib eine klare Beschreibung des Grundes an"
+        other_reason: "Andere..."
+        optional: "optional"
       stale_help: "Diese Überprüfung wurde von <b>%{username}</b> gelöst."
       claim_help:
         optional: "Du kannst dieses Element reservieren, damit andere es nicht überprüfen."
@@ -1367,7 +1375,7 @@ de:
         disable_description: "Bitte gib den Authentifizierungscode aus deiner App ein."
         show_key_description: "Manuell eingeben"
         short_description: |
-          Schütze dein Konto mit Einweg-Sicherheitscodes.
+          Schütze dein Konto mit einmalig verwendbaren Sicherheitscodes oder physischen Sicherheitsschlüsseln.
         extended_description: |
           Zwei-Faktor-Authentifizierung erhöht die Sicherheit deines Kontos, indem zusätzlich zum Passwort ein einmalig gültiger Code erforderlich ist. Codes können auf <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+android" target='_blank'>Android</a>- und <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+iOS">iOS</a>-Geräten generiert werden.
         oauth_enabled_warning: "Bitte beachte, dass soziale Anmeldemethoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert wurde."
@@ -1406,6 +1414,22 @@ de:
           save: "Speichern"
           edit_description: "Name des physischen Sicherheitsschlüssels"
           name_required_error: "Du musst einen Namen für deinen Sicherheitsschlüssel angeben."
+      passkeys:
+        rename_passkey: "Hauptschlüssel umbenennen"
+        add_passkey: "Hauptschlüssel hinzufügen"
+        confirm_delete_passkey: "Möchtest du wirklich diesen Hauptschlüssel löschen?"
+        passkey_successfully_created: "Erfolg! Dein neuer Hauptschlüssel wurde erstellt."
+        rename_passkey_instructions: "Wähle einen Namen für den Hauptschlüssel, mit dem du ihn leicht identifizieren kannst, zum Beispiel den Namen deines Passwortmanagers."
+        name:
+          default: "Hauptpassschlüssel"
+        save: "Speichern"
+        title: "Hauptschlüssel"
+        short_description: "Hauptschlüssel ersetzen Passwörter, die deine Identität biometrisch (z.B. durch Berührung, FaceID) oder über eine Geräte-PIN/ein Passwort validieren."
+        added_prefix: "Hinzugefügt"
+        last_used_prefix: "Zuletzt verwendet"
+        never_used: "Nie benutzt"
+        not_allowed_error: "Bei der Registrierung des Hauptschlüssels wurde entweder das Zeitlimit überschritten, er wurde abgebrochen oder ist nicht zulässig."
+        already_added_error: "Du hast diesen Hauptschlüssel bereits registriert. Du musst ihn nicht erneut registrieren."
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -1516,6 +1540,7 @@ de:
         instructions: "Zur Registrierung eines Benutzerkontos wird ein Einladungs-Code benötigt."
       auth_tokens:
         title: "Kürzlich benutzte Geräte"
+        short_description: "Dies ist eine Liste der Geräte, die sich kürzlich bei deinem Konto angemeldet haben."
         details: "Details"
         log_out_all: "Überall abmelden"
         not_you: "Das bist nicht du?"
@@ -1684,6 +1709,12 @@ de:
           progress: "%{progress} % hochgeladen …"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
           error: "Die Datei sollte im CSV Format vorliegen."
+      confirm_access:
+        title: "Zugriff bestätigen"
+        incorrect_password: "Das eingegebene Passwort ist falsch."
+        logged_in_as: "Du bist eingeloggt als: "
+        instructions: "Bitte bestätige deine Identität, um diese Aktion abzuschließen."
+        fine_print: "Wir bitten dich, deine Identität zu bestätigen, da dies eine potenziell sensible Aktion ist. Wenn du dich einmal authentifiziert hast, wirst du erst nach ein paar Stunden Inaktivität wieder aufgefordert, dich erneut zu authentifizieren."
       password:
         title: "Passwort"
         too_short: "Dein Passwort ist zu kurz."
@@ -1693,6 +1724,8 @@ de:
         ok: "Dein Passwort sieht in Ordnung aus."
         instructions: "mindestens %{count} Zeichen"
         required: "Bitte Passwort eingeben"
+        confirm: "Bestätigen"
+        incorrect_password: "Das eingegebene Passwort ist falsch."
       summary:
         title: "Zusammenfassung"
         stats: "Statistiken"
@@ -2023,6 +2056,8 @@ de:
         name: "Discord"
         title: "Mit Discord anmelden"
         sr_title: "Mit Discord anmelden"
+      passkey:
+        name: "Anmeldung mit einem Hauptschlüssel"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"
@@ -2067,12 +2102,6 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
-      plus_subcategories_title:
-        one: "%{name} und eine Unterkategorie"
-        other: "%{name} und %{count} Unterkategorien"
-      plus_subcategories:
-        one: "+ %{count} Unterkategorie"
-        other: "+ %{count} Unterkategorien"
     select_kit:
       delete_item: "%{name} löschen"
       filter_by: "Filtern nach: %{name}"
@@ -2275,6 +2304,7 @@ de:
           desc: Ein geflüsterter Beitrag ist nur für Team-Mitglieder sichtbar
         create_topic:
           label: "Neues Thema"
+          desc: Erstelle ein neues Thema
         shared_draft:
           label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
@@ -3405,6 +3435,7 @@ de:
       logo: "Logo für Kategorie"
       logo_dark: "Logobild der Kategorie „Dunkler Modus“"
       background_image: "Hintergrundbild für Kategorie"
+      background_image_dark: "Dunkle Kategorie Hintergrundbild"
       badge_colors: "Farben des Abzeichens"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
@@ -4114,7 +4145,7 @@ de:
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
           reset_confirm: "Bist du sicher, dass du diesen Abschnitt auf die Standardeinstellungen zurücksetzen willst?"
-          public: "Diesen Abschnitt öffentlich und für alle sichtbar machen"
+          public: "Für alle sichtbar"
           always_public: "Die Inhalte in diesem Abschnitt sind immer öffentlich"
           more_menu: "Menü „Mehr“"
           links:
@@ -4766,7 +4797,7 @@ de:
         install: "Installieren"
         delete: "Löschen"
         delete_confirm: 'Möchtest du wirklich „%{theme_name}“ löschen?'
-        bulk_delete: 'Bist du sicher?'
+        bulk_delete: "Bist du sicher?"
         bulk_themes_delete_confirm: "Dadurch werden die folgenden Themes deinstalliert und können von den Nutzern auf deiner Website nicht mehr verwendet werden:"
         bulk_components_delete_confirm: "Dadurch werden die folgenden Komponenten deinstalliert und können von den Nutzern deiner Website nicht mehr verwendet werden:"
         color: "Farbe"

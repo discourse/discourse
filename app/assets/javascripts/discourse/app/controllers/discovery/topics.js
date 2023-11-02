@@ -12,7 +12,7 @@ import DismissTopics from "discourse/mixins/dismiss-topics";
 import Topic from "discourse/models/topic";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class TopicsController extends DiscoveryController.extend(
   DismissTopics

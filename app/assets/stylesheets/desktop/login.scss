@@ -197,12 +197,11 @@
 // // create account
 // // modal only
 // .d-modal.create-account {
-//   .create-account-body {
-//     min-width: 100%;
-//   }
 //   .modal-body {
+//     min-width: 100%;
 //     overflow: hidden;
 //   }
+//
 //   .has-alt-auth .create-account-form {
 //     display: grid;
 //     grid-template-columns: 60% 40%;
@@ -347,9 +346,6 @@
 //     }
 //     display: flex;
 //     flex-direction: column;
-//     &.confirm {
-//       margin-top: 5px;
-//     }
 //   }
 
 //   .invites-show {

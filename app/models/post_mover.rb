@@ -277,6 +277,7 @@ class PostMover
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
 
+    DiscourseEvent.trigger(:first_post_moved, new_post, post)
     DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
 
     # we don't want to keep the old topic's OP bookmarked when we are

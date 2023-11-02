@@ -128,12 +128,7 @@ cs:
         existing_topic:
           title: "Sloučit téma"
       retention_reminders:
-        public:
-          one: "%{count} den"
-          few: "%{count} dny"
-          many: "%{count} dní"
-          other: "%{count} dní"
-        dm:
+        short:
           one: "%{count} den"
           few: "%{count} dny"
           many: "%{count} dní"

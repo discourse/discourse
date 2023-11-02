@@ -12,6 +12,7 @@ import {
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
 import SectionLink from "discourse/lib/sidebar/section-link";
+import AdminRevampSectionLink from "discourse/lib/sidebar/user/community-section/admin-revamp-section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
@@ -25,6 +26,7 @@ const SPECIAL_LINKS_MAP = {
   "/review": ReviewSectionLink,
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,
+  "/admin-revamp": AdminRevampSectionLink,
   "/g": GroupsSectionLink,
 };
 

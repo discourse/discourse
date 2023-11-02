@@ -14,7 +14,7 @@ import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const USER_HOMES = {
   1: "latest",

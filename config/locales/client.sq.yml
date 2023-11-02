@@ -240,6 +240,8 @@ sq:
       in_reply_to: "në përgjigje të"
       explain:
         total: "Total"
+      revise_and_reject_post:
+        reason: "Arsye"
       delete: "Fshij"
       settings:
         saved: "U ruajtën"
@@ -637,6 +639,8 @@ sq:
         edit: "Redakto"
         security_key:
           save: "Ruaj"
+      passkeys:
+        save: "Ruaj"
       change_about:
         title: "Ndrysho Rreth meje"
         error: "Pati një gabim gjatë ndryshimit të kësaj të dhëne."
