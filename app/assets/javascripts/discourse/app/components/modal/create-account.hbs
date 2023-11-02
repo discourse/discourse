@@ -16,7 +16,7 @@
 
     <div
       class={{concat-class
-        "login-left-side"
+        (if this.site.desktopView "login-left-side")
         this.model.authOptions.auth_provider
       }}
     >
@@ -245,28 +245,30 @@
           />
         </form>
 
-        <div class="modal-footer">
+        <div class="d-modal__footer">
           <div class="disclaimer">
+            do ff rustig erik
             {{html-safe this.disclaimerHtml}}
           </div>
-
-          <DButton
-            @action={{action "createAccount"}}
-            @disabled={{this.submitDisabled}}
-            @label="create_account.title"
-            @isLoading={{this.formSubmitted}}
-            class="btn-large btn-primary"
-          />
-
-          {{#unless this.hasAuthOptions}}
+          <div class="d-modal__footer-buttons">
             <DButton
-              @action={{route-action "showLogin"}}
-              @disabled={{this.formSubmitted}}
-              @label="log_in"
-              id="login-link"
-              class="btn-large"
+              @action={{action "createAccount"}}
+              @disabled={{this.submitDisabled}}
+              @label="create_account.title"
+              @isLoading={{this.formSubmitted}}
+              class="btn-large btn-primary"
             />
-          {{/unless}}
+
+            {{#unless this.hasAuthOptions}}
+              <DButton
+                @action={{route-action "showLogin"}}
+                @disabled={{this.formSubmitted}}
+                @label="log_in"
+                id="login-link"
+                class="btn-large btn-flat"
+              />
+            {{/unless}}
+          </div>
         </div>
 
         <PluginOutlet
@@ -279,10 +281,10 @@
         {{loading-spinner size="large"}}
       {{/if}}
     </div>
-    <div class="login-right-side">
-      {{#if this.showExternalLoginButtons}}
+    {{#if this.showExternalLoginButtons}}
+      <div class="login-right-side">
         <LoginButtons @externalLogin={{action "externalLogin"}} />
-      {{/if}}
-    </div>
+      </div>
+    {{/if}}
   </:body>
 </DModal>
