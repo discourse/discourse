@@ -5,7 +5,6 @@ import { inject as service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class ReorderCategories extends Component {
   @service site;
@@ -19,9 +18,10 @@ export default class ReorderCategories extends Component {
     this.reorder();
   }
 
-  @discourseComputed("site.categories.[]")
-  categoriesBuffered(categories) {
-    return (categories || []).map((c) => BufferedProxy.create({ content: c }));
+  get categoriesBuffered() {
+    return this.site.categories.map((c) =>
+      BufferedProxy.create({ content: c })
+    );
   }
 
   /**
