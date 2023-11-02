@@ -23,7 +23,9 @@ export default class ReorderCategories extends Component {
 
   @cached
   get categoriesOrdered() {
-    return this.categoriesBuffered.sort((a, b) => a.position - b.position);
+    return this.categoriesBuffered.sort(
+      (a, b) => a.get("position") - b.get("position")
+    );
   }
 
   /**
