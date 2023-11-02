@@ -42,7 +42,7 @@ acceptance("CSS Generator", function (needs) {
     const cssTag = document.querySelector("style#category-badge-css-generator");
     assert.equal(
       cssTag.innerHTML,
-      '.badge-category[data-category="1"] { --category-badge-color: var(--category-1-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category="2"] { --category-badge-color: var(--category-2-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category="4"] { --category-badge-color: var(--category-4-color); --category-badge-text-color: #ffffff; }'
+      '.badge-category[data-category-id="1"] { --category-badge-color: var(--category-1-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category-id="2"] { --category-badge-color: var(--category-2-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category-id="4"] { --category-badge-color: var(--category-4-color); --category-badge-text-color: #ffffff; }'
     );
   });
 });

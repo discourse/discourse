@@ -17,9 +17,9 @@ export default {
       let parentCategory = Category.findById(
         get(category, "parent_category_id")
       );
-      let badgeCss = `.badge-category[data-category="${category.id}"] { --category-badge-color: var(--category-${category.id}-color); --category-badge-text-color: #${category.text_color}; }`;
+      let badgeCss = `.badge-category[data-category-id="${category.id}"] { --category-badge-color: var(--category-${category.id}-color); --category-badge-text-color: #${category.text_color}; }`;
       if (parentCategory) {
-        badgeCss += `.badge-category[data-parent-category="${parentCategory.id}"] { --parent-category-badge-color: var(--category-${parentCategory.id}-color); }`;
+        badgeCss += `.badge-category[data-parent-category-id="${parentCategory.id}"] { --parent-category-badge-color: var(--category-${parentCategory.id}-color); }`;
       }
       return badgeCss;
     });

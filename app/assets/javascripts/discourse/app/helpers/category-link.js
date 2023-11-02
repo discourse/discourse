@@ -109,7 +109,9 @@ export function defaultCategoryLinkRenderer(category, opts) {
   let html = "";
   let parentCat = null;
   let categoryDir = "";
-  let dataAttributes = category ? `data-category="${get(category, "id")}"` : "";
+  let dataAttributes = category
+    ? `data-category-id="${get(category, "id")}"`
+    : "";
 
   if (!opts.hideParent) {
     parentCat = Category.findById(get(category, "parent_category_id"));
