@@ -444,11 +444,8 @@ export default class DLightbox extends Component {
       case SWIPE_DIRECTIONS.RIGHT:
         this.options.isRTL ? this.showPreviousItem() : this.showNextItem();
         break;
-      case SWIPE_DIRECTIONS.UP:
-        this.close();
-        break;
       case SWIPE_DIRECTIONS.DOWN:
-        this.toggleCarousel();
+        this.close();
         break;
     }
   }

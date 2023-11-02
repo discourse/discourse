@@ -840,47 +840,10 @@ acceptance("Experimental Lightbox - mobile", function (needs) {
     });
 
     await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchend", {
-      changedTouches: [{ screenX: 0, screenY: -150 }],
-      touches: [{ pageX: 0, pageY: 150 }],
-    });
-
-    assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
-  });
-
-  test("navigation - swipe carousel", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
-    assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
-
-    assert.dom(SELECTORS.CAROUSEL).exists();
-    await click(SELECTORS.CAROUSEL_BUTTON); // closes carousel
-
-    await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchstart", {
-      changedTouches: [{ screenX: 0, screenY: 0 }],
-      touches: [{ screenX: 0, screenY: 0 }],
-    });
-
-    await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchend", {
       changedTouches: [{ screenX: 0, screenY: 150 }],
       touches: [{ pageX: 0, pageY: 150 }],
     });
 
-    assert.dom(SELECTORS.CAROUSEL).exists(); // opens after swiping down
-
-    await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchstart", {
-      changedTouches: [{ screenX: 0, screenY: 0 }],
-      touches: [{ screenX: 0, screenY: 0 }],
-    });
-
-    await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchend", {
-      changedTouches: [{ screenX: 0, screenY: 150 }],
-      touches: [{ pageX: 0, pageY: 150 }],
-    });
-
-    assert.dom(SELECTORS.CAROUSEL).doesNotExist(); // closes after swiping down again
-
-    await click(SELECTORS.CLOSE_BUTTON);
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
   });
 });
