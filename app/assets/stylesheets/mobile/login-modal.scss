@@ -5,6 +5,12 @@
       &__body {
         flex-direction: column;
         gap: unset;
+        padding-inline: 0.5rem;
+      }
+      &__footer {
+        border-top: 1px solid var(--primary-low);
+        padding: 1rem;
+        font-size: var(--font-down-1);
       }
     }
 
@@ -12,11 +18,16 @@
       font-size: var(--font-up-3);
     }
 
+    .login-welcome-header {
+      padding: 1rem;
+    }
+
     #login-buttons {
       flex-direction: row;
       flex-wrap: wrap;
       padding: 0 1rem;
       gap: 0.25em;
+      margin-bottom: 1rem;
 
       .btn {
         margin: 0;
@@ -34,14 +45,8 @@
 
     #login-form,
     .login-form {
-      margin: 1rem 0 0;
-      padding: 1em;
-
-      form {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-      }
+      margin: 0;
+      padding: 1rem;
 
       .input-group {
         input {
@@ -63,10 +68,6 @@
           color: var(--primary-medium);
         }
       }
-    }
-
-    .modal-footer {
-      border-top: 1px solid var(--primary-low);
     }
     .caps-lock-warning {
       display: none;
