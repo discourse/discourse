@@ -5,9 +5,11 @@
     }
   }
   input[type="text"] {
+    margin: 0;
     max-width: 2.5em;
     padding: 0.35em;
     text-align: center;
+
     @include breakpoint(mobile-extra-large) {
       width: 2em;
     }
@@ -29,6 +31,11 @@
       max-width: 30vw;
     }
   }
+}
+
+.reorder-categories-actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .reorder-categories-depth-1 {

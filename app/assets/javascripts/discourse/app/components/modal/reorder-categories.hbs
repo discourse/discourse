@@ -19,21 +19,23 @@
             </td>
 
             <td>
-              <NumberField
-                @number={{readonly category.position}}
-                @change={{fn this.change category}}
-                @min="0"
-              />
-              <DButton
-                @action={{fn this.move category -1}}
-                @icon="arrow-up"
-                class="btn-default no-text"
-              />
-              <DButton
-                @action={{fn this.move category 1}}
-                @icon="arrow-down"
-                class="btn-default no-text"
-              />
+              <div class="reorder-categories-actions">
+                <NumberField
+                  @number={{readonly category.position}}
+                  @change={{fn this.change category}}
+                  @min="0"
+                />
+                <DButton
+                  @action={{fn this.move category -1}}
+                  @icon="arrow-up"
+                  class="btn-default no-text"
+                />
+                <DButton
+                  @action={{fn this.move category 1}}
+                  @icon="arrow-down"
+                  class="btn-default no-text"
+                />
+              </div>
             </td>
           </tr>
         {{/each}}
