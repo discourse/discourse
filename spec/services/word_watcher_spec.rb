@@ -53,8 +53,9 @@ RSpec.describe WordWatcher do
     end
 
     context "when watched_words_regular_expressions = true" do
+      before { SiteSetting.watched_words_regular_expressions = true }
+
       it "returns the proper regexp" do
-        SiteSetting.watched_words_regular_expressions = true
         regexps = described_class.compiled_regexps_for_action(:block)
 
         expect(regexps).to be_an(Array)
@@ -62,6 +63,22 @@ RSpec.describe WordWatcher do
           "/(#{word1})|(#{word2})/i",
           "/(#{word3})|(#{word4})/",
         )
+      end
+
+      it "validates regexp in Ruby" do
+        Fabricate(:watched_word, word: "*test", action: WatchedWord.actions[:block])
+
+        expect {
+          described_class.compiled_regexps_for_action(:block, raise_errors: true)
+        }.to raise_error(RegexpError)
+      end
+
+      it "validates regexp in JavaScript" do
+        Fabricate(:watched_word, word: "a\\-b", action: WatchedWord.actions[:block])
+
+        expect {
+          described_class.compiled_regexps_for_action(:block, raise_errors: true)
+        }.to raise_error(MiniRacer::RuntimeError)
       end
     end
 

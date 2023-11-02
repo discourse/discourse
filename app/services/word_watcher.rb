@@ -78,20 +78,51 @@ class WordWatcher
     (cached_words_for_action(action) || [])
       .group_by { |attrs| attrs[:case_sensitive] ? :case_sensitive : :case_insensitive }
       .map do |group_key, attrs_list|
-        words = attrs_list.map { |attrs| attrs[:word] }
+        # Validate words
+        words =
+          attrs_list
+            .map { |attrs| attrs[:word] }
+            .map do |word|
+              # Validate Ruby regular expression
+              rb_regexp = word_to_regexp(word, engine: :ruby)
+
+              begin
+                Regexp.new(rb_regexp)
+              rescue RegexpError
+                if raise_errors
+                  raise
+                else
+                  next
+                end
+              end
+
+              # Validate JavaScript regular expression
+              js_regexp = word_to_regexp(word, engine: :js)
+
+              begin
+                PrettyText.v8.eval("new RegExp(#{js_regexp.inspect}, 'gu')")
+              rescue MiniRacer::RuntimeError
+                if raise_errors
+                  raise
+                else
+                  next
+                end
+              end
+
+              word
+            end
+            .select { |r| r.present? }
 
         # Compile all watched words into a single regular expression
         regexp =
           words
             .map do |word|
-              r = word_to_regexp(word, match_word: SiteSetting.watched_words_regular_expressions?)
-              begin
-                r if Regexp.new(r)
-              rescue RegexpError
-                raise if raise_errors
-              end
+              word_to_regexp(
+                word,
+                engine: engine,
+                match_word: SiteSetting.watched_words_regular_expressions?,
+              )
             end
-            .select { |r| r.present? }
             .join("|")
 
         # Add word boundaries to the regexp for regular watched words
