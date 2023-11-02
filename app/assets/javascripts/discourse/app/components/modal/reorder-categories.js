@@ -35,7 +35,6 @@ export default class ReorderCategories extends Component {
    *      parent          =>    parent/c2
    *      other                 parent/c2/c1
    *      parent/c2             other
-   *
    **/
   reorder() {
     this.reorderChildren(null, 0, 0);
