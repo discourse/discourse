@@ -39,21 +39,7 @@ export default class ReorderCategories extends Component.extend(Evented) {
    *
    **/
   reorder() {
-    const reorderChildren = (categoryId, depth, index) => {
-      this.categoriesOrdered.forEach((category) => {
-        if (
-          (categoryId === null && !category.get("parent_category_id")) ||
-          category.get("parent_category_id") === categoryId
-        ) {
-          category.setProperties({ depth, position: index++ });
-          index = reorderChildren(category.get("id"), depth + 1, index);
-        }
-      });
-
-      return index;
-    };
-
-    reorderChildren(null, 0, 0);
+    this.reorderChildren(null, 0, 0);
 
     this.categoriesBuffered.forEach((bc) => {
       if (bc.get("hasBufferedChanges")) {
@@ -62,6 +48,20 @@ export default class ReorderCategories extends Component.extend(Evented) {
     });
 
     this.notifyPropertyChange("categoriesBuffered");
+  }
+
+  reorderChildren(categoryId, depth, index) {
+    this.categoriesOrdered.forEach((category) => {
+      if (
+        (categoryId === null && !category.get("parent_category_id")) ||
+        category.get("parent_category_id") === categoryId
+      ) {
+        category.setProperties({ depth, position: index++ });
+        index = this.reorderChildren(category.get("id"), depth + 1, index);
+      }
+    });
+
+    return index;
   }
 
   countDescendants(category) {
