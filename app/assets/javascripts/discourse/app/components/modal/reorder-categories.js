@@ -5,23 +5,17 @@ import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default class ReorderCategories extends Component {
   @service site;
 
   categoriesSorting = ["position"];
 
-  @sort("categories", "categoriesSorting") categoriesOrdered;
+  @sort("site.categories", "categoriesSorting") categoriesOrdered;
 
   init() {
     super.init(...arguments);
     next(() => this.reorder());
-  }
-
-  @discourseComputed("site.categories.[]")
-  categories() {
-    return this.site.categories;
   }
 
   /**
@@ -156,7 +150,7 @@ export default class ReorderCategories extends Component {
     this.reorder();
 
     const data = {};
-    for (const category of this.categories) {
+    for (const category of this.site.categories) {
       data[category.get("id")] = category.get("position");
     }
 
