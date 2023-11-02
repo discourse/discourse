@@ -102,7 +102,13 @@ RSpec.describe ThemeStore::ZipExporter do
       `rm #{file}`
 
       folders = Dir.glob("**/*").reject { |f| File.file?(f) }
-      expect(folders).to contain_exactly("assets", "common", "locales", "mobile", "migrations")
+      expect(folders).to contain_exactly(
+        "assets",
+        "common",
+        "locales",
+        "mobile",
+        "migrations/settings",
+      )
 
       files = Dir.glob("**/*").reject { |f| File.directory?(f) }
       expect(files).to contain_exactly(
