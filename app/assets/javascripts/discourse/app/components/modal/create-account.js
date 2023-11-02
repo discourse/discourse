@@ -4,6 +4,7 @@ import EmberObject, { action } from "@ember/object";
 import { alias, notEmpty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import LoginModal from "discourse/components/modal/login";
@@ -20,10 +21,7 @@ import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default class CreateAccount extends Component.extend(
