@@ -1,26 +1,29 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
 import { inject as service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend(Evented, {
-  site: service(),
+export default class ReorderCategories extends Component.extend(Evented) {
+  @service site;
+
+  categoriesSorting = ["position"];
+
+  @sort("categoriesBuffered", "categoriesSorting") categoriesOrdered;
 
   init() {
-    this._super(...arguments);
-    this.categoriesSorting = ["position"];
-  },
+    super.init(...arguments);
+    this.reorder();
+  }
 
   @discourseComputed("site.categories.[]")
   categoriesBuffered(categories) {
     return (categories || []).map((c) => BufferedProxy.create({ content: c }));
-  },
-
-  categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
+  }
 
   /**
    * 1. Make sure all categories have unique position numbers.
@@ -35,7 +38,6 @@ export default Component.extend(Evented, {
    *      parent/c2             other
    *
    **/
-  @on("init")
   reorder() {
     const reorderChildren = (categoryId, depth, index) => {
       this.categoriesOrdered.forEach((category) => {
@@ -60,7 +62,7 @@ export default Component.extend(Evented, {
     });
 
     this.notifyPropertyChange("categoriesBuffered");
-  },
+  }
 
   countDescendants(category) {
     return category.get("subcategories")
@@ -71,7 +73,7 @@ export default Component.extend(Evented, {
             category.get("subcategories").length
           )
       : 0;
-  },
+  }
 
   move(category, direction) {
     let targetPosition = category.get("position") + direction;
@@ -142,41 +144,43 @@ export default Component.extend(Evented, {
     category.set("position", targetPosition);
 
     this.reorder();
-  },
+  }
 
-  actions: {
-    change(category, event) {
-      let newPosition = parseFloat(event.target.value);
-      newPosition =
-        newPosition < category.get("position")
-          ? Math.ceil(newPosition)
-          : Math.floor(newPosition);
-      const direction = newPosition - category.get("position");
-      this.move(category, direction);
-    },
+  @action
+  change(category, event) {
+    let newPosition = parseFloat(event.target.value);
+    newPosition =
+      newPosition < category.get("position")
+        ? Math.ceil(newPosition)
+        : Math.floor(newPosition);
+    const direction = newPosition - category.get("position");
+    this.move(category, direction);
+  }
 
-    moveUp(category) {
-      this.move(category, -1);
-    },
+  @action
+  moveUp(category) {
+    this.move(category, -1);
+  }
 
-    moveDown(category) {
-      this.move(category, 1);
-    },
+  @action
+  moveDown(category) {
+    this.move(category, 1);
+  }
 
-    save() {
-      this.reorder();
+  @action
+  save() {
+    this.reorder();
 
-      const data = {};
-      this.categoriesBuffered.forEach((cat) => {
-        data[cat.get("id")] = cat.get("position");
-      });
+    const data = {};
+    this.categoriesBuffered.forEach((cat) => {
+      data[cat.get("id")] = cat.get("position");
+    });
 
-      ajax("/categories/reorder", {
-        type: "POST",
-        data: { mapping: JSON.stringify(data) },
-      })
-        .then(() => window.location.reload())
-        .catch(popupAjaxError);
-    },
-  },
-});
+    ajax("/categories/reorder", {
+      type: "POST",
+      data: { mapping: JSON.stringify(data) },
+    })
+      .then(() => window.location.reload())
+      .catch(popupAjaxError);
+  }
+}
