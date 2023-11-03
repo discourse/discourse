@@ -65,7 +65,7 @@ export default class DLightbox extends Component {
       return htmlSafe(variables.join(""));
     }
 
-    const { width, height, aspectRatio, dominantColor, fullsizeURL, smallURL } =
+    const { width, height, aspectRatio, dominantColor, fullsizeURL } =
       this.currentItem;
 
     variables.push(
@@ -74,8 +74,7 @@ export default class DLightbox extends Component {
       `${base}-height: ${height}px`,
       `${base}-aspect-ratio: ${aspectRatio}`,
       `${base}-dominant-color: #${dominantColor}`,
-      `${base}-full-size-url: url(${encodeURI(fullsizeURL)})`,
-      `${base}-small-url: url(${encodeURI(smallURL)})`
+      `${base}-full-size-url: url(${encodeURI(fullsizeURL)})`
     );
 
     return htmlSafe(variables.filter(Boolean).join(";"));
