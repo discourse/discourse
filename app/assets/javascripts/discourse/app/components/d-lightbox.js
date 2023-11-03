@@ -37,7 +37,7 @@ export default class DLightbox extends Component {
   @tracked isFullScreen = false;
   @tracked rotationAmount = 0;
 
-  @tracked hasCarousel = false;
+  @tracked hasCarousel = true;
   @tracked hasExpandedTitle = false;
 
   options = {};
@@ -120,7 +120,12 @@ export default class DLightbox extends Component {
   }
 
   get shouldDisplayCarousel() {
-    return this.hasCarousel && !this.isZoomed && !this.isRotated;
+    return (
+      this.hasCarousel &&
+      this.totalItemCount >= this.options.minCarouselItemCount &&
+      !this.isZoomed &&
+      !this.isRotated
+    );
   }
 
   get shouldDisplayCarouselArrows() {
@@ -438,11 +443,8 @@ export default class DLightbox extends Component {
       case SWIPE_DIRECTIONS.RIGHT:
         this.options.isRTL ? this.showPreviousItem() : this.showNextItem();
         break;
-      case SWIPE_DIRECTIONS.UP:
-        this.close();
-        break;
       case SWIPE_DIRECTIONS.DOWN:
-        this.toggleCarousel();
+        this.close();
         break;
     }
   }
@@ -450,7 +452,7 @@ export default class DLightbox extends Component {
   @bind
   cleanup() {
     if (this.isVisible) {
-      this.hasCarousel = !!document.querySelector(".d-lightbox.has-carousel");
+      this.hasCarousel = true;
       this.hasExpandedTitle = false;
       this.isLoading = false;
       this.items = [];
