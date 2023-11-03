@@ -29,13 +29,13 @@
       {{yield}}
     {{else if c.componentClass}}
       <c.componentClass @outletArgs={{this.outletArgsWithDeprecations}}>
-        {{#if c.willOverwrite}}
+        {{#if c.willOverrideBlock}}
           {{yield}}
         {{/if}}
       </c.componentClass>
     {{else if @defaultGlimmer}}
       <c.templateOnly @outletArgs={{this.outletArgsWithDeprecations}}>
-        {{#if c.willOverwrite}}
+        {{#if c.willOverrideBlock}}
           {{yield}}
         {{/if}}
       </c.templateOnly>
@@ -49,11 +49,13 @@
         @tagName={{or @connectorTagName ""}}
         @layout={{c.template}}
       >
-        {{#if c.willOverwrite}}
+        {{#if c.willOverrideBlock}}
           {{yield}}
         {{/if}}
       </PluginConnector>
     {{/if}}
+  {{else}}
+    {{yield}}
   {{/each}}
 {{else}}
   {{yield}}

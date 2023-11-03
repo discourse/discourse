@@ -192,7 +192,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         assert.true(
           this.consoleErrorStub
             .getCall(0)
-            .args[0].includes("Multiple connectors"),
+            .args[0].includes("Multiple overriding connectors"),
           "console error includes message about multiple connectors"
         );
 
@@ -218,7 +218,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         assert.true(
           this.consoleErrorStub
             .getCall(0)
-            .args[0].includes("Multiple connectors"),
+            .args[0].includes("Multiple overriding connectors"),
           "console error includes message about multiple connectors"
         );
 

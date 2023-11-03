@@ -91,37 +91,38 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     );
 
     if (connectors.length && hasBlock) {
-      const beforeConnectors = connectors.filter((c) => c.willInsertBefore);
-      const overwritingConnectors = connectors.filter((c) => c.willOverwrite);
-      if (overwritingConnectors.length === 0) {
+      const beforeConnectors = connectors.filter(
+        (c) => c.willInsertBeforeBlock
+      );
+
+      const overridingConnectors = connectors.filter(
+        (c) => c.willOverrideBlock
+      );
+      if (overridingConnectors.length === 0) {
         // in case there is no overwriting connectors registered, we need to force the block to be rendered
         // inserting a POJO with a yieldPlaceholder property that will be tested in the template
         // we need to that because it is possible that there are only before/after connectors registered and because
         // of this the using {{else}} in the {{#each}} would not work properly
-        overwritingConnectors.push({ yieldPlaceholder: true });
+        overridingConnectors.push({ yieldPlaceholder: true });
       }
-      const afterConnectors = connectors.filter((c) => c.willInsertAfter);
+      const afterConnectors = connectors.filter((c) => c.willInsertAfterBlock);
 
-      if (overwritingConnectors.length > 1) {
-        const message = `Multiple overwriting connectors were registered for the ${this.args.name} outlet. Using the first.`;
+      if (overridingConnectors.length > 1) {
+        const message = `Multiple overriding connectors were registered for the ${this.args.name} outlet. Using the first.`;
         this.clientErrorHandler.displayErrorNotice(message);
         // eslint-disable-next-line no-console
         console.error(
           message,
-          overwritingConnectors.map((c) => c.humanReadableName)
+          overridingConnectors.map((c) => c.humanReadableName)
         );
         return [
           ...beforeConnectors,
-          overwritingConnectors[0],
+          overridingConnectors[0],
           ...afterConnectors,
         ];
       }
 
-      return [
-        ...beforeConnectors,
-        ...overwritingConnectors,
-        ...afterConnectors,
-      ];
+      return [...beforeConnectors, ...overridingConnectors, ...afterConnectors];
     }
 
     return connectors;

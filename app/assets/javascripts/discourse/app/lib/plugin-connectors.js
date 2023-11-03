@@ -181,6 +181,8 @@ function buildConnectorCache() {
       } else {
         info.classModuleName = moduleName;
       }
+
+      info.willOverrideBlock = true;
     }
   );
 
@@ -196,14 +198,14 @@ function buildConnectorCache() {
       const info = new ConnectorInfo(outletName);
       info.classModule = klass;
 
-      info.willOverwrite = !opts?.insert;
-      info.willInsertBefore = opts?.insert === "before";
-      info.willInsertAfter = opts?.insert === "after";
+      info.willOverrideBlock = !opts?.insert;
+      info.willInsertBeforeBlock = opts?.insert === "before";
+      info.willInsertAfterBlock = opts?.insert === "after";
 
       if (
-        !info.willOverwrite &&
-        !info.willInsertBefore &&
-        !info.willInsertAfter
+        !info.willOverrideBlock &&
+        !info.willInsertBeforeBlock &&
+        !info.willInsertAfterBlock
       ) {
         // eslint-disable-next-line no-console
         console.error(
