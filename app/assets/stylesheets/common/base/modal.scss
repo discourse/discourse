@@ -37,6 +37,14 @@
     box-shadow: var(--shadow-modal);
   }
 
+  //temporary extra to support this often-used legacy class within the new template
+  .modal-inner-container {
+    max-width: unset;
+    box-shadow: unset;
+    flex: unset;
+    background: unset;
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;

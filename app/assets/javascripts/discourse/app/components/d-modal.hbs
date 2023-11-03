@@ -18,79 +18,81 @@
     {{trap-tab preventScroll=false}}
   >
     <div class="d-modal__wrapper">
-      <div class="d-modal__container">
-        {{yield to="aboveHeader"}}
+      <div class="modal-inner-container">
+        <div class="d-modal__container">
+          {{yield to="aboveHeader"}}
 
-        {{#if
-          (or
-            this.dismissable
-            @title
-            (has-block "headerBelowTitle")
-            (has-block "headerAboveTitle")
-          )
-        }}
-          <div class={{concat-class "d-modal__header" @headerClass}}>
+          {{#if
+            (or
+              this.dismissable
+              @title
+              (has-block "headerBelowTitle")
+              (has-block "headerAboveTitle")
+            )
+          }}
+            <div class={{concat-class "d-modal__header" @headerClass}}>
 
-            {{yield to="headerAboveTitle"}}
+              {{yield to="headerAboveTitle"}}
 
-            {{#if @title}}
-              <div class="d-modal__title">
-                <h3
-                  id="discourse-modal-title"
-                  class="d-modal__title-text"
-                >{{@title}}</h3>
+              {{#if @title}}
+                <div class="d-modal__title">
+                  <h3
+                    id="discourse-modal-title"
+                    class="d-modal__title-text"
+                  >{{@title}}</h3>
 
-                {{#if @subtitle}}
-                  <p class="d-modal__subtitle-text">{{@subtitle}}</p>
-                {{/if}}
+                  {{#if @subtitle}}
+                    <p class="d-modal__subtitle-text">{{@subtitle}}</p>
+                  {{/if}}
 
-                {{yield to="belowModalTitle"}}
-              </div>
-            {{/if}}
-            {{yield to="headerBelowTitle"}}
+                  {{yield to="belowModalTitle"}}
+                </div>
+              {{/if}}
+              {{yield to="headerBelowTitle"}}
 
-            {{#if this.dismissable}}
-              <DButton
-                @icon="times"
-                @action={{this.handleCloseButton}}
-                @title="modal.close"
-                class="btn-flat modal-close"
-              />
-            {{/if}}
-          </div>
-        {{/if}}
-
-        {{yield to="belowHeader"}}
-
-        {{this.validateFlashType @flashType}}
-        {{#if @flash}}
-          <div
-            id="modal-alert"
-            role="alert"
-            class={{concat-class
-              "alert"
-              (if @flashType (concat "alert-" @flashType))
-            }}
-          >
-            {{~@flash~}}
-          </div>
-        {{/if}}
-
-        <div class={{concat-class "d-modal__body" @bodyClass}} tabindex="-1">
-          {{#if (has-block "body")}}
-            {{yield to="body"}}
-          {{else}}
-            {{yield}}
+              {{#if this.dismissable}}
+                <DButton
+                  @icon="times"
+                  @action={{this.handleCloseButton}}
+                  @title="modal.close"
+                  class="btn-flat modal-close"
+                />
+              {{/if}}
+            </div>
           {{/if}}
-        </div>
 
-        {{#if (has-block "footer")}}
-          <div class="d-modal__footer">
-            {{yield to="footer"}}
+          {{yield to="belowHeader"}}
+
+          {{this.validateFlashType @flashType}}
+          {{#if @flash}}
+            <div
+              id="modal-alert"
+              role="alert"
+              class={{concat-class
+                "alert"
+                (if @flashType (concat "alert-" @flashType))
+              }}
+            >
+              {{~@flash~}}
+            </div>
+          {{/if}}
+
+          <div class={{concat-class "d-modal__body" @bodyClass}} tabindex="-1">
+            {{#if (has-block "body")}}
+              {{yield to="body"}}
+            {{else}}
+              {{yield}}
+            {{/if}}
           </div>
-        {{/if}}
 
-        {{yield to="belowFooter"}}
+          {{#if (has-block "footer")}}
+            <div class="d-modal__footer">
+              {{yield to="footer"}}
+            </div>
+          {{/if}}
+
+          {{yield to="belowFooter"}}
+        </div>
       </div>
     </div>
   </this.dynamicElement>
