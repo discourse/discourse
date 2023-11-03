@@ -12,14 +12,18 @@ export default class ChatThreadListHeader extends Component {
 
   threadListTitle = I18n.t("chat.threads.list");
   closeButtonTitle = I18n.t("chat.thread.close");
-
-  showBackButton = this.args.channel && this.site.mobileView;
   showCloseButton = !this.site.mobileView;
 
-  backButton = {
-    route: "chat.channel.index",
-    models: this.args.channel.routeModels,
-    title: I18n.t("chat.return_to_channel"),
+  get showBackButton() {
+    return this.args.channel && this.site.mobileView;
+  }
+
+  get backButton() {
+    return {
+      route: "chat.channel.index",
+      models: this.args.channel.routeModels,
+      title: I18n.t("chat.return_to_channel"),
+    };
   }
 
   <template>
@@ -37,7 +41,8 @@ export default class ChatThreadListHeader extends Component {
         {{/if}}
       </div>
 
-      <div class={{concatClass
+      <div
+        class={{concatClass
           "chat-thread-list-header__label"
           (unless this.showBackButton "-no-back-btn")
         }}
