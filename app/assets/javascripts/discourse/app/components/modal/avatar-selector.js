@@ -99,23 +99,26 @@ export default class AvatarSelectorModal extends Component {
   }
 
   get allowAvatarUpload() {
-    const allowUploadedAvatars = this.siteSettings.allow_uploaded_avatars;
     return (
-      this.siteSettingMatches(allowUploadedAvatars, this.currentUser) &&
+      this.siteSettingMatches &&
       allowsImages(this.currentUser.staff, this.siteSettings)
     );
   }
 
-  siteSettingMatches(value, user) {
-    switch (value) {
+  get siteSettingMatches() {
+    const allowUploadedAvatars = this.siteSettings.allow_uploaded_avatars;
+    switch (allowUploadedAvatars) {
       case "disabled":
         return false;
       case "staff":
-        return user.staff;
+        return this.currentUser.staff;
       case "admin":
-        return user.admin;
+        return this.currentUser.admin;
       default:
-        return user.trust_level >= parseInt(value, 10) || user.staff;
+        return (
+          this.currentUser.trust_level >= parseInt(allowUploadedAvatars, 10) ||
+          this.currentUser.staff
+        );
     }
   }
 
@@ -169,10 +172,9 @@ export default class AvatarSelectorModal extends Component {
   @action
   async saveAvatarSelection() {
     const selectedUploadId = this.selectedUploadId;
-    const type = this.selected;
 
     try {
-      await this.user.pickAvatar(selectedUploadId, type);
+      await this.user.pickAvatar(selectedUploadId, this.selected);
       if (!isTesting()) {
         window.location.reload();
       }
