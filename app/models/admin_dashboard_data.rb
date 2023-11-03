@@ -3,7 +3,11 @@
 class AdminDashboardData
   include StatsCacheable
 
-  cattr_reader :problem_syms, :problem_blocks, :problem_messages, :problem_scheduled_check_blocks
+  cattr_reader :problem_syms,
+               :problem_blocks,
+               :problem_messages,
+               :problem_scheduled_check_blocks,
+               :problem_scheduled_check_klasses
 
   class Problem
     VALID_PRIORITIES = %w[low high].freeze
@@ -80,7 +84,8 @@ class AdminDashboardData
     @@problem_blocks << blk if blk
   end
 
-  def self.add_scheduled_problem_check(check_identifier, &blk)
+  def self.add_scheduled_problem_check(check_identifier, klass = nil, &blk)
+    @@problem_scheduled_check_klasses[check_identifier] = klass
     @@problem_scheduled_check_blocks[check_identifier] = blk
   end
 
@@ -125,7 +130,7 @@ class AdminDashboardData
   end
 
   def self.register_default_scheduled_problem_checks
-    add_scheduled_problem_check(:group_smtp_credentials) do
+    add_scheduled_problem_check(:group_smtp_credentials, GroupEmailCredentialsCheck) do
       problems = GroupEmailCredentialsCheck.run
       problems.map do |p|
         problem_message =
@@ -158,6 +163,8 @@ class AdminDashboardData
 
     problems = instance_exec(&check)
 
+    yield(problems) if block_given? && problems.present?
+
     Array
       .wrap(problems)
       .compact
@@ -186,6 +193,7 @@ class AdminDashboardData
     @@problem_syms = []
     @@problem_blocks = []
     @@problem_scheduled_check_blocks = {}
+    @@problem_scheduled_check_klasses = {}
 
     @@problem_messages = %w[
       dashboard.bad_favicon_url
