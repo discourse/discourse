@@ -1,3 +1,16 @@
+#main-outlet-wrapper:has(.invites-show) {
+  display: block;
+  height: 100vh;
+
+  .sidebar-wrapper {
+    display: none;
+  }
+
+  #main-outlet {
+    padding: 0;
+    height: 100%;
+  }
+}
 .invites-show {
   position: absolute;
   top: 50%;
@@ -6,7 +19,7 @@
   max-width: 500px;
   padding: 2rem 3rem;
   background: var(--secondary);
-  box-shadow: var(--shadow-modal);
+  box-shadow: var(--shadow-menu-panel);
 
   .login-welcome-header {
     display: grid;
