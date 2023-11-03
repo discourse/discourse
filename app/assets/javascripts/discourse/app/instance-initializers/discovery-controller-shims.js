@@ -3,6 +3,8 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { inject as service } from "@ember/service";
 import deprecated from "discourse-common/lib/deprecated";
 
+let reopenedClasses = [];
+
 function ControllerShim(resolverName, deprecationId) {
   return class AbstractControllerShim extends EmberObject {
     static printDeprecation() {
@@ -16,6 +18,7 @@ function ControllerShim(resolverName, deprecationId) {
 
     static reopen() {
       this.printDeprecation();
+      this.reopenedClasses.push(resolverName);
       return super.reopen(...arguments);
     }
 
@@ -83,11 +86,10 @@ export default {
         transition.to.name.startsWith("tags.show") ||
         transition.to.name === "tag.show"
       ) {
-        // Ensure the shims are initialized, in case anything has added observers
-        // to their properties
-        container.lookup("controller:discovery/topics");
-        container.lookup("controller:navigation/category");
-        container.lookup("controller:tag-show");
+        // Ensure any reopened shims are initialized in case anything has added observers
+        reopenedClasses.forEach((resolverName) =>
+          container.lookup(resolverName)
+        );
       }
     });
   },
