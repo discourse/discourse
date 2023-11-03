@@ -18,7 +18,7 @@ function ControllerShim(resolverName, deprecationId) {
 
     static reopen() {
       this.printDeprecation();
-      this.reopenedClasses.push(resolverName);
+      reopenedClasses.push(resolverName);
       return super.reopen(...arguments);
     }
 
