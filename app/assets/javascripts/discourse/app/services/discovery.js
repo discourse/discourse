@@ -12,10 +12,9 @@ export default class DiscoveryService extends Service {
 
   get onDiscoveryRoute() {
     const { currentRouteName } = this.router;
-
     return (
-      currentRouteName.startsWith("discovery.") ||
-      currentRouteName.startsWith("tags.show") ||
+      currentRouteName?.startsWith("discovery.") ||
+      currentRouteName?.startsWith("tags.show") ||
       currentRouteName === "tag.show"
     );
   }
@@ -34,7 +33,7 @@ export default class DiscoveryService extends Service {
 
   get currentTopicList() {
     if (this.onDiscoveryRoute) {
-      this.#routeAttrs.list;
+      return this.#routeAttrs.list;
     }
   }
 

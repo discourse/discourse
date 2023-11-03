@@ -16,6 +16,7 @@ function ControllerShim(resolverName, deprecationId) {
 
     static reopen() {
       this.printDeprecation();
+      return super.reopen(...arguments);
     }
 
     @service discovery;
