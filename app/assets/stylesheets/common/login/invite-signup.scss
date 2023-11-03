@@ -12,14 +12,8 @@
   }
 }
 .invites-show {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  max-width: 500px;
   padding: 2rem 3rem;
   background: var(--secondary);
-  box-shadow: var(--shadow-menu-panel);
 
   .login-welcome-header {
     display: grid;
@@ -73,6 +67,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    margin-top: 1rem;
   }
 
   .disclaimer {
