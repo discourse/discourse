@@ -323,11 +323,8 @@
   .categories-wrapper {
     display: inline-flex;
     flex: 0 1 auto;
+    gap: 0 0.5em;
     @include ellipsis;
-
-    span + span {
-      margin-left: 0.4em;
-    }
   }
   .badge-category__wrapper {
     min-width: 2.75em; // min needed for ellipsis
