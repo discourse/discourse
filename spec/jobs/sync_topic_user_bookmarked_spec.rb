@@ -39,16 +39,10 @@ RSpec.describe Jobs::SyncTopicUserBookmarked do
     expect(tu2.reload.bookmarked).to eq(false)
   end
 
-  it "works when no topic id is provided (runs for all topics)" do
-    Fabricate(:bookmark, user: tu1.user, bookmarkable: topic.posts.sample)
-    Fabricate(:bookmark, user: tu4.user, bookmarkable: topic.posts.sample)
-
-    job.execute
-
+  it "still considers the topic bookmarked if it has a Topic bookmarkable" do
+    expect(tu1.reload.bookmarked).to eq(false)
+    Fabricate(:bookmark, user: tu1.user, bookmarkable: topic)
+    job.execute(topic_id: topic.id)
     expect(tu1.reload.bookmarked).to eq(true)
-    expect(tu2.reload.bookmarked).to eq(false)
-    expect(tu3.reload.bookmarked).to eq(false)
-    expect(tu4.reload.bookmarked).to eq(true)
-    expect(tu5.reload.bookmarked).to eq(false)
   end
 end
