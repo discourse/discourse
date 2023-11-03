@@ -94,7 +94,7 @@ export default class ChatThreadHeader extends Component {
       });
     }
 
-    this.chatApi
+    return this.chatApi
       .updateCurrentUserThreadNotificationsSettings(
         this.args.thread.channel.id,
         this.args.thread.id,
