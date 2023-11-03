@@ -53,11 +53,6 @@ export default buildCategoryPanel("general", {
       .uniq();
   },
 
-  @discourseComputed
-  noCategoryStyle() {
-    return this.siteSettings.category_style === "none";
-  },
-
   @discourseComputed("category.id", "category.color")
   usedBackgroundColors(categoryId, categoryColor) {
     const categories = this.site.get("categoriesList");
