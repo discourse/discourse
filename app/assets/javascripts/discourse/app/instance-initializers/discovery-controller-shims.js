@@ -76,5 +76,19 @@ export default {
     );
 
     container.register("controller:tag-show", TagShowControllerShim);
+
+    container.lookup("service:router").on("routeDidChange", (transition) => {
+      if (
+        transition.to.name.startsWith("discovery.") ||
+        transition.to.name.startsWith("tags.show") ||
+        transition.to.name === "tag.show"
+      ) {
+        // Ensure the shims are initialized, in case anything has added observers
+        // to their properties
+        container.lookup("controller:discovery/topics");
+        container.lookup("controller:navigation/category");
+        container.lookup("controller:tag-show");
+      }
+    });
   },
 };
