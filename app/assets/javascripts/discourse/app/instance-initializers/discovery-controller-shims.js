@@ -81,10 +81,11 @@ export default {
     container.register("controller:tag-show", TagShowControllerShim);
 
     container.lookup("service:router").on("routeDidChange", (transition) => {
+      const destination = transition.to?.name;
       if (
-        transition.to.name.startsWith("discovery.") ||
-        transition.to.name.startsWith("tags.show") ||
-        transition.to.name === "tag.show"
+        destination?.startsWith("discovery.") ||
+        destination?.startsWith("tags.show") ||
+        destination === "tag.show"
       ) {
         // Ensure any reopened shims are initialized in case anything has added observers
         reopenedClasses.forEach((resolverName) =>
