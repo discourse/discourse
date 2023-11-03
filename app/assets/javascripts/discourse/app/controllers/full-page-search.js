@@ -43,7 +43,6 @@ export const SEARCH_TYPE_USERS = "users";
 const PAGE_LIMIT = 10;
 
 const customSearchTypes = [];
-let additionalSearchResults = [];
 
 export function registerFullPageSearchType(
   translationKey,
@@ -51,10 +50,6 @@ export function registerFullPageSearchType(
   searchFunc
 ) {
   customSearchTypes.push({ translationKey, searchTypeId, searchFunc });
-}
-
-export function additionalResults(updatedResults) {
-  additionalSearchResults = updatedResults;
 }
 
 export default Controller.extend({
@@ -84,6 +79,7 @@ export default Controller.extend({
   page: 1,
   resultCount: null,
   searchTypes: null,
+  additionalSearchResults: [],
   selected: [],
   error: null,
 
@@ -314,8 +310,8 @@ export default Controller.extend({
       : "search-info";
   },
 
-  @discourseComputed("model.posts")
-  searchResultPosts(posts) {
+  @discourseComputed("model.posts", "additionalSearchResults")
+  searchResultPosts(posts, additionalSearchResults) {
     if (additionalSearchResults.length > 0) {
       return reciprocallyRankedList([posts, additionalSearchResults]);
     } else {
@@ -480,9 +476,8 @@ export default Controller.extend({
   },
 
   @action
-  recheckSearchResults() {
-    // Note: Action is called by pluginAPI method `addSearchResults()`
-    this.notifyPropertyChange("searchResultPosts");
+  addSearchResults1(newResults) {
+    this.set("additionalSearchResults", newResults);
   },
 
   actions: {

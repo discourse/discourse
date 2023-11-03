@@ -22,10 +22,7 @@ import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTIO
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
-import {
-  additionalResults,
-  registerFullPageSearchType,
-} from "discourse/controllers/full-page-search";
+import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import {
@@ -2561,24 +2558,6 @@ class PluginApi {
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
-  }
-
-  /**
-   * Allows you add additional search results to the full page search results.
-   * Search results added through this API will be mixed with initial search results
-   * and ranked using the reciprocal ranking fusion algorithm.
-   *
-   * (See `reciprocallyRankedList()` in `discourse/app/lib/search.js` for more
-   * details on how reciprocal ranking works)
-   *
-   *
-   * Example:
-   *
-   * api.addSearchResults(newPostArray);
-   */
-  addSearchResults(results) {
-    additionalResults(results);
-    this.container.lookup("controller:full-page-search").recheckSearchResults();
   }
 }
 
