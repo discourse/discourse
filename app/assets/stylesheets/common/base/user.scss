@@ -972,3 +972,23 @@
     }
   }
 }
+
+// Due to special login animations, the order here needs to be changed
+.control-group[data-setting-name="user-user-fields"]
+  .user-field.text
+  .controls {
+  display: flex;
+  flex-direction: column;
+  .control-label.alt-placeholder {
+    order: 1;
+  }
+  .ember-text-field {
+    order: 2;
+  }
+  .tip {
+    order: 3;
+  }
+  .instructions {
+    order: 4;
+  }
+}

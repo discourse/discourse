@@ -29,6 +29,14 @@ RSpec.describe ThemeStore::ZipExporter do
         upload_id: upload.id,
         type: :theme_upload_var,
       )
+
+      theme.set_field(target: :migrations, name: "0201-some-migration", type: :js, value: <<~JS)
+          export default function migrate(settings) {
+            settings.set("aa", 1);
+            return settings;
+          }
+        JS
+
       theme.build_remote_theme(
         remote_url: "",
         about_url: "abouturl",
@@ -94,7 +102,14 @@ RSpec.describe ThemeStore::ZipExporter do
       `rm #{file}`
 
       folders = Dir.glob("**/*").reject { |f| File.file?(f) }
-      expect(folders).to contain_exactly("assets", "common", "locales", "mobile")
+      expect(folders).to contain_exactly(
+        "assets",
+        "common",
+        "locales",
+        "mobile",
+        "migrations",
+        "migrations/settings",
+      )
 
       files = Dir.glob("**/*").reject { |f| File.directory?(f) }
       expect(files).to contain_exactly(
@@ -105,6 +120,7 @@ RSpec.describe ThemeStore::ZipExporter do
         "locales/en.yml",
         "mobile/mobile.scss",
         "settings.yml",
+        "migrations/settings/0201-some-migration.js",
       )
 
       expect(JSON.parse(File.read("about.json")).deep_symbolize_keys).to eq(
@@ -145,6 +161,12 @@ RSpec.describe ThemeStore::ZipExporter do
       expect(File.read("locales/en.yml")).to eq(
         { en: { key: "value" } }.deep_stringify_keys.to_yaml,
       )
+      expect(File.read("migrations/settings/0201-some-migration.js")).to eq(<<~JS)
+        export default function migrate(settings) {
+          settings.set("aa", 1);
+          return settings;
+        }
+      JS
 
       theme.update!(name: "Discourse Header Icons")
       exporter = ThemeStore::ZipExporter.new(theme)

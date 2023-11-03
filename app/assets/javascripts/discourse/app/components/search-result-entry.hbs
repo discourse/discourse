@@ -31,6 +31,10 @@
           </HighlightSearch>
         {{/if}}
       </span>
+      <PluginOutlet
+        @name="search-results-topic-title-suffix"
+        @outletArgs={{hash topic=this.post.topic}}
+      />
     </a>
 
     <div class="search-category">

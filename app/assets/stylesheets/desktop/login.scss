@@ -311,6 +311,7 @@
       input.value-entered + label.alt-placeholder {
         top: -8px;
         left: calc(3em - 0.25em);
+        font-size: var(--font-down-1);
       }
     }
     .password-confirmation {

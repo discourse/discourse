@@ -178,9 +178,12 @@ describe "Custom sidebar sections", type: :system do
       ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"],
     )
 
-    tags_link = find(".sidebar-section-link[data-link-name='Sidebar Tags']")
-    latest_link = find(".sidebar-section-link[data-link-name='Sidebar Latest']")
+    sidebar.edit_custom_section("My section")
+
+    tags_link = find(".draggable[data-link-name='Sidebar Tags']")
+    latest_link = find(".draggable[data-link-name='Sidebar Latest']")
     tags_link.drag_to(latest_link, html5: true, delay: 0.4)
+    section_modal.save
 
     expect(sidebar.primary_section_links("my-section")).to eq(
       ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],

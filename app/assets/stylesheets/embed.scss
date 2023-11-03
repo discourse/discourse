@@ -3,6 +3,7 @@
 @import "./common/foundation/base";
 @import "./color_definitions";
 @import "./common/components/buttons";
+@import "./common/components/hashtag";
 
 article.post {
   border-bottom: 1px solid var(--primary-low);
@@ -72,6 +73,15 @@ article.post {
     }
     p {
       margin: 0 0 1em 0;
+    }
+
+    .hashtag-cooked {
+      padding: 0.2em 0.5em;
+
+      .hashtag-icon-placeholder {
+        font-weight: bold;
+        margin-right: 0;
+      }
     }
   }
 }

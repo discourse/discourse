@@ -92,6 +92,22 @@ en:
       not_allowed_theme: "`%{repo}` is not in the list of allowed themes (check `allowed_theme_repos` global setting)."
       ssh_key_gone: "You waited too long to install the theme and SSH key expired. Please try again."
       too_many_files: "The number of files (%{count}) in the theme has exceeded the maximum allowed number of files (%{limit})"
+      migrations:
+        invalid_filename: "Invalid filename for migration file: %{filename}. Filenames must begin with 4 digits followed by a hyphen and then a name that only contains alphanumeric characters with hyphens."
+        name_too_long:
+          one: "Migration name is too long. It shouldn't exceed %{count} character."
+          other: "Migration name is too long. It shouldn't exceed %{count} characters."
+        too_many_pending_migrations: "There are too many pending migrations in this theme. Themes are not allowed to introduce more than 100 migrations in a single update"
+        out_of_sequence: "Migration '%{name}' is out of sequence. The last migration for this theme had version number %{current} which is higher than the new migration"
+        syntax_error: "Failed to run migration '%{name}' because it has a syntax error: %{error}"
+        exceeded_memory_limit: "Migration '%{name}' failed because it exceeded the memory limit"
+        timed_out: "Migration '%{name}' timed out"
+        no_exported_function: "Migration '%{name}' doesn't export a function to perform the migration"
+        default_export_not_a_function: "Migration '%{name}' has a default export that's not a function. The default export must be the function that performs the migration"
+        no_returned_value: "Migration '%{name}' didn't return any value (or returned null or undefined). It must return a Map object"
+        wrong_return_type: "Migration '%{name}' returned an unknown data type. It must return a Map object"
+        runtime_error: "Migration '%{name}' encountered the following runtime error: %{error}"
+        unknown_setting_returned_by_migration: "Migrations '%{name}' returned a setting '%{setting_name}' which is not declared in the theme's settings.yml file"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
@@ -1582,7 +1598,7 @@ en:
     blocked_onebox_domains: "A list of domains that will never be oneboxed e.g. wikipedia.org\n(Wildcard symbols * ? not supported)"
     block_onebox_on_redirect: "Block onebox for URLs that redirect."
     allowed_inline_onebox_domains: "A list of domains that will be oneboxed in miniature form if linked without a title"
-    enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_allowlist site setting and allow inline onebox on all domains."
+    enable_inline_onebox_on_all_domains: "Ignore allowed_inline_onebox_domains site setting and allow inline onebox on all domains."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
@@ -5174,6 +5190,7 @@ en:
       private_message: '%{username} sent you a private message in "%{topic}" - %{site_title}'
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
       watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
+      watching_category_or_tag: '%{username} created a new post "%{topic}" - %{site_title}'
       confirm_title: "Notifications enabled - %{site_title}"
       confirm_body: "Success! Notifications have been enabled."
       custom: "Notification from %{username} on %{site_title}"

@@ -235,6 +235,32 @@ RSpec.describe Admin::ThemesController do
         expect(response.status).to eq(201)
       end
 
+      it "responds with suitable error message when a migration fails" do
+        repo_path =
+          setup_git_repo(
+            "about.json" => { name: "test theme" }.to_json,
+            "settings.yaml" => "boolean_setting: true",
+            "migrations/settings/0001-some-migration.js" => <<~JS,
+            export default function migrate(settings) {
+              settings.set("unknown_setting", "dsad");
+              return settings;
+            }
+          JS
+          )
+        repo_url = MockGitImporter.register("https://example.com/initial_repo.git", repo_path)
+
+        post "/admin/themes/import.json", params: { remote: repo_url }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t(
+            "themes.import_error.migrations.unknown_setting_returned_by_migration",
+            name: "0001-some-migration",
+            setting_name: "unknown_setting",
+          ),
+        )
+      end
+
       it "fails to import with a failing status" do
         post "/admin/themes/import.json", params: { remote: "non-existent" }
 
@@ -250,16 +276,9 @@ RSpec.describe Admin::ThemesController do
       it "can lookup a private key by public key" do
         Discourse.redis.setex("ssh_key_abcdef", 1.hour, "rsa private key")
 
-        ThemeStore::GitImporter.any_instance.stubs(:import!)
-        RemoteTheme.stubs(:extract_theme_info).returns(
-          "name" => "discourse-brand-header",
-          "component" => true,
-        )
-        RemoteTheme.any_instance.stubs(:update_from_remote)
-
         post "/admin/themes/import.json",
              params: {
-               remote: "    https://github.com/discourse/discourse-brand-header.git       ",
+               remote: "    #{repo_url}       ",
                public_key: "abcdef",
              }
 
