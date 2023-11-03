@@ -1,19 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { LinkTo } from "@ember/routing";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import ChatModalThreadSettings from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
-import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
-import ChatThreadHeaderUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/thread/header-unread-indicator";
-import ThreadNotificationsButton from "discourse/plugins/chat/select-kit/addons/components/thread-notifications-button";
-import DButton from "discourse/components/d-button";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
+import ChatModalThreadSettings from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
+import ChatThreadHeaderUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/thread/header-unread-indicator";
+import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
+import ThreadNotificationsButton from "discourse/plugins/chat/select-kit/addons/components/thread-notifications-button";
 
 export default class ChatThreadHeader extends Component {
   @service currentUser;
@@ -46,7 +46,7 @@ export default class ChatThreadHeader extends Component {
     return {
       route,
       models: this.args.channel.routeModels,
-      title: title,
+      title,
     };
   }
 

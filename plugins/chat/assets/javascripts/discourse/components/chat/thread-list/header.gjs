@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
-import icon from "discourse-common/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import concatClass from "discourse/helpers/concat-class";
+import replaceEmoji from "discourse/helpers/replace-emoji";
+import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
 
 export default class ChatThreadListHeader extends Component {
@@ -25,7 +25,7 @@ export default class ChatThreadListHeader extends Component {
   <template>
     <div class="chat-thread-list-header">
       <div class="chat-thread-header__left-buttons">
-        {{#if showBackButton}}
+        {{#if this.showBackButton}}
           <LinkTo
             class="chat-thread__back-to-previous-route btn-flat btn btn-icon no-text"
             @route={{this.backButton.route}}
@@ -39,7 +39,7 @@ export default class ChatThreadListHeader extends Component {
 
       <div class={{concatClass
           "chat-thread-list-header__label"
-          (unless showBackButton "-no-back-btn")
+          (unless this.showBackButton "-no-back-btn")
         }}
       >
         <span>
@@ -54,7 +54,7 @@ export default class ChatThreadListHeader extends Component {
         {{/if}}
       </div>
 
-      {{#if showCloseButton}}
+      {{#if this.showCloseButton}}
         <div class="chat-thread-header__buttons">
           <LinkTo
             class="chat-thread__close btn-flat btn btn-icon no-text"

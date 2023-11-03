@@ -1,17 +1,15 @@
 import Component from "@glimmer/component";
-import { LinkTo } from "@ember/routing";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import icon from "discourse-common/helpers/d-icon";
+import { inject as service } from "@ember/service";
 import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
-import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread";
 import ChatDrawerHeader from "discourse/plugins/chat/discourse/components/chat-drawer/header";
-import ChatDrawerHeaderTitle from "discourse/plugins/chat/discourse/components/chat-drawer/header/title";
 import ChatDrawerHeaderBackLink from "discourse/plugins/chat/discourse/components/chat-drawer/header/back-link";
 import ChatDrawerHeaderRightActions from "discourse/plugins/chat/discourse/components/chat-drawer/header/right-actions";
+import ChatDrawerHeaderTitle from "discourse/plugins/chat/discourse/components/chat-drawer/header/title";
+import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread";
 
 export default class ChatDrawerThread extends Component {
   @service appEvents;
@@ -78,7 +76,7 @@ export default class ChatDrawerThread extends Component {
         </div>
       {{/if}}
 
-      <ChatDrawerHeaderTitle @translatedTitle={{threadTitle}} />
+      <ChatDrawerHeaderTitle @translatedTitle={{this.threadTitle}} />
 
       <ChatDrawerHeaderRightActions @drawerActions={{@drawerActions}} />
     </ChatDrawerHeader>
