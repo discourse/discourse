@@ -53,6 +53,14 @@ class DiscoveryTopicsControllerShim extends ControllerShim(
       return this.discovery.currentTopicList;
     }
   }
+
+  @dependentKeyCompat
+  get category() {
+    this.constructor.printDeprecation();
+    if (this.discovery.onDiscoveryRoute) {
+      return this.discovery.category;
+    }
+  }
 }
 
 class TagShowControllerShim extends ControllerShim(
