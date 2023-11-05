@@ -32,7 +32,10 @@
             @onChange={{this.onSelectedChanged}}
           />
           <label class="radio" for="logo-small">
-            {{bound-avatar-template this.siteSettings.site_logo_small_url "large"}}
+            {{bound-avatar-template
+              this.siteSettings.site_logo_small_url
+              "large"
+            }}
             {{i18n "user.change_avatar.logo_small"}}
           </label>
         </div>
