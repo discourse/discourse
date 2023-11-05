@@ -15,14 +15,6 @@ export default class AvatarSelectorModal extends Component {
   @tracked uploading = false;
   @tracked _selected = null;
 
-  get gravatar() {
-    return {
-      gravatarName: this.siteSettings.gravatar_name,
-      gravatarBaseUrl: this.siteSettings.gravatar_base_url,
-      gravatarLoginUrl: this.siteSettings.gravatar_login_url,
-    };
-  }
-
   get user() {
     return this.args.model.user;
   }
@@ -171,10 +163,8 @@ export default class AvatarSelectorModal extends Component {
 
   @action
   async saveAvatarSelection() {
-    const selectedUploadId = this.selectedUploadId;
-
     try {
-      await this.user.pickAvatar(selectedUploadId, this.selected);
+      await this.user.pickAvatar(this.selectedUploadId, this.selected);
       if (!isTesting()) {
         window.location.reload();
       }

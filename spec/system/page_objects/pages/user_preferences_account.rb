@@ -16,8 +16,12 @@ module PageObjects
         visit(user).click_edit_avatar_button
       end
 
-      def find_avatar_source
-        page.find(".pref-avatar img.avatar")[:src]
+      def has_custom_uploaded_avatar_image?
+        has_css?(".pref-avatar img.avatar[src*='user_avatar']")
+      end
+
+      def has_system_avatar_image?
+        has_css?(".pref-avatar img.avatar[src*='letter_avatar']")
       end
     end
   end
