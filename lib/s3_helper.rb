@@ -47,6 +47,15 @@ class S3Helper
     setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
     options = S3Helper.s3_options(setting_klass)
     options[:client] = s3_client if s3_client.present?
+    use_accelerate_endpoint =
+      (
+        if use_db_s3_config
+          SiteSetting.enable_s3_transfer_acceleration
+        else
+          GlobalSetting.s3_enable_transfer_acceleration
+        end
+      )
+    options[:use_accelerate_endpoint] = !for_backup && use_accelerate_endpoint
 
     bucket =
       if for_backup
@@ -262,9 +271,6 @@ class S3Helper
 
     opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
-    opts[:use_accelerate_endpoint] = SiteSetting.enable_s3_upload_acceleration
-    opts[:logger] = Logger.new(STDOUT)
-    opts[:log_level] = :debug
 
     unless obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id
@@ -356,7 +362,7 @@ class S3Helper
         bucket: s3_bucket_name,
         key: key,
         expires_in: expires_in,
-        use_accelerate_endpoint: SiteSetting.enable_s3_upload_acceleration,
+        use_accelerate_endpoint: @s3_options[:use_accelerate_endpoint],
       }.merge(opts),
     )
   end
@@ -374,7 +380,7 @@ class S3Helper
         bucket: s3_bucket_name,
         key: key,
         expires_in: expires_in,
-        use_accelerate_endpoint: SiteSetting.enable_s3_upload_acceleration,
+        use_accelerate_endpoint: @s3_options[:use_accelerate_endpoint],
       }.merge(opts),
     )
   end

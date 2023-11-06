@@ -1462,7 +1462,7 @@ files:
   enable_s3_uploads:
     default: false
     client: true
-  enable_s3_upload_acceleration:
+  enable_s3_transfer_acceleration:
     default: false
     hidden: true
   s3_use_iam_profile:
