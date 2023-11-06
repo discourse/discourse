@@ -60,6 +60,6 @@ jobs:
         shell: bash # On host
         run: docker run --entrypoint='' --rm -d --name myimage myimage:latest tail -f /dev/null
       - name: Run tests
-        run: rails runner 'puts "Hello world"'
+        run: bin/rails runner 'puts "Hello world"'
 
 
