@@ -114,7 +114,6 @@ RSpec.describe Chat::ChatController do
             job: Jobs::Chat::ProcessMessage,
             args: {
               chat_message_id: chat_message.id,
-              is_dirty: true,
             },
           ) do
             put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"

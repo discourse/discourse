@@ -127,11 +127,12 @@ module SiteSettingExtension
       end
   end
 
+  def deprecated_settings
+    @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
+  end
+
   def settings_hash
     result = {}
-    deprecated_settings = Set.new
-
-    SiteSettings::DeprecatedSettings::SETTINGS.each { |s| deprecated_settings << s[0] }
 
     defaults.all.keys.each do |s|
       result[s] = if deprecated_settings.include?(s.to_s)
@@ -157,7 +158,12 @@ module SiteSettingExtension
       Hash[
         *@client_settings
           .map do |name|
-            value = self.public_send(name)
+            value =
+              if deprecated_settings.include?(name.to_s)
+                public_send(name, warn: false)
+              else
+                public_send(name)
+              end
             type = type_supervisor.get_type(name)
             value = value.to_s if type == :upload
             value = value.map(&:to_s).join("|") if type == :uploaded_image_list
