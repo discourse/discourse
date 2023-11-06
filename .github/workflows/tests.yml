@@ -32,7 +32,7 @@ jobs:
         with:
           context: ./.github/test-image
           build-contexts: |
-            github_sha=${{ env.github_sha }}
+            github_sha=${{ github.sha }}
           tags: myimage:latest
           outputs: type=docker,dest=/tmp/myimage.tar
       - name: Upload artifact
