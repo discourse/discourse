@@ -13,7 +13,6 @@ const DeprecationSilencer = require("deprecation-silencer");
 const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
-const { StatsWriterPlugin } = require("webpack-stats-plugin");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -139,13 +138,6 @@ module.exports = function (defaults) {
         output: {
           publicPath: "auto",
         },
-        entry: {
-          "assets/discourse.js/features/markdown-it.js": {
-            import: "./static/markdown-it",
-            dependOn: "assets/discourse.js",
-            runtime: false,
-          },
-        },
         externals: [
           function ({ request }, callback) {
             if (
@@ -186,39 +178,6 @@ module.exports = function (defaults) {
             },
           ],
         },
-        plugins: [
-          // The server use this output to map each asset to its chunks
-          new StatsWriterPlugin({
-            filename: "assets.json",
-            stats: {
-              all: false,
-              entrypoints: true,
-            },
-            transform({ entrypoints }) {
-              let names = Object.keys(entrypoints);
-              let output = {};
-
-              for (let name of names.sort()) {
-                let assets = entrypoints[name].assets.map(
-                  (asset) => asset.name
-                );
-
-                let parent = names.find((parentName) =>
-                  name.startsWith(parentName + "/")
-                );
-
-                if (parent) {
-                  name = name.slice(parent.length + 1);
-                  output[parent][name] = { assets };
-                } else {
-                  output[name] = { assets };
-                }
-              }
-
-              return JSON.stringify(output, null, 2);
-            },
-          }),
-        ],
       },
     },
   });
