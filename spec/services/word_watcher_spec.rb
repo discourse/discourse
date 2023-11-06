@@ -18,15 +18,9 @@ RSpec.describe WordWatcher do
       word2 =
         Fabricate(:watched_word, action: WatchedWord.actions[:block], case_sensitive: true).word
 
-      expect(described_class.words_for_action(:block)).to include(
-        word1 => {
-          case_sensitive: false,
-          word: word1,
-        },
-        word2 => {
-          case_sensitive: true,
-          word: word2,
-        },
+      expect(described_class.words_for_action(:block)).to contain_exactly(
+        { case_sensitive: false, word: word1, regexp: word1 },
+        { case_sensitive: true, word: word2, regexp: word2 },
       )
     end
 
@@ -38,17 +32,13 @@ RSpec.describe WordWatcher do
           replacement: "http://test.localhost/",
         ).word
 
-      expect(described_class.words_for_action(:link)).to include(
-        word => {
-          case_sensitive: false,
-          replacement: "http://test.localhost/",
-          word: word,
-        },
+      expect(described_class.words_for_action(:link)).to contain_exactly(
+        { case_sensitive: false, replacement: "http://test.localhost/", word: word, regexp: word },
       )
     end
 
     it "returns an empty hash when no words are present" do
-      expect(described_class.words_for_action(:tag)).to eq({})
+      expect(described_class.words_for_action(:tag)).to eq([])
     end
   end
 

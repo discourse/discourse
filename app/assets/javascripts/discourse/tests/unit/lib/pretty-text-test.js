@@ -1086,7 +1086,9 @@ eviltrout</p>
     assert.cookedOptions(
       "Pleased to meet you, but pleeeease call me later, xyz123",
       {
-        censoredRegexp: [{ "(xyz*|plee+ase)": { case_sensitive: false } }],
+        censoredRegexp: [
+          { full_regexp: "(xyz*|plee+ase)", case_sensitive: false },
+        ],
       },
       "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>",
       "supports censoring"
@@ -1611,13 +1613,14 @@ var bar = 'bar';
 
   test("watched words replace", function (assert) {
     const opts = {
-      watchedWordsReplace: {
-        "(?:\\W|^)(fun)(?=\\W|$)": {
+      watchedWordsReplace: [
+        {
           word: "fun",
+          full_regexp: "(?:\\W|^)(fun)(?=\\W|$)",
           replacement: "times",
           case_sensitive: false,
         },
-      },
+      ],
     };
 
     assert.cookedOptions("test fun funny", opts, "<p>test times funny</p>");
@@ -1626,13 +1629,14 @@ var bar = 'bar';
 
   test("watched words link", function (assert) {
     const opts = {
-      watchedWordsLink: {
-        "(?:\\W|^)(fun)(?=\\W|$)": {
+      watchedWordsLink: [
+        {
           word: "fun",
+          full_regexp: "(?:\\W|^)(fun)(?=\\W|$)",
           replacement: "https://discourse.org",
           case_sensitive: false,
         },
-      },
+      ],
     };
 
     assert.cookedOptions(
@@ -1645,13 +1649,14 @@ var bar = 'bar';
   test("watched words replace with bad regex", function (assert) {
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
-      watchedWordsReplace: {
-        "(\\bu?\\b)": {
+      watchedWordsReplace: [
+        {
           word: "(\\bu?\\b)",
+          full_regexp: "(\\bu?\\b)",
           replacement: "you",
           case_sensitive: false,
         },
-      },
+      ],
     };
 
     assert.cookedOptions(
