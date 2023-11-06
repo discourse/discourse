@@ -34,23 +34,28 @@ jobs:
           build-args: |
             github_sha=${{ github.sha }}
           tags: myimage:latest
-          outputs: type=docker,dest=/tmp/myimage.tar
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: myimage
-          path: /tmp/myimage.tar
+          cache-from: type=gha,scope=${{github.run_id}}
+          cache-to: type=gha,mode=min,scope=${{github.run_id}}
+      # - name: Upload artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: myimage
+      #     path: /tmp/myimage.tar
 
   use:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and export
+        uses: docker/build-push-action@v5
         with:
-          name: myimage
-          path: /tmp
-      - name: Load image
-        run: |
-          docker load --input /tmp/myimage.tar
-          docker image ls -a          
+          context: ./.github/test-image
+          build-args: |
+            github_sha=${{ github.sha }}
+          tags: myimage:latest
+          cache-from: type=gha,scope=${{github.run_id}}
+          cache-to: type=gha,mode=min,scope=${{github.run_id}}
