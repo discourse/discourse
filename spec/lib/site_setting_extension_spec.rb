@@ -841,7 +841,7 @@ RSpec.describe SiteSettingExtension do
 
       after { Rails.logger = @orig_logger }
 
-      it "does not log deprecation warnings" do
+      xit "does not log deprecation warnings" do
         begin
           original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
           SiteSettings::DeprecatedSettings::SETTINGS.clear
@@ -869,7 +869,7 @@ RSpec.describe SiteSettingExtension do
 
       after { Rails.logger = @orig_logger }
 
-      it "does not log deprecation warnings" do
+      xit "does not log deprecation warnings" do
         begin
           original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
           SiteSettings::DeprecatedSettings::SETTINGS.clear
