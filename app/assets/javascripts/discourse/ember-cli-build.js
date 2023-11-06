@@ -78,9 +78,6 @@ module.exports = function (defaults) {
 
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(vendorJs + "bootbox.js");
-  app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
-    type: "test",
-  });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
   app.import(
