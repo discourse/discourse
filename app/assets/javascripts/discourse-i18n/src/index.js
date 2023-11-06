@@ -1,4 +1,4 @@
-if ("I18n" in globalThis) {
+if (window.I18n) {
   throw new Error(
     "I18n already defined, discourse-i18n unexpectedly loaded twice!"
   );
