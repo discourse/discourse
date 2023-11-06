@@ -20,28 +20,28 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    runs-on: 'ubuntu-20.04-8core'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build and export
-        uses: docker/build-push-action@v5
-        with:
-          context: ./.github/test-image
-          build-args: |
-            github_sha=${{ github.sha }}
-          tags: myimage:latest
-          cache-to: type=gha,mode=min,scope=${{github.run_id}}
+  # build:
+  #   runs-on: 'ubuntu-20.04-8core'
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+  #     - name: Build and export
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: ./.github/test-image
+  #         build-args: |
+  #           github_sha=${{ github.sha }}
+  #         tags: myimage:latest
+  #         cache-to: type=gha,mode=min,scope=${{github.run_id}}
 
   use:
     runs-on: 'ubuntu-20.04-8core'
-    needs: build
+    # needs: build
     defaults:
       run:
-        shell: bash -c -eo pipefail "cat {0} | docker exec -w /var/www/discourse myimage bash --noprofile --norc -eo pipefail"
+        shell: bash -eo pipefail -c "cat {0} | docker exec -w /var/www/discourse myimage bash --noprofile --norc -eo pipefail"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
