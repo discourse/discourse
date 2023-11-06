@@ -41,12 +41,14 @@ jobs:
     # needs: build
     defaults:
       run:
-        shell: bash -eo pipefail -c "cat {0} | docker exec -w /var/www/discourse myimage bash --noprofile --norc -eo pipefail"
+        shell: bash -eo pipefail -c "cat {0}"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - name: Say hi
+        run: echo "Hello world"
       - name: Build and export
         uses: docker/build-push-action@v5
         with:
