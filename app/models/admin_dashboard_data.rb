@@ -220,9 +220,7 @@ class AdminDashboardData
                       :watched_words_check,
                       :google_analytics_version_check,
                       :translation_overrides_check,
-                      :deprecated_category_style_check
-
-    register_default_scheduled_problem_checks
+                      register_default_scheduled_problem_checks
 
     add_problem_check { sidekiq_check || queue_size_check }
   end
@@ -458,10 +456,6 @@ class AdminDashboardData
     return unless themes.present?
 
     themes_html_format(themes, "dashboard.unreachable_themes")
-  end
-
-  def deprecated_category_style_check
-    I18n.t("dashboard.category_style_deprecated") if SiteSetting.category_style != "bullet"
   end
 
   private
