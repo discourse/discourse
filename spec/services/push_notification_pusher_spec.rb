@@ -14,6 +14,8 @@ RSpec.describe PushNotificationPusher do
 
   context "with user" do
     fab!(:user) { Fabricate(:user) }
+    let(:topic_title) { "Topic" }
+    let(:username) { "system" }
 
     def create_subscription
       data = <<~JSON
@@ -28,16 +30,17 @@ RSpec.describe PushNotificationPusher do
       PushSubscription.create!(user_id: user.id, data: data)
     end
 
-    def execute_push(notification_type: 1)
+    def execute_push(notification_type: 1, post_number: 1)
       PushNotificationPusher.push(
         user,
         {
-          topic_title: "Topic",
-          username: "system",
+          topic_title: topic_title,
+          username: username,
           excerpt: "description",
           topic_id: 1,
           post_url: "https://example.com/t/1/2",
           notification_type: notification_type,
+          post_number: post_number,
         },
       )
     end
@@ -156,6 +159,42 @@ RSpec.describe PushNotificationPusher do
 
       subscription.reload
       expect(subscription.error_count).to eq(1)
+    end
+
+    describe "`watching_category_or_tag` notifications" do
+      it "Uses the 'watching_first_post' translation when new topic was created" do
+        message =
+          execute_push(
+            notification_type: Notification.types[:watching_category_or_tag],
+            post_number: 1,
+          )
+
+        expect(message[:title]).to eq(
+          I18n.t(
+            "discourse_push_notifications.popup.watching_first_post",
+            site_title: SiteSetting.title,
+            topic: topic_title,
+            username: username,
+          ),
+        )
+      end
+
+      it "Uses the 'posted' translation when new post was created" do
+        message =
+          execute_push(
+            notification_type: Notification.types[:watching_category_or_tag],
+            post_number: 2,
+          )
+
+        expect(message[:title]).to eq(
+          I18n.t(
+            "discourse_push_notifications.popup.posted",
+            site_title: SiteSetting.title,
+            topic: topic_title,
+            username: username,
+          ),
+        )
+      end
     end
   end
 end
