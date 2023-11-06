@@ -81,7 +81,6 @@ jobs:
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.ruby }}-gem-
 
       - name: Setup gems
         run: |
@@ -102,7 +101,6 @@ jobs:
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
 
       - name: Yarn install
         run: yarn install --frozen-lockfile
