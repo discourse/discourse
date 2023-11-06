@@ -130,6 +130,7 @@
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",
     "webpack": "^5.89.0",
+    "webpack-stats-plugin": "^1.1.3",
     "wizard": "1.0.0",
     "workbox-cacheable-response": "^7.0.0",
     "workbox-core": "^7.0.0",
