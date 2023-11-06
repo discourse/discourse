@@ -41,14 +41,12 @@ jobs:
     # needs: build
     defaults:
       run:
-        shell: bash -eo pipefail -c "cat {0}"
+        shell: bash -eo pipefail -c "cat {0} | docker exec -w /var/www/discourse myimage bash --noprofile --norc -eo pipefail"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Say hi
-        run: echo "Hello world"
       - name: Build and export
         uses: docker/build-push-action@v5
         with:
@@ -60,7 +58,7 @@ jobs:
           load: true
       - name: Start image
         shell: bash # On host
-        run: docker run --rm -d --name myimage myimage:latest
+        run: docker run --entrypoint /bin/bash --rm -d --name myimage myimage:latest sleep infinity
       - name: Run tests
         run: rails runner 'puts "Hello world"'
 
