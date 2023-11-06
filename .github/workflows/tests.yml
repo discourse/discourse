@@ -73,12 +73,15 @@ jobs:
       - name: Core RSpec
         if: matrix.build_type == 'backend'
         run: bin/turbo_rspec --use-runtime-info --verbose --format documentation
+      - name: Ember Build for System Tests
+        if: matrix.build_type == 'system'
+        run: bin/ember-cli --build
       - name: Core System
         if: matrix.build_type == 'system'
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
       - name: Frontend
         if: matrix.build_type == 'frontend'
-        run: yarn ember exam --load-balance --parallel=5 --launch Chrome --write-execution-file --random
+        run: bin/yarn-app ember exam --load-balance --parallel=5 --launch Chrome --write-execution-file --random
 
 
 
