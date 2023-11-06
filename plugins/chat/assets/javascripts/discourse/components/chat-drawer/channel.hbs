@@ -16,10 +16,12 @@
     {{did-update this.fetchChannel @params.channelId}}
   >
     {{#if this.chat.activeChannel}}
-      <ChatChannel
-        @targetMessageId={{readonly @params.messageId}}
-        @channel={{this.chat.activeChannel}}
-      />
+      {{#each (array this.chat.activeChannel) as |channel|}}
+        <ChatChannel
+          @targetMessageId={{readonly @params.messageId}}
+          @channel={{channel}}
+        />
+      {{/each}}
     {{/if}}
   </div>
 {{/if}}

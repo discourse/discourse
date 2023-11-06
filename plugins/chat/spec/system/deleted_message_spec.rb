@@ -15,19 +15,14 @@ RSpec.describe "Deleted message", type: :system do
   end
 
   context "when deleting a message" do
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
     it "shows as deleted" do
       chat_page.visit_channel(channel_1)
-      channel_page.send_message
 
-      expect(page).to have_css(".-persisted")
+      channel_page.messages.delete(message_1)
 
-      last_message = find(".chat-message-container:last-child")
-      channel_page.messages.delete(OpenStruct.new(id: last_message["data-id"]))
-
-      expect(channel_page.messages).to have_deleted_message(
-        OpenStruct.new(id: last_message["data-id"]),
-        count: 1,
-      )
+      expect(channel_page.messages).to have_deleted_message(message_1, count: 1)
     end
 
     it "does not error when coming back to the channel from another channel" do

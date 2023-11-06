@@ -3,7 +3,7 @@
 RSpec.describe "Chat message - channel", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
 
   let(:cdp) { PageObjects::CDP.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
