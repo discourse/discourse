@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-20.04-8core'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,17 +34,14 @@ jobs:
           build-args: |
             github_sha=${{ github.sha }}
           tags: myimage:latest
-          cache-from: type=gha,scope=${{github.run_id}}
           cache-to: type=gha,mode=min,scope=${{github.run_id}}
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: myimage
-      #     path: /tmp/myimage.tar
 
   use:
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-20.04-8core'
     needs: build
+    defaults:
+      run:
+        shell: docker exec -w /var/www/discourse myimage bash
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -58,4 +55,11 @@ jobs:
             github_sha=${{ github.sha }}
           tags: myimage:latest
           cache-from: type=gha,scope=${{github.run_id}}
-          cache-to: type=gha,mode=min,scope=${{github.run_id}}
+          load: true
+      - name: Start image
+        shell: bash # On host
+        run: docker run --rm -d --name myimage myimage:latest
+      - name: Run tests
+        run: rails runner 'puts "Hello world"'
+
+
