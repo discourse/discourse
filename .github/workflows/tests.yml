@@ -69,10 +69,9 @@ jobs:
           context: ./.github/test-image
           build-args: |
             github_sha=${{ github.sha }}
-          tags: myimage:latest
+          tags: localhost:5000/myimage:latest
           cache-from: type=gha,scope=${{github.run_id}}
           push: true
-          tags: localhost:5000/myimage:latest
       - name: Start image
         shell: bash
         run: docker run --entrypoint='' --rm -d --name myimage localhost:5000/myimage:latest tail -f /dev/null
