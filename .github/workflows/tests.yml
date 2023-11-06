@@ -20,25 +20,32 @@ permissions:
   contents: read
 
 jobs:
-  # build:
-  #   runs-on: 'ubuntu-20.04-8core'
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #     - name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v3
-  #     - name: Build and export
-  #       uses: docker/build-push-action@v5
-  #       with:
-  #         context: ./.github/test-image
-  #         build-args: |
-  #           github_sha=${{ github.sha }}
-  #         tags: myimage:latest
-  #         cache-to: type=gha,mode=min,scope=${{github.run_id}}
+  build:
+    runs-on: 'ubuntu-20.04-8core'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and export
+        uses: docker/build-push-action@v5
+        with:
+          context: ./.github/test-image
+          build-args: |
+            github_sha=${{ github.sha }}
+          tags: myimage:latest
+          cache-to: type=gha,mode=min,scope=${{github.run_id}}
 
   use:
     runs-on: 'ubuntu-20.04-8core'
-    # needs: build
+    needs: build
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        build_type: [backend, frontend, system]
+
     defaults:
       run:
         shell: bash -eo pipefail -c "cat {0} | docker exec -i -w /var/www/discourse -u discourse myimage bash --noprofile --norc -eo pipefail"
@@ -64,8 +71,14 @@ jobs:
       - name: Start postgres
         run: script/start_test_db.rb --skip-setup
       - name: Core RSpec
-        # if: matrix.build_type == 'backend' && matrix.target == 'core'
+        if: matrix.build_type == 'backend'
         run: bin/turbo_rspec --use-runtime-info --verbose --format documentation
+      - name: Core System
+        if: matrix.build_type == 'system'
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+      - name: Frontend
+        if: matrix.build_type == 'frontend'
+        run: yarn ember exam --load-balance --parallel=5 --launch Chrome --write-execution-file --random
 
 
 
