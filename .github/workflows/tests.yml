@@ -49,11 +49,20 @@ jobs:
     defaults:
       run:
         shell: bash -eo pipefail -c "cat {0} | docker exec -i -w /var/www/discourse -u discourse myimage bash --noprofile --norc -eo pipefail"
+
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
       - name: Build and export
         uses: docker/build-push-action@v5
         with:
@@ -62,10 +71,11 @@ jobs:
             github_sha=${{ github.sha }}
           tags: myimage:latest
           cache-from: type=gha,scope=${{github.run_id}}
-          load: true
+          push: true
+          tags: localhost:5000/myimage:latest
       - name: Start image
         shell: bash
-        run: docker run --entrypoint='' --rm -d --name myimage myimage:latest tail -f /dev/null
+        run: docker run --entrypoint='' --rm -d --name myimage localhost:5000/myimage:latest tail -f /dev/null
       - name: Start redis
         run: redis-server --dir tmp/test_data/redis --daemonize yes
       - name: Start postgres
@@ -81,7 +91,7 @@ jobs:
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
       - name: Frontend
         if: matrix.build_type == 'frontend'
-        run: bin/yarn-app ember exam --load-balance --parallel=5 --launch Chrome --write-execution-file --random
+        run: CI=1 bin/yarn-app ember exam --load-balance --parallel=5 --launch Chrome --write-execution-file --random
 
 
 
