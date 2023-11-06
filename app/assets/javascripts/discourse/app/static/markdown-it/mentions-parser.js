@@ -1,10 +1,10 @@
-export class MentionsParser {
-  constructor(prettyText) {
-    this.prettyText = prettyText;
+export default class MentionsParser {
+  constructor(engine) {
+    this.engine = engine;
   }
 
   parse(markdown) {
-    const tokens = this.prettyText.parse(markdown);
+    const tokens = this.engine.parse(markdown);
     const mentions = this.#parse(tokens);
     return [...new Set(mentions)];
   }

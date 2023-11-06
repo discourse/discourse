@@ -1,14 +1,14 @@
 import { setupTest } from "ember-qunit";
 import { registerEmoji } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import QUnit, { module, test } from "qunit";
 import { deepMerge } from "discourse-common/lib/object";
+import DiscourseMarkdownIt from "discourse-markdown-it";
+import { extractDataAttribute } from "discourse-markdown-it/engine";
 
 const rawOpts = {
   siteSettings: {
@@ -27,10 +27,12 @@ const rawOpts = {
   getURL: (url) => url,
 };
 
-const defaultOpts = buildOptions(rawOpts);
+function build(options = rawOpts) {
+  return DiscourseMarkdownIt.withDefaultFeatures().withOptions(options);
+}
 
 QUnit.assert.cooked = function (input, expected, message) {
-  const actual = new PrettyText(defaultOpts).cook(input);
+  const actual = build().cook(input);
   this.pushResult({
     result: actual === expected.replace(/\/>/g, ">"),
     actual,
@@ -41,7 +43,7 @@ QUnit.assert.cooked = function (input, expected, message) {
 
 QUnit.assert.cookedOptions = function (input, opts, expected, message) {
   const merged = deepMerge({}, rawOpts, opts);
-  const actual = new PrettyText(buildOptions(merged)).cook(input);
+  const actual = build(merged).cook(input);
   this.pushResult({
     result: actual === expected,
     actual,
@@ -59,12 +61,12 @@ module("Unit | Utility | pretty-text", function (hooks) {
 
   test("buildOptions", function (assert) {
     assert.ok(
-      buildOptions({ siteSettings: { enable_emoji: true } }).discourse.features
+      build({ siteSettings: { enable_emoji: true } }).options.discourse.features
         .emoji,
       "emoji enabled"
     );
     assert.ok(
-      !buildOptions({ siteSettings: { enable_emoji: false } }).discourse
+      !build({ siteSettings: { enable_emoji: false } }).options.discourse
         .features.emoji,
       "emoji disabled"
     );
@@ -733,7 +735,7 @@ eviltrout</p>
 
   test("Oneboxing", function (assert) {
     function matches(input, regexp) {
-      return new PrettyText(defaultOpts).cook(input).match(regexp);
+      return build().cook(input).match(regexp);
     }
 
     assert.ok(
@@ -1338,7 +1340,7 @@ var bar = 'bar';
   });
 
   test("quotes with trailing formatting", function (assert) {
-    const result = new PrettyText(defaultOpts).cook(
+    const result = build().cook(
       '[quote="EvilTrout, post:123, topic:456, full:true"]\nhello\n[/quote]\n*Test*'
     );
     assert.strictEqual(

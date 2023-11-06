@@ -1,8 +1,6 @@
 // since the markdown.it interface is a bit on the verbose side
 // we can keep some general patterns here
 
-export default null;
-
 // creates a rule suitable for inline parsing and replacement
 //
 // example:

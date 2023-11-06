@@ -1,4 +1,4 @@
-import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
+import { parseBBCodeTag } from "./bbcode-block";
 
 function tokenizeBBCode(state, silent, ruler) {
   let pos = state.pos;
