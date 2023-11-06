@@ -41,7 +41,7 @@ jobs:
     needs: build
     defaults:
       run:
-        shell: cat {0} | docker exec -w /var/www/discourse myimage bash --noprofile --norc -eo pipefail
+        shell: bash -c -eo pipefail "cat {0} | docker exec -w /var/www/discourse myimage bash --noprofile --norc -eo pipefail"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
