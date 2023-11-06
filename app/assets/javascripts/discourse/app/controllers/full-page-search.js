@@ -254,7 +254,7 @@ export default Controller.extend({
     return I18n.t("search.result_count", { count, plus, term });
   },
 
-  @observes("model.[posts,categories,tags,users].length", "searchResultPosts")
+  @observes("model.{posts,categories,tags,users}.length", "searchResultPosts")
   resultCountChanged() {
     if (!this.model.posts) {
       return 0;
