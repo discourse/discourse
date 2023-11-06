@@ -219,8 +219,9 @@ class AdminDashboardData
                       :unreachable_themes,
                       :watched_words_check,
                       :google_analytics_version_check,
-                      :translation_overrides_check,
-                      register_default_scheduled_problem_checks
+                      :translation_overrides_check
+
+    register_default_scheduled_problem_checks
 
     add_problem_check { sidekiq_check || queue_size_check }
   end
