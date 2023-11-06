@@ -20,7 +20,10 @@ describe DiscourseAutomation::AdminAutomationsController do
 
       context "when user is logged in" do
         context "when user is admin" do
-          before { sign_in(Fabricate(:admin)) }
+          before do
+            Jobs.run_immediately!
+            sign_in(Fabricate(:admin))
+          end
 
           it "triggers the automation" do
             list = capture_contexts { post "/automations/#{automation.id}/trigger.json" }
@@ -67,6 +70,7 @@ describe DiscourseAutomation::AdminAutomationsController do
                }
 
           expect(response.status).to eq(200)
+          expect(Jobs::DiscourseAutomationTrigger.jobs.size).to eq(1)
         end
       end
     end
@@ -75,7 +79,10 @@ describe DiscourseAutomation::AdminAutomationsController do
       fab!(:admin) { Fabricate(:admin) }
       fab!(:automation) { Fabricate(:automation, trigger: "api_call") }
 
-      before { sign_in(admin) }
+      before do
+        Jobs.run_immediately!
+        sign_in(admin)
+      end
 
       it "passes the params" do
         list =

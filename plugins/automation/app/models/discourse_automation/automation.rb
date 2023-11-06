@@ -115,17 +115,21 @@ module DiscourseAutomation
       new_context
     end
 
+    def trigger_in_background!(context = {})
+      Jobs.enqueue(
+        :discourse_automation_trigger,
+        automation_id: id,
+        context: self.class.serialize_context(context),
+      )
+    end
+
     def trigger!(context = {})
       if enabled
         # we need this unconditionally for testing
         scriptable = DiscourseAutomation::Scriptable.new(script)
 
         if scriptable.background && !running_in_background
-          Jobs.enqueue(
-            :discourse_automation_trigger,
-            automation_id: id,
-            context: self.class.serialize_context(context),
-          )
+          trigger_in_background!(context)
         else
           triggerable&.on_call&.call(self, serialized_fields)
           scriptable.script.call(context, serialized_fields, self)
