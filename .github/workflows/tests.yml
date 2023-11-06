@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Create builder
+        run: docker buildx create --use
       - name: Build and export
         uses: docker/build-push-action@v5
         with:
@@ -51,6 +53,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Create builder
+        shell: bash
+        run: docker buildx create --use
       - name: Build and export
         uses: docker/build-push-action@v5
         with:
