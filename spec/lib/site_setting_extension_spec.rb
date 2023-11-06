@@ -832,6 +832,60 @@ RSpec.describe SiteSettingExtension do
 
       expect(client_settings["with_html"]).to eq("<script></script>rest")
     end
+
+    context "for deprecated settings" do
+      before do
+        @orig_logger = Rails.logger
+        Rails.logger = @fake_logger = FakeLogger.new
+      end
+
+      after { Rails.logger = @orig_logger }
+
+      it "does not log deprecation warnings" do
+        begin
+          original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
+          SiteSettings::DeprecatedSettings::SETTINGS.clear
+          SiteSettings::DeprecatedSettings::SETTINGS.push(
+            ["use_https", "force_https", true, "0.0.1"],
+          )
+          SiteSetting.setup_deprecated_methods
+
+          SiteSetting.client_settings_json_uncached
+          expect(@fake_logger.warnings).to eq([])
+        ensure
+          SiteSettings::DeprecatedSettings::SETTINGS.clear
+          SiteSettings::DeprecatedSettings::SETTINGS.concat(original_settings)
+        end
+      end
+    end
+  end
+
+  describe ".settings_hash" do
+    context "for deprecated settings" do
+      before do
+        @orig_logger = Rails.logger
+        Rails.logger = @fake_logger = FakeLogger.new
+      end
+
+      after { Rails.logger = @orig_logger }
+
+      it "does not log deprecation warnings" do
+        begin
+          original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
+          SiteSettings::DeprecatedSettings::SETTINGS.clear
+          SiteSettings::DeprecatedSettings::SETTINGS.push(
+            ["use_https", "force_https", true, "0.0.1"],
+          )
+          SiteSetting.setup_deprecated_methods
+
+          SiteSetting.settings_hash
+          expect(@fake_logger.warnings).to eq([])
+        ensure
+          SiteSettings::DeprecatedSettings::SETTINGS.clear
+          SiteSettings::DeprecatedSettings::SETTINGS.concat(original_settings)
+        end
+      end
+    end
   end
 
   describe ".setup_methods" do
