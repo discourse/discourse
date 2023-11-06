@@ -25,8 +25,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Build and export
         uses: docker/build-push-action@v5
         with:
@@ -50,31 +48,21 @@ jobs:
       run:
         shell: bash -eo pipefail -c "cat {0} | docker exec -i -w /var/www/discourse -u discourse myimage bash --noprofile --norc -eo pipefail"
 
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          driver-opts: network=host
       - name: Build and export
         uses: docker/build-push-action@v5
         with:
           context: ./.github/test-image
           build-args: |
             github_sha=${{ github.sha }}
-          tags: localhost:5000/myimage:latest
+          tags: myimage:latest
           cache-from: type=gha,scope=${{github.run_id}}
           push: true
       - name: Start image
         shell: bash
-        run: docker run --entrypoint='' --rm -d --name myimage localhost:5000/myimage:latest tail -f /dev/null
+        run: docker run --entrypoint='' --rm -d --name myimage myimage:latest tail -f /dev/null
       - name: Start redis
         run: redis-server --dir tmp/test_data/redis --daemonize yes
       - name: Start postgres
