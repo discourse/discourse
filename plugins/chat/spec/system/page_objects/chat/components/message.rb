@@ -60,12 +60,11 @@ module PageObjects
           text = args[:text]
           text = I18n.t("js.chat.deleted", count: args[:deleted]) if args[:deleted]
 
-          if text
-            @component =
-              find(context).find("#{selector} .chat-message-text", text: /#{Regexp.escape(text)}/)
-          else
-            @component = page.find(context).find(selector)
-          end
+          @component =
+            page.find(
+              "#{context} #{selector} .chat-message-text",
+              text: text ? /#{Regexp.escape(text)}/ : nil,
+            )
 
           self
         end
