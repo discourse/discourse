@@ -32,7 +32,7 @@ module PageObjects
 
         def secondary_action(action)
           if page.has_css?("html.mobile-view", wait: 0)
-            component.click(delay: 0.4)
+            component.click(delay: 0.6)
             page.find(".chat-message-actions [data-id=\"#{action}\"]").click
           else
             open_more_menu
@@ -52,14 +52,7 @@ module PageObjects
             return
           end
 
-          if page.has_css?("html.mobile-view", wait: 0)
-            component.click(delay: 0.6)
-            page.find(".chat-message-actions [data-id=\"select\"]").click
-          else
-            hover
-            click_more_button
-            page.find("[data-value='select']").click
-          end
+          secondary_action("select")
         end
 
         def find(**args)
@@ -103,6 +96,13 @@ module PageObjects
 
         def build_selector(**args)
           selector = SELECTOR
+
+          if args[:not_processed]
+            selector += ".-not-processed"
+          else
+            selector += ".-processed"
+          end
+
           selector += "[data-id=\"#{args[:id]}\"]" if args[:id]
           selector += ".-selected" if args[:selected]
           selector += ".-persisted" if args[:persisted]

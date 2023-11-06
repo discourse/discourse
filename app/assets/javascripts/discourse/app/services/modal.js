@@ -14,7 +14,6 @@ import I18n from "discourse-i18n";
 // Known legacy modals in core. Silence deprecation warnings for these so the messages
 // don't cause unnecessary noise.
 const KNOWN_LEGACY_MODALS = [
-  "associate-account-confirm",
   "avatar-selector",
   "change-owner",
   "change-post-notice",

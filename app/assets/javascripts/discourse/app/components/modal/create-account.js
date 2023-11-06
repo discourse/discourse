@@ -4,6 +4,7 @@ import EmberObject, { action } from "@ember/object";
 import { alias, notEmpty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import LoginModal from "discourse/components/modal/login";
@@ -20,10 +21,7 @@ import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll } from "discourse/models/login-method";
 import User from "discourse/models/user";
 import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default class CreateAccount extends Component.extend(
@@ -53,6 +51,8 @@ export default class CreateAccount extends Component.extend(
   @alias("model.authOptions") authOptions;
   @alias("model.accountEmail") accountEmail;
   @alias("model.accountUsername") accountUsername;
+  // For NameValidation mixin
+  @alias("model.accountName") accountName;
 
   init() {
     super.init(...arguments);
@@ -373,16 +373,15 @@ export default class CreateAccount extends Component.extend(
       );
     }
 
-    const attrs = this.getProperties(
-      "model.accountName",
-      "model.accountEmail",
-      "accountPassword",
-      "model.accountUsername",
-      "accountChallenge",
-      "inviteCode"
-    );
-
-    attrs["accountPasswordConfirm"] = this.accountHoneypot;
+    const attrs = {
+      accountName: this.model.accountName,
+      accountEmail: this.model.accountEmail,
+      accountPassword: this.accountPassword,
+      accountUsername: this.model.accountUsername,
+      accountChallenge: this.accountChallenge,
+      inviteCode: this.inviteCode,
+      accountPasswordConfirm: this.accountHoneypot,
+    };
 
     const userFields = this.userFields;
     const destinationUrl = this.get("model.authOptions.destination_url");

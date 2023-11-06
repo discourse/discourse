@@ -32,8 +32,10 @@ export default class AdminRoute extends DiscourseRoute {
     });
   }
 
-  deactivate() {
+  deactivate(transition) {
     this.controllerFor("application").set("showTop", true);
-    this.sidebarState.setPanel(MAIN_PANEL);
+    if (!transition?.to.name.startsWith("admin")) {
+      this.sidebarState.setPanel(MAIN_PANEL);
+    }
   }
 }

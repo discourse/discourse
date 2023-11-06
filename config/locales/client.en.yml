@@ -221,6 +221,8 @@ en:
 
     broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
 
+    broken_plugin_alert: "Caused by plugin '%{name}'"
+
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -4610,7 +4612,6 @@ en:
       errors:
         valueMissing:
           default: "Please fill out this field."
-          text: "Please fill out this field."
           select-one: "Please select an item in the list."
           select-multiple: "Please select at least one item in the list."
           checkbox: "Please check this box if you want to proceed."

@@ -160,6 +160,8 @@ class Admin::ThemesController < Admin::AdminController
       render_json_error I18n.t("themes.import_error.unknown_file_type"),
                         status: :unprocessable_entity
     end
+  rescue Theme::SettingsMigrationError => err
+    render_json_error err.message
   end
 
   def index
@@ -226,10 +228,14 @@ class Admin::ThemesController < Admin::AdminController
 
     @theme.remote_theme.update_remote_version if params[:theme][:remote_check]
 
-    @theme.remote_theme.update_from_remote if params[:theme][:remote_update]
+    if params[:theme][:remote_update]
+      @theme.remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+    else
+      @theme.save
+    end
 
     respond_to do |format|
-      if @theme.save
+      if @theme.errors.blank?
         update_default_theme
 
         @theme = Theme.include_relations.find(@theme.id)
@@ -252,6 +258,8 @@ class Admin::ThemesController < Admin::AdminController
       end
     end
   rescue RemoteTheme::ImportError => e
+    render_json_error e.message
+  rescue Theme::SettingsMigrationError => e
     render_json_error e.message
   end
 

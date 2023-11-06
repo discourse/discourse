@@ -47,6 +47,17 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     return {};
   },
 
+  /**
+   * Overridable for custom file validations, executed before uploading.
+   *
+   * @param {object} file
+   *
+   * @returns {boolean}
+   */
+  isUploadedFileAllowed() {
+    return true;
+  },
+
   uploadingOrProcessing: or("uploading", "processing"),
 
   @on("willDestroyElement")
@@ -112,7 +123,9 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           },
           this.validateUploadedFilesOptions()
         );
-        const isValid = validateUploadedFile(currentFile, validationOpts);
+        const isValid =
+          validateUploadedFile(currentFile, validationOpts) &&
+          this.isUploadedFileAllowed(currentFile);
         this.setProperties({
           uploadProgress: 0,
           uploading: isValid && this.autoStartUploads,

@@ -31,7 +31,6 @@ class ContentSecurityPolicy
     SCRIPT_ASSET_DIRECTORIES = [
       # [dir, can_use_s3_cdn, can_use_cdn, for_worker]
       ["/assets/", true, true, true],
-      ["/brotli_asset/", true, true, true],
       ["/extra-locales/", false, false, false],
       ["/highlight-js/", false, true, false],
       ["/javascripts/", false, true, true],

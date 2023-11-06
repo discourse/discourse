@@ -11,8 +11,8 @@ RSpec.describe CensoredWordsValidator do
         Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "bad")
       end
 
-      context "when word_matcher_regexp_list is empty" do
-        before { WordWatcher.stubs(:word_matcher_regexp_list).returns([]) }
+      context "when compiled_regexps_for_action is empty" do
+        before { WordWatcher.stubs(:compiled_regexps_for_action).returns([]) }
 
         it "adds no errors to the record" do
           validate
@@ -20,7 +20,7 @@ RSpec.describe CensoredWordsValidator do
         end
       end
 
-      context "when word_matcher_regexp_list is not empty" do
+      context "when compiled_regexps_for_action is not empty" do
         context "when the new value does not contain the watched word" do
           let(:value) { "some new good text" }
 

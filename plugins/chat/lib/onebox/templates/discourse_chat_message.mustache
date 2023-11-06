@@ -7,7 +7,12 @@
     </div>
     <div class="chat-transcript-username">{{username}}</div>
     <div class="chat-transcript-datetime">
-      <a href="/chat/c/-/{{channel_id}}" title="{{created_at}}">{{created_at}}</a>
+      {{#thread_id}}
+        <a href="/chat/c/-/{{channel_id}}/t/{{thread_id}}/{{message_id}}" title="{{created_at}}">{{created_at}}</a>
+      {{/thread_id}}
+      {{^thread_id}}
+        <a href="/chat/c/-/{{channel_id}}/{{message_id}}" title="{{created_at}}">{{created_at}}</a>
+      {{/thread_id}}
     </div>
     <a class="chat-transcript-channel" href="/chat/c/-/{{channel_id}}">
       {{#is_category}}

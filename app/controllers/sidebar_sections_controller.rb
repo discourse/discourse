@@ -83,17 +83,6 @@ class SidebarSectionsController < ApplicationController
     render_serialized(sidebar_section, SidebarSectionSerializer)
   end
 
-  def reorder
-    sidebar_section = SidebarSection.find_by(id: reorder_params["sidebar_section_id"])
-    @guardian.ensure_can_edit!(sidebar_section)
-    order = reorder_params["links_order"].map(&:to_i).each_with_index.to_h
-    set_order(sidebar_section, order)
-
-    render_serialized(sidebar_section, SidebarSectionSerializer)
-  rescue Discourse::InvalidAccess
-    render json: failed_json, status: 403
-  end
-
   def destroy
     sidebar_section = SidebarSection.find_by(id: section_params["id"])
     @guardian.ensure_can_delete!(sidebar_section)

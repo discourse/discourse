@@ -61,7 +61,6 @@ export default class ChatChannel extends Component {
   @tracked isScrolling = false;
 
   scrollable = null;
-  _loadedChannelId = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
@@ -98,7 +97,7 @@ export default class ChatChannel extends Component {
   teardownListeners() {
     this.#cancelHandlers();
     removeOnPresenceChange(this.onPresenceChangeCallback);
-    this.unsubscribeToUpdates(this._loadedChannelId);
+    this.unsubscribeToUpdates(this.args.channel.id);
   }
 
   @action
@@ -109,12 +108,6 @@ export default class ChatChannel extends Component {
 
   @action
   didUpdateChannel() {
-    this.#cancelHandlers();
-
-    if (!this.args.channel) {
-      return;
-    }
-
     this.messagesManager.clear();
 
     if (
@@ -122,12 +115,6 @@ export default class ChatChannel extends Component {
       !this.args.channel.isFollowing
     ) {
       this.chatChannelsManager.follow(this.args.channel);
-    }
-
-    if (this._loadedChannelId !== this.args.channel.id) {
-      this.unsubscribeToUpdates(this._loadedChannelId);
-      this.pane.selectingMessages = false;
-      this._loadedChannelId = this.args.channel.id;
     }
 
     const existingDraft = this.chatDraftsManager.get({
@@ -647,7 +634,6 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    this.unsubscribeToUpdates(channel.id);
     this.messageBus.subscribe(
       `/chat/${channel.id}`,
       this.onMessage,

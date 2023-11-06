@@ -125,9 +125,6 @@ module ApplicationHelper
           path = path.gsub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
-    elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req? &&
-          Rails.env != "development"
-      path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 
     path

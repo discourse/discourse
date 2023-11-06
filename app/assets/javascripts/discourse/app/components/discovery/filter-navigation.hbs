@@ -7,10 +7,7 @@
       <Input
         class="topic-query-filter__filter-term"
         @value={{this.newQueryString}}
-        @enter={{action
-          this.discoveryFilter.updateTopicsListQueryParams
-          this.newQueryString
-        }}
+        @enter={{action @updateTopicsListQueryParams this.newQueryString}}
         @type="text"
         id="queryStringInput"
         autocomplete="off"
