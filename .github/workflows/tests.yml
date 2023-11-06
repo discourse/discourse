@@ -31,7 +31,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./.github/test-image
-          build-contexts: |
+          build-args: |
             github_sha=${{ github.sha }}
           tags: myimage:latest
           outputs: type=docker,dest=/tmp/myimage.tar
