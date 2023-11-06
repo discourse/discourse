@@ -34,7 +34,7 @@ RSpec.describe "Chat | composer | thread", type: :system, js: true do
       thread_page.edit_message(message_2, "instant")
 
       expect(thread_page.messages).to have_message(
-        text: message_2.message + "instant",
+        text: message_2.message + " instant",
         persisted: false,
       )
     ensure

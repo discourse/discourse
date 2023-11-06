@@ -41,7 +41,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
 
     context "when quoting a single message into a topic" do
       fab!(:post_1) { Fabricate(:post) }
-      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1, use_service: true) }
 
       it "quotes the message" do
         chat_page.visit_channel(chat_channel_1)
@@ -62,8 +62,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
 
     context "when quoting multiple messages into a topic" do
       fab!(:post_1) { Fabricate(:post) }
-      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
-      fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1, use_service: true) }
+      fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1, use_service: true) }
 
       it "quotes the messages" do
         chat_page.visit_channel(chat_channel_1)
@@ -85,7 +85,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
 
     context "when quoting a message containing a onebox" do
       fab!(:post_1) { Fabricate(:post) }
-      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1, use_service: true) }
 
       before do
         Oneboxer.stubs(:preview).returns(
@@ -109,7 +109,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
     end
 
     context "when quoting a message in another message" do
-      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1, use_service: true) }
 
       it "quotes the message" do
         chat_page.visit_channel(chat_channel_1)
@@ -125,7 +125,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
   end
 
   context "when quoting into a topic directly" do
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1, use_service: true) }
     let(:topic_title) { "Some topic title for testing" }
 
     it "opens the topic composer with correct state" do
