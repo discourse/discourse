@@ -64,7 +64,7 @@ jobs:
             github_sha=${{ github.sha }}
           tags: myimage:latest
           cache-from: type=gha,scope=${{github.run_id}}
-          push: true
+          load: true
       - name: Start image
         shell: bash
         run: docker run --entrypoint='' --rm -d --name myimage myimage:latest tail -f /dev/null
