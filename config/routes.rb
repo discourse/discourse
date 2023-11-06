@@ -1469,11 +1469,6 @@ Discourse::Application.routes.draw do
         :constraints => {
           format: /.*/,
         }
-    get "brotli_asset/*path" => "static#brotli_asset",
-        :format => false,
-        :constraints => {
-          format: /.*/,
-        }
 
     get "favicon/proxied" => "static#favicon", :format => false
 
