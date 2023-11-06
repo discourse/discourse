@@ -14,7 +14,17 @@
     or a
     <code>href</code>, if you want to link to a specific page but don't know the
     Ember route. You can also use the Ember Inspector extension to find route
-    names, for example for plugin routes which are not auto-generated here.</p>
+    names, for example for plugin routes which are not auto-generated here.
+    <br /><br />
+    <code>routeModels</code>
+    is an array of values that correspond to parts of the route; for example the
+    topic route may be
+    <code>/t/:id</code>, so to get a link to topic with ID 123 you would do
+    <code>routeModels: [123]</code>.</p>
+
+  <p>All configuration options for a section and its links looks like this:</p>
+
+  <pre><code>{{this.exampleJson}}</code></pre>
 
   <DButton
     @action={{this.resetToDefault}}
