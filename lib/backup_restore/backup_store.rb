@@ -42,6 +42,25 @@ module BackupRestore
       reset_cache
     end
 
+    def delete_prior_to_n_days
+      window = SiteSetting.remove_older_backups.to_i
+      puts "window: #{window} days"
+      return unless window && window.is_a?(Numeric) && window > 0
+      return unless cleanup_allowed?
+
+      store = BackupRestore::BackupStore.create
+      puts Time.now.ago(window.days)
+      files.each { |file|
+        puts file.filename
+        puts file.last_modified
+        if file.last_modified < Time.now.ago(window.days)
+          puts "deleting #{file.filename}"
+          store.delete_file(file.filename)
+        end
+      }
+      # reset_cache
+    end
+
     def remote?
       fail NotImplementedError
     end

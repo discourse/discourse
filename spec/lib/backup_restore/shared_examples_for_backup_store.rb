@@ -148,6 +148,29 @@ RSpec.shared_examples "backup store" do
       end
     end
 
+    include ActiveSupport::Testing::TimeHelpers
+    describe "#delete_prior_to_n_days" do
+      it "does nothing if the number of days blank or <1" do
+        SiteSetting.remove_older_backups = ""
+
+        store.delete_prior_to_n_days
+        expect(store.files).to eq([backup1, backup2, backup3])
+      end
+
+      it "removes the two backups that are older than 7 days" do
+        travel_to Time.new(2018, 9, 19, 0, 0, 00)
+
+          # 7 days-1 minute later than backup1,
+          # which has last_modified= "2018-09-13T15:10:00Z"
+
+        SiteSetting.remove_older_backups = "7"
+
+          #expect(store.files).to eq([backup1, backup2, backup3])
+        store.delete_prior_to_n_days
+        expect(store.files).to eq([backup1])
+      end
+    end
+
     describe "#file" do
       it "returns information about the file when the file exists" do
         expect(store.file(backup1.filename)).to eq(backup1)

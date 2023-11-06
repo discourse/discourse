@@ -10,6 +10,7 @@ RSpec.describe BackupRestore::LocalBackupStore do
     @root_directory = Dir.mktmpdir
     @paths = []
     SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
+
   end
 
   after { FileUtils.remove_dir(@root_directory, true) }
