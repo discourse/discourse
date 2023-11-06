@@ -32,7 +32,7 @@ module PageObjects
 
         def secondary_action(action)
           if page.has_css?("html.mobile-view", wait: 0)
-            component.click(delay: 0.6)
+            component.find(".chat-message-text").click(delay: 0.6)
             page.find(".chat-message-actions [data-id=\"#{action}\"]").click
           else
             open_more_menu
@@ -61,10 +61,7 @@ module PageObjects
           text = I18n.t("js.chat.deleted", count: args[:deleted]) if args[:deleted]
 
           @component =
-            page.find(
-              "#{context} #{selector} .chat-message-text",
-              text: text ? /#{Regexp.escape(text)}/ : nil,
-            )
+            page.find("#{context} #{selector}", text: text ? /#{Regexp.escape(text)}/ : nil)
 
           self
         end
