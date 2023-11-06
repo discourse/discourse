@@ -144,12 +144,13 @@ acceptance("Admin - Watched Words", function (needs) {
 acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
   needs.user();
   needs.site({
-    watched_words_replace: {
-      "(?:\\W|^)(betis)(?=\\W|$)": {
+    watched_words_replace: [
+      {
+        full_regexp: "(?:\\W|^)(betis)(?=\\W|$)",
         replacement: ":poop:",
         case_sensitive: false,
       },
-    },
+    ],
   });
 
   test("emoji renders successfully after replacement", async function (assert) {

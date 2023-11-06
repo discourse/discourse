@@ -1,8 +1,3 @@
-import {
-  createWatchedWordRegExp,
-  toWatchedWord,
-} from "discourse-common/utils/watched-words";
-
 const MAX_MATCHES = 100;
 
 function isLinkOpen(str) {
@@ -16,13 +11,9 @@ function isLinkClose(str) {
 function findAllMatches(text, matchers) {
   const matches = [];
 
-  for (const { word, pattern, replacement, link } of matchers) {
-    if (matches.length >= MAX_MATCHES) {
-      break;
-    }
-
-    if (word.test(text)) {
-      for (const match of text.matchAll(pattern)) {
+  for (const { regexp, fullRegexp, replacement, link } of matchers) {
+    if (regexp.test(text)) {
+      for (const match of text.matchAll(fullRegexp)) {
         matches.push({
           index: match.index + match[0].indexOf(match[1]),
           text: match[1],
@@ -34,6 +25,10 @@ function findAllMatches(text, matchers) {
           break;
         }
       }
+    }
+
+    if (matches.length >= MAX_MATCHES) {
+      break;
     }
   }
 
@@ -53,37 +48,27 @@ export function setup(helper) {
   const opts = helper.getOptions();
 
   helper.registerPlugin((md) => {
-    const matchers = [];
+    const matchers = [
+      ...(md.options.discourse.watchedWordsReplace || []).map((word) => ({
+        regexp: new RegExp(word.regexp, word.case_sensitive ? "" : "i"),
+        fullRegexp: new RegExp(
+          word.full_regexp,
+          word.case_sensitive ? "gu" : "gui"
+        ),
+        replacement: word.replacement,
+        link: false,
+      })),
 
-    if (md.options.discourse.watchedWordsReplace) {
-      Object.entries(md.options.discourse.watchedWordsReplace).forEach(
-        ([regexpString, options]) => {
-          const word = toWatchedWord({ [regexpString]: options });
-
-          matchers.push({
-            word: new RegExp(options.regexp, options.case_sensitive ? "" : "i"),
-            pattern: createWatchedWordRegExp(word),
-            replacement: options.replacement,
-            link: false,
-          });
-        }
-      );
-    }
-
-    if (md.options.discourse.watchedWordsLink) {
-      Object.entries(md.options.discourse.watchedWordsLink).forEach(
-        ([regexpString, options]) => {
-          const word = toWatchedWord({ [regexpString]: options });
-
-          matchers.push({
-            word: new RegExp(options.regexp, options.case_sensitive ? "" : "i"),
-            pattern: createWatchedWordRegExp(word),
-            replacement: options.replacement,
-            link: true,
-          });
-        }
-      );
-    }
+      ...(md.options.discourse.watchedWordsLink || []).map((word) => ({
+        regexp: new RegExp(word.regexp, word.case_sensitive ? "" : "i"),
+        fullRegexp: new RegExp(
+          word.full_regexp,
+          word.case_sensitive ? "gu" : "gui"
+        ),
+        replacement: word.replacement,
+        link: true,
+      })),
+    ];
 
     if (matchers.length === 0) {
       return;

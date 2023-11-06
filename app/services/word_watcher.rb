@@ -2,7 +2,7 @@
 
 class WordWatcher
   REPLACEMENT_LETTER ||= CGI.unescape_html("&#9632;")
-  CACHE_VERSION ||= 3
+  CACHE_VERSION ||= 4
 
   def initialize(raw)
     @raw = raw
@@ -32,11 +32,21 @@ class WordWatcher
       .limit(WatchedWord::MAX_WORDS_PER_ACTION)
       .order(:id)
       .pluck(:word, :replacement, :case_sensitive)
+<<<<<<< HEAD
       .to_h do |w, r, c|
         [
           word_to_regexp(w, match_word: false),
           { word: w, replacement: r, case_sensitive: c }.compact,
         ]
+=======
+      .map do |w, r, c|
+        {
+          word: w,
+          regexp: word_to_regexp(w, match_word: false),
+          replacement: r,
+          case_sensitive: c,
+        }.compact
+>>>>>>> ce7b9da045 (DEV: Simplify watched word data structures)
       end
   end
 
@@ -55,8 +65,9 @@ class WordWatcher
   end
 
   def self.regexps_for_action(action, engine: :ruby)
-    cached_words_for_action(action)&.to_h do |_, attrs|
-      [word_to_regexp(attrs[:word], engine: engine), attrs]
+    cached_words_for_action(action)&.map do |attrs|
+      attrs[:full_regexp] = word_to_regexp(attrs[:word], engine: engine)
+      attrs
     end
   end
 
@@ -64,11 +75,7 @@ class WordWatcher
   # Make sure it is compatible with major browsers when changing
   # hint: non-chrome browsers do not support 'lookbehind'
   def self.compiled_regexps_for_action(action, engine: :ruby, raise_errors: false)
-    words = cached_words_for_action(action)
-    return [] if words.blank?
-
-    words
-      .values
+    (cached_words_for_action(action) || [])
       .group_by { |attrs| attrs[:case_sensitive] ? :case_sensitive : :case_insensitive }
       .map do |group_key, attrs_list|
         words = attrs_list.map { |attrs| attrs[:word] }
@@ -101,7 +108,7 @@ class WordWatcher
 
   def self.serialized_regexps_for_action(action, engine: :ruby)
     compiled_regexps_for_action(action, engine: engine).map do |r|
-      { r.source => { case_sensitive: !r.casefold? } }
+      { full_regexp: r.source, case_sensitive: !r.casefold? }
     end
   end
 
@@ -273,12 +280,10 @@ class WordWatcher
   private_class_method :match_word_regexp
 
   def self.replace(text, watch_word_type)
-    regexps_for_action(watch_word_type)
-      .to_a
-      .reduce(text) do |t, (word_regexp, attrs)|
-        case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
-        replace_text_with_regexp(t, Regexp.new(word_regexp, case_flag), attrs[:replacement])
-      end
+    (regexps_for_action(watch_word_type) || []).reduce(text) do |t, attrs|
+      case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
+      replace_text_with_regexp(t, Regexp.new(attrs[:full_regexp], case_flag), attrs[:replacement])
+    end
   end
 
   private_class_method :replace

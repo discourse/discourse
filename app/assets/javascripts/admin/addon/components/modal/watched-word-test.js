@@ -1,9 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import {
-  createWatchedWordRegExp,
-  toWatchedWord,
-} from "discourse-common/utils/watched-words";
+import { createWatchedWordRegExp } from "discourse-common/utils/watched-words";
 
 export default class WatchedWordTest extends Component {
   @tracked value;
@@ -68,8 +65,8 @@ export default class WatchedWordTest extends Component {
       let matches = [];
       this.args.model.watchedWord.compiledRegularExpression.forEach(
         (regexp) => {
-          const wordRegexp = createWatchedWordRegExp(toWatchedWord(regexp));
-          matches.push(...(this.value.match(wordRegexp) || []));
+          const regexpObj = createWatchedWordRegExp(regexp);
+          matches.push(...(this.value.match(regexpObj) || []));
         }
       );
 

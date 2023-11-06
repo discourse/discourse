@@ -27,11 +27,11 @@ export default {
     ],
     compiled_regular_expressions: {
       block: [
-        { '(?:\\W|^)(liquorice|anise|<img\\ src="x">)(?=\\W|$)': { case_sensitive: false }, },
+        { full_regexp: '(?:\\W|^)(liquorice|anise|<img\\ src="x">)(?=\\W|$)', case_sensitive: false },
       ],
       censor: [],
       require_approval: [
-        { "(?:\\W|^)(coupon)(?=\\W|$)": { case_sensitive: false }, },
+        { full_regexp: "(?:\\W|^)(coupon)(?=\\W|$)", case_sensitive: false },
       ],
       flag: [{ "(?:\\W|^)(pyramid|scheme)(?=\\W|$)": {case_sensitive: false }, },],
       replace: [{ "(?:\\W|^)(hi)(?=\\W|$)": { case_sensitive: false }},],
