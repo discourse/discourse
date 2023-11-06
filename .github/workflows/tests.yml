@@ -57,9 +57,15 @@ jobs:
           cache-from: type=gha,scope=${{github.run_id}}
           load: true
       - name: Start image
-        shell: bash # On host
+        shell: bash
         run: docker run --entrypoint='' --rm -d --name myimage myimage:latest tail -f /dev/null
-      - name: Run tests
-        run: bin/rails runner 'puts "Hello world"'
+      - name: Start redis
+        run: redis-server --dir tmp/test_data/redis --daemonize yes
+      - name: Start postgres
+        run: script/start_test_db.rb --skip-setup
+      - name: Core RSpec
+        # if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: bin/turbo_rspec --use-runtime-info --verbose --format documentation
+
 
 

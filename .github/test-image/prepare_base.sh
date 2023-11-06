@@ -18,5 +18,4 @@ yarn install;
 redis-server --dir tmp/test_data/redis --daemonize yes;
 script/start_test_db.rb;
 
-bundle exec rake db:create;
-LOAD_PLUGINS=1 bundle exec rake db:migrate;
+bin/rake db:create db:migrate parallel:create parallel:migrate;
