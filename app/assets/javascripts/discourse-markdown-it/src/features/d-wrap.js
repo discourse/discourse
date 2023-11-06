@@ -1,4 +1,4 @@
-import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
+import { parseBBCodeTag } from "./bbcode-block";
 
 const WRAP_CLASS = "d-wrap";
 
