@@ -56,7 +56,7 @@
   }
 
   // Target the .badge-category text, the bullet icon needs to maintain `display: block`
-  .suggested-topics-message .badge-wrapper .badge-category {
+  .suggested-topics-message .badge-category__wrapper .badge-category {
     display: inline;
     vertical-align: baseline;
     line-height: var(--line-height-medium);

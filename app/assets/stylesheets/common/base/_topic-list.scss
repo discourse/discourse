@@ -3,10 +3,6 @@
 .list-controls {
   background: var(--d-content-background);
 
-  .badge-category {
-    font-size: var(--font-up-1);
-  }
-
   .combo-box .combo-box-header {
     background: var(--secondary);
     color: var(--primary);
@@ -262,7 +258,6 @@
     .discourse-tags {
       flex-wrap: wrap;
     }
-    a.badge-wrapper.box,
     a.discourse-tag.box {
       padding-top: 0;
       padding-bottom: 0;

@@ -466,10 +466,6 @@ aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
 
-  .badge-wrapper {
-    margin-left: 5px;
-  }
-
   .title {
     @include post-aside;
 
@@ -1273,11 +1269,6 @@ span.mention {
 .suggested-topics {
   .topics {
     padding-bottom: 15px;
-  }
-  .suggested-topics-message {
-    .badge-wrapper {
-      margin-right: 0;
-    }
   }
 }
 

@@ -279,11 +279,11 @@ html.composer-open {
           overflow: hidden;
           display: flex;
           gap: 0 0.5em;
-          .badge-wrapper {
+          .badge-category__wrapper {
             overflow: hidden;
           }
           // This prevents the first category from being too-truncated at the expense of a long subcategory
-          .badge-wrapper:first-of-type:not(:last-of-type) {
+          .badge-category__wrapper:first-of-type:not(:last-of-type) {
             flex: 1 0 auto;
             max-width: 50%;
           }

@@ -113,10 +113,6 @@ $search-pad-horizontal: 0.5em;
         flex-wrap: wrap;
         align-items: baseline;
         gap: 0 0.5em;
-
-        .badge-wrapper {
-          margin-right: 0.5em;
-        }
       }
     }
 
@@ -253,9 +249,8 @@ $search-pad-horizontal: 0.5em;
       .search-item-prefix {
         margin-right: 0.33em;
       }
-      .badge-wrapper {
+      .badge-category__wrapper {
         font-size: var(--font-0);
-        margin-right: 0.5em;
       }
       .search-link {
         display: flex;
