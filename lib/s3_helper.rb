@@ -262,6 +262,9 @@ class S3Helper
 
     opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
+    opts[:use_accelerate_endpoint] = SiteSetting.enable_s3_upload_acceleration
+    opts[:logger] = Logger.new(STDOUT)
+    opts[:log_level] = :debug
 
     unless obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id
@@ -349,7 +352,12 @@ class S3Helper
   def presigned_url(key, method:, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, opts: {})
     Aws::S3::Presigner.new(client: s3_client).presigned_url(
       method,
-      { bucket: s3_bucket_name, key: key, expires_in: expires_in }.merge(opts),
+      {
+        bucket: s3_bucket_name,
+        key: key,
+        expires_in: expires_in,
+        use_accelerate_endpoint: SiteSetting.enable_s3_upload_acceleration,
+      }.merge(opts),
     )
   end
 
@@ -362,7 +370,12 @@ class S3Helper
   )
     Aws::S3::Presigner.new(client: s3_client).presigned_request(
       method,
-      { bucket: s3_bucket_name, key: key, expires_in: expires_in }.merge(opts),
+      {
+        bucket: s3_bucket_name,
+        key: key,
+        expires_in: expires_in,
+        use_accelerate_endpoint: SiteSetting.enable_s3_upload_acceleration,
+      }.merge(opts),
     )
   end
 
