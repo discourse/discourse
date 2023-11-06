@@ -41,7 +41,7 @@ jobs:
     needs: build
     defaults:
       run:
-        shell: docker exec -w /var/www/discourse myimage bash
+        shell: docker exec -w /var/www/discourse myimage bash {0}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
