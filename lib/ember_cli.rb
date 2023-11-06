@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-module EmberCli
+class EmberCli < ActiveSupport::CurrentAttributes
+  # Cache which persists for the duration of a request
+  attribute :request_cached_script_chunks
+
   def self.dist_dir
     "#{Rails.root}/app/assets/javascripts/discourse/dist"
   end
@@ -10,7 +13,8 @@ module EmberCli
   end
 
   def self.script_chunks
-    return @chunk_infos if @chunk_infos
+    return @production_chunk_infos if @production_chunk_infos
+    return self.request_cached_script_chunks if self.request_cached_script_chunks
 
     chunk_infos = JSON.parse(File.read("#{dist_dir}/assets.json"))
 
@@ -20,8 +24,8 @@ module EmberCli
       value["assets"].map { |chunk| chunk.delete_prefix("assets/").delete_suffix(".js") }
     end
 
-    @chunk_infos = chunk_infos if Rails.env.production?
-    chunk_infos
+    @production_chunk_infos = chunk_infos if Rails.env.production?
+    self.request_cached_script_chunks = chunk_infos
   rescue Errno::ENOENT
     {}
   end
@@ -53,7 +57,8 @@ module EmberCli
   end
 
   def self.clear_cache!
-    @chunk_infos = nil
+    @prod_chunk_infos = nil
     @assets = nil
+    self.request_cached_script_chunks = nil
   end
 end
