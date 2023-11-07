@@ -46,7 +46,7 @@ export default class Color extends Component {
     return testColor.color && hexifiedColor === value;
   }
 
-  @action
+  @__action__
   onChangeColor(color) {
     this.set("value", color);
   }
