@@ -1838,7 +1838,9 @@ RSpec.describe TopicQuery do
       shared_drafts_category.set_permissions(group => :full)
       shared_drafts_category.save
       SiteSetting.shared_drafts_category = shared_drafts_category.id
-      SiteSetting.shared_drafts_min_trust_level = TrustLevel[3]
+      SiteSetting.shared_drafts_allowed_groups =
+        Group::AUTO_GROUPS[:trust_level_3].to_s + "|" + Group::AUTO_GROUPS[:staff].to_s
+      Group.refresh_automatic_groups!
     end
 
     context "with destination_category_id" do
@@ -1853,7 +1855,7 @@ RSpec.describe TopicQuery do
       end
 
       it "allow group members with enough trust level to query destination_category_id" do
-        member = Fabricate(:user, trust_level: TrustLevel[3])
+        member = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)
         group.add(member)
 
         list = TopicQuery.new(member, destination_category_id: category.id).list_latest
@@ -1862,7 +1864,7 @@ RSpec.describe TopicQuery do
       end
 
       it "doesn't allow group members without enough trust level to query destination_category_id" do
-        member = Fabricate(:user, trust_level: TrustLevel[2])
+        member = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
         group.add(member)
 
         list = TopicQuery.new(member, destination_category_id: category.id).list_latest
