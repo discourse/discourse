@@ -21,7 +21,7 @@ export default class AdminPenaltyPostAction extends Component {
     });
   }
 
-  @action
+  @__action__
   penaltyChanged(postAction) {
     this.set("postAction", postAction);
 
