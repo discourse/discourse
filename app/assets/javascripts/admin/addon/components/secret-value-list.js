@@ -22,7 +22,7 @@ export default class SecretValueList extends Component {
     );
   }
 
-  @action
+  @__action__
   changeKey(index, event) {
     const newValue = event.target.value;
 
@@ -33,7 +33,7 @@ export default class SecretValueList extends Component {
     this._replaceValue(index, newValue, "key");
   }
 
-  @action
+  @__action__
   changeSecret(index, event) {
     const newValue = event.target.value;
 
