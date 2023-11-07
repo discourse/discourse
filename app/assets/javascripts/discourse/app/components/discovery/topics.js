@@ -203,7 +203,7 @@ export default class DiscoveryTopics extends Component {
     );
   }
 
-  get expandAllGloballyPinned() {
+  get expandGloballyPinned() {
     return !this.expandAllPinned;
   }
 
