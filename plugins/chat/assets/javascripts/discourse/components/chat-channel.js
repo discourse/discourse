@@ -91,9 +91,7 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  teardownListeners(element, [channelId]) {
-    console.log("teardown", channelId);
-
+  teardownListeners() {
     this.#cancelHandlers();
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.subscriptionManager.teardown();
