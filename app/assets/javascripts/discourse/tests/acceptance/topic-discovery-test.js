@@ -1,8 +1,6 @@
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
-import sinon from "sinon";
 import { configureEyeline } from "discourse/lib/eyeline";
-import DiscourseURL from "discourse/lib/url";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
@@ -128,19 +126,13 @@ acceptance("Topic Discovery", function (needs) {
   });
 
   test("Using period chooser when query params are present", async function (assert) {
-    await visit("/top?f=foo&d=bar");
-
-    sinon.stub(DiscourseURL, "routeTo");
+    await visit("/top?status=closed");
 
     const periodChooser = selectKit(".period-chooser");
-
     await periodChooser.expand();
     await periodChooser.selectRowByValue("yearly");
 
-    assert.ok(
-      DiscourseURL.routeTo.calledWith("/top?f=foo&d=bar&period=yearly"),
-      "it keeps the query params"
-    );
+    assert.strictEqual(currentURL(), "/top?period=yearly&status=closed");
   });
 
   test("switching between tabs", async function (assert) {

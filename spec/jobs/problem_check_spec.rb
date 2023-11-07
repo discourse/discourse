@@ -6,8 +6,13 @@ RSpec.describe Jobs::ProblemCheck do
     AdminDashboardData.reset_problem_checks
   end
 
+  class TestCheck
+    def self.max_retries = 0
+    def self.retry_wait = 30.seconds
+  end
+
   it "runs the scheduled problem check that has been added and adds the messages to the load_found_scheduled_check_problems array" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
+    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
       AdminDashboardData::Problem.new("big problem")
     end
 
@@ -19,7 +24,7 @@ RSpec.describe Jobs::ProblemCheck do
   end
 
   it "can handle the problem check returning multiple problems" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
+    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
       [
         AdminDashboardData::Problem.new("big problem"),
         AdminDashboardData::Problem.new(
@@ -36,7 +41,7 @@ RSpec.describe Jobs::ProblemCheck do
   end
 
   it "does not add the same problem twice if the identifier already exists" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
+    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
       [
         AdminDashboardData::Problem.new(
           "yuge problem",
@@ -56,8 +61,36 @@ RSpec.describe Jobs::ProblemCheck do
     expect(problems.map(&:to_s)).to match_array(["yuge problem"])
   end
 
+  it "schedules a retry if there are attempts remaining" do
+    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
+      AdminDashboardData::Problem.new("big problem")
+    end
+
+    TestCheck.stubs(:max_retries).returns(1)
+
+    expect_enqueued_with(
+      job: :problem_check,
+      args: {
+        check_identifier: :test_identifier,
+        retry_count: 1,
+      },
+    ) { described_class.new.execute(check_identifier: :test_identifier) }
+  end
+
+  it "does not schedule a retry if there are no more attempts remaining" do
+    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
+      AdminDashboardData::Problem.new("big problem")
+    end
+
+    TestCheck.stubs(:max_retries).returns(1)
+
+    expect_not_enqueued_with(job: :problem_check) do
+      described_class.new.execute(check_identifier: :test_identifier, retry_count: 1)
+    end
+  end
+
   it "handles errors from a troublesome check" do
-    AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
+    AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
       raise StandardError.new("something went wrong")
       AdminDashboardData::Problem.new("polling issue")
     end
