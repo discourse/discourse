@@ -3,6 +3,8 @@
 Fabricator(:user_stat) {}
 
 Fabricator(:user, class_name: :user) do
+  transient refresh_auto_groups: false
+
   name "Bruce Wayne"
   username { sequence(:username) { |i| "bruce#{i}" } }
   email { sequence(:email) { |i| "bruce#{i}@wayne.com" } }
@@ -10,6 +12,10 @@ Fabricator(:user, class_name: :user) do
   trust_level TrustLevel[1]
   ip_address { sequence(:ip_address) { |i| "99.232.23.#{i % 254}" } }
   active true
+
+  after_create do |user, transients|
+    Group.user_trust_level_change!(user.id, user.trust_level) if transients[:refresh_auto_groups]
+  end
 end
 
 Fabricator(:user_with_secondary_email, from: :user) do

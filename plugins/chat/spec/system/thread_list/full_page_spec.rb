@@ -39,7 +39,7 @@ describe "Thread list in side panel | full page", type: :system do
 
     it "does not show new threads in the channel in the thread list if the user is not tracking them" do
       chat_page.visit_channel(channel)
-      Fabricate(:chat_message_with_service, chat_channel: channel, in_reply_to: thread_om)
+      Fabricate(:chat_message, chat_channel: channel, in_reply_to: thread_om, use_service: true)
       channel_page.open_thread_list
 
       expect(page).to have_content(I18n.t("js.chat.threads.none"))
@@ -89,9 +89,12 @@ describe "Thread list in side panel | full page", type: :system do
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css("img.emoji[alt='hamburger']")
     end
 
-    it "shows an excerpt of the original message of the thread" do
-      thread_1.original_message.update!(message: "This is a long message for the excerpt")
-      thread_1.original_message.rebake!
+    it "shows an excerpt of the original message of the thread", inline: true do
+      update_message!(
+        thread_1.original_message,
+        user: thread_1.original_message.user,
+        text: "This is a long message for the excerpt",
+      )
       chat_page.visit_threads_list(channel)
 
       expect(thread_list_page.item_by_id(thread_1.id)).to have_content(
@@ -154,11 +157,7 @@ describe "Thread list in side panel | full page", type: :system do
 
         expect(thread_list_page).to have_thread(thread_1)
 
-        Chat::TrashMessage.call(
-          message_id: thread_1.original_message.id,
-          channel_id: thread_1.channel.id,
-          guardian: other_user.guardian,
-        )
+        trash_message!(thread_1.original_message, user: other_user)
 
         expect(thread_list_page).to have_no_thread(thread_1)
       end

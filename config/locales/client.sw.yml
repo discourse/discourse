@@ -1914,7 +1914,7 @@ sw:
       action: "Ripoti Chapisho"
       take_action_options:
         default:
-          title: "Fanya Kitendo"
+          title: "Ficha Chapisho"
         suspend:
           title: "Simamisha Mtumiaji"
         silence:
@@ -2267,6 +2267,9 @@ sw:
             my_posts:
               content: "Machapisho Yangu"
     form_templates:
+      upload_field:
+        upload: "Ongeza"
+        uploading: "Inapakia"
       errors:
         typeMismatch:
           default: "Tafadhali andika thamani sahihi."

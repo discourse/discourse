@@ -120,18 +120,19 @@ RSpec.describe "Drawer", type: :system do
       chat_page.minimize_full_page
       drawer_page.maximize
 
-      using_session("user_1") do |session|
-        sign_in(user_1)
-        chat_page.visit_channel(channel_1)
-        channel_page.send_message("onlyonce")
-        session.quit
-      end
+      Fabricate(
+        :chat_message,
+        chat_channel: channel_1,
+        user: user_1,
+        use_service: true,
+        message: "onlyonce",
+      )
 
-      expect(page).to have_content("onlyonce", count: 1, wait: 20)
+      expect(page).to have_content("onlyonce", count: 1)
 
       chat_page.visit_channel(channel_2)
 
-      expect(page).to have_content("onlyonce", count: 0, wait: 20)
+      expect(page).to have_content("onlyonce", count: 0)
     end
   end
 

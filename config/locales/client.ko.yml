@@ -2974,8 +2974,7 @@ ko:
       action: "게시물 신고"
       take_action_options:
         default:
-          title: "조치하기"
-          details: "추가 커뮤니티 신고를 기다리지 않고 바로 신고 한계치에 도달합니다"
+          title: "글 숨기기"
         suspend:
           title: "사용자 정지"
           details: "신고 한계치에 도달하고 사용자를 정지합니다"
@@ -2992,7 +2991,6 @@ ko:
       ip_address_missing: "(해당 사항 없음)"
       hidden_email_address: "(숨김)"
       submit_tooltip: "비밀 신고 제출"
-      take_action_tooltip: "추가 커뮤니티 신고를 기다리지 않고 바로 신고 한계치에 도달합니다"
       cant: "지금은 이 게시물을 신고할 수 없습니다"
       notify_staff: "운영진에게 비공개로 알리기"
       formatted_name:
@@ -3520,6 +3518,9 @@ ko:
       button_title: "편집 시작"
     until: "까지:"
     form_templates:
+      upload_field:
+        upload: "업로드"
+        uploading: "업로드 중"
       errors:
         typeMismatch:
           default: "유효한 값을 입력하십시오."

@@ -12,6 +12,10 @@
       {{else}}
         <SearchMenu::HighlightedSearch @string={{@result.topic.fancyTitle}} />
       {{/if}}
+      <PluginOutlet
+        @name="search-menu-results-topic-title-suffix"
+        @outletArgs={{hash topic=@result.topic}}
+      />
     </span>
   </span>
   <span class="second-line">

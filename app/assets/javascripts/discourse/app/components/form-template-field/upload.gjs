@@ -12,38 +12,51 @@ export default class FormTemplateFieldUpload extends Component.extend(
   UppyUploadMixin
 ) {
   @tracked uploadValue;
-  @tracked uploadComplete = false;
   @tracked uploadedFiles = [];
-  @tracked disabled = this.uploading;
+  @tracked disabled = this.uploadingOrProcessing;
   @tracked fileUploadElementId = `${dasherize(this.id)}-uploader`;
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;
 
   type = "composer";
 
-  @computed("uploading", "uploadValue")
+  @computed("uploadingOrProcessing")
   get uploadStatusLabel() {
-    if (!this.uploading && !this.uploadValue) {
-      return "form_templates.upload_field.upload";
-    }
+    return this.uploadingOrProcessing
+      ? "form_templates.upload_field.uploading"
+      : "form_templates.upload_field.upload";
+  }
 
-    if (!this.uploading && this.uploadValue) {
-      this.uploadComplete = true;
-      return "form_templates.upload_field.upload";
-    }
+  /**
+   * The validation from PickFilesButton._filesPicked, where acceptedFormatsOverride
+   * is validated and displays a message, happens after the upload is complete.
+   *
+   * Overriding this method allows us to validate the file before the upload
+   *
+   * @param file
+   * @returns {boolean}
+   */
+  isUploadedFileAllowed(file) {
+    // same logic from PickFilesButton._hasAcceptedExtensionOrType
+    const fileTypes = this.attributes.file_types;
+    const extension = file.name.split(".").pop();
 
-    return "form_templates.upload_field.uploading";
+    return (
+      !fileTypes ||
+      fileTypes.includes(`.${extension}`) ||
+      fileTypes.includes(file.type)
+    );
   }
 
   uploadDone(upload) {
     // If re-uploading, clear the existing file if multiple aren't allowed
-    if (!this.attributes.allow_multiple && this.uploadComplete) {
+    if (!this.attributes.allow_multiple && this.uploadValue) {
       this.uploadedFiles = [];
       this.uploadValue = "";
     }
 
-    const uploadMarkdown = this.buildMarkdown(upload);
     this.uploadedFiles.pushObject(upload);
 
+    const uploadMarkdown = this.buildMarkdown(upload);
     if (this.uploadValue && this.allowMultipleFiles) {
       // multiple file upload
       this.uploadValue = `${this.uploadValue}\n${uploadMarkdown}`;

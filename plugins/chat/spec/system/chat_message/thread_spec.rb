@@ -3,12 +3,15 @@
 RSpec.describe "Chat message - thread", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
+  fab!(:thread_original_message) { Fabricate(:chat_message_with_service, chat_channel: channel_1) }
   fab!(:thread_message_1) do
-    message_1 = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
-    Fabricate(:chat_message, in_reply_to: message_1, use_service: true)
+    Fabricate(
+      :chat_message_with_service,
+      chat_channel: channel_1,
+      in_reply_to: thread_original_message,
+    )
   end
 
-  let(:cdp) { PageObjects::CDP.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
 
@@ -31,6 +34,8 @@ RSpec.describe "Chat message - thread", type: :system do
   end
 
   context "when copying text of a message" do
+    let(:cdp) { PageObjects::CDP.new }
+
     before { cdp.allow_clipboard }
 
     it "[mobile] copies the text of a single message", mobile: true do

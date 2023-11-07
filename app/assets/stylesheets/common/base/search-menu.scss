@@ -22,15 +22,16 @@ $search-pad-horizontal: 0.5em;
 
   .search-input {
     position: relative;
-    margin: 1px;
     display: flex;
     align-items: center;
-    border: 1px solid var(--primary-medium);
-    border-radius: var(--d-border-radius-large);
+    background: var(--secondary-very-high);
+    border-radius: var(--d-input-border-radius);
+    margin: 1px;
+    padding: 0.25rem;
 
     input#search-term {
-      border-width: 0;
-      border-radius: var(--d-border-radius-large);
+      background: none;
+      border: 0;
       margin-bottom: 0;
       width: auto;
       flex-grow: 1;
@@ -44,6 +45,10 @@ $search-pad-horizontal: 0.5em;
       margin: 2px;
       margin-right: 0;
       white-space: nowrap;
+      background-color: var(--primary-300);
+      &:hover {
+        background-color: var(--primary-medium);
+      }
     }
     &:focus-within {
       @include default-focus;
@@ -57,8 +62,10 @@ $search-pad-horizontal: 0.5em;
     }
   }
 
-  input[type="text"] {
-    margin-right: 0px;
+  .menu-panel {
+    border: 0;
+    box-shadow: var(--shadow-dropdown);
+    padding: 1rem;
   }
 
   &.menu-panel-results {
@@ -77,7 +84,6 @@ $search-pad-horizontal: 0.5em;
     display: flex;
     flex-direction: column;
     padding-top: $search-pad-vertical;
-    padding-bottom: $search-pad-vertical;
 
     .list {
       min-width: 100px;
@@ -312,11 +318,6 @@ $search-pad-horizontal: 0.5em;
   }
 
   .searching {
-    position: absolute;
-    top: $search-pad-vertical + 0.2em;
-    right: $search-pad-horizontal;
-    min-height: 20px;
-
     .spinner {
       width: 12px;
       height: 12px;
@@ -331,7 +332,7 @@ $search-pad-horizontal: 0.5em;
       display: inline-block;
       background-color: transparent;
       .d-icon {
-        color: var(--primary-low-mid);
+        color: var(--primary-medium);
       }
       &:focus,
       &:hover {

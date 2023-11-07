@@ -51,21 +51,14 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
     # Lose the cache intentionally.
     Chat::Thread.clear_caches!(thread.id)
     message_to_destroy = thread.last_message
-    Chat::TrashMessage.call(
-      message_id: message_to_destroy.id,
-      channel_id: thread.channel_id,
-      guardian: guardian,
-    )
+    trash_message!(message_to_destroy, user: guardian.user)
     expect(thread.replies_count_cache).to eq(5)
     expect(thread.reload.replies_count).to eq(5)
 
     # Lose the cache intentionally.
     Chat::Thread.clear_caches!(thread.id)
-    Chat::RestoreMessage.call(
-      message_id: message_to_destroy.id,
-      channel_id: thread.channel_id,
-      guardian: guardian,
-    )
+
+    restore_message!(message_to_destroy, user: guardian.user)
     expect(thread.replies_count_cache).to eq(6)
     expect(thread.reload.replies_count).to eq(6)
   end

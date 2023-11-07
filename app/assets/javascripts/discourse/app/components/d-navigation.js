@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -142,10 +142,23 @@ export default Component.extend({
     return filterType !== "categories";
   },
 
-  @discourseComputed()
-  canBulk() {
-    const controller = getOwner(this).lookup("controller:discovery/topics");
-    return controller.canBulkSelect;
+  @action
+  async changeTagNotificationLevel(notificationLevel) {
+    const response = await this.tagNotification.update({
+      notification_level: notificationLevel,
+    });
+
+    const payload = response.responseJson;
+
+    this.tagNotification.set("notification_level", notificationLevel);
+
+    this.currentUser.setProperties({
+      watched_tags: payload.watched_tags,
+      watching_first_post_tags: payload.watching_first_post_tags,
+      tracked_tags: payload.tracked_tags,
+      muted_tags: payload.muted_tags,
+      regular_tags: payload.regular_tags,
+    });
   },
 
   actions: {

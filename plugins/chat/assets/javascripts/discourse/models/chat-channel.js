@@ -192,6 +192,7 @@ export default class ChatChannel {
   async stageMessage(message) {
     message.id = guid();
     message.staged = true;
+    message.processed = false;
     message.draft = false;
     message.createdAt = new Date();
     message.channel = this;

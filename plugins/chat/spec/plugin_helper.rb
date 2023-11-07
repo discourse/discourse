@@ -8,7 +8,7 @@ module ChatSystemHelpers
     user.activate
 
     SiteSetting.chat_enabled = true
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
 
     channels_for_membership.each do |channel|
       membership = channel.add(user)
@@ -42,11 +42,11 @@ module ChatSystemHelpers
           in_reply_to_id: in_reply_to,
           thread_id: thread_id,
           guardian: last_user.guardian,
-          message: Faker::Lorem.paragraph,
+          message: Faker::Lorem.words(number: 5).join(" "),
         )
 
       raise "#{creator.inspect_steps.inspect}\n\n#{creator.inspect_steps.error}" if creator.failure?
-      last_message = creator.message
+      last_message = creator.message_instance
     end
 
     last_message.thread.set_replies_count_cache(messages_count - 1, update_db: true)
@@ -66,6 +66,41 @@ module ChatSpecHelpers
     raise RSpec::Expectations::ExpectationNotMetError.new(
             "Service failed, see below for step details:\n\n" + result.inspect_steps.inspect,
           )
+  end
+
+  def update_message!(message, text: nil, user: Discourse.system_user, upload_ids: nil)
+    result =
+      Chat::UpdateMessage.call(
+        guardian: user.guardian,
+        message_id: message.id,
+        upload_ids: upload_ids,
+        message: text,
+        process_inline: true,
+      )
+    service_failed!(result) if result.failure?
+    result.message_instance
+  end
+
+  def trash_message!(message, user: Discourse.system_user)
+    result =
+      Chat::TrashMessage.call(
+        message_id: message.id,
+        channel_id: message.chat_channel_id,
+        guardian: user.guardian,
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
+
+  def restore_message!(message, user: Discourse.system_user)
+    result =
+      Chat::RestoreMessage.call(
+        message_id: message.id,
+        channel_id: message.chat_channel_id,
+        guardian: user.guardian,
+      )
+    service_failed!(result) if result.failure?
+    result
   end
 end
 

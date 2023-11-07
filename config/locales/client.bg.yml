@@ -3002,9 +3002,6 @@ bg:
       title: "Благодарим ви, че помагате да поддържаме дискусията цивилизована!"
       action: "Сигнализирай публикацията "
       take_action_options:
-        default:
-          title: "Предприеми действие "
-          details: "Достигнете границата от сигнали веднага, вместо да чакате за още сигнали от общността"
         suspend:
           title: "Отстрани потребител"
       notify_action: "Съобщение"
@@ -3014,7 +3011,6 @@ bg:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(скрит)"
       submit_tooltip: "Пусни скрит сигнал"
-      take_action_tooltip: "Достигнете границата от сигнали веднага, вместо да чакате за още сигнали от общността"
       cant: "Не може да сигнализирате за тази публикация в момента."
       notify_staff: "Съобщи лично на екипа"
       formatted_name:
@@ -3389,6 +3385,9 @@ bg:
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
     form_templates:
+      upload_field:
+        upload: "Качи"
+        uploading: "Качване "
       errors:
         typeMismatch:
           default: "Моля, въведете валидна стойност."

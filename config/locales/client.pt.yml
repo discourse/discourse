@@ -2951,9 +2951,6 @@ pt:
       title: "Obrigado por ajudar a manter a nossa comunidade cívica!"
       action: "Denunciar Publicação"
       take_action_options:
-        default:
-          title: "Acionar"
-          details: "Atingir imediatamente o limite de denúncias, em vez de esperar por mais denúncias da comunidade"
         suspend:
           title: "Utilizador Suspenso"
           details: "Chegar ao limite de sinalizações e suspender o usuário"
@@ -2968,7 +2965,6 @@ pt:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(escondido)"
       submit_tooltip: "Submeter a denúncia privada"
-      take_action_tooltip: "Atingir imediatamente o limite de denúncias, em vez de esperar por mais denúncias da comunidade"
       cant: "Pedimos desculpa, não é possível colocar uma denúncia nesta publicação neste momento."
       notify_staff: "Notificar o pessoal privadamente"
       formatted_name:
@@ -3450,6 +3446,9 @@ pt:
               content: "Revisão"
     until: "Até:"
     form_templates:
+      upload_field:
+        upload: "Enviar"
+        uploading: "A enviar"
       errors:
         typeMismatch:
           default: "Por favor introduza um valor válido."

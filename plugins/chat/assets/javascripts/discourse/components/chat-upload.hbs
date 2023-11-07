@@ -8,6 +8,7 @@
     style={{this.imageStyle}}
     loading="lazy"
     tabindex="0"
+    data-dominant-color={{@upload.dominant_color}}
     {{on "load" this.imageLoaded}}
   />
 {{else if (eq this.type this.VIDEO_TYPE)}}

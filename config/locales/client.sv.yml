@@ -3447,8 +3447,7 @@ sv:
       action: "Flagga inlägg"
       take_action_options:
         default:
-          title: "Åtgärda"
-          details: "Nå flaggtröskeln omedelbart, istället för att vänta på fler flaggor från forumets användare"
+          title: "Dölj inlägg"
         suspend:
           title: "Stäng av användaren"
           details: "Nå flaggtröskeln och stäng av användaren"
@@ -3465,7 +3464,6 @@ sv:
       ip_address_missing: "(---)"
       hidden_email_address: "(dold)"
       submit_tooltip: "Använd den privata flaggan"
-      take_action_tooltip: "Nå flaggränsen omedelbart, snarare än att vänta på mer flaggor från användarna"
       cant: "Tyvärr, du kan inte flagga detta inlägg just nu."
       notify_staff: "Avisera personal privat"
       formatted_name:
@@ -4125,10 +4123,12 @@ sv:
     form_template_chooser:
       select_template: "Välj formulärmallar"
     form_templates:
+      upload_field:
+        upload: "Bild"
+        uploading: "Laddar upp"
       errors:
         valueMissing:
           default: "Fyll i detta fält."
-          text: "Fyll i detta fält."
           select-one: "Välj ett objekt i listan."
           select-multiple: "Välj minst ett objekt i listan."
           checkbox: "Markera den här rutan om du vill fortsätta."

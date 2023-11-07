@@ -3011,8 +3011,7 @@ ur:
       action: "پوسٹ فلَیگ کریں"
       take_action_options:
         default:
-          title: "کارروائی کریں"
-          details: "بجائے مزید کمیونٹی کی طرف سے فلَیگز کا انتظارکرنے کے، فوری طور پرفلَیگز کی حد تک پہنچ جائیں"
+          title: "پوسٹ چھپائیں"
         suspend:
           title: "صارف معطل کریں"
           details: "نشان کی حد تک پہنچیں، اور صارف کو معطل کریں"
@@ -3029,7 +3028,6 @@ ur:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
       submit_tooltip: "نجی فلَیگ جمع کریں"
-      take_action_tooltip: "بجائے مزید کمیونٹی کی طرف سے فلَیگز کا انتظارکرنے کے، فوری طور پرفلَیگز کی حد تک پہنچ جائیں"
       cant: "معذرت، آپ اِس وقت اِس پوسٹکو فلَیگ نہیں کر سکتے۔"
       notify_staff: "عملے کو نجی طور پر مطلع کریں"
       formatted_name:
@@ -3578,6 +3576,9 @@ ur:
               content: "جائزہ لیں"
     until: "جب تک:"
     form_templates:
+      upload_field:
+        upload: "اَپ لوڈ"
+        uploading: "اَپ لوڈ کیا جا رہا ہے"
       errors:
         typeMismatch:
           default: "براہ کرم، ایک قابلِ قبول قدر درج کریں۔"

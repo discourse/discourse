@@ -5,6 +5,7 @@ export const ANIMATION_DURATION =
     ? 0
     : 150;
 
+export const MIN_CAROUSEL_ITEM_COUNT = 2;
 export const MIN_CAROUSEL_ARROW_ITEM_COUNT = 5;
 
 export const SWIPE_THRESHOLD = 50;

@@ -22,6 +22,8 @@ bg:
       cannot_see_multiple:
         one: "%{first_identifier} и %{count} друг потребител нямат достъп до този канал и не са били уведомени."
         other: "%{first_identifier} и %{count} други потребители нямат достъп до този канал и не са били уведомени."
+    onebox:
+      thread_title_connector: "в"
   discourse_push_notifications:
     popup:
       chat_mention:

@@ -1716,8 +1716,9 @@ RSpec.describe Guardian do
 
         before do
           SiteSetting.shared_drafts_category = category.id
-          SiteSetting.shared_drafts_min_trust_level = "2"
+          SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
           Fabricate(:shared_draft, topic: topic)
+          Group.refresh_automatic_groups!
         end
 
         it "returns true if a shared draft exists" do

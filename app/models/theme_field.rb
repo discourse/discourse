@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
 class ThemeField < ActiveRecord::Base
+  MIGRATION_NAME_PART_MAX_LENGTH = 150
+
   belongs_to :upload
   has_one :javascript_cache, dependent: :destroy
   has_one :upload_reference, as: :target, dependent: :destroy
+  has_one :theme_settings_migration
 
   validates :value, { length: { maximum: 1024**2 } }
+
+  validate :migration_filename_is_valid, if: :migration_field?
 
   after_save do
     if self.type_id == ThemeField.types[:theme_upload_var] && saved_change_to_upload_id?
@@ -340,7 +345,7 @@ class ThemeField < ActiveRecord::Base
       types[:scss]
     elsif target.to_s == "extra_scss"
       types[:scss]
-    elsif target.to_s == "extra_js"
+    elsif %w[migrations extra_js].include?(target.to_s)
       types[:js]
     elsif target.to_s == "settings" || target.to_s == "translations"
       types[:yaml]
@@ -394,6 +399,10 @@ class ThemeField < ActiveRecord::Base
       self.name == SvgSprite.theme_sprite_variable_name
   end
 
+  def migration_field?
+    Theme.targets[:migrations] == self.target_id
+  end
+
   def ensure_baked!
     needs_baking = !self.value_baked || compiler_version != Theme.compiler_version
     return unless needs_baking
@@ -420,6 +429,9 @@ class ThemeField < ActiveRecord::Base
     elsif svg_sprite_field?
       SvgSprite.expire_cache
       self.error = validate_svg_sprite_xml
+      self.value_baked = "baked"
+      self.compiler_version = Theme.compiler_version
+    elsif migration_field?
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
     end
@@ -603,6 +615,13 @@ class ThemeField < ActiveRecord::Base
       targets: :common,
       canonical: ->(h) { "assets/#{h[:name]}#{File.extname(h[:filename])}" },
     ),
+    ThemeFileMatcher.new(
+      regex: %r{\Amigrations/settings/(?<name>[^/]+)\.js\z},
+      names: nil,
+      types: :js,
+      targets: :migrations,
+      canonical: ->(h) { "migrations/settings/#{h[:name]}.js" },
+    ),
   ]
 
   # For now just work for standard fields
@@ -714,6 +733,28 @@ class ThemeField < ActiveRecord::Base
       JAVASCRIPT_TYPES.include?(node["type"].downcase)
     else
       true
+    end
+  end
+
+  def migration_filename_is_valid
+    if !name.match?(/\A\d{4}-[a-zA-Z0-9]+/)
+      self.errors.add(
+        :base,
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: name),
+      )
+      return
+    end
+
+    # the 5 here is the length of the first 4 digits and the dash that follows
+    # them
+    if name.size - 5 > MIGRATION_NAME_PART_MAX_LENGTH
+      self.errors.add(
+        :base,
+        I18n.t(
+          "themes.import_error.migrations.name_too_long",
+          count: MIGRATION_NAME_PART_MAX_LENGTH,
+        ),
+      )
     end
   end
 end

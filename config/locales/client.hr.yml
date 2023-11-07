@@ -3491,9 +3491,6 @@ hr:
       title: "Hvala što pomažete održavati našu zajednicu pristojnom."
       action: "Označi objavu zastavicom"
       take_action_options:
-        default:
-          title: "Poduzmi akciju"
-          details: "Dođite odmah o praga za oznake, umjesto da čekate još oznaka od zajednice."
         suspend:
           title: "Suspendiraj korisnika"
           details: "Dosegnite prag zastavice i suspendirajte korisnika"
@@ -3510,7 +3507,6 @@ hr:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skriveno)"
       submit_tooltip: "Priložite privatnu zastavicu."
-      take_action_tooltip: "Dođite odmah o praga za oznake, umjesto da čekate još oznaka od zajednice."
       cant: "Žao nam je, trenutno ne možete označiti ovu objavu zastavicom."
       notify_staff: "Obavijesti osoblje privatno"
       formatted_name:
@@ -4138,10 +4134,12 @@ hr:
       button_title: "Započnite s uređivanjem"
     until: "Do:"
     form_templates:
+      upload_field:
+        upload: "Učitaj"
+        uploading: "Učitavanje"
       errors:
         valueMissing:
           default: "Molimo ispunite ovo polje."
-          text: "Molimo ispunite ovo polje."
           select-one: "Odaberite stavku na popisu."
           select-multiple: "Odaberite barem jednu stavku na popisu."
           checkbox: "Označite ovaj okvir ako želite nastaviti."

@@ -81,4 +81,15 @@
     max-width: 100%;
     height: auto;
   }
+
+  .hashtag-cooked {
+    padding: 0.1em 0.5em;
+    font-size: 0.85em;
+
+    .hashtag-icon-placeholder {
+      font-weight: bold;
+      font-size: inherit;
+      margin-right: 0;
+    }
+  }
 }

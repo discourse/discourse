@@ -21,7 +21,7 @@ import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/com
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
-import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
+import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
@@ -1610,7 +1610,9 @@ class PluginApi {
   addDocumentTitleCounter(counterFunction) {
     addPluginDocumentTitleCounter(counterFunction);
   }
+
   /**
+   *
    * Used for decorating the rendered HTML content of a plugin-outlet after it's been rendered
    *
    * `callback` will be called when it is time to decorate it.
@@ -1628,8 +1630,14 @@ class PluginApi {
    * );
    * ```
    *
+   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead
+   *
    **/
   decoratePluginOutlet(outletName, callback, opts) {
+    deprecated(
+      "decoratePluginOutlet is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use CSS or plugin outlet connectors instead",
+      { id: "discourse.decorate-plugin-outlet" }
+    );
     addPluginOutletDecorator(outletName, callback, opts || {});
   }
 

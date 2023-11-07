@@ -206,12 +206,11 @@
 // create account
 // modal only
 .d-modal.create-account {
-  .create-account-body {
-    min-width: 100%;
-  }
   .modal-body {
+    min-width: 100%;
     overflow: hidden;
   }
+
   .has-alt-auth .create-account-form {
     display: grid;
     grid-template-columns: 60% 40%;
@@ -312,6 +311,7 @@
       input.value-entered + label.alt-placeholder {
         top: -8px;
         left: calc(3em - 0.25em);
+        font-size: var(--font-down-1);
       }
     }
     .password-confirmation {

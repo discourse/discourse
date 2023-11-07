@@ -4,6 +4,7 @@ import { inject as service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class BulkSelectHelper {
   @service router;
@@ -28,6 +29,7 @@ export default class BulkSelectHelper {
     this.selected.concat(topics);
   }
 
+  @bind
   toggleBulkSelect() {
     this.bulkSelectEnabled = !this.bulkSelectEnabled;
     this.clear();

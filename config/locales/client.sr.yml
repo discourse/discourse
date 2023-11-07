@@ -1523,9 +1523,6 @@ sr:
       title: "Hvala što pomažete u održavanju naše zajednice pristojnom."
       action: "Označi Poruku Zastavom"
       take_action_options:
-        default:
-          title: "Preduzmi Akciju"
-          details: "Dođite odmah do praga za zastave, umesto da čekate još zastava od zajednice."
         suspend:
           title: "Suspenduj Korisnika"
       notify_action: "Privatna poruka"
@@ -1534,7 +1531,6 @@ sr:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(sakriveno)"
       submit_tooltip: "Priložite privatnu zastavu."
-      take_action_tooltip: "Dođite odmah do praga za zastave, umesto da čekate još zastava od zajednice."
       cant: "Žao nam je, trenutno ne možete označiti ovu poruku zastavom."
       formatted_name:
         off_topic: "Van Teme je."
@@ -1835,6 +1831,9 @@ sr:
             my_posts:
               content: "Moje poruke"
     form_templates:
+      upload_field:
+        upload: "Upload"
+        uploading: "Uploading"
       errors:
         typeMismatch:
           default: "Molimo unesite validnu vrednost"

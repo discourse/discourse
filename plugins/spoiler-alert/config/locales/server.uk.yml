@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 uk:
+  site_settings:
+    spoiler_enabled: 'Увімкнути плагін спойлерів. Якщо ви зміните це, ви повинні переробити всі пости за допомогою: "rake posts:rebake".'
+  spoiler_alert:
+    excerpt_spoiler: "спойлер"

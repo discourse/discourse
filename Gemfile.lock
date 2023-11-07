@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: c17bac468c5c5e4ca6808f7232abaca090f71e26
+  revision: 0dc6c6d8fae333ac2dfd91e740eacd9a69b21562
   specs:
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -82,17 +82,17 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    base64 (0.1.1)
+    base64 (0.2.0)
     better_errors (2.10.1)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
       rouge (>= 1.0.0)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
-    bootsnap (1.16.0)
+    bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
-    bullet (7.1.2)
+    bullet (7.1.3)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
@@ -107,7 +107,7 @@ GEM
       xpath (~> 3.2)
     cbor (0.5.9.6)
     certified (1.0.0)
-    cgi (0.3.6)
+    cgi (0.4.0)
     chunky_png (1.4.0)
     coderay (1.1.3)
     colored2 (4.0.0)
@@ -161,11 +161,11 @@ GEM
     gc_tracer (1.5.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (3.24.4)
-    google-protobuf (3.24.4-aarch64-linux)
-    google-protobuf (3.24.4-arm64-darwin)
-    google-protobuf (3.24.4-x86_64-darwin)
-    google-protobuf (3.24.4-x86_64-linux)
+    google-protobuf (3.25.0)
+    google-protobuf (3.25.0-aarch64-linux)
+    google-protobuf (3.25.0-arm64-darwin)
+    google-protobuf (3.25.0-x86_64-darwin)
+    google-protobuf (3.25.0-x86_64-linux)
     guess_html_encoding (0.0.11)
     hana (1.3.7)
     hashdiff (1.0.1)
@@ -212,7 +212,7 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.13.0)
+    logster (2.13.1)
     loofah (2.21.4)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -246,14 +246,14 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     mustache (1.1.1)
-    net-http (0.3.2)
+    net-http (0.4.0)
       uri
-    net-imap (0.4.2)
+    net-imap (0.4.4)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.2.1)
+    net-protocol (0.2.2)
       timeout
     net-smtp (0.4.0)
       net-protocol
@@ -328,7 +328,7 @@ GEM
     public_suffix (5.0.3)
     puma (6.4.0)
       nio4r (~> 2.0)
-    racc (1.7.1)
+    racc (1.7.3)
     rack (2.2.8)
     rack-mini-profiler (3.1.1)
       rack (>= 1.2.0)
@@ -359,7 +359,7 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     raindrops (0.20.1)
-    rake (13.0.6)
+    rake (13.1.0)
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -436,8 +436,8 @@ GEM
       rubocop-rspec (>= 2.0.0)
     rubocop-factory_bot (2.24.0)
       rubocop (~> 1.33)
-    rubocop-rspec (2.24.1)
-      rubocop (~> 1.33)
+    rubocop-rspec (2.25.0)
+      rubocop (~> 1.40)
       rubocop-capybara (~> 2.17)
       rubocop-factory_bot (~> 2.22)
     ruby-prof (1.6.3)
@@ -461,7 +461,7 @@ GEM
       google-protobuf (~> 3.23)
     sass-embedded (1.66.1-x86_64-linux-gnu)
       google-protobuf (~> 3.23)
-    selenium-webdriver (4.14.0)
+    selenium-webdriver (4.15.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -497,7 +497,7 @@ GEM
     syntax_tree-disable_ternary (1.0.0)
     test-prof (1.2.3)
     thor (1.3.0)
-    timeout (0.4.0)
+    timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2023.3)
@@ -512,7 +512,7 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.16.0)
-    uri (0.12.2)
+    uri (0.13.0)
     version_gem (1.1.3)
     web-push (3.0.0)
       hkdf (~> 1.0)
@@ -655,7 +655,7 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
-  selenium-webdriver (~> 4.11)
+  selenium-webdriver (~> 4.14)
   shoulda-matchers!
   sidekiq
   simplecov

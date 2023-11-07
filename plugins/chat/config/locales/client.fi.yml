@@ -186,7 +186,6 @@ fi:
       save: "Tallenna"
       select: "Valitse"
       return_to_list: "Palaa kanavaluetteloon"
-      return_to_threads_list: "Palaa aktiivisiin keskusteluihin"
       unread_threads_count:
         one: "Sinulla on %{count} lukematon keskustelu"
         other: "Sinulla on %{count} lukematonta keskustelua"
@@ -499,7 +498,6 @@ fi:
           other: "+%{count}"
       threads:
         open: "Avaa ketju"
-        list: "Käynnissä olevat keskustelut"
         none: "Et osallistu mihinkään viestiketjuun tällä kanavalla."
       draft_channel_screen:
         header: "Uusi viesti"

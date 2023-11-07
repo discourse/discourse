@@ -3362,6 +3362,7 @@ tr_TR:
       logo: "Kategori Logo Görüntüsü"
       logo_dark: "Koyu Mod Kategorisi Logo Görüntüsü"
       background_image: "Kategori Arka Plan Görüntüsü"
+      background_image_dark: "Koyu Kategori Arka Plan Resmi"
       badge_colors: "Rozet renkleri"
       background_color: "Arka plan rengi"
       foreground_color: "Ön plan rengi"
@@ -3479,8 +3480,8 @@ tr_TR:
       action: "Gönderiye Bayrak Ekle"
       take_action_options:
         default:
-          title: "Harekete Geç"
-          details: "Daha fazla topluluk bayrağı beklemek yerine bayrak eşiğine anında ulaşın"
+          title: "Gönderiyi Gizle"
+          details: "Bayrak eşiğine hemen ulaşın, gönderiyi gizleyin ve bekleyen tüm bayrakları kabul edin"
         suspend:
           title: "Kullanıcıyı Askıya Al"
           details: "Bayrak eşiğine ulaşın ve kullanıcıyı askıya alın"
@@ -3497,7 +3498,7 @@ tr_TR:
       ip_address_missing: "(Geçersiz)"
       hidden_email_address: "(gizli)"
       submit_tooltip: "Özel bayrağı gönder"
-      take_action_tooltip: "Daha fazla topluluk bayrağı beklemek yerine bayrak eşiğine anında ulaşın"
+      take_action_tooltip: "Bayrak eşiğine hemen ulaşın, gönderiyi gizleyin ve bekleyen tüm bayrakları kabul edin"
       cant: "Üzgünüz, şu anda bu gönderiye bayrak ekleyemezsiniz."
       notify_staff: "Personeli özel olarak bilgilendirin"
       formatted_name:
@@ -4163,10 +4164,12 @@ tr_TR:
     form_template_chooser:
       select_template: "Form şablonlarını seçin"
     form_templates:
+      upload_field:
+        upload: "Yükle"
+        uploading: "Yükleniyor"
       errors:
         valueMissing:
           default: "Lütfen bu alanı doldurun."
-          text: "Lütfen bu alanı doldurun."
           select-one: "Lütfen listeden bir öge seçin."
           select-multiple: "Lütfen listeden en az bir öge seçin."
           checkbox: "Devam etmek istiyorsanız lütfen bu kutuyu işaretleyin."

@@ -16,7 +16,7 @@
       />
       {{#if this.showLoginButtons}}
         <LoginButtons
-          @externalLogin={{this.externalLogin}}
+          @externalLogin={{this.externalLoginAction}}
           @passkeyLogin={{this.passkeyLogin}}
         />
       {{/if}}
@@ -73,7 +73,7 @@
       {{/unless}}
       <div class="login-right-side">
         <LoginButtons
-          @externalLogin={{this.externalLogin}}
+          @externalLogin={{this.externalLoginAction}}
           @passkeyLogin={{this.passkeyLogin}}
         />
       </div>

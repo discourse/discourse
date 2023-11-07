@@ -3278,8 +3278,7 @@ ja:
       action: "投稿を通報"
       take_action_options:
         default:
-          title: "対応する"
-          details: "誰かの通報を待たずに、今すぐ通報する"
+          title: "投稿を非表示"
         suspend:
           title: "ユーザーを凍結"
           details: "通報のしきい値に達すると、ユーザーを凍結します"
@@ -3296,7 +3295,6 @@ ja:
       ip_address_missing: "(該当なし)"
       hidden_email_address: "(非表示)"
       submit_tooltip: "非公開の通報を送信する"
-      take_action_tooltip: "誰かの通報を待たずに、今すぐ通報する"
       cant: "現在、この投稿を通報することはできません。"
       notify_staff: "非公開でスタッフに通報"
       formatted_name:
@@ -3927,10 +3925,12 @@ ja:
     form_template_chooser:
       select_template: "フォームテンプレートを選択する"
     form_templates:
+      upload_field:
+        upload: "アップロード"
+        uploading: "アップロード中"
       errors:
         valueMissing:
           default: "このフィールドに入力してください。"
-          text: "このフィールドに入力してください。"
           select-one: "リスト内の項目を選択してください。"
           select-multiple: "リスト内の項目を少なくとも 1 つ選択してください。"
           checkbox: "続行する場合は、このチェックボックスをオンにしてください。"

@@ -32,7 +32,8 @@ module Chat
     policy :ensure_valid_thread_for_channel
     policy :ensure_thread_matches_parent
     model :uploads, optional: true
-    model :message, :instantiate_message
+    model :message_instance, :instantiate_message
+
     transaction do
       step :save_message
       step :delete_drafts
@@ -43,7 +44,7 @@ module Chat
       step :process_direct_message_channel
     end
     step :publish_new_thread
-    step :publish_new_message_events
+    step :process
     step :publish_user_tracking_state
 
     class Contract
@@ -54,6 +55,7 @@ module Chat
       attribute :upload_ids, :array
       attribute :thread_id, :string
       attribute :incoming_chat_webhook
+      attribute :process_inline, :boolean, default: Rails.env.test?
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
@@ -127,38 +129,38 @@ module Chat
       )
     end
 
-    def save_message(message:, **)
-      message.cook
-      message.save!
-      message.create_mentions
+    def save_message(message_instance:, **)
+      message_instance.save!
     end
 
     def delete_drafts(channel:, guardian:, **)
       Chat::Draft.where(user: guardian.user, chat_channel: channel).destroy_all
     end
 
-    def post_process_thread(thread:, message:, guardian:, **)
+    def post_process_thread(thread:, message_instance:, guardian:, **)
       return unless thread
 
-      thread.update!(last_message: message)
+      thread.update!(last_message: message_instance)
       thread.increment_replies_count_cache
-      thread.add(guardian.user).update!(last_read_message: message)
+      thread.add(guardian.user).update!(last_read_message: message_instance)
       thread.add(thread.original_message_user)
     end
 
-    def create_webhook_event(contract:, message:, **)
+    def create_webhook_event(contract:, message_instance:, **)
       return if contract.incoming_chat_webhook.blank?
-      message.create_chat_webhook_event(incoming_chat_webhook: contract.incoming_chat_webhook)
+      message_instance.create_chat_webhook_event(
+        incoming_chat_webhook: contract.incoming_chat_webhook,
+      )
     end
 
-    def update_channel_last_message(channel:, message:, **)
-      return if message.in_thread?
-      channel.update!(last_message: message)
+    def update_channel_last_message(channel:, message_instance:, **)
+      return if message_instance.in_thread?
+      channel.update!(last_message: message_instance)
     end
 
-    def update_membership_last_read(channel_membership:, message:, **)
-      return if message.in_thread?
-      channel_membership.update!(last_read_message: message)
+    def update_membership_last_read(channel_membership:, message_instance:, **)
+      return if message_instance.in_thread?
+      channel_membership.update!(last_read_message: message_instance)
     end
 
     def process_direct_message_channel(channel_membership:, **)
@@ -173,16 +175,23 @@ module Chat
       Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
     end
 
-    def publish_new_message_events(channel:, message:, contract:, guardian:, **)
-      Chat::Publisher.publish_new!(channel, message, contract.staged_id)
-      Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: message.id })
-      Chat::Notifier.notify_new(chat_message: message, timestamp: message.created_at)
-      DiscourseEvent.trigger(:chat_message_created, message, channel, guardian.user)
+    def process(channel:, message_instance:, contract:, **)
+      if contract.process_inline
+        Jobs::Chat::ProcessMessage.new.execute(
+          { chat_message_id: message_instance.id, staged_id: contract.staged_id },
+        )
+      else
+        Jobs.enqueue(
+          Jobs::Chat::ProcessMessage,
+          { chat_message_id: message_instance.id, staged_id: contract.staged_id },
+        )
+      end
     end
 
-    def publish_user_tracking_state(message:, channel:, channel_membership:, guardian:, **)
-      message_to_publish = message
-      message_to_publish = channel_membership.last_read_message || message if message.in_thread?
+    def publish_user_tracking_state(message_instance:, channel:, channel_membership:, guardian:, **)
+      message_to_publish = message_instance
+      message_to_publish =
+        channel_membership.last_read_message || message_instance if message_instance.in_thread?
       Chat::Publisher.publish_user_tracking_state!(guardian.user, channel, message_to_publish)
     end
   end
