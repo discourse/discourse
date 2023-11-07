@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
@@ -41,19 +40,14 @@ export default class ChatThreadListHeader extends Component {
         {{/if}}
       </div>
 
-      <div
-        class={{concatClass
-          "chat-thread-list-header__label"
-          (unless this.showBackButton "-no-back-btn")
-        }}
-      >
+      <div class="chat-thread-list-header__label">
         <span>
           {{icon "discourse-threads"}}
           {{replaceEmoji this.threadListTitle}}
         </span>
 
         {{#if this.site.mobileView}}
-          <div class="chat-thread-list-header__label_channel">
+          <div class="chat-thread-list-header__label-channel">
             {{replaceEmoji @channel.title}}
           </div>
         {{/if}}

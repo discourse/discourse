@@ -22,18 +22,18 @@ export default class ChatDrawerHeaderTitle extends Component {
   <template>
     <span class="chat-drawer-header__title">
       <div class="chat-drawer-header__top-line">
-        <div>
+        <span class="chat-drawer-header__icon">
           {{#if this.showIcon}}
             {{icon @icon}}
           {{/if}}
+        </span>
 
-          {{this.headerTitle}}
+        <span class="chat-drawer-header__title-text">{{this.headerTitle}}</span>
 
-          {{#if this.showChannel}}
-            -
-            {{@channelName}}
-          {{/if}}
-        </div>
+        {{#if this.showChannel}}
+          <span class="chat-drawer-header__divider">-</span>
+          <span class="chat-drawer-header__channel-name">{{@channelName}}</span>
+        {{/if}}
       </div>
     </span>
   </template>

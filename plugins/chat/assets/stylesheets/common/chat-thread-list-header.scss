@@ -13,16 +13,11 @@
     margin-left: auto;
   }
 
-  &__label {
-    &.-no-back-btn {
-      margin-left: 0.5rem;
-    }
-    span {
-      font-weight: bold;
-    }
+  &__label span {
+    font-weight: bold;
   }
 
-  &__label_channel {
+  &__label-channel {
     display: block;
     font-size: var(--font-down-1-rem);
   }
