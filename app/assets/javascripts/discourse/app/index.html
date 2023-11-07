@@ -24,14 +24,9 @@
     <!-- bootstrap-content head -->
     {{content-for "head"}}
 
-    <discourse-chunked-script entrypoint="vendor">
-      <script defer src="{{rootURL}}assets/vendor.js"></script>
-    </discourse-chunked-script>
+    <script defer src="{{rootURL}}assets/vendor.js"></script>
 
-    <discourse-chunked-script entrypoint="discourse">
-      <ember-auto-import-scripts defer entrypoint="app"></ember-auto-import-scripts>
-      <script defer src="{{rootURL}}assets/discourse.js"></script>
-    </discourse-chunked-script>
+    <script defer src="{{rootURL}}assets/discourse.js"></script>
 
     <!-- bootstrap-content locale-script -->
   </head>
