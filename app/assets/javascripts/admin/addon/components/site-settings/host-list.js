@@ -10,7 +10,7 @@ export default class HostList extends Component {
     return this.value.toString().split(this.tokenSeparator).filter(Boolean);
   }
 
-  @action
+  @__action__
   onChange(value) {
     if (value.some((v) => v.includes("?") || v.includes("*"))) {
       return;
