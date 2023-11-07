@@ -82,6 +82,22 @@ de:
       not_allowed_theme: "`%{repo}` ist nicht in der Liste der zulässigen Themes (überprüfe die globale Einstellung `allowed_theme_repos`)."
       ssh_key_gone: "Du hast zu lange mit der Installation des Themes gewartet und der SSH-Schlüssel ist abgelaufen. Bitte versuche es noch einmal."
       too_many_files: "Die Anzahl der Dateien (%{count}) im Thema hat die maximal zulässige Anzahl von Dateien (%{limit}) überschritten."
+      migrations:
+        invalid_filename: "Ungültiger Dateiname für Migrationsdatei: %{filename}. Dateinamen müssen mit 4 Ziffern beginnen, gefolgt von einem Bindestrich und dann einem Namen, der nur alphanumerische Zeichen mit Bindestrichen enthält."
+        name_too_long:
+          one: "Der Migrationsname ist zu lang. Er sollte nicht länger als %{count} Zeichen sein."
+          other: "Der Migrationsname ist zu lang. Er sollte nicht länger als %{count} Zeichen sein."
+        too_many_pending_migrations: "Es gibt zu viele ausstehende Migrationen in diesem Thema. Themes dürfen nicht mehr als 100 Migrationen in einem einzigen Update einführen"
+        out_of_sequence: "Die Migration '%{name}' ist nicht in der richtigen Reihenfolge. Die letzte Migration für dieses Thema hatte die Versionsnummer %{current} , die höher ist als die neue Migration"
+        syntax_error: "Die Migration '%{name}' konnte nicht ausgeführt werden, da sie einen Syntaxfehler aufweist: %{error}"
+        exceeded_memory_limit: "Die Migration „%{name}“ ist fehlgeschlagen, da das Speicherlimit überschritten wurde"
+        timed_out: "Zeitüberschreitung bei Migration „%{name}“."
+        no_exported_function: "Migration '%{name}' exportiert keine Funktion, um die Migration durchzuführen"
+        default_export_not_a_function: "Die Migration '%{name}' hat einen Standardexport, der keine Funktion ist. Der Standardexport muss die Funktion sein, die die Migration durchführt"
+        no_returned_value: "Die Migration '%{name}' hat keinen Wert zurückgegeben (oder null oder undefiniert). Sie muss ein Map-Objekt zurückgeben"
+        wrong_return_type: "Die Migration '%{name}' hat einen unbekannten Datentyp zurückgegeben. Sie muss ein Map-Objekt zurückgeben"
+        runtime_error: "Die Migration '%{name}' ist auf den folgenden Laufzeitfehler gestoßen: %{error}"
+        unknown_setting_returned_by_migration: "Migrationen '%{name}' haben eine Einstellung '%{setting_name}' zurückgegeben, die nicht in der Datei settings.yml des Themes deklariert ist"
     errors:
       component_no_user_selectable: "Theme-Komponenten können nicht vom Benutzer auswählbar sein"
       component_no_default: "Theme-Komponenten können nicht Standard-Theme sein"
@@ -1495,7 +1511,7 @@ de:
     blocked_onebox_domains: "Eine Liste von Domains, die niemals in einer Onebox untergebracht werden, z. B. wikipedia.org\n(Wildcard-Symbole * ? werden nicht unterstützt)"
     block_onebox_on_redirect: "Onebox für weiterleitende URLs blockieren."
     allowed_inline_onebox_domains: "Eine Liste von Domains, die in verkleinerter Form in eine Onebox umgewandelt werden, wenn sie ohne Titel verlinkt werden"
-    enable_inline_onebox_on_all_domains: "Ignoriere die Website-Einstellung `inline_onebox_domain_allowlist` und erlaube Inline-Oneboxen für alle Domains"
+    enable_inline_onebox_on_all_domains: "Ignoriere die Site-Einstellung allowed_inline_onebox_domains und erlaube Inline-Onebox auf allen Domains."
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox-Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren.)"
     max_oneboxes_per_post: "Maximale Anzahl von Oneboxes in einem Beitrag."
     facebook_app_access_token: "Ein Token, das aus deiner Facebook-App-ID und deinem Geheimnis generiert wird. Wird verwendet, um Instagram-Oneboxes zu generieren."
@@ -1996,6 +2012,7 @@ de:
     allow_anonymous_posting: "Benutzern erlauben, in den anonymen Modus zu wechseln"
     allow_anonymous_likes: "Anonymen Benutzern erlauben, Beiträgen ein „Gefällt mir“ zu geben"
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
+    anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
     allow_users_to_hide_profile: "Benutzern erlauben, ihr Profil und ihre Präsenz auszublenden"
@@ -2231,7 +2248,7 @@ de:
       reply_by_email_address_is_empty: "Du musst „reply by email address“ definieren, bevor Antworten per E-Mail aktiviert wird."
       email_polling_disabled: "Du musst entweder die manuelle Abfrage, die POP3-Abfrage oder eine benutzerdefinierte E-Mail-Abfrage aktivieren, bevor du die Antwort per E-Mail aktivieren kannst."
       user_locale_not_enabled: "Du musst erst „allow user locale“ aktivieren, bevor du diese Einstellung aktivierst."
-      personal_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass jemand außer den Team-Mitgliedern private Nachrichten verschickt, wähle die Team-Gruppe aus."
+      at_least_one_group_required: "Du musst mindestens eine Gruppe für diese Einstellung angeben."
       invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."
       invalid_regex_with_message: "Die Regex „%{regex}“ hat einen Fehler: %{message}"
       email_editable_enabled: "Du musst „email editable“ deaktivieren, bevor du diese Einstellung aktivierst."
@@ -2261,6 +2278,8 @@ de:
       delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden"
       invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: „{0.1,0.2,0.3,1.0}“. Beachte, dass der Maximalwert für jede Gewichtung 1.0 beträgt."
+    keywords:
+      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2706,6 +2725,28 @@ de:
         Feedback: %{feedback}
 
         Du kannst deinen ursprünglichen Beitrag unten bearbeiten und erneut abschicken, um die vorgeschlagenen Änderungen vorzunehmen, oder auf diese Nachricht antworten, wenn du Fragen hast.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Danke,
+        %{site_name} Moderatoren
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Feedback zu deinem Thema"
+      subject_template: "Feedback zum neuen Thema \"%{topic_title}\""
+      text_body_template: |
+        Hallo %{username},
+
+        Wir haben dein neues Thema mit dem Titel "%{topic_title}" überprüft und haben ein Feedback für dich.
+
+        Grund: %{reason}
+
+        Feedback: %{feedback}
+
+        Du kannst den Originalbeitrag deines Themas unten bearbeiten und erneut einreichen, um die vorgeschlagenen Änderungen vorzunehmen, oder auf diese Nachricht antworten, wenn du Fragen hast.
 
         --------
 

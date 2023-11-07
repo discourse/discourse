@@ -239,7 +239,6 @@ fr:
       save: "Enregistrer"
       select: "Sélectionner"
       return_to_list: "Retour à la liste des canaux"
-      return_to_threads_list: "Revenir aux discussions en cours"
       unread_threads_count:
         one: "Vous avez %{count} discussion non lue"
         other: "Vous avez %{count} discussions non lues"
@@ -546,7 +545,6 @@ fr:
           other: "+ %{count}"
       threads:
         open: "Ouvrir le fil"
-        list: "Discussions en cours"
         none: "Vous ne participez à aucun fil dans ce canal."
       draft_channel_screen:
         header: "Nouveau message"

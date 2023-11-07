@@ -64,6 +64,8 @@ ro:
       bookmark_message: "Semn de carte"
       bookmark_message_edit: "Editați marcajul"
       save: "Salvare"
+      return_to_channel: "Revino la canal"
+      return_to_threads_list: "Revino la lista de fire"
       sounds:
         none: "Nimeni"
       exit: "înapoi"
@@ -153,6 +155,8 @@ ro:
             title: "Normal"
           tracking:
             title: "Urmărire"
+      threads:
+        list: "Fire"
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulare"

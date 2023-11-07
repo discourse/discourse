@@ -24,6 +24,8 @@ id:
             chat:
               create_message: "Buat pesan obrolan di kanal tertentu"
     chat:
+      text_copied: Teks disalin ke papan klip
+      link_copied: Tautan disalin ke papan klip
       deleted_chat_username: dihapus
       dates:
         time_tiny: "h:mm"
@@ -68,10 +70,10 @@ id:
         channel_wide_mentions_disallowed: "Penyebutan @here dan @all dinonaktifkan di kanal ini."
       reply: "Balas"
       edit: "Ubah"
+      copy_text: "Salin teks"
       bookmark_message: "Penandaan"
       bookmark_message_edit: "Edit Bookmark"
       save: "Simpan"
-      return_to_threads_list: "Kembali ke diskusi yang sedang berlangsung"
       sounds:
         none: "Tidak ada"
       channel_status:
@@ -168,7 +170,6 @@ id:
         participants_other_count:
           other: "+%{count}"
       threads:
-        list: "Diskusi yang sedang berlangsung"
         none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."
       draft_channel_screen:
         header: "Pesan Baru"

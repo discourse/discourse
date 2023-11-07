@@ -239,7 +239,6 @@ sv:
       save: "Spara"
       select: "Välj"
       return_to_list: "Återgå till listan över kanaler"
-      return_to_threads_list: "Gå tillbaka till pågående diskussioner"
       unread_threads_count:
         one: "Du har %{count} oläst diskussion"
         other: "Du har %{count} olästa diskussioner"
@@ -546,7 +545,6 @@ sv:
           other: "+%{count}"
       threads:
         open: "Öppna tråd"
-        list: "Pågående diskussioner"
         none: "Du deltar inte i några trådar i den här kanalen."
       draft_channel_screen:
         header: "Nytt meddelande"

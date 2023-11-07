@@ -3025,9 +3025,6 @@ vi:
       action: "Đánh dấu Bài viết"
       take_action: "Thực hiện Tác vụ…"
       take_action_options:
-        default:
-          title: "Hành động"
-          details: "Đạt đến ngưỡng gắn cờ ngay lập tức, thay vì chờ thêm cờ cộng đồng"
         suspend:
           title: "Tạm ngưng người dùng"
           details: "Đạt đến ngưỡng gắn cờ và tạm ngưng người dùng"
@@ -3042,7 +3039,6 @@ vi:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(ẩn)"
       submit_tooltip: "Đánh dấu riêng tư"
-      take_action_tooltip: "Tiếp cận ngưỡng đánh dấu ngay lập tức, thay vì đợi cộng đồng"
       cant: "Xin lỗi, bạn không thể đánh dấu bài viết lúc này."
       notify_staff: "Thông báo riêng cho BQT"
       formatted_name:
@@ -3591,6 +3587,9 @@ vi:
               content: "Review"
     until: "Cho đến khi:"
     form_templates:
+      upload_field:
+        upload: "Tải lên"
+        uploading: "Đang tải lên"
       errors:
         typeMismatch:
           default: "Hãy nhập giá trị hợp lệ."

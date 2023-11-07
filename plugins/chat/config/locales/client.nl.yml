@@ -239,7 +239,6 @@ nl:
       save: "Opslaan"
       select: "Selecteren"
       return_to_list: "Terug naar kanalenlijst"
-      return_to_threads_list: "Terug naar lopende discussies"
       unread_threads_count:
         one: "Je hebt %{count} ongelezen discussie"
         other: "Je hebt %{count} ongelezen discussies"
@@ -546,7 +545,6 @@ nl:
           other: "+%{count}"
       threads:
         open: "Thread openen"
-        list: "Lopende discussies"
         none: "Je neemt niet deel aan discussies in dit kanaal."
       draft_channel_screen:
         header: "Nieuw bericht"

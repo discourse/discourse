@@ -180,6 +180,7 @@ de:
       inline_to_message: "Nachricht #%{message_id} von %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat für Thema %{topic_title}"
+      thread_title_connector: "in"
       x_members:
         one: "%{count} Mitglied"
         other: "%{count} Mitglieder"

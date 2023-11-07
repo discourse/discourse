@@ -116,7 +116,6 @@ fa_IR:
       save: "ذخیره"
       select: "انتخاب کنید"
       return_to_list: "بازگشت به فهرست کانال‌ها"
-      return_to_threads_list: "بازگشت به گفتگوی جاری"
       unread_threads_count:
         one: "شما %{count} گفتگوی خوانده نشده دارید"
         other: "شما %{count} گفتگوی خوانده نشده دارید"
@@ -302,8 +301,6 @@ fa_IR:
             title: "معمولی"
           tracking:
             title: "پیگیری"
-      threads:
-        list: "گفتگوهای در حال انجام"
       draft_channel_screen:
         header: "پیام جدید"
         cancel: "انصراف"
