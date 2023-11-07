@@ -21,16 +21,11 @@ export default Controller.extend(CanCheckEmails, {
   modal: service(),
   loading: false,
   dirty: false,
-  resetPasswordLoading: false,
-  resetPasswordProgress: "",
-  password: null,
   errorMessage: null,
   newUsername: null,
   backupEnabled: alias("model.second_factor_backup_enabled"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
   totps: null,
-
-  loaded: false,
 
   init() {
     this._super(...arguments);
@@ -45,6 +40,11 @@ export default Controller.extend(CanCheckEmails, {
   @discourseComputed("currentUser")
   showEnforcedNotice(user) {
     return user && user.enforcedSecondFactor;
+  },
+
+  @discourseComputed("totps", "security_keys")
+  hasSecondFactors(totps, security_keys) {
+    return totps.length > 0 || security_keys.length > 0;
   },
 
   @action
@@ -81,7 +81,7 @@ export default Controller.extend(CanCheckEmails, {
     this.set("loading", true);
 
     this.model
-      .loadSecondFactorCodes(this.password)
+      .loadSecondFactorCodes()
       .then((response) => {
         if (response.error) {
           this.set("errorMessage", response.error);
@@ -90,17 +90,10 @@ export default Controller.extend(CanCheckEmails, {
 
         this.setProperties({
           errorMessage: null,
-          loaded: true,
           totps: response.totps,
           security_keys: response.security_keys,
-          password: null,
           dirty: false,
         });
-        this.set(
-          "model.second_factor_enabled",
-          (response.totps && response.totps.length > 0) ||
-            (response.security_keys && response.security_keys.length > 0)
-        );
       })
       .catch((e) => this.handleError(e))
       .finally(() => this.set("loading", false));
@@ -111,37 +104,7 @@ export default Controller.extend(CanCheckEmails, {
     this.set("dirty", true);
   },
 
-  @action
-  resetPassword(event) {
-    event?.preventDefault();
-
-    this.setProperties({
-      resetPasswordLoading: true,
-      resetPasswordProgress: "",
-    });
-
-    return this.model
-      .changePassword()
-      .then(() => {
-        this.set(
-          "resetPasswordProgress",
-          I18n.t("user.change_password.success")
-        );
-      })
-      .catch(popupAjaxError)
-      .finally(() => this.set("resetPasswordLoading", false));
-  },
-
   actions: {
-    confirmPassword() {
-      if (!this.password) {
-        return;
-      }
-      this.markDirty();
-      this.loadSecondFactors();
-      this.set("password", null);
-    },
-
     disableAllSecondFactors() {
       if (this.loading) {
         return;

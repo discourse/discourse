@@ -1463,8 +1463,6 @@ en:
         title: "Two-Factor Authentication"
         enable: "Manage Two-Factor Authentication"
         disable_all: "Disable All"
-        forgot_password: "Forgot password?"
-        confirm_password_description: "Please confirm your password to continue"
         name: "Name"
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
