@@ -230,6 +230,8 @@ es:
           fields:
             group:
               label: Grupo
+            badge:
+              label: Insignia
         suspend_user_by_email:
           fields:
             suspend_until:

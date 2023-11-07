@@ -136,6 +136,8 @@ fa_IR:
           fields:
             group:
               label: گروه
+            badge:
+              label: نشان
         suspend_user_by_email:
           fields:
             reason:

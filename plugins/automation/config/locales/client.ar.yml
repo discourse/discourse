@@ -230,6 +230,8 @@ ar:
           fields:
             group:
               label: المجموعة
+            badge:
+              label: شارة
         suspend_user_by_email:
           fields:
             suspend_until:

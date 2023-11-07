@@ -230,6 +230,8 @@ tr_TR:
           fields:
             group:
               label: Grup
+            badge:
+              label: Rozet
         suspend_user_by_email:
           fields:
             suspend_until:

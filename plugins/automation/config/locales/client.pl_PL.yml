@@ -181,6 +181,8 @@ pl_PL:
           fields:
             group:
               label: Grupa
+            badge:
+              label: Odznaka
         suspend_user_by_email:
           fields:
             reason:

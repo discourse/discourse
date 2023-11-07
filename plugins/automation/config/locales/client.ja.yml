@@ -230,6 +230,8 @@ ja:
           fields:
             group:
               label: グループ
+            badge:
+              label: バッジ
         suspend_user_by_email:
           fields:
             suspend_until:

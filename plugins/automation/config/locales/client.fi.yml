@@ -230,6 +230,8 @@ fi:
           fields:
             group:
               label: Ryhmä
+            badge:
+              label: Kunniamerkki
         suspend_user_by_email:
           fields:
             suspend_until:

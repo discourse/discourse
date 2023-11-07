@@ -230,6 +230,8 @@ zh_CN:
           fields:
             group:
               label: 群组
+            badge:
+              label: 徽章
         suspend_user_by_email:
           fields:
             suspend_until:

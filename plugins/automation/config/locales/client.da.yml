@@ -189,6 +189,8 @@ da:
               label: Emblem Navn
             group:
               label: Gruppe
+            badge:
+              label: Emblem
         suspend_user_by_email:
           fields:
             actor:

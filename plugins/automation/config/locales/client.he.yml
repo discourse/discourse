@@ -237,6 +237,9 @@ he:
             remove_members_without_badge:
               label: הסרת חברים קיימים ללא עיטור
               description: כרשות, להסיר חברי קבוצה קיימים בלי עיטורים מסוימים
+            badge:
+              label: עיטור
+              description: בחירת עיטור
         suspend_user_by_email:
           fields:
             suspend_until:

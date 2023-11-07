@@ -209,6 +209,8 @@ sv:
           fields:
             group:
               label: Grupp
+            badge:
+              label: Märke
         suspend_user_by_email:
           fields:
             suspend_until:

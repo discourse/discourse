@@ -230,6 +230,8 @@ pt_BR:
           fields:
             group:
               label: Grupo
+            badge:
+              label: Emblema
         suspend_user_by_email:
           fields:
             suspend_until:

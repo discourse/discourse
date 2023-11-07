@@ -230,6 +230,8 @@ de:
           fields:
             group:
               label: Gruppe
+            badge:
+              label: Abzeichen
         suspend_user_by_email:
           fields:
             suspend_until:

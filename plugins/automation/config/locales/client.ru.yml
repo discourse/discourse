@@ -230,6 +230,8 @@ ru:
           fields:
             group:
               label: Группа
+            badge:
+              label: Награда
         suspend_user_by_email:
           fields:
             suspend_until:

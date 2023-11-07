@@ -230,6 +230,8 @@ it:
           fields:
             group:
               label: Gruppo
+            badge:
+              label: Distintivo
         suspend_user_by_email:
           fields:
             suspend_until:

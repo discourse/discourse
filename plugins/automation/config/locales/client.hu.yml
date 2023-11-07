@@ -196,6 +196,8 @@ hu:
           fields:
             group:
               label: Csoport
+            badge:
+              label: Jelvény
         suspend_user_by_email:
           fields:
             reason:
