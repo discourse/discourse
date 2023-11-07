@@ -22,12 +22,12 @@ export default class CompactList extends Component {
     ];
   }
 
-  @action
+  @__action__
   onChangeListSetting(value) {
     this.set("value", value.join(this.tokenSeparator));
   }
 
-  @action
+  @__action__
   onChangeChoices(choices) {
     this.set("createdChoices", [
       ...new Set([...makeArray(this.createdChoices), ...makeArray(choices)]),
