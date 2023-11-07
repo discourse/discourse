@@ -26,7 +26,7 @@ export default class NamedList extends Component {
     return choices;
   }
 
-  @__action__
+  @action
   onChangeListSetting(value) {
     this.set("value", value.join(this.tokenSeparator));
   }

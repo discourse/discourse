@@ -31,14 +31,14 @@ export default class EmojiValueList extends Component {
       });
   }
 
-  @__action__
+  @action
   closeEmojiPicker() {
     this.collection.setEach("isEditing", false);
     this.set("emojiPickerIsActive", false);
     this.set("isEditorFocused", false);
   }
 
-  @__action__
+  @action
   emojiSelected(code) {
     if (!this._validateInput(code)) {
       return;

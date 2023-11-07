@@ -23,7 +23,7 @@ export default class AdminWatchedWord extends Component {
     return replacement.split(",");
   }
 
-  @__action__
+  @action
   deleteWord() {
     this.word
       .destroy()

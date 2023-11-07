@@ -5,7 +5,7 @@ import FilterComponent from "admin/components/report-filters/filter";
 export default class Category extends FilterComponent {
   @readOnly("filter.default") category;
 
-  @__action__
+  @action
   onChange(categoryId) {
     this.applyFilter(this.filter.id, categoryId || undefined);
   }

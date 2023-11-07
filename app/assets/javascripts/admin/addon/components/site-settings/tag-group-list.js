@@ -8,7 +8,7 @@ export default class TagGroupList extends Component {
     return value.split("|").filter(Boolean);
   }
 
-  @__action__
+  @action
   onTagGroupChange(tagGroups) {
     this.set("value", tagGroups.join("|"));
   }

@@ -34,7 +34,7 @@ export default class UserStatusPicker extends Component {
     this.set("isFocused", false);
   }
 
-  @__action__
+  @action
   emojiSelected(emoji) {
     this.set("status.emoji", emoji);
     this.set("emojiPickerIsActive", false);
@@ -47,7 +47,7 @@ export default class UserStatusPicker extends Component {
     this.set("isFocused", true);
   }
 
-  @__action__
+  @action
   onEmojiPickerOutsideClick() {
     this.set("emojiPickerIsActive", false);
   }
@@ -59,7 +59,7 @@ export default class UserStatusPicker extends Component {
     }
   }
 
-  @__action__
+  @action
   toggleEmojiPicker(event) {
     event.stopPropagation();
     this.set("emojiPickerIsActive", !this.emojiPickerIsActive);

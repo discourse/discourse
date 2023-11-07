@@ -293,7 +293,7 @@ export default class ComposerMessages extends Component {
     });
   }
 
-  @__action__
+  @action
   closeMessage(message, event) {
     event?.preventDefault();
     this._removeMessage(message);
@@ -329,7 +329,7 @@ export default class ComposerMessages extends Component {
     };
   }
 
-  @__action__
+  @action
   switchPM(message) {
     this.composer.set("action", "privateMessage");
     this.composer.set("targetRecipients", message.reply_username);

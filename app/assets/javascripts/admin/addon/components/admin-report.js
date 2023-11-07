@@ -195,7 +195,7 @@ export default class AdminReport extends Component {
     });
   }
 
-  @__action__
+  @action
   onChangeDateRange(range) {
     this.setProperties({
       startDate: range.from,
@@ -203,7 +203,7 @@ export default class AdminReport extends Component {
     });
   }
 
-  @__action__
+  @action
   applyFilter(id, value) {
     let customFilters = this.get("filters.customFilters") || {};
 
