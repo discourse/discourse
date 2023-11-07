@@ -99,6 +99,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :presence_channel_prefixes
 
+  define_filtered_register :email_notification_filters
   define_filtered_register :push_notification_filters
 
   define_filtered_register :notification_consolidation_plans
