@@ -362,10 +362,10 @@ RSpec.describe CategoryList do
     fab!(:category) { Fabricate(:category, user: admin) }
 
     before { category.upsert_custom_fields("bob" => "marley") }
-    after { CategoryList.preloaded_category_custom_fields = Set.new }
+    after { Site.reset_preloaded_category_custom_fields }
 
     it "can preloads custom fields" do
-      CategoryList.preloaded_category_custom_fields << "bob"
+      Site.preloaded_category_custom_fields << "bob"
 
       expect(category_list.categories[-1].custom_field_preloaded?("bob")).to eq(true)
     end

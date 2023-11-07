@@ -292,9 +292,9 @@ class Plugin::Instance
 
   # Registers a category custom field to be loaded when rendering a category list
   # Example usage:
-  #   register_category_list_preloaded_category_custom_fields("custom_field")
-  def register_category_list_preloaded_category_custom_fields(field)
-    CategoryList.preloaded_category_custom_fields << field
+  #   register_preloaded_category_custom_fields("custom_field")
+  def register_preloaded_category_custom_fields(field)
+    Site.preloaded_category_custom_fields << field
   end
 
   def custom_avatar_column(column)
