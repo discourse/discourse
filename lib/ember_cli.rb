@@ -24,6 +24,12 @@ class EmberCli < ActiveSupport::CurrentAttributes
       value["assets"].map { |chunk| chunk.delete_prefix("assets/").delete_suffix(".js") }
     end
 
+    # Special case - vendor.js is fingerprinted by Embroider in production, but not run through Webpack
+    if !assets.include?("vendor.js") &&
+         fingerprinted = assets.find { |a| a.match?(/^vendor\..*\.js$/) }
+      chunk_infos["vendor"] = [fingerprinted.delete_suffix(".js")]
+    end
+
     @production_chunk_infos = chunk_infos if Rails.env.production?
     self.request_cached_script_chunks = chunk_infos
   rescue Errno::ENOENT
@@ -57,7 +63,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.clear_cache!
-    @prod_chunk_infos = nil
+    @production_chunk_infos = nil
     @assets = nil
     self.request_cached_script_chunks = nil
   end
