@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # name: discourse-automation
-# about: Lets you automate actions on your Discourse Forum
+# about: Allows admins to automate actions through scripts and triggers. Customisation is made through an automatically generated UI.
+# meta_topic_id: 195773
 # version: 0.1
 # authors: jjaffeux
 # url: https://github.com/discourse/discourse-automation
