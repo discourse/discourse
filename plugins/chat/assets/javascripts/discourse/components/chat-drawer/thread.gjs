@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -88,12 +89,14 @@ export default class ChatDrawerThread extends Component {
         {{didUpdate this.fetchChannelAndThread @params.channelId}}
         {{didUpdate this.fetchChannelAndThread @params.threadId}}
       >
-        {{#if this.chat.activeChannel.activeThread}}
-          <ChatThread
-            @thread={{this.chat.activeChannel.activeThread}}
-            @targetMessageId={{@params.messageId}}
-          />
-        {{/if}}
+        {{#each (array this.chat.activeChannel.activeThread) as |thread|}}
+          {{#if thread}}
+            <ChatThread
+              @thread={{thread}}
+              @targetMessageId={{@params.messageId}}
+            />
+          {{/if}}
+        {{/each}}
       </div>
     {{/if}}
   </template>

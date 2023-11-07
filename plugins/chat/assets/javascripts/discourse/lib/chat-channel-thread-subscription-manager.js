@@ -1,82 +1,43 @@
-import Service, { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
+import { getOwner, setOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
-export function handleStagedMessage(channel, messagesManager, data) {
-  const stagedMessage = messagesManager.findStagedMessage(data.staged_id);
-
-  if (!stagedMessage) {
-    return;
-  }
-
-  stagedMessage.error = null;
-  stagedMessage.id = data.chat_message.id;
-  stagedMessage.staged = false;
-  stagedMessage.excerpt = data.chat_message.excerpt;
-  stagedMessage.channel = channel;
-  stagedMessage.createdAt = new Date(data.chat_message.created_at);
-
-  return stagedMessage;
-}
-
-/**
- * Handles subscriptions for MessageBus messages sent from Chat::Publisher
- * to the channel and thread panes. There are individual services for
- * each (ChatChannelPaneSubscriptionsManager and ChatThreadPaneSubscriptionsManager)
- * that implement their own logic where necessary. Functions which will
- * always be different between the two raise a "not implemented" error in
- * the base class, and the child class must define the associated function,
- * even if it is a noop in that context.
- *
- * For example, in the thread context there is no need to handle the thread
- * creation event, because the panel will not be open in that case.
- */
-export default class ChatPaneBaseSubscriptionsManager extends Service {
-  @service chat;
+export default class ChatChannelThreadSubscriptionManager {
   @service currentUser;
+  @service messageBus;
 
-  messageBusChannel = null;
-  messageBusLastId = null;
+  @tracked channel;
 
-  get messagesManager() {
-    return this.model.messagesManager;
-  }
+  constructor(context, thread, { onNewMessage } = {}) {
+    setOwner(this, getOwner(context));
 
-  beforeSubscribe() {}
-  afterMessage() {}
-
-  subscribe(model) {
-    this.unsubscribe();
-    this.beforeSubscribe(model);
-    this.model = model;
-
-    if (!this.messageBusChannel) {
-      return;
-    }
+    this.thread = thread;
+    this.onNewMessage = onNewMessage;
 
     this.messageBus.subscribe(
       this.messageBusChannel,
       this.onMessage,
-      this.messageBusLastId
+      this.thread.channelMessageBusLastId
     );
   }
 
-  unsubscribe() {
-    if (!this.model) {
-      return;
-    }
-
-    this.messageBus.unsubscribe(this.messageBusChannel, this.onMessage);
-    this.model = null;
+  get messagesManager() {
+    return this.thread.messagesManager;
   }
 
-  handleStagedMessageInternal(channel, data) {
-    return handleStagedMessage(channel, this.messagesManager, data);
+  get messageBusChannel() {
+    return `/chat/${this.thread.channel.id}/thread/${this.thread.id}`;
+  }
+
+  teardown() {
+    this.messageBus.unsubscribe(this.messageBusChannel, this.onMessage);
   }
 
   @bind
-  onMessage(busData) {
+  onMessage(busData, _, __, lastMessageBusId) {
     switch (busData.type) {
       case "sent":
         this.handleSentMessage(busData);
@@ -111,19 +72,44 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
       case "thread_created":
         this.handleNewThreadCreated(busData);
         break;
-      case "update_thread_original_message":
-        this.handleThreadOriginalMessageUpdate(busData);
-        break;
-      case "notice":
-        this.handleNotice(busData);
-        break;
     }
 
-    this.afterMessage(this.model, ...arguments);
+    this.thread.threadMessageBusLastId = lastMessageBusId;
   }
 
-  handleSentMessage() {
-    throw "not implemented";
+  handleSentMessage(data) {
+    if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
+      const stagedMessage = this.handleStagedMessage(
+        this.thread.channel,
+        this.messagesManager,
+        data
+      );
+      if (stagedMessage) {
+        return;
+      }
+    }
+
+    const message = ChatMessage.create(this.thread.channel, data.chat_message);
+    message.thread = this.thread;
+    message.manager = this.messagesManager;
+    this.onNewMessage?.(message);
+  }
+
+  handleStagedMessage(channel, messagesManager, data) {
+    const stagedMessage = messagesManager.findStagedMessage(data.staged_id);
+
+    if (!stagedMessage) {
+      return;
+    }
+
+    stagedMessage.error = null;
+    stagedMessage.id = data.chat_message.id;
+    stagedMessage.staged = false;
+    stagedMessage.excerpt = data.chat_message.excerpt;
+    stagedMessage.channel = channel;
+    stagedMessage.createdAt = new Date(data.chat_message.created_at);
+
+    return stagedMessage;
   }
 
   handleProcessedMessage(data) {
@@ -182,7 +168,10 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
       this.messagesManager.removeMessage(targetMsg);
     }
 
-    this._afterDeleteMessage(targetMsg, data);
+    if (this.thread.currentUserMembership?.lastReadMessageId === targetMsg.id) {
+      this.thread.currentUserMembership.lastReadMessageId =
+        data.latest_not_deleted_message_id;
+    }
   }
 
   handleRestoreMessage(data) {
@@ -211,10 +200,10 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   }
 
   handleNewThreadCreated(data) {
-    this.model.threadsManager
-      .find(this.model.id, data.thread_id, { fetchIfNotFound: true })
+    this.thread.threadsManager
+      .find(this.thread.id, data.thread_id, { fetchIfNotFound: true })
       .then((thread) => {
-        const channelOriginalMessage = this.model.messagesManager.findMessage(
+        const channelOriginalMessage = this.thread.messagesManager.findMessage(
           thread.originalMessage.id
         );
 
@@ -222,17 +211,5 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
           channelOriginalMessage.thread = thread;
         }
       });
-  }
-
-  handleThreadOriginalMessageUpdate() {
-    throw "not implemented";
-  }
-
-  handleNotice() {
-    throw "not implemented";
-  }
-
-  _afterDeleteMessage() {
-    throw "not implemented";
   }
 }
