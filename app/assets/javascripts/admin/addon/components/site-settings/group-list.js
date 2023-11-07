@@ -18,7 +18,7 @@ export default class GroupList extends Component {
     return (this.value || "").split(this.tokenSeparator).filter(Boolean);
   }
 
-  @action
+  @__action__
   onChangeGroupListSetting(value) {
     this.set("value", value.join(this.tokenSeparator));
   }
