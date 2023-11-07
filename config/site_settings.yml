@@ -881,7 +881,7 @@ posting:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   shared_drafts_allowed_groups:
-    default: "1" # auto group staff
+    default: "3" # auto group staff
     type: group_list
     client: true
     allow_any: false
