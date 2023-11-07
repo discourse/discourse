@@ -723,6 +723,33 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     polls.close
+
+    puts "", "Importing polls into post custom fields..."
+
+    polls = query(<<~SQL)
+      SELECT post_id, MIN(created_at) AS created_at
+        FROM polls
+       GROUP BY post_id
+       ORDER BY post_id
+    SQL
+
+    field_name = DiscoursePoll::HAS_POLLS
+    value = "true"
+    existing_fields = PostCustomField.where(name: field_name).pluck(:post_id).to_set
+
+    create_post_custom_fields(polls) do |row|
+      next unless (post_id = post_id_from_imported_id(row["post_id"]))
+      next unless existing_fields.include?(post_id)
+
+      {
+        post_id: post_id,
+        name: field_name,
+        value: value,
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    polls.close
   end
 
   def import_poll_options

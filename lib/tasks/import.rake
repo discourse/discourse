@@ -709,3 +709,21 @@ def run_jobs
   Jobs::TopRefreshOlder.new.execute({})
   # Jobs::Weekly.new.execute({})
 end
+
+desc "Rebake posts that contain polls"
+task "import:rebake_posts_with_polls" => :environment do
+  log "Rebaking posts with polls"
+
+  Jobs.run_immediately!
+
+  posts = Post.where("EXISTS (SELECT 1 FROM polls WHERE polls.post_id = posts.id)")
+
+  max_count = posts.count
+  current_count = 0
+
+  posts.find_each do |post|
+    post.rebake!
+    current_count += 1
+    print "\r%7d / %7d" % [current_count, max_count]
+  end
+end
