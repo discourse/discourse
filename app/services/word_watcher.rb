@@ -32,7 +32,12 @@ class WordWatcher
       .limit(WatchedWord::MAX_WORDS_PER_ACTION)
       .order(:id)
       .pluck(:word, :replacement, :case_sensitive)
-      .to_h { |w, r, c| [w, { word: w, replacement: r, case_sensitive: c }.compact] }
+      .to_h do |w, r, c|
+        [
+          word_to_regexp(w, match_word: false),
+          { word: w, replacement: r, case_sensitive: c }.compact,
+        ]
+      end
   end
 
   def self.words_for_action_exist?(action)
@@ -50,8 +55,8 @@ class WordWatcher
   end
 
   def self.regexps_for_action(action, engine: :ruby)
-    cached_words_for_action(action)&.to_h do |word, attrs|
-      [word_to_regexp(word, engine: engine), attrs]
+    cached_words_for_action(action)&.to_h do |_, attrs|
+      [word_to_regexp(attrs[:word], engine: engine), attrs]
     end
   end
 
