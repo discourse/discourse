@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { inject as service } from "@ember/service";
 import CategoriesAndLatestTopics from "discourse/components/categories-and-latest-topics";
 import CategoriesAndTopTopics from "discourse/components/categories-and-top-topics";
@@ -6,6 +7,7 @@ import CategoriesBoxes from "discourse/components/categories-boxes";
 import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
 import CategoriesOnly from "discourse/components/categories-only";
 import CategoriesWithFeaturedTopics from "discourse/components/categories-with-featured-topics";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SubcategoriesWithFeaturedTopics from "discourse/components/subcategories-with-featured-topics";
 
 const mobileCompatibleViews = [
@@ -73,6 +75,11 @@ export default class CategoriesDisplay extends Component {
   }
 
   <template>
+    <PluginOutlet
+      @name="above-discovery-categories"
+      @connectorTagName="div"
+      @outletArgs={{hash categories=@categories topics=@topics}}
+    />
     <this.categoriesComponent @categories={{@categories}} @topics={{@topics}} />
   </template>
 }
