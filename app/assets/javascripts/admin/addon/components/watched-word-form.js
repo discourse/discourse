@@ -68,7 +68,7 @@ export default class WatchedWordForm extends Component {
     schedule("afterRender", () => this.element.querySelector("input").focus());
   }
 
-  @action
+  @__action__
   changeSelectedTags(tags) {
     this.setProperties({
       selectedTags: tags,
