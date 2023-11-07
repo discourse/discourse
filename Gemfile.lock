@@ -124,7 +124,7 @@ GEM
       addressable
     dartsass-ruby (3.0.2)
       sass-embedded (~> 1.54, < 1.67)
-    date (3.3.3)
+    date (3.3.4)
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
     diffy (3.4.2)
