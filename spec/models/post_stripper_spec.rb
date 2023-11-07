@@ -33,4 +33,20 @@ RSpec.describe PostStripper do
 
     expect(fragment.to_s).to_not include(onebox)
   end
+
+  context "with plugins" do
+    it "runs strippers registered by plugins" do
+      plugin_element = '<div class="plugin_class"></div>'
+
+      block = Proc.new { |nokogiri_fragment| nokogiri_fragment.css(".plugin_class").remove }
+      plugin = stub(enabled?: true)
+      DiscoursePluginRegistry.register_post_stripper({ block: block }, plugin)
+
+      fragment = Nokogiri::HTML5.fragment("<p>#{plugin_element}</p>")
+
+      PostStripper.strip(fragment)
+
+      expect(fragment.to_s).to_not include(plugin_element)
+    end
+  end
 end
