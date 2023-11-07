@@ -25,6 +25,7 @@ module FileStore
         S3Helper.new(
           s3_bucket,
           Rails.configuration.multisite ? multisite_tombstone_prefix : TOMBSTONE_PREFIX,
+          use_accelerate_endpoint: SiteSetting.enable_s3_transfer_acceleration,
         )
     end
 
