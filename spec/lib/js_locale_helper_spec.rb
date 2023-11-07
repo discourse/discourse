@@ -16,6 +16,7 @@ RSpec.describe JsLocaleHelper do
 
     ctx = MiniRacer::Context.new
     ctx.load("#{node_modules}/loader.js/dist/loader/loader.js")
+    ctx.eval("var window = globalThis;")
     ctx.eval(discourse_i18n)
     ctx.eval <<~JS
       define("discourse/loader-shims", () => {})

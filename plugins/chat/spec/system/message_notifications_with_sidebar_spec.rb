@@ -52,7 +52,6 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
             end
 
             it "doesn’t show indicator in header" do
-              Jobs.run_immediately!
               visit("/")
               create_message(channel: channel_1, creator: user_1)
 

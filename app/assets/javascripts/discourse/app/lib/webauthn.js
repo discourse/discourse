@@ -17,6 +17,27 @@ export function isWebauthnSupported() {
   return typeof PublicKeyCredential !== "undefined";
 }
 
+// The webauthn API only supports one auth attempt at a time
+// We need this service to cancel the previous attempt when a new one is started
+class WebauthnAbortService {
+  controller = undefined;
+
+  signal() {
+    if (this.controller) {
+      const abortError = new Error("Cancelling pending webauthn call");
+      abortError.name = "AbortError";
+      this.controller.abort(abortError);
+    }
+
+    this.controller = new AbortController();
+    return this.controller.signal;
+  }
+}
+
+// Need to use a singleton here to reset the active webauthn ceremony
+// Inspired by the BaseWebAuthnAbortService in https://github.com/MasterKale/SimpleWebAuthn
+const WebauthnAbortHandler = new WebauthnAbortService();
+
 export function getWebauthnCredential(
   challenge,
   allowedCredentialIds,
@@ -49,6 +70,7 @@ export function getWebauthnCredential(
         // (this is only a hint, though, browser may still prompt)
         userVerification: "discouraged",
       },
+      signal: WebauthnAbortHandler.signal(),
     })
     .then((credential) => {
       // 3. If credential.response is not an instance of AuthenticatorAssertionResponse, abort the ceremony.
@@ -93,27 +115,6 @@ export function getWebauthnCredential(
       errorCallback(err);
     });
 }
-
-// The webauthn API only supports one auth attempt at a time
-// We need this service to cancel the previous attempt when a new one is started
-class WebauthnAbortService {
-  controller = undefined;
-
-  signal() {
-    if (this.controller) {
-      const abortError = new Error("Cancelling pending webauthn call");
-      abortError.name = "AbortError";
-      this.controller.abort(abortError);
-    }
-
-    this.controller = new AbortController();
-    return this.controller.signal;
-  }
-}
-
-// Need to use a singleton here to reset the active webauthn ceremony
-// Inspired by the BaseWebAuthnAbortService in https://github.com/MasterKale/SimpleWebAuthn
-const WebauthnAbortHandler = new WebauthnAbortService();
 
 export async function getPasskeyCredential(
   challenge,

@@ -1,7 +1,7 @@
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { module, test } from "qunit";
+import { cook } from "discourse/lib/text";
 
-const defaultOpts = buildOptions({
+const opts = {
   siteSettings: {
     enable_emoji: true,
     emoji_set: "twitter",
@@ -10,24 +10,21 @@ const defaultOpts = buildOptions({
   },
   censoredWords: "shucks|whiz|whizzer",
   getURL: (url) => url,
-});
+};
 
 module("lib:details-cooked-test", function () {
-  test("details", function (assert) {
-    const cooked = (input, expected, text) => {
-      assert.strictEqual(
-        new PrettyText(defaultOpts).cook(input),
-        expected.replace(/\/>/g, ">"),
-        text
-      );
+  test("details", async function (assert) {
+    const testCooked = async (input, expected, text) => {
+      const cooked = (await cook(input, opts)).toString();
+      assert.strictEqual(cooked, expected, text);
     };
-    cooked(
+    await testCooked(
       `<details><summary>Info</summary>coucou</details>`,
       `<details><summary>Info</summary>coucou</details>`,
       "manual HTML for details"
     );
 
-    cooked(
+    await testCooked(
       "[details=testing]\ntest\n[/details]",
       `<details>
 <summary>

@@ -78,9 +78,6 @@ module.exports = function (defaults) {
 
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(vendorJs + "bootbox.js");
-  app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
-    type: "test",
-  });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
   app.import(
@@ -95,10 +92,6 @@ module.exports = function (defaults) {
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
   const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
-
-  const markdownItBundleTree = app.project
-    .findAddonByName("pretty-text")
-    .treeForMarkdownItBundle();
 
   const testStylesheetTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
@@ -129,19 +122,19 @@ module.exports = function (defaults) {
       inputFiles: ["**/*.js"],
       outputFile: `assets/wizard.js`,
     }),
-    concat(markdownItBundleTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/markdown-it-bundle.js`,
-    }),
     generateScriptsTree(app),
     discoursePluginsTree,
     testStylesheetTree,
   ];
 
   const appTree = compatBuild(app, Webpack, {
+    staticAppPaths: ["static"],
     packagerOptions: {
       webpackConfig: {
         devtool: "source-map",
+        output: {
+          publicPath: "auto",
+        },
         externals: [
           function ({ request }, callback) {
             if (
@@ -150,8 +143,6 @@ module.exports = function (defaults) {
               (request === "jquery" ||
                 request.startsWith("admin/") ||
                 request.startsWith("wizard/") ||
-                (request.startsWith("pretty-text/engines/") &&
-                  request !== "pretty-text/engines/discourse-markdown-it") ||
                 request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))
             ) {
