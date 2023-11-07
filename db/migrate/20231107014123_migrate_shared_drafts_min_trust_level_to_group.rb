@@ -31,7 +31,7 @@ class MigrateSharedDraftsMinTrustLevelToGroup < ActiveRecord::Migration[7.0]
       # Data_type 20 is group_list.
       DB.exec(<<~SQL, setting: shared_drafts_allowed_groups)
         INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
-        VALUES('shared_drafts_allowed_groups', :setting, '20', NOW(), NOW())
+        VALUES('shared_drafts_allowed_groups', :setting, 20, NOW(), NOW())
       SQL
     end
   end
