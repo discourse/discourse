@@ -1987,6 +1987,7 @@ en:
     here_mention: "Name used for a @mention to allow privileged users to notify up to 'max_here_mentioned' people participating in the topic. Must not be an existing username."
     max_here_mentioned: "Maximum number of mentioned people by @here."
     min_trust_level_for_here_mention: "The minimum trust level allowed to mention @here."
+    here_mention_allowed_groups: "Groups that are allowed to mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -2540,6 +2541,7 @@ en:
 
     keywords:
       anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
+      here_mention_allowed_groups: "min_trust_level_for_here_mention"
 
     placeholder:
       discourse_connect_provider_secrets:
