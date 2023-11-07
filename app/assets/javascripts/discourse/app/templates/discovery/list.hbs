@@ -32,28 +32,18 @@
   </:header>
 
   <:list>
-    <PluginOutlet
-      @name="discovery-list-area"
-      @outletArgs={{hash
-        category=this.model.category
-        tag=this.model.tag
-        list=this.model.list
-      }}
-      @defaultGlimmer={{true}}
-    >
-      <Discovery::Topics
-        @period={{this.model.list.for_period}}
-        @changePeriod={{this.changePeriod}}
-        @model={{this.model.list}}
-        @canBulkSelect={{this.canBulkSelect}}
-        @bulkSelectHelper={{this.bulkSelectHelper}}
-        @showDismissRead={{this.showDismissRead}}
-        @showResetNew={{this.showResetNew}}
-        @category={{this.model.category}}
-        @tag={{this.model.tag}}
-        @changeSort={{this.changeSort}}
-        @changeNewListSubset={{this.changeNewListSubset}}
-      />
-    </PluginOutlet>
+    <Discovery::Topics
+      @period={{this.model.list.for_period}}
+      @changePeriod={{this.changePeriod}}
+      @model={{this.model.list}}
+      @canBulkSelect={{this.canBulkSelect}}
+      @bulkSelectHelper={{this.bulkSelectHelper}}
+      @showDismissRead={{this.showDismissRead}}
+      @showResetNew={{this.showResetNew}}
+      @category={{this.model.category}}
+      @tag={{this.model.tag}}
+      @changeSort={{this.changeSort}}
+      @changeNewListSubset={{this.changeNewListSubset}}
+    />
   </:list>
 </Discovery::Layout>

@@ -52,11 +52,15 @@
         @outletArgs={{hash model=@model}}
       />
       <div id="list-area">
-        <PluginOutlet @name="list-area" @outletArgs={{hash model=@model}}>
+        <PluginOutlet
+          @name="discovery-list-area"
+          @outletArgs={{hash model=@model}}
+          @defaultGlimmer={{true}}
+        >
           <PluginOutlet
             @name="discovery-list-container-top"
             @connectorTagName="span"
-            @outletArgs={{hash category=@model.category}}
+            @outletArgs={{hash category=@category}}
           />
           {{yield to="list"}}
         </PluginOutlet>
