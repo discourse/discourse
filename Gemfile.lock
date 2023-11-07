@@ -82,7 +82,7 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    base64 (0.1.1)
+    base64 (0.2.0)
     better_errors (2.10.1)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
