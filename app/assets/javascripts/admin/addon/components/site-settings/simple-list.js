@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 export default class SimpleList extends Component {
   inputDelimiter = "|";
 
-  @action
+  @__action__
   onChange(value) {
     this.set("value", value.join(this.inputDelimiter || "\n"));
   }
