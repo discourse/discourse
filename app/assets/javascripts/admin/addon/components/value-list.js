@@ -43,7 +43,7 @@ export default class ValueList extends Component {
     }
   }
 
-  @action
+  @__action__
   changeValue(index, event) {
     this._replaceValue(index, event.target.value);
   }
@@ -63,7 +63,7 @@ export default class ValueList extends Component {
     this._removeValue(value);
   }
 
-  @action
+  @__action__
   selectChoice(choice) {
     this._addValue(choice);
   }
