@@ -1581,9 +1581,6 @@ sq:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Sinjalizo postimin"
       take_action_options:
-        default:
-          title: "Vepro"
-          details: "Kaloni direkt tek pragu i sinjalizimeve (dmth, mos prisni për sinjalizime të tjera nga komuniteti)"
         suspend:
           title: "Pezullo anëtarin"
       notify_action: "Mesazh"
@@ -1593,7 +1590,6 @@ sq:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(fshehur)"
       submit_tooltip: "Dërgoni sinjalizimin privatisht"
-      take_action_tooltip: "Kaloni direkt tek pragu i sinjalizimeve (dmth, mos prisni për sinjalizime të tjera nga komuniteti)"
       cant: "Na vjen keq, nuk mund të sinjalizoni këtë postim tani. "
       notify_staff: "Njoftoni stafin privatisht"
       formatted_name:
@@ -1951,6 +1947,9 @@ sq:
             my_posts:
               content: "Postimet e mia"
     form_templates:
+      upload_field:
+        upload: "Ngarko"
+        uploading: "Duke ngarkuar"
       errors:
         typeMismatch:
           default: "Ju lutem shkruani një vlerë të vlefshme."

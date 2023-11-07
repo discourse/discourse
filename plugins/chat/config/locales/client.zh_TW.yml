@@ -245,7 +245,6 @@ zh_TW:
           other: "+%{count}"
       threads:
         open: "開啟討論串"
-        list: "進行中的討論"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"

@@ -1930,9 +1930,6 @@ sk:
       title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
       action: "Označ príspevok"
       take_action_options:
-        default:
-          title: "Vykonať akciu"
-          details: "Dosiahnuť okamžite limit označení, namiesto čakania na ďalšie označenia od komunity"
         suspend:
           title: "Zruš práva používateľovi"
         silence:
@@ -1944,7 +1941,6 @@ sk:
       ip_address_missing: "(nedostupné)"
       hidden_email_address: "(skryté)"
       submit_tooltip: "Odoslať súkromné označenie"
-      take_action_tooltip: "Dosiahnuť okamžite limit označení, namiesto čakania na ďalšie označenia od komunity"
       cant: "Ľutujeme, ale tento príspevok sa teraz nedá označiť ."
       notify_staff: "Súkromne upozorniť zamestnancov"
       formatted_name:
@@ -2324,6 +2320,9 @@ sk:
     form_template_chooser:
       select_template: "Výber šablón formulárov"
     form_templates:
+      upload_field:
+        upload: "Načítať"
+        uploading: "Nahrávanie"
       errors:
         typeMismatch:
           default: "Prosím zadajte platnú hodnotu."

@@ -3513,8 +3513,7 @@ es:
       take_action: "Tomar medidas…"
       take_action_options:
         default:
-          title: "Tomar medidas"
-          details: "Alcanzar el umbral de denuncias inmediatamente en vez de esperar más denuncias de la comunidad"
+          title: "Ocultar publicación"
         suspend:
           title: "Suspender usuario"
           details: "Alcanzar el umbral de denuncias y suspender al usuario"
@@ -3531,7 +3530,6 @@ es:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
       submit_tooltip: "Enviar la denuncia privada"
-      take_action_tooltip: "Alcanzar el umbral de denuncias inmediatamente en vez de esperar más denuncias de la comunidad"
       cant: "Lo sentimos, no puedes denunciar esta publicación en este momento."
       notify_staff: "Notificar al personal de forma privada"
       formatted_name:
@@ -4208,10 +4206,12 @@ es:
     form_template_chooser:
       select_template: "Seleccionar plantillas de formulario"
     form_templates:
+      upload_field:
+        upload: "Subir"
+        uploading: "Subiendo"
       errors:
         valueMissing:
           default: "Rellena este campo."
-          text: "Rellena este campo."
           select-one: "Selecciona un elemento de la lista."
           select-multiple: "Selecciona al menos un elemento de la lista."
           checkbox: "Marca esta casilla si quieres continuar."

@@ -3448,8 +3448,7 @@ pt_BR:
       action: "Sinalizar resposta"
       take_action_options:
         default:
-          title: "Tomar medida"
-          details: "Atingir o limite de denuncias imediatamente em vez de esperar por mais denuncias da comunidade"
+          title: "Ocultar publicação"
         suspend:
           title: "Suspender usuário(a)"
           details: "Alcance o limite de sinalizadores e suspenda o(a) usuário(a)"
@@ -3466,7 +3465,6 @@ pt_BR:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
       submit_tooltip: "Enviar um sinalizador privado"
-      take_action_tooltip: "Atingir o limite de denuncias imediatamente em vez de esperar por mais denuncias da comunidade"
       cant: "Desculpe, não é possível colocar um sinalizador neste momento."
       notify_staff: "Avisar a equipe de forma privada"
       formatted_name:
@@ -4126,10 +4124,12 @@ pt_BR:
     form_template_chooser:
       select_template: "Selecione modelos de formulário"
     form_templates:
+      upload_field:
+        upload: "Enviar"
+        uploading: "Enviando"
       errors:
         valueMissing:
           default: "Preencha este campo."
-          text: "Preencha este campo."
           select-one: "Selecione um item da lista."
           select-multiple: "Selecione pelo menos um item da lista."
           checkbox: "Marque esta caixa se quiser continuar."

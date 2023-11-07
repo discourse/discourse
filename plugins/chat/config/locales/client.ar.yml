@@ -271,7 +271,6 @@ ar:
       save: "حفظ"
       select: "تحديد"
       return_to_list: "العودة إلى قائمة القنوات"
-      return_to_threads_list: "العودة إلى المناقشات الجارية"
       unread_threads_count:
         zero: "لديك %{count} مناقشة غير مقروءة"
         one: "لديك مناقشة واحدة (%{count}) غير مقروءة"
@@ -639,7 +638,6 @@ ar:
           other: "+%{count}"
       threads:
         open: "فتح سلسلة دردشة"
-        list: "المناقشات الجارية"
         none: "أنت لا تشارك في أي سلاسل دردشة في هذه القناة."
       draft_channel_screen:
         header: "رسالة جديدة"

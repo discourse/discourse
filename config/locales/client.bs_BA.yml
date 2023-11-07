@@ -2542,9 +2542,6 @@ bs_BA:
       title: "Zašto prijavljujete ovaj post?"
       action: "Prijavi objavu"
       take_action_options:
-        default:
-          title: "Poduzmi Akciju"
-          details: "Dođite odmah do praga za oznake, umjesto da čekate još oznaka od zajednice."
         suspend:
           title: "Suspend User"
         silence:
@@ -2556,7 +2553,6 @@ bs_BA:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
       submit_tooltip: "Predaj privatnu prijavu"
-      take_action_tooltip: "Dođite odmah do praga za oznake, umjesto da čekate još oznaka od zajednice."
       cant: "Nažalost, trenutno ne možete prijaviti ovu objavu"
       notify_staff: "Obavijesti privatno moderatora foruma"
       formatted_name:
@@ -3046,6 +3042,9 @@ bs_BA:
               content: "Pregled"
     until: "Sve do:"
     form_templates:
+      upload_field:
+        upload: "Učitavanje"
+        uploading: "Učitavam"
       errors:
         typeMismatch:
           default: "Molim unesite ispravnu vrijednost."
