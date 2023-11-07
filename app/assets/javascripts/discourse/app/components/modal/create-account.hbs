@@ -280,7 +280,7 @@
         {{loading-spinner size="large"}}
       {{/if}}
     </div>
-    {{#if this.showExternalLoginButtons}}
+    {{#if this.hasAtLeastOneLoginButton}}
       <div class="login-right-side">
         <LoginButtons @externalLogin={{action "externalLogin"}} />
       </div>

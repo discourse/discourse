@@ -71,12 +71,14 @@
           <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
         </div>
       {{/unless}}
-      <div class="login-right-side">
-        <LoginButtons
-          @externalLogin={{this.externalLoginAction}}
-          @passkeyLogin={{this.passkeyLogin}}
-        />
-      </div>
+      {{#if this.hasAtLeastOneLoginButton}}
+        <div class="login-right-side">
+          <LoginButtons
+            @externalLogin={{this.externalLoginAction}}
+            @passkeyLogin={{this.passkeyLogin}}
+          />
+        </div>
+      {{/if}}
     {{/if}}
   </:body>
 </DModal>
