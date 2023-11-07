@@ -9,6 +9,7 @@ import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import {
   FUTURE,
   PAST,
@@ -36,7 +37,6 @@ export default class ChatThread extends Component {
   @service chatHistory;
   @service chatThreadComposer;
   @service chatThreadPane;
-  @service chatThreadPaneSubscriptionsManager;
   @service currentUser;
   @service router;
   @service siteSettings;
@@ -86,13 +86,8 @@ export default class ChatThread extends Component {
   }
 
   @action
-  subscribeToUpdates() {
-    this.chatThreadPaneSubscriptionsManager.subscribe(this.args.thread);
-  }
-
-  @action
   teardown() {
-    this.chatThreadPaneSubscriptionsManager.unsubscribe();
+    this.subscriptionManager.teardown();
     cancel(this._debouncedFillPaneAttemptHandler);
     cancel(this._debounceUpdateLastReadMessageHandler);
   }
@@ -166,7 +161,11 @@ export default class ChatThread extends Component {
   @action
   loadMessages() {
     this.fetchMessages();
-    this.subscribeToUpdates();
+    this.subscriptionManager = new ChatChannelThreadSubscriptionManager(
+      this,
+      this.args.thread,
+      { onNewMessage: this.onNewMessage }
+    );
   }
 
   @action
@@ -294,6 +293,11 @@ export default class ChatThread extends Component {
     this._ignoreNextScroll = true;
     const message = this.messagesManager.findMessage(messageId);
     scrollListToMessage(this.scrollable, message, opts);
+  }
+
+  @bind
+  onNewMessage(message) {
+    this.messagesManager.addMessages([message]);
   }
 
   @bind

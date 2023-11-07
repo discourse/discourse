@@ -8,11 +8,11 @@ const COMPONENT_DICT = {
 };
 
 export default class ChatNotices extends Component {
-  @service("chat-channel-pane-subscriptions-manager") subscriptionsManager;
+  @service("chat-channel-notices-manager") noticesManager;
 
   @action
   clearNotice() {
-    this.subscriptionsManager.clearNotice(this.args.notice);
+    this.noticesManager.clearNotice(this.args.notice);
   }
 
   get component() {

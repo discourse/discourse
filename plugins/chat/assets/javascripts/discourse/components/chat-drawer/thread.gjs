@@ -88,12 +88,12 @@ export default class ChatDrawerThread extends Component {
         {{didUpdate this.fetchChannelAndThread @params.channelId}}
         {{didUpdate this.fetchChannelAndThread @params.threadId}}
       >
-        {{#if this.chat.activeChannel.activeThread}}
+        {{#each (array this.chat.activeChannel.activeThread) as |thread|}}
           <ChatThread
-            @thread={{this.chat.activeChannel.activeThread}}
+            @thread={{thread}}
             @targetMessageId={{@params.messageId}}
           />
-        {{/if}}
+        {{/each}}
       </div>
     {{/if}}
   </template>
