@@ -8,7 +8,7 @@ export default class CategoryList extends Component {
     return Category.findByIds(this.value.split("|").filter(Boolean));
   }
 
-  @action
+  @__action__
   onChangeSelectedCategories(value) {
     this.set("value", (value || []).mapBy("id").join("|"));
   }
