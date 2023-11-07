@@ -1,4 +1,4 @@
-name: Check pull request source branch
+name: PR base branch check
 on:
   pull_request:
 jobs:
