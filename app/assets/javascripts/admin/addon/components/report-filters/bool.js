@@ -9,7 +9,7 @@ export default class Bool extends FilterComponent {
     this.set("checked", !!this.filter.default);
   }
 
-  @action
+  @__action__
   onChange() {
     this.applyFilter(this.filter.id, !this.checked || undefined);
   }
