@@ -45,7 +45,7 @@ export default class SidebarSection extends Component {
     }
   }
 
-  @action
+  @__action__
   handleMultipleHeaderActions(id) {
     this.args.headerActions
       .find((headerAction) => headerAction.id === id)
