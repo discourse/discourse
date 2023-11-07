@@ -8,7 +8,7 @@ export default class TagList extends Component {
     return value.split("|").filter(Boolean);
   }
 
-  @action
+  @__action__
   changeSelectedTags(tags) {
     this.set("value", tags.join("|"));
   }
