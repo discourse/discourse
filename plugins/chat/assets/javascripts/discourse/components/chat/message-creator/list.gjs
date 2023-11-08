@@ -99,6 +99,7 @@ export default class List extends Component {
             {{on "mouseleave" (fn @onHighlight null)}}
             role="button"
             tabindex="0"
+            data-identifier={{item.identifier}}
           >
             {{component (this.componentForItem item.type) item=item}}
           </li>
