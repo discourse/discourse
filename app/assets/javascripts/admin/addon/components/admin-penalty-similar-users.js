@@ -14,7 +14,7 @@ export default class AdminPenaltySimilarUsers extends Component {
     }
   }
 
-  @__action__
+  @action
   selectUserId(userId, event) {
     if (!this.selectedUserIds) {
       return;

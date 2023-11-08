@@ -15,6 +15,4 @@ export default class Group extends FilterComponent {
   get groupId() {
     return this.filter.default ? parseInt(this.filter.default, 10) : null;
   }
-
-  // DELETE THIS COMMENT: @action onChange inherited from super class
 }

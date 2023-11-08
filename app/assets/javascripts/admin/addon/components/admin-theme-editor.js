@@ -110,12 +110,12 @@ export default class AdminThemeEditor extends Component {
     next(() => this.appEvents.trigger("ace:resize"));
   }
 
-  @__action__
+  @action
   cancelAddField() {
     this.set("addingField", false);
   }
 
-  @__action__
+  @action
   addField(name) {
     if (!name) {
       return;
@@ -126,7 +126,7 @@ export default class AdminThemeEditor extends Component {
     this.fieldAdded(this.currentTargetName, name);
   }
 
-  @__action__
+  @action
   setWarning(message) {
     this.set("warning", message);
   }

@@ -137,7 +137,7 @@ export default class ThemesList extends Component {
     }
   }
 
-  @__action__
+  @action
   navigateToTheme(theme) {
     this.router.transitionTo("adminCustomizeThemes.show", theme);
   }

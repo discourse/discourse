@@ -47,13 +47,13 @@ export default class ChatModalEditChannelName extends Component {
       .catch((error) => (this.flash = extractError(error)));
   }
 
-  @__action__
+  @action
   onChangeChatChannelName(event) {
     this.flash = null;
     this.#debouncedGenerateSlug(event?.target?.value);
   }
 
-  @__action__
+  @action
   onChangeChatChannelSlug() {
     this.flash = null;
     this.#debouncedGenerateSlug(this.editedName);

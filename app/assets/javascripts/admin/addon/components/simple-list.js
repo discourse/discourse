@@ -30,7 +30,7 @@ export default class SimpleList extends Component {
     }
   }
 
-  @__action__
+  @action
   changeValue(index, event) {
     this.collection.replace(index, 1, [event.target.value]);
     this.collection.arrayContentDidChange(index);

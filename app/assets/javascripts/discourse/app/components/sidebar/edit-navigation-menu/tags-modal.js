@@ -129,7 +129,7 @@ export default class extends Component {
       this.siteSettings.default_navigation_menu_tags.split("|");
   }
 
-  @__action__
+  @action
   toggleTag(tag) {
     if (this.selectedTags.includes(tag)) {
       this.selectedTags.removeObject(tag);

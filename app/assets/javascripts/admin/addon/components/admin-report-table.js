@@ -167,7 +167,7 @@ export default class AdminReportTable extends Component {
     this.set("page", page);
   }
 
-  @__action__
+  @action
   sortByLabel(label) {
     if (this.sortLabel === label) {
       this.set("sortDirection", this.sortDirection === 1 ? -1 : 1);
