@@ -84,18 +84,16 @@ RSpec.describe "Outgoing chat webhooks" do
       expect(payload_channel["chatable_id"]).to eq(direct_message.id)
       expect(payload_channel["chatable_type"]).to eq("DirectMessage")
       expect(payload_channel["chatable_url"]).to be_nil
+      expect(payload_channel["chatable"]["users"][0]["id"]).to eq(user2.id)
+      expect(payload_channel["chatable"]["users"][0]["username"]).to eq(user2.username)
+      expect(payload_channel["chatable"]["users"][0]["name"]).to eq(user2.name)
+      expect(payload_channel["chatable"]["users"][0]["avatar_template"]).to eq(
+        user2.avatar_template,
+      )
+      expect(payload_channel["chatable"]["users"][0]["can_chat"]).to eq(true)
+      expect(payload_channel["chatable"]["users"][0]["has_chat_enabled"]).to eq(true)
       expect(payload_channel["title"]).to eq(channel.title(user1))
       expect(payload_channel["slug"]).to be_nil
-
-      membership =
-        payload_channel["chatable"]["memberships"].detect { |m| m["user"]["id"] == user2.id }
-      user = membership["user"]
-
-      expect(user["username"]).to eq(user2.username)
-      expect(user["name"]).to eq(user2.name)
-      expect(user["avatar_template"]).to eq(user2.avatar_template)
-      expect(user["can_chat"]).to eq(true)
-      expect(user["has_chat_enabled"]).to eq(true)
 
       yield(payload_channel) if block_given?
     end
