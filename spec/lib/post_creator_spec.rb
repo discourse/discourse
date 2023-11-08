@@ -1464,8 +1464,15 @@ RSpec.describe PostCreator do
       creator.create
       expect(creator.errors).to be_blank
       expect(TopicEmbed.where(embed_url: embed_url).exists?).to eq(true)
+    end
 
-      # If we try to create another topic with the embed url, should fail
+    it "does not create topics with the same embed url" do
+      PostCreator.create(
+        user,
+        embed_url: embed_url,
+        title: "Reviews of Science Ovens",
+        raw: "Did you know that you can use microwaves to cook your dinner? Science!",
+      )
       creator =
         PostCreator.new(
           user,
@@ -1476,6 +1483,22 @@ RSpec.describe PostCreator do
       result = creator.create
       expect(result).to be_present
       expect(creator.errors).to be_present
+    end
+
+    it "sets the embed content sha1" do
+      content = "Did you know that you can use microwaves to cook your dinner? Science!"
+      content_sha1 = Digest::SHA1.hexdigest(content)
+      creator =
+        PostCreator.new(
+          user,
+          embed_url: embed_url,
+          embed_content_sha1: content_sha1,
+          title: "Reviews of Science Ovens",
+          raw: content,
+        )
+      creator.create
+      expect(creator.errors).to be_blank
+      expect(TopicEmbed.where(content_sha1: content_sha1).exists?).to eq(true)
     end
   end
 
