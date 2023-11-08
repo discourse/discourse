@@ -2540,6 +2540,7 @@ en:
 
     keywords:
       anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
+      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
 
     placeholder:
       discourse_connect_provider_secrets:
