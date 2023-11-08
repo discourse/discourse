@@ -196,6 +196,7 @@ de:
       error_caused_by: "Verursacht durch „%{name}“. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion zu aktualisieren, neu zu konfigurieren oder zu deaktivieren."
       only_admins: "(Diese Nachricht wird nur Website-Administratoren angezeigt)"
     broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
+    broken_plugin_alert: "Verursacht durch das Plugin '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -2003,6 +2004,7 @@ de:
       security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldedaten gefunden."
       security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
       security_key_invalid_response_error: "Der Authentifizierungsprozess des Sicherheitsschlüssels ist aufgrund einer ungültigen Antwort fehlgeschlagen."
+      passkey_security_error: "Es gab einen Sicherheitsfehler: %{message}"
       email_placeholder: "E-Mail/Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
@@ -3554,8 +3556,8 @@ de:
       take_action: "Reagieren …"
       take_action_options:
         default:
-          title: "Reagieren"
-          details: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
+          title: "Beitrag verstecken"
+          details: "Erreiche die Markierungsschwelle sofort, verstecke den Beitrag und stimme allen ausstehenden Markierungen zu"
         suspend:
           title: "Benutzer sperren"
           details: "Erreiche den Meldungsschwellenwert und sperre den Benutzer"
@@ -3572,7 +3574,7 @@ de:
       ip_address_missing: "(nicht verfügbar)"
       hidden_email_address: "(versteckt)"
       submit_tooltip: "Private Meldung abschicken"
-      take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
+      take_action_tooltip: "Erreiche die Markierungsschwelle sofort, verstecke den Beitrag und stimme allen ausstehenden Markierungen zu"
       cant: "Entschuldige, du kannst diesen Beitrag derzeit nicht melden."
       notify_staff: "Team privat benachrichtigen"
       formatted_name:
@@ -4250,10 +4252,12 @@ de:
     form_template_chooser:
       select_template: "Formularvorlagen auswählen"
     form_templates:
+      upload_field:
+        upload: "Hochladen"
+        uploading: "Wird hochgeladen"
       errors:
         valueMissing:
           default: "Bitte fülle dieses Feld aus."
-          text: "Bitte fülle dieses Feld aus."
           select-one: "Bitte wähle ein Element aus der Liste aus."
           select-multiple: "Bitte wähle mindestens ein Element aus der Liste aus."
           checkbox: "Bitte markiere dieses Kästchen, wenn du fortfahren möchtest."

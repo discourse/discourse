@@ -3788,8 +3788,7 @@ ru:
       action: "Пожаловаться на сообщение"
       take_action_options:
         default:
-          title: "Принять меры"
-          details: "Сымитировать пороговое количество жалоб, не дожидаясь их от сообщества"
+          title: "Скрыть сообщение"
         suspend:
           title: "Заблокировать пользователя"
           details: "Сымитировать пороговое количество жалоб и заблокировать пользователя"
@@ -3806,7 +3805,6 @@ ru:
       ip_address_missing: "(Н/Д)"
       hidden_email_address: "(скрыто)"
       submit_tooltip: "Отправить приватную жалобу"
-      take_action_tooltip: "Сымитировать пороговое количество жалоб, не дожидаясь их от сообщества"
       cant: "Вы не можете сейчас отправить жалобу на это сообщение."
       notify_staff: "Приватно сообщить персоналу"
       formatted_name:
@@ -4524,10 +4522,12 @@ ru:
     form_template_chooser:
       select_template: "Выберите шаблоны форм"
     form_templates:
+      upload_field:
+        upload: "Загрузка"
+        uploading: "Загрузка"
       errors:
         valueMissing:
           default: "Заполните это поле."
-          text: "Заполните это поле."
           select-one: "Выберите пункт в списке."
           select-multiple: "Выберите как минимум один пункт в списке."
           checkbox: "Чтобы продолжить, поставьте этот флажок."

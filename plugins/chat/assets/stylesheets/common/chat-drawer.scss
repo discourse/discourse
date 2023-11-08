@@ -148,6 +148,14 @@ a.chat-drawer-header__title {
   }
 }
 
+.chat-drawer-header__icon {
+  margin-right: 0.25rem;
+}
+
+.chat-drawer-header__divider {
+  margin: 0 0.25rem;
+}
+
 .chat-drawer-header {
   box-sizing: border-box;
   border-bottom: solid 1px var(--primary-low);

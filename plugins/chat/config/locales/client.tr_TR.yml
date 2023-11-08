@@ -255,7 +255,8 @@ tr_TR:
       save: "Kaydet"
       select: "Seç"
       return_to_list: "Kanal listesine dön"
-      return_to_threads_list: "Devam eden tartışmalara dönün"
+      return_to_channel: "Kanala geri dön"
+      return_to_threads_list: "Konu listesine dön"
       unread_threads_count:
         one: "%{count} okunmamış tartışmanız var"
         other: "%{count} okunmamış tartışmanız var"
@@ -564,7 +565,7 @@ tr_TR:
           other: "+%{count}"
       threads:
         open: "Konu aç"
-        list: "Devam eden tartışmalar"
+        list: "Konular"
         none: "Bu kanaldaki herhangi bir konuya katılmıyorsunuz."
       draft_channel_screen:
         header: "Yeni Mesaj"

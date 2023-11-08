@@ -504,8 +504,8 @@ ko:
             name:
               same_as_password: "비밀번호와 같습니다."
             ip_address:
-              blocked: "이 IP 주소에서는 신규 등록할 수 없습니다."
-              max_new_accounts_per_registration_ip: "이 IP 주소에서는 신규 등록할 수 없습니다(최대 한도에 도달함). 운영진에게 문의하세요."
+              blocked: "이 IP주소에서는 가입이 안됩니다."
+              max_new_accounts_per_registration_ip: "이 IP에서는 가입이 더이상 되지 않습니다(최대 가입 제한 도달). 스태프에게 연락주세요."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1320,7 +1320,6 @@ ko:
     show_pinned_excerpt_desktop: "데스크톱 뷰에서 고정된 주제의 발췌를 표시합니다."
     post_onebox_maxlength: "onebox 적용된 Discourse 게시물의 최대 문자 수입니다."
     allowed_inline_onebox_domains: "제목 없이 링크된 경우 미니어처 형식으로 onebox 적용되는 도메인 목록"
-    enable_inline_onebox_on_all_domains: "inline_onebox_domain_whitelist 사이트 설정을 무시하고 모든 도메인에서 인라인 onebox를 허용합니다."
     force_custom_user_agent_hosts: "모든 요청에서 사용자 지정 onebox 사용자 에이전트를 사용할 호스트입니다. (특히 사용자 에이전트의 액세스를 제한하는 호스트에 유용합니다)"
     max_oneboxes_per_post: "게시물당 최대 onebox 수"
     facebook_app_access_token: "Facebook 앱 ID 및 암호에서 생성된 토큰입니다. Instagram onebox를 생성하는 데 사용됩니다."

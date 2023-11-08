@@ -94,6 +94,12 @@
       font-weight: bold;
       margin-right: 1em;
     }
+    .value {
+      max-width: calc(
+        100% - 8em - 1em
+      ); // subtracting width of name and margin-right
+      word-wrap: break-word;
+    }
     margin-bottom: 0.5em;
   }
 }

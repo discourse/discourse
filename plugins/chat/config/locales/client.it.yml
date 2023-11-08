@@ -246,7 +246,6 @@ it:
       save: "Salva"
       select: "Seleziona"
       return_to_list: "Torna all'elenco dei canali"
-      return_to_threads_list: "Torna alle discussioni in corso"
       unread_threads_count:
         one: "Hai %{count} discussione non lette"
         other: "Hai %{count} discussioni non lette"
@@ -557,7 +556,6 @@ it:
           other: "+%{count}"
       threads:
         open: "Apri Discussione"
-        list: "Discussioni in corso"
         none: "Non stai partecipando a nessun thread in questo canale."
       draft_channel_screen:
         header: "Nuovo messaggio"

@@ -90,7 +90,7 @@ describe "Thread list in side panel | full page", type: :system do
     end
 
     it "shows an excerpt of the original message of the thread", inline: true do
-      update_message(
+      update_message!(
         thread_1.original_message,
         user: thread_1.original_message.user,
         text: "This is a long message for the excerpt",
@@ -157,11 +157,7 @@ describe "Thread list in side panel | full page", type: :system do
 
         expect(thread_list_page).to have_thread(thread_1)
 
-        Chat::TrashMessage.call(
-          message_id: thread_1.original_message.id,
-          channel_id: thread_1.channel.id,
-          guardian: other_user.guardian,
-        )
+        trash_message!(thread_1.original_message, user: other_user)
 
         expect(thread_list_page).to have_no_thread(thread_1)
       end

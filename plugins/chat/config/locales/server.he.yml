@@ -28,6 +28,7 @@ he:
     max_mentions_per_chat_message: "מספר התראות מרבי של @שם בהן יכול להשתמש משתמש בהודעת צ׳אט."
     chat_max_direct_message_users: "משתמשים לא יכולים להוסיף יותר מכמות זו של משתמשים אחרים בעת יצירת הודעה ישירה חדשה. יש להגדיר ל־0 כדי לאפשר הודעות עצמיות. הסגל מוחרג מההגדרה הזאת."
     chat_allow_archiving_channels: "לאפשר לסגל להעביר הודעות לארכיון בנושא בעת סגירת ערוץ."
+    chat_editing_grace_period: "במשך (n) שניות לאחר שליחת הודעה בצ׳אט, העריכה לא תציג את התגית (הערוכה) על ידי הודעת הצ׳אט."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
@@ -197,6 +198,7 @@ he:
       inline_to_message: "הודעה מס׳ %{message_id} מאת ‎%{username}‏ – ‎#%{chat_channel}"
       inline_to_channel: "צ׳אט מס׳ %{chat_channel}"
       inline_to_topic_channel: "צ׳אט לנושא %{topic_title}"
+      thread_title_connector: "בתוך"
       x_members:
         one: "חבר %{count}"
         two: "%{count} חברים"

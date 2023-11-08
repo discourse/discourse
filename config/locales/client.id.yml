@@ -1494,6 +1494,7 @@ id:
       emoji: "Emoji :)"
       options: "Pilihan"
       add_warning: "Ini adalah peringatan resmi."
+      esc_label: "abaikan pesan"
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Judul harus ada"
@@ -2031,10 +2032,12 @@ id:
     form_template_chooser:
       select_template: "Pilih templat formulir"
     form_templates:
+      upload_field:
+        upload: "Unggah"
+        uploading: "Mengunggah"
       errors:
         valueMissing:
           default: "Harap isi kolom ini."
-          text: "Harap isi kolom ini."
           select-one: "Harap pilih item dalam daftar."
           select-multiple: "Pilih setidaknya satu item dalam daftar."
           checkbox: "Harap centang kotak ini jika Anda ingin melanjutkan."
@@ -2124,6 +2127,11 @@ id:
               status: "Memperbarui status topik. Status: ditutup, arsip, terlihat, disematkan. Diaktifkan: benar, salah. Tentukan kategori_id di sini dan di dalam muatan permintaan untuk hanya mengizinkan perubahan status pada topik-topik di dalam kategori tersebut."
             posts:
               list: Daftar post terbaru dan post pribadi. RSS juga didukung.
+            tag_groups:
+              list: Dapatkan daftar grup tag.
+              show: Dapatkan satu grup tag berdasarkan id.
+              create: Membuat grup tag.
+              update: Memperbarui grup tag yang ditentukan oleh id.
       web_hooks:
         edit: "Ubah"
         save: "Simpan"

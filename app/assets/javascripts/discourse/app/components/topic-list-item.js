@@ -70,7 +70,7 @@ export default Component.extend({
     this.renderTopicListItem();
   },
 
-  @observes("topic.pinned")
+  @observes("topic.pinned", "expandGloballyPinned", "expandAllPinned")
   renderTopicListItem() {
     const template = findRawTemplate("list/topic-list-item");
     if (template) {

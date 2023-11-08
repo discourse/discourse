@@ -73,7 +73,6 @@ sk:
       rebake_message: "Pregenerovať HTML"
       bookmark_message: "Záložka"
       save: "Uložiť"
-      return_to_threads_list: "Návrat k prebiehajúcim diskusiám"
       unread_threads_count:
         one: "Máte %{count} neprečítanú diskusiu"
         few: "Máte %{count} neprečítaných diskusií"
@@ -216,7 +215,6 @@ sk:
           other: "+%{count}"
       threads:
         open: "Otvoriť vlákno"
-        list: "Prebiehajúca diskusia"
         none: "Nezúčastňujete sa na žiadnych vláknach v tomto kanáli."
       draft_channel_screen:
         header: "Nová správa"

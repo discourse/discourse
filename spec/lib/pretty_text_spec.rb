@@ -1981,6 +1981,19 @@ HTML
       HTML
     end
 
+    it "replaces words with wildcards" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "*dolor*",
+        replacement: "something else",
+      )
+
+      expect(PrettyText.cook("Lorem ipsum xdolorx sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else sit amet</p>
+      HTML
+    end
+
     it "replaces words with links" do
       Fabricate(
         :watched_word,

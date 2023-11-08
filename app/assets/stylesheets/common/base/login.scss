@@ -41,7 +41,6 @@ body.invite-page {
 // Create Account + Login
 .d-modal.create-account,
 .d-modal.login-modal,
-.invites-show,
 .admin-invite-page {
   .modal-inner-container {
     position: relative;
@@ -345,95 +344,6 @@ body.invite-page {
     padding-top: 0;
     padding-bottom: 0;
     font-size: var(--font-0);
-  }
-}
-
-// admin invite page
-.invites-show {
-  display: grid;
-  justify-content: center;
-  .two-col {
-    position: relative;
-    display: grid;
-    margin-top: 5px;
-  }
-
-  .invite-form,
-  .invite-success {
-    border-radius: 8px;
-    margin-top: 25px;
-    border: 1px solid var(--primary-low);
-    background-color: var(--secondary);
-  }
-
-  .invite-form {
-    margin-bottom: 50px;
-    box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
-    max-width: calc(30em);
-    .tip {
-      display: block;
-    }
-    .col-image {
-      display: none;
-    }
-    .disclaimer {
-      margin: 1em 0 0;
-    }
-  }
-
-  #login-buttons {
-    .btn {
-      background-color: var(--primary-low);
-      color: var(--primary);
-    }
-  }
-
-  .col-image {
-    position: relative;
-    margin-right: 20px;
-    justify-self: center;
-    @media screen and (max-width: 600px) {
-      display: none;
-    }
-  }
-
-  form {
-    .controls,
-    .input {
-      margin-bottom: 10px;
-    }
-    .instructions {
-      color: var(--primary-medium);
-      margin: 0;
-      font-size: var(--font-down-1);
-      font-weight: normal;
-      line-height: var(--line-height-medium);
-    }
-    .tip {
-      font-size: var(--font-down-1);
-      &:not(:empty) {
-        margin-bottom: 0.25em;
-      }
-    }
-  }
-
-  .invitation-cta {
-    display: flex;
-    align-items: center;
-    margin-top: 2em;
-    &__accept {
-      margin-right: 1em;
-    }
-    &__signed-up {
-      margin-right: 0.5em;
-    }
-    &__sign-in {
-      padding: 0;
-      &.btn-flat.btn-text:not([disabled]):active {
-        background-color: transparent;
-        background-image: none;
-      }
-    }
   }
 }
 

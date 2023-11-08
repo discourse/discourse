@@ -277,8 +277,9 @@ RSpec.describe Group do
 
         expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(false)
 
-        _events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_0) }
+        events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_0) }
 
+        expect(events).to include(event_name: :group_updated, params: [tl0_users])
         expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(true)
         publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last["args"].first
         expect(publish_event_job_args["user_ids"]).to include(user.id)

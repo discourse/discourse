@@ -2916,8 +2916,7 @@ fa_IR:
       action: "پرچم‌گذاری نوشته"
       take_action_options:
         default:
-          title: "اقدام"
-          details: "رسیدن سریع به آستانه پرچم، به جای انتظار برای پرچم انجمن"
+          title: "پنهان کردن نوشته"
         suspend:
           title: "کاربر تعلیق شده"
       notify_action: "پیام"
@@ -2927,7 +2926,6 @@ fa_IR:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
       submit_tooltip: "ثبت پرچم خصوصی"
-      take_action_tooltip: "رسیدن سریع به آستانه پرچم، به جای انتظار برای پرچم انجمن"
       cant: "متأسفیم، در حال حاضر نمی‌توانید روی این نوشته پرچم بگذارید."
       notify_staff: "همکاران را به صورت خصوصی مطلع کن"
       formatted_name:
@@ -3419,6 +3417,9 @@ fa_IR:
           label: انجمن
     until: "تا وقتی که:"
     form_templates:
+      upload_field:
+        upload: "بار گذاری"
+        uploading: "در حال بروز‌رسانی "
       errors:
         typeMismatch:
           default: "یک مقدار معتبر وارد کنید."

@@ -879,6 +879,14 @@ posting:
   shared_drafts_min_trust_level:
     default: "staff"
     enum: "TrustLevelAndStaffSetting"
+    hidden: true
+  shared_drafts_allowed_groups:
+    default: "3" # auto group staff
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   post_edit_time_limit:
     default: 1440
     max: 10080
@@ -1462,6 +1470,9 @@ files:
   enable_s3_uploads:
     default: false
     client: true
+  enable_s3_transfer_acceleration:
+    default: false
+    hidden: true
   s3_use_iam_profile:
     default: false
   s3_access_key_id:

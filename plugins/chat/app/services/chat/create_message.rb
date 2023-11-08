@@ -44,7 +44,7 @@ module Chat
       step :process_direct_message_channel
     end
     step :publish_new_thread
-    step :publish_new_message_events
+    step :process
     step :publish_user_tracking_state
 
     class Contract
@@ -175,17 +175,15 @@ module Chat
       Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
     end
 
-    def publish_new_message_events(channel:, message_instance:, contract:, **)
-      staged_id = contract.staged_id
-
+    def process(channel:, message_instance:, contract:, **)
       if contract.process_inline
         Jobs::Chat::ProcessMessage.new.execute(
-          { chat_message_id: message_instance.id, staged_id: staged_id },
+          { chat_message_id: message_instance.id, staged_id: contract.staged_id },
         )
       else
         Jobs.enqueue(
           Jobs::Chat::ProcessMessage,
-          { chat_message_id: message_instance.id, staged_id: staged_id },
+          { chat_message_id: message_instance.id, staged_id: contract.staged_id },
         )
       end
     end

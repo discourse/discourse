@@ -358,40 +358,12 @@
     flex-direction: column;
   }
 
-  .invites-show {
-    padding-top: 20px;
-
-    .two-col {
-      margin-top: 30px;
-    }
-    .col-form {
-      margin-left: 200px;
-      .inline-invite-img {
-        display: none;
-      }
-    }
-    form {
-      .controls,
-      .input {
-        margin-left: 20px;
-      }
-      input,
-      label {
-        margin-bottom: 0;
-      }
-      .user-field .control-label:not(.checkbox-label) {
-        margin-left: 20px;
-      }
-    }
-  }
-
   .tos-agree {
     margin-bottom: 12px;
   }
 }
 
-.password-reset,
-.invites-show {
+.password-reset {
   .col-form {
     padding: 0.5em 2em 1em;
     max-width: 30em;
@@ -411,10 +383,6 @@
   input:not([type="checkbox"]) {
     // 80% width on checkboxes messes up the layout for custom fields
     width: 80%;
-  }
-  .invite-form,
-  .invite-success {
-    box-shadow: var(--shadow-card);
   }
 }
 

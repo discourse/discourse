@@ -13,6 +13,7 @@ import {
 } from "discourse/lib/user-presence";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
 import {
   FUTURE,
   PAST,
@@ -29,9 +30,6 @@ import {
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-// TODO (martin) Remove this when the handleSentMessage logic inside chatChannelPaneSubscriptionsManager
-// is moved over from this file completely.
-import { handleStagedMessage } from "discourse/plugins/chat/discourse/services/chat-pane-base-subscriptions-manager";
 import { stackingContextFix } from "../lib/chat-ios-hacks";
 
 export default class ChatChannel extends Component {
@@ -40,7 +38,6 @@ export default class ChatChannel extends Component {
   @service chat;
   @service chatApi;
   @service chatChannelsManager;
-  @service chatChannelPaneSubscriptionsManager;
   @service chatComposerPresenceManager;
   @service chatDraftsManager;
   @service chatEmojiPickerManager;
@@ -97,7 +94,7 @@ export default class ChatChannel extends Component {
   teardownListeners() {
     this.#cancelHandlers();
     removeOnPresenceChange(this.onPresenceChangeCallback);
-    this.unsubscribeToUpdates(this.args.channel.id);
+    this.subscriptionManager.teardown();
   }
 
   @action
@@ -140,13 +137,25 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    this.subscribeToUpdates(this.args.channel);
+    this.subscriptionManager = new ChatChannelSubscriptionManager(
+      this,
+      this.args.channel,
+      { onNewMessage: this.onNewMessage }
+    );
 
     if (this.args.targetMessageId) {
       this.debounceHighlightOrFetchMessage(this.args.targetMessageId);
     } else {
       this.fetchMessages({ fetch_from_last_read: true });
     }
+  }
+
+  @bind
+  onNewMessage(message) {
+    stackingContextFix(this.scrollable, () => {
+      this.messagesManager.addMessages([message]);
+    });
+    this.debouncedUpdateLastReadMessage();
   }
 
   @bind
@@ -464,36 +473,6 @@ export default class ChatChannel extends Component {
     }
   }
 
-  @bind
-  onMessage(data) {
-    switch (data.type) {
-      case "sent":
-        this.handleSentMessage(data);
-        break;
-    }
-  }
-
-  handleSentMessage(data) {
-    if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
-      const stagedMessage = handleStagedMessage(
-        this.args.channel,
-        this.messagesManager,
-        data
-      );
-      if (stagedMessage) {
-        return;
-      }
-    }
-
-    const message = ChatMessage.create(this.args.channel, data.chat_message);
-    message.manager = this.args.channel.messagesManager;
-    stackingContextFix(this.scrollable, () => {
-      this.messagesManager.addMessages([message]);
-    });
-    this.debouncedUpdateLastReadMessage();
-    this.args.channel.lastMessage = message;
-  }
-
   @action
   async onSendMessage(message) {
     await message.cook();
@@ -618,28 +597,6 @@ export default class ChatChannel extends Component {
     DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL).then(() => {
       DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
     });
-  }
-
-  unsubscribeToUpdates(channelId) {
-    if (!channelId) {
-      return;
-    }
-
-    this.chatChannelPaneSubscriptionsManager.unsubscribe();
-    this.messageBus.unsubscribe(`/chat/${channelId}`, this.onMessage);
-  }
-
-  subscribeToUpdates(channel) {
-    if (!channel) {
-      return;
-    }
-
-    this.messageBus.subscribe(
-      `/chat/${channel.id}`,
-      this.onMessage,
-      channel.channelMessageBusLastId
-    );
-    this.chatChannelPaneSubscriptionsManager.subscribe(channel);
   }
 
   @action

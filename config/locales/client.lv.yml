@@ -2380,8 +2380,6 @@ lv:
       title: "Paldies, ka palīdzat uzturēt mūsu forumu civilizētu!"
       action: "Ziņot par ierakstu"
       take_action_options:
-        default:
-          details: "Sasniegt ziņojumu robežu uzreiz, nevis gaidīt vēl ziņojumus no lietotājiem"
         suspend:
           title: "Apturētie lietotāji"
       notify_action: "Ziņa"
@@ -2391,7 +2389,6 @@ lv:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(paslēpts)"
       submit_tooltip: "Paziņot privāti"
-      take_action_tooltip: "Sasniegt ziņojumu robežu uzreiz, nevis gaidīt vēl ziņojumus no lietotājiem"
       cant: "Atvainojiet, šobrīd jūs nevarat ziņot par šo ierakstu."
       notify_staff: "Ziņot darbiniekiem privāti"
       formatted_name:
@@ -2779,6 +2776,9 @@ lv:
             review:
               content: "Pārskats"
     form_templates:
+      upload_field:
+        upload: "Augšupielādēt"
+        uploading: "Notiek ielāde"
       errors:
         typeMismatch:
           default: "Lūdzu ievadiet derīgu vērtību "

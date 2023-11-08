@@ -188,6 +188,7 @@ pl_PL:
       inline_to_message: "Wiadomość #%{message_id} od %{username} - #%{chat_channel}"
       inline_to_channel: "Czat #%{chat_channel}"
       inline_to_topic_channel: "Czat dla tematu %{topic_title}"
+      thread_title_connector: "w"
       x_members:
         one: "%{count} członek"
         few: "%{count} członków"

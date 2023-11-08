@@ -3480,8 +3480,7 @@ fi:
       action: "Liputa viesti"
       take_action_options:
         default:
-          title: "Ryhdy toimiin"
-          details: "Ylitä lippujen kynnysmäärä välittömästi, odottamatta enempää yhteisön jäsenten liputuksia"
+          title: "Piilota viesti"
         suspend:
           title: "Hyllytä käyttäjä"
           details: "Ylitä lippujen kynnysmäärä ja hyllytä käyttäjä"
@@ -3498,7 +3497,6 @@ fi:
       ip_address_missing: "-"
       hidden_email_address: "(piilotettu)"
       submit_tooltip: "Lähetä yksityinen lippu"
-      take_action_tooltip: "Saavuta liputusraja välittömästi; ei tarvetta odottaa muiden käyttäjien liputuksia."
       cant: "Et valitettavasti voi liputtaa tätä viestiä tällä hetkellä."
       notify_staff: "Ilmoita henkilökunnalle yksityisesti"
       formatted_name:
@@ -4162,10 +4160,12 @@ fi:
     form_template_chooser:
       select_template: "Valitse lomakemallit"
     form_templates:
+      upload_field:
+        upload: "Lataa"
+        uploading: "Ladataan"
       errors:
         valueMissing:
           default: "Täytä tämä kenttä."
-          text: "Täytä tämä kenttä."
           select-one: "Valitse kohde luettelosta."
           select-multiple: "Valitse vähintään yksi kohde luettelosta."
           checkbox: "Valitse tämä ruutu, jos haluat jatkaa."

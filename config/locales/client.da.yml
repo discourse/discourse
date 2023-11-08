@@ -3076,8 +3076,7 @@ da:
       take_action: "Tag Handling…"
       take_action_options:
         default:
-          title: "Tag Handling"
-          details: "Nå rapporteringsgrænsen med det samme i stedet for at vente på flere fællesskabs-rapporteringer"
+          title: "Skjul Indlæg"
         suspend:
           title: "Suspendér bruger"
           details: "Nå rapporteringsgrænsen, og suspendér brugeren"
@@ -3094,7 +3093,6 @@ da:
       ip_address_missing: "(I/T)"
       hidden_email_address: "(skjult)"
       submit_tooltip: "Send privat markeringen"
-      take_action_tooltip: "Nå til markerings niveauer med det samme, i stedet for at vente på flere markeringer fra fælleskabet"
       cant: "Beklager, du kan i øjeblikket ikke rapportere dette indlæg."
       notify_staff: "Informer staff privat"
       formatted_name:
@@ -3668,6 +3666,9 @@ da:
           label: Forum
     until: "Indtil:"
     form_templates:
+      upload_field:
+        upload: "Overfør"
+        uploading: "Overfører billede"
       errors:
         typeMismatch:
           default: "Indtast venligst en gyldig værdi."

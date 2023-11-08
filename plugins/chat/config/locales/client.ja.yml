@@ -232,7 +232,6 @@ ja:
       save: "保存"
       select: "選択"
       return_to_list: "チャンネルリストに戻る"
-      return_to_threads_list: "進行中のディスカッションに戻る"
       unread_threads_count:
         other: "未読のディスカッションが %{count} 件あります"
       scroll_to_bottom: "一番下にスクロール"
@@ -517,7 +516,6 @@ ja:
           other: "+%{count} 件"
       threads:
         open: "スレッドを開く"
-        list: "進行中のディスカッション"
         none: "このチャンネルのどのスレッドにも参加していません。"
       draft_channel_screen:
         header: "新しいメッセージ"

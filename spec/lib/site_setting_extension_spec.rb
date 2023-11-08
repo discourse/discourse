@@ -834,27 +834,24 @@ RSpec.describe SiteSettingExtension do
     end
 
     context "for deprecated settings" do
+      let(:fake_logger) { FakeLogger.new }
+
       before do
         @orig_logger = Rails.logger
-        Rails.logger = @fake_logger = FakeLogger.new
+        Rails.logger = fake_logger
       end
 
       after { Rails.logger = @orig_logger }
 
-      xit "does not log deprecation warnings" do
-        begin
-          original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
-          SiteSettings::DeprecatedSettings::SETTINGS.clear
-          SiteSettings::DeprecatedSettings::SETTINGS.push(
-            ["use_https", "force_https", true, "0.0.1"],
-          )
+      it "does not log deprecation warnings" do
+        stub_const(
+          SiteSettings::DeprecatedSettings,
+          "SETTINGS",
+          [["use_https", "force_https", true, "0.0.1"]],
+        ) do
           SiteSetting.setup_deprecated_methods
-
           SiteSetting.client_settings_json_uncached
-          expect(@fake_logger.warnings).to eq([])
-        ensure
-          SiteSettings::DeprecatedSettings::SETTINGS.clear
-          SiteSettings::DeprecatedSettings::SETTINGS.concat(original_settings)
+          expect(fake_logger.warnings).to eq([])
         end
       end
     end
@@ -862,27 +859,24 @@ RSpec.describe SiteSettingExtension do
 
   describe ".settings_hash" do
     context "for deprecated settings" do
+      let(:fake_logger) { FakeLogger.new }
+
       before do
         @orig_logger = Rails.logger
-        Rails.logger = @fake_logger = FakeLogger.new
+        Rails.logger = fake_logger
       end
 
       after { Rails.logger = @orig_logger }
 
-      xit "does not log deprecation warnings" do
-        begin
-          original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
-          SiteSettings::DeprecatedSettings::SETTINGS.clear
-          SiteSettings::DeprecatedSettings::SETTINGS.push(
-            ["use_https", "force_https", true, "0.0.1"],
-          )
+      it "does not log deprecation warnings" do
+        stub_const(
+          SiteSettings::DeprecatedSettings,
+          "SETTINGS",
+          [["use_https", "force_https", true, "0.0.1"]],
+        ) do
           SiteSetting.setup_deprecated_methods
-
           SiteSetting.settings_hash
-          expect(@fake_logger.warnings).to eq([])
-        ensure
-          SiteSettings::DeprecatedSettings::SETTINGS.clear
-          SiteSettings::DeprecatedSettings::SETTINGS.concat(original_settings)
+          expect(fake_logger.warnings).to eq([])
         end
       end
     end

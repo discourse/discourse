@@ -3847,8 +3847,7 @@ pl_PL:
       take_action: "Podejmij działanie…"
       take_action_options:
         default:
-          title: "Podejmij działanie"
-          details: "Symuluj progową liczbę flag bez czekania na nie ze strony społeczności"
+          title: "Ukryj post"
         suspend:
           title: "Zawieś użytkownika"
           details: "Symuluj progową liczbę flag i zawieś użytkownika."
@@ -3865,7 +3864,6 @@ pl_PL:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(ukryto)"
       submit_tooltip: "Zapisz prywatną flagę."
-      take_action_tooltip: "Nie czekaj, aż wpis zostanie zgłoszony przez innych, natychmiast oflaguj do działania . "
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
       notify_staff: "Powiadom zespół wiadomością prywatną"
       formatted_name:
@@ -4595,10 +4593,12 @@ pl_PL:
     form_template_chooser:
       select_template: "Wybierz szablony formularzy"
     form_templates:
+      upload_field:
+        upload: "Prześlij"
+        uploading: "Wgrywanie"
       errors:
         valueMissing:
           default: "Proszę wypełnić to pole."
-          text: "Proszę wypełnić to pole."
           select-one: "Wybierz pozycję z listy."
           select-multiple: "Wybierz co najmniej jedną pozycję z listy."
           checkbox: "Zaznacz to pole, jeśli chcesz kontynuować."

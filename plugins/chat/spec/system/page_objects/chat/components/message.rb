@@ -32,7 +32,7 @@ module PageObjects
 
         def secondary_action(action)
           if page.has_css?("html.mobile-view", wait: 0)
-            component.click(delay: 0.6)
+            component.find(".chat-message-text").click(delay: 0.6)
             page.find(".chat-message-actions [data-id=\"#{action}\"]").click
           else
             open_more_menu
@@ -60,12 +60,8 @@ module PageObjects
           text = args[:text]
           text = I18n.t("js.chat.deleted", count: args[:deleted]) if args[:deleted]
 
-          if text
-            @component =
-              find(context).find("#{selector} .chat-message-text", text: /#{Regexp.escape(text)}/)
-          else
-            @component = page.find(context).find(selector)
-          end
+          @component =
+            page.find("#{context} #{selector}", text: text ? /#{Regexp.escape(text)}/ : nil)
 
           self
         end
@@ -100,7 +96,7 @@ module PageObjects
           if args[:not_processed]
             selector += ".-not-processed"
           else
-            selector += ".-processed"
+            selector += ".-processed.-persisted"
           end
 
           selector += "[data-id=\"#{args[:id]}\"]" if args[:id]

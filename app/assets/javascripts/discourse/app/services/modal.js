@@ -11,20 +11,6 @@ import deprecated, {
 } from "discourse-common/lib/deprecated";
 import I18n from "discourse-i18n";
 
-// Known legacy modals in core. Silence deprecation warnings for these so the messages
-// don't cause unnecessary noise.
-const KNOWN_LEGACY_MODALS = [
-  "avatar-selector",
-  "change-owner",
-  "change-post-notice",
-  "create-invite-bulk",
-  "create-invite",
-  "grant-badge",
-  "group-default-notifications",
-  "reject-reason-reviewable",
-  "reorder-categories",
-];
-
 const LEGACY_OPTS = new Set([
   "admin",
   "templateName",
@@ -139,17 +125,15 @@ export default class ModalServiceWithLegacySupport extends ModalService {
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
-    if (!KNOWN_LEGACY_MODALS.includes(modal)) {
-      deprecated(
-        `Defining modals using a controller is deprecated. Use the component-based API instead. (modal: ${modal})`,
-        {
-          id: "discourse.modal-controllers",
-          since: "3.1",
-          dropFrom: "3.2",
-          url: "https://meta.discourse.org/t/268057",
-        }
-      );
-    }
+    deprecated(
+      `Defining modals using a controller is deprecated. Use the component-based API instead. (modal: ${modal})`,
+      {
+        id: "discourse.modal-controllers",
+        since: "3.1",
+        dropFrom: "3.2",
+        url: "https://meta.discourse.org/t/268057",
+      }
+    );
 
     const name = modal;
     const container = getOwner(this);

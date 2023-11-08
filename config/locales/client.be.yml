@@ -1174,7 +1174,7 @@ be:
       action: "Пазначыць запіс"
       take_action_options:
         default:
-          title: "прыняць меры"
+          title: "схаваць паведамленне"
         suspend:
           title: "прыпыніць карыстальніка"
         silence:
@@ -1411,6 +1411,9 @@ be:
             review:
               content: "Патрабуе перагляду"
     form_templates:
+      upload_field:
+        upload: "Запампаваць"
+        uploading: "загрузка"
       errors:
         typeMismatch:
           default: "Калі ласка, увядзіце карэктнае значэнне."
