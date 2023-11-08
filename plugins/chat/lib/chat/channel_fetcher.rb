@@ -223,6 +223,15 @@ module Chat
           )
       end
 
+      if options.key?(:following)
+        following_params = { user_id: user_id }
+        following_params[:following] = options[:following] if options[:following].present?
+        query =
+          query.joins(:user_chat_channel_memberships).where(
+            user_chat_channel_memberships: following_params,
+          )
+      end
+
       query =
         query.order("last_message.created_at DESC NULLS LAST").group(
           "chat_channels.id",
