@@ -76,7 +76,7 @@ class TopicEmbed < ActiveRecord::Base
           embed_content_sha1: content_sha1,
         }
 
-        PostCreator.create(user, create_args)
+        post = PostCreator.create(user, create_args)
       end
     else
       absolutize_urls(url, contents)
