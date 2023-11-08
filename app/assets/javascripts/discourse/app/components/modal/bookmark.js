@@ -173,7 +173,7 @@ export default class BookmarkModal extends Component {
     this.showOptions = !this.showOptions;
   }
 
-  @action
+  @__action__
   onTimeSelected(type, time) {
     this.bookmark.selectedReminderType = type;
     this.bookmark.selectedDatetime = time;
@@ -206,7 +206,7 @@ export default class BookmarkModal extends Component {
     }
   }
 
-  @action
+  @__action__
   closeWithoutSavingBookmark() {
     this._closeWithoutSaving = true;
     this.args.closeModal({ closeWithoutSaving: this._closeWithoutSaving });
