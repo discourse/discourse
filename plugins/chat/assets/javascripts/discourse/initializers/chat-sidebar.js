@@ -8,9 +8,9 @@ import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { avatarUrl } from "discourse-common/lib/avatar-utils";
 import getURL from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
-import getFirstUser from "discourse/plugins/chat/discourse/lib/get-first-user";
 import {
   CHAT_PANEL,
   initSidebarState,
@@ -218,13 +218,28 @@ export default {
               this.channel = channel;
               this.chatService = chatService;
               this.currentUser = currentUser;
+
+              if (this.oneOnOneMessage) {
+                const user = this.channel.chatable.users[0];
+                if (user.username !== I18n.t("chat.deleted_chat_username")) {
+                  user.trackStatus();
+                }
+              }
+            }
+
+            @bind
+            willDestroy() {
+              if (this.oneOnOneMessage) {
+                this.channel.chatable.users[0].stopTrackingStatus();
+              }
+            }
+
+            get oneOnOneMessage() {
+              return this.channel.chatable.users.length === 1;
             }
 
             get contentComponentArgs() {
-              return getFirstUser(
-                this.channel.chatable.users,
-                this.currentUser
-              ).get("status");
+              return this.channel.chatable.users[0].get("status");
             }
 
             get contentComponent() {
@@ -287,8 +302,7 @@ export default {
                 return this.channel.membershipsCount;
               } else {
                 return avatarUrl(
-                  getFirstUser(this.channel.chatable.users, this.currentUser)
-                    .avatar_template,
+                  this.channel.chatable.users[0].avatar_template,
                   "tiny"
                 );
               }
@@ -296,10 +310,7 @@ export default {
 
             get prefixCSSClass() {
               const activeUsers = this.chatService.presenceChannel.users;
-              const user = getFirstUser(
-                this.channel.chatable.users,
-                this.currentUser
-              );
+              const user = this.channel.chatable.users[0];
 
               if (
                 !!activeUsers?.findBy("id", user?.id) ||
@@ -338,6 +349,7 @@ export default {
               if (container.isDestroyed) {
                 return;
               }
+
               this.chatService = container.lookup("service:chat");
               this.chatChannelsManager = container.lookup(
                 "service:chat-channels-manager"

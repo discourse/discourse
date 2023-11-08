@@ -7,13 +7,12 @@ import UserStatusMessage from "discourse/components/user-status-message";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import icon from "discourse-common/helpers/d-icon";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
-import getFirstUser from "discourse/plugins/chat/discourse/lib/get-first-user";
 
 export default class ChatChannelTitle extends Component {
   @service currentUser;
 
   get firstUser() {
-    return getFirstUser(this.args.channel.chatable.users, this.currentUser);
+    return this.args.channel.chatable.users[0];
   }
 
   get users() {
