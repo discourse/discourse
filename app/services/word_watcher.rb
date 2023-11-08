@@ -8,7 +8,7 @@ class WordWatcher
     @raw = raw
   end
 
-  @cache_enabled = false
+  @cache_enabled = true
 
   def self.disable_cache
     @cache_enabled = false

@@ -511,13 +511,13 @@
     },
     "watched_words_replace": {
       "type": [
-        "string",
+        "array",
         "null"
       ]
     },
     "watched_words_link": {
       "type": [
-        "string",
+        "array",
         "null"
       ]
     },
