@@ -19,8 +19,8 @@ RSpec.describe WordWatcher do
         Fabricate(:watched_word, action: WatchedWord.actions[:block], case_sensitive: true).word
 
       expect(described_class.words_for_action(:block)).to contain_exactly(
-        { case_sensitive: false, word: word1, regexp: word1 },
-        { case_sensitive: true, word: word2, regexp: word2 },
+        { case_sensitive: false, word: word1 },
+        { case_sensitive: true, word: word2 },
       )
     end
 
@@ -33,12 +33,32 @@ RSpec.describe WordWatcher do
         ).word
 
       expect(described_class.words_for_action(:link)).to contain_exactly(
-        { case_sensitive: false, replacement: "http://test.localhost/", word: word, regexp: word },
+        { case_sensitive: false, replacement: "http://test.localhost/", word: word },
       )
     end
 
     it "returns an empty hash when no words are present" do
       expect(described_class.words_for_action(:tag)).to eq([])
+    end
+
+    context "when watched_words_regular_expressions = true" do
+      before { SiteSetting.watched_words_regular_expressions = true }
+
+      it "validates regexp in Ruby" do
+        Fabricate(:watched_word, word: "*test", action: WatchedWord.actions[:block])
+
+        expect { described_class.words_for_action(:block, raise_errors: true) }.to raise_error(
+          RegexpError,
+        )
+      end
+
+      it "validates regexp in JavaScript" do
+        Fabricate(:watched_word, word: "a\\-b", action: WatchedWord.actions[:block])
+
+        expect { described_class.words_for_action(:block, raise_errors: true) }.to raise_error(
+          MiniRacer::RuntimeError,
+        )
+      end
     end
   end
 
@@ -63,22 +83,6 @@ RSpec.describe WordWatcher do
           "/(#{word1})|(#{word2})/i",
           "/(#{word3})|(#{word4})/",
         )
-      end
-
-      it "validates regexp in Ruby" do
-        Fabricate(:watched_word, word: "*test", action: WatchedWord.actions[:block])
-
-        expect {
-          described_class.compiled_regexps_for_action(:block, raise_errors: true)
-        }.to raise_error(RegexpError)
-      end
-
-      it "validates regexp in JavaScript" do
-        Fabricate(:watched_word, word: "a\\-b", action: WatchedWord.actions[:block])
-
-        expect {
-          described_class.compiled_regexps_for_action(:block, raise_errors: true)
-        }.to raise_error(MiniRacer::RuntimeError)
       end
     end
 
@@ -114,12 +118,6 @@ RSpec.describe WordWatcher do
           /(#{word1})|(#{word2})/i,
           /(#{word3})|(#{word4})/,
         )
-      end
-
-      it "raises an exception with raise_errors set to true" do
-        expect {
-          described_class.compiled_regexps_for_action(:block, raise_errors: true)
-        }.to raise_error(RegexpError)
       end
     end
   end

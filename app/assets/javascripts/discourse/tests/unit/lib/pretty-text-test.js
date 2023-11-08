@@ -1086,9 +1086,7 @@ eviltrout</p>
     assert.cookedOptions(
       "Pleased to meet you, but pleeeease call me later, xyz123",
       {
-        censoredRegexp: [
-          { full_regexp: "(xyz*|plee+ase)", case_sensitive: false },
-        ],
+        censoredRegexp: [{ regexp: "(xyz*|plee+ase)", case_sensitive: false }],
       },
       "<p>Pleased to meet you, but ■■■■■■■■■ call me later, ■■■123</p>",
       "supports censoring"
@@ -1616,7 +1614,7 @@ var bar = 'bar';
       watchedWordsReplace: [
         {
           word: "fun",
-          full_regexp: "(?:\\W|^)(fun)(?=\\W|$)",
+          regexp: "(?:\\W|^)(fun)(?=\\W|$)",
           replacement: "times",
           case_sensitive: false,
         },
@@ -1632,7 +1630,7 @@ var bar = 'bar';
       watchedWordsLink: [
         {
           word: "fun",
-          full_regexp: "(?:\\W|^)(fun)(?=\\W|$)",
+          regexp: "(?:\\W|^)(fun)(?=\\W|$)",
           replacement: "https://discourse.org",
           case_sensitive: false,
         },
@@ -1652,7 +1650,7 @@ var bar = 'bar';
       watchedWordsReplace: [
         {
           word: "(\\bu?\\b)",
-          full_regexp: "(\\bu?\\b)",
+          regexp: "(\\bu?\\b)",
           replacement: "you",
           case_sensitive: false,
         },

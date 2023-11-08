@@ -16,10 +16,8 @@ class WatchedWordListSerializer < ApplicationSerializer
   end
 
   def compiled_regular_expressions
-    expressions = {}
-    actions.each do |action|
-      expressions[action] = WordWatcher.serialized_regexps_for_action(action, engine: :js)
+    actions.to_h do |action|
+      [action, WordWatcher.serialized_regexps_for_action(action, engine: :js)]
     end
-    expressions
   end
 end

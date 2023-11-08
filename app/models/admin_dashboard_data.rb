@@ -432,7 +432,7 @@ class AdminDashboardData
   def watched_words_check
     WatchedWord.actions.keys.each do |action|
       begin
-        WordWatcher.compiled_regexps_for_action(action, raise_errors: true)
+        WordWatcher.words_for_action(action, raise_errors: true)
       rescue RegexpError => e
         translated_action = I18n.t("admin_js.admin.watched_words.actions.#{action}")
         I18n.t(

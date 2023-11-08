@@ -8,7 +8,7 @@ class WordWatcher
     @raw = raw
   end
 
-  @cache_enabled = true
+  @cache_enabled = false
 
   def self.disable_cache
     @cache_enabled = false
@@ -26,27 +26,41 @@ class WordWatcher
     WatchedWord.actions.each { |action, _| Discourse.cache.delete(cache_key(action)) }
   end
 
-  def self.words_for_action(action)
+  def self.words_for_action(action, raise_errors: false)
     WatchedWord
       .where(action: WatchedWord.actions[action.to_sym])
       .limit(WatchedWord::MAX_WORDS_PER_ACTION)
       .order(:id)
       .pluck(:word, :replacement, :case_sensitive)
-<<<<<<< HEAD
-      .to_h do |w, r, c|
-        [
-          word_to_regexp(w, match_word: false),
-          { word: w, replacement: r, case_sensitive: c }.compact,
-        ]
-=======
-      .map do |w, r, c|
-        {
-          word: w,
-          regexp: word_to_regexp(w, match_word: false),
-          replacement: r,
-          case_sensitive: c,
-        }.compact
->>>>>>> ce7b9da045 (DEV: Simplify watched word data structures)
+      .map { |w, r, c| { word: w, replacement: r, case_sensitive: c }.compact }
+      .filter do |attrs|
+        # Validate Ruby regular expression
+        rb_regexp = word_to_regexp(attrs[:word], engine: :ruby)
+
+        begin
+          Regexp.new(rb_regexp)
+        rescue RegexpError
+          if raise_errors
+            raise
+          else
+            next
+          end
+        end
+
+        # Validate JavaScript regular expression
+        js_regexp = word_to_regexp(attrs[:word], engine: :js)
+
+        begin
+          PrettyText.v8.eval("new RegExp(#{js_regexp.inspect}, 'gu')")
+        rescue MiniRacer::RuntimeError
+          if raise_errors
+            raise
+          else
+            next
+          end
+        end
+
+        true
       end
   end
 
@@ -56,17 +70,16 @@ class WordWatcher
 
   def self.cached_words_for_action(action)
     if cache_enabled?
-      Discourse
-        .cache
-        .fetch(cache_key(action), expires_in: 1.day) { words_for_action(action).presence }
+      Discourse.cache.fetch(cache_key(action), expires_in: 1.day) { words_for_action(action) }
     else
-      words_for_action(action).presence
+      words_for_action(action)
     end
   end
 
   def self.regexps_for_action(action, engine: :ruby)
-    cached_words_for_action(action)&.map do |attrs|
-      attrs[:full_regexp] = word_to_regexp(attrs[:word], engine: engine)
+    cached_words_for_action(action).map do |attrs|
+      attrs[:partial_regexp] = word_to_regexp(attrs[:word], match_word: false)
+      attrs[:regexp] = word_to_regexp(attrs[:word], engine: engine)
       attrs
     end
   end
@@ -74,44 +87,12 @@ class WordWatcher
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   # hint: non-chrome browsers do not support 'lookbehind'
-  def self.compiled_regexps_for_action(action, engine: :ruby, raise_errors: false)
-    (cached_words_for_action(action) || [])
+  def self.compiled_regexps_for_action(action, engine: :ruby)
+    cached_words_for_action(action)
       .group_by { |attrs| attrs[:case_sensitive] ? :case_sensitive : :case_insensitive }
       .map do |group_key, attrs_list|
         # Validate words
-        words =
-          attrs_list
-            .map { |attrs| attrs[:word] }
-            .map do |word|
-              # Validate Ruby regular expression
-              rb_regexp = word_to_regexp(word, engine: :ruby)
-
-              begin
-                Regexp.new(rb_regexp)
-              rescue RegexpError
-                if raise_errors
-                  raise
-                else
-                  next
-                end
-              end
-
-              # Validate JavaScript regular expression
-              js_regexp = word_to_regexp(word, engine: :js)
-
-              begin
-                PrettyText.v8.eval("new RegExp(#{js_regexp.inspect}, 'gu')")
-              rescue MiniRacer::RuntimeError
-                if raise_errors
-                  raise
-                else
-                  next
-                end
-              end
-
-              word
-            end
-            .select { |r| r.present? }
+        words = attrs_list.map { |attrs| attrs[:word] }
 
         # Compile all watched words into a single regular expression
         regexp =
@@ -139,7 +120,7 @@ class WordWatcher
 
   def self.serialized_regexps_for_action(action, engine: :ruby)
     compiled_regexps_for_action(action, engine: engine).map do |r|
-      { full_regexp: r.source, case_sensitive: !r.casefold? }
+      { regexp: r.source, case_sensitive: !r.casefold? }
     end
   end
 
@@ -313,7 +294,7 @@ class WordWatcher
   def self.replace(text, watch_word_type)
     (regexps_for_action(watch_word_type) || []).reduce(text) do |t, attrs|
       case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
-      replace_text_with_regexp(t, Regexp.new(attrs[:full_regexp], case_flag), attrs[:replacement])
+      replace_text_with_regexp(t, Regexp.new(attrs[:regexp], case_flag), attrs[:replacement])
     end
   end
 

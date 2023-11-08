@@ -1,3 +1,5 @@
+import { createWatchedWordRegExp } from "discourse-common/utils/watched-words";
+
 const MAX_MATCHES = 100;
 
 function isLinkOpen(str) {
@@ -11,9 +13,9 @@ function isLinkClose(str) {
 function findAllMatches(text, matchers) {
   const matches = [];
 
-  for (const { regexp, fullRegexp, replacement, link } of matchers) {
-    if (regexp.test(text)) {
-      for (const match of text.matchAll(fullRegexp)) {
+  for (const { partialRegexp, regexp, replacement, link } of matchers) {
+    if (partialRegexp.test(text)) {
+      for (const match of text.matchAll(regexp)) {
         matches.push({
           index: match.index + match[0].indexOf(match[1]),
           text: match[1],
@@ -50,21 +52,21 @@ export function setup(helper) {
   helper.registerPlugin((md) => {
     const matchers = [
       ...(md.options.discourse.watchedWordsReplace || []).map((word) => ({
-        regexp: new RegExp(word.regexp, word.case_sensitive ? "" : "i"),
-        fullRegexp: new RegExp(
-          word.full_regexp,
-          word.case_sensitive ? "gu" : "gui"
+        partialRegexp: new RegExp(
+          word.partial_regexp,
+          word.case_sensitive ? "" : "i"
         ),
+        regexp: createWatchedWordRegExp(word),
         replacement: word.replacement,
         link: false,
       })),
 
       ...(md.options.discourse.watchedWordsLink || []).map((word) => ({
-        regexp: new RegExp(word.regexp, word.case_sensitive ? "" : "i"),
-        fullRegexp: new RegExp(
-          word.full_regexp,
-          word.case_sensitive ? "gu" : "gui"
+        partialRegexp: new RegExp(
+          word.partial_regexp,
+          word.case_sensitive ? "" : "i"
         ),
+        regexp: createWatchedWordRegExp(word),
         replacement: word.replacement,
         link: true,
       })),

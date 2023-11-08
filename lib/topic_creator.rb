@@ -188,7 +188,7 @@ class TopicCreator
       end
     end
 
-    watched_words = WordWatcher.words_for_action(:tag)
+    watched_words = WordWatcher.cached_words_for_action(:tag)
     if watched_words.present?
       word_watcher = WordWatcher.new("#{@opts[:title]} #{@opts[:raw]}")
       word_watcher_tags = topic.tags.map(&:name)
