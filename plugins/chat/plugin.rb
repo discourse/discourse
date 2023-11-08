@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # name: chat
-# about: Chat inside Discourse
+# about: Adds chat functionality.
+# meta_topic_id: 230881
 # version: 0.4
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/chat

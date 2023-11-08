@@ -1533,12 +1533,6 @@ class UsersController < ApplicationController
       raise Discourse::NotFound
     end
 
-    if params[:password].present?
-      if !confirm_secure_session
-        return render json: failed_json.merge(error: I18n.t("login.incorrect_password"))
-      end
-    end
-
     if secure_session_confirmed?
       totp_second_factors =
         current_user
@@ -1555,7 +1549,7 @@ class UsersController < ApplicationController
 
       render json: success_json.merge(totps: totp_second_factors, security_keys: security_keys)
     else
-      render json: success_json.merge(password_required: true)
+      render json: success_json.merge(unconfirmed_session: true)
     end
   end
 

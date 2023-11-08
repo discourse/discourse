@@ -2812,8 +2812,7 @@ sl:
       action: "Prijavi prispevek"
       take_action_options:
         default:
-          title: "Ukrepaj"
-          details: "Doseži zahtevan nivo prijav takoj in ne čakaj na več prijav s strani uporabnikov"
+          title: "Skrij prispevek"
         suspend:
           title: "Suspendiraj uporabnika"
         silence:
@@ -2825,7 +2824,6 @@ sl:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrito)"
       submit_tooltip: "Pošlji zasebno opozorilo"
-      take_action_tooltip: "Doseži zahtevan nivo prijav takoj in ne čakaj na več prijav s strani uporabnikov"
       cant: "Tega prispevka ne morete prijaviti v tem trenutku."
       notify_staff: "Prijavite osebju foruma"
       formatted_name:
@@ -3353,6 +3351,9 @@ sl:
               content: "Pregled"
     until: "Do:"
     form_templates:
+      upload_field:
+        upload: "Prenesi"
+        uploading: "Nalagam"
       errors:
         typeMismatch:
           default: "Vnesite veljavno vsebino"

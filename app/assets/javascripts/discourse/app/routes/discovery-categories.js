@@ -1,7 +1,6 @@
 import EmberObject, { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { hash } from "rsvp";
-import ReorderCategories from "discourse/components/modal/reorder-categories";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -15,10 +14,8 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service router;
   @service session;
 
-  renderTemplate() {
-    this.render("navigation/categories", { outlet: "navigation-bar" });
-    this.render("discovery/categories", { outlet: "list-container" });
-  }
+  templateName = "discovery/categories";
+  controllerName = "discovery/categories";
 
   findCategories() {
     let style =
@@ -132,27 +129,16 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
     return I18n.t("filters.categories.title");
   }
 
-  setupController(controller, model) {
-    controller.set("model", model);
-
-    this.controllerFor("navigation/categories").setProperties({
-      showCategoryAdmin: model.get("can_create_category"),
-      canCreateTopic: model.get("can_create_topic"),
+  setupController(controller) {
+    controller.setProperties({
+      discovery: this.controllerFor("discovery"),
     });
+
+    super.setupController(...arguments);
   }
 
   @action
   triggerRefresh() {
     this.refresh();
-  }
-
-  @action
-  createCategory() {
-    this.router.transitionTo("newCategory");
-  }
-
-  @action
-  reorderCategories() {
-    this.modal.show(ReorderCategories);
   }
 }

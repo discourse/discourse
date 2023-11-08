@@ -1,0 +1,58 @@
+<div class="container">
+  <DiscourseBanner />
+  {{#if @category}}
+    <CategoryReadOnlyBanner
+      @category={{@category}}
+      @readOnly={{@createTopicDisabled}}
+    />
+  {{/if}}
+</div>
+
+<span>
+  <PluginOutlet @name="discovery-list-controls-above" @connectorTagName="div" />
+</span>
+
+<div class="list-controls">
+  <PluginOutlet
+    @name="discovery-navigation-bar-above"
+    @connectorTagName="div"
+  />
+  <div class="container">
+    {{yield to="navigation"}}
+  </div>
+</div>
+
+<span>
+  <PluginOutlet @name="discovery-above" @connectorTagName="div" />
+</span>
+
+<div class="container list-container">
+  <div class="row">
+    <div class="full-width">
+      <div id="header-list-area">
+        {{yield to="header"}}
+        <PluginOutlet
+          @name="header-list-container-bottom"
+          @outletArgs={{hash category=@category}}
+        />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="full-width">
+      <PluginOutlet @name="before-list-area" />
+      <div id="list-area">
+        <PluginOutlet
+          @name="discovery-list-container-top"
+          @connectorTagName="span"
+          @outletArgs={{hash category=@category}}
+        />
+        {{yield to="list"}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<span>
+  <PluginOutlet @name="discovery-below" @connectorTagName="div" />
+</span>

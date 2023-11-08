@@ -3128,7 +3128,7 @@ hu:
       action: "Bejegyzés megjelölése"
       take_action_options:
         default:
-          title: "Művelet megkezdése"
+          title: "Bejegyzés elrejtése"
         suspend:
           title: "Felhasználó felfüggesztése"
         silence:
@@ -3666,6 +3666,9 @@ hu:
     form_template_chooser:
       select_template: "Űrlapsablonok kiválasztása"
     form_templates:
+      upload_field:
+        upload: "Feltöltés"
+        uploading: "Feltöltés"
       errors:
         typeMismatch:
           default: "Adjon meg egy érvényes dátumot."

@@ -1598,7 +1598,7 @@ en:
     blocked_onebox_domains: "A list of domains that will never be oneboxed e.g. wikipedia.org\n(Wildcard symbols * ? not supported)"
     block_onebox_on_redirect: "Block onebox for URLs that redirect."
     allowed_inline_onebox_domains: "A list of domains that will be oneboxed in miniature form if linked without a title"
-    enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_allowlist site setting and allow inline onebox on all domains."
+    enable_inline_onebox_on_all_domains: "Ignore allowed_inline_onebox_domains site setting and allow inline onebox on all domains."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
@@ -2430,6 +2430,7 @@ en:
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
     shared_drafts_min_trust_level: "Allow users to see and edit Shared Drafts."
+    shared_drafts_allowed_groups: "Allow users in these groups to see and edit Shared Drafts."
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
@@ -2539,6 +2540,7 @@ en:
 
     keywords:
       anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
+      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -5190,7 +5192,6 @@ en:
       private_message: '%{username} sent you a private message in "%{topic}" - %{site_title}'
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
       watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
-      watching_category_or_tag: '%{username} created a new post "%{topic}" - %{site_title}'
       confirm_title: "Notifications enabled - %{site_title}"
       confirm_body: "Success! Notifications have been enabled."
       custom: "Notification from %{username} on %{site_title}"

@@ -15,13 +15,13 @@ ro:
           format: "%n %u"
           units:
             byte:
-              one: Byte
-              few: Bytes
-              other: Bytes
-            gb: GB
-            kb: KB
-            mb: MB
-            tb: TB
+              one: Octet
+              few: Octeți
+              other: De octeți
+            gb: GO
+            kb: KO
+            mb: MO
+            tb: TO
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
@@ -42,55 +42,60 @@ ro:
       long_date_without_year_with_linebreak: "DD MMM<br/>HH:mm"
       long_date_with_year_with_linebreak: "DD MMM 'YY<br/>HH:mm"
       wrap_ago: "%{date} în urmă"
+      wrap_on: "pe %{date}"
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1min"
         less_than_x_seconds:
-          one: "< %{count}s"
-          few: "< %{count}s"
-          other: "< %{count} s"
+          one: "< %{count} sec"
+          few: "< %{count} sec"
+          other: "< %{count} sec"
         x_seconds:
-          one: "%{count}s"
-          few: "%{count} s"
-          other: "%{count} s"
+          one: "%{count} sec"
+          few: "%{count} sec"
+          other: "%{count} sec"
         less_than_x_minutes:
-          one: "< %{count}m"
-          few: "< 1m"
-          other: "< %{count}m"
-        x_minutes:
-          one: "%{count}m"
-          few: "%{count} m"
-          other: "%{count} m"
-        about_x_hours:
-          one: "%{count}h"
-          few: "%{count} h"
-          other: "%{count} h"
-        x_days:
-          one: "%{count}z"
-          few: "%{count} z"
-          other: "%{count} z"
-        x_months:
-          one: "%{count}mon"
-          few: "1mon"
-          other: "%{count}mon"
-        about_x_years:
-          one: "%{count}a"
-          few: "%{count} a"
-          other: "%{count} a"
-        over_x_years:
-          one: "> %{count}a"
-          few: "> %{count} a"
-          other: "> %{count} a"
-        almost_x_years:
-          one: "%{count}a"
-          few: "%{count} a"
-          other: "%{count} de a"
-        date_month: "DD MMMM"
-        date_year: "MMM 'YY"
-      medium:
+          one: "< %{count} min"
+          few: "< %{count} min"
+          other: "< %{count} min"
         x_minutes:
           one: "%{count} min"
           few: "%{count} min"
-          other: "%{count} de min"
+          other: "%{count} min"
+        about_x_hours:
+          one: "%{count} oră"
+          few: "%{count} ore"
+          other: "%{count} de ore"
+        x_days:
+          one: "%{count} zi"
+          few: "%{count} zile"
+          other: "%{count} de zile"
+        x_months:
+          one: "%{count} lună"
+          few: "%{count} luni"
+          other: "%{count} de luni"
+        about_x_years:
+          one: "%{count} an"
+          few: "%{count} ani"
+          other: "%{count} de ani"
+        over_x_years:
+          one: "> %{count} an"
+          few: "> %{count} ani"
+          other: "> %{count} de ani"
+        almost_x_years:
+          one: "%{count} an"
+          few: "%{count} ani"
+          other: "%{count} de ani"
+        date_month: "DD MMMM"
+        date_year: "MMM 'YY"
+      medium:
+        less_than_x_minutes:
+          one: "mai puțin de %{count} minut"
+          few: "mai puțin de %{count} minute"
+          other: "mai puțin de %{count} de minute"
+        x_minutes:
+          one: "%{count} minut"
+          few: "%{count} minute"
+          other: "%{count} de minute"
         x_hours:
           one: "%{count} oră"
           few: "%{count} ore"
@@ -98,68 +103,90 @@ ro:
         about_x_hours:
           one: "aproximativ %{count} oră"
           few: "aproximativ %{count} ore"
-          other: "aproximativ %{count} ore"
+          other: "aproximativ %{count} de ore"
         x_days:
           one: "%{count} zi"
           few: "%{count} zile"
           other: "%{count} de zile"
+        x_months:
+          one: "%{count} lună"
+          few: "%{count} luni"
+          other: "%{count} de luni"
         about_x_years:
           one: "aproximativ %{count} an"
           few: "aproximativ %{count} ani"
-          other: "aproximativ %{count} ani"
+          other: "aproximativ %{count} de ani"
+        over_x_years:
+          one: "peste %{count} an"
+          few: "peste %{count} ani"
+          other: "peste %{count} de ani"
+        almost_x_years:
+          one: "aproape %{count} an"
+          few: "aproape %{count} ani"
+          other: "aproape %{count} de ani"
         date_year: "D MM YYYY"
       medium_with_ago:
         x_minutes:
-          one: "acum un min"
-          few: "acum %{count} min"
-          other: "acum %{count} de min"
+          one: "acum %{count} minut"
+          few: "acum %{count} minute"
+          other: "acum %{count} de minute"
         x_hours:
-          one: "acum o oră"
+          one: "acum %{count} oră"
           few: "acum %{count} ore"
           other: "acum %{count} de ore"
         x_days:
-          one: "acum o zi"
+          one: "acum %{count} zi"
           few: "acum %{count} zile"
           other: "acum %{count} de zile"
         x_months:
-          one: "acum %{count} luni"
+          one: "acum %{count} lună"
           few: "acum %{count} luni"
           other: "acum %{count} de luni"
+        x_years:
+          one: "acum %{count} an"
+          few: "acum %{count} ani"
+          other: "acum %{count} de ani"
       later:
         x_days:
-          one: "După o zi"
-          few: "După %{count} zile"
-          other: "După %{count} de zile"
+          one: "%{count} zi mai târziu"
+          few: "%{count} zile mai târziu"
+          other: "%{count} de zile mai târziu"
         x_months:
-          one: "O lună mai târziu"
+          one: "%{count} lună mai târziu"
           few: "%{count} luni mai târziu"
           other: "%{count} de luni mai târziu"
         x_years:
-          one: "După un an"
-          few: "După %{count} ani"
-          other: "După %{count} de ani"
-      previous_month: "Luna anterioară"
+          one: "%{count} an mai târziu"
+          few: "%{count} ani mai târziu"
+          other: "%{count} de ani mai târziu"
+      previous_month: "Luna precedentă"
       next_month: "Luna următoare"
       placeholder: dată
       from_placeholder: "din data"
-      to_placeholder: "la data"
+      to_placeholder: "până la data"
     share:
       topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
-      close: "Închide"
+      post: "articol #%{postNumber} de @%{username}"
+      close: "închide"
       twitter: "Distribuie pe Twitter"
       facebook: "Distribuie pe Facebook"
       email: "Trimite prin e-mail"
-      url: "Copiați și partajați URL-ul"
+      url: "Copiază și distribuie URL"
+    word_connector:
+      comma: ", "
     action_codes:
-      public_topic: "A făcut Acest subiect public %{when}"
-      private_topic: "Fă acest subiect un mesaj personal %{when}"
-      split_topic: "Desparte această discuție %{when}"
-      invited_user: "A invitAt pe %{who} %{when}"
-      invited_group: "A invitAt pe %{who} %{when}"
-      user_left: "%{who} s-a îndepărtat de la acest mesaj %{when}"
-      removed_user: "Scos pe %{who} %{when}"
-      removed_group: "Scos pe %{who} %{when}"
+      public_topic: "A făcut acest subiect public %{when}"
+      open_topic: "A convertit aceasta într-un subiect %{when}"
+      private_topic: "A făcut acest subiect un mesaj personal %{when}"
+      split_topic: "A împărțit acest subiect %{when}"
+      invited_user: "A invitat pe %{who} %{when}"
+      invited_group: "A invitat pe %{who} %{when}"
+      user_left: "%{who} s-a eliminat de la acest mesaj %{when}"
+      removed_user: "A eliminat pe %{who} %{when}"
+      removed_group: "A eliminat pe %{who} %{when}"
       autobumped: "Impuls automat %{when}"
+      tags_changed: "Etichete actualizate %{when}"
+      category_changed: "Categorie actualizată %{when}"
       autoclosed:
         enabled: "Închis %{when}"
         disabled: "Deschis %{when}"
@@ -171,28 +198,37 @@ ro:
         disabled: "Dezarhivat %{when}"
       pinned:
         enabled: "Fixat %{when}"
-        disabled: "Ne-fixat %{when}"
+        disabled: "De-fixat %{when}"
       pinned_globally:
         enabled: "Fixat la nivel global %{when}"
-        disabled: "Ne-fixat %{when}"
+        disabled: "De-fixat %{when}"
       visible:
-        enabled: "Afișat %{when}"
-        disabled: "Ascuns %{when}"
+        enabled: "Listat %{when}"
+        disabled: "De-listat %{when}"
       banner:
-        enabled: "A creAt Acest bAnner %{when}. VA ApăreA lA începutul fiecărei pAgini până când vA fi Ascuns de către utilizAtor."
-        disabled: "A îndepărtAt Acest bAnner %{when}. Nu vA mAi ApăreA lA începutul fiecărei pAgini."
+        enabled: "A făcut din acesta un banner %{when}. Va apărea la începutul fiecărei pagini până când va fi ascuns de către utilizator."
+        disabled: "A eliminat acest banner %{when}. Nu va mai apărea la începutul fiecărei pagini."
+      forwarded: "A redirecționat e-mailul de mai sus"
     topic_admin_menu: "acțiuni subiect"
-    skip_to_main_content: "Treci la conținutul principal"
-    emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
+    skip_to_main_content: "Sari la conținutul principal"
+    skip_user_nav: "Sari la conținutul profilului"
+    emails_are_disabled: "Trimiterea de e-mailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări e-mail de niciun fel."
+    emails_are_disabled_non_staff: "Mesajele de e-mail de ieșire au fost dezactivate pentru utilizatorii care nu fac parte din echipă."
     software_update_prompt:
-      message: "Site-ul a fost actualizat! <span>Reîmprospătează pagina</span>."
-      dismiss: "Renunță"
+      message: "Am actualizat acest site, <span>te rugăm să reîmprospătezi</span>, altfel s-ar putea să ai un comportament neașteptat."
+      dismiss: "Respinge"
+    bootstrap_mode: "Începe"
     themes:
       default_description: "Implicit"
+      broken_theme_alert: "Este posibil ca site-ul tău să nu funcționeze pentru că o temă sau componentă are erori."
+      error_caused_by: "Cauzat de '%{name}'. <a target='blank' href='%{path}'>Clic aici</a> pentru a actualiza, reconfigura sau dezactiva."
+      only_admins: "(acest mesaj este afișat doar pentru administratorii site-ului)"
+    broken_decorator_alert: "Este posibil ca articolele să nu fie afișate corect deoarece unul dintre decoratorii de conținut al articolelor de pe site-ul tău a generat o eroare."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
+        ap_east_1: "Asia Pacific (Hong Kong)"
         ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -201,6 +237,7 @@ ro:
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_north_1: "UE (Stockholm)"
+        eu_south_1: "EU (Milan)"
         eu_west_1: "EU (Irlanda)"
         eu_west_2: "UE (Londra)"
         eu_west_3: "EU (Paris)"
@@ -211,123 +248,133 @@ ro:
         us_gov_west_1: "AWS GovCloud (SUA-Vest)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
-    clear_input: "Șterge"
-    edit: "Editează titlul și categoria acestui subiect"
+    clear_input: "Golește intrarea"
+    edit: "editează titlul și categoria acestui subiect"
     expand: "Extinde"
-    not_implemented: "Această funcționalitate nu a fost implementată încă."
+    not_implemented: "Regret, dar această caracteristică nu a fost implementată încă!"
     no_value: "Nu"
     yes_value: "Da"
     ok_value: "Ok"
     cancel_value: "Anulare"
     submit: "Trimite"
     delete: "Șterge"
-    generic_error: "A apărut o eroare."
+    generic_error: "Regret, a apărut o eroare."
     generic_error_with_reason: "A apărut o eroare: %{error}"
+    multiple_errors: "Au apărut mai multe erori: %{errors}"
     sign_up: "Înregistrare"
     log_in: "Autentificare"
     age: "Vârsta"
     joined: "Înregistrat"
     admin_title: "Admin"
-    show_more: "Mai mult"
-    show_help: "Opțiuni"
-    links: "Adrese web"
+    show_more: "Arată mai mult"
+    show_help: "opțiuni"
+    links: "Legături"
     links_lowercase:
-      one: "link"
-      few: "link-uri"
-      other: "de link-uri"
+      one: "legătură"
+      few: "legături"
+      other: "de legături"
     faq: "Întrebări frecvente"
     guidelines: "Indicații"
     privacy_policy: "Politică de confidențialitate"
     privacy: "Confidențialitate"
     tos: "Termenii serviciului"
     rules: "Reguli"
-    conduct: "Codul de conduită"
-    mobile_view: "Vedere pentru mobil"
-    desktop_view: "Vedere pentru desktop"
-    now: "Acum"
-    read_more: "Citește mai mult"
+    conduct: "Cod de conduită"
+    mobile_view: "Vizualizare pe mobil"
+    desktop_view: "Vizualizare pe desktop"
+    now: "chiar acum"
+    read_more: "citește mai mult"
     more: "Mai mult"
     x_more:
-      one: "Mai e %{count}"
-      few: "Mai e %{count}"
-      other: "Mai e %{count}"
-    never: "Niciodată"
-    every_30_minutes: "La fiecare 30 de minute"
-    every_hour: "La fiecare oră"
-    daily: "Zilnic"
-    weekly: "Săptămânal"
-    every_month: "în fiecare lună"
+      one: "Încă %{count}"
+      few: "Încă %{count}"
+      other: "Încă %{count}"
+    never: "niciodată"
+    every_30_minutes: "la fiecare 30 de minute"
+    every_hour: "la fiecare oră"
+    daily: "zilnic"
+    weekly: "săptămânal"
+    every_month: "lunar"
     every_six_months: "la fiecare șase luni"
     max_of_count: "max din %{count}"
     character_count:
-      one: "Un caracter"
+      one: "%{count} caracter"
       few: "%{count} caractere"
       other: "%{count} de caractere"
+    period_chooser:
+      aria_label: "Filtrează după perioadă"
     related_messages:
-      title: "Mesaje legate de"
+      title: "Mesaje conexe"
       pill: "Mesaje legate de"
     suggested_topics:
       pm_title: "Mesaje sugerate"
     about:
       simple_title: "Despre"
       title: "Despre %{title}"
-      stats: "Statisticile site-ului"
-      our_admins: "Administratori"
-      our_moderators: "Moderatori"
+      stats: "Statistici site"
+      our_admins: "Administratorii noștri"
+      our_moderators: "Moderatorii noștri"
       moderators: "Moderatori"
       stat:
         last_day: "24 ore"
       like_count: "Aprecieri"
       topic_count: "Subiecte"
-      post_count: "Postări"
-      contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, contactează-ne la %{contact_info}."
+      post_count: "Articole"
+      contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, te rugăm să ne contactezi la %{contact_info}."
     bookmarked:
       title: "Semn de carte"
-      edit_bookmark: "Editați marcajul"
+      edit_bookmark: "Editează marcaj"
       clear_bookmarks: "Șterge semnele de carte"
       help:
+        bookmark: "Clic pentru a pune un semn de carte la acest subiect"
+        edit_bookmark: "Clic pentru a edita semnul de carte pe un mesaj din acest subiect"
         edit_bookmark_for_topic: "Faceți clic pentru a edita marcajul pentru acest subiect"
-        unbookmark: "Click pentru a șterge semnele de carte"
+        unbookmark: "Clic pentru a elimina toate semnele de carte din acest subiect"
+        unbookmark_with_reminder: "Clic pentru a elimina toate semnele de carte și memento-urile din acest subiect"
     bookmarks:
-      created: "Ai marcat acestă postare %{name} ca semn de carte"
-      create: "Creare semn de carte"
-      edit: "Editare semn de carte"
-      not_bookmarked: "marchează ca semn de carte acest post"
-      remove_reminder_keep_bookmark: "Șterge memento-ul și păstrează semnul de carte"
+      created: "Ai pus un semn de carte la acest articol. %{name}"
+      created_generic: "Ai pus un semn de carte aici. %{name}"
+      create: "Creează semn de carte"
+      edit: "Editează semn de carte"
+      not_bookmarked: "pune semn de carte la acest articol"
+      remove_reminder_keep_bookmark: "Șterge mementoul și păstrează semnul de carte"
       created_with_reminder: "Ai marcat această postare cu un memento %{date}. %{name}"
+      created_with_reminder_generic: "Ai marcat acest articol cu un memento %{date}. %{name}"
       delete: "Șterge semn de carte"
-      confirm_delete: "Sunteţi sigur că doriţi să ştergeţi acest semn de carte? Mementoul va fi de asemenea şters."
-      confirm_clear: "Sigur doriți să ștergeți toate marcajele din acest subiect?"
+      confirm_delete: "Sigur vrei să ștergi acest semn de carte? Mementoul va fi de asemenea șters."
+      confirm_clear: "Sigur vrei să ștergi toate marcajele tale din acest subiect?"
       save: "Salvează"
-      no_timezone: 'Nu ați setat încă un fus orar. Nu veți putea seta mementouri. Configurați <a href="%{basePath}/my/preferences/profile">în profilul dvs.</a>.'
-      invalid_custom_datetime: "Data și ora pe care le-ai furnizat sunt invalide, te rugăm să încerci din nou."
-      list_permission_denied: "Nu ai permisiuni de acces la link-urile preferate ale acestui utilizator"
-      no_user_bookmarks: "Nu ai link-uri de postări salvate; link-urile salvate îți permit revenirea la postări specifice"
+      no_timezone: 'Nu ai setat încă un fus orar. Nu vei putea seta mementouri. Setează unul <a href="%{basePath}/my/preferences/profile">în profilul tău</a>.'
+      invalid_custom_datetime: "Data și ora pe care le-ai furnizat sunt nevalide, te rugăm să încerci din nou."
+      list_permission_denied: "Nu ai permisiunea de a vedea semnele de carte ale acestui utilizator."
+      no_user_bookmarks: "Nu ai niciun articol marcat; semnele de carte îți permit să ajungi rapid la anumite articole."
       auto_delete_preference:
-        label: "După ce sunteți notificat"
-        never: "Păstrați marcajul"
+        label: "După ce primești notificare"
+        never: "Păstrează semn de carte"
         when_reminder_sent: "Șterge semn de carte"
-        on_owner_reply: "Șterge marcajul, după ce răspund"
-        clear_reminder: "Păstrează semnul de carte și șterge memento-ul"
-      search_placeholder: "Căutați marcaje după nume, titlul subiectului sau conținutul postării"
+        on_owner_reply: "Șterge semn de carte, după ce răspund"
+        clear_reminder: "Păstrează semn de carte și șterge memento"
+      search_placeholder: "Caută semne de carte după nume, titlul subiect sau conținut articol"
       search: "Caută"
       reminders:
         today_with_time: "astăzi la %{time}"
         tomorrow_with_time: "mâine la %{time}"
         at_time: "la %{date_time}"
-        existing_reminder: "Ai un memento setat pentru acest link salvat care va fi trimis %{at_date_time}"
+        existing_reminder: "Ai un memento setat pentru acest semn de carte care va fi trimis %{at_date_time}"
     copy_codeblock:
       copied: "copiat!"
-      copy: "copiați codul în clipboard"
-      fullscreen: "afișați codul în ecran complet"
+      copy: "copiază cod în memoria temporară"
+      fullscreen: "afișează cod în ecran complet"
     drafts:
       label: "Ciorne"
-      label_with_count: "Schițe (%{count})"
-      resume: "Reluați"
-      remove: "Eliminați"
-      remove_confirmation: "Ești sigur că vrei să ștergi această ciornă?"
+      label_with_count: "Ciorne (%{count})"
+      resume: "Reia"
+      remove: "Elimină"
+      remove_confirmation: "Sigur vrei să ștergi această ciornă?"
       new_topic: "Ciornă subiect nou"
+      new_private_message: "Ciornă mesaj personal nou"
       abandon:
+        confirm: "Ai deja o ciornă în curs de redactare. Ce ai vrea să faci cu ea?"
         yes_value: "Renunță"
         no_value: "Reia editarea"
     topic_count_all:
@@ -335,79 +382,86 @@ ro:
       few: "Afișați %{count} subiecte noi"
       other: "Afișați %{count} subiecte noi"
     topic_count_categories:
-      one: "Un subiect nou sau actualizat."
-      few: "%{count} subiecte noi sau actualizate."
-      other: "%{count} de subiecte noi sau actualizate."
+      one: "Vezi %{count} subiect nou sau actualizat"
+      few: "Vezi %{count} subiecte noi sau actualizate"
+      other: "Vezi %{count} de subiecte noi sau actualizate"
     topic_count_latest:
-      one: "Un subiect nou sau actualizat."
-      few: "%{count} subiecte noi sau actualizate."
-      other: "%{count} de subiecte noi sau actualizate."
+      one: "Vezi %{count} subiect nou sau actualizat"
+      few: "Vezi %{count} subiecte noi sau actualizate"
+      other: "Vezi %{count} de subiecte noi sau actualizate"
     topic_count_unseen:
-      one: "Un subiect nou sau actualizat."
-      few: "%{count} subiecte noi sau actualizate."
-      other: "%{count} de subiecte noi sau actualizate."
+      one: "Vezi %{count} subiect nou sau actualizat"
+      few: "Vezi %{count} subiecte noi sau actualizate"
+      other: "Vezi %{count} de subiecte noi sau actualizate"
     topic_count_unread:
-      one: "Afișați %{count} cubiect necitit"
-      few: "Afișați %{count} subiect necitit"
-      other: "Vedeți %{count} subiecte necitite"
+      one: "Vezi %{count} subiect necitit"
+      few: "Vezi %{count} subiecte necitite"
+      other: "Vezi %{count} de subiecte necitite"
     topic_count_new:
-      one: "Afișați %{count} subiect nou"
-      few: "Afișați %{count} subiecte noi"
-      other: "Afișați %{count} subiecte noi"
-    preview: "Previzualizează"
-    cancel: "Anulează"
-    save: "Salvează schimbările"
+      one: "Vezi %{count} subiect nou"
+      few: "Vezi %{count} subiecte noi"
+      other: "Vezi %{count} de subiecte noi"
+    preview: "previzualizează"
+    cancel: "anulează"
+    save: "Salvează modificări"
     saved: "Salvat!"
     upload: "Încarcă"
-    clipboard: "memoria temporară"
+    clipboard: "memorie temporară"
     uploaded: "Încărcat!"
     enable: "Activează"
     disable: "Dezactivează"
     continue: "Continuă"
-    switch_to_anon: "Intrați în Modul anonim"
-    switch_from_anon: "Ieșiți din Modul anonim"
+    switch_to_anon: "Intră în modul anonim"
+    switch_from_anon: "Ieși din modul anonim"
     banner:
-      close: "Ignoră acest banner"
+      close: "Respinge acest banner"
       edit: "Editează"
     pwa:
       install_banner: "Vrei să <a href>instalezi %{title} pe acest dispozitiv?</a>"
     choose_topic:
-      none_found: "Nu au fost găsite subiecte noi."
+      none_found: "Niciun subiect găsit."
       title:
-        search: "Caută o discuție"
-        placeholder: "scrie titlul discuției, URL-ul sau ID-ul aici"
+        search: "Caută un subiect"
+        placeholder: "introdu aici titlul subiectului, URL-ul sau ID-ul"
     choose_message:
-      none_found: "Nu sunt mesaje."
+      none_found: "Niciun mesaj găsit."
       title:
         search: "Căutați un mesaj"
-        placeholder: "scrie titlul mesajului, URL-ul sau id-ul aici"
+        placeholder: "introdu aici titlul mesajului, URL-ul sau ID-ul"
     review:
-      order_by: "Sortează după"
-      date_filter: "Postat între"
-      in_reply_to: "ca răspuns pentru"
+      show_more: "Arată mai mult"
+      show_less: "Arată mai puțin"
+      order_by: "Ordonează după"
+      date_filter: "Publicat între"
+      in_reply_to: "ca răspuns la"
       explain:
         why: "explică de ce acest element a ajuns în coada de așteptare"
         title: "Scor ce poate fi revizuit"
         formula: "Formulă"
         subtotal: "Subtotal"
         total: "Total"
-        min_score_visibility: "Scorul minim pentru vizibilitate"
+        min_score_visibility: "Scor minim pentru vizibilitate"
         score_to_hide: "Scor pentru a ascunde postarea"
         take_action_bonus:
           name: "a luat măsuri"
-          title: "Când un membru al personalului alege să utilizeze steagul va primi un bonus."
+          title: "Când un membru al echipei alege să utilizeze semnalarea va primi un bonus."
         user_accuracy_bonus:
-          name: "precizia utilizatorului"
+          name: "precizie utilizator"
+          title: "Utilizatorilor ale căror semnalări au fost agreate de-a lungul istoriei li se acordă un bonus."
         trust_level_bonus:
           name: "nivel de încredere"
           title: "Elementele care pot fi revizuite create de utilizatorii cu nivel mai înalt de încredere au un scor mai mare."
+        type_bonus:
+          name: "introdu bonus"
+          title: "Anumite tipuri care pot fi revizuite pot primi un bonus de către echipă pentru a le face o prioritate mai mare."
       revise_and_reject_post:
         reason: "Motiv"
         optional: "opțional"
+      stale_help: "Această examinare a fost rezolvată de <b>%{username}</b>."
       claim_help:
-        optional: "Puteți revendica acest element pentru a împiedica alte persoane să-l revizuiască."
+        optional: "Poți revendica acest element pentru a împiedica alte persoane să-l revizuiască."
         required: "Trebuie să revendici elementele înainte de a le putea revizui."
-        claimed_by_you: "Ai revendicat acest articol și îl poți revizui."
+        claimed_by_you: "Ai revendicat acest element și îl poți revizui."
         claimed_by_other: "Acest element poate fi revizuit numai de <b>%{username}</b>."
       claim:
         title: "revendică acest subiect"
@@ -417,7 +471,7 @@ ro:
       delete: "Șterge"
       settings:
         saved: "Salvat"
-        save_changes: "Salvează schimbările"
+        save_changes: "Salvează modificări"
         title: "Setări"
         priorities:
           title: "Priorități care pot fi revizuite"
@@ -425,34 +479,38 @@ ro:
       view_all: "Vezi tot"
       grouped_by_topic: "Grupate după subiect"
       none: "Nu există elemente de revizuit."
-      view_pending: "vezi ce este în aşteptare"
+      view_pending: "vezi ce este în așteptare"
       topic_has_pending:
-        one: "Acest subiect are o <b>%{count}</b> postare în așteptarea aprobării"
-        few: "Acest subiect are <b>%{count}</b> postări în așteptarea aprobării"
-        other: "Acest subiect are <b>%{count}</b> postări în așteptarea aprobării"
+        one: "Acest subiect are <b>%{count}</b> articol în așteptarea aprobării"
+        few: "Acest subiect are <b>%{count}</b> articole în așteptarea aprobării"
+        other: "Acest subiect are <b>%{count}</b> de articole în așteptarea aprobării"
       title: "Revizuire"
       topic: "Subiect:"
-      filtered_topic: "Ai ales conținutul care poate fi revizuit dintr-un singur subiect."
-      filtered_user: "Utilizatori"
+      filtered_topic: "Ai filtrat până la conținutul care poate fi revizuit într-un singur subiect."
+      filtered_user: "Utilizator"
       filtered_reviewed_by: "Revizuit de"
       show_all_topics: "arată toate subiectele"
-      deleted_post: "(postare ștearsă)"
+      deleted_post: "(articol șters)"
       deleted_user: "(utilizator șters)"
       user:
         bio: "Bio"
-        website: "Website"
+        website: "Site web"
         username: "Nume utilizator"
-        email: "Email"
+        email: "E-mail"
         name: "Nume"
         fields: "Câmpuri"
         reject_reason: "Motiv"
       user_percentage:
+        summary:
+          one: "%{agreed}, %{disagreed}, %{ignored} (a ultimei semnalări)"
+          few: "%{agreed}, %{disagreed}, %{ignored} (a ultimelor %{count} semnalări)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (a ultimelor %{count} de semnalări)"
         agreed:
-          one: "%{count}% este de acord"
-          few: "%{count}% sunt de acord"
-          other: "%{count}% sunt de acord"
+          one: "%{count}% de acord"
+          few: "%{count}% de acord"
+          other: "%{count}% de acord"
         disagreed:
-          one: "%{count}% nu este de acord"
+          one: "%{count}% nu sunt de acord"
           few: "%{count}% nu sunt de acord"
           other: "%{count}% nu sunt de acord"
         ignored:
@@ -460,20 +518,20 @@ ro:
           few: "%{count}% ignoră"
           other: "%{count}% ignoră"
       topics:
-        topic: "Discuție"
+        topic: "Subiect"
         reviewable_count: "Număr"
         reported_by: "Raportat de"
         deleted: "[Subiect șters]"
-        original: "(topic inițial)"
+        original: "(subiect original)"
         details: "detalii"
         unique_users:
           one: "%{count} utilizator"
           few: "%{count} utilizatori"
-          other: "%{count} utilizatori"
+          other: "%{count} de utilizatori"
       replies:
         one: "%{count} răspuns"
         few: "%{count} răspunsuri"
-        other: "%{count} răspunsuri"
+        other: "%{count} de răspunsuri"
       edit: "Editează"
       save: "Salvează"
       cancel: "Anulează"
@@ -485,7 +543,7 @@ ro:
           all: "(toate tipurile)"
         minimum_score: "Scor minim:"
         refresh: "Reîmprospătează"
-        status: "Status"
+        status: "Stare"
         category: "Categorie"
         orders:
           score: "Scor"
@@ -499,84 +557,107 @@ ro:
           medium: "Medie"
           high: "Ridicată"
       conversation:
-        view_full: "vezi conversația completă"
+        view_full: "vezi toată conversația"
       scores:
-        about: "Acest scor este calculat pe baza nivelului de încredere al reclamantului, a acurateței notificărilor anterioare și a priorității elementului raportat."
+        about: "Acest scor este calculat pe baza nivelului de încredere a reclamantului, a acurateței semnalărilor anterioare și a priorității elementului raportat."
         score: "Scor"
+        date: "Dată raport"
         type: "Motiv"
         status: "Status"
         submitted_by: "Raportat de"
+        reviewed_by: "Revizuit de"
+        reviewed_timestamp: "Dată revizuire"
       statuses:
         pending:
           title: "În așteptare"
         approved:
           title: "Aprobat"
+        approved_flag:
+          title: "Semnalare aprobată"
+        approved_user:
+          title: "Utilizator aprobat"
+        approved_post:
+          title: "Articol aprobat"
         rejected:
-          title: "Respinse"
+          title: "Respins"
+        rejected_flag:
+          title: "Semnalare respinsă"
+        rejected_user:
+          title: "Utilizator respins"
+        rejected_post:
+          title: "Articol respins"
+        ignored:
+          title: "Semnalare ignorată"
+        deleted:
+          title: "Subiect sau articol șters"
         reviewed:
           title: "Toate revizuite"
         all:
-          title: "Totul"
+          title: "Tot"
       context_question:
         delimiter: "sau"
       types:
         reviewable_flagged_post:
-          title: "Postare semnalată"
+          title: "Articol semnalat"
           flagged_by: "Semnalat de"
           noun: "postare"
         reviewable_queued_topic:
           title: "Subiect în așteptare"
           noun: "discuție"
         reviewable_queued_post:
-          title: "Postare în așteptare"
+          title: "Articol în așteptare"
           noun: "postare"
         reviewable_user:
-          title: "Utilizatori"
+          title: "Utilizator"
           noun: "utilizatori"
         reviewable_post:
-          title: "Postare"
+          title: "Articol"
           noun: "postare"
       approval:
-        title: "Necesită aprobare"
-        description: "Am primit noua postare dar trebuie să fie aprobată de un moderator înainte că ea să apară pe site. Te rugăm să ai răbdare."
+        title: "Articolul are nevoie de aprobare"
+        description: "Am primit articolul tău nou, dar trebuie să fie aprobat de un moderator înainte că el să apară pe site. Te rugăm să ai răbdare."
         pending_posts:
-          one: "Ai <strong>%{count}</strong> postare în așteptare."
-          few: "Ai <strong>%{count}</strong> postări în așteptare."
-          other: "Ai <strong>%{count}</strong> postări în așteptare."
+          one: "Ai <strong>%{count}</strong> articol în așteptare."
+          few: "Ai <strong>%{count}</strong> articole în așteptare."
+          other: "Ai <strong>%{count}</strong> de articole în așteptare."
         ok: "Ok"
-      example_username: "nume de utilizator"
+      example_username: "nume utilizator"
       reject_reason:
-        send_email: "Trimite un e-mail de respingere"
+        title: "De ce respingi acest utilizator?"
+        send_email: "Trimite e-mail de respingere"
     relative_time_picker:
       minutes:
         one: "minut"
         few: "minute"
-        other: "minute"
+        other: "de minute"
       hours:
         one: "oră"
         few: "ore"
-        other: "ore"
+        other: "de ore"
       days:
         one: "zi"
         few: "zile"
-        other: "zile"
+        other: "de zile"
       months:
         one: "lună"
         few: "luni"
-        other: "luni"
+        other: "de luni"
       years:
         one: "an"
         few: "ani"
-        other: "ani"
+        other: "de ani"
       relative: "Relativ"
     time_shortcut:
       now: "Acum"
+      in_one_hour: "Într-o oră"
+      in_two_hours: "In două ore"
       later_today: "Mai târziu azi"
-      two_days: "Doua zile"
+      two_days: "Două zile"
       next_business_day: "Următoarea zi lucrătoare"
       tomorrow: "Mâine"
+      post_local_date: "Dată în articol"
       later_this_week: "Mai târziu săptămâna asta"
-      this_weekend: "Acest weekend"
+      this_weekend: "Acest sfârșit de săptămână"
       start_of_next_business_week: "Luni"
       start_of_next_business_week_alt: "Lunea viitoare"
       next_week: "Săptămâna viitoare"
@@ -588,81 +669,89 @@ ro:
       six_months: "Șase luni"
       one_year: "Un an"
       forever: "Pentru totdeanua"
-      none: "Nici unul necesar"
+      relative: "Timp relativ"
+      none: "Niciunul nu este necesar"
       never: "Niciodată"
       last_custom: "Ultima dată personalizată"
       custom: "Data și ora personalizată"
       select_timeframe: "Alege un interval de timp"
     user_action:
-      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a postat <a href='%{topicUrl}'>discuția</a>"
-      you_posted_topic: "<a href='%{userUrl}'>ai</a> postat <a href='%{topicUrl}'>subiectul</a>"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a publicat <a href='%{topicUrl}'>articolul</a>"
+      you_posted_topic: "<a href='%{userUrl}'>Tu</a> ai publicat <a href='%{topicUrl}'>subiectul</a>"
       user_replied_to_post: "<a href='%{userUrl}'>%{user}</a>a răspuns la<a href='%{postUrl}'>%{post_number}</a>"
       you_replied_to_post: "<a href='%{userUrl}'>Tu</a> ai răspuns la <a href='%{postUrl}'>%{post_number}</a>"
       user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> a răspuns la <a href='%{topicUrl}'>subiect</a>"
       you_replied_to_topic: "<a href='%{userUrl}'>Tu</a> ai răspuns la <a href='%{topicUrl}'>subiect</a>"
       user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> a menționat pe <a href='%{user2Url}'>%{another_user}</a>"
-      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> te-a menționat pe <a href='%{user2Url}'>tine</a>"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> <a href='%{user2Url}'>te-a</a> menționat"
       you_mentioned_user: "<a href='%{user1Url}'>Tu</a> ai menționat pe <a href='%{user2Url}'>%{another_user}</a>"
-      posted_by_user: "Postat de <a href='%{userUrl}'>%{user}</a>"
-      posted_by_you: "Postat de <a href='%{userUrl}'>tine</a>"
+      posted_by_user: "Publicat de <a href='%{userUrl}'>%{user}</a>"
+      posted_by_you: "Publicat de <a href='%{userUrl}'>tine</a>"
       sent_by_user: "Trimis de <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Trimis de <a href='%{userUrl}'>tine</a>"
     directory:
       username: "Nume de utilizator"
-      filter_name: "Filtrează după nume utilizator"
+      filter_name: "filtrează după nume utilizator"
       title: "Utilizatori"
       likes_given: "Oferite"
       likes_received: "Primite"
       topics_entered: "Văzute"
       topics_entered_long: "Subiecte văzute"
-      time_read: "Timp citit"
+      time_read: "Timp citire"
       topic_count: "Subiecte"
       topic_count_long: "Subiecte create"
       post_count: "Răspunsuri"
-      post_count_long: "Răspunsuri postate"
+      post_count_long: "Răspunsuri publicate"
       no_results: "Nu s-au găsit rezultate."
       days_visited: "Vizite"
       days_visited_long: "Zile de vizită"
       posts_read: "Citite"
-      posts_read_long: "Postări citite"
+      posts_read_long: "Articole citite"
       last_updated: "Ultima actualizare:"
       total_rows:
         one: "%{count} utilizator"
         few: "%{count} utilizatori"
         other: "%{count} de utilizatori"
       edit_columns:
+        title: "Editează coloane director"
         save: "Salvează"
         reset_to_default: "Resetare la valorile implicite"
       group:
         all: "toate grupurile"
+      sort:
+        label: "Sortează după %{criteria}"
     group_histories:
       actions:
-        change_group_setting: "Schimbă setarea grupului"
+        change_group_setting: "Schimbă setare grup"
         add_user_to_group: "Adaugă utilizator"
-        remove_user_from_group: "Șterge utilizator"
+        remove_user_from_group: "Elimină utilizator"
         make_user_group_owner: "Fă proprietar"
         remove_user_as_group_owner: "Revocă proprietar"
     groups:
       member_added: "Adăugat"
       member_requested: "Solicitat la"
       add_members:
+        title: "Adaugă utilizatori la %{group_name}"
+        description: "Introdu o listă de utilizatori pe care vrei să-i inviți în grup sau lipește într-o listă separată prin virgulă:"
         usernames_placeholder: "nume de utilizatori"
         usernames_or_emails_placeholder: "nume de utilizator sau e-mailuri"
-        notify_users: "Notifică utilizatorii"
+        notify_users: "Notifică utilizatori"
+        set_owner: "Setează utilizatorii ca proprietari ai acestui grup"
       requests:
         title: "Cereri"
         reason: "Motiv"
         accept: "Acceptă"
         accepted: "acceptat"
         deny: "Respinge"
-        denied: "respinse"
+        denied: "respins"
         undone: "cerere retrasă"
         handle: "gestionează cererea de înscriere"
-        undo: "Anulează acțiunea"
+        undo: "Anulează"
       manage:
         title: "Gestionează"
         name: "Nume"
-        full_name: "Nume și prenume"
+        full_name: "Nume complet"
+        add_members: "Adaugă utilizatori"
         invite_members: "Invită"
         delete_member_confirm: "Elimini „%{username}” din grupul „%{group}”?"
         profile:
@@ -672,9 +761,29 @@ ro:
           posting: Publicare
           notification: Notificare
         email:
-          title: "Email"
+          title: "E-mail"
           status: "S-au sincronizat prin IMAP %{old_emails} e-mailuri din %{total_emails} în total."
-          last_updated_by: "de către"
+          enable_smtp: "Activează SMTP"
+          enable_imap: "Activează IMAP"
+          test_settings: "Setări de testare"
+          save_settings: "Salvează setări"
+          last_updated: "Ultima actualizare:"
+          last_updated_by: "de"
+          settings_required: "Toate setările sunt necesare, te rugăm să completezi toate câmpurile înainte de validare."
+          smtp_settings_valid: "Setări SMTP valide."
+          smtp_title: "SMTP"
+          smtp_instructions: "Când activezi SMTP pentru grup, toate e-mailurile trimise din căsuța de intrare a grupului vor fi trimise prin intermediul setărilor SMTP specificate aici în locul serverului de mail configurat pentru alte e-mailuri trimise de forum."
+          imap_title: "IMAP"
+          imap_additional_settings: "Setări suplimentare"
+          imap_instructions: 'Când activezi IMAP pentru grup, e-mailurile sunt sincronizate între intrările grupului și serverul IMAP și cutia poștală furnizată. SMTP trebuie să fie activat cu date de conectare valide și testate înainte ca IMAP să poată fi activat. Numele de utilizator şi parola utilizate pentru SMTP vor fi folosite pentru IMAP. Pentru mai multe informații vezi <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">anunțul despre caracteristici pe Discourse Meta</a>.'
+          imap_alpha_warning: "Atenție: Aceasta este o caracteristică pentru etapa alfa. Doar Gmail este suportat oficial. Utilizează pe propriul risc!"
+          imap_settings_valid: "Setări IMAP valide."
+          smtp_disable_confirm: "Dacă dezactivezi SMTP, toate setările SMTP și IMAP vor fi resetate și funcționalitatea asociată va fi dezactivată. Sigur vrei să continui?"
+          imap_disable_confirm: "Dacă dezactivezi IMAP, toate setările IMAP vor fi resetate și funcționalitatea asociată va fi dezactivată. Sigur vrei să continui?"
+          imap_mailbox_not_selected: "Trebuie să selectezi o cutie poștală pentru această configurație IMAP, altfel nicio cutie poștală nu va fi sincronizată!"
+          prefill:
+            title: "Pre-completare cu setări pentru:"
+            gmail: "Gmail"
           credentials:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
@@ -687,19 +796,23 @@ ro:
             password: "Parolă"
           settings:
             title: "Setări"
+            allow_unknown_sender_topic_replies: "Permite răspunsuri la subiect cu expeditor necunoscut."
+            allow_unknown_sender_topic_replies_hint: "Permite expeditorilor necunoscuți să răspundă la subiecte de grup. Dacă acest lucru nu este activat, răspunsurile de la adresele de e-mail care nu sunt deja invitate la subiect vor crea un subiect nou."
+            from_alias: "De la alias"
           mailboxes:
             synchronized: "Cutie poștală sincronizată"
             none_found: "Nu au fost găsite cutii poștale în acest cont de e-mail."
+            disabled: "Dezactivat"
         membership:
-          title: Abonare
+          title: Calitate de membru
           access: Acces
         categories:
           title: Categorii
           long_title: "Notificări implicite pentru categorii"
           description: "Când utilizatorii sunt adăugați la acest grup, setările lor de notificare ale categoriei vor fi salvate cu aceste valori implicite. Ulterior, aceștia le pot schimba."
-          watched_categories_instructions: "Urmărește automat toate subiectele din aceste categorii. Membrii grupului vor fi notificați cu privire la toate postările și subiectele noi, iar numărul de postări noi va apărea, de asemenea, lângă subiect."
-          tracked_categories_instructions: "Urmărește automat toate subiectele din aceste categorii. Numărul de mesaje noi va apărea lângă subiect."
-          watching_first_post_categories_instructions: "Utilizatorii vor fi notificați cu privire la prima postare în fiecare subiect nou din aceste categorii."
+          watched_categories_instructions: "Urmărește automat toate subiectele din aceste categorii. Membrii grupului vor fi notificați cu privire la toate articolele și subiectele noi, iar numărul de articole noi va apărea, de asemenea, lângă subiect."
+          tracked_categories_instructions: "Urmărește automat toate subiectele din aceste categorii. Numărul de articole noi va apărea lângă subiect."
+          watching_first_post_categories_instructions: "Utilizatorii vor fi notificați cu privire la primul articol din fiecare subiect nou din aceste categorii."
           regular_categories_instructions: "Dacă aceste categorii sunt dezactivate, vor fi deblocate pentru membrii grupului. Utilizatorii vor fi notificați dacă sunt menționați sau cineva le răspunde."
         tags:
           title: Etichete
@@ -1050,6 +1163,15 @@ ro:
       save_to_change_theme: 'Tema va fi actualizată după ce faceți clic pe „%{save_text}”'
       home: "Pagina inițială implicită"
       staged: "Pus în scenă"
+      staff_counters:
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> semnalare utilă'
+          few: '<span class="%{className}">%{count}</span> semnalări utile'
+          other: '<span class="%{className}">%{count}</span> de semnalări utile'
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> articol semnalat'
+          few: '<span class="%{className}">%{count}</span> articole semnalate'
+          other: '<span class="%{className}">%{count}</span> de articole semnalate'
       messages:
         inbox: "Primite"
         latest: "Cele mai recente"
@@ -1094,9 +1216,9 @@ ro:
       second_factor_backup:
         regenerate: "Regenerare"
         disable: "Dezactivează"
-        copy_to_clipboard: "Copiază în clipboard"
-        copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
-        copied_to_clipboard: "Copiat în clipboard"
+        copy_to_clipboard: "Copiază în memoria temporară"
+        copy_to_clipboard_error: "Eroare la copierea datelor în memoria temporară"
+        copied_to_clipboard: "Copiat în memoria temporară"
         codes:
           description: "Fiecare dintre aceste coduri de rezervă poate fi folosit o singură dată. Păstrează-le într-un loc sigur, dar accesibil."
       second_factor:
@@ -1607,7 +1729,7 @@ ro:
     emoji_picker:
       filter_placeholder: Caută emoji
       objects: Obiecte
-      flags: Marcaje de avertizare
+      flags: Semnalări
       recent: Folosite recent
       default: Emojii personalizate
     composer:
@@ -2022,6 +2144,7 @@ ro:
         auto_open: "Acest subiect va fi deschis automat la %{timeLeft}."
         auto_close: "Acest subiect va fi automat închis în %{timeLeft}."
         auto_close_after_last_post: "Acest subiect se va închide la %{duration} după ultimul răspuns."
+        auto_delete_replies: "Răspunsurile la acest subiect sunt șterse automat după %{duration}."
       auto_close_title: "Setări de închidere automată"
       auto_close_immediate:
         one: "Ultima postare din subiect este deja veche de o oră, așa că subiectul va fi închis imediat."
@@ -2107,9 +2230,9 @@ ro:
         title: "Tipărire"
         help: "Deschide o versiune pentru imprimare a acestui subiect"
       flag_topic:
-        title: "Marcaje"
-        help: "marchează acest subiect pentru a atrage atenția adminilor sau a le trimite o notificare privată despre el"
-        success_message: "Ai marcat cu succes acest subiect."
+        title: "Semnalare"
+        help: "semnalează în mod privat acest subiect pentru a atrage atenția administratorilor sau a le trimite o notificare privată despre el"
+        success_message: "Ai semnalat cu succes acest subiect."
       feature_topic:
         title: "Promovează acest subiect"
         pin: "Pune acest subiect în vârful categoriei %{categoryLink} până"
@@ -2284,7 +2407,7 @@ ro:
         edit: "editează această postare"
         edit_action: "Modifică"
         edit_anonymous: "Ne pare rău, dar trebuie să fii autentificat pentru a edita această postare."
-        flag: "marchează această postare ca mesaj privat sau trimite o notificare privată despre ea către un admin/moderator"
+        flag: "semnalează în mod privat acest articol pentru a atrage atenția administratorilor sau a le trimite o notificare privată despre el"
         delete: "șterge această postare"
         undelete: "restaurează această postare"
         share: "distribuie un link către această postare"
@@ -2309,7 +2432,7 @@ ro:
         unhide: "Arată"
         lock_post: "Blochează postarea"
         unlock_post: "Deblochează postarea"
-        delete_topic_disallowed_modal: "Nu ai permisiuni suficiente pentru a șterge această discuție. Dacă vrei ca ea să fie ștearsă, marcheaz-o trimițând un mesaj explicativ moderatorului."
+        delete_topic_disallowed_modal: "Nu ai permisiuni suficiente pentru a șterge acest subiect. Dacă vrei ca el să fie șters, semnalează-l trimițând un mesaj explicativ moderatorului."
         delete_topic_disallowed: "nu ai permisiuni suficiente pentru a șterge această discuție"
         delete_topic: "șterge subiectul"
       actions:
@@ -2323,10 +2446,10 @@ ro:
             few: "și %{count} alții au apreciat asta"
             other: "și %{count} alții au apreciat asta"
         by_you:
-          off_topic: "Ai marcat asta cu mesaj de avertizare, ca fiind în afara subiectului"
-          spam: "Ai marcat asta cu mesaj de avertizare, ca fiind spam"
-          inappropriate: "Ai marcat asta cu mesaj de avertizare, ca fiind inadecvat"
-          notify_moderators: "Ai marcat asta cu mesaj de avertizare, pentru moderare"
+          off_topic: "Ai semnalat aceasta ca fiind pe lângă subiect"
+          spam: "Ai semnalat aceasta ca fiind spam"
+          inappropriate: "Ai semnalat aceasta ca fiind inadecvată"
+          notify_moderators: "Ai semnalat aceasta pentru moderare"
           notify_user: "Ai trimis un mesaj către acest utilizator"
       delete:
         confirm:
@@ -2477,46 +2600,57 @@ ro:
         general: "General"
         email: "Email"
     flagging:
-      title: "Îți mulțumim că ne ajuți să păstrăm o comunitate civilizată!"
-      action: "Marcare"
+      title: "Îți mulțumim că ne ajuți să ne păstrăm comunitatea civilizată!"
+      action: "Semnalează articol"
       take_action_options:
         default:
-          title: "Acționează"
-          details: "Se atinge pragul de avertizare imediat, în loc să se aștepte și avertizări din comunitate"
+          title: "Ascunde postarea"
         suspend:
-          title: "Suspendă Utilizator"
-          details: "Atinge pragul de avertizare și suspendă utilizatorul"
+          title: "Suspendă utilizator"
+          details: "Atinge pragul de semnalări și suspendă utilizatorul"
         silence:
-          title: "Suspendă utilizatorul"
-          details: "Atinge pragul de avertizare și suspendă utilizatorul"
+          title: "Reducere la tăcere utilizator"
+          details: "Atinge pragul de semnalări și redu la tăcere utilizatorul"
       notify_action: "Mesaj"
-      official_warning: "Avertizare oficială"
+      official_warning: "Avertisment oficial"
       delete_spammer: "Șterge spammer"
+      flag_for_review: "Coadă pentru revizuire"
+      delete_confirm_MF: |
+        Ești pe cale să ștergi { POSTS, plural,
+            one {<b>#</b> articol}
+            few {<b>#</b> articole}
+          other {<b>#</b> de articole}
+        } și { TOPICS, plural,
+            one {<b>#</b> subiect}
+            few {<b>#</b> subiecte}
+          other {<b>#</b> de subiecte}
+        } ale acestui utilizator, să-i elimini contul, să blochezi înregistrările de pe adresa lui IP <b>{ip_address}</b> și să-i adaugi adresa de e-mail <b>{email}</b> pe lista celor blocate permanent. Sigur crezi că acest utilizator este un spammer?
       yes_delete_spammer: "Da, șterge spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(ascuns)"
-      submit_tooltip: "Trimite marcaj de avertizare privat"
-      take_action_tooltip: "Se trimite marcajul de avertizare imediat, în loc să se aștepte și alte marcaje de avertizare ale comunității"
-      cant: "Ne pare rău, deocamdată nu poți marca această postare cu marcaj de avertizare."
+      submit_tooltip: "Trimite semnalarea privată"
+      cant: "Regret, momentan nu poți semnala acest articol."
       notify_staff: "Notifică în privat un moderator "
       formatted_name:
-        off_topic: "În afara subiectului"
-        inappropriate: "E inadecvat"
-        spam: "E spam"
+        off_topic: "Este pe lângă subiect"
+        inappropriate: "Este inadecvat"
+        spam: "Este spam"
       custom_placeholder_notify_user: "Fii specific, constructiv și întotdeauna amabil."
-      custom_placeholder_notify_moderators: "Spune-ne exact ceea ce te preocupă, și dă-ne și link-uri relevante de câte ori e posibil."
+      notify_user_textarea_label: "Mesaj pentru utilizator"
+      custom_placeholder_notify_moderators: "Spune-ne exact ceea ce te preocupă, și dă-ne și legături relevante și exemple de câte ori este posibil."
+      notify_moderators_textarea_label: "Mesaj pentru moderatori"
       custom_message:
         at_least:
-          one: "introdu cel puțin un caracter"
+          one: "introdu cel puțin %{count} caracter"
           few: "introdu cel puțin %{count} caractere"
           other: "introdu cel puțin %{count} de caractere"
         left:
-          one: "a mai rămas %{count} ..."
-          few: "au mai rămas %{count} ..."
-          other: "au mai rămas %{count} ..."
+          one: "a mai rămas %{count}"
+          few: "au mai rămas %{count}"
+          other: "au mai rămas %{count}"
     flagging_topic:
-      title: "Îți mulțumim că ne ajuți să păstrăm o comunitate civilizată!"
-      action: "Marchează subiectul cu marcaj de avertizare"
+      title: "Îți mulțumim că ne ajuți să ne păstrăm comunitatea civilizată!"
+      action: "Semnalează subiect"
       notify_action: "Mesaj"
     topic_map:
       title: "Rezumatul subiectului"
@@ -2723,7 +2857,7 @@ ro:
         reply_post: "%{shortcut} Răspunde la postare"
         quote_post: "%{shortcut} Citează postare"
         like: "%{shortcut} Apreciază postare"
-        flag: "%{shortcut} Marchează postare cu marcaj de avertizare"
+        flag: "%{shortcut} Semnalează articol"
         bookmark: "%{shortcut} Marchează postare cu semn de carte"
         edit: "%{shortcut} Editează postare"
         delete: "%{shortcut} Șterge postare"
@@ -2920,8 +3054,12 @@ ro:
               content: "Postările mele"
             review:
               content: "Revizuire"
+              title: "Articole semnalate și alte elemente la coadă"
     until: "Pana cand:"
     form_templates:
+      upload_field:
+        upload: "Încărcare"
+        uploading: "Se încarcă"
       errors:
         typeMismatch:
           default: "Introduceţi o valoare validă."
@@ -3181,9 +3319,9 @@ ro:
         delete: "Șterge"
         color: "Culoare"
         opacity: "Opacitate"
-        copy_to_clipboard: "Copiază în clipboard"
-        copied_to_clipboard: "Copiat în clipboard"
-        copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
+        copy_to_clipboard: "Copiază în memoria temporară"
+        copied_to_clipboard: "Copiat în memoria temporară"
+        copy_to_clipboard_error: "Eroare la copierea datelor în memoria temporară"
         theme_owner: "Nemodificabil, deținut de:"
         email_templates:
           title: "Email"
@@ -3479,7 +3617,9 @@ ro:
           block: "Blochează"
           censor: "Cenzurează"
           require_approval: "Necesită aprobare"
-          flag: "Marchează cu marcaj de avertizare"
+          flag: "Semnalează"
+        action_descriptions:
+          flag: "Permite articole care conțin aceste cuvinte, dar semnalează-te ca nepotrivite pentru a fi analizate de către moderatori."
         form:
           link_placeholder: "https://example.com"
           add: "Adaugă"
@@ -3589,6 +3729,9 @@ ro:
         grant_moderation: "Acordă titlu de moderator"
         unsuspend: "Reactivează"
         suspend: "Suspendă"
+        show_flags_received: "Afișează semnalări primite"
+        flags_received_by: "Semnalări primite de %{username}"
+        flags_received_none: "Acest utilizator nu a primit nicio semnalare."
         reputation: Reputație
         permissions: Permisiuni
         activity: Activitate
@@ -3599,10 +3742,10 @@ ro:
         post_count: Postări create
         second_factor_enabled: Autentificare în doi pași (2FA) este activată
         topics_entered: Subiecte văzute
-        flags_given_count: Marcaje de avertizare acordate
-        flags_received_count: Marcaje de avertizare primite
+        flags_given_count: Semnalări date
+        flags_received_count: Semnalări primite
         warnings_received_count: Avertismente primite
-        flags_given_received_count: "Marcaje de avertizare acordate/primite"
+        flags_given_received_count: "Semnalări date/primite"
         approve: "Aprobare"
         approved_by: "aprobat de"
         approve_success: "Utilizator aprobat, email trimis cu instrucțiuni de activare."
@@ -3689,8 +3832,8 @@ ro:
           topics_viewed_all_time: "Subiecte vizualizate (dintotdeauna)"
           posts_read: "Postări citite"
           posts_read_all_time: "Postări citite (dintotdeauna)"
-          flagged_posts: "Postări marcate cu marcaje de avertizare"
-          flagged_by_users: "Utilizatori ce au marcat cu marcaje de avertizare"
+          flagged_posts: "Articole semnalate"
+          flagged_by_users: "Utilizatori ce au semnalat"
           likes_given: "Aprecieri oferite"
           likes_received: "Aprecieri primite"
           likes_received_days: "Aprecieri primite: zile unice"
@@ -3901,6 +4044,7 @@ ro:
         post_title: "Postare"
         category_id: "ID categorie"
         category_title: "Categorie"
+        copy_to_clipboard: "Copiază legătură permanentă în memoria temporară"
         delete_confirm: Ești sigur că vrei să ștergi această adresă permanentă?
         form:
           label: "Nou:"

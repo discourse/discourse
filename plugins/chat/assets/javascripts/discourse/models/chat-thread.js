@@ -61,6 +61,7 @@ export default class ChatThread {
   async stageMessage(message) {
     message.id = guid();
     message.staged = true;
+    message.processed = false;
     message.draft = false;
     message.createdAt ??= moment.utc().format();
     message.thread = this;

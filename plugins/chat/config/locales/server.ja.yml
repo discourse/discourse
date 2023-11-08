@@ -159,6 +159,7 @@ ja:
       inline_to_message: "%{username} によるメッセージ #%{message_id} - #%{chat_channel}"
       inline_to_channel: "チャット #%{chat_channel}"
       inline_to_topic_channel: "トピック %{topic_title} のチャット"
+      thread_title_connector: "検索対象"
       x_members:
         other: "%{count} 人のメンバー"
       and_x_others:

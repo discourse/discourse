@@ -120,11 +120,11 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     end
 
     it "has preloaded chat mentions and users for the thread original message" do
-      thread_1.original_message.update!(
-        message: "@#{current_user.username} hello and @#{thread_2.original_message_user.username}!",
+      update_message!(
+        thread_1.original_message,
+        user: thread_1.original_message.user,
+        text: "@#{current_user.username} hello and @#{thread_2.original_message_user.username}!",
       )
-      thread_1.original_message.rebake!
-      thread_1.original_message.create_mentions
 
       get "/chat/api/channels/#{public_channel.id}/threads"
       expect(response.status).to eq(200)

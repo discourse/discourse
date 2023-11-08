@@ -101,6 +101,11 @@
             ></div>
           {{/if}}
 
+          <PluginOutlet
+            @name="group-index-table-header-after-username"
+            @outletArgs={{hash group=this.model}}
+          />
+
           <TableHeaderToggle
             @class="directory-table__column-header--added"
             @order={{this.order}}
@@ -179,6 +184,12 @@
 
                 </div>
               {{/if}}
+
+              <PluginOutlet
+                @name="group-index-table-row-after-username"
+                @outletArgs={{hash member=m}}
+              />
+
               <div class="directory-table__cell directory-table__cell--added">
                 <span class="directory-table__label">
                   <span>{{i18n "groups.member_added"}}</span>

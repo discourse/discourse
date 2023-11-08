@@ -250,7 +250,6 @@ zh_CN:
       save: "保存"
       select: "选择"
       return_to_list: "返回频道列表"
-      return_to_threads_list: "返回正在进行的讨论"
       unread_threads_count:
         other: "您有 %{count} 条未读讨论"
       scroll_to_bottom: "滚动到底部"
@@ -541,7 +540,6 @@ zh_CN:
           other: "+%{count}"
       threads:
         open: "打开对话"
-        list: "正在进行的讨论"
         none: "您没有参与此频道中的任何对话。"
       draft_channel_screen:
         header: "新消息"

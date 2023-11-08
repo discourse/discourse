@@ -510,49 +510,23 @@ describe Chat::Message do
 
       it "keeps the same hashtags the user has permission to after rebake" do
         group.add(chat_message.user)
-        chat_message.update!(
-          message:
+        update_message!(
+          chat_message,
+          user: chat_message.user,
+          text:
             "this is the message ##{category.slug} ##{secure_category.slug} ##{chat_message.chat_channel.slug}",
         )
-        chat_message.cook
-        chat_message.save!
 
         expect(chat_message.reload.cooked).to include(secure_category.name)
 
         chat_message.rebake!
+
         expect(chat_message.reload.cooked).to include(secure_category.name)
       end
     end
   end
 
-  describe "#create_mentions" do
-    fab!(:message) { Fabricate(:chat_message) }
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-
-    it "creates mentions for mentioned  usernames" do
-      message.message = "Mentioning @#{user1.username} and @#{user2.username}"
-      message.cook
-
-      message.create_mentions
-      message.reload
-
-      expect(message.chat_mentions.pluck(:user_id)).to match_array([user1.id, user2.id])
-    end
-
-    it "ignores duplicated mentions" do
-      message.message =
-        "Mentioning @#{user1.username} @#{user1.username} @#{user1.username} @#{user1.username}"
-      message.cook
-
-      message.create_mentions
-      message.reload
-
-      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
-    end
-  end
-
-  describe "#update_mentions" do
+  describe "#upsert_mentions" do
     fab!(:user1) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:user3) { Fabricate(:user) }
@@ -564,11 +538,11 @@ describe Chat::Message do
 
     it "creates newly added mentions" do
       existing_mention_ids = message.chat_mentions.pluck(:id)
-      message.message = message.message + " @#{user3.username} @#{user4.username} "
-      message.cook
-
-      message.update_mentions
-      message.reload
+      update_message!(
+        message,
+        user: message.user,
+        text: message.message + " @#{user3.username} @#{user4.username} ",
+      )
 
       expect(message.chat_mentions.pluck(:user_id)).to match_array(
         [user1.id, user2.id, user3.id, user4.id],
@@ -577,22 +551,15 @@ describe Chat::Message do
     end
 
     it "drops removed mentions" do
-      message.message = "Hey @#{user1.username}" # user 2 is not mentioned anymore
-      message.cook
-
-      message.update_mentions
-      message.reload
+      # user 2 is not mentioned anymore
+      update_message!(message, user: message.user, text: "Hey @#{user1.username}")
 
       expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
     end
 
     it "changes nothing if passed mentions are identical to existing mentions" do
       existing_mention_ids = message.chat_mentions.pluck(:id)
-      message.message = message.message
-      message.cook
-
-      message.update_mentions
-      message.reload
+      update_message!(message, user: message.user, text: message.message)
 
       expect(message.chat_mentions.pluck(:user_id)).to match_array(already_mentioned)
       expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated

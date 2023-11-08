@@ -15,13 +15,13 @@ async function catchAbortedTransition() {
   }
 }
 
-acceptance("Enforce Second Factor", function (needs) {
+acceptance("Enforce Second Factor for unconfirmed session", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     server.post("/u/second_factors.json", () => {
       return helper.response({
         success: "OK",
-        password_required: "true",
+        unconfirmed_session: "true",
       });
     });
   });
@@ -30,22 +30,10 @@ acceptance("Enforce Second Factor", function (needs) {
     await visit("/u/eviltrout/preferences/second-factor");
     this.siteSettings.enforce_second_factor = "staff";
 
-    await catchAbortedTransition();
-
     assert.strictEqual(
       currentRouteName(),
-      "preferences.second-factor",
-      "it will not transition from second-factor preferences"
-    );
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='admin']"
-    );
-
-    assert.strictEqual(
-      currentRouteName(),
-      "preferences.second-factor",
-      "it stays at second-factor preferences"
+      "preferences.security",
+      "it transitions to security preferences"
     );
   });
 
@@ -55,26 +43,10 @@ acceptance("Enforce Second Factor", function (needs) {
     await visit("/u/eviltrout/preferences/second-factor");
     this.siteSettings.enforce_second_factor = "all";
 
-    await catchAbortedTransition();
-
     assert.strictEqual(
       currentRouteName(),
-      "preferences.second-factor",
-      "it will not transition from second-factor preferences"
-    );
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
-    );
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='about']"
-    );
-
-    assert.strictEqual(
-      currentRouteName(),
-      "preferences.second-factor",
-      "it stays at second-factor preferences"
+      "preferences.security",
+      "it will transition to security preferences"
     );
   });
 

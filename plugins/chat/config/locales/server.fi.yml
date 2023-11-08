@@ -169,6 +169,7 @@ fi:
       inline_to_message: "Viesti %{message_id}, lähettäjä: %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Ketjun %{topic_title} chat-keskustelu"
+      thread_title_connector: "kohteessa"
       x_members:
         one: "%{count} jäsen"
         other: "%{count} jäsentä"

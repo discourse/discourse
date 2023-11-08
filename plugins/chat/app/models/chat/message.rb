@@ -156,19 +156,8 @@ module Chat
 
     def rebake!(invalidate_oneboxes: false, priority: nil)
       ensure_last_editor_id
-
-      previous_cooked = self.cooked
-      new_cooked =
-        self.class.cook(
-          message,
-          invalidate_oneboxes: invalidate_oneboxes,
-          user_id: self.last_editor_id,
-        )
-      update_columns(cooked: new_cooked, cooked_version: BAKED_VERSION)
-      args = { chat_message_id: self.id }
+      args = { chat_message_id: self.id, invalidate_oneboxes: invalidate_oneboxes }
       args[:queue] = priority.to_s if priority && priority != :normal
-      args[:is_dirty] = true if previous_cooked != new_cooked
-
       Jobs.enqueue(Jobs::Chat::ProcessMessage, args)
     end
 
@@ -258,19 +247,14 @@ module Chat
       end
     end
 
-    def create_mentions
-      insert_mentions(parsed_mentions.all_mentioned_users_ids)
-    end
-
-    def update_mentions
+    def upsert_mentions
       mentioned_user_ids = parsed_mentions.all_mentioned_users_ids
-
       old_mentions = chat_mentions.pluck(:user_id)
-      updated_mentions = mentioned_user_ids
-      mentioned_user_ids_to_drop = old_mentions - updated_mentions
-      mentioned_user_ids_to_add = updated_mentions - old_mentions
 
+      mentioned_user_ids_to_drop = old_mentions - mentioned_user_ids
       delete_mentions(mentioned_user_ids_to_drop)
+
+      mentioned_user_ids_to_add = mentioned_user_ids - old_mentions
       insert_mentions(mentioned_user_ids_to_add)
     end
 

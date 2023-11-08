@@ -147,7 +147,6 @@ hr:
       bookmark_message: "Zabilješka"
       bookmark_message_edit: "Uredi oznaku"
       save: "Spremi"
-      return_to_threads_list: "Povratak na tekuće rasprave"
       unread_threads_count:
         one: "Imate %{count} nepročitanu raspravu"
         few: "Imate %{count} nepročitane rasprave"
@@ -308,7 +307,6 @@ hr:
           other: "+%{count}"
       threads:
         open: "Otvori nit"
-        list: "Tekuće rasprave"
         none: "Ne sudjelujete ni u jednoj niti na ovom kanalu."
       draft_channel_screen:
         header: "Nova poruka"

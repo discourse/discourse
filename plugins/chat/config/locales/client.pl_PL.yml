@@ -260,7 +260,6 @@ pl_PL:
       save: "Zapisz"
       select: "Wybierz"
       return_to_list: "Powrót do listy kanałów"
-      return_to_threads_list: "Wróć do trwających dyskusji"
       unread_threads_count:
         one: "Masz %{count} nieprzeczytaną dyskusje"
         few: "Masz %{count} nieprzeczytane dyskusje"
@@ -602,7 +601,6 @@ pl_PL:
           other: "+%{count}"
       threads:
         open: "Otwórz wątek"
-        list: "Trwające dyskusje"
         none: "Nie uczestniczysz w żadnych wątkach na tym kanale."
       draft_channel_screen:
         header: "Nowa wiadomość"
