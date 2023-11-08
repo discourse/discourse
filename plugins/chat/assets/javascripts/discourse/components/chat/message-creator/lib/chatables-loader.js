@@ -27,6 +27,10 @@ export default class ChatablesLoader {
   ) {
     this.request?.abort();
 
+    if (!term) {
+      return this.#preloadedChannels();
+    }
+
     try {
       this.loadingSlider.transitionStarted();
       this.request = ajax("/chat/api/chatables", {
@@ -39,8 +43,6 @@ export default class ChatablesLoader {
         },
       });
       const results = await this.request;
-      this.selectedItem = null;
-
       this.loadingSlider.transitionEnded();
 
       return [
@@ -57,6 +59,23 @@ export default class ChatablesLoader {
     } catch (e) {
       popupAjaxError(e);
     }
+  }
+
+  #preloadedChannels() {
+    return this.chatChannelsManager.allChannels
+      .map((channel) => {
+        let chatable;
+        if (channel.chatable?.users?.length === 1) {
+          chatable = ChatChatable.createUser(channel.chatable.users[0]);
+          chatable.tracking = this.#injectTracking(chatable);
+        } else {
+          chatable = ChatChatable.createChannel(channel);
+          chatable.tracking = channel.tracking;
+        }
+        return chatable;
+      })
+      .filter(Boolean)
+      .slice(0, MAX_RESULTS);
   }
 
   #injectTracking(chatable) {

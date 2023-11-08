@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -27,6 +29,7 @@ export default class ChatMessageCreatorSearch extends Component {
         label: "New group chat",
         enabled: true,
         icon: "users",
+        id: "new-group-chat",
       },
       ...this.chatables,
     ];
@@ -101,7 +104,10 @@ export default class ChatMessageCreatorSearch extends Component {
     >
       <div class="chat-message-creator__search-container">
         <div class="chat-message-creator__search">
-          <div class="chat-message-creator__section">
+          <div
+            class="chat-message-creator__section"
+            {{didInsert (fn this.fetch null)}}
+          >
             <SearchInput @onFilter={{this.onFilter}} />
 
             <DButton

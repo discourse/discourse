@@ -100,6 +100,7 @@ export default class List extends Component {
             role="button"
             tabindex="0"
             data-identifier={{item.identifier}}
+            id={{item.id}}
           >
             {{component (this.componentForItem item.type) item=item}}
           </li>

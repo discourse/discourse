@@ -16,7 +16,7 @@ module Chat
 
     contract
     step :clean_term
-    model :memberships
+    model :memberships, optional: true
     model :users, optional: true
     model :category_channels, optional: true
     model :direct_message_channels, optional: true
