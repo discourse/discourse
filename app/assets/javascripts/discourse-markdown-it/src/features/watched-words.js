@@ -1,4 +1,4 @@
-import { createWatchedWordRegExp } from "discourse-common/utils/watched-words";
+import { watchedWordMatcher } from "discourse-common/utils/watched-words";
 
 const MAX_MATCHES = 100;
 
@@ -51,25 +51,12 @@ export function setup(helper) {
 
   helper.registerPlugin((md) => {
     const matchers = [
-      ...(md.options.discourse.watchedWordsReplace || []).map((word) => ({
-        partialRegexp: new RegExp(
-          word.partial_regexp,
-          word.case_sensitive ? "" : "i"
-        ),
-        regexp: createWatchedWordRegExp(word),
-        replacement: word.replacement,
-        link: false,
-      })),
-
-      ...(md.options.discourse.watchedWordsLink || []).map((word) => ({
-        partialRegexp: new RegExp(
-          word.partial_regexp,
-          word.case_sensitive ? "" : "i"
-        ),
-        regexp: createWatchedWordRegExp(word),
-        replacement: word.replacement,
-        link: true,
-      })),
+      ...(md.options.discourse.watchedWordsReplace || []).map((word) =>
+        watchedWordMatcher(word)
+      ),
+      ...(md.options.discourse.watchedWordsLink || []).map((word) =>
+        watchedWordMatcher(word, true)
+      ),
     ];
 
     if (matchers.length === 0) {

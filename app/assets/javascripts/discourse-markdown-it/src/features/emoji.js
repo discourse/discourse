@@ -1,5 +1,6 @@
 import { buildEmojiUrl, isCustomEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
+import { watchedWordMatcher } from "discourse-common/utils/watched-words";
 
 const MAX_NAME_LENGTH = 60;
 
@@ -196,7 +197,7 @@ function applyEmoji(
   enableShortcuts,
   inlineEmoji,
   customEmojiTranslation,
-  watchedWordsReplacer,
+  watchedWordsMatchers,
   emojiDenyList
 ) {
   let result = null;
@@ -206,23 +207,14 @@ function applyEmoji(
     content = emojiUnicodeReplacer(content);
   }
 
-  if (watchedWordsReplacer) {
-    const watchedWordRegex = Object.keys(watchedWordsReplacer);
-
-    watchedWordRegex.forEach((watchedWord) => {
-      if (content?.match(watchedWord)) {
-        const regex = new RegExp(watchedWord, "g");
-        const matches = content.match(regex);
-        const replacement = watchedWordsReplacer[watchedWord].replacement;
-
-        matches.forEach(() => {
-          const matchingRegex = regex.exec(content);
-          if (matchingRegex) {
-            content = content.replace(matchingRegex[1], replacement);
-          }
-        });
+  if (watchedWordsMatchers) {
+    for (const { partialRegexp, regexp, replacement } of watchedWordsMatchers) {
+      if (partialRegexp.test(content)) {
+        for (const match of content.matchAll(regexp)) {
+          content = content.replace(match[1], replacement);
+        }
       }
-    });
+    }
   }
 
   // prevent denied emoji and aliases from being rendered
@@ -370,7 +362,9 @@ export function setup(helper) {
           md.options.discourse.features.emojiShortcuts,
           md.options.discourse.features.inlineEmoji,
           md.options.discourse.customEmojiTranslation,
-          md.options.discourse.watchedWordsReplace,
+          (md.options.discourse.watchedWordsReplace || []).map((word) =>
+            watchedWordMatcher(word)
+          ),
           md.options.discourse.emojiDenyList
         )
       )
