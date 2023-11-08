@@ -244,7 +244,7 @@ export default class CreateAccount extends Component.extend(
     });
   }
 
-  @action
+  @__action__
   checkEmailAvailability() {
     if (
       !this.emailValidation.ok ||
@@ -474,7 +474,7 @@ export default class CreateAccount extends Component.extend(
     this.toggleProperty("maskPassword");
   }
 
-  @action
+  @__action__
   externalLogin(provider) {
     // we will automatically redirect to the external auth service
     this.modal.show(LoginModal, {
@@ -486,7 +486,7 @@ export default class CreateAccount extends Component.extend(
     });
   }
 
-  @action
+  @__action__
   createAccount() {
     this.set("flash", "");
     this.set("forceValidationReason", true);
