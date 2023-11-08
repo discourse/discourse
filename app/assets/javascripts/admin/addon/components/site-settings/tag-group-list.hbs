@@ -1,6 +1,6 @@
 <TagGroupChooser
   @tagGroups={{this.selectedTagGroups}}
-  @onChange={{action "onTagGroupChange"}}
+  @onChange={{this.onTagGroupChange}}
   @options={{hash filterPlaceholder="category.required_tag_group.placeholder"}}
 />
 <div class="desc">{{html-safe this.setting.description}}</div>
