@@ -493,6 +493,10 @@ after_initialize do
   register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
   register_hashtag_type_priority_for_context("channel", "topic-composer", 10)
 
+  register_post_stripper do |nokogiri_fragment|
+    nokogiri_fragment.css(".chat-transcript .mention").remove
+  end
+
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: Chat::Message::MARKDOWN_FEATURES,
     limited_pretty_text_markdown_rules: Chat::Message::MARKDOWN_IT_RULES,

@@ -1254,6 +1254,14 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_post_action_notify_user_handler(handler, self)
   end
 
+  # We strip posts before detecting mentions, oneboxes, attachments etc.
+  # We strip those elements that shouldn't be detected. For example,
+  # a mention inside a quote should be ignored, so we strip it off.
+  # Using this API plugins can register their own post strippers.
+  def register_post_stripper(&block)
+    DiscoursePluginRegistry.register_post_stripper({ block: block }, self)
+  end
+
   protected
 
   def self.js_path
