@@ -319,7 +319,7 @@ export default class PollUiBuilderModal extends Component {
     }));
   }
 
-  @action
+  @__action__
   onOptionsTextChange(e) {
     this.set(
       "pollOptions",
