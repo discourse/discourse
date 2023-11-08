@@ -84,6 +84,10 @@ export default {
                 return htmlSafe(emojiUnescape(this.channel.escapedTitle));
               }
 
+              get prefixType() {
+                return "icon";
+              }
+
               get prefixValue() {
                 return "d-chat";
               }
@@ -100,18 +104,6 @@ export default {
 
               get prefixBadge() {
                 return this.channel.chatable.read_restricted ? "lock" : "";
-              }
-
-              get prefixCSSClass() {
-                const activeUsers = this.chatService.presenceChannel.users;
-                const user = this.channel.chatable.users[0];
-                if (
-                  !!activeUsers?.findBy("id", user?.id) ||
-                  !!activeUsers?.findBy("username", user?.username)
-                ) {
-                  return "active";
-                }
-                return "";
               }
 
               get suffixType() {
@@ -304,7 +296,6 @@ export default {
 
             get prefixCSSClass() {
               const activeUsers = this.chatService.presenceChannel.users;
-              console.log(this.channel.chatable);
               const user = getFirstUser(
                 this.channel.chatable.users,
                 this.currentUser
