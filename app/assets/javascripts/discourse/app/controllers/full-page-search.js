@@ -476,7 +476,7 @@ export default Controller.extend({
   },
 
   @action
-  addSearchResults1(newResults) {
+  addSearchResults(newResults) {
     this.set("additionalSearchResults", newResults);
   },
 
