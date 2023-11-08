@@ -84,7 +84,7 @@ RSpec.describe BackupRestore::Backuper do
     context "when the result isn't successful" do
       let(:success) { false }
 
-      it "doesn't refresh disk stats" do
+      it "refresh disk stats" do
         store.expects(:reset_cache).never
         run
       end
@@ -94,9 +94,16 @@ RSpec.describe BackupRestore::Backuper do
       let(:success) { true }
 
       it "refreshes disk stats" do
-        store.expects(:reset_cache)
+        store.expects(:reset_cache).times(3)
         run
       end
     end
+
+    # context "whether successful or not" do
+    #   it "deletes old backups" do
+    #     store.expects(:delete_prior_to_n_days)
+    #     run
+    #   end
+    # end
   end
 end

@@ -159,13 +159,13 @@ RSpec.shared_examples "backup store" do
 
       it "removes the two backups that are older than 7 days" do
         travel_to Time.new(2018, 9, 19, 0, 0, 00)
-
-          # 7 days-1 minute later than backup1,
-          # which has last_modified= "2018-09-13T15:10:00Z"
-
         SiteSetting.remove_older_backups = "7"
 
-          #expect(store.files).to eq([backup1, backup2, backup3])
+        # 7 days before 9/19 is 9/12. that's earlier than date
+        # of backup1 (9/13, last_modified= "2018-09-13T15:10:00Z").
+        # Hence backup1 should be retained because it's within the last 7 days.
+        # and backup2 & backup3, which are older, should be deleted
+
         store.delete_prior_to_n_days
         expect(store.files).to eq([backup1])
       end
