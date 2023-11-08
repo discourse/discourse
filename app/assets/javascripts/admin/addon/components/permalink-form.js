@@ -38,7 +38,7 @@ export default class PermalinkForm extends Component {
     );
   }
 
-  @action
+  @__action__
   submitFormOnEnter(event) {
     if (event.key === "Enter") {
       this.onSubmit();
