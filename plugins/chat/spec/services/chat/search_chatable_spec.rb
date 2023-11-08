@@ -19,6 +19,7 @@ RSpec.describe Chat::SearchChatable do
     let(:include_users) { false }
     let(:include_category_channels) { false }
     let(:include_direct_message_channels) { false }
+    let(:excluded_memberships_channel_id) { nil }
     let(:params) do
       {
         guardian: guardian,
@@ -26,6 +27,7 @@ RSpec.describe Chat::SearchChatable do
         include_users: include_users,
         include_category_channels: include_category_channels,
         include_direct_message_channels: include_direct_message_channels,
+        excluded_memberships_channel_id: excluded_memberships_channel_id,
       }
     end
 
@@ -69,6 +71,12 @@ RSpec.describe Chat::SearchChatable do
           params[:term] = "sam"
 
           expect(result.users).to contain_exactly(sam)
+        end
+
+        it "can filter users with a membership to a specific channel" do
+          params[:excluded_memberships_channel_id] = channel_1.id
+
+          expect(result.users).to_not include(current_user)
         end
       end
 

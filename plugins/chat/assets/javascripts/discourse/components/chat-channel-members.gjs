@@ -12,7 +12,6 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import icon from "discourse-common/helpers/d-icon";
 import discourseDebounce from "discourse-common/lib/debounce";
 import I18n from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
 import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";
@@ -27,6 +26,7 @@ export default class ChatChannelMembers extends Component {
   @tracked filter = "";
   @tracked showAddMembers = false;
 
+  addMemberLabel = I18n.t("chat.members_view.add_member");
   filterPlaceholder = I18n.t("chat.members_view.filter_placeholder");
   noMembershipsFoundLabel = I18n.t("chat.channel.no_memberships_found");
   noMembershipsLabel = I18n.t("chat.channel.no_memberships");
@@ -155,24 +155,22 @@ export default class ChatChannelMembers extends Component {
               tabindex="0"
             >
               {{icon "plus"}}
-              <span>Add Member</span>
+              <span>{{this.addMemberLabel}}</span>
             </li>
           {{/if}}
           {{#each this.members as |membership|}}
-            {{#unless (eq membership.user.id -1)}}
-              <li
-                class="chat-channel-members__list-item -member"
-                {{on "click" (fn this.openMemberCard membership.user)}}
-                {{this.onEnter (fn this.openMemberCard membership.user)}}
-                tabindex="0"
-              >
-                <ChatUserInfo
-                  @user={{membership.user}}
-                  @avatarSize="tiny"
-                  @interactive={{false}}
-                />
-              </li>
-            {{/unless}}
+            <li
+              class="chat-channel-members__list-item -member"
+              {{on "click" (fn this.openMemberCard membership.user)}}
+              {{this.onEnter (fn this.openMemberCard membership.user)}}
+              tabindex="0"
+            >
+              <ChatUserInfo
+                @user={{membership.user}}
+                @avatarSize="tiny"
+                @interactive={{false}}
+              />
+            </li>
           {{else}}
             {{#if this.noResults}}
               <li

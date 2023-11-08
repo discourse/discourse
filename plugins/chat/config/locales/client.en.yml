@@ -310,6 +310,7 @@ en:
 
       members_view:
         filter_placeholder: Find members
+        add_member: Add Member
 
       about_view:
         associated_topic: Linked topic

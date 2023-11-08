@@ -18,6 +18,11 @@
       align-items: center;
       box-sizing: border-box;
       padding: 0.5rem;
+      cursor: pointer;
+
+      .avatar {
+        cursor: pointer;
+      }
 
       &:hover {
         background: var(--primary-very-low);
