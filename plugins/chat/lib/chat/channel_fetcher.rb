@@ -88,7 +88,17 @@ module Chat
 
       allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
 
-      channels = Chat::Channel.includes(:last_message, chatable: [:topic_only_relative_url])
+      channels =
+        Chat::Channel.includes(
+          :last_message,
+          chatable: %i[
+            topic_only_relative_url
+            uploaded_background
+            uploaded_background_dark
+            uploaded_logo
+            uploaded_logo_dark
+          ],
+        )
       channels = channels.includes(:chat_channel_archive) if options[:include_archives]
 
       channels =

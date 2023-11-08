@@ -130,6 +130,9 @@ en:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} has been invited by %{inviting_user}."
+        other: "%{invited_users} have been invited by %{inviting_user}."
       archive:
         first_post_raw: "This topic is an archive of the [%{channel_name}](%{channel_url}) chat channel."
       messages_moved:

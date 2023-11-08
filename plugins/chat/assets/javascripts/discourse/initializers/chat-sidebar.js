@@ -8,9 +8,9 @@ import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { avatarUrl } from "discourse-common/lib/avatar-utils";
 import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import getFirstUser from "discourse/plugins/chat/discourse/lib/get-first-user";
 import {
   CHAT_PANEL,
   initSidebarState,
@@ -84,10 +84,6 @@ export default {
                 return htmlSafe(emojiUnescape(this.channel.escapedTitle));
               }
 
-              get prefixType() {
-                return "icon";
-              }
-
               get prefixValue() {
                 return "d-chat";
               }
@@ -104,6 +100,18 @@ export default {
 
               get prefixBadge() {
                 return this.channel.chatable.read_restricted ? "lock" : "";
+              }
+
+              get prefixCSSClass() {
+                const activeUsers = this.chatService.presenceChannel.users;
+                const user = this.channel.chatable.users[0];
+                if (
+                  !!activeUsers?.findBy("id", user?.id) ||
+                  !!activeUsers?.findBy("username", user?.username)
+                ) {
+                  return "active";
+                }
+                return "";
               }
 
               get suffixType() {
@@ -206,24 +214,29 @@ export default {
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           const SidebarChatDirectMessagesSectionLink = class extends BaseCustomSidebarSectionLink {
-            constructor({ channel, chatService }) {
+            route = "chat.channel";
+            suffixType = "icon";
+            suffixCSSClass = "urgent";
+            hoverType = "icon";
+            hoverValue = "times";
+            hoverTitle = I18n.t("chat.direct_messages.leave");
+
+            constructor({ channel, chatService, currentUser }) {
               super(...arguments);
               this.channel = channel;
               this.chatService = chatService;
-
-              if (this.oneOnOneMessage) {
-                const user = this.channel.chatable.users[0];
-                if (user.username !== I18n.t("chat.deleted_chat_username")) {
-                  user.trackStatus();
-                }
-              }
+              this.currentUser = currentUser;
             }
 
-            @bind
-            willDestroy() {
-              if (this.oneOnOneMessage) {
-                this.channel.chatable.users[0].stopTrackingStatus();
-              }
+            get contentComponentArgs() {
+              return getFirstUser(
+                this.channel.chatable.users,
+                this.currentUser
+              ).get("status");
+            }
+
+            get contentComponent() {
+              return "user-status-message";
             }
 
             get name() {
@@ -246,10 +259,6 @@ export default {
               return classes.join(" ");
             }
 
-            get route() {
-              return "chat.channel";
-            }
-
             get models() {
               return this.channel.routeModels;
             }
@@ -260,53 +269,47 @@ export default {
               });
             }
 
-            get oneOnOneMessage() {
-              return this.channel.chatable.users.length === 1;
-            }
-
-            get contentComponentArgs() {
-              return this.channel.chatable.users[0].get("status");
-            }
-
-            get contentComponent() {
-              return "user-status-message";
-            }
-
             get text() {
-              const username = this.channel.escapedTitle.replaceAll("@", "");
-              if (this.oneOnOneMessage) {
+              if (this.channel.chatable.group) {
+                return this.channel.title;
+              } else {
+                const username = this.channel.escapedTitle.replaceAll("@", "");
                 return htmlSafe(
                   `${escapeExpression(username)}${decorateUsername(
                     escapeExpression(username)
                   )}`
                 );
-              } else {
-                return username;
               }
             }
 
             get prefixType() {
-              if (this.oneOnOneMessage) {
-                return "image";
-              } else {
+              if (this.channel.chatable.group) {
                 return "text";
+              } else {
+                return "image";
               }
             }
 
             get prefixValue() {
-              if (this.channel.chatable.users.length === 1) {
+              if (this.channel.chatable.group) {
+                return this.channel.membershipsCount;
+              } else {
                 return avatarUrl(
-                  this.channel.chatable.users[0].avatar_template,
+                  getFirstUser(this.channel.chatable.users, this.currentUser)
+                    .avatar_template,
                   "tiny"
                 );
-              } else {
-                return this.channel.chatable.users.length;
               }
             }
 
             get prefixCSSClass() {
               const activeUsers = this.chatService.presenceChannel.users;
-              const user = this.channel.chatable.users[0];
+              console.log(this.channel.chatable);
+              const user = getFirstUser(
+                this.channel.chatable.users,
+                this.currentUser
+              );
+
               if (
                 !!activeUsers?.findBy("id", user?.id) ||
                 !!activeUsers?.findBy("username", user?.username)
@@ -316,24 +319,8 @@ export default {
               return "";
             }
 
-            get suffixType() {
-              return "icon";
-            }
-
             get suffixValue() {
               return this.channel.tracking.unreadCount > 0 ? "circle" : "";
-            }
-
-            get suffixCSSClass() {
-              return "urgent";
-            }
-
-            get hoverType() {
-              return "icon";
-            }
-
-            get hoverValue() {
-              return "times";
             }
 
             get hoverAction() {
@@ -343,16 +330,13 @@ export default {
                 this.chatService.unfollowChannel(this.channel);
               };
             }
-
-            get hoverTitle() {
-              return I18n.t("chat.direct_messages.leave");
-            }
           };
 
           const SidebarChatDirectMessagesSection = class extends BaseCustomSidebarSection {
             @service site;
             @service modal;
             @service router;
+            @service currentUser;
 
             @tracked
             userCanDirectMessage = this.chatService.userCanDirectMessage;
@@ -375,6 +359,7 @@ export default {
                   new SidebarChatDirectMessagesSectionLink({
                     channel,
                     chatService: this.chatService,
+                    currentUser: this.currentUser,
                   })
               );
             }

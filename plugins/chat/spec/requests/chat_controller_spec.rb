@@ -610,7 +610,8 @@ RSpec.describe Chat::ChatController do
       post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
       expect(response.status).to eq(403)
 
-      Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
+      dm_channel.add(user)
+
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
       }.to change { Chat::Draft.count }.by(1)

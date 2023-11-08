@@ -85,7 +85,7 @@ RSpec.describe Chat::GuardianExtensions do
         end
 
         it "returns true if the user is part of the direct message" do
-          Chat::DirectMessageUser.create!(user: user, direct_message: chatable)
+          channel.add(user)
           expect(guardian.can_join_chat_channel?(channel)).to eq(true)
         end
       end

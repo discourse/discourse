@@ -7,7 +7,7 @@ module Chat
   # are passed in.
   #
   # @example
-  #  Service::Chat::CreateDirectMessageChannel.call(
+  #  ::Chat::CreateDirectMessageChannel.call(
   #    guardian: guardian,
   #    target_usernames: ["bob", "alice"]
   #  )
@@ -32,10 +32,13 @@ module Chat
            class_name: Chat::DirectMessageChannel::CanCommunicateAllPartiesPolicy
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
+    step :set_optional_name
     step :update_memberships
+    step :recompute_users_count
 
     # @!visibility private
     class Contract
+      attribute :name, :string
       attribute :target_usernames, :array
       validates :target_usernames, presence: true
     end
@@ -58,17 +61,26 @@ module Chat
       !user_comm_screener.actor_disallowing_all_pms?
     end
 
-    def fetch_or_create_direct_message(target_users:, **)
-      Chat::DirectMessage.for_user_ids(target_users.map(&:id)) ||
-        Chat::DirectMessage.create(user_ids: target_users.map(&:id))
+    def fetch_or_create_direct_message(target_users:, contract:, **)
+      ids = target_users.map(&:id)
+
+      if ids.size > 2 || contract.name.present?
+        ::Chat::DirectMessage.create(user_ids: ids, group: true)
+      else
+        ::Chat::DirectMessage.for_user_ids(ids) || ::Chat::DirectMessage.create(user_ids: ids)
+      end
     end
 
     def fetch_or_create_channel(direct_message:, **)
-      Chat::DirectMessageChannel.find_or_create_by(chatable: direct_message)
+      ::Chat::DirectMessageChannel.find_or_create_by(chatable: direct_message)
+    end
+
+    def set_optional_name(channel:, contract:, **)
+      channel.update!(name: contract.name) if contract.name&.length&.positive?
     end
 
     def update_memberships(channel:, target_users:, **)
-      always_level = Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
+      always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
         target_users.map do |user|
@@ -84,9 +96,16 @@ module Chat
           }
         end
 
-      Chat::UserChatChannelMembership.upsert_all(
+      ::Chat::UserChatChannelMembership.upsert_all(
         memberships,
         unique_by: %i[user_id chat_channel_id],
+      )
+    end
+
+    def recompute_users_count(channel:, **)
+      channel.update!(
+        user_count: ::Chat::ChannelMembershipsQuery.count(channel),
+        user_count_stale: false,
       )
     end
   end

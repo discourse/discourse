@@ -31,4 +31,22 @@
       margin: 10px auto auto auto;
     }
   }
+
+  .chat-message-creator__new-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .chat-message-creator__search {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .chat-message-creator__add-members-header-container,
+  .chat-message-creator__list-container {
+    padding-inline: 1rem;
+  }
 }

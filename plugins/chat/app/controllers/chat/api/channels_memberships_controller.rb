@@ -28,4 +28,12 @@ class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
       },
     )
   end
+
+  def create
+    with_service(Chat::AddUsersToChannel) do
+      on_failed_policy(:can_add_users_to_channel) do
+        render_json_error("Users can't be added to this channel")
+      end
+    end
+  end
 end
