@@ -1,6 +1,6 @@
 import { buildEmojiUrl, isCustomEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
-import { watchedWordMatcher } from "discourse-common/utils/watched-words";
+import { buildWatchedWordMatcher } from "discourse-common/utils/watched-words";
 
 const MAX_NAME_LENGTH = 60;
 
@@ -363,7 +363,7 @@ export function setup(helper) {
           md.options.discourse.features.inlineEmoji,
           md.options.discourse.customEmojiTranslation,
           (md.options.discourse.watchedWordsReplace || []).map((word) =>
-            watchedWordMatcher(word)
+            buildWatchedWordMatcher(word)
           ),
           md.options.discourse.emojiDenyList
         )

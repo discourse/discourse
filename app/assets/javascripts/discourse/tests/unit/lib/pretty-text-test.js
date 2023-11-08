@@ -1613,7 +1613,6 @@ var bar = 'bar';
     const opts = {
       watchedWordsReplace: [
         {
-          word: "fun",
           regexp: "(?:\\W|^)(fun)(?=\\W|$)",
           replacement: "times",
           case_sensitive: false,
@@ -1629,7 +1628,6 @@ var bar = 'bar';
     const opts = {
       watchedWordsLink: [
         {
-          word: "fun",
           regexp: "(?:\\W|^)(fun)(?=\\W|$)",
           replacement: "https://discourse.org",
           case_sensitive: false,
@@ -1649,7 +1647,6 @@ var bar = 'bar';
       siteSettings: { watched_words_regular_expressions: true },
       watchedWordsReplace: [
         {
-          word: "(\\bu?\\b)",
           regexp: "(\\bu?\\b)",
           replacement: "you",
           case_sensitive: false,

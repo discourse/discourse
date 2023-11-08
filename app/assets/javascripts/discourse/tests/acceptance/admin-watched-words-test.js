@@ -146,7 +146,6 @@ acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
   needs.site({
     watched_words_replace: [
       {
-        word: "betis",
         partial_regexp: "betis",
         regexp: "(?:\\W|^)(betis)(?=\\W|$)",
         replacement: ":poop:",

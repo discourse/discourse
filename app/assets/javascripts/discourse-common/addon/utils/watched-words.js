@@ -3,7 +3,7 @@ export function createWatchedWordRegExp(word) {
   return new RegExp(word.regexp, `${caseFlag}gu`);
 }
 
-export function watchedWordMatcher(word, link = false) {
+export function buildWatchedWordMatcher(word, link = false) {
   return {
     partialRegexp: new RegExp(
       word.partial_regexp,

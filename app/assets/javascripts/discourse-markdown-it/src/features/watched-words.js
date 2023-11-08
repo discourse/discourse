@@ -1,4 +1,4 @@
-import { watchedWordMatcher } from "discourse-common/utils/watched-words";
+import { buildWatchedWordMatcher } from "discourse-common/utils/watched-words";
 
 const MAX_MATCHES = 100;
 
@@ -52,10 +52,10 @@ export function setup(helper) {
   helper.registerPlugin((md) => {
     const matchers = [
       ...(md.options.discourse.watchedWordsReplace || []).map((word) =>
-        watchedWordMatcher(word)
+        buildWatchedWordMatcher(word)
       ),
       ...(md.options.discourse.watchedWordsLink || []).map((word) =>
-        watchedWordMatcher(word, true)
+        buildWatchedWordMatcher(word, true)
       ),
     ];
 
