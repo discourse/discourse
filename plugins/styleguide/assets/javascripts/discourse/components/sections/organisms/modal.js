@@ -25,6 +25,10 @@ export default class extends Component {
   @action
   toggleInline() {
     this.inline = !this.inline;
+    if (!this.inline) {
+      // Make sure there is a way to dismiss the modal
+      this.dismissable = true;
+    }
   }
 
   @action
