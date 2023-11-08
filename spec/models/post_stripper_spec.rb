@@ -41,7 +41,7 @@ RSpec.describe PostStripper do
       plugin_element = '<div class="plugin_class"></div>'
 
       block = Proc.new { |nokogiri_fragment| nokogiri_fragment.css(".plugin_class").remove }
-      plugin = stub(enabled?: true)
+      plugin = OpenStruct.new(enabled?: true)
       DiscoursePluginRegistry.register_post_stripper({ block: block }, plugin)
 
       fragment = Nokogiri::HTML5.fragment("<p>#{plugin_element}</p>")
