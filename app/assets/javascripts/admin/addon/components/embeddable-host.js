@@ -42,7 +42,7 @@ export default class EmbeddableHost extends Component.extend(
     this.set("editToggled", true);
   }
 
-  @action
+  @__action__
   save() {
     if (this.cantSave) {
       return;
