@@ -25,44 +25,45 @@
       <div class="modal-middle-container">
         <div class="modal-inner-container">
           {{yield to="aboveHeader"}}
-          {{#if this.showHeader}}
-            {{#if
+          {{#if
+          (and
+            (not @hideHeader)
               (or
                 this.dismissable
                 @title
                 (has-block "headerBelowTitle")
                 (has-block "headerAboveTitle")
               )
-            }}
-              <div class={{concat-class "modal-header" @headerClass}}>
-                {{#if this.dismissable}}
-                  <DButton
-                    @icon="times"
-                    @action={{this.handleCloseButton}}
-                    @title="modal.close"
-                    class="btn-flat modal-close close"
-                  />
+          )
+          }}
+            <div class={{concat-class "modal-header" @headerClass}}>
+              {{#if this.dismissable}}
+                <DButton
+                  @icon="times"
+                  @action={{this.handleCloseButton}}
+                  @title="modal.close"
+                  class="btn-flat modal-close close"
+                />
+              {{/if}}
+
+              {{yield to="headerAboveTitle"}}
+
+              <div class="modal-title-wrapper">
+                {{#if @title}}
+                  <div class="title">
+                    <h3 id="discourse-modal-title">{{@title}}</h3>
+
+                    {{#if @subtitle}}
+                      <p class="subtitle">{{@subtitle}}</p>
+                    {{/if}}
+                  </div>
                 {{/if}}
 
-                {{yield to="headerAboveTitle"}}
-
-                <div class="modal-title-wrapper">
-                  {{#if @title}}
-                    <div class="title">
-                      <h3 id="discourse-modal-title">{{@title}}</h3>
-
-                      {{#if @subtitle}}
-                        <p class="subtitle">{{@subtitle}}</p>
-                      {{/if}}
-                    </div>
-                  {{/if}}
-
-                  {{yield to="belowModalTitle"}}
-                </div>
-
-                {{yield to="headerBelowTitle"}}
+                {{yield to="belowModalTitle"}}
               </div>
-            {{/if}}
+
+              {{yield to="headerBelowTitle"}}
+            </div>
           {{/if}}
 
           {{yield to="belowHeader"}}
