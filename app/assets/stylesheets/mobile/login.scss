@@ -230,8 +230,7 @@
 }
 
 .password-reset,
-.email-login,
-.invites-show {
+.email-login {
   margin-top: 30px;
   .col-image {
     padding-top: 12px;
@@ -259,15 +258,6 @@
 .discourse-touch .password-reset {
   .instructions {
     margin-bottom: 16px;
-  }
-}
-
-.invites-show {
-  .col-image {
-    display: none;
-  }
-  h1.login-title {
-    font-size: var(--font-up-3);
   }
 }
 
