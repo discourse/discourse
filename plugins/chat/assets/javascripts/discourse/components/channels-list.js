@@ -86,7 +86,7 @@ export default class ChannelsList extends Component {
     }`;
   }
 
-  @action
+  @__action__
   toggleChannelSection(section) {
     this.args.toggleSection(section);
   }
