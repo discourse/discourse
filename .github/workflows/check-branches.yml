@@ -1,0 +1,14 @@
+name: PR base branch check
+on:
+  pull_request:
+jobs:
+  check-branches:
+    if: github.event_name == 'pull_request' && github.repository == 'discourse/discourse-private-mirror'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branches
+        run: |
+          if [ ${{ github.base_ref }} == "tests-passed" ]; then
+            echo "PR requests to tests-passed branch are not allowed. Please use main."
+            exit 1
+          fi
