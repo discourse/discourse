@@ -21,7 +21,7 @@ module Chat
     end
 
     def generate_auto_slug
-      return if !self.slug.present?
+      false if !self.slug.present?
     end
   end
 end

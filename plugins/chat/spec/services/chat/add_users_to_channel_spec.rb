@@ -22,16 +22,15 @@ RSpec.describe Chat::AddUsersToChannel do
     end
 
     context "when all steps pass" do
-      fab!(:direct_message) { Fabricate(:direct_message, users: [current_user], group: true) }
-
       before { channel.add(current_user) }
 
       it "fetches users to add" do
         expect(result.users.map(&:username)).to contain_exactly(*users.map(&:username))
       end
 
-      it "doesn't include users with membership" do
-        channel.add(users.first)
+      it "doesn't include existing direct message users" do
+        Chat::DirectMessageUser.create!(user: users.first, direct_message: direct_message)
+
         expect(result.users.map(&:username)).to contain_exactly(*users[1..-1].map(&:username))
       end
 
@@ -42,7 +41,7 @@ RSpec.describe Chat::AddUsersToChannel do
       end
 
       it "creates direct messages users" do
-        expect { result }.to change { ::Chat::DirectMessageUser.count }.by(users.count)
+        expect { result }.to change { ::Chat::DirectMessageUser.count }.by(users.count + 1) # +1 for system user creating the notice message and added to the channel
       end
 
       it "updates users count" do

@@ -63,7 +63,7 @@ module Chat
       ::User.where(
         "username IN (?) AND id NOT IN (?)",
         [*contract.usernames],
-        channel.allowed_user_ids,
+        channel.chatable.direct_message_users.select(:user_id),
       ).to_a
     end
 
@@ -123,17 +123,20 @@ module Chat
 
       return if added_users.blank?
 
-      ::Chat::CreateMessage.call(
-        guardian: Discourse.system_user.guardian,
-        chat_channel_id: channel.id,
-        message:
-          I18n.t(
-            "chat.channel.users_invited_to_channel",
-            invited_users: added_users.map { |u| "@#{u.username}" }.join(", "),
-            inviting_user: "@#{guardian.user.username}",
-            count: added_users.count,
-          ),
-      )
+      result =
+        ::Chat::CreateMessage.call(
+          guardian: Discourse.system_user.guardian,
+          chat_channel_id: channel.id,
+          message:
+            I18n.t(
+              "chat.channel.users_invited_to_channel",
+              invited_users: added_users.map { |u| "@#{u.username}" }.join(", "),
+              inviting_user: "@#{guardian.user.username}",
+              count: added_users.count,
+            ),
+        )
+
+      fail!(failure: "Failed to notice the channel") if result.failure?
     end
   end
 end

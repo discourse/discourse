@@ -76,7 +76,13 @@ module Chat
     end
 
     def enforce_system_membership(guardian:, channel:, **)
-      channel.add(guardian.user) if guardian.user&.is_system_user?
+      if guardian.user&.is_system_user?
+        channel.add(guardian.user)
+
+        if channel.direct_message_channel?
+          channel.chatable.direct_message_users.find_or_create_by!(user: guardian.user)
+        end
+      end
     end
 
     def fetch_channel_membership(guardian:, channel:, **)
