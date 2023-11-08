@@ -26,15 +26,15 @@
         <div class="modal-inner-container">
           {{yield to="aboveHeader"}}
           {{#if
-          (and
-            (not @hideHeader)
+            (and
+              (not @hideHeader)
               (or
                 this.dismissable
                 @title
                 (has-block "headerBelowTitle")
                 (has-block "headerAboveTitle")
               )
-          )
+            )
           }}
             <div class={{concat-class "modal-header" @headerClass}}>
               {{#if this.dismissable}}
