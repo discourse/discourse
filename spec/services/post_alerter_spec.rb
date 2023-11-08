@@ -59,6 +59,18 @@ RSpec.describe PostAlerter do
     PostAlerter.post_created(post)
   end
 
+  def setup_push_notification_subscription_for(user:)
+    2.times do |i|
+      UserApiKey.create!(
+        user_id: user.id,
+        client_id: "xxx#{i}",
+        application_name: "iPhone#{i}",
+        scopes: ["notifications"].map { |name| UserApiKeyScope.new(name: name) },
+        push_url: "https://site2.com/push",
+      )
+    end
+  end
+
   context "with private message" do
     it "notifies for pms correctly" do
       pm = Fabricate(:topic, archetype: "private_message", category_id: nil)
@@ -1172,15 +1184,7 @@ RSpec.describe PostAlerter do
 
     before do
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
-      2.times do |i|
-        UserApiKey.create!(
-          user_id: evil_trout.id,
-          client_id: "xxx#{i}",
-          application_name: "iPhone#{i}",
-          scopes: ["notifications"].map { |name| UserApiKeyScope.new(name: name) },
-          push_url: "https://site2.com/push",
-        )
-      end
+      setup_push_notification_subscription_for(user: evil_trout)
     end
 
     describe "DiscoursePluginRegistry#push_notification_filters" do
@@ -1506,6 +1510,24 @@ RSpec.describe PostAlerter do
         params: [[user], post],
       )
     end
+
+    it "sends a push notification when user has a push subscription" do
+      setup_push_notification_subscription_for(user: user)
+
+      level = CategoryUser.notification_levels[:watching_first_post]
+      CategoryUser.set_notification_level_for_category(user, level, category.id)
+      events =
+        DiscourseEvent.track_events(:push_notification) do
+          PostAlerter.new.after_save_post(post, true)
+        end
+
+      expect(
+        events.detect do |e|
+          e[:params][0] == user &&
+            e[:params][1][:notification_type] == Notification.types[:watching_first_post]
+        end,
+      ).to be_present
+    end
   end
 
   context "with replies" do
@@ -1827,6 +1849,23 @@ RSpec.describe PostAlerter do
         expect(notification.post_number).to eq(1)
         notification_data = JSON.parse(notification.data)
         expect(notification_data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
+      end
+
+      it "sends a push notification when user has a push subscription" do
+        setup_push_notification_subscription_for(user: user)
+
+        topic = Fabricate(:topic, category: category)
+        post = Fabricate(:post, topic: topic)
+        level = CategoryUser.notification_levels[:watching]
+        CategoryUser.set_notification_level_for_category(user, level, category.id)
+        events = DiscourseEvent.track_events(:push_notification) { PostAlerter.post_created(post) }
+
+        expect(
+          events.detect do |e|
+            e[:params][0] == user &&
+              e[:params][1][:notification_type] == Notification.types[:watching_category_or_tag]
+          end,
+        ).to be_present
       end
     end
   end

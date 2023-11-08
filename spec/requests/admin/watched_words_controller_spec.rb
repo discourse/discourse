@@ -51,10 +51,7 @@ RSpec.describe Admin::WatchedWordsController do
           ),
         )
         expect(watched_words["compiled_regular_expressions"]["block"].first).to eq(
-          WordWatcher
-            .serializable_word_matcher_regexp(:block, engine: :js)
-            .first
-            .deep_stringify_keys,
+          WordWatcher.serialized_regexps_for_action(:block, engine: :js).first.deep_stringify_keys,
         )
       end
     end

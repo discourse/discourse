@@ -198,7 +198,6 @@ module Chat
         @parsed_mentions
           .group_mentions
           .not_suspended
-          .where("user_count <= ?", SiteSetting.max_users_notified_per_group_mention)
           .where.not(username_lower: @user.username_lower)
           .where.not(id: already_covered_ids)
 

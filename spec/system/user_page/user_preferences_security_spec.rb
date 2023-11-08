@@ -60,6 +60,13 @@ describe "User preferences for Security", type: :system do
         )
       authenticator = page.driver.browser.add_virtual_authenticator(options)
 
+      page.driver.browser.manage.add_cookie(
+        domain: Discourse.current_hostname,
+        name: "destination_url",
+        value: "/new",
+        path: "/",
+      )
+
       user_preferences_security_page.visit(user)
 
       find(".pref-passkeys__add .btn").click
@@ -93,6 +100,9 @@ describe "User preferences for Security", type: :system do
       find(".d-header .login-button").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      # ensures that we are redirected to the destination_url cookie
+      expect(page.driver.current_url).to include("/new")
 
       # clear authenticator (otherwise it will interfere with other tests)
       authenticator.remove!
