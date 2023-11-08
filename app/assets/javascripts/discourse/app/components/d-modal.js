@@ -42,6 +42,10 @@ export default class DModal extends Component {
     }
   }
 
+  get showHeader() {
+    return !this.args.hideHeader;
+  }
+
   shouldTriggerClickOnEnter(event) {
     if (this.args.submitOnEnter === false) {
       return false;
