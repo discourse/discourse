@@ -8,7 +8,8 @@ jobs:
     steps:
       - name: Check branches
         run: |
-          if [ ${{ github.base_ref }} == "tests-passed" ]; then
+          BASE_REF=${{ github.base_ref }}
+          if [ "$BASE_REF" == "tests-passed" ]; then
             echo "PR requests to tests-passed branch are not allowed. Please use main."
             exit 1
           fi
