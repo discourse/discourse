@@ -134,7 +134,7 @@ export default class extends Component {
     this.selectedSidebarCategoryIds.clear();
   }
 
-  @action
+  @__action__
   toggleCategory(categoryId) {
     if (this.selectedSidebarCategoryIds.includes(categoryId)) {
       this.selectedSidebarCategoryIds.removeObject(categoryId);

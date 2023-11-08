@@ -59,7 +59,7 @@
                   disabled={{not
                     (includes this.filteredCategoryIds category.id)
                   }}
-                  {{on "click" (action "toggleCategory" category.id)}}
+                  {{on "click" (fn this.toggleCategory category.id)}}
                 />
               </label>
             </div>
