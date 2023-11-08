@@ -2,7 +2,8 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 
 export default class Filter extends Component {
-  @action
+  // DELETE THIS COMMENT: referenced by group.js
+  @__action__
   onChange(value) {
     this.applyFilter(this.filter.id, value);
   }
