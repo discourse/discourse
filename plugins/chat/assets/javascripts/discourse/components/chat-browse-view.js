@@ -52,7 +52,7 @@ export default class ChatBrowseView extends Component {
     );
   }
 
-  @action
+  @__action__
   debouncedFiltering(event) {
     this.set("channelsCollection", this.chatApi.channels());
 
