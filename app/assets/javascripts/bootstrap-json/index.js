@@ -8,6 +8,12 @@ const fsPromises = fs.promises;
 const { JSDOM } = require("jsdom");
 const { Buffer } = require("node:buffer");
 const { env } = require("node:process");
+const { glob } = require("glob");
+
+async function listDistAssets() {
+  const files = await glob("**/*.js", { nodir: true, cwd: "dist/assets" });
+  return new Set(files);
+}
 
 function updateScriptReferences({
   chunkInfos,
@@ -15,6 +21,7 @@ function updateScriptReferences({
   selector,
   attribute,
   baseURL,
+  distAssets,
 }) {
   const elements = dom.window.document.querySelectorAll(selector);
   const handledEntrypoints = new Set();
@@ -27,9 +34,16 @@ function updateScriptReferences({
       continue;
     }
 
-    const chunks = chunkInfos[`assets/${entrypointName}.js`]?.assets || [
-      `assets/${entrypointName}.js`,
-    ];
+    let chunks = chunkInfos[`assets/${entrypointName}.js`]?.assets;
+
+    if (!chunks) {
+      if (distAssets.has(`${entrypointName}.js`)) {
+        chunks = [`assets/${entrypointName}.js`];
+      } else {
+        // Not an ember-cli asset, do not rewrite
+        continue;
+      }
+    }
 
     const newElements = chunks.map((chunk) => {
       const newElement = el.cloneNode(true);
@@ -142,9 +156,10 @@ async function handleRequest(proxy, baseURL, req, res) {
   res.status(response.status);
 
   if (isHTML) {
-    const [responseText, chunkInfoText] = await Promise.all([
+    const [responseText, chunkInfoText, distAssets] = await Promise.all([
       response.text(),
       fsPromises.readFile("dist/assets.json", "utf-8"),
+      listDistAssets(),
     ]);
 
     const chunkInfos = JSON.parse(chunkInfoText);
@@ -157,6 +172,7 @@ async function handleRequest(proxy, baseURL, req, res) {
       selector: "script[data-discourse-entrypoint]",
       attribute: "src",
       baseURL,
+      distAssets,
     });
 
     updateScriptReferences({
@@ -165,6 +181,7 @@ async function handleRequest(proxy, baseURL, req, res) {
       selector: "link[rel=preload][data-discourse-entrypoint]",
       attribute: "href",
       baseURL,
+      distAssets,
     });
 
     res.send(dom.serialize());
