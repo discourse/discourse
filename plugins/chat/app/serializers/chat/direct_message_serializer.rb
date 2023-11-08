@@ -2,15 +2,21 @@
 
 module Chat
   class DirectMessageSerializer < ApplicationSerializer
-    attribute :group
-
-    has_many :users, serializer: ::Chat::ChatableUserSerializer, embed: :objects
+    attributes :group, :users
 
     def users
       users = object.direct_message_users.map(&:user).map { |u| u || Chat::NullUser.new }
+      users = users - [scope.user] if users.count > 1
 
-      return users - [scope.user] if users.count > 1
-      users
+      serializer =
+        ActiveModel::ArraySerializer.new(
+          users,
+          each_serializer: ::Chat::ChatableUserSerializer,
+          scope: scope,
+          include_status: true,
+        )
+
+      serializer.as_json
     end
   end
 end

@@ -9,7 +9,8 @@ module Chat
                :excerpt,
                :chat_channel_id,
                :deleted_at,
-               :mentioned_users
+               :mentioned_users,
+               :user
 
     def excerpt
       object.censored_excerpt
@@ -22,10 +23,12 @@ module Chat
         .map(&:user)
         .compact
         .sort_by(&:id)
-        .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+        .map { |user| BasicUserSerializer.new(user, root: false, include_status: true) }
         .as_json
     end
 
-    has_one :user, serializer: BasicUserWithStatusSerializer, embed: :objects
+    def user
+      BasicUserSerializer.new(object.user, root: false, include_status: true).as_json
+    end
   end
 end

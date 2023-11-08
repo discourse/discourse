@@ -2,7 +2,7 @@
 
 # A basic user serializer, with custom fields
 class UserWithCustomFieldsSerializer < BasicUserSerializer
-  attributes :custom_fields
+  attributes :custom_fields, :status
 
   def custom_fields
     fields = custom_field_keys
@@ -16,6 +16,20 @@ class UserWithCustomFieldsSerializer < BasicUserSerializer
     else
       {}
     end
+  end
+
+  def include_status?
+    predicate = @options[:include_status] && SiteSetting.enable_user_status && user.has_status?
+
+    if user.association(:user_option).loaded?
+      predicate = predicate && !user.user_option.hide_profile_and_presence
+    end
+
+    predicate
+  end
+
+  def status
+    ::UserStatusSerializer.new(user.user_status, root: false)
   end
 
   private

@@ -586,7 +586,7 @@ class PostSerializer < BasicPostSerializer
         query = query.where(username: object.mentions)
       end
 
-    users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+    users.map { |user| BasicUserSerializer.new(user, root: false, include_status: true).as_json }
   end
 
   def include_mentioned_users?
