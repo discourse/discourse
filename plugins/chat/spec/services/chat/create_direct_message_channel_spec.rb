@@ -98,6 +98,18 @@ RSpec.describe Chat::CreateDirectMessageChannel do
             expect(result.channel.id).to eq(existing_channel.id)
           end
         end
+
+        context "when theres also a group channel with same users" do
+          let(:target_usernames) { [user_1.username] }
+
+          it "returns the non group existing channel" do
+            group_channel = described_class.call(params.merge(name: "cats")).channel
+            channel = described_class.call(params).channel
+
+            expect(result.channel.id).to_not eq(group_channel.id)
+            expect(result.channel.id).to eq(channel.id)
+          end
+        end
       end
 
       context "when a name is given" do
