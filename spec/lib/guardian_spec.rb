@@ -4289,6 +4289,8 @@ RSpec.describe Guardian do
   end
 
   describe "#can_mention_here?" do
+    before { Group.refresh_automatic_groups! }
+
     it "returns false if disabled" do
       SiteSetting.max_here_mentioned = 0
       expect(admin.guardian.can_mention_here?).to eq(false)
@@ -4301,6 +4303,7 @@ RSpec.describe Guardian do
 
     it "works with trust levels" do
       SiteSetting.min_trust_level_for_here_mention = 2
+      SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
 
       expect(trust_level_0.guardian.can_mention_here?).to eq(false)
       expect(trust_level_1.guardian.can_mention_here?).to eq(false)
@@ -4313,6 +4316,7 @@ RSpec.describe Guardian do
 
     it "works with staff" do
       SiteSetting.min_trust_level_for_here_mention = "staff"
+      SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:staff]
 
       expect(trust_level_4.guardian.can_mention_here?).to eq(false)
       expect(moderator.guardian.can_mention_here?).to eq(true)
@@ -4321,6 +4325,7 @@ RSpec.describe Guardian do
 
     it "works with admin" do
       SiteSetting.min_trust_level_for_here_mention = "admin"
+      SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(trust_level_4.guardian.can_mention_here?).to eq(false)
       expect(moderator.guardian.can_mention_here?).to eq(false)

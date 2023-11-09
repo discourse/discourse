@@ -960,6 +960,13 @@ posting:
   min_trust_level_for_here_mention:
     default: "2"
     enum: "TrustLevelAndStaffSetting"
+  here_mention_allowed_groups:
+    default: "12" # auto group trust_level_2
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   title_max_word_length:
     default: 30
     locale_default:
