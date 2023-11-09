@@ -105,6 +105,8 @@ RSpec.describe BookmarkQuery do
       context "with custom bookmarkable fitering" do
         before { register_test_bookmarkable }
 
+        after { DiscoursePluginRegistry.reset! }
+
         let!(:bookmark5) do
           Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkking"))
         end

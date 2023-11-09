@@ -97,6 +97,13 @@ RSpec.describe TopicBookmarkable do
       bookmark1.reload
       expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
     end
+
+    it "cannot send reminder if the user cannot access the topic" do
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(true)
+      bookmark1.bookmarkable.update!(category: private_category)
+      bookmark1.reload
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
+    end
   end
 
   describe "#reminder_handler" do
