@@ -339,6 +339,8 @@ en:
         no_items: "No items"
         create_group_placeholder: "Group chat name (optional)"
         participants_counter:  "%{selection_count}/%{max} participants"
+        new_group_chat: "New group chat"
+        filter: "Filter"
 
       channel_edit_name_slug_modal:
         title: Edit channel

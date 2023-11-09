@@ -4,11 +4,16 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import icon from "discourse-common/helpers/d-icon";
+import I18n from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
 import { getNext, getPrevious } from "./lib/iterate-list";
 import Member from "./member";
 
-export default class members extends Component {
+export default class Members extends Component {
+  addMoreMembersLabel = I18n.t(
+    "chat.new_message_modal.user_search_placeholder"
+  );
+
   @action
   onFilter() {
     this.args.onFilter(...arguments);
@@ -81,7 +86,7 @@ export default class members extends Component {
         {{/each}}
 
         <Input
-          placeholder="...add more users"
+          placeholder={{this.addMoreMembersLabel}}
           class="chat-message-creator__members-input"
           @value={{@filter}}
           autofocus={{true}}

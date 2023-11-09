@@ -4,15 +4,15 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import eq from "truth-helpers/helpers/eq";
-import Action from "./action";
 import Channel from "./channel";
+import ListAction from "./list-action";
 import User from "./user";
 
 export default class List extends Component {
   componentForItem(type) {
     switch (type) {
-      case "action":
-        return Action;
+      case "list-action":
+        return ListAction;
       case "user":
         return User;
       case "channel":
