@@ -47,15 +47,8 @@ class S3Helper
     setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
     options = S3Helper.s3_options(setting_klass)
     options[:client] = s3_client if s3_client.present?
-    use_accelerate_endpoint =
-      (
-        if use_db_s3_config
-          SiteSetting.enable_s3_transfer_acceleration
-        else
-          GlobalSetting.s3_enable_transfer_acceleration
-        end
-      )
-    options[:use_accelerate_endpoint] = !for_backup && use_accelerate_endpoint
+    options[:use_accelerate_endpoint] = !for_backup &&
+      SiteSetting.Upload.enable_s3_transfer_acceleration
 
     bucket =
       if for_backup
