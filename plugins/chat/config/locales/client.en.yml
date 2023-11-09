@@ -342,7 +342,7 @@ en:
         new_group_chat: "New group chat"
         filter: "Filter"
         cant_add_more_members: "Maximum number of members reached"
-        create_new_groupchat: "Create groupchat"
+        create_new_groupchat: "Create group chat"
 
       channel_edit_name_slug_modal:
         title: Edit channel
