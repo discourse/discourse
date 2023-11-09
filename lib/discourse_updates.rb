@@ -249,7 +249,8 @@ module DiscourseUpdates
     end
 
     def new_features_endpoint
-      "https://meta.discourse.org/new-features.json"
+      return "https://meta.discourse.org/new-features.json" if Rails.env.production?
+      ENV["DISCOURSE_NEW_FEATURES_ENDPOINT"] || "http://localhost:4200/new-features.json"
     end
 
     def new_features_key
