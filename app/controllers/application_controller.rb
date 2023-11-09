@@ -32,7 +32,6 @@ class ApplicationController < ActionController::Base
   before_action :rate_limit_crawlers
   before_action :check_readonly_mode
   before_action :handle_theme
-  before_action :set_current_user_for_logs
   before_action :set_mp_snapshot_fields
   before_action :clear_notifications
   around_action :with_resolved_locale
@@ -53,6 +52,7 @@ class ApplicationController < ActionController::Base
   after_action :add_noindex_header_to_non_canonical, if: :spa_boot_request?
   after_action :set_cross_origin_opener_policy_header, if: :spa_boot_request?
   after_action :clean_xml, if: :is_feed_response?
+  after_action :set_current_user_for_logs
   around_action :link_preload, if: -> { spa_boot_request? && GlobalSetting.preload_link_header }
 
   HONEYPOT_KEY ||= "HONEYPOT_KEY"
@@ -359,7 +359,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_user_for_logs
-    if current_user
+    if current_user && !response.headers["Expires"]
       Logster.add_to_env(request.env, "username", current_user.username)
       response.headers["X-Discourse-Username"] = current_user.username
     end

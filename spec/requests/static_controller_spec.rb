@@ -13,11 +13,18 @@ RSpec.describe StaticController do
 
     context "with local store" do
       it "returns the default favicon if favicon has not been configured" do
+        sign_in(Fabricate(:user))
+
         get "/favicon/proxied"
 
         expect(response.status).to eq(200)
         expect(response.media_type).to eq("image/png")
         expect(response.body.bytesize).to eq(SiteIconManager.favicon.filesize)
+
+        # should be cached
+        expect(response["Expires"]).to be_present
+        # we cache headers, so don't include usernames
+        expect(response["X-Discourse-Username"]).to eq(nil)
       end
 
       it "returns the configured favicon" do
