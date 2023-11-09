@@ -62,7 +62,7 @@ RSpec.describe "Flag message", type: :system do
     expect(chat_page.message_creator).to be_not_listing(channel_1)
   end
 
-  it "can create a new group message " do
+  it "can create a new group message" do
     visit("/")
     chat_page.open_new_message
     chat_page.find("#new-group-chat").click

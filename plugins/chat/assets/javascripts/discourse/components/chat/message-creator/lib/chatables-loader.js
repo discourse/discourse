@@ -23,12 +23,17 @@ export default class ChatablesLoader {
       includeCategoryChannels: true,
       includeDirectMessageChannels: true,
       excludedUserIds: null,
+      preloadChannels: false,
     }
   ) {
     this.request?.abort();
 
-    if (!term) {
+    if (!term && options.preloadChannels) {
       return this.#preloadedChannels();
+    }
+
+    if (!term) {
+      return [];
     }
 
     try {

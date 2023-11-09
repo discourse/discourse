@@ -80,6 +80,10 @@
     flex-grow: 1;
     border-top: 1px solid var(--primary-low);
   }
+
+  .btn {
+    margin-left: auto;
+  }
 }
 
 .chat-message-creator__participants-count {
@@ -156,6 +160,10 @@
     padding: 0.25rem;
     display: flex;
     align-items: center;
+
+    &#new-group-chat {
+      height: 30px;
+    }
 
     .d-icon-users {
       padding: 2px 2px;

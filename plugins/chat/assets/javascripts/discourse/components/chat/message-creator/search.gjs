@@ -75,7 +75,7 @@ export default class ChatMessageCreatorSearch extends Component {
   @action
   async fetch(term) {
     const loader = new ChatablesLoader(this);
-    this.chatables = await loader.search(term);
+    this.chatables = await loader.search(term, { preloadChannels: true });
 
     this.highlightedChatable = this.items[0];
   }
