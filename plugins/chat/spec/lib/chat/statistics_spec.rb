@@ -160,9 +160,9 @@ describe Chat::Statistics do
     it "counts messages count accurately" do
       channel_messages = described_class.channel_messages
       expect(channel_messages[:last_day]).to eq(1)
-      expect(channel_messages["7_days"]).to eq(3)
-      expect(channel_messages["28_days"]).to eq(6)
-      expect(channel_messages["30_days"]).to eq(7)
+      expect(channel_messages[:"7_days"]).to eq(3)
+      expect(channel_messages[:"28_days"]).to eq(6)
+      expect(channel_messages[:"30_days"]).to eq(7)
       expect(channel_messages[:count]).to eq(10)
     end
   end
@@ -226,9 +226,9 @@ describe Chat::Statistics do
     it "counts messages count accurately" do
       direct_messages = described_class.direct_messages
       expect(direct_messages[:last_day]).to eq(1)
-      expect(direct_messages["7_days"]).to eq(3)
-      expect(direct_messages["28_days"]).to eq(6)
-      expect(direct_messages["30_days"]).to eq(7)
+      expect(direct_messages[:"7_days"]).to eq(3)
+      expect(direct_messages[:"28_days"]).to eq(6)
+      expect(direct_messages[:"30_days"]).to eq(7)
       expect(direct_messages[:count]).to eq(10)
     end
   end
@@ -330,9 +330,9 @@ describe Chat::Statistics do
     it "counts messages count accurately" do
       threaded_messages = described_class.threaded_messages
       expect(threaded_messages[:last_day]).to eq(3)
-      expect(threaded_messages["7_days"]).to eq(5)
-      expect(threaded_messages["28_days"]).to eq(8)
-      expect(threaded_messages["30_days"]).to eq(9)
+      expect(threaded_messages[:"7_days"]).to eq(5)
+      expect(threaded_messages[:"28_days"]).to eq(8)
+      expect(threaded_messages[:"30_days"]).to eq(9)
       expect(threaded_messages[:count]).to eq(12)
     end
   end
