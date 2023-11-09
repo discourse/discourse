@@ -14,7 +14,11 @@ export default class Member extends Component {
       }}
       @action={{fn @onSelect @member}}
     >
-      <ChatUserAvatar @user={{@member.model}} @interactive={{false}} />
+      <ChatUserAvatar
+        @user={{@member.model}}
+        @interactive={{false}}
+        @showPresence={{false}}
+      />
       <span class="chat-message-creator__member-username">
         {{@member.model.username}}
       </span>
