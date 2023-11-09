@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
+import { extractError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse-common/lib/debounce";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
@@ -84,8 +84,6 @@ export default class ChatModalEditChannelName extends Component {
     );
   }
 
-  // intentionally not showing AJAX error for this, we will autogenerate
-  // the slug server-side if they leave it blank
   async #generateSlug(name) {
     try {
       await ajax("/slugs.json", { type: "POST", data: { name } }).then(
@@ -94,7 +92,8 @@ export default class ChatModalEditChannelName extends Component {
         }
       );
     } catch (error) {
-      popupAjaxError(error);
+      // eslint-disable-next-line no-console
+      console.log(error);
     }
   }
 }
