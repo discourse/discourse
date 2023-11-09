@@ -239,7 +239,6 @@ pt_BR:
       save: "Salvar"
       select: "Selecionar"
       return_to_list: "Retornar para lista de canais"
-      return_to_threads_list: "Retornar às discussões em andamento"
       unread_threads_count:
         one: "Você tem %{count} discussão não lida"
         other: "Você tem %{count} discussões não lidas"
@@ -546,7 +545,6 @@ pt_BR:
           other: "+%{count}"
       threads:
         open: "Tópico Aberto"
-        list: "Discussões em andamento"
         none: "Você não está participando de nenhum tópico neste canal."
       draft_channel_screen:
         header: "Novas mensagens"

@@ -1477,7 +1477,7 @@ tr_TR:
     blocked_onebox_domains: "Asla tek kutulu olmayacak alan adlarının bir listesi, örneğin wikipedia.org\n(Joker karakter sembolleri * ? desteklenmez)"
     block_onebox_on_redirect: "Yönlendirme yapan URL'ler için onebox'ı engelleyin."
     allowed_inline_onebox_domains: "Başlık olmadan bağlantı verilirse minyatür formda onebox olarak gösterilecek alan adlarının listesi"
-    enable_inline_onebox_on_all_domains: "inline_onebox_domain_allowlist site ayarını yok sayın ve tüm alan adlarında satır içi onebox'a izin verin."
+    enable_inline_onebox_on_all_domains: "allowed_inline_onebox_domains site ayarını yok say ve tüm alan adlarında inline onebox'a izin ver."
     force_custom_user_agent_hosts: "Tüm isteklerde özel onebox kullanıcı aracısının kullanılacağı ana bilgisayarlar. (Özellikle kullanıcı aracısına göre erişimi sınırlayan ana bilgisayarlar için kullanışlıdır)."
     max_oneboxes_per_post: "Bir gönderideki maksimum onebox sayısı."
     facebook_app_access_token: "Facebook uygulama kimliğinizden ve gizli dizinizden oluşturulan bir belirteç. Instagram onebox'ları oluşturmak için kullanılır."
@@ -1975,6 +1975,7 @@ tr_TR:
     allow_anonymous_posting: "Kullanıcıların anonim moda geçmesine izin verin"
     allow_anonymous_likes: "Anonim kullanıcıların gönderileri beğenmelerine izin verin"
     anonymous_posting_min_trust_level: "Anonim gönderimi etkinleştirmek için gereken minimum güven seviyesi"
+    anonymous_posting_allowed_groups: "Anonim gönderimi etkinleştirmesine izin verilen gruplar"
     anonymous_account_duration_minutes: "Anonimliği korumak için her kullanıcı için her N dakikada bir yeni bir anonim hesap oluşturun. Örnek: 600 olarak ayarlanırsa son gönderiden itibaren 600 dakika geçer geçmez VE kullanıcı anonime geçerse yeni bir anonim hesap oluşturulur."
     hide_user_profiles_from_public: "Anonim kullanıcılar için kullanıcı kartlarını, kullanıcı profillerini ve kullanıcı dizinini devre dışı bırakın."
     allow_users_to_hide_profile: "Kullanıcıların profillerini ve varlıklarını gizlemelerine izin verin"
@@ -2144,6 +2145,7 @@ tr_TR:
     city_for_disputes: "Anlaşmazlıklar için şehir"
     shared_drafts_category: "Konu taslakları için bir kategori belirleyerek Paylaşılan Taslaklar özelliğini etkinleştirin. Bu kategorideki konular, personel kullanıcılar için konu listelerinden bastırılır."
     shared_drafts_min_trust_level: "Kullanıcıların Paylaşılan Taslakları görmesine ve düzenlemesine izin verin."
+    shared_drafts_allowed_groups: "Bu gruplardaki kullanıcıların Paylaşılan Taslakları görmesine ve düzenlemesine izin verin."
     push_notifications_prompt: "Kullanıcı onayı istemini gösterin."
     push_notifications_icon: "Bildirim köşesinde görünen rozet simgesi. Şeffaflığa sahip 96×96 monokromatik bir PNG önerilir."
     enable_desktop_push_notifications: "Masaüstü anlık bildirimlerini etkinleştirin"
@@ -2206,7 +2208,7 @@ tr_TR:
       reply_by_email_address_is_empty: "E-posta ile yanıtlamayı etkinleştirmeden önce bir \"yanıtlama e-postası\" ayarlamanız gerekiyor."
       email_polling_disabled: "E-posta ile yanıtlamayı etkinleştirmeden önce manuel, POP3 yoklamasını veya özel bir posta yoklayıcısını etkinleştirmeniz gerekir."
       user_locale_not_enabled: "Bu ayarı etkinleştirmeden önce \"kullanıcı yerel ayarına izin ver\" seçeneğini etkinleştirmeniz gerekiyor."
-      personal_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin kişisel mesaj göndermesini istemiyorsanız personel grubunu seçin."
+      at_least_one_group_required: "Bu ayar için en az bir grup belirtmelisiniz."
       invalid_regex: "Regex geçersiz veya izin verilmiyor."
       invalid_regex_with_message: "\"%{regex}\" regex'inde bir hata var: %{message}"
       email_editable_enabled: "Bu ayarı etkinleştirmeden önce \"e-posta düzenlenebilir\" seçeneğini devre dışı bırakmalısınız."
@@ -2653,6 +2655,28 @@ tr_TR:
         Geribildirim: %{feedback}
 
         Aşağıdaki orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Teşekkürler,
+        %{site_name} Moderatörleri
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Gönderinizle ilgili geri bildirim"
+      subject_template: "\"%{topic_title}\" başlıklı yeni konu hakkında geri bildirim"
+      text_body_template: |
+        Merhaba %{username},
+
+        "%{topic_title}" başlıklı gönderinizi inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+
+        Sebep: %{reason}
+
+        Geribildirim: %{feedback}
+
+        Aşağıda orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
 
         --------
 

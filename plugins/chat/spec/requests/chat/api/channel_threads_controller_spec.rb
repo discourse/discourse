@@ -120,7 +120,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     end
 
     it "has preloaded chat mentions and users for the thread original message" do
-      update_message(
+      update_message!(
         thread_1.original_message,
         user: thread_1.original_message.user,
         text: "@#{current_user.username} hello and @#{thread_2.original_message_user.username}!",

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # name: chat
-# about: Chat inside Discourse
+# about: Adds chat functionality.
+# meta_topic_id: 230881
 # version: 0.4
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/chat
@@ -491,6 +492,10 @@ after_initialize do
   register_hashtag_type_priority_for_context("category", "chat-composer", 100)
   register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
   register_hashtag_type_priority_for_context("channel", "topic-composer", 10)
+
+  register_post_stripper do |nokogiri_fragment|
+    nokogiri_fragment.css(".chat-transcript .mention").remove
+  end
 
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: Chat::Message::MARKDOWN_FEATURES,

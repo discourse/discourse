@@ -96,7 +96,7 @@ module PageObjects
           if args[:not_processed]
             selector += ".-not-processed"
           else
-            selector += ".-processed"
+            selector += ".-processed.-persisted"
           end
 
           selector += "[data-id=\"#{args[:id]}\"]" if args[:id]

@@ -82,7 +82,7 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    base64 (0.1.1)
+    base64 (0.2.0)
     better_errors (2.10.1)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
@@ -107,7 +107,7 @@ GEM
       xpath (~> 3.2)
     cbor (0.5.9.6)
     certified (1.0.0)
-    cgi (0.3.6)
+    cgi (0.4.0)
     chunky_png (1.4.0)
     coderay (1.1.3)
     colored2 (4.0.0)
@@ -124,7 +124,7 @@ GEM
       addressable
     dartsass-ruby (3.0.2)
       sass-embedded (~> 1.54, < 1.67)
-    date (3.3.3)
+    date (3.3.4)
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
     diffy (3.4.2)
@@ -253,7 +253,7 @@ GEM
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.2.1)
+    net-protocol (0.2.2)
       timeout
     net-smtp (0.4.0)
       net-protocol
@@ -490,7 +490,7 @@ GEM
     syntax_tree-disable_ternary (1.0.0)
     test-prof (1.2.3)
     thor (1.3.0)
-    timeout (0.4.0)
+    timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2023.3)

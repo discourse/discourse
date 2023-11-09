@@ -26,7 +26,7 @@ export default class ChatMessage {
   @tracked selected;
   @tracked channel;
   @tracked staged;
-  @tracked processed;
+  @tracked processed = true;
   @tracked draftSaved;
   @tracked draft;
   @tracked createdAt;

@@ -1,24 +1,22 @@
-import Controller from "@ember/controller";
+import Component from "@ember/component";
+import { action } from "@ember/object";
 import { sort } from "@ember/object/computed";
-import Evented from "@ember/object/evented";
-import BufferedProxy from "ember-buffered-proxy/proxy";
+import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
 
-export default Controller.extend(ModalFunctionality, Evented, {
+export default class ReorderCategories extends Component {
+  @service site;
+
+  categoriesSorting = ["position"];
+
+  @sort("site.categories", "categoriesSorting") categoriesOrdered;
+
   init() {
-    this._super(...arguments);
-    this.categoriesSorting = ["position"];
-  },
-
-  @discourseComputed("site.categories.[]")
-  categoriesBuffered(categories) {
-    return (categories || []).map((c) => BufferedProxy.create({ content: c }));
-  },
-
-  categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
+    super.init(...arguments);
+    next(() => this.reorder());
+  }
 
   /**
    * 1. Make sure all categories have unique position numbers.
@@ -31,46 +29,39 @@ export default Controller.extend(ModalFunctionality, Evented, {
    *      parent          =>    parent/c2
    *      other                 parent/c2/c1
    *      parent/c2             other
-   *
    **/
-  @on("init")
   reorder() {
-    const reorderChildren = (categoryId, depth, index) => {
-      this.categoriesOrdered.forEach((category) => {
-        if (
-          (categoryId === null && !category.get("parent_category_id")) ||
-          category.get("parent_category_id") === categoryId
-        ) {
-          category.setProperties({ depth, position: index++ });
-          index = reorderChildren(category.get("id"), depth + 1, index);
-        }
-      });
+    this.reorderChildren(null, 0, 0);
+  }
 
-      return index;
-    };
-
-    reorderChildren(null, 0, 0);
-
-    this.categoriesBuffered.forEach((bc) => {
-      if (bc.get("hasBufferedChanges")) {
-        bc.applyBufferedChanges();
+  reorderChildren(categoryId, depth, index) {
+    for (const category of this.categoriesOrdered) {
+      if (
+        (categoryId === null && !category.get("parent_category_id")) ||
+        category.get("parent_category_id") === categoryId
+      ) {
+        category.setProperties({ depth, position: index++ });
+        index = this.reorderChildren(category.get("id"), depth + 1, index);
       }
-    });
+    }
 
-    this.notifyPropertyChange("categoriesBuffered");
-  },
+    return index;
+  }
 
   countDescendants(category) {
-    return category.get("subcategories")
-      ? category
-          .get("subcategories")
-          .reduce(
-            (count, subcategory) => count + this.countDescendants(subcategory),
-            category.get("subcategories").length
-          )
-      : 0;
-  },
+    if (!category.get("subcategories")) {
+      return 0;
+    }
 
+    return category
+      .get("subcategories")
+      .reduce(
+        (count, subcategory) => count + this.countDescendants(subcategory),
+        category.get("subcategories").length
+      );
+  }
+
+  @action
   move(category, direction) {
     let targetPosition = category.get("position") + direction;
 
@@ -114,7 +105,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
     }
 
     // Update other categories between current and target position
-    this.categoriesOrdered.map((c) => {
+    for (const c of this.categoriesOrdered) {
       if (direction < 0) {
         // Moving up (position gets smaller)
         if (
@@ -134,47 +125,42 @@ export default Controller.extend(ModalFunctionality, Evented, {
           c.set("position", newPosition);
         }
       }
-    });
+    }
 
     // Update this category's position to target position
     category.set("position", targetPosition);
 
     this.reorder();
-  },
+  }
 
-  actions: {
-    change(category, event) {
-      let newPosition = parseFloat(event.target.value);
-      newPosition =
-        newPosition < category.get("position")
-          ? Math.ceil(newPosition)
-          : Math.floor(newPosition);
-      const direction = newPosition - category.get("position");
-      this.move(category, direction);
-    },
+  @action
+  change(category, event) {
+    let newPosition = parseFloat(event.target.value);
+    newPosition =
+      newPosition < category.get("position")
+        ? Math.ceil(newPosition)
+        : Math.floor(newPosition);
+    const direction = newPosition - category.get("position");
+    this.move(category, direction);
+  }
 
-    moveUp(category) {
-      this.move(category, -1);
-    },
+  @action
+  async save() {
+    this.reorder();
 
-    moveDown(category) {
-      this.move(category, 1);
-    },
+    const data = {};
+    for (const category of this.site.categories) {
+      data[category.get("id")] = category.get("position");
+    }
 
-    save() {
-      this.reorder();
-
-      const data = {};
-      this.categoriesBuffered.forEach((cat) => {
-        data[cat.get("id")] = cat.get("position");
-      });
-
-      ajax("/categories/reorder", {
+    try {
+      await ajax("/categories/reorder", {
         type: "POST",
         data: { mapping: JSON.stringify(data) },
-      })
-        .then(() => window.location.reload())
-        .catch(popupAjaxError);
-    },
-  },
-});
+      });
+      window.location.reload();
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+}

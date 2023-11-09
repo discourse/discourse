@@ -277,7 +277,7 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     it "renders safe HTML like mentions (which are just links) in the reply-to" do
-      update_message(
+      update_message!(
         message_2,
         user: other_user,
         text: "@#{other_user.username} <mark>not marked</mark>",

@@ -999,6 +999,12 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
   end
 
+  # Registers a new email notification filter. Notification is passed into block, and if all
+  # filters return `true`, the email notification will be sent.
+  def register_email_notification_filter(&block)
+    DiscoursePluginRegistry.register_email_notification_filter(block, self)
+  end
+
   # Registers a new push notification filter. User and notification payload are passed into block, and if all
   # filters return `true`, the push notification will be sent.
   def register_push_notification_filter(&block)
@@ -1246,6 +1252,14 @@ class Plugin::Instance
   # call will be skipped.
   def register_post_action_notify_user_handler(handler)
     DiscoursePluginRegistry.register_post_action_notify_user_handler(handler, self)
+  end
+
+  # We strip posts before detecting mentions, oneboxes, attachments etc.
+  # We strip those elements that shouldn't be detected. For example,
+  # a mention inside a quote should be ignored, so we strip it off.
+  # Using this API plugins can register their own post strippers.
+  def register_post_stripper(&block)
+    DiscoursePluginRegistry.register_post_stripper({ block: block }, self)
   end
 
   protected

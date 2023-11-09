@@ -107,10 +107,6 @@
   }
 }
 
-.pref-second-factor {
-  margin-top: 10px;
-}
-
 .invite-controls .btn {
   margin-right: 0px;
 }
@@ -250,21 +246,6 @@ table.user-invite-list {
 
 .user-messages {
   margin-right: 0.2em;
-}
-
-.user-preferences {
-  .form-vertical {
-    width: 500px;
-    max-width: 100%;
-  }
-
-  .category-selector,
-  .tag-chooser,
-  textarea,
-  input.user-selector,
-  .user-chooser {
-    width: 100%;
-  }
 }
 
 .user-crawler {

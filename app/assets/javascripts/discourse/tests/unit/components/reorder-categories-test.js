@@ -2,11 +2,13 @@ import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
-module("Unit | Controller | reorder-categories", function (hooks) {
+module("Unit | Component | reorder-categories", function (hooks) {
   setupTest(hooks);
 
   test("reorder set unique position number", function (assert) {
-    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const component = this.owner
+      .factoryFor("component:modal/reorder-categories")
+      .create();
     const store = getOwner(this).lookup("service:store");
 
     const site = getOwner(this).lookup("service:site");
@@ -16,15 +18,17 @@ module("Unit | Controller | reorder-categories", function (hooks) {
       store.createRecord("category", { id: 3, position: 0 }),
     ]);
 
-    controller.reorder();
+    component.reorder();
 
-    controller.categoriesOrdered.forEach((category, index) => {
+    component.categoriesOrdered.forEach((category, index) => {
       assert.strictEqual(category.get("position"), index);
     });
   });
 
   test("reorder places subcategories after their parent categories, while maintaining the relative order", function (assert) {
-    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const component = this.owner
+      .factoryFor("component:modal/reorder-categories")
+      .create();
     const store = getOwner(this).lookup("service:store");
 
     const parent = store.createRecord("category", {
@@ -54,16 +58,18 @@ module("Unit | Controller | reorder-categories", function (hooks) {
     const site = getOwner(this).lookup("service:site");
     site.set("categories", [child2, parent, other, child1]);
 
-    controller.reorder();
+    component.reorder();
 
     assert.deepEqual(
-      controller.categoriesOrdered.mapBy("slug"),
+      component.categoriesOrdered.mapBy("slug"),
       expectedOrderSlugs
     );
   });
 
   test("changing the position number of a category should place it at given position", function (assert) {
-    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const component = this.owner
+      .factoryFor("component:modal/reorder-categories")
+      .create();
     const store = getOwner(this).lookup("service:store");
 
     const elem1 = store.createRecord("category", {
@@ -88,9 +94,9 @@ module("Unit | Controller | reorder-categories", function (hooks) {
     site.set("categories", [elem1, elem2, elem3]);
 
     // Move category 'foo' from position 0 to position 2
-    controller.send("change", elem1, { target: { value: "2" } });
+    component.change(elem1, { target: { value: "2" } });
 
-    assert.deepEqual(controller.categoriesOrdered.mapBy("slug"), [
+    assert.deepEqual(component.categoriesOrdered.mapBy("slug"), [
       "bar",
       "test",
       "foo",
@@ -98,7 +104,9 @@ module("Unit | Controller | reorder-categories", function (hooks) {
   });
 
   test("changing the position number of a category should place it at given position and respect children", function (assert) {
-    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const component = this.owner
+      .factoryFor("component:modal/reorder-categories")
+      .create();
     const store = getOwner(this).lookup("service:store");
 
     const elem1 = store.createRecord("category", {
@@ -129,9 +137,9 @@ module("Unit | Controller | reorder-categories", function (hooks) {
     const site = getOwner(this).lookup("service:site");
     site.set("categories", [elem1, child1, elem2, elem3]);
 
-    controller.send("change", elem1, { target: { value: 3 } });
+    component.change(elem1, { target: { value: 3 } });
 
-    assert.deepEqual(controller.categoriesOrdered.mapBy("slug"), [
+    assert.deepEqual(component.categoriesOrdered.mapBy("slug"), [
       "bar",
       "test",
       "foo",
@@ -140,7 +148,9 @@ module("Unit | Controller | reorder-categories", function (hooks) {
   });
 
   test("changing the position through click on arrow of a category should place it at given position and respect children", function (assert) {
-    const controller = getOwner(this).lookup("controller:reorder-categories");
+    const component = this.owner
+      .factoryFor("component:modal/reorder-categories")
+      .create();
     const store = getOwner(this).lookup("service:store");
 
     const child2 = store.createRecord("category", {
@@ -180,11 +190,11 @@ module("Unit | Controller | reorder-categories", function (hooks) {
     const site = getOwner(this).lookup("service:site");
     site.set("categories", [elem1, child1, child2, elem2, elem3]);
 
-    controller.reorder();
+    component.reorder();
 
-    controller.send("moveDown", elem1);
+    component.move(elem1, 1);
 
-    assert.deepEqual(controller.categoriesOrdered.mapBy("slug"), [
+    assert.deepEqual(component.categoriesOrdered.mapBy("slug"), [
       "bar",
       "foo",
       "foo-child",

@@ -114,95 +114,97 @@ export default Component.extend({
     });
   },
 
-  actions: {
-    toggleEditControls() {
-      this.toggleProperty("showEditControls");
-    },
+  @action
+  toggleEditControls() {
+    this.toggleProperty("showEditControls");
+  },
 
-    cancelEditing() {
-      this.set("editing", false);
-    },
+  @action
+  cancelEditing() {
+    this.set("editing", false);
+  },
 
-    finishedEditing() {
-      const oldTagName = this.tag.id;
-      this.tag
-        .update({ id: this.newTagName, description: this.newTagDescription })
-        .then((result) => {
-          this.set("editing", false);
-          this.tagInfo.set("description", this.newTagDescription);
-          if (
-            result.responseJson.tag &&
-            oldTagName !== result.responseJson.tag.id
-          ) {
-            this.router.transitionTo("tag.show", result.responseJson.tag.id);
-          }
+  @action
+  finishedEditing() {
+    const oldTagName = this.tag.id;
+    this.tag
+      .update({ id: this.newTagName, description: this.newTagDescription })
+      .then((result) => {
+        this.set("editing", false);
+        this.tagInfo.set("description", this.newTagDescription);
+        if (
+          result.responseJson.tag &&
+          oldTagName !== result.responseJson.tag.id
+        ) {
+          this.router.transitionTo("tag.show", result.responseJson.tag.id);
+        }
+      })
+      .catch(popupAjaxError);
+  },
+
+  @action
+  deleteTag() {
+    const numTopics =
+      this.get("list.topic_list.tags.firstObject.topic_count") || 0;
+
+    let confirmText =
+      numTopics === 0
+        ? I18n.t("tagging.delete_confirm_no_topics")
+        : I18n.t("tagging.delete_confirm", { count: numTopics });
+
+    if (this.tagInfo.synonyms.length > 0) {
+      confirmText +=
+        " " +
+        I18n.t("tagging.delete_confirm_synonyms", {
+          count: this.tagInfo.synonyms.length,
+        });
+    }
+
+    this.dialog.deleteConfirm({
+      message: confirmText,
+      didConfirm: async () => {
+        try {
+          await this.tag.destroyRecord();
+          this.router.transitionTo("tags.index");
+        } catch {
+          this.dialog.alert(I18n.t("generic_error"));
+        }
+      },
+    });
+  },
+
+  @action
+  addSynonyms() {
+    this.dialog.confirm({
+      message: htmlSafe(
+        I18n.t("tagging.add_synonyms_explanation", {
+          count: this.newSynonyms.length,
+          tag_name: this.tagInfo.name,
         })
-        .catch(popupAjaxError);
-    },
-
-    @action
-    deleteTag() {
-      const numTopics =
-        this.get("list.topic_list.tags.firstObject.topic_count") || 0;
-
-      let confirmText =
-        numTopics === 0
-          ? I18n.t("tagging.delete_confirm_no_topics")
-          : I18n.t("tagging.delete_confirm", { count: numTopics });
-
-      if (this.tagInfo.synonyms.length > 0) {
-        confirmText +=
-          " " +
-          I18n.t("tagging.delete_confirm_synonyms", {
-            count: this.tagInfo.synonyms.length,
-          });
-      }
-
-      this.dialog.deleteConfirm({
-        message: confirmText,
-        didConfirm: async () => {
-          try {
-            await this.tag.destroyRecord();
-            this.router.transitionTo("tags.index");
-          } catch {
-            this.dialog.alert(I18n.t("generic_error"));
-          }
-        },
-      });
-    },
-
-    addSynonyms() {
-      this.dialog.confirm({
-        message: htmlSafe(
-          I18n.t("tagging.add_synonyms_explanation", {
-            count: this.newSynonyms.length,
-            tag_name: this.tagInfo.name,
+      ),
+      didConfirm: () => {
+        return ajax(`/tag/${this.tagInfo.name}/synonyms`, {
+          type: "POST",
+          data: {
+            synonyms: this.newSynonyms,
+          },
+        })
+          .then((response) => {
+            if (response.success) {
+              this.set("newSynonyms", null);
+              this.loadTagInfo();
+            } else if (response.failed_tags) {
+              this.dialog.alert(
+                I18n.t("tagging.add_synonyms_failed", {
+                  tag_names: Object.keys(response.failed_tags).join(", "),
+                })
+              );
+            } else {
+              this.dialog.alert(I18n.t("generic_error"));
+            }
           })
-        ),
-        didConfirm: () => {
-          return ajax(`/tag/${this.tagInfo.name}/synonyms`, {
-            type: "POST",
-            data: {
-              synonyms: this.newSynonyms,
-            },
-          })
-            .then((response) => {
-              if (response.success) {
-                this.set("newSynonyms", null);
-                this.loadTagInfo();
-              } else if (response.failed_tags) {
-                this.dialog.alert(
-                  I18n.t("tagging.add_synonyms_failed", {
-                    tag_names: Object.keys(response.failed_tags).join(", "),
-                  })
-                );
-              } else {
-                this.dialog.alert(I18n.t("generic_error"));
-              }
-            })
-            .catch(popupAjaxError);
-        },
-      });
-    },
+          .catch(popupAjaxError);
+      },
+    });
   },
 });
