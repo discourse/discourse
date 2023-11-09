@@ -19,10 +19,6 @@
 
     html.keyboard-visible body.ios-safari-composer-hacks & {
       height: calc(var(--composer-vh, 1vh) * 100);
-      .modal-inner-container {
-        max-height: 100%;
-        margin-bottom: 0px;
-      }
     }
   }
 
@@ -35,14 +31,6 @@
     max-height: 80vh;
     background-color: var(--secondary);
     box-shadow: var(--shadow-modal);
-  }
-
-  //temporary extra to support this often-used legacy class within the new template
-  .modal-inner-container {
-    max-width: unset;
-    box-shadow: unset;
-    flex: unset;
-    background: unset;
   }
 
   &__header {
