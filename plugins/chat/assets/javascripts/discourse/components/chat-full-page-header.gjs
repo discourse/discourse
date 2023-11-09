@@ -33,12 +33,21 @@ export default class ChatFullPageHeader extends Component {
   }
 
   get canEditChannel() {
-    return (
-      this.chatGuardian.canEditChatChannel() &&
-      (this.args.channel.isCategoryChannel ||
-        (this.args.channel.isDirectMessageChannel &&
-          this.args.channel.chatable.group))
-    );
+    if (
+      this.args.channel.isCategoryChannel &&
+      this.chatGuardian.canEditChatChannel()
+    ) {
+      return true;
+    }
+
+    if (
+      this.args.channel.isDirectMessageChannel &&
+      this.args.channel.chatable.group
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   @action

@@ -63,7 +63,7 @@ module Chat
     end
 
     def check_channel_permission(guardian:, channel:, **)
-      guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?
+      guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?(channel)
     end
 
     def update_channel(channel:, contract:, **)
