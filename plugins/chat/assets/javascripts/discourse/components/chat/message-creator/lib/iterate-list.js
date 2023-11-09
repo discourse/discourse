@@ -1,12 +1,12 @@
-export function getNext(list, currentIdentifier = null) {
+export function getNext(list, current = null) {
   if (list.length === 0) {
     return null;
   }
 
   list = list.filterBy("enabled");
 
-  if (currentIdentifier) {
-    const currentIndex = list.mapBy("identifier").indexOf(currentIdentifier);
+  if (current?.identifier) {
+    const currentIndex = list.mapBy("identifier").indexOf(current?.identifier);
 
     if (currentIndex < list.length - 1) {
       return list.objectAt(currentIndex + 1);
@@ -18,15 +18,15 @@ export function getNext(list, currentIdentifier = null) {
   }
 }
 
-export function getPrevious(list, currentIdentifier = null) {
+export function getPrevious(list, current = null) {
   if (list.length === 0) {
     return null;
   }
 
   list = list.filterBy("enabled");
 
-  if (currentIdentifier) {
-    const currentIndex = list.mapBy("identifier").indexOf(currentIdentifier);
+  if (current?.identifier) {
+    const currentIndex = list.mapBy("identifier").indexOf(current?.identifier);
 
     if (currentIndex > 0) {
       return list.objectAt(currentIndex - 1);

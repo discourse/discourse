@@ -10,14 +10,14 @@ export default class ListHandler extends Component {
         event.stopPropagation();
 
         this.args.onHighlight(
-          getNext(this.args.items, this.args.highlightedItem?.identifier)
+          getNext(this.args.items, this.args.highlightedItem)
         );
       } else if (event.key === "ArrowUp") {
         event.preventDefault();
         event.stopPropagation();
 
         this.args.onHighlight(
-          getPrevious(this.args.items, this.args.highlightedItem?.identifier)
+          getPrevious(this.args.items, this.args.highlightedItem)
         );
       } else if (event.key === "Enter" && this.args.highlightedItem) {
         event.preventDefault();
