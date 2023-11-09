@@ -67,7 +67,7 @@ export default class List extends Component {
                 }}
                 {{on "click" (fn this.handleClick item)}}
                 {{on "keypress" (fn this.handleEnter item)}}
-                {{on "mouseenter" (fn @onHighlight item)}}
+                {{on "mousemove" (fn @onHighlight item)}}
                 {{on "mouseleave" (fn @onHighlight null)}}
                 role="button"
                 tabindex="0"

@@ -79,7 +79,7 @@ export default class NewGroup extends Component {
               <DButton
                 class="btn-primary btn-flat"
                 @label="cancel"
-                @action=""
+                @action={{@cancel}}
               />
               <DButton
                 class="btn-primary create-chat-group"
