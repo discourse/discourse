@@ -91,6 +91,9 @@ class BulkImport::Generic < BulkImport::Base
     import_upload_references
     import_optimized_images
 
+    import_topic_users
+    update_topic_users
+
     import_user_stats
     enable_category_settings
   end
@@ -859,12 +862,112 @@ class BulkImport::Generic < BulkImport::Base
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
+  def import_topic_users
+    puts "", "Importing topic users..."
+
+    topic_users = query(<<~SQL)
+      SELECT *
+        FROM topic_users
+       ORDER BY user_id, topic_id
+    SQL
+
+    existing_topics = TopicUser.pluck(:topic_id).to_set
+
+    create_topic_users(topic_users) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      next unless user_id && topic_id
+      next if existing_topics.include?(topic_id)
+
+      {
+        user_id: user_id,
+        topic_id: topic_id,
+        last_read_post_number: row["last_read_post_number"],
+        last_visited_at: to_datetime(row["last_visited_at"]),
+        first_visited_at: to_datetime(row["first_visited_at"]),
+        notification_level: row["notification_level"],
+        notifications_changed_at: to_datetime(row["notifications_changed_at"]),
+        notifications_reason_id: row["notifications_reason_id"],
+        total_msecs_viewed: row["total_msecs_viewed"] || 0,
+      }
+    end
+
+    topic_users.close
+  end
+
+  def update_topic_users
+    puts "", "Updating topic users..."
+
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+      INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, first_visited_at, last_visited_at,
+                               notification_level, notifications_changed_at, notifications_reason_id, total_msecs_viewed,
+                               last_posted_at)
+      SELECT p.user_id, p.topic_id, TRUE AS posted, MAX(p.post_number) AS last_read_post_number,
+             MIN(p.created_at) AS first_visited_at, MAX(p.created_at) AS last_visited_at,
+             CASE WHEN MIN(p.post_number) = 1 THEN 3 ELSE 2 END AS notification_level,
+             MIN(p.created_at) AS notifications_changed_at,
+             CASE WHEN MIN(p.post_number) = 1 THEN 1 ELSE 4 END AS notifications_reason_id,
+             MAX(p.post_number) * 10000 AS total_msecs_viewed, MAX(p.created_at) AS last_posted_at
+        FROM posts p
+             JOIN topics t ON p.topic_id = t.id
+       WHERE p.deleted_at IS NULL
+         AND NOT p.hidden
+         AND t.deleted_at IS NULL
+         AND t.visible
+       GROUP BY p.user_id, p.topic_id
+          ON CONFLICT (user_id, topic_id) DO UPDATE SET posted = excluded.posted,
+                                                        last_read_post_number = GREATEST(topic_users.last_read_post_number, excluded.last_read_post_number),
+                                                        first_visited_at = LEAST(topic_users.first_visited_at, excluded.first_visited_at),
+                                                        last_visited_at = GREATEST(topic_users.last_visited_at, excluded.last_visited_at),
+                                                        notification_level = GREATEST(topic_users.notification_level, excluded.notification_level),
+                                                        notifications_changed_at = CASE WHEN COALESCE(excluded.notification_level, 0) > COALESCE(topic_users.notification_level, 0)
+                                                                                          THEN COALESCE(excluded.notifications_changed_at, topic_users.notifications_changed_at)
+                                                                                        ELSE topic_users.notifications_changed_at END,
+                                                        notifications_reason_id = CASE WHEN COALESCE(excluded.notification_level, 0) > COALESCE(topic_users.notification_level, 0)
+                                                                                         THEN COALESCE(excluded.notifications_reason_id, topic_users.notifications_reason_id)
+                                                                                       ELSE topic_users.notifications_reason_id END,
+                                                        total_msecs_viewed = CASE WHEN topic_users.total_msecs_viewed = 0
+                                                                                    THEN excluded.total_msecs_viewed
+                                                                                  ELSE topic_users.total_msecs_viewed END,
+                                                        last_posted_at = GREATEST(topic_users.last_posted_at, excluded.last_posted_at)
+    SQL
+
+    DB.exec(<<~SQL)
+      INSERT INTO topic_users (user_id, topic_id, last_read_post_number, first_visited_at, last_visited_at,
+                               total_msecs_viewed, liked)
+      SELECT pa.user_id, p.topic_id, MAX(p.post_number) AS last_read_post_number, MIN(pa.created_at) AS first_visited_at,
+             MAX(pa.created_at) AS last_visited_at, MAX(p.post_number) * 10000 AS total_msecs_viewed, TRUE AS liked
+        FROM post_actions pa
+             JOIN posts p ON pa.post_id = p.id
+             JOIN topics t ON p.topic_id = t.id
+       WHERE pa.post_action_type_id = 2
+         AND pa.user_id > 0
+         AND pa.deleted_at IS NULL
+         AND p.deleted_at IS NULL
+         AND NOT p.hidden
+         AND t.deleted_at IS NULL
+         AND t.visible
+       GROUP BY pa.user_id, p.topic_id
+          ON CONFLICT (user_id, topic_id) DO UPDATE SET last_read_post_number = GREATEST(topic_users.last_read_post_number, excluded.last_read_post_number),
+                                                        first_visited_at = LEAST(topic_users.first_visited_at, excluded.first_visited_at),
+                                                        last_visited_at = GREATEST(topic_users.last_visited_at, excluded.last_visited_at),
+                                                        total_msecs_viewed = CASE WHEN topic_users.total_msecs_viewed = 0
+                                                                                    THEN excluded.total_msecs_viewed
+                                                                                  ELSE topic_users.total_msecs_viewed END,
+                                                        liked = excluded.liked
+    SQL
+
+    puts "  Updated topic users in #{(Time.now - start_time).to_i} seconds."
+  end
+
   def import_user_stats
     puts "", "Importing user stats..."
 
     start_time = Time.now
 
-    # TODO Merge with #update_user_stats from import.rake and check if there are privacy concerns wi
+    # TODO Merge with #update_user_stats from import.rake and check if there are privacy concerns
     # E.g. maybe we need to exclude PMs from the calculation?
 
     DB.exec(<<~SQL)
