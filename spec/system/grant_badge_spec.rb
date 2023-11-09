@@ -5,7 +5,7 @@ describe "Granting Badges", type: :system do
 
   context "when in topic" do
     fab!(:post) { Fabricate(:post, raw: "This is some post to bookmark") }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:badge_to_grant) { Fabricate(:manually_grantable_badge) }
     fab!(:other_badge) { Fabricate(:manually_grantable_badge) }
     let(:user) { post.user }

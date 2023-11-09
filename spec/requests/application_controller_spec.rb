@@ -128,7 +128,7 @@ RSpec.describe ApplicationController do
 
   describe "#redirect_to_second_factor_if_required" do
     let(:admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     before do
       admin # to skip welcome wizard at home page `/`
@@ -430,8 +430,8 @@ RSpec.describe ApplicationController do
     let!(:theme) { Fabricate(:theme, user_selectable: true) }
     let!(:theme2) { Fabricate(:theme, user_selectable: true) }
     let!(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
-    fab!(:user) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user)
+    fab!(:admin)
 
     before { sign_in(user) }
 
@@ -1061,7 +1061,7 @@ RSpec.describe ApplicationController do
   end
 
   describe "Discourse-Rate-Limit-Error-Code header" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     before { RateLimiter.enable }
 
@@ -1152,7 +1152,7 @@ RSpec.describe ApplicationController do
   describe "#banner_json" do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
-    fab!(:banner_topic) { Fabricate(:banner_topic) }
+    fab!(:banner_topic)
     fab!(:p1) { Fabricate(:post, topic: banner_topic, raw: "A banner topic") }
 
     before do
@@ -1252,7 +1252,7 @@ RSpec.describe ApplicationController do
     end
 
     context "when user is regular user" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       before { sign_in(user) }
 

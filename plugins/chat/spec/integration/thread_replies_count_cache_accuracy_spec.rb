@@ -3,7 +3,7 @@
 RSpec.describe "Chat::Thread replies_count cache accuracy" do
   include ActiveSupport::Testing::TimeHelpers
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:thread) { Fabricate(:chat_thread) }
 
   let(:guardian) { user.guardian }

@@ -6,7 +6,7 @@ RSpec.describe Jobs::ProcessPost do
   end
 
   context "with a post" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
 
     it "does not erase posts when CookedPostProcessor malfunctions" do
       # Look kids, an actual reason why you want to use mocks

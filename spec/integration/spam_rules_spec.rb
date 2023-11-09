@@ -3,8 +3,8 @@
 
 RSpec.describe "spam rules for users" do
   describe "auto-silence users based on flagging" do
-    fab!(:admin) { Fabricate(:admin) } # needed to send a system message
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:admin) # needed to send a system message
+    fab!(:moderator)
     fab!(:user1) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
 

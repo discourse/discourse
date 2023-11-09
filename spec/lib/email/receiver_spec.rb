@@ -281,7 +281,7 @@ RSpec.describe Email::Receiver do
 
   describe "reply" do
     let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
     fab!(:topic) { create_topic(category: category, user: user) }
     fab!(:post) { create_post(topic: topic) }
@@ -1913,7 +1913,7 @@ RSpec.describe Email::Receiver do
 
     context "when email is a reply" do
       let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
       fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
       fab!(:user2) { Fabricate(:user, email: "someone_else@bar.com") }
       fab!(:topic) { create_topic(category: category, user: user) }
@@ -2221,7 +2221,7 @@ RSpec.describe Email::Receiver do
   end
 
   describe "replying to digest" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:digest_message_id) { "7402d8ae-1c6e-44bc-9948-48e007839bcc@localhost" }
     fab!(:email_log) do
       Fabricate(

@@ -11,14 +11,14 @@ RSpec.describe TopicQuery do
   #   work.
   #
   #   We should use be more explicit in communicating how the clock moves
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   fab!(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
 
   fab!(:tl4_user) { Fabricate(:trust_level_4) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator)
+  fab!(:admin)
 
   describe "secure category" do
     it "filters categories out correctly" do
@@ -397,7 +397,7 @@ RSpec.describe TopicQuery do
   end
 
   describe "tag filter" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
     fab!(:other_tag) { Fabricate(:tag) }
     fab!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
 
@@ -1452,8 +1452,8 @@ RSpec.describe TopicQuery do
     end
 
     context "when logged in and user is part of the `experimental_new_new_view_groups` site setting groups" do
-      fab!(:group) { Fabricate(:group) }
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:group)
+      fab!(:topic)
 
       before do
         SiteSetting.experimental_new_new_view_groups = group.name
@@ -1478,7 +1478,7 @@ RSpec.describe TopicQuery do
       end
 
       context "when there are new topics for user" do
-        fab!(:category) { Fabricate(:category) }
+        fab!(:category)
         fab!(:category2) { Fabricate(:category) }
 
         fab!(:topic_in_category_that_user_created_and_has_partially_read) do
@@ -1776,7 +1776,7 @@ RSpec.describe TopicQuery do
   end
 
   describe "#list_group_topics" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     let(:user) do
       user = Fabricate(:user)
@@ -1830,9 +1830,9 @@ RSpec.describe TopicQuery do
     fab!(:shared_drafts_category) { Fabricate(:category_with_definition) }
     fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
     fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:admin)
+    fab!(:user)
+    fab!(:group)
 
     before do
       shared_drafts_category.set_permissions(group => :full)
@@ -2150,7 +2150,7 @@ RSpec.describe TopicQuery do
         )
       end
     end
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:topic_in_watched_category_and_muted_tag) do
       Fabricate(:topic, category: watched_category, tags: [muted_tag])
     end

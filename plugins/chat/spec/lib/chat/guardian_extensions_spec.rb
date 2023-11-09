@@ -91,7 +91,7 @@ RSpec.describe Chat::GuardianExtensions do
       end
 
       context "for category channel" do
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
         fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
 
         it "returns true if the user can join the category" do
@@ -207,7 +207,7 @@ RSpec.describe Chat::GuardianExtensions do
           end
 
           context "when user can't post in chatable" do
-            fab!(:group) { Fabricate(:group) }
+            fab!(:group)
             fab!(:channel) { Fabricate(:private_category_channel, group: group) }
 
             before do

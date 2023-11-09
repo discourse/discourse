@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserArchivedMessage do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user_2) { Fabricate(:user) }
 
   fab!(:private_message) do

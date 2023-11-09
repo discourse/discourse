@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicTrackingState do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:whisperers_group) { Fabricate(:group) }
-  fab!(:private_message_post) { Fabricate(:private_message_post) }
+  fab!(:private_message_post)
   let(:private_message_topic) { private_message_post.topic }
   let(:post) { create_post }
   let(:topic) { post.topic }
@@ -20,7 +20,7 @@ RSpec.describe TopicTrackingState do
   shared_examples "publishes message to right groups and users" do |message_bus_channel, method|
     fab!(:public_category) { Fabricate(:category, read_restricted: false) }
     fab!(:topic_in_public_category) { Fabricate(:topic, category: public_category) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:read_restricted_category_with_groups) { Fabricate(:private_category, group: group) }
 
     fab!(:topic_in_read_restricted_category_with_groups) do
@@ -348,7 +348,7 @@ RSpec.describe TopicTrackingState do
   end
 
   describe "#publish_read_private_message" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     let(:read_topic_key) { "/private-messages/unread-indicator/#{group_message.id}" }
     let(:read_post_key) { "/topic/#{group_message.id}" }
     let(:group_message) do

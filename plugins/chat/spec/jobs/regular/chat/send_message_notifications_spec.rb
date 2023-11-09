@@ -14,7 +14,7 @@ RSpec.describe Jobs::Chat::SendMessageNotifications do
     end
 
     context "when there's a message" do
-      fab!(:chat_message) { Fabricate(:chat_message) }
+      fab!(:chat_message)
 
       it "does nothing when the reason is invalid" do
         Chat::Notifier.expects(:notify_new).never

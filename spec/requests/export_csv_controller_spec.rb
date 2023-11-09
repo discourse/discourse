@@ -2,7 +2,7 @@
 
 RSpec.describe ExportCsvController do
   context "while logged in as normal user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     before { sign_in(user) }
 
     describe "#export_entity" do
@@ -40,7 +40,7 @@ RSpec.describe ExportCsvController do
   end
 
   context "while logged in as an admin" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     before { sign_in(admin) }
 
     describe "#export_entity" do
@@ -77,7 +77,7 @@ RSpec.describe ExportCsvController do
   end
 
   context "while logged in as a moderator" do
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator)
 
     before { sign_in(moderator) }
 

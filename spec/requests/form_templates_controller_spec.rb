@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe FormTemplatesController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   before { SiteSetting.experimental_form_templates = true }
 
   describe "#index" do
-    fab!(:form_template) { Fabricate(:form_template) }
+    fab!(:form_template)
     fab!(:form_template_2) { Fabricate(:form_template) }
     fab!(:form_template_3) { Fabricate(:form_template) }
 
@@ -48,7 +48,7 @@ RSpec.describe FormTemplatesController do
   end
 
   describe "#show" do
-    fab!(:form_template) { Fabricate(:form_template) }
+    fab!(:form_template)
 
     context "when logged in as a user" do
       before { sign_in(user) }

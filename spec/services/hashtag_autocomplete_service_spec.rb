@@ -3,7 +3,7 @@
 RSpec.describe HashtagAutocompleteService do
   subject(:service) { described_class.new(guardian) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:category1) { Fabricate(:category, name: "The Book Club", slug: "the-book-club") }
   fab!(:tag1) do
     Fabricate(:tag, name: "great-books", staff_topic_count: 22, public_topic_count: 22)

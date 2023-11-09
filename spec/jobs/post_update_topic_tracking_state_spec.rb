@@ -3,7 +3,7 @@
 RSpec.describe Jobs::PostUpdateTopicTrackingState do
   subject(:job) { described_class.new }
 
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
 
   it "should publish messages" do
     messages = MessageBus.track_publish { job.execute({ post_id: post.id }) }

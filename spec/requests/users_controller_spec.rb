@@ -3,15 +3,15 @@
 require "rotp"
 
 RSpec.describe UsersController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user1) { Fabricate(:user, username: "someusername") }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:inactive_user) { Fabricate(:inactive_user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:inactive_user)
 
   before { Group.refresh_automatic_groups! }
 
@@ -1438,7 +1438,7 @@ RSpec.describe UsersController do
     end
 
     context "with custom fields" do
-      fab!(:user_field) { Fabricate(:user_field) }
+      fab!(:user_field)
       fab!(:another_field) { Fabricate(:user_field) }
       fab!(:optional_field) { Fabricate(:user_field, required: false) }
 
@@ -2266,8 +2266,8 @@ RSpec.describe UsersController do
 
     context "with authenticated user" do
       context "with permission to update" do
-        fab!(:upload) { Fabricate(:upload) }
-        fab!(:user) { Fabricate(:user) }
+        fab!(:upload)
+        fab!(:user)
 
         before { sign_in(user) }
 
@@ -2381,7 +2381,7 @@ RSpec.describe UsersController do
 
         context "with user fields" do
           context "with an editable field" do
-            fab!(:user_field) { Fabricate(:user_field) }
+            fab!(:user_field)
             fab!(:optional_field) { Fabricate(:user_field, required: false) }
 
             it "should update the user field" do
@@ -3125,7 +3125,7 @@ RSpec.describe UsersController do
   end
 
   describe "#badge_title" do
-    fab!(:badge) { Fabricate(:badge) }
+    fab!(:badge)
     let(:user_badge) { BadgeGranter.grant(badge, user1) }
 
     it "sets the user's title to the badge name if it is titleable" do
@@ -4673,7 +4673,7 @@ RSpec.describe UsersController do
       end
 
       describe "include_post_count_for" do
-        fab!(:topic) { Fabricate(:topic) }
+        fab!(:topic)
 
         before_all do
           Fabricate(:post, user: user1, topic: topic)
@@ -6444,7 +6444,7 @@ RSpec.describe UsersController do
   end
 
   describe "#feature_topic" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:other_topic) { Fabricate(:topic) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: another_user) }
     fab!(:category) { Fabricate(:category_with_definition) }
@@ -6517,7 +6517,7 @@ RSpec.describe UsersController do
   end
 
   describe "#clear_featured_topic" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "requires the user to be logged in" do
       put "/u/#{user1.username}/clear-featured-topic.json"
@@ -6656,7 +6656,7 @@ RSpec.describe UsersController do
   end
 
   describe "#bookmarks excerpts" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let!(:topic) { Fabricate(:topic, user: user) }
     let!(:post) { Fabricate(:post, topic: topic) }
     let!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: topic) }
@@ -6843,7 +6843,7 @@ RSpec.describe UsersController do
   end
 
   describe "#user_menu_bookmarks" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     fab!(:topic) { Fabricate(:post).topic }
     fab!(:bookmark_with_reminder) { Fabricate(:bookmark, user: user, bookmarkable: post) }
     fab!(:bookmark_without_reminder) { Fabricate(:bookmark, user: user, bookmarkable: topic) }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserStatusSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user_status) do
     Fabricate(
       :user_status,

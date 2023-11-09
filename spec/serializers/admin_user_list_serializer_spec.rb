@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe AdminUserListSerializer do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   let(:guardian) { Guardian.new(admin) }
 
   let(:serializer) { AdminUserListSerializer.new(user, scope: guardian, root: false) }

@@ -2,7 +2,7 @@
 
 RSpec.describe "Quoting chat message transcripts", type: :system do
   fab!(:current_user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   fab!(:chat_channel_1) { Fabricate(:chat_channel) }
 
   let(:cdp) { PageObjects::CDP.new }

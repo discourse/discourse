@@ -4,7 +4,7 @@ RSpec.describe GroupUserSerializer do
   let(:serializer) { described_class.new(user, scope: Guardian.new(user), root: false) }
 
   describe "#status" do
-    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user_status)
     fab!(:user) { Fabricate(:user, user_status: user_status) }
 
     it "adds user status when enabled in site settings" do

@@ -3,7 +3,7 @@
 describe "Fast edit", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:fast_editor) { PageObjects::Components::FastEditor.new }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:post_2) { Fabricate(:post, topic: topic, raw: "It ‘twas a great’ “time”!") }
   fab!(:current_user) { Fabricate(:admin) }

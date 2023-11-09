@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Jobs::UpdatePostUploadsSecureStatus do
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
 
   before do
     UploadReference.create!(target: post, upload: Fabricate(:upload))

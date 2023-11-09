@@ -3,11 +3,11 @@
 RSpec.describe PostAction do
   it { is_expected.to rate_limit }
 
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator)
   fab!(:codinghorror) { Fabricate(:coding_horror) }
   fab!(:eviltrout) { Fabricate(:evil_trout) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:admin)
+  fab!(:post)
   fab!(:second_post) { Fabricate(:post, topic: post.topic) }
 
   def value_for(user_id, dt)
@@ -94,7 +94,7 @@ RSpec.describe PostAction do
     end
 
     context "with category group moderators" do
-      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:group_user)
       let(:group) { group_user.group }
 
       before do
@@ -644,7 +644,7 @@ RSpec.describe PostAction do
     end
 
     context "with topic auto closing" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       let(:post1) { create_post(topic: topic) }
       let(:post2) { create_post(topic: topic) }
       let(:post3) { create_post(topic: topic) }

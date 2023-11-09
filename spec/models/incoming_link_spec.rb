@@ -3,7 +3,7 @@
 RSpec.describe IncomingLink do
   fab!(:sharing_user) { Fabricate(:user, name: "Alice") }
   fab!(:current_user) { Fabricate(:user, name: "Bob") }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
   let(:topic) { post.topic }
 
   let :incoming_link do

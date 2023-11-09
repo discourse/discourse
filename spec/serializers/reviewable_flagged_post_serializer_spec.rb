@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableFlaggedPostSerializer do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   it "includes the user fields for review" do
     p0 = Fabricate(:post)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe AboutSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   context "when login_required is enabled" do
     before do

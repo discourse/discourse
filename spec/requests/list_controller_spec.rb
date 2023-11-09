@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe ListController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:group) { Fabricate(:group, name: "AwesomeGroup") }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   before do
     admin # to skip welcome wizard at home page `/`
@@ -225,7 +225,7 @@ RSpec.describe ListController do
     end
 
     context "with lazy_load_categories" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
       fab!(:subcategory) { Fabricate(:category, parent_category: category) }
 
       before { topic.update!(category: subcategory) }
@@ -302,9 +302,9 @@ RSpec.describe ListController do
   end
 
   describe "filter private messages by tag" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user)
+    fab!(:moderator)
+    fab!(:admin)
     let(:tag) { Fabricate(:tag) }
     let(:private_message) { Fabricate(:private_message_topic, user: admin) }
 
@@ -916,7 +916,7 @@ RSpec.describe ListController do
 
   describe "#private_messages_warnings" do
     fab!(:target_user) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:moderator1) { Fabricate(:moderator) }
     fab!(:moderator2) { Fabricate(:moderator) }
 
@@ -1141,9 +1141,9 @@ RSpec.describe ListController do
   describe "#filter" do
     fab!(:category) { Fabricate(:category, slug: "category-slug") }
     fab!(:tag) { Fabricate(:tag, name: "tag1") }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group:, slug: "private-category-slug") }
-    fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+    fab!(:private_message_topic)
     fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
     before { SiteSetting.experimental_topics_filter = true }
@@ -1375,7 +1375,7 @@ RSpec.describe ListController do
     end
 
     describe "when filtering by status" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
       fab!(:private_category) { Fabricate(:private_category, group: group) }
       fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
@@ -1471,8 +1471,8 @@ RSpec.describe ListController do
     end
 
     context "when the user is part of the `experimental_new_new_view_groups` site setting group" do
-      fab!(:category) { Fabricate(:category) }
-      fab!(:tag) { Fabricate(:tag) }
+      fab!(:category)
+      fab!(:tag)
 
       fab!(:new_reply) { make_topic_with_unread_replies(Fabricate(:post).topic, user) }
       fab!(:new_topic) { Fabricate(:post).topic }

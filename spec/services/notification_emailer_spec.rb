@@ -6,7 +6,7 @@ RSpec.describe NotificationEmailer do
     NotificationEmailer.enable
   end
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
   # something is off with fabricator

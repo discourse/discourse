@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PostReply do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:other_post) { Fabricate(:post, topic: topic) }
 

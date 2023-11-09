@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Editing sidebar categories navigation", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   fab!(:category2) { Fabricate(:category, name: "category2") }
 

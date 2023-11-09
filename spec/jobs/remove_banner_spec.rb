@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::RemoveBanner do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:user) { topic.user }
 
   context "when topic is not bannered until" do

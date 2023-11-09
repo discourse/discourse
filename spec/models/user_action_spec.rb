@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserAction do
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:coding_horror)
 
   before { UserActionManager.enable }
 
@@ -11,7 +11,7 @@ RSpec.describe UserAction do
   describe "#stream" do
     fab!(:public_post) { Fabricate(:post) }
     let(:public_topic) { public_post.topic }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     fab!(:private_post) { Fabricate(:post) }
     let(:private_topic) do
@@ -161,7 +161,7 @@ RSpec.describe UserAction do
   end
 
   describe "when user likes" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     let(:likee) { post.user }
     fab!(:liker) { coding_horror }
 

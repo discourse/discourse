@@ -3,7 +3,7 @@
 RSpec.describe Jobs::BookmarkReminderNotifications do
   subject(:job) { described_class.new }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:five_minutes_ago) { Time.zone.now - 5.minutes }
   let(:bookmark1) { Fabricate(:bookmark, user: user) }
   let(:bookmark2) { Fabricate(:bookmark, user: user) }
