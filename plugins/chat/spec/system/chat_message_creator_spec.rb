@@ -77,6 +77,6 @@ RSpec.describe "Flag message", type: :system do
     chat_page.message_creator.click_row(user_2)
     page.find(".create-chat-group").click
 
-    expect(page).to have_current_path(%r{/chat/c/cats/(\d+)})
+    expect(page).to have_current_path(%r{/chat/c/cats/\d+})
   end
 end
