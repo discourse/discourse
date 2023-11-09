@@ -243,7 +243,9 @@ export default {
             }
 
             get contentComponent() {
-              return "user-status-message";
+              if (this.oneOnOneMessage) {
+                return "user-status-message";
+              }
             }
 
             get name() {

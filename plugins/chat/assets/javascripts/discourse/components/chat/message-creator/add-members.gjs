@@ -70,7 +70,7 @@ export default class AddMembers extends Component {
               <DButton class="btn-flat" @label="cancel" @action={{@cancel}} />
 
               <DButton
-                class="btn-primary"
+                class="btn-primary add-to-channel"
                 @label="chat.direct_message_creator.add_to_channel"
                 @action={{this.saveGroupMembers}}
               />
