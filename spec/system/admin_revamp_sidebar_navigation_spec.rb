@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin Revamp | Sidebar Naviagion", type: :system do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   let(:sidebar_page) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before do

@@ -3,7 +3,7 @@
 describe "Change Owner Modal", type: :system do
   fab!(:post) { Fabricate(:post, raw: "This is some post to change owner for") }
   fab!(:other_user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   let(:user) { post.user }
   let(:topic) { post.topic }
   let(:topic_page) { PageObjects::Pages::Topic.new }

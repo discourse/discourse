@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupArchivedMessage do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user_2) { Fabricate(:user) }
 
   before_all { Group.refresh_automatic_groups! }

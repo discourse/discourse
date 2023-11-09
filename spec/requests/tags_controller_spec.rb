@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe TagsController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   fab!(:regular_user) { Fabricate(:trust_level_4) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:moderator)
+  fab!(:category)
   fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
 
   before { SiteSetting.tagging_enabled = true }
@@ -115,7 +115,7 @@ RSpec.describe TagsController do
     end
 
     context "with pm_tags_allowed_for_groups" do
-      fab!(:admin) { Fabricate(:admin) }
+      fab!(:admin)
       fab!(:topic) { Fabricate(:topic, tags: [topic_tag]) }
       fab!(:pm) do
         Fabricate(
@@ -639,7 +639,7 @@ RSpec.describe TagsController do
   end
 
   describe "#update" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     before do
       tag
@@ -733,7 +733,7 @@ RSpec.describe TagsController do
   end
 
   describe "#show_latest" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
     fab!(:other_tag) { Fabricate(:tag) }
     fab!(:third_tag) { Fabricate(:tag) }
 
@@ -898,9 +898,9 @@ RSpec.describe TagsController do
   end
 
   describe "#show_top" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:tag_topic) { Fabricate(:topic, category: category, tags: [tag]) }
     fab!(:tag_topic2) { Fabricate(:topic, category: category, tags: [tag]) }
@@ -1290,7 +1290,7 @@ RSpec.describe TagsController do
   end
 
   describe "#create_synonyms" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     it "fails if not logged in" do
       post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
@@ -1337,7 +1337,7 @@ RSpec.describe TagsController do
   describe "#destroy_synonym" do
     subject(:destroy_synonym) { delete("/tag/#{tag.name}/synonyms/#{synonym.name}.json") }
 
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
     fab!(:synonym) { Fabricate(:tag, target_tag: tag, name: "synonym") }
 
     it "fails if not logged in" do
@@ -1376,7 +1376,7 @@ RSpec.describe TagsController do
   end
 
   describe "#update_notifications" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     before { sign_in(user) }
 

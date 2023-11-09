@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::ChannelHashtagDataSource do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:category) { Fabricate(:category) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user)
+  fab!(:category)
+  fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:channel1) do
     Fabricate(

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Custom sidebar sections", type: :system do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 

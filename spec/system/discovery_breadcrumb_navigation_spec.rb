@@ -49,7 +49,7 @@ describe "Navigating with breadcrumbs", type: :system do
   end
 
   context "with tags" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
     fab!(:c1_topic_tagged) { Fabricate(:topic, category: category1, tags: [tag]) }
     fab!(:c3_topic_tagged) { Fabricate(:topic, category: category3, tags: [tag]) }
     fab!(:c3_child_topic_tagged) { Fabricate(:topic, category: category3_child, tags: [tag]) }

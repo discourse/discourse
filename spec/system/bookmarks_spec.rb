@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Bookmarking posts and topics", type: :system do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:current_user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is some post to bookmark") }
   fab!(:post_2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }

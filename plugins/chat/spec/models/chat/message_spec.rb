@@ -496,11 +496,11 @@ describe Chat::Message do
   end
 
   describe "#rebake!" do
-    fab!(:chat_message) { Fabricate(:chat_message) }
+    fab!(:chat_message)
 
     describe "hashtags" do
-      fab!(:category) { Fabricate(:category) }
-      fab!(:group) { Fabricate(:group) }
+      fab!(:category)
+      fab!(:group)
       fab!(:secure_category) { Fabricate(:private_category, group: group) }
 
       before do

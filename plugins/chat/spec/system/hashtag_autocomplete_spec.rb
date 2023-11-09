@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 describe "Using #hashtag autocompletion to search for and lookup channels", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:channel1) { Fabricate(:chat_channel, name: "Music Lounge", slug: "music") }
   fab!(:channel2) { Fabricate(:chat_channel, name: "Random", slug: "random") }
   fab!(:category) { Fabricate(:category, name: "Raspberry", slug: "raspberry-beret") }
   fab!(:tag) { Fabricate(:tag, name: "razed") }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:message1) { Fabricate(:chat_message, chat_channel: channel1) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -128,7 +128,7 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
   end
 
   context "when a user cannot access the category for a cooked channel hashtag" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:manager_group) { Fabricate(:group, name: "Managers") }
     fab!(:private_category) do
       Fabricate(:private_category, name: "Management", slug: "management", group: manager_group)

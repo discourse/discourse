@@ -9,7 +9,7 @@ describe Chat::ReviewQueue do
   fab!(:flagger) { Fabricate(:user) }
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:message) { Fabricate(:chat_message, user: message_poster, chat_channel: chat_channel) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   let(:guardian) { Guardian.new(flagger) }
   let(:admin_guardian) { Guardian.new(admin) }

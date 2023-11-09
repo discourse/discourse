@@ -6,7 +6,7 @@ RSpec.describe SessionController do
   let(:user) { Fabricate(:user) }
   let(:email_token) { Fabricate(:email_token, user: user) }
 
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   let(:admin_email_token) { Fabricate(:email_token, user: admin) }
 
   shared_examples "failed to continue local login" do
@@ -2740,7 +2740,7 @@ RSpec.describe SessionController do
     end
 
     context "for an existing username" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       context "when local login is disabled" do
         before do

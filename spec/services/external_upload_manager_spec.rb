@@ -3,7 +3,7 @@
 RSpec.describe ExternalUploadManager do
   subject(:manager) { ExternalUploadManager.new(external_upload_stub) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   let!(:logo_file) { file_from_fixtures("logo.png") }
   let!(:pdf_file) { file_from_fixtures("large.pdf", "pdf") }

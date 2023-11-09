@@ -3,7 +3,7 @@
 RSpec.describe UserSilencer do
   fab!(:user) { Fabricate(:user, trust_level: 0) }
   fab!(:post) { Fabricate(:post, user: user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "silence" do
     subject(:silence_user) { silencer.silence }

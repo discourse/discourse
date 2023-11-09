@@ -3,7 +3,7 @@
 RSpec.describe BookmarkQuery do
   before { SearchIndexer.enable }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   def bookmark_query(user: nil, search_term: nil, per_page: nil)
     BookmarkQuery.new(user: user || self.user, search_term:, per_page:)

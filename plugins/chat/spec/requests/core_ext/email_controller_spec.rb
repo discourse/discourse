@@ -4,7 +4,7 @@ require "rails_helper"
 
 describe EmailController do
   describe "unsubscribing from chat email settings" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "updates an user chat summary frequency" do
       SiteSetting.chat_enabled = true

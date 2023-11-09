@@ -2,8 +2,8 @@
 
 RSpec.describe TopicCreator do
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator)
+  fab!(:admin)
 
   let(:valid_attrs) { Fabricate.attributes_for(:topic) }
   let(:pm_valid_attrs) do

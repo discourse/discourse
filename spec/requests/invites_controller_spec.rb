@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe InvitesController do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
   describe "#show" do
-    fab!(:invite) { Fabricate(:invite) }
+    fab!(:invite)
 
     it "shows the accept invite page" do
       get "/invites/#{invite.invite_key}"
@@ -80,7 +80,7 @@ RSpec.describe InvitesController do
     end
 
     describe "logged in user viewing an invite" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
 
       before { sign_in(user) }
 
@@ -266,7 +266,7 @@ RSpec.describe InvitesController do
     end
 
     context "with invite to topic" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       it "works" do
         sign_in(user)
@@ -289,7 +289,7 @@ RSpec.describe InvitesController do
       end
 
       context "when topic is private" do
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
 
         fab!(:secured_category) do |category|
           category = Fabricate(:category)
@@ -321,7 +321,7 @@ RSpec.describe InvitesController do
     end
 
     context "with invite to group" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
 
       it "works for admins" do
         sign_in(admin)
@@ -654,7 +654,7 @@ RSpec.describe InvitesController do
     end
 
     context "with a deleted invite" do
-      fab!(:invite) { Fabricate(:invite) }
+      fab!(:invite)
 
       before { invite.trash! }
 
@@ -1062,7 +1062,7 @@ RSpec.describe InvitesController do
     end
 
     context "when new registrations are disabled" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       fab!(:invite) { Invite.generate(topic.user, email: "test@example.com", topic: topic) }
 
       before { SiteSetting.allow_new_registrations = false }
@@ -1082,7 +1082,7 @@ RSpec.describe InvitesController do
       context "for an email invite" do
         fab!(:invite) { Fabricate(:invite, email: "test@example.com") }
         fab!(:user) { Fabricate(:user, email: "test@example.com") }
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
 
         it "redeems the invitation and creates the invite accepted notification" do
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
@@ -1174,7 +1174,7 @@ RSpec.describe InvitesController do
       context "for an invite link" do
         fab!(:invite) { Fabricate(:invite, email: nil) }
         fab!(:user) { Fabricate(:user, email: "test@example.com") }
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
 
         it "redeems the invitation and creates the invite accepted notification" do
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
@@ -1294,7 +1294,7 @@ RSpec.describe InvitesController do
     end
 
     context "with staged user" do
-      fab!(:invite) { Fabricate(:invite) }
+      fab!(:invite)
       fab!(:staged_user) { Fabricate(:user, staged: true, email: invite.email) }
 
       it "can keep the old username" do

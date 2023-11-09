@@ -454,7 +454,7 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "#html_classes" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "includes 'rtl' when the I18n.locale is rtl" do
       I18n.stubs(:locale).returns(:he)
@@ -679,7 +679,7 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "discourse_color_scheme_stylesheets" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "returns a stylesheet link tag by default" do
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
@@ -797,7 +797,7 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "html_lang" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     before do
       I18n.locale = :de

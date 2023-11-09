@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe PostActionCreator do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:admin)
+  fab!(:user)
+  fab!(:post)
   let(:like_type_id) { PostActionType.types[:like] }
 
   before { Group.refresh_automatic_groups! }

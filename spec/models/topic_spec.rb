@@ -3,15 +3,15 @@
 
 RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user1) { Fabricate(:user) }
   fab!(:whisperers_group) { Fabricate(:group) }
   fab!(:user2) { Fabricate(:user, groups: [whisperers_group]) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:moderator)
+  fab!(:coding_horror)
+  fab!(:evil_trout)
+  fab!(:admin)
+  fab!(:group)
   fab!(:trust_level_2) do
     Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite)
   end
@@ -736,7 +736,7 @@ RSpec.describe Topic do
       end
 
       context "with secure categories" do
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
         fab!(:private_category) { Fabricate(:private_category, group: group) }
 
         before { topic.update!(category: private_category) }
@@ -1334,7 +1334,7 @@ RSpec.describe Topic do
   end
 
   describe "moderator posts" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "creates a moderator post" do
       mod_post =
@@ -1595,7 +1595,7 @@ RSpec.describe Topic do
   end
 
   describe "banner" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:user) { topic.user }
     let(:banner) { { html: "<p>BANNER</p>", url: topic.url, key: topic.id } }
 
@@ -1706,7 +1706,7 @@ RSpec.describe Topic do
   end
 
   describe "after create" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "is a regular topic by default" do
       expect(topic.archetype).to eq(Archetype.default)
@@ -1728,7 +1728,7 @@ RSpec.describe Topic do
   end
 
   describe "#change_category_to_id" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:user) { topic.user }
     fab!(:category) { Fabricate(:category_with_definition, user: user) }
 
@@ -2077,7 +2077,7 @@ RSpec.describe Topic do
 
     let(:closing_topic) { Fabricate(:topic_timer, execute_at: 5.hours.from_now).topic }
 
-    fab!(:trust_level_4) { Fabricate(:trust_level_4) }
+    fab!(:trust_level_4)
 
     it "can take a number of hours as an integer" do
       freeze_time now
@@ -2563,7 +2563,7 @@ RSpec.describe Topic do
   end
 
   describe "trash!" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     context "with category's topic count" do
       fab!(:category) { Fabricate(:category_with_definition) }
@@ -2613,7 +2613,7 @@ RSpec.describe Topic do
   end
 
   describe "recover!" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     context "with category's topic count" do
       fab!(:category) { Fabricate(:category_with_definition) }
@@ -2874,7 +2874,7 @@ RSpec.describe Topic do
 
   describe "featured link" do
     before { SiteSetting.topic_featured_link_enabled = true }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "can validate featured link" do
       topic.featured_link = " invalid string"
@@ -3129,7 +3129,7 @@ RSpec.describe Topic do
   end
 
   describe "#remove_allowed_user" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:private_topic) do
       Fabricate(
         :private_message_topic,
@@ -3417,7 +3417,7 @@ RSpec.describe Topic do
   end
 
   describe "#cannot_permanently_delete_reason" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     let!(:topic) { post.topic }
 
     before { freeze_time }

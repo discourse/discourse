@@ -4,10 +4,10 @@ require "post_creator"
 require "topic_subtype"
 
 RSpec.describe PostCreator do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:coding_horror)
+  fab!(:evil_trout)
   let(:topic) { Fabricate(:topic, user: user) }
 
   describe "new topic" do
@@ -1555,7 +1555,7 @@ RSpec.describe PostCreator do
   end
 
   describe "staged users" do
-    fab!(:staged) { Fabricate(:staged) }
+    fab!(:staged)
 
     it "automatically watches all messages it participates in" do
       post =
@@ -2042,9 +2042,9 @@ RSpec.describe PostCreator do
   end
 
   describe "#create_post_notice" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:staged) { Fabricate(:staged) }
-    fab!(:anonymous) { Fabricate(:anonymous) }
+    fab!(:user)
+    fab!(:staged)
+    fab!(:anonymous)
 
     it "generates post notices for new users" do
       post =

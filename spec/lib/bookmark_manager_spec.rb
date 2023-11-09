@@ -3,7 +3,7 @@
 RSpec.describe BookmarkManager do
   subject(:manager) { described_class.new(user) }
 
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
 
   let(:user) { Fabricate(:user) }
   let(:reminder_at) { 1.day.from_now }

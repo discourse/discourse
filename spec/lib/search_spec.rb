@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Search do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:admin)
+  fab!(:topic)
 
   before do
     SearchIndexer.enable
@@ -140,7 +140,7 @@ RSpec.describe Search do
   end
 
   describe "custom_eager_load" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic) }
 
     before do
@@ -1332,7 +1332,7 @@ RSpec.describe Search do
       end
 
       context "with non staff logged in" do
-        fab!(:user) { Fabricate(:user) }
+        fab!(:user)
 
         it "shows doesn't show group" do
           expect(search(user).groups.map(&:name)).to eq([])
@@ -1648,7 +1648,7 @@ RSpec.describe Search do
 
   describe "Advanced search" do
     describe "bookmarks" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let!(:bookmark_post1) { Fabricate(:post, raw: "boom this is a bookmarked post") }
       let!(:bookmark_post2) { Fabricate(:post, raw: "wow some other cool thing") }
 
@@ -1770,7 +1770,7 @@ RSpec.describe Search do
 
     context "when searching for posts made by users of a group" do
       fab!(:topic) { Fabricate(:topic, created_at: 3.months.ago) }
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       fab!(:user_2) { Fabricate(:user) }
       fab!(:user_3) { Fabricate(:user) }
       fab!(:group) { Fabricate(:group, name: "Like_a_Boss").tap { |g| g.add(user) } }

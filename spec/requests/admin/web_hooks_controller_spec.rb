@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::WebHooksController do
-  fab!(:web_hook) { Fabricate(:web_hook) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:web_hook)
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#create" do
     context "when logged in as admin" do

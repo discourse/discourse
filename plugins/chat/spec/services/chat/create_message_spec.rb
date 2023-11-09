@@ -22,7 +22,7 @@ RSpec.describe Chat::CreateMessage do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:other_user) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }

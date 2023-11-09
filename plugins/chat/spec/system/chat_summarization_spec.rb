@@ -2,7 +2,7 @@
 
 RSpec.describe "Summarize a channel since your last visit", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   let(:plugin) { Plugin::Instance.new }
 
   fab!(:channel) { Fabricate(:chat_channel) }

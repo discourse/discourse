@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe PostActionsController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:user)
+  fab!(:coding_horror)
 
   before { Group.refresh_automatic_groups! }
 

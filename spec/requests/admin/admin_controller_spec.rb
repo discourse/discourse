@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::AdminController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin)
+  fab!(:moderator)
 
   describe "#index" do
     context "when unauthenticated" do

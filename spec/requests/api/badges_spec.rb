@@ -2,8 +2,8 @@
 require "swagger_helper"
 
 RSpec.describe "badges" do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:badge) { Fabricate(:badge) }
+  fab!(:admin)
+  fab!(:badge)
 
   before do
     Jobs.run_immediately!

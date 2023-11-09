@@ -3,13 +3,13 @@
 require "rails_helper"
 
 RSpec.describe Chat::ChatController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:other_user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:admin)
+  fab!(:category)
   fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
   fab!(:dm_chat_channel) { Fabricate(:direct_message_channel, users: [user, other_user, admin]) }
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:tag)
 
   MESSAGE_COUNT = 70
   MESSAGE_COUNT.times do |n|

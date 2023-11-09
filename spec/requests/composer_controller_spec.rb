@@ -3,7 +3,7 @@
 RSpec.describe ComposerController do
   describe "#mentions" do
     fab!(:current_user) { Fabricate(:user) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     fab!(:group) do
       Fabricate(
@@ -73,7 +73,7 @@ RSpec.describe ComposerController do
     end
 
     context "with a regular topic" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       it "finds mentions" do
         get "/composer/mentions.json",

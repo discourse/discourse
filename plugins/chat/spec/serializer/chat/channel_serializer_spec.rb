@@ -5,9 +5,9 @@ require "rails_helper"
 describe Chat::ChannelSerializer do
   subject(:serializer) { described_class.new(chat_channel, scope: guardian, root: nil) }
 
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:chat_channel) { Fabricate(:chat_channel) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:chat_channel)
 
   let(:guardian_user) { user }
   let(:guardian) { Guardian.new(guardian_user) }
@@ -52,7 +52,7 @@ describe Chat::ChannelSerializer do
 
   describe "#meta" do
     context "for category channels" do
-      fab!(:chat_channel) { Fabricate(:chat_channel) }
+      fab!(:chat_channel)
 
       it "has the required message_bus_last_ids keys and calls MessageBus" do
         MessageBus.expects(:last_id).with(Chat::Publisher.root_message_bus_channel(chat_channel.id))

@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicGuardian do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   fab!(:tl3_user) { Fabricate(:trust_level_3) }
   fab!(:tl4_user) { Fabricate(:trust_level_4) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:category) { Fabricate(:category) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:moderator)
+  fab!(:category)
+  fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:private_topic) { Fabricate(:topic, category: private_category) }
-  fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+  fab!(:private_message_topic)
 
   before { Guardian.enable_topic_can_see_consistency_check }
 

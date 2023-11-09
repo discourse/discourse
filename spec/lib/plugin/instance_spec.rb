@@ -707,7 +707,7 @@ RSpec.describe Plugin::Instance do
   end
 
   describe "#register_site_categories_callback" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     it "adds a callback to the Site#categories" do
       instance = Plugin::Instance.new
@@ -731,7 +731,7 @@ RSpec.describe Plugin::Instance do
 
   describe "#register_notification_consolidation_plan" do
     let(:plugin) { Plugin::Instance.new }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     after { DiscoursePluginRegistry.reset_register!(:notification_consolidation_plans) }
 
@@ -845,7 +845,7 @@ RSpec.describe Plugin::Instance do
 
     after { DiscoursePluginRegistry.reset_register!(:user_destroyer_on_content_deletion_callbacks) }
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "calls the callback when the UserDestroyer runs with the delete_posts opt set to true" do
       callback_called = false

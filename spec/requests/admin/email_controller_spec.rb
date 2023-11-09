@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::EmailController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:email_log) { Fabricate(:email_log) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:email_log)
 
   describe "#index" do
     context "when logged in as an admin" do
@@ -48,7 +48,7 @@ RSpec.describe Admin::EmailController do
   end
 
   describe "#sent" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     fab!(:email_log) { Fabricate(:email_log, post: post) }
 
     let(:post_reply_key) { Fabricate(:post_reply_key, post: post, user: email_log.user) }
@@ -137,7 +137,7 @@ RSpec.describe Admin::EmailController do
   end
 
   describe "#skipped" do
-    # fab!(:user) { Fabricate(:user) }
+    # fab!(:user)
     fab!(:log1) { Fabricate(:skipped_email_log, user: user, created_at: 20.minutes.ago) }
     fab!(:log2) { Fabricate(:skipped_email_log, created_at: 10.minutes.ago) }
 
@@ -213,7 +213,7 @@ RSpec.describe Admin::EmailController do
 
       context "with SiteSetting.disable_emails" do
         fab!(:eviltrout) { Fabricate(:evil_trout) }
-        fab!(:admin) { Fabricate(:admin) }
+        fab!(:admin)
 
         it 'bypasses disable when setting is "yes"' do
           SiteSetting.disable_emails = "yes"

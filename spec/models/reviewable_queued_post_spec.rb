@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableQueuedPost, type: :model do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:category)
+  fab!(:moderator)
 
   describe "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }

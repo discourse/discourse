@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Composer Form Template Validations", type: :system, js: true do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:form_template) do
     Fabricate(
       :form_template,
