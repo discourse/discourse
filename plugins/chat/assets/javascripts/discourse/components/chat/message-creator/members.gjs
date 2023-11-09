@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import icon from "discourse-common/helpers/d-icon";
 import eq from "truth-helpers/helpers/eq";
+import { getNext, getPrevious } from "./lib/iterate-list";
 import Member from "./member";
 
 export default class members extends Component {
@@ -38,7 +39,7 @@ export default class members extends Component {
       event.stopPropagation();
 
       this.args.onHighlightMember(
-        this.#getPrevious(this.args.members, this.args.highlightedMember)
+        getPrevious(this.args.members, this.args.highlightedMember)
       );
 
       return;
@@ -48,7 +49,7 @@ export default class members extends Component {
       event.stopPropagation();
 
       this.args.onHighlightMember(
-        this.#getNext(this.args.members, this.args.highlightedMember)
+        getNext(this.args.members, this.args.highlightedMember)
       );
 
       return;
@@ -64,50 +65,6 @@ export default class members extends Component {
     }
 
     this.highlightedMember = null;
-  }
-
-  #getNext(list, current = null) {
-    if (list.length === 0) {
-      return null;
-    }
-
-    list = list.filterBy("enabled");
-
-    if (current?.identifier) {
-      const currentIndex = list
-        .mapBy("identifier")
-        .indexOf(current?.identifier);
-
-      if (currentIndex < list.length - 1) {
-        return list.objectAt(currentIndex + 1);
-      } else {
-        return list[0];
-      }
-    } else {
-      return list[0];
-    }
-  }
-
-  #getPrevious(list, current = null) {
-    if (list.length === 0) {
-      return null;
-    }
-
-    list = list.filterBy("enabled");
-
-    if (current?.identifier) {
-      const currentIndex = list
-        .mapBy("identifier")
-        .indexOf(current?.identifier);
-
-      if (currentIndex > 0) {
-        return list.objectAt(currentIndex - 1);
-      } else {
-        return list.objectAt(list.length - 1);
-      }
-    } else {
-      return list.objectAt(list.length - 1);
-    }
   }
 
   <template>
