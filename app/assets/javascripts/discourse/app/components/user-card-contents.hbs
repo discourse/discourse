@@ -171,13 +171,11 @@
               />
             </li>
           {{/if}}
-          <li>
-            <PluginOutlet
-              @name="user-card-additional-buttons"
-              @connectorTagName="div"
-              @outletArgs={{hash user=this.user close=(action "close")}}
-            />
-          </li>
+          <PluginOutlet
+            @name="user-card-additional-buttons"
+            @connectorTagName="li"
+            @outletArgs={{hash user=this.user close=(action "close")}}
+          />
         </ul>
         <PluginOutlet
           @name="user-card-additional-controls"
