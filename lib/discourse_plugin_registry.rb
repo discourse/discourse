@@ -113,7 +113,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :search_groups_set_query_callbacks
 
-  define_filtered_register :about_stat_groups
+  define_filtered_register :stats
   define_filtered_register :bookmarkables
 
   define_filtered_register :list_suggested_for_providers

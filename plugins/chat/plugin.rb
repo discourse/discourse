@@ -480,11 +480,13 @@ after_initialize do
 
   register_email_unsubscriber("chat_summary", EmailControllerHelper::ChatSummaryUnsubscriber)
 
-  register_about_stat_group("chat_messages", show_in_ui: true) { Chat::Statistics.about_messages }
+  register_stat("chat_messages", show_in_ui: true, expose_via_api: true) do
+    Chat::Statistics.about_messages
+  end
 
-  register_about_stat_group("chat_channels") { Chat::Statistics.about_channels }
+  register_stat("chat_channels", expose_via_api: true) { Chat::Statistics.about_channels }
 
-  register_about_stat_group("chat_users") { Chat::Statistics.about_users }
+  register_stat("chat_users", expose_via_api: true) { Chat::Statistics.about_users }
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)
