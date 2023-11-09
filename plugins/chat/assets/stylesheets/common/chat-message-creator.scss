@@ -1,6 +1,8 @@
 .chat-message-creator__section {
   display: flex;
   width: 100%;
+  padding-inline: 1rem 0.5rem;
+  box-sizing: border-box;
 }
 
 .chat-message-creator__add-members {
@@ -20,16 +22,30 @@
 }
 
 .chat-message-creator__member {
-  padding: 0.25rem;
-  border: 1px solid var(--primary-medium);
+  padding: 0 0.25rem;
   border-radius: var(--border-radius);
+  background: var(--primary-very-low);
+  gap: 0.25rem;
 
+  //I think this class isnt working atm?
   &.-highlighted {
     border-color: var(--tertiary);
   }
 
-  &-username {
-    padding-inline: 0.5rem;
+  &:hover {
+    .discourse-no-touch & {
+      background: var(--primary-very-low);
+      color: var(--primary);
+      border-color: var(--tertiary);
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+  }
+
+  .d-icon {
+    margin-left: 0.25rem;
   }
 }
 
@@ -52,11 +68,12 @@
   display: flex;
   align-items: center;
   flex-grow: 1;
-  padding: 0.5rem 1rem;
+  padding-inline: 1rem;
 
   &-container {
     display: flex;
     flex-grow: 1;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--primary-low);
   }
 
@@ -72,22 +89,24 @@
 .chat-message-creator__new-group-footer {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   flex-grow: 1;
-  padding: 0.5rem 1rem;
+  gap: 1rem;
+  padding: 1rem 1rem 0;
 
   &-container {
     display: flex;
     flex-grow: 1;
     border-top: 1px solid var(--primary-low);
   }
-
-  .btn {
-    margin-left: auto;
-  }
 }
 
 .chat-message-creator__participants-count {
   white-space: nowrap;
+}
+
+.chat-message-creator__warning-max-members {
+  padding-inline: 1rem;
 }
 
 .chat-message-creator__members {
@@ -122,13 +141,9 @@
   }
 }
 
-.chat-message-creator__participants-count {
-  white-space: nowrap;
-}
-
 .chat-message-creator__members-count {
   white-space: nowrap;
-
+  color: var(--primary-medium);
   &.-reached-limit {
     color: var(--danger);
   }
@@ -138,7 +153,6 @@
   display: flex;
   flex-grow: 1;
   justify-content: flex-end;
-  margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--primary-low);
 
@@ -157,13 +171,9 @@
   &-item {
     box-sizing: border-box;
     cursor: pointer;
-    padding: 0.25rem;
+    padding: 0.5rem 1rem;
     display: flex;
     align-items: center;
-
-    &#new-group-chat {
-      height: 30px;
-    }
 
     .d-icon-users {
       padding: 2px 2px;
@@ -199,7 +209,6 @@
   align-items: center;
   background: var(--secondary-very-high);
   width: 100%;
-  margin: 0.5rem;
   box-sizing: border-box;
   height: 42px;
   padding: 0 0.5rem;
