@@ -48,34 +48,36 @@ export default class List extends Component {
   }
 
   <template>
-    <div class="chat-message-creator__list-container">
-      {{#if @maxReached}}
-        {{this.cantAddMoreMembersLabel}}
-      {{else}}
-        <ul class="chat-message-creator__list">
-          {{#each @items as |item|}}
-            <li
-              class={{concatClass
-                "chat-message-creator__list-item"
-                (if
-                  (eq item.identifier @highlightedItem.identifier)
-                  "-highlighted"
-                )
-              }}
-              {{on "click" (fn this.handleClick item)}}
-              {{on "keypress" (fn this.handleEnter item)}}
-              {{on "mouseenter" (fn @onHighlight item)}}
-              {{on "mouseleave" (fn @onHighlight null)}}
-              role="button"
-              tabindex="0"
-              data-identifier={{item.identifier}}
-              id={{item.id}}
-            >
-              {{component (this.componentForItem item.type) item=item}}
-            </li>
-          {{/each}}
-        </ul>
-      {{/if}}
-    </div>
+    {{#if @items}}
+      <div class="chat-message-creator__list-container">
+        {{#if @maxReached}}
+          {{this.cantAddMoreMembersLabel}}
+        {{else}}
+          <ul class="chat-message-creator__list">
+            {{#each @items as |item|}}
+              <li
+                class={{concatClass
+                  "chat-message-creator__list-item"
+                  (if
+                    (eq item.identifier @highlightedItem.identifier)
+                    "-highlighted"
+                  )
+                }}
+                {{on "click" (fn this.handleClick item)}}
+                {{on "keypress" (fn this.handleEnter item)}}
+                {{on "mouseenter" (fn @onHighlight item)}}
+                {{on "mouseleave" (fn @onHighlight null)}}
+                role="button"
+                tabindex="0"
+                data-identifier={{item.identifier}}
+                id={{item.id}}
+              >
+                {{component (this.componentForItem item.type) item=item}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </div>
+    {{/if}}
   </template>
 }
