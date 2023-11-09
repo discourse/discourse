@@ -50,7 +50,9 @@ export default class List extends Component {
   <template>
     <div class="chat-message-creator__list-container">
       {{#if @maxReached}}
-        {{this.cantAddMoreMembersLabel}}
+        <div
+          class="chat-message-creator__warning-max-members"
+        >{{this.cantAddMoreMembersLabel}}</div>
       {{else}}
         <ul class="chat-message-creator__list">
           {{#each @items as |item|}}
