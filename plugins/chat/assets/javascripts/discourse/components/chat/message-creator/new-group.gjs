@@ -6,6 +6,7 @@ import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
+import gte from "truth-helpers/helpers/gte";
 import MembersCount from "./members-count";
 import MembersSelector from "./members-selector";
 
@@ -66,6 +67,10 @@ export default class NewGroup extends Component {
           @onChange={{@onChangeMembers}}
           @close={{@close}}
           @cancel={{@cancel}}
+          @maxReached={{gte
+            this.membersCount
+            this.siteSettings.chat_max_direct_message_users
+          }}
         />
 
         {{#if @members.length}}

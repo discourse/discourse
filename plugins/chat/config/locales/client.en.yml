@@ -341,6 +341,7 @@ en:
         participants_counter:  "%{selection_count}/%{max} participants"
         new_group_chat: "New group chat"
         filter: "Filter"
+        cant_add_more_members: "Maximum number of members reached"
 
       channel_edit_name_slug_modal:
         title: Edit channel

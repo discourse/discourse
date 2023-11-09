@@ -133,6 +133,7 @@ export default class MembersSelector extends Component {
         @highlightedItem={{this.highlightedChatable}}
         @onSelect={{this.selectChatable}}
         @onHighlight={{this.highlightChatable}}
+        @maxReached={{@maxReached}}
       />
 
     </ListHandler>
