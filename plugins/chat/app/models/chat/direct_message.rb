@@ -31,6 +31,8 @@ module Chat
     end
 
     def chat_channel_title_for_user(chat_channel, acting_user)
+      return chat_channel.title if group && chat_channel.title.present?
+
       users =
         (direct_message_users.map(&:user) - [acting_user]).map { |user| user || Chat::NullUser.new }
 
