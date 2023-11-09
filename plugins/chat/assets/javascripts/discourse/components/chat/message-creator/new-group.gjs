@@ -77,7 +77,7 @@ export default class NewGroup extends Component {
           <div class="chat-message-creator__new-group-footer-container">
             <div class="chat-message-creator__new-group-footer">
               <DButton
-                class="btn-primary"
+                class="btn-primary create-chat-group"
                 @label="save"
                 @action={{this.createGroup}}
               />

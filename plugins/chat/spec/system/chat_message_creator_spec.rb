@@ -63,10 +63,20 @@ RSpec.describe "Flag message", type: :system do
   end
 
   it "can create a new group message" do
+    user_1 = Fabricate(:user)
+    user_2 = Fabricate(:user)
+
     visit("/")
+    chat_page.prefers_full_page
     chat_page.open_new_message
     chat_page.find("#new-group-chat").click
+    chat_page.find(".chat-message-creator__new-group-header__input").fill_in(with: "cats")
+    chat_page.find(".chat-message-creator__members-input").fill_in(with: user_1.username)
+    chat_page.message_creator.click_row(user_1)
+    chat_page.find(".chat-message-creator__members-input").fill_in(with: user_2.username)
+    chat_page.message_creator.click_row(user_2)
+    page.find(".create-chat-group").click
 
-    expect(chat_page).to have_css(".chat-message-creator__members-input")
+    expect(page).to have_current_path(%r{/chat/c/cats/(\d+)})
   end
 end
