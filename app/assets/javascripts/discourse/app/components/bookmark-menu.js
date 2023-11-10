@@ -1,18 +1,18 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
 } from "discourse/components/d-modal";
-import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { inject as controller } from "@ember/controller";
-import Bookmark from "discourse/models/bookmark";
 import { BookmarkFormData } from "discourse/lib/bookmark";
-import BookmarkRedesignModal from "../components/modal/bookmark-redesign";
-import { tracked } from "@glimmer/tracking";
+import Bookmark from "discourse/models/bookmark";
 import discourseLater from "discourse-common/lib/later";
-import { modifier } from "ember-modifier";
-import { cancel } from "@ember/runloop";
+import BookmarkRedesignModal from "../components/modal/bookmark-redesign";
 
 export default class DiscourseBookmarkMenu extends Component {
   @service modal;

@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
-import { excerpt, sanitize } from "discourse/lib/text";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import { now, parseCustomDatetime } from "discourse/lib/time-utils";
-import discourseLater from "discourse-common/lib/later";
-import { extractError } from "discourse/lib/ajax-error";
-import { ajax } from "discourse/lib/ajax";
-import { CLOSE_INITIATED_BY_CLICK_OUTSIDE } from "discourse/components/d-modal";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import I18n from "I18n";
 import { and, notEmpty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
+import { CLOSE_INITIATED_BY_CLICK_OUTSIDE } from "discourse/components/d-modal";
+import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
+import { excerpt, sanitize } from "discourse/lib/text";
+import { now, parseCustomDatetime } from "discourse/lib/time-utils";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import discourseLater from "discourse-common/lib/later";
+import I18n from "I18n";
 
 export default class BookmarkRedesignModal extends Component {
   @service dialog;
