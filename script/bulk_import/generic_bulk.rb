@@ -887,7 +887,8 @@ class BulkImport::Generic < BulkImport::Base
         first_visited_at: to_datetime(row["first_visited_at"]),
         notification_level: row["notification_level"],
         notifications_changed_at: to_datetime(row["notifications_changed_at"]),
-        notifications_reason_id: row["notifications_reason_id"],
+        notifications_reason_id:
+          row["notifications_reason_id"] || TopicUser.notification_reasons[:user_changed],
         total_msecs_viewed: row["total_msecs_viewed"] || 0,
       }
     end
@@ -900,19 +901,29 @@ class BulkImport::Generic < BulkImport::Base
 
     start_time = Time.now
 
-    DB.exec(<<~SQL)
+    params = {
+      post_action_type_id: PostActionType.types[:like],
+      msecs_viewed_per_post: 10_000,
+      notification_level_topic_created: NotificationLevels.topic_levels[:watching],
+      notification_level_posted: NotificationLevels.topic_levels[:tracking],
+      reason_topic_created: TopicUser.notification_reasons[:created_topic],
+      reason_posted: TopicUser.notification_reasons[:created_post],
+    }
+
+    DB.exec(<<~SQL, params)
       INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, first_visited_at, last_visited_at,
                                notification_level, notifications_changed_at, notifications_reason_id, total_msecs_viewed,
                                last_posted_at)
       SELECT p.user_id, p.topic_id, TRUE AS posted, MAX(p.post_number) AS last_read_post_number,
              MIN(p.created_at) AS first_visited_at, MAX(p.created_at) AS last_visited_at,
-             CASE WHEN MIN(p.post_number) = 1 THEN 3 ELSE 2 END AS notification_level,
-             MIN(p.created_at) AS notifications_changed_at,
-             CASE WHEN MIN(p.post_number) = 1 THEN 1 ELSE 4 END AS notifications_reason_id,
-             MAX(p.post_number) * 10000 AS total_msecs_viewed, MAX(p.created_at) AS last_posted_at
+             CASE WHEN MIN(p.post_number) = 1 THEN :notification_level_topic_created
+                  ELSE :notification_level_posted END AS notification_level, MIN(p.created_at) AS notifications_changed_at,
+             CASE WHEN MIN(p.post_number) = 1 THEN :reason_topic_created ELSE :reason_posted END AS notifications_reason_id,
+             MAX(p.post_number) * :msecs_viewed_per_post AS total_msecs_viewed, MAX(p.created_at) AS last_posted_at
         FROM posts p
              JOIN topics t ON p.topic_id = t.id
-       WHERE p.deleted_at IS NULL
+       WHERE p.user_id > 0
+         AND p.deleted_at IS NULL
          AND NOT p.hidden
          AND t.deleted_at IS NULL
          AND t.visible
@@ -934,15 +945,15 @@ class BulkImport::Generic < BulkImport::Base
                                                         last_posted_at = GREATEST(topic_users.last_posted_at, excluded.last_posted_at)
     SQL
 
-    DB.exec(<<~SQL)
-      INSERT INTO topic_users (user_id, topic_id, last_read_post_number, first_visited_at, last_visited_at,
-                               total_msecs_viewed, liked)
+    DB.exec(<<~SQL, params)
+      INSERT INTO topic_users (user_id, topic_id, last_read_post_number, first_visited_at, last_visited_at, total_msecs_viewed, liked)
       SELECT pa.user_id, p.topic_id, MAX(p.post_number) AS last_read_post_number, MIN(pa.created_at) AS first_visited_at,
-             MAX(pa.created_at) AS last_visited_at, MAX(p.post_number) * 10000 AS total_msecs_viewed, TRUE AS liked
+             MAX(pa.created_at) AS last_visited_at, MAX(p.post_number) * :msecs_viewed_per_post AS total_msecs_viewed,
+             TRUE AS liked
         FROM post_actions pa
              JOIN posts p ON pa.post_id = p.id
              JOIN topics t ON p.topic_id = t.id
-       WHERE pa.post_action_type_id = 2
+       WHERE pa.post_action_type_id = :post_action_type_id
          AND pa.user_id > 0
          AND pa.deleted_at IS NULL
          AND p.deleted_at IS NULL
