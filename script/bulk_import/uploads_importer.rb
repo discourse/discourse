@@ -150,25 +150,35 @@ module BulkImport
 
           while (row = queue.pop)
             begin
-              relative_path = row["relative_path"]
-              path = File.join(@root_path, relative_path, row["filename"])
-              file_exists = File.exist?(path)
+              data_file = nil
+              path = nil
 
-              if !file_exists
-                @settings[:path_replacements].each do |from, to|
-                  path = File.join(@root_path, relative_path.sub(from, to), row["filename"])
-                  break if (file_exists = File.exist?(path))
+              if row["data"].present?
+                data_file = Tempfile.new("discourse-upload", binmode: true)
+                data_file.write(row["data"])
+                data_file.rewind
+                path = data_file.path
+              else
+                relative_path = row["relative_path"]
+                path = File.join(@root_path, relative_path, row["filename"])
+                file_exists = File.exist?(path)
+
+                if !file_exists
+                  @settings[:path_replacements].each do |from, to|
+                    path = File.join(@root_path, relative_path.sub(from, to), row["filename"])
+                    break if (file_exists = File.exist?(path))
+                  end
                 end
-              end
 
-              if !file_exists
-                status_queue << {
-                  id: row["id"],
-                  upload: nil,
-                  skipped: true,
-                  skip_reason: "file not found",
-                }
-                next
+                if !file_exists
+                  status_queue << {
+                    id: row["id"],
+                    upload: nil,
+                    skipped: true,
+                    skip_reason: "file not found",
+                  }
+                  next
+                end
               end
 
               retry_count = 0
@@ -235,6 +245,8 @@ module BulkImport
                 error: e.message,
                 skip_reason: "error",
               }
+            ensure
+              data_file&.close!
             end
           end
         end
