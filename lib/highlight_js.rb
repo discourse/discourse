@@ -24,10 +24,22 @@ module HighlightJs
     JS
   end
 
+  def self.cache
+    @lang_string_cache ||= {}
+  end
+
   def self.version(lang_string)
-    (@lang_string_cache ||= {})[lang_string] ||= Digest::SHA1.hexdigest(
-      bundle lang_string.split("|")
-    )
+    cache_info = cache[RailsMultisite::ConnectionManagement.current_db]
+
+    return cache_info[:digest] if cache_info&.[](:lang_string) == lang_string
+
+    cache_info = {
+      lang_string: lang_string,
+      digest: Digest::SHA1.hexdigest(bundle(lang_string.split("|"))),
+    }
+
+    cache[RailsMultisite::ConnectionManagement.current_db] = cache_info
+    cache_info[:digest]
   end
 
   def self.path
