@@ -1,5 +1,8 @@
 <label class="wizard-container__label">
-  <PluginOutlet @name="wizard-checkbox" @outletArgs={{hash disabled=true}}>
+  <PluginOutlet
+    @name="wizard-checkbox"
+    @outletArgs={{hash disabled=this.field.disabled}}
+  >
     <Input
       @type="checkbox"
       disabled={{this.field.disabled}}
