@@ -669,7 +669,8 @@ RSpec.describe PrettyText do
       ).to match_html(
         "<pre data-code-foo='&lt;script&gt;alert(document.cookie)&lt;/script&gt;' data-code-wrap='mermaid'><code class='lang-mermaid'>\n</code></pre>",
       )
-      expect(PrettyText.cook("```mermaid foo=‮ begin admin o\n```")).to match_html(
+      # Check unicode bidi characters are stripped:
+      expect(PrettyText.cook("```mermaid foo=\u202E begin admin o\u001C\n```")).to match_html(
         "<pre data-code-wrap='mermaid'><code class='lang-mermaid'>\n</code></pre>",
       )
       expect(PrettyText.cook("```c++\nc++\n```")).to match_html(
