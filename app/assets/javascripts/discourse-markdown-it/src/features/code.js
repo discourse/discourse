@@ -52,6 +52,8 @@ function render(tokens, idx, options, env, slf, md) {
 
   if (TEXT_CODE_CLASSES.includes(tag)) {
     className = "lang-plaintext";
+  } else if (tag === "auto") {
+    className = "lang-auto";
   } else {
     className = `lang-${md.utils.escapeHtml(tag)}`;
     attributes["wrap"] = tag;
