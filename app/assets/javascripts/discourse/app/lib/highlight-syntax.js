@@ -126,8 +126,8 @@ function customHighlightJSPlugins(hljs) {
 }
 
 function initializer(hljs) {
-  customHighlightJSLanguages();
-  customHighlightJSPlugins();
+  customHighlightJSLanguages(hljs);
+  customHighlightJSPlugins(hljs);
   hljs.addPlugin(mergeHTMLPlugin);
   hljs.configure({
     ignoreUnescapedHTML: true,
