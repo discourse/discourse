@@ -1,4 +1,5 @@
 import DEBUG from "@glimmer/env";
+import { waitForPromise } from "@ember/test-waiters";
 import mergeHTMLPlugin from "discourse/lib/highlight-syntax-merge-html-plugin";
 import { isTesting } from "discourse-common/config/environment";
 
@@ -54,7 +55,11 @@ export default async function highlightSyntax(elem, siteSettings, session) {
 
 async function ensureHighlightJs(langFile) {
   try {
-    return await (hljsLoadPromise ??= loadHighlightJs(langFile));
+    if (!hljsLoadPromise) {
+      hljsLoadPromise = loadHighlightJs(langFile);
+      waitForPromise(hljsLoadPromise);
+    }
+    return await hljsLoadPromise;
   } catch (e) {
     // Allow retry next time
     hljsLoadPromise = null;
