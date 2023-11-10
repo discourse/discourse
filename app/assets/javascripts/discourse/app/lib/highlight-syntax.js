@@ -23,10 +23,6 @@ export default async function highlightSyntax(elem, siteSettings, session) {
 
   const path = session.highlightJsPath;
 
-  if (!path) {
-    return;
-  }
-
   const hljs = await ensureHighlightJs(path);
 
   codeblocks.forEach((e) => {

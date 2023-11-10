@@ -47,14 +47,14 @@ module("Unit | Utility | highlight-syntax", function (hooks) {
 
     assert.strictEqual(
       document
-        .querySelector("code.language-ruby.hljs .hljs-keyword")
+        .querySelector("code.lang-ruby.hljs .hljs-keyword")
         .innerText.trim(),
       "def"
     );
 
     // Checks if HTML structure was preserved
     assert.strictEqual(
-      document.querySelectorAll("code.language-ruby.hljs ol li").length,
+      document.querySelectorAll("code.lang-ruby.hljs ol li").length,
       3
     );
   });
