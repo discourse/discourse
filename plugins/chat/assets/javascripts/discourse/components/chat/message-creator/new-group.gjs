@@ -18,6 +18,7 @@ export default class NewGroup extends Component {
   @tracked newGroupTitle = "";
 
   placeholder = I18n.t("chat.direct_message_creator.group_name");
+  cancelLabel = I18n.t("cancel");
 
   get membersCount() {
     return this.args.members?.length;
@@ -78,19 +79,18 @@ export default class NewGroup extends Component {
             <div class="chat-message-creator__new-group-footer">
               <DButton
                 class="btn-primary btn-flat"
-                @label="cancel"
+                @label={{this.cancelLabel}}
                 @action={{@cancel}}
               />
               <DButton
                 class="btn-primary create-chat-group"
-                @label="chat.new_message_modal.create_new_groupchat"
+                @label="chat.new_message_modal.create_new_group_chat"
                 @action={{this.createGroup}}
               />
 
             </div>
           </div>
         {{/if}}
-
       </div>
     </div>
   </template>

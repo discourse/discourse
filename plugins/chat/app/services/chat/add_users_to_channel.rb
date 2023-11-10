@@ -24,7 +24,7 @@ module Chat
     contract
     model :channel
     policy :can_add_users_to_channel
-    model :users
+    model :users, optional: true
 
     transaction do
       step :upsert_memberships
@@ -88,6 +88,11 @@ module Chat
           }
         end
 
+      if memberships.blank?
+        context.added_user_ids = []
+        return
+      end
+
       context.added_user_ids =
         ::Chat::UserChatChannelMembership
           .upsert_all(
@@ -112,6 +117,8 @@ module Chat
     end
 
     def recompute_users_count(channel:, **)
+      return if context.added_user_ids.blank?
+
       channel.update!(
         user_count: ::Chat::ChannelMembershipsQuery.count(channel),
         user_count_stale: false,

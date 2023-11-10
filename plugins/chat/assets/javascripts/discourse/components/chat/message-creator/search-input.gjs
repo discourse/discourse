@@ -16,7 +16,7 @@ export default class ChatMessageCreatorSearchInput extends Component {
         }}
         <Input
           class="chat-message-creator__search-input__input"
-          placeholder="Filter"
+          placeholder={{this.filterPlaceholder}}
           {{on "input" @onFilter}}
         />
       </div>

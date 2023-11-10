@@ -16,6 +16,7 @@ RSpec.describe Chat::Api::ChannelsMembershipsController do
   describe "#create" do
     describe "success" do
       it "works" do
+        add_users_to_channel(current_user, channel_1)
         post "/chat/api/channels/#{channel_1.id}/memberships",
              params: {
                usernames: [Fabricate(:user).username],
@@ -35,6 +36,9 @@ RSpec.describe Chat::Api::ChannelsMembershipsController do
              }
 
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("chat.errors.users_cant_be_added_to_channel"),
+        )
       end
     end
 
