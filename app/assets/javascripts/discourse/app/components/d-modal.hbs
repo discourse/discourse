@@ -22,11 +22,14 @@
         {{yield to="aboveHeader"}}
 
         {{#if
-          (or
-            this.dismissable
-            @title
-            (has-block "headerBelowTitle")
-            (has-block "headerAboveTitle")
+          (and
+            (not @hideHeader)
+            (or
+              this.dismissable
+              @title
+              (has-block "headerBelowTitle")
+              (has-block "headerAboveTitle")
+            )
           )
         }}
           <div class={{concat-class "d-modal__header" @headerClass}}>
