@@ -723,6 +723,17 @@ class BulkImport::Base
 
   PLUGIN_STORE_ROW_COLUMNS ||= %i[plugin_name key type_name value]
 
+  PERMALINK_COLUMNS ||= %i[
+    url
+    topic_id
+    post_id
+    category_id
+    tag_id
+    external_url
+    created_at
+    updated_at
+  ]
+
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
   end
@@ -875,6 +886,10 @@ class BulkImport::Base
 
   def create_plugin_store_rows(rows, &block)
     create_records(rows, "plugin_store_row", PLUGIN_STORE_ROW_COLUMNS, &block)
+  end
+
+  def create_permalinks(rows, &block)
+    create_records(rows, "permalink", PERMALINK_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1483,6 +1498,12 @@ class BulkImport::Base
 
   def process_plugin_store_row(plugin_store_row)
     plugin_store_row
+  end
+
+  def process_permalink(permalink)
+    permalink[:created_at] ||= NOW
+    permalink[:updated_at] ||= NOW
+    permalink
   end
 
   def create_records(all_rows, name, columns, &block)

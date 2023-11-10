@@ -96,6 +96,9 @@ class BulkImport::Generic < BulkImport::Base
 
     import_user_stats
     enable_category_settings
+
+    import_permalink_normalizations
+    import_permalinks
   end
 
   def execute_after
@@ -1773,6 +1776,51 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def import_permalink_normalizations
+    puts "", "Importing permalink normalizations..."
+
+    start_time = Time.now
+
+    rows = query(<<~SQL)
+      SELECT normalization
+        FROM permalink_normalizations
+       ORDER BY normalization
+    SQL
+
+    normalizations = SiteSetting.permalink_normalizations
+    normalizations = normalizations.blank? ? [] : normalizations.split("|")
+
+    rows.each do |row|
+      normalization = row["normalization"]
+      normalizations << normalization unless normalizations.include?(normalization)
+    end
+
+    SiteSetting.permalink_normalizations = normalizations.join("|")
+    rows.close
+
+    puts "  Import took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def import_permalinks
+    puts "", "Importing permalinks for topics..."
+
+    rows = query(<<~SQL)
+      SELECT id, old_relative_url
+        FROM topics
+       WHERE old_relative_url IS NOT NULL
+       ORDER BY id
+    SQL
+
+    create_permalinks(rows) do |row|
+      topic_id = topic_id_from_imported_id(row["id"])
+      next unless topic_id
+
+      { url: row["old_relative_url"], topic_id: topic_id }
+    end
+
+    rows.close
   end
 
   def create_connection(path)
