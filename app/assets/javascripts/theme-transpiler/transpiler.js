@@ -89,7 +89,11 @@ function buildTemplateCompilerBabelPlugins({ extension, themeId }) {
       HTMLBarsInlinePrecompile,
       {
         compiler,
-        enableLegacyModules: ["ember-cli-htmlbars"],
+        enableLegacyModules: [
+          "ember-cli-htmlbars",
+          "ember-cli-htmlbars-inline-precompile",
+          "htmlbars-inline-precompile",
+        ],
       },
     ],
   ];
