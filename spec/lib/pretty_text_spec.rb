@@ -632,7 +632,7 @@ RSpec.describe PrettyText do
 
       # keep in mind spaces should be trimmed per spec
       expect(PrettyText.cook("```   ruby the mooby\n`````")).to eq(
-        '<pre><code class="lang-ruby"></code></pre>',
+        '<pre data-code-wrap="ruby"><code class="lang-ruby"></code></pre>',
       )
       expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html(
         "<pre><code class='lang-cpp'>cpp\n</code></pre>",
