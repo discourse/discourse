@@ -25,7 +25,7 @@ module PageObjects
       end
 
       def click_outside
-        find(".modal-outer-container").click(x: 0, y: 0)
+        find(".d-modal__wrapper").click(x: 0, y: 0)
       end
 
       def click_primary_button
