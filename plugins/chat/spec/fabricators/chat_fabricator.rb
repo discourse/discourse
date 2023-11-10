@@ -33,9 +33,13 @@ Fabricator(:private_category_channel, from: :category_channel) do
 end
 
 Fabricator(:direct_message_channel, from: :chat_channel) do
-  transient :users, following: true, with_membership: true
+  transient :users, :group, following: true, with_membership: true
   chatable do |attrs|
-    Fabricate(:direct_message, users: attrs[:users] || [Fabricate(:user), Fabricate(:user)])
+    Fabricate(
+      :direct_message,
+      users: attrs[:users] || [Fabricate(:user), Fabricate(:user)],
+      group: attrs[:group] || false,
+    )
   end
   status { :open }
   name nil

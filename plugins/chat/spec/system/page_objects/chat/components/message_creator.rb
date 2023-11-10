@@ -13,7 +13,7 @@ module PageObjects
         end
 
         def input
-          component.find(".chat-message-creator__input")
+          component.find(".chat-message-creator__search-input__input")
         end
 
         def filter(query = "")
@@ -104,7 +104,7 @@ module PageObjects
         end
 
         def build_row_selector(chatable, **args)
-          selector = ".chat-message-creator__row"
+          selector = ".chat-message-creator__list-item"
           selector += content_selector(**args)
           selector += chatable_selector(chatable, **args)
           selector
@@ -116,9 +116,9 @@ module PageObjects
           selector = ".-selected" if args[:selected]
           selector = ":not(.-disabled)" if args[:enabled]
           if args[:active]
-            selector += ".-active"
+            selector += ".-highlighted"
           elsif args[:inactive]
-            selector += ":not(.-active)"
+            selector += ":not(.-highlighted)"
           end
           selector
         end
@@ -126,14 +126,11 @@ module PageObjects
         def chatable_selector(chatable, **args)
           selector = ""
           if chatable.try(:category_channel?)
-            selector += ".-channel"
-            selector += "[data-id='c-#{chatable.id}']"
+            selector += "[data-identifier='c-#{chatable.id}']"
           elsif chatable.try(:direct_message_channel?)
-            selector += ".-channel"
-            selector += "[data-id='c-#{chatable.id}']"
+            selector += "[data-identifier='c-#{chatable.id}']"
           else
-            selector += ".-user"
-            selector += "[data-id='u-#{chatable.id}']"
+            selector += "[data-identifier='u-#{chatable.id}']"
           end
           selector
         end

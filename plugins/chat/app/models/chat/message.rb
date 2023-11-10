@@ -114,7 +114,7 @@ module Chat
       return uploads.first.original_filename if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(cooked, max_length, strip_links: true)
+      PrettyText.excerpt(cooked, max_length, strip_links: true, keep_mentions: true)
     end
 
     def censored_excerpt(max_length: 50)

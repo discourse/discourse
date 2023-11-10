@@ -88,7 +88,17 @@ module Chat
 
       allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
 
-      channels = Chat::Channel.includes(:last_message, chatable: [:topic_only_relative_url])
+      channels =
+        Chat::Channel.includes(
+          :last_message,
+          chatable: %i[
+            topic_only_relative_url
+            uploaded_background
+            uploaded_background_dark
+            uploaded_logo
+            uploaded_logo_dark
+          ],
+        )
       channels = channels.includes(:chat_channel_archive) if options[:include_archives]
 
       channels =
@@ -175,18 +185,6 @@ module Chat
     end
 
     def self.secured_direct_message_channels_search(user_id, guardian, options = {})
-      query =
-        Chat::Channel.strict_loading.includes(
-          last_message: [:uploads],
-          chatable: [{ direct_message_users: [user: :user_option] }, :users],
-        )
-      query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
-      query = query.joins(:user_chat_channel_memberships)
-      query =
-        query.joins(
-          "LEFT JOIN chat_messages last_message ON last_message.id = chat_channels.last_message_id",
-        )
-
       scoped_channels =
         Chat::Channel
           .joins(
@@ -197,36 +195,48 @@ module Chat
           )
           .where("direct_message_users.user_id = :user_id", user_id: user_id)
 
-      if options[:user_ids]
-        scoped_channels =
-          scoped_channels.where(
-            "EXISTS (
-              SELECT 1
-              FROM direct_message_channels AS dmc
-              INNER JOIN direct_message_users AS dmu ON dmu.direct_message_channel_id = dmc.id
-              WHERE dmc.id = chat_channels.chatable_id AND dmu.user_id IN (:user_ids)
-            )",
-            user_ids: options[:user_ids],
+      query =
+        Chat::Channel
+          .strict_loading
+          .where(id: scoped_channels)
+          .includes(
+            last_message: [:uploads],
+            chatable: [{ direct_message_users: [user: :user_option] }, :users],
+          )
+          .joins(
+            "LEFT JOIN chat_messages last_message ON last_message.id = chat_channels.last_message_id",
+          )
+
+      query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
+
+      if options[:filter]
+        if options[:match_filter_on_starts_with]
+          filter_sql = "#{options[:filter].downcase}%"
+        else
+          filter_sql = "%#{options[:filter].downcase}%"
+        end
+
+        query =
+          query.joins(user_chat_channel_memberships: :user).where(
+            "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter OR users.username ILIKE :filter",
+            filter: filter_sql,
           )
       end
 
       if options.key?(:following)
+        following_params = { user_id: user_id }
+        following_params[:following] = options[:following] if options[:following].present?
         query =
-          query.where(
-            user_chat_channel_memberships: {
-              user_id: user_id,
-              following: options[:following],
-            },
+          query.joins(:user_chat_channel_memberships).where(
+            user_chat_channel_memberships: following_params,
           )
-      else
-        query = query.where(user_chat_channel_memberships: { user_id: user_id })
       end
 
       query =
-        query
-          .where(chatable_type: Chat::Channel.direct_channel_chatable_types)
-          .where(chat_channels: { id: scoped_channels })
-          .order("last_message.created_at DESC NULLS LAST")
+        query.order("last_message.created_at DESC NULLS LAST").group(
+          "chat_channels.id",
+          "last_message.id",
+        )
 
       channels = query.to_a
       preload_fields =

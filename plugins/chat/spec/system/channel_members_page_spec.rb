@@ -26,7 +26,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       it "redirects to settings page" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
+        expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/members")
       end
     end
 
@@ -62,6 +62,44 @@ RSpec.describe "Channel - Info - Members page", type: :system do
           expect(page).to have_selector(".chat-channel-members__list-item", count: 1, text: "cat")
         end
       end
+    end
+  end
+
+  context "when category channel" do
+    it "doesn’t allow to add members" do
+      chat_page.visit_channel_members(channel_1)
+
+      expect(chat_page).to have_no_css(".chat-channel-members__list-item.-add-member")
+    end
+  end
+
+  context "when category channel" do
+    fab!(:channel_1) do
+      Fabricate(
+        :direct_message_channel,
+        slug: "test-channel",
+        users: [current_user, Fabricate(:user), Fabricate(:user)],
+        group: true,
+      )
+    end
+
+    it "allows to add members" do
+      new_user = Fabricate(:user)
+      chat_page.visit_channel_members(channel_1)
+      chat_page.find(".chat-channel-members__list-item.-add-member").click
+      chat_page.find(".chat-message-creator__members-input").fill_in(with: new_user.username)
+      chat_page.find(".chat-message-creator__list-item").click
+      chat_page.find(".add-to-channel").click
+
+      expect(chat_page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}")
+      expect(chat_page).to have_content(
+        I18n.t(
+          "chat.channel.users_invited_to_channel",
+          invited_users: "@#{new_user.username}",
+          inviting_user: "@#{current_user.username}",
+          count: 1,
+        ),
+      )
     end
   end
 end
