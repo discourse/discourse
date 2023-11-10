@@ -312,8 +312,11 @@ export default Controller.extend({
 
   @discourseComputed("model.posts", "additionalSearchResults")
   searchResultPosts(posts, additionalSearchResults) {
-    if (additionalSearchResults.length > 0) {
-      return reciprocallyRankedList([posts, additionalSearchResults]);
+    if (additionalSearchResults && additionalSearchResults?.list?.length > 0) {
+      return reciprocallyRankedList(
+        [posts, additionalSearchResults.list],
+        ["topic_id", additionalSearchResults.identifier]
+      );
     } else {
       return posts;
     }
@@ -476,8 +479,11 @@ export default Controller.extend({
   },
 
   @action
-  addSearchResults(newResults) {
-    this.set("additionalSearchResults", newResults);
+  addSearchResults(list, identifier) {
+    this.set("additionalSearchResults", {
+      list,
+      identifier,
+    });
   },
 
   actions: {
