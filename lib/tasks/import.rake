@@ -25,6 +25,7 @@ task "import:ensure_consistency" => :environment do
   update_groups
   update_tag_stats
   update_topic_users
+  update_topic_featured_users
   create_category_definitions
 
   # run_jobs
@@ -499,6 +500,11 @@ def update_topic_users
        AND tu.user_id = X.user_id
        AND posted = 'f'
   SQL
+end
+
+def update_topic_featured_users
+  log "Updating topic featured users..."
+  TopicFeaturedUsers.ensure_consistency!
 end
 
 def create_category_definitions
