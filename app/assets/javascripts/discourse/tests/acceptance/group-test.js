@@ -191,7 +191,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-index-request");
 
     assert.strictEqual(
-      query(".d-modal__header .title").innerText.trim(),
+      query(".d-modal__header .d-modal__title-text").innerText.trim(),
       I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
     );
 

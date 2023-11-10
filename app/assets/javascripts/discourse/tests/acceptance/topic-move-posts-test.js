@@ -32,7 +32,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"
@@ -82,7 +82,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"
@@ -159,7 +159,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"
@@ -195,7 +195,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"

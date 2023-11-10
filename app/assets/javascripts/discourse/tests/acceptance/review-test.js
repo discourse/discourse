@@ -70,9 +70,9 @@ acceptance("Review", function (needs) {
 
     assert.ok(visible(".reject-reason-reviewable-modal"));
     assert.ok(
-      query(".reject-reason-reviewable-modal .title").innerHTML.includes(
-        I18n.t("review.reject_reason.title")
-      ),
+      query(
+        ".reject-reason-reviewable-modal .d-modal__title"
+      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
       "it opens reject reason modal when user is rejected"
     );
 
@@ -82,9 +82,9 @@ acceptance("Review", function (needs) {
 
     assert.ok(visible(".reject-reason-reviewable-modal"));
     assert.ok(
-      query(".reject-reason-reviewable-modal .title").innerHTML.includes(
-        I18n.t("review.reject_reason.title")
-      ),
+      query(
+        ".reject-reason-reviewable-modal .d-modal__title"
+      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
       "it opens reject reason modal when user is rejected and blocked"
     );
   });
