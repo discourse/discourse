@@ -1,15 +1,15 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import CreateAccount from "discourse/components/modal/create-account";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import LoginModal from "discourse/components/modal/login";
-import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie from "discourse/lib/cookie";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
-import showModal from "discourse/lib/show-modal";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
+import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { findAll } from "discourse/models/login-method";
@@ -40,6 +40,7 @@ const ApplicationRoute = DiscourseRoute.extend({
   loadingSlider: service(),
   router: service(),
   siteSettings: service(),
+  clientErrorHandler: service(),
 
   get includeExternalLoginMethods() {
     return (
@@ -66,12 +67,6 @@ const ApplicationRoute = DiscourseRoute.extend({
   },
 
   actions: {
-    toggleAnonymous() {
-      ajax(userPath("toggle-anon"), { type: "POST" }).then(() => {
-        window.location.reload();
-      });
-    },
-
     toggleMobileView() {
       mobile.toggleMobileView();
     },
@@ -124,13 +119,22 @@ const ApplicationRoute = DiscourseRoute.extend({
       const xhrOrErr = err.jqXHR ? err.jqXHR : err;
       const exceptionController = this.controllerFor("exception");
 
-      const c = window.console;
-      if (c && c.error) {
-        c.error(xhrOrErr);
-      }
+      const themeOrPluginSource = identifySource(err);
+
+      // eslint-disable-next-line no-console
+      console.error(
+        ...[consolePrefix(err, themeOrPluginSource), xhrOrErr].filter(Boolean)
+      );
 
       if (xhrOrErr && xhrOrErr.status === 404) {
         return this.router.transitionTo("exception-unknown");
+      }
+
+      if (themeOrPluginSource) {
+        this.clientErrorHandler.displayErrorNotice(
+          "Error loading route",
+          themeOrPluginSource
+        );
       }
 
       exceptionController.setProperties({
@@ -265,11 +269,7 @@ const ApplicationRoute = DiscourseRoute.extend({
           },
         });
       } else {
-        const createAccount = showModal("create-account", {
-          modalClass: "create-account",
-          titleAriaElementId: "create-account-title",
-        });
-        createAccount.setProperties(createAccountProps);
+        this.modal.show(CreateAccount, { model: createAccountProps });
       }
     }
   },

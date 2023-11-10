@@ -63,6 +63,8 @@ pt:
         single_user: "%{username}"
     mention_warning:
       dismiss: "marcar Visto"
+    onebox:
+      thread_title_connector: "em"
   discourse_push_notifications:
     popup:
       chat_mention:

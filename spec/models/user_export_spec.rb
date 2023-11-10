@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserExport do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe ".remove_old_exports" do
     it "should remove the right records" do

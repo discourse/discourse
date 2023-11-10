@@ -183,15 +183,27 @@
 // create account
 // modal only
 
-#discourse-modal .create-account .modal-body {
-  max-height: 60vh !important;
-  overflow: hidden;
-  @media screen and (max-height: 575px) {
-    max-height: 50vh !important;
-  }
-}
-
 .d-modal.create-account {
+  .modal-body {
+    max-height: 60vh !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (max-height: 575px) {
+      max-height: 50vh !important;
+    }
+
+    #login-buttons {
+      border-bottom: 1px solid var(--primary-low);
+    }
+
+    .login-form {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+
   .create-account-form {
     overflow-y: auto;
     .login-welcome-header {
@@ -202,17 +214,6 @@
       top: 0;
       background-color: var(--secondary);
     }
-  }
-}
-
-.create-account .modal-body {
-  display: flex;
-  flex-direction: column;
-  #login-buttons {
-    border-bottom: 1px solid var(--primary-low);
-  }
-  .login-form {
-    margin-bottom: 0.75em;
   }
 }
 
@@ -229,8 +230,7 @@
 }
 
 .password-reset,
-.email-login,
-.invites-show {
+.email-login {
   margin-top: 30px;
   .col-image {
     padding-top: 12px;
@@ -258,15 +258,6 @@
 .discourse-touch .password-reset {
   .instructions {
     margin-bottom: 16px;
-  }
-}
-
-.invites-show {
-  .col-image {
-    display: none;
-  }
-  h1.login-title {
-    font-size: var(--font-up-3);
   }
 }
 

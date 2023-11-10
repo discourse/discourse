@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe TopicBookmarkable do
   subject(:registered_bookmarkable) { RegisteredBookmarkable.new(TopicBookmarkable) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
 
   let(:guardian) { Guardian.new(user) }
@@ -94,6 +94,13 @@ RSpec.describe TopicBookmarkable do
     it "cannot send reminder if the topic is deleted" do
       expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(true)
       bookmark1.bookmarkable.trash!
+      bookmark1.reload
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
+    end
+
+    it "cannot send reminder if the user cannot access the topic" do
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(true)
+      bookmark1.bookmarkable.update!(category: private_category)
       bookmark1.reload
       expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
     end

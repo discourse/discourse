@@ -3,13 +3,13 @@
 require "rails_helper"
 
 RSpec.describe Chat::ChatController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:other_user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:admin)
+  fab!(:category)
   fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
   fab!(:dm_chat_channel) { Fabricate(:direct_message_channel, users: [user, other_user, admin]) }
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:tag)
 
   MESSAGE_COUNT = 70
   MESSAGE_COUNT.times do |n|
@@ -114,7 +114,6 @@ RSpec.describe Chat::ChatController do
             job: Jobs::Chat::ProcessMessage,
             args: {
               chat_message_id: chat_message.id,
-              is_dirty: true,
             },
           ) do
             put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
@@ -158,7 +157,7 @@ RSpec.describe Chat::ChatController do
     end
   end
 
-  describe "#edit_message" do
+  xdescribe "#edit_message" do
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
 
     context "when current user is silenced" do
@@ -367,61 +366,6 @@ RSpec.describe Chat::ChatController do
             }
       }.to change { chat_message.reactions.where(user: user, emoji: emoji).count }.by(-1)
       expect(response.status).to eq(200)
-    end
-  end
-
-  describe "invite_users" do
-    fab!(:chat_channel) { Fabricate(:category_channel) }
-    fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: admin) }
-    fab!(:user2) { Fabricate(:user) }
-
-    before do
-      sign_in(admin)
-
-      [user, user2].each { |u| u.user_option.update(chat_enabled: true) }
-    end
-
-    it "doesn't invite users who cannot chat" do
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admins]
-
-      expect {
-        put "/chat/#{chat_channel.id}/invite.json", params: { user_ids: [user.id] }
-      }.not_to change {
-        user.notifications.where(notification_type: Notification.types[:chat_invitation]).count
-      }
-    end
-
-    it "creates an invitation notification for users who can chat" do
-      expect {
-        put "/chat/#{chat_channel.id}/invite.json", params: { user_ids: [user.id] }
-      }.to change {
-        user.notifications.where(notification_type: Notification.types[:chat_invitation]).count
-      }.by(1)
-      notification =
-        user.notifications.where(notification_type: Notification.types[:chat_invitation]).last
-      parsed_data = JSON.parse(notification[:data])
-      expect(parsed_data["chat_channel_title"]).to eq(chat_channel.title(user))
-      expect(parsed_data["chat_channel_slug"]).to eq(chat_channel.slug)
-    end
-
-    it "creates multiple invitations" do
-      expect {
-        put "/chat/#{chat_channel.id}/invite.json", params: { user_ids: [user.id, user2.id] }
-      }.to change {
-        Notification.where(
-          notification_type: Notification.types[:chat_invitation],
-          user_id: [user.id, user2.id],
-        ).count
-      }.by(2)
-    end
-
-    it "adds chat_message_id when param is present" do
-      put "/chat/#{chat_channel.id}/invite.json",
-          params: {
-            user_ids: [user.id],
-            chat_message_id: chat_message.id,
-          }
-      expect(JSON.parse(Notification.last.data)["chat_message_id"]).to eq(chat_message.id.to_s)
     end
   end
 

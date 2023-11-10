@@ -384,7 +384,8 @@ hu:
               same_as_email: "azonos az e-mail címével. Használjon biztonságosabb jelszót."
               same_as_current: "azonos a jelenlegi jelszavával."
             ip_address:
-              signup_not_allowed: "A regisztráció nem lehetséges ezzel a fiókkal."
+              blocked: "Új regisztrációk nem engedélyezettek az te IP-címedről."
+              max_new_accounts_per_registration_ip: "Új regisztráció az Ön IP-címéről nem engedélyezett (elérte a maximális korlátot). Vegye fel a kapcsolatot egy munkatársával."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1116,9 +1117,6 @@ hu:
     email:
       invalid: "érvénytelen."
       blocked: "nem engedélyezett."
-    ip_address:
-      blocked: "Új regisztrációk nem engedélyezettek az te IP-címedről."
-      max_new_accounts_per_registration_ip: "Új regisztráció az Ön IP-címéről nem engedélyezett (elérte a maximális korlátot). Vegye fel a kapcsolatot egy munkatársával."
   unsubscribe_mailer:
     subject_template: "Erősítsd meg, hogy a továbbiakban nem szeretnél e-mailes frissítéseket kapni a %{site_title} oldalról."
     text_body_template: |

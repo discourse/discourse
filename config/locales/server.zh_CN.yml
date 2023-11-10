@@ -82,6 +82,16 @@ zh_CN:
       not_allowed_theme: "`%{repo}` 不在允许的主题列表中（请检查 `allowed_theme_repos` 全局设置）。"
       ssh_key_gone: "您安装主题等待的时间太长，并且 SSH 密钥已过期。请再试一次。"
       too_many_files: "主题中的文件数 (%{count}) 已超过允许的最大文件数 (%{limit})"
+      migrations:
+        invalid_filename: "迁移文件的文件名无效： %{filename}。文件名必须以 4 位数字开头，后跟连字符，然后是仅包含字母数字字符和连字符的名称。"
+        name_too_long:
+          other: "迁移名称太长。不应超过 %{count} 字符。"
+        too_many_pending_migrations: "该主题中有太多待处理的迁移。主题在一次更新中不允许引入超过 100 个迁移"
+        out_of_sequence: "迁移 '%{name}' 不按顺序进行。该主题的最后一次迁移的版本号为 %{current} ，高于新迁移的版本"
+        syntax_error: "无法运行迁移 '%{name}'，因为它有语法错误: %{error}"
+        exceeded_memory_limit: "迁移 '%{name}' 失败，因为它超出了内存限制"
+        timed_out: "迁移 '%{name}' 超时"
+        no_exported_function: "迁移 '%{name}' 没有导出执行迁移的函数"
     errors:
       component_no_user_selectable: "主题组件无法由用户选择"
       component_no_default: "主题组件不能是默认主题"
@@ -550,7 +560,8 @@ zh_CN:
             name:
               same_as_password: "与您的密码相同。"
             ip_address:
-              signup_not_allowed: "不允许从此帐户注册。"
+              blocked: "不允许从您的 IP 地址进行新注册。"
+              max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -1351,6 +1362,7 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
     v3_analytics_deprecated: "您的 Discourse 目前使用的是 Google Analytics（分析）3，2023 年 7 月后该版本将不受支持。立即<a href='https://meta.discourse.org/t/260498'>升级到Google Analytics（分析）4</a> ，以继续接收有价值的见解和分析，了解您的网站性能。"
+    category_style_deprecated: "你的 Discourse 目前使用的是过时的分类样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅 <a href='https://meta.discourse.org/t/282441'>移至单一类别风格网站设置</a> ，了解如何保留所选类别风格。"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1427,7 +1439,6 @@ zh_CN:
     blocked_onebox_domains: "一个永远不会被归类的域名列表，例如：wikipedia.org（不支持通配符*？）"
     block_onebox_on_redirect: "阻止重定向 URL 的归类。"
     allowed_inline_onebox_domains: "如果在没有标题的情况下链接，将以微型形式进行 Onebox 处理的网域列表"
-    enable_inline_onebox_on_all_domains: "忽略 inline_onebox_domain_allowlist 站点设置并在所有网域上允许内联 Onebox。"
     force_custom_user_agent_hosts: "对所有请求使用自定义 Onebox 用户代理的主机。（对于限制用户代理访问的主机特别有用）。"
     max_oneboxes_per_post: "帖子中的最大 Onebox 数量。"
     facebook_app_access_token: "从您的 Facebook 应用 ID 和密钥生成的令牌。用于生成 Instagram Onebox。"
@@ -1527,8 +1538,8 @@ zh_CN:
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
-    top_menu: "确定主页导航中显示的条目以及显示顺序。示例：latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "确定帖子菜单中显示的条目以及显示顺序。示例：like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "确定主页导航中显示的条目，以及出现的顺序。"
+    post_menu: "确定帖子菜单中显示的条目，以及出现的顺序。"
     post_menu_hidden_items: "除非点击扩展省略号，否则在帖子菜单中默认隐藏的菜单项。"
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
@@ -1928,6 +1939,7 @@ zh_CN:
     allow_anonymous_posting: "允许用户切换至匿名模式"
     allow_anonymous_likes: "允许匿名用户点赞帖子"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
+    anonymous_posting_allowed_groups: "启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
     allow_users_to_hide_profile: "允许用户隐藏他们的个人资料和状态"
@@ -2011,6 +2023,7 @@ zh_CN:
     approve_new_topics_unless_trust_level: "低于此信任级别的用户的新话题必须接受审批"
     approve_unless_staged: "暂存用户的新话题和帖子必须接受审批"
     notify_about_queued_posts_after: "如果有帖子等待审核的小时超过此数值，向所有版主发送通知。设置为 0 将禁用这些通知。"
+    reviewable_revision_reasons: "拒绝带有修订的可审查队列帖子时，可以选择的原因列表。其他也始终可用，允许输入自定义原因。"
     auto_close_messages_post_count: "消息被自动关闭前允许的最大帖子数（设置为 0 将禁用）"
     auto_close_topics_post_count: "话题被自动关闭前允许的最大帖子数（设置为 0 将禁用）"
     auto_close_topics_create_linked_topic: "在话题根据 'auto close topics post count' 设置被自动关闭后，创建一个新的链接话题"
@@ -2162,7 +2175,7 @@ zh_CN:
       reply_by_email_address_is_empty: "在启用通过电子邮件回复之前，您必须先设置 'reply by email address'。"
       email_polling_disabled: "您必须先启用手动、POP3 轮询或启用自定义邮件轮询器，然后才能通过电子邮件进行回复。"
       user_locale_not_enabled: "在启用此设置之前，您必须先启用 'allow user locale'。"
-      personal_message_enabled_groups_invalid: "您必须为此设置指定至少一个群组。如果您不希望管理人员以外的任何人发送 PM，请选择管理人员群组。"
+      at_least_one_group_required: "你必须为该设置指定至少一个组。"
       invalid_regex: "正则表达式无效或不被允许。"
       invalid_regex_with_message: "正则表达式 '%{regex}' 有一个错误：%{message}"
       email_editable_enabled: "在启用此设置之前，您必须先禁用 'email editable'。"
@@ -2387,9 +2400,6 @@ zh_CN:
       blocked: "不被允许。"
       revoked: "在 %{date}之前不会向 '%{email}' 发送电子邮件。"
       does_not_exist: "不适用"
-    ip_address:
-      blocked: "不允许从您的 IP 地址进行新注册。"
-      max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
     website:
       domain_not_allowed: "网站无效。允许的网域包括：%{domains}"
     auto_rejected: "因时限被自动拒绝。查看 auto_handle_queued_age 站点设置。"

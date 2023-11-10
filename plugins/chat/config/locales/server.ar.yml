@@ -203,6 +203,7 @@ ar:
       inline_to_message: "الرسالة #%{message_id} بواسطة %{username} - #%{chat_channel}"
       inline_to_channel: "الدردشة #%{chat_channel}"
       inline_to_topic_channel: "دردشة للموضوع %{topic_title}"
+      thread_title_connector: "في"
       x_members:
         zero: "%{count} عضوًا"
         one: "عضو واحد (%{count})"

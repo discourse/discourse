@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicTag do
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:tag)
   let(:topic_tag) { Fabricate(:topic_tag, topic: topic, tag: tag) }
 
   describe "#after_create" do

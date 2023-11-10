@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PresenceController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
 
   let(:ch1) { PresenceChannel.new("/test/public1") }

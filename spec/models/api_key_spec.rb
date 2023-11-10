@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ApiKey do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :created_by }

@@ -163,8 +163,8 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_revise_and_reject_post(performed_by, args)
     pm_translation_args = {
-      topic_title: self.topic.title,
-      topic_url: self.topic.url,
+      topic_title: self.topic&.title || self.payload["title"],
+      topic_url: self.topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],
       feedback: args[:revise_feedback],
       original_post: self.payload["raw"],
@@ -172,7 +172,13 @@ class ReviewableQueuedPost < Reviewable
     }
     SystemMessage.create_from_system_user(
       self.target_created_by,
-      :reviewable_queued_post_revise_and_reject,
+      (
+        if self.topic.blank?
+          :reviewable_queued_post_revise_and_reject_new_topic
+        else
+          :reviewable_queued_post_revise_and_reject
+        end
+      ),
       pm_translation_args,
     )
     StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now) if performed_by.staff?

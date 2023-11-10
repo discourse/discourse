@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "User preferences for Interface", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:user_preferences_page) { PageObjects::Pages::UserPreferences.new }
   let(:user_preferences_interface_page) { PageObjects::Pages::UserPreferencesInterface.new }
 

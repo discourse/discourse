@@ -791,7 +791,7 @@ const Composer = RestModel.extend({
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
       whisper: opts.whisper,
-      tags: opts.tags,
+      tags: opts.tags || [],
       noBump: opts.noBump,
     });
 
@@ -824,7 +824,10 @@ const Composer = RestModel.extend({
     });
 
     // We set the category id separately for topic templates on opening of composer
-    this.set("categoryId", opts.categoryId || this.get("topic.category.id"));
+    this.set(
+      "categoryId",
+      opts.topicCategoryId || opts.categoryId || this.get("topic.category.id")
+    );
 
     if (!this.categoryId && this.creatingTopic) {
       const categories = this.site.categories;

@@ -568,7 +568,8 @@ es:
             name:
               same_as_password: "es igual a tu contraseña."
             ip_address:
-              signup_not_allowed: "No se permite el registro desde esta cuenta."
+              blocked: "No se permiten nuevos registros desde tu dirección IP."
+              max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (se alcanzó el límite máximo). Contacta con un miembro del equipo."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1460,7 +1461,6 @@ es:
     blocked_onebox_domains: "Una lista de dominios que nunca se incluirá en un solo recuadro, por ejemplo, wikipedia.org\n(no se admiten símbolos comodín *?)"
     block_onebox_on_redirect: "Bloquear onebox para URLs que redireccionen."
     allowed_inline_onebox_domains: "Una lista de dominios que serán oneboxed en forma de miniatura si están vinculados sin título"
-    enable_inline_onebox_on_all_domains: "Ignorar el ajuste del sitio inline_onebox_domain_allowlist y permitir inline onebox en todos los dominios."
     force_custom_user_agent_hosts: "Hosts que se utilizará para el agente usuario personalizado de onebox en todas las solicitudes. (Especialmente útil para hosts que limitan el acceso por usuario agente)."
     max_oneboxes_per_post: "Número máximo de oneboxes en una publicación."
     facebook_app_access_token: "Token generado desde app ID y secreto de Facebook. Usado para generar oneboxes de Instagram."
@@ -1554,8 +1554,6 @@ es:
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
     include_secure_categories_in_tag_counts: "Si está activada, el recuento de temas de una etiqueta incluirá los temas que estén en categorías de lectura restringida para todos los usuarios. Si está desactivada, a los usuarios normales solo se les mostrará un recuento de temas para una etiqueta en la que todos los temas estén en categorías públicas."
     display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
-    top_menu: "Determinar los elementos que aparecen en el menú de navegación de la página de inicio y su orden. Ejemplo últimos|nuevos|no leídos|categorías|destacados|leídos|publicados|marcadores"
-    post_menu: "Determinar los elementos que aparecen en el menú de publicación y su orden. Ejemplo: me gusta|editar|denunciar|eliminar|compartir|guardar en marcadores|responder"
     post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."
     allow_username_in_share_links: "Permitir que los nombres de usuario se incluyan en los enlaces compartidos. Esto es útil para premiar medallas basadas en visitantes únicos."
@@ -2181,7 +2179,6 @@ es:
       reply_by_email_address_is_empty: "Debes establecer el campo «dirección para responder por correo electrónico» antes de activar respuesta por correo electrónico."
       email_polling_disabled: "Debes activar el sondeo manual, POP3 o tener activado un sondeador de correo personalizado antes de activar la respuesta por correo electrónico."
       user_locale_not_enabled: "Debes activar primero «permitir usuario local» antes de activar esta opción."
-      personal_message_enabled_groups_invalid: "Debes especificar al menos un grupo para esta configuración. Si no quieres que nadie, excepto el personal, envíe MP, elige el grupo del personal."
       invalid_regex: "La expresión regular no es válida o no está permitida."
       invalid_regex_with_message: "La expresión regular «%{regex}» contiene un error: %{message}"
       email_editable_enabled: "Debes desactivar primero «correo electrónico editable» antes de activar esta opción."
@@ -2411,9 +2408,6 @@ es:
       blocked: "no está permitido."
       revoked: "No se enviarán más correos electrónicos a «%{email}» hasta %{date}."
       does_not_exist: "N/D"
-    ip_address:
-      blocked: "No se permiten nuevos registros desde tu dirección IP."
-      max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (se alcanzó el límite máximo). Contacta con un miembro del equipo."
     website:
       domain_not_allowed: "El sitio web no es válido. Los dominios permitidos son: %{domains}"
     auto_rejected: "Rechazo automáticamente debido a la antigüedad. Ver configuración auto_handle_queued_age"

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicQuery::PrivateMessageLists do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
   fab!(:user_2) { Fabricate(:user) }
   fab!(:user_3) { Fabricate(:user) }
   fab!(:user_4) { Fabricate(:user) }
@@ -163,7 +163,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
   end
 
   describe "#list_private_messages_unread" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:user_2) { Fabricate(:user) }
 
     before_all { Group.refresh_automatic_groups! }
@@ -207,7 +207,7 @@ RSpec.describe TopicQuery::PrivateMessageLists do
   end
 
   describe "#list_private_messages_new" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:user_2) { Fabricate(:user) }
 
     before_all { Group.refresh_automatic_groups! }

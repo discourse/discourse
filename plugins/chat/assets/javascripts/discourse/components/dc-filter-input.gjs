@@ -28,7 +28,6 @@ export default class DcFilterInput extends Component {
   });
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <div
       class={{concatClass
         @class

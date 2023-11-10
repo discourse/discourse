@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableQueuedPost, type: :model do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:category)
+  fab!(:moderator)
 
   describe "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }
@@ -177,6 +177,40 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
           expect(topic.first_post.raw).not_to include("Other...")
           expect(topic.first_post.raw).to include("Boring")
+        end
+
+        context "when the topic is nil in the case of a new topic being created" do
+          let(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
+
+          it "works" do
+            args = { revise_reason: "Duplicate", revise_feedback: "This is old news" }
+            expect { reviewable.perform(moderator, :revise_and_reject_post, args) }.to change {
+              Topic.where(archetype: Archetype.private_message).count
+            }
+            topic = Topic.where(archetype: Archetype.private_message).last
+
+            expect(topic.title).to eq(
+              I18n.t(
+                "system_messages.reviewable_queued_post_revise_and_reject_new_topic.subject_template",
+                topic_title: reviewable.payload["title"],
+              ),
+            )
+            translation_params = {
+              username: reviewable.target_created_by.username,
+              topic_title: reviewable.payload["title"],
+              topic_url: nil,
+              reason: args[:revise_reason],
+              feedback: args[:revise_feedback],
+              original_post: reviewable.payload["raw"],
+              site_name: SiteSetting.title,
+            }
+            expect(topic.first_post.raw.chomp).to eq(
+              I18n.t(
+                "system_messages.reviewable_queued_post_revise_and_reject_new_topic.text_body_template",
+                translation_params,
+              ).chomp,
+            )
+          end
         end
       end
 

@@ -1,66 +1,39 @@
 # frozen_string_literal: true
 
-module EmberCli
+class EmberCli < ActiveSupport::CurrentAttributes
+  # Cache which persists for the duration of a request
+  attribute :request_cached_script_chunks
+
   def self.dist_dir
     "#{Rails.root}/app/assets/javascripts/discourse/dist"
   end
 
   def self.assets
-    @assets ||=
-      begin
-        assets = %w[
-          discourse.js
-          admin.js
-          wizard.js
-          ember_jquery.js
-          markdown-it-bundle.js
-          start-discourse.js
-          vendor.js
-        ]
-        assets +=
-          Dir.glob("app/assets/javascripts/discourse/scripts/*.js").map { |f| File.basename(f) }
-
-        if workbox_dir_name
-          assets +=
-            Dir
-              .glob("app/assets/javascripts/discourse/dist/assets/#{workbox_dir_name}/*")
-              .map { |f| "#{workbox_dir_name}/#{File.basename(f)}" }
-        end
-
-        Discourse
-          .find_plugin_js_assets(include_disabled: true)
-          .each do |file|
-            next if file.ends_with?("_extra") # these are still handled by sprockets
-            assets << "#{file}.js"
-          end
-
-        assets
-      end
+    @assets ||= Dir.glob("**/*.{js,map,txt}", base: "#{dist_dir}/assets")
   end
 
   def self.script_chunks
-    return @@chunk_infos if defined?(@@chunk_infos)
+    return @production_chunk_infos if @production_chunk_infos
+    return self.request_cached_script_chunks if self.request_cached_script_chunks
 
-    chunk_infos = {}
+    chunk_infos = JSON.parse(File.read("#{dist_dir}/assets.json"))
 
-    begin
-      test_html = File.read("#{dist_dir}/tests/index.html")
-      chunk_infos.merge! parse_chunks_from_html(test_html)
-    rescue Errno::ENOENT
-      # production build
+    chunk_infos.transform_keys! { |key| key.delete_prefix("assets/").delete_suffix(".js") }
+
+    chunk_infos.transform_values! do |value|
+      value["assets"].map { |chunk| chunk.delete_prefix("assets/").delete_suffix(".js") }
     end
 
-    index_html = File.read("#{dist_dir}/index.html")
-    chunk_infos.merge! parse_chunks_from_html(index_html)
+    # Special case - vendor.js is fingerprinted by Embroider in production, but not run through Webpack
+    if !assets.include?("vendor.js") &&
+         fingerprinted = assets.find { |a| a.match?(/^vendor\..*\.js$/) }
+      chunk_infos["vendor"] = [fingerprinted.delete_suffix(".js")]
+    end
 
-    @@chunk_infos = chunk_infos if Rails.env.production?
-    chunk_infos
+    @production_chunk_infos = chunk_infos if Rails.env.production?
+    self.request_cached_script_chunks = chunk_infos
   rescue Errno::ENOENT
     {}
-  end
-
-  def self.parse_source_map_path(file)
-    File.read("#{dist_dir}/assets/#{file}")[%r{//# sourceMappingURL=(.*)$}, 1]
   end
 
   def self.is_ember_cli_asset?(name)
@@ -85,26 +58,13 @@ module EmberCli
       end
   end
 
-  def self.parse_chunks_from_html(html)
-    doc = Nokogiri::HTML5.parse(html)
-
-    chunk_infos = {}
-
-    doc
-      .css("discourse-chunked-script")
-      .each do |discourse_script|
-        entrypoint = discourse_script.attr("entrypoint")
-        chunk_infos[entrypoint] = discourse_script
-          .css("script[src]")
-          .map do |script|
-            script.attr("src").delete_prefix("#{Discourse.base_path}/assets/").delete_suffix(".js")
-          end
-      end
-
-    chunk_infos
-  end
-
   def self.has_tests?
     File.exist?("#{dist_dir}/tests/index.html")
+  end
+
+  def self.clear_cache!
+    @production_chunk_infos = nil
+    @assets = nil
+    self.request_cached_script_chunks = nil
   end
 end

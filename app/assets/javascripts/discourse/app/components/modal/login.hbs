@@ -15,7 +15,10 @@
         @createAccount={{this.createAccount}}
       />
       {{#if this.showLoginButtons}}
-        <LoginButtons @externalLogin={{this.externalLogin}} />
+        <LoginButtons
+          @externalLogin={{this.externalLoginAction}}
+          @passkeyLogin={{this.passkeyLogin}}
+        />
       {{/if}}
     {{/if}}
 
@@ -31,6 +34,8 @@
           @loginName={{this.loginName}}
           @loginNameChanged={{this.loginNameChanged}}
           @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
+          @canUsePasskeys={{this.canUsePasskeys}}
+          @passkeyLogin={{this.passkeyLogin}}
           @loginPassword={{this.loginPassword}}
           @secondFactorMethod={{this.secondFactorMethod}}
           @secondFactorToken={{this.secondFactorToken}}
@@ -67,7 +72,10 @@
         </div>
       {{/unless}}
       <div class="login-right-side">
-        <LoginButtons @externalLogin={{this.externalLogin}} />
+        <LoginButtons
+          @externalLogin={{this.externalLoginAction}}
+          @passkeyLogin={{this.passkeyLogin}}
+        />
       </div>
     {{/if}}
   </:body>

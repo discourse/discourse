@@ -165,6 +165,7 @@ sv:
       inline_to_message: "Meddelande #%{message_id} av %{username} – #%{chat_channel}"
       inline_to_channel: "Chatt #%{chat_channel}"
       inline_to_topic_channel: "Chatt för ämne %{topic_title}"
+      thread_title_connector: "i"
       x_members:
         one: "%{count} medlem"
         other: "%{count} medlemmar"

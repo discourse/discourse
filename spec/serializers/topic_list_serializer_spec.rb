@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicListSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   let(:topic) { Fabricate(:topic).tap { |t| t.allowed_user_ids = [t.user_id] } }
 

@@ -2240,16 +2240,6 @@ pl_PL:
         few: "%{count} tematy w tej kategorii"
         many: "%{count} tematów w tej kategorii"
         other: "%{count} tematów w tej kategorii"
-      plus_subcategories_title:
-        one: "%{name} i jedna podkategoria"
-        few: "%{name} i %{count} podkategorie"
-        many: "%{name} i %{count} podkategorii"
-        other: "%{name} i %{count} podkategorii"
-      plus_subcategories:
-        one: "+ %{count} podkategoria"
-        few: "+ %{count} podkategorie"
-        many: "+ %{count} podkategorii"
-        other: "+ %{count} podkategorii"
     select_kit:
       delete_item: "Usuń %{name}"
       filter_by: "Filtruj według: %{name}"
@@ -3857,8 +3847,7 @@ pl_PL:
       take_action: "Podejmij działanie…"
       take_action_options:
         default:
-          title: "Podejmij działanie"
-          details: "Symuluj progową liczbę flag bez czekania na nie ze strony społeczności"
+          title: "Ukryj post"
         suspend:
           title: "Zawieś użytkownika"
           details: "Symuluj progową liczbę flag i zawieś użytkownika."
@@ -3875,7 +3864,6 @@ pl_PL:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(ukryto)"
       submit_tooltip: "Zapisz prywatną flagę."
-      take_action_tooltip: "Nie czekaj, aż wpis zostanie zgłoszony przez innych, natychmiast oflaguj do działania . "
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
       notify_staff: "Powiadom zespół wiadomością prywatną"
       formatted_name:
@@ -4498,7 +4486,7 @@ pl_PL:
           delete: "Usuń"
           delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
           reset_confirm: "Czy na pewno chcesz przywrócić tę sekcję do ustawień domyślnych?"
-          public: "Ustaw tę sekcję jako publiczną i widoczną dla wszystkich"
+          public: "Widoczne dla każdego"
           always_public: "Treść w tej sekcji jest zawsze publiczna"
           more_menu: "Menu więcej"
           links:
@@ -4605,10 +4593,12 @@ pl_PL:
     form_template_chooser:
       select_template: "Wybierz szablony formularzy"
     form_templates:
+      upload_field:
+        upload: "Prześlij"
+        uploading: "Wgrywanie"
       errors:
         valueMissing:
           default: "Proszę wypełnić to pole."
-          text: "Proszę wypełnić to pole."
           select-one: "Wybierz pozycję z listy."
           select-multiple: "Wybierz co najmniej jedną pozycję z listy."
           checkbox: "Zaznacz to pole, jeśli chcesz kontynuować."

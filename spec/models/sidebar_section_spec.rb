@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SidebarSection do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
   let(:community_section) do
     SidebarSection.find_by(section_type: SidebarSection.section_types[:community])

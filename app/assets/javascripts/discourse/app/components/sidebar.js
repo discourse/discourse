@@ -57,6 +57,7 @@ export default class Sidebar extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     if (this.site.mobileView) {
       document.removeEventListener("click", this.collapseSidebar);
     }

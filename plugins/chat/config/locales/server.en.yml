@@ -22,6 +22,9 @@ en:
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
     chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
+    chat_editing_grace_period: "For (n) seconds after sending a chat, editing will not display the (edited) tag by the chat message."
+    chat_editing_grace_period_max_diff_low_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 0 and 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 2 and up)."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
@@ -176,6 +179,7 @@ en:
       inline_to_message: "Message #%{message_id} by %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat for Topic %{topic_title}"
+      thread_title_connector: "in"
 
       x_members:
         one: "%{count} member"

@@ -4,7 +4,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   let(:except_user_ids) { [] }
 
   before do

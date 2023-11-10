@@ -142,6 +142,10 @@ acceptance("Experimental Lightbox - layout multiple images", function (needs) {
 
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
     await waitForLoad();
+
+    assert.dom(SELECTORS.CAROUSEL).exists();
+    await click(SELECTORS.CAROUSEL_BUTTON);
+
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
     assert.dom(SELECTORS.PREV_BUTTON).exists();
     assert.dom(SELECTORS.NEXT_BUTTON).exists();
@@ -149,7 +153,6 @@ acceptance("Experimental Lightbox - layout multiple images", function (needs) {
     assert.dom(SELECTORS.COUNTERS).exists();
     assert.dom(SELECTORS.COUNTER_CURRENT).hasText("1");
     assert.dom(SELECTORS.COUNTER_TOTAL).hasText("3");
-    assert.dom(SELECTORS.CAROUSEL).doesNotExist();
 
     await click(SELECTORS.CLOSE_BUTTON);
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
@@ -223,6 +226,7 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     assert.dom(SELECTORS.COUNTER_TOTAL).hasText("3");
 
     await waitForLoad();
+    await click(SELECTORS.CAROUSEL_BUTTON);
 
     assert
       .dom(SELECTORS.MAIN_IMAGE)
@@ -268,6 +272,8 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     assert.dom(SELECTORS.COUNTER_TOTAL).hasText("3");
 
     await waitForLoad();
+    await click(SELECTORS.CAROUSEL_BUTTON);
+
     assert
       .dom(SELECTORS.MAIN_IMAGE)
       .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL);
@@ -513,7 +519,6 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
 
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
     await waitForLoad();
-
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
 
     assert.dom(".d-lightbox__screen-reader-announcer").exists();
@@ -521,6 +526,9 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     assert
       .dom(".d-lightbox__screen-reader-announcer")
       .hasText(firstExpectedTitle);
+
+    // hide carousel so prev/next btns are visible
+    await click(SELECTORS.CAROUSEL_BUTTON);
 
     await click(SELECTORS.NEXT_BUTTON);
     await waitForLoad();
@@ -544,34 +552,27 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     await waitForLoad();
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", "ArrowRight");
-
     assert.dom(SELECTORS.COUNTER_CURRENT).hasText("2");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", "ArrowLeft");
-
     assert.dom(SELECTORS.COUNTER_CURRENT).hasText("1");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", "ArrowDown");
-
     assert.dom(SELECTORS.COUNTER_CURRENT).hasText("2");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", "ArrowUp");
-
     assert.dom(SELECTORS.COUNTER_CURRENT).hasText("1");
 
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-zoomed");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 90); // 'z' key
-
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-zoomed");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 90);
-
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-zoomed");
+
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-rotated");
-
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 82); // r key
-
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-rotated");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 82);
@@ -581,26 +582,20 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     // back to original rotation
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-rotated");
 
+    await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 65); // 'a' key
     assert.dom(SELECTORS.CAROUSEL).doesNotExist();
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 65); // 'a' key
-
     assert.dom(SELECTORS.CAROUSEL).exists();
-
-    await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 65);
-
-    assert.dom(SELECTORS.CAROUSEL).doesNotExist();
 
     assert
       .dom(SELECTORS.LIGHTBOX_CONTAINER)
       .doesNotHaveClass("has-expanded-title");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 84); // 't' key
-
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("has-expanded-title");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 84);
-
     assert
       .dom(SELECTORS.LIGHTBOX_CONTAINER)
       .doesNotHaveClass("has-expanded-title");
@@ -615,18 +610,15 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     const exitFullscreenStub = sinon.stub(document, "exitFullscreen");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 77); // 'm' key
-
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-fullscreen");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 77);
-
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-fullscreen");
 
     requestFullscreenStub.restore();
     exitFullscreenStub.restore();
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keydown", "Escape");
-
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
   });
 });
@@ -644,17 +636,13 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
   test("navigation", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
+    await waitForLoad();
 
     // lightbox opens with the first image
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
     assert.dom(SELECTORS.COUNTER_CURRENT).hasText("1");
 
-    // carousel is not visible by default
-    assert.dom(SELECTORS.CAROUSEL).doesNotExist();
-
-    await click(SELECTORS.CAROUSEL_BUTTON);
-
-    // carousel opens after clicking the button, and has prev/next buttons
+    // carousel is visible by default if there are multiple images
     assert.dom(SELECTORS.CAROUSEL).exists();
     assert.dom(SELECTORS.CAROUSEL_PREV_BUTTON).exists();
     assert.dom(SELECTORS.CAROUSEL_NEXT_BUTTON).exists();
@@ -694,7 +682,7 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
       .dom(SELECTORS.CAROUSEL_ITEM + ".is-current")
       .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.third.smallURL);
 
-    // carousel closes after clicking the carousel button again
+    // carousel closes after clicking the carousel button
     await click(SELECTORS.CAROUSEL_BUTTON);
     assert.dom(SELECTORS.CAROUSEL).doesNotExist();
 
@@ -715,10 +703,8 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
 
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).exists();
-    assert.dom(SELECTORS.CAROUSEL).doesNotExist();
 
-    // carousel opens after clicking the button
-    await click(SELECTORS.CAROUSEL_BUTTON);
+    // carousel opens by default if there are more than 2 images
     assert.dom(SELECTORS.CAROUSEL).exists();
     assert.dom(SELECTORS.CAROUSEL_ITEM).exists({ count: 3 });
 
@@ -739,9 +725,6 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
 
     // click on image from first gallery
     await click("#post_1 " + SELECTORS.DEFAULT_ITEM_SELECTOR + ":nth-child(1)");
-
-    // toggle carousel open
-    await click(SELECTORS.CAROUSEL_BUTTON);
 
     // number of images in carousel matches first gallery
     assert.dom(SELECTORS.CAROUSEL_ITEM).exists({ count: 6 });
@@ -857,45 +840,10 @@ acceptance("Experimental Lightbox - mobile", function (needs) {
     });
 
     await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchend", {
-      changedTouches: [{ screenX: 0, screenY: -150 }],
-      touches: [{ pageX: 0, pageY: 150 }],
-    });
-
-    assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
-  });
-
-  test("navigation - swipe carousel", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
-    assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
-    assert.dom(SELECTORS.CAROUSEL).doesNotExist();
-
-    await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchstart", {
-      changedTouches: [{ screenX: 0, screenY: 0 }],
-      touches: [{ screenX: 0, screenY: 0 }],
-    });
-
-    await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchend", {
       changedTouches: [{ screenX: 0, screenY: 150 }],
       touches: [{ pageX: 0, pageY: 150 }],
     });
 
-    assert.dom(SELECTORS.CAROUSEL).exists(); // opens after swiping down
-
-    await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchstart", {
-      changedTouches: [{ screenX: 0, screenY: 0 }],
-      touches: [{ screenX: 0, screenY: 0 }],
-    });
-
-    await triggerEvent(SELECTORS.LIGHTBOX_BODY, "touchend", {
-      changedTouches: [{ screenX: 0, screenY: 150 }],
-      touches: [{ pageX: 0, pageY: 150 }],
-    });
-
-    assert.dom(SELECTORS.CAROUSEL).doesNotExist(); // closes after swiping down again
-
-    await click(SELECTORS.CLOSE_BUTTON);
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
   });
 });

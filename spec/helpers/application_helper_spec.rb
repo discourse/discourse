@@ -28,15 +28,6 @@ RSpec.describe ApplicationHelper do
       expect(helper.include_crawler_content?).to eq(false)
     end
 
-    it "provides brotli links to brotli cdn" do
-      set_cdn_url "https://awesome.com"
-
-      helper.request.env["HTTP_ACCEPT_ENCODING"] = "br"
-      link = helper.preload_script("start-discourse")
-
-      expect(link).to eq(script_tag("https://awesome.com/brotli_asset/start-discourse.js"))
-    end
-
     context "with s3 CDN" do
       before do
         global_setting :s3_bucket, "test_bucket"
@@ -463,7 +454,7 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "#html_classes" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "includes 'rtl' when the I18n.locale is rtl" do
       I18n.stubs(:locale).returns(:he)
@@ -688,7 +679,7 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "discourse_color_scheme_stylesheets" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "returns a stylesheet link tag by default" do
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
@@ -806,7 +797,7 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "html_lang" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     before do
       I18n.locale = :de

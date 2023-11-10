@@ -3,7 +3,7 @@
 require "discourse_ip_info"
 
 RSpec.describe UserAuthToken do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   it "can remove old expired tokens" do
     SiteSetting.verbose_auth_token_logging = true
@@ -286,7 +286,7 @@ RSpec.describe UserAuthToken do
   end
 
   context "with suspicious login" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     it "is not checked when generated for non-staff" do
       UserAuthToken.generate!(user_id: user.id, staff: user.staff?)

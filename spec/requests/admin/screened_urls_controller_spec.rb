@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ScreenedUrlsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:screened_url) { Fabricate(:screened_url) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:screened_url)
 
   describe "#index" do
     shared_examples "screened urls accessible" do

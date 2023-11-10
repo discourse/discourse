@@ -54,20 +54,27 @@ export default MultiSelectComponent.extend({
   },
 
   async search(filter) {
-    return this.siteSettings.lazy_load_categories
-      ? await Category.asyncSearch(filter, {
-          includeUncategorized:
-            this.attrs.options?.allowUncategorized !== undefined
-              ? this.attrs.options.allowUncategorized
-              : this.selectKit.options.allowUncategorized,
-          selectCategoryIds: this.categories
-            ? this.categories.map((x) => x.id)
-            : null,
-          rejectCategoryIds: this.blockedCategories
-            ? this.blockedCategories.map((x) => x.id)
-            : null,
-        })
-      : this._super(filter);
+    if (!this.siteSettings.lazy_load_categories) {
+      return this._super(filter);
+    }
+
+    const rejectCategoryIds = new Set();
+    // Reject selected options
+    if (this.categories) {
+      this.categories.forEach((c) => rejectCategoryIds.add(c.id));
+    }
+    // Reject blocked categories
+    if (this.blockedCategories) {
+      this.blockedCategories.forEach((c) => rejectCategoryIds.add(c.id));
+    }
+
+    return await Category.asyncSearch(filter, {
+      includeUncategorized:
+        this.attrs.options?.allowUncategorized !== undefined
+          ? this.attrs.options.allowUncategorized
+          : this.selectKit.options.allowUncategorized,
+      rejectCategoryIds: Array.from(rejectCategoryIds),
+    });
   },
 
   select(value, item) {
@@ -87,9 +94,7 @@ export default MultiSelectComponent.extend({
 
   actions: {
     onChange(values) {
-      this.attrs.onChange(
-        values.map((v) => Category.findById(v)).filter(Boolean)
-      );
+      this.onChange(values.map((v) => Category.findById(v)).filter(Boolean));
       return false;
     },
   },

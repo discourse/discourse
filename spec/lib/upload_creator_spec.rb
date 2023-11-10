@@ -3,7 +3,7 @@
 require "file_store/s3_store"
 
 RSpec.describe UploadCreator do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "#create_for" do
     describe "when upload is not an image" do

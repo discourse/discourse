@@ -568,7 +568,8 @@ nl:
             name:
               same_as_password: "is hetzelfde als je wachtwoord."
             ip_address:
-              signup_not_allowed: "Registratie vanaf dit account is niet toegestaan."
+              blocked: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan."
+              max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan (maximumlimiet bereikt). Neem contact op met een medewerker."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1474,7 +1475,6 @@ nl:
     blocked_onebox_domains: "Een lijst van domeinen die nooit worden ge-oneboxt, bijvoorbeeld wikipedia.org\n(Jokersymbolen *? worden niet ondersteund)"
     block_onebox_on_redirect: "Onebox blokkeren voor URL's die omleiden."
     allowed_inline_onebox_domains: "Een lijst van domeinen die in een onebox als miniatuur worden omgezet wanneer gekoppeld zonder titel"
-    enable_inline_onebox_on_all_domains: "Website-instelling inline_onebox_domain_allowlist negeren en inline onebox op alle domeinen toestaan."
     force_custom_user_agent_hosts: "Hosts waarvoor bij alle verzoeken de aangepaste onebox-useragent wordt gebruikt. (Met name handig voor hosts die toegang beperken via de useragent)."
     max_oneboxes_per_post: "Maximale aantal oneboxes in een bericht."
     facebook_app_access_token: "Een token, gegenereerd op basis van je Facebook-app-ID en -geheim. Gebruikt om Instagram-oneboxes te genereren."
@@ -1568,8 +1568,6 @@ nl:
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."
-    top_menu: "Bepaal welke items in de navigatie op de startpagina worden weergegeven en in welke volgorde. Voorbeeld: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Bepaal welke items in het berichtmenu worden weergegeven en in welke volgorde. Voorbeeld: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "De menu-items die standaard in het berichtmenu moeten worden verborgen, totdat er op een uitvouw-ellipsis wordt geklikt."
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."
     allow_username_in_share_links: "Sta toe dat gebruikersnamen worden opgenomen in gedeelde links. Dit is handig om badges toe te kennen op basis van unieke bezoekers."
@@ -2195,7 +2193,6 @@ nl:
       reply_by_email_address_is_empty: "Je moet een 'reply by email address' instellen voordat je antwoorden via e-mail inschakelt."
       email_polling_disabled: "Je moet handmatige polling, POP3-polling of een aangepaste e-mailpoller inschakelen voordat je antwoorden via e-mail inschakelt."
       user_locale_not_enabled: "Je moet 'allow user locale' inschakelen voordat je deze instelling inschakelt."
-      personal_message_enabled_groups_invalid: "Je moet ten minste één groep opgeven voor deze instelling. Als je niet wilt dat iemand behalve medewerkers PB's stuurt, kies dan de medewerkersgroep."
       invalid_regex: "Regex is ongeldig of niet toegestaan."
       invalid_regex_with_message: "De reguliere expressie '%{regex}' bevat een fout: %{message}"
       email_editable_enabled: "Je moet 'email editable' uitschakelen voordat je deze instelling inschakelt."
@@ -2425,9 +2422,6 @@ nl:
       blocked: "is niet toegestaan."
       revoked: "Stuurt geen e-mails naar '%{email}' tot %{date}."
       does_not_exist: "N.v.t."
-    ip_address:
-      blocked: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan."
-      max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan (maximumlimiet bereikt). Neem contact op met een medewerker."
     website:
       domain_not_allowed: "Website is ongeldig. Toegestane domeinnamen zijn: %{domains}"
     auto_rejected: "Automatisch geweigerd vanwege leeftijd. Zie de website-instelling auto_handle_queued_age."

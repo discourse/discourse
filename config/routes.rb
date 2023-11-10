@@ -221,6 +221,7 @@ Discourse::Application.routes.draw do
 
       get "customize" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/themes" => "themes#index", :constraints => AdminConstraint.new
+      get "customize/theme-components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/colors" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/colors/:id" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/permalinks" => "permalinks#index", :constraints => AdminConstraint.new
@@ -1025,7 +1026,6 @@ Discourse::Application.routes.draw do
     get "posts/by-date/:topic_id/:date" => "posts#by_date"
     get "posts/:id/reply-history" => "posts#reply_history"
     get "posts/:id/reply-ids" => "posts#reply_ids"
-    get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
     get "posts/:username/deleted" => "posts#deleted_posts",
         :constraints => {
           username: RouteFormat.username,
@@ -1470,11 +1470,6 @@ Discourse::Application.routes.draw do
         :constraints => {
           format: /.*/,
         }
-    get "brotli_asset/*path" => "static#brotli_asset",
-        :format => false,
-        :constraints => {
-          format: /.*/,
-        }
 
     get "favicon/proxied" => "static#favicon", :format => false
 
@@ -1608,7 +1603,6 @@ Discourse::Application.routes.draw do
     delete "user-status" => "user_status#clear"
 
     resources :sidebar_sections, only: %i[index create update destroy]
-    post "/sidebar_sections/reorder" => "sidebar_sections#reorder"
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Editing sidebar tags navigation", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:tag1) { Fabricate(:tag, name: "tag").tap { |tag| Fabricate.times(3, :topic, tags: [tag]) } }
 
   fab!(:tag2) do
@@ -157,6 +157,9 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     expect(sidebar).to have_tags_section
 
     modal = sidebar.click_edit_tags_button
+
+    expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
+
     modal.filter_by_selected
 
     expect(modal).to have_tag_checkboxes([tag1, tag2])

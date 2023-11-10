@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # name: chat
-# about: Chat inside Discourse
+# about: Adds chat functionality.
+# meta_topic_id: 230881
 # version: 0.4
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/chat
@@ -479,11 +480,13 @@ after_initialize do
 
   register_email_unsubscriber("chat_summary", EmailControllerHelper::ChatSummaryUnsubscriber)
 
-  register_about_stat_group("chat_messages", show_in_ui: true) { Chat::Statistics.about_messages }
+  register_stat("chat_messages", show_in_ui: true, expose_via_api: true) do
+    Chat::Statistics.about_messages
+  end
 
-  register_about_stat_group("chat_channels") { Chat::Statistics.about_channels }
+  register_stat("chat_channels", expose_via_api: true) { Chat::Statistics.about_channels }
 
-  register_about_stat_group("chat_users") { Chat::Statistics.about_users }
+  register_stat("chat_users", expose_via_api: true) { Chat::Statistics.about_users }
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)
@@ -491,6 +494,10 @@ after_initialize do
   register_hashtag_type_priority_for_context("category", "chat-composer", 100)
   register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
   register_hashtag_type_priority_for_context("channel", "topic-composer", 10)
+
+  register_post_stripper do |nokogiri_fragment|
+    nokogiri_fragment.css(".chat-transcript .mention").remove
+  end
 
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: Chat::Message::MARKDOWN_FEATURES,

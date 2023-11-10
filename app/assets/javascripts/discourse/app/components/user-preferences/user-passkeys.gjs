@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/application";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
@@ -8,6 +7,7 @@ import DButton from "discourse/components/d-button";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
+import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferToBase64, stringToBuffer } from "discourse/lib/webauthn";
 import I18n from "discourse-i18n";
@@ -20,7 +20,6 @@ export default class UserPasskeys extends Component {
 
   instructions = I18n.t("user.passkeys.short_description");
   title = I18n.t("user.passkeys.title");
-  formatDate = getOwner(this).resolveRegistration("helper:format-date");
   addedPrefix = I18n.t("user.passkeys.added_prefix");
   lastUsedPrefix = I18n.t("user.passkeys.last_used_prefix");
   neverUsed = I18n.t("user.passkeys.never_used");
@@ -193,7 +192,7 @@ export default class UserPasskeys extends Component {
                 <span class="prefix">
                   {{this.addedPrefix}}
                 </span>
-                {{this.formatDate
+                {{formatDate
                   passkey.created_at
                   format="medium"
                   leaveAgo="true"
@@ -204,7 +203,7 @@ export default class UserPasskeys extends Component {
                   <span class="prefix">
                     {{this.lastUsedPrefix}}
                   </span>
-                  {{this.formatDate
+                  {{formatDate
                     passkey.last_used
                     format="medium"
                     leaveAgo="true"

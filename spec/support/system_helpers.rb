@@ -199,8 +199,6 @@ module SystemHelpers
   end
 
   def skip_unless_s3_system_specs_enabled!
-    skip("(martin) temporarily skipping minio tests because of parralel binary issues")
-
     if !ENV["CI"] && !ENV["RUN_S3_SYSTEM_SPECS"]
       skip(
         "S3 system specs are disabled in this environment, set CI=1 or RUN_S3_SYSTEM_SPECS=1 to enable them.",

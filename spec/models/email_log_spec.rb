@@ -5,7 +5,7 @@ RSpec.describe EmailLog do
   it { is_expected.to validate_presence_of :to_address }
   it { is_expected.to validate_presence_of :email_type }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "unique email per post" do
     it "only allows through one email per post" do
@@ -183,7 +183,7 @@ RSpec.describe EmailLog do
   end
 
   describe "bounce_error_code fix before update" do
-    fab!(:email_log) { Fabricate(:email_log) }
+    fab!(:email_log)
 
     it "makes sure the bounce_error_code is in the format X.X.X or XXX" do
       email_log.update!(bounce_error_code: "5.1.1")

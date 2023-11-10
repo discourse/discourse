@@ -116,7 +116,12 @@ class SeedHelper
   end
 end
 
-task "multisite:migrate" => %w[db:load_config environment set_locale] do |_, args|
+task "multisite:migrate" => %w[
+       db:load_config
+       environment
+       set_locale
+       assets:precompile:theme_transpiler
+     ] do |_, args|
   raise "Multisite migrate is only supported in production" if ENV["RAILS_ENV"] != "production"
 
   DistributedMutex.synchronize(

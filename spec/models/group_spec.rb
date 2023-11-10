@@ -257,7 +257,7 @@ RSpec.describe Group do
     end
 
     describe "after updating automatic group members" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       it "triggers an event when a user is removed from an automatic group" do
         tl3_users = Group.find(Group::AUTO_GROUPS[:trust_level_3])
@@ -277,8 +277,9 @@ RSpec.describe Group do
 
         expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(false)
 
-        _events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_0) }
+        events = DiscourseEvent.track_events { Group.refresh_automatic_group!(:trust_level_0) }
 
+        expect(events).to include(event_name: :group_updated, params: [tl0_users])
         expect(GroupUser.exists?(group: tl0_users, user: user)).to eq(true)
         publish_event_job_args = Jobs::PublishGroupMembershipUpdates.jobs.last["args"].first
         expect(publish_event_job_args["user_ids"]).to include(user.id)
@@ -513,7 +514,7 @@ RSpec.describe Group do
   end
 
   describe "destroy" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:group) { Fabricate(:group, users: [user]) }
 
     before { group.add(user) }
@@ -636,7 +637,7 @@ RSpec.describe Group do
   end
 
   describe "group management" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     it "by default has no managers" do
       expect(group.group_users.where("group_users.owner")).to be_empty
@@ -909,7 +910,7 @@ RSpec.describe Group do
     end
 
     describe "with webhook" do
-      fab!(:group_user_web_hook) { Fabricate(:group_user_web_hook) }
+      fab!(:group_user_web_hook)
 
       it "Enqueues webhook events" do
         group.remove(user)
@@ -977,7 +978,7 @@ RSpec.describe Group do
     end
 
     context "when adding a user into a public group" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
 
       it "should publish the group's categories to the client" do
         group.update!(public_admission: true, categories: [category])
@@ -1073,7 +1074,7 @@ RSpec.describe Group do
     end
 
     describe "with webhook" do
-      fab!(:group_user_web_hook) { Fabricate(:group_user_web_hook) }
+      fab!(:group_user_web_hook)
 
       it "Enqueues user_removed_from_group webhook events for each group_user" do
         group.bulk_add([user.id, admin.id])

@@ -206,12 +206,11 @@
 // create account
 // modal only
 .d-modal.create-account {
-  .create-account-body {
-    min-width: 100%;
-  }
   .modal-body {
+    min-width: 100%;
     overflow: hidden;
   }
+
   .has-alt-auth .create-account-form {
     display: grid;
     grid-template-columns: 60% 40%;
@@ -312,6 +311,7 @@
       input.value-entered + label.alt-placeholder {
         top: -8px;
         left: calc(3em - 0.25em);
+        font-size: var(--font-down-1);
       }
     }
     .password-confirmation {
@@ -356,36 +356,6 @@
     }
     display: flex;
     flex-direction: column;
-    &.confirm {
-      margin-top: 5px;
-    }
-  }
-
-  .invites-show {
-    padding-top: 20px;
-
-    .two-col {
-      margin-top: 30px;
-    }
-    .col-form {
-      margin-left: 200px;
-      .inline-invite-img {
-        display: none;
-      }
-    }
-    form {
-      .controls,
-      .input {
-        margin-left: 20px;
-      }
-      input,
-      label {
-        margin-bottom: 0;
-      }
-      .user-field .control-label:not(.checkbox-label) {
-        margin-left: 20px;
-      }
-    }
   }
 
   .tos-agree {
@@ -393,8 +363,7 @@
   }
 }
 
-.password-reset,
-.invites-show {
+.password-reset {
   .col-form {
     padding: 0.5em 2em 1em;
     max-width: 30em;
@@ -414,10 +383,6 @@
   input:not([type="checkbox"]) {
     // 80% width on checkboxes messes up the layout for custom fields
     width: 80%;
-  }
-  .invite-form,
-  .invite-success {
-    box-shadow: var(--shadow-card);
   }
 }
 

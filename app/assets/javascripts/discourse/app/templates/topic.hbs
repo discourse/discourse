@@ -19,8 +19,6 @@
     <AddTopicStatusClasses @topic={{this.model}} />
     <div class="container">
       <DiscourseBanner
-        @user={{this.currentUser}}
-        @banner={{this.site.banner}}
         @overlay={{this.hasScrolled}}
         @hide={{this.model.errorLoading}}
       />
@@ -359,6 +357,8 @@
                 @toggleWiki={{action "toggleWiki"}}
                 @showTopReplies={{action "showTopReplies"}}
                 @cancelFilter={{action "cancelFilter"}}
+                @collapseSummary={{action "collapseSummary"}}
+                @showSummary={{action "showSummary"}}
                 @removeAllowedUser={{action "removeAllowedUser"}}
                 @removeAllowedGroup={{action "removeAllowedGroup"}}
                 @topVisibleChanged={{action "topVisibleChanged"}}

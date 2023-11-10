@@ -5,16 +5,21 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import { isWebauthnSupported } from "discourse/lib/webauthn";
+import {
+  getPasskeyCredential,
+  isWebauthnSupported,
+} from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
 import I18n from "discourse-i18n";
 
 export default class Login extends Component {
+  @service capabilities;
   @service dialog;
   @service siteSettings;
   @service site;
@@ -25,8 +30,8 @@ export default class Login extends Component {
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
-  @tracked flash = this.args.model?.flash;
-  @tracked flashType = this.args.model?.flashType;
+  @tracked flash = this.args.model.flash;
+  @tracked flashType = this.args.model.flashType;
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked
   canLoginLocalWithEmail = this.siteSettings.enable_local_logins_via_email;
@@ -43,7 +48,8 @@ export default class Login extends Component {
 
   constructor() {
     super(...arguments);
-    if (this.args.model?.isExternalLogin) {
+
+    if (this.args.model.isExternalLogin) {
       this.externalLogin(this.args.model.externalLoginMethod, {
         signup: this.args.model.signup,
       });
@@ -52,7 +58,7 @@ export default class Login extends Component {
 
   get awaitingApproval() {
     return (
-      this.args.model?.awaitingApproval &&
+      this.args.model.awaitingApproval &&
       !this.canLoginLocal &&
       !this.canLoginLocalWithEmail
     );
@@ -107,6 +113,56 @@ export default class Login extends Component {
     return (
       this.args.model.canSignUp && !this.loggingIn && !this.showSecondFactor
     );
+  }
+
+  @action
+  async passkeyLogin(mediation = "optional") {
+    try {
+      // we need to check isConditionalMediationAvailable for Firefox
+      // without it, Firefox will throw console errors
+      // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
+      // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
+      if (
+        mediation === "conditional" &&
+        this.capabilities.isFirefox &&
+        window.PublicKeyCredential
+      ) {
+        const isCMA =
+          // eslint-disable-next-line no-undef
+          await PublicKeyCredential.isConditionalMediationAvailable();
+        if (!isCMA) {
+          return;
+        }
+      }
+      const response = await ajax("/session/passkey/challenge.json");
+
+      const publicKeyCredential = await getPasskeyCredential(
+        response.challenge,
+        (errorMessage) => this.dialog.alert(errorMessage),
+        mediation
+      );
+
+      if (publicKeyCredential) {
+        const authResult = await ajax("/session/passkey/auth.json", {
+          type: "POST",
+          data: { publicKeyCredential },
+        });
+
+        if (authResult && !authResult.error) {
+          const destinationUrl = cookie("destination_url");
+          if (destinationUrl) {
+            removeCookie("destination_url");
+            window.location.assign(destinationUrl);
+          } else {
+            window.location.reload();
+          }
+        } else {
+          this.dialog.alert(authResult.error);
+        }
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   @action
@@ -283,12 +339,7 @@ export default class Login extends Component {
     }
   }
 
-  @action
-  async externalLogin(loginMethod, { signup = false } = {}) {
-    if (this.loginDisabled) {
-      return;
-    }
-
+  async externalLogin(loginMethod, { signup }) {
     try {
       this.loggingIn = true;
       await loginMethod.doLogin({ signup });
@@ -296,6 +347,15 @@ export default class Login extends Component {
     } catch {
       this.loggingIn = false;
     }
+  }
+
+  @action
+  async externalLoginAction(loginMethod) {
+    if (this.loginDisabled) {
+      return;
+    }
+
+    await this.externalLogin(loginMethod, { signup: false });
   }
 
   @action

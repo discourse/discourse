@@ -4,8 +4,8 @@
 # TODO - test pinning, create_moderator_post
 
 RSpec.describe TopicStatusUpdater do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
 
   it "avoids notifying on automatically closed topics" do
     # TODO: TopicStatusUpdater should suppress message bus updates from the users it "pretends to read"

@@ -6,6 +6,16 @@ module PageObjects
       include Capybara::DSL
       include RSpec::Matchers
 
+      BODY_SELECTOR = ""
+
+      def body
+        find(".modal-body#{BODY_SELECTOR}")
+      end
+
+      def footer
+        find(".modal-footer")
+      end
+
       def close
         find(".modal-close").click
       end
@@ -19,11 +29,11 @@ module PageObjects
       end
 
       def click_primary_button
-        find(".modal-footer .btn-primary").click
+        footer.find(".btn-primary").click
       end
 
       def has_content?(content)
-        find(".modal-body").has_content?(content)
+        body.has_content?(content)
       end
 
       def open?

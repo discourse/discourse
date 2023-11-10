@@ -123,7 +123,7 @@ RSpec.describe Wizard::StepUpdater do
       end
 
       context "with an existing default theme" do
-        fab!(:theme) { Fabricate(:theme) }
+        fab!(:theme)
 
         before { theme.set_default! }
 

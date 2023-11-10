@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import AuthTokenModal from "discourse/components/modal/auth-token";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -17,6 +18,8 @@ const DEFAULT_AUTH_TOKENS_COUNT = 2;
 
 export default Controller.extend(CanCheckEmails, {
   modal: service(),
+  dialog: service(),
+  router: service(),
   passwordProgress: null,
   subpageTitle: I18n.t("user.preferences_nav.security"),
   showAllAuthTokens: false,
@@ -112,6 +115,27 @@ export default Controller.extend(CanCheckEmails, {
         } // All sessions revoked
       })
       .catch(popupAjaxError);
+  },
+
+  @action
+  async manage2FA() {
+    try {
+      const trustedSession = await this.model.trustedSession();
+
+      if (!trustedSession.success) {
+        this.dialog.dialog({
+          title: I18n.t("user.confirm_access.title"),
+          type: "notice",
+          bodyComponent: ConfirmSession,
+          didConfirm: () =>
+            this.router.transitionTo("preferences.second-factor"),
+        });
+      } else {
+        await this.router.transitionTo("preferences.second-factor");
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
   },
 
   actions: {

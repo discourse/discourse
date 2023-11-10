@@ -11,7 +11,7 @@ module Chat
     end
 
     def self.preload_associations
-      [:chat_channel]
+      [{ chat_channel: :chatable }]
     end
 
     def self.list_query(user, guardian)
@@ -58,7 +58,8 @@ module Chat
     end
 
     def self.reminder_conditions(bookmark)
-      bookmark.bookmarkable.present? && bookmark.bookmarkable.chat_channel.present?
+      bookmark.bookmarkable.present? && bookmark.bookmarkable.chat_channel.present? &&
+        self.can_see?(bookmark.user.guardian, bookmark)
     end
 
     def self.can_see?(guardian, bookmark)

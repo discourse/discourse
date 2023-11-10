@@ -2,7 +2,7 @@
 
 RSpec.describe UserDestroyer do
   fab!(:user) { Fabricate(:user_with_secondary_email) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe ".new" do
     it "raises an error when user is nil" do

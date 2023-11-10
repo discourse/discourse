@@ -80,7 +80,7 @@ RSpec.describe UserNotifications do
   end
 
   describe ".post_approved" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
 
     it "works" do
       subject =

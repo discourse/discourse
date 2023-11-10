@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe InviteRedeemer do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "#initialize" do
     fab!(:redeeming_user) { Fabricate(:user, email: "redeemer@test.com") }

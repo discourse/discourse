@@ -2451,8 +2451,7 @@ ca:
       action: "Marca la publicació amb bandera "
       take_action_options:
         default:
-          title: "Actua"
-          details: "Arriba al límit de banderes immediatament, més que no pas esperar més banderes de la comunitat"
+          title: "Amaga la publicació"
         suspend:
           title: "Suspèn l'usuari"
         silence:
@@ -2464,7 +2463,6 @@ ca:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(amagat)"
       submit_tooltip: "Envia la bandera privada"
-      take_action_tooltip: "Arriba al límit de banderes immediatament, més que no pas esperar més banderes de la comunitat"
       cant: "Ara com ara no podeu marcar amb bandera aquesta publicació."
       notify_staff: "Notifica l'equip responsable en privat"
       formatted_name:
@@ -2885,6 +2883,9 @@ ca:
               content: "Revisa"
     until: "Fins a:"
     form_templates:
+      upload_field:
+        upload: "Carrega"
+        uploading: "Carregant"
       errors:
         typeMismatch:
           default: "Introduïu un valor vàlid."

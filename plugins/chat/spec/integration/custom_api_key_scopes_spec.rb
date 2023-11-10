@@ -8,7 +8,7 @@ describe "API keys scoped to chat#create_message" do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
   end
 
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:chat_channel_2) { Fabricate(:category_channel) }
 

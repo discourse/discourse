@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserProfileView do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:other_user) { Fabricate(:user) }
   let(:user_profile_id) { user.user_profile.id }
 

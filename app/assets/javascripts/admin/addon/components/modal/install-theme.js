@@ -117,6 +117,7 @@ export default class InstallTheme extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.args.model.clearParams?.();
   }
 

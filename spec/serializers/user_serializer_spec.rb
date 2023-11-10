@@ -64,10 +64,10 @@ RSpec.describe UserSerializer do
   context "with a user" do
     let(:admin_user) { Fabricate(:admin) }
     let(:scope) { Guardian.new }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
     fab!(:upload2) { Fabricate(:upload) }
 
     context "when the scope user is admin" do
@@ -342,7 +342,7 @@ RSpec.describe UserSerializer do
   end
 
   context "with custom_fields" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:json) { UserSerializer.new(user, scope: Guardian.new, root: false).as_json }
 
     before do
@@ -378,7 +378,7 @@ RSpec.describe UserSerializer do
   end
 
   context "with user fields" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     let! :fields do
       [
@@ -408,7 +408,7 @@ RSpec.describe UserSerializer do
   end
 
   context "with user_api_keys" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "sorts keys by last used time" do
       freeze_time
@@ -441,7 +441,7 @@ RSpec.describe UserSerializer do
   end
 
   context "with user_passkeys" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:passkey0) do
       Fabricate(:passkey_with_random_credential, user: user, created_at: 5.hours.ago)
     end

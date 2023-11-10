@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ScreenedEmailsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:screened_email) { Fabricate(:screened_email) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:screened_email)
 
   describe "#index" do
     shared_examples "screened emails accessible" do

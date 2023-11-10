@@ -2038,12 +2038,6 @@ pt_BR:
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
-      plus_subcategories_title:
-        one: "%{name} e uma subcategoria"
-        other: "%{name} e %{count} subcategorias"
-      plus_subcategories:
-        one: "+%{count} subcategoria"
-        other: "+%{count} subcategorias"
     select_kit:
       delete_item: "Excluir %{name}"
       filter_by: "Filtrar por: %{name}"
@@ -3454,8 +3448,7 @@ pt_BR:
       action: "Sinalizar resposta"
       take_action_options:
         default:
-          title: "Tomar medida"
-          details: "Atingir o limite de denuncias imediatamente em vez de esperar por mais denuncias da comunidade"
+          title: "Ocultar publicação"
         suspend:
           title: "Suspender usuário(a)"
           details: "Alcance o limite de sinalizadores e suspenda o(a) usuário(a)"
@@ -3472,7 +3465,6 @@ pt_BR:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
       submit_tooltip: "Enviar um sinalizador privado"
-      take_action_tooltip: "Atingir o limite de denuncias imediatamente em vez de esperar por mais denuncias da comunidade"
       cant: "Desculpe, não é possível colocar um sinalizador neste momento."
       notify_staff: "Avisar a equipe de forma privada"
       formatted_name:
@@ -4028,7 +4020,6 @@ pt_BR:
           delete: "Excluir"
           delete_confirm: "Tem certeza de que deseja excluir essa seção?"
           reset_confirm: "Tem certeza de que deseja redefinir esta seção para o padrão?"
-          public: "Tornar esta seção pública e visível para todos"
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
           links:
@@ -4133,10 +4124,12 @@ pt_BR:
     form_template_chooser:
       select_template: "Selecione modelos de formulário"
     form_templates:
+      upload_field:
+        upload: "Enviar"
+        uploading: "Enviando"
       errors:
         valueMissing:
           default: "Preencha este campo."
-          text: "Preencha este campo."
           select-one: "Selecione um item da lista."
           select-multiple: "Selecione pelo menos um item da lista."
           checkbox: "Marque esta caixa se quiser continuar."

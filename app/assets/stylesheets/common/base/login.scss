@@ -41,7 +41,6 @@ body.invite-page {
 // Create Account + Login
 .d-modal.create-account,
 .d-modal.login-modal,
-.invites-show,
 .admin-invite-page {
   .modal-inner-container {
     position: relative;
@@ -157,7 +156,9 @@ body.invite-page {
         min-height: 1.4em; // prevents height increase due to tips
       }
       label.alt-placeholder,
-      .user-field.dropdown label.control-label {
+      .user-field.text label.control-label,
+      .user-field.dropdown label.control-label,
+      .user-field.multiselect label.control-label {
         color: var(--primary-medium);
         font-size: 16px;
         font-weight: normal;
@@ -168,16 +169,19 @@ body.invite-page {
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
         transition: 0.2s ease all;
       }
-      .user-field.dropdown label.control-label {
+      .user-field.text label.control-label,
+      .user-field.dropdown label.control-label,
+      .user-field.multiselect label.control-label {
         z-index: 999;
         top: -8px;
         left: calc(1em - 0.25em);
         background-color: var(--secondary);
-        padding: 0 0.25em 0 0.25em;
         font-size: $font-down-1;
       }
-      .user-field.dropdown:focus-within {
-        z-index: 1000; // this ensures the active dropdown is always on top of sibling dropdown labels
+      .user-field.text:focus-within,
+      .user-field.dropdown:focus-within,
+      .user-field.multiselect:focus-within {
+        z-index: 1000; // ensures the active input is always on top of sibling input labels
       }
       input:focus + label.alt-placeholder,
       input.value-entered + label.alt-placeholder {
@@ -255,7 +259,8 @@ body.invite-page {
             text-overflow: ellipsis;
           }
         }
-        span.name {
+        details:not(.has-selection) span.name,
+        details:not(.has-selection) span.formatted-selection {
           color: var(--primary-medium);
         }
         .select-kit-row span.name {
@@ -291,10 +296,11 @@ body.invite-page {
   }
 
   @media screen and (min-width: 701px) {
-    .create-account-body {
+    .modal-body {
       max-width: 40em;
     }
   }
+
   .user-field {
     input[type="text"] {
       margin-bottom: 0;
@@ -333,94 +339,11 @@ body.invite-page {
 .toggle-password-mask {
   align-self: start;
   line-height: 1.4; // aligns with input description text
-}
-
-// admin invite page
-.invites-show {
-  display: grid;
-  justify-content: center;
-  .two-col {
-    position: relative;
-    display: grid;
-    margin-top: 5px;
-  }
-
-  .invite-form,
-  .invite-success {
-    border-radius: 8px;
-    margin-top: 25px;
-    border: 1px solid var(--primary-low);
-    background-color: var(--secondary);
-  }
-
-  .invite-form {
-    margin-bottom: 50px;
-    box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
-    max-width: calc(30em);
-    .tip {
-      display: block;
-    }
-    .col-image {
-      display: none;
-    }
-    .disclaimer {
-      margin: 1em 0 0;
-    }
-  }
-
-  #login-buttons {
-    .btn {
-      background-color: var(--primary-low);
-      color: var(--primary);
-    }
-  }
-
-  .col-image {
-    position: relative;
-    margin-right: 20px;
-    justify-self: center;
-    @media screen and (max-width: 600px) {
-      display: none;
-    }
-  }
-
-  form {
-    .controls,
-    .input {
-      margin-bottom: 10px;
-    }
-    .instructions {
-      color: var(--primary-medium);
-      margin: 0;
-      font-size: var(--font-down-1);
-      font-weight: normal;
-      line-height: var(--line-height-medium);
-    }
-    .tip {
-      font-size: var(--font-down-1);
-      &:not(:empty) {
-        margin-bottom: 0.25em;
-      }
-    }
-  }
-
-  .invitation-cta {
-    display: flex;
-    align-items: center;
-    margin-top: 2em;
-    &__accept {
-      margin-right: 1em;
-    }
-    &__signed-up {
-      margin-right: 0.5em;
-    }
-    &__sign-in {
-      padding: 0;
-      &.btn-flat.btn-text:not([disabled]):active {
-        background-color: transparent;
-        background-image: none;
-      }
-    }
+  .ios-device & {
+    // reset form-item-sizing mixin styles
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: var(--font-0);
   }
 }
 

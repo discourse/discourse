@@ -2450,6 +2450,9 @@ th:
               content: "รีวิว"
     until: "จนถึง:"
     form_templates:
+      upload_field:
+        upload: "อัปโหลด"
+        uploading: "กำลังอัปโหลด"
       errors:
         typeMismatch:
           default: "กรอกค่าที่ถูกต้อง"

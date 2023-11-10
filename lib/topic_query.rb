@@ -38,7 +38,7 @@ class TopicQuery
   end
 
   def self.public_valid_options
-    # For these to work in Ember, add them to `controllers/discovery-sortable.js`
+    # For these to work in Ember, add them to `controllers/discovery/list.js`
     @public_valid_options ||= %i[
       page
       before

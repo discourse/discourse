@@ -15,7 +15,7 @@ RSpec.describe UserOption do
   end
 
   describe "defaults" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "should be redirected to top when there is a reason to" do
       user.user_option.expects(:redirected_to_top).returns(reason: "42")
@@ -111,7 +111,7 @@ RSpec.describe UserOption do
   end
 
   describe ".redirected_to_top" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "should have no reason when `SiteSetting.redirect_users_to_top_page` is disabled" do
       SiteSetting.redirect_users_to_top_page = false
@@ -192,7 +192,7 @@ RSpec.describe UserOption do
   end
 
   describe ".user_tzinfo" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     context "with user with valid timezone given" do
       before { user.user_option.update(timezone: "Europe/Paris") }

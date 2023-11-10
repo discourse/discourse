@@ -1,6 +1,3 @@
-{{#if @channel.id}}
-  <ChatChannel
-    @channel={{@channel}}
-    @targetMessageId={{readonly @targetMessageId}}
-  />
-{{/if}}
+{{#each (array @channel) as |channel|}}
+  <ChatChannel @channel={{channel}} @targetMessageId={{@targetMessageId}} />
+{{/each}}

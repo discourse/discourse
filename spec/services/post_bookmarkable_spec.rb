@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe PostBookmarkable do
   subject(:registered_bookmarkable) { RegisteredBookmarkable.new(PostBookmarkable) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
 
   let(:guardian) { Guardian.new(user) }
@@ -98,6 +98,13 @@ RSpec.describe PostBookmarkable do
       Post.with_deleted.find_by(id: bookmark1.bookmarkable_id).recover!
       bookmark1.reload
       bookmark1.bookmarkable.topic.trash!
+      bookmark1.reload
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
+    end
+
+    it "cannot send reminder if the user cannot access the topic" do
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(true)
+      bookmark1.bookmarkable.topic.update!(category: private_category)
       bookmark1.reload
       expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
     end

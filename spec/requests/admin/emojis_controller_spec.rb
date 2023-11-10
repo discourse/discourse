@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::EmojisController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:upload) { Fabricate(:upload) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:upload)
 
   describe "#index" do
     context "when logged in as an admin" do

@@ -16,6 +16,7 @@ class CategoryList
   def self.included_associations
     [
       :uploaded_background,
+      :uploaded_background_dark,
       :uploaded_logo,
       :uploaded_logo_dark,
       :topic_only_relative_url,
@@ -137,6 +138,10 @@ class CategoryList
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
     @categories = query.to_a
+
+    if Site.preloaded_category_custom_fields.any?
+      Category.preload_custom_fields(@categories, Site.preloaded_category_custom_fields)
+    end
 
     include_subcategories = @options[:include_subcategories] == true
 

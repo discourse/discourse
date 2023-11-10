@@ -28,50 +28,24 @@ module PrettyText
     Rails.root
   end
 
-  def self.find_file(root, filename)
-    return filename if File.file?("#{root}#{filename}")
-
-    es6_name = "#{filename}.js.es6"
-    return es6_name if File.file?("#{root}#{es6_name}")
-
-    js_name = "#{filename}.js"
-    return js_name if File.file?("#{root}#{js_name}")
-
-    erb_name = "#{filename}.js.es6.erb"
-    return erb_name if File.file?("#{root}#{erb_name}")
-
-    erb_name = "#{filename}.js.erb"
-    erb_name if File.file?("#{root}#{erb_name}")
+  def self.apply_es6_file(ctx:, path:, module_name:)
+    source = File.read(path)
+    transpiler = DiscourseJsProcessor::Transpiler.new
+    transpiled = transpiler.perform(source, nil, module_name)
+    ctx.eval(transpiled, filename: module_name)
   end
 
-  def self.apply_es6_file(ctx, root_path, part_name)
-    filename = find_file(root_path, part_name)
-    if filename
-      source = File.read("#{root_path}#{filename}")
-      source = ERB.new(source).result(binding) if filename =~ /\.erb\z/
-
-      transpiler = DiscourseJsProcessor::Transpiler.new
-      transpiled = transpiler.perform(source, "#{Rails.root}/app/assets/javascripts/", part_name)
-      ctx.eval(transpiled)
-    else
-      # Look for vendored stuff
-      vendor_root = "#{Rails.root}/vendor/assets/javascripts/"
-      filename = find_file(vendor_root, part_name)
-      ctx.eval(File.read("#{vendor_root}#{filename}")) if filename
-    end
-  end
-
-  def self.ctx_load_directory(ctx, path)
-    root_path = "#{Rails.root}/app/assets/javascripts/"
-    Dir["#{root_path}#{path}/**/*"].sort.each do |f|
-      apply_es6_file(ctx, root_path, f.sub(root_path, "").sub(/\.js(.es6)?\z/, ""))
+  def self.ctx_load_directory(ctx:, base_path:, module_prefix:)
+    Dir["**/*.js", base: base_path].sort.each do |f|
+      module_name = "#{module_prefix}#{f.delete_suffix(".js")}"
+      apply_es6_file(ctx: ctx, path: File.join(base_path, f), module_name: module_name)
     end
   end
 
   def self.create_es6_context
     ctx = MiniRacer::Context.new(timeout: 25_000, ensure_gc_after_idle: 2000)
 
-    ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
+    ctx.eval("window = globalThis; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
     ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
     ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
@@ -91,22 +65,40 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    root_path = "#{Rails.root}/app/assets/javascripts/"
-    ctx_load(ctx, "#{root_path}/node_modules/loader.js/dist/loader/loader.js")
-    ctx_load(ctx, "#{root_path}/handlebars-shim.js")
-    ctx_load(ctx, "#{root_path}/node_modules/xss/dist/xss.js")
+    root_path = "#{Rails.root}/app/assets/javascripts"
+    ctx.load("#{root_path}/node_modules/loader.js/dist/loader/loader.js")
+    ctx.load("#{root_path}/node_modules/markdown-it/dist/markdown-it.js")
+    ctx.load("#{root_path}/handlebars-shim.js")
+    ctx.load("#{root_path}/node_modules/xss/dist/xss.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
-    ctx_load_directory(ctx, "pretty-text/addon")
-    ctx_load_directory(ctx, "pretty-text/engines/discourse-markdown")
-    ctx_load(ctx, "#{root_path}/node_modules/markdown-it/dist/markdown-it.js")
 
-    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/get-url")
-    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")
-    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/deprecated")
-    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/escape")
-    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/avatar-utils")
-    apply_es6_file(ctx, root_path, "discourse-common/addon/utils/watched-words")
-    apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
+    ctx_load_directory(
+      ctx: ctx,
+      base_path: "#{root_path}/pretty-text/addon",
+      module_prefix: "pretty-text/",
+    )
+    ctx_load_directory(
+      ctx: ctx,
+      base_path: "#{root_path}/discourse-markdown-it/src",
+      module_prefix: "discourse-markdown-it/",
+    )
+
+    %w[
+      discourse-common/addon/lib/get-url
+      discourse-common/addon/lib/object
+      discourse-common/addon/lib/deprecated
+      discourse-common/addon/lib/escape
+      discourse-common/addon/lib/avatar-utils
+      discourse-common/addon/utils/watched-words
+      discourse/app/lib/to-markdown
+      discourse/app/static/markdown-it/features
+    ].each do |f|
+      apply_es6_file(
+        ctx: ctx,
+        path: "#{root_path}/#{f}.js",
+        module_name: f.sub("/addon/", "/").sub("/app/", "/"),
+      )
+    end
 
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
@@ -116,10 +108,13 @@ module PrettyText
       to_load << a if File.file?(a) && a =~ /discourse-markdown/
     end
     to_load.uniq.each do |f|
-      if f =~ %r{\A.+assets/javascripts/}
-        root = Regexp.last_match[0]
-        apply_es6_file(ctx, root, f.sub(root, "").sub(/\.js(\.es6)?\z/, ""))
-      end
+      plugin_name = f[%r{/plugins/([^/]+)/}, 1]
+      module_name = f[%r{/assets/javascripts/(.+)\.}, 1]
+      apply_es6_file(
+        ctx: ctx,
+        path: f,
+        module_name: "discourse/plugins/#{plugin_name}/#{module_name}",
+      )
     end
 
     DiscoursePluginRegistry.vendored_core_pretty_text.each { |vpt| ctx.eval(File.read(vpt)) }
@@ -203,9 +198,9 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.emojiDenyList = #{Emoji.denied.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor, engine: :js).to_json};
-        __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace, engine: :js).to_json};
-        __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link, engine: :js).to_json};
+        __optInput.censoredRegexp = #{WordWatcher.serialized_regexps_for_action(:censor, engine: :js).to_json};
+        __optInput.watchedWordsReplace = #{WordWatcher.regexps_for_action(:replace, engine: :js).to_json};
+        __optInput.watchedWordsLink = #{WordWatcher.regexps_for_action(:link, engine: :js).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
         __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
       JS
@@ -227,8 +222,8 @@ module PrettyText
       buffer << "__optInput.hashtagTypesInPriorityOrder = [#{hashtag_types_as_js}];\n"
       buffer << "__optInput.hashtagIcons = #{HashtagAutocompleteService.data_source_icon_map.to_json};\n"
 
-      buffer << "__textOptions = __buildOptions(__optInput);\n"
-      buffer << ("__pt = new __PrettyText(__textOptions);")
+      buffer << "__pluginFeatures = __loadPluginFeatures();"
+      buffer << "__pt = __DiscourseMarkdownIt.withCustomFeatures(__pluginFeatures).withOptions(__optInput);"
 
       # Be careful disabling sanitization. We allow for custom emails
       buffer << ("__pt.disableSanitizer();") if opts[:sanitize] == false
@@ -664,10 +659,6 @@ module PrettyText
     rval = nil
     @mutex.synchronize { rval = yield }
     rval
-  end
-
-  def self.ctx_load(ctx, *files)
-    files.each { |file| ctx.load(app_root + file) }
   end
 
   private

@@ -4,9 +4,9 @@ RSpec.describe CategoriesController do
   describe "#destroy" do
     subject(:destroy_category) { delete "/categories/#{category.slug}.json" }
 
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:category) { Fabricate(:category, user: admin) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     context "when user is staff" do
       before { sign_in(admin) }

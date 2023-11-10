@@ -118,6 +118,7 @@ en:
         title: "Show activity indicator in header"
         all_new: "All New Messages"
         dm_and_mentions: "Direct Messages and Mentions"
+        only_mentions: "Only Mentions"
         never: "Never"
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
@@ -258,7 +259,8 @@ en:
       save: "Save"
       select: "Select"
       return_to_list: "Return to channels list"
-      return_to_threads_list: "Return to ongoing discussions"
+      return_to_channel: "Return to channel"
+      return_to_threads_list: "Return to threads list"
       unread_threads_count:
         one: "You have %{count} unread discussion"
         other: "You have %{count} unread discussions"
@@ -599,7 +601,7 @@ en:
           other: "+%{count}"
       threads:
         open: "Open Thread"
-        list: "Ongoing discussions"
+        list: "Threads"
         none: "You are not participating in any threads in this channel."
 
       draft_channel_screen:

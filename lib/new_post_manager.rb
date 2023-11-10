@@ -202,8 +202,8 @@ class NewPostManager
   def self.queue_enabled?
     SiteSetting.approve_post_count > 0 || SiteSetting.approve_unless_trust_level.to_i > 0 ||
       SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
-      SiteSetting.approve_unless_staged ||
-      WordWatcher.words_for_action_exists?(:require_approval) || handlers.size > 1
+      SiteSetting.approve_unless_staged || WordWatcher.words_for_action_exist?(:require_approval) ||
+      handlers.size > 1
   end
 
   def initialize(user, args)

@@ -11,8 +11,9 @@ RSpec.describe "Message errors", type: :system do
   context "when message is too long" do
     fab!(:channel) { Fabricate(:chat_channel) }
 
+    before { channel.add(current_user) }
+
     it "only shows the error, not the message" do
-      channel.add(current_user)
       sign_in(current_user)
       chat_page.visit_channel(channel)
 

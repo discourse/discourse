@@ -493,7 +493,6 @@ export default class ChatMessage extends Component {
 
   <template>
     {{! template-lint-disable no-invalid-interactive }}
-    {{! template-lint-disable modifier-name-case }}
     {{#if this.shouldRender}}
       {{#if (eq @context "channel")}}
         <ChatMessageSeparatorDate
@@ -510,6 +509,7 @@ export default class ChatMessage extends Component {
           (if @message.highlighted "-highlighted")
           (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
           (if @message.staged "-staged" "-persisted")
+          (if @message.processed "-processed" "-not-processed")
           (if this.hasActiveState "-active")
           (if @message.bookmark "-bookmarked")
           (if @message.deletedAt "-deleted")

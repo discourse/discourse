@@ -1418,15 +1418,12 @@ it:
         rename_passkey_instructions: "Scegli un nome per la passkey che la identificherà facilmente, ad esempio utilizza il nome del tuo gestore di password."
         name:
           default: "Passkey principale"
-          google_password_manager: "Google Password Manager"
-          icloud_keychain: "iCloud Keychain"
         save: "Salva"
         title: "Passkey"
         short_description: "Le passkey sostituiscono le password e convalidano la tua identità biometricamente (ad esempio touch, faceID) o tramite un PIN/password del dispositivo."
         added_prefix: "Aggiunto"
         last_used_prefix: "Ultimo uso"
         never_used: "Mai usata"
-        not_allowed_error: "Il processo di registrazione della passkey è scaduto o è stato annullato."
         already_added_error: "Hai già registrato questa passkey. Non devi registrarla di nuovo."
       change_about:
         title: "Modifica i dati personali"
@@ -2099,12 +2096,6 @@ it:
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
-      plus_subcategories_title:
-        one: "%{name} e una sottocategoria"
-        other: "%{name} e %{count} sottocategorie"
-      plus_subcategories:
-        one: "+ %{count} sottocategoria"
-        other: "+ %{count} sottocategorie"
     select_kit:
       delete_item: "Cancella %{name}"
       filter_by: "Filtra per: %{name}"
@@ -3435,6 +3426,7 @@ it:
       logo: "Immagine Categoria"
       logo_dark: "Immagine del logo della categoria Modalità scura"
       background_image: "Immagine di sfondo della categoria"
+      background_image_dark: "Immagine di sfondo della categoria per il tema scuro"
       badge_colors: "Colori dei distintivi"
       background_color: "Colore di sfondo"
       foreground_color: "Colore in primo piano"
@@ -3553,8 +3545,7 @@ it:
       take_action: "Esegui azione…"
       take_action_options:
         default:
-          title: "Procedi"
-          details: "Raggiungi la soglia di segnalazioni immediatamente, piuttosto che aspettare altre segnalazioni della comunità"
+          title: "Nascondi Messaggio"
         suspend:
           title: "Sospendi utente"
           details: "Raggiungi la soglia delle segnalazioni e sospendi l'utente"
@@ -3571,7 +3562,6 @@ it:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
       submit_tooltip: "Invia la segnalazione privata"
-      take_action_tooltip: "Raggiungi la soglia di segnalazioni immediatamente, piuttosto che aspettare altre segnalazioni della comunità"
       cant: "Spiacenti, al momento non puoi segnalare questo messaggio."
       notify_staff: "Notifica staff privatamente"
       formatted_name:
@@ -4144,7 +4134,6 @@ it:
           delete: "Elimina"
           delete_confirm: "Vuoi davvero eliminare questa sezione?"
           reset_confirm: "Vuoi davvero ripristinare questa sezione ai valori predefiniti?"
-          public: "Rendi questa sezione pubblica e visibile a tutti"
           always_public: "Il contenuto di questa sezione è sempre pubblico"
           more_menu: "Menu Altro"
           links:
@@ -4249,10 +4238,12 @@ it:
     form_template_chooser:
       select_template: "Seleziona i modelli di modulo"
     form_templates:
+      upload_field:
+        upload: "Carica"
+        uploading: "Caricamento"
       errors:
         valueMissing:
           default: "Per favore compila questo campo."
-          text: "Per favore compila questo campo."
           select-one: "Per favore seleziona un elemento nella lista."
           select-multiple: "Per favore selezione almeno un elemento nella lista."
           checkbox: "Per favore seleziona questa casella se vuoi procedere."

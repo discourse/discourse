@@ -10,14 +10,13 @@
   "dependencies": {
     "deprecation-silencer": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
-    "ember-auto-import": "^2.6.3",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-template-imports": "^4.0.0",
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
+    "@babel/core": "^7.23.3",
     "ember-cli": "~5.0.0",
     "webpack": "^5.89.0"
   },

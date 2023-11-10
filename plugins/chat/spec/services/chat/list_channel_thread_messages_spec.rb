@@ -3,7 +3,7 @@
 RSpec.describe Chat::ListChannelThreadMessages do
   subject(:result) { described_class.call(params) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:thread) do
     Fabricate(:chat_thread, channel: Fabricate(:chat_channel, threading_enabled: true))
   end

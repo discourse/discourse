@@ -5,6 +5,7 @@ import RestrictedUserRoute from "discourse/routes/restricted-user";
 export default RestrictedUserRoute.extend({
   currentUser: service(),
   siteSettings: service(),
+  router: service(),
 
   model() {
     return this.modelFor("user");
@@ -15,15 +16,15 @@ export default RestrictedUserRoute.extend({
     controller.set("loading", true);
 
     model
-      .loadSecondFactorCodes("")
+      .loadSecondFactorCodes()
       .then((response) => {
         if (response.error) {
           controller.set("errorMessage", response.error);
+        } else if (response.unconfirmed_session) {
+          this.router.transitionTo("preferences.security");
         } else {
           controller.setProperties({
             errorMessage: null,
-            loaded: !response.password_required,
-            dirty: !!response.password_required,
             totps: response.totps,
             security_keys: response.security_keys,
           });

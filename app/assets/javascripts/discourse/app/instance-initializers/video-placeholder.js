@@ -1,3 +1,4 @@
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
@@ -9,6 +10,10 @@ export default {
       function handleVideoPlaceholderClick(helper, event) {
         const parentDiv = event.target.closest(".video-placeholder-container");
         const wrapper = parentDiv.querySelector(".video-placeholder-wrapper");
+        const overlay = wrapper.querySelector(".video-placeholder-overlay");
+
+        parentDiv.style.cursor = "";
+        overlay.innerHTML = spinnerHTML;
 
         const videoHTML = `
         <video width="100%" height="100%" preload="metadata" controls style="display:none">
@@ -77,7 +82,7 @@ export default {
           container.addEventListener(
             "click",
             handleVideoPlaceholderClick.bind(null, helper),
-            false
+            { once: true }
           );
           overlay.innerHTML = `${iconHTML("play")}`;
           wrapper.appendChild(overlay);

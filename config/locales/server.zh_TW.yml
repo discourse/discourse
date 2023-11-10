@@ -394,7 +394,8 @@ zh_TW:
             name:
               same_as_password: "與您的密碼相同"
             ip_address:
-              signup_not_allowed: "不能使用這個帳戶進行登入"
+              blocked: "不允許從你的 IP 地址註冊新使用者。"
+              max_new_accounts_per_registration_ip: "不允許從你的 IP 地址註冊新使用者（達到上限）。聯繫一個管理人員。"
         user_email:
           attributes:
             user_id:
@@ -1166,8 +1167,6 @@ zh_TW:
     slow_down_crawler_rate: "如果指定了slow_down_crawler_user_agents，則此速率將適用於所有抓取工具（請求之間的延遲秒數）"
     content_security_policy_collect_reports: "在 /csp_reports 啟用CSP違規報告蒐集"
     invalidate_inactive_admin_email_after_days: "在這幾天沒有訪問網站的管理員帳戶，在登入前需要重新驗證該管理員帳戶的電子郵件。設定為0禁用。"
-    top_menu: "選擇在主頁導航列包含哪些項目，以及排列次序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "確定在貼文功能表條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "貼文菜單中默認隱藏的按鈕，點擊省略號後顯示。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     site_contact_username: "以一個有效的工作成員帳號來發送所有自動化消息。如果保留空白，則會使用預設的系統帳號。"
@@ -1713,9 +1712,6 @@ zh_TW:
       not_allowed: "本站不允許使用該郵箱服務商提供的電子郵箱，請使用其它郵箱位址。"
       blocked: "不被允許。"
       revoked: "在%{date}之前不發送郵件至“%{email}”"
-    ip_address:
-      blocked: "不允許從你的 IP 地址註冊新使用者。"
-      max_new_accounts_per_registration_ip: "不允許從你的 IP 地址註冊新使用者（達到上限）。聯繫一個管理人員。"
     website:
       domain_not_allowed: "網站無效。允許的域名有：%{domains}"
     auto_rejected: "由於年齡而被系統自動拒絕，請參閱「auto_handle_queued_age」網站設定"

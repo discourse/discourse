@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    spoiler:
+      title: Spoiler vervagen
+      label:
+        show: "Verborgen inhoud weergeven"
+    composer:
+      spoiler_text: "Deze tekst wordt vervaagd"

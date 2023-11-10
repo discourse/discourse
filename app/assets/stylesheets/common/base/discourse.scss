@@ -135,6 +135,11 @@ label {
   display: flex;
   margin-bottom: 5px;
   align-items: flex-start;
+  color: var(--primary-high);
+
+  &:not(.checkbox-label) {
+    font-weight: bold;
+  }
   > .d-icon {
     align-self: center;
     margin-right: 4px;
@@ -225,7 +230,7 @@ input {
     margin-bottom: 9px;
     color: var(--primary);
     background-color: var(--secondary);
-    border: 1px solid var(--primary-medium);
+    border: 1px solid var(--primary-400);
     border-radius: var(--d-input-border-radius);
     &:focus {
       @include default-focus;
@@ -269,7 +274,7 @@ textarea {
   box-sizing: border-box;
   height: auto;
   background-color: var(--secondary);
-  border: 1px solid var(--primary-medium);
+  border: 1px solid var(--primary-400);
   border-radius: 0;
 
   &:focus {

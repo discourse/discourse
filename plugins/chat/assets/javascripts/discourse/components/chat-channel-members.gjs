@@ -85,7 +85,6 @@ export default class ChatChannelMembers extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <div class="chat-channel-members">
       <DcFilterInput
         @class="chat-channel-members__filter"

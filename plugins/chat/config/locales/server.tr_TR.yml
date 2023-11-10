@@ -177,6 +177,7 @@ tr_TR:
       inline_to_message: "%{username} adlı kullanıcının #%{message_id} mesajı - #%{chat_channel}"
       inline_to_channel: "Sohbet #%{chat_channel}"
       inline_to_topic_channel: "%{topic_title} Konusu için Sohbet"
+      thread_title_connector: "içinde"
       x_members:
         one: "%{count} üye"
         other: "%{count} üye"

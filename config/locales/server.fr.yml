@@ -568,7 +568,8 @@ fr:
             name:
               same_as_password: "est identique à votre mot de passe."
             ip_address:
-              signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
+              blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
+              max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1474,7 +1475,6 @@ fr:
     blocked_onebox_domains: "Liste de domaines qui ne seront jamais intégrés dans une Onebox. (P. ex., wikipedia.org.) (Les symboles joker « * » et « ? » ne sont pas pris en charge.)"
     block_onebox_on_redirect: "Bloquer Onebox pour les URL redirigées."
     allowed_inline_onebox_domains: "Une liste de domaines qui seront transformés en Onebox s'ils ont été insérés sans titre"
-    enable_inline_onebox_on_all_domains: "Ignorer le paramètre « inline_onebox_domain_allowlist » et permettre des Onebox en ligne pour tous les domaines."
     force_custom_user_agent_hosts: "Domaines pour lesquels utiliser un agent utilisateur personnalisé pour les requêtes de Onebox. (Cela est utile pour les domaines limitant les accès par agent utilisateur.)"
     max_oneboxes_per_post: "Nombre maximal de Onebox dans un message."
     facebook_app_access_token: "Un jeton généré à partir de votre identifiant d'application Facebook et de votre secret. Utilisé pour générer des Onebox Instagram."
@@ -1568,8 +1568,6 @@ fr:
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
-    top_menu: "Choisissez les éléments qui apparaissent dans la navigation de la page d'accueil, ainsi que leur ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Choisissez les éléments qui apparaissent dans le menu du message, ainsi que leur ordre. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront masqués par défaut jusqu'à extension du menu."
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
     allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."
@@ -2195,7 +2193,6 @@ fr:
       reply_by_email_address_is_empty: "Vous devez configurer le paramètre « reply by email address » avant d'activer les réponses par e-mail."
       email_polling_disabled: "Vous devez activer l'interrogation POP3 manuelle ou activer un observateur de messagerie personnalisé avant d'activer la réponse par e-mail."
       user_locale_not_enabled: "Vous devez d'abord activer « allow user locale » avant d'activer ce paramètre."
-      personal_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quelqu'un d'autre que les responsables envoie des messages directs, choisissez le groupe des responsables."
       invalid_regex: "L'expression régulière est invalide ou non autorisée."
       invalid_regex_with_message: "L'expression régulière « %{regex} » est erronée : %{message}"
       email_editable_enabled: "Vous devez désactiver « email editable » avant d'activer ce paramètre."
@@ -2425,9 +2422,6 @@ fr:
       blocked: "n'est pas autorisé."
       revoked: "N'enverra plus d'e-mails à « %{email} » jusqu'au %{date}."
       does_not_exist: "S.O."
-    ip_address:
-      blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
-      max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
     website:
       domain_not_allowed: "Site Web invalide. Les domaines autorisés sont : %{domains}"
     auto_rejected: "Refusé automatiquement en raison de l'âge. Voir le paramètre de site « auto_handle_queued_age »."

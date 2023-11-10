@@ -9,6 +9,7 @@ import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import {
   FUTURE,
   PAST,
@@ -36,7 +37,6 @@ export default class ChatThread extends Component {
   @service chatHistory;
   @service chatThreadComposer;
   @service chatThreadPane;
-  @service chatThreadPaneSubscriptionsManager;
   @service currentUser;
   @service router;
   @service siteSettings;
@@ -86,13 +86,8 @@ export default class ChatThread extends Component {
   }
 
   @action
-  subscribeToUpdates() {
-    this.chatThreadPaneSubscriptionsManager.subscribe(this.args.thread);
-  }
-
-  @action
   teardown() {
-    this.chatThreadPaneSubscriptionsManager.unsubscribe();
+    this.subscriptionManager.teardown();
     cancel(this._debouncedFillPaneAttemptHandler);
     cancel(this._debounceUpdateLastReadMessageHandler);
   }
@@ -166,7 +161,11 @@ export default class ChatThread extends Component {
   @action
   loadMessages() {
     this.fetchMessages();
-    this.subscribeToUpdates();
+    this.subscriptionManager = new ChatChannelThreadSubscriptionManager(
+      this,
+      this.args.thread,
+      { onNewMessage: this.onNewMessage }
+    );
   }
 
   @action
@@ -297,6 +296,11 @@ export default class ChatThread extends Component {
   }
 
   @bind
+  onNewMessage(message) {
+    this.messagesManager.addMessages([message]);
+  }
+
+  @bind
   processMessages(thread, result) {
     const messages = result.messages.map((messageData) => {
       const ignored = this.currentUser.ignored_users || [];
@@ -391,7 +395,7 @@ export default class ChatThread extends Component {
     this.chatThreadPane.sending = true;
 
     const data = {
-      new_message: message.message,
+      message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 

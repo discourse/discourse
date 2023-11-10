@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ColorSchemesController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   let(:valid_params) do
     {

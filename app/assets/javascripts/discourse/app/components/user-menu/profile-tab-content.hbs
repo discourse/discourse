@@ -102,7 +102,7 @@
       }}
     >
       <DButton
-        @action={{route-action "toggleAnonymous"}}
+        @action={{this.toggleAnonymous}}
         class="btn-flat profile-tab-btn"
       >
         {{#if this.currentUser.is_anonymous}}

@@ -33,7 +33,7 @@ export function addSidebarPanel(func) {
 }
 
 export function addSidebarSection(func, panelKey) {
-  const panel = customPanels.find((p) => p.key === panelKey);
+  const panel = customPanels.findBy("key", panelKey);
   if (!panel) {
     // eslint-disable-next-line no-console
     return console.warn(
@@ -43,6 +43,20 @@ export function addSidebarSection(func, panelKey) {
   panel.sections.push(
     func.call(this, BaseCustomSidebarSection, BaseCustomSidebarSectionLink)
   );
+}
+
+export function resetPanelSections(
+  panelKey,
+  newSections = null,
+  sectionBuilder = null
+) {
+  const panel = customPanels.findBy("key", panelKey);
+  if (newSections) {
+    panel.sections = [];
+    sectionBuilder(newSections);
+  } else {
+    panel.sections = [];
+  }
 }
 
 export function resetSidebarPanels() {

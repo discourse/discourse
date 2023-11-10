@@ -2,9 +2,9 @@
 
 RSpec.describe InviteSerializer do
   describe "#can_delete_invite" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:user)
+    fab!(:admin)
+    fab!(:moderator)
     fab!(:invite_from_user) { Fabricate(:invite, invited_by: user) }
     fab!(:invite_from_moderator) { Fabricate(:invite, invited_by: moderator) }
 

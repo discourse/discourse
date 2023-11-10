@@ -189,6 +189,7 @@ ru:
       inline_to_message: "Сообщение №%{message_id} от пользователя %{username} — №%{chat_channel}"
       inline_to_channel: "Чат №%{chat_channel}"
       inline_to_topic_channel: "Чат по теме %{topic_title}"
+      thread_title_connector: "в"
       x_members:
         one: "%{count} участник"
         few: "%{count} участника"

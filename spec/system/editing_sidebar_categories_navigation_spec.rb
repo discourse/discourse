@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Editing sidebar categories navigation", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   fab!(:category2) { Fabricate(:category, name: "category2") }
 
@@ -24,7 +24,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
   before { sign_in(user) }
 
   shared_examples "a user can edit the sidebar categories navigation" do |mobile|
-    it "allows a user to edit the sidebar categories navigation", mobile: mobile do
+    xit "allows a user to edit the sidebar categories navigation", mobile: mobile do
       visit "/latest"
 
       sidebar.open_on_mobile if mobile

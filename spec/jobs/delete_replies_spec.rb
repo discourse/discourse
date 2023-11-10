@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::DeleteReplies do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:topic_timer) do
     Fabricate(
       :topic_timer,

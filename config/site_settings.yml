@@ -682,6 +682,14 @@ users:
     default: 1
     enum: "TrustLevelSetting"
     client: true
+    hidden: true
+  anonymous_posting_allowed_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   anonymous_account_duration_minutes:
     default: 10080
     max: 99000
@@ -860,7 +868,7 @@ posting:
     client: true
     allow_any: false
     refresh: true
-    validator: "PersonalMessageEnabledGroupsValidator"
+    validator: "AtLeastOneGroupValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -871,6 +879,14 @@ posting:
   shared_drafts_min_trust_level:
     default: "staff"
     enum: "TrustLevelAndStaffSetting"
+    hidden: true
+  shared_drafts_allowed_groups:
+    default: "3" # auto group staff
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   post_edit_time_limit:
     default: 1440
     max: 10080
@@ -944,6 +960,13 @@ posting:
   min_trust_level_for_here_mention:
     default: "2"
     enum: "TrustLevelAndStaffSetting"
+  here_mention_allowed_groups:
+    default: "12" # auto group trust_level_2
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   title_max_word_length:
     default: 30
     locale_default:
@@ -1454,6 +1477,9 @@ files:
   enable_s3_uploads:
     default: false
     client: true
+  enable_s3_transfer_acceleration:
+    default: false
+    hidden: true
   s3_use_iam_profile:
     default: false
   s3_access_key_id:

@@ -102,13 +102,7 @@ function _validateFormTemplateData(form) {
 function _showErrorMessage(field, element) {
   if (field.validity.valueMissing) {
     const prefix = "form_templates.errors.valueMissing";
-    const types = [
-      "select-one",
-      "select-multiple",
-      "checkbox",
-      "text",
-      "number",
-    ];
+    const types = ["select-one", "select-multiple", "checkbox"];
     _showErrorByType(element, field, prefix, types);
   } else if (field.validity.typeMismatch) {
     const prefix = "form_templates.errors.typeMismatch";

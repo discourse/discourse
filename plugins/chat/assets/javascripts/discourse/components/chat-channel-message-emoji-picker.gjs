@@ -64,7 +64,6 @@ export default class ChatChannelMessageEmojiPicker extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <ChatEmojiPicker
       @context="chat-channel-message"
       @didInsert={{this.didInsert}}

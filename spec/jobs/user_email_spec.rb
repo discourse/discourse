@@ -442,7 +442,7 @@ RSpec.describe Jobs::UserEmail do
               data: { original_post_id: post.id }.to_json,
             )
           end
-          fab!(:moderator) { Fabricate(:moderator) }
+          fab!(:moderator)
           fab!(:regular_user) { Fabricate(:user) }
 
           context "when this is not a group PM" do
@@ -468,7 +468,7 @@ RSpec.describe Jobs::UserEmail do
           end
 
           context "when this is a group PM" do
-            fab!(:group) { Fabricate(:group) }
+            fab!(:group)
             fab!(:users) { Fabricate.times(2, :user) }
 
             let(:post) { Fabricate(:group_private_message_post, user: user, recipients: group) }

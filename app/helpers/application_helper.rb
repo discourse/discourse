@@ -26,6 +26,7 @@ module ApplicationHelper
         },
         EXTEND_PROTOTYPES: {
           Date: false,
+          String: false,
         },
         _APPLICATION_TEMPLATE_WRAPPER: false,
         _DEFAULT_ASYNC_OBSERVERS: true,
@@ -124,9 +125,6 @@ module ApplicationHelper
           path = path.gsub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
-    elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req? &&
-          Rails.env != "development"
-      path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 
     path
@@ -694,7 +692,6 @@ module ApplicationHelper
       base_uri: Discourse.base_path,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,
-      markdown_it_url: script_asset_path("markdown-it-bundle"),
       service_worker_url: "service-worker.js",
       default_locale: SiteSetting.default_locale,
       asset_version: Discourse.assets_digest,

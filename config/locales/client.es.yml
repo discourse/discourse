@@ -2064,12 +2064,6 @@ es:
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
-      plus_subcategories_title:
-        one: "%{name} y una subcategoría"
-        other: "%{name} y %{count} subcategorías"
-      plus_subcategories:
-        one: "+ %{count} subcategoría"
-        other: "+ %{count} subcategorías"
     select_kit:
       delete_item: "Eliminar %{name}"
       filter_by: "Filtrar por: %{name}"
@@ -3519,8 +3513,7 @@ es:
       take_action: "Tomar medidas…"
       take_action_options:
         default:
-          title: "Tomar medidas"
-          details: "Alcanzar el umbral de denuncias inmediatamente en vez de esperar más denuncias de la comunidad"
+          title: "Ocultar publicación"
         suspend:
           title: "Suspender usuario"
           details: "Alcanzar el umbral de denuncias y suspender al usuario"
@@ -3537,7 +3530,6 @@ es:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
       submit_tooltip: "Enviar la denuncia privada"
-      take_action_tooltip: "Alcanzar el umbral de denuncias inmediatamente en vez de esperar más denuncias de la comunidad"
       cant: "Lo sentimos, no puedes denunciar esta publicación en este momento."
       notify_staff: "Notificar al personal de forma privada"
       formatted_name:
@@ -4110,7 +4102,6 @@ es:
           delete: "Eliminar"
           delete_confirm: "¿Seguro que quieres eliminar esta sección?"
           reset_confirm: "¿Seguro que quieres restablecer esta sección a los valores predeterminados?"
-          public: "Hacer que esta sección sea pública y visible para todos"
           always_public: "El contenido de esta sección es siempre público"
           more_menu: "Menú Más"
           links:
@@ -4215,10 +4206,12 @@ es:
     form_template_chooser:
       select_template: "Seleccionar plantillas de formulario"
     form_templates:
+      upload_field:
+        upload: "Subir"
+        uploading: "Subiendo"
       errors:
         valueMissing:
           default: "Rellena este campo."
-          text: "Rellena este campo."
           select-one: "Selecciona un elemento de la lista."
           select-multiple: "Selecciona al menos un elemento de la lista."
           checkbox: "Marca esta casilla si quieres continuar."
