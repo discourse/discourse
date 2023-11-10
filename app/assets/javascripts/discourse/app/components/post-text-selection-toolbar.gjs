@@ -235,6 +235,7 @@ export default class PostTextSelectionToolbar extends Component {
                 <PluginOutlet
                   @name="quote-share-buttons-after"
                   @connectorTagName="span"
+                  @outletArgs={{hash data=@data}}
                 />
               </span>
             </span>

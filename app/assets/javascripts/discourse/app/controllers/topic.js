@@ -457,6 +457,18 @@ export default Controller.extend(bufferedProperty("model"), {
       });
     },
 
+    buildQuoteMarkdown() {
+      const { postId, buffer, opts } = this.quoteState;
+      const loadedPost = this.get("model.postStream").findLoadedPost(postId);
+      const promise = loadedPost
+        ? Promise.resolve(loadedPost)
+        : this.get("model.postStream").loadPost(postId);
+
+      return promise.then((post) => {
+        return buildQuote(post, buffer, opts);
+      });
+    },
+
     fillGapBefore(args) {
       return this.get("model.postStream").fillGapBefore(args.post, args.gap);
     },
