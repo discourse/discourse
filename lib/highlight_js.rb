@@ -18,7 +18,7 @@ module HighlightJs
       end
 
     <<~JS
-      export default function registerLanguages(hljs){
+      export default function registerLanguages(hljs) {
         #{lang_js.join("\n")}
       }
     JS

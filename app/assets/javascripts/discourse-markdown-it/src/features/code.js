@@ -82,7 +82,7 @@ export function setup(helper) {
   helper.allowList({
     custom(tag, name, value) {
       if (tag === "code" && name === "class") {
-        return !!/^lang\-.+$/.exec(value);
+        return /^lang\-.+$/.test(value);
       }
     },
   });
