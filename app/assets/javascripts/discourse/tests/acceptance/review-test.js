@@ -76,7 +76,7 @@ acceptance("Review", function (needs) {
       "it opens reject reason modal when user is rejected"
     );
 
-    await click(".modal-footer .cancel");
+    await click(".d-modal__footer .cancel");
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_block");
 

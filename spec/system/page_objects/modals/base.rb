@@ -9,11 +9,11 @@ module PageObjects
       BODY_SELECTOR = ""
 
       def body
-        find(".modal-body#{BODY_SELECTOR}")
+        find(".d-modal__body#{BODY_SELECTOR}")
       end
 
       def footer
-        find(".modal-footer")
+        find(".d-modal__footer")
       end
 
       def close
