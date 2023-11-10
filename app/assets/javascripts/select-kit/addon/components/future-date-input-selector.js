@@ -30,12 +30,11 @@ export default ComboBoxComponent.extend({
       if (value !== "custom" && !isEmpty(value)) {
         const { time } = this.content.find((x) => x.id === value);
         if (time) {
-          this.attrs.onChangeInput &&
-            this.attrs.onChangeInput(time.locale("en").format(FORMAT));
+          this.onChangeInput?.(time.locale("en").format(FORMAT));
         }
       }
 
-      this.attrs.onChange && this.attrs.onChange(value);
+      this.onChange?.(value);
     },
   },
 });

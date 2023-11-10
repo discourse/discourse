@@ -127,8 +127,8 @@ export default Component.extend({
       this.modal.show(JumpToPost, {
         model: {
           topic: this.topic,
-          jumpToIndex: this.attrs.jumpToIndex,
-          jumpToDate: this.attrs.jumpToDate,
+          jumpToIndex: this.jumpToIndex,
+          jumpToDate: this.jumpToDate,
         },
       });
     }

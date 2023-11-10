@@ -53,8 +53,8 @@ export default Component.extend({
 
     if (
       !isPresent(this.date) &&
-      !isPresent(this.attrs.hours) &&
-      !isPresent(this.attrs.minutes)
+      !isPresent(this.hours) &&
+      !isPresent(this.minutes)
     ) {
       this.setProperties({
         hours: null,

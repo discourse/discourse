@@ -14,8 +14,8 @@ export default Component.extend({
 
   @on("init")
   cloneDuration() {
-    const usesHours = Object.hasOwn(this.attrs, "durationHours");
-    const usesMinutes = Object.hasOwn(this.attrs, "durationMinutes");
+    const usesHours = this.durationHours !== null;
+    const usesMinutes = this.durationMinutes !== null;
 
     if (usesHours && usesMinutes) {
       throw new Error(

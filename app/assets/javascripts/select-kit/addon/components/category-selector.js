@@ -33,8 +33,8 @@ export default MultiSelectComponent.extend({
     const blockedCategories = makeArray(this.blockedCategories);
     return Category.list().filter((category) => {
       if (category.isUncategorizedCategory) {
-        if (this.attrs.options?.allowUncategorized !== undefined) {
-          return this.attrs.options.allowUncategorized;
+        if (this.options?.allowUncategorized !== undefined) {
+          return this.options.allowUncategorized;
         }
 
         return this.selectKit.options.allowUncategorized;
@@ -70,8 +70,8 @@ export default MultiSelectComponent.extend({
 
     return await Category.asyncSearch(filter, {
       includeUncategorized:
-        this.attrs.options?.allowUncategorized !== undefined
-          ? this.attrs.options.allowUncategorized
+        this.options?.allowUncategorized !== undefined
+          ? this.options.allowUncategorized
           : this.selectKit.options.allowUncategorized,
       rejectCategoryIds: Array.from(rejectCategoryIds),
     });

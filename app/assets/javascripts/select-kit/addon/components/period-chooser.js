@@ -29,7 +29,7 @@ export default DropdownSelectBoxComponent.extend({
       if (this.action) {
         this.action(value);
       } else {
-        this.attrs.onChange && this.attrs.onChange(value);
+        this.onChange?.(value);
       }
     },
   },
