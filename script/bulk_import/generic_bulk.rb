@@ -1813,9 +1813,11 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY id
     SQL
 
+    existing_permalinks = Permalink.pluck(:topic_id).to_set
+
     create_permalinks(rows) do |row|
       topic_id = topic_id_from_imported_id(row["id"])
-      next unless topic_id
+      next if !topic_id || existing_permalinks.include?(topic_id)
 
       { url: row["old_relative_url"], topic_id: topic_id }
     end
