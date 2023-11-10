@@ -1,9 +1,11 @@
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import renderTags from "discourse/lib/render-tags";
 import { topicFeaturedLinkNode } from "discourse/lib/render-topic-featured-link";
 import DiscourseURL from "discourse/lib/url";
 import { avatarImg } from "discourse/widgets/post";
 import RawHtml from "discourse/widgets/raw-html";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -110,6 +112,19 @@ export default createWidget("header-topic-info", {
           attributes: { "data-topic-id": topic.get("id") },
           contents: () => titleHTML,
         })
+      );
+
+      heading.push(
+        new RenderGlimmer(
+          this,
+          "div",
+          hbs`<PluginOutlet @name="header-topic-title-suffix" @outletArgs={{@data.outletArgs}}/>`,
+          {
+            outletArgs: {
+              topic,
+            },
+          }
+        )
       );
     }
 

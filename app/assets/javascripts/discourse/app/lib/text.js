@@ -1,44 +1,17 @@
-import { htmlSafe } from "@ember/template";
 import AllowLister from "pretty-text/allow-lister";
 import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
-import { Promise } from "rsvp";
-import loadScript from "discourse/lib/load-script";
-import { MentionsParser } from "discourse/lib/mentions-parser";
-import { formatUsername } from "discourse/lib/utilities";
-import Session from "discourse/models/session";
 import deprecated from "discourse-common/lib/deprecated";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { helperContext } from "discourse-common/lib/helpers";
 
-function getOpts(opts) {
-  let context = helperContext();
-
-  opts = Object.assign(
-    {
-      getURL: getURLWithCDN,
-      currentUser: context.currentUser,
-      censoredRegexp: context.site.censored_regexp,
-      customEmojiTranslation: context.site.custom_emoji_translation,
-      emojiDenyList: context.site.denied_emojis,
-      siteSettings: context.siteSettings,
-      formatUsername,
-      watchedWordsReplace: context.site.watched_words_replace,
-      watchedWordsLink: context.site.watched_words_link,
-      additionalOptions: context.site.markdown_additional_options,
-    },
-    opts
-  );
-
-  return buildOptions(opts);
+async function withEngine(name, ...args) {
+  const engine = await import("discourse/static/markdown-it");
+  return engine[name](...args);
 }
 
-export function cook(text, options) {
-  return loadMarkdownIt().then(() => {
-    const cooked = createPrettyText(options).cook(text);
-    return htmlSafe(cooked);
-  });
+export async function cook(text, options) {
+  return await withEngine("cook", text, options);
 }
 
 // todo drop this function after migrating everything to cook()
@@ -48,66 +21,38 @@ export function cookAsync(text, options) {
     dropFrom: "3.2.0.beta5",
     id: "discourse.text.cook-async",
   });
+
   return cook(text, options);
 }
 
-// Warm up pretty text with a set of options and return a function
-// which can be used to cook without rebuilding pretty-text every time
-export function generateCookFunction(options) {
-  return loadMarkdownIt().then(() => {
-    const prettyText = createPrettyText(options);
-    return (text) => prettyText.cook(text);
-  });
+// Warm up the engine with a set of options and return a function
+// which can be used to cook without rebuilding the engine every time
+export async function generateCookFunction(options) {
+  return await withEngine("generateCookFunction", options);
 }
 
-export function generateLinkifyFunction(options) {
-  return loadMarkdownIt().then(() => {
-    const prettyText = createPrettyText(options);
-    return prettyText.opts.engine.linkify;
-  });
+export async function generateLinkifyFunction(options) {
+  return await withEngine("generateLinkifyFunction", options);
 }
 
+// TODO: this one is special, it attempts to do something even without
+// the engine loaded. Currently, this is what is forcing the xss library
+// to be included on initial page load. The API/behavior also seems a bit
+// different than the async version.
 export function sanitize(text, options) {
   return textSanitize(text, new AllowLister(options));
 }
 
-export function sanitizeAsync(text, options) {
-  return loadMarkdownIt().then(() => {
-    return createPrettyText(options).sanitize(text);
-  });
+export async function sanitizeAsync(text, options) {
+  return await withEngine("sanitize", text, options);
 }
 
-export function parseAsync(md, options = {}, env = {}) {
-  return loadMarkdownIt().then(() => {
-    return createPrettyText(options).parse(md, env);
-  });
+export async function parseAsync(md, options = {}, env = {}) {
+  return await withEngine("parse", md, options, env);
 }
 
 export async function parseMentions(markdown, options) {
-  await loadMarkdownIt();
-  const prettyText = createPrettyText(options);
-  const mentionsParser = new MentionsParser(prettyText);
-  return mentionsParser.parse(markdown);
-}
-
-function loadMarkdownIt() {
-  return new Promise((resolve) => {
-    let markdownItURL = Session.currentProp("markdownItURL");
-    if (markdownItURL) {
-      loadScript(markdownItURL)
-        .then(() => resolve())
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-        });
-    } else {
-      resolve();
-    }
-  });
-}
-
-function createPrettyText(options) {
-  return new PrettyText(getOpts(options));
+  return await withEngine("parseMentions", markdown, options);
 }
 
 function emojiOptions() {

@@ -28,6 +28,8 @@ vi:
           other: "%{comma_separated_usernames} và %{count} khác"
     mention_warning:
       dismiss: "bỏ qua"
+    onebox:
+      thread_title_connector: "trong"
   discourse_push_notifications:
     popup:
       chat_mention:

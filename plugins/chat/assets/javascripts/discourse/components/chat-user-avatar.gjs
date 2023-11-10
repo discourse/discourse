@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import { renderAvatar } from "discourse/helpers/user-avatar";
+import { userPath } from "discourse/lib/url";
 
 export default class ChatUserAvatar extends Component {
   @service chat;
@@ -37,19 +38,23 @@ export default class ChatUserAvatar extends Component {
     );
   }
 
+  get userPath() {
+    return userPath(this.args.user.username);
+  }
+
   <template>
     <div
       class={{concatClass "chat-user-avatar" (if this.isOnline "is-online")}}
       data-username={{@user.username}}
     >
       {{#if this.interactive}}
-        <div
-          role="button"
-          class="chat-user-avatar__container clickable"
+        <a
+          class="chat-user-avatar__container"
+          href={{this.userPath}}
           data-user-card={{@user.username}}
         >
           {{this.avatar}}
-        </div>
+        </a>
       {{else}}
         {{this.avatar}}
       {{/if}}

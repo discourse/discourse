@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe WebHookTopicViewSerializer do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:admin)
+  fab!(:topic)
 
   let(:serializer) do
     WebHookTopicViewSerializer.new(TopicView.new(topic), scope: Guardian.new(admin), root: false)

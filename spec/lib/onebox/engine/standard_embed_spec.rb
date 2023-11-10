@@ -66,6 +66,34 @@ RSpec.describe Onebox::Engine::StandardEmbed do
       expect(instance.raw).to eq({ title: "do not override me" })
     end
 
+    it "sets favicon URL" do
+      html_doc =
+        mocked_html_doc(
+          twitter_data: {
+            "name" => "twitter:url",
+            "content" => "cool.url",
+          },
+          favicon_url: "https://favicon.co/default.ico",
+        )
+      Onebox::Helpers.stubs(fetch_html_doc: html_doc)
+
+      expect(instance.raw).to eq({ url: "cool.url", favicon: "https://favicon.co/default.ico" })
+    end
+
+    it "ignores suspiciously long favicon URLs" do
+      html_doc =
+        mocked_html_doc(
+          twitter_data: {
+            "name" => "twitter:url",
+            "content" => "cool.url",
+          },
+          favicon_url: "https://favicon.co/#{"a" * 2_000}.ico",
+        )
+      Onebox::Helpers.stubs(fetch_html_doc: html_doc)
+
+      expect(instance.raw).to eq({ url: "cool.url" })
+    end
+
     it "sets oembed data" do
       Onebox::Helpers.stubs(fetch_html_doc: nil)
       Onebox::Oembed.any_instance.stubs(:data).returns({ description: "description" })
@@ -84,11 +112,11 @@ RSpec.describe Onebox::Engine::StandardEmbed do
 
   private
 
-  def mocked_html_doc(twitter_data: nil)
+  def mocked_html_doc(twitter_data: nil, favicon_url: nil)
     html_doc = mock
     html_doc.stubs(at_css: nil, at: nil)
     stub_twitter(html_doc, twitter_data)
-    stub_favicon(html_doc)
+    stub_favicon(html_doc, favicon_url)
     stub_json_ld
     html_doc
   end
@@ -97,13 +125,13 @@ RSpec.describe Onebox::Engine::StandardEmbed do
     html_doc.expects(:css).with("meta").at_least_once.returns([twitter_data])
   end
 
-  def stub_favicon(html_doc)
+  def stub_favicon(html_doc, favicon_url = nil)
     html_doc
       .stubs(:css)
       .with(
         'link[rel="shortcut icon"], link[rel="icon shortcut"], link[rel="shortcut"], link[rel="icon"]',
       )
-      .returns([])
+      .returns([{ "href" => favicon_url }.compact])
   end
 
   def stub_json_ld

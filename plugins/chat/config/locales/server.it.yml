@@ -177,6 +177,7 @@ it:
       inline_to_message: "Messaggio n.%{message_id} per %{username} – n.%{chat_channel}"
       inline_to_channel: "Chat n. %{chat_channel}"
       inline_to_topic_channel: "Chat per l'argomento %{topic_title}"
+      thread_title_connector: "in"
       x_members:
         one: "%{count} membro"
         other: "%{count} membri"

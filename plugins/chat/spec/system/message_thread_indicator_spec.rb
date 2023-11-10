@@ -6,6 +6,7 @@ describe "Thread indicator for chat messages", type: :system do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
   let(:open_thread) { PageObjects::Pages::ChatThread.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
@@ -123,50 +124,49 @@ describe "Thread indicator for chat messages", type: :system do
     end
 
     it "shows an excerpt of the last reply in the thread" do
-      thread_1.last_message.update!(message: "test for excerpt")
-      thread_1.last_message.rebake!
+      update_message!(
+        thread_1.original_message,
+        user: thread_1.original_message.user,
+        text: "test for excerpt",
+      )
 
       chat_page.visit_channel(channel)
+
       expect(
-        channel_page.message_thread_indicator(thread_1.original_message).excerpt,
-      ).to have_content(thread_excerpt(thread_1.last_message))
+        channel_page.message_thread_indicator(thread_1.original_message.reload).excerpt,
+      ).to have_content(thread_excerpt(thread_1.last_message.reload))
     end
 
     it "updates the last reply excerpt and participants when a new message is added to the thread" do
       new_user = Fabricate(:user)
       chat_system_user_bootstrap(user: new_user, channel: channel)
       original_last_reply = thread_1.last_message
-      original_last_reply.update!(message: "test for excerpt")
-      original_last_reply.rebake!
+      update_message!(original_last_reply, user: original_last_reply.user, text: "test for excerpt")
 
       chat_page.visit_channel(channel)
 
-      excerpt_text = thread_excerpt(original_last_reply)
+      excerpt_text = thread_excerpt(original_last_reply.reload)
 
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_content(
         excerpt_text,
       )
 
-      using_session(:new_user) do |session|
-        sign_in(new_user)
-        chat_page.visit_channel(channel)
-        channel_page.message_thread_indicator(thread_1.original_message).click
-
-        expect(side_panel).to have_open_thread(thread_1)
-
-        open_thread.send_message("wow i am happy to join this thread!")
-      end
+      new_message =
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          thread: thread_1,
+          user: new_user,
+          in_reply_to: thread_1.original_message,
+          use_service: true,
+        )
 
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
         new_user,
       )
-
-      new_user_reply = thread_1.replies.where(user: new_user).first
-      excerpt_text = thread_excerpt(new_user_reply)
-
       expect(
         channel_page.message_thread_indicator(thread_1.original_message).excerpt,
-      ).to have_content(excerpt_text)
+      ).to have_content(thread_excerpt(new_message))
     end
   end
 end

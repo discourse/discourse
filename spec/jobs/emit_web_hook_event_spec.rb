@@ -7,8 +7,8 @@ RSpec.describe Jobs::EmitWebHookEvent do
 
   fab!(:post_hook) { Fabricate(:web_hook) }
   fab!(:inactive_hook) { Fabricate(:inactive_web_hook) }
-  fab!(:post) { Fabricate(:post) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:post)
+  fab!(:user)
 
   it "raises an error when there is no web hook record" do
     expect { job.execute(event_type: "post", payload: {}) }.to raise_error(
@@ -175,8 +175,8 @@ RSpec.describe Jobs::EmitWebHookEvent do
   end
 
   context "with category filters" do
-    fab!(:category) { Fabricate(:category) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:category)
+    fab!(:topic)
     fab!(:topic_with_category) { Fabricate(:topic, category_id: category.id) }
     fab!(:topic_hook) { Fabricate(:topic_web_hook, categories: [category]) }
 
@@ -204,7 +204,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
   end
 
   context "with tag filters" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
     fab!(:topic) { Fabricate(:topic, tags: [tag]) }
     fab!(:topic_hook) { Fabricate(:topic_web_hook, tags: [tag]) }
 
@@ -240,7 +240,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
   end
 
   context "with group filters" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:user) { Fabricate(:user, groups: [group]) }
     fab!(:like_hook) { Fabricate(:like_web_hook, groups: [group]) }
 

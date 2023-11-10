@@ -125,7 +125,6 @@ ko:
       save: "저장"
       select: "선택"
       return_to_list: "채널 목록으로 돌아가기"
-      return_to_threads_list: "진행 중인 토론으로 돌아가기"
       unread_threads_count:
         other: "읽지 않은 토론이 %{count}개 있습니다."
       scroll_to_bottom: "맨 아래로 스크롤"

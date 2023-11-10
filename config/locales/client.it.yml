@@ -3545,8 +3545,7 @@ it:
       take_action: "Esegui azione…"
       take_action_options:
         default:
-          title: "Procedi"
-          details: "Raggiungi la soglia di segnalazioni immediatamente, piuttosto che aspettare altre segnalazioni della comunità"
+          title: "Nascondi Messaggio"
         suspend:
           title: "Sospendi utente"
           details: "Raggiungi la soglia delle segnalazioni e sospendi l'utente"
@@ -3563,7 +3562,6 @@ it:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
       submit_tooltip: "Invia la segnalazione privata"
-      take_action_tooltip: "Raggiungi la soglia di segnalazioni immediatamente, piuttosto che aspettare altre segnalazioni della comunità"
       cant: "Spiacenti, al momento non puoi segnalare questo messaggio."
       notify_staff: "Notifica staff privatamente"
       formatted_name:
@@ -4240,10 +4238,12 @@ it:
     form_template_chooser:
       select_template: "Seleziona i modelli di modulo"
     form_templates:
+      upload_field:
+        upload: "Carica"
+        uploading: "Caricamento"
       errors:
         valueMissing:
           default: "Per favore compila questo campo."
-          text: "Per favore compila questo campo."
           select-one: "Per favore seleziona un elemento nella lista."
           select-multiple: "Per favore selezione almeno un elemento nella lista."
           checkbox: "Per favore seleziona questa casella se vuoi procedere."

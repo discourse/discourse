@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe PostMover do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
+  fab!(:admin)
+  fab!(:evil_trout)
 
   describe "#move_types" do
     context "when verifying enum sequence" do
@@ -2101,7 +2101,7 @@ RSpec.describe PostMover do
     end
 
     context "with messages" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       fab!(:another_user) { Fabricate(:user) }
       fab!(:regular_user) { Fabricate(:trust_level_4) }
       fab!(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
@@ -2437,7 +2437,7 @@ RSpec.describe PostMover do
 
     context "with banner topic" do
       fab!(:regular_user) { Fabricate(:trust_level_4) }
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       fab!(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
       fab!(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
       fab!(:p1) { Fabricate(:post, topic: banner_topic, user: evil_trout) }

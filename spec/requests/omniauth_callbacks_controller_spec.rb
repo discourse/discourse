@@ -3,7 +3,7 @@
 require "discourse_connect_base"
 
 RSpec.describe Users::OmniauthCallbacksController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   before { OmniAuth.config.test_mode = true }
 

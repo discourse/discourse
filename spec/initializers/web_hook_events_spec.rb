@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Webhook event handlers" do
-  fab!(:user_badge) { Fabricate(:user_badge) }
+  fab!(:user_badge)
   fab!(:web_hook) { Fabricate(:user_badge_web_hook) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:badge) { Fabricate(:badge) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:user)
+  fab!(:badge)
+  fab!(:post)
 
   describe "user_badge events" do
     it "enqueues user_badge_granted webhook event" do

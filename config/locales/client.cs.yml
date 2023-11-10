@@ -3082,8 +3082,7 @@ cs:
       take_action: "Podniknout kroky..."
       take_action_options:
         default:
-          title: "Zakročit"
-          details: "Ihned dosáhni vlaječky prahu, než aby jsi čekal na více komunitních vlaječek"
+          title: "Schovat příspěvek"
         suspend:
           title: "Suspend User"
         silence:
@@ -3095,7 +3094,6 @@ cs:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrytý)"
       submit_tooltip: "Podat soukromé nahlášení"
-      take_action_tooltip: "Ihned dosáhni vlaječky prahu, než aby jsi čekal na více komunitních vlaječek"
       cant: "Bohužel nyní nemůžete tento příspěvek nahlásit."
       notify_staff: "Napište členům redakce soukromě"
       formatted_name:
@@ -3696,10 +3694,12 @@ cs:
     form_template_chooser:
       select_template: "Vyberte šablony formulářů"
     form_templates:
+      upload_field:
+        upload: "Nahrát"
+        uploading: "Nahrává se"
       errors:
         valueMissing:
           default: "Vyplňte prosím toto pole."
-          text: "Vyplňte prosím toto pole."
           select-one: "Vyberte položku ze seznamu."
           select-multiple: "Vyberte prosím alespoň jednu položku v seznamu."
           checkbox: "Zaškrtněte toto políčko, pokud chcete pokračovat."

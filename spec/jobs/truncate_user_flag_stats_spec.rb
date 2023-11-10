@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::TruncateUserFlagStats do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:other_user) { Fabricate(:user) }
 
   before do

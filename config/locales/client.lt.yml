@@ -2972,8 +2972,7 @@ lt:
       action: "Uždėti Įrašui Vėliavą"
       take_action_options:
         default:
-          title: "Imtis Veiksmų"
-          details: "Prieiti prie vėliavų ribos tuoj pat, o ne laukti daugiau vartotojų vėliavų"
+          title: "Paslėpti įrašą"
         suspend:
           title: "Sustabdyti vartotoją"
         silence:
@@ -2986,7 +2985,6 @@ lt:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(paslėptas)"
       submit_tooltip: "Patvirtinti privačią vėliavą"
-      take_action_tooltip: "Prieiti prie vėliavų ribos tuoj pat, o ne laukti daugiau vartotojų vėliavų"
       cant: "Apgailestaujame, tačiau šiuo metu negalite uždėti šiam įrašui vėliavos. "
       notify_staff: "Įspėti moderatorius privačiai"
       formatted_name:
@@ -3526,6 +3524,9 @@ lt:
               content: "Peržiūra"
     until: "Iki:"
     form_templates:
+      upload_field:
+        upload: "Įkelti"
+        uploading: "Įkeliama"
       errors:
         typeMismatch:
           default: "Prašome įrašyti tinkamą reikšmę."

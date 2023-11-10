@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Stylesheet::Manager::ScssChecker do
-  fab!(:theme) { Fabricate(:theme) }
+  fab!(:theme)
 
   describe "#has_scss" do
     it "should return true when theme has scss" do

@@ -3,13 +3,13 @@
 require "rails_helper"
 
 RSpec.describe Chat::ChatController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:other_user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:admin)
+  fab!(:category)
   fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
   fab!(:dm_chat_channel) { Fabricate(:direct_message_channel, users: [user, other_user, admin]) }
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:tag)
 
   MESSAGE_COUNT = 70
   MESSAGE_COUNT.times do |n|
@@ -114,7 +114,6 @@ RSpec.describe Chat::ChatController do
             job: Jobs::Chat::ProcessMessage,
             args: {
               chat_message_id: chat_message.id,
-              is_dirty: true,
             },
           ) do
             put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
@@ -612,6 +611,7 @@ RSpec.describe Chat::ChatController do
       expect(response.status).to eq(403)
 
       Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
+
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
       }.to change { Chat::Draft.count }.by(1)

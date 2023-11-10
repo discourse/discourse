@@ -7,7 +7,7 @@ RSpec.describe WebHookUserSerializer do
     user
   end
 
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   let :serializer do
     WebHookUserSerializer.new(user, scope: Guardian.new(admin), root: false)

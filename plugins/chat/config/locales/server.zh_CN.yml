@@ -167,6 +167,7 @@ zh_CN:
       inline_to_message: "消息 #%{message_id}，来自%{username} – #%{chat_channel}"
       inline_to_channel: "聊天 #%{chat_channel}"
       inline_to_topic_channel: "话题%{topic_title}的聊天"
+      thread_title_connector: "位置"
       x_members:
         other: "%{count} 个成员"
       and_x_others:

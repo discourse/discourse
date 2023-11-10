@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserEmail do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "Validations" do
     it "allows only one primary email" do

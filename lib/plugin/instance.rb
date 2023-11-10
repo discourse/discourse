@@ -292,9 +292,9 @@ class Plugin::Instance
 
   # Registers a category custom field to be loaded when rendering a category list
   # Example usage:
-  #   register_category_list_preloaded_category_custom_fields("custom_field")
-  def register_category_list_preloaded_category_custom_fields(field)
-    CategoryList.preloaded_category_custom_fields << field
+  #   register_preloaded_category_custom_fields("custom_field")
+  def register_preloaded_category_custom_fields(field)
+    Site.preloaded_category_custom_fields << field
   end
 
   def custom_avatar_column(column)
@@ -999,6 +999,12 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
   end
 
+  # Registers a new email notification filter. Notification is passed into block, and if all
+  # filters return `true`, the email notification will be sent.
+  def register_email_notification_filter(&block)
+    DiscoursePluginRegistry.register_email_notification_filter(block, self)
+  end
+
   # Registers a new push notification filter. User and notification payload are passed into block, and if all
   # filters return `true`, the push notification will be sent.
   def register_push_notification_filter(&block)
@@ -1104,7 +1110,7 @@ class Plugin::Instance
   # but all stats will be shown on the /about.json route. For example take
   # this usage:
   #
-  # register_about_stat_group("chat_messages") do
+  # register_stat("chat_messages") do
   #   { last_day: 1, "7_days" => 10, "30_days" => 100, count: 1000, previous_30_days: 150 }
   # end
   #
@@ -1126,18 +1132,12 @@ class Plugin::Instance
   # group of stats is shown on the site About page in the Site Statistics
   # table. Some stats may be needed purely for reporting purposes and thus
   # do not need to be shown in the UI to admins/users.
-  def register_about_stat_group(plugin_stat_group_name, show_in_ui: false, &block)
+  def register_stat(name, show_in_ui: false, expose_via_api: false, &block)
     # We do not want to register and display the same group multiple times.
-    if DiscoursePluginRegistry.about_stat_groups.any? { |stat_group|
-         stat_group[:name] == plugin_stat_group_name
-       }
-      return
-    end
+    return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
 
-    DiscoursePluginRegistry.register_about_stat_group(
-      { name: plugin_stat_group_name, show_in_ui: show_in_ui, block: block },
-      self,
-    )
+    stat = Stat.new(name, show_in_ui: show_in_ui, expose_via_api: expose_via_api, &block)
+    DiscoursePluginRegistry.register_stat(stat, self)
   end
 
   ##
@@ -1246,6 +1246,14 @@ class Plugin::Instance
   # call will be skipped.
   def register_post_action_notify_user_handler(handler)
     DiscoursePluginRegistry.register_post_action_notify_user_handler(handler, self)
+  end
+
+  # We strip posts before detecting mentions, oneboxes, attachments etc.
+  # We strip those elements that shouldn't be detected. For example,
+  # a mention inside a quote should be ignored, so we strip it off.
+  # Using this API plugins can register their own post strippers.
+  def register_post_stripper(&block)
+    DiscoursePluginRegistry.register_post_stripper({ block: block }, self)
   end
 
   protected

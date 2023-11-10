@@ -11,7 +11,7 @@ RSpec.describe TopicLink do
 
   fab!(:user) { topic.user }
 
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
 
   it "can't link to the same topic" do
     ftl = TopicLink.new(url: "/t/#{topic.id}", topic_id: topic.id, link_topic_id: topic.id)
@@ -104,7 +104,7 @@ RSpec.describe TopicLink do
 
     context "with topic link" do
       fab!(:other_topic) { Fabricate(:topic, user: user) }
-      fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:moderator)
 
       let(:post) { Fabricate(:post, topic: other_topic, user: user, raw: "some content") }
 

@@ -19,28 +19,26 @@
     <UserPreferences::UserPasskeys @model={{@model}} />
   {{/if}}
 
-  <div
-    class="control-group pref-second-factor"
-    data-setting-name="user-second-factor"
-  >
-    <label class="control-label">{{i18n "user.second_factor.title"}}</label>
-    {{#unless this.model.second_factor_enabled}}
+  {{#if this.isCurrentUser}}
+    <div
+      class="control-group pref-second-factor"
+      data-setting-name="user-second-factor"
+    >
+      <label class="control-label">{{i18n "user.second_factor.title"}}</label>
       <div class="instructions">
         {{i18n "user.second_factor.short_description"}}
       </div>
-    {{/unless}}
-    <div class="controls pref-second-factor">
-      {{#if this.isCurrentUser}}
-        <LinkTo
-          @route="preferences.second-factor"
-          class="btn btn-default btn-second-factor"
-        >
-          {{d-icon "lock"}}
-          <span>{{i18n "user.second_factor.enable"}}</span>
-        </LinkTo>
-      {{/if}}
+
+      <div class="controls pref-second-factor">
+        <DButton
+          @action={{this.manage2FA}}
+          @icon="lock"
+          @label="user.second_factor.enable"
+          class="btn-second-factor"
+        />
+      </div>
     </div>
-  </div>
+  {{/if}}
 {{/if}}
 
 {{#if this.canCheckEmails}}

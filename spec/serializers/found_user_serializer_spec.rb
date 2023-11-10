@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe FoundUserSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:serializer) { described_class.new(user, root: false) }
 
   describe "#id" do

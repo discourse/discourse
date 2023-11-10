@@ -6,15 +6,15 @@
     <h3>
       <a class="badge-wrapper bullet" href="{{url}}">
         {{#color}}
-          <span class="badge-category-bg" style="background-color: #{{{color}}}"></span>
+          <span class="badge-category-bg" style="background-color: #{{color}}"></span>
         {{/color}}
-        <span class="clear-badge"><span>{{{name}}}</span></span>
+        <span class="clear-badge"><span>{{name}}</span></span>
       </a>
     </h3>
     {{#description}}
       <div>
         <span class="description">
-          <p>{{{description}}}</p>
+          <p>{{description}}</p>
         </span>
       </div>
     {{/description}}
@@ -23,8 +23,8 @@
         {{#subcategories}}
           <span class="subcategory">
             <a class="badge-wrapper bullet" href="{{url}}">
-              <span class="badge-category-bg" style="background-color: #{{{color}}}"></span>
-              <span class="badge-category clear-badge"><span class="category-name">{{{name}}}</span></span>
+              <span class="badge-category-bg" style="background-color: #{{color}}"></span>
+              <span class="badge-category clear-badge"><span class="category-name">{{name}}</span></span>
             </a>
           </span>
         {{/subcategories}}

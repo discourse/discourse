@@ -27,22 +27,22 @@ end
 RSpec::Matchers.define_negated_matcher :not_add_notification, :add_notification
 
 RSpec.describe PostAlerter do
-  fab!(:category) { Fabricate(:category) }
+  fab!(:category)
 
-  fab!(:topic) { Fabricate(:topic) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:topic)
+  fab!(:post)
 
-  fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+  fab!(:private_message_topic)
   fab!(:private_message_topic_post1) { Fabricate(:post, topic: private_message_topic) }
   fab!(:private_message_topic_post2) { Fabricate(:post, topic: private_message_topic) }
 
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
 
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:admin)
+  fab!(:evil_trout)
+  fab!(:coding_horror)
   fab!(:walterwhite) { Fabricate(:walter_white) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
   fab!(:private_category) do
@@ -542,7 +542,7 @@ RSpec.describe PostAlerter do
   end
 
   context "with quotes" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     fab!(:topic) { Fabricate(:topic, category: category) }
 
     it "does not notify for muted users" do
@@ -1447,9 +1447,9 @@ RSpec.describe PostAlerter do
   end
 
   describe "watching_first_post" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:category) { Fabricate(:category) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:user)
+    fab!(:category)
+    fab!(:tag)
     fab!(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
     fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -2051,7 +2051,7 @@ RSpec.describe PostAlerter do
     end
 
     context "with on change" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       fab!(:other_tag) { Fabricate(:tag) }
       fab!(:watched_tag) { Fabricate(:tag) }
 
@@ -2120,8 +2120,8 @@ RSpec.describe PostAlerter do
       fab!(:other_tag) { Fabricate(:tag) }
       fab!(:other_tag2) { Fabricate(:tag) }
       fab!(:other_tag3) { Fabricate(:tag) }
-      fab!(:user) { Fabricate(:user) }
-      fab!(:staged) { Fabricate(:staged) }
+      fab!(:user)
+      fab!(:staged)
 
       before do
         SiteSetting.tagging_enabled = true
@@ -2159,8 +2159,8 @@ RSpec.describe PostAlerter do
     end
 
     context "with tag groups" do
-      fab!(:tag) { Fabricate(:tag) }
-      fab!(:user) { Fabricate(:user) }
+      fab!(:tag)
+      fab!(:user)
       fab!(:topic) { Fabricate(:topic, tags: [tag]) }
       fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -2264,8 +2264,8 @@ RSpec.describe PostAlerter do
   describe "#notify_post_users" do
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:last_editor) { Fabricate(:user) }
-    fab!(:tag) { Fabricate(:tag) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:tag)
+    fab!(:category)
 
     it "creates single edit notification when post is modified" do
       TopicUser.create!(

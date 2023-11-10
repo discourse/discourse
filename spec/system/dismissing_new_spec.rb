@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Dismissing New", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   let(:discovery) { PageObjects::Pages::Discovery.new }
   let(:topic_list_controls) { PageObjects::Components::TopicListControls.new }
@@ -56,7 +56,7 @@ RSpec.describe "Dismissing New", type: :system do
   end
 
   describe "when a user has a new topic" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "should remove the new topic across sessions after the user dismisses it" do
       sign_in(user)
@@ -132,7 +132,7 @@ RSpec.describe "Dismissing New", type: :system do
     end
 
     context "with a tagged topic" do
-      fab!(:tag) { Fabricate(:tag) }
+      fab!(:tag)
       fab!(:tagged_topic) { Fabricate(:topic, tags: [tag]) }
       fab!(:tagged_first_post) { Fabricate(:post, topic: tagged_topic) }
 

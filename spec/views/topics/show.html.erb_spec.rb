@@ -4,7 +4,7 @@ require "rails_helper"
 require "ostruct"
 
 RSpec.describe "topics/show.html.erb" do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   it "add nofollow to RSS alternate link for topic" do
     topic_view = OpenStruct.new(topic: topic, posts: [])

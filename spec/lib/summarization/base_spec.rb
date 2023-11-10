@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe Summarization::Base do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user)
+  fab!(:group)
+  fab!(:topic)
 
   let(:plugin) { Plugin::Instance.new }
 

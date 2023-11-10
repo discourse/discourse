@@ -3,8 +3,8 @@
 require "rspec"
 
 RSpec.describe EditDirectoryColumnsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
 
   describe "#update" do
     let(:first_directory_column_id) { DirectoryColumn.first.id }

@@ -4,7 +4,7 @@ require "email/sender"
 
 RSpec.describe Email::Sender do
   before { SiteSetting.secure_uploads_allow_embed_images_in_emails = false }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
   let(:mock_smtp_transaction_response) do
     "250 Ok: queued as 2l3Md07BObzB8kRyHZeoN0baSUAhzc7A-NviRioOr80=@mailhog.example"
   end
@@ -14,8 +14,8 @@ RSpec.describe Email::Sender do
   end
 
   context "when disable_emails is enabled" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:user)
+    fab!(:moderator)
 
     context "when disable_emails is enabled for everyone" do
       before { SiteSetting.disable_emails = "yes" }
@@ -189,7 +189,7 @@ RSpec.describe Email::Sender do
     end
 
     context "when reply_key is present" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
       let(:reply_key) { PostReplyKey.find_by!(post_id: post.id, user_id: user.id).reply_key }
 
@@ -229,7 +229,7 @@ RSpec.describe Email::Sender do
     end
 
     describe "adds Precedence header" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       fab!(:post) { Fabricate(:post, topic: topic) }
 
       before do
@@ -253,7 +253,7 @@ RSpec.describe Email::Sender do
     end
 
     describe "email threading" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
       fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
@@ -532,7 +532,7 @@ RSpec.describe Email::Sender do
         Discourse.system_user.id,
       )
     end
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     fab!(:reply) do
       raw = <<~RAW
         Hello world! It’s a great day!
@@ -796,7 +796,7 @@ RSpec.describe Email::Sender do
       message
     end
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
 
     before do
@@ -813,7 +813,7 @@ RSpec.describe Email::Sender do
     end
 
     describe "post reply keys" do
-      fab!(:post) { Fabricate(:post) }
+      fab!(:post)
 
       before do
         message.header["X-Discourse-Post-Id"] = post.id
@@ -865,7 +865,7 @@ RSpec.describe Email::Sender do
       message
     end
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
 
     it "logs the cc addresses in the email log (but not users if they do not match the emails)" do

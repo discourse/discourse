@@ -1,57 +1,18 @@
-import { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { reads } from "@ember/object/computed";
-import { dasherize } from "@ember/string";
-import DiscoveryController from "discourse/controllers/discovery";
+import { inject as service } from "@ember/service";
 import discourseComputed from "discourse-common/utils/decorators";
 
-const subcategoryStyleComponentNames = {
-  rows: "categories_only",
-  rows_with_featured_topics: "categories_with_featured_topics",
-  boxes: "categories_boxes",
-  boxes_with_featured_topics: "categories_boxes_with_topics",
-};
-
-const mobileCompatibleViews = [
-  "categories_with_featured_topics",
-  "subcategories_with_featured_topics",
-];
-
-export default class CategoriesController extends DiscoveryController {
-  @controller discovery;
-
-  // this makes sure the composer isn't scoping to a specific category
-  category = null;
+export default class CategoriesController extends Controller {
+  @service router;
+  @service composer;
 
   @reads("currentUser.staff") canEdit;
 
   @discourseComputed
   isCategoriesRoute() {
     return this.router.currentRouteName === "discovery.categories";
-  }
-
-  @discourseComputed("model.parentCategory")
-  categoryPageStyle(parentCategory) {
-    let style = this.siteSettings.desktop_category_page_style;
-
-    if (this.site.mobileView && !mobileCompatibleViews.includes(style)) {
-      style = mobileCompatibleViews[0];
-    }
-
-    if (parentCategory) {
-      style =
-        subcategoryStyleComponentNames[
-          parentCategory.get("subcategory_list_style")
-        ] || style;
-    }
-
-    const componentName =
-      parentCategory &&
-      (style === "categories_and_latest_topics" ||
-        style === "categories_and_latest_topics_created_date")
-        ? "categories_only"
-        : style;
-    return dasherize(componentName);
   }
 
   @action
@@ -61,6 +22,13 @@ export default class CategoriesController extends DiscoveryController {
     // Move inserted into topics
     this.model.loadBefore(tracker.get("newIncoming"), true);
     tracker.resetTracking();
+  }
+
+  @action
+  createTopic() {
+    this.composer.openNewTopic({
+      preferDraft: true,
+    });
   }
 
   @action

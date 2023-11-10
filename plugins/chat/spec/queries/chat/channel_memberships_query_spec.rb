@@ -295,7 +295,7 @@ describe Chat::ChannelMembershipsQuery do
 
   context "when user is inactive" do
     fab!(:channel_1) { Fabricate(:category_channel) }
-    fab!(:inactive_user) { Fabricate(:inactive_user) }
+    fab!(:inactive_user)
 
     before do
       Chat::UserChatChannelMembership.create(

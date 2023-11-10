@@ -18,6 +18,7 @@ Chat::Engine.routes.draw do
     post "/channels/:channel_id/invites" => "channels_invites#create"
     post "/channels/:channel_id/archives" => "channels_archives#create"
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
+    post "/channels/:channel_id/memberships" => "channels_memberships#create"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"
     post "/channels/:channel_id/memberships/me" => "channels_current_user_membership#create"
     put "/channels/:channel_id/notifications-settings/me" =>

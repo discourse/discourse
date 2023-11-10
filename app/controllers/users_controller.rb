@@ -1533,12 +1533,6 @@ class UsersController < ApplicationController
       raise Discourse::NotFound
     end
 
-    if params[:password].present?
-      if !confirm_secure_session
-        return render json: failed_json.merge(error: I18n.t("login.incorrect_password"))
-      end
-    end
-
     if secure_session_confirmed?
       totp_second_factors =
         current_user
@@ -1555,7 +1549,7 @@ class UsersController < ApplicationController
 
       render json: success_json.merge(totps: totp_second_factors, security_keys: security_keys)
     else
-      render json: success_json.merge(password_required: true)
+      render json: success_json.merge(unconfirmed_session: true)
     end
   end
 
@@ -1884,11 +1878,7 @@ class UsersController < ApplicationController
     end
 
     reminder_notifications =
-      Notification
-        .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
-        .unread
-        .where(notification_type: Notification.types[:bookmark_reminder])
-
+      BookmarkQuery.new(user: current_user).unread_notifications(limit: USER_MENU_LIST_LIMIT)
     if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids =
         reminder_notifications.filter_map { |notification| notification.data_hash[:bookmark_id] }

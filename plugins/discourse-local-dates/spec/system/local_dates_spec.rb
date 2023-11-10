@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Local dates", type: :system do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:current_user) { Fabricate(:user) }
   let(:year) { Time.zone.now.year + 1 }
   let(:month) { Time.zone.now.month }

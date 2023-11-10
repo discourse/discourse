@@ -3,7 +3,7 @@
 describe "Group Card", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:members) { Fabricate.times(12, :user) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:group) { Fabricate(:public_group, users: members) }
   let(:mention) { "@#{group.name}" }
   let(:post_with_mention) do

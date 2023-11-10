@@ -326,9 +326,6 @@ cs:
               same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
               same_as_current: "je stejné jako vaše současné heslo."
               unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
-            ip_address:
-              blocked: "New registrations are not allowed from your IP address."
-              max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
         user_email:
           attributes:
             user_id:

@@ -3,8 +3,8 @@
 require "pretty_text"
 
 RSpec.describe PrettyText do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:user)
+  fab!(:post)
 
   before { SiteSetting.enable_markdown_typographer = false }
 
@@ -327,7 +327,7 @@ RSpec.describe PrettyText do
       let(:default_avatar) do
         "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png"
       end
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
       fab!(:user) { Fabricate(:user, primary_group: group) }
 
       before { User.stubs(:default_template).returns(default_avatar) }
@@ -1978,6 +1978,19 @@ HTML
 
       expect(PrettyText.cook("Lorem ipsum xdolor sit amet")).to match_html(<<~HTML)
         <p>Lorem ipsum xdolor sit amet</p>
+      HTML
+    end
+
+    it "replaces words with wildcards" do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "*dolor*",
+        replacement: "something else",
+      )
+
+      expect(PrettyText.cook("Lorem ipsum xdolorx sit amet")).to match_html(<<~HTML)
+        <p>Lorem ipsum something else sit amet</p>
       HTML
     end
 

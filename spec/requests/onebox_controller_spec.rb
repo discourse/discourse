@@ -187,7 +187,7 @@ RSpec.describe OneboxController do
     end
 
     context "with local categories" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
 
       it "oneboxes a public category" do
         get "/onebox.json", params: { url: category.url }

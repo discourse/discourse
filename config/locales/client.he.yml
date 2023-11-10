@@ -252,6 +252,7 @@ he:
       error_caused_by: "נגרם על ידי ‚%{name}’. <a target='blank' href='%{path}'>יש ללחוץ כאן</a> כדי לעדכן, להגדיר מחדש או להשבית."
       only_admins: "(הודעה זו מופיע רק למנהלי האתר)"
     broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
+    broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
     s3:
       regions:
         ap_northeast_1: "אסיה ומדינות האוקיינוס השקט (טוקיו)"
@@ -2169,6 +2170,7 @@ he:
       security_key_no_matching_credential_error: "לא ניתן למצוא פרטי גישה במפתח האבטחה שסופק."
       security_key_support_missing_error: "המכשיר או הדפדפן הנוכחי שלך לא תומך בשימוש במפתחות אבטחה, נא להשתמש בשיטה אחרת."
       security_key_invalid_response_error: "תהליך אימות מפתח האבטחה נכשלה עקב תגובה שגויה."
+      passkey_security_error: "אירעה שגיאת אבטחה: %{message}"
       email_placeholder: "דוא״ל / שם משתמש"
       caps_lock_warning: "מקש Caps Lock לחוץ"
       error: "שגיאה לא ידועה"
@@ -3888,8 +3890,8 @@ he:
       take_action: "נקיטת פעולה…"
       take_action_options:
         default:
-          title: "נקיטת פעולה"
-          details: "להגיע באופן מיידי למספר הדגלים הדרוש, במקום להמתין לדגלים נוספים מן הקהילה"
+          title: "הסתרת פוסט"
+          details: "להגיע לסף הסימון באופן מיידי, להסתיר את הפוסט ולהסכים עם כל הסימונים הממתינים"
         suspend:
           title: "השעיית משתמש"
           details: "להגיע למספר הדגלים הדרוש ולהשעות את המשתמש"
@@ -3906,7 +3908,7 @@ he:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(מוסתר)"
       submit_tooltip: "שלחו את הדגל הפרטי"
-      take_action_tooltip: "הגעה באופן מיידי למספר הדגלים האפשרי, במקום להמתין לדגלים נוספים מן הקהילה"
+      take_action_tooltip: "להגיע לסף הסימון באופן מיידי, להסתיר את הפוסט ולהסכים עם כל הסימונים הממתינים"
       cant: "סליחה, לא ניתן לדגל פוסט זה כרגע."
       notify_staff: "להודיע לסגל באופן פרטי"
       formatted_name:
@@ -4648,10 +4650,12 @@ he:
     form_template_chooser:
       select_template: "בחירת תבניות טופס"
     form_templates:
+      upload_field:
+        upload: "העלאה"
+        uploading: "בהליכי העלאה"
       errors:
         valueMissing:
           default: "נא למלא את השדה הזה."
-          text: "נא למלא את השדה הזה."
           select-one: "נא לבחור פריט מהרשימה."
           select-multiple: "נא לבחור לפחות פריט אחד מהרשימה."
           checkbox: "נא לסמן תיבה זו כדי להמשיך."

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe CurrentUserSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   subject(:serializer) { described_class.new(user, scope: guardian, root: false) }
 
   let(:guardian) { Guardian.new(user) }
@@ -65,7 +65,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#muted_tag" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     let!(:tag_user) do
       TagUser.create!(
@@ -184,7 +184,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#status" do
-    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user_status)
     fab!(:user) { Fabricate(:user, user_status: user_status) }
     let(:serializer) { described_class.new(user, scope: Guardian.new(user), root: false) }
 
@@ -293,7 +293,7 @@ RSpec.describe CurrentUserSerializer do
   include_examples "User Sidebar Serializer Attributes", described_class
 
   describe "#sidebar_sections" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
 
     it "eager loads sidebar_urls" do

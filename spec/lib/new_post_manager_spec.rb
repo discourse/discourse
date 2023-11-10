@@ -3,8 +3,8 @@
 require "new_post_manager"
 
 RSpec.describe NewPostManager do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user)
+  fab!(:topic)
 
   describe "default action" do
     it "creates the post by default" do

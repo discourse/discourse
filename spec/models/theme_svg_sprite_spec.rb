@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemeSvgSprite do
-  fab!(:theme) { Fabricate(:theme) }
+  fab!(:theme)
 
   describe "#refetch!" do
     context "when an upload exists" do

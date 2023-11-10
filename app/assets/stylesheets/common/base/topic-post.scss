@@ -208,6 +208,10 @@
       height: var(--calculated-height);
     }
   }
+
+  svg {
+    max-height: 2000px;
+  }
 }
 
 // add staff color
@@ -1008,6 +1012,7 @@ aside.quote {
 }
 
 pre {
+  max-height: 2000px;
   code {
     word-wrap: normal;
     display: block;
@@ -1114,6 +1119,7 @@ blockquote > *:last-child {
   }
 }
 
+.reviewable .post-body,
 .cooked table,
 .d-editor-preview table {
   thead {
@@ -1380,7 +1386,7 @@ span.mention {
     position: relative;
     .select-posts {
       position: absolute;
-      right: 5em;
+      right: 7em;
       z-index: z("dropdown");
       top: 0.5em;
       height: 100px;

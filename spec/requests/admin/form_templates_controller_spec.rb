@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::FormTemplatesController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
 
   before { SiteSetting.experimental_form_templates = true }
 
   describe "#index" do
-    fab!(:form_template) { Fabricate(:form_template) }
+    fab!(:form_template)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -46,7 +46,7 @@ RSpec.describe Admin::FormTemplatesController do
   end
 
   describe "#show" do
-    fab!(:form_template) { Fabricate(:form_template) }
+    fab!(:form_template)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -102,7 +102,7 @@ RSpec.describe Admin::FormTemplatesController do
   end
 
   describe "#update" do
-    fab!(:form_template) { Fabricate(:form_template) }
+    fab!(:form_template)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -145,7 +145,7 @@ RSpec.describe Admin::FormTemplatesController do
   end
 
   describe "#destroy" do
-    fab!(:form_template) { Fabricate(:form_template) }
+    fab!(:form_template)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }

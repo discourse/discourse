@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DirectoryItemSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   before { DirectoryItem.refresh! }
 

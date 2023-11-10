@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe "Viewing User Menu", system: true do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   describe "when viewing replies notifications tab" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "should display group mentioned notifications in the tab" do
       Jobs.run_immediately!

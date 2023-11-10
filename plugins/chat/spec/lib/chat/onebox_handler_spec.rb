@@ -6,7 +6,7 @@ describe Chat::OneboxHandler do
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:private_channel) { Fabricate(:category_channel, chatable: private_category) }
   fab!(:public_channel) { Fabricate(:category_channel) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user_2) { Fabricate(:user, active: false) }
   fab!(:user_3) { Fabricate(:user, staged: true) }
   fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }

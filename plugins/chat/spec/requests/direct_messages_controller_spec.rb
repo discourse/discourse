@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Chat::DirectMessagesController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }

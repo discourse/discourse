@@ -239,7 +239,6 @@ es:
       save: "Guardar"
       select: "Seleccionar"
       return_to_list: "Volver a la lista de canales"
-      return_to_threads_list: "Volver a las discusiones en curso"
       unread_threads_count:
         one: "Tienes %{count} discusión sin leer"
         other: "Tienes %{count} discusiones sin leer"
@@ -546,7 +545,6 @@ es:
           other: "+%{count}"
       threads:
         open: "Hilo abierto"
-        list: "Discusiones en curso"
         none: "No participas en ningún hilo de este canal."
       draft_channel_screen:
         header: "Nuevo mensaje"

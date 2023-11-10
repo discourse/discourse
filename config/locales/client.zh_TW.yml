@@ -2488,8 +2488,7 @@ zh_TW:
       action: "檢舉貼文"
       take_action_options:
         default:
-          title: "執行動作"
-          details: "使其立刻達到檢舉門檻，不用等待更多人檢舉"
+          title: "隱藏貼文"
         suspend:
           title: "將使用者停權"
         silence:
@@ -2501,7 +2500,6 @@ zh_TW:
       ip_address_missing: "(N/A)"
       hidden_email_address: "( 隱藏) "
       submit_tooltip: "送出私人檢舉"
-      take_action_tooltip: "使其立刻達到檢舉門檻，不用等待更多人檢舉"
       cant: "抱歉，你目前無法檢舉此貼文。"
       notify_staff: "私下通知管理人員"
       formatted_name:
@@ -2943,6 +2941,9 @@ zh_TW:
       button_title: "開始編輯"
     until: "直到："
     form_templates:
+      upload_field:
+        upload: "上傳"
+        uploading: "上傳中"
       errors:
         typeMismatch:
           default: "請輸入一個有效的值。"

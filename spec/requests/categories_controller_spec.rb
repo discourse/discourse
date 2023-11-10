@@ -3,7 +3,7 @@
 RSpec.describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "#index" do
     it "web crawler view has correct urls for subfolder install" do
@@ -217,7 +217,7 @@ RSpec.describe CategoriesController do
     end
 
     describe "categories and latest topics - ordered by created date" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
       fab!(:topic1) do
         Fabricate(
           :topic,
