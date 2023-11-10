@@ -17,6 +17,10 @@
     border-bottom: 0;
   }
 
+  details > .chat-transcript-chained:first-of-type {
+    margin-top: 0.5rem;
+  }
+
   .chat-transcript-meta {
     color: var(--primary-high);
     font-size: var(--font-down-2-rem);
@@ -59,6 +63,10 @@
     p:last-of-type {
       margin-bottom: 0;
     }
+  }
+
+  summary > .chat-transcript-user {
+    margin-top: 0.5rem;
   }
 
   .chat-transcript-user-avatar .avatar {
