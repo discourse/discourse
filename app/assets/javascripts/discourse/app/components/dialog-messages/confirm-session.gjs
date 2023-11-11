@@ -6,11 +6,17 @@ import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import UserLink from "discourse/components/user-link";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  getPasskeyCredential,
+  isWebauthnSupported,
+} from "discourse/lib/webauthn";
 import I18n from "discourse-i18n";
 
 export default class ConfirmSession extends Component {
   @service dialog;
   @service currentUser;
+  @service siteSettings;
 
   @tracked errorMessage;
 
@@ -19,8 +25,49 @@ export default class ConfirmSession extends Component {
   loggedInAs = I18n.t("user.confirm_access.logged_in_as");
   finePrint = I18n.t("user.confirm_access.fine_print");
 
+  get canUsePasskeys() {
+    return (
+      this.siteSettings.enable_local_logins &&
+      this.siteSettings.experimental_passkeys &&
+      this.currentUser.user_passkeys?.length > 0 &&
+      isWebauthnSupported()
+    );
+  }
+
+  @action
+  async confirmWithPasskey() {
+    try {
+      const publicKeyCredential = await getPasskeyCredential((errorMessage) =>
+        this.dialog.alert(errorMessage)
+      );
+
+      if (!publicKeyCredential) {
+        return;
+      }
+
+      const result = await ajax("/u/confirm-session", {
+        type: "POST",
+        data: { publicKeyCredential },
+      });
+
+      if (result.success) {
+        this.errorMessage = null;
+        this.dialog.didConfirmWrapped();
+      } else {
+        this.errorMessage = I18n.t("user.confirm_access.incorrect_passkey");
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
   @action
   async submit() {
+    if (!this.password) {
+      this.errorMessage = I18n.t("user.confirm_access.incorrect_password");
+    } else {
+      this.errorMessage = null;
+    }
     const result = await ajax("/u/confirm-session", {
       type: "POST",
       data: {
@@ -73,6 +120,16 @@ export default class ConfirmSession extends Component {
               @label="user.password.confirm"
             />
           </div>
+          {{#if this.canUsePasskeys}}
+            <div class="confirm-session__passkey">
+              <DButton
+                class="btn-flat"
+                @type="button"
+                @action={{this.confirmWithPasskey}}
+                @label="user.passkeys.confirm_button"
+              />
+            </div>
+          {{/if}}
         </div>
       </form>
 
