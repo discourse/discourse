@@ -37,8 +37,8 @@ export default class ConfirmSession extends Component {
   @action
   async confirmWithPasskey() {
     try {
-      const publicKeyCredential = await getPasskeyCredential((errorMessage) =>
-        this.dialog.alert(errorMessage)
+      const publicKeyCredential = await getPasskeyCredential((e) =>
+        this.dialog.alert(e)
       );
 
       if (!publicKeyCredential) {
@@ -63,11 +63,10 @@ export default class ConfirmSession extends Component {
 
   @action
   async submit() {
-    if (!this.password) {
-      this.errorMessage = I18n.t("user.confirm_access.incorrect_password");
-    } else {
-      this.errorMessage = null;
-    }
+    this.errorMessage = this.password
+      ? null
+      : I18n.t("user.confirm_access.incorrect_password");
+
     const result = await ajax("/u/confirm-session", {
       type: "POST",
       data: {

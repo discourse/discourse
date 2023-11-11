@@ -119,7 +119,7 @@ export default class Login extends Component {
   async passkeyLogin(mediation = "optional") {
     try {
       const publicKeyCredential = await getPasskeyCredential(
-        (errorMessage) => this.dialog.alert(errorMessage),
+        (e) => this.dialog.alert(e),
         mediation,
         this.capabilities.isFirefox
       );
