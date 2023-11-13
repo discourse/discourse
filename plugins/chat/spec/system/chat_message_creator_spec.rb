@@ -20,6 +20,14 @@ RSpec.describe "Flag message", type: :system do
     expect(chat_page.message_creator).to be_listing(channel_1)
   end
 
+  it "doesn’t show create group option when filtered" do
+    visit("/")
+    chat_page.open_new_message
+    chat_page.message_creator.filter("x")
+
+    expect(chat_page).to have_no_css("#new-group-chat")
+  end
+
   it "can filter channels" do
     channel_1 = Fabricate(:chat_channel)
     channel_2 = Fabricate(:chat_channel)
