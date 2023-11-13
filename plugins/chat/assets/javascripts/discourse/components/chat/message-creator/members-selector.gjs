@@ -43,6 +43,10 @@ export default class MembersSelector extends Component {
 
   @action
   selectChatable(chatable) {
+    if (!chatable.enabled) {
+      return;
+    }
+
     if (
       this.args.members.length + (this.args.channel?.membershipsCount ?? 0) >=
       this.siteSettings.chat_max_direct_message_users

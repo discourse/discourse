@@ -62,6 +62,10 @@ export default class ChatMessageCreatorSearch extends Component {
         this.args.onChangeMode(MODES.new_group);
         break;
       case "user":
+        if (!item.enabled) {
+          return;
+        }
+
         await this.startOneToOneChannel(item.model.username);
         break;
       default:

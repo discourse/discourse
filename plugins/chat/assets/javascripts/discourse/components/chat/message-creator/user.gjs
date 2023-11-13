@@ -12,7 +12,7 @@ export default class ChatableUser extends Component {
   disabledUserLabel = I18n.t("chat.new_message_modal.disabled_user");
 
   <template>
-    <div class="chat-message-creator__chatable-user">
+    <div class="chat-message-creator__chatable -user">
       <ChatUserAvatar @user={{@item.model}} @interactive={{false}} />
       <ChatUserDisplayName @user={{@item.model}} />
 
@@ -23,7 +23,7 @@ export default class ChatableUser extends Component {
       {{userStatus @item.model currentUser=this.currentUser}}
 
       {{#unless @item.enabled}}
-        <span class="disabled-text">
+        <span class="chat-message-creator__chatable -disabled-chat">
           {{this.disabledUserLabel}}
         </span>
       {{/unless}}
