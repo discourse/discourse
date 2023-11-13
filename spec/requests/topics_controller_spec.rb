@@ -2714,7 +2714,7 @@ RSpec.describe TopicsController do
 
         body = response.body
 
-        expect(body).to have_tag(:script, src: "/assets/discourse.js")
+        expect(body).to have_tag(:script, with: { "data-discourse-entrypoint" => "discourse" })
         expect(body).to have_tag(:meta, with: { name: "fragment" })
       end
 
@@ -3116,7 +3116,7 @@ RSpec.describe TopicsController do
           body = response.body
 
           expect(response.status).to eq(200)
-          expect(body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+          expect(body).to have_tag(:script, with: { "data-discourse-entrypoint" => "discourse" })
           expect(body).to_not have_tag(:meta, with: { name: "fragment" })
         end
       end
@@ -3129,7 +3129,7 @@ RSpec.describe TopicsController do
 
           body = response.body
 
-          expect(body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+          expect(body).to have_tag(:script, with: { "data-discourse-entrypoint" => "discourse" })
           expect(body).to have_tag(:meta, with: { name: "fragment" })
         end
 
@@ -5162,7 +5162,7 @@ RSpec.describe TopicsController do
 
         body = response.body
 
-        expect(body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+        expect(body).to have_tag(:script, with: { "data-discourse-entrypoint" => "discourse" })
         expect(body).to have_tag(:meta, with: { name: "fragment" })
       end
     end
