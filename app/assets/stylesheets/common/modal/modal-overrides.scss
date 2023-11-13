@@ -263,3 +263,31 @@
     margin-bottom: 0;
   }
 }
+
+.d-modal.chat-modal-new-message {
+  .d-modal {
+    &__wrapper {
+      align-items: flex-start;
+    }
+    &__container {
+      width: var(--modal-max-width);
+      margin-top: 1rem;
+    }
+    &__body {
+      padding: 0;
+
+      input {
+        width: auto;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .d-modal {
+      &__container {
+        width: 100%;
+        margin-top: 0;
+      }
+    }
+  }
+}
