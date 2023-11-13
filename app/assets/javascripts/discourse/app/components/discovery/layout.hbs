@@ -12,7 +12,7 @@
   <PluginOutlet
     @name="discovery-list-controls-above"
     @connectorTagName="div"
-    @outletArgs={{hash model=@model}}
+    @outletArgs={{hash category=@model.category tag=@model.tag}}
   />
 </span>
 
@@ -20,7 +20,7 @@
   <PluginOutlet
     @name="discovery-navigation-bar-above"
     @connectorTagName="div"
-    @outletArgs={{hash model=@model}}
+    @outletArgs={{hash category=@model.category tag=@model.tag}}
   />
   <div class="container">
     {{yield to="navigation"}}
@@ -28,10 +28,10 @@
 </div>
 
 <PluginOutlet
-    @name="discovery-above"
-    @connectorTagName="div"
-    @outletArgs={{hash model=@model}}
-  />
+  @name="discovery-above"
+  @connectorTagName="div"
+  @outletArgs={{hash category=@model.category tag=@model.tag}}
+/>
 
 <div class="container list-container">
   <div class="row">
@@ -40,7 +40,7 @@
         {{yield to="header"}}
         <PluginOutlet
           @name="header-list-container-bottom"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{hash category=@model.category tag=@model.tag}}
         />
       </div>
     </div>
@@ -49,18 +49,22 @@
     <div class="full-width">
       <PluginOutlet
         @name="before-list-area"
-        @outletArgs={{hash model=@model}}
+        @outletArgs={{hash category=@model.category tag=@model.tag}}
       />
       <div id="list-area">
         <PluginOutlet
           @name="discovery-list-area"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{hash
+            category=@model.category
+            tag=@model.tag
+            model=@model
+          }}
           @defaultGlimmer={{true}}
         >
           <PluginOutlet
             @name="discovery-list-container-top"
             @connectorTagName="span"
-            @outletArgs={{hash category=@category}}
+            @outletArgs={{hash category=@model.category tag=@model.tag}}
           />
           {{yield to="list"}}
         </PluginOutlet>
@@ -73,6 +77,6 @@
   <PluginOutlet
     @name="discovery-below"
     @connectorTagName="div"
-    @outletArgs={{hash model=@model}}
+    @outletArgs={{hash category=@model.category tag=@model.tag}}
   />
 </span>

@@ -116,7 +116,12 @@
   {{#if this.allLoaded}}
     <PluginOutlet
       @name="topic-list-bottom"
-      @outletArgs={{hash allLoaded=this.allLoaded model=@model}}
+      @outletArgs={{hash
+        category=@category
+        tag=@tag
+        allLoaded=this.allLoaded
+        model=@model
+      }}
     >
       <TopicDismissButtons
         @position="bottom"
