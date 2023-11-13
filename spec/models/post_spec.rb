@@ -2136,7 +2136,7 @@ RSpec.describe Post do
   end
 
   describe "relative_url" do
-    it "returns the correct relative url" do
+    it "returns the correct post url with subfolder install" do
       set_subfolder "/forum"
       post = Fabricate(:post)
 
