@@ -282,7 +282,10 @@
     </div>
     {{#if this.hasAtLeastOneLoginButton}}
       <div class="login-right-side">
-        <LoginButtons @externalLogin={{this.externalLogin}} @context="create-account" />
+        <LoginButtons
+          @externalLogin={{this.externalLogin}}
+          @context="create-account"
+        />
       </div>
     {{/if}}
   </:body>
