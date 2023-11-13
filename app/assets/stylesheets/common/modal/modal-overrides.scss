@@ -135,6 +135,9 @@
       max-width: 90%;
     }
     .topic-categories {
+      display: flex;
+      font-weight: normal;
+      gap: 0.5em;
       width: 100%;
     }
   }
