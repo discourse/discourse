@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -18,6 +19,8 @@ const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
 export default class PollUiBuilderModal extends Component {
+  @service siteSettings;
+
   showAdvanced = false;
   pollType = REGULAR_POLL_TYPE;
   pollTitle;
@@ -30,7 +33,7 @@ export default class PollUiBuilderModal extends Component {
   pollAutoClose;
   pollResult = ALWAYS_POLL_RESULT;
   chartType = BAR_CHART_TYPE;
-  publicPoll = true;
+  publicPoll = this.siteSettings.poll_default_public;
 
   @or("showAdvanced", "isNumber") showNumber;
   @gt("pollOptions.length", 1) canRemoveOption;

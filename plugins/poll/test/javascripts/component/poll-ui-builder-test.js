@@ -211,4 +211,22 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
     );
     await resultVisibility.collapse();
   });
+
+  test("default public value can be controlled with site setting", async function (assert) {
+    this.siteSettings.poll_default_public = false;
+
+    const results = await setupBuilder(this);
+
+    await fillIn(".poll-option-value input", "a");
+    await click(".poll-option-add");
+    await fillIn(".poll-option-value:nth-of-type(2) input", "b");
+
+    await click(".insert-poll");
+
+    assert.strictEqual(
+      results[results.length - 1],
+      "[poll type=regular results=always public=false chartType=bar]\n* a\n* b\n[/poll]\n",
+      "can be set to private boolean"
+    );
+  });
 });
