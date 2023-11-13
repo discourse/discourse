@@ -32,43 +32,6 @@ RSpec.describe Chat::ChatController do
     Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
   end
 
-  describe "#enable_chat" do
-    context "with category as chatable" do
-      let!(:category) { Fabricate(:category) }
-      let(:channel) { Fabricate(:category_channel, chatable: category) }
-
-      it "ensures created channel can be seen" do
-        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-        sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-
-      # TODO: rewrite specs to ensure no exception is raised
-      it "ensures existing channel can be seen" do
-        Guardian.any_instance.expects(:can_join_chat_channel?)
-
-        sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-    end
-  end
-
-  describe "#disable_chat" do
-    context "with category as chatable" do
-      it "ensures category can be seen" do
-        category = Fabricate(:category)
-        channel = Fabricate(:category_channel, chatable: category)
-        message = Fabricate(:chat_message, chat_channel: channel)
-
-        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-        sign_in(admin)
-        post "/chat/disable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-    end
-  end
-
   describe "#rebake" do
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
 

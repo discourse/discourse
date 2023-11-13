@@ -71,8 +71,6 @@ Chat::Engine.routes.draw do
   get "/browse/closed" => "chat#respond"
   get "/browse/open" => "chat#respond"
   get "/browse/archived" => "chat#respond"
-  post "/enable" => "chat#enable_chat"
-  post "/disable" => "chat#disable_chat"
   post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
   get "/message/:message_id" => "chat#message_link"
   put ":chat_channel_id/react/:message_id" => "chat#react"
