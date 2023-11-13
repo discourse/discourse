@@ -17,8 +17,8 @@ module("Integration | Component | d-modal", function (hooks) {
         @subtitle="Modal Subtitle"
       />
     </template>);
-    assert.dom(".d-modal .d-modal__title").hasText("Modal Title");
-    assert.dom(".d-modal .subtitle").hasText("Modal Subtitle");
+    assert.dom(".d-modal .d-modal__title-text").hasText("Modal Title");
+    assert.dom(".d-modal .d-modal__subtitle-text").hasText("Modal Subtitle");
   });
 
   test("named blocks", async function (assert) {
