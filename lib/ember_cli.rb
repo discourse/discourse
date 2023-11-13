@@ -69,7 +69,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.clear_cache!
-    self.request.cache = nil
+    self.request_cache = nil
     @production_cache = nil
   end
 end

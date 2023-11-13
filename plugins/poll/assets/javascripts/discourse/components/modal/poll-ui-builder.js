@@ -30,7 +30,7 @@ export default class PollUiBuilderModal extends Component {
   pollAutoClose;
   pollResult = ALWAYS_POLL_RESULT;
   chartType = BAR_CHART_TYPE;
-  publicPoll = false;
+  publicPoll = true;
 
   @or("showAdvanced", "isNumber") showNumber;
   @gt("pollOptions.length", 1) canRemoveOption;
@@ -174,9 +174,7 @@ export default class PollUiBuilderModal extends Component {
     if (pollType === NUMBER_POLL_TYPE) {
       pollHeader += ` step=${step}`;
     }
-    if (publicPoll) {
-      pollHeader += ` public=true`;
-    }
+    pollHeader += ` public=${publicPoll ? "true" : "false"}`;
     if (chartType && pollType !== NUMBER_POLL_TYPE) {
       pollHeader += ` chartType=${chartType}`;
     }
@@ -380,5 +378,10 @@ export default class PollUiBuilderModal extends Component {
   updatePollType(pollType, event) {
     event?.preventDefault();
     this.set("pollType", pollType);
+  }
+
+  @action
+  togglePublic() {
+    this.set("publicPoll", !this.publicPoll);
   }
 }

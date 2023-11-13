@@ -110,10 +110,6 @@ module.exports = function (defaults) {
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    funnel(`${vendorJs}/highlightjs`, {
-      files: ["highlight-test-bundle.min.js"],
-      destDir: "assets/highlightjs",
-    }),
     generateWorkboxTree(),
     concat(adminTree, {
       inputFiles: ["**/*.js"],

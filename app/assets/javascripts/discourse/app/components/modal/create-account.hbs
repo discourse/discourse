@@ -39,7 +39,7 @@
           {{/if}}
           <div class="input-group create-account-email">
             <Input
-              {{on "focusout" (action "checkEmailAvailability")}}
+              {{on "focusout" this.checkEmailAvailability}}
               @type="email"
               @value={{this.model.accountEmail}}
               disabled={{this.emailDisabled}}
@@ -251,7 +251,7 @@
           </div>
           <div class="d-modal__footer-buttons">
             <DButton
-              @action={{action "createAccount"}}
+              @action={{this.createAccount}}
               @disabled={{this.submitDisabled}}
               @label="create_account.title"
               @isLoading={{this.formSubmitted}}
@@ -282,7 +282,7 @@
     </div>
     {{#if this.hasAtLeastOneLoginButton}}
       <div class="login-right-side">
-        <LoginButtons @externalLogin={{action "externalLogin"}} />
+        <LoginButtons @externalLogin={{this.externalLogin}} />
       </div>
     {{/if}}
   </:body>

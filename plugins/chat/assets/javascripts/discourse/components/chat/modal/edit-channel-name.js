@@ -57,9 +57,9 @@ export default class ChatModalEditChannelName extends Component {
   }
 
   @action
-  onChangeChatChannelName(title) {
+  onChangeChatChannelName(event) {
     this.flash = null;
-    this.#debouncedGenerateSlug(title);
+    this.#debouncedGenerateSlug(event?.target?.value);
   }
 
   @action

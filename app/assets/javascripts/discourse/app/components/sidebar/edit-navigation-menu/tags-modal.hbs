@@ -34,7 +34,7 @@
               class="sidebar-tags-form__input"
               @type="checkbox"
               @checked={{includes this.selectedTags tag.name}}
-              {{on "click" (action "toggleTag" tag.name)}}
+              {{on "click" (fn this.toggleTag tag.name)}}
             />
 
             <label
