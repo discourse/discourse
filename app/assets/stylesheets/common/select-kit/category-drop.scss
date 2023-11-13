@@ -3,36 +3,15 @@
     &.category-drop {
       min-width: auto;
 
-      .badge-wrapper {
+      .badge-category__wrapper {
         font-size: var(--font-0);
         font-weight: normal;
         max-width: 260px;
-
-        &.box {
-          margin: 0;
-
-          span.badge-category {
-            margin: 0;
-            .d-icon-lock {
-              margin-right: 5px;
-            }
-          }
-        }
-      }
-
-      &.box.has-selection .category-drop-header {
-        .badge-wrapper.box {
-          padding: 0;
-        }
       }
 
       .category-drop-header {
         &.is-none .selected-name {
           color: inherit;
-        }
-
-        .badge-wrapper {
-          margin-right: 0;
         }
       }
 
@@ -61,14 +40,6 @@
           font-weight: normal;
           color: var(--primary-medium);
           font-size: var(--font-down-1);
-        }
-
-        .badge-wrapper {
-          margin: 0;
-
-          &:nth-child(2) {
-            margin-left: 10px;
-          }
         }
       }
     }

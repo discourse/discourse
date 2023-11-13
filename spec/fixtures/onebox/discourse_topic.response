@@ -233,9 +233,8 @@ And that too in just over an year, way to go! [boom]">
 
   <div id="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
       <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-        <a href="https://meta.discourse.org/c/praise" class="badge-wrapper bullet" itemprop="item">
-          <span class="badge-category-bg"></span>
-          <span class="category-title" itemprop="name">praise</span>
+        <a href="https://meta.discourse.org/c/praise" class="badge-category__wrapper" itemprop="item">
+          <span class="badge-category__title" itemprop="name">praise</span>
         </a>
         <meta itemprop="position" content="1" />
       </div>

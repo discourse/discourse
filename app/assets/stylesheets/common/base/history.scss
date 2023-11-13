@@ -48,9 +48,6 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5em;
-    .badge-wrapper {
-      margin: 0;
-    }
   }
 
   #display-modes {
@@ -170,9 +167,6 @@
 
   #revisions {
     word-wrap: break-word;
-    .badge-wrapper {
-      margin: 0;
-    }
     table {
       margin-top: 10px;
       tr {

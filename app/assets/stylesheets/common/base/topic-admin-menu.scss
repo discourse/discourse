@@ -65,9 +65,6 @@
     &:not(:last-of-type) {
       border-bottom: 1px solid var(--primary-low);
     }
-    .badge-wrapper {
-      margin-right: 0;
-    }
     .desc {
       display: inline-block;
       vertical-align: middle;
@@ -114,7 +111,7 @@
     max-width: 90%;
     margin: 0;
   }
-  .badge-wrapper {
+  .badge-category__wrapper {
     white-space: nowrap;
     overflow: hidden;
     max-width: 19em;

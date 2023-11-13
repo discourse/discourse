@@ -265,10 +265,6 @@ $topic-progress-height: 42px;
   }
 }
 
-a.badge-category {
-  margin-top: 5px;
-}
-
 #topic-title {
   .title-wrapper {
     display: flex;
@@ -282,9 +278,7 @@ a.badge-category {
     margin-bottom: 0;
     width: 100%;
   }
-  a.badge-category {
-    margin-top: 5px;
-  }
+
   a.edit-topic .d-icon {
     font-size: 0.8em;
   }
