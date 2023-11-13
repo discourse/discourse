@@ -1609,7 +1609,7 @@ class UsersController < ApplicationController
   end
 
   def create_passkey
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
     render json:
@@ -1624,7 +1624,7 @@ class UsersController < ApplicationController
   end
 
   def register_passkey
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     params.require(:name)
     params.require(:attestation)
@@ -1644,7 +1644,7 @@ class UsersController < ApplicationController
   end
 
   def delete_passkey
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     current_user.security_keys.find_by(id: params[:id].to_i)&.destroy!
 
@@ -1652,7 +1652,7 @@ class UsersController < ApplicationController
   end
 
   def rename_passkey
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     params.require(:id)
     params.require(:name)

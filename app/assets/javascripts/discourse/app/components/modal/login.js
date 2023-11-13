@@ -96,7 +96,7 @@ export default class Login extends Component {
   get canUsePasskeys() {
     return (
       this.siteSettings.enable_local_logins &&
-      this.siteSettings.experimental_passkeys &&
+      this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
   }

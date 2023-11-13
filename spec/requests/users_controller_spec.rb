@@ -5950,7 +5950,7 @@ RSpec.describe UsersController do
 
   describe "#create_passkey" do
     before do
-      SiteSetting.experimental_passkeys = true
+      SiteSetting.enable_passkeys = true
       stub_secure_session_confirmed
     end
 
@@ -5991,7 +5991,7 @@ RSpec.describe UsersController do
   end
 
   describe "#rename_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
 
     it "fails if no user is logged in" do
       put "/u/rename_passkey/NONE.json"
@@ -6044,7 +6044,7 @@ RSpec.describe UsersController do
   end
 
   describe "#delete_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
     fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
 
     it "fails if user does not have a confirmed session" do
@@ -6079,7 +6079,7 @@ RSpec.describe UsersController do
   end
 
   describe "#register_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
 
     it "fails if user is not logged in" do
       stub_secure_session_confirmed

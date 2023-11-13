@@ -47,7 +47,7 @@ acceptance("Modal - Login - With 2FA", function (needs) {
 
 acceptance("Modal - Login - With Passkeys enabled", function (needs) {
   needs.settings({
-    experimental_passkeys: true,
+    enable_passkeys: true,
   });
 
   needs.pretender((server, helper) => {
@@ -72,7 +72,7 @@ acceptance("Modal - Login - With Passkeys enabled", function (needs) {
 
 acceptance("Modal - Login - With Passkeys disabled", function (needs) {
   needs.settings({
-    experimental_passkeys: false,
+    enable_passkeys: false,
   });
 
   test("Excludes passkeys button and conditional UI", async function (assert) {
@@ -87,7 +87,7 @@ acceptance("Modal - Login - With Passkeys disabled", function (needs) {
 acceptance("Modal - Login - Passkeys on mobile", function (needs) {
   needs.mobileView();
   needs.settings({
-    experimental_passkeys: true,
+    enable_passkeys: true,
   });
 
   needs.pretender((server, helper) => {
