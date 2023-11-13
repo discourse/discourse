@@ -282,6 +282,23 @@
     }
   }
 
+  .chat-message-creator {
+    &__add-members-header-container {
+      padding-inline: 1rem 0.5rem;
+    }
+    &__add-members-header {
+      align-items: center;
+    }
+    &__members {
+      min-height: unset;
+      padding: 0.25rem 0.5rem;
+    }
+    &__add-members__close-btn {
+      margin-top: 0;
+      height: 33px;
+    }
+  }
+
   @media screen and (max-width: 768px) {
     .d-modal {
       &__container {
