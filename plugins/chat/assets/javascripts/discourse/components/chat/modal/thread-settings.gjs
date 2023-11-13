@@ -1,8 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import i18n from "discourse-common/helpers/i18n";
 
 export default class ChatModalThreadSettings extends Component {
   @service chatApi;
@@ -35,4 +39,33 @@ export default class ChatModalThreadSettings extends Component {
         this.saving = false;
       });
   }
+
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      class="chat-modal-thread-settings"
+      @inline={{@inline}}
+      @title={{i18n "chat.thread.settings"}}
+    >
+      <:body>
+        <label for="thread-title" class="thread-title-label">
+          {{i18n "chat.thread.title"}}
+        </label>
+        <Input
+          name="thread-title"
+          class="chat-modal-thread-settings__title-input"
+          @type="text"
+          @value={{this.editedTitle}}
+        />
+      </:body>
+      <:footer>
+        <DButton
+          @disabled={{this.buttonDisabled}}
+          @action={{this.saveThread}}
+          @label="save"
+          class="btn-primary"
+        />
+      </:footer>
+    </DModal>
+  </template>
 }

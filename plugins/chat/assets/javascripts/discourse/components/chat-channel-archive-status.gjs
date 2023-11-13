@@ -3,6 +3,8 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isPresent } from "@ember/utils";
+import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
@@ -50,4 +52,34 @@ export default class ChatChannelArchiveStatus extends Component {
     }
     return getURL(`/t/-/${this.args.channel.archive.topicId}`);
   }
+
+  <template>
+    {{#if this.shouldRender}}
+      {{#if @channel.archive.failed}}
+        <div
+          class={{concatClass
+            "alert alert-warn chat-channel-retry-archive"
+            @channel.status
+          }}
+        >
+          <div class="chat-channel-archive-failed-message">
+            {{this.channelArchiveFailedMessage}}
+          </div>
+
+          <div class="chat-channel-archive-failed-retry">
+            <DButton
+              @action={{this.retryArchive}}
+              @label="chat.channel_archive.retry"
+            />
+          </div>
+        </div>
+      {{else if @channel.archive.completed}}
+        <div
+          class={{concatClass "chat-channel-archive-status" @channel.status}}
+        >
+          {{this.channelArchiveCompletedMessage}}
+        </div>
+      {{/if}}
+    {{/if}}
+  </template>
 }

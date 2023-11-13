@@ -2,8 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
+import DModal from "discourse/components/d-modal";
+import DModalCancel from "discourse/components/d-modal-cancel";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
 export default class ChatModalChannelSummary extends Component {
   @service chatApi;
@@ -45,4 +50,29 @@ export default class ChatModalChannelSummary extends Component {
       .catch(popupAjaxError)
       .finally(() => (this.loading = false));
   }
+
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      class="chat-modal-channel-summary"
+      @title={{i18n "chat.summarization.title"}}
+    >
+      <:body>
+        <span>{{i18n "chat.summarization.description"}}</span>
+        <ComboBox
+          @value={{this.sinceHours}}
+          @content={{this.sinceOptions}}
+          @onChange={{this.summarize}}
+          @valueProperty="value"
+          @class="summarization-since"
+        />
+        <ConditionalLoadingSection @isLoading={{this.loading}}>
+          <p class="summary-area">{{this.summary}}</p>
+        </ConditionalLoadingSection>
+      </:body>
+      <:footer>
+        <DModalCancel @close={{@closeModal}} />
+      </:footer>
+    </DModal>
+  </template>
 }

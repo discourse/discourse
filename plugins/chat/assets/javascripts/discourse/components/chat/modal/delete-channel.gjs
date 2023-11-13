@@ -4,7 +4,11 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
+import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
 
@@ -65,4 +69,39 @@ export default class ChatModalDeleteChannel extends Component {
       .catch(popupAjaxError)
       .finally(() => (this.deleting = false));
   }
+
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      class="chat-modal-delete-channel"
+      @inline={{@inline}}
+      @title={{i18n "chat.channel_delete.title"}}
+      @flash={{this.flash}}
+      @flashType={{this.flashType}}
+    >
+      <:body>
+        <p class="chat-modal-delete-channel__instructions">
+          {{this.instructionsText}}
+        </p>
+
+        <TextField
+          @value={{this.channelNameConfirmation}}
+          @id="channel-delete-confirm-name"
+          @placeholderKey="chat.channel_delete.confirm_channel_name"
+          @autocorrect="off"
+          @autocapitalize="off"
+        />
+      </:body>
+      <:footer>
+        <DButton
+          @disabled={{this.buttonDisabled}}
+          @action={{this.deleteChannel}}
+          @label="chat.channel_delete.confirm"
+          id="chat-confirm-delete-channel"
+          class="btn-danger"
+        />
+        <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
+      </:footer>
+    </DModal>
+  </template>
 }

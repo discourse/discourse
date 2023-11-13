@@ -4,7 +4,10 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
 import {
@@ -12,6 +15,7 @@ import {
   NEW_TOPIC_SELECTION,
 } from "discourse/plugins/chat/discourse/components/chat-to-topic-selector";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatToTopicSelector from "../../chat-to-topic-selector";
 
 export default class ChatModalArchiveChannel extends Component {
   @service chatApi;
@@ -109,4 +113,39 @@ export default class ChatModalArchiveChannel extends Component {
     }
     return data;
   }
+
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      class="chat-modal-archive-channel"
+      @inline={{@inline}}
+      @title={{i18n "chat.channel_archive.title"}}
+      @flash={{this.flash}}
+      @flashType={{this.flashType}}
+    >
+      <:body>
+        <p class="chat-modal-archive-channel__instructions">
+          {{this.instructionsText}}
+        </p>
+        <ChatToTopicSelector
+          @selection={{this.selection}}
+          @topicTitle={{this.topicTitle}}
+          @categoryId={{this.categoryId}}
+          @tags={{this.tags}}
+          @selectedTopicId={{this.selectedTopicId}}
+          @instructionLabels={{this.instructionLabels}}
+          @allowNewMessage={{false}}
+        />
+      </:body>
+      <:footer>
+        <DButton
+          @disabled={{this.buttonDisabled}}
+          @action={{this.archiveChannel}}
+          @label="chat.channel_archive.title"
+          id="chat-confirm-archive-channel"
+          class="btn-primary"
+        />
+      </:footer>
+    </DModal>
+  </template>
 }

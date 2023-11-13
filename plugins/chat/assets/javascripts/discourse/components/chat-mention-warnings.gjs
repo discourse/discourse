@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import dIcon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
@@ -145,4 +147,36 @@ export default class ChatMentionWarnings extends Component {
       })
     );
   }
+
+  <template>
+    {{#if this.show}}
+      <div class="chat-mention-warnings">
+        <div class="chat-mention-warning__icon">
+          {{dIcon "exclamation-triangle"}}
+        </div>
+        <div class="chat-mention-warning__text">
+          <div class="chat-mention-warning__header">
+            {{this.warningHeaderText}}
+          </div>
+          <ul class={{this.listStyleClass}}>
+            {{#if this.hasTooManyMentions}}
+              <li>{{this.tooManyMentionsBody}}</li>
+            {{else}}
+              {{#if this.channelWideMentionDisallowed}}
+                <li>{{i18n
+                    "chat.mention_warning.channel_wide_mentions_disallowed"
+                  }}</li>
+              {{/if}}
+              {{#if this.hasUnreachableGroupMentions}}
+                <li>{{this.unreachableBody}}</li>
+              {{/if}}
+              {{#if this.hasOverMembersLimitGroupMentions}}
+                <li>{{this.overMembersLimitBody}}</li>
+              {{/if}}
+            {{/if}}
+          </ul>
+        </div>
+      </div>
+    {{/if}}
+  </template>
 }

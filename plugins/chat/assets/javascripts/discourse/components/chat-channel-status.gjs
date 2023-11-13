@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
+import dIcon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
 import {
   CHANNEL_STATUSES,
   channelStatusIcon,
 } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatChannelArchiveStatus from "./chat-channel-archive-status";
 
 export default class ChatChannelStatus extends Component {
   LONG_FORMAT = "long";
@@ -60,4 +62,14 @@ export default class ChatChannelStatus extends Component {
         return I18n.t("chat.channel_status.read_only_header");
     }
   }
+
+  <template>
+    {{#if this.shouldRender}}
+      <div class="chat-channel-status">
+        {{dIcon this.channelStatusIcon}}
+        <span>{{this.channelStatusMessage}}</span>
+        <ChatChannelArchiveStatus @channel={{@channel}} />
+      </div>
+    {{/if}}
+  </template>
 }

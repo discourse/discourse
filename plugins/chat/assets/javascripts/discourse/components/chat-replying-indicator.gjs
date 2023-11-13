@@ -1,8 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { inject as service } from "@ember/service";
 import { isPresent } from "@ember/utils";
+import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
 
 export default class ChatReplyingIndicator extends Component {
@@ -74,4 +78,27 @@ export default class ChatReplyingIndicator extends Component {
   get shouldRender() {
     return isPresent(this.usernames);
   }
+
+  <template>
+    {{#if @presenceChannelName}}
+      <div
+        class={{concatClass
+          "chat-replying-indicator"
+          (if this.presenceChannel.subscribed "is-subscribed")
+        }}
+        {{didInsert this.subscribe}}
+        {{didUpdate this.updateSubscription @presenceChannelName}}
+        {{willDestroy this.unsubscribe}}
+      >
+        {{#if this.shouldRender}}
+          <span class="chat-replying-indicator__text">{{this.text}}</span>
+          <span class="chat-replying-indicator__wave">
+            <span class="chat-replying-indicator__dot">.</span>
+            <span class="chat-replying-indicator__dot">.</span>
+            <span class="chat-replying-indicator__dot">.</span>
+          </span>
+        {{/if}}
+      </div>
+    {{/if}}
+  </template>
 }

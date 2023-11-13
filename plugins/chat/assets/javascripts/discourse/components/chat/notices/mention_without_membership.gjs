@@ -1,8 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import dIcon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
+import laterFn from "../../../modifiers/chat/later-fn";
 
 export default class MentionWithoutMembership extends Component {
   @service("chat-api") chatApi;
@@ -28,4 +32,36 @@ export default class MentionWithoutMembership extends Component {
       popupAjaxError(error);
     }
   }
+
+  <template>
+    <div class="mention-without-membership-notice">
+      {{#if this.invitationsSent}}
+        <span
+          class="mention-without-membership-notice__invitation-sent"
+          {{laterFn @clearNotice 3000}}
+        >
+          {{dIcon "check"}}
+          <span>
+            {{i18n
+              "chat.mention_warning.invitations_sent"
+              count=this.userIds.length
+            }}
+          </span>
+        </span>
+      {{else}}
+        <p class="mention-without-membership-notice__body -without-membership">
+          <span
+            class="mention-without-membership-notice__body__text"
+          >{{@notice.data.text}}</span>
+          <a
+            class="mention-without-membership-notice__body__link"
+            href
+            {{on "click" this.sendInvitations}}
+          >
+            {{i18n "chat.mention_warning.invite"}}
+          </a>
+        </p>
+      {{/if}}
+    </div>
+  </template>
 }

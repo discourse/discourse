@@ -1,10 +1,24 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import concatClass from "discourse/helpers/concat-class";
+import noop from "discourse/helpers/noop";
+import dIcon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import onResize from "../modifiers/chat/on-resize";
+import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsList extends Component {
   @service chat;
@@ -119,4 +133,147 @@ export default class ChannelsList extends Component {
     const scroller = document.querySelector(".channels-list");
     scroller.scrollTo(0, position);
   }
+
+  <template>
+    {{#if this.showMobileDirectMessageButton}}
+      <DButton
+        @icon="plus"
+        class="no-text btn-flat open-new-message-btn keep-mobile-sidebar-open btn-floating"
+        @action={{this.openNewMessageModal}}
+        title={{i18n this.createDirectMessageChannelLabel}}
+      />
+    {{/if}}
+
+    <div
+      role="region"
+      aria-label={{i18n "chat.aria_roles.channels_list"}}
+      class={{concatClass
+        "channels-list"
+        (if this.hasScrollbar "has-scrollbar")
+      }}
+      {{on
+        "scroll"
+        (if
+          this.chatStateManager.isFullPageActive this.storeScrollPosition (noop)
+        )
+      }}
+      {{didInsert this.computeHasScrollbar}}
+      {{onResize this.computeResizedEntries}}
+    >
+      {{#if this.displayPublicChannels}}
+        <div class="chat-channel-divider public-channels-section">
+          {{#if this.inSidebar}}
+            <span
+              class="title-caret"
+              id="public-channels-caret"
+              role="button"
+              title="toggle nav list"
+              {{on "click" (fn this.toggleChannelSection "public-channels")}}
+              data-toggleable="public-channels"
+            >
+              {{dIcon "angle-up"}}
+            </span>
+          {{/if}}
+          <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
+
+          <LinkTo
+            @route="chat.browse"
+            class="btn no-text btn-flat open-browse-page-btn title-action"
+            title={{i18n "chat.channels_list_popup.browse"}}
+          >
+            {{dIcon "pencil-alt"}}
+          </LinkTo>
+        </div>
+
+        <div
+          id="public-channels"
+          class={{concatClass
+            "channels-list-container"
+            "public-channels"
+            (if this.inSidebar "collapsible-sidebar-section")
+          }}
+        >
+          {{#if this.publicChannelsEmpty}}
+            <div class="public-channel-empty-message">
+              <span class="channel-title">{{i18n
+                  "chat.no_public_channels"
+                }}</span>
+              <LinkTo @route="chat.browse">
+                {{i18n "chat.click_to_join"}}
+              </LinkTo>
+            </div>
+          {{else}}
+            {{#each
+              this.chatChannelsManager.publicMessageChannels
+              as |channel|
+            }}
+              <ChatChannelRow
+                @channel={{channel}}
+                @options={{hash settingsButton=true}}
+              />
+            {{/each}}
+          {{/if}}
+
+        </div>
+      {{/if}}
+
+      <PluginOutlet
+        @name="below-public-chat-channels"
+        @tagName=""
+        @outletArgs={{hash inSidebar=this.inSidebar}}
+      />
+
+      {{#if this.showDirectMessageChannels}}
+        <div class="chat-channel-divider direct-message-channels-section">
+          {{#if this.inSidebar}}
+            <span
+              class="title-caret"
+              id="direct-message-channels-caret"
+              role="button"
+              title="toggle nav list"
+              {{on
+                "click"
+                (fn this.toggleChannelSection "direct-message-channels")
+              }}
+              data-toggleable="direct-message-channels"
+            >
+              {{dIcon "angle-up"}}
+            </span>
+          {{/if}}
+          <span class="channel-title">{{i18n
+              "chat.direct_messages.title"
+            }}</span>
+
+          {{#if
+            (and
+              this.canCreateDirectMessageChannel
+              (not this.showMobileDirectMessageButton)
+            )
+          }}
+            <DButton
+              @icon="plus"
+              class="no-text btn-flat open-new-message-btn"
+              @action={{this.openNewMessageModal}}
+              title={{i18n this.createDirectMessageChannelLabel}}
+            />
+          {{/if}}
+        </div>
+      {{/if}}
+
+      <div
+        id="direct-message-channels"
+        class={{this.directMessageChannelClasses}}
+      >
+        {{#each
+          this.chatChannelsManager.truncatedDirectMessageChannels
+          as |channel|
+        }}
+          <ChatChannelRow
+            @channel={{channel}}
+            @options={{hash leaveButton=true}}
+          />
+        {{/each}}
+      </div>
+    </div>
+  </template>
 }

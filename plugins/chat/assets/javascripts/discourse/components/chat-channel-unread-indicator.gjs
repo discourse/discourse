@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
 import { hasChatIndicator } from "../lib/chat-user-preferences";
 
 export default class ChatChannelUnreadIndicator extends Component {
@@ -47,4 +48,19 @@ export default class ChatChannelUnreadIndicator extends Component {
   #onlyMentions() {
     return hasChatIndicator(this.currentUser).ONLY_MENTIONS;
   }
+
+  <template>
+    {{#if this.showUnreadIndicator}}
+      <div
+        class={{concatClass
+          "chat-channel-unread-indicator"
+          (if this.isUrgent "-urgent")
+        }}
+      >
+        <div class="chat-channel-unread-indicator__number">{{#if
+            this.showUnreadCount
+          }}{{this.unreadCount}}{{else}}&nbsp;{{/if}}</div>
+      </div>
+    {{/if}}
+  </template>
 }
