@@ -2714,7 +2714,7 @@ RSpec.describe TopicsController do
 
         body = response.body
 
-        expect(body).to have_tag(:script, src: "/assets/discourse.js")
+        expect(body).to have_tag(:script, with: { "data-discourse-entrypoint" => "discourse" })
         expect(body).to have_tag(:meta, with: { name: "fragment" })
       end
 
