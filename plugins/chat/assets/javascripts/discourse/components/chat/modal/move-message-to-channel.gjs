@@ -4,8 +4,12 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isBlank } from "@ember/utils";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
+import ChatChannelChooser from "../../chat-channel-chooser";
 
 export default class ChatModalMoveMessageToChannel extends Component {
   @service chat;
@@ -65,4 +69,36 @@ export default class ChatModalMoveMessageToChannel extends Component {
       })
       .catch(popupAjaxError);
   }
+
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      class="chat-modal-move-message-to-channel"
+      @inline={{@inline}}
+      @title={{i18n "chat.move_to_channel.title"}}
+    >
+      <:body>
+        {{#if this.selectedMessageCount}}
+          <p>{{this.instructionsText}}</p>
+        {{/if}}
+
+        <ChatChannelChooser
+          @class="chat-modal-move-message-to-channel__channel-chooser"
+          @content={{this.availableChannels}}
+          @value={{this.destinationChannelId}}
+          @nameProperty="title"
+        />
+      </:body>
+      <:footer>
+        <DButton
+          @icon="sign-out-alt"
+          @disabled={{this.disableMoveButton}}
+          @action={{this.moveMessages}}
+          @label="chat.move_to_channel.confirm_move"
+          class="btn-primary"
+        />
+        <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
+      </:footer>
+    </DModal>
+  </template>
 }

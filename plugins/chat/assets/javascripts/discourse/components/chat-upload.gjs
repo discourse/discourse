@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import eq from "truth-helpers/helpers/eq";
 
 export default class extends Component {
   @service siteSettings;
@@ -52,4 +54,37 @@ export default class extends Component {
   imageLoaded() {
     this.loaded = true;
   }
+
+  <template>
+    {{#if (eq this.type this.IMAGE_TYPE)}}
+      <img
+        class="chat-img-upload"
+        data-orig-src={{@upload.short_url}}
+        height={{this.size.height}}
+        width={{this.size.width}}
+        src={{@upload.url}}
+        style={{this.imageStyle}}
+        loading="lazy"
+        tabindex="0"
+        data-dominant-color={{@upload.dominant_color}}
+        {{on "load" this.imageLoaded}}
+      />
+    {{else if (eq this.type this.VIDEO_TYPE)}}
+      <video class="chat-video-upload" preload="metadata" height="150" controls>
+        <source src={{@upload.url}} />
+      </video>
+    {{else if (eq this.type this.AUDIO_TYPE)}}
+      <audio class="chat-audio-upload" preload="metadata" controls>
+        <source src={{@upload.url}} />
+      </audio>
+    {{else}}
+      <a
+        class="chat-other-upload"
+        data-orig-href={{@upload.short_url}}
+        href={{@upload.url}}
+      >
+        {{@upload.original_filename}}
+      </a>
+    {{/if}}
+  </template>
 }

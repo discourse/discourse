@@ -2,7 +2,10 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
@@ -52,4 +55,27 @@ export default class ChatModalToggleChannelStatus extends Component {
       })
       .catch(popupAjaxError);
   }
+
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      class="chat-modal-toggle-channel-status"
+      @inline={{@inline}}
+      @title={{i18n this.modalTitle}}
+    >
+      <:body>
+        <p
+          class="chat-modal-toggle-channel-status__instructions"
+        >{{this.instructions}}</p>
+      </:body>
+      <:footer>
+        <DButton
+          @action={{this.onStatusChange}}
+          @label={{this.buttonLabel}}
+          id="chat-channel-toggle-btn"
+          class="btn-primary"
+        />
+      </:footer>
+    </DModal>
+  </template>
 }
