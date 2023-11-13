@@ -274,8 +274,7 @@ export default class PostTextSelection extends Component {
 
   @action
   async buildQuote() {
-    const markdown = await this.args.buildQuoteMarkdown();
-    return markdown;
+    return await this.args.buildQuoteMarkdown();
   }
 
   <template>
