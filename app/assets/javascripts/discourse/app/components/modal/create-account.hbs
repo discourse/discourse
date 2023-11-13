@@ -40,7 +40,7 @@
             {{/if}}
             <div class="input-group create-account-email">
               <Input
-                {{on "focusout" (action "checkEmailAvailability")}}
+                {{on "focusout" this.checkEmailAvailability}}
                 @type="email"
                 @value={{this.model.accountEmail}}
                 disabled={{this.emailDisabled}}
@@ -253,7 +253,7 @@
           </div>
 
           <DButton
-            @action={{action "createAccount"}}
+            @action={{this.createAccount}}
             @disabled={{this.submitDisabled}}
             @label="create_account.title"
             @isLoading={{this.formSubmitted}}
@@ -279,7 +279,7 @@
 
       {{#if this.showExternalLoginButtons}}
         <div class="create-account-login-buttons">
-          <LoginButtons @externalLogin={{action "externalLogin"}} />
+          <LoginButtons @externalLogin={{this.externalLogin}} />
         </div>
       {{/if}}
 

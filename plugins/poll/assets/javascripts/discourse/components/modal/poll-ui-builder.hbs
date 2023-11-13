@@ -53,7 +53,7 @@
             }}</label>
           <Textarea
             @value={{this.pollOptionsText}}
-            {{on "input" (action "onOptionsTextChange")}}
+            {{on "input" this.onOptionsTextChange}}
           />
           {{#if this.showMinNumOfOptionsValidation}}
             {{#unless this.minNumOfOptionsValidation.ok}}
