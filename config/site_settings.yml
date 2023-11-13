@@ -425,6 +425,10 @@ login:
     client: true
     default: true
     validator: "EnableLocalLoginsViaEmailValidator"
+  enable_passkeys:
+    client: true
+    default: false
+    hidden: true
   allow_new_registrations:
     client: true
     default: true
@@ -2188,10 +2192,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  experimental_passkeys:
-    client: true
-    default: false
-    hidden: true
   experimental_search_menu_groups:
     type: group_list
     list_type: compact
