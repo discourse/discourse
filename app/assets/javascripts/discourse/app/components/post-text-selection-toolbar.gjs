@@ -212,6 +212,12 @@ export default class PostTextSelectionToolbar extends Component {
             />
           {{/if}}
 
+          <PluginOutlet
+            @name="quote-share-buttons-before"
+            @connectorTagName="span"
+            @outletArgs={{hash data=@data}}
+          />
+
           {{#if this.quoteSharingEnabled}}
             <span class="quote-sharing">
               {{#if this.quoteSharingShowLabel}}
