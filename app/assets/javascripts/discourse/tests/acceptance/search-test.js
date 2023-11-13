@@ -154,7 +154,7 @@ acceptance("Search - Anonymous", function (needs) {
     );
 
     assert.ok(
-      exists(`${contextSelector} span.badge-wrapper`),
+      exists(`${contextSelector} span.badge-category__wrapper`),
       "category badge is a span (i.e. not a link)"
     );
 
@@ -584,7 +584,7 @@ acceptance("Search - with tagging enabled", function (needs) {
       query(
         ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
       ).textContent.trim(),
-      "dev slow",
+      "devslow",
       "tags displayed in search results"
     );
   });
@@ -831,7 +831,7 @@ acceptance("Search - assistant", function (needs) {
     assert.ok(exists(query(firstCategory)));
 
     const firstResultSlug = query(
-      `${firstCategory} .category-name`
+      `${firstCategory} .badge-category__name`
     ).textContent.trim();
 
     await click(firstCategory);
@@ -857,8 +857,9 @@ acceptance("Search - assistant", function (needs) {
     await click("#search-button");
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug",
       "Category is displayed"
     );
@@ -885,8 +886,9 @@ acceptance("Search - assistant", function (needs) {
     );
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug"
     );
 

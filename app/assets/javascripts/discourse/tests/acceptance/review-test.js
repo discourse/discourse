@@ -138,7 +138,7 @@ acceptance("Review", function (needs) {
     await visit("/review");
 
     assert.ok(exists(`${topic} .reviewable-action.approve`));
-    assert.ok(!exists(`${topic} .category-name`));
+    assert.ok(!exists(`${topic} .badge-category__name`));
 
     assert.strictEqual(
       query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,
@@ -220,7 +220,7 @@ acceptance("Review", function (needs) {
       "new raw contents"
     );
     assert.strictEqual(
-      query(`${topic} .category-name`).innerText.trim(),
+      query(`${topic} .badge-category__name`).innerText.trim(),
       "support"
     );
   });
