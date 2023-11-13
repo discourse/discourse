@@ -888,7 +888,7 @@ RSpec.describe PostMover do
           end
 
           context "with subfolder installs" do
-            before { Discourse.stubs(:base_path).returns("/forum") }
+            before { set_subfolder "/forum" }
 
             it "creates a small action with correct post url" do
               moved_to = topic.move_posts(user, [p2.id], destination_topic_id: destination_topic.id)
