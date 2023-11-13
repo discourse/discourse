@@ -887,6 +887,27 @@ RSpec.describe PostMover do
             expect(new_post.post_revisions.size).to eq(1)
           end
 
+          context "with subfolder installs" do
+            before { set_subfolder "/forum" }
+
+            it "creates a small action with correct post url" do
+              moved_to = topic.move_posts(user, [p2.id], destination_topic_id: destination_topic.id)
+              small_action = topic.posts.last
+
+              expect(small_action.post_type).to eq(Post.types[:small_action])
+
+              expected_text =
+                I18n.t(
+                  "move_posts.existing_topic_moderator_post",
+                  count: 1,
+                  topic_link: "[#{moved_to.title}](#{p2.reload.relative_url})",
+                  locale: :en,
+                )
+
+              expect(small_action.raw).to eq(expected_text)
+            end
+          end
+
           context "with read state and other stats per user" do
             def create_topic_user(user, topic, opts = {})
               notification_level = opts.delete(:notification_level) || :regular

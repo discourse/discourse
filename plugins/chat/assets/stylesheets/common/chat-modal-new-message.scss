@@ -8,10 +8,6 @@
     padding: 0;
   }
 
-  .modal-header {
-    display: none;
-  }
-
   .modal-inner-container {
     width: var(--modal-max-width);
     box-shadow: var(--shadow-dropdown);
@@ -30,5 +26,17 @@
     .modal-inner-container {
       margin: 10px auto auto auto;
     }
+  }
+
+  .chat-message-creator__search,
+  .chat-message-creator__new-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-block: 1rem;
+  }
+
+  .chat-message-creator__add-members-header-container {
+    padding-inline: 1rem;
   }
 }

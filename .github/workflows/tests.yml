@@ -80,8 +80,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.ruby }}-gem-
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
 
       - name: Setup gems
         run: |
@@ -101,8 +100,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
       - name: Yarn install
         run: yarn install --frozen-lockfile
@@ -307,8 +305,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse

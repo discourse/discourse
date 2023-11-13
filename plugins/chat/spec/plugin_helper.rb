@@ -102,6 +102,17 @@ module ChatSpecHelpers
     service_failed!(result) if result.failure?
     result
   end
+
+  def add_users_to_channel(users, channel, user: Discourse.system_user)
+    result =
+      ::Chat::AddUsersToChannel.call(
+        guardian: user.guardian,
+        channel_id: channel.id,
+        usernames: Array(users).map(&:username),
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
 end
 
 RSpec.configure do |config|

@@ -203,13 +203,13 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     );
 
     assert.strictEqual(
-      secondOption.querySelector(".category-name").textContent.trim(),
+      secondOption.querySelector(".badge-category__name").textContent.trim(),
       "bug",
       "second option includes category slug"
     );
 
     assert.ok(
-      exists(`${contextSelector} span.badge-wrapper`),
+      exists(`${contextSelector} span.badge-category__wrapper`),
       "category badge is a span (i.e. not a link)"
     );
   });
@@ -706,7 +706,7 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
       query(
         ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
       ).textContent.trim(),
-      "dev slow",
+      "devslow",
       "tags displayed in search results"
     );
   });
@@ -741,8 +741,9 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
     await click("#search-button");
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug",
       "Category is displayed"
     );
@@ -769,8 +770,9 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
     );
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug"
     );
 
@@ -996,7 +998,7 @@ acceptance("Search - Glimmer - assistant", function (needs) {
 
     assert.strictEqual(
       query(
-        ".search-menu .results ul.search-menu-assistant .search-link .category-name"
+        ".search-menu .results ul.search-menu-assistant .search-link .badge-category__name"
       ).innerText,
       "support"
     );
@@ -1095,7 +1097,7 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     const firstCategory =
       ".search-menu .results ul.search-menu-assistant .search-link";
     const firstCategoryName = query(
-      `${firstCategory} .category-name`
+      `${firstCategory} .badge-category__name`
     ).innerText;
     await click(firstCategory);
 

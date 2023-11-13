@@ -114,46 +114,56 @@
 <footer class="topic-list-bottom">
   <ConditionalLoadingSpinner @condition={{@model.loadingMore}} />
   {{#if this.allLoaded}}
-    <TopicDismissButtons
-      @position="bottom"
-      @selectedTopics={{@bulkSelectHelper.selected}}
-      @model={{@model}}
-      @showResetNew={{@showResetNew}}
-      @showDismissRead={{@showDismissRead}}
-      @resetNew={{this.resetNew}}
-      @dismissRead={{this.dismissRead}}
-    />
-
-    <FooterMessage
-      @education={{this.footerEducation}}
-      @message={{this.footerMessage}}
+    <PluginOutlet
+      @name="topic-list-bottom"
+      @outletArgs={{hash
+        category=@category
+        tag=@tag
+        allLoaded=this.allLoaded
+        model=@model
+      }}
     >
-      {{#if @tag}}
-        {{html-safe
-          (i18n "topic.browse_all_tags_or_latest" basePath=(base-path))
-        }}
-      {{else if this.latest}}
-        {{#if @category.canCreateTopic}}
-          <DiscourseLinkedText
-            @action={{fn
-              this.composer.openNewTopic
-              (hash category=@category preferDraft=true)
-            }}
-            @text="topic.suggest_create_topic"
-          />
+      <TopicDismissButtons
+        @position="bottom"
+        @selectedTopics={{@bulkSelectHelper.selected}}
+        @model={{@model}}
+        @showResetNew={{@showResetNew}}
+        @showDismissRead={{@showDismissRead}}
+        @resetNew={{this.resetNew}}
+        @dismissRead={{this.dismissRead}}
+      />
+
+      <FooterMessage
+        @education={{this.footerEducation}}
+        @message={{this.footerMessage}}
+      >
+        {{#if @tag}}
+          {{html-safe
+            (i18n "topic.browse_all_tags_or_latest" basePath=(base-path))
+          }}
+        {{else if this.latest}}
+          {{#if @category.canCreateTopic}}
+            <DiscourseLinkedText
+              @action={{fn
+                this.composer.openNewTopic
+                (hash category=@category preferDraft=true)
+              }}
+              @text="topic.suggest_create_topic"
+            />
+          {{/if}}
+        {{else if this.top}}
+          {{html-safe
+            (i18n
+              "topic.browse_all_categories_latest_or_top" basePath=(base-path)
+            )
+          }}
+          <TopPeriodButtons @period={{@period}} @action={{@changePeriod}} />
+        {{else}}
+          {{html-safe
+            (i18n "topic.browse_all_categories_latest" basePath=(base-path))
+          }}
         {{/if}}
-      {{else if this.top}}
-        {{html-safe
-          (i18n
-            "topic.browse_all_categories_latest_or_top" basePath=(base-path)
-          )
-        }}
-        <TopPeriodButtons @period={{@period}} @action={{@changePeriod}} />
-      {{else}}
-        {{html-safe
-          (i18n "topic.browse_all_categories_latest" basePath=(base-path))
-        }}
-      {{/if}}
-    </FooterMessage>
+      </FooterMessage>
+    </PluginOutlet>
   {{/if}}
 </footer>

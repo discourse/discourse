@@ -99,7 +99,7 @@ acceptance("User Preferences - Security", function (needs) {
   });
 
   test("Viewing Passkeys - user has a key", async function (assert) {
-    this.siteSettings.experimental_passkeys = true;
+    this.siteSettings.enable_passkeys = true;
 
     updateCurrentUser({
       user_passkeys: [
@@ -161,7 +161,7 @@ acceptance("User Preferences - Security", function (needs) {
   });
 
   test("Viewing Passkeys - empty state", async function (assert) {
-    this.siteSettings.experimental_passkeys = true;
+    this.siteSettings.enable_passkeys = true;
 
     await visit("/u/eviltrout/preferences/security");
 
@@ -179,7 +179,7 @@ acceptance("User Preferences - Security", function (needs) {
   });
 
   test("Viewing Passkeys - another user has a key", async function (assert) {
-    this.siteSettings.experimental_passkeys = true;
+    this.siteSettings.enable_passkeys = true;
 
     // user charlie has passkeys in fixtures
     await visit("/u/charlie/preferences/security");

@@ -10,7 +10,12 @@ RSpec.describe InvitesController do
     it "shows the accept invite page" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+      expect(response.body).to have_tag(
+        :script,
+        with: {
+          "data-discourse-entrypoint" => "discourse",
+        },
+      )
       expect(response.body).not_to include(invite.email)
       expect(response.body).to_not include(
         I18n.t(

@@ -28,7 +28,7 @@ export default Controller.extend(CanCheckEmails, {
     return (
       !this.siteSettings.enable_discourse_connect &&
       this.siteSettings.enable_local_logins &&
-      this.siteSettings.experimental_passkeys &&
+      this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
   },

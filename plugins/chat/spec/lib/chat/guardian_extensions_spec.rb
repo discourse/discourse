@@ -46,9 +46,39 @@ RSpec.describe Chat::GuardianExtensions do
       expect(staff_guardian.can_create_chat_channel?).to eq(true)
     end
 
-    it "only staff can edit chat channels" do
-      expect(guardian.can_edit_chat_channel?).to eq(false)
-      expect(staff_guardian.can_edit_chat_channel?).to eq(true)
+    context "when category channel" do
+      it "allows staff to edit chat channels" do
+        expect(guardian.can_edit_chat_channel?(channel)).to eq(false)
+        expect(staff_guardian.can_edit_chat_channel?(channel)).to eq(true)
+      end
+    end
+
+    context "when direct message channel" do
+      context "when member of channel" do
+        context "when group" do
+          before do
+            dm_channel.chatable.update!(group: true)
+            add_users_to_channel(user, dm_channel)
+          end
+
+          it "allows to edit the channel" do
+            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(true)
+          end
+        end
+
+        context "when not group" do
+          it "doesn’t allow  to edit the channel" do
+            Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
+            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(false)
+          end
+        end
+      end
+
+      context "when not member of channel" do
+        it "doesn’t allow to edit the channel" do
+          expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(false)
+        end
+      end
     end
 
     it "only staff can close chat channels" do

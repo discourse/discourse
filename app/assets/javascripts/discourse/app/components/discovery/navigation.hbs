@@ -3,7 +3,7 @@
 {{#if @category}}
   <PluginOutlet
     @name="above-category-heading"
-    @outletArgs={{hash category=@category}}
+    @outletArgs={{hash category=@category tag=@tag}}
   />
 
   <section class="category-heading">
@@ -18,7 +18,7 @@
       <PluginOutlet
         @name="category-heading"
         @connectorTagName="div"
-        @outletArgs={{hash category=@category}}
+        @outletArgs={{hash category=@category tag=@tag}}
       />
     </span>
   </section>

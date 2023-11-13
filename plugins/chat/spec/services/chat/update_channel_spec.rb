@@ -23,12 +23,6 @@ RSpec.describe Chat::UpdateChannel do
     it { is_expected.to fail_a_policy(:check_channel_permission) }
   end
 
-  context "when the user tries to edit a DM channel" do
-    fab!(:channel) { Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)]) }
-
-    it { is_expected.to fail_a_policy(:no_direct_message_channel) }
-  end
-
   context "when channel is a category one" do
     context "when a valid user provides valid params" do
       let(:message) do

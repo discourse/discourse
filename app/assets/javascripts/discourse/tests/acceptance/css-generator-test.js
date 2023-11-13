@@ -7,9 +7,15 @@ acceptance("CSS Generator", function (needs) {
 
   needs.site({
     categories: [
-      { id: 1, color: "ff0000", name: "category1" },
-      { id: 2, color: "333", name: "category2" },
-      { id: 4, color: "2B81AF", parentCategory: { id: 1 }, name: "category3" },
+      { id: 1, color: "ff0000", text_color: "ffffff", name: "category1" },
+      { id: 2, color: "333", text_color: "ffffff", name: "category2" },
+      {
+        id: 4,
+        color: "2B81AF",
+        text_color: "ffffff",
+        parentCategory: { id: 1 },
+        name: "category3",
+      },
     ],
   });
 
@@ -30,6 +36,15 @@ acceptance("CSS Generator", function (needs) {
       ".hashtag-color--category-1 {\n  background: linear-gradient(-90deg, var(--category-1-color) 50%, var(--category-1-color) 50%);\n}\n.hashtag-color--category-2 {\n  background: linear-gradient(-90deg, var(--category-2-color) 50%, var(--category-2-color) 50%);\n}\n.hashtag-color--category-4 {\n  background: linear-gradient(-90deg, var(--category-4-color) 50%, var(--category-1-color) 50%);\n}"
     );
   });
+
+  test("category badge CSS variables are generated", async function (assert) {
+    await visit("/");
+    const cssTag = document.querySelector("style#category-badge-css-generator");
+    assert.equal(
+      cssTag.innerHTML,
+      '.badge-category[data-category-id="1"] { --category-badge-color: var(--category-1-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category-id="2"] { --category-badge-color: var(--category-2-color); --category-badge-text-color: #ffffff; }\n.badge-category[data-category-id="4"] { --category-badge-color: var(--category-4-color); --category-badge-text-color: #ffffff; }'
+    );
+  });
 });
 
 acceptance(
@@ -37,11 +52,19 @@ acceptance(
   function (needs) {
     needs.site({ categories: null });
     needs.settings({ login_required: true });
-
     test("category CSS variables are not generated", async function (assert) {
       await visit("/");
+
       const cssTag = document.querySelector(
         "style#category-color-css-generator"
+      );
+      assert.notOk(exists(cssTag));
+    });
+
+    test("category badge CSS variables are not generated", async function (assert) {
+      await visit("/");
+      const cssTag = document.querySelector(
+        "style#category-badge-css-generator"
       );
       assert.notOk(exists(cssTag));
     });

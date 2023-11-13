@@ -96,14 +96,14 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
     await click(".insert-poll");
     assert.strictEqual(
       results[results.length - 1],
-      "[poll type=number results=always min=1 max=20 step=1]\n[/poll]\n"
+      "[poll type=number results=always min=1 max=20 step=1 public=true]\n[/poll]\n"
     );
 
     await fillIn(".poll-options-step", "2");
     await click(".insert-poll");
     assert.strictEqual(
       results[results.length - 1],
-      "[poll type=number results=always min=1 max=20 step=2]\n[/poll]\n",
+      "[poll type=number results=always min=1 max=20 step=2 public=true]\n[/poll]\n",
       "includes step value"
     );
 
@@ -111,8 +111,8 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
     await click(".insert-poll");
     assert.strictEqual(
       results[results.length - 1],
-      "[poll type=number results=always min=1 max=20 step=2 public=true]\n[/poll]\n",
-      "includes public boolean"
+      "[poll type=number results=always min=1 max=20 step=2 public=false]\n[/poll]\n",
+      "can be set to private"
     );
 
     await fillIn(".poll-options-step", "0");
@@ -131,7 +131,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
     await click(".insert-poll");
     assert.strictEqual(
       results[results.length - 1],
-      "[poll type=regular results=always chartType=bar]\n* a\n* b\n[/poll]\n",
+      "[poll type=regular results=always public=true chartType=bar]\n* a\n* b\n[/poll]\n",
       "has correct output"
     );
 
@@ -142,8 +142,8 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
     await click(".insert-poll");
     assert.strictEqual(
       results[results.length - 1],
-      "[poll type=regular results=always public=true chartType=bar]\n* a\n* b\n[/poll]\n",
-      "has public boolean"
+      "[poll type=regular results=always public=false chartType=bar]\n* a\n* b\n[/poll]\n",
+      "can be set to private"
     );
 
     const groupChooser = selectKit(".group-chooser");
@@ -154,7 +154,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
     await click(".insert-poll");
     assert.strictEqual(
       results[results.length - 1],
-      "[poll type=regular results=always public=true chartType=bar groups=custom_group]\n* a\n* b\n[/poll]\n",
+      "[poll type=regular results=always public=false chartType=bar groups=custom_group]\n* a\n* b\n[/poll]\n",
       "has groups"
     );
   });
@@ -171,7 +171,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
     await click(".insert-poll");
     assert.strictEqual(
       results[results.length - 1],
-      "[poll type=multiple results=always min=1 max=2 chartType=bar]\n* a\n* b\n[/poll]\n",
+      "[poll type=multiple results=always min=1 max=2 public=true chartType=bar]\n* a\n* b\n[/poll]\n",
       "has correct output"
     );
 
@@ -182,8 +182,8 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
     await click(".insert-poll");
     assert.strictEqual(
       results[results.length - 1],
-      "[poll type=multiple results=always min=1 max=2 public=true chartType=bar]\n* a\n* b\n[/poll]\n",
-      "has public boolean"
+      "[poll type=multiple results=always min=1 max=2 public=false chartType=bar]\n* a\n* b\n[/poll]\n",
+      "can be set to private boolean"
     );
   });
 
@@ -210,5 +210,23 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
       "staff_only is visible to staff"
     );
     await resultVisibility.collapse();
+  });
+
+  test("default public value can be controlled with site setting", async function (assert) {
+    this.siteSettings.poll_default_public = false;
+
+    const results = await setupBuilder(this);
+
+    await fillIn(".poll-option-value input", "a");
+    await click(".poll-option-add");
+    await fillIn(".poll-option-value:nth-of-type(2) input", "b");
+
+    await click(".insert-poll");
+
+    assert.strictEqual(
+      results[results.length - 1],
+      "[poll type=regular results=always public=false chartType=bar]\n* a\n* b\n[/poll]\n",
+      "can be set to private boolean"
+    );
   });
 });

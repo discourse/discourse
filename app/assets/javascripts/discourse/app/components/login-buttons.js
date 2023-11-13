@@ -10,10 +10,10 @@ export default Component.extend({
   @discourseComputed(
     "buttons.length",
     "showLoginWithEmailLink",
-    "canUsePasskeys"
+    "showPasskeysButton"
   )
-  hidden(buttonsCount, showLoginWithEmailLink, canUsePasskeys) {
-    return buttonsCount === 0 && !showLoginWithEmailLink && !canUsePasskeys;
+  hidden(buttonsCount, showLoginWithEmailLink, showPasskeysButton) {
+    return buttonsCount === 0 && !showLoginWithEmailLink && !showPasskeysButton;
   },
 
   @discourseComputed
@@ -22,10 +22,11 @@ export default Component.extend({
   },
 
   @discourseComputed
-  canUsePasskeys() {
+  showPasskeysButton() {
     return (
       this.siteSettings.enable_local_logins &&
-      this.siteSettings.experimental_passkeys &&
+      this.siteSettings.enable_passkeys &&
+      this.context === "login" &&
       isWebauthnSupported()
     );
   },

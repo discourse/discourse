@@ -2,19 +2,18 @@
 
 class EmberCli < ActiveSupport::CurrentAttributes
   # Cache which persists for the duration of a request
-  attribute :request_cached_script_chunks
+  attribute :request_cache
 
   def self.dist_dir
     "#{Rails.root}/app/assets/javascripts/discourse/dist"
   end
 
   def self.assets
-    @assets ||= Dir.glob("**/*.{js,map,txt}", base: "#{dist_dir}/assets")
+    cache[:assets] ||= Dir.glob("**/*.{js,map,txt}", base: "#{dist_dir}/assets")
   end
 
   def self.script_chunks
-    return @production_chunk_infos if @production_chunk_infos
-    return self.request_cached_script_chunks if self.request_cached_script_chunks
+    return cache[:script_chunks] if cache[:script_chunks]
 
     chunk_infos = JSON.parse(File.read("#{dist_dir}/assets.json"))
 
@@ -30,8 +29,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
       chunk_infos["vendor"] = [fingerprinted.delete_suffix(".js")]
     end
 
-    @production_chunk_infos = chunk_infos if Rails.env.production?
-    self.request_cached_script_chunks = chunk_infos
+    cache[:script_chunks] = chunk_infos
   rescue Errno::ENOENT
     {}
   end
@@ -62,9 +60,16 @@ class EmberCli < ActiveSupport::CurrentAttributes
     File.exist?("#{dist_dir}/tests/index.html")
   end
 
+  def self.cache
+    if Rails.env.development?
+      self.request_cache ||= {}
+    else
+      @production_cache ||= {}
+    end
+  end
+
   def self.clear_cache!
-    @production_chunk_infos = nil
-    @assets = nil
-    self.request_cached_script_chunks = nil
+    self.request_cache = nil
+    @production_cache = nil
   end
 end

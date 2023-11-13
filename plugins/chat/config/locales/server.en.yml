@@ -53,6 +53,7 @@ en:
   chat:
     deleted_chat_username: deleted
     errors:
+      users_cant_be_added_to_channel: "Users can't be added to this channel."
       channel_exists_for_category: "A channel already exists for this category and name"
       channel_new_message_disallowed:
         archived: "The channel is archived, no new messages can be sent"
@@ -130,6 +131,9 @@ en:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} has been invited by %{inviting_user}."
+        other: "%{invited_users} have been invited by %{inviting_user}."
       archive:
         first_post_raw: "This topic is an archive of the [%{channel_name}](%{channel_url}) chat channel."
       messages_moved:

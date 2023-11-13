@@ -310,6 +310,7 @@ en:
 
       members_view:
         filter_placeholder: Find members
+        add_member: Add Member
 
       about_view:
         associated_topic: Linked topic
@@ -333,9 +334,15 @@ en:
         default_search_placeholder: "#a-channel, @somebody or anything"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@somebody"
-        user_search_placeholder: "...add more users"
+        user_search_placeholder: "...add more members"
         disabled_user: "has disabled chat"
         no_items: "No items"
+        create_group_placeholder: "Group chat name (optional)"
+        participants_counter:  "%{selection_count}/%{max} participants"
+        new_group_chat: "New group chat"
+        filter: "Filter"
+        cant_add_more_members: "Maximum number of members reached"
+        create_new_group_chat: "Create group chat"
 
       channel_edit_name_slug_modal:
         title: Edit channel
@@ -350,10 +357,15 @@ en:
         description: Tell people what this channel is all about
 
       direct_message_creator:
+        add_to_channel: "Add to channel"
         title: New Message
         prefix: "To:"
         no_results: No results
         selected_user_title: "Deselect %{username}"
+        group_name: "Group chat name (optional)"
+        members_counter:
+          one: "%{count}/%{max} member"
+          other: "%{count}/%{max} members"
 
       channel:
         no_memberships: This channel has no members

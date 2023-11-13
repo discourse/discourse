@@ -338,7 +338,7 @@ class SessionController < ApplicationController
   end
 
   def passkey_login
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     params.require(:publicKeyCredential)
 

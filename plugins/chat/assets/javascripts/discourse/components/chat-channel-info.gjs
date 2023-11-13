@@ -1,14 +1,19 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
+import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 
 export default class ChatChannelMessageEmojiPicker extends Component {
   @service chatChannelInfoRouteOriginManager;
   @service site;
+  @service modal;
+  @service chatGuardian;
 
   membersLabel = I18n.t("chat.channel_info.tabs.members");
   settingsLabel = I18n.t("chat.channel_info.tabs.settings");
@@ -16,11 +21,23 @@ export default class ChatChannelMessageEmojiPicker extends Component {
   backToAllChannelsLabel = I18n.t("chat.channel_info.back_to_channel");
 
   get showTabs() {
+    return this.site.desktopView && this.args.channel.isOpen;
+  }
+
+  get canEditChannel() {
     return (
-      this.site.desktopView &&
-      this.args.channel.membershipsCount > 1 &&
-      this.args.channel.isOpen
+      this.chatGuardian.canEditChatChannel() &&
+      (this.args.channel.isCategoryChannel ||
+        (this.args.channel.isDirectMessageChannel &&
+          this.args.channel.chatable.group))
     );
+  }
+
+  @action
+  editChannelTitle() {
+    return this.modal.show(ChatModalEditChannelName, {
+      model: this.args.channel,
+    });
   }
 
   <template>
@@ -48,6 +65,14 @@ export default class ChatChannelMessageEmojiPicker extends Component {
         </div>
 
         <ChatChannelTitle @channel={{@channel}} />
+
+        {{#if this.canEditChannel}}
+          <DButton
+            @icon="pencil-alt"
+            class="btn-flat"
+            @action={{this.editChannelTitle}}
+          />
+        {{/if}}
       </div>
     </div>
 

@@ -35,6 +35,8 @@ describe UsersController do
       sign_in(current_user)
     end
 
+    after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
+
     it "does not return any unread notifications for chat bookmarks that the user no longer has access to" do
       bookmark_with_reminder =
         Fabricate(:bookmark, user: current_user, bookmarkable: bookmark_message)

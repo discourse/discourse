@@ -456,7 +456,7 @@ RSpec.describe UserSerializer do
     end
 
     it "includes passkeys if feature is enabled" do
-      SiteSetting.experimental_passkeys = true
+      SiteSetting.enable_passkeys = true
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
 
