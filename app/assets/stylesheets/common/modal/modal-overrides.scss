@@ -242,3 +242,21 @@
     width: calc(100%);
   }
 }
+
+.d-modal.share-topic-modal {
+  .d-modal {
+    &__title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    &__subtitle-text {
+      color: var(--primary-med-or-secondary-med);
+    }
+  }
+
+  form {
+    margin-bottom: 0;
+  }
+}

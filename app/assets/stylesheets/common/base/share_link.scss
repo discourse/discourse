@@ -43,32 +43,6 @@
   }
 }
 
-// topic share modal
-
-.share-topic-modal {
-  .modal-header {
-    .subtitle {
-      color: var(--primary-med-or-secondary-med);
-    }
-  }
-
-  form {
-    margin-bottom: 0;
-  }
-
-  .invite-users {
-    display: flex;
-    flex-direction: column;
-    margin: 1.5em 0 0.25em;
-    width: 100%;
-
-    button {
-      margin-top: 0;
-      margin-right: 0;
-    }
-  }
-}
-
 // topic invite modal
 
 .create-invite-modal {
