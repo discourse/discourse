@@ -24,7 +24,7 @@ module Chat
     def process_thumbnails
       @model.uploads.each do |upload|
         if upload.width <= SiteSetting.max_image_width &&
-             upload.height <= SiteSetting.max_image_heigh
+             upload.height <= SiteSetting.max_image_height
           return false
         end
 
