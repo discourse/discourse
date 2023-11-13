@@ -13,7 +13,7 @@ RSpec.describe PushNotificationPusher do
   end
 
   context "with user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:topic_title) { "Topic" }
     let(:username) { "system" }
 

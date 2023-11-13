@@ -3,7 +3,7 @@
 RSpec.describe "Updating tag counts" do
   fab!(:tag1) { Fabricate(:tag) }
   fab!(:tag2) { Fabricate(:tag) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   fab!(:public_category) { Fabricate(:category) }
   fab!(:public_category2) { Fabricate(:category) }
   fab!(:private_category) { Fabricate(:private_category, group: group) }

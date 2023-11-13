@@ -3,9 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Chat::ReviewableMessage, type: :model do
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:chat_channel) { Fabricate(:chat_channel) }
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:chat_channel)
   fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
   fab!(:reviewable) do
     Fabricate(:chat_reviewable_message, target: chat_message, created_by: moderator)

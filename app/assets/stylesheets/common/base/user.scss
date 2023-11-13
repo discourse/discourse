@@ -518,6 +518,23 @@
 }
 
 .user-preferences {
+  .form-vertical {
+    width: 500px;
+    max-width: 100%;
+
+    .control-group {
+      margin-bottom: 2em;
+    }
+  }
+
+  .category-selector,
+  .tag-chooser,
+  textarea,
+  input.user-selector,
+  .user-chooser {
+    width: 100%;
+  }
+
   textarea {
     height: 100px;
   }
@@ -734,6 +751,10 @@
         }
       }
     }
+  }
+
+  .pref-second-factor {
+    margin-top: 0.5em;
   }
 }
 

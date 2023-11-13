@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SecondFactor::AuthManager do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:guardian) { Guardian.new(user) }
   fab!(:user_totp) { Fabricate(:user_second_factor_totp, user: user) }
 

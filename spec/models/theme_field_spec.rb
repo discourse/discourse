@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemeField do
-  fab!(:theme) { Fabricate(:theme) }
+  fab!(:theme)
 
   before do
     SvgSprite.clear_plugin_svg_sprite_cache!

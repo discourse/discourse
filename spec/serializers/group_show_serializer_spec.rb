@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupShowSerializer do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user)
+  fab!(:group)
 
   context "with an admin user" do
     fab!(:user) { Fabricate(:admin) }

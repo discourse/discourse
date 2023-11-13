@@ -1,4 +1,7 @@
 [data-content][data-identifier="user-status-message-tooltip"] {
+  display: flex;
+  align-items: center;
+
   .emoji {
     width: 1em;
     height: 1em;
@@ -16,7 +19,7 @@
   }
 
   .user-status-tooltip-until {
-    margin-top: 0.1rem;
     color: var(--primary-medium);
+    padding-left: 0.25rem;
   }
 }

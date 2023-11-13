@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserStatus do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "validations" do
     it "is invalid when ends_at is before set_at" do

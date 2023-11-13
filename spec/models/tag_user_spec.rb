@@ -186,7 +186,7 @@ RSpec.describe TagUser do
   end
 
   describe "integration" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:watched_tag) { Fabricate(:tag) }
     let(:muted_tag) { Fabricate(:tag) }
     fab!(:tracked_tag) { Fabricate(:tag) }

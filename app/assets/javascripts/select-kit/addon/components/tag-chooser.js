@@ -71,8 +71,8 @@ export default MultiSelectComponent.extend(TagsMixin, {
 
   actions: {
     onChange(value, items) {
-      if (this.attrs.onChange) {
-        this.attrs.onChange(value, items);
+      if (this.onChange) {
+        this.onChange(value, items);
       } else {
         this.set("tags", value);
       }

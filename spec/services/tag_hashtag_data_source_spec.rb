@@ -6,7 +6,7 @@ RSpec.describe TagHashtagDataSource do
   fab!(:tag3) { Fabricate(:tag, name: "factory", public_topic_count: 4) }
   fab!(:tag4) { Fabricate(:tag, name: "factorio", public_topic_count: 3) }
   fab!(:tag5) { Fabricate(:tag, name: "factz", public_topic_count: 1) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:guardian) { Guardian.new(user) }
 
   describe "#enabled?" do

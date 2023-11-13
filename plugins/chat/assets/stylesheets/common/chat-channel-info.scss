@@ -1,14 +1,27 @@
 .chat-channel-info {
   display: flex;
-  flex-direction: column;
   height: 100%;
   padding: 1rem;
+  flex-direction: column;
+
+  .chat-message-creator__container {
+    width: 100%;
+  }
 
   &__nav {
     .nav-pills {
       margin: 0;
       padding-bottom: 1rem;
     }
+  }
+}
+
+.chat-channel-members__add-members {
+  display: flex;
+  gap: 1rem;
+
+  .chat-message-creator-container {
+    width: 100%;
   }
 }
 

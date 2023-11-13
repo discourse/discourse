@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import ReorderCategories from "discourse/components/modal/reorder-categories";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
-import showModal from "discourse/lib/show-modal";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
@@ -10,6 +10,7 @@ import Category from "discourse/models/category";
 export default class DiscoveryNavigation extends Component {
   @service router;
   @service currentUser;
+  @service modal;
 
   get filterMode() {
     return calculateFilterMode({
@@ -56,6 +57,6 @@ export default class DiscoveryNavigation extends Component {
 
   @action
   reorderCategories() {
-    showModal("reorder-categories");
+    this.modal.show(ReorderCategories);
   }
 }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SingleSignOnRecordSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let :sso do
     SingleSignOnRecord.create!(
       user_id: user.id,
@@ -12,7 +12,7 @@ RSpec.describe SingleSignOnRecordSerializer do
   end
 
   context "with an admin" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     let :serializer do
       SingleSignOnRecordSerializer.new(sso, scope: Guardian.new(admin), root: false)
     end

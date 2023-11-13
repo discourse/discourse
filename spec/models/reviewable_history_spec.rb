@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableHistory, type: :model do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:moderator)
 
   it "adds a `created` history event when a reviewable is created" do
     reviewable = ReviewableUser.needs_review!(target: user, created_by: admin)

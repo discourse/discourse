@@ -26,7 +26,7 @@
           id="public-channels-caret"
           role="button"
           title="toggle nav list"
-          {{on "click" (action "toggleChannelSection" "public-channels")}}
+          {{on "click" (fn this.toggleChannelSection "public-channels")}}
           data-toggleable="public-channels"
         >
           {{d-icon "angle-up"}}
@@ -86,7 +86,7 @@
           title="toggle nav list"
           {{on
             "click"
-            (action "toggleChannelSection" "direct-message-channels")
+            (fn this.toggleChannelSection "direct-message-channels")
           }}
           data-toggleable="direct-message-channels"
         >

@@ -6,7 +6,7 @@ RSpec.describe SiteSettings::Validations do
   subject(:validations) { Class.new.include(described_class).new }
 
   describe "default_categories" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     it "supports valid categories" do
       expect {

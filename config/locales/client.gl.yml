@@ -2813,8 +2813,7 @@ gl:
       action: "Sinalar a publicación"
       take_action_options:
         default:
-          title: "Intervir"
-          details: "Acadar o límite da alerta inmediatamente e non agardar por máis alertas da comunidade"
+          title: "Agochar publicación"
         suspend:
           title: "Suspender o usuario"
           details: "Acadar o límite da alerta e suspender o usuario"
@@ -2831,7 +2830,6 @@ gl:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(agochado)"
       submit_tooltip: "Enviar a alerta privada"
-      take_action_tooltip: "Acadar o limiar de alertas inmediatamente no canto de agardar por máis alertas da comunidade"
       cant: "Sentímolo pero non pode sinalar esta publicación neste intre."
       notify_staff: "Notificarllo ao equipo privadamente"
       formatted_name:
@@ -3316,6 +3314,9 @@ gl:
               content: "Revisar"
     until: "Ata:"
     form_templates:
+      upload_field:
+        upload: "Cargar"
+        uploading: "Cargando"
       errors:
         typeMismatch:
           default: "Introduza un valor correcto."

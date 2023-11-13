@@ -168,6 +168,7 @@ zh_CN:
       error_caused_by: "由 '%{name}' 引起。<a target='blank' href='%{path}'>点击此处</a>进行更新、重新配置或禁用。"
       only_admins: "（此消息仅向站点管理员显示）"
     broken_decorator_alert: "帖子可能无法正确显示，因为您的站点上的其中一个帖子内容装饰器引发错误。"
+    broken_plugin_alert: "由插件 '%{name}' 引起"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -1915,6 +1916,7 @@ zh_CN:
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
       security_key_invalid_response_error: "由于响应无效，安全密钥身份验证过程失败。"
+      passkey_security_error: "存在安全错误： %{message}"
       email_placeholder: "电子邮件/用户名"
       caps_lock_warning: "大写锁定已开启"
       error: "未知错误"
@@ -3381,8 +3383,8 @@ zh_CN:
       take_action: "采取行动…"
       take_action_options:
         default:
-          title: "采取行动"
-          details: "立即达到举报阈值，而不是等待更多社区举报"
+          title: "隐藏帖子"
+          details: "立即达到标记阈值，隐藏帖子，并同意所有待处理的标记"
         suspend:
           title: "封禁用户"
           details: "立即达到举报阈值，并封禁用户"
@@ -3399,7 +3401,7 @@ zh_CN:
       ip_address_missing: "（不适用）"
       hidden_email_address: "（已隐藏）"
       submit_tooltip: "提交不公开举报"
-      take_action_tooltip: "立即达到举报阈值，而不是等待更多社区举报"
+      take_action_tooltip: "立即达到标记阈值，隐藏帖子，并同意所有待处理的标记立即达到标记阈值，隐藏帖子，并同意所有待处理的标记"
       cant: "抱歉，您目前无法举报此帖子。"
       notify_staff: "私下通知管理人员"
       formatted_name:
@@ -3941,6 +3943,7 @@ zh_CN:
           delete: "删除"
           delete_confirm: "确定要删除此版块吗？"
           reset_confirm: "确定要将此版块重置为默认值吗？"
+          public: "所有人可见"
           always_public: "此版块中的内容始终公开"
           more_menu: "“更多”菜单"
           links:
@@ -4044,10 +4047,12 @@ zh_CN:
     form_template_chooser:
       select_template: "选择表单模板"
     form_templates:
+      upload_field:
+        upload: "上传"
+        uploading: "正在上传"
       errors:
         valueMissing:
           default: "请填写此字段。"
-          text: "请填写此字段。"
           select-one: "请在列表中选择一个条目。"
           select-multiple: "请在列表中至少选择一个条目。"
           checkbox: "如果您想继续，请勾选此框。"

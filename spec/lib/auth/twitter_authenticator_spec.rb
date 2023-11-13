@@ -51,7 +51,7 @@ RSpec.describe Auth::TwitterAuthenticator do
   end
 
   describe "revoke" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:authenticator) { Auth::TwitterAuthenticator.new }
 
     it "raises exception if no entry for user" do

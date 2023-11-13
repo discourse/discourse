@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserBookmarkListSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   context "for polymorphic bookmarks" do
     before do

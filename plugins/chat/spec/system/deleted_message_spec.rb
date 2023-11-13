@@ -83,10 +83,10 @@ RSpec.describe "Deleted message", type: :system do
     it "groups them" do
       chat_page.visit_channel(channel_1)
 
-      channel_page.messages.delete(message_1)
-      channel_page.messages.delete(message_3)
-      channel_page.messages.delete(message_4)
-      channel_page.messages.delete(message_6)
+      trash_message!(message_1)
+      trash_message!(message_3)
+      trash_message!(message_4)
+      trash_message!(message_6)
 
       expect(channel_page.messages).to have_deleted_messages(message_1, message_6)
       expect(channel_page.messages).to have_deleted_message(message_4, count: 2)

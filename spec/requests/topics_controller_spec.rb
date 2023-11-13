@@ -2,13 +2,13 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicsController do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:dest_topic) { Fabricate(:topic) }
   fab!(:invisible_topic) { Fabricate(:topic, visible: false) }
 
   fab!(:pm) { Fabricate(:private_message_topic) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user_2) { Fabricate(:user) }
   fab!(:post_author1) { Fabricate(:user) }
   fab!(:post_author2) { Fabricate(:user) }
@@ -16,13 +16,13 @@ RSpec.describe TopicsController do
   fab!(:post_author4) { Fabricate(:user) }
   fab!(:post_author5) { Fabricate(:user) }
   fab!(:post_author6) { Fabricate(:user) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:trust_level_0) { Fabricate(:trust_level_0) }
-  fab!(:trust_level_1) { Fabricate(:trust_level_1) }
-  fab!(:trust_level_4) { Fabricate(:trust_level_4) }
+  fab!(:moderator)
+  fab!(:admin)
+  fab!(:trust_level_0)
+  fab!(:trust_level_1)
+  fab!(:trust_level_4)
 
-  fab!(:category) { Fabricate(:category) }
+  fab!(:category)
   fab!(:tracked_category) { Fabricate(:category) }
   fab!(:shared_drafts_category) { Fabricate(:category) }
   fab!(:staff_category) do
@@ -32,9 +32,9 @@ RSpec.describe TopicsController do
     end
   end
 
-  fab!(:group_user) { Fabricate(:group_user) }
+  fab!(:group_user)
 
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:tag)
 
   before { SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
@@ -571,7 +571,7 @@ RSpec.describe TopicsController do
     describe "moving to an existing message" do
       before { sign_in(admin) }
 
-      fab!(:evil_trout) { Fabricate(:evil_trout) }
+      fab!(:evil_trout)
       fab!(:message) { pm }
       fab!(:p2) { Fabricate(:post, user: evil_trout, post_number: 2, topic: message) }
 
@@ -618,7 +618,7 @@ RSpec.describe TopicsController do
     describe "moving chronologically to an existing message" do
       before { sign_in(admin) }
 
-      fab!(:evil_trout) { Fabricate(:evil_trout) }
+      fab!(:evil_trout)
       fab!(:message) { pm }
 
       fab!(:dest_message) do
@@ -4047,8 +4047,8 @@ RSpec.describe TopicsController do
         end
 
         context "when the category has private child categories" do
-          fab!(:category) { Fabricate(:category) }
-          fab!(:group) { Fabricate(:group) }
+          fab!(:category)
+          fab!(:group)
           fab!(:private_child_category) do
             Fabricate(:private_category, parent_category: category, group: group)
           end
@@ -4116,7 +4116,7 @@ RSpec.describe TopicsController do
         end
 
         context "when the category is private" do
-          fab!(:group) { Fabricate(:group) }
+          fab!(:group)
           fab!(:private_category) { Fabricate(:private_category, group: group) }
           fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
@@ -4165,7 +4165,7 @@ RSpec.describe TopicsController do
         context "when the tag is restricted" do
           fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
           fab!(:topic_with_restricted_tag) { Fabricate(:topic, tags: [restricted_tag]) }
-          fab!(:group) { Fabricate(:group) }
+          fab!(:group)
           fab!(:topic_without_tag) { Fabricate(:topic) }
           fab!(:tag_group) do
             Fabricate(
@@ -4304,7 +4304,7 @@ RSpec.describe TopicsController do
     end
 
     describe "new and unread" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
       fab!(:new_topic) { Fabricate(:topic) }
       fab!(:unread_topic) { Fabricate(:topic, highest_post_number: 3) }
       fab!(:topic_user) do
@@ -4396,7 +4396,7 @@ RSpec.describe TopicsController do
       end
 
       context "when category" do
-        fab!(:category) { Fabricate(:category) }
+        fab!(:category)
         fab!(:new_topic_2) { Fabricate(:topic, category: category) }
         fab!(:unread_topic_2) { Fabricate(:topic, category: category, highest_post_number: 3) }
         fab!(:topic_user) do
@@ -4429,7 +4429,7 @@ RSpec.describe TopicsController do
       end
 
       context "when tag" do
-        fab!(:tag) { Fabricate(:tag) }
+        fab!(:tag)
         fab!(:new_topic_2) { Fabricate(:topic) }
         fab!(:unread_topic_2) { Fabricate(:topic, highest_post_number: 3) }
         fab!(:topic_user) do
@@ -5618,7 +5618,7 @@ RSpec.describe TopicsController do
     end
 
     context "when the user is not a member of an allowlisted group" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       before { sign_in(user) }
 

@@ -156,9 +156,6 @@ te:
               common: "ఇది పదివేలు తరచూ వాడే సంకేతపదాలలో ఒకటి. దయచేసి మరింత భద్రమైన సంకేతపదం వాడండి."
               same_as_username: "మీ వినియోగదారు పేరు అదే ఉంది. మరింత సురక్షిత సంకేతపదం ఉపయోగించండి."
               same_as_email: "మీ ఈ-మెయిల్ అదే ఉంది. మరింత సురక్షిత సంకేతపదం ఉపయోగించండి."
-            ip_address:
-              blocked: "New registrations are not allowed from your IP address."
-              max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
         color_scheme_color:
           attributes:
             hex:

@@ -3,29 +3,37 @@
 module Jobs
   class SyncTopicUserBookmarked < ::Jobs::Base
     def execute(args = {})
-      topic_id = args[:topic_id]
+      raise Discourse::InvalidParameters.new(:topic_id) unless args[:topic_id].present?
 
-      DB.exec(<<~SQL, topic_id: topic_id)
-        UPDATE topic_users SET bookmarked = true
-        FROM bookmarks AS b
-        INNER JOIN posts ON posts.id = b.bookmarkable_id AND b.bookmarkable_type = 'Post'
-        WHERE NOT topic_users.bookmarked AND
-          posts.deleted_at IS NULL AND
-          topic_users.topic_id = posts.topic_id AND
-          topic_users.user_id = b.user_id #{topic_id.present? ? "AND topic_users.topic_id = :topic_id" : ""}
-      SQL
+      DB.exec(<<~SQL, topic_id: args[:topic_id])
+        SELECT bookmarks.user_id, COUNT(*)
+        INTO TEMP TABLE tmp_sync_topic_user_bookmarks
+        FROM bookmarks
+        LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'
+        LEFT JOIN topics ON (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic') OR
+         (topics.id = posts.topic_id)
+        WHERE (topics.id = :topic_id OR posts.topic_id = :topic_id)
+        AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
+        GROUP BY bookmarks.user_id;
 
-      DB.exec(<<~SQL, topic_id: topic_id)
-        UPDATE topic_users SET bookmarked = false
-        WHERE topic_users.bookmarked AND
-          (
-            SELECT COUNT(*)
-            FROM bookmarks
-            INNER JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'
-            WHERE posts.topic_id = topic_users.topic_id
-            AND bookmarks.user_id = topic_users.user_id
-            AND posts.deleted_at IS NULL
-        ) = 0 #{topic_id.present? ? "AND topic_users.topic_id = :topic_id" : ""}
+        UPDATE topic_users
+        SET bookmarked = true
+        FROM tmp_sync_topic_user_bookmarks
+        WHERE topic_users.user_id = tmp_sync_topic_user_bookmarks.user_id AND
+          topic_users.topic_id = :topic_id AND
+          tmp_sync_topic_user_bookmarks.count > 0;
+
+        UPDATE topic_users
+        SET bookmarked = false
+        FROM tmp_sync_topic_user_bookmarks
+        WHERE topic_users.topic_id = :topic_id AND
+          topic_users.bookmarked = true AND
+          topic_users.user_id NOT IN (
+            SELECT tmp_sync_topic_user_bookmarks.user_id
+            FROM tmp_sync_topic_user_bookmarks
+          );
+
+        DROP TABLE tmp_sync_topic_user_bookmarks;
       SQL
     end
   end

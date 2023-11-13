@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserAvatar do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:avatar) { user.create_user_avatar! }
 
   describe "#update_gravatar!" do

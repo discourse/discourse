@@ -74,11 +74,12 @@
   width: 22px;
   height: 22px;
   box-sizing: border-box;
-  text-align: center;
+  justify-content: center;
   font-weight: 700;
   font-size: var(--font-down-1);
   align-items: center;
   padding: 0.25rem 0.5rem;
+  color: var(--primary-high);
 }
 
 .chat-channel-title__category-badge {

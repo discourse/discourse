@@ -1,10 +1,13 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { inject as service } from "@ember/service";
 import CategoriesAndLatestTopics from "discourse/components/categories-and-latest-topics";
+import CategoriesAndTopTopics from "discourse/components/categories-and-top-topics";
 import CategoriesBoxes from "discourse/components/categories-boxes";
 import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
 import CategoriesOnly from "discourse/components/categories-only";
 import CategoriesWithFeaturedTopics from "discourse/components/categories-with-featured-topics";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SubcategoriesWithFeaturedTopics from "discourse/components/subcategories-with-featured-topics";
 
 const mobileCompatibleViews = [
@@ -22,6 +25,7 @@ const subcategoryComponents = {
 const globalComponents = {
   categories_and_latest_topics_created_date: CategoriesAndLatestTopics,
   categories_and_latest_topics: CategoriesAndLatestTopics,
+  categories_and_top_topics: CategoriesAndTopTopics,
   categories_boxes_with_topics: CategoriesBoxesWithTopics,
   categories_boxes: CategoriesBoxes,
   categories_only: CategoriesOnly,
@@ -53,7 +57,6 @@ export default class CategoriesDisplay extends Component {
       style = mobileCompatibleViews[0];
     }
     const component = globalComponents[style];
-
     if (!component) {
       // eslint-disable-next-line no-console
       console.error("Unknown category list style: " + style);
@@ -72,6 +75,11 @@ export default class CategoriesDisplay extends Component {
   }
 
   <template>
+    <PluginOutlet
+      @name="above-discovery-categories"
+      @connectorTagName="div"
+      @outletArgs={{hash categories=@categories topics=@topics}}
+    />
     <this.categoriesComponent @categories={{@categories}} @topics={{@topics}} />
   </template>
 }

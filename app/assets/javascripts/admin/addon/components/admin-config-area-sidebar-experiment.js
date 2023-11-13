@@ -13,10 +13,34 @@ import { ADMIN_PANEL } from "discourse/services/sidebar-state";
 export default class AdminConfigAreaSidebarExperiment extends Component {
   @service adminSidebarExperimentStateManager;
   @service toasts;
+  @service router;
   @tracked editedNavConfig;
+
+  validRouteNames = new Set();
 
   get defaultAdminNav() {
     return JSON.stringify(ADMIN_NAV_MAP, null, 2);
+  }
+
+  get exampleJson() {
+    return JSON.stringify(
+      {
+        name: "section-name",
+        text: "Section Name",
+        links: [
+          {
+            name: "admin-revamp",
+            route: "admin-revamp",
+            routeModels: [123],
+            text: "Revamp",
+            href: "https://forum.site.com/t/123",
+            icon: "rocket",
+          },
+        ],
+      },
+      null,
+      2
+    );
   }
 
   @action
@@ -43,6 +67,40 @@ export default class AdminConfigAreaSidebarExperiment extends Component {
         duration: 3000,
         data: {
           message: "There was an error, make sure the structure is valid JSON.",
+        },
+      });
+      return;
+    }
+
+    let invalidRoutes = [];
+    config.forEach((section) => {
+      section.links.forEach((link) => {
+        if (!link.route) {
+          return;
+        }
+
+        if (this.validRouteNames.has(link.route)) {
+          return;
+        }
+
+        try {
+          this.router._router._routerMicrolib.recognizer.handlersFor(
+            link.route
+          );
+          this.validRouteNames.add(link.route);
+        } catch {
+          invalidRoutes.push(link.route);
+        }
+      });
+    });
+
+    if (invalidRoutes.length) {
+      this.toasts.error({
+        duration: 3000,
+        data: {
+          message: `There was an error with one or more of the routes provided: ${invalidRoutes.join(
+            ", "
+          )}`,
         },
       });
       return;

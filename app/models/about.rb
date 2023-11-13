@@ -2,10 +2,7 @@
 
 class About
   def self.displayed_plugin_stat_groups
-    DiscoursePluginRegistry
-      .about_stat_groups
-      .select { |stat_group| stat_group[:show_in_ui] }
-      .map { |stat_group| stat_group[:name] }
+    DiscoursePluginRegistry.stats.select { |stat| stat.show_in_ui }.map { |stat| stat.name }
   end
 
   class CategoryMods
@@ -28,7 +25,7 @@ class About
   end
 
   def self.fetch_stats
-    About.new.stats
+    Stat.api_stats
   end
 
   def initialize(user = nil)
@@ -64,57 +61,7 @@ class About
   end
 
   def stats
-    @stats ||= {
-      topic_count: Topic.listable_topics.count,
-      topics_last_day: Topic.listable_topics.where("created_at > ?", 1.days.ago).count,
-      topics_7_days: Topic.listable_topics.where("created_at > ?", 7.days.ago).count,
-      topics_30_days: Topic.listable_topics.where("created_at > ?", 30.days.ago).count,
-      post_count: Post.count,
-      posts_last_day: Post.where("created_at > ?", 1.days.ago).count,
-      posts_7_days: Post.where("created_at > ?", 7.days.ago).count,
-      posts_30_days: Post.where("created_at > ?", 30.days.ago).count,
-      user_count: User.real.count,
-      users_last_day: User.real.where("created_at > ?", 1.days.ago).count,
-      users_7_days: User.real.where("created_at > ?", 7.days.ago).count,
-      users_30_days: User.real.where("created_at > ?", 30.days.ago).count,
-      active_users_last_day: User.where("last_seen_at > ?", 1.days.ago).count,
-      active_users_7_days: User.where("last_seen_at > ?", 7.days.ago).count,
-      active_users_30_days: User.where("last_seen_at > ?", 30.days.ago).count,
-      like_count: UserAction.where(action_type: UserAction::LIKE).count,
-      likes_last_day:
-        UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 1.days.ago).count,
-      likes_7_days:
-        UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 7.days.ago).count,
-      likes_30_days:
-        UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 30.days.ago).count,
-    }.merge(plugin_stats)
-  end
-
-  def plugin_stats
-    final_plugin_stats = {}
-    DiscoursePluginRegistry.about_stat_groups.each do |stat_group|
-      begin
-        stats = stat_group[:block].call
-      rescue StandardError => err
-        Discourse.warn_exception(
-          err,
-          message: "Unexpected error when collecting #{stat_group[:name]} About stats.",
-        )
-        next
-      end
-
-      if !stats.key?(:last_day) || !stats.key?("7_days") || !stats.key?("30_days") ||
-           !stats.key?(:count)
-        Rails.logger.warn(
-          "Plugin stat group #{stat_group[:name]} for About stats does not have all required keys, skipping.",
-        )
-      else
-        final_plugin_stats.merge!(
-          stats.transform_keys { |key| "#{stat_group[:name]}_#{key}".to_sym },
-        )
-      end
-    end
-    final_plugin_stats
+    @stats ||= About.fetch_stats
   end
 
   def category_moderators

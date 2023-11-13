@@ -55,7 +55,8 @@ class NotificationsController < ApplicationController
         end
       end
 
-      notifications = filter_inaccessible_notifications(notifications)
+      notifications =
+        Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
 
       json = {
         notifications: serialize_data(notifications, NotificationSerializer),
@@ -82,7 +83,8 @@ class NotificationsController < ApplicationController
 
       total_rows = notifications.dup.count
       notifications = notifications.offset(offset).limit(60)
-      notifications = filter_inaccessible_notifications(notifications)
+      notifications =
+        Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
       render_json_dump(
         notifications: serialize_data(notifications, NotificationSerializer),
         total_rows_notifications: total_rows,
@@ -154,11 +156,5 @@ class NotificationsController < ApplicationController
 
   def render_notification
     render_json_dump(NotificationSerializer.new(@notification, scope: guardian, root: false))
-  end
-
-  def filter_inaccessible_notifications(notifications)
-    topic_ids = notifications.map { |n| n.topic_id }.compact.uniq
-    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids: topic_ids)
-    notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
   end
 end

@@ -3,15 +3,15 @@
 require "rotp"
 
 RSpec.describe UsersController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user1) { Fabricate(:user, username: "someusername") }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:inactive_user) { Fabricate(:inactive_user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:inactive_user)
 
   before { Group.refresh_automatic_groups! }
 
@@ -1438,7 +1438,7 @@ RSpec.describe UsersController do
     end
 
     context "with custom fields" do
-      fab!(:user_field) { Fabricate(:user_field) }
+      fab!(:user_field)
       fab!(:another_field) { Fabricate(:user_field) }
       fab!(:optional_field) { Fabricate(:user_field, required: false) }
 
@@ -2266,8 +2266,8 @@ RSpec.describe UsersController do
 
     context "with authenticated user" do
       context "with permission to update" do
-        fab!(:upload) { Fabricate(:upload) }
-        fab!(:user) { Fabricate(:user) }
+        fab!(:upload)
+        fab!(:user)
 
         before { sign_in(user) }
 
@@ -2381,7 +2381,7 @@ RSpec.describe UsersController do
 
         context "with user fields" do
           context "with an editable field" do
-            fab!(:user_field) { Fabricate(:user_field) }
+            fab!(:user_field)
             fab!(:optional_field) { Fabricate(:user_field, required: false) }
 
             it "should update the user field" do
@@ -3125,7 +3125,7 @@ RSpec.describe UsersController do
   end
 
   describe "#badge_title" do
-    fab!(:badge) { Fabricate(:badge) }
+    fab!(:badge)
     let(:user_badge) { BadgeGranter.grant(badge, user1) }
 
     it "sets the user's title to the badge name if it is titleable" do
@@ -4673,7 +4673,7 @@ RSpec.describe UsersController do
       end
 
       describe "include_post_count_for" do
-        fab!(:topic) { Fabricate(:topic) }
+        fab!(:topic)
 
         before_all do
           Fabricate(:post, user: user1, topic: topic)
@@ -6322,55 +6322,40 @@ RSpec.describe UsersController do
         SiteSetting.enable_discourse_connect = false
       end
 
-      context "when the password parameter is not provided" do
-        let(:password) { "" }
+      context "when the session is unconfirmed" do
+        it "returns unconfirmed session response" do
+          post "/u/second_factors.json"
 
-        before { post "/u/second_factors.json", params: { password: password } }
-
-        it "returns password required response" do
           expect(response.status).to eq(200)
           response_body = response.parsed_body
-          expect(response_body["password_required"]).to eq(true)
+          expect(response_body["unconfirmed_session"]).to eq(true)
         end
       end
 
-      context "when the password is provided" do
-        fab!(:user) { Fabricate(:user, password: "8555039dd212cc66ec68") }
+      context "when the session is confirmed" do
+        fab!(:user) { Fabricate(:user, password: "acoolpassword") }
 
-        context "when the password is correct" do
-          let(:password) { "8555039dd212cc66ec68" }
-
-          it "returns a list of enabled totps and security_key second factors" do
-            totp_second_factor = Fabricate(:user_second_factor_totp, user: user)
-            security_key_second_factor =
-              Fabricate(
-                :user_security_key,
-                user: user,
-                factor_type: UserSecurityKey.factor_types[:second_factor],
-              )
-
-            post "/u/second_factors.json", params: { password: password }
-
-            expect(response.status).to eq(200)
-            response_body = response.parsed_body
-            expect(response_body["totps"].map { |second_factor| second_factor["id"] }).to include(
-              totp_second_factor.id,
+        it "returns a list of enabled totps and security_key second factors" do
+          totp_second_factor = Fabricate(:user_second_factor_totp, user: user)
+          security_key_second_factor =
+            Fabricate(
+              :user_security_key,
+              user: user,
+              factor_type: UserSecurityKey.factor_types[:second_factor],
             )
-            expect(
-              response_body["security_keys"].map { |second_factor| second_factor["id"] },
-            ).to include(security_key_second_factor.id)
-          end
-        end
 
-        context "when the password is not correct" do
-          let(:password) { "wrongpassword" }
+          post "/u/confirm-session.json", params: { password: "acoolpassword" }
 
-          it "returns the incorrect password response" do
-            post "/u/second_factors.json", params: { password: password }
+          post "/u/second_factors.json"
 
-            response_body = response.parsed_body
-            expect(response_body["error"]).to eq(I18n.t("login.incorrect_password"))
-          end
+          expect(response.status).to eq(200)
+          response_body = response.parsed_body
+          expect(response_body["totps"].map { |second_factor| second_factor["id"] }).to include(
+            totp_second_factor.id,
+          )
+          expect(
+            response_body["security_keys"].map { |second_factor| second_factor["id"] },
+          ).to include(security_key_second_factor.id)
         end
       end
     end
@@ -6459,7 +6444,7 @@ RSpec.describe UsersController do
   end
 
   describe "#feature_topic" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:other_topic) { Fabricate(:topic) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: another_user) }
     fab!(:category) { Fabricate(:category_with_definition) }
@@ -6532,7 +6517,7 @@ RSpec.describe UsersController do
   end
 
   describe "#clear_featured_topic" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "requires the user to be logged in" do
       put "/u/#{user1.username}/clear-featured-topic.json"
@@ -6671,7 +6656,7 @@ RSpec.describe UsersController do
   end
 
   describe "#bookmarks excerpts" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let!(:topic) { Fabricate(:topic, user: user) }
     let!(:post) { Fabricate(:post, topic: topic) }
     let!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: topic) }
@@ -6858,7 +6843,7 @@ RSpec.describe UsersController do
   end
 
   describe "#user_menu_bookmarks" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     fab!(:topic) { Fabricate(:post).topic }
     fab!(:bookmark_with_reminder) { Fabricate(:bookmark, user: user, bookmarkable: post) }
     fab!(:bookmark_without_reminder) { Fabricate(:bookmark, user: user, bookmarkable: topic) }
@@ -6937,8 +6922,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
-        expect(notifications.size).to eq(1)
-        expect(notifications.first["data"]["bookmark_id"]).to be_nil
+        expect(notifications.size).to eq(0)
 
         bookmarks = response.parsed_body["bookmarks"]
         expect(bookmarks.map { |bookmark| bookmark["id"] }).to contain_exactly(
@@ -6984,6 +6968,24 @@ RSpec.describe UsersController do
 
         bookmarks = response.parsed_body["bookmarks"]
         expect(bookmarks.size).to eq(1)
+      end
+
+      it "does not return any unread notifications for bookmarks that the user no longer has access to" do
+        bookmark_with_reminder2 = Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post))
+        TopicUser.change(user.id, bookmark_with_reminder2.bookmarkable.topic, total_msecs_viewed: 1)
+        BookmarkReminderNotificationHandler.new(bookmark_with_reminder2).send_notification
+
+        bookmark_with_reminder2.bookmarkable.topic.update!(
+          archetype: Archetype.private_message,
+          category: nil,
+        )
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
       end
     end
   end

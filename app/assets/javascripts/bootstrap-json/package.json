@@ -1,7 +1,7 @@
 {
   "name": "bootstrap-json",
   "version": "1.0.0",
-  "description": "Express.js middleware that proxies ember cli requests and fetches bootstrap json",
+  "description": "Express.js middleware which injects ember-cli asset URLs into Discourse's HTML",
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "keywords": [
@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "clean-base-url": "^1.0.0",
-    "discourse-plugins": "1.0.0",
     "express": "^4.18.2",
+    "glob": "^10.3.10",
     "html-entities": "^2.4.0",
     "jsdom": "^22.1.0",
     "node-fetch": "^3.3.2"

@@ -1,0 +1,53 @@
+<DModal
+  @title={{i18n "categories.reorder.title"}}
+  @closeModal={{@closeModal}}
+  class="reorder-categories"
+>
+  <:body>
+    <table>
+      <thead>
+        <th>{{i18n "categories.category"}}</th>
+        <th>{{i18n "categories.reorder.position"}}</th>
+      </thead>
+      <tbody>
+        {{#each this.categoriesOrdered as |category|}}
+          <tr data-category-id={{category.id}}>
+            <td>
+              <div class={{concat "reorder-categories-depth-" category.depth}}>
+                {{category-badge category allowUncategorized="true"}}
+              </div>
+            </td>
+
+            <td>
+              <div class="reorder-categories-actions">
+                <NumberField
+                  @number={{readonly category.position}}
+                  @change={{fn this.change category}}
+                  @min="0"
+                />
+                <DButton
+                  @action={{fn this.move category -1}}
+                  @icon="arrow-up"
+                  class="btn-default no-text"
+                />
+                <DButton
+                  @action={{fn this.move category 1}}
+                  @icon="arrow-down"
+                  class="btn-default no-text"
+                />
+              </div>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </:body>
+
+  <:footer>
+    <DButton
+      @action={{this.save}}
+      @label="categories.reorder.save"
+      class="btn-primary"
+    />
+  </:footer>
+</DModal>

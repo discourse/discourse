@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Bookmark do
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
 
   describe "Validations" do
     after { DiscoursePluginRegistry.reset! }
@@ -160,7 +160,7 @@ RSpec.describe Bookmark do
     end
 
     describe "bookmark limits" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       it "does not get the bookmark limit error because it is not creating a new bookmark (for users already over the limit)" do
         Fabricate(:bookmark, user: user)

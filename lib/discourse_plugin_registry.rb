@@ -99,6 +99,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :presence_channel_prefixes
 
+  define_filtered_register :email_notification_filters
   define_filtered_register :push_notification_filters
 
   define_filtered_register :notification_consolidation_plans
@@ -112,7 +113,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :search_groups_set_query_callbacks
 
-  define_filtered_register :about_stat_groups
+  define_filtered_register :stats
   define_filtered_register :bookmarkables
 
   define_filtered_register :list_suggested_for_providers
@@ -120,6 +121,8 @@ class DiscoursePluginRegistry
   define_filtered_register :summarization_strategies
 
   define_filtered_register :post_action_notify_user_handlers
+
+  define_filtered_register :post_strippers
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider

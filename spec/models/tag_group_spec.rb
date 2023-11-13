@@ -4,10 +4,10 @@ RSpec.describe TagGroup do
   describe "#visible" do
     fab!(:user1) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:admin)
+    fab!(:moderator)
 
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:beta_group) { Fabricate(:group) }
 
     fab!(:everyone_tag_group) do
@@ -120,7 +120,7 @@ RSpec.describe TagGroup do
 
   describe "tag_names=" do
     let(:tag_group) { Fabricate(:tag_group) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     before { SiteSetting.tagging_enabled = true }
 

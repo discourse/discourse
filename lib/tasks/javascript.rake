@@ -76,7 +76,6 @@ def dependencies
     { source: "diffhtml/dist/diffhtml.min.js", public: true },
     { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
     { source: "pikaday/pikaday.js", public: true },
-    { source: "@highlightjs/cdn-assets/.", destination: "highlightjs" },
     { source: "moment/moment.js" },
     { source: "moment/locale/.", destination: "moment-locale" },
     {
@@ -317,32 +316,6 @@ task "javascript:update_constants" => :environment do
     export const replacements = #{Emoji.unicode_replacements_json};
   JS
 
-  langs = []
-  Dir
-    .glob("vendor/assets/javascripts/highlightjs/languages/*.min.js")
-    .each { |f| langs << File.basename(f, ".min.js") }
-  bundle = HighlightJs.bundle(langs)
-
-  ctx = MiniRacer::Context.new
-  hljs_aliases = ctx.eval(<<~JS)
-    #{bundle}
-
-    let aliases = {};
-    hljs.listLanguages().forEach((lang) => {
-      if (hljs.getLanguage(lang).aliases) {
-        aliases[lang] = hljs.getLanguage(lang).aliases;
-      }
-    });
-
-    aliases;
-  JS
-
-  write_template("pretty-text/addon/highlightjs-aliases.js", task_name, <<~JS)
-    export const HLJS_ALIASES = #{hljs_aliases.to_json};
-  JS
-
-  ctx.dispose
-
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
   JS
@@ -378,16 +351,6 @@ task "javascript:update" => "clean_up" do
       filename = f[:destination]
     else
       filename = f[:source].split("/").last
-    end
-
-    if src.include? "highlightjs"
-      puts "Cleanup highlightjs styles and install smaller test bundle"
-      system("rm -rf node_modules/@highlightjs/cdn-assets/styles")
-
-      # We don't need every language for tests
-      langs = %w[javascript sql ruby]
-      test_bundle_dest = "vendor/assets/javascripts/highlightjs/highlight-test-bundle.min.js"
-      File.write(test_bundle_dest, HighlightJs.bundle(langs))
     end
 
     if f[:public_root]

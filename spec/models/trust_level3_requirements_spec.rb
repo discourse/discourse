@@ -3,8 +3,8 @@
 RSpec.describe TrustLevel3Requirements do
   subject(:tl3_requirements) { described_class.new(user) }
 
-  fab!(:user) { Fabricate(:user) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user)
+  fab!(:moderator)
   fab!(:topic1) { Fabricate(:topic) }
   fab!(:topic2) { Fabricate(:topic) }
   fab!(:topic3) { Fabricate(:topic) }

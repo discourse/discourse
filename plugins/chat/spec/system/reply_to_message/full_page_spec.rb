@@ -99,7 +99,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
 
     it "renders safe HTML from the original message excerpt" do
       other_user = Fabricate(:user)
-      update_message(
+      update_message!(
         original_message,
         user: current_user,
         text: "@#{other_user.username} <mark>not marked</mark>",

@@ -68,7 +68,7 @@ module ChatSpecHelpers
           )
   end
 
-  def update_message(message, text: nil, user: Discourse.system_user, upload_ids: nil)
+  def update_message!(message, text: nil, user: Discourse.system_user, upload_ids: nil)
     result =
       Chat::UpdateMessage.call(
         guardian: user.guardian,
@@ -79,6 +79,39 @@ module ChatSpecHelpers
       )
     service_failed!(result) if result.failure?
     result.message_instance
+  end
+
+  def trash_message!(message, user: Discourse.system_user)
+    result =
+      Chat::TrashMessage.call(
+        message_id: message.id,
+        channel_id: message.chat_channel_id,
+        guardian: user.guardian,
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
+
+  def restore_message!(message, user: Discourse.system_user)
+    result =
+      Chat::RestoreMessage.call(
+        message_id: message.id,
+        channel_id: message.chat_channel_id,
+        guardian: user.guardian,
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
+
+  def add_users_to_channel(users, channel, user: Discourse.system_user)
+    result =
+      ::Chat::AddUsersToChannel.call(
+        guardian: user.guardian,
+        channel_id: channel.id,
+        usernames: Array(users).map(&:username),
+      )
+    service_failed!(result) if result.failure?
+    result
   end
 end
 

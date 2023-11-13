@@ -120,6 +120,7 @@ de:
         title: "Aktivitätsindikator in der Kopfzeile anzeigen"
         all_new: "bei allen neuen Nachrichten"
         dm_and_mentions: "bei Direktnachrichten und Erwähnungen"
+        only_mentions: "Nur Erwähnungen"
         never: "niemals"
       separate_sidebar_mode:
         title: "Separate Seitenleisten-Modi für Forum und Chat anzeigen"
@@ -257,7 +258,6 @@ de:
       save: "Speichern"
       select: "Auswählen"
       return_to_list: "Zurück zur Kanalliste"
-      return_to_threads_list: "Zurück zu den laufenden Diskussionen"
       unread_threads_count:
         one: "Du hast %{count} ungelesene Diskussion"
         other: "Du hast %{count} ungelesene Diskussionen"
@@ -571,7 +571,6 @@ de:
           other: "+%{count}"
       threads:
         open: "Thread öffnen"
-        list: "Laufende Diskussionen"
         none: "Du nimmst an keinem Thread in diesem Kanal teil."
       draft_channel_screen:
         header: "Neue Nachricht"

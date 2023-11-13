@@ -22,9 +22,9 @@ module Chat
     policy :no_silenced_user
     contract
     model :channel
+    step :enforce_system_membership
     policy :allowed_to_join_channel
     policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::MessageCreationPolicy
-    step :enforce_system_membership
     model :channel_membership
     model :reply, optional: true
     policy :ensure_reply_consistency
@@ -44,7 +44,7 @@ module Chat
       step :process_direct_message_channel
     end
     step :publish_new_thread
-    step :publish_new_message_events
+    step :process
     step :publish_user_tracking_state
 
     class Contract
@@ -76,7 +76,13 @@ module Chat
     end
 
     def enforce_system_membership(guardian:, channel:, **)
-      channel.add(guardian.user) if guardian.user.is_system_user?
+      if guardian.user&.is_system_user?
+        channel.add(guardian.user)
+
+        if channel.direct_message_channel?
+          channel.chatable.direct_message_users.find_or_create_by!(user: guardian.user)
+        end
+      end
     end
 
     def fetch_channel_membership(guardian:, channel:, **)
@@ -175,17 +181,15 @@ module Chat
       Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
     end
 
-    def publish_new_message_events(channel:, message_instance:, contract:, **)
-      staged_id = contract.staged_id
-
+    def process(channel:, message_instance:, contract:, **)
       if contract.process_inline
         Jobs::Chat::ProcessMessage.new.execute(
-          { chat_message_id: message_instance.id, staged_id: staged_id },
+          { chat_message_id: message_instance.id, staged_id: contract.staged_id },
         )
       else
         Jobs.enqueue(
           Jobs::Chat::ProcessMessage,
-          { chat_message_id: message_instance.id, staged_id: staged_id },
+          { chat_message_id: message_instance.id, staged_id: contract.staged_id },
         )
       end
     end

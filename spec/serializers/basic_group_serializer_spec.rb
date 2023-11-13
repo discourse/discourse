@@ -4,7 +4,7 @@ RSpec.describe BasicGroupSerializer do
   subject(:serializer) { described_class.new(group, scope: guardian, root: false) }
 
   let(:guardian) { Guardian.new }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
 
   describe "#display_name" do
     describe "automatic group" do
@@ -16,7 +16,7 @@ RSpec.describe BasicGroupSerializer do
     end
 
     describe "normal group" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
 
       it "should not include the display name" do
         expect(serializer.display_name).to eq(nil)
@@ -54,7 +54,7 @@ RSpec.describe BasicGroupSerializer do
     end
 
     describe "for a group user" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:guardian) { Guardian.new(user) }
 
       before { group.add(user) }
@@ -77,7 +77,7 @@ RSpec.describe BasicGroupSerializer do
     fab!(:group) { Fabricate(:group, members_visibility_level: Group.visibility_levels[:members]) }
 
     describe "for a group user" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:guardian) { Guardian.new(user) }
 
       before { group.add(user) }

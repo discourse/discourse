@@ -1981,6 +1981,7 @@ it:
     allow_anonymous_posting: "Permetti agli utenti di passare alla modalità anonima"
     allow_anonymous_likes: "Consenti agli utenti anonimi di mettere mi piace ai messaggi"
     anonymous_posting_min_trust_level: "Livello di attendibilità minimo richiesto per abilitare la pubblicazione in modalità anonima"
+    anonymous_posting_allowed_groups: "Gruppi a cui è consentito abilitare la pubblicazione anonima"
     anonymous_account_duration_minutes: "Per proteggere l'anonimato creare un nuovo account anonimo ogni N minuti per ogni utente. Esempio: se impostato a 600, non appena passano 600 minuti dall'ultimo messaggio E l'utente passa in modalità anonima, viene creato un nuovo account anonimo."
     hide_user_profiles_from_public: "Disabilita schede utenti, profili utenti e directory utenti per gli utenti anonimi."
     allow_users_to_hide_profile: "Permetti agli utenti di nascondere il loro profilo e la loro presenza"
@@ -2152,6 +2153,7 @@ it:
     city_for_disputes: "Sede per eventuali controversie"
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
     shared_drafts_min_trust_level: "Consenti agli utenti di visualizzare e modificare le bozze condivise."
+    shared_drafts_allowed_groups: "Consenti agli utenti in questi gruppi di visualizzare e modificare le bozze condivise."
     push_notifications_prompt: "Visualizza richiesta di consenso dell'utente."
     push_notifications_icon: "L'icona del distintivo che appare nell'angolo delle notifiche. Si consiglia un'immagine PNG monocromatica 96×96 con trasparenza."
     enable_desktop_push_notifications: "Abilita le notifiche push sul desktop"
@@ -2214,7 +2216,7 @@ it:
       reply_by_email_address_is_empty: "Devi impostare 'reply by email address' prima di attivare la risposta via email."
       email_polling_disabled: "È necessario abilitare il polling manuale POP3 o avere abilitato un poller di posta personalizzato prima di abilitare la risposta via email."
       user_locale_not_enabled: "Prima di attivare questa impostazione, devi abilitare 'allow user locale'."
-      personal_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se vuoi che nessuno al di fuori dello staff invii MP, scegli il gruppo dello staff."
+      at_least_one_group_required: "È necessario specificare almeno un gruppo per questa impostazione."
       invalid_regex: "Regex non è valido o non è consentito."
       invalid_regex_with_message: "La regex '%{regex}' contiene un errore: %{message}"
       email_editable_enabled: "Prima di attivare questa impostazione, devi disabilitare 'email editable'."
@@ -2680,6 +2682,28 @@ it:
 
         Grazie,
         Moderatori%{site_name}
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Feedback sul tuo argomento"
+      subject_template: "Feedback sul nuovo argomento intitolato \"%{topic_title}\""
+      text_body_template: |
+        Ciao %{username},
+
+        Abbiamo esaminato il tuo messaggio in "%{topic_title}" e abbiamo un feedback per te.
+
+        Motivo: %{reason}
+
+        Feedback: %{feedback}
+
+        Puoi modificare il tuo messaggio originale qui sotto e reinviarlo con le modifiche suggerite, oppure rispondi a questo messaggio se hai domande in merito.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Grazie,
+        I Moderatori di %{site_name}
     post_hidden_again:
       title: "Messaggio nascosto nuovamente"
       subject_template: "Messaggio nascosto dalle segnalazioni della comunità. Lo staff è stato informato"

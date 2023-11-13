@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::DeleteTopic do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   fab!(:topic) { Fabricate(:topic_timer, user: admin).topic }
 
