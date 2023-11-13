@@ -28,7 +28,7 @@ export default class ConfirmSession extends Component {
   get canUsePasskeys() {
     return (
       this.siteSettings.enable_local_logins &&
-      this.siteSettings.experimental_passkeys &&
+      this.siteSettings.enable_passkeys &&
       this.currentUser.user_passkeys?.length > 0 &&
       isWebauthnSupported()
     );
