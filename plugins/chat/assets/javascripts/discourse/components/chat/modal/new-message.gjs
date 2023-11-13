@@ -20,6 +20,7 @@ export default class ChatModalNewMessage extends Component {
         class="chat-modal-new-message"
         @title="chat.new_message_modal.title"
         @inline={{@inline}}
+        @hideHeader={{true}}
       >
         <MessageCreator @onClose={{@closeModal}} @channel={{@model}} />
       </DModal>
