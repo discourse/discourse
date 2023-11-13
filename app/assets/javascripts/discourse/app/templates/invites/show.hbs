@@ -50,7 +50,10 @@
                   />
                 {{/unless}}
               {{else}}
-                <LoginButtons @externalLogin={{action "externalLogin"}} />
+                <LoginButtons
+                  @externalLogin={{action "externalLogin"}}
+                  @context="invite"
+                />
               {{/if}}
             {{/if}}
 

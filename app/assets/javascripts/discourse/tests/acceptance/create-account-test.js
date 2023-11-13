@@ -114,3 +114,19 @@ acceptance("Create Account - full_name_required", function (needs) {
     assert.verifySteps(["request"]);
   });
 });
+
+acceptance("Create Account - passkeys enabled", function (needs) {
+  needs.settings({ enable_passkeys: true });
+
+  test("does not show passkeys button", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert
+      .dom(".create-account-form .btn-primary")
+      .exists("create account button exists");
+
+    assert.dom(".create-account-form .btn-primary").exists();
+    assert.dom(".passkey-login-button").doesNotExist();
+  });
+});

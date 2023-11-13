@@ -16,10 +16,11 @@ export default class Channel extends Component {
   }
 
   <template>
-    <div class="chat-message-creator__chatable-category-channel">
+    <div class="chat-message-creator__chatable -category-channel">
       <ChatChannelTitle @channel={{@item.model}} />
 
       {{#if (gt @item.tracking.unreadCount 0)}}
+
         <div
           class={{concatClass "unread-indicator" (if this.isUrgent "-urgent")}}
         ></div>

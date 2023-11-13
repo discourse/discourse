@@ -21,19 +21,28 @@ export default class ChatMessageCreatorSearch extends Component {
 
   @tracked chatables = [];
   @tracked highlightedChatable;
+  @tracked term;
+  @tracked loading = false;
 
   get items() {
-    return [
-      {
+    const items = [];
+
+    if (this.loading) {
+      return items;
+    }
+
+    if (!this.term?.length) {
+      items.push({
         identifier: "new-group",
         type: "list-action",
         label: I18n.t("chat.new_message_modal.new_group_chat"),
         enabled: true,
         icon: "users",
         id: "new-group-chat",
-      },
-      ...this.chatables,
-    ];
+      });
+    }
+
+    return [...items, ...this.chatables];
   }
 
   @action
@@ -53,6 +62,10 @@ export default class ChatMessageCreatorSearch extends Component {
         this.args.onChangeMode(MODES.new_group);
         break;
       case "user":
+        if (!item.enabled) {
+          return;
+        }
+
         await this.startOneToOneChannel(item.model.username);
         break;
       default:
@@ -64,6 +77,9 @@ export default class ChatMessageCreatorSearch extends Component {
 
   @action
   onFilter(event) {
+    this.chatables = [];
+    this.term = event?.target?.value;
+
     this.searchHandler = discourseDebounce(
       this,
       this.fetch,
@@ -73,9 +89,11 @@ export default class ChatMessageCreatorSearch extends Component {
   }
 
   @action
-  async fetch(term) {
+  async fetch() {
     const loader = new ChatablesLoader(this);
-    this.chatables = await loader.search(term, { preloadChannels: true });
+    this.chatables = await loader.search(this.term, {
+      preloadChannels: !this.term,
+    });
 
     this.highlightedChatable = this.items[0];
   }
@@ -109,7 +127,7 @@ export default class ChatMessageCreatorSearch extends Component {
             class="chat-message-creator__section"
             {{didInsert (fn this.fetch null)}}
           >
-            <SearchInput @onFilter={{this.onFilter}} />
+            <SearchInput @filter={{this.term}} @onFilter={{this.onFilter}} />
 
             <DButton
               class="btn-flat chat-message-creator__search-input__cancel-button"

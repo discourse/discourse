@@ -49,7 +49,7 @@ describe "User preferences for Security", type: :system do
   end
 
   shared_examples "passkeys" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
 
     it "adds a passkey and logs in with it" do
       options =

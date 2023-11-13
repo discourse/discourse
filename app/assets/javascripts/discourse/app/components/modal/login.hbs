@@ -18,6 +18,7 @@
         <LoginButtons
           @externalLogin={{this.externalLoginAction}}
           @passkeyLogin={{this.passkeyLogin}}
+          @context="login"
         />
       {{/if}}
     {{/if}}
@@ -76,6 +77,7 @@
           <LoginButtons
             @externalLogin={{this.externalLoginAction}}
             @passkeyLogin={{this.passkeyLogin}}
+            @context="login"
           />
         </div>
       {{/if}}
