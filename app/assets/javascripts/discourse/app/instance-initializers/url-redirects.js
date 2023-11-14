@@ -24,19 +24,5 @@ export default {
     // Initialize default homepage
     let siteSettings = owner.lookup("service:site-settings");
     initializeDefaultHomepage(siteSettings);
-
-    let defaultUserRoute = siteSettings.view_user_route || "summary";
-    if (!owner.lookup(`route:user.${defaultUserRoute}`)) {
-      defaultUserRoute = "summary";
-    }
-
-    DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, `/u/$1/${defaultUserRoute}`, {
-      exceptions: [
-        "/u/account-created",
-        "/users/account-created",
-        "/u/password-reset",
-        "/users/password-reset",
-      ],
-    });
   },
 };
