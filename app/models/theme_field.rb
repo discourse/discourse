@@ -664,6 +664,8 @@ class ThemeField < ActiveRecord::Base
           name: ThemeField.scss_fields + ThemeField.html_fields,
         )
       )
+    elsif translation_field?
+      return theme.theme_fields.where(target_id: Theme.targets[:translations])
     end
     ThemeField.none
   end
