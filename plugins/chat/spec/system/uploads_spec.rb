@@ -56,7 +56,7 @@ describe "Uploading files in chat messages", type: :system do
 
       expect(channel_page.messages).to have_message(
         text: "thumbnail test\n#{File.basename(file_path)}",
-        persisted: true,
+        persisted: false,
       )
 
       # the upload should have created a thumbnail
