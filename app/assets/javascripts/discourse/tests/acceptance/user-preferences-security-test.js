@@ -136,6 +136,14 @@ acceptance("User Preferences - Security", function (needs) {
         "displays a dialog to confirm the user's identity before adding a passkey"
       );
 
+    assert
+      .dom(".dialog-body #password")
+      .exists("dialog includes a password field");
+
+    assert
+      .dom(".dialog-body .confirm-session__passkey")
+      .exists("dialog includes a passkey button");
+
     await click(".dialog-close");
 
     const dropdown = selectKit(".passkey-options-dropdown");
@@ -176,6 +184,12 @@ acceptance("User Preferences - Security", function (needs) {
       .exists(
         "displays a dialog to confirm the user's identity before adding a passkey"
       );
+
+    assert.dom(".dialog-body #password").exists("includes a password field");
+
+    assert
+      .dom(".dialog-body .confirm-session__passkey")
+      .doesNotExist("does not include a passkey button");
   });
 
   test("Viewing Passkeys - another user has a key", async function (assert) {
