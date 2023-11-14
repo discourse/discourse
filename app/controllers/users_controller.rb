@@ -2187,11 +2187,11 @@ class UsersController < ApplicationController
       raise Discourse::InvalidParameters.new "Missing password or passkey"
     end
 
-    if (params[:password].present?)
+    if params[:password].present?
       return false if !current_user.confirm_password?(params[:password])
     end
 
-    if (params[:publicKeyCredential].present?)
+    if params[:publicKeyCredential].present?
       passkey =
         ::DiscourseWebauthn::AuthenticationService.new(
           current_user,
