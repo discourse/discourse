@@ -11,9 +11,12 @@ class AdminPluginSerializer < ApplicationSerializer
              :enabled_setting,
              :has_settings,
              :is_official,
+             :is_experimental,
+             :is_discourse_owned,
              :commit_hash,
              :commit_url,
-             :meta_url
+             :meta_url,
+             :authors
 
   def id
     object.directory_name
@@ -33,6 +36,10 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def url
     object.metadata.url
+  end
+
+  def authors
+    object.metadata.authors
   end
 
   def enabled
@@ -70,6 +77,14 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def is_official
     Plugin::Metadata::OFFICIAL_PLUGINS.include?(object.name)
+  end
+
+  def is_experimental
+    object.metadata.experimental
+  end
+
+  def is_discourse_owned
+    object.discourse_owned?
   end
 
   def commit_hash

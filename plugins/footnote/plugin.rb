@@ -4,6 +4,7 @@
 # about: Adds markdown.it footnote support to Discourse
 # version: 1.0
 # authors: Discourse Team
+# meta_topic_id: 84533
 # url: https://github.com/discourse/discourse/tree/main/plugins/footnote
 
 enabled_site_setting :enable_markdown_footnotes

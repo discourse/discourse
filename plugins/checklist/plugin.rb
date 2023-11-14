@@ -4,6 +4,7 @@
 # about: Add checklist support to Discourse
 # version: 1.0
 # authors: Discourse Team
+# meta_topic_id: 36362
 # url: https://github.com/discourse/discourse/tree/main/plugins/checklist
 
 enabled_site_setting :checklist_enabled

@@ -111,6 +111,7 @@ class Plugin::Metadata
     required_version
     transpile_js
     meta_topic_id
+    experimental
   ]
   attr_accessor(*FIELDS)
 
