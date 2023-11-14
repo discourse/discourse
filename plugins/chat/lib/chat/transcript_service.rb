@@ -39,6 +39,8 @@ module Chat
         @no_link = no_link
         @include_reactions = include_reactions
         @message_data = []
+        @threads_markdown = {}
+        @attrs = {}
         @thread_id = thread_id
       end
 
@@ -46,27 +48,28 @@ module Chat
         @message_data << { message: message, reactions: reactions }
       end
 
-      def add_nested(markdown)
-        @message_data.last[:nested] ||= []
-        @message_data.last[:nested] << markdown
+      def add_thread_markdown(thread_id:, markdown:)
+        @threads_markdown[thread_id] = markdown
+      end
+
+      def set_attrs(message)
+        @attrs = [quote_attr(message)]
       end
 
       def render
-        attrs = [quote_attr(@message_data.first[:message])]
-
         if channel
-          attrs << channel_attr
-          attrs << channel_id_attr
+          @attrs << channel_attr
+          @attrs << channel_id_attr
         end
 
-        attrs << MULTIQUOTE_ATTR if multiquote
-        attrs << CHAINED_ATTR if chained
-        attrs << NO_LINK_ATTR if no_link
-        attrs << reactions_attr if include_reactions
-        attrs << thread_id_attr if thread_id
+        @attrs << MULTIQUOTE_ATTR if multiquote
+        @attrs << CHAINED_ATTR if chained
+        @attrs << NO_LINK_ATTR if no_link
+        @attrs << reactions_attr if include_reactions
+        @attrs << thread_id_attr if thread_id
 
         <<~MARKDOWN
-      [chat #{attrs.compact.join(" ")}]
+      [chat #{@attrs.compact.join(" ")}]
       #{render_messages}
       [/chat]
       MARKDOWN
@@ -78,8 +81,15 @@ module Chat
         @message_data
           .map do |msg_data|
             rendered_message = msg_data[:message].to_markdown
-            if msg_data[:nested]
-              rendered_message + "\n" + msg_data[:nested].join("\n")
+
+            if msg_data[:message].thread_id.present?
+              thread_data = @threads_markdown[msg_data[:message].thread_id]
+
+              if !thread_data.nil?
+                rendered_message + "\n" + thread_data
+              else
+                rendered_message
+              end
             else
               rendered_message
             end
@@ -131,48 +141,94 @@ module Chat
     def generate_markdown
       previous_message = nil
       rendered_markdown = []
+      rendered_thread_markdown = []
       all_messages_same_user = messages.count(:user_id) == 1
-      first_message_processed = false
-      include_multiquote = messages.count > 1
 
-      group_messages(messages).each do |thread_id, thread_messages|
-        main_message = thread_messages.first
-        is_main_thread_message = main_message.thread_id.nil?
+      open_bbcode_tag =
+        TranscriptBBCode.new(
+          channel: @channel,
+          acting_user: @acting_user,
+          multiquote: messages.length > 1,
+          chained: !all_messages_same_user,
+          no_link: @opts[:no_link],
+          thread_id: messages.first.thread_id,
+          include_reactions: @opts[:include_reactions],
+        )
 
-        include_channel_info = !first_message_processed && is_main_thread_message
-        thread_id_attr = thread_id unless main_message.thread_id.nil?
+      group_messages(messages).each do |id, message_group|
+        message = message_group.first
 
-        open_bbcode_tag =
-          TranscriptBBCode.new(
-            channel: include_channel_info ? @channel : nil,
-            acting_user: @acting_user,
-            multiquote: include_multiquote && !first_message_processed,
-            chained: !all_messages_same_user,
-            no_link: @opts[:no_link],
-            include_reactions: @opts[:include_reactions],
-            thread_id: thread_id_attr,
-          )
+        if previous_message.present? &&
+             (
+               previous_message.user_id != message.user_id ||
+                 previous_message.thread_id != message.thread_id
+             )
+          rendered_markdown << open_bbcode_tag.render
 
-        open_bbcode_tag.add(message: main_message)
-        previous_message = main_message
-        first_message_processed = true
-
-        thread_messages[1..].each do |message|
-          nested_bbcode_tag =
+          open_bbcode_tag =
             TranscriptBBCode.new(
               acting_user: @acting_user,
               chained: !all_messages_same_user,
               no_link: @opts[:no_link],
+              thread_id: message.thread_id,
               include_reactions: @opts[:include_reactions],
             )
-          nested_bbcode_tag.add(message: message)
-          open_bbcode_tag.add_nested(nested_bbcode_tag.render)
-          previous_message = message
         end
 
-        # tie off the last open bbcode + render
-        rendered_markdown << open_bbcode_tag.render
+        if @opts[:include_reactions]
+          open_bbcode_tag.add(message: message, reactions: reactions_for_message(message))
+        else
+          open_bbcode_tag.add(message: message)
+        end
+        open_bbcode_tag.set_attrs(message)
+        previous_message = message
+
+        if message_group.length > 1
+          previous_thread_message = nil
+
+          thread_bbcode_tag =
+            TranscriptBBCode.new(
+              acting_user: @acting_user,
+              chained: true,
+              no_link: @opts[:no_link],
+              include_reactions: @opts[:include_reactions],
+            )
+
+          message_group[1..].each do |thread_message|
+            if previous_thread_message.present? &&
+                 previous_thread_message.user_id != thread_message.user_id
+              rendered_thread_markdown << thread_bbcode_tag.render
+
+              thread_bbcode_tag =
+                TranscriptBBCode.new(
+                  acting_user: @acting_user,
+                  chained: !all_messages_same_user,
+                  no_link: @opts[:no_link],
+                  include_reactions: @opts[:include_reactions],
+                )
+            end
+
+            if @opts[:include_reactions]
+              thread_bbcode_tag.add(
+                message: thread_message,
+                reactions: reactions_for_message(thread_message),
+              )
+            else
+              thread_bbcode_tag.add(message: thread_message)
+            end
+            thread_bbcode_tag.set_attrs(thread_message)
+            previous_thread_message = thread_message
+          end
+          rendered_thread_markdown << thread_bbcode_tag.render
+        end
+        open_bbcode_tag.add_thread_markdown(
+          thread_id: message_group.first.thread_id,
+          markdown: rendered_thread_markdown.join("\n"),
+        )
       end
+
+      # tie off the last open bbcode + render
+      rendered_markdown << open_bbcode_tag.render
       rendered_markdown.join("\n")
     end
 
