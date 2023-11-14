@@ -1,3 +1,5 @@
+/* global PublicKeyCredential */
+
 import { ajax } from "discourse/lib/ajax";
 import I18n from "discourse-i18n";
 
@@ -130,10 +132,8 @@ export async function getPasskeyCredential(
   // without it, Firefox will throw console errors
   // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
   // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
-  if (mediation === "conditional" && isFirefox && window.PublicKeyCredential) {
-    const isCMA =
-      // eslint-disable-next-line no-undef
-      await PublicKeyCredential.isConditionalMediationAvailable();
+  if (mediation === "conditional" && isFirefox) {
+    const isCMA = await PublicKeyCredential.isConditionalMediationAvailable();
     if (!isCMA) {
       return;
     }
