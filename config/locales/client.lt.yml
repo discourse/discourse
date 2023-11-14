@@ -1208,8 +1208,6 @@ lt:
         title: "Dviejų veiksnių autentifikavimas"
         enable: "Tvarkyti dviejų veiksnių autentifikavimą"
         disable_all: "Išjungti visus"
-        forgot_password: "Pamiršote slaptažodį?"
-        confirm_password_description: "Patvirtinkite slaptažodį norėdami tęsti"
         name: "Vardas"
         label: "Kodas"
         rate_limit: "Prašome palaukti prieš bandydami kitą autentifikavimo kodą."

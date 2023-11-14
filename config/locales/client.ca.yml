@@ -1011,8 +1011,6 @@ ca:
           title: "Codis de còpia de seguretat generats"
           description: "Cada un dels codis de còpia de seguretat es pot fer servir sols una vegada. Manteniu-los en algun lloc web segur però accessible. "
       second_factor:
-        forgot_password: "Heu oblidat la contrasenya?"
-        confirm_password_description: "Confirmeu la contrasenya per a continuar"
         name: "Nom"
         label: "Codi"
         rate_limit: "Espereu abans de provar un altre codi d'autenticació."

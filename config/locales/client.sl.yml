@@ -1127,8 +1127,6 @@ sl:
         title: "Preverjanje v dveh korakih"
         enable: "Upravljajte preverjanje v dveh korakih"
         disable_all: "Onemogoči vse"
-        forgot_password: "Ste pozabili geslo?"
-        confirm_password_description: "Vnesite geslo za nadaljevanje"
         name: "Polno ime"
         label: "Koda"
         rate_limit: "Počakajte preden uporabite novo potrditveno kodo."

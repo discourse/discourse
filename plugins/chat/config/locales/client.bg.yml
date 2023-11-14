@@ -99,6 +99,8 @@ bg:
         tabs:
           members: Членове
           settings: Настройки
+      new_message_modal:
+        filter: "Филтър"
       direct_message_creator:
         title: Ново Съобщение
         prefix: "До:"

@@ -1353,8 +1353,6 @@ es:
         title: "Autenticación de dos factores"
         enable: "Gestionar la autenticación de dos factores"
         disable_all: "Desactivar todo"
-        forgot_password: "¿Has olvidado tu contraseña?"
-        confirm_password_description: "Confirma tu contraseña para continuar"
         name: "Nombre"
         label: "Código"
         rate_limit: "Espera antes de intentar utilizar otro código de autenticación."

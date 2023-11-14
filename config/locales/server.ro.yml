@@ -955,6 +955,7 @@ ro:
     newuser_max_replies_per_topic: "Numărul maxim de răspunsuri pe care un utilizator nou le poate adăuga într-un singur subiect înainte ca cineva să răspundă."
     max_mentions_per_post: "Numărul maxim de notificări de @nume pe care le poate folosi oricine într-o postare."
     max_users_notified_per_group_mention: "Numărul maxim de utilizatori care pot primi o notificare dacă un grup este menționat (dacă pragul este atins, nici o notificare nu va fi trimisă)"
+    here_mention_allowed_groups: "Grupuri cărora li se permite să menționeze @aici."
     create_thumbnails: "Creează previzualizări de tipul thumbnail și lightbox ale imaginilor ce sunt prea mari să încapă într-o postare."
     email_time_window_mins: "Așteaptă (n) minute până să trimiți un email de notificare, pentru a da utilizatorilor șansa să-și editeze și să-și finalizeze postările."
     email_posts_context: "Câte răspunsuri precedente să fie incluse drept context în email-urile de notificare."
@@ -966,7 +967,6 @@ ro:
     min_title_similar_length: "Lungimea minimă a unui titlu înainte să fie verificat pentru subiecte similare."
     desktop_category_page_style: "Stil vizual pentru pagina /categories ."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
-    category_style: "Stil vizual pentru categoria ecusoane."
     dark_mode_none: "Nimeni"
     max_attachment_size_kb: "Mărimea maximă a unui atașament de fișiere încărcate în Kb. Aceasta trebuie configurata în nginx (client_max_body_size) / apache sau proxy."
     authorized_extensions: "O listă de extensii de fișiere permise la încărcare (folosiți '*' pentru activarea tuturor tipurilor de fișiere)"
@@ -1072,8 +1072,9 @@ ro:
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
     short_progress_text_threshold: "După ce numărul de postări într-un subiect devine mai mare decât acest număr, bara de progres va afișa doar numărul postării curente. Dacă schiimbi lățimea barei de progres, va trebui să schimbi această valoare."
+    default_code_lang: "Evidențierea implicită a sintaxei limbajului de programare aplicată blocurilor de cod markdown (auto, text, ruby, python etc.). Această valoare trebuie să fie prezentă și în setarea `limbaje evidențiate` a site-ului."
     warn_reviving_old_topic_age: "Când cineva răspunde la un subiect unde ultimul răspuns e mai vechi decât atâtea zile, va fi afișată o avertizare. Dezactivează prin alegerea cifrei 0."
-    autohighlight_all_code: "Forțează aplicarea de punere în evidență cod pe toate blocurile de cod preformatate, chiar și atunci când nu le este explicit specificată limba."
+    autohighlight_all_code: "Aplică evidențierea sintaxei la blocurile <code> HTML , chiar dacă acestea nu au specificată o limbă."
     embed_truncate: "Retează postările încorporate."
     allowed_href_schemes: "Alte tipuri de linkuri permise, în afară de http și https."
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
@@ -1144,6 +1145,9 @@ ro:
       invalid_regex: "Regex invalid sau nepermis."
       min_username_length_range: "Nu poți seta minimum cu o valoare mai mare decât a maximului."
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
+    keywords:
+      here_mention_allowed_groups: "min_trust_level_for_here_mention"
+      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:

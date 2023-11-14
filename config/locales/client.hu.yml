@@ -1262,8 +1262,6 @@ hu:
         title: "Kétfaktoros hitelesítés"
         enable: "A kétfaktoros hitelesítés kezelése"
         disable_all: "Összes letiltása"
-        forgot_password: "Elfelejtette a jelszavát?"
-        confirm_password_description: "A folytatáshoz erősítse meg a jelszavát"
         name: "Név"
         label: "Kód"
         rate_limit: "Várjon, mielőtt egy másik hitelesítési kódot próbálna ki."

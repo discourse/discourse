@@ -1346,8 +1346,6 @@ fi:
         title: "Kaksivaiheinen tunnistus"
         enable: "Hallitse kaksivaiheista tunnistusta"
         disable_all: "Poista kaikki käytöstä"
-        forgot_password: "Unohditko salasanasi?"
-        confirm_password_description: "Jatka vahvistamalla salasanasi"
         name: "Nimi"
         label: "Koodi"
         rate_limit: "Odota hetki ennen toisen todennuskoodin kokeilemista."

@@ -1645,8 +1645,6 @@ ar:
         title: "المصادقة الثنائية"
         enable: "إدارة المصادقة الثنائية"
         disable_all: "إيقاف الكل"
-        forgot_password: "هل نسيت كلمة المرور؟"
-        confirm_password_description: "يُرجى تأكيد كلمة المرور للمتابعة"
         name: "الاسم"
         label: "الرمز"
         rate_limit: "يُرجى الانتظار قبل تجربة رمز مصادقة آخر."

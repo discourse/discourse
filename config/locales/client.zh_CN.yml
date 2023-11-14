@@ -1291,8 +1291,6 @@ zh_CN:
         title: "双重身份验证"
         enable: "管理双重身份验证"
         disable_all: "全部禁用"
-        forgot_password: "忘记密码了？"
-        confirm_password_description: "请确认您的密码以继续"
         name: "名称"
         label: "代码"
         rate_limit: "请稍候，然后再尝试其他身份验证代码。"

@@ -1156,8 +1156,6 @@ ko:
         title: "2단계 인증"
         enable: "2단계 인증 관리"
         disable_all: "모두 비활성화"
-        forgot_password: "비밀번호가 기억나지 않나요?"
-        confirm_password_description: "계속하려면 비밀번호를 입력하세요"
         name: "이름"
         label: "코드"
         rate_limit: "다른 인증 코드를 시도하기 전에 잠시 기다려 주세요."
