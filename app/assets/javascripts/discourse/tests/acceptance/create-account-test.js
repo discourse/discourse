@@ -123,10 +123,10 @@ acceptance("Create Account - passkeys enabled", function (needs) {
     await click("header .sign-up-button");
 
     assert
-      .dom(".create-account-form .btn-primary")
+      .dom(".d-modal.create-account .btn-primary")
       .exists("create account button exists");
 
-    assert.dom(".create-account-form .btn-primary").exists();
+    assert.dom(".d-modal.create-account .btn-primary").exists();
     assert.dom(".passkey-login-button").doesNotExist();
   });
 });
