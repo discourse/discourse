@@ -123,7 +123,6 @@ export default class ConfirmSession extends Component {
             <div class="confirm-session__passkey">
               <DButton
                 class="btn-flat"
-                @type="button"
                 @action={{this.confirmWithPasskey}}
                 @label="user.passkeys.confirm_button"
               />
