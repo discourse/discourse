@@ -39,6 +39,40 @@ describe "Uploading files in chat messages", type: :system do
       expect(Chat::Message.last.uploads.count).to eq(1)
     end
 
+    it "adds a thumbnail for large images" do
+      SiteSetting.create_thumbnails = true
+
+      chat.visit_channel(channel_1)
+      file_path = file_from_fixtures("huge.jpg", "images").path
+
+      attach_file(file_path) do
+        channel_page.open_action_menu
+        channel_page.click_action_button("chat-upload-btn")
+      end
+
+      channel_page.send_message("thumbnail test")
+
+      expect(page).not_to have_css(".chat-composer-upload")
+
+      expect(channel_page.messages).to have_message(
+        text: "thumbnail test\n#{File.basename(file_path)}",
+        persisted: true,
+      )
+
+      # the upload should have created a thumbnail
+      upload = Chat::Message.last.uploads.first
+      expect(upload.thumbnail).to be_present
+
+      # reload the page and check that the upload is now a thumbnail
+      chat.visit_channel(channel_1)
+
+      # image has src attribute with thumbnail url
+      expect(channel_page).to have_css(".chat-uploads img[src$='#{upload.thumbnail.url}']")
+
+      # image has data-orig-src with original image src
+      expect(channel_page).to have_css(".chat-uploads img[data-orig-src$='#{upload.url}']")
+    end
+
     it "adds dominant color attribute to images" do
       chat.visit_channel(channel_1)
       file_path = file_from_fixtures("logo.png", "images").path
