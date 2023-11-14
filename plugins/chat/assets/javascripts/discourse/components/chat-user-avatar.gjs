@@ -56,7 +56,9 @@ export default class ChatUserAvatar extends Component {
           {{this.avatar}}
         </a>
       {{else}}
-        {{this.avatar}}
+        <span class="chat-user-avatar__container">
+          {{this.avatar}}
+        </span>
       {{/if}}
     </div>
   </template>
