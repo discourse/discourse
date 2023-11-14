@@ -59,6 +59,8 @@ sw:
         tabs:
           members: Wanachama
           settings: Mipangilio
+      new_message_modal:
+        filter: "Chuja"
       direct_message_creator:
         title: Ujumbe Mpya
         prefix: "Kwenda:"

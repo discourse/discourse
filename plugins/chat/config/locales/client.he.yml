@@ -272,6 +272,8 @@ he:
       save: "שמירה"
       select: "בחירה"
       return_to_list: "חזרה לרשימת הערוצים"
+      return_to_channel: "חזרה לערוץ"
+      return_to_threads_list: "חזרה לרשימת השרשורים"
       unread_threads_count:
         one: "יש דיון שטרם קראת"
         two: "יש %{count} דיונים שטרם קראת"
@@ -342,9 +344,9 @@ he:
         default_search_placeholder: "#ערוץ, @מישהם או כל דבר אחר"
         default_channel_search_placeholder: "#ערוץ"
         default_user_search_placeholder: "@מישהם"
-        user_search_placeholder: "…הוספת משתמשים נוספים"
         disabled_user: "השבית את הצ׳אט"
         no_items: "אין פריטים"
+        filter: "סינון"
       channel_edit_name_slug_modal:
         title: עריכת ערוץ
         input_placeholder: הוספת שם
@@ -617,6 +619,7 @@ he:
           other: "+%{count}"
       threads:
         open: "פתיחת שרשור"
+        list: "שרשורים"
         none: "אין לך חלק באף אחד מהשרשורים בערוץ הזה."
       draft_channel_screen:
         header: "הודעה חדשה"

@@ -1057,7 +1057,6 @@ zh_TW:
       second_factor:
         title: "兩步驟驗證"
         enable: "管理兩步驟驗證"
-        confirm_password_description: "請確認你的密碼以繼續"
         name: "名稱"
         label: "代碼"
         rate_limit: "嘗試其他驗證代碼前請稍後"

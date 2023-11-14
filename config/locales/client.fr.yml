@@ -1341,8 +1341,6 @@ fr:
         title: "Authentification à deux facteurs"
         enable: "Gérer l'authentification à deux facteurs"
         disable_all: "Tout désactiver"
-        forgot_password: "Mot de passe oublié ?"
-        confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         name: "Nom"
         label: "Code"
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'authentification."

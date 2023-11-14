@@ -305,9 +305,9 @@ pt_BR:
         default_search_placeholder: "#a-channel, @alguém ou alguma coisa"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@alguém"
-        user_search_placeholder: "... adicionar mais usuários"
         disabled_user: "desativou o chat"
         no_items: "Nenhum item"
+        filter: "Filtro"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Adicionar um nome

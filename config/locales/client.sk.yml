@@ -843,7 +843,6 @@ sk:
           title: "Záložné kódy vygenerované"
           description: "Každý z týchto záložných kódov sa môže použiť iba raz. Uložte si ich bezpečne, no, aby Vám boli dostupné"
       second_factor:
-        confirm_password_description: "Pre pokračovanie potvrďte svoje heslo prosím"
         name: "Meno"
         label: "Kód"
         rate_limit: "Prosím čakajte pred zadaním ďalšieho autentifikačného kódu"

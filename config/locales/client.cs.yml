@@ -1272,8 +1272,6 @@ cs:
         title: "Dvoufaktorové ověření"
         enable: "Správa dvoufaktorového ověřování"
         disable_all: "Zakázat vše"
-        forgot_password: "Zapomněli jste heslo?"
-        confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         name: "Jméno"
         label: "Kód"
         rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."

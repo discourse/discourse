@@ -1051,8 +1051,6 @@ bs_BA:
           title: "Generirani sigurnosni kodovi"
           description: "Svaki od ovih rezervnih kodova može se koristiti samo jednom. Držite ih na sigurnom, ali pristupačnom mjestu."
       second_factor:
-        forgot_password: "Zaboravili ste password?"
-        confirm_password_description: "Molimo vas da potvrdite šifru kako bi nastavili"
         name: "Ime"
         label: "Šifra"
         rate_limit: "Pričekajte prije pokušaja drugog koda za provjeru autentičnosti."
