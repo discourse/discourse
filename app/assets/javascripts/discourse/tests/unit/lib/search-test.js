@@ -70,15 +70,27 @@ module("Unit | Utility | search", function (hooks) {
         id: 250,
         name: "Bruce Wayne",
         username: "batman",
+        topic_id: 96,
         topic: {
           id: 96,
           title: "I like to fight crime",
         },
       },
       {
+        id: 104,
+        name: "Steve Rogers",
+        username: "captain_america",
+        topic_id: 2,
+        topic: {
+          id: 2,
+          title: "What its like being frozen...",
+        },
+      },
+      {
         id: 202,
         name: "Peter Parker",
         username: "spidey",
+        topic_id: 32,
         topic: {
           id: 32,
           title: "My experience meeting the Avengers",
@@ -88,6 +100,7 @@ module("Unit | Utility | search", function (hooks) {
         id: 290,
         name: "Clark Kent",
         username: "superman",
+        topic_id: 111,
         topic: {
           id: 111,
           title: "My fear of Kryptonite",
@@ -100,8 +113,9 @@ module("Unit | Utility | search", function (hooks) {
         id: 104,
         name: "Tony Stark",
         username: "ironman",
+        topic_id: 95,
         topic: {
-          id: 96,
+          id: 95,
           title: "What I learned from my father",
         },
       },
@@ -109,15 +123,27 @@ module("Unit | Utility | search", function (hooks) {
         id: 246,
         name: "The Joker",
         username: "joker",
+        topic_id: 93,
         topic: {
           id: 93,
           title: "Why don't you put a smile on that face...",
         },
       },
       {
+        id: 104,
+        name: "Steve Rogers",
+        username: "captain_america",
+        topic_id: 2,
+        topic: {
+          id: 2,
+          title: "What its like being frozen...",
+        },
+      },
+      {
         id: 245,
         name: "Loki",
         username: "loki",
+        topic_id: 92,
         topic: {
           id: 92,
           title: "There is only one person you can trust",
@@ -127,68 +153,95 @@ module("Unit | Utility | search", function (hooks) {
 
     const desiredMixedResults = [
       {
+        id: 104,
+        itemKey: "2_2",
+        name: "Steve Rogers",
+        reciprocalRank: 0.30952380952380953,
+        topic: {
+          id: 2,
+          title: "What its like being frozen...",
+        },
+        topic_id: 2,
+        username: "captain_america",
+      },
+      {
         id: 250,
+        itemKey: "96_96",
         name: "Bruce Wayne",
         reciprocalRank: 0.2,
         topic: {
           id: 96,
           title: "I like to fight crime",
         },
+        topic_id: 96,
         username: "batman",
       },
       {
         id: 104,
+        itemKey: "95_95",
         name: "Tony Stark",
         reciprocalRank: 0.2,
         topic: {
-          id: 96,
+          id: 95,
           title: "What I learned from my father",
         },
+        topic_id: 95,
         username: "ironman",
       },
       {
-        id: 202,
-        name: "Peter Parker",
-        reciprocalRank: 0.16666666666666666,
-        topic: {
-          id: 32,
-          title: "My experience meeting the Avengers",
-        },
-        username: "spidey",
-      },
-      {
         id: 246,
+        itemKey: "93_93",
         name: "The Joker",
         reciprocalRank: 0.16666666666666666,
         topic: {
           id: 93,
           title: "Why don't you put a smile on that face...",
         },
+        topic_id: 93,
         username: "joker",
       },
       {
-        id: 290,
-        name: "Clark Kent",
+        id: 202,
+        itemKey: "32_32",
+        name: "Peter Parker",
         reciprocalRank: 0.14285714285714285,
+        topic: {
+          id: 32,
+          title: "My experience meeting the Avengers",
+        },
+        topic_id: 32,
+        username: "spidey",
+      },
+      {
+        id: 290,
+        itemKey: "111_111",
+        name: "Clark Kent",
+        reciprocalRank: 0.125,
         topic: {
           id: 111,
           title: "My fear of Kryptonite",
         },
+        topic_id: 111,
         username: "superman",
       },
       {
         id: 245,
+        itemKey: "92_92",
         name: "Loki",
-        reciprocalRank: 0.14285714285714285,
+        reciprocalRank: 0.125,
         topic: {
           id: 92,
           title: "There is only one person you can trust",
         },
+        topic_id: 92,
         username: "loki",
       },
     ];
 
-    const rankedList = reciprocallyRankedList([sourceA, sourceB]);
+    const rankedList = reciprocallyRankedList(
+      [sourceA, sourceB],
+      ["topic_id", "topic_id"]
+    );
 
     assert.deepEqual(
       rankedList,
