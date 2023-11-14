@@ -34,7 +34,7 @@ export default class UserIndex extends DiscourseRoute {
 
     let destination;
     if (viewingMe) {
-      destination = "user.activity";
+      destination = "userActivity";
     } else {
       destination = this.viewingOtherUserDefaultRoute;
     }
