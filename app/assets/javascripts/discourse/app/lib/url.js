@@ -8,7 +8,6 @@ import offsetCalculator from "discourse/lib/offset-calculator";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
-import User from "discourse/models/user";
 import { isTesting } from "discourse-common/config/environment";
 import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 
@@ -226,21 +225,6 @@ const DiscourseURL = EmberObject.extend({
     const oldPath = this.router.currentURL;
 
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
-
-    // Rewrite /my/* urls
-    let myPath = getURL("/my/");
-    const fullPath = getURL(path);
-    if (fullPath.startsWith(myPath)) {
-      const currentUser = User.current();
-      if (currentUser) {
-        path = fullPath.replace(
-          myPath,
-          `${userPath(currentUser.get("username_lower"))}/`
-        );
-      } else {
-        return this.redirectTo("/login-preferences");
-      }
-    }
 
     // handle prefixes
     if (path.startsWith("/")) {
