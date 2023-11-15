@@ -2,9 +2,9 @@ import { dasherize, underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
-import categoryFromId from "discourse-common/utils/category-macro";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
+import Category from "./category";
 
 export const PENDING = 0;
 export const APPROVED = 1;
@@ -68,7 +68,10 @@ const Reviewable = RestModel.extend({
     });
   },
 
-  category: categoryFromId("category_id"),
+  @discourseComputed("category_id")
+  category() {
+    return Category.findById(this.category_id);
+  },
 
   update(updates) {
     // If no changes, do nothing
