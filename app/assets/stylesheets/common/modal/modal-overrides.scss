@@ -306,3 +306,15 @@
     }
   }
 }
+
+.d-modal.fullscreen-table-modal {
+  .d-modal {
+    &__container {
+      max-width: $reply-area-max-width;
+      max-height: unset;
+    }
+    &__header {
+      justify-content: flex-end;
+    }
+  }
+}
