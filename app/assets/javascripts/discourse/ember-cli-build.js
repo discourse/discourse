@@ -15,6 +15,7 @@ const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
 const withSideWatch = require("./lib/with-side-watch");
+const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -73,7 +74,7 @@ module.exports = function (defaults) {
     },
 
     trees: {
-      app: withSideWatch("app", { watching: ["../discourse-markdown-it"] }),
+      app: RawHandlebarsCompiler(withSideWatch("app", { watching: ["../discourse-markdown-it"] })),
     },
   });
 
@@ -137,6 +138,12 @@ module.exports = function (defaults) {
         output: {
           publicPath: "auto",
         },
+        cache: isProduction
+          ? false
+          : {
+              type: "memory",
+              maxGenerations: 1,
+            },
         entry: {
           "assets/discourse.js/features/markdown-it.js": {
             import: "./static/markdown-it",

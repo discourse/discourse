@@ -11,15 +11,3 @@ Discourse/NoResetColumnInformationInMigrations:
 Lint/Debugger:
   Exclude:
     - script/**/*
-
-RSpec/ContextWording:
-  Prefixes:
-    - when
-    - with
-    - without
-    - for
-    - while
-    - if
-    - as
-    - after
-    - in

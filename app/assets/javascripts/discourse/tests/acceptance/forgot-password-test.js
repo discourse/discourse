@@ -62,7 +62,7 @@ acceptance("Forgot password", function (needs) {
     );
 
     assert.strictEqual(
-      query(".modal-body").innerHTML.trim(),
+      query(".d-modal__body").innerHTML.trim(),
       I18n.t("forgot_password.complete_username_found", {
         username: "someuser",
       }),
@@ -76,7 +76,7 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.strictEqual(
-      query(".modal-body").innerHTML.trim(),
+      query(".d-modal__body").innerHTML.trim(),
       I18n.t("forgot_password.complete_email_found", {
         email: "someuser@gmail.com",
       }),
@@ -108,7 +108,7 @@ acceptance(
       await click(".forgot-password-reset");
 
       assert.strictEqual(
-        query(".modal-body").innerHTML.trim(),
+        query(".d-modal__body").innerHTML.trim(),
         I18n.t("forgot_password.complete_username", {
           username: "someuser",
         }),

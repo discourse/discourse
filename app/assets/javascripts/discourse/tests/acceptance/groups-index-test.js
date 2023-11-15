@@ -29,7 +29,7 @@ acceptance("Groups", function () {
     await click(".group-index-join");
     assert.ok(exists(".modal.login-modal"), "it shows the login modal");
 
-    await click(".login-modal .close");
+    await click(".login-modal .modal-close");
     assert.ok(invisible(".modal.login-modal"), "it closes the login modal");
 
     await click(".group-index-request");

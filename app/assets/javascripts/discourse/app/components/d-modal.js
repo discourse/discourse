@@ -85,7 +85,9 @@ export default class DModal extends Component {
     }
 
     if (event.key === "Enter" && this.shouldTriggerClickOnEnter(event)) {
-      this.wrapperElement.querySelector(".modal-footer .btn-primary")?.click();
+      this.wrapperElement
+        .querySelector(".d-modal__footer .btn-primary")
+        ?.click();
       event.preventDefault();
     }
   }
