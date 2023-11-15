@@ -6,6 +6,117 @@ import { createWidgetFrom } from "discourse/widgets/widget";
 
 const INITIAL_CLASSES = Symbol("RENDER_GLIMMER_INITIAL_CLASSES");
 
+export class RenderComponent {
+  /**
+   * Create a RenderComponent instance
+   * @param widget - the widget instance which is rendering this content
+   * @param renderInto - a string describing a new wrapper element (e.g. `div.my-class`),
+   *  or an existing HTML element to append content into.
+   * @param component - a component to render
+   * @param data - will be made available at `@data` in your template
+   */
+  constructor(widget, renderInto, component, data) {
+    this.renderInto = renderInto;
+    if (widget) {
+      this.widget = widget;
+    }
+    this.component = component;
+    this.data = data;
+  }
+
+  init() {
+    if (this.renderInto instanceof Element) {
+      this.element = this.renderInto;
+    } else {
+      const [type, ...classNames] = this.renderInto.split(".");
+      this.element = document.createElement(type);
+      this.element.classList.add(...classNames);
+      this.element[INITIAL_CLASSES] = classNames;
+    }
+    this.connectComponent();
+    return this.element;
+  }
+
+  destroy() {
+    if (this._componentInfo) {
+      this.parentMountWidgetComponent.unmountChildComponent(
+        this._componentInfo
+      );
+    }
+  }
+
+  update(prev) {
+    if (
+      prev.component !== this.component ||
+      prev.renderInto !== this.renderInto
+    ) {
+      // Totally different component, but the widget framework guessed it was the
+      // same widget. Destroy old component and re-init the new one.
+      prev.destroy();
+      return this.init();
+    }
+
+    this._componentInfo = prev._componentInfo;
+    if (prev.data !== this.data) {
+      this._componentInfo.data = this.data;
+    }
+
+    return null;
+  }
+
+  connectComponent() {
+    const { element, component } = this;
+
+    this._componentInfo = {
+      element,
+      component,
+      @tracked data: this.data,
+      setWrapperElementAttrs: (attrs) =>
+        this.updateElementAttrs(element, attrs),
+    };
+
+    this.parentMountWidgetComponent.mountChildComponent(this._componentInfo);
+  }
+
+  updateElementAttrs(element, attrs) {
+    for (let [key, value] of Object.entries(attrs)) {
+      if (key === "class") {
+        value = [element[INITIAL_CLASSES], value].filter(Boolean).join(" ");
+      }
+
+      if ([null, undefined].includes(value)) {
+        element.removeAttribute(key);
+      } else {
+        element.setAttribute(key, value);
+      }
+    }
+  }
+
+  get parentMountWidgetComponent() {
+    return this.widget?._findView() || this._emberView;
+  }
+}
+
+RenderComponent.prototype.type = "Widget";
+
+export function registerComponentWidgetShim(name, tagName, component) {
+  const RenderComponentShim = class MyClass extends RenderComponent {
+    constructor(attrs) {
+      super(null, tagName, component, attrs);
+      return this;
+    }
+
+    get widget() {
+      return this.parentWidget;
+    }
+
+    didRenderWidget() {}
+    willRerenderWidget() {}
+  };
+
+  createWidgetFrom(RenderComponentShim, name, {});
+}
+
 /*
 
 This class allows you to render arbitrary Glimmer templates inside widgets.
@@ -82,8 +193,7 @@ hbs`{{@setWrapperElementAttrs class="some class value" title="title value"}}`
 If you prefer, you can pass this function down into your own components, and call it from there. Invoked as a helper, this can
 be passed (auto-)tracked values, and will update the wrapper element attributes whenever the inputs.
 */
-
-export default class RenderGlimmer {
+export default class RenderGlimmer extends RenderComponent {
   /**
    * Create a RenderGlimmer instance
    * @param widget - the widget instance which is rendering this content
@@ -97,92 +207,14 @@ export default class RenderGlimmer {
       "`template` should be a template compiled via `ember-cli-htmlbars`",
       template.name === "factory"
     );
-    this.renderInto = renderInto;
-    if (widget) {
-      this.widget = widget;
-    }
-    this.template = template;
-    this.data = data;
-  }
-
-  init() {
-    if (this.renderInto instanceof Element) {
-      this.element = this.renderInto;
-    } else {
-      const [type, ...classNames] = this.renderInto.split(".");
-      this.element = document.createElement(type);
-      this.element.classList.add(...classNames);
-      this.element[INITIAL_CLASSES] = classNames;
-    }
-    this.connectComponent();
-    return this.element;
-  }
-
-  destroy() {
-    if (this._componentInfo) {
-      this.parentMountWidgetComponent.unmountChildComponent(
-        this._componentInfo
-      );
-    }
-  }
-
-  update(prev) {
-    if (
-      prev.template.__id !== this.template.__id ||
-      prev.renderInto !== this.renderInto
-    ) {
-      // Totally different component, but the widget framework guessed it was the
-      // same widget. Destroy old component and re-init the new one.
-      prev.destroy();
-      return this.init();
-    }
-
-    this._componentInfo = prev._componentInfo;
-    if (prev.data !== this.data) {
-      this._componentInfo.data = this.data;
-    }
-
-    return null;
-  }
-
-  connectComponent() {
-    const { element, template } = this;
 
     const component = templateOnly();
     component.name = "Widgets/RenderGlimmer";
     setComponentTemplate(template, component);
 
-    this._componentInfo = {
-      element,
-      component,
-      @tracked data: this.data,
-      setWrapperElementAttrs: (attrs) =>
-        this.updateElementAttrs(element, attrs),
-    };
-
-    this.parentMountWidgetComponent.mountChildComponent(this._componentInfo);
-  }
-
-  updateElementAttrs(element, attrs) {
-    for (let [key, value] of Object.entries(attrs)) {
-      if (key === "class") {
-        value = [element[INITIAL_CLASSES], value].filter(Boolean).join(" ");
-      }
-
-      if ([null, undefined].includes(value)) {
-        element.removeAttribute(key);
-      } else {
-        element.setAttribute(key, value);
-      }
-    }
-  }
-
-  get parentMountWidgetComponent() {
-    return this.widget?._findView() || this._emberView;
+    super(widget, renderInto, component, data);
   }
 }
-
-RenderGlimmer.prototype.type = "Widget";
 
 /**
  * Define a widget shim which renders a Glimmer template. Designed for incrementally migrating
