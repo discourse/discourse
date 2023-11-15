@@ -171,12 +171,11 @@ module Chat
     end
 
     def self.preload_custom_fields_for(channels)
-      preload_fields = Category.instance_variable_get(:@custom_field_types).keys
       Category.preload_custom_fields(
         channels
           .select { |c| c.chatable_type == "Category" || c.chatable_type == "category" }
           .map(&:chatable),
-        preload_fields,
+        Site.preloaded_category_custom_fields,
       )
     end
 
