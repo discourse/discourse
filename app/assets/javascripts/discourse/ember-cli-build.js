@@ -14,6 +14,7 @@ const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const withSideWatch = require("./lib/with-side-watch");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -69,6 +70,10 @@ module.exports = function (defaults) {
       // https://github.com/discourse/backburner.js/commits/discourse-patches
       backburner:
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
+    },
+
+    trees: {
+      app: withSideWatch("app", { watching: ["../discourse-markdown-it"] }),
     },
   });
 
