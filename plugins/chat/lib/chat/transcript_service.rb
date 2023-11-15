@@ -40,7 +40,6 @@ module Chat
         @include_reactions = include_reactions
         @message_data = []
         @threads_markdown = {}
-        @attrs = {}
         @thread_id = thread_id
       end
 
@@ -52,24 +51,22 @@ module Chat
         @threads_markdown[thread_id] = markdown
       end
 
-      def set_attrs(message)
-        @attrs = [quote_attr(message)]
-      end
-
       def render
+        attrs = [quote_attr(@message_data.first[:message])]
+
         if channel
-          @attrs << channel_attr
-          @attrs << channel_id_attr
+          attrs << channel_attr
+          attrs << channel_id_attr
         end
 
-        @attrs << MULTIQUOTE_ATTR if multiquote
-        @attrs << CHAINED_ATTR if chained
-        @attrs << NO_LINK_ATTR if no_link
-        @attrs << reactions_attr if include_reactions
-        @attrs << thread_id_attr if thread_id
+        attrs << MULTIQUOTE_ATTR if multiquote
+        attrs << CHAINED_ATTR if chained
+        attrs << NO_LINK_ATTR if no_link
+        attrs << reactions_attr if include_reactions
+        attrs << thread_id_attr if thread_id
 
         <<~MARKDOWN
-      [chat #{@attrs.compact.join(" ")}]
+      [chat #{attrs.compact.join(" ")}]
       #{render_messages}
       [/chat]
       MARKDOWN
@@ -180,7 +177,7 @@ module Chat
         else
           open_bbcode_tag.add(message: message)
         end
-        open_bbcode_tag.set_attrs(message)
+
         previous_message = message
 
         if message_group.length > 1
@@ -217,7 +214,6 @@ module Chat
             else
               thread_bbcode_tag.add(message: thread_message)
             end
-            thread_bbcode_tag.set_attrs(thread_message)
             previous_thread_message = thread_message
           end
           rendered_thread_markdown << thread_bbcode_tag.render
