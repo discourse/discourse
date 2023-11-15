@@ -14,6 +14,7 @@ const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -72,6 +73,10 @@ module.exports = function (defaults) {
     },
 
     historySupportMiddleware: false,
+
+    trees: {
+      app: RawHandlebarsCompiler("app"),
+    },
   });
 
   // TODO: remove me
