@@ -312,7 +312,7 @@ export default Controller.extend({
 
   @discourseComputed("model.posts", "additionalSearchResults")
   searchResultPosts(posts, additionalSearchResults) {
-    if (additionalSearchResults && additionalSearchResults?.list?.length > 0) {
+    if (additionalSearchResults?.list?.length > 0) {
       return reciprocallyRankedList(
         [posts, additionalSearchResults.list],
         ["topic_id", additionalSearchResults.identifier]
