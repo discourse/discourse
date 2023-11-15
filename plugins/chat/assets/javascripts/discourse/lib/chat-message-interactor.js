@@ -268,7 +268,7 @@ export default class ChatMessageInteractor {
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
     this.toasts.success({
-      duration: 3000,
+      duration: 1500,
       data: { message: I18n.t("chat.link_copied") },
     });
   }
