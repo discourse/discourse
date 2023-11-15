@@ -187,7 +187,7 @@ module Chat
           thread_bbcode_tag =
             TranscriptBBCode.new(
               acting_user: @acting_user,
-              chained: true,
+              chained: !all_messages_same_user,
               no_link: @opts[:no_link],
               include_reactions: @opts[:include_reactions],
             )
