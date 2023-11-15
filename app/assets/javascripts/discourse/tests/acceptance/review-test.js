@@ -70,21 +70,21 @@ acceptance("Review", function (needs) {
 
     assert.ok(visible(".reject-reason-reviewable-modal"));
     assert.ok(
-      query(".reject-reason-reviewable-modal .title").innerHTML.includes(
-        I18n.t("review.reject_reason.title")
-      ),
+      query(
+        ".reject-reason-reviewable-modal .d-modal__title"
+      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
       "it opens reject reason modal when user is rejected"
     );
 
-    await click(".modal-footer .cancel");
+    await click(".d-modal__footer .cancel");
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_block");
 
     assert.ok(visible(".reject-reason-reviewable-modal"));
     assert.ok(
-      query(".reject-reason-reviewable-modal .title").innerHTML.includes(
-        I18n.t("review.reject_reason.title")
-      ),
+      query(
+        ".reject-reason-reviewable-modal .d-modal__title"
+      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
       "it opens reject reason modal when user is rejected and blocked"
     );
   });

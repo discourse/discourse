@@ -1,4 +1,4 @@
-<div class="modal-footer">
+<div class="d-modal__footer">
   {{#if @canLoginLocal}}
     {{#unless @showSecurityKey}}
       <DButton
@@ -15,7 +15,7 @@
 
     {{#if @showSignupLink}}
       <DButton
-        class="btn-large"
+        class="btn-large btn-flat"
         id="new-account-link"
         @action={{@createAccount}}
         @label="create_account.title"

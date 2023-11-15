@@ -147,7 +147,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       "confirmation modal to dismiss unread is present"
     );
     assert.strictEqual(
-      query(".modal-body").innerText,
+      query(".d-modal__body").innerText,
       I18n.t("topics.bulk.also_dismiss_topics")
     );
     await click("#dismiss-read-confirm");
@@ -177,7 +177,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       "confirmation modal to dismiss unread is present"
     );
     assert.strictEqual(
-      query(".modal-body").innerText,
+      query(".d-modal__body").innerText,
       "Stop tracking these topics so they never show up as unread for me again"
     );
 
