@@ -3,23 +3,21 @@
 .d-modal {
   pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
 
-  &__wrapper {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    z-index: z("modal", "content");
-    overflow: auto;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: z("modal", "content");
+  overflow: auto;
 
-    .-inline & {
-      position: relative;
-    }
+  &.-inline {
+    position: relative;
+  }
 
-    html.keyboard-visible body.ios-safari-composer-hacks & {
-      height: calc(var(--composer-vh, 1vh) * 100);
-    }
+  html.keyboard-visible body.ios-safari-composer-hacks & {
+    height: calc(var(--composer-vh, 1vh) * 100);
   }
 
   &__container {
