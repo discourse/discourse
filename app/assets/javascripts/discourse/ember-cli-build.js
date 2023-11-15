@@ -132,6 +132,12 @@ module.exports = function (defaults) {
         output: {
           publicPath: "auto",
         },
+        cache: isProduction
+          ? false
+          : {
+              type: "memory",
+              maxGenerations: 1,
+            },
         entry: {
           "assets/discourse.js/features/markdown-it.js": {
             import: "./static/markdown-it",
