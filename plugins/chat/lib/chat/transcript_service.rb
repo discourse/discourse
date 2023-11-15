@@ -86,7 +86,7 @@ module Chat
               thread_data = @threads_markdown[msg_data[:message].thread_id]
 
               if !thread_data.nil?
-                rendered_message + "\n" + thread_data
+                rendered_message + "\n\n" + thread_data
               else
                 rendered_message
               end
@@ -185,6 +185,7 @@ module Chat
 
         if message_group.length > 1
           previous_thread_message = nil
+          rendered_thread_markdown.clear
 
           thread_bbcode_tag =
             TranscriptBBCode.new(
