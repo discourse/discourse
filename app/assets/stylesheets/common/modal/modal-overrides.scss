@@ -265,8 +265,8 @@
 }
 
 .d-modal.chat-modal-new-message {
+  align-items: flex-start;
   .d-modal {
-    align-items: flex-start;
     &__container {
       width: var(--modal-max-width);
       margin-top: 1rem;
