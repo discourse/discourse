@@ -70,6 +70,8 @@ module.exports = function (defaults) {
       backburner:
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
     },
+
+    historySupportMiddleware: false,
   });
 
   // TODO: remove me
