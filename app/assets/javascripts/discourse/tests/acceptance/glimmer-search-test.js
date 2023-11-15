@@ -1,4 +1,10 @@
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
@@ -481,6 +487,10 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
         ],
       })
     );
+
+    server.get("/t/2179.json", () => {
+      return helper.response({});
+    });
   });
 
   test("full page search - the right filters are shown", async function (assert) {
@@ -623,6 +633,30 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
         searchFixtures["search/query"].topics[0].slug
       ),
       "adds link from search to composer"
+    );
+  });
+
+  // see https://meta.discourse.org/t/keyboard-navigation-messes-up-the-search-menu/285405
+  test("search menu keyboard navigation - on 'Enter' keydown navigate to selected search item url", async function (assert) {
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "J");
+    await click("#search-button");
+    await fillIn("#search-term", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+
+    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
+    assert.strictEqual(
+      document.activeElement.getAttribute("href"),
+      firstTopicResultUrl,
+      "first search result is highlighted"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+    assert.strictEqual(
+      currentURL(),
+      firstTopicResultUrl,
+      "redirects to selected search result url"
     );
   });
 
