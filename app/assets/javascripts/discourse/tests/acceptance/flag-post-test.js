@@ -130,11 +130,11 @@ acceptance("flagging", function (needs) {
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
-    assert.ok(exists(".modal-body"));
+    assert.ok(exists(".d-modal__body"));
     await fillIn("input.silence-reason", "for breaking the rules");
 
     await click(".perform-penalize");
-    assert.ok(!exists(".modal-body"));
+    assert.ok(!exists(".d-modal__body"));
   });
 
   test("Can delete spammer from spam", async function (assert) {

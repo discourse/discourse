@@ -121,7 +121,7 @@ acceptance("Topic - Bulk Actions - Mobile", function (needs) {
     await click(queryAll("input.bulk-select")[1]);
 
     await click(".bulk-select-actions");
-    await click(".modal-body .delete-topics");
+    await click(".d-modal__body .delete-topics");
 
     assert
       .dom(".topic-bulk-actions-modal")

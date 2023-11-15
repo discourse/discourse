@@ -190,17 +190,21 @@ acceptance("Theme", function (needs) {
     await click(".install-theme-content button.advanced-repo");
 
     assert.notOk(
-      exists(".admin-install-theme-modal .modal-footer .install-theme-warning"),
+      exists(
+        ".admin-install-theme-modal .d-modal__footer .install-theme-warning"
+      ),
       "no Git warning is displayed"
     );
 
-    await click(".admin-install-theme-modal .modal-footer .btn-primary");
+    await click(".admin-install-theme-modal .d-modal__footer .btn-primary");
     assert.ok(
-      exists(".admin-install-theme-modal .modal-footer .install-theme-warning"),
+      exists(
+        ".admin-install-theme-modal .d-modal__footer .install-theme-warning"
+      ),
       "Git warning is displayed"
     );
 
-    await click(".admin-install-theme-modal .modal-footer .btn-danger");
+    await click(".admin-install-theme-modal .d-modal__footer .btn-danger");
 
     assert.notOk(
       exists(".admin-install-theme-modal:visible"),

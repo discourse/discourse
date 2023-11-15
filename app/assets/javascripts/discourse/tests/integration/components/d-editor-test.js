@@ -695,6 +695,33 @@ third line`
     );
   });
 
+  test("Toolbar buttons are only rendered when condition is met", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "shown",
+          group: "extras",
+          icon: "far-smile",
+          action: () => {},
+          condition: () => true,
+        });
+
+        toolbar.addButton({
+          id: "not-shown",
+          group: "extras",
+          icon: "far-frown",
+          action: () => {},
+          condition: () => false,
+        });
+      });
+    });
+
+    await render(hbs`<DEditor/>`);
+
+    assert.ok(exists(".d-editor-button-bar button.shown"));
+    assert.notOk(exists(".d-editor-button-bar button.not-shown"));
+  });
+
   test("toolbar buttons tabindex", async function (assert) {
     await render(hbs`<DEditor />`);
     const buttons = queryAll(".d-editor-button-bar .btn");

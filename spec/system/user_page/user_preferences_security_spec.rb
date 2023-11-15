@@ -26,7 +26,7 @@ describe "User preferences for Security", type: :system do
       find(".security-key .new-security-key").click
       expect(user_preferences_security_page).to have_css("input#security-key-name")
 
-      find(".modal-body input#security-key-name").fill_in(with: "First Key")
+      find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
       find(".add-security-key").click
 
       expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
@@ -38,7 +38,7 @@ describe "User preferences for Security", type: :system do
       find("input#login-account-name").fill_in(with: user.username)
       find("input#login-account-password").fill_in(with: password)
 
-      find(".modal-footer .btn-primary").click
+      find(".d-modal__footer .btn-primary").click
       find("#security-key .btn-primary").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")

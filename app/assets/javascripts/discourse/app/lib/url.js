@@ -247,8 +247,6 @@ const DiscourseURL = EmberObject.extend({
       path = withoutPrefix(path);
     }
 
-    path = rewritePath(path);
-
     if (typeof opts.afterRouteComplete === "function") {
       schedule("afterRender", opts.afterRouteComplete);
     }

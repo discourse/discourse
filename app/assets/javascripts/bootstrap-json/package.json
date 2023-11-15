@@ -9,9 +9,11 @@
   ],
   "ember-addon": {
     "before": [
-      "serve-files-middleware",
-      "history-support-middleware",
+      "broccoli-serve-files",
       "proxy-server-middleware"
+    ],
+    "after": [
+      "broccoli-watcher"
     ]
   },
   "devDependencies": {

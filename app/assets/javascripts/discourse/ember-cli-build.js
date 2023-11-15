@@ -72,6 +72,8 @@ module.exports = function (defaults) {
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
     },
 
+    historySupportMiddleware: false,
+
     trees: {
       app: RawHandlebarsCompiler("app"),
     },
