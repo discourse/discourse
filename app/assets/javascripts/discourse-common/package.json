@@ -31,7 +31,7 @@
   "devDependencies": {
     "@babel/core": "^7.23.3",
     "@ember/optional-features": "^2.0.0",
-    "@embroider/test-setup": "^3.0.2",
+    "@embroider/test-setup": "^3.0.3",
     "@glimmer/component": "^1.1.2",
     "@types/ember": "^4.0.9",
     "@types/ember__application": "^4.0.10",
