@@ -12,7 +12,7 @@ en:
     poll: "poll"
     invalid_argument: "Invalid value '%{value}' for argument '%{argument}'."
 
-    multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
+    multiple_polls_without_name: "When creating multiple polls, include unique names by adding <code>name=example</code> to your <code>[poll]</code> tags."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
 
     default_poll_must_have_at_least_1_option: "Poll must have at least 1 option."
