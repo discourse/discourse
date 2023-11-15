@@ -1191,27 +1191,27 @@
     ember-cli-version-checker "^5.1.2"
     semver "^7.3.5"
 
-"@embroider/addon-shim@^1.0.0", "@embroider/addon-shim@^1.8.3", "@embroider/addon-shim@^1.8.4":
-  version "1.8.6"
-  resolved "https://registry.yarnpkg.com/@embroider/addon-shim/-/addon-shim-1.8.6.tgz#b676991b4fa32c3a98dc7db7dc6cd655029c3f09"
-  integrity sha512-siC9kP78uucEbpDcVyxjkwa76pcs5rVzDVpWO4PDc9EAXRX+pzmUuSTLAK3GztUwx7/PWhz1BenAivqdSvSgfg==
+"@embroider/addon-shim@^1.0.0", "@embroider/addon-shim@^1.8.3", "@embroider/addon-shim@^1.8.4", "@embroider/addon-shim@^1.8.7":
+  version "1.8.7"
+  resolved "https://registry.yarnpkg.com/@embroider/addon-shim/-/addon-shim-1.8.7.tgz#ba2dcb0647ed2cb0c500c835326266b89ceec595"
+  integrity sha512-JGOQNRj3UR0NdWEg8MsM2eqPLncEwSB1IX+rwntIj22TEKj8biqx7GDgSbeH+ZedijmCh354Hf2c5rthrdzUAw==
   dependencies:
-    "@embroider/shared-internals" "^2.2.3"
+    "@embroider/shared-internals" "^2.5.1"
     broccoli-funnel "^3.0.8"
     semver "^7.3.8"
 
-"@embroider/babel-loader-9@3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@embroider/babel-loader-9/-/babel-loader-9-3.1.0.tgz#eae859b82215fc7ee0e69ec867fda7b4eb4de2c0"
-  integrity sha512-TEOaOAsci15Zc3qh8kFAt/XpAsKjw/DzS/1+dv7yNGOeEgqImux+RoZ7DkZkVZNeuA0eAonpY79B+B0J17Us5g==
+"@embroider/babel-loader-9@3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@embroider/babel-loader-9/-/babel-loader-9-3.1.1.tgz#4fa1249d174fcb0c5645cf2619cffd118cc84caf"
+  integrity sha512-8mIDRXvwntYIQc2JFVvGXEppHUJRhw+6aEzHtbCZDr4oOKw55IyY+RHzas3JILRq64owLA+Ox0yu6nkwL1ApRQ==
   dependencies:
     "@babel/core" "^7.14.5"
     babel-loader "^9.0.0"
 
-"@embroider/compat@^3.2.3":
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/@embroider/compat/-/compat-3.2.3.tgz#d2fbfaa29ee54228ba6d16001a47b8ff4aac178f"
-  integrity sha512-sszGNEqi3EiAY6uJesfiCgXwuZwGzdHXmjpiQIoSqJn/kVIRlHi220fGIIX6rJBWW2SAUO6pvTBE8VO89InDWw==
+"@embroider/compat@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@embroider/compat/-/compat-3.3.1.tgz#ce95beac54acf131186f89e646bbca958d7a2906"
+  integrity sha512-0jG2GzJqfqEvsNQ8MiU6B4INYQ5UN3YDzIYgXBuT7QEVxtoEAV3yCQNtJgi/BnIjFu+i3WYqSDjByfToDlgphg==
   dependencies:
     "@babel/code-frame" "^7.14.5"
     "@babel/core" "^7.14.5"
@@ -1220,7 +1220,7 @@
     "@babel/preset-env" "^7.14.5"
     "@babel/runtime" "^7.18.6"
     "@babel/traverse" "^7.14.5"
-    "@embroider/macros" "1.13.2"
+    "@embroider/macros" "1.13.3"
     "@types/babel__code-frame" "^7.0.2"
     "@types/yargs" "^17.0.3"
     assert-never "^1.1.0"
@@ -1255,16 +1255,16 @@
     walk-sync "^3.0.0"
     yargs "^17.0.1"
 
-"@embroider/core@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@embroider/core/-/core-3.3.0.tgz#ebdce3abd7d74e0f348643af355687516df37e79"
-  integrity sha512-QkOLFB3DUuDg6DU7qNAKFNJUyzgmjWNiRLcyrhThYgWeN5h8ilatG3sl5atBN6Jh3wCIJmhjXagafkA82a0abQ==
+"@embroider/core@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@embroider/core/-/core-3.4.1.tgz#47fd6dbbff847c283a000eafe860af003bd7a99d"
+  integrity sha512-zI6ie90S0mXp4zjvhTVxFmBKy0+T0zLqkrOp2vqCjB7zA/sbnivp+N9oqBg6AmRmG08Jw4L/bRx+m4ntHTGvPQ==
   dependencies:
     "@babel/core" "^7.14.5"
     "@babel/parser" "^7.14.5"
     "@babel/traverse" "^7.14.5"
-    "@embroider/macros" "1.13.2"
-    "@embroider/shared-internals" "2.5.0"
+    "@embroider/macros" "1.13.3"
+    "@embroider/shared-internals" "2.5.1"
     assert-never "^1.2.1"
     babel-plugin-ember-template-compilation "^2.1.1"
     broccoli-node-api "^1.7.0"
@@ -1285,17 +1285,17 @@
     typescript-memoize "^1.0.1"
     walk-sync "^3.0.0"
 
-"@embroider/hbs-loader@3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@embroider/hbs-loader/-/hbs-loader-3.0.2.tgz#6e740a06011cb9ed070fbc073d69d0f2b3fc5af2"
-  integrity sha512-uN0w4rbes0xJUvC8YrhkwoTEbMD5wIMPMWF8+3BnLmHcATSFZ34hEmOGorgBB1lLAkv5Vo7xhBulWGwigEvBUg==
+"@embroider/hbs-loader@3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@embroider/hbs-loader/-/hbs-loader-3.0.3.tgz#73eee9a54fa893d4f48b7ffe05c40c26cb491dae"
+  integrity sha512-sI2K3/III1WGGxS+aIf8uW5tgcNiE7APNhThn2ZTwqU47fK20Uz8TJZhst0GfNZFsCsmuQMRUikRJvQU8naSWA==
 
-"@embroider/macros@1.13.2", "@embroider/macros@^1.0.0", "@embroider/macros@^1.10.0", "@embroider/macros@^1.11.0", "@embroider/macros@^1.13.1", "@embroider/macros@^1.8.3":
-  version "1.13.2"
-  resolved "https://registry.yarnpkg.com/@embroider/macros/-/macros-1.13.2.tgz#07dda11313a2539f403404881b729e622a80ca17"
-  integrity sha512-AUgJ71xG8kjuTx8XB1AQNBiebJuXRfhcHr318dCwnQz9VRXdYSnEEqf38XRvGYIoCvIyn/3c72LrSwzaJqknOA==
+"@embroider/macros@1.13.3", "@embroider/macros@^1.0.0", "@embroider/macros@^1.10.0", "@embroider/macros@^1.11.0", "@embroider/macros@^1.13.1", "@embroider/macros@^1.8.3":
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/@embroider/macros/-/macros-1.13.3.tgz#e1ff584e01bcdebb9fa9f6982ecc2ea89886867f"
+  integrity sha512-JUC1aHRLIN2LNy1l+gz7gWkw9JmnsE20GL3LduCzNvCAnEQpMTJhW5BUbEWqdCnAWBPte/M2ofckqBXyTZioTQ==
   dependencies:
-    "@embroider/shared-internals" "2.5.0"
+    "@embroider/shared-internals" "2.5.1"
     assert-never "^1.2.1"
     babel-import-util "^2.0.0"
     ember-cli-babel "^7.26.6"
@@ -1304,10 +1304,10 @@
     resolve "^1.20.0"
     semver "^7.3.2"
 
-"@embroider/shared-internals@2.5.0", "@embroider/shared-internals@^2.0.0", "@embroider/shared-internals@^2.2.3":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@embroider/shared-internals/-/shared-internals-2.5.0.tgz#4a0b5127c589718fae60fc22f81374ed558b944a"
-  integrity sha512-7qzrb7GVIyNqeY0umxoeIvjDC+ay1b+wb2yCVuYTUYrFfLAkLEy9FNI3iWCi3RdQ9OFjgcAxAnwsAiPIMZZ3pQ==
+"@embroider/shared-internals@2.5.1", "@embroider/shared-internals@^2.0.0", "@embroider/shared-internals@^2.5.1":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@embroider/shared-internals/-/shared-internals-2.5.1.tgz#a4d8c057cbff293ef6eb29ee6537f263d206b444"
+  integrity sha512-b+TWDBisH1p6HeTbJIO8pgu1WzfTP0ZSAlZBqjXwOyrS0ZxP1qNYRrEX+IxyzIibEFjXBxeLakiejz3DJvZX5A==
   dependencies:
     babel-import-util "^2.0.0"
     debug "^4.3.2"
@@ -1319,10 +1319,10 @@
     semver "^7.3.5"
     typescript-memoize "^1.0.1"
 
-"@embroider/test-setup@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@embroider/test-setup/-/test-setup-3.0.2.tgz#cfd42a0f61d573396897b958005547d174769188"
-  integrity sha512-cq/xp06CAB8rAGnObeJux7qALnAX2MatMVLjWyGDr3ogS5lHTNXZVCv4ltTM3pJ8EsZWpPM32dtUZqSJFkGibQ==
+"@embroider/test-setup@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@embroider/test-setup/-/test-setup-3.0.3.tgz#938f36db1578ad70f357a09ef4ebd16fca0434f9"
+  integrity sha512-3K5KSyTdnxAkZQill6+TdC/XTRr6226LNwZMsrhRbBM0FFZXw2D8qmJSHPvZLheQx3A1jnF9t1lyrAzrKlg6Yw==
   dependencies:
     lodash "^4.17.21"
     resolve "^1.20.0"
@@ -1336,15 +1336,15 @@
     broccoli-funnel "^3.0.5"
     ember-cli-babel "^7.26.11"
 
-"@embroider/webpack@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@embroider/webpack/-/webpack-3.2.0.tgz#02b874b9367bf23e920da985dac497b94c7ce54f"
-  integrity sha512-+H2NjbExiZBY1m3bj2WRmd+1WxndcMiITwa7CuUnq84iOSzQ7T7DWuSB3FLkFfkKeO/4x40pHV0QilzD9ldlZQ==
+"@embroider/webpack@^3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@embroider/webpack/-/webpack-3.2.1.tgz#9ca88998eb2ed669cdc229a787ce0615461f30c7"
+  integrity sha512-bTm1CWCK0Jln6XH0rmZv+MrhR3XIpUgsZsN+6KRnP0Yna9YHa1/ix3rBzn3ke/3yapzA5dqdXVjCUN0XDFMp/g==
   dependencies:
     "@babel/core" "^7.14.5"
-    "@embroider/babel-loader-9" "3.1.0"
-    "@embroider/hbs-loader" "3.0.2"
-    "@embroider/shared-internals" "2.5.0"
+    "@embroider/babel-loader-9" "3.1.1"
+    "@embroider/hbs-loader" "3.0.3"
+    "@embroider/shared-internals" "2.5.1"
     "@types/supports-color" "^8.1.0"
     assert-never "^1.2.1"
     babel-loader "^8.2.2"
