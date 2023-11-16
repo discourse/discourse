@@ -6,7 +6,6 @@ import DiscourseURL, {
   prefixProtocol,
   userPath,
 } from "discourse/lib/url";
-import User from "discourse/models/user";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setPrefix } from "discourse-common/lib/get-url";
 
@@ -77,8 +76,6 @@ module("Unit | Utility | url", function (hooks) {
 
   test("routeTo with prefix", async function (assert) {
     setPrefix("/forum");
-    logIn();
-    const user = User.current();
 
     sinon.stub(DiscourseURL, "router").get(() => {
       return {
@@ -88,7 +85,7 @@ module("Unit | Utility | url", function (hooks) {
     sinon.stub(DiscourseURL, "handleURL");
     DiscourseURL.routeTo("/my/messages");
     assert.ok(
-      DiscourseURL.handleURL.calledWith(`/u/${user.username}/messages`),
+      DiscourseURL.handleURL.calledWith(`/my/messages`),
       "it should navigate to the messages page"
     );
   });
