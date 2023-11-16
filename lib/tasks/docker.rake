@@ -69,8 +69,12 @@ def migrate_databases(parallel: false, load_plugins: false)
   migrate_env = load_plugins ? "LOAD_PLUGINS=1" : "LOAD_PLUGINS=0"
 
   success = true
-  success &&= run_or_fail("#{migrate_env} bundle exec rake db:migrate")
-  success &&= run_or_fail("#{migrate_env} bundle exec rake parallel:migrate") if parallel
+  success &&=
+    run_or_fail("#{migrate_env} script/silence_successful_output bundle exec rake db:migrate")
+  success &&=
+    run_or_fail(
+      "#{migrate_env} script/silence_successful_output bundle exec rake parallel:migrate",
+    ) if parallel
   success
 end
 
