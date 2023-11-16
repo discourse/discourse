@@ -138,7 +138,7 @@ const chatTranscriptRule = {
       spanToken.attrs = [["title", messageTimeStart]];
 
       spanToken.block = false;
-      if (channelName) {
+      if (channelName && !multiQuote) {
         let channelLinkToken = state.push("link_open", "a", 1);
         channelLinkToken.attrs = [
           ["class", "chat-transcript-channel"],
