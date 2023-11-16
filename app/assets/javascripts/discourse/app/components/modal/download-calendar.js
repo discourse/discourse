@@ -22,12 +22,14 @@ export default class downloadCalendar extends Component {
     if (this.selectedCalendar === "ics") {
       downloadIcs(
         this.args.model.calendar.title,
-        this.args.model.calendar.dates
+        this.args.model.calendar.dates,
+        this.args.model.calendar.recurrenceRule
       );
     } else {
       downloadGoogle(
         this.args.model.calendar.title,
-        this.args.model.calendar.dates
+        this.args.model.calendar.dates,
+        this.args.model.calendar.recurrenceRule
       );
     }
     this.args.closeModal();
