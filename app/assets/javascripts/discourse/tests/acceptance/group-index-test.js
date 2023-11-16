@@ -1,4 +1,4 @@
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
@@ -146,6 +146,9 @@ acceptance("Group Members", function (needs) {
   });
 });
 
+/**
+ * Workaround for https://github.com/tildeio/router.js/pull/335
+ */
 async function visitWithRedirects(url) {
   try {
     await visit(url);
@@ -154,6 +157,7 @@ async function visitWithRedirects(url) {
     if (message !== "TransitionAborted") {
       throw error;
     }
+    await settled();
   }
 }
 

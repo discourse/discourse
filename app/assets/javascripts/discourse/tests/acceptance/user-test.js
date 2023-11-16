@@ -1,5 +1,11 @@
 import EmberObject from "@ember/object";
-import { click, currentRouteName, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  settled,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
@@ -13,6 +19,21 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
+
+/**
+ * Workaround for https://github.com/tildeio/router.js/pull/335
+ */
+async function visitWithRedirects(url) {
+  try {
+    await visit(url);
+  } catch (error) {
+    const { message } = error;
+    if (message !== "TransitionAborted") {
+      throw error;
+    }
+    await settled();
+  }
+}
 
 acceptance("User Routes", function (needs) {
   needs.user();
@@ -384,5 +405,27 @@ acceptance("User - Logout", function (needs) {
     );
 
     await click(".dialog-overlay");
+  });
+});
+
+acceptance("User - /my/ shortcuts for logged-in users", function (needs) {
+  needs.user({ username: "eviltrout" });
+
+  test("Redirects correctly", async function (assert) {
+    await visitWithRedirects("/my/activity");
+    assert.strictEqual(currentURL(), "/u/eviltrout/activity");
+
+    await visitWithRedirects("/my/preferences/account");
+    assert.strictEqual(currentURL(), "/u/eviltrout/preferences/account");
+  });
+});
+
+acceptance("User - /my/ shortcuts for anon users", function () {
+  test("Redirects correctly", async function (assert) {
+    await visitWithRedirects("/my/activity");
+    assert.strictEqual(currentURL(), "/login-preferences");
+
+    await visitWithRedirects("/my/preferences/account");
+    assert.strictEqual(currentURL(), "/login-preferences");
   });
 });
