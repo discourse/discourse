@@ -189,7 +189,7 @@ zh_CN:
       too_long:
         other: 过长（最多 %{count} 个字符）
       too_short:
-        other: 过短（最多 %{count} 个字符）
+        other: 过短（最少 %{count} 个字符）
       wrong_length:
         other: 长度错误（应为 %{count} 个字符）
       other_than: "必须不为 %{count}"
