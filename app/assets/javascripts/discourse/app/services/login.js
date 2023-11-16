@@ -5,7 +5,10 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 @disableImplicitInjections
 export default class LoginService extends Service {
   @action
-  async externalLogin(loginMethod, { signup = false, setLoggingIn = null }) {
+  async externalLogin(
+    loginMethod,
+    { signup = false, setLoggingIn = null } = {}
+  ) {
     try {
       setLoggingIn?.(true);
       await loginMethod.doLogin({ signup });
