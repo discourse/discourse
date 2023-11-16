@@ -51,6 +51,10 @@ acceptance("User Preferences - Second Factor", function (needs) {
         backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"],
       });
     });
+
+    server.get("/u/trusted-session.json", () => {
+      return helper.response({ success: "OK" });
+    });
   });
 
   test("second factor totp", async function (assert) {
