@@ -97,6 +97,7 @@ export default Controller.extend({
       );
 
       this.set("saving", true);
+      const previousParentCategory = model.get("parentCategory");
       model.set("parentCategory", parentCategory);
 
       model
@@ -118,6 +119,8 @@ export default Controller.extend({
         .catch((error) => {
           popupAjaxError(error);
           this.set("saving", false);
+          model.set("parent_category_id", undefined);
+          model.set("parentCategory", previousParentCategory);
         });
     },
 
