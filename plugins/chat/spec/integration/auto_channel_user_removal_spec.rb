@@ -99,7 +99,7 @@ describe "Automatic user removal from channels" do
 
   context "when a user is removed from a group" do
     context "when the user is no longer in any chat_allowed_groups" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
 
       before do
         group.add(user_1)

@@ -4,6 +4,7 @@
   <Styleguide::Component>
     <DModal
       @closeModal={{fn (mut this.inline) true}}
+      @hideHeader={{this.hideHeader}}
       @inline={{this.inline}}
       @title={{this.title}}
       @subtitle={{this.subtitle}}
@@ -23,6 +24,12 @@
   </Styleguide::Component>
 
   <Styleguide::Controls>
+    <Styleguide::Controls::Row @name="@hideHeader">
+      <DToggleSwitch
+        @state={{this.hideHeader}}
+        {{on "click" this.toggleHeader}}
+      />
+    </Styleguide::Controls::Row>
     <Styleguide::Controls::Row @name="@inline">
       <DToggleSwitch @state={{this.inline}} {{on "click" this.toggleInline}} />
     </Styleguide::Controls::Row>

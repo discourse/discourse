@@ -5,5 +5,5 @@ export function createWatchedWordRegExp(word) {
 
 export function toWatchedWord(regexp) {
   const [[regexpString, options]] = Object.entries(regexp);
-  return { regexp: regexpString, ...options };
+  return { ...options, regexp: regexpString };
 }

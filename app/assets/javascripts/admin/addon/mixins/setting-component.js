@@ -5,7 +5,6 @@ import Mixin from "@ember/object/mixin";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { splitString } from "discourse/lib/utilities";
@@ -113,14 +112,6 @@ export default Mixin.create({
 
   @discourseComputed("setting", "buffered.value")
   preview(setting, value) {
-    // A bit hacky, but allows us to use helpers
-    if (setting.setting === "category_style") {
-      const category = this.site.get("categories.firstObject");
-      if (category) {
-        return categoryLinkHTML(category, { categoryStyle: value });
-      }
-    }
-
     const preview = setting.preview;
     if (preview) {
       const escapedValue = preview.replace(/\{\{value\}\}/g, value);

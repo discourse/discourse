@@ -2,13 +2,13 @@
 
 RSpec.describe PostGuardian do
   fab!(:groupless_user) { Fabricate(:user) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:anon) { Fabricate(:anonymous) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:group)
   fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:hidden_post) { Fabricate(:post, topic: topic, hidden: true) }
 

@@ -271,7 +271,6 @@ ar:
       save: "حفظ"
       select: "تحديد"
       return_to_list: "العودة إلى قائمة القنوات"
-      return_to_threads_list: "العودة إلى المناقشات الجارية"
       unread_threads_count:
         zero: "لديك %{count} مناقشة غير مقروءة"
         one: "لديك مناقشة واحدة (%{count}) غير مقروءة"
@@ -346,9 +345,9 @@ ar:
         default_search_placeholder: "#a-channel، @شخص أو شيء"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@شخص"
-        user_search_placeholder: "...إضافة المزيد من المستخدمين"
         disabled_user: "عطَّل الدردشة"
         no_items: "لا توجد عناصر"
+        filter: "المرشح"
       channel_edit_name_slug_modal:
         title: تعديل القناة
         input_placeholder: أضِف اسمًا
@@ -639,7 +638,6 @@ ar:
           other: "+%{count}"
       threads:
         open: "فتح سلسلة دردشة"
-        list: "المناقشات الجارية"
         none: "أنت لا تشارك في أي سلاسل دردشة في هذه القناة."
       draft_channel_screen:
         header: "رسالة جديدة"

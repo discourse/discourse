@@ -1341,8 +1341,6 @@ fr:
         title: "Authentification à deux facteurs"
         enable: "Gérer l'authentification à deux facteurs"
         disable_all: "Tout désactiver"
-        forgot_password: "Mot de passe oublié ?"
-        confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         name: "Nom"
         label: "Code"
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'authentification."
@@ -3451,8 +3449,7 @@ fr:
       action: "Signaler ce message"
       take_action_options:
         default:
-          title: "Intervenir"
-          details: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre d'autres signalements de la communauté."
+          title: "Masquer le message"
         suspend:
           title: "Suspendre l'utilisateur"
           details: "Atteindre le seuil de signalement et suspendre l'utilisateur"
@@ -3469,7 +3466,6 @@ fr:
       ip_address_missing: "(S.O.)"
       hidden_email_address: "(masqué)"
       submit_tooltip: "Soumettre le signalement privé"
-      take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre d'autres signalements de la communauté."
       cant: "Nous sommes désolés, vous ne pouvez pas signaler ce message pour le moment."
       notify_staff: "Notifier les responsables de manière privée"
       formatted_name:
@@ -4129,10 +4125,12 @@ fr:
     form_template_chooser:
       select_template: "Sélectionner des modèles de formulaire"
     form_templates:
+      upload_field:
+        upload: "Envoi"
+        uploading: "En cours d'envoi"
       errors:
         valueMissing:
           default: "Veuillez remplir ce champ."
-          text: "Veuillez remplir ce champ."
           select-one: "Veuillez sélectionner un élément dans la liste."
           select-multiple: "Veuillez sélectionner au moins un élément dans la liste."
           checkbox: "Veuillez cocher cette case si vous souhaitez continuer."

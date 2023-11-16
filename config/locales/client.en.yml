@@ -221,6 +221,8 @@ en:
 
     broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
 
+    broken_plugin_alert: "Caused by plugin '%{name}'"
+
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -1461,8 +1463,6 @@ en:
         title: "Two-Factor Authentication"
         enable: "Manage Two-Factor Authentication"
         disable_all: "Disable All"
-        forgot_password: "Forgot password?"
-        confirm_password_description: "Please confirm your password to continue"
         name: "Name"
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
@@ -1526,6 +1526,7 @@ en:
         never_used: "Never Used"
         not_allowed_error: "The passkey registration process either timed out, was cancelled or is not allowed."
         already_added_error: "You have already registered this passkey. You don’t have to register it again."
+        confirm_button: "or use a passkey"
 
       change_about:
         title: "Change About Me"
@@ -1617,14 +1618,14 @@ en:
 
       name:
         title: "Name"
-        instructions: "your full name (optional)"
-        instructions_required: "Your full name"
+        instructions: "Your full name (optional)."
+        instructions_required: "Your full name."
         required: "Please enter a name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "unique, no spaces, short"
+        instructions: "Unique, no spaces, short."
         short_instructions: "People can mention you as @%{username}"
         available: "Your username is available"
         not_available: "Not available. Try %{suggestion}?"
@@ -1845,6 +1846,7 @@ en:
       confirm_access:
         title: "Confirm access"
         incorrect_password: "The entered password is incorrect."
+        incorrect_passkey: "That passkey is incorrect."
         logged_in_as: "You are logged in as: "
         instructions: "Please confirm your identity in order to complete this action."
         fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
@@ -1855,7 +1857,7 @@ en:
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
-        instructions: "at least %{count} characters"
+        instructions: "At least %{count} characters."
         required: "Please enter a password"
         confirm: "Confirm"
         incorrect_password: "The entered password is incorrect."
@@ -2154,6 +2156,7 @@ en:
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       invite_no_username: "Enter your email address, and we'll send you a password reset email."
+      email-username: "Email or username"
       reset: "Reset Password"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
@@ -2634,6 +2637,7 @@ en:
         private_message: '%{username} sent you a personal message in "%{topic}" - %{site_title}'
         linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
         watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} posted in "%{topic}" - %{site_title}'
         confirm_title: "Notifications enabled - %{site_title}"
         confirm_body: "Success! Notifications have been enabled."
         custom: "Notification from %{username} on %{site_title}"
@@ -3855,8 +3859,8 @@ en:
       take_action: "Take Action…"
       take_action_options:
         default:
-          title: "Take Action"
-          details: "Reach the flag threshold immediately, rather than waiting for more community flags"
+          title: "Hide Post"
+          details: "Reach the flag threshold immediately, hide the post, and agree with all pending flags"
         suspend:
           title: "Suspend User"
           details: "Reach the flag threshold, and suspend the user"
@@ -3882,7 +3886,7 @@ en:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
       submit_tooltip: "Submit the private flag"
-      take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
+      take_action_tooltip: "Reach the flag threshold immediately, hide the post, and agree with all pending flags"
       cant: "Sorry, you can't flag this post at this time."
       notify_staff: "Notify staff privately"
       formatted_name:
@@ -4610,7 +4614,6 @@ en:
       errors:
         valueMissing:
           default: "Please fill out this field."
-          text: "Please fill out this field."
           select-one: "Please select an item in the list."
           select-multiple: "Please select at least one item in the list."
           checkbox: "Please check this box if you want to proceed."

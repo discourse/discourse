@@ -5,9 +5,9 @@ RSpec.describe About do
     include_examples "stats cacheable"
   end
 
-  def register_about_stat_group(name, stats_block, show_in_ui: true)
-    DiscoursePluginRegistry.register_about_stat_group(
-      { name: name, show_in_ui: show_in_ui, block: stats_block },
+  def register_stat(name, stats_block)
+    DiscoursePluginRegistry.register_stat(
+      Stat.new(name, show_in_ui: true, expose_via_api: true, &stats_block),
       stub(enabled?: true),
     )
   end
@@ -17,7 +17,7 @@ RSpec.describe About do
   describe "#stats" do
     it "adds plugin stats to the output" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      register_about_stat_group("some_group", Proc.new { stats })
+      register_stat("some_group", Proc.new { stats })
       expect(described_class.new.stats.with_indifferent_access).to match(
         hash_including(
           some_group_last_day: 1,
@@ -30,7 +30,7 @@ RSpec.describe About do
 
     it "does not add plugin stats to the output if they are missing one of the required keys" do
       stats = { "7_days" => 10, "30_days" => 100, :count => 1000 }
-      register_about_stat_group("some_group", Proc.new { stats })
+      register_stat("some_group", Proc.new { stats })
       expect(described_class.new.stats).not_to match(
         hash_including(
           some_group_last_day: 1,
@@ -43,8 +43,8 @@ RSpec.describe About do
 
     it "does not error if any of the plugin stat blocks throw an error and still adds the non-errored stats to output" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      register_about_stat_group("some_group", Proc.new { stats })
-      register_about_stat_group("other_group", Proc.new { raise StandardError })
+      register_stat("some_group", Proc.new { stats })
+      register_stat("other_group", Proc.new { raise StandardError })
       expect(described_class.new.stats.with_indifferent_access).to match(
         hash_including(
           some_group_last_day: 1,

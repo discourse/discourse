@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::BumpTopic do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
 
   it "can bump a topic" do
     topic = Fabricate(:topic_timer, user: admin).topic

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemeField do
-  fab!(:theme) { Fabricate(:theme) }
+  fab!(:theme)
 
   before do
     SvgSprite.clear_plugin_svg_sprite_cache!
@@ -595,6 +595,57 @@ HTML
         expect(fr1.javascript_cache.content).to include("helloworld")
         expect(fr1.javascript_cache.content).to include("enval1")
       end
+
+      it "is recreated when data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
+      end
+
+      it "is recreated when fallback data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: {} }.deep_stringify_keys.to_yaml,
+        )
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
+      end
     end
 
     describe "prefix injection" do
@@ -773,6 +824,69 @@ HTML
       expect(theme.scss_variables).to include("$test_js: unquote(\"#{upload.url}\");")
 
       expect(theme.scss_variables).not_to include("theme_uploads")
+    end
+  end
+
+  describe "migration JavaScript field" do
+    it "must match a specific format for filename" do
+      field = Fabricate(:migration_theme_field, theme: theme)
+      field.name = "12-some-name"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "12-some-name"),
+      )
+
+      field.name = "00012-some-name"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "00012-some-name"),
+      )
+
+      field.name = "0012some-name"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012some-name"),
+      )
+
+      field.name = "0012"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012"),
+      )
+
+      field.name = "0012-something"
+
+      expect(field.valid?).to eq(true)
+    end
+
+    it "doesn't allow weird characters in the name" do
+      field = Fabricate(:migration_theme_field, theme: theme)
+      field.name = "0012-ëèard"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012-ëèard"),
+      )
+    end
+
+    it "imposes a limit on the name part in the filename" do
+      stub_const(ThemeField, "MIGRATION_NAME_PART_MAX_LENGTH", 10) do
+        field = Fabricate(:migration_theme_field, theme: theme)
+        field.name = "0012-#{"a" * 11}"
+
+        expect(field.valid?).to eq(false)
+        expect(field.errors.full_messages).to contain_exactly(
+          I18n.t("themes.import_error.migrations.name_too_long", count: 10),
+        )
+
+        field.name = "0012-#{"a" * 10}"
+
+        expect(field.valid?).to eq(true)
+      end
     end
   end
 end

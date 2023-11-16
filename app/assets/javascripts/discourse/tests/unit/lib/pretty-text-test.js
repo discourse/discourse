@@ -1,14 +1,14 @@
 import { setupTest } from "ember-qunit";
 import { registerEmoji } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import QUnit, { module, test } from "qunit";
 import { deepMerge } from "discourse-common/lib/object";
+import DiscourseMarkdownIt from "discourse-markdown-it";
+import { extractDataAttribute } from "discourse-markdown-it/engine";
 
 const rawOpts = {
   siteSettings: {
@@ -27,10 +27,12 @@ const rawOpts = {
   getURL: (url) => url,
 };
 
-const defaultOpts = buildOptions(rawOpts);
+function build(options = rawOpts) {
+  return DiscourseMarkdownIt.withDefaultFeatures().withOptions(options);
+}
 
 QUnit.assert.cooked = function (input, expected, message) {
-  const actual = new PrettyText(defaultOpts).cook(input);
+  const actual = build().cook(input);
   this.pushResult({
     result: actual === expected.replace(/\/>/g, ">"),
     actual,
@@ -41,7 +43,7 @@ QUnit.assert.cooked = function (input, expected, message) {
 
 QUnit.assert.cookedOptions = function (input, opts, expected, message) {
   const merged = deepMerge({}, rawOpts, opts);
-  const actual = new PrettyText(buildOptions(merged)).cook(input);
+  const actual = build(merged).cook(input);
   this.pushResult({
     result: actual === expected,
     actual,
@@ -59,12 +61,12 @@ module("Unit | Utility | pretty-text", function (hooks) {
 
   test("buildOptions", function (assert) {
     assert.ok(
-      buildOptions({ siteSettings: { enable_emoji: true } }).discourse.features
+      build({ siteSettings: { enable_emoji: true } }).options.discourse.features
         .emoji,
       "emoji enabled"
     );
     assert.ok(
-      !buildOptions({ siteSettings: { enable_emoji: false } }).discourse
+      !build({ siteSettings: { enable_emoji: false } }).options.discourse
         .features.emoji,
       "emoji disabled"
     );
@@ -733,7 +735,7 @@ eviltrout</p>
 
   test("Oneboxing", function (assert) {
     function matches(input, regexp) {
-      return new PrettyText(defaultOpts).cook(input).match(regexp);
+      return build().cook(input).match(regexp);
     }
 
     assert.ok(
@@ -806,25 +808,25 @@ eviltrout</p>
 
     assert.cooked(
       "```json\n{hello: 'world'}\n```\ntrailing",
-      "<pre><code class=\"lang-json\">{hello: 'world'}\n</code></pre>\n<p>trailing</p>",
+      '<pre data-code-wrap="json"><code class="lang-json">{hello: \'world\'}\n</code></pre>\n<p>trailing</p>',
       "It does not truncate text after a code block."
     );
 
     assert.cooked(
       "```json\nline 1\n\nline 2\n\n\nline3\n```",
-      '<pre><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
+      '<pre data-code-wrap="json"><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
       "it maintains new lines inside a code block."
     );
 
     assert.cooked(
       "hello\nworld\n```json\nline 1\n\nline 2\n\n\nline3\n```",
-      '<p>hello<br>\nworld</p>\n<pre><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
+      '<p>hello<br>\nworld</p>\n<pre data-code-wrap="json"><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
       "it maintains new lines inside a code block with leading content."
     );
 
     assert.cooked(
       "```ruby\n<header>hello</header>\n```",
-      '<pre><code class="lang-ruby">&lt;header&gt;hello&lt;/header&gt;\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby">&lt;header&gt;hello&lt;/header&gt;\n</code></pre>',
       "it escapes code in the code block"
     );
 
@@ -836,7 +838,7 @@ eviltrout</p>
 
     assert.cooked(
       "```ruby\n# cool\n```",
-      '<pre><code class="lang-ruby"># cool\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby"># cool\n</code></pre>',
       "it supports changing the language"
     );
 
@@ -848,19 +850,19 @@ eviltrout</p>
 
     assert.cooked(
       "```ruby\ndef self.parse(text)\n\n  text\nend\n```",
-      '<pre><code class="lang-ruby">def self.parse(text)\n\n  text\nend\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby">def self.parse(text)\n\n  text\nend\n</code></pre>',
       "it allows leading spaces on lines in a code block."
     );
 
     assert.cooked(
       "```ruby\nhello `eviltrout`\n```",
-      '<pre><code class="lang-ruby">hello `eviltrout`\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby">hello `eviltrout`\n</code></pre>',
       "it allows code with backticks in it"
     );
 
     assert.cooked(
       "```eviltrout\nhello\n```",
-      '<pre data-code-wrap="eviltrout"><code class="lang-plaintext">hello\n</code></pre>',
+      '<pre data-code-wrap="eviltrout"><code class="lang-eviltrout">hello\n</code></pre>',
       "it converts to custom block unknown code names"
     );
 
@@ -1313,7 +1315,7 @@ eviltrout</p>
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<pre><code class=\"lang-javascript\">var foo ='foo';
+<pre data-code-wrap=\"javascript\"><code class=\"lang-javascript\">var foo ='foo';
 var bar = 'bar';
 </code></pre>
 </blockquote>
@@ -1328,7 +1330,7 @@ var bar = 'bar';
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<pre><code class=\"lang-javascript\">var foo ='foo';
+<pre data-code-wrap=\"javascript\"><code class=\"lang-javascript\">var foo ='foo';
 var bar = 'bar';
 </code></pre>
 </blockquote>
@@ -1338,7 +1340,7 @@ var bar = 'bar';
   });
 
   test("quotes with trailing formatting", function (assert) {
-    const result = new PrettyText(defaultOpts).cook(
+    const result = build().cook(
       '[quote="EvilTrout, post:123, topic:456, full:true"]\nhello\n[/quote]\n*Test*'
     );
     assert.strictEqual(
@@ -1664,7 +1666,7 @@ var bar = 'bar';
     // "js" is an alias of "javascript"
     assert.cooked(
       "```js\nvar foo ='foo';\nvar bar = 'bar';\n```",
-      `<pre><code class=\"lang-js\">var foo ='foo';
+      `<pre data-code-wrap="js"><code class=\"lang-js\">var foo ='foo';
 var bar = 'bar';
 </code></pre>`,
       "code block with js alias works"
@@ -1673,7 +1675,7 @@ var bar = 'bar';
     // "html" is an alias of "xml"
     assert.cooked(
       "```html\n<strong>fun</strong> times\n```",
-      `<pre><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
+      `<pre data-code-wrap="html"><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
 </code></pre>`,
       "code block with html alias work"
     );

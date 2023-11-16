@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Post do
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:coding_horror)
 
   let(:upload_path) { Discourse.store.upload_path }
 
@@ -214,9 +214,9 @@ RSpec.describe Post do
   end
 
   describe "flagging helpers" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     fab!(:user) { coding_horror }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     it "is_flagged? is accurate" do
       PostActionCreator.off_topic(user, post)
@@ -915,7 +915,7 @@ RSpec.describe Post do
     end
 
     context "with a new reply" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       let(:other_user) { coding_horror }
       let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!" }
       let!(:post) do
@@ -1020,7 +1020,7 @@ RSpec.describe Post do
   end
 
   describe "reply_ids" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     let!(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
     let!(:p2) { Fabricate(:post, topic: topic, post_number: 2, reply_to_post_number: 1) }
     let!(:p3) { Fabricate(:post, topic: topic, post_number: 3) }
@@ -1395,7 +1395,7 @@ RSpec.describe Post do
   end
 
   describe "#set_owner" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1462,7 +1462,7 @@ RSpec.describe Post do
   end
 
   describe "#hide!" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
 
     after { Discourse.redis.flushdb }
 
@@ -1490,7 +1490,7 @@ RSpec.describe Post do
   end
 
   describe "#unhide!" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
 
     before { SiteSetting.unique_posts_mins = 5 }
 
@@ -2090,8 +2090,8 @@ RSpec.describe Post do
   end
 
   describe "#cannot_permanently_delete_reason" do
-    fab!(:post) { Fabricate(:post) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:post)
+    fab!(:admin)
 
     before do
       freeze_time
@@ -2132,6 +2132,17 @@ RSpec.describe Post do
 
       expect(post3.canonical_url).to eq("#{topic_url}?page=2#post_#{post3.post_number}")
       expect(post4.canonical_url).to eq("#{topic_url}?page=2#post_#{post4.post_number}")
+    end
+  end
+
+  describe "relative_url" do
+    it "returns the correct post url with subfolder install" do
+      set_subfolder "/forum"
+      post = Fabricate(:post)
+
+      expect(post.relative_url).to eq(
+        "/forum/t/#{post.topic.slug}/#{post.topic.id}/#{post.post_number}",
+      )
     end
   end
 

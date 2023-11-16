@@ -6,7 +6,7 @@ RSpec.describe SessionController do
   let(:user) { Fabricate(:user) }
   let(:email_token) { Fabricate(:email_token, user: user) }
 
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   let(:admin_email_token) { Fabricate(:email_token, user: admin) }
 
   shared_examples "failed to continue local login" do
@@ -2740,7 +2740,7 @@ RSpec.describe SessionController do
     end
 
     context "for an existing username" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       context "when local login is disabled" do
         before do
@@ -3043,14 +3043,14 @@ RSpec.describe SessionController do
 
   describe "#passkey_login" do
     it "returns 404 if feature is not enabled" do
-      SiteSetting.experimental_passkeys = false
+      SiteSetting.enable_passkeys = false
 
       post "/session/passkey/auth.json"
       expect(response.status).to eq(404)
     end
 
-    context "when experimental_passkeys is enabled" do
-      before { SiteSetting.experimental_passkeys = true }
+    context "when enable_passkeys is enabled" do
+      before { SiteSetting.enable_passkeys = true }
 
       it "fails if public key param is missing" do
         post "/session/passkey/auth.json"

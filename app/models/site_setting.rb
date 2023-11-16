@@ -158,6 +158,14 @@ class SiteSetting < ActiveRecord::Base
       SiteSetting.enable_s3_uploads ? SiteSetting.s3_endpoint : GlobalSetting.s3_endpoint
     end
 
+    def self.enable_s3_transfer_acceleration
+      if SiteSetting.enable_s3_uploads
+        SiteSetting.enable_s3_transfer_acceleration
+      else
+        GlobalSetting.enable_s3_transfer_acceleration
+      end
+    end
+
     def self.enable_s3_uploads
       SiteSetting.enable_s3_uploads || GlobalSetting.use_s3?
     end

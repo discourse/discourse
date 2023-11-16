@@ -119,6 +119,13 @@ describe Chat::MessageBookmarkable do
       bookmark1.reload
       expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
     end
+
+    it "cannot send reminder if the user cannot access the channel" do
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(true)
+      bookmark1.bookmarkable.update!(chat_channel: Fabricate(:private_category_channel))
+      bookmark1.reload
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
+    end
   end
 
   describe "#reminder_handler" do

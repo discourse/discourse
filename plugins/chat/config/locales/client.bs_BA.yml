@@ -62,6 +62,7 @@ bs_BA:
           settings: Postavke
       new_message_modal:
         no_items: "Nema stavki"
+        filter: "Filter"
       direct_message_creator:
         title: Nova poruka
         prefix: "Za:"

@@ -4,7 +4,7 @@ RSpec.describe HashtagsController do
   fab!(:category) { Fabricate(:category, name: "Random", slug: "random") }
   fab!(:tag) { Fabricate(:tag, name: "bug") }
 
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   fab!(:private_category) do
     Fabricate(:private_category, group: group, name: "Staff", slug: "staff")
   end
@@ -100,7 +100,7 @@ RSpec.describe HashtagsController do
       end
 
       context "as admin" do
-        fab!(:admin) { Fabricate(:admin) }
+        fab!(:admin)
 
         before { sign_in(admin) }
 

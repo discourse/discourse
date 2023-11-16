@@ -585,7 +585,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
   describe "with a lightboxed image" do
     fab!(:upload) { Fabricate(:large_image_upload) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     before { Jobs.run_immediately! }
 

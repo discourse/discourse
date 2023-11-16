@@ -36,7 +36,7 @@ module Onebox
         body, excerpt = compute_body(raw["body"])
         ulink = URI(link)
 
-        labels = raw["labels"].map { |l| { name: Emoji.codes_to_img(l["name"]) } }
+        labels = raw["labels"].map { |l| { name: Emoji.codes_to_img(CGI.escapeHTML(l["name"])) } }
 
         {
           link: @url,

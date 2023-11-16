@@ -6,7 +6,7 @@ describe Chat::OneboxHandler do
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:private_channel) { Fabricate(:category_channel, chatable: private_category) }
   fab!(:public_channel) { Fabricate(:category_channel) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user_2) { Fabricate(:user, active: false) }
   fab!(:user_3) { Fabricate(:user, staged: true) }
   fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }
@@ -93,7 +93,7 @@ describe Chat::OneboxHandler do
               </div>
               <div class="chat-transcript-username">#{user.username}</div>
               <div class="chat-transcript-datetime">
-                <a href="/chat/c/-/#{public_channel.id}" title="#{public_message.created_at}">#{public_message.created_at}</a>
+                <a href="/chat/c/-/#{public_channel.id}/#{public_message.id}" title="#{public_message.created_at}">#{public_message.created_at}</a>
               </div>
               <a class="chat-transcript-channel" href="/chat/c/-/#{public_channel.id}">
                 <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">

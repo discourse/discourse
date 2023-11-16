@@ -116,7 +116,6 @@ fa_IR:
       save: "ذخیره"
       select: "انتخاب کنید"
       return_to_list: "بازگشت به فهرست کانال‌ها"
-      return_to_threads_list: "بازگشت به گفتگوی جاری"
       unread_threads_count:
         one: "شما %{count} گفتگوی خوانده نشده دارید"
         other: "شما %{count} گفتگوی خوانده نشده دارید"
@@ -168,6 +167,8 @@ fa_IR:
         tabs:
           members: اعضاء
           settings: تنظیمات
+      new_message_modal:
+        filter: "فیلتر"
       channel_edit_name_slug_modal:
         title: ویرایش کانال
         input_placeholder: افزودن نام
@@ -177,6 +178,7 @@ fa_IR:
         input_placeholder: افزودن توضیحات
         description: به بقیه افراد بگویید که این کانال در مورد چی هست
       direct_message_creator:
+        add_to_channel: "افزودن به کانال"
         title: پیام جدید
         prefix: "به:"
         no_results: هیج نتیجه‌ای نداشت
@@ -302,8 +304,6 @@ fa_IR:
             title: "معمولی"
           tracking:
             title: "پیگیری"
-      threads:
-        list: "گفتگوهای در حال انجام"
       draft_channel_screen:
         header: "پیام جدید"
         cancel: "انصراف"

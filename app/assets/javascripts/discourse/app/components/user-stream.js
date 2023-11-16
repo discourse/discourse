@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { on } from "@ember/object/evented";
+import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import $ from "jquery";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -129,13 +130,21 @@ export default Component.extend(LoadMore, {
       const stream = this.stream;
       stream.findItems().then(() => {
         this.set("loading", false);
-        let element = this._lastDecoratedElement?.nextElementSibling;
-        while (element) {
-          this.trigger("user-stream:new-item-inserted", element);
-          this.appEvents.trigger("decorate-non-stream-cooked-element", element);
-          element = element.nextElementSibling;
-        }
-        this._updateLastDecoratedElement();
+
+        // The next elements are not rendered on the page yet, we need to
+        // wait for that before trying to decorate them.
+        later(() => {
+          let element = this._lastDecoratedElement?.nextElementSibling;
+          while (element) {
+            this.trigger("user-stream:new-item-inserted", element);
+            this.appEvents.trigger(
+              "decorate-non-stream-cooked-element",
+              element
+            );
+            element = element.nextElementSibling;
+          }
+          this._updateLastDecoratedElement();
+        });
       });
     },
   },

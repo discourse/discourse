@@ -886,7 +886,6 @@ et:
         copied_to_clipboard: "Kopeeritud lõikelauale"
         download_backup_codes: "Lae varukoodid alla"
       second_factor:
-        confirm_password_description: "Palun kinnita jätkamiseks oma parooli"
         name: "Nimi"
         label: "Kood"
         rate_limit: "Palun oota enne kui proovid mõnda teist autentimise koodi."
@@ -2149,8 +2148,7 @@ et:
       action: "Tähista postitus"
       take_action_options:
         default:
-          title: "Tegutse"
-          details: "Liigu kohe tähise künniseni, ilma kogukonnalt täiendavaid tähiseid ootamata"
+          title: "Peida postitus"
         suspend:
           title: "Peata kasutaja"
         silence:
@@ -2162,7 +2160,6 @@ et:
       ip_address_missing: "(asjassepuutumatu)"
       hidden_email_address: "(peidetud)"
       submit_tooltip: "Saada privaatne tähis"
-      take_action_tooltip: "Liigu kohe tähise künniseni, ilma kogukonnalt täiendavaid tähiseid ootamata"
       cant: "Vabandame, seda postitust ei saa praegu tähistada."
       notify_staff: "Hoiata meeskonda privaatselt"
       formatted_name:
@@ -2536,6 +2533,9 @@ et:
             review:
               content: "Vaata üle"
     form_templates:
+      upload_field:
+        upload: "Laadi üles"
+        uploading: "Laen üles"
       errors:
         typeMismatch:
           default: "Palun sisesta korrektne väärtus."

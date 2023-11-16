@@ -47,7 +47,7 @@ acceptance("Post Table Wrapper Test", function () {
       "The table is present inside the modal"
     );
 
-    await click(".fullscreen-table-modal .modal-close.close");
+    await click(".fullscreen-table-modal .modal-close");
     await click(
       `${postWithLargeTable} .fullscreen-table-wrapper .btn-expand-table svg`
     );

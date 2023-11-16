@@ -3,8 +3,8 @@
 describe Jobs::PublishGroupMembershipUpdates do
   subject(:job) { described_class.new }
 
-  fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user)
+  fab!(:group)
 
   it "publishes events for added users" do
     events =

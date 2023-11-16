@@ -267,4 +267,72 @@ module.exports = {
       return true;
     }
   },
+
+  pluginScriptTags(config) {
+    const scripts = [];
+
+    const pluginInfos = this.pluginInfos();
+
+    for (const {
+      pluginName,
+      directoryName,
+      hasJs,
+      hasAdminJs,
+    } of pluginInfos) {
+      if (hasJs) {
+        scripts.push({
+          src: `plugins/${directoryName}.js`,
+          name: pluginName,
+        });
+      }
+
+      if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
+        scripts.push({
+          src: `plugins/${directoryName}_extras.js`,
+          name: pluginName,
+        });
+      }
+
+      if (hasAdminJs) {
+        scripts.push({
+          src: `plugins/${directoryName}_admin.js`,
+          name: pluginName,
+        });
+      }
+    }
+
+    return scripts
+      .map(
+        ({ src, name }) =>
+          `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
+      )
+      .join("\n");
+  },
+
+  pluginTestScriptTags(config) {
+    return this.pluginInfos()
+      .filter(({ hasTests }) => hasTests)
+      .map(
+        ({ directoryName, pluginName }) =>
+          `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
+      )
+      .join("\n");
+  },
+
+  contentFor(type, config) {
+    if (!this.shouldLoadPlugins()) {
+      return;
+    }
+
+    switch (type) {
+      case "test-plugin-js":
+        return this.pluginScriptTags(config);
+
+      case "test-plugin-tests-js":
+        return this.pluginTestScriptTags(config);
+
+      case "test-plugin-css":
+        return `<link rel="stylesheet" href="${config.rootURL}bootstrap/plugin-css-for-tests.css" data-discourse-plugin="_all" />`;
+    }
+  },
 };

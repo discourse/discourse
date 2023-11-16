@@ -33,9 +33,13 @@ Fabricator(:private_category_channel, from: :category_channel) do
 end
 
 Fabricator(:direct_message_channel, from: :chat_channel) do
-  transient :users, following: true, with_membership: true
+  transient :users, :group, following: true, with_membership: true
   chatable do |attrs|
-    Fabricate(:direct_message, users: attrs[:users] || [Fabricate(:user), Fabricate(:user)])
+    Fabricate(
+      :direct_message,
+      users: attrs[:users] || [Fabricate(:user), Fabricate(:user)],
+      group: attrs[:group] || false,
+    )
   end
   status { :open }
   name nil
@@ -63,10 +67,10 @@ end
 Fabricator(:chat_message_without_service, class_name: "Chat::Message") do
   user
   chat_channel
-  message { Faker::Lorem.paragraph_by_chars(number: 500).gsub("...", "…").gsub("..", "…") }
+  message { Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length) }
 
   after_build { |message, attrs| message.cook }
-  after_create { |message, attrs| message.create_mentions }
+  after_create { |message, attrs| message.upsert_mentions }
 end
 
 Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
@@ -86,17 +90,28 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
     Group.refresh_automatic_groups!
     channel.add(user)
 
-    resolved_class.call(
-      chat_channel_id: channel.id,
-      guardian: user.guardian,
-      message:
-        transients[:message] ||
-          Faker::Lorem.paragraph_by_chars(number: 500).gsub("...", "…").gsub("..", "…"),
-      thread_id: transients[:thread]&.id,
-      in_reply_to_id: transients[:in_reply_to]&.id,
-      upload_ids: transients[:upload_ids],
-      incoming_chat_webhook: transients[:incoming_chat_webhook],
-    ).message
+    result =
+      resolved_class.call(
+        chat_channel_id: channel.id,
+        guardian: user.guardian,
+        message:
+          transients[:message] ||
+            Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
+        thread_id: transients[:thread]&.id,
+        in_reply_to_id: transients[:in_reply_to]&.id,
+        upload_ids: transients[:upload_ids],
+        incoming_chat_webhook: transients[:incoming_chat_webhook],
+        process_inline: true,
+      )
+
+    if result.failure?
+      raise RSpec::Expectations::ExpectationNotMetError.new(
+              "Service `#{resolved_class}` failed, see below for step details:\n\n" +
+                result.inspect_steps.inspect,
+            )
+    end
+
+    result.message_instance
   end
 end
 

@@ -1,5 +1,5 @@
 <DModal
-  class="login-modal"
+  class="login-modal -large"
   @bodyClass={{this.modalBodyClasses}}
   @closeModal={{@closeModal}}
   @flash={{this.flash}}
@@ -16,8 +16,9 @@
       />
       {{#if this.showLoginButtons}}
         <LoginButtons
-          @externalLogin={{this.externalLogin}}
+          @externalLogin={{this.externalLoginAction}}
           @passkeyLogin={{this.passkeyLogin}}
+          @context="login"
         />
       {{/if}}
     {{/if}}
@@ -71,12 +72,15 @@
           <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
         </div>
       {{/unless}}
-      <div class="login-right-side">
-        <LoginButtons
-          @externalLogin={{this.externalLogin}}
-          @passkeyLogin={{this.passkeyLogin}}
-        />
-      </div>
+      {{#if this.hasAtLeastOneLoginButton}}
+        <div class="login-right-side">
+          <LoginButtons
+            @externalLogin={{this.externalLoginAction}}
+            @passkeyLogin={{this.passkeyLogin}}
+            @context="login"
+          />
+        </div>
+      {{/if}}
     {{/if}}
   </:body>
 </DModal>

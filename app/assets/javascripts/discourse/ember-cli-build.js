@@ -13,6 +13,8 @@ const DeprecationSilencer = require("deprecation-silencer");
 const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
+const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -69,6 +71,12 @@ module.exports = function (defaults) {
       backburner:
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
     },
+
+    historySupportMiddleware: false,
+
+    trees: {
+      app: RawHandlebarsCompiler("app"),
+    },
   });
 
   // TODO: remove me
@@ -78,9 +86,6 @@ module.exports = function (defaults) {
 
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(vendorJs + "bootbox.js");
-  app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
-    type: "test",
-  });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
   app.import(
@@ -95,10 +100,6 @@ module.exports = function (defaults) {
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
   const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
-
-  const markdownItBundleTree = app.project
-    .findAddonByName("pretty-text")
-    .treeForMarkdownItBundle();
 
   const testStylesheetTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
@@ -116,10 +117,6 @@ module.exports = function (defaults) {
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    funnel(`${vendorJs}/highlightjs`, {
-      files: ["highlight-test-bundle.min.js"],
-      destDir: "assets/highlightjs",
-    }),
     generateWorkboxTree(),
     concat(adminTree, {
       inputFiles: ["**/*.js"],
@@ -129,19 +126,32 @@ module.exports = function (defaults) {
       inputFiles: ["**/*.js"],
       outputFile: `assets/wizard.js`,
     }),
-    concat(markdownItBundleTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/markdown-it-bundle.js`,
-    }),
     generateScriptsTree(app),
     discoursePluginsTree,
     testStylesheetTree,
   ];
 
   const appTree = compatBuild(app, Webpack, {
+    staticAppPaths: ["static"],
     packagerOptions: {
       webpackConfig: {
         devtool: "source-map",
+        output: {
+          publicPath: "auto",
+        },
+        cache: isProduction
+          ? false
+          : {
+              type: "memory",
+              maxGenerations: 1,
+            },
+        entry: {
+          "assets/discourse.js/features/markdown-it.js": {
+            import: "./static/markdown-it",
+            dependOn: "assets/discourse.js",
+            runtime: false,
+          },
+        },
         externals: [
           function ({ request }, callback) {
             if (
@@ -150,8 +160,6 @@ module.exports = function (defaults) {
               (request === "jquery" ||
                 request.startsWith("admin/") ||
                 request.startsWith("wizard/") ||
-                (request.startsWith("pretty-text/engines/") &&
-                  request !== "pretty-text/engines/discourse-markdown-it") ||
                 request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))
             ) {
@@ -184,6 +192,39 @@ module.exports = function (defaults) {
             },
           ],
         },
+        plugins: [
+          // The server use this output to map each asset to its chunks
+          new StatsWriterPlugin({
+            filename: "assets.json",
+            stats: {
+              all: false,
+              entrypoints: true,
+            },
+            transform({ entrypoints }) {
+              let names = Object.keys(entrypoints);
+              let output = {};
+
+              for (let name of names.sort()) {
+                let assets = entrypoints[name].assets.map(
+                  (asset) => asset.name
+                );
+
+                let parent = names.find((parentName) =>
+                  name.startsWith(parentName + "/")
+                );
+
+                if (parent) {
+                  name = name.slice(parent.length + 1);
+                  output[parent][name] = { assets };
+                } else {
+                  output[name] = { assets };
+                }
+              }
+
+              return JSON.stringify(output, null, 2);
+            },
+          }),
+        ],
       },
     },
   });

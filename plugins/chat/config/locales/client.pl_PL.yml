@@ -260,7 +260,6 @@ pl_PL:
       save: "Zapisz"
       select: "Wybierz"
       return_to_list: "Powrót do listy kanałów"
-      return_to_threads_list: "Wróć do trwających dyskusji"
       unread_threads_count:
         one: "Masz %{count} nieprzeczytaną dyskusje"
         few: "Masz %{count} nieprzeczytane dyskusje"
@@ -311,6 +310,7 @@ pl_PL:
         yesterday: Wczoraj
       members_view:
         filter_placeholder: Znajdź członków
+        add_member: Dodaj członka
       about_view:
         associated_topic: Powiązany temat
         associated_category: Połączona kategoria
@@ -331,9 +331,15 @@ pl_PL:
         default_search_placeholder: "#kanał, @ktoś lub cokolwiek"
         default_channel_search_placeholder: "#kanał"
         default_user_search_placeholder: "@ktoś"
-        user_search_placeholder: "...dodaj więcej użytkowników"
+        user_search_placeholder: "...dodaj więcej członków"
         disabled_user: "wyłączył czat"
         no_items: "Brak elementu"
+        create_group_placeholder: "Nazwa czatu grupowego (opcjonalnie)"
+        participants_counter: "%{selection_count}/%{max} uczestników"
+        new_group_chat: "Nowy czat grupowy"
+        filter: "Filtr"
+        cant_add_more_members: "Osiągnięto maksymalną liczbę członków"
+        create_new_group_chat: "Utwórz czat grupowy"
       channel_edit_name_slug_modal:
         title: Edytuj kanał
         input_placeholder: Dodaj nazwę
@@ -345,10 +351,16 @@ pl_PL:
         input_placeholder: Dodaj opis
         description: Powiedz innym, o czym jest ten kanał
       direct_message_creator:
+        add_to_channel: "Dodaj do kanału"
         title: Nowa wiadomość
         prefix: "Do:"
         no_results: Brak wyników
         selected_user_title: "Odznacz %{username}"
+        members_counter:
+          one: "%{count}/%{max} członek"
+          few: "%{count}/%{max} członków"
+          many: "%{count}/%{max} członków"
+          other: "%{count}/%{max} członków"
       channel:
         no_memberships: Ten kanał nie ma członków
         no_memberships_found: Nie znaleziono członków
@@ -602,7 +614,6 @@ pl_PL:
           other: "+%{count}"
       threads:
         open: "Otwórz wątek"
-        list: "Trwające dyskusje"
         none: "Nie uczestniczysz w żadnych wątkach na tym kanale."
       draft_channel_screen:
         header: "Nowa wiadomość"

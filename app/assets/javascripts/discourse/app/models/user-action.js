@@ -4,8 +4,8 @@ import { postUrl } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
 import UserActionGroup from "discourse/models/user-action-group";
-import categoryFromId from "discourse-common/utils/category-macro";
 import discourseComputed from "discourse-common/utils/decorators";
+import Category from "./category";
 
 const UserActionTypes = {
   likes_given: 1,
@@ -27,7 +27,10 @@ Object.keys(UserActionTypes).forEach(
 );
 
 const UserAction = RestModel.extend({
-  category: categoryFromId("category_id"),
+  @discourseComputed("category_id")
+  category() {
+    return Category.findById(this.category_id);
+  },
 
   @discourseComputed("action_type")
   descriptionKey(action) {

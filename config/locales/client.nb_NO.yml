@@ -1127,8 +1127,6 @@ nb_NO:
         title: "To-faktor autentisering"
         enable: "deaktiver totrinnsverifisering"
         disable_all: "Deaktiver Alle"
-        forgot_password: "Glemt passord?"
-        confirm_password_description: "Bekreft passordet ditt for å fortsette"
         name: "Navn"
         label: "Kode"
         rate_limit: "Vennligst vent før du prøver en annen autentiseringskode."
@@ -2846,8 +2844,7 @@ nb_NO:
       action: "Rapporter innlegg"
       take_action_options:
         default:
-          title: "Ta handling"
-          details: "Oppnå rapporteringsterskel umiddelbart, i stedet for å vente på flere rapporteringer."
+          title: "Skjul innlegg"
         suspend:
           title: "Steng ute bruker"
           details: "Nå flaggterskelen, og suspendere brukeren"
@@ -2864,7 +2861,6 @@ nb_NO:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skjult)"
       submit_tooltip: "Rapporter privat"
-      take_action_tooltip: "Oppnå rapporteringsterskel umiddelbart, i stedet for å vente på flere rapporteringer."
       cant: "Beklager, du kan ikke rapportere dette innlegget nå."
       notify_staff: "Gjør stab oppmerksom på dette privat"
       formatted_name:
@@ -3366,6 +3362,9 @@ nb_NO:
               content: "Gjennomgang"
     until: "Inntil:"
     form_templates:
+      upload_field:
+        upload: "Bilde"
+        uploading: "Laster opp bilde"
       errors:
         typeMismatch:
           default: "Skriv inn en gyldig verdi."

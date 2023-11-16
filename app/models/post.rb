@@ -646,6 +646,10 @@ class Post < ActiveRecord::Base
     "#{Discourse.base_url}#{url}"
   end
 
+  def relative_url
+    "#{Discourse.base_path}#{url}"
+  end
+
   def url(opts = nil)
     opts ||= {}
 

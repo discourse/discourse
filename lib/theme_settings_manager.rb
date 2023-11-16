@@ -7,10 +7,20 @@ class ThemeSettingsManager
     ThemeSetting.types
   end
 
+  def self.cast_row_value(row)
+    type_name = self.types.invert[row.data_type].downcase.capitalize
+    klass = "ThemeSettingsManager::#{type_name}".constantize
+    klass.cast(row.value)
+  end
+
   def self.create(name, default, type, theme, opts = {})
     type_name = self.types.invert[type].downcase.capitalize
     klass = "ThemeSettingsManager::#{type_name}".constantize
     klass.new(name, default, theme, opts)
+  end
+
+  def self.cast(value)
+    value
   end
 
   def initialize(name, default, theme, opts = {})
@@ -128,23 +138,31 @@ class ThemeSettingsManager
   end
 
   class Bool < self
+    def self.cast(value)
+      [true, "true"].include?(value)
+    end
+
     def value
-      [true, "true"].include?(super)
+      self.class.cast(super)
     end
 
     def value=(new_value)
-      new_value = ([true, "true"].include?(new_value)).to_s
+      new_value = (self.class.cast(new_value)).to_s
       super(new_value)
     end
   end
 
   class Integer < self
+    def self.cast(value)
+      value.to_i
+    end
+
     def value
-      super.to_i
+      self.class.cast(super)
     end
 
     def value=(new_value)
-      super(new_value.to_i)
+      super(self.class.cast(new_value))
     end
 
     def is_valid_value?(new_value)
@@ -153,12 +171,16 @@ class ThemeSettingsManager
   end
 
   class Float < self
+    def self.cast(value)
+      value.to_f
+    end
+
     def value
-      super.to_f
+      self.class.cast(super)
     end
 
     def value=(new_value)
-      super(new_value.to_f)
+      super(self.class.cast(new_value))
     end
 
     def is_valid_value?(new_value)

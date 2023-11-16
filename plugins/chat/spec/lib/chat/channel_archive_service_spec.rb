@@ -8,7 +8,7 @@ describe Chat::ChannelArchiveService do
 
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:user) { Fabricate(:user, admin: true) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:category)
 
   let(:topic_params) { { topic_title: "This will be a new topic", category_id: category.id } }
 
@@ -304,7 +304,7 @@ describe Chat::ChannelArchiveService do
     end
 
     context "when archiving to an existing topic" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       let(:topic_params) { { topic_id: topic.id } }
 
       before { 3.times { Fabricate(:post, topic: topic) } }

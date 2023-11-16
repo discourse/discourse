@@ -79,8 +79,8 @@ describe Chat::Statistics do
     it "counts non-deleted messages created in all status channels in the time period accurately" do
       about_messages = described_class.about_messages
       expect(about_messages[:last_day]).to eq(1)
-      expect(about_messages["7_days"]).to eq(3)
-      expect(about_messages["30_days"]).to eq(7)
+      expect(about_messages[:"7_days"]).to eq(3)
+      expect(about_messages[:"30_days"]).to eq(7)
       expect(about_messages[:previous_30_days]).to eq(2)
       expect(about_messages[:count]).to eq(10)
     end
@@ -90,8 +90,8 @@ describe Chat::Statistics do
     it "counts open channels created in the time period accurately" do
       about_channels = described_class.about_channels
       expect(about_channels[:last_day]).to eq(1)
-      expect(about_channels["7_days"]).to eq(3)
-      expect(about_channels["30_days"]).to eq(5)
+      expect(about_channels[:"7_days"]).to eq(3)
+      expect(about_channels[:"30_days"]).to eq(5)
       expect(about_channels[:previous_30_days]).to eq(1)
       expect(about_channels[:count]).to eq(6)
     end
@@ -101,8 +101,8 @@ describe Chat::Statistics do
     it "counts any users who have sent any message to a chat channel in the time periods accurately" do
       about_users = described_class.about_users
       expect(about_users[:last_day]).to eq(1)
-      expect(about_users["7_days"]).to eq(2)
-      expect(about_users["30_days"]).to eq(3)
+      expect(about_users[:"7_days"]).to eq(2)
+      expect(about_users[:"30_days"]).to eq(3)
       expect(about_users[:previous_30_days]).to eq(2)
       expect(about_users[:count]).to eq(4)
     end

@@ -3,8 +3,8 @@
 require "csv"
 
 RSpec.describe Admin::WatchedWordsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
 
   describe "#index" do
     context "when logged in as non-staff user" do
@@ -51,17 +51,14 @@ RSpec.describe Admin::WatchedWordsController do
           ),
         )
         expect(watched_words["compiled_regular_expressions"]["block"].first).to eq(
-          WordWatcher
-            .serializable_word_matcher_regexp(:block, engine: :js)
-            .first
-            .deep_stringify_keys,
+          WordWatcher.serialized_regexps_for_action(:block, engine: :js).first.deep_stringify_keys,
         )
       end
     end
   end
 
   describe "#destroy" do
-    fab!(:watched_word) { Fabricate(:watched_word) }
+    fab!(:watched_word)
 
     context "when logged in as a non-staff user" do
       before { sign_in(user) }

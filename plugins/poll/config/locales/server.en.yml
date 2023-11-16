@@ -6,12 +6,13 @@ en:
     poll_minimum_trust_level_to_create: "Define the minimum trust level needed to create polls."
     poll_groupable_user_fields: "A set of user field names that can be used to group and filter poll results."
     poll_export_data_explorer_query_id: "ID of the Data Explorer Query to use for exporting poll results (0 to disable)."
+    poll_default_public: "When creating a new poll, enable the 'show who voted' option by default."
 
   poll:
     poll: "poll"
     invalid_argument: "Invalid value '%{value}' for argument '%{argument}'."
 
-    multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
+    multiple_polls_without_name: "When creating multiple polls, include unique names by adding <code>name=example</code> to your <code>[poll]</code> tags."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
 
     default_poll_must_have_at_least_1_option: "Poll must have at least 1 option."

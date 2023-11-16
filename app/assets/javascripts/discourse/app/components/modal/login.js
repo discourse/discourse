@@ -30,8 +30,8 @@ export default class Login extends Component {
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
-  @tracked flash = this.args.model?.flash;
-  @tracked flashType = this.args.model?.flashType;
+  @tracked flash = this.args.model.flash;
+  @tracked flashType = this.args.model.flashType;
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked
   canLoginLocalWithEmail = this.siteSettings.enable_local_logins_via_email;
@@ -48,7 +48,8 @@ export default class Login extends Component {
 
   constructor() {
     super(...arguments);
-    if (this.args.model?.isExternalLogin) {
+
+    if (this.args.model.isExternalLogin) {
       this.externalLogin(this.args.model.externalLoginMethod, {
         signup: this.args.model.signup,
       });
@@ -57,7 +58,7 @@ export default class Login extends Component {
 
   get awaitingApproval() {
     return (
-      this.args.model?.awaitingApproval &&
+      this.args.model.awaitingApproval &&
       !this.canLoginLocal &&
       !this.canLoginLocalWithEmail
     );
@@ -95,7 +96,7 @@ export default class Login extends Component {
   get canUsePasskeys() {
     return (
       this.siteSettings.enable_local_logins &&
-      this.siteSettings.experimental_passkeys &&
+      this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
   }
@@ -117,28 +118,10 @@ export default class Login extends Component {
   @action
   async passkeyLogin(mediation = "optional") {
     try {
-      // we need to check isConditionalMediationAvailable for Firefox
-      // without it, Firefox will throw console errors
-      // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
-      // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
-      if (
-        mediation === "conditional" &&
-        this.capabilities.isFirefox &&
-        window.PublicKeyCredential
-      ) {
-        const isCMA =
-          // eslint-disable-next-line no-undef
-          await PublicKeyCredential.isConditionalMediationAvailable();
-        if (!isCMA) {
-          return;
-        }
-      }
-      const response = await ajax("/session/passkey/challenge.json");
-
       const publicKeyCredential = await getPasskeyCredential(
-        response.challenge,
-        (errorMessage) => this.dialog.alert(errorMessage),
-        mediation
+        (e) => this.dialog.alert(e),
+        mediation,
+        this.capabilities.isFirefox
       );
 
       if (publicKeyCredential) {
@@ -148,7 +131,13 @@ export default class Login extends Component {
         });
 
         if (authResult && !authResult.error) {
-          window.location.reload();
+          const destinationUrl = cookie("destination_url");
+          if (destinationUrl) {
+            removeCookie("destination_url");
+            window.location.assign(destinationUrl);
+          } else {
+            window.location.reload();
+          }
         } else {
           this.dialog.alert(authResult.error);
         }
@@ -332,12 +321,7 @@ export default class Login extends Component {
     }
   }
 
-  @action
-  async externalLogin(loginMethod, { signup = false } = {}) {
-    if (this.loginDisabled) {
-      return;
-    }
-
+  async externalLogin(loginMethod, { signup }) {
     try {
       this.loggingIn = true;
       await loginMethod.doLogin({ signup });
@@ -345,6 +329,15 @@ export default class Login extends Component {
     } catch {
       this.loggingIn = false;
     }
+  }
+
+  @action
+  async externalLoginAction(loginMethod) {
+    if (this.loginDisabled) {
+      return;
+    }
+
+    await this.externalLogin(loginMethod, { signup: false });
   }
 
   @action

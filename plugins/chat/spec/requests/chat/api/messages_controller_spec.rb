@@ -2,7 +2,7 @@
 
 RSpec.describe Chat::Api::ChannelMessagesController do
   fab!(:current_user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   before do
     SiteSetting.chat_enabled = true
@@ -68,7 +68,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
     describe "for category" do
       fab!(:user_2) { Fabricate(:user) }
-      fab!(:chat_channel) { Fabricate(:chat_channel) }
+      fab!(:chat_channel)
       fab!(:message) { Fabricate(:chat_message, chat_channel: chat_channel, user: current_user) }
       fab!(:user_2_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user_2) }
 
@@ -178,11 +178,11 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:another_user) { Fabricate(:user) }
 
     describe "for category" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
       fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
 
       it_behaves_like "chat_message_restoration"
@@ -199,8 +199,8 @@ RSpec.describe Chat::Api::ChannelMessagesController do
   end
 
   describe "#create" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:user)
+    fab!(:category)
 
     let(:message) { "This is a message" }
 

@@ -54,8 +54,8 @@
 <EmojiPicker
   @isActive={{this.emojiPickerIsActive}}
   @isEditorFocused={{this.isEditorFocused}}
-  @emojiSelected={{action "emojiSelected"}}
-  @onEmojiPickerClose={{action "closeEmojiPicker"}}
+  @emojiSelected={{this.emojiSelected}}
+  @onEmojiPickerClose={{this.closeEmojiPicker}}
 />
 
 <SettingValidationMessage @message={{this.validationMessage}} />

@@ -79,8 +79,8 @@
             <Input
               @type={{this.text}}
               @value={{this.newFieldName}}
-              @enter={{action "addField"}}
-              @escape-press={{action "cancelAddField"}}
+              @enter={{this.addField}}
+              @escape-press={{this.cancelAddField}}
             />
             <DButton
               @action={{fn this.addField this.newFieldName}}
@@ -126,5 +126,5 @@
   @placeholder={{this.placeholder}}
   @htmlPlaceholder={{true}}
   @save={{this.save}}
-  @setWarning={{action "setWarning"}}
+  @setWarning={{this.setWarning}}
 />

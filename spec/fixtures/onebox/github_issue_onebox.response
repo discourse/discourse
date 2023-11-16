@@ -1,0 +1,73 @@
+{
+  "url": "https://api.github.com/repos/romanrizzi/avalancha-parser/issues/2",
+  "repository_url": "https://api.github.com/repos/romanrizzi/avalancha-parser",
+  "labels_url": "https://api.github.com/repos/romanrizzi/avalancha-parser/issues/2/labels{/name}",
+  "comments_url": "https://api.github.com/repos/romanrizzi/avalancha-parser/issues/2/comments",
+  "events_url": "https://api.github.com/repos/romanrizzi/avalancha-parser/issues/2/events",
+  "html_url": "https://github.com/romanrizzi/avalancha-parser/issues/2",
+  "id": 1957276127,
+  "node_id": "I_kwDOEdKQe850qanf",
+  "number": 2,
+  "title": "Test issue #2",
+  "user": {
+    "login": "romanrizzi",
+    "id": 5025816,
+    "node_id": "MDQ6VXNlcjUwMjU4MTY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5025816?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/romanrizzi",
+    "html_url": "https://github.com/romanrizzi",
+    "followers_url": "https://api.github.com/users/romanrizzi/followers",
+    "following_url": "https://api.github.com/users/romanrizzi/following{/other_user}",
+    "gists_url": "https://api.github.com/users/romanrizzi/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/romanrizzi/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/romanrizzi/subscriptions",
+    "organizations_url": "https://api.github.com/users/romanrizzi/orgs",
+    "repos_url": "https://api.github.com/users/romanrizzi/repos",
+    "events_url": "https://api.github.com/users/romanrizzi/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/romanrizzi/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 6119137046,
+      "node_id": "LA_kwDOEdKQe88AAAABbLqfFg",
+      "url": "https://api.github.com/repos/romanrizzi/avalancha-parser/labels/Test%20:+1:%20%3Cstyle%3Ebody%20%7Bdisplay:%20none%7D%3C/style%3E",
+      "name": "Test :+1: <style>body {display: none}</style>",
+      "color": "0E8A16",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignee": null,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-10-23T14:13:07Z",
+  "updated_at": "2023-10-23T14:13:07Z",
+  "closed_at": null,
+  "author_association": "OWNER",
+  "active_lock_reason": null,
+  "body": "test",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/romanrizzi/avalancha-parser/issues/2/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/romanrizzi/avalancha-parser/issues/2/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null
+}

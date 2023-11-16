@@ -2,8 +2,8 @@
 
 describe "Group members", type: :system do
   let(:group_page) { PageObjects::Pages::Group.new }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:admin)
+  fab!(:group)
 
   before { sign_in(admin) }
 

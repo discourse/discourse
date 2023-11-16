@@ -3,9 +3,9 @@
 require "post_merger"
 
 RSpec.describe PostMerger do
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:moderator)
+  fab!(:admin)
+  fab!(:user)
   let(:post) { create_post }
   let(:topic) { post.topic }
 

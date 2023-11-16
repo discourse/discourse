@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Email::MessageIdService do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:second_post) { Fabricate(:post, topic: topic) }
 

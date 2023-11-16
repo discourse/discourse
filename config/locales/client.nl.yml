@@ -1341,8 +1341,6 @@ nl:
         title: "Tweeledige verificatie"
         enable: "Tweeledige verificatie beheren"
         disable_all: "Alles uitschakelen"
-        forgot_password: "Wachtwoord vergeten?"
-        confirm_password_description: "Bevestig je wachtwoord om door te gaan"
         name: "Naam"
         label: "Code"
         rate_limit: "Wacht even voordat je een andere verificatiecode probeert."
@@ -3448,8 +3446,7 @@ nl:
       action: "Bericht markeren"
       take_action_options:
         default:
-          title: "Actie ondernemen"
-          details: "De markeerdrempel direct bereiken, in plaats van op meer markeringen door de community te wachten"
+          title: "Bericht verbergen"
         suspend:
           title: "Gebruiker schorsen"
           details: "De markeerdrempel bereiken en de gebruiker schorsen"
@@ -3466,7 +3463,6 @@ nl:
       ip_address_missing: "(N.v.t.)"
       hidden_email_address: "(verborgen)"
       submit_tooltip: "Stuur de privémarkering"
-      take_action_tooltip: "De markeerdrempel direct bereiken, in plaats van op meer markeringen door de community te wachten"
       cant: "Sorry, je kunt dit bericht momenteel niet markeren."
       notify_staff: "Medewerkers privémelding sturen"
       formatted_name:
@@ -4126,10 +4122,12 @@ nl:
     form_template_chooser:
       select_template: "Selecteer formuliersjablonen"
     form_templates:
+      upload_field:
+        upload: "Upload"
+        uploading: "Uploaden"
       errors:
         valueMissing:
           default: "Vul dit veld in."
-          text: "Vul dit veld in."
           select-one: "Selecteer een item in de lijst."
           select-multiple: "Selecteer ten minste één item in de lijst."
           checkbox: "Selecteer dit vakje als je verder wilt gaan."

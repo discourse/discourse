@@ -41,6 +41,7 @@ zh_TW:
     bookmarkable:
       notification_title: "%{channel_name} 中的訊息"
     onebox:
+      thread_title_connector: "在"
       x_members:
         other: "%{count} 位成員"
   discourse_push_notifications:

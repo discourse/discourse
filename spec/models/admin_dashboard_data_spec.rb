@@ -48,25 +48,6 @@ RSpec.describe AdminDashboardData do
   end
 
   describe "adding scheduled checks" do
-    it "adds the passed block to the scheduled checks" do
-      called = false
-      AdminDashboardData.add_scheduled_problem_check(:test_identifier) { called = true }
-
-      AdminDashboardData.execute_scheduled_checks
-      expect(called).to eq(true)
-    end
-
-    it "adds a found problem from a scheduled check" do
-      AdminDashboardData.add_scheduled_problem_check(:test_identifier) do
-        AdminDashboardData::Problem.new("test problem")
-      end
-
-      AdminDashboardData.execute_scheduled_checks
-      problems = AdminDashboardData.load_found_scheduled_check_problems
-      expect(problems.first).to be_a(AdminDashboardData::Problem)
-      expect(problems.first.message).to eq("test problem")
-    end
-
     it "does not add duplicate problems with the same identifier" do
       prob1 = AdminDashboardData::Problem.new("test problem", identifier: "test")
       prob2 = AdminDashboardData::Problem.new("test problem 2", identifier: "test")
@@ -78,7 +59,7 @@ RSpec.describe AdminDashboardData do
     end
 
     it "does not error when loading malformed problems saved in redis" do
-      Discourse.redis.set(AdminDashboardData::SCHEDULED_PROBLEM_STORAGE_KEY, "{ 'badjson")
+      Discourse.redis.rpush(AdminDashboardData::SCHEDULED_PROBLEM_STORAGE_KEY, "{ 'badjson")
       expect(AdminDashboardData.load_found_scheduled_check_problems).to eq([])
     end
 
@@ -99,6 +80,49 @@ RSpec.describe AdminDashboardData do
 
   describe "stats cache" do
     include_examples "stats cacheable"
+  end
+
+  describe ".execute_scheduled_checks" do
+    let(:blk) { -> {} }
+
+    before { AdminDashboardData.add_scheduled_problem_check(:foo, &blk) }
+    after { AdminDashboardData.reset_problem_checks }
+
+    it do
+      expect_enqueued_with(job: :problem_check, args: { check_identifier: :foo }) do
+        AdminDashboardData.execute_scheduled_checks
+      end
+    end
+  end
+
+  describe ".execute_scheduled_check" do
+    context "when problems are found" do
+      let(:blk) { -> { self::Problem.new("Problem") } }
+
+      before do
+        AdminDashboardData.add_scheduled_problem_check(:foo, &blk)
+        AdminDashboardData.expects(:add_found_scheduled_check_problem).once
+      end
+
+      after { AdminDashboardData.reset_problem_checks }
+
+      it do
+        expect(described_class.execute_scheduled_check(:foo)).to all(be_a(described_class::Problem))
+      end
+    end
+
+    context "when check errors out" do
+      let(:blk) { -> { raise StandardError } }
+
+      before do
+        AdminDashboardData.add_scheduled_problem_check(:foo, &blk)
+        Discourse.expects(:warn_exception).once
+      end
+
+      after { AdminDashboardData.reset_problem_checks }
+
+      it { expect(described_class.execute_scheduled_check(:foo)).to eq(nil) }
+    end
   end
 
   describe "#problem_message_check" do
@@ -364,28 +388,6 @@ RSpec.describe AdminDashboardData do
 
       it "outputs nothing" do
         expect(dashboard_data.translation_overrides_check).to eq(nil)
-      end
-    end
-  end
-
-  describe "#deprecated_category_style_check" do
-    subject(:dashboard_data) { described_class.new }
-
-    context "with a non-default category style" do
-      before { SiteSetting.set(:category_style, "box") }
-
-      it "outputs the correct message" do
-        expect(dashboard_data.deprecated_category_style_check).to eq(
-          I18n.t("dashboard.category_style_deprecated"),
-        )
-      end
-    end
-
-    context "with the default category style" do
-      before { SiteSetting.set(:category_style, "bullet") }
-
-      it "outputs nothing" do
-        expect(dashboard_data.deprecated_category_style_check).to eq(nil)
       end
     end
   end

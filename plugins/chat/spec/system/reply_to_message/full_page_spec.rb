@@ -13,6 +13,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
       :chat_message,
       chat_channel: channel_1,
       message: "This is a message to reply to!",
+      user: current_user,
       use_service: true,
     )
   end
@@ -98,8 +99,11 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
 
     it "renders safe HTML from the original message excerpt" do
       other_user = Fabricate(:user)
-      original_message.update!(message: "@#{other_user.username} <mark>not marked</mark>")
-      original_message.rebake!
+      update_message!(
+        original_message,
+        user: current_user,
+        text: "@#{other_user.username} <mark>not marked</mark>",
+      )
       chat_page.visit_channel(channel_1)
       channel_page.reply_to(original_message)
 

@@ -10,7 +10,7 @@ RSpec.describe Chat::CreateCategoryChannel do
     subject(:result) { described_class.call(params) }
 
     fab!(:current_user) { Fabricate(:admin) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     let(:category_id) { category.id }
 
     let(:guardian) { Guardian.new(current_user) }

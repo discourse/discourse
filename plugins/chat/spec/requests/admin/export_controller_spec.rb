@@ -4,9 +4,9 @@ require "rails_helper"
 
 RSpec.describe Chat::ChatController do
   describe "#export_messages" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user)
+    fab!(:moderator)
+    fab!(:admin)
 
     it "enqueues the export job and logs into staff actions" do
       sign_in(admin)

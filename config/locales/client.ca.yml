@@ -1011,8 +1011,6 @@ ca:
           title: "Codis de còpia de seguretat generats"
           description: "Cada un dels codis de còpia de seguretat es pot fer servir sols una vegada. Manteniu-los en algun lloc web segur però accessible. "
       second_factor:
-        forgot_password: "Heu oblidat la contrasenya?"
-        confirm_password_description: "Confirmeu la contrasenya per a continuar"
         name: "Nom"
         label: "Codi"
         rate_limit: "Espereu abans de provar un altre codi d'autenticació."
@@ -2451,8 +2449,7 @@ ca:
       action: "Marca la publicació amb bandera "
       take_action_options:
         default:
-          title: "Actua"
-          details: "Arriba al límit de banderes immediatament, més que no pas esperar més banderes de la comunitat"
+          title: "Amaga la publicació"
         suspend:
           title: "Suspèn l'usuari"
         silence:
@@ -2464,7 +2461,6 @@ ca:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(amagat)"
       submit_tooltip: "Envia la bandera privada"
-      take_action_tooltip: "Arriba al límit de banderes immediatament, més que no pas esperar més banderes de la comunitat"
       cant: "Ara com ara no podeu marcar amb bandera aquesta publicació."
       notify_staff: "Notifica l'equip responsable en privat"
       formatted_name:
@@ -2885,6 +2881,9 @@ ca:
               content: "Revisa"
     until: "Fins a:"
     form_templates:
+      upload_field:
+        upload: "Carrega"
+        uploading: "Carregant"
       errors:
         typeMismatch:
           default: "Introduïu un valor vàlid."

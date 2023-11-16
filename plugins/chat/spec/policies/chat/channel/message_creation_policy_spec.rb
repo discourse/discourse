@@ -3,7 +3,7 @@
 RSpec.describe Chat::Channel::MessageCreationPolicy do
   subject(:policy) { described_class.new(context) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   let(:guardian) { user.guardian }
   let(:context) { Service::Base::Context.build(channel: channel, guardian: guardian) }

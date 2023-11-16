@@ -25,6 +25,8 @@ lt:
         single_user: "%{username}"
     mention_warning:
       dismiss: "praleisti"
+    onebox:
+      thread_title_connector: "į"
   discourse_push_notifications:
     popup:
       chat_mention:

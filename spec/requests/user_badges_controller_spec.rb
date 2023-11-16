@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe UserBadgesController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:badge) { Fabricate(:badge) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:badge)
 
   describe "#index" do
     fab!(:badge) { Fabricate(:badge, target_posts: true, show_posts: false) }
@@ -42,11 +42,11 @@ RSpec.describe UserBadgesController do
   end
 
   describe "#index" do
-    fab!(:post) { Fabricate(:post) }
-    fab!(:private_message_post) { Fabricate(:private_message_post) }
+    fab!(:post)
+    fab!(:private_message_post)
     let(:topic) { post.topic }
     let(:private_message_topic) { private_message_post.topic }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
     fab!(:restricted_topic) { Fabricate(:topic, category: private_category) }
     fab!(:restricted_post) { Fabricate(:post, topic: restricted_topic) }

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe UserStatCountUpdater do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user_stat) { user.user_stat }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
   fab!(:post_2) { Fabricate(:post, topic: post.topic) }
 
   before do

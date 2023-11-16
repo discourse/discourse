@@ -384,38 +384,36 @@ export default class SidebarSectionForm extends Component {
   }
 
   @bind
-  reorder(linkFromId, linkTo, above) {
-    if (linkFromId === linkTo.objectId) {
+  setDraggedLink(link) {
+    this.draggedLink = link;
+  }
+
+  @bind
+  reorder(targetLink, above) {
+    if (this.draggedLink === targetLink) {
       return;
     }
-    let linkFrom = this.transformedModel.links.find(
-      (link) => link.objectId === linkFromId
-    );
-    if (!linkFrom) {
-      linkFrom = this.transformedModel.secondaryLinks.find(
-        (link) => link.objectId === linkFromId
-      );
-    }
 
-    if (linkFrom.isPrimary) {
-      this.transformedModel.links.removeObject(linkFrom);
+    if (this.draggedLink.isPrimary) {
+      this.transformedModel.links.removeObject(this.draggedLink);
     } else {
-      this.transformedModel.secondaryLinks?.removeObject(linkFrom);
+      this.transformedModel.secondaryLinks?.removeObject(this.draggedLink);
     }
 
-    if (linkTo.isPrimary) {
-      const toPosition = this.transformedModel.links.indexOf(linkTo);
-      linkFrom.segment = "primary";
+    if (targetLink.isPrimary) {
+      const toPosition = this.transformedModel.links.indexOf(targetLink);
+      this.draggedLink.segment = "primary";
       this.transformedModel.links.insertAt(
         above ? toPosition : toPosition + 1,
-        linkFrom
+        this.draggedLink
       );
     } else {
-      linkFrom.segment = "secondary";
-      const toPosition = this.transformedModel.secondaryLinks.indexOf(linkTo);
+      this.draggedLink.segment = "secondary";
+      const toPosition =
+        this.transformedModel.secondaryLinks.indexOf(targetLink);
       this.transformedModel.secondaryLinks.insertAt(
         above ? toPosition : toPosition + 1,
-        linkFrom
+        this.draggedLink
       );
     }
   }

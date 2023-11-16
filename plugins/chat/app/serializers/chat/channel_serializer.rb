@@ -88,7 +88,7 @@ module Chat
     end
 
     def include_auto_join_users?
-      scope.can_edit_chat_channel?
+      object.category_channel? && scope.can_edit_chat_channel?(object)
     end
 
     def include_current_user_membership?

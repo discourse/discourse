@@ -52,6 +52,8 @@ be:
         tabs:
           members: Удзельнікі
           settings: Налады
+      new_message_modal:
+        filter: "Filter"
       direct_message_creator:
         title: новае паведамленне
         prefix: "да:"

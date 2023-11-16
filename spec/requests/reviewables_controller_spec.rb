@@ -38,7 +38,7 @@ RSpec.describe ReviewablesController do
   end
 
   context "when logged in" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     before { sign_in(admin) }
 
@@ -324,7 +324,7 @@ RSpec.describe ReviewablesController do
 
     describe "#show" do
       context "with basics" do
-        fab!(:reviewable) { Fabricate(:reviewable) }
+        fab!(:reviewable)
         before { sign_in(Fabricate(:moderator)) }
 
         it "returns the reviewable as json" do
@@ -342,9 +342,9 @@ RSpec.describe ReviewablesController do
       end
 
       context "with conversation" do
-        fab!(:post) { Fabricate(:post) }
-        fab!(:user) { Fabricate(:user) }
-        fab!(:admin) { Fabricate(:admin) }
+        fab!(:post)
+        fab!(:user)
+        fab!(:admin)
         let(:result) { PostActionCreator.notify_moderators(user, post, "this is the first post") }
         let(:reviewable) { result.reviewable }
 
@@ -393,7 +393,7 @@ RSpec.describe ReviewablesController do
 
     describe "#explain" do
       context "with basics" do
-        fab!(:reviewable) { Fabricate(:reviewable) }
+        fab!(:reviewable)
 
         before { sign_in(Fabricate(:moderator)) }
 
@@ -414,7 +414,7 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#perform" do
-      fab!(:reviewable) { Fabricate(:reviewable) }
+      fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
 
       it "returns 404 when the reviewable does not exist" do
@@ -659,10 +659,10 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#update" do
-      fab!(:reviewable) { Fabricate(:reviewable) }
+      fab!(:reviewable)
       fab!(:reviewable_post) { Fabricate(:reviewable_queued_post) }
       fab!(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic) }
-      fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:moderator)
       fab!(:reviewable_approved_post) do
         Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
       end
@@ -788,7 +788,7 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#destroy" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       it "returns 404 if the reviewable doesn't exist" do
         sign_in(user)
@@ -881,7 +881,7 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#count" do
-      fab!(:admin) { Fabricate(:admin) }
+      fab!(:admin)
 
       before { sign_in(admin) }
 

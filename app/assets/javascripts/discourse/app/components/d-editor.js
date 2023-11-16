@@ -170,12 +170,13 @@ class Toolbar {
       tabindex: button.tabindex || "-1",
       className: button.className || button.id,
       label: button.label,
-      icon: button.label ? null : button.icon || button.id,
+      icon: button.icon || button.id,
       action: button.action || ((a) => this.context.send("toolbarButton", a)),
       perform: button.perform || function () {},
       trimLeading: button.trimLeading,
       popupMenu: button.popupMenu || false,
       preventFocus: button.preventFocus || false,
+      condition: button.condition || (() => true),
     };
 
     if (button.sendAction) {

@@ -72,7 +72,7 @@ RSpec.describe TopicUser do
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :topic }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   let(:topic) do
     u = Fabricate(:user)

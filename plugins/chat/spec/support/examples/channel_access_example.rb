@@ -25,7 +25,7 @@ RSpec.shared_examples "channel access example" do |verb, endpoint, params|
   context "when channel can’t be seen by current user" do
     fab!(:chatable) { Fabricate(:private_category, group: Fabricate(:group)) }
     fab!(:chat_channel) { Fabricate(:category_channel, chatable: chatable) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:membership) do
       Fabricate(:user_chat_channel_membership, user: user, chat_channel: chat_channel)
     end

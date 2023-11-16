@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 describe AdminUserActionSerializer do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   let(:guardian) { Guardian.new(admin) }
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
   it "includes the slug/title/category ID for a post's deleted topic" do

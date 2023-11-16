@@ -5,7 +5,7 @@ export default class ChatChannelInfoMembersRoute extends DiscourseRoute {
   @service router;
 
   afterModel(model) {
-    if (!model.isOpen || model.membershipsCount < 1) {
+    if (!model.isOpen) {
       return this.router.replaceWith("chat.channel.info.settings");
     }
   }

@@ -94,9 +94,7 @@ export default MultiSelectComponent.extend({
 
   actions: {
     onChange(values) {
-      this.attrs.onChange(
-        values.map((v) => Category.findById(v)).filter(Boolean)
-      );
+      this.onChange(values.map((v) => Category.findById(v)).filter(Boolean));
       return false;
     },
   },

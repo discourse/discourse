@@ -1,0 +1,18 @@
+<Discovery::Layout @model={{this.model}}>
+  <:navigation>
+    <Discovery::FilterNavigation
+      @queryString={{this.q}}
+      @updateTopicsListQueryParams={{this.updateTopicsListQueryParams}}
+    />
+  </:navigation>
+  <:list>
+    <Discovery::Topics
+      @period={{this.period}}
+      @expandAllPinned={{this.expandAllPinned}}
+      @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
+      @model={{this.model}}
+      @canBulkSelect={{this.canBulkSelect}}
+      @bulkSelectHelper={{this.bulkSelectHelper}}
+    />
+  </:list>
+</Discovery::Layout>

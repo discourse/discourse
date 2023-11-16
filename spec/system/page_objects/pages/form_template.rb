@@ -32,7 +32,10 @@ module PageObjects
       end
 
       def has_category_in_template_row?(category_name)
-        find(".form-templates__table .categories .category-name", text: category_name).present?
+        find(
+          ".form-templates__table .categories .badge-category__name",
+          text: category_name,
+        ).present?
       end
 
       def has_template_structure?(structure)

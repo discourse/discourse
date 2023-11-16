@@ -2,12 +2,12 @@
 
 RSpec.describe Jobs::BulkInvite do
   describe "#execute" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:east_coast_user) { Fabricate(:east_coast_user) }
+    fab!(:user)
+    fab!(:admin)
+    fab!(:east_coast_user)
     fab!(:group1) { Fabricate(:group, name: "group1") }
     fab!(:group2) { Fabricate(:group, name: "group2") }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     let(:staged_user) { Fabricate(:user, staged: true, active: false) }
     let(:email) { "test@discourse.org" }
     let(:invites) do

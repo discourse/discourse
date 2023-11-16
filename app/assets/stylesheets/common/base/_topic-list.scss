@@ -3,11 +3,6 @@
 .list-controls {
   background: var(--d-content-background);
 
-  a.badge-category {
-    padding: 3px 12px;
-    font-size: var(--font-up-1);
-  }
-
   .combo-box .combo-box-header {
     background: var(--secondary);
     color: var(--primary);
@@ -129,10 +124,11 @@
   a.title:not(.badge-notification) {
     color: var(--primary-medium);
   }
-  span.badge-category {
+  .badge-category {
     color: var(--primary-medium);
   }
-  a.discourse-tag {
+  .discourse-tag,
+  .discourse-tag:visited {
     color: var(--primary-medium);
   }
 }
@@ -258,10 +254,10 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    gap: 0.5em;
     .discourse-tags {
       flex-wrap: wrap;
     }
-    a.badge-wrapper.box,
     a.discourse-tag.box {
       padding-top: 0;
       padding-bottom: 0;

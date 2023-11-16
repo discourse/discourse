@@ -607,7 +607,8 @@ class Guardian
     return false if !authenticated?
     return false if User.where(username_lower: SiteSetting.here_mention).exists?
 
-    @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
+    @user.in_any_groups?(SiteSetting.here_mention_allowed_groups_map) ||
+      @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
   end
 
   def is_me?(other)

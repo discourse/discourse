@@ -301,7 +301,8 @@
     display: flex;
     flex-wrap: wrap;
     margin-top: 0.25em;
-    .badge-wrapper {
+    gap: 0 0.5em;
+    .badge-category__wrapper {
       max-width: 100%;
     }
   }
@@ -313,7 +314,6 @@
 
     .discourse-tag.simple {
       font-size: var(--font-down-1);
-      margin-right: 0.25em;
     }
   }
 
@@ -363,7 +363,6 @@
 
   .discourse-tag.simple {
     font-size: var(--font-down-1);
-    margin-right: 0.25em;
   }
 }
 

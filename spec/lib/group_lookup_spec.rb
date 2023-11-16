@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupLookup do
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
 
   describe "#[]" do
     before { @group_lookup = GroupLookup.new([group.id, nil]) }

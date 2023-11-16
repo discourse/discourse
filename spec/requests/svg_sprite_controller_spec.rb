@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SvgSpriteController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "#show" do
     before { SvgSprite.expire_cache }

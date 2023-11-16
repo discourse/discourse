@@ -14,13 +14,16 @@ RSpec.describe Chat::Api::ChatablesController do
     describe "without chat permissions" do
       it "errors errors for anon" do
         get "/chat/api/chatables"
+
         expect(response.status).to eq(403)
       end
 
       it "errors when user cannot chat" do
         SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
         sign_in(current_user)
+
         get "/chat/api/chatables"
+
         expect(response.status).to eq(403)
       end
     end
@@ -28,9 +31,11 @@ RSpec.describe Chat::Api::ChatablesController do
     describe "with chat permissions" do
       fab!(:channel_1) { Fabricate(:chat_channel) }
 
-      before { sign_in(current_user) }
+      before { channel_1.add(current_user) }
 
       it "returns results" do
+        sign_in(current_user)
+
         get "/chat/api/chatables", params: { term: channel_1.name }
 
         expect(response.status).to eq(200)

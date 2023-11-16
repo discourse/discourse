@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Custom sidebar sections", type: :system do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
@@ -178,9 +178,12 @@ describe "Custom sidebar sections", type: :system do
       ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"],
     )
 
-    tags_link = find(".sidebar-section-link[data-link-name='Sidebar Tags']")
-    latest_link = find(".sidebar-section-link[data-link-name='Sidebar Latest']")
+    sidebar.edit_custom_section("My section")
+
+    tags_link = find(".draggable[data-link-name='Sidebar Tags']")
+    latest_link = find(".draggable[data-link-name='Sidebar Latest']")
     tags_link.drag_to(latest_link, html5: true, delay: 0.4)
+    section_modal.save
 
     expect(sidebar.primary_section_links("my-section")).to eq(
       ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],

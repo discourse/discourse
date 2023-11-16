@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableClaimedTopicsController do
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator)
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:reviewable) { Fabricate(:reviewable_flagged_post, topic: topic) }
 
   describe "#create" do

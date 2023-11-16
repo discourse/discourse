@@ -131,6 +131,7 @@ da:
           settings: Indstillinger
       new_message_modal:
         no_items: "Ingen punkter"
+        filter: "Filter"
       direct_message_creator:
         title: Ny Besked
         prefix: "Til:"

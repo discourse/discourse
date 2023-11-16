@@ -41,11 +41,17 @@ jobs:
 
       matrix:
         build_type: [backend, frontend, system, annotations]
-        target: [core, plugins]
+        target: [core, plugins, themes]
         ruby: ["3.2"]
         exclude:
           - build_type: annotations
             target: plugins
+          - build_type: annotations
+            target: themes
+          - build_type: frontend
+            target: themes
+          - build_type: backend
+            target: themes
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
         include:
@@ -80,8 +86,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.ruby }}-gem-
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
 
       - name: Setup gems
         run: |
@@ -101,8 +106,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
       - name: Yarn install
         run: yarn install --frozen-lockfile
@@ -114,6 +118,10 @@ jobs:
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins'
         run: bin/rake plugin:pull_compatible_all
+
+      - name: Checkout official themes
+        if: matrix.target == 'themes'
+        run: bin/rake themes:clone_all_official
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         run: |
@@ -239,10 +247,17 @@ jobs:
           LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
         timeout-minutes: 30
-      
+
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        timeout-minutes: 30
+
+      - name: Theme System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'themes'
+        run: |
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
+        shell: bash
         timeout-minutes: 30
 
       - name: Upload failed system test screenshots
@@ -307,8 +322,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse

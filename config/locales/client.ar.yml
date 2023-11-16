@@ -1645,8 +1645,6 @@ ar:
         title: "المصادقة الثنائية"
         enable: "إدارة المصادقة الثنائية"
         disable_all: "إيقاف الكل"
-        forgot_password: "هل نسيت كلمة المرور؟"
-        confirm_password_description: "يُرجى تأكيد كلمة المرور للمتابعة"
         name: "الاسم"
         label: "الرمز"
         rate_limit: "يُرجى الانتظار قبل تجربة رمز مصادقة آخر."
@@ -4186,8 +4184,7 @@ ar:
       take_action: "اتخاذ إجراء…"
       take_action_options:
         default:
-          title: "اتخاذ إجراء"
-          details: "الوصول إلى الحد الأقصى للبلاغات على الفور بدلًا من انتظار المزيد من البلاغات من أعضاء المجتمع."
+          title: "إخفاء المنشور"
         suspend:
           title: "تعليق المستخدم"
           details: "الوصول إلى الحد الأقصى للبلاغات وتعليق المستخدم"
@@ -4204,7 +4201,6 @@ ar:
       ip_address_missing: "(لا يوجد)"
       hidden_email_address: "(مخفي)"
       submit_tooltip: "إرسال البلاغ الخاص"
-      take_action_tooltip: "الوصول إلى الحد الأقصى للبلاغات على الفور بدلًا من انتظار المزيد من البلاغات من أعضاء المجتمع."
       cant: "عذرًا، لا يمكنك الإبلاغ عن هذا المنشور في الوقت الحالي."
       notify_staff: "إرسال إشعار إلى فريق العمل بشكلٍ خاص"
       formatted_name:
@@ -5008,10 +5004,12 @@ ar:
     form_template_chooser:
       select_template: "التحديد من القوالب"
     form_templates:
+      upload_field:
+        upload: "تحميل"
+        uploading: "جارٍ الرفع"
       errors:
         valueMissing:
           default: "يُرجى ملء هذا الحقل."
-          text: "يُرجى ملء هذا الحقل."
           select-one: "يُرجى تحديد عنصر في القائمة."
           select-multiple: "يُرجى تحديد عنصر واحد على الأقل في القائمة."
           checkbox: "يُرجى تحديد هذا المربع إذا كنت تريد المتابعة."

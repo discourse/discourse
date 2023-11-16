@@ -4,7 +4,7 @@ describe "Emoji deny list", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   before { sign_in(admin) }
 
@@ -44,7 +44,7 @@ describe "Emoji deny list", type: :system do
       Emoji.clear_cache && Discourse.request_refresh!
     end
 
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic) }
 
     xit "should remove denied emojis from emoji picker" do

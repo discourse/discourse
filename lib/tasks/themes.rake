@@ -70,8 +70,7 @@ def update_themes
         remote_theme.update_remote_version
         if remote_theme.out_of_date?
           puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
-          remote_theme.update_from_remote
-          theme.save!
+          remote_theme.update_from_remote(already_in_transaction: true)
         else
           puts "up to date"
         end
@@ -194,4 +193,27 @@ ensure
   db&.stop
   db&.remove
   redis&.remove
+end
+
+desc "Clones all official themes."
+task "themes:clone_all_official" do |task, args|
+  require "theme_metadata"
+  FileUtils.rm_rf("tmp/themes")
+
+  official_themes =
+    ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
+      repo = "https://github.com/discourse/#{theme_name}"
+      path = File.expand_path("tmp/themes/#{theme_name}")
+
+      attempts = 0
+
+      begin
+        attempts += 1
+        system("git clone #{repo} #{path}", exception: true)
+      rescue StandardError
+        abort("Failed to clone #{repo}") if attempts >= 3
+        STDERR.puts "Failed to clone #{repo}... trying again..."
+        retry
+      end
+    end
 end
