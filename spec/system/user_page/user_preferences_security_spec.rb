@@ -109,13 +109,38 @@ describe "User preferences for Security", type: :system do
     end
   end
 
+  shared_examples "enforced second factor" do
+    it "allows user to add 2FA" do
+      SiteSetting.enforce_second_factor = "all"
+
+      visit("/")
+
+      expect(page).to have_selector(
+        ".alert-error",
+        text: "You are required to enable two-factor authentication before accessing this site.",
+      )
+
+      expect(page).to have_css(".user-preferences .totp")
+      expect(page).to have_css(".user-preferences .security-key")
+
+      find(".user-preferences .totp .btn.new-totp").click
+
+      find(".dialog-body input#password").fill_in(with: password)
+      find(".confirm-session .btn-primary").click
+
+      expect(page).to have_css(".qr-code")
+    end
+  end
+
   context "when desktop" do
     include_examples "security keys"
     include_examples "passkeys"
+    include_examples "enforced second factor"
   end
 
   context "when mobile", mobile: true do
     include_examples "security keys"
     include_examples "passkeys"
+    include_examples "enforced second factor"
   end
 end
