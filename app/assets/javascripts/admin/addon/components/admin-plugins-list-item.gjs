@@ -31,13 +31,13 @@ export default class AdminPluginsListItem extends Component {
   }
 
   <template>
-    <tr data-plugin-name="{{@plugin.name}}">
+    <tr data-plugin-name={{@plugin.name}}>
       <td class="plugin-details">
         <div class="name-with-badges">
           <div class="name">
             {{#if @plugin.linkUrl}}
               <a
-                href="{{@plugin.linkUrl}}"
+                href={{@plugin.linkUrl}}
                 rel="noopener noreferrer"
                 target="_blank"
               >{{@plugin.nameTitleized}}</a>
@@ -66,7 +66,11 @@ export default class AdminPluginsListItem extends Component {
         <div class="about">
           {{@plugin.about}}
           {{#if @plugin.linkUrl}}
-            <a href="{{@plugin.linkUrl}}" target="_blank">
+            <a
+              href={{@plugin.linkUrl}}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               {{i18n "learn_more"}}
             </a>
           {{/if}}
@@ -85,7 +89,7 @@ export default class AdminPluginsListItem extends Component {
             {{on "click" (fn this.togglePluginEnabled @plugin)}}
           />
         {{else}}
-          <DToggleSwitch @state="{{@plugin.enabled}}" disabled={{true}} />
+          <DToggleSwitch @state={{@plugin.enabled}} disabled={{true}} />
         {{/if}}
       </td>
       <td class="settings">
@@ -94,9 +98,9 @@ export default class AdminPluginsListItem extends Component {
             <LinkTo
               class="btn-default btn btn-icon-text"
               @route="adminSiteSettingsCategory"
-              @model="{{@plugin.settingCategoryName}}"
+              @model={{@plugin.settingCategoryName}}
               @query={{hash filter=(concat "plugin:" @plugin.name)}}
-              data-plugin-setting-button="{{@plugin.name}}"
+              data-plugin-setting-button={{@plugin.name}}
             >
               {{icon "cog"}}
               {{i18n "admin.plugins.change_settings_short"}}

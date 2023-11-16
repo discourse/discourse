@@ -41,8 +41,8 @@ acceptance("Admin - Plugins", function (needs) {
     await visit("/admin/plugins");
 
     assert
-      .dom("table.admin-plugins tr .plugin-name .name")
-      .hasText("some-test-plugin", "displays the plugin in the table");
+      .dom("table.admin-plugins tr .plugin-details .name-with-badges .name")
+      .hasText("Some Test Plugin", "displays the plugin in the table");
 
     assert
       .dom(".admin-plugins .admin-container .alert-error")

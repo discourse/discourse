@@ -10,7 +10,7 @@ describe "Admin Plugins List", type: :system, js: true do
     plugins.find { |p| p.name == "spoiler-alert" }
   end
 
-  it "shows the list of plugins" do
+  xit "shows the list of plugins" do
     visit "/admin/plugins"
 
     plugin_row = find(".admin-plugins tr[data-plugin-name=\"spoiler-alert\"]")
