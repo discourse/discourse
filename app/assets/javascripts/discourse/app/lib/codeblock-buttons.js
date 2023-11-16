@@ -119,11 +119,7 @@ export default class CodeblockButtons {
         }px`;
       }
 
-      if (
-        this.showFullscreen &&
-        !Mobile.isMobileDevice &&
-        codeBlock.scrollWidth > codeBlock.clientWidth
-      ) {
+      if (this.showFullscreen && !Mobile.isMobileDevice) {
         const fullscreenButton = document.createElement("button");
         fullscreenButton.classList.add("btn", "nohighlight", "fullscreen-cmd");
         fullscreenButton.ariaLabel = I18n.t("copy_codeblock.fullscreen");
