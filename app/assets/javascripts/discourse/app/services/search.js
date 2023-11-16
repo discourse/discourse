@@ -1,11 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Service from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
 export default class Search extends Service {
+  @service appEvents;
+
   @tracked activeGlobalSearchTerm = "";
   @tracked searchContext;
   @tracked highlightTerm;
