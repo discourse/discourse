@@ -63,7 +63,11 @@ module Chat
         attrs << CHAINED_ATTR if chained
         attrs << NO_LINK_ATTR if no_link
         attrs << reactions_attr if include_reactions
-        attrs << thread_id_attr if thread_id
+
+        if thread_id
+          attrs << thread_id_attr
+          attrs << thread_title_attr
+        end
 
         <<~MARKDOWN
       [chat #{attrs.compact.join(" ")}]
@@ -120,6 +124,12 @@ module Chat
 
       def thread_id_attr
         "threadId=\"#{thread_id}\""
+      end
+
+      def thread_title_attr
+        thread = Chat::Thread.find(thread_id)
+        return if thread.title.blank?
+        "threadTitle=\"#{thread.title}\""
       end
     end
 
