@@ -1,7 +1,6 @@
 import EmberObject from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import $ from "jquery";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { withoutPrefix } from "discourse-common/lib/get-url";
 
 let popstateFired = false;
@@ -96,10 +95,7 @@ const DiscourseLocation = EmberObject.extend({
     path = this.formatURL(path);
 
     if (state && state.path !== path) {
-      const paths = [path, state.path];
-      if (!(paths.includes("/") && paths.includes(`/${defaultHomepage()}`))) {
-        this.pushState(path);
-      }
+      this.pushState(path);
     }
   },
 
