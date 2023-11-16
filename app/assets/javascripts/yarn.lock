@@ -5272,10 +5272,10 @@ ember-rfc176-data@^0.3.17:
   resolved "https://registry.yarnpkg.com/ember-rfc176-data/-/ember-rfc176-data-0.3.18.tgz#bb6fdcef49999981317ea81b6cc9210fb4108d65"
   integrity sha512-JtuLoYGSjay1W3MQAxt3eINWXNYYQliK90tLwtb8aeCuQK8zKGCRbBodVIrkcTqshULMnRuTOS6t1P7oQk3g6Q==
 
-ember-route-template@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/ember-route-template/-/ember-route-template-1.0.2.tgz#e5a0ed9eebb13ce186e23e1e4a0c8c4f5d6fe35e"
-  integrity sha512-t2BvTuV5ti10MrUfJXI6fFZSxBhHrWbqDpT85VE71dhqbUg8ccv/7aJhPEZZk1o444681f/kdOg3lqxfSOUH9w==
+ember-route-template@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/ember-route-template/-/ember-route-template-1.0.3.tgz#75e004f94a533284ee978baf5089acaecb99c7de"
+  integrity sha512-p//Nk4g4Wu9F8cZdjB69rKxTRi6RRW32a8K5sYsi5cofTcJtPBXRWUXWpQEjJX6qcucgxooQwEm9+7MOy4lwNw==
   dependencies:
     "@embroider/addon-shim" "^1.0.0"
 

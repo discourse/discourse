@@ -12,6 +12,7 @@ tr_TR:
     poll_minimum_trust_level_to_create: "Anket oluşturmak için gereken minimum güven seviyesini tanımlayın."
     poll_groupable_user_fields: "Anket sonuçlarını gruplamak ve filtrelemek için kullanılabilecek bir dizi kullanıcı alanı adı."
     poll_export_data_explorer_query_id: "Anket sonuçlarını dışa aktarmak için kullanılacak Veri Gezgini Sorgusunun kimliği (devre dışı bırakmak için 0)."
+    poll_default_public: "Yeni bir anket oluştururken, varsayılan olarak 'kimin oy verdiğini göster' seçeneğini etkinleştirin."
   poll:
     poll: "anket"
     invalid_argument: "\"%{argument}\" bağımsız değişkeni için geçersiz değer \"%{value}\"."

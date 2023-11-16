@@ -55,6 +55,7 @@ tr_TR:
   chat:
     deleted_chat_username: silindi
     errors:
+      users_cant_be_added_to_channel: "Bu kanala kullanıcı eklenemez."
       channel_exists_for_category: "Bu kategori ve ada sahip bir kanal zaten var"
       channel_new_message_disallowed:
         archived: "Kanal arşivlendi, yeni mesaj gönderilemez"
@@ -132,6 +133,9 @@ tr_TR:
         transcript_title: "%{channel_name} adlı kanaldaki önceki mesajların dökümü"
         transcript_body: "Size daha fazla bağlam sağlamak için bu konuşmadaki önceki mesajların bir dökümünü ekledik (en fazla on):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} %{inviting_user} tarafından davet edildi."
+        other: "%{invited_users} %{inviting_user} tarafından davet edildi."
       archive:
         first_post_raw: "Bu konu, [%{channel_name}](%{channel_url}) sohbet kanalının bir arşividir."
       messages_moved:

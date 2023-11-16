@@ -1097,8 +1097,6 @@ gl:
         title: "Autenticación de dobre paso"
         enable: "Xestionar autenticación de dobre paso"
         disable_all: "Desactivar todos"
-        forgot_password: "Esqueceu o contrasinal?"
-        confirm_password_description: "Confirme o seu contrasinal para continuar"
         name: "Nome"
         label: "Código"
         rate_limit: "Agarde antes de tentalo con outro código de autenticación."

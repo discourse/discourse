@@ -323,7 +323,7 @@ acceptance(
       );
       await durationDropdown.expand();
       await durationDropdown.selectRowByIndex(0);
-      await click(".modal-footer .btn-primary");
+      await click(".d-modal__footer .btn-primary");
       await notificationLevelDropdown.expand();
       assert.strictEqual(
         notificationLevelDropdown.selectedRow().value(),
@@ -345,7 +345,7 @@ acceptance("User - Invalid view_user_route setting", function (needs) {
   });
 });
 
-acceptance("User - Valid view_user_route setting", function (needs) {
+acceptance("User - view_user_route setting set to activity", function (needs) {
   needs.settings({
     view_user_route: "activity",
   });
@@ -354,6 +354,14 @@ acceptance("User - Valid view_user_route setting", function (needs) {
     await visit("/u/eviltrout");
 
     assert.strictEqual(currentRouteName(), "userActivity.index");
+  });
+});
+
+acceptance("User - Valid view_user_route setting default", function () {
+  test("It defaults to summary", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.strictEqual(currentRouteName(), "user.summary");
   });
 });
 

@@ -194,3 +194,26 @@ ensure
   db&.remove
   redis&.remove
 end
+
+desc "Clones all official themes."
+task "themes:clone_all_official" do |task, args|
+  require "theme_metadata"
+  FileUtils.rm_rf("tmp/themes")
+
+  official_themes =
+    ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
+      repo = "https://github.com/discourse/#{theme_name}"
+      path = File.expand_path("tmp/themes/#{theme_name}")
+
+      attempts = 0
+
+      begin
+        attempts += 1
+        system("git clone #{repo} #{path}", exception: true)
+      rescue StandardError
+        abort("Failed to clone #{repo}") if attempts >= 3
+        STDERR.puts "Failed to clone #{repo}... trying again..."
+        retry
+      end
+    end
+end

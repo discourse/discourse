@@ -418,7 +418,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
 
     before do
       settings.setting(:type_null, nil)
-      settings.setting(:type_int, 1)
+      settings.setting(:type_int, 1, min: -10, max: 10)
       settings.setting(:type_true, true)
       settings.setting(:type_float, 2.3232)
       settings.setting(:type_string, "string")
@@ -433,24 +433,31 @@ RSpec.describe SiteSettings::TypeSupervisor do
     it "returns null type" do
       expect(settings.type_supervisor.type_hash(:type_null)[:type]).to eq "null"
     end
+
     it "returns int type" do
       expect(settings.type_supervisor.type_hash(:type_int)[:type]).to eq "integer"
     end
+
     it "returns bool type" do
       expect(settings.type_supervisor.type_hash(:type_true)[:type]).to eq "bool"
     end
+
     it "returns float type" do
       expect(settings.type_supervisor.type_hash(:type_float)[:type]).to eq "float"
     end
+
     it "returns string type" do
       expect(settings.type_supervisor.type_hash(:type_string)[:type]).to eq "string"
     end
+
     it "returns url_list type" do
       expect(settings.type_supervisor.type_hash(:type_url_list)[:type]).to eq "url_list"
     end
+
     it "returns textarea type" do
       expect(settings.type_supervisor.type_hash(:type_textarea)[:textarea]).to eq true
     end
+
     it "returns enum type" do
       expect(settings.type_supervisor.type_hash(:type_enum_choices)[:type]).to eq "enum"
     end
@@ -473,6 +480,11 @@ RSpec.describe SiteSettings::TypeSupervisor do
       hash = settings.type_supervisor.type_hash(:type_enum_class)
       expect(hash[:valid_values]).to eq %w[a b]
       expect(hash[:translate_names]).to eq false
+    end
+
+    it "returns int min/max values" do
+      expect(settings.type_supervisor.type_hash(:type_int)[:min]).to eq(-10)
+      expect(settings.type_supervisor.type_hash(:type_int)[:max]).to eq(10)
     end
   end
 end

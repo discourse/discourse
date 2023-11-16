@@ -1343,8 +1343,6 @@ hr:
         title: "Dvofaktorska autentifikacija"
         enable: "Upravljanje dvofaktorskom autentifikacijom"
         disable_all: "Onemogući sve"
-        forgot_password: "Zaboravili ste lozinku?"
-        confirm_password_description: "Molimo potvrdite svoju lozinku za nastavak"
         name: "Ime i prezime"
         label: "Šifra"
         rate_limit: "Pričekajte prije pokušaja drugog koda za provjeru autentičnosti."

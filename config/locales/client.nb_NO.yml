@@ -1127,8 +1127,6 @@ nb_NO:
         title: "To-faktor autentisering"
         enable: "deaktiver totrinnsverifisering"
         disable_all: "Deaktiver Alle"
-        forgot_password: "Glemt passord?"
-        confirm_password_description: "Bekreft passordet ditt for å fortsette"
         name: "Navn"
         label: "Kode"
         rate_limit: "Vennligst vent før du prøver en annen autentiseringskode."

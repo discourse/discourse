@@ -14,6 +14,7 @@ const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -69,6 +70,12 @@ module.exports = function (defaults) {
       // https://github.com/discourse/backburner.js/commits/discourse-patches
       backburner:
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
+    },
+
+    historySupportMiddleware: false,
+
+    trees: {
+      app: RawHandlebarsCompiler("app"),
     },
   });
 
@@ -132,6 +139,12 @@ module.exports = function (defaults) {
         output: {
           publicPath: "auto",
         },
+        cache: isProduction
+          ? false
+          : {
+              type: "memory",
+              maxGenerations: 1,
+            },
         entry: {
           "assets/discourse.js/features/markdown-it.js": {
             import: "./static/markdown-it",

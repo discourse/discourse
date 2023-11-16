@@ -117,7 +117,7 @@ export default createWidget("header-topic-info", {
       heading.push(
         new RenderGlimmer(
           this,
-          "div",
+          "span.header-topic-title-suffix",
           hbs`<PluginOutlet @name="header-topic-title-suffix" @outletArgs={{@data.outletArgs}}/>`,
           {
             outletArgs: {

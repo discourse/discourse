@@ -181,6 +181,7 @@ hr:
           settings: Postavke
       new_message_modal:
         no_items: "Nema stvari"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Uredi kanal
         input_placeholder: Dodajte ime

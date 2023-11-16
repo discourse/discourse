@@ -63,6 +63,7 @@ ca:
           settings: Configuració
       new_message_modal:
         no_items: "Sense elements"
+        filter: "Filtre"
       direct_message_creator:
         title: Missatge nou
         prefix: "A:"

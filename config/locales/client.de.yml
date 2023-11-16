@@ -1366,8 +1366,6 @@ de:
         title: "Zwei-Faktor-Authentifizierung"
         enable: "Zwei-Faktor-Authentifizierung verwalten"
         disable_all: "Alle deaktivieren"
-        forgot_password: "Passwort vergessen?"
-        confirm_password_description: "Bitte bestätige dein Passwort, um fortzufahren"
         name: "Name"
         label: "Code"
         rate_limit: "Bitte warte ein wenig, bevor du es mit einem anderen Authentifizierungscode versuchst."

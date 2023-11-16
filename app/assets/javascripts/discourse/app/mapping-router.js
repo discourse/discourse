@@ -1,5 +1,4 @@
 import EmberRouter from "@ember/routing/router";
-import { rewritePath } from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
 import { isTesting } from "discourse-common/config/environment";
@@ -9,7 +8,6 @@ const BareRouter = EmberRouter.extend({
   location: isTesting() ? "none" : "discourse-location",
 
   handleURL(url) {
-    url = rewritePath(url);
     const params = url.split("?");
 
     if (params[0] === "/" || params[0] === "") {

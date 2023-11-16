@@ -1269,7 +1269,6 @@ hr:
     min_title_similar_length: "Minimalna duljina naslova prije nego što će se provjeriti za slične teme."
     desktop_category_page_style: "Vizualni stil za stranicu /kategorije."
     category_colors: "Popis heksadecimalnih vrijednosti boja dopuštenih za kategorije."
-    category_style: "Vizualni stil za bedževe kategorije."
     default_dark_mode_color_scheme_id: "Shema boja koja se koristi u tamnom načinu rada."
     dark_mode_none: "ništa"
     max_image_size_kb: "Maksimalna veličina slike za učitavanje u kB. Ovo također mora biti konfigurirano u nginx (client_max_body_size) / apache ili proxy. Slike veće od ovoga i manje od client_max_body_size bit će promijenjene u veličini kako bi stale pri prijenosu."

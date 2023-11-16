@@ -9,11 +9,11 @@ module PageObjects
       BODY_SELECTOR = ""
 
       def body
-        find(".modal-body#{BODY_SELECTOR}")
+        find(".d-modal__body#{BODY_SELECTOR}")
       end
 
       def footer
-        find(".modal-footer")
+        find(".d-modal__footer")
       end
 
       def close
@@ -25,7 +25,7 @@ module PageObjects
       end
 
       def click_outside
-        find(".modal-outer-container").click(x: 0, y: 0)
+        find(".d-modal").click(x: 0, y: 0)
       end
 
       def click_primary_button

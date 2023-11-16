@@ -32,7 +32,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"
@@ -67,7 +67,7 @@ acceptance("Topic move posts", function (needs) {
     await click("#post_11 .select-below");
     await click(".selected-posts .move-to-topic");
     await fillIn(".choose-topic-modal #split-topic-name", "Existing topic");
-    await click(".choose-topic-modal .modal-footer .btn-primary");
+    await click(".choose-topic-modal .d-modal__footer .btn-primary");
     assert.strictEqual(
       query("#modal-alert").innerText.trim(),
       I18n.t("topic.move_to.error")
@@ -82,7 +82,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"
@@ -159,7 +159,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"
@@ -195,7 +195,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"

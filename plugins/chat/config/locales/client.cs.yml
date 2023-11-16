@@ -80,6 +80,8 @@ cs:
         tabs:
           members: Členové
           settings: Nastavení
+      new_message_modal:
+        filter: "Filtr"
       direct_message_creator:
         title: Nová zpráva
         prefix: "Komu:"

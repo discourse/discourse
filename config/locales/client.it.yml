@@ -1361,8 +1361,6 @@ it:
         title: "Autenticazione a due fattori"
         enable: "Gestione autenticazione a due fattori"
         disable_all: "Disattiva tutto"
-        forgot_password: "Ha dimenticato la password?"
-        confirm_password_description: "Conferma la tua password per continuare"
         name: "Nome"
         label: "Codice"
         rate_limit: "Attendi prima di provare un altro codice di autenticazione."

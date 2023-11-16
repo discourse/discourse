@@ -23,24 +23,33 @@ export default class Types extends Component {
 
   @action
   onClick(event) {
+    this.routeToSearchResult(event);
+  }
+
+  @action
+  onKeydown(event) {
+    if (event.key === "Escape") {
+      this.args.closeSearchMenu();
+      event.preventDefault();
+      return false;
+    } else if (event.key === "Enter") {
+      this.routeToSearchResult(event);
+      return false;
+    }
+
+    this.search.handleResultInsertion(event);
+    this.search.handleArrowUpOrDown(event);
+  }
+
+  @action
+  routeToSearchResult(event) {
     if (wantsNewWindow(event)) {
       return;
     }
 
     event.preventDefault();
-    DiscourseURL.routeTo(event.currentTarget.href);
+    event.stopPropagation();
+    DiscourseURL.routeTo(event.target.href);
     this.args.closeSearchMenu();
-  }
-
-  @action
-  onKeydown(e) {
-    if (e.key === "Escape") {
-      this.args.closeSearchMenu();
-      e.preventDefault();
-      return false;
-    }
-
-    this.search.handleResultInsertion(e);
-    this.search.handleArrowUpOrDown(e);
   }
 }

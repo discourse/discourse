@@ -13,7 +13,6 @@ import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-
 import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 
 export default class ChatFullPageHeader extends Component {
-  @service chatGuardian;
   @service chatStateManager;
   @service modal;
   @service router;
@@ -30,24 +29,6 @@ export default class ChatFullPageHeader extends Component {
       this.router.currentRoute.name !== "chat.channel.thread.index" &&
       this.router.currentRoute.name !== "chat.channel.thread"
     );
-  }
-
-  get canEditChannel() {
-    if (
-      this.args.channel.isCategoryChannel &&
-      this.chatGuardian.canEditChatChannel()
-    ) {
-      return true;
-    }
-
-    if (
-      this.args.channel.isDirectMessageChannel &&
-      this.args.channel.chatable.group
-    ) {
-      return true;
-    }
-
-    return false;
   }
 
   @action
@@ -84,14 +65,6 @@ export default class ChatFullPageHeader extends Component {
           >
             <ChatChannelTitle @channel={{@channel}} />
           </LinkTo>
-
-          {{#if this.canEditChannel}}
-            <DButton
-              @icon="pencil-alt"
-              class="btn-flat"
-              @action={{this.editChannelTitle}}
-            />
-          {{/if}}
 
           {{#if (or @channel.threadingEnabled this.site.desktopView)}}
             <div class="chat-full-page-header__right-actions">
