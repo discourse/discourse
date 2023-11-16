@@ -26,11 +26,25 @@ const ALLOWED_KEYS = [
 export default TextField.extend({
   classNameBindings: ["invalid"],
 
-  keyDown: function (e) {
+  keyDown: function (event) {
     return (
-      ALLOWED_KEYS.includes(e.key) ||
-      (e.key === "-" && parseInt(this.get("min"), 10) < 0)
+      ALLOWED_KEYS.includes(event.key) ||
+      (event.key === "-" && this._minNumber && this._minNumber < 0)
     );
+  },
+
+  get _minNumber() {
+    if (!this.get("min")) {
+      return;
+    }
+    return parseInt(this.get("min"), 10);
+  },
+
+  get _maxNumber() {
+    if (!this.get("max")) {
+      return;
+    }
+    return parseInt(this.get("max"), 10);
   },
 
   @discourseComputed("number")
