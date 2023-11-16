@@ -79,6 +79,10 @@ export default class SearchMenu extends Component {
       classes.push("menu-panel-results");
     }
 
+    if (this.loading) {
+      classes.push("loading");
+    }
+
     return classes.join(" ");
   }
 
@@ -151,7 +155,7 @@ export default class SearchMenu extends Component {
   clearSearch(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.search.updateActiveGlobalTerm("");
+    this.search.activeGlobalSearchTerm = "";
     focusSearchInput();
     this.triggerSearch();
   }
@@ -162,7 +166,7 @@ export default class SearchMenu extends Component {
     if (opts.setTopicContext) {
       this.search.inTopicContext = true;
     }
-    this.search.updateActiveGlobalTerm(term);
+    this.search.activeGlobalSearchTerm = term;
     this.triggerSearch();
   }
 
@@ -266,6 +270,7 @@ export default class SearchMenu extends Component {
       this.loading = false;
       this.invalidTerm = true;
     } else {
+      this.loading = true;
       this.invalidTerm = false;
 
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {

@@ -1,13 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Service, { inject as service } from "@ember/service";
+import Service from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
 export default class Search extends Service {
-  @service appEvents;
-
   @tracked activeGlobalSearchTerm = "";
   @tracked searchContext;
   @tracked highlightTerm;
@@ -19,14 +17,6 @@ export default class Search extends Service {
 
   get contextType() {
     return this.searchContext?.type || null;
-  }
-
-  updateActiveGlobalTerm(term) {
-    this.activeGlobalSearchTerm = term;
-
-    // This appEvent allows themes/plugins to listen for search term changes without relying on
-    // an observer.
-    this.appEvents.trigger("search:term-updated", { term });
   }
 
   // The need to navigate with the keyboard creates a lot shared logic

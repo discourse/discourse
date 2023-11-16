@@ -29,12 +29,7 @@
 
       <PluginOutlet
         @name="search-menu-results-top"
-        @outletArgs={{hash
-          inTopicContext=this.search.inTopicContext
-          searchTermChanged=@searchTermChanged
-          searchTopics=@searchTopics
-          closeSearchMenu=@closeSearchMenu
-        }}
+        @outletArgs={{hash closeSearchMenu=@closeSearchMenu}}
       />
 
       {{#if (and @searchTopics this.resultTypesWithComponent)}}
