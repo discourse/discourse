@@ -158,7 +158,7 @@ jobs:
           env.USES_PARALLEL_DATABASES == 'true' &&
           steps.app-cache.outputs.cache-hit != 'true'
         run: |
-          script/silence_successful_output bin/rake parallel:create
+          bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
 
       - name: Dump database for cache
