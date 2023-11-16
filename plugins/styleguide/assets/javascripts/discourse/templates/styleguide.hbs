@@ -15,6 +15,48 @@
   </section>
 
   <section class="styleguide-contents">
+    <div class="github-onebox">
+      <div class="github-onebox__repo-info">
+        <div class="github-onebox__repo-details">
+          <div class="github-onebox__author">
+            {{d-icon "user"}}
+            <span class="github-onebox__author-name">Charlie</span>
+          </div>
+          <div class="github-onebox__text">contributed to</div>
+          <div class="github-onebox__repo">
+            {{d-icon "fab-github"}}
+            <span class="github-onebox__repo-name">discourse/discourse</span>
+          </div>
+        </div>
+        <div class="github-onebox__repo-status">
+          <span class="github-onebox__repo_changes">
+            <span class="github-onebox__repo-added">+400</span>
+            <span class="github-onebox__repo-change-divider">/</span>
+            <span class="github-onebox__repo-removed">-212</span>
+          </span>
+          <span class="github-onebox__repo_tag --merged">merged</span>
+        </div>
+      </div>
+      <div class="github-onebox__content">
+        <div class="github-onebox__title">
+          <a
+            class="github-onebox__link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >FIX: correct online indicator for non interactive</a>
+          <DButton
+            @class="github-onebox__expand-button"
+            @icon="chevron-down"
+            @title=""
+            @action=""
+          />
+        </div>
+        <div class="github-onebox__description">In addition, the code syntax
+          highlighting and copy buttons were broken in fullscreen because of
+          modal changes over time. It is not the things themselves that disturb
+          people but the judgements they make about these things.</div>
+      </div>
+    </div>
     {{outlet}}
   </section>
 </section>

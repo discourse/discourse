@@ -1,0 +1,106 @@
+.github-onebox {
+  //add this line when implementing, will scope to chat while not restricting the component to be used elsewhere later on
+  // .main-chat-outlet & {
+  border: 2px solid var(--primary-low);
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
+
+  &__repo-info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__repo-details {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    white-space: nowrap;
+  }
+  &__author-name {
+    font-weight: bold;
+  }
+  &__text {
+    color: var(--primary-high);
+  }
+
+  .d-icon-fab-github {
+    color: var(--github);
+  }
+
+  &__repo-status {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    flex-wrap: wrap-reverse;
+    gap: 0.5rem;
+    flex-shrink: 1;
+  }
+
+  &__repo_tag {
+    border-radius: 1rem;
+    padding: 0.15rem 0.5rem;
+    color: #fff;
+    font-size: var(--font-down-1-rem);
+
+    &.--open {
+      background-color: #1f883d;
+    }
+
+    &.--draft {
+      background-color: #6e7781;
+    }
+
+    &.--closed {
+      background-color: #cf222e;
+    }
+
+    &.--merged {
+      background-color: #7f32da;
+    }
+  }
+
+  &__repo-changes {
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__repo-added {
+    color: #1f883d;
+    font-weight: bold;
+  }
+  &__repo-removed {
+    color: #cf222e;
+    font-weight: bold;
+  }
+
+  &__repo-change-divider {
+    color: var(--primary-medium);
+  }
+
+  &__title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  &__link {
+    font-size: var(--font-up-1-rem);
+    font-weight: bold;
+    display: -webkit-inline-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  &__expand-button {
+    height: var(--font-up-2-rem);
+  }
+
+  &__description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  // }
+}
