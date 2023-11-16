@@ -2,7 +2,7 @@
 
 describe "Post small actions", type: :system do
   fab!(:current_user) { Fabricate(:user) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 

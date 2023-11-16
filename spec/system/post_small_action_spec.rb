@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Post small actions", type: :system do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:admin)
+  fab!(:topic)
   fab!(:first_post) do
     Fabricate(:post, topic: topic, raw: "This is a special post with special stuff")
   end
