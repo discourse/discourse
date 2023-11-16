@@ -43,7 +43,7 @@ const ApplicationRoute = DiscourseRoute.extend({
   clientErrorHandler: service(),
   login: service(),
 
-  get includeExternalLoginMethods() {
+  get isOnlyOneExternalLoginMethod() {
     return (
       !this.siteSettings.enable_local_logins &&
       this.externalLoginMethods.length === 1
@@ -241,7 +241,7 @@ const ApplicationRoute = DiscourseRoute.extend({
         : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.includeExternalLoginMethods) {
+      if (this.isOnlyOneExternalLoginMethod) {
         this.login.externalLogin(this.externalLoginMethods[0]);
       } else {
         this.modal.show(LoginModal, {
@@ -260,7 +260,7 @@ const ApplicationRoute = DiscourseRoute.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.includeExternalLoginMethods) {
+      if (this.isOnlyOneExternalLoginMethod) {
         // we will automatically redirect to the external auth service
         this.login.externalLogin(this.externalLoginMethods[0], {
           signup: true,
