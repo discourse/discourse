@@ -534,6 +534,28 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
     );
   });
 
+  test("topic results - topic search scope - clicking a search result navigates to topic url", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+
+    const firstSearchResult =
+      ".search-menu .results li:nth-of-type(1) a.search-link";
+    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
+    assert.strictEqual(
+      query(firstSearchResult).getAttribute("href"),
+      firstTopicResultUrl
+    );
+
+    await click(firstSearchResult);
+    assert.strictEqual(
+      currentURL(),
+      firstTopicResultUrl,
+      "redirects to clicked search result url"
+    );
+  });
+
   test("search menu keyboard navigation", async function (assert) {
     const container = ".search-menu .results";
     await visit("/");

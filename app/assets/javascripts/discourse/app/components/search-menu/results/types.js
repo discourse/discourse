@@ -23,6 +23,9 @@ export default class Types extends Component {
 
   @action
   onClick(event) {
+    if (wantsNewWindow(event)) {
+      return;
+    }
     this.routeToSearchResult(event);
   }
 
@@ -33,6 +36,8 @@ export default class Types extends Component {
       event.preventDefault();
       return false;
     } else if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
       this.routeToSearchResult(event);
       return false;
     }
@@ -43,12 +48,6 @@ export default class Types extends Component {
 
   @action
   routeToSearchResult(event) {
-    if (wantsNewWindow(event)) {
-      return;
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
     DiscourseURL.routeTo(event.target.href);
     this.args.closeSearchMenu();
   }
