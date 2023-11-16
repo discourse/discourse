@@ -46,7 +46,7 @@ export default class JsonSchemaEditorModal extends Component {
   _loadEditor(editor) {
     let { JSONEditor } = window;
 
-    JSONEditor.defaults.options.theme = "bootstrap4";
+    JSONEditor.defaults.options.theme = "barebones";
     JSONEditor.defaults.iconlibs = {
       discourseIcons: DiscourseJsonSchemaEditorIconlib,
     };
@@ -62,7 +62,6 @@ export default class JsonSchemaEditorModal extends Component {
       disable_edit_json: true,
       disable_properties: true,
       disable_collapse: false,
-      remove_button_labels: true,
       show_errors: "never",
       startval: this.value ? JSON.parse(this.value) : null,
     });
@@ -76,6 +75,8 @@ class DiscourseJsonSchemaEditorIconlib {
       add: "plus",
       moveup: "arrow-up",
       movedown: "arrow-down",
+      moveleft: "chevron-left",
+      moveright: "chevron-right",
       copy: "copy",
       collapse: "chevron-down",
       expand: "chevron-up",
