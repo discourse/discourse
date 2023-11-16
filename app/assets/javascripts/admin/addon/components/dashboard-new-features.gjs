@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
@@ -17,7 +18,7 @@ export default class DashboardNewFeatures extends Component {
         this.newFeatures = json.new_features;
         this.isLoaded = true;
       })
-      .catch(() => {
+      .finally(() => {
         this.isLoaded = true;
       });
   }
@@ -29,12 +30,12 @@ export default class DashboardNewFeatures extends Component {
           <DashboardNewFeatureItem @item={{feature}} />
         {{/each}}
       {{else if this.isLoaded}}
-        {{i18n "admin.dashboard.new_features.previous_announcements"}}
-
-        <a
-          href="https://meta.discourse.org/tags/c/announcements/67/release-notes"
-        >Discourse Meta</a>
-
+        {{htmlSafe
+          (i18n
+            "admin.dashboard.new_features.previous_announcements"
+            url="https://meta.discourse.org/tags/c/announcements/67/release-notes"
+          )
+        }}
       {{/if}}
     </div>
   </template>

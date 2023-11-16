@@ -28,7 +28,12 @@ export default class DashboardNewFeatureItem extends Component {
         <div class="admin-new-feature-item__feature-description">
           <CookText @rawText={{@item.description}} />
           {{#if @item.link}}
-            <a href={{@item.link}} class="admin-new-feature-item__learn-more">
+            <a
+              href={{@item.link}}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="admin-new-feature-item__learn-more"
+            >
               {{i18n "admin.dashboard.new_features.learn_more"}}
             </a>
           {{/if}}

@@ -4677,7 +4677,7 @@ en:
         problems_found: "Some advice based on your current site settings"
         new_features:
           title: "What's new"
-          previous_announcements: "You can see previous new feature announcements on "
+          previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
         last_checked: "Last checked"
         refresh_problems: "Refresh"
