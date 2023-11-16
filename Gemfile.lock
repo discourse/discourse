@@ -498,7 +498,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.9)
+    unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
     unicorn (6.1.0)
       kgio (~> 2.6)
