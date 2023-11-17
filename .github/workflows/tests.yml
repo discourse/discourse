@@ -330,19 +330,21 @@ jobs:
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
-        run: |
-          yarn install --frozen-lockfile
-          cd ../next-ember-version-wrapper && yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile
 
-      - name: Core QUnit (Ember 3)
-        if: matrix.updated_ember == false
-        working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember exam --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
-        timeout-minutes: 15
-
-      - name: Core QUnit (Ember 5)
+      - name: Upgrade Ember
         if: matrix.updated_ember == true
-        run: script/with_updated_ember bin/yarn-app ember exam --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        run: script/upgrade_ember.rb
+
+      - name: Ember Build
+        working-directory: ./app/assets/javascripts/discourse
+        run: |
+          mkdir /tmp/emberbuild
+          yarn ember build --environment=test -o /tmp/emberbuild
+
+      - name: Core QUnit
+        working-directory: ./app/assets/javascripts/discourse
+        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v3

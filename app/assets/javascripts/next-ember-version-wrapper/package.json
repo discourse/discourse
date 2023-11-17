@@ -1,7 +1,0 @@
-{
-  "name": "next-ember-version-wrapper",
-  "private": true,
-  "dependencies": {
-    "ember-source": "^5.4.0"
-  }
-}
