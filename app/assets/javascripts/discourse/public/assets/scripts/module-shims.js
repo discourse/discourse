@@ -46,16 +46,14 @@ define("ember-jquery-legacy", ["exports"], function (exports) {
   };
 });
 
-// TODO make this conditional so it only runs for old ember
 // ember-cached-decorator-polyfill uses a Babel transformation to apply this polyfill in core.
 // Adding that Babel transformation to themes and plugins will be complex, so we use this to
 // patch it at runtime. This can be removed once `@glimmer/tracking` is updated to a version
 // with native `@cached` support.
 const glimmerTracking = require("@glimmer/tracking");
 if (glimmerTracking.cached) {
-  console.error(
-    "@glimmer/tracking natively supports the @cached decorator. The polyfill can be removed."
-  );
+  // No-op. Can be removed once we're fully upgraded to Ember 4+
+  // Search juice: EMBER_MAJOR_VERSION < 4;
 } else {
   Object.defineProperty(glimmerTracking, "cached", {
     get: () => require("ember-cached-decorator-polyfill").cached,
