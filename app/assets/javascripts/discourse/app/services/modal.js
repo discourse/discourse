@@ -5,12 +5,12 @@ import Service, { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import $ from "jquery";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
+import { EMBER_MAJOR_VERSION } from "discourse/lib/ember-version";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import deprecated, {
   withSilencedDeprecations,
 } from "discourse-common/lib/deprecated";
 import I18n from "discourse-i18n";
-import { EMBER_MAJOR_VERSION } from "discourse/lib/ember-version";
 
 const LEGACY_OPTS = new Set([
   "admin",
