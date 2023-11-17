@@ -2,13 +2,15 @@
   <div class="card-cloak hidden"></div>
 {{/if}}
 
-<UserCardContents
-  @topic={{this.topic.model}}
-  @showUser={{this.showUser}}
-  @filterPosts={{this.filterPosts}}
-  @composePrivateMessage={{route-action "composePrivateMessage"}}
-  role="dialog"
-/>
+<PluginOutlet @name="user-card-content-container">
+  <UserCardContents
+    @topic={{this.topic.model}}
+    @showUser={{this.showUser}}
+    @filterPosts={{this.filterPosts}}
+    @composePrivateMessage={{route-action "composePrivateMessage"}}
+    role="dialog"
+  />
+</PluginOutlet>
 
 <GroupCardContents
   @topic={{this.topic.model}}

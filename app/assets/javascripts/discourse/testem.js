@@ -156,17 +156,21 @@ if (process.env.TESTEM_FIREFOX_PATH) {
 }
 
 const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
+const themeTestPages = process.env.THEME_TEST_PAGES;
 
-if (process.argv.includes("-t")) {
-  // Running testem without ember cli. Probably for theme-qunit
-  const testPage = process.argv[process.argv.indexOf("-t") + 1];
-
+if (themeTestPages) {
+  module.exports.test_page = themeTestPages.split(",");
   module.exports.proxies = {};
+
+  // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`
+  // requests. This is required because testem prepends a string to the path of the `test_page` option when it makes
+  // the request and there is no easy way for us to strip the string from the path through the proxy. As such, we let the
+  // destination server handle the request base on the prefix instead.
   module.exports.proxies[`/*/theme-qunit`] = {
-    target: `${target}${testPage}`,
-    ignorePath: true,
+    target: `${target}/testem-theme-qunit`,
     xfwd: true,
   };
+
   module.exports.proxies["/*/*"] = { target, xfwd: true };
 
   module.exports.middleware = [

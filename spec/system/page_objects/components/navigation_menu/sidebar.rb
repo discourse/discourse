@@ -6,7 +6,7 @@ module PageObjects
       class Sidebar < Base
         def open_on_mobile
           click_button("toggle-hamburger-menu")
-          page.has_no_css?("div.menu-panel.animating")
+          wait_for_animation(find("div.menu-panel"))
         end
 
         def visible?

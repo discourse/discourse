@@ -45,7 +45,7 @@ export default class ConfirmSession extends Component {
         return;
       }
 
-      const result = await ajax("/u/confirm-session", {
+      const result = await ajax("/u/confirm-session.json", {
         type: "POST",
         data: { publicKeyCredential },
       });
@@ -67,7 +67,7 @@ export default class ConfirmSession extends Component {
       ? null
       : I18n.t("user.confirm_access.incorrect_password");
 
-    const result = await ajax("/u/confirm-session", {
+    const result = await ajax("/u/confirm-session.json", {
       type: "POST",
       data: {
         password: this.password,

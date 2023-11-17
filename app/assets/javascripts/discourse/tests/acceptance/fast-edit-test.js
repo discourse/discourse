@@ -45,6 +45,9 @@ acceptance("Fast Edit", function (needs) {
     const textNode = query("#post_1 .cooked p").childNodes[0];
 
     await selectText(textNode, 9);
+
+    assert.dom(".quote-button").exists();
+
     await triggerKeyEvent(document, "keypress", "E");
 
     assert.dom("#fast-edit-input").exists();
@@ -60,7 +63,11 @@ acceptance("Fast Edit", function (needs) {
 
     // Closing
     await selectText(textNode, 9);
+
+    assert.dom(".quote-button").exists();
+
     await triggerKeyEvent(document, "keypress", "E");
+
     assert.dom("#fast-edit-input").exists();
 
     await triggerKeyEvent("#fast-edit-input", "keydown", "Escape");

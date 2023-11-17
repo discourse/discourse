@@ -10,8 +10,16 @@ export default {
     DiscourseURL.rewrite(/^\/groups$/, "/g");
     DiscourseURL.rewrite(/^\/groups\//, "/g/");
 
-    // Initialize default homepage
+    const currentUser = owner.lookup("service:current-user");
     let siteSettings = owner.lookup("service:site-settings");
+
+    // Setup `/my` redirects
+    if (currentUser) {
+      DiscourseURL.rewrite(/^\/my\//, `/u/${currentUser.username_lower}/`);
+    } else {
+      DiscourseURL.rewrite(/^\/my\/.*/, "/login-preferences");
+    }
+
     initializeDefaultHomepage(siteSettings);
   },
 };
