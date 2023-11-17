@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Composer Form Templates", type: :system do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:form_template_1) do
     Fabricate(
       :form_template,
@@ -158,7 +158,6 @@ describe "Composer Form Templates", type: :system do
     SiteSetting.experimental_form_templates = true
     SiteSetting.authorized_extensions = "*"
     sign_in user
-    Group.refresh_automatic_groups!
   end
 
   describe "discard draft modal" do
