@@ -101,7 +101,7 @@ module.exports = {
     },
 
     "ember-cli-babel": {
-      throwUnlessParallelizable: false,
+      throwUnlessParallelizable: true,
     },
 
     "ember-this-fallback": {
