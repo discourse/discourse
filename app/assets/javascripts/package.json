@@ -13,6 +13,7 @@
     "discourse-hbr",
     "discourse-i18n",
     "discourse-markdown-it",
+    "discourse-plugin",
     "discourse-plugins",
     "discourse-widget-hbs",
     "ember-cli-progress-ci",

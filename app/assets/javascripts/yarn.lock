@@ -5230,6 +5230,13 @@ ember-on-resize-modifier@^2.0.2:
     ember-modifier "^3.2.7 || ^4.0.0"
     ember-resize-observer-service "^1.1.0"
 
+ember-polaris-service@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/ember-polaris-service/-/ember-polaris-service-0.5.0.tgz#a4f8054adff78f0cacb5ceacd6e347e8f688574a"
+  integrity sha512-dugyu/H+h1dBjKpPQvQ/Mtml32lWnP7sDvMLKbqNnS2M8NGVQ/j7dov8FR0gAKwjWhCn+osUekGiG4PhEZ3wqg==
+  dependencies:
+    "@embroider/addon-shim" "^1.0.0"
+
 ember-qunit@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-6.2.0.tgz#4d492951035d1df5c7802c4ae6cf299c8f41d75b"
