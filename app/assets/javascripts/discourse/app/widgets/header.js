@@ -503,6 +503,12 @@ export default createWidget("header", {
     }
 
     let contents = () => {
+      const extraHeaderIcons = new RenderGlimmer(
+        this,
+        "div.extra-header-icons",
+        hbs`<PluginOutlets::ExtraHeaderIcons />`
+      );
+
       const headerIcons = this.attach("header-icons", {
         hamburgerVisible: state.hamburgerVisible,
         userVisible: state.userVisible,
@@ -513,10 +519,14 @@ export default createWidget("header", {
       });
 
       if (attrs.onlyIcons) {
-        return headerIcons;
+        return [extraHeaderIcons, headerIcons];
       }
 
-      const panels = [this.attach("header-buttons", attrs), headerIcons];
+      const panels = [
+        this.attach("header-buttons", attrs),
+        extraHeaderIcons,
+        headerIcons,
+      ];
 
       if (state.searchVisible || this.search.visible) {
         if (this.currentUser?.experimental_search_menu_groups_enabled) {
