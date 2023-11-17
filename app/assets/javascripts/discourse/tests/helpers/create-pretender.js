@@ -359,8 +359,8 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/search", (request) => {
     if (
-      request.queryParams.q.includes("discourse") &&
-      request.queryParams.q !== "discourse visited"
+      request.queryParams.q === "discourse" ||
+      request.queryParams.q === "discourse order:latest"
     ) {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "discourse visited") {
