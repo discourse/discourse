@@ -23,6 +23,18 @@ const EMBER_MAJOR_VERSION = parseInt(
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
+function filterForEmberVersion(tree) {
+  if (EMBER_MAJOR_VERSION < 4) {
+    return tree;
+  }
+
+  return funnel(tree, {
+    // d-modal-legacy includes a named outlet which would cause
+    // a build failure in modern Ember
+    exclude: ["**/components/d-modal-legacy.hbs"],
+  });
+}
+
 module.exports = function (defaults) {
   const discourseRoot = path.resolve("../../../..");
   const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
@@ -63,7 +75,7 @@ module.exports = function (defaults) {
     },
 
     "ember-cli-babel": {
-      throwUnlessParallelizable: false,
+      throwUnlessParallelizable: true,
     },
 
     babel: {
@@ -80,7 +92,7 @@ module.exports = function (defaults) {
     historySupportMiddleware: false,
 
     trees: {
-      app: RawHandlebarsCompiler("app"),
+      app: filterForEmberVersion(RawHandlebarsCompiler("app")),
     },
   });
 

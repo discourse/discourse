@@ -12,8 +12,6 @@
 {{/if}}
 
 {{#if this.renderLegacy}}
-  {{! Legacy modals depend on this wrapper being in the DOM at all times. Eventually this will be dropped.
-For now, we mitigate the potential impact on things like tests by removing the `modal` and `d-modal` classes when inactive }}
   <DModalLegacy
     @modalClass={{if
       this.modal.isLegacy
@@ -32,7 +30,5 @@ For now, we mitigate the potential impact on things like tests by removing the `
     @hidden={{this.modal.hidden}}
     @errors={{this.modal.errors}}
     @closeModal={{this.closeModal}}
-  >
-    {{outlet "modalBody"}}
-  </DModalLegacy>
+  />
 {{/if}}

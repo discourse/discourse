@@ -109,14 +109,6 @@ module.exports = {
     },
   },
 
-  // TODO - gate on version, and shouldn't be in discourse-plugins
-  setupPreprocessorRegistry(type, registry) {
-    registry.add("htmlbars-ast-plugin", {
-      name: "rewrite-named-outlets",
-      plugin: require.resolve("../discourse/lib/rewrite-named-outlets"),
-    });
-  },
-
   pluginInfos() {
     const root = path.resolve("../../../../plugins");
     const pluginDirectories = fs
