@@ -298,6 +298,7 @@ jobs:
       fail-fast: false
       matrix:
         browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+        updated_ember: [false]
         include:
           - browser: chrome
             updated_ember: true
