@@ -832,7 +832,7 @@ RSpec.describe Email::Receiver do
     end
 
     it "accepts emails with wrong reply key if the system knows about the forwarded email" do
-      Fabricate(:user, email: "bob@bar.com")
+      Fabricate(:user, email: "bob@bar.com", refresh_auto_groups: true)
       Fabricate(
         :incoming_email,
         raw: <<~RAW,
@@ -1555,7 +1555,12 @@ RSpec.describe Email::Receiver do
       DiscourseEvent.on(:topic_created, &handler)
 
       user =
-        Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+        Fabricate(
+          :user,
+          email: "existing@bar.com",
+          trust_level: SiteSetting.email_in_min_trust,
+          refresh_auto_groups: true,
+        )
       group = Fabricate(:group)
 
       group.add(user)
@@ -1642,10 +1647,10 @@ RSpec.describe Email::Receiver do
     end
 
     it "works when approving is enabled" do
-      SiteSetting.approve_unless_trust_level = 4
+      SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
 
-      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
-      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3], refresh_auto_groups: true)
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4], refresh_auto_groups: true)
 
       category.set_permissions(Group[:trust_level_4] => :full)
       category.save!

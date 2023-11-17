@@ -158,6 +158,7 @@ describe "Composer Form Templates", type: :system do
     SiteSetting.experimental_form_templates = true
     SiteSetting.authorized_extensions = "*"
     sign_in user
+    Group.refresh_automatic_groups!
   end
 
   describe "discard draft modal" do
