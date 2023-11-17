@@ -99,4 +99,19 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
       end
     end
   end
+
+  context "when click on reply indicator" do
+    before do
+      Fabricate(:chat_message, chat_channel: channel_1)
+      Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: message_1)
+    end
+
+    it "highlights the message" do
+      chat_page.visit_channel(channel_1)
+
+      page.find(".chat-reply").click
+
+      expect(channel_page.messages).to have_message(id: message_1.id, highlighted: true)
+    end
+  end
 end

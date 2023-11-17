@@ -23,6 +23,7 @@ export default class Login extends Component {
   @service dialog;
   @service siteSettings;
   @service site;
+  @service login;
 
   @tracked loggingIn = false;
   @tracked loggedIn = false;
@@ -45,16 +46,6 @@ export default class Login extends Component {
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
   @tracked secondFactorToken;
-
-  constructor() {
-    super(...arguments);
-
-    if (this.args.model.isExternalLogin) {
-      this.externalLogin(this.args.model.externalLoginMethod, {
-        signup: this.args.model.signup,
-      });
-    }
-  }
 
   get awaitingApproval() {
     return (
@@ -183,7 +174,7 @@ export default class Login extends Component {
   }
 
   @action
-  async login() {
+  async triggerLogin() {
     if (this.loginDisabled) {
       return;
     }
@@ -321,23 +312,15 @@ export default class Login extends Component {
     }
   }
 
-  async externalLogin(loginMethod, { signup }) {
-    try {
-      this.loggingIn = true;
-      await loginMethod.doLogin({ signup });
-      this.args.closeModal();
-    } catch {
-      this.loggingIn = false;
-    }
-  }
-
   @action
   async externalLoginAction(loginMethod) {
     if (this.loginDisabled) {
       return;
     }
-
-    await this.externalLogin(loginMethod, { signup: false });
+    this.login.externalLogin(loginMethod, {
+      signup: false,
+      setLoggingIn: (value) => (this.loggingIn = value),
+    });
   }
 
   @action

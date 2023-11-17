@@ -14,6 +14,7 @@ const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const withSideWatch = require("./lib/with-side-watch");
 const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 
 const EMBER_MAJOR_VERSION = parseInt(
@@ -89,10 +90,12 @@ module.exports = function (defaults) {
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
     },
 
-    historySupportMiddleware: false,
-
     trees: {
-      app: filterForEmberVersion(RawHandlebarsCompiler("app")),
+      app: filterForEmberVersion(
+        RawHandlebarsCompiler(
+          withSideWatch("app", { watching: ["../discourse-markdown-it"] })
+        )
+      ),
     },
   });
 
