@@ -358,7 +358,10 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/clicks/track", success);
 
   pretender.get("/search", (request) => {
-    if (request.queryParams.q === "discourse") {
+    if (
+      request.queryParams.q.includes("discourse") &&
+      request.queryParams.q !== "discourse visited"
+    ) {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "discourse visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
