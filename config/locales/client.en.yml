@@ -2381,6 +2381,7 @@ en:
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
       toggle_unlisted: "Toggle Unlisted"
+      insert_table: "Insert Table"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to…"
@@ -4641,6 +4642,64 @@ en:
           other: "The input must be more than %{count}."
         patternMismatch: "Please match the requested format."
         badInput: "Please enter a valid input."
+
+    table_builder:
+      title: "Table Builder"
+      modal:
+        title: "Table Builder"
+        create: "Build Table"
+        help:
+          title: "Using the Spreadsheet Editor"
+          enter_key: "Enter"
+          tab_key: "Tab"
+          new_row: "at the end of a row to insert a new row."
+          new_col: "at the end of a column to insert a new column."
+          options: "Right-click on cells to access more options in a dropdown menu."
+        confirm_close: "Are you sure you want to close the table bulder? Any unsaved changes will be lost."
+      edit:
+        btn_edit: "Edit Table"
+        modal:
+          title: "Edit Table"
+          cancel: "cancel"
+          save: "Save"
+          reason: "why are you editing?"
+          trigger_reason: "Add reason for edit"
+        default_edit_reason: "Update Table with Table Editor"
+      default_header:
+        col_1: "Column 1"
+        col_2: "Column 2"
+        col_3: "Column 3"
+        col_4: "Column 4"
+      spreadsheet:
+        no_records_found: "No records found"
+        show: "Show"
+        entries: "entries"
+        about: "About"
+        prompts:
+          delete_selected_rows: "Are you sure you want to delete the selected rows?"
+          delete_selected_cols: "Are you sure you want to delete the selected columns?"
+          will_destroy_merged_cells: "This action will destroy any existing merged cells. Are you sure?"
+          will_clear_search_results: "This action will destroy any existing merged cells. Are you sure?"
+          conflicts_with_merged_cells: "There is a conflict with another merged cell"
+        invalid_merge_props: "Invalid merged properties"
+        cells_already_merged: "Cell already merged"
+        no_cells_selected: "No cells selected"
+        context_menu:
+          row:
+            before: "Insert a new row before"
+            after: "Insert a new row after"
+            delete: "Delete selected rows"
+          col:
+            before: "Insert a new column before"
+            after: "Insert a new column after"
+            delete: "Delete selected columns"
+            rename: "Rename this column"
+          order:
+            ascending: "Order ascending"
+            descending: "Order descending"
+          copy: "Copy..."
+          paste: "Paste..."
+          save: "Save as..."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

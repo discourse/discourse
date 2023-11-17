@@ -1,0 +1,41 @@
+.open-popup-link {
+  display: inline;
+  margin-inline: 0.25em;
+}
+
+.btn-edit-table {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.fullscreen-table-wrapper:hover .btn-edit-table {
+  opacity: 100%;
+}
+
+.mobile-view {
+  .btn-edit-table {
+    display: none;
+    z-index: 2;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .fullscreen-table-wrapper {
+    position: relative;
+
+    &:hover {
+      table {
+        opacity: 0.5;
+      }
+
+      .btn-edit-table {
+        display: block;
+        z-index: 2;
+      }
+    }
+  }
+}
