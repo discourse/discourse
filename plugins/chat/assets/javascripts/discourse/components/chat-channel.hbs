@@ -11,6 +11,7 @@
   {{did-insert this.didUpdateChannel}}
   {{did-insert this.addAutoFocusEventListener}}
   {{will-destroy this.removeAutoFocusEventListener}}
+  {{did-update this.loadMessages @targetMessageId}}
   data-id={{@channel.id}}
 >
   <ChatFullPageHeader
