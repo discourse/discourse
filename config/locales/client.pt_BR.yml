@@ -1512,7 +1512,7 @@ pt_BR:
         browser_active: '%{browser} | <span class="active">ativar agora</span>'
         browser_last_seen: "%{browser}|%{date}"
       last_posted: "Última postagem"
-      last_seen: "Vistos"
+      last_seen: "Visto por último"
       created: "Ingressou"
       log_out: "Sair"
       location: "Localização"
@@ -3085,7 +3085,7 @@ pt_BR:
         other: "ver %{count} respostas ocultas"
       sr_reply_to: "Resposta à postagem %{post_number} por %{username}"
       notice:
-        new_user: "Esta é a primeira vez que o %{user} postou. Vamos dar boas-vindas à nossa comunidade"
+        new_user: "Esta é a primeira vez que %{user} postou. Vamos dar boas-vindas à nossa comunidade"
         returning_user: "Faz tempo que não vemos %{user}. Sua última postagem foi em %{time}."
       unread: "A postagem não foi lida"
       has_replies:
