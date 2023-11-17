@@ -32,9 +32,9 @@ export default class AdminPluginsListItem extends Component {
 
   <template>
     <tr data-plugin-name={{@plugin.name}}>
-      <td class="plugin-details">
-        <div class="name-with-badges">
-          <div class="name">
+      <td class="admin-plugins-list__row">
+        <div class="admin-plugins-list__name-with-badges">
+          <div class="admin-plugins-list__name">
             {{#if @plugin.linkUrl}}
               <a
                 href={{@plugin.linkUrl}}
@@ -49,7 +49,7 @@ export default class AdminPluginsListItem extends Component {
           <div class="badges">
             {{#if @plugin.isExperimental}}
               <span
-                class="plugin-badge -experimental"
+                class="admin-plugins-list__badge -experimental"
                 title={{i18n "admin.plugins.experimental"}}
               >
                 {{i18n "admin.plugins.experimental_badge"}}
@@ -57,13 +57,15 @@ export default class AdminPluginsListItem extends Component {
             {{/if}}
           </div>
         </div>
-        <div class="author">
+        <div class="admin-plugins-list__author">
           {{@plugin.author}}
           {{#if @plugin.isOfficial}}
-            {{icon "fab-discourse"}}
+            <span title={{i18n "admin.plugins.official"}}>{{icon
+                "fab-discourse"
+              }}</span>
           {{/if}}
         </div>
-        <div class="about">
+        <div class="admin-plugins-list__about">
           {{@plugin.about}}
           {{#if @plugin.linkUrl}}
             <a
@@ -76,12 +78,12 @@ export default class AdminPluginsListItem extends Component {
           {{/if}}
         </div>
       </td>
-      <td class="version">
+      <td class="admin-plugins-list__version">
         <div class="label">{{i18n "admin.plugins.version"}}</div>
         {{@plugin.version}}<br />
         <PluginCommitHash @plugin={{@plugin}} />
       </td>
-      <td class="col-enabled">
+      <td class="admin-plugins-list__enabled">
         <div class="label">{{i18n "admin.plugins.enabled"}}</div>
         {{#if @plugin.enabledSetting}}
           <DToggleSwitch
@@ -92,7 +94,7 @@ export default class AdminPluginsListItem extends Component {
           <DToggleSwitch @state={{@plugin.enabled}} disabled={{true}} />
         {{/if}}
       </td>
-      <td class="settings">
+      <td class="admin-plugins-list__settings">
         {{#if this.currentUser.admin}}
           {{#if @plugin.hasSettings}}
             <LinkTo

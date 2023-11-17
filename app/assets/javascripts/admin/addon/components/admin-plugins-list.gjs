@@ -4,7 +4,7 @@ import AdminPluginsListItem from "./admin-plugins-list-item";
 
 export default class AdminPluginsList extends Component {
   <template>
-    <table class="admin-plugins grid">
+    <table class="admin-plugins-list grid">
       <thead>
         <tr>
           <th>{{i18n "admin.plugins.name"}}</th>
