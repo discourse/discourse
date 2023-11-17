@@ -13,20 +13,20 @@ describe "Admin Plugins List", type: :system, js: true do
   xit "shows the list of plugins" do
     visit "/admin/plugins"
 
-    plugin_row = find(".admin-plugins tr[data-plugin-name=\"spoiler-alert\"]")
+    plugin_row = find(".admin-plugins-list tr[data-plugin-name=\"spoiler-alert\"]")
     expect(plugin_row).to have_css(
-      "td.admin-plugins__list-item .admin-plugins__name-with-badges .admin-plugins__name",
+      "td.admin-plugins-list__row .admin-plugins__name-with-badges .admin-plugins__name",
       text: "Spoiler Alert",
     )
     expect(plugin_row).to have_css(
-      "td.admin-plugins__list-item .admin-plugins__author",
+      "td.admin-plugins-list__row .admin-plugins__author",
       text: I18n.t("admin_js.admin.plugins.author", { author: "Discourse" }),
     )
     expect(plugin_row).to have_css(
-      "td.admin-plugins__list-item .admin-plugins__name-with-badges .admin-plugins__name a[href=\"https://meta.discourse.org/t/12650\"]",
+      "td.admin-plugins-list__row .admin-plugins__name-with-badges .admin-plugins__name a[href=\"https://meta.discourse.org/t/12650\"]",
     )
     expect(plugin_row).to have_css(
-      "td.admin-plugins__list-item .admin-plugins__about",
+      "td.admin-plugins-list__row .admin-plugins__about",
       text: spoiler_alert_plugin.metadata.about,
     )
   end

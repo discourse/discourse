@@ -57,7 +57,7 @@
         tr {
           grid-template-columns: 0.25fr repeat(3, 1fr);
         }
-        .admin-plugins-list__list-item {
+        .admin-plugins-list__row {
           grid-column-start: 2;
           grid-column-end: -1;
         }
