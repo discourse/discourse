@@ -329,7 +329,9 @@ jobs:
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn install --frozen-lockfile
+        run: |
+          yarn install --frozen-lockfile
+          cd ../next-ember-version-wrapper yarn install --frozen-lockfile
 
       - name: Core QUnit (Ember 3)
         if: matrix.updated_ember != 'true'
