@@ -7,4 +7,6 @@ window.__widget_helpers = widgetHelpers;
 // TODO: Eliminate this global
 window.virtualDom = virtualDom;
 
-window.$ = window.jQuery = jQuery;
+if (!window.$) {
+  window.$ = window.jQuery = jQuery;
+}
