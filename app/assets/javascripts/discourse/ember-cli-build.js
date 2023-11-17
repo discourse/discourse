@@ -74,7 +74,9 @@ module.exports = function (defaults) {
     },
 
     trees: {
-      app: RawHandlebarsCompiler(withSideWatch("app", { watching: ["../discourse-markdown-it"] })),
+      app: RawHandlebarsCompiler(
+        withSideWatch("app", { watching: ["../discourse-markdown-it"] })
+      ),
     },
   });
 
