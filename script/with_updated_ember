@@ -1,0 +1,17 @@
+#!/bin/bash
+
+javascriptsDir=$(dirname "$0")/../app/assets/javascripts
+
+echo "[with_updated_ember] Running '$@' with ember-source overridden..." >&2
+
+(cd $javascriptsDir/next-ember-version-wrapper/node_modules/ember-source && yarn link) || exit 1
+(cd $javascriptsDir && yarn link ember-source) || exit 1
+
+("$@")
+STATUS=$?
+
+echo "[with_updated_ember] Done. Unlinking temporary ember-source..." >&2
+(cd $javascriptsDir && yarn unlink ember-source && yarn install -s --force) || exit 1
+(cd $javascriptsDir/next-ember-version-wrapper/node_modules/ember-source && yarn unlink) || exit 1
+
+exit $STATUS

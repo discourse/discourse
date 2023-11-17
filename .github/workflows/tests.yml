@@ -286,7 +286,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }})
+    name: core frontend (${{ matrix.browser }})${{ matrix.updated_ember && ' (Ember 5)' || '' }}
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
@@ -298,6 +298,9 @@ jobs:
       fail-fast: false
       matrix:
         browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+        include:
+          - browser: chrome
+            updated_ember: true
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
@@ -328,15 +331,16 @@ jobs:
         working-directory: ./app/assets/javascripts/discourse
         run: yarn install --frozen-lockfile
 
-      - name: Ember Build
+      - name: Core QUnit (Ember 3)
+        if: !matrix.updated_ember
         working-directory: ./app/assets/javascripts/discourse
-        run: |
-          mkdir /tmp/emberbuild
-          yarn ember build --environment=test -o /tmp/emberbuild
+        run: yarn ember exam --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        timeout-minutes: 15
 
-      - name: Core QUnit
+      - name: Core QUnit (Ember 5)
+        if: matrix.updated_ember
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        run: script/with_updated_ember yarn ember exam --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v3

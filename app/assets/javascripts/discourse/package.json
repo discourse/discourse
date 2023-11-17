@@ -13,7 +13,7 @@
     "build": "ember build",
     "start": "ember serve",
     "test": "ember test",
-    "postinstall": "../run-patch-package"
+    "postinstall": "(cd .. && yarn run postinstall)"
   },
   "dependencies": {
     "@glimmer/syntax": "^0.84.3",

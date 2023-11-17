@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "postinstall": "./run-patch-package"
+    "postinstall": "./run-patch-package && (cd next-ember-version-wrapper && yarn install -s)"
   },
   "workspaces": [
     "admin",
