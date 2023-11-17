@@ -6,6 +6,7 @@
   "workspaces": [
     "admin",
     "bootstrap-json",
+    "chat-lite",
     "deprecation-silencer",
     "dialog-holder",
     "discourse",

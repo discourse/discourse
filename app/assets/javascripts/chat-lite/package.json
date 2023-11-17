@@ -1,0 +1,59 @@
+{
+  "name": "chat-lite",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Discourse's chat plugin, but lite",
+  "author": "Discourse <team@discourse.org>",
+  "license": "GPL-2.0-only",
+  "keywords": [
+    "ember-addon"
+  ],
+  "exports": {
+    "./connectors/*": "./dist/connectors/*.js",
+    "./markdown-features/*": "./dist/markdown-features/*.js",
+    "./addon-main.js": "./addon-main.cjs"
+  },
+  "files": [
+    "addon-main.cjs",
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup --config",
+    "start": "rollup --config --watch --no-watch.clearScreen"
+  },
+  "dependencies": {
+    "@embroider/addon-shim": "^1.0.0",
+    "ember-auto-import": "^2.6.3",
+    "lodash": "^4.17.21"
+  },
+  "peerDependencies": {
+    "discourse-plugin": "*"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.0",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-proposal-decorators": "^7.20.13",
+    "@babel/plugin-transform-class-static-block": "^7.20.0",
+    "@babel/plugin-transform-typescript": "^7.22.15",
+    "@babel/runtime": "^7.17.0",
+    "@embroider/addon-dev": "^4.1.0",
+    "@rollup/plugin-babel": "^6.0.3",
+    "babel-plugin-ember-template-compilation": "^2.2.0",
+    "ember-template-imports": "^4.0.0",
+    "rollup": "^3.21.8"
+  },
+  "engines": {
+    "node": "16.* || >= 18",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.21.1"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "ember-addon": {
+    "version": 2,
+    "type": "addon",
+    "main": "addon-main.cjs",
+    "app-js": {}
+  }
+}
