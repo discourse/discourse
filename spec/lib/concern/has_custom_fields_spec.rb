@@ -347,6 +347,17 @@ RSpec.describe HasCustomFields do
       expect(item_with_json.custom_fields_clean?).to eq(true)
     end
 
+    it "doesn't update array fields when the items are the same, but appear in different orders" do
+      CustomFieldsTestItem.register_custom_field_type("array_field", :array)
+      test_item = CustomFieldsTestItem.create
+      test_item.custom_fields["array_field"] = %w[foo bar]
+      test_item.save_custom_fields
+      test_item.custom_fields["array_field"] = %w[bar foo]
+      expect { test_item.save_custom_fields }.not_to change {
+        CustomFieldsTestItemCustomField.last.id
+      }
+    end
+
     describe "create_singular" do
       it "creates new records" do
         item = CustomFieldsTestItem.create!

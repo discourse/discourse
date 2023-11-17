@@ -259,7 +259,8 @@ module HasCustomFields
 
         # let's iterate through our arrays and compare them
         array_fields.each do |field_name, fields|
-          if fields.length == dup[field_name].length && fields.map(&:value) == dup[field_name]
+          if fields.length == dup[field_name].length &&
+               fields.map(&:value).to_set == dup[field_name].to_set
             dup.delete(field_name)
           else
             fields.each(&:destroy!)
