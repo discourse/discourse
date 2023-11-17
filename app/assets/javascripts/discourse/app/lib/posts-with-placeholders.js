@@ -1,10 +1,10 @@
-import EmberArray from "@ember/array";
-import EmberObject from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import {
   arrayContentDidChange,
   arrayContentWillChange,
 } from "@ember/-internals/metal";
+import EmberArray from "@ember/array";
+import EmberObject from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export function Placeholder(viewName) {
   this.viewName = viewName;

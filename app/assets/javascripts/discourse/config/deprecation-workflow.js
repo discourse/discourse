@@ -13,5 +13,9 @@ globalThis.deprecationWorkflow.config = {
       handler: "silence",
       matchId: "discourse.decorate-widget.hamburger-widget-links",
     },
+    {
+      handler: "silence",
+      matchId: "deprecate-implicit-route-model",
+    },
   ],
 };

@@ -1,3 +1,4 @@
+import { arrayContentDidChange } from "@ember/-internals/metal";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
@@ -33,7 +34,7 @@ export default class SimpleList extends Component {
   @action
   changeValue(index, event) {
     this.collection.replace(index, 1, [event.target.value]);
-    this.collection.arrayContentDidChange(index);
+    arrayContentDidChange(this.collection, index);
     this._onChange();
   }
 
