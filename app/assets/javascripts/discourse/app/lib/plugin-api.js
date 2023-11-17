@@ -1654,8 +1654,13 @@ class PluginApi {
    * });
    * ```
    *
+   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead
    **/
   decorateTopicTitle(callback) {
+    deprecated(
+      "decorateTopicTitle is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead",
+      { id: "discourse.decorate-topic-title" }
+    );
     addTopicTitleDecorator(callback);
   }
 
