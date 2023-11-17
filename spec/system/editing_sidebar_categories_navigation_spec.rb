@@ -24,7 +24,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
   before { sign_in(user) }
 
   shared_examples "a user can edit the sidebar categories navigation" do |mobile|
-    xit "allows a user to edit the sidebar categories navigation", mobile: mobile do
+    it "allows a user to edit the sidebar categories navigation", mobile: mobile do
       visit "/latest"
 
       sidebar.open_on_mobile if mobile

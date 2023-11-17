@@ -12,6 +12,7 @@ import {
   getSearchKey,
   isValidSearchTerm,
   logSearchLinkClick,
+  reciprocallyRankedList,
   searchContextDescription,
   translateResults,
   updateRecentSearches,
@@ -78,6 +79,7 @@ export default Controller.extend({
   page: 1,
   resultCount: null,
   searchTypes: null,
+  additionalSearchResults: [],
   selected: [],
   error: null,
 
@@ -252,7 +254,7 @@ export default Controller.extend({
     return I18n.t("search.result_count", { count, plus, term });
   },
 
-  @observes("model.[posts,categories,tags,users].length")
+  @observes("model.{posts,categories,tags,users}.length", "searchResultPosts")
   resultCountChanged() {
     if (!this.model.posts) {
       return 0;
@@ -260,7 +262,7 @@ export default Controller.extend({
 
     this.set(
       "resultCount",
-      this.model.posts.length +
+      this.searchResultPosts.length +
         this.model.categories.length +
         this.model.tags.length +
         this.model.users.length
@@ -274,7 +276,7 @@ export default Controller.extend({
 
   hasSelection: gt("selected.length", 0),
 
-  @discourseComputed("selected.length", "model.posts.length")
+  @discourseComputed("selected.length", "searchResultPosts.length")
   hasUnselectedResults(selectionCount, postsCount) {
     return selectionCount < postsCount;
   },
@@ -306,6 +308,18 @@ export default Controller.extend({
     return bulkSelectEnabled
       ? "search-info bulk-select-visible"
       : "search-info";
+  },
+
+  @discourseComputed("model.posts", "additionalSearchResults")
+  searchResultPosts(posts, additionalSearchResults) {
+    if (additionalSearchResults?.list?.length > 0) {
+      return reciprocallyRankedList(
+        [posts, additionalSearchResults.list],
+        ["topic_id", additionalSearchResults.identifier]
+      );
+    } else {
+      return posts;
+    }
   },
 
   searchButtonDisabled: or("searching", "loading"),
@@ -464,9 +478,17 @@ export default Controller.extend({
     });
   },
 
+  @action
+  addSearchResults(list, identifier) {
+    this.set("additionalSearchResults", {
+      list,
+      identifier,
+    });
+  },
+
   actions: {
     selectAll() {
-      this.selected.addObjects(this.get("model.posts").mapBy("topic"));
+      this.selected.addObjects(this.get("searchResultPosts").mapBy("topic"));
 
       // Doing this the proper way is a HUGE pain,
       // we can hack this to work by observing each on the array
