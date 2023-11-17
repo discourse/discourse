@@ -328,13 +328,13 @@ jobs:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
+      - name: Upgrade Ember
+        if: matrix.updated_ember == true
+        run: script/switch_ember_version.rb 5  
+
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
         run: yarn install --frozen-lockfile
-
-      - name: Upgrade Ember
-        if: matrix.updated_ember == true
-        run: script/upgrade_ember.rb
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
