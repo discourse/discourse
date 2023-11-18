@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import {
   currentRouteName,
   getSettledState,
@@ -95,5 +96,23 @@ acceptance("Page Loading Indicator", function (needs) {
 
     assert.strictEqual(currentRouteName(), "about");
     assert.dom("#main-outlet section.about").exists();
+  });
+
+  test("it only performs one slide during nested loading events", async function (assert) {
+    this.siteSettings.page_loading_indicator = "slider";
+
+    await visit("/");
+
+    const events = [];
+    const service = getOwner(this).lookup("service:loading-slider");
+    service.on("stateChanged", (loading) => {
+      events.push(loading);
+    });
+
+    visit("/u/eviltrout/activity");
+
+    await settled();
+
+    assert.deepEqual(events, [true, false]);
   });
 });
