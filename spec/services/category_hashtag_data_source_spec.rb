@@ -7,10 +7,10 @@ RSpec.describe CategoryHashtagDataSource do
   end
   fab!(:category2) { Fabricate(:category, name: "Book Section", slug: "books", topic_count: 566) }
   fab!(:category3) { Fabricate(:category, slug: "movies", topic_count: 245) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   fab!(:category4) { Fabricate(:private_category, slug: "secret", group: group, topic_count: 40) }
   fab!(:category5) { Fabricate(:category, slug: "casual", topic_count: 99) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:guardian) { Guardian.new(user) }
   let(:uncategorized_category) { Category.find(SiteSetting.uncategorized_category_id) }
 

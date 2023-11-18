@@ -3,7 +3,7 @@
 require "wizard"
 
 RSpec.describe Wizard do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   before { SiteSetting.wizard_enabled = true }
 

@@ -5,13 +5,12 @@
   />
 
   <div
-    style={{unless this.noCategoryStyle (category-color-variable c.color)}}
+    style={{category-color-variable c.color}}
     data-category-id={{c.id}}
     data-notification-level={{c.notificationLevelString}}
     data-url={{c.url}}
     class="category category-box category-box-{{c.slug}}
-      {{if c.isMuted 'muted'}}
-      {{if this.noCategoryStyle 'no-category-boxes-style'}}"
+      {{if c.isMuted 'muted'}}"
   >
     <div class="category-box-inner">
       {{#unless c.isMuted}}

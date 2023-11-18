@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe StaticController do
-  fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload)
 
   describe "#favicon" do
     let(:filename) { "smallest.png" }

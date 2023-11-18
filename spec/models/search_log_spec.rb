@@ -54,7 +54,7 @@ RSpec.describe SearchLog, type: :model do
     end
 
     context "when logged in" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       it "logs and updates the search" do
         freeze_time
@@ -176,7 +176,7 @@ RSpec.describe SearchLog, type: :model do
   end
 
   describe "trending" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     before do
       SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1")
       SearchLog.log(term: "php", search_type: :header, ip_address: "127.0.0.1")

@@ -58,6 +58,11 @@ export default function () {
           }
         );
 
+        this.route("adminCustomizeThemeComponents", {
+          path: "theme-components",
+          resetNamespace: true,
+        });
+
         this.route(
           "adminSiteText",
           { path: "/site_texts", resetNamespace: true },

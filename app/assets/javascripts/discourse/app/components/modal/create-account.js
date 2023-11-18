@@ -7,7 +7,6 @@ import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { Promise } from "rsvp";
-import LoginModal from "discourse/components/modal/login";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -30,9 +29,9 @@ export default class CreateAccount extends Component.extend(
   NameValidation,
   UserFieldsValidation
 ) {
-  @service modal;
   @service site;
   @service siteSettings;
+  @service login;
 
   accountChallenge = 0;
   accountHoneypot = 0;
@@ -477,13 +476,7 @@ export default class CreateAccount extends Component.extend(
   @action
   externalLogin(provider) {
     // we will automatically redirect to the external auth service
-    this.modal.show(LoginModal, {
-      model: {
-        isExternalLogin: true,
-        externalLoginMethod: provider,
-        signup: true,
-      },
-    });
+    this.login.externalLogin(provider, { signup: true });
   }
 
   @action

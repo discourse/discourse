@@ -1153,8 +1153,6 @@ vi:
         title: "Xác thực hai yếu tố"
         enable: "Quản lý xác thực hai yếu tố"
         disable_all: "Vô hiệu hóa tất cả"
-        forgot_password: "Quên mật khẩu?"
-        confirm_password_description: "Làm ơn xác nhận mật khẩu để tiếp tục"
         name: "Tên"
         label: "Mã"
         rate_limit: "Vui lòng đợi trước khi thử mã xác thực khác."

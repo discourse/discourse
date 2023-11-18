@@ -1805,6 +1805,7 @@ tr_TR:
     here_mention: "Ayrıcalıklı kullanıcıların konuya katılan en fazla \"max_here_mentioned\" kişiye bildirimde bulunmasına izin vermek için @bahsetme için kullanılan ad. Mevcut bir kullanıcı adı olmamalıdır."
     max_here_mentioned: "@Burada bahsedilen maksimum kişi sayısı."
     min_trust_level_for_here_mention: "@Burada bahsedilmesine izin verilen minimum güven seviyesi."
+    here_mention_allowed_groups: "@here atıfı yapılmasına izin verilen gruplar."
     create_thumbnails: "Bir gönderiye sığmayacak kadar büyük küçük resimler ve ışık kutusu görüntüleri oluşturun."
     email_time_window_mins: "Kullanıcılara gönderilerini düzenleme ve son haline getirme şansı tanımak için herhangi bir bildirim e-postası göndermeden önce (n) dakika bekleyin."
     personal_email_time_window_seconds: "Kullanıcılara mesajlarını düzenleme ve son haline getirme şansı tanımak için herhangi bir kişisel mesaj bildirim e-postası göndermeden önce (n) saniye bekleyin."
@@ -1820,7 +1821,6 @@ tr_TR:
     min_title_similar_length: "Benzer konular için kontrol edilmeden önce bir başlığın minimum uzunluğu."
     desktop_category_page_style: "Kategoriler sayfası için görsel stil."
     category_colors: "Kategoriler için izin verilen onaltılık renk değerlerinin bir listesi."
-    category_style: "Kategori rozetleri için görsel stil."
     default_dark_mode_color_scheme_id: "Koyu moddayken kullanılan renk şeması."
     dark_mode_none: "Hiçbiri"
     max_image_size_kb: "KB cinsinden maksimum görüntü yükleme boyutu. Bu, nginx (client_max_body_size) / apache veya proxy'de de yapılandırılmalıdır. Bundan daha büyük ve client_max_body_size değerinden daha küçük görüntüler yükleme sırasında sığacak şekilde yeniden boyutlandırılır."
@@ -2024,9 +2024,9 @@ tr_TR:
     display_name_on_posts: "Bir kullanıcının @kullanıcı adına ek olarak gönderilerinde tam adını gösterin."
     show_time_gap_days: "Bu kadar gün arayla iki gönderi yapılmışsa aradaki zaman farkını konu içinde gösterin."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktıktan sonra, ilerleme çubuğu yalnızca geçerli gönderi sayısını gösterecektir. İlerleme çubuğunun genişliğini değiştirirseniz bu değeri değiştirmeniz gerekebilir."
-    default_code_lang: "Kod bloklarına uygulanan varsayılan programlama dili sözdizimi vurgulaması (auto, text, ruby, python vb.). Bu değer aynı zamanda \"highlighted languages\" site ayarında da bulunmalıdır."
+    default_code_lang: "Markdown kod bloklarına (otomatik, metin, ruby, python vb.) uygulanan varsayılan programlama dili sözdizimi vurgulaması. Bu değer aynı zamanda \"vurgulanan diller\" site ayarında da bulunmalıdır."
     warn_reviving_old_topic_age: "Biri son yanıtın şu kadar günden daha eski olduğu bir konuya yanıt vermeye başladığında, bir uyarı görüntülenir. 0'a ayarlayarak devre dışı bırakın."
-    autohighlight_all_code: "Dili açıkça belirtmemiş olsalar bile önceden biçimlendirilmiş tüm kod bloklarına kod vurgulamayı zorla uygulayın."
+    autohighlight_all_code: "Bir dil belirtmemiş olsalar bile HTML <code> bloklarına sözdizimi vurgulaması uygula."
     highlighted_languages: "Sözdizimi vurgulama kuralları dahil edildi. (Uyarı: Çok fazla dil eklemek performansı etkileyebilir) Demo için bkz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
     show_copy_button_on_codeblocks: "Blok içeriğini kullanıcının panosuna kopyalamak için codeblocks'a bir düğme ekleyin."
     embed_any_origin: "Kaynağından bağımsız olarak yerleştirilebilir içeriğe izin verin. Bu, statik HTML içeren mobil uygulamalar için gereklidir."
@@ -2666,7 +2666,7 @@ tr_TR:
         %{site_name} Moderatörleri
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Gönderinizle ilgili geri bildirim"
-      subject_template: "\"%{topic_title}\" başlıklı yeni konu hakkında geri bildirim"
+      subject_template: '"%{topic_title}" başlıklı yeni konu hakkında geri bildirim'
       text_body_template: |
         Merhaba %{username},
 

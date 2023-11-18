@@ -664,6 +664,8 @@ class ThemeField < ActiveRecord::Base
           name: ThemeField.scss_fields + ThemeField.html_fields,
         )
       )
+    elsif translation_field? && name == "en" # en is fallback for all other locales
+      return theme.theme_fields.where(target_id: Theme.targets[:translations]).where.not(name: "en")
     end
     ThemeField.none
   end

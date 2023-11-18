@@ -62,6 +62,7 @@ gl:
           settings: Configuración
       new_message_modal:
         no_items: "Sen elementos"
+        filter: "Filtro"
       direct_message_creator:
         title: Nova mensaxe
         prefix: "A:"

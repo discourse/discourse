@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::StaffActionLogsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#index" do
     shared_examples "staff action logs accessible" do

@@ -227,7 +227,7 @@
       align-items: center;
       @include ellipsis;
       margin-bottom: 0.6em;
-      .badge-wrapper {
+      .badge-category__wrapper {
         overflow: hidden;
       }
       .subcategory-image-placeholder {

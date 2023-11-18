@@ -68,7 +68,7 @@ describe Chat::Message do
       RAW
 
       expect(cooked).to eq(<<~COOKED.chomp)
-      <pre><code class="lang-ruby">Widget.triangulate(argument: "no u")
+      <pre data-code-wrap="ruby"><code class="lang-ruby">Widget.triangulate(argument: "no u")
       </code></pre>
       COOKED
     end
@@ -496,11 +496,11 @@ describe Chat::Message do
   end
 
   describe "#rebake!" do
-    fab!(:chat_message) { Fabricate(:chat_message) }
+    fab!(:chat_message)
 
     describe "hashtags" do
-      fab!(:category) { Fabricate(:category) }
-      fab!(:group) { Fabricate(:group) }
+      fab!(:category)
+      fab!(:group)
       fab!(:secure_category) { Fabricate(:private_category, group: group) }
 
       before do

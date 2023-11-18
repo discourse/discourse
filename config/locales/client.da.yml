@@ -1194,8 +1194,6 @@ da:
         title: "To-faktor godkendelse"
         enable: "Administrer To-faktor godkendelse"
         disable_all: "Deaktiver alle"
-        forgot_password: "Glemt kodeord?"
-        confirm_password_description: "Bekræft dit kodeord for at fortsætte"
         name: "Navn"
         label: "Kode"
         rate_limit: "Vent venligst, før du prøver en anden godkendelseskode."

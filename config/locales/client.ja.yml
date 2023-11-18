@@ -1266,8 +1266,6 @@ ja:
         title: "二要素認証"
         enable: "二要素認証を管理"
         disable_all: "すべて無効化"
-        forgot_password: "パスワードを忘れましたか？"
-        confirm_password_description: "続行するにはパスワードを確認してください"
         name: "名前"
         label: "コード"
         rate_limit: "別の認証コードを試す前に、しばらくお待ちください。"

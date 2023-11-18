@@ -2,7 +2,7 @@
 
 describe "Admin Site Setting Search", type: :system do
   let(:settings_page) { PageObjects::Pages::AdminSettings.new }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   before do
     SiteSetting.title = "Discourse"

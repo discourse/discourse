@@ -4,7 +4,7 @@ RSpec.describe InlineUploads do
 
   describe ".process" do
     context "with local uploads" do
-      fab!(:upload) { Fabricate(:upload) }
+      fab!(:upload)
       fab!(:upload2) { Fabricate(:upload) }
       fab!(:upload3) { Fabricate(:upload) }
 

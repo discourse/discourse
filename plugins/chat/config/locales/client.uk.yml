@@ -354,9 +354,9 @@ uk:
         default_search_placeholder: "#канал, @хтось або щось"
         default_channel_search_placeholder: "#канал"
         default_user_search_placeholder: "@хтось"
-        user_search_placeholder: "...додати більше користувачів"
         disabled_user: "вимкнув чат"
         no_items: "Немає елементів"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Редагувати канал
         input_placeholder: Додайте назву

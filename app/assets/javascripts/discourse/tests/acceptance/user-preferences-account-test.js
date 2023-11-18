@@ -295,7 +295,7 @@ acceptance("User Preferences - Account", function (needs) {
     );
 
     await click("#gravatar");
-    await click(".modal-footer .btn");
+    await click(".d-modal__footer .btn");
 
     assert.deepEqual(
       pickAvatarRequestData,

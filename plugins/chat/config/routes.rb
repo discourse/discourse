@@ -18,6 +18,7 @@ Chat::Engine.routes.draw do
     post "/channels/:channel_id/invites" => "channels_invites#create"
     post "/channels/:channel_id/archives" => "channels_archives#create"
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
+    post "/channels/:channel_id/memberships" => "channels_memberships#create"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"
     post "/channels/:channel_id/memberships/me" => "channels_current_user_membership#create"
     put "/channels/:channel_id/notifications-settings/me" =>
@@ -70,8 +71,6 @@ Chat::Engine.routes.draw do
   get "/browse/closed" => "chat#respond"
   get "/browse/open" => "chat#respond"
   get "/browse/archived" => "chat#respond"
-  post "/enable" => "chat#enable_chat"
-  post "/disable" => "chat#disable_chat"
   post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
   get "/message/:message_id" => "chat#message_link"
   put ":chat_channel_id/react/:message_id" => "chat#react"

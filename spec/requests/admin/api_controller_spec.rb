@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ApiController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   fab!(:key1, refind: false) { Fabricate(:api_key, description: "my key") }
   fab!(:key2, refind: false) { Fabricate(:api_key, user: admin) }

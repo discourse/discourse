@@ -5,9 +5,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     ReviewableFlaggedPost.default_visible.pending.count
   end
 
-  fab!(:user) { Fabricate(:user) }
-  fab!(:post) { Fabricate(:post) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user)
+  fab!(:post)
+  fab!(:moderator)
 
   it "sets `potential_spam` when a spam flag is added" do
     reviewable = PostActionCreator.off_topic(user, post).reviewable

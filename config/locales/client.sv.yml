@@ -1339,8 +1339,6 @@ sv:
         title: "Tvåfaktorsautentisering"
         enable: "Hantera tvåfaktorsautentisering"
         disable_all: "Inaktivera alla"
-        forgot_password: "Glömt lösenordet?"
-        confirm_password_description: "Bekräfta lösenordet för att fortsätta"
         name: "Namn"
         label: "Kod"
         rate_limit: "Vänta innan du provar en annan autentiseringskod."

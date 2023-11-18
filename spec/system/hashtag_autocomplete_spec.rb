@@ -243,7 +243,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   end
 
   context "when a user cannot access the category for a hashtag cooked in another post" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:manager_group) { Fabricate(:group, name: "Managers") }
     fab!(:private_category) do
       Fabricate(:private_category, name: "Management", slug: "management", group: manager_group)

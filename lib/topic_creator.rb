@@ -191,8 +191,8 @@ class TopicCreator
     if watched_words.present?
       word_watcher = WordWatcher.new("#{@opts[:title]} #{@opts[:raw]}")
       word_watcher_tags = topic.tags.map(&:name)
-      watched_words.each do |word, opts|
-        if word_watcher.word_matches?(word, case_sensitive: opts[:case_sensitive])
+      watched_words.each do |_, opts|
+        if word_watcher.word_matches?(opts[:word], case_sensitive: opts[:case_sensitive])
           word_watcher_tags += opts[:replacement].split(",")
         end
       end

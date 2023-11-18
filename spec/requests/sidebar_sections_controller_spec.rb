@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe SidebarSectionsController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:moderator)
 
   describe "#index" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "private section", user: user) }

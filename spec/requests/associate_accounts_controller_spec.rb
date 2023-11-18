@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Users::AssociateAccountsController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user2) { Fabricate(:user) }
 
   before { OmniAuth.config.test_mode = true }

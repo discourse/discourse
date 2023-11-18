@@ -22,9 +22,9 @@ module Chat
     policy :no_silenced_user
     contract
     model :channel
+    step :enforce_system_membership
     policy :allowed_to_join_channel
     policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::MessageCreationPolicy
-    step :enforce_system_membership
     model :channel_membership
     model :reply, optional: true
     policy :ensure_reply_consistency
@@ -76,7 +76,13 @@ module Chat
     end
 
     def enforce_system_membership(guardian:, channel:, **)
-      channel.add(guardian.user) if guardian.user.is_system_user?
+      if guardian.user&.is_system_user?
+        channel.add(guardian.user)
+
+        if channel.direct_message_channel?
+          channel.chatable.direct_message_users.find_or_create_by!(user: guardian.user)
+        end
+      end
     end
 
     def fetch_channel_membership(guardian:, channel:, **)

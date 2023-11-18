@@ -1097,8 +1097,6 @@ id:
         codes:
           title: "Kode Cadangan Dibuat"
       second_factor:
-        forgot_password: "Lupa password?"
-        confirm_password_description: "Harap konfirmasi password Anda untuk melanjutkan"
         name: "Nama"
         label: "Kode"
         show_key_description: "Masukkan secara manual"

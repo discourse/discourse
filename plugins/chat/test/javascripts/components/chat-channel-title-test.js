@@ -10,9 +10,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   setupRenderingTest(hooks);
 
   test("category channel", async function (assert) {
-    this.channel = fabricators.channel({
-      chatable_type: CHATABLE_TYPES.categoryChannel,
-    });
+    this.channel = fabricators.channel();
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -39,8 +37,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
 
   test("category channel - read restricted", async function (assert) {
     this.channel = fabricators.channel({
-      chatable_type: CHATABLE_TYPES.categoryChannel,
-      chatable: { read_restricted: true },
+      chatable: fabricators.category({ read_restricted: true }),
     });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
@@ -50,8 +47,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
 
   test("category channel - not read restricted", async function (assert) {
     this.channel = fabricators.channel({
-      chatable_type: CHATABLE_TYPES.categoryChannel,
-      chatable: { read_restricted: false },
+      chatable: fabricators.category({ read_restricted: false }),
     });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
@@ -70,10 +66,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
 
     const user = this.channel.chatable.users[0];
 
-    assert.true(
-      exists(`.chat-user-avatar__container .avatar[title="${user.username}"]`)
-    );
-
+    assert.true(exists(`.chat-user-avatar .avatar[title="${user.username}"]`));
     assert.strictEqual(
       query(".chat-channel-title__name").innerText.trim(),
       user.username
@@ -81,20 +74,15 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("direct message channel - multiple users", async function (assert) {
-    const channel = fabricators.directMessageChannel();
-
-    channel.chatable.users.push({
-      id: 2,
-      username: "joffrey",
-      name: null,
-      avatar_template: "/letter_avatar_proxy/v3/letter/t/31188e/{size}.png",
+    this.channel = fabricators.directMessageChannel({
+      users: [fabricators.user(), fabricators.user(), fabricators.user()],
     });
-
-    this.channel = channel;
+    this.channel.chatable.group = true;
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
     const users = this.channel.chatable.users;
+
     assert.strictEqual(
       parseInt(query(".chat-channel-title__users-count").innerText.trim(), 10),
       users.length

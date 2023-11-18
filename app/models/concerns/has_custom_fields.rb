@@ -18,10 +18,6 @@ module HasCustomFields
     def self.get_custom_field_type(types, key)
       return unless types
 
-      sorted_types = types.keys.select { |k| k.end_with?("*") }.sort_by(&:length).reverse
-
-      sorted_types.each { |t| return types[t] if key =~ /\A#{t}/i }
-
       types[key]
     end
 
@@ -63,23 +59,10 @@ module HasCustomFields
   CUSTOM_FIELDS_MAX_ITEMS = 100
   CUSTOM_FIELDS_MAX_VALUE_LENGTH = 10_000_000
 
-  included do
-    attr_reader :preloaded_custom_fields
-
-    has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
-
-    validate :custom_fields_max_items, unless: :custom_fields_clean?
-    validate :custom_fields_value_length, unless: :custom_fields_clean?
-
-    after_save :save_custom_fields
-
-    def custom_fields_fk
-      @custom_fields_fk ||= "#{_custom_fields.reflect_on_all_associations(:belongs_to)[0].name}_id"
-    end
-
+  module ClassMethods
     # To avoid n+1 queries, use this function to retrieve lots of custom fields in one go
     # and create a "sideloaded" version for easy querying by id.
-    def self.custom_fields_for_ids(ids, allowed_fields)
+    def custom_fields_for_ids(ids, allowed_fields)
       klass = "#{name}CustomField".constantize
       foreign_key = "#{name.underscore}_id".to_sym
 
@@ -98,21 +81,21 @@ module HasCustomFields
       result
     end
 
-    def self.append_custom_field(target, key, value)
+    def append_custom_field(target, key, value)
       HasCustomFields::Helpers.append_field(target, key, value, @custom_field_types)
     end
 
-    def self.register_custom_field_type(name, type)
+    def register_custom_field_type(name, type)
       @custom_field_types ||= {}
       @custom_field_types[name] = type
     end
 
-    def self.get_custom_field_type(name)
+    def get_custom_field_type(name)
       @custom_field_types ||= {}
       @custom_field_types[name]
     end
 
-    def self.preload_custom_fields(objects, fields)
+    def preload_custom_fields(objects, fields)
       if objects.present?
         map = {}
 
@@ -140,28 +123,23 @@ module HasCustomFields
           end
       end
     end
+  end
 
-    private
+  included do
+    extend ClassMethods
 
-    def custom_fields_max_items
-      if custom_fields.size > CUSTOM_FIELDS_MAX_ITEMS
-        errors.add(
-          :base,
-          I18n.t("custom_fields.validations.max_items", max_items_number: CUSTOM_FIELDS_MAX_ITEMS),
-        )
-      end
-    end
+    has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
 
-    def custom_fields_value_length
-      return if custom_fields.values.all? { _1.to_s.size <= CUSTOM_FIELDS_MAX_VALUE_LENGTH }
-      errors.add(
-        :base,
-        I18n.t(
-          "custom_fields.validations.max_value_length",
-          max_value_length: CUSTOM_FIELDS_MAX_VALUE_LENGTH,
-        ),
-      )
-    end
+    validate :custom_fields_max_items, unless: :custom_fields_clean?
+    validate :custom_fields_value_length, unless: :custom_fields_clean?
+
+    after_save :save_custom_fields
+  end
+
+  attr_reader :preloaded_custom_fields
+
+  def custom_fields_fk
+    @custom_fields_fk ||= "#{_custom_fields.reflect_on_all_associations(:belongs_to)[0].name}_id"
   end
 
   def reload(options = nil)
@@ -328,5 +306,27 @@ module HasCustomFields
       .each { |key, value| self.class.append_custom_field(target, key, value) }
     @custom_fields_orig = target
     @custom_fields = @custom_fields_orig.deep_dup
+  end
+
+  private
+
+  def custom_fields_max_items
+    if custom_fields.size > CUSTOM_FIELDS_MAX_ITEMS
+      errors.add(
+        :base,
+        I18n.t("custom_fields.validations.max_items", max_items_number: CUSTOM_FIELDS_MAX_ITEMS),
+      )
+    end
+  end
+
+  def custom_fields_value_length
+    return if custom_fields.values.all? { _1.to_s.size <= CUSTOM_FIELDS_MAX_VALUE_LENGTH }
+    errors.add(
+      :base,
+      I18n.t(
+        "custom_fields.validations.max_value_length",
+        max_value_length: CUSTOM_FIELDS_MAX_VALUE_LENGTH,
+      ),
+    )
   end
 end

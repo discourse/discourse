@@ -2,8 +2,8 @@
 
 describe "Reviewables", type: :system do
   let(:review_page) { PageObjects::Pages::Review.new }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:theme) { Fabricate(:theme) }
+  fab!(:admin)
+  fab!(:theme)
   fab!(:long_post) { Fabricate(:post_with_very_long_raw_content) }
 
   before { sign_in(admin) }
@@ -57,7 +57,7 @@ describe "Reviewables", type: :system do
   end
 
   describe "when there is a reviewable user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
 
     before do

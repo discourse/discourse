@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoryUser do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   def tracking
     CategoryUser.notification_levels[:tracking]
@@ -13,7 +13,7 @@ RSpec.describe CategoryUser do
   end
 
   describe "#batch_set" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     def category_ids_at_level(level)
       CategoryUser.where(

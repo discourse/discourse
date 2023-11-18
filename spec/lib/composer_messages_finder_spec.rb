@@ -100,7 +100,7 @@ RSpec.describe ComposerMessagesFinder do
 
   describe ".check_avatar_notification" do
     let(:finder) { ComposerMessagesFinder.new(user, composer_action: "createTopic") }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     context "with success" do
       let!(:message) { finder.check_avatar_notification }
@@ -149,8 +149,8 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   describe ".check_sequential_replies" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user)
+    fab!(:topic)
 
     before do
       SiteSetting.educate_until_posts = 10
@@ -234,8 +234,8 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   describe ".check_dominating_topic" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user)
+    fab!(:topic)
 
     before do
       SiteSetting.educate_until_posts = 10
@@ -329,7 +329,7 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   describe "#dont_feed_the_trolls" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:author) { Fabricate(:user) }
     fab!(:other_user) { Fabricate(:user) }
     fab!(:third_user) { Fabricate(:user) }
@@ -418,7 +418,7 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   describe ".check_get_a_room" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:other_user) { Fabricate(:user) }
     fab!(:third_user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic, user: other_user) }
@@ -554,8 +554,8 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   describe ".check_reviving_old_topic" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user)
+    fab!(:topic)
 
     it "does not give a message without a topic id" do
       expect(
@@ -623,7 +623,7 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   context "when editing a post" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:topic) { Fabricate(:post).topic }
 
     let!(:post) do

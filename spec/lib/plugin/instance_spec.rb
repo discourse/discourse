@@ -707,7 +707,7 @@ RSpec.describe Plugin::Instance do
   end
 
   describe "#register_site_categories_callback" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     it "adds a callback to the Site#categories" do
       instance = Plugin::Instance.new
@@ -731,7 +731,7 @@ RSpec.describe Plugin::Instance do
 
   describe "#register_notification_consolidation_plan" do
     let(:plugin) { Plugin::Instance.new }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     after { DiscoursePluginRegistry.reset_register!(:notification_consolidation_plans) }
 
@@ -808,15 +808,15 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  describe "#register_about_stat_group" do
+  describe "#register_stat" do
     let(:plugin) { Plugin::Instance.new }
 
     after { DiscoursePluginRegistry.reset! }
 
     it "registers an about stat group correctly" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_about_stat_group("some_group", show_in_ui: true) { stats }
-      expect(About.new.plugin_stats.with_indifferent_access).to match(
+      plugin.register_stat("some_group", show_in_ui: true) { stats }
+      expect(Stat.all_stats.with_indifferent_access).to match(
         hash_including(
           some_group_last_day: 1,
           some_group_7_days: 10,
@@ -828,15 +828,15 @@ RSpec.describe Plugin::Instance do
 
     it "hides the stat group from the UI by default" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_about_stat_group("some_group") { stats }
+      plugin.register_stat("some_group") { stats }
       expect(About.displayed_plugin_stat_groups).to eq([])
     end
 
     it "does not allow duplicate named stat groups" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_about_stat_group("some_group") { stats }
-      plugin.register_about_stat_group("some_group") { stats }
-      expect(DiscoursePluginRegistry.about_stat_groups.count).to eq(1)
+      plugin.register_stat("some_group") { stats }
+      plugin.register_stat("some_group") { stats }
+      expect(DiscoursePluginRegistry.stats.count).to eq(1)
     end
   end
 
@@ -845,7 +845,7 @@ RSpec.describe Plugin::Instance do
 
     after { DiscoursePluginRegistry.reset_register!(:user_destroyer_on_content_deletion_callbacks) }
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "calls the callback when the UserDestroyer runs with the delete_posts opt set to true" do
       callback_called = false

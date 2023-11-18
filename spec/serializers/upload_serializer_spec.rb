@@ -3,7 +3,7 @@
 RSpec.describe UploadSerializer do
   subject(:serializer) { UploadSerializer.new(upload, root: false) }
 
-  fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload)
 
   it "should render without errors" do
     json_data = JSON.parse(serializer.to_json)

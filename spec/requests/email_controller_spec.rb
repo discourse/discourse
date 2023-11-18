@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe EmailController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "#perform_unsubscribe" do
     it "raises not found on invalid key" do
@@ -148,7 +148,7 @@ RSpec.describe EmailController do
     end
 
     describe "when topic is public" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       it "should return the right response" do
         key = SecureRandom.hex
@@ -179,7 +179,7 @@ RSpec.describe EmailController do
       expect(response.body).to include(CGI.escapeHTML(I18n.t("unsubscribe.not_found_description")))
     end
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "displays an error when the key has no associated user" do
       key_without_owner = UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE)
@@ -287,7 +287,7 @@ RSpec.describe EmailController do
     end
 
     context "when unsubscribing from a post" do
-      fab!(:post) { Fabricate(:post) }
+      fab!(:post)
       let(:user) { post.user }
       let(:key_type) { UnsubscribeKey::TOPIC_TYPE }
 
@@ -297,7 +297,7 @@ RSpec.describe EmailController do
         navigate_to_unsubscribe
         expect(response.body).to include("unwatch_category")
         doc = Nokogiri::HTML5.fragment(response.body)
-        expect(doc.css('a.badge-wrapper[href="/c/uncategorized/1"]').size).to eq(1)
+        expect(doc.css('a.badge-category__wrapper[href="/c/uncategorized/1"]').size).to eq(1)
 
         cu.destroy!
 

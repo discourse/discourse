@@ -385,10 +385,10 @@ export default class Chat extends Service {
   // @param {array} usernames - The usernames to create or fetch the direct message
   // channel for. The current user will automatically be included in the channel
   // when it is created.
-  upsertDmChannelForUsernames(usernames) {
+  upsertDmChannelForUsernames(usernames, name = null) {
     return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
-      data: { target_usernames: usernames.uniq() },
+      data: { target_usernames: usernames.uniq(), name },
     })
       .then((response) => {
         const channel = this.chatChannelsManager.store(response.channel);

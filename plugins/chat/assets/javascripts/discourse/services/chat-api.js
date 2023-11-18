@@ -490,6 +490,18 @@ export default class ChatApi extends Service {
     return this.#getRequest(`/channels/${channelId}/summarize`, options);
   }
 
+  /**
+   * Add members to a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {Array<string>} usernames - The usernames of the users to add.
+   */
+  addMembersToChannel(channelId, usernames) {
+    return this.#postRequest(`/channels/${channelId}/memberships`, {
+      usernames,
+    });
+  }
+
   get #basePath() {
     return "/chat/api";
   }

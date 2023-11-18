@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::EmbeddingController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#show" do
     context "when logged in as an admin" do

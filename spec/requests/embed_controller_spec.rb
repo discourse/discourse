@@ -5,7 +5,7 @@ RSpec.describe EmbedController do
   let(:embed_url_secure) { "https://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:discourse_username) { "eviltrout" }
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   describe "#info" do
     context "without api key" do
@@ -172,7 +172,7 @@ RSpec.describe EmbedController do
     end
 
     describe "by topic id" do
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+      fab!(:embeddable_host)
 
       it "allows a topic to be embedded by id" do
         get "/embed/comments",
@@ -188,7 +188,7 @@ RSpec.describe EmbedController do
     end
 
     context "with a host" do
-      fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+      fab!(:embeddable_host)
 
       before { Jobs.run_immediately! }
 

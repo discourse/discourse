@@ -1353,8 +1353,6 @@ tr_TR:
         title: "İki Adımlı Kimlik Doğrulama"
         enable: "İki Adımlı Kimlik Doğrulamayı Yönet"
         disable_all: "Tümünü Devre Dışı Bırak"
-        forgot_password: "Şifrenizi mi unuttunuz?"
-        confirm_password_description: "Devam etmek için lütfen şifrenizi onaylayın"
         name: "Ad"
         label: "Kod"
         rate_limit: "Lütfen başka bir kimlik doğrulama kodu denemeden önce bekleyin."

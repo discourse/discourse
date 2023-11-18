@@ -652,7 +652,7 @@ RSpec.describe Chat::UpdateMessage do
     end
 
     describe "watched words" do
-      fab!(:watched_word) { Fabricate(:watched_word) }
+      fab!(:watched_word)
 
       it "errors when a blocked word is present" do
         chat_message = create_chat_message(user1, "something", public_chat_channel)

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe BasicGroupUserSerializer do
-  fab!(:group) { Fabricate(:group) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:group)
+  fab!(:user)
 
   before { group.add(user) }
 

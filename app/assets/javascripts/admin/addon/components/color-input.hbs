@@ -2,7 +2,7 @@
   @class="hex-input"
   @value={{this.hexValue}}
   @maxlength={{this.maxlength}}
-  @input={{action "onHexInput" value="target.value"}}
+  @input={{this.onHexInput}}
 />
 <input
   class="picker"

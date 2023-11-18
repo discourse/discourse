@@ -79,6 +79,10 @@ export default class SearchMenu extends Component {
       classes.push("menu-panel-results");
     }
 
+    if (this.loading) {
+      classes.push("loading");
+    }
+
     return classes.join(" ");
   }
 
@@ -266,6 +270,7 @@ export default class SearchMenu extends Component {
       this.loading = false;
       this.invalidTerm = true;
     } else {
+      this.loading = true;
       this.invalidTerm = false;
 
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {

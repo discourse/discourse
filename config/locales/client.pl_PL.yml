@@ -349,7 +349,10 @@ pl_PL:
       our_moderators: "Moderatorzy"
       moderators: "Moderatorzy"
       stat:
+        all_time: "Cały czas"
         last_day: "24 godziny"
+        last_7_days: "7 dni"
+        last_30_days: "30 dni"
       like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Posty"
@@ -1114,6 +1117,7 @@ pl_PL:
     user:
       said: "%{username}:"
       profile: "Profil"
+      profile_possessive: "profil %{username}"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -1501,8 +1505,6 @@ pl_PL:
         title: "Uwierzytelnianie dwuskładnikowe"
         enable: "Zarządzaj uwierzytelnianiem dwuskładnikowym"
         disable_all: "Wyłącz wszystkie"
-        forgot_password: "Zapomniałeś/łaś hasła?"
-        confirm_password_description: "Potwierdź swoje hasło, aby kontynuować"
         name: "Imię"
         label: "Kod"
         rate_limit: "Poczekaj, zanim spróbujesz użyć innego kodu uwierzytelniającego."
@@ -2463,6 +2465,7 @@ pl_PL:
           desc: Szepty są widoczne tylko dla zespołu zarządzającego
         create_topic:
           label: "Nowy temat"
+          desc: Utwórz nowy temat
         shared_draft:
           label: "Udostępniony projekt"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
@@ -3029,6 +3032,7 @@ pl_PL:
           false { lub <a href="{basePath}/latest">zobacz najnowsze tematy</a>}
           other {}
         }
+      created_at: "Utworzono: %{date}"
       bumped_at: "Ostatnie: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a> lub <a href='%{basePath}/latest'>przeglądaj najnowsze tematy</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a>, <a href='%{basePath}/latest'>zobacz najnowsze tematy</a> lub zobacz popularne:"

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe CategoryTagStat do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:category)
+  fab!(:tag)
   fab!(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
 
   describe "#update_topic_counts" do

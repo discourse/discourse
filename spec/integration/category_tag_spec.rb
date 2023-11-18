@@ -12,8 +12,8 @@ RSpec.describe "category tag restrictions" do
   fab!(:tag4) { Fabricate(:tag, name: "tag4") }
   let(:tag_with_colon) { Fabricate(:tag, name: "with:colon") }
 
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
 
   before do
     SiteSetting.tagging_enabled = true
@@ -275,7 +275,7 @@ RSpec.describe "category tag restrictions" do
 
   context "with tag groups restricted to a category" do
     fab!(:tag_group1) { Fabricate(:tag_group) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     fab!(:other_category) { Fabricate(:category) }
 
     before do
@@ -760,8 +760,8 @@ RSpec.describe "category tag restrictions" do
 end
 
 RSpec.describe "tag topic counts per category" do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:admin)
+  fab!(:category)
   fab!(:category2) { Fabricate(:category) }
   fab!(:tag1) { Fabricate(:tag) }
   fab!(:tag2) { Fabricate(:tag) }

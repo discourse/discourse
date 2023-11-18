@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe Guardian do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:another_user) { Fabricate(:user) }
   fab!(:member) { Fabricate(:user) }
   fab!(:owner) { Fabricate(:user) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator)
+  fab!(:admin)
   fab!(:anonymous_user) { Fabricate(:anonymous) }
   fab!(:staff_post) { Fabricate(:post, user: moderator) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   fab!(:another_group) { Fabricate(:group) }
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
   fab!(:plain_category) { Fabricate(:category) }
@@ -20,7 +20,7 @@ RSpec.describe Guardian do
   fab!(:trust_level_3) { Fabricate(:user, trust_level: 3) }
   fab!(:trust_level_4) { Fabricate(:user, trust_level: 4) }
   fab!(:another_admin) { Fabricate(:admin) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:coding_horror)
 
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
@@ -95,8 +95,8 @@ RSpec.describe Guardian do
   end
 
   describe "#post_can_act?" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:post) { Fabricate(:post) }
+    fab!(:user)
+    fab!(:post)
 
     describe "an anonymous user" do
       before { SiteSetting.allow_anonymous_posting = true }
@@ -269,8 +269,8 @@ RSpec.describe Guardian do
   end
 
   describe "can_enable_safe_mode" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:user)
+    fab!(:moderator)
 
     context "when enabled" do
       before { SiteSetting.enable_safe_mode = true }
@@ -528,7 +528,7 @@ RSpec.describe Guardian do
   end
 
   describe "can_reply_as_new_topic" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:private_message) { Fabricate(:private_message_topic) }
 
     it "returns false for a non logged in user" do
@@ -604,8 +604,8 @@ RSpec.describe Guardian do
   end
 
   describe "can_invite_to_forum?" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:user)
+    fab!(:moderator)
 
     it "returns true if user has sufficient trust level" do
       SiteSetting.min_trust_level_to_allow_invite = 2
@@ -665,7 +665,7 @@ RSpec.describe Guardian do
         user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
       end
       fab!(:category) { Fabricate(:category, read_restricted: true) }
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       fab!(:private_topic) { Fabricate(:topic, category: category) }
       fab!(:user) { topic.user }
       let(:private_category) { Fabricate(:private_category, group: group) }
@@ -745,7 +745,7 @@ RSpec.describe Guardian do
     end
 
     describe "private messages" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
 
       before do
@@ -819,7 +819,7 @@ RSpec.describe Guardian do
   end
 
   describe "can_see_deleted_post?" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
 
     before { post.trash!(user) }
 
@@ -1069,7 +1069,7 @@ RSpec.describe Guardian do
     end
 
     describe "a Post" do
-      fab!(:post) { Fabricate(:post) }
+      fab!(:post)
       fab!(:another_admin) { Fabricate(:admin) }
 
       it "correctly handles post visibility" do
@@ -1152,7 +1152,7 @@ RSpec.describe Guardian do
     end
 
     describe "a PostRevision" do
-      fab!(:post_revision) { Fabricate(:post_revision) }
+      fab!(:post_revision)
 
       context "when edit_history_visible_to_public is true" do
         before { SiteSetting.edit_history_visible_to_public = true }
@@ -1453,7 +1453,7 @@ RSpec.describe Guardian do
     end
 
     context "when category group moderation is enabled" do
-      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:group_user)
 
       before do
         SiteSetting.enable_category_group_moderation = true
@@ -1709,7 +1709,7 @@ RSpec.describe Guardian do
       end
 
       context "with shared drafts" do
-        fab!(:category) { Fabricate(:category) }
+        fab!(:category)
 
         let(:topic) { Fabricate(:topic, category: category) }
         let(:post_with_draft) { Fabricate(:post, topic: topic) }
@@ -2292,7 +2292,7 @@ RSpec.describe Guardian do
       end
 
       context "when category group moderation is enabled" do
-        fab!(:group_user) { Fabricate(:group_user) }
+        fab!(:group_user)
 
         before { SiteSetting.enable_category_group_moderation = true }
 
@@ -4061,7 +4061,7 @@ RSpec.describe Guardian do
     let(:uncategorized) { Category.find(SiteSetting.uncategorized_category_id) }
 
     context "when uncategorized" do
-      fab!(:link_category) { Fabricate(:link_category) }
+      fab!(:link_category)
 
       it "allows featured links if uncategorized allows it" do
         uncategorized.topic_featured_link_allowed = true
@@ -4078,7 +4078,7 @@ RSpec.describe Guardian do
 
     context "when exist" do
       fab!(:category) { Fabricate(:category, topic_featured_link_allowed: false) }
-      fab!(:link_category) { Fabricate(:link_category) }
+      fab!(:link_category)
 
       it "returns true if the category is listed" do
         expect(guardian.can_edit_featured_link?(link_category.id)).to eq(true)
@@ -4177,7 +4177,7 @@ RSpec.describe Guardian do
     end
 
     context "with anonymous users" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       it "should be false" do
         expect(Guardian.new.can_remove_allowed_users?(topic)).to eq(false)
@@ -4289,6 +4289,8 @@ RSpec.describe Guardian do
   end
 
   describe "#can_mention_here?" do
+    before { Group.refresh_automatic_groups! }
+
     it "returns false if disabled" do
       SiteSetting.max_here_mentioned = 0
       expect(admin.guardian.can_mention_here?).to eq(false)
@@ -4301,6 +4303,7 @@ RSpec.describe Guardian do
 
     it "works with trust levels" do
       SiteSetting.min_trust_level_for_here_mention = 2
+      SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
 
       expect(trust_level_0.guardian.can_mention_here?).to eq(false)
       expect(trust_level_1.guardian.can_mention_here?).to eq(false)
@@ -4313,6 +4316,7 @@ RSpec.describe Guardian do
 
     it "works with staff" do
       SiteSetting.min_trust_level_for_here_mention = "staff"
+      SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:staff]
 
       expect(trust_level_4.guardian.can_mention_here?).to eq(false)
       expect(moderator.guardian.can_mention_here?).to eq(true)
@@ -4321,6 +4325,7 @@ RSpec.describe Guardian do
 
     it "works with admin" do
       SiteSetting.min_trust_level_for_here_mention = "admin"
+      SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(trust_level_4.guardian.can_mention_here?).to eq(false)
       expect(moderator.guardian.can_mention_here?).to eq(false)
@@ -4331,7 +4336,7 @@ RSpec.describe Guardian do
   describe "#is_category_group_moderator" do
     before { SiteSetting.enable_category_group_moderation = true }
 
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     it "should correctly detect category moderation" do
       group.add(user)

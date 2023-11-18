@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Category do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   it_behaves_like "it has custom fields"
 
@@ -84,11 +84,11 @@ RSpec.describe Category do
   end
 
   describe "#review_group_id" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:category) { Fabricate(:category_with_definition, reviewable_by_group: group) }
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "will add the group to the reviewable" do
       SiteSetting.enable_category_group_moderation = true
@@ -132,7 +132,7 @@ RSpec.describe Category do
   end
 
   describe "topic_create_allowed and post_create_allowed" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     fab!(:user) do
       user = Fabricate(:user)
@@ -141,7 +141,7 @@ RSpec.describe Category do
       user
     end
 
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     fab!(:default_category) { Fabricate(:category_with_definition) }
 
@@ -226,8 +226,8 @@ RSpec.describe Category do
   describe "security" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:category_2) { Fabricate(:category_with_definition) }
-    fab!(:user) { Fabricate(:user) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:user)
+    fab!(:group)
 
     it "secures categories correctly" do
       expect(category.read_restricted?).to be false
@@ -772,7 +772,7 @@ RSpec.describe Category do
   end
 
   describe "parent categories" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:parent_category) { Fabricate(:category_with_definition, user: user) }
 
     it "can be associated with a parent category" do
@@ -862,7 +862,7 @@ RSpec.describe Category do
   end
 
   describe "validate email_in" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "works with a valid email" do
       expect(Category.new(name: "test", user: user, email_in: "test@example.com").valid?).to eq(
@@ -1040,8 +1040,8 @@ RSpec.describe Category do
   end
 
   describe "validate permissions compatibility" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:admin)
+    fab!(:group)
     fab!(:group2) { Fabricate(:group) }
     fab!(:parent_category) { Fabricate(:category_with_definition, name: "parent") }
     fab!(:subcategory) do
@@ -1294,9 +1294,9 @@ RSpec.describe Category do
   end
 
   describe "#cannot_delete_reason" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     let(:guardian) { Guardian.new(admin) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     describe "when category is uncategorized" do
       it "should return the reason" do
@@ -1340,7 +1340,7 @@ RSpec.describe Category do
   end
 
   describe "#deleting the general category" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     it "should empty out the general_category_id site_setting" do
       SiteSetting.general_category_id = category.id
@@ -1426,7 +1426,7 @@ RSpec.describe Category do
 
   describe "allowed_tags=" do
     let(:category) { Fabricate(:category) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
     fab!(:tag2) { Fabricate(:tag) }
 
     before { SiteSetting.tagging_enabled = true }

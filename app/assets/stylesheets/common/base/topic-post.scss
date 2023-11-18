@@ -208,6 +208,10 @@
       height: var(--calculated-height);
     }
   }
+
+  svg {
+    max-height: 2000px;
+  }
 }
 
 // add staff color
@@ -465,10 +469,6 @@ nav.post-controls {
 aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
-
-  .badge-wrapper {
-    margin-left: 5px;
-  }
 
   .title {
     @include post-aside;
@@ -1008,6 +1008,7 @@ aside.quote {
 }
 
 pre {
+  max-height: 2000px;
   code {
     word-wrap: normal;
     display: block;
@@ -1274,11 +1275,6 @@ span.mention {
   .topics {
     padding-bottom: 15px;
   }
-  .suggested-topics-message {
-    .badge-wrapper {
-      margin-right: 0;
-    }
-  }
 }
 
 .large-image-placeholder {
@@ -1381,7 +1377,7 @@ span.mention {
     position: relative;
     .select-posts {
       position: absolute;
-      right: 5em;
+      right: 7em;
       z-index: z("dropdown");
       top: 0.5em;
       height: 100px;

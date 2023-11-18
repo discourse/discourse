@@ -1,4 +1,4 @@
-<Discovery::Layout>
+<Discovery::Layout @model={{this.model}}>
   <:navigation>
     <Discovery::Navigation
       @showCategoryAdmin={{this.model.can_create_category}}
@@ -8,14 +8,6 @@
     />
   </:navigation>
   <:list>
-    <PluginOutlet
-      @name="above-discovery-categories"
-      @connectorTagName="div"
-      @outletArgs={{hash
-        categories=this.model.categories
-        topics=this.model.topics
-      }}
-    />
 
     {{body-class "categories-list"}}
 

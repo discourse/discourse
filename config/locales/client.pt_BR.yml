@@ -1341,8 +1341,6 @@ pt_BR:
         title: "Autenticação de dois fatores"
         enable: "Gerenciar autenticação de dois fatores"
         disable_all: "Desativar tudo"
-        forgot_password: "Esqueceu a senha?"
-        confirm_password_description: "Confirme sua senha para continuar"
         name: "Nome"
         label: "Código"
         rate_limit: "Aguarde antes de tentar outro código de autenticação."

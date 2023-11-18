@@ -3,7 +3,7 @@
 RSpec.describe Chat::Action::PublishAndFollowDirectMessageChannel do
   subject(:action) { described_class.call(channel_membership: membership) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   let(:membership) { user.user_chat_channel_memberships.last }
 

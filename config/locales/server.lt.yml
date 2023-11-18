@@ -1375,7 +1375,6 @@ lt:
     newuser_max_mentions_per_post: "Didžiausias @name pranešimų skaičius, kurį naujas vartotojas gali naudoti įraše."
     newuser_max_replies_per_topic: "Maksimalus atsakymų skaičius, kurį naujas vartotojas gali pateikti vienoje temoje, kol kas nors į juos atsakys."
     enable_mentions: "Leiskite vartotojams paminėti kitus vartotojus."
-    category_style: "Vizualus stilius kategorijos ženklelių."
     dark_mode_none: "Nieko"
     max_similar_results: "Kiek panašių temų rodyti virš redaktoriaus kuriant naują temą. Palyginimas pagrįstas pavadinimu ir tekstu."
     max_image_megapixels: "Didžiausias leistinas vaizdo megapikselių skaičius. Vaizdai su didesniu megapikselių skaičiumi bus atmesti."

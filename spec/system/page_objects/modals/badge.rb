@@ -16,7 +16,7 @@ module PageObjects
       end
 
       def grant
-        within(modal) { find(".modal-footer .btn").click }
+        within(modal) { find(".d-modal__footer .btn").click }
       end
 
       def has_success_flash_visible?

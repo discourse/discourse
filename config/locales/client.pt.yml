@@ -1181,8 +1181,6 @@ pt:
         title: "Autenticação em Dois Passos"
         enable: "Gerir Autenticação em Dois Passos"
         disable_all: "Desativar Tudo"
-        forgot_password: "Esqueceu a palavra-passe?"
-        confirm_password_description: "Por favor confirme a sua palavra-passe para continuar"
         name: "Nome"
         label: "Código"
         rate_limit: "Por favor espere antes de voltar a tentar um código de autenticação."

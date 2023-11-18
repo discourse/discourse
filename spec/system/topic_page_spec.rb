@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Topic page", type: :system do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   before { Fabricate(:post, topic: topic, cooked: <<~HTML) }
     <h2 dir="ltr" id="toc-h2-testing" data-d-toc="toc-h2-testing" class="d-toc-post-heading">

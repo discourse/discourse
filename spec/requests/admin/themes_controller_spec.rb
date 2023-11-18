@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ThemesController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   let! :repo do
     setup_git_repo("about.json" => { name: "discourse-branch-header" }.to_json)

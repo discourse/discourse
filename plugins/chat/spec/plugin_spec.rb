@@ -12,7 +12,7 @@ describe Chat do
 
   describe "register_upload_unused" do
     fab!(:chat_channel) { Fabricate(:chat_channel, chatable: Fabricate(:category)) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
@@ -37,7 +37,7 @@ describe Chat do
 
   describe "register_upload_in_use" do
     fab!(:chat_channel) { Fabricate(:chat_channel, chatable: Fabricate(:category)) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:message_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
     fab!(:draft_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
@@ -75,7 +75,7 @@ describe Chat do
     let!(:user) { Fabricate(:user) }
     let!(:guardian) { Guardian.new(user) }
     let(:serializer) { UserCardSerializer.new(target_user, scope: guardian) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     context "when chat enabled" do
       before { SiteSetting.chat_enabled = true }
@@ -127,7 +127,7 @@ describe Chat do
 
   describe "chat oneboxes" do
     fab!(:chat_channel) { Fabricate(:category_channel) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     fab!(:chat_message) do
       Fabricate(:chat_message, chat_channel: chat_channel, user: user, message: "Hello world!")
@@ -184,7 +184,7 @@ describe Chat do
     end
 
     describe "when a user is created" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
       let(:user) { Fabricate(:user, last_seen_at: nil, first_seen_at: nil) }
 
       it "queues a job to auto-join the user the first time they log in" do
@@ -210,7 +210,7 @@ describe Chat do
     end
 
     describe "when category permissions change" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
 
       let(:chatters_group_permission) do
         { chatters_group.name => CategoryGroup.permission_types[:full] }
@@ -261,7 +261,7 @@ describe Chat do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     end
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     let(:serializer) { CurrentUserSerializer.new(user, scope: Guardian.new(user)) }
 
@@ -330,7 +330,7 @@ describe Chat do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     end
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:serializer) { CurrentUserSerializer.new(user, scope: Guardian.new(user)) }
 
     context "when no channels exist" do
@@ -370,7 +370,7 @@ describe Chat do
   end
 
   describe "Deleting posts while deleting a user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "queues a job to also delete chat messages" do
       deletion_opts = { delete_posts: true }

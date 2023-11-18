@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicsBulkAction do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   describe "#dismiss_topics" do
     fab!(:user) { Fabricate(:user, created_at: 1.days.ago) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     fab!(:topic2) { Fabricate(:topic, category: category, created_at: 60.minutes.ago) }
     fab!(:topic3) { Fabricate(:topic, category: category, created_at: 120.minutes.ago) }
 
@@ -151,7 +151,7 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "change_category" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     fab!(:fist_post) { Fabricate(:post, topic: topic) }
 
     context "when the user can edit the topic" do
@@ -261,7 +261,7 @@ RSpec.describe TopicsBulkAction do
 
   describe "delete" do
     fab!(:topic) { Fabricate(:post).topic }
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator)
 
     it "deletes the topic" do
       tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")

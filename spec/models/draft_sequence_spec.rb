@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DraftSequence do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe ".next" do
     it "should produce next sequence for a key" do

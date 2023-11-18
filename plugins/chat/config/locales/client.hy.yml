@@ -62,6 +62,7 @@ hy:
           settings: Կարգավորումներ
       new_message_modal:
         no_items: "Տարրեր չկան"
+        filter: "Ֆիլտր"
       direct_message_creator:
         title: Նոր Հաղորդագրություն
         prefix: "Ում:"

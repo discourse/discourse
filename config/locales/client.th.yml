@@ -847,8 +847,6 @@ th:
       second_factor_backup:
         disable: "ปิดใช้งาน"
       second_factor:
-        forgot_password: "ลืมรหัสผ่านใช่ไหม"
-        confirm_password_description: "กรุณายืนยันรหัสผ่านเพื่อดำเนินการต่อ"
         name: "ชื่อ"
         disable: "ปิดใช้งาน"
         delete: "ลบ"

@@ -222,7 +222,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
   end
 
   describe "revoke" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:authenticator) { Auth::GoogleOAuth2Authenticator.new }
 
     it "raises exception if no entry for user" do

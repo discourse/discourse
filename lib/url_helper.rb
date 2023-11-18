@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UrlHelper
-  MAX_URL_LENGTH = 100_000
+  MAX_URL_LENGTH = 2_000
 
   # At the moment this handles invalid URLs that browser address bar accepts
   # where second # is not encoded

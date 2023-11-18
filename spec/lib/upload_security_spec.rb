@@ -7,7 +7,7 @@ RSpec.describe UploadSecurity do
   fab!(:post_in_secure_context) do
     Fabricate(:post, topic: Fabricate(:topic, category: private_category))
   end
-  fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload)
 
   let(:type) { nil }
   let(:opts) { { type: type, creating: creating } }

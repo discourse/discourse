@@ -3,13 +3,13 @@
 require "topic_view"
 
 RSpec.describe TopicView do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:topic) { Fabricate(:topic) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
+  fab!(:user)
+  fab!(:moderator)
+  fab!(:admin)
+  fab!(:topic)
+  fab!(:evil_trout)
   fab!(:first_poster) { topic.user }
-  fab!(:anonymous) { Fabricate(:anonymous) }
+  fab!(:anonymous)
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
 
@@ -235,7 +235,7 @@ RSpec.describe TopicView do
     end
 
     context "when log_check_personal_message is enabled" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
       fab!(:private_message) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
       before do
@@ -312,7 +312,7 @@ RSpec.describe TopicView do
     end
 
     describe "#get_canonical_path" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       let(:path) { "/1234" }
 
       before do

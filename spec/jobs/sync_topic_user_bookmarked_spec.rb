@@ -3,7 +3,7 @@
 RSpec.describe Jobs::SyncTopicUserBookmarked do
   subject(:job) { described_class.new }
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post1) { Fabricate(:post, topic: topic) }
   fab!(:post2) { Fabricate(:post, topic: topic) }
   fab!(:post3) { Fabricate(:post, topic: topic) }

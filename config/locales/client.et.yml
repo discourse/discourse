@@ -886,7 +886,6 @@ et:
         copied_to_clipboard: "Kopeeritud lõikelauale"
         download_backup_codes: "Lae varukoodid alla"
       second_factor:
-        confirm_password_description: "Palun kinnita jätkamiseks oma parooli"
         name: "Nimi"
         label: "Kood"
         rate_limit: "Palun oota enne kui proovid mõnda teist autentimise koodi."

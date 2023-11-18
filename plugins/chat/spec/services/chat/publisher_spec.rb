@@ -63,7 +63,7 @@ describe Chat::Publisher do
   describe ".publish_user_tracking_state!" do
     fab!(:channel) { Fabricate(:category_channel) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     let(:data) do
       MessageBus

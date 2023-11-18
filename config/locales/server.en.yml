@@ -1622,7 +1622,7 @@ en:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
-    enforce_second_factor: "Forces users to enable two-factor authentication. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only."
+    enforce_second_factor: "Require users to enable two-factor authentication before they can access the Discourse UI. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only. This setting does not affect API or 'DiscourseConnect provider' authentication."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     same_site_cookies: "Use same site cookies, they eliminate all Cross Site Request Forgery vectors on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use an external auth method."
 
@@ -1987,6 +1987,7 @@ en:
     here_mention: "Name used for a @mention to allow privileged users to notify up to 'max_here_mentioned' people participating in the topic. Must not be an existing username."
     max_here_mentioned: "Maximum number of mentioned people by @here."
     min_trust_level_for_here_mention: "The minimum trust level allowed to mention @here."
+    here_mention_allowed_groups: "Groups that are allowed to mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -2007,7 +2008,6 @@ en:
 
     desktop_category_page_style: "Visual style for the /categories page."
     category_colors: "A list of hexadecimal color values allowed for categories."
-    category_style: "Visual style for category badges."
     default_dark_mode_color_scheme_id: "The color scheme used when in dark mode."
     dark_mode_none: "None"
 
@@ -2280,9 +2280,9 @@ en:
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to code blocks (auto, text, ruby, python etc.). This value must also be present in the `highlighted languages` site setting."
+    default_code_lang: "Default programming language syntax highlighting applied to markdown code blocks (auto, text, ruby, python etc.). This value must also be present in the `highlighted languages` site setting."
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
-    autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
+    autohighlight_all_code: "Apply syntax highlighting to HTML <code> blocks, even if they didn't specify a language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
     show_copy_button_on_codeblocks: "Add a button to codeblocks to copy the block contents to the user's clipboard."
 
@@ -2540,6 +2540,8 @@ en:
 
     keywords:
       anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
+      here_mention_allowed_groups: "min_trust_level_for_here_mention"
+      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2674,6 +2676,7 @@ en:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
     incorrect_password: "Incorrect password"
+    incorrect_password_or_passkey: "Incorrect password or passkey"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."
     activate_email: "<p>You’re almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
@@ -3030,7 +3033,7 @@ en:
 
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Feedback on your topic"
-      subject_template: "Feedback on new topic titled \"%{topic_title}\""
+      subject_template: 'Feedback on new topic titled "%{topic_title}"'
       text_body_template: |
         Hi %{username},
 

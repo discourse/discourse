@@ -8,9 +8,9 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
   end
   before { SiteSetting.tagging_enabled = true }
 
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:tag)
   fab!(:topic) { Fabricate(:topic, tags: [tag]) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:post) { Fabricate(:post, topic: topic, user: user) }
 
   shared_examples "no emails" do

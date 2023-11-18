@@ -93,19 +93,25 @@ export default class ChatComposerChannel extends ChatComposer {
 
   #messageRecipients(channel) {
     if (channel.isDirectMessageChannel) {
-      const directMessageRecipients = channel.chatable.users;
-      if (
-        directMessageRecipients.length === 1 &&
-        directMessageRecipients[0].id === this.currentUser.id
-      ) {
-        return I18n.t("chat.placeholder_self");
-      }
+      if (channel.chatable.group && channel.title) {
+        return I18n.t("chat.placeholder_channel", {
+          channelName: `#${channel.title}`,
+        });
+      } else {
+        const directMessageRecipients = channel.chatable.users;
+        if (
+          directMessageRecipients.length === 1 &&
+          directMessageRecipients[0].id === this.currentUser.id
+        ) {
+          return I18n.t("chat.placeholder_self");
+        }
 
-      return I18n.t("chat.placeholder_users", {
-        commaSeparatedNames: directMessageRecipients
-          .map((u) => u.name || `@${u.username}`)
-          .join(I18n.t("word_connector.comma")),
-      });
+        return I18n.t("chat.placeholder_users", {
+          commaSeparatedNames: directMessageRecipients
+            .map((u) => u.name || `@${u.username}`)
+            .join(I18n.t("word_connector.comma")),
+        });
+      }
     } else {
       return I18n.t("chat.placeholder_channel", {
         channelName: `#${channel.title}`,

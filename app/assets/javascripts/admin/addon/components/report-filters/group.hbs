@@ -2,7 +2,7 @@
   @valueProperty="value"
   @content={{this.groupOptions}}
   @value={{this.groupId}}
-  @onChange={{action "onChange"}}
+  @onChange={{this.onChange}}
   @options={{hash
     allowAny=this.filter.allow_any
     filterable=true

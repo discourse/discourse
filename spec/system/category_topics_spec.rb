@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 describe "Viewing top topics on categories page", type: :system, js: true do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:category_list) { PageObjects::Components::CategoryList.new }
   let(:topic_view) { PageObjects::Components::TopicView.new }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:post) { Fabricate(:post, topic: topic) }
 

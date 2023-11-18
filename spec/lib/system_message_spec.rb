@@ -5,8 +5,8 @@ require "topic_subtype"
 
 RSpec.describe SystemMessage do
   describe "#create" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:admin)
+    fab!(:user)
 
     before { SiteSetting.site_contact_username = admin.username }
 

@@ -4,7 +4,7 @@ RSpec.describe UserMerger do
   fab!(:target_user) { Fabricate(:user, username: "alice", email: "alice@example.com") }
   fab!(:source_user) { Fabricate(:user, username: "alice1", email: "alice@work.com") }
   fab!(:walter) { Fabricate(:walter_white) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:coding_horror)
 
   fab!(:p1) { Fabricate(:post) }
   fab!(:p2) { Fabricate(:post) }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Composer Form Templates", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:form_template_1) do
     Fabricate(
       :form_template,

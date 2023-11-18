@@ -1341,8 +1341,6 @@ nl:
         title: "Tweeledige verificatie"
         enable: "Tweeledige verificatie beheren"
         disable_all: "Alles uitschakelen"
-        forgot_password: "Wachtwoord vergeten?"
-        confirm_password_description: "Bevestig je wachtwoord om door te gaan"
         name: "Naam"
         label: "Code"
         rate_limit: "Wacht even voordat je een andere verificatiecode probeert."

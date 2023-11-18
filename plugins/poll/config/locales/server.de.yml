@@ -12,6 +12,7 @@ de:
     poll_minimum_trust_level_to_create: "Erforderliche Vertrauensstufe, um Umfragen zu erstellen."
     poll_groupable_user_fields: "Eine Reihe von Benutzerfeldern, die verwendet werden können, um Umfrageergebnisse zu gruppieren und zu filtern."
     poll_export_data_explorer_query_id: "ID der Datenexplorer-Abfrage, die zum Exportieren von Umfrageergebnissen verwendet werden soll (0 zum Deaktivieren)."
+    poll_default_public: "Wenn du eine neue Umfrage erstellst, aktiviere standardmäßig die Option \"anzeigen, wer abgestimmt hat\"."
   poll:
     poll: "Umfrage"
     invalid_argument: "Ungültiger Wert „%{value}“ für Argument „%{argument}“."

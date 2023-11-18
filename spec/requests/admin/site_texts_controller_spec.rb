@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::SiteTextsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
   let(:default_locale) { I18n.locale }
 
   after do

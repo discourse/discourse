@@ -3,13 +3,13 @@
 require "rails_helper"
 
 RSpec.describe Chat::ChatController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:other_user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:admin)
+  fab!(:category)
   fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
   fab!(:dm_chat_channel) { Fabricate(:direct_message_channel, users: [user, other_user, admin]) }
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:tag)
 
   MESSAGE_COUNT = 70
   MESSAGE_COUNT.times do |n|
@@ -30,43 +30,6 @@ RSpec.describe Chat::ChatController do
 
   def flag_message(message, flagger, flag_type: ReviewableScore.types[:off_topic])
     Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
-  end
-
-  describe "#enable_chat" do
-    context "with category as chatable" do
-      let!(:category) { Fabricate(:category) }
-      let(:channel) { Fabricate(:category_channel, chatable: category) }
-
-      it "ensures created channel can be seen" do
-        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-        sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-
-      # TODO: rewrite specs to ensure no exception is raised
-      it "ensures existing channel can be seen" do
-        Guardian.any_instance.expects(:can_join_chat_channel?)
-
-        sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-    end
-  end
-
-  describe "#disable_chat" do
-    context "with category as chatable" do
-      it "ensures category can be seen" do
-        category = Fabricate(:category)
-        channel = Fabricate(:category_channel, chatable: category)
-        message = Fabricate(:chat_message, chat_channel: channel)
-
-        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-        sign_in(admin)
-        post "/chat/disable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-    end
   end
 
   describe "#rebake" do
@@ -611,6 +574,7 @@ RSpec.describe Chat::ChatController do
       expect(response.status).to eq(403)
 
       Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
+
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
       }.to change { Chat::Draft.count }.by(1)

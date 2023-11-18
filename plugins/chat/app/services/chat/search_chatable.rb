@@ -15,78 +15,65 @@ module Chat
     #   @return [Service::Base::Context]
 
     contract
-    step :set_mode
     step :clean_term
-    step :fetch_memberships
-    step :fetch_users
-    step :fetch_category_channels
-    step :fetch_direct_message_channels
+    model :memberships, optional: true
+    model :users, optional: true
+    model :category_channels, optional: true
+    model :direct_message_channels, optional: true
 
     # @!visibility private
     class Contract
-      attribute :term, default: ""
+      attribute :term, :string, default: ""
+      attribute :include_users, :boolean, default: true
+      attribute :include_category_channels, :boolean, default: true
+      attribute :include_direct_message_channels, :boolean, default: true
+      attribute :excluded_memberships_channel_id, :integer
     end
 
     private
-
-    def set_mode
-      context.mode =
-        if context.contract.term&.start_with?("#")
-          :channel
-        elsif context.contract.term&.start_with?("@")
-          :user
-        else
-          :all
-        end
-    end
 
     def clean_term(contract:, **)
       context.term = contract.term.downcase&.gsub(/^#+/, "")&.gsub(/^@+/, "")&.strip
     end
 
     def fetch_memberships(guardian:, **)
-      context.memberships = ::Chat::ChannelMembershipManager.all_for_user(guardian.user)
+      ::Chat::ChannelMembershipManager.all_for_user(guardian.user)
     end
 
-    def fetch_users(guardian:, **)
+    def fetch_users(guardian:, contract:, **)
+      return unless contract.include_users
       return unless guardian.can_create_direct_message?
-      return if context.mode == :channel
-      context.users = search_users(context.term, guardian)
+      search_users(context, guardian, contract)
     end
 
-    def fetch_category_channels(guardian:, **)
-      return if context.mode == :user
+    def fetch_category_channels(guardian:, contract:, **)
+      return unless contract.include_category_channels
       return if !SiteSetting.enable_public_channels
 
-      context.category_channels =
-        ::Chat::ChannelFetcher.secured_public_channel_search(
-          guardian,
-          filter_on_category_name: false,
-          match_filter_on_starts_with: false,
-          filter: context.term,
-          status: :open,
-          limit: 10,
-        )
+      ::Chat::ChannelFetcher.secured_public_channel_search(
+        guardian,
+        filter_on_category_name: false,
+        match_filter_on_starts_with: false,
+        filter: context.term,
+        status: :open,
+        limit: 10,
+      )
     end
 
-    def fetch_direct_message_channels(guardian:, **args)
-      return if context.mode == :user
-
-      user_ids = nil
-      if context.term.length > 0
-        user_ids =
-          (context.users.nil? ? search_users(context.term, guardian) : context.users).map(&:id)
-      end
+    def fetch_direct_message_channels(guardian:, users:, contract:, **args)
+      return unless contract.include_direct_message_channels
 
       channels =
         ::Chat::ChannelFetcher.secured_direct_message_channels_search(
           guardian.user.id,
           guardian,
           limit: 10,
-          user_ids: user_ids,
+          match_filter_on_starts_with: false,
+          filter: context.term,
         ) || []
 
-      if user_ids.present? && context.mode == :all
+      if users && contract.include_users
+        user_ids = users.map(&:id)
         channels =
           channels.reject do |channel|
             channel_user_ids = channel.allowed_user_ids - [guardian.user.id]
@@ -96,17 +83,31 @@ module Chat
           end
       end
 
-      context.direct_message_channels = channels
+      channels
     end
 
-    def search_users(term, guardian)
-      user_search = ::UserSearch.new(term, limit: 10)
+    def search_users(context, guardian, contract)
+      user_search = ::UserSearch.new(context.term, limit: 10)
 
-      if term.blank?
-        user_search.scoped_users.includes(:user_option)
+      if context.term.blank?
+        user_search = user_search.scoped_users.real.includes(:user_option)
       else
-        user_search.search.includes(:user_option)
+        user_search = user_search.search.real.includes(:user_option)
       end
+
+      if context.excluded_memberships_channel_id
+        user_search =
+          user_search.where(
+            "NOT EXISTS (
+      SELECT 1
+      FROM user_chat_channel_memberships
+      WHERE user_chat_channel_memberships.user_id = users.id AND user_chat_channel_memberships.chat_channel_id = ?
+    )",
+            context.excluded_memberships_channel_id,
+          )
+      end
+
+      user_search
     end
   end
 end

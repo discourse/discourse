@@ -1075,8 +1075,6 @@ lv:
         title: "Divu faktoru autentifikācija"
         enable: "Pārvaldiet divu faktoru autentifikāciju"
         disable_all: "Atspējot visu"
-        forgot_password: "Aizmirsi paroli?"
-        confirm_password_description: "Lai turpinātu, lūdzu, apstipriniet savu paroli"
         name: "Vārds"
         label: "Kods"
         rate_limit: "Lūdzu, uzgaidiet, pirms izmēģināt citu autentifikācijas kodu."

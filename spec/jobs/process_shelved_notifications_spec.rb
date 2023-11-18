@@ -3,7 +3,7 @@
 RSpec.describe Jobs::ProcessShelvedNotifications do
   subject(:job) { described_class.new }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:post) { Fabricate(:post) }
 
   it "removes all past do not disturb timings" do
