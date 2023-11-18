@@ -31,6 +31,15 @@
     box-shadow: var(--shadow-modal);
   }
 
+  // fixes modal placement on Android when keyboard is visible
+  html.keyboard-visible:not(.ios-device) & {
+    height: calc(100% - env(keyboard-inset-height));
+
+    .d-modal__container {
+      max-height: 100%;
+    }
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;
