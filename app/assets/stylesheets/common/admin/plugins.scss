@@ -8,35 +8,66 @@
   }
 
   .admin-plugins-list {
-    &__row {
-      .admin-plugins-list__author {
-        font-size: var(--font-down-1);
-        padding: 0.25em 0;
+    @media screen and (min-width: 550px) {
+      tr {
+        grid-template-columns: 0.25fr repeat(4, 1fr);
       }
-
-      .admin-plugins-list__name-with-badges {
-        display: flex;
-
-        .admin-plugins-list__name {
-          font-weight: bold;
-          margin-right: 0.5em;
+    }
+    @include breakpoint(mobile-extra-large) {
+      tr {
+        grid-template-columns: 0.25fr repeat(3, 1fr);
+      }
+      .admin-plugins-list {
+        &__row {
+          grid-column-start: 2;
+          grid-column-end: -1;
         }
-
-        .admin-plugins-list__badge {
-          font-weight: 400;
-          font-size: var(--font-down-2);
-          background-color: var(--primary-low);
-          color: var(--primary-medium);
-          padding: 0.2em 0.8em;
-
-          .d-icon {
-            font-size: 0.8em;
+        &__settings {
+          grid-row: 2;
+          grid-column-start: 4;
+          text-align: right;
+          button {
+            display: flex;
           }
         }
-
-        .admin-plugins-list__badge + .admin-plugins-list__badge {
-          margin-left: 0.5em;
+        &__version {
+          grid-row: 2;
+          grid-column-start: 3;
         }
+        &__enabled {
+          grid-row: 2;
+          grid-column-start: 2;
+        }
+      }
+    }
+
+    &__author {
+      font-size: var(--font-down-1);
+      padding: 0.25em 0;
+    }
+
+    &__name-with-badges {
+      display: flex;
+    }
+
+    &__name {
+      font-weight: bold;
+      margin-right: 0.5em;
+    }
+
+    &__badge {
+      font-weight: 400;
+      font-size: var(--font-down-2);
+      background-color: var(--primary-low);
+      color: var(--primary-medium);
+      padding: 0.2em 0.8em;
+
+      .d-icon {
+        font-size: 0.8em;
+      }
+
+      & + .admin-plugins-list__badge {
+        margin-left: 0.5em;
       }
     }
 
@@ -46,42 +77,5 @@
         font-size: var(--font-down-1);
       }
     }
-
-    .grid {
-      @media screen and (min-width: 550px) {
-        tr {
-          grid-template-columns: 0.25fr repeat(4, 1fr);
-        }
-      }
-      @include breakpoint(mobile-extra-large) {
-        tr {
-          grid-template-columns: 0.25fr repeat(3, 1fr);
-        }
-        .admin-plugins-list__row {
-          grid-column-start: 2;
-          grid-column-end: -1;
-        }
-        .admin-plugins-list__settings {
-          grid-row: 2;
-          grid-column-start: 4;
-          text-align: right;
-          button {
-            display: flex;
-          }
-        }
-        td.admin-plugins-list__version {
-          grid-row: 2;
-          grid-column-start: 3;
-        }
-        td.admin-plugins-list__enabled {
-          grid-row: 2;
-          grid-column-start: 2;
-        }
-      }
-    }
   }
-}
-
-.admin-plugins-official-badge {
-  color: var(--success);
 }
