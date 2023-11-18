@@ -48,6 +48,10 @@ export default EmberObject.extend(EmberArray, {
     this._changeArray(cb, this.get("posts.length") - 1, 1, 0);
   },
 
+  insertPost(insertAtIndex, cb) {
+    this._changeArray(cb, insertAtIndex, 0, 1);
+  },
+
   refreshAll(cb) {
     const length = this.get("posts.length");
     this._changeArray(cb, 0, length, length);
