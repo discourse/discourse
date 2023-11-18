@@ -585,12 +585,12 @@ class BulkImport::Generic < BulkImport::Base
 
   def post_raw(row, group_names, user_names)
     raw = row["raw"]
+    placeholders = row["placeholders"].present? ? JSON.parse(row["placeholders"]) : nil
 
-    if row["polls"].present?
-      poll_mapping =
-        JSON.parse(row["polls"]).map { |poll| [poll["poll_id"], poll["placeholder"]] }.to_h
+    if (polls = placeholders["polls"]).present?
+      poll_mapping = polls.map { |poll| [poll["poll_id"], poll["placeholder"]] }.to_h
 
-      polls = query(<<~SQL, { post_id: row["id"] })
+      poll_details = query(<<~SQL, { post_id: row["id"] })
         SELECT p.*, ROW_NUMBER() OVER (PARTITION BY p.post_id, p.name ORDER BY p.id) AS seq,
                JSON_GROUP_ARRAY(DISTINCT TRIM(po.text)) AS options
           FROM polls p
@@ -599,26 +599,16 @@ class BulkImport::Generic < BulkImport::Base
          ORDER BY p.id, po.position, po.id
       SQL
 
-      polls.each do |poll|
+      poll_details.each do |poll|
         if (placeholder = poll_mapping[poll["id"]])
           raw.gsub!(placeholder, poll_bbcode(poll))
         end
       end
 
-      polls.close
-
-      polls = JSON.parse(row["polls"])
-
-      polls.each do |poll|
-        poll_id = poll_id_from_original_id(poll["id"])
-        poll_name = poll["name"]
-        raw.gsub!(poll["placeholder"], "[poll name=#{poll_name} poll=#{poll_id}]")
-      end
+      poll_details.close
     end
 
-    if row["mentions"].present?
-      mentions = JSON.parse(row["mentions"])
-
+    if (mentions = placeholders["mentions"]).present?
       mentions.each do |mention|
         name =
           if mention["type"] == "user"
@@ -629,6 +619,18 @@ class BulkImport::Generic < BulkImport::Base
 
         puts "#{mention["type"]} not found -- #{mention["id"]}" unless name
         raw.gsub!(mention["placeholder"], "@#{name}")
+      end
+    end
+
+    if (events = placeholders["events"]).present?
+      events.each do |event|
+        event_details = @source_db.get_first_row(<<~SQL, { event_id: event["event_id"] })
+          SELECT *
+            FROM events
+           WHERE id = :event_id
+        SQL
+
+        raw.gsub!(event["placeholder"], event_bbcode(event_details)) if event_details
       end
     end
 
@@ -690,6 +692,40 @@ class BulkImport::Generic < BulkImport::Base
     text << "# #{title}\n" if title.present?
     text << options.map { |o| "* #{o}" }.join("\n") if options.present? && !number_type
     text << "\n[/poll]\n"
+    text
+  end
+
+  def event_bbcode(event)
+    unless defined?(::DiscoursePostEvent)
+      if !@warned_about_discourse_post_event
+        @warned_about_discourse_post_event = true
+        puts "  Skipping import of events because the plugin is not installed."
+      end
+      return
+    end
+
+    starts_at = to_datetime(event["starts_at"])
+    ends_at = to_datetime(event["ends_at"])
+    status = DiscoursePostEvent::Event.statuses[event["status"]].to_s
+    name =
+      if (name = event["name"].presence)
+        name.ljust(DiscoursePostEvent::Event::MIN_NAME_LENGTH, ".").truncate(
+          DiscoursePostEvent::Event::MAX_NAME_LENGTH,
+        )
+      end
+    url = event["url"]
+    custom_fields = event["custom_fields"] ? JSON.parse(event["custom_fields"]) : nil
+
+    text = +"[event"
+    text << %{ start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}"} if starts_at
+    text << %{ end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}"} if ends_at
+    text << %{ timezone="UTC"}
+    text << %{ status="#{status}"} if status
+    text << %{ name="#{name}"} if name
+    text << %{ url="#{url}"} if url
+    custom_fields.each { |key, value| text << %{ #{key}="#{value}"} } if custom_fields
+    text << "]\n"
+    text << "[/event]\n"
     text
   end
 
@@ -1435,6 +1471,11 @@ class BulkImport::Generic < BulkImport::Base
   def import_topic_tags
     puts "", "Importing topic tags..."
 
+    if !@tag_mapping
+      puts "  Skipping import of topic tags because tags have not been imported."
+      return
+    end
+
     topic_tags = query(<<~SQL)
       SELECT *
         FROM topic_tags
@@ -1599,7 +1640,7 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     # TODO Make this configurable
-    from_date = Date.tomorrow
+    from_date = Date.today
     DiscourseGamification::GamificationLeaderboard.all.each do |leaderboard|
       leaderboard.update!(from_date: from_date)
     end
