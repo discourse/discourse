@@ -697,6 +697,22 @@ class BulkImport::Base
 
   GAMIFICATION_SCORE_EVENT_COLUMNS ||= %i[user_id date points description created_at updated_at]
 
+  POST_EVENT_COLUMNS ||= %i[
+    id
+    status
+    original_starts_at
+    original_ends_at
+    deleted_at
+    raw_invitees
+    name
+    url
+    custom_fields
+    reminders
+    recurrence
+    timezone
+    minimal
+  ]
+
   POLL_COLUMNS ||= %i[
     id
     post_id
@@ -870,6 +886,10 @@ class BulkImport::Base
 
   def create_gamification_score_events(rows, &block)
     create_records(rows, "gamification_score_event", GAMIFICATION_SCORE_EVENT_COLUMNS, &block)
+  end
+
+  def create_post_events(rows, &block)
+    create_records(rows, "discourse_post_event_events", POST_EVENT_COLUMNS, &block)
   end
 
   def create_polls(rows, &block)
@@ -1459,6 +1479,10 @@ class BulkImport::Base
     score_event[:created_at] ||= NOW
     score_event[:updated_at] ||= NOW
     score_event
+  end
+
+  def process_discourse_post_event_events(post_event)
+    post_event
   end
 
   def process_poll(poll)

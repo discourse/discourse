@@ -38,6 +38,8 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
+    import_site_settings
+
     import_uploads
 
     # needs to happen before users, because keeping group names is more important than usernames
@@ -83,6 +85,7 @@ class BulkImport::Generic < BulkImport::Base
     import_votes
     import_answers
     import_gamification_scores
+    import_post_events
 
     import_badge_groupings
     import_badges
@@ -106,6 +109,36 @@ class BulkImport::Generic < BulkImport::Base
 
     @source_db.close
     @uploads_db.close if @uploads_db
+  end
+
+  def import_site_settings
+    puts "", "Importing site settings..."
+
+    rows = query(<<~SQL)
+      SELECT name, value, action
+      FROM site_settings
+      ORDER BY ROWID
+    SQL
+
+    all_settings = SiteSetting.all_settings
+
+    rows.each do |row|
+      name = row["name"].to_sym
+      setting = all_settings.find { |s| s[:setting] == name }
+      next unless setting
+
+      case row["action"]
+      when "update"
+        SiteSetting.set_and_log(name, row["value"])
+      when "append"
+        raise "Cannot append to #{name} setting" if setting[:type] != "list"
+        items = (SiteSetting.get(name) || "").split("|")
+        items << row["value"] unless items.include?(row["value"])
+        SiteSetting.set_and_log(name, items.join("|"))
+      end
+    end
+
+    rows.close
   end
 
   def import_categories
@@ -622,16 +655,14 @@ class BulkImport::Generic < BulkImport::Base
       end
     end
 
-    if (events = placeholders["events"]).present?
-      events.each do |event|
-        event_details = @source_db.get_first_row(<<~SQL, { event_id: event["event_id"] })
-          SELECT *
-            FROM events
-           WHERE id = :event_id
-        SQL
+    if (event = placeholders["event"]).present?
+      event_details = @source_db.get_first_row(<<~SQL, { event_id: event["event_id"] })
+        SELECT *
+          FROM events
+         WHERE id = :event_id
+      SQL
 
-        raw.gsub!(event["placeholder"], event_bbcode(event_details)) if event_details
-      end
+      raw.gsub!(event["placeholder"], event_bbcode(event_details)) if event_details
     end
 
     if row["upload_ids"].present? && @uploads_db
@@ -662,16 +693,18 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def poll_bbcode(row)
+    return unless defined?(::Poll)
+
     name = poll_name(row)
-    type = Poll.types.key(row["type"])
-    regular_type = type == Poll.types[:regular]
-    number_type = type == Poll.types[:number]
-    result_visibility = Poll.results.key(row["results"])
+    type = ::Poll.types.key(row["type"])
+    regular_type = type == ::Poll.types[:regular]
+    number_type = type == ::Poll.types[:number]
+    result_visibility = ::Poll.results.key(row["results"])
     min = row["min"]
     max = row["max"]
     step = row["step"]
-    visibility = Poll.visibilities.key(row["visibility"])
-    chart_type = Poll.chart_types.key(row["chart_type"])
+    visibility = ::Poll.visibilities.key(row["visibility"])
+    chart_type = ::Poll.chart_types.key(row["chart_type"])
     groups = row["groups"]
     auto_close = to_datetime(row["close_at"])
     title = row["title"]
@@ -696,21 +729,15 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def event_bbcode(event)
-    unless defined?(::DiscoursePostEvent)
-      if !@warned_about_discourse_post_event
-        @warned_about_discourse_post_event = true
-        puts "  Skipping import of events because the plugin is not installed."
-      end
-      return
-    end
+    return unless defined?(::DiscoursePostEvent)
 
     starts_at = to_datetime(event["starts_at"])
     ends_at = to_datetime(event["ends_at"])
-    status = DiscoursePostEvent::Event.statuses[event["status"]].to_s
+    status = ::DiscoursePostEvent::Event.statuses[event["status"]].to_s
     name =
       if (name = event["name"].presence)
-        name.ljust(DiscoursePostEvent::Event::MIN_NAME_LENGTH, ".").truncate(
-          DiscoursePostEvent::Event::MAX_NAME_LENGTH,
+        name.ljust(::DiscoursePostEvent::Event::MIN_NAME_LENGTH, ".").truncate(
+          ::DiscoursePostEvent::Event::MAX_NAME_LENGTH,
         )
       end
     url = event["url"]
@@ -730,6 +757,11 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_polls
+    unless defined?(::Poll)
+      puts "", "Skipping polls, because the poll plugin is not installed."
+      return
+    end
+
     puts "", "Importing polls..."
 
     polls = query(<<~SQL)
@@ -795,6 +827,11 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_poll_options
+    unless defined?(::Poll)
+      puts "", "Skipping polls, because the poll plugin is not installed."
+      return
+    end
+
     puts "", "Importing poll options..."
 
     poll_options = query(<<~SQL)
@@ -823,6 +860,11 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_poll_votes
+    unless defined?(::Poll)
+      puts "", "Skipping polls, because the poll plugin is not installed."
+      return
+    end
+
     puts "", "Importing poll votes..."
 
     poll_votes = query(<<~SQL)
@@ -1671,6 +1713,51 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     scores.close
+  end
+
+  def import_post_events
+    puts "", "Importing events..."
+
+    unless defined?(::DiscoursePostEvent)
+      puts "  Skipping import of events because the plugin is not installed."
+      return
+    end
+
+    post_events = query(<<~SQL)
+      SELECT *
+        FROM events
+       ORDER BY id
+    SQL
+
+    default_custom_fields = "{}"
+    timezone = "UTC"
+    public_group_invitees = "{#{::DiscoursePostEvent::Event::PUBLIC_GROUP}}"
+    standalone_invitees = "{}"
+
+    create_post_events(post_events) do |row|
+      post_id = post_id_from_imported_id(row["post_id"])
+
+      {
+        id: post_id,
+        status: row["status"],
+        original_starts_at: to_datetime(row["starts_at"]),
+        original_ends_at: to_datetime(row["ends_at"]),
+        name: row["name"],
+        url: row["url"] ? row["url"][0..999] : nil,
+        custom_fields: row["custom_fields"] || default_custom_fields,
+        timezone: timezone,
+        raw_invitees:
+          (
+            if row["status"] == ::DiscoursePostEvent::Event.statuses[:public]
+              public_group_invitees
+            else
+              standalone_invitees
+            end
+          ),
+      }
+    end
+
+    post_events.close
   end
 
   def import_tag_users
