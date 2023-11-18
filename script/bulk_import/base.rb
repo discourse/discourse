@@ -703,6 +703,18 @@ class BulkImport::Base
     minimal
   ]
 
+  POST_EVENT_DATES_COLUMNS ||= %i[
+    event_id
+    starts_at
+    ends_at
+    reminder_counter
+    event_will_start_sent_at
+    event_started_sent_at
+    finished_at
+    created_at
+    updated_at
+  ]
+
   POLL_COLUMNS ||= %i[
     id
     post_id
@@ -880,6 +892,10 @@ class BulkImport::Base
 
   def create_post_events(rows, &block)
     create_records(rows, "discourse_post_event_events", POST_EVENT_COLUMNS, &block)
+  end
+
+  def create_post_event_dates(rows, &block)
+    create_records(rows, "discourse_calendar_post_event_dates", POST_EVENT_DATES_COLUMNS, &block)
   end
 
   def create_polls(rows, &block)
@@ -1471,6 +1487,12 @@ class BulkImport::Base
 
   def process_discourse_post_event_events(post_event)
     post_event
+  end
+
+  def process_discourse_calendar_post_event_dates(post_event_date)
+    post_event_date[:created_at] ||= NOW
+    post_event_date[:updated_at] ||= NOW
+    post_event_date
   end
 
   def process_poll(poll)

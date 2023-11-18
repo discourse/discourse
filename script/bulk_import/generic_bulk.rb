@@ -1734,8 +1734,11 @@ class BulkImport::Generic < BulkImport::Base
     public_group_invitees = "{#{::DiscoursePostEvent::Event::PUBLIC_GROUP}}"
     standalone_invitees = "{}"
 
+    existing_events = DiscoursePostEvent::Event.pluck(:id).to_set
+
     create_post_events(post_events) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
+      next if !post_id || existing_events.include?(post_id)
 
       {
         id: post_id,
@@ -1755,6 +1758,52 @@ class BulkImport::Generic < BulkImport::Base
             end
           ),
       }
+    end
+
+    puts "", "Importing event dates..."
+
+    post_events.reset
+    existing_events = DiscoursePostEvent::EventDate.pluck(:event_id).to_set
+
+    create_post_event_dates(post_events) do |row|
+      post_id = post_id_from_imported_id(row["post_id"])
+      next if !post_id || existing_events.include?(post_id)
+
+      {
+        event_id: post_id,
+        starts_at: to_datetime(row["starts_at"]),
+        ends_at: to_datetime(row["ends_at"]),
+      }
+    end
+
+    puts "", "Importing topic event custom fields..."
+
+    post_events.reset
+    field_name = DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT
+    existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
+
+    create_topic_custom_fields(post_events) do |row|
+      date = to_datetime(row["starts_at"])
+      next unless date
+
+      topic_id = topic_id_from_imported_post_id(row["post_id"])
+      next if !topic_id || existing_fields.include?(topic_id)
+
+      { topic_id: topic_id, name: field_name, value: date.utc.strftime("%Y-%m-%d %H:%M:%S") }
+    end
+
+    post_events.reset
+    field_name = DiscoursePostEvent::TOPIC_POST_EVENT_ENDS_AT
+    existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
+
+    create_topic_custom_fields(post_events) do |row|
+      date = to_datetime(row["ends_at"])
+      next unless date
+
+      topic_id = topic_id_from_imported_post_id(row["post_id"])
+      next if !topic_id || existing_fields.include?(topic_id)
+
+      { topic_id: topic_id, name: field_name, value: date.utc.strftime("%Y-%m-%d %H:%M:%S") }
     end
 
     post_events.close
