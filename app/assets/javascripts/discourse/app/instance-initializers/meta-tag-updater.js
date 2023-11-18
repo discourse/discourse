@@ -1,3 +1,4 @@
+import { getCanonicalUrl } from "discourse/lib/url";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 
 export default {
@@ -21,7 +22,7 @@ export default {
       twitterTitle?.setAttribute("content", title);
       twitterUrl?.setAttribute("content", absoluteUrl);
 
-      canonicalUrl?.setAttribute("href", absoluteUrl);
+      canonicalUrl?.setAttribute("href", getCanonicalUrl(absoluteUrl));
     });
   },
 };

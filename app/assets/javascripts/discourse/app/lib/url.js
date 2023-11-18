@@ -40,6 +40,8 @@ const SERVER_SIDE_ONLY = [
 // scrolling to "suggested topics".
 const JUMP_END_BUFFER = 250;
 
+const ALLOWED_CANONICAL_PARAMS = ["page"];
+
 export function rewritePath(path) {
   const params = path.split("?");
 
@@ -541,6 +543,21 @@ export function getEditCategoryUrl(category, subcategories, tab) {
     url += `/${tab}`;
   }
   return getURL(url);
+}
+
+export function getCanonicalUrl(absoluteUrl) {
+  const canonicalUrl = new URL(absoluteUrl);
+  canonicalUrl.pathname = canonicalUrl.pathname.replace(/\/$/, "");
+
+  const allowedSearchParams = new URLSearchParams();
+  for (const [key, value] of canonicalUrl.searchParams) {
+    if (ALLOWED_CANONICAL_PARAMS.includes(key)) {
+      allowedSearchParams.append(key, value);
+    }
+  }
+  canonicalUrl.search = allowedSearchParams.toString();
+
+  return canonicalUrl.toString();
 }
 
 export default _urlInstance;
