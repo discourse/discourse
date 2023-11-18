@@ -248,8 +248,6 @@ class BulkImport::Base
         .where(name: "import_username")
         .pluck("user_custom_fields.value", "users.username")
         .to_h
-    @last_muted_user_id = last_id(MutedUser)
-    @last_user_history_id = last_id(UserHistory)
     @last_user_avatar_id = last_id(UserAvatar)
     @last_upload_id = last_id(Upload)
 
@@ -335,14 +333,6 @@ class BulkImport::Base
     end
     if @last_post_action_id > 0
       @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
-    end
-    if @last_muted_user_id > 0
-      @raw_connection.exec("SELECT setval('#{MutedUser.sequence_name}', #{@last_muted_user_id})")
-    end
-    if @last_user_history_id > 0
-      @raw_connection.exec(
-        "SELECT setval('#{UserHistory.sequence_name}', #{@last_user_history_id})",
-      )
     end
     if @last_user_avatar_id > 0
       @raw_connection.exec("SELECT setval('#{UserAvatar.sequence_name}', #{@last_user_avatar_id})")
@@ -471,7 +461,7 @@ class BulkImport::Base
     digest_attempted_at
   ]
 
-  USER_HISTORY_COLUMNS ||= %i[id action acting_user_id target_user_id details created_at updated_at]
+  USER_HISTORY_COLUMNS ||= %i[action acting_user_id target_user_id details created_at updated_at]
 
   USER_AVATAR_COLUMNS ||= %i[id user_id custom_upload_id created_at updated_at]
 
@@ -539,7 +529,7 @@ class BulkImport::Base
     updated_at
   ]
 
-  MUTED_USER_COLUMNS ||= %i[id user_id muted_user_id created_at updated_at]
+  MUTED_USER_COLUMNS ||= %i[user_id muted_user_id created_at updated_at]
 
   CATEGORY_COLUMNS ||= %i[
     id
@@ -1025,14 +1015,12 @@ class BulkImport::Base
   end
 
   def process_user_history(history)
-    history[:id] = @last_user_history_id += 1
     history[:created_at] ||= NOW
     history[:updated_at] ||= NOW
     history
   end
 
   def process_muted_user(muted_user)
-    muted_user[:id] = @last_muted_user_id += 1
     muted_user[:created_at] ||= NOW
     muted_user[:updated_at] ||= NOW
     muted_user
