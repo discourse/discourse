@@ -4266,8 +4266,6 @@ es:
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         new_features:
           title: "\U0001F381 Novedades"
-          dismiss: "Descartar"
-          learn_more: "Más información"
         last_checked: "Ultima comprobación"
         refresh_problems: "Volver a cargar"
         no_problems: "No se ha encontrado ningún problema."

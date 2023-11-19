@@ -2888,9 +2888,6 @@ hy:
         installed_version: "Տեղադրված է "
         latest_version: "Վերջինը"
         problems_found: "Որոշ խորհուրդներ՝ հիմնված Ձեր կայքի ընթացիկ կարգավորումների վրա"
-        new_features:
-          dismiss: "Չեղարկել"
-          learn_more: "Իմանալ ավելին"
         last_checked: "Վերջին ստուգումը՝ "
         refresh_problems: "Թարմացնել"
         no_problems: "Խնդիրներ չեն գտնվել:"

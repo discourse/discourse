@@ -2472,9 +2472,6 @@ th:
         please_upgrade: "กรุณาอัปเกรด!"
         installed_version: "ติดตั้งแล้ว"
         latest_version: "ล่าสุด"
-        new_features:
-          dismiss: "ซ่อน"
-          learn_more: "เรียนรู้เพิ่มเติม"
         last_checked: "ตรวจล่าสุด"
         refresh_problems: "รีเฟรช"
         no_problems: "ไม่พบปัญหา"

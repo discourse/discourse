@@ -4729,8 +4729,6 @@ uk:
         problems_found: "Кілька порад по вашим поточним налаштуванням сайту"
         new_features:
           title: "\U0001F381 Нові можливості"
-          dismiss: "Відхилити"
-          learn_more: "Дізнатися більше"
         last_checked: "Остання перевірка"
         refresh_problems: "Оновити"
         no_problems: "Не виявлено жодних проблем."

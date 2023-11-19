@@ -3398,8 +3398,6 @@ nb_NO:
         problems_found: "Noen råd basert på gjeldende sideinnstillinger"
         new_features:
           title: "\U0001F381 Nye funksjoner"
-          dismiss: "Avslå"
-          learn_more: "Finn ut mer"
         last_checked: "Sist sjekket"
         refresh_problems: "Last inn siden på nytt"
         no_problems: "Ingen problemer ble funnet."

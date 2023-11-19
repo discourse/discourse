@@ -2934,12 +2934,13 @@ dashboard:
     client: true
     type: list
     list_type: compact
-    default: "moderation|security|reports"
+    default: "moderation|security|reports|features"
     allow_any: false
     choices:
       - moderation
       - security
       - reports
+      - features
   dashboard_general_tab_activity_metrics:
     client: true
     type: list

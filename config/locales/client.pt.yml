@@ -3479,8 +3479,6 @@ pt:
         problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
         new_features:
           title: "\U0001F381 Novos Recursos"
-          dismiss: "Marcar como visto"
-          learn_more: "Saiba mais"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema encontrado."

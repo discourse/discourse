@@ -3072,9 +3072,6 @@ bs_BA:
         installed_version: "Installed"
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
-        new_features:
-          dismiss: "Odpusti"
-          learn_more: "Saznaj više"
         last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"
         no_problems: "No problems were found."

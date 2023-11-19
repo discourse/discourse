@@ -4190,8 +4190,6 @@ hr:
         problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
         new_features:
           title: "\U0001F381 Nove značajke"
-          dismiss: "Skloni"
-          learn_more: "Saznajte više"
         last_checked: "Zadnje provjereno"
         refresh_problems: "Osvježi"
         no_problems: "Nisu pronađeni problemi."

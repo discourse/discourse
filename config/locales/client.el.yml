@@ -3342,9 +3342,6 @@ el:
         installed_version: "Εγκατεστημένα"
         latest_version: "Τελευταία"
         problems_found: "Μερικές συμβουλές με βάση τις τρέχουσες ρυθμίσεις του ιστότοπού σας"
-        new_features:
-          dismiss: "Απόρριψη"
-          learn_more: "Μάθε περισσότερα"
         last_checked: "Τελευταίος έλεγχος"
         refresh_problems: "Ανανέωση"
         no_problems: "Δεν βρέθηκε κανένα πρόβλημα."

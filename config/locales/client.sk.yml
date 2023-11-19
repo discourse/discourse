@@ -2346,9 +2346,6 @@ sk:
         version_check_pending: "Zdá sa že ste nedávno aktualizovali. Fantastické!"
         installed_version: "Nainštalované"
         latest_version: "Najnovšie"
-        new_features:
-          dismiss: "Zahodiť"
-          learn_more: "Zistiť viac"
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."

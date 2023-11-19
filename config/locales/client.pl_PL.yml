@@ -4667,8 +4667,6 @@ pl_PL:
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         new_features:
           title: "\U0001F381 Nowe funkcje"
-          dismiss: "Odrzuć"
-          learn_more: "Dowiedz się więcej"
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."

@@ -4103,8 +4103,6 @@ zh_CN:
         problems_found: "基于您当前站点设置的一些建议"
         new_features:
           title: "\U0001F381 新功能"
-          dismiss: "忽略"
-          learn_more: "了解详情"
         last_checked: "上次检查"
         refresh_problems: "刷新"
         no_problems: "找不到问题。"

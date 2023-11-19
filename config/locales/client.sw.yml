@@ -2295,9 +2295,6 @@ sw:
         version_check_pending: "Inaonekana umeweka toleo la sasa hivi karibuni. Vizuri!"
         installed_version: "Imesanikishwa"
         latest_version: "Hivi Karibuni"
-        new_features:
-          dismiss: "Ondosha"
-          learn_more: "Jifunze zaidi"
         last_checked: "Mara ya Mwisho imeangaliwa"
         refresh_problems: "Rudisha Tena"
         no_problems: "Hakuna matatizo yaliyopatikana."

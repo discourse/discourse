@@ -2561,9 +2561,6 @@ et:
         version_check_pending: "Näib, et oled hiljuti uuendanud. Fantastiline!"
         installed_version: "Paigaldatud"
         latest_version: "Viimased"
-        new_features:
-          dismiss: "Ignoreeri"
-          learn_more: "Uuri veel"
         last_checked: "Viimati kontrollitud"
         refresh_problems: "Värskenda"
         no_problems: "Probleeme ei tuvastatud."

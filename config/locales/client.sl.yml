@@ -3383,8 +3383,6 @@ sl:
         problems_found: "Nekaj priporočil glede na vaše trenutne nastavitve strani"
         new_features:
           title: "\U0001F381 Nove funkcije"
-          dismiss: "Opusti"
-          learn_more: "Več o tem"
         last_checked: "Nazadnje preverjeno"
         refresh_problems: "Osveži"
         no_problems: "Nismo našli problemov."

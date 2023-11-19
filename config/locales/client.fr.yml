@@ -4187,8 +4187,6 @@ fr:
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         new_features:
           title: "\U0001F381 Nouveautés"
-          dismiss: "Ignorer"
-          learn_more: "En savoir plus…"
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."

@@ -4580,8 +4580,6 @@ ru:
         problems_found: "Несколько советов по текущим настройкам сайта"
         new_features:
           title: "\U0001F381 Новые возможности"
-          dismiss: "Закрыть"
-          learn_more: "Подробнее"
         last_checked: "Последняя проверка"
         refresh_problems: "Обновить"
         no_problems: "Проблем не обнаружено."
