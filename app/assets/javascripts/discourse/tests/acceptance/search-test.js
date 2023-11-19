@@ -341,6 +341,7 @@ acceptance("Search - Default sort order", function (needs) {
     this.searchPreferencesManager = this.container.lookup(
       "service:search-preferences-manager"
     );
+    this.searchPreferencesManager.sortOrder = null;
   });
   needs.hooks.afterEach(function () {
     this.searchPreferencesManager.sortOrder = null;
