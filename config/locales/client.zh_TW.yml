@@ -2971,8 +2971,6 @@ zh_TW:
         problems_found: "根據您現在網站設定的建議"
         new_features:
           title: "\U0001F381 新功能"
-          dismiss: "忽略"
-          learn_more: "了解更多"
         last_checked: "上次檢查的時間"
         refresh_problems: "重新整理"
         no_problems: "未發現任何問題。"

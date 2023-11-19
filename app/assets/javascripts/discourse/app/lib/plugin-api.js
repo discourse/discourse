@@ -18,6 +18,11 @@ import {
 } from "discourse/components/reviewable-item";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
 import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/components/search-menu/results/assistant";
+import {
+  addQuickSearchRandomTip,
+  removeDefaultQuickSearchRandomTips,
+} from "discourse/components/search-menu/results/random-quick-tip";
+import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
@@ -107,9 +112,9 @@ import {
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { addOnKeyDownCallback } from "discourse/widgets/search-menu";
 import {
-  addQuickSearchRandomTip,
+  addQuickSearchRandomTip as addWidgetQuickSearchRandomTip,
   addSearchSuggestion,
-  removeDefaultQuickSearchRandomTips,
+  removeDefaultQuickSearchRandomTips as removeWidgetDefaultQuickSearchRandomTips,
 } from "discourse/widgets/search-menu-results";
 import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
 import {
@@ -1654,8 +1659,17 @@ class PluginApi {
    * });
    * ```
    *
+   * @deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead
    **/
   decorateTopicTitle(callback) {
+    deprecated(
+      "decorateTopicTitle is deprecated because modifying an Ember-rendered DOM tree can lead to very unexpected errors. Use plugin outlet connectors instead",
+      {
+        id: "discourse.decorate-topic-title",
+        since: "3.2",
+        dropFrom: "3.3",
+      }
+    );
     addTopicTitleDecorator(callback);
   }
 
@@ -1854,6 +1868,7 @@ class PluginApi {
    */
   addSearchMenuOnKeyDownCallback(fn) {
     addOnKeyDownCallback(fn);
+    addOnKeyUpCallback(fn);
   }
 
   /**
@@ -1873,6 +1888,7 @@ class PluginApi {
    */
   addQuickSearchRandomTip(tip) {
     addQuickSearchRandomTip(tip);
+    addWidgetQuickSearchRandomTip(tip);
   }
 
   /**
@@ -1884,8 +1900,9 @@ class PluginApi {
    * ```
    *
    */
-  removeDefaultQuickSearchRandomTips(tip) {
-    removeDefaultQuickSearchRandomTips(tip);
+  removeDefaultQuickSearchRandomTips() {
+    removeDefaultQuickSearchRandomTips();
+    removeWidgetDefaultQuickSearchRandomTips();
   }
 
   /**

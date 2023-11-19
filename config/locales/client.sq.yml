@@ -1974,9 +1974,6 @@ sq:
         version_check_pending: "Me sa shohim keni rinovuar faqen se fundmi. Fantastike!"
         installed_version: "Instaluar"
         latest_version: "Të fundit"
-        new_features:
-          dismiss: "Hiqe"
-          learn_more: "Mëso më shumë"
         last_checked: "Verifikimi i fundit"
         refresh_problems: "Rifresko"
         no_problems: "Nuk u gjet asnjë gabim."

@@ -3447,9 +3447,6 @@ fa_IR:
         installed_version: "نصب"
         latest_version: "آخرین"
         problems_found: "چند توصیه براثاث تنظیمات فعلی سایت شما"
-        new_features:
-          dismiss: "نخواستیم"
-          learn_more: "بیشتر بدانید"
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
         no_problems: "هیچ مشکلات پیدا نشد."

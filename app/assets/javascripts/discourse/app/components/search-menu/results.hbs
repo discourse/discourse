@@ -19,38 +19,55 @@
         @searchTermChanged={{@searchTermChanged}}
       />
     {{else}}
-      {{#if @searchTopics}}
+      {{#if (and (not @searchTopics) (not @inPMInboxContext))}}
+        {{! render the first couple suggestions before a search has been performed}}
+        <SearchMenu::Results::InitialOptions
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+        />
+      {{/if}}
+
+      <PluginOutlet
+        @name="search-menu-results-top"
+        @outletArgs={{hash closeSearchMenu=@closeSearchMenu}}
+      />
+
+      {{#if (and @searchTopics this.resultTypesWithComponent)}}
         {{! render results after a search has been performed }}
-        {{#if this.resultTypesWithComponent}}
-          <SearchMenu::Results::Types
-            @resultTypes={{this.resultTypesWithComponent}}
-            @topicResultsOnly={{true}}
-            @closeSearchMenu={{@closeSearchMenu}}
-          />
-          <SearchMenu::Results::MoreLink
-            @updateTypeFilter={{@updateTypeFilter}}
-            @triggerSearch={{@triggerSearch}}
-            @resultTypes={{this.resultTypesWithComponent}}
-            @closeSearchMenu={{@closeSearchMenu}}
-            @searchTermChanged={{@searchTermChanged}}
-          />
-        {{/if}}
-      {{else}}
-        {{#unless @inPMInboxContext}}
-          {{! render the first couple suggestions before a search has been performed}}
-          <SearchMenu::Results::InitialOptions
-            @closeSearchMenu={{@closeSearchMenu}}
-            @searchTermChanged={{@searchTermChanged}}
-          />
-          {{#if this.resultTypesWithComponent}}
-            <SearchMenu::Results::Types
-              @resultTypes={{this.resultTypesWithComponent}}
-              @closeSearchMenu={{@closeSearchMenu}}
-              @searchTermChanged={{@searchTermChanged}}
-            />
-          {{/if}}
-        {{/unless}}
+        <SearchMenu::Results::Types
+          @resultTypes={{this.resultTypesWithComponent}}
+          @topicResultsOnly={{true}}
+          @closeSearchMenu={{@closeSearchMenu}}
+        />
+        <SearchMenu::Results::MoreLink
+          @updateTypeFilter={{@updateTypeFilter}}
+          @triggerSearch={{@triggerSearch}}
+          @resultTypes={{this.resultTypesWithComponent}}
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+        />
+      {{else if
+        (and
+          (not @inPMInboxContext)
+          (not @searchTopics)
+          this.resultTypesWithComponent
+        )
+      }}
+        <SearchMenu::Results::Types
+          @resultTypes={{this.resultTypesWithComponent}}
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+        />
       {{/if}}
     {{/if}}
+    <PluginOutlet
+      @name="search-menu-results-bottom"
+      @outletArgs={{hash
+        inTopicContext=this.search.inTopicContext
+        searchTermChanged=@searchTermChanged
+        searchTopics=@searchTopics
+        closeSearchMenu=@closeSearchMenu
+      }}
+    />
   </div>
 {{/if}}

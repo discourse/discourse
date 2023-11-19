@@ -3558,8 +3558,6 @@ lt:
         problems_found: "Keletas patarimų, pagrįstų dabartiniais svetainės nustatymais"
         new_features:
           title: "\U0001F381 Naujos funkcijos"
-          dismiss: "Praleisti"
-          learn_more: "Sužinoti daugiau"
         last_checked: "Paskutinį kartą tikrinta"
         refresh_problems: "Atnaujinti"
         no_problems: "Nerasta jokių problemų"

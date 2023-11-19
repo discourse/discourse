@@ -3621,8 +3621,6 @@ vi:
         problems_found: "Một số lời khuyên dựa trên cài đặt trang web hiện tại của bạn"
         new_features:
           title: "\U0001F381 Các tính năng mới"
-          dismiss: "Hủy bỏ"
-          learn_more: "Tìm hiểu thêm"
         last_checked: "Kiểm tra lần cuối"
         refresh_problems: "Làm mới"
         no_problems: "Không phát hiện vấn đề"

@@ -3698,8 +3698,6 @@ hu:
         problems_found: "Néhány tanács az aktuális webhelybeállítások alapján"
         new_features:
           title: "\U0001F381 Új funkciók"
-          dismiss: "Elvetés"
-          learn_more: "Tudjon meg többet"
         last_checked: "Utoljára ellenőrizve:"
         refresh_problems: "Újratöltés"
         no_problems: "Nem találtunk semmilyen problémát."
