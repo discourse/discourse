@@ -681,6 +681,7 @@ class BulkImport::Base
     created_at
     updated_at
     multiple_grant
+    query
   ]
 
   USER_BADGE_COLUMNS ||= %i[badge_id user_id granted_at granted_by_id seq post_id created_at]

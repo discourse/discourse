@@ -1885,6 +1885,7 @@ class BulkImport::Generic < BulkImport::Base
         long_description: row["long_description"],
         image_upload_id:
           row["image_upload_id"] ? upload_id_from_original_id(row["image_upload_id"]) : nil,
+        query: row["query"],
       }
     end
 
