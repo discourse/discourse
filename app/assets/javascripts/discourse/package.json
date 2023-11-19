@@ -39,7 +39,7 @@
     "@ember/string": "^3.1.1",
     "@ember/test-helpers": "^2.9.4",
     "@embroider/compat": "^3.3.1",
-    "@embroider/core": "^3.4.1",
+    "@embroider/core": "^3.4.2",
     "@embroider/macros": "^1.13.1",
     "@embroider/webpack": "^3.2.1",
     "@floating-ui/dom": "^1.5.0",
