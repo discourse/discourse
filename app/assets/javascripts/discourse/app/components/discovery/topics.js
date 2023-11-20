@@ -24,7 +24,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get ascending() {
-    return this.args.model.get("params.ascending");
+    return this.args.model.get("params.ascending") === "true";
   }
 
   get hasTopics() {
