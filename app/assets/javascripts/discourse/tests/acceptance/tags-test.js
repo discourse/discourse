@@ -475,6 +475,17 @@ acceptance("Tag info", function (needs) {
     );
   });
 
+  test("tag info hides when tag filter removed", async function (assert) {
+    await visit("/tag/happy-monkey");
+
+    await click("#show-tag-info");
+    assert.dom(".tag-info .tag-name").exists();
+
+    await visit("/latest");
+
+    assert.dom(".tag-info").doesNotExist("tag info is not shown on homepage");
+  });
+
   test("can filter tags page by category", async function (assert) {
     await visit("/tag/planters");
 
