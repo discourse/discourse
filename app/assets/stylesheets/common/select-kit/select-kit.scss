@@ -113,7 +113,8 @@
       }
 
       .name {
-        display: inline-block;
+        display: inline-flex;
+        gap: 0.5em;
         > .d-icon {
           margin-left: 0.5em;
           margin-right: 0;
