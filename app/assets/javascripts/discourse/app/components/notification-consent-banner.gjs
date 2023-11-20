@@ -23,7 +23,7 @@ export default class NotificationConsentBanner extends Component {
     );
   }
 
-  setbannerDismissed(value) {
+  setBannerDismissed(value) {
     pushNotificationKeyValueStore.setItem(userDismissedPromptKey, value);
     this.bannerDismissed = pushNotificationKeyValueStore.getItem(
       userDismissedPromptKey
