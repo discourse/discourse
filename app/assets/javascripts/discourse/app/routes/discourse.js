@@ -65,13 +65,6 @@ const DiscourseRoute = Route.extend({
 
     return user.id === this.currentUser.id;
   },
-
-  isPoppedState(transition) {
-    return (
-      !transition._discourse_intercepted &&
-      (!!transition.intent.url || !!transition.queryParamsOnly)
-    );
-  },
 });
 
 export default DiscourseRoute;
