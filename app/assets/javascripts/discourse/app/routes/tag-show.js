@@ -26,7 +26,6 @@ export default class TagShowRoute extends DiscourseRoute {
   @service store;
   @service topicTrackingState;
   @service("search") searchService;
-  @service historyStore;
 
   queryParams = queryParams;
   controllerName = "discovery/list";
@@ -120,7 +119,7 @@ export default class TagShowRoute extends DiscourseRoute {
       filter,
       filteredQueryParams,
       {
-        cached: this.historyStore.isPoppedState,
+        cached: this.isPoppedState(transition),
       }
     );
 

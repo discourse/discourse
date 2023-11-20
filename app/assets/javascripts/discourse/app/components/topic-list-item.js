@@ -38,7 +38,8 @@ export function showEntrance(e) {
 
 export function navigateToTopic(topic, href) {
   const owner = getOwner(this);
-  const historyStore = owner.lookup("service:history-store");
+  const router = owner.lookup("service:router");
+  const session = owner.lookup("service:session");
   const siteSettings = owner.lookup("service:site-settings");
   const appEvents = owner.lookup("service:appEvents");
 
@@ -48,7 +49,10 @@ export function navigateToTopic(topic, href) {
     appEvents.trigger("header:update-topic", topic);
   }
 
-  historyStore.set("lastTopicIdViewed", topic.id);
+  session.set("lastTopicIdViewed", {
+    topicId: topic.id,
+    historyUuid: router.location.getState?.().uuid,
+  });
 
   DiscourseURL.routeTo(href || topic.get("url"));
   return false;
@@ -56,7 +60,6 @@ export function navigateToTopic(topic, href) {
 
 export default Component.extend({
   router: service(),
-  historyStore: service(),
   tagName: "tr",
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
   attributeBindings: ["data-topic-id", "role", "ariaLevel:aria-level"],
@@ -351,11 +354,15 @@ export default Component.extend({
 
   _highlightIfNeeded: on("didInsertElement", function () {
     // highlight the last topic viewed
-    const lastViewedTopicId = this.historyStore.get("lastTopicIdViewed");
-    const isLastViewedTopic = lastViewedTopicId === this.topic.id;
+    const lastViewedTopicInfo = this.session.get("lastTopicIdViewed");
+
+    const isLastViewedTopic =
+      lastViewedTopicInfo?.topicId === this.topic.id &&
+      lastViewedTopicInfo?.historyUuid ===
+        this.router.location.getState?.().uuid;
 
     if (isLastViewedTopic) {
-      this.historyStore.delete("lastTopicIdViewed");
+      this.session.set("lastTopicIdViewed", null);
       this.highlight({ isLastViewedTopic: true });
     } else if (this.get("topic.highlight")) {
       // highlight new topics that have been loaded from the server or the one we just created
