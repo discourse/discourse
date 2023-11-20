@@ -9,7 +9,7 @@ export default class DiscoveryIndex extends DiscourseRoute {
 
   beforeModel(transition) {
     const url = transition.intent.url;
-    const params = url.split("?", 2)[1];
+    const params = url?.split("?", 2)[1];
     let destination = homepageDestination();
     if (params) {
       destination += `&${params}`;
