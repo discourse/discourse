@@ -2057,7 +2057,7 @@ en:
           other {# errors/minute}
         }.
 
-    learn_more: "learn more…"
+    learn_more: "Learn more…"
 
     mute: Mute
     unmute: Unmute
@@ -5076,8 +5076,11 @@ en:
         not_enabled: "N"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
-        official: "Official Plugin"
+        official: "Official Discourse Plugin"
+        experimental: "Experimental Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
+        author: "By %{author}"
+        experimental_badge: "experimental"
 
       navigation_menu:
         sidebar: "Sidebar"

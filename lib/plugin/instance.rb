@@ -516,6 +516,14 @@ class Plugin::Instance
     @git_repo ||= GitRepo.new(directory, name)
   end
 
+  def discourse_owned?
+    parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
+    return false if !parsed_commit_url
+    github_org = parsed_commit_url.path.split("/")[1]
+    (github_org == "discourse" || github_org == "discourse-org") &&
+      parsed_commit_url.host == "github.com"
+  end
+
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
   def on(event_name, &block)
     DiscourseEvent.on(event_name) { |*args, **kwargs| block.call(*args, **kwargs) if enabled? }
