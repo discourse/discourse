@@ -33,7 +33,6 @@ function entranceDate(dt, showTime) {
 export default Component.extend(CleansUp, {
   router: service(),
   session: service(),
-  historyStore: service(),
   elementId: "topic-entrance",
   classNameBindings: ["visible::hidden"],
   topic: null,
@@ -167,7 +166,10 @@ export default Component.extend(CleansUp, {
   },
 
   _jumpTo(destination) {
-    this.historyStore.set("lastTopicIdViewed", this.topic.id);
+    this.session.set("lastTopicIdViewed", {
+      topicId: this.topic.id,
+      historyUuid: this.router.location.getState?.().uuid,
+    });
 
     this.cleanUp();
     DiscourseURL.routeTo(destination);

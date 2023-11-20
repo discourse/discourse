@@ -98,18 +98,17 @@ class AbstractTopicRoute extends DiscourseRoute {
   @service store;
   @service topicTrackingState;
   @service currentUser;
-  @service historyStore;
 
   queryParams = queryParams;
   templateName = "discovery/list";
   controllerName = "discovery/list";
 
-  async model(data) {
+  async model(data, transition) {
     // attempt to stop early cause we need this to be called before .sync
     this.screenTrack.stop();
 
     const findOpts = filterQueryParams(data),
-      findExtras = { cached: this.historyStore.isPoppedState };
+      findExtras = { cached: this.isPoppedState(transition) };
 
     const topicListPromise = findTopicList(
       this.store,

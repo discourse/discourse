@@ -21,7 +21,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
   @service store;
   @service topicTrackingState;
   @service("search") searchService;
-  @service historyStore;
 
   queryParams = queryParams;
 
@@ -87,7 +86,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
 
   async _retrieveTopicList(category, transition, modelParams) {
     const findOpts = filterQueryParams(modelParams, this.routeConfig);
-    const extras = { cached: this.historyStore.isPoppedState };
+    const extras = { cached: this.isPoppedState(transition) };
 
     let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
     if (findOpts.no_subcategories) {
