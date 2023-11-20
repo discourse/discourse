@@ -9,14 +9,14 @@ export default class DashboardNewFeatureItem extends Component {
     <div class="admin-new-feature-item">
       <div class="admin-new-feature-item__content">
         <div class="admin-new-feature-item__header">
-          <h3>
-            {{@item.title}}
-          </h3>
           {{#if (and @item.emoji (not @item.screenshot_url))}}
             <div
               class="admin-new-feature-item__new-feature-emoji"
             >{{@item.emoji}}</div>
           {{/if}}
+          <h3>
+            {{@item.title}}
+          </h3>
         </div>
         {{#if @item.screenshot_url}}
           <img
