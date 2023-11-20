@@ -815,7 +815,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_post_custom_fields(polls) do |row|
       next unless (post_id = post_id_from_imported_id(row["post_id"]))
-      next unless existing_fields.include?(post_id)
+      next if existing_fields.include?(post_id)
 
       {
         post_id: post_id,
