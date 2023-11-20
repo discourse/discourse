@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
 describe "Flagging post", type: :system, js: true do
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:first_post) { Fabricate(:post) }
