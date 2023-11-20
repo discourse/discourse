@@ -377,6 +377,7 @@ en:
       copied: "copied!"
       copy: "copy code to clipboard"
       fullscreen: "show code in full screen"
+      view_code: "View code"
 
     drafts:
       label: "Drafts"
@@ -4454,6 +4455,7 @@ en:
       sr_jump_bottom_button: "Jump to the last post"
     fullscreen_table:
       expand_btn: "Expand Table"
+      view_table: "View Table"
 
     second_factor_auth:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
