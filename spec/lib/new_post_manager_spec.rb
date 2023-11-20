@@ -107,7 +107,6 @@ RSpec.describe NewPostManager do
 
   describe "default handler" do
     let(:manager) { NewPostManager.new(user, raw: "this is new post content", topic_id: topic.id) }
-    before { Group.refresh_automatic_groups! }
 
     context "with the settings zeroed out" do
       before do

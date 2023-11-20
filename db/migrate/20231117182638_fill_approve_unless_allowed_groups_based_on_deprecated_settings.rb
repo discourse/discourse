@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class FillApproveUnlessAllowedGroupsBasedOnDeprecatedSettings < ActiveRecord::Migration[7.0]
   def up
     approve_unless_trust_level_raw =
       DB.query_single(
-        "SELECT value FROM site_settings WHERE name = 'approve_unless_trust_level'",
+        "SELECT value FROM site_settings WHERE name = 'approve_unless_trust_level' LIMIT 1",
       ).first
 
     # Default for old setting is TL0, we only need to do anything if it's been changed in the DB.
