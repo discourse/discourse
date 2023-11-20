@@ -53,9 +53,6 @@ export default class AdminPlugin {
     return this.name
       .split("-")
       .map((word) => {
-        if (word.length <= 2) {
-          return word.toUpperCase();
-        }
         return capitalize(word);
       })
       .join(" ");
