@@ -109,9 +109,7 @@ acceptance("Page Loading Indicator", function (needs) {
       events.push(loading);
     });
 
-    visit("/u/eviltrout/activity");
-
-    await settled();
+    await visit("/u/eviltrout/activity");
 
     assert.deepEqual(events, [true, false]);
   });
