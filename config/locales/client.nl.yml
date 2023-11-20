@@ -4184,8 +4184,6 @@ nl:
         problems_found: "Advies op basis van je huidige website-instellingen"
         new_features:
           title: "\U0001F381 Nieuwe functies"
-          dismiss: "Negeren"
-          learn_more: "Meer informatie"
         last_checked: "Laatst gecontroleerd"
         refresh_problems: "Vernieuwen"
         no_problems: "Er zijn geen problemen gevonden."

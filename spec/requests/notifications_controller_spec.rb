@@ -90,10 +90,32 @@ RSpec.describe NotificationsController do
         describe "when limit params is invalid" do
           include_examples "invalid limit params",
                            "/notifications.json",
-                           described_class::INDEX_LIMIT,
+                           described_class::INDEX_LIMIT + 1,
                            params: {
                              recent: true,
                            }
+        end
+
+        it "respects limit param and properly bumps offset for load_more_notifications URL" do
+          7.times { notification = Fabricate(:notification, user: user) }
+
+          get "/notifications.json", params: { username: user.username, limit: 2 }
+          expect(response.parsed_body["notifications"].count).to eq(2)
+          expect(response.parsed_body["load_more_notifications"]).to eq(
+            "/notifications?limit=2&offset=2&username=#{user.username}",
+          )
+
+          # Same as response above but we need .json added before query params.
+          get "/notifications.json?limit=2&offset=2&username=#{user.username}"
+          expect(response.parsed_body["load_more_notifications"]).to eq(
+            "/notifications?limit=2&offset=4&username=#{user.username}",
+          )
+
+          # We are seeing that the offset is increasing properly and limit is staying the same
+          get "/notifications.json?limit=2&offset=4&username=#{user.username}"
+          expect(response.parsed_body["load_more_notifications"]).to eq(
+            "/notifications?limit=2&offset=6&username=#{user.username}",
+          )
         end
 
         it "get notifications with all filters" do

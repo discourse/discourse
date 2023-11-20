@@ -3981,8 +3981,6 @@ ja:
         problems_found: "現在のサイト設定に基づいたアドバイス"
         new_features:
           title: "\U0001F381 新機能"
-          dismiss: "閉じる"
-          learn_more: "もっと読む"
         last_checked: "最終チェック"
         refresh_problems: "更新"
         no_problems: "問題は見つかりませんでした。"

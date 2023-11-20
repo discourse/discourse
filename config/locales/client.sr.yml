@@ -1858,9 +1858,6 @@ sr:
         version_check_pending: "Čini se da ste nedavno nadogradili. Fantastično!"
         installed_version: "Instalirano"
         latest_version: "Poslednje"
-        new_features:
-          dismiss: "Одбаци"
-          learn_more: "Saznaj više"
         last_checked: "Zadnje provereno"
         refresh_problems: "Osveži"
         no_problems: "Nisu pronađeni problemi."

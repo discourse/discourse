@@ -14,6 +14,10 @@ export default function () {
         path: "/dashboard/reports",
         resetNamespace: true,
       });
+      this.route("admin.dashboardNewFeatures", {
+        path: "/dashboard/new-features",
+        resetNamespace: true,
+      });
     });
 
     this.route(

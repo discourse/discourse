@@ -3742,8 +3742,6 @@ cs:
         problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
         new_features:
           title: "\U0001F381 Nové funkce"
-          dismiss: "Označit jako přečtené"
-          learn_more: "Více informací"
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
         no_problems: "Nenalezeny žádné problémy."

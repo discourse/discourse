@@ -107,12 +107,6 @@ docker run -d \
     discourse/discourse_dev:release /sbin/boot
 
 if [ "${initialize}" = "initialize" ]; then
-    echo "Installing gems..."
-    "${SCRIPTPATH}/bundle" install
-
-    echo "Yarn install..."
-    "${SCRIPTPATH}/exec" yarn install --cwd app/assets/javascripts/discourse
-
     echo "Migrating database..."
     "${SCRIPTPATH}/rake" db:migrate
     RAILS_ENV=test "${SCRIPTPATH}/rake" db:migrate
@@ -120,3 +114,10 @@ if [ "${initialize}" = "initialize" ]; then
     echo "Creating admin user..."
     "${SCRIPTPATH}/rake" admin:create
 fi
+
+echo "Installing gems..."
+"${SCRIPTPATH}/bundle" install
+
+echo "Yarn install..."
+"${SCRIPTPATH}/exec" yarn install --cwd app/assets/javascripts/discourse
+

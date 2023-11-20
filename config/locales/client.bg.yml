@@ -3410,9 +3410,6 @@ bg:
         version_check_pending: "Изглежда, че скоро сте обновили версията. Това е чудесно!"
         installed_version: "Инсталирани"
         latest_version: "Последни"
-        new_features:
-          dismiss: "Отмени"
-          learn_more: "Научете повече"
         last_checked: "Последна проверка"
         refresh_problems: "Обнови"
         no_problems: "Не бяха открити проблеми."

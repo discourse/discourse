@@ -4220,8 +4220,6 @@ fi:
         problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
         new_features:
           title: "\U0001F381 Uudet ominaisuudet"
-          dismiss: "Sulje"
-          learn_more: "Lue lisää"
         last_checked: "Viimeksi tarkistettu"
         refresh_problems: "Päivitä"
         no_problems: "Ongelmia ei löytynyt."

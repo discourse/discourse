@@ -3089,9 +3089,6 @@ ro:
         version_check_pending: "Se pare că ai actualizat recent. Fantastic!"
         installed_version: "Instalată"
         latest_version: "Ultima"
-        new_features:
-          dismiss: "Înlătură"
-          learn_more: "Află mai multe"
         last_checked: "Ultima verificare"
         refresh_problems: "Reîmprospătează"
         no_problems: "Nu a apărut nicio problemă."

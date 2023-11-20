@@ -2914,9 +2914,6 @@ ca:
         installed_version: "Instal·lat"
         latest_version: "Més recents"
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
-        new_features:
-          dismiss: "Descarta-ho"
-          learn_more: "Per a saber-ne més"
         last_checked: "Comprovat per darrera vegada"
         refresh_problems: "Actualitza"
         no_problems: "No s'han trobat problemes."
