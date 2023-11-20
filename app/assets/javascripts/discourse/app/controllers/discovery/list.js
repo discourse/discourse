@@ -101,6 +101,16 @@ export default class DiscoveryListController extends Controller {
     return this.model.category && !this.createTopicTargetCategory;
   }
 
+  get resolvedAscending() {
+    return (
+      (this.ascending ?? this.model.list.get("params.ascending")) === "true"
+    );
+  }
+
+  get resolvedOrder() {
+    return this.order ?? this.model.list.get("params.order") ?? "activity";
+  }
+
   @action
   createTopic() {
     this.composer.openNewTopic({
@@ -120,14 +130,12 @@ export default class DiscoveryListController extends Controller {
 
   @action
   changeSort(sortBy) {
-    if (sortBy === this.order) {
-      this.ascending = !this.ascending;
-      this.model.list.updateSortParams(sortBy, this.ascending);
+    if (sortBy === this.resolvedOrder) {
+      this.ascending = !this.resolvedAscending;
     } else {
-      this.order = sortBy;
       this.ascending = false;
-      this.model.list.updateSortParams(sortBy, false);
     }
+    this.order = sortBy;
   }
 
   @action
