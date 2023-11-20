@@ -101,6 +101,16 @@ $topic-progress-height: 42px;
       position: relative;
     }
   }
+  #topic-progress-wrapper {
+    .topic-admin-menu-button .toggle-admin-menu {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    #topic-progress {
+      border-top-right-radius: var(--d-border-radius);
+      border-bottom-right-radius: var(--d-border-radius);
+    }
+  }
 }
 
 .progress-back-container {
