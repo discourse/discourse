@@ -63,7 +63,7 @@ export default class ChatThread {
     message.staged = true;
     message.processed = false;
     message.draft = false;
-    message.createdAt ??= moment.utc().format();
+    message.createdAt = new Date();
     message.thread = this;
 
     this.messagesManager.addMessages([message]);
