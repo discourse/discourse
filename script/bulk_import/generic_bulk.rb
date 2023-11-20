@@ -149,17 +149,19 @@ class BulkImport::Generic < BulkImport::Base
           RECURSIVE
           tree AS (
                     SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted,
-                           c.slug, c.old_relative_url, c.existing_id, c.position, c.logo_upload_id, 0 AS level
+                           c.slug, c.existing_id, c.position, c.logo_upload_id, 0 AS level
                       FROM categories c
                      WHERE c.parent_category_id IS NULL
                      UNION ALL
                     SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted,
-                           c.slug, c.old_relative_url, c.existing_id, c.position, c.logo_upload_id, tree.level + 1 AS level
+                           c.slug, c.existing_id, c.position, c.logo_upload_id, tree.level + 1 AS level
                       FROM categories c,
                            tree
                      WHERE c.parent_category_id = tree.id
                   )
-      SELECT *
+      SELECT id, parent_category_id, name, description, color, text_color, read_restricted, slug, existing_id, logo_upload_id,
+             COALESCE(position,
+                      ROW_NUMBER() OVER (PARTITION BY parent_category_id ORDER BY parent_category_id NULLS FIRST, name)) AS position
         FROM tree
        ORDER BY level, position, id
     SQL
