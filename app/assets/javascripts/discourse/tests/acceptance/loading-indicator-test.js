@@ -103,14 +103,13 @@ acceptance("Page Loading Indicator", function (needs) {
 
     await visit("/");
 
-    const events = [];
     const service = getOwner(this).lookup("service:loading-slider");
     service.on("stateChanged", (loading) => {
-      events.push(loading);
+      assert.step(`loading: ${loading}`);
     });
 
     await visit("/u/eviltrout/activity");
 
-    assert.deepEqual(events, [true, false]);
+    assert.verifySteps(["loading: true", "loading: false"]);
   });
 });
