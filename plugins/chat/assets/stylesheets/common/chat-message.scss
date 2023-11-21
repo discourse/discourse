@@ -67,14 +67,10 @@
     }
 
     .mention {
-      padding: 0 0em 0.07em;
-      display: inline-block;
-      font-size: 0.93em;
+      @include mention;
 
       &.highlighted {
-        @include mention;
         background: var(--tertiary-low);
-        color: var(--primary);
       }
     }
 
