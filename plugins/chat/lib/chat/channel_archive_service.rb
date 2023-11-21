@@ -146,9 +146,10 @@ module Chat
               post_last_message = messages_chunk[ARCHIVED_MESSAGES_PER_POST - 1]
 
               thread = threads.select { |msg| msg.thread_id == post_last_message.thread_id }
-              thread_size = thread.size - 1
               thread_om = thread.first
+              next if thread_om.nil?
 
+              thread_size = thread.size - 1
               last_thread_index = 0
 
               (messages_chunk.size / ARCHIVED_MESSAGES_PER_POST + 1).times do |index|
@@ -186,8 +187,9 @@ module Chat
 
             messages_chunk.each do |message|
               # We duplicate the original message when it spans across multiple posts
-              if messages_chunk.size > ARCHIVED_MESSAGES_PER_POST && !message.thread_id.nil? &&
-                   message.thread_id == thread_om.thread_id && batch.empty? && message != thread_om
+              if messages_chunk.size > ARCHIVED_MESSAGES_PER_POST && thread_om.present? &&
+                   !message.thread_id.nil? && message.thread_id == thread_om.thread_id &&
+                   batch.empty? && message != thread_om
                 batch << thread_om
 
                 thread_ranges[thread_om.id] = split_thread_ranges[message.thread_id].first

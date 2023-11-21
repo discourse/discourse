@@ -251,7 +251,6 @@ module Chat
 
       # tie off the last open bbcode + render
       rendered_markdown << open_bbcode_tag.render
-      puts rendered_markdown.join("\n")
       rendered_markdown.join("\n")
     end
 
