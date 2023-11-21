@@ -72,6 +72,7 @@ module HasCustomFields
 
       klass
         .where(foreign_key => ids, :name => allowed_fields)
+        .order(:id)
         .pluck(foreign_key, :name, :value)
         .each do |cf|
           result[cf[0]] ||= {}
@@ -111,6 +112,7 @@ module HasCustomFields
 
         "#{name}CustomField"
           .constantize
+          .order(:id)
           .where("#{fk} in (?)", map.keys)
           .where("name in (?)", fields)
           .pluck(fk, :name, :value)
@@ -301,7 +303,7 @@ module HasCustomFields
   def refresh_custom_fields_from_db
     target = HashWithIndifferentAccess.new
     _custom_fields
-      .order("id asc")
+      .order(:id)
       .pluck(:name, :value)
       .each { |key, value| self.class.append_custom_field(target, key, value) }
     @custom_fields_orig = target
