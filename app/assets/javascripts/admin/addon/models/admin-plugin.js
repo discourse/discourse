@@ -28,9 +28,11 @@ export default class AdminPlugin {
     this.authors = args.authors;
   }
 
-  get settingCategoryName() {
-    const snakeCaseName = this.name.replaceAll("-", "_");
+  get snakeCaseName() {
+    return this.name.replaceAll("-", "_");
+  }
 
+  get translatedCategoryName() {
     // We do this because the site setting list is grouped by category,
     // with plugins that have their root site setting key defined as `plugins:`
     // being grouped under the generic "plugins" category.
@@ -39,17 +41,26 @@ export default class AdminPlugin {
     // we can use that instead to go directly to the setting category.
     //
     // Over time, no plugins should be missing this data.
-    const translationAttempt = I18n.lookup(
-      `admin.site_settings.categories.${snakeCaseName}`
-    );
-    if (translationAttempt) {
-      return snakeCaseName;
+    return I18n.lookup(`admin.site_settings.categories.${this.snakeCaseName}`);
+  }
+
+  get settingCategoryName() {
+    if (this.translatedCategoryName) {
+      return this.snakeCaseName;
     }
 
     return "plugins";
   }
 
   get nameTitleized() {
+    // The category name is better in a lot of cases, as it's a human-inputted
+    // translation, and we can handle things like SAML instead of showing them
+    // as Saml from discourse-saml. We can fall back to the programattic version
+    // though if needed.
+    if (this.translatedCategoryName) {
+      return this.translatedCategoryName;
+    }
+
     return this.name
       .split("-")
       .map((word) => {
