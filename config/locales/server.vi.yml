@@ -1018,7 +1018,6 @@ vi:
     facebook_app_access_token: "Mã thông báo được tạo từ bí mật và ID ứng dụng Facebook của bạn. Được sử dụng để tạo hộp thư Instagram."
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
-    enforce_second_factor: "Buộc người dùng kích hoạt xác thực hai yếu tố. Chọn 'tất cả' để thực thi nó cho tất cả người dùng. Chọn 'nhân viên' để chỉ áp dụng cho người dùng là nhân viên."
     force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"

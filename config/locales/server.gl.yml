@@ -1322,7 +1322,6 @@ gl:
     email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
     email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
-    enforce_second_factor: "Obriga os usuarios a activar a autenticación de dobre paso. Seleccione «todo» para aplicalo a todos os usuarios. Seleccione «equipo» para forzalo en usuarios do equipo."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída en «Resumir este tema»."
     summary_posts_required: "Número mínimo de publicacións antes de que «Resumir este tema» estea activado. Os cambios neste axuste aplicaranse retroactivamente despois dunha semana."

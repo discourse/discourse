@@ -1457,14 +1457,13 @@ bg:
           generic: "Вашият %{provider} акаунт ще се използва за удостоверяване."
       name:
         title: "Име"
-        instructions: "вашето пълно име (опционално)"
-        instructions_required: "Вашето пълно име"
+        instructions: "Вашето пълно име (опционално)."
+        instructions_required: "Вашето пълно име."
         required: "Моля, въведете име"
         too_short: "Името е твърде кратко."
         ok: "Вашето име изглежда добре"
       username:
         title: "Потребителско име"
-        instructions: "уникално, без интервали"
         short_instructions: "Хора могат да Ви споменават като @%{username}"
         available: "Вашето потребителско име е свободно"
         not_available: "Не е налично. Пробвайте с %{suggestion}?"
@@ -1659,7 +1658,7 @@ bg:
         same_as_username: "Вашата парола е същата като вашето потребителско име."
         same_as_email: "Вашата парола е същата като вашия email."
         ok: "Вашата парола изглежда добре."
-        instructions: "поне %{count}знака"
+        instructions: "Поне %{count}знака."
         required: "Моля, въведете парола"
       summary:
         title: "Сумарно"
@@ -2239,6 +2238,7 @@ bg:
         posted: '%{username} публикува в "%{topic}" - %{site_title}'
         private_message: '%{username} ви изпрати лично съобщение в "%{topic}" - %{site_title}'
         linked: '%{username} прикачи вашата публикация от "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} публикува в "%{topic}" - %{site_title}'
         confirm_title: "Включени известявания - %{site_title}"
         confirm_body: "Успех! Известяването е включено."
       titles:
@@ -3410,6 +3410,8 @@ bg:
         version_check_pending: "Изглежда, че скоро сте обновили версията. Това е чудесно!"
         installed_version: "Инсталирани"
         latest_version: "Последни"
+        new_features:
+          learn_more: "Научете повече..."
         last_checked: "Последна проверка"
         refresh_problems: "Обнови"
         no_problems: "Не бяха открити проблеми."
@@ -3518,6 +3520,7 @@ bg:
         not_enabled: "N "
         change_settings_short: "Настройки"
         howto: "Как да инсталирам софтуерни приставки?"
+        author: "От %{author}"
       backups:
         title: "Бекъп"
         menu:

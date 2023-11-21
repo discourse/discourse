@@ -1213,14 +1213,13 @@ el:
           generic: "Ο %{provider} λογαριασμός σας θα χρησιμοποιηθεί για έλεγχο ταυτότητας."
       name:
         title: "Όνομα"
-        instructions: "το ονοματεπώνυμό σου (προαιρετικό)"
-        instructions_required: "Το ονοματεπώνυμό σου"
+        instructions: "Το ονοματεπώνυμό σου (προαιρετικό)."
+        instructions_required: "Το ονοματεπώνυμό σου."
         required: "Παρακαλώ εισαγάγετε ένα όνομα"
         too_short: "Το όνομά σου είναι πολύ μικρό"
         ok: "Το όνομά σου είναι καλό"
       username:
         title: "Όνομα Χρήστη"
-        instructions: "μοναδικό, χωρίς κενά, σύντομο"
         short_instructions: "Οι άλλοι μπορούν να αναφερθούν σε σένα με το @%{username} "
         available: "Το όνομα χρήστη είναι διαθέσιμο"
         not_available: "Δεν είναι διαθέσιμο. Δοκίμασε %{suggestion};"
@@ -1391,7 +1390,7 @@ el:
         same_as_username: "Ο κωδικός πρόσβασης που έδωσες είναι ο ίδιος με το όνομα χρήστη."
         same_as_email: "Ο κωδικός πρόσβασής σου είναι ίδιος με τη διεύθυνση email σου."
         ok: "Ο κωδικός πρόσβασης φαίνεται καλός."
-        instructions: "τουλάχιστον %{count} χαρακτήρες"
+        instructions: "Τουλάχιστον %{count} χαρακτήρες."
         required: "Παρακαλώ εισαγάγετε έναν κωδικό πρόσβασης"
       summary:
         title: "Περίληψη"
@@ -1904,6 +1903,7 @@ el:
         private_message: 'Ο/Η %{username} σας έστειλε ένα προσωπικό μήνυμα στο "%{topic}" - %{site_title}'
         linked: '%{username} έκανε μια σύνδεση στην ανάρτηση που έκανες στο νήμα "%{topic}" - %{site_title}'
         watching_first_post: 'Ο/Η %{username} δημιούργησε ένα νέο θέμα "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} ανάρτησε στο "%{topic}" - %{site_title}'
         confirm_title: "Ενεργοποιημένες ειδοποιήσεις - %{site_title}"
         confirm_body: "Επιτυχία! Οι ειδοποιήσεις έχουν ενεργοποιηθεί."
         custom: "Ειδοποίηση από %{username} στο %{site_title}"
@@ -3342,6 +3342,8 @@ el:
         installed_version: "Εγκατεστημένα"
         latest_version: "Τελευταία"
         problems_found: "Μερικές συμβουλές με βάση τις τρέχουσες ρυθμίσεις του ιστότοπού σας"
+        new_features:
+          learn_more: "Μάθε περισσότερα..."
         last_checked: "Τελευταίος έλεγχος"
         refresh_problems: "Ανανέωση"
         no_problems: "Δεν βρέθηκε κανένα πρόβλημα."
@@ -3588,7 +3590,7 @@ el:
         not_enabled: "Ν"
         change_settings_short: "Ρυθμίσεις"
         howto: "Πως εγκαθιστώ πρόσθετα;"
-        official: "Επίσημο πρόσθετο"
+        author: "Του/της %{author}"
       backups:
         title: "Αντίγραφα ασφαλείας"
         menu:

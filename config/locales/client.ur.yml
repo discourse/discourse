@@ -1288,14 +1288,13 @@ ur:
           generic: "آپ کا %{provider} اکاؤنٹ تصدیق کیلئے استعمال کیا جائے گا۔"
       name:
         title: "نام"
-        instructions: "آپ کا پورا نام (اختیاری)"
-        instructions_required: "آپ کا پورا نام"
+        instructions: "آپ کا پورا نام (اختیاری)."
+        instructions_required: "آپ کا پورا نام."
         required: "براہ کرم ایک نام درج کریں"
         too_short: "آپ کا نام بہت چھوٹا ہے"
         ok: "آپ کا نام صحیح لگ رہا ہے"
       username:
         title: "صارف کا نام"
-        instructions: "منفرد، کوئی خالی جگہ نہیں، مختصر"
         short_instructions: "لوگ آپ کا زکر @%{username} کے طور پر کر سکتے ہیں"
         available: "آپ کا صارف نام دستیاب ہے"
         not_available: "دستیاب نہیں۔ اِستعمال کریں %{suggestion}؟"
@@ -1488,7 +1487,7 @@ ur:
         same_as_username: "آپ کا پاسورڈ وہی ہے جو آپ کا صارف نام ہے۔"
         same_as_email: "آپ کا پاسورڈ وہی ہے جو آپ کا اِی میل ہے۔"
         ok: "آپ کا پاسورڈ صحیح لگ رہا ہے"
-        instructions: "کم از کم %{count} حروف"
+        instructions: "کم از کم %{count} حروف."
         required: "براہ کرم پاس ورڈ درج کریں"
         confirm: "تصدیق کریں"
       summary:
@@ -2028,6 +2027,7 @@ ur:
         private_message: '%{username} نے "%{topic}" میں آپ کو زاتی پیغام بھیجا - %{site_title}'
         linked: '%{username} نے "%{topic}" سے آپ کی پوسٹ کو لنک کیا - %{site_title}'
         watching_first_post: '%{username} نے ایک نیا ٹاپک "%{topic}" بنایا - %{site_title}'
+        watching_category_or_tag: '%{username} نے "%{topic}" میں پوسٹ کیا - %{site_title}'
         confirm_title: "نوٹیفکیشن فعال - %{site_title}"
         confirm_body: "کامیابی! اطلاعات فعال ہوگئی ہیں۔"
         custom: "%{username} کی طرف سے %{site_title} پر اطلاعات"
@@ -3609,7 +3609,7 @@ ur:
         latest_version: "تازہ ترین"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
         new_features:
-          title: "\U0001F381 نئی خصوصیات"
+          learn_more: "مزید جانیں..."
         last_checked: "آخری دفعہ چیک کیا گیا"
         refresh_problems: "رِیفریش"
         no_problems: "کوئی مسائل نہیں پائے گئے۔"
@@ -3898,7 +3898,7 @@ ur:
         not_enabled: "N"
         change_settings_short: "سیٹِنگ"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
-        official: "آفیشل پلَگ اِن"
+        author: "%{author} کی طرف سے"
       backups:
         title: "بیک اَپس"
         menu:

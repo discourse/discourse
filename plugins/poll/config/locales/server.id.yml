@@ -15,7 +15,6 @@ id:
   poll:
     poll: "poll"
     invalid_argument: "Nilai '%{value}' tidak valid untuk argumen '%{argument}'."
-    multiple_polls_without_name: "Ada beberapa polling tanpa sebuah nama. Gunakan atribut '<code>nama</code>' untuk membuat identitas polling anda unik."
     multiple_polls_with_same_name: "Ada beberapa polling dengan nama yang sama: <strong>%{name}</strong>. Gunakan atribut '<code>nama</code>' untuk mengidentifikasi polling anda secara unik."
     default_poll_must_have_at_least_1_option: "Poll harus memiliki setidaknya 1 opsi."
     named_poll_must_have_at_least_1_option: "Poll bernama <strong>%{name}</strong> harus memiliki setidaknya 1 opsi."

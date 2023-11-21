@@ -1314,7 +1314,6 @@ da:
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     detailed_404: "Giver flere detaljer til brugerne om, hvorfor de ikke kan få adgang til et bestemt emne. Bemærk: Dette er mindre sikkert, fordi brugerne vil vide, om en URL oversættes til et gyldigt emne."
-    enforce_second_factor: "Tvinger brugere til at aktivere to-faktor godkendelse. Vælg 'alle' for at håndhæve det for alle brugere. Vælg 'personale' for kun at håndhæve den til medarbejderbrugere."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
     summary_score_threshold: "Påkrævet minimum score for et indlæg til at blive inkluderet i 'opsummering af emne'"
     summary_posts_required: "Minimumsopslag i et emne før 'Opsummér dette emne' er aktiveret. Ændringer af denne indstilling vil blive anvendt med tilbagevirkende kraft inden for en uge."
