@@ -57,7 +57,7 @@ const ApplicationRoute = DiscourseRoute.extend({
   @action
   loading(transition) {
     this.loadingSlider.transitionStarted();
-    transition.promise.finally(() => {
+    transition.finally(() => {
       this.loadingSlider.transitionEnded();
     });
     return false;
