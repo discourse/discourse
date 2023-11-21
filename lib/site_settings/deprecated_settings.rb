@@ -12,6 +12,12 @@ module SiteSettings::DeprecatedSettings
     ["shared_drafts_min_trust_level", "shared_drafts_allowed_groups", false, "3.3"],
     ["min_trust_level_for_here_mention", "here_mention_allowed_groups", false, "3.3"],
     ["approve_unless_trust_level", "approve_unless_allowed_groups", false, "3.3"],
+    [
+      "approve_new_topics_unless_trust_level",
+      "approve_new_topics_unless_allowed_groups",
+      false,
+      "3.3",
+    ],
   ]
 
   def setup_deprecated_methods

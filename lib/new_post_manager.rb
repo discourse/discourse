@@ -97,10 +97,10 @@ class NewPostManager
     end
 
     if (
-         manager.args[:title].present? &&
-           user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i
+         manager.args[:title].present? && user.groups.any? &&
+           !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
        )
-      return :new_topics_unless_trust_level
+      return :new_topics_unless_allowed_groups
     end
 
     if WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
@@ -205,9 +205,13 @@ class NewPostManager
     SiteSetting.approve_post_count > 0 ||
       !(
         SiteSetting.approve_unless_allowed_groups_map.include?(Group::AUTO_GROUPS[:trust_level_0])
-      ) || SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
-      SiteSetting.approve_unless_staged || WordWatcher.words_for_action_exist?(:require_approval) ||
-      handlers.size > 1
+      ) ||
+      !(
+        SiteSetting.approve_new_topics_unless_allowed_groups_map.include?(
+          Group::AUTO_GROUPS[:trust_level_0],
+        )
+      ) || SiteSetting.approve_unless_staged ||
+      WordWatcher.words_for_action_exist?(:require_approval) || handlers.size > 1
   end
 
   def initialize(user, args)

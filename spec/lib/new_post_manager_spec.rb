@@ -249,7 +249,9 @@ RSpec.describe NewPostManager do
     end
 
     context "with a high trust level setting for new topics but post responds to existing topic" do
-      before { SiteSetting.approve_new_topics_unless_trust_level = 4 }
+      before do
+        SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      end
       it "doesn't return a result action" do
         result = NewPostManager.default_handler(manager)
         expect(result).to eq(nil)
@@ -329,14 +331,14 @@ RSpec.describe NewPostManager do
     end
     context "with a high trust level setting for new topics" do
       before do
-        SiteSetting.approve_new_topics_unless_trust_level = 4
+        SiteSetting.approve_new_topics_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
         Group.refresh_automatic_groups!
       end
       it "will return an enqueue result" do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
-        expect(result.reason).to eq(:new_topics_unless_trust_level)
+        expect(result.reason).to eq(:new_topics_unless_allowed_groups)
       end
     end
   end
