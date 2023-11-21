@@ -17,7 +17,7 @@ module Chat
     # @!method call(guardian:, channel_id:, thread_id:, data:)
     #   @param [Guardian] guardian
     #   @param [Integer] channel_id of the channel
-    #   @param [Hash] object containing the data of the draft (message and upload_ids keys)
+    #   @param [String] json object as string containing the data of the draft (message, uploads, replyToMsg and editing keys)
     #   @option [Integer] thread_id of the channel
     #   @return [Service::Base::Context]
     contract

@@ -38,7 +38,6 @@ export default class ChatChannelThreadSubscriptionManager {
 
   @bind
   onMessage(busData, _, __, lastMessageBusId) {
-    console.log(busData);
     switch (busData.type) {
       case "sent":
         this.handleSentMessage(busData);
