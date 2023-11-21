@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -12,36 +13,32 @@ module(
       this.subject = getOwner(this).lookup("service:chat-drafts-manager");
     });
 
-    hooks.afterEach(function () {
-      this.subject.reset();
-    });
-
-    test("storing and retrieving message", function (assert) {
+    test("storing and retrieving message", async function (assert) {
       const message1 = fabricators.message();
-      this.subject.add(message1);
 
-      assert.strictEqual(
-        this.subject.get({ channelId: message1.channel.id }),
-        message1
-      );
+      pretender.post(`/chat/api/channels/${message1.channel.id}/drafts`, () => {
+        return response({});
+      });
+
+      await this.subject.add(message1, message1.channel.id);
+
+      assert.strictEqual(this.subject.get(message1.channel.id), message1);
 
       const message2 = fabricators.message();
-      this.subject.add(message2);
 
-      assert.strictEqual(
-        this.subject.get({ channelId: message2.channel.id }),
-        message2
-      );
+      pretender.post(`/chat/api/channels/${message2.channel.id}/drafts`, () => {
+        return response({});
+      });
+
+      await this.subject.add(message2, message2.channel.id);
+
+      assert.strictEqual(this.subject.get(message2.channel.id), message2);
     });
 
-    test("stores only chat messages", function (assert) {
-      assert.throws(function () {
-        this.subject.add({ foo: "bar" });
-      }, /instance of ChatMessage/);
-    });
+    test("#reset", async function (assert) {
+      const message = fabricators.message();
 
-    test("#reset", function (assert) {
-      this.subject.add(fabricators.message());
+      await this.subject.add(message, message.channel.id);
 
       assert.strictEqual(Object.keys(this.subject.drafts).length, 1);
 

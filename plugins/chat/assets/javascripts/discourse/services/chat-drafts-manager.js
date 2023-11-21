@@ -1,6 +1,5 @@
 import { cancel } from "@ember/runloop";
 import Service, { inject as service } from "@ember/service";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export default class ChatDraftsManager extends Service {
   @service chatApi;
@@ -8,11 +7,12 @@ export default class ChatDraftsManager extends Service {
   drafts = {};
 
   async add(message, channelId, threadId) {
-    if (message instanceof ChatMessage) {
-      this.drafts[this.key(channelId, threadId)] = message;
+    try {
       await this.persistDraft(message, channelId, threadId);
-    } else {
-      throw new Error("message must be an instance of ChatMessage");
+      this.drafts[this.key(channelId, threadId)] = message;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log("Couldn't save draft", e);
     }
   }
 
