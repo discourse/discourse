@@ -2321,6 +2321,7 @@ en:
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
     approve_unless_allowed_groups: "Posts for users not in these groups must be approved"
     approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
+    approve_new_topics_unless_allowed_groups: "New topics for users not in these groups must be approved"
     approve_unless_staged: "New topics and posts for staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
     reviewable_revision_reasons: "List of reasons that can be selected when rejecting a reviewable queued post with a revision. Other is always available as well, which allows for a custom reason to be entered."
