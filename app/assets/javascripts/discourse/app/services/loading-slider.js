@@ -74,8 +74,8 @@ export default class LoadingSlider extends Service.extend(Evented) {
 
   timer = new Timer();
 
-  get enabled() {
-    return this.siteSettings.page_loading_indicator === "slider";
+  get mode() {
+    return this.siteSettings.page_loading_indicator;
   }
 
   get averageLoadingDuration() {

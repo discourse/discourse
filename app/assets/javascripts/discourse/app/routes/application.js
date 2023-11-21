@@ -56,15 +56,11 @@ const ApplicationRoute = DiscourseRoute.extend({
 
   @action
   loading(transition) {
-    if (this.loadingSlider.enabled) {
-      this.loadingSlider.transitionStarted();
-      transition.promise.finally(() => {
-        this.loadingSlider.transitionEnded();
-      });
-      return false;
-    } else {
-      return true; // Use native ember loading implementation
-    }
+    this.loadingSlider.transitionStarted();
+    transition.promise.finally(() => {
+      this.loadingSlider.transitionEnded();
+    });
+    return false;
   },
 
   actions: {
