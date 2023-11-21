@@ -43,7 +43,7 @@ RSpec.describe Chat::UpsertDraft do
 
         params[:data] = MultiJson.dump(message: "b")
 
-        expect { result }.to change { Chat::Draft.count }.by(0)
+        expect { result }.to_not change { Chat::Draft.count }
         expect(Chat::Draft.last.data).to eq(params[:data])
       end
 

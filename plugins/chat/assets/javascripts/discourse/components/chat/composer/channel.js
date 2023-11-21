@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import { debounce } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import ChatComposer from "../../chat-composer";
+
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
@@ -21,6 +22,11 @@ export default class ChatComposerChannel extends ChatComposer {
   @action
   destroyDraft() {
     this.chatDraftsManager.remove(this.args.channel.id);
+  }
+
+  @action
+  resetDraft() {
+    this.args.channel.resetDraft(this.currentUser);
   }
 
   get draft() {

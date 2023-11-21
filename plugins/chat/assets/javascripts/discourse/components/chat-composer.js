@@ -594,6 +594,6 @@ export default class ChatComposer extends Component {
       this.draft,
       this.context
     ).delete();
-    this.reset(this.args.channel, this.args.thread);
+    this.resetDraft();
   }
 }

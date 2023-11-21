@@ -34,8 +34,8 @@ export default class ChatComposerThread extends ChatComposer {
   }
 
   @action
-  reset() {
-    this.composer.reset(this.args.thread);
+  resetDraft() {
+    this.args.thread.resetDraft(this.currentUser);
   }
 
   get draft() {

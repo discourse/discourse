@@ -57,6 +57,13 @@ export default class ChatThread {
     this.preview = ChatThreadPreview.create(args.preview);
   }
 
+  resetDraft(user) {
+    this.draft = ChatMessage.createDraftMessage(this.channel, {
+      user,
+      thread: this,
+    });
+  }
+
   async stageMessage(message) {
     message.id = guid();
     message.staged = true;

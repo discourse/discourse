@@ -5,7 +5,7 @@
   {{#if this.shouldRenderMessageDetails}}
     <ChatComposerMessageDetails
       @message={{if this.draft.editing this.draft this.draft.inReplyTo}}
-      @cancelAction={{this.composer.cancel}}
+      @cancelAction={{this.resetDraft}}
     />
   {{/if}}
 

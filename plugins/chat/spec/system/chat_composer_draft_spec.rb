@@ -140,26 +140,27 @@ RSpec.describe "Chat composer draft", type: :system do
   end
 
   context "when loading a thread with a draft" do
+    fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
 
     before do
+      create_draft(channel_1, user: current_user, thread: thread_1)
       channel_1.add(current_user)
       sign_in(current_user)
     end
 
     it "loads the draft" do
-      create_draft(channel_1, thread: thread_1)
       chat_page.visit_thread(thread_1)
 
       expect(thread_page.composer.value).to eq("draft")
     end
 
     context "when loading another channel and back" do
-      fab!(:channel_2) { Fabricate(:chat_channel) }
+      fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }
       fab!(:thread_2) { Fabricate(:chat_thread, channel: channel_2) }
 
       before do
-        create_draft(channel_2, thread: thread_2, data: { message: "draft2" })
+        create_draft(channel_2, user: current_user, thread: thread_2, data: { message: "draft2" })
         channel_2.add(current_user)
       end
 
