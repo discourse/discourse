@@ -4661,7 +4661,7 @@ en:
         modal:
           title: "Edit Table"
           cancel: "cancel"
-          save: "Save"
+          create: "Save"
           reason: "why are you editing?"
           trigger_reason: "Add reason for edit"
         default_edit_reason: "Update Table with Table Editor"
