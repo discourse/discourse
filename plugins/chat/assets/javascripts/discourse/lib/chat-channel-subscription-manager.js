@@ -231,5 +231,7 @@ export default class ChatChannelSubscriptionManager {
     if (message?.thread) {
       message.thread.preview = ChatThreadPreview.create(data.preview);
     }
+
+    message.thread.preview.yolo = 1;
   }
 }

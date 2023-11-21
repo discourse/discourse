@@ -29,8 +29,8 @@ export default class ChatThread {
   @tracked threadMessageBusLastId;
   @tracked replyCount;
   @tracked tracking;
-  @tracked currentUserMembership = null;
-  @tracked preview = null;
+  @tracked currentUserMembership;
+  @tracked preview;
 
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
 
@@ -38,7 +38,6 @@ export default class ChatThread {
     this.id = args.id;
     this.channel = channel;
     this.status = args.status;
-    this.draft = args.draft;
     this.staged = args.staged;
     this.replyCount = args.reply_count;
 
