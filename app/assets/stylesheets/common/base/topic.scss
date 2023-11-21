@@ -101,6 +101,23 @@ $topic-progress-height: 42px;
       position: relative;
     }
   }
+  #topic-progress-wrapper {
+    .topic-admin-menu-button .toggle-admin-menu {
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--d-border-radius);
+      border-bottom-right-radius: 0;
+    }
+    #topic-progress {
+      border-radius: var(--d-border-radius);
+      overflow: hidden;
+    }
+    .topic-admin-menu-button-container + #topic-progress {
+      border-top-left-radius: 0;
+      border-top-right-radius: var(--d-border-radius);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: var(--d-border-radius);
+    }
+  }
 }
 
 .progress-back-container {
