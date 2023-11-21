@@ -1274,14 +1274,13 @@ ko:
           generic: "%{provider} 계정이 인증에 사용됩니다."
       name:
         title: "이름"
-        instructions: "전체 이름(선택사항)"
-        instructions_required: "전체 이름"
+        instructions: "전체 이름 (선택 사항)."
+        instructions_required: "전체 이름."
         required: "이름을 입력하세요"
         too_short: "이름이 너무 짧습니다."
         ok: "올바른 이름입니다"
       username:
         title: "사용자명"
-        instructions: "공백 없이 짧고 고유해야 합니다"
         short_instructions: "다른 사용자가 나를 @%{username} 형식으로 멘션할 수 있습니다"
         available: "아이디로 사용할 수 있습니다"
         not_available: "사용할 수 없습니다. %{suggestion} 아이디는 어떠세요?"
@@ -1470,7 +1469,7 @@ ko:
         same_as_username: "비밀번호가 사용자명과 동일합니다."
         same_as_email: "비밀번호가 이메일과 동일합니다."
         ok: "올바른 비밀번호입니다."
-        instructions: "%{count}자 이상"
+        instructions: "%{count}자 이상."
         required: "비밀번호를 입력하세요"
         confirm: "확인"
       summary:
@@ -2007,6 +2006,7 @@ ko:
         private_message: '''%{topic}'' -%{site_title}에서 %{username} 님이 나에게 개인 메시지를 보냈습니다'
         linked: '%{username} 님이 ''%{topic}'' - %{site_title}의 내 게시물에 링크했습니다'
         watching_first_post: '%{username} 님이 새 주제(''%{topic}'' - %{site_title})를 만들었습니다'
+        watching_category_or_tag: '"%{topic}"에서 %{username}님이 글을 게시하였습니다 - %{site_title}'
         confirm_title: "알림 활성화됨 - %{site_title}"
         confirm_body: "알림이 활성화되었습니다."
         custom: "%{site_title}의 %{username} 님의 알림"
@@ -3550,7 +3550,7 @@ ko:
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
         new_features:
-          title: "\U0001F381 새 기능"
+          learn_more: "더 보기..."
         last_checked: "마지막으로 확인함"
         refresh_problems: "새로고침"
         no_problems: "문제가 발견되지 않았습니다."
@@ -3834,7 +3834,7 @@ ko:
         not_enabled: "아니요"
         change_settings_short: "설정"
         howto: "플러그인은 어떻게 설치하나요?"
-        official: "공식 플러그인"
+        author: "%{author}에 의해"
       navigation_menu:
         sidebar: "사이드바"
       backups:

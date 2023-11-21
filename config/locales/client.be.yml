@@ -571,7 +571,7 @@ be:
         cancel: "адмяніць"
       name:
         title: "Імя"
-        instructions_required: "Ваша поўнае імя"
+        instructions_required: "Ваша поўнае імя."
         too_short: "Ваша імя занадта кароткае"
         ok: "Ваша імя выглядае добра"
       username:
@@ -1438,6 +1438,8 @@ be:
         version_check_pending: "Здаецца, Вы нядаўна здзейснілі абнаўлення. Выдатна!"
         installed_version: "устаноўленая"
         latest_version: "апошняя"
+        new_features:
+          learn_more: "Даведацца больш ..."
         last_checked: "апошняя праверка"
         refresh_problems: "абнавіць"
         no_problems: "Не выяўлена ніякіх праблем."

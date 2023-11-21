@@ -1249,7 +1249,6 @@ lt:
     mobile_logo_dark: "Tamsios schemos alternatyva svetainės „mobiliojo logotipo“ nustatymui."
     large_icon: "Vaizdas naudojamas kaip kitų metaduomenų piktogramų pagrindas. Idealiu atveju turėtų būti didesnis nei 512 x 512. Jei paliksite tuščią, bus naudojamas logotipas_mažas."
     email_custom_headers: "Brūkšniais atskirtas pasirinktinių el. laiškų antraščių sąrašas"
-    enforce_second_factor: "Priverčia vartotojus įgalinti dviejų veiksnių autentifikavimą. Pasirinkite „viskas“, kad jis būtų taikomas visiems vartotojams. Pasirinkite „personalas“, kad jis būtų taikomas tik darbuotojams."
     force_https: "Priverskite savo svetainę naudoti tik HTTPS. ĮSPĖJIMAS: NEGALIMA to įjungti, kol nepatikrinate, kad HTTPS yra visiškai nustatytas ir veikia visiškai visur! Ar patikrinote savo CDN, visus socialinius prisijungimus ir visus išorinius logotipus / priklausomybes, kad įsitikintumėte, jog jie taip pat suderinami su HTTPS?"
     summary_score_threshold: "Minimalus balas, kurio reikia, kad įrašas būtų įtrauktas į „Apibendrinti šią temą“"
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"

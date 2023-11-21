@@ -1265,14 +1265,13 @@ vi:
           generic: "Tài khoản %{provider} của bạn sẽ được sử dụng để xác thực."
       name:
         title: "Tên"
-        instructions: "Tên đầy đủ của bạn (tuỳ chọn)"
-        instructions_required: "Tên đầy đủ của bạn"
+        instructions: "Tên đầy đủ của bạn (tuỳ chọn)."
+        instructions_required: "Tên đầy đủ của bạn."
         required: "Vui lòng nhập tên"
         too_short: "Tên của bạn quá ngắn"
         ok: "Tên của bạn có vẻ ổn"
       username:
         title: "Username"
-        instructions: "Duy nhất, không có khoảng trống, ngắn"
         short_instructions: "Mọi người có thể nhắc tới bạn bằng @%{username}"
         available: "Tên đăng nhập của bạn có sẵn"
         not_available: "Chưa có sẵn. Thử %{suggestion}?"
@@ -1465,7 +1464,7 @@ vi:
         same_as_username: "Mật khẩu của bạn trùng với tên đăng nhập."
         same_as_email: "Mật khẩu của bạn trùng với email của bạn."
         ok: "Mật khẩu của bạn có vẻ ổn."
-        instructions: "ít nhất %{count} kí tự"
+        instructions: "Ít nhất %{count} kí tự."
         required: "Vui lòng nhập mật khẩu"
         confirm: "Xác nhận"
       summary:
@@ -1582,7 +1581,7 @@ vi:
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / giờ}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / phút}}.
-    learn_more: "tìm hiểu thêm…"
+    learn_more: "Tìm hiểu thêm…"
     mute: Im lặng
     unmute: Bỏ im lặng
     last_post: Được gửi
@@ -2028,6 +2027,7 @@ vi:
         private_message: '%{username} đã gửi cho bạn một tin nhắn cá nhân trong "%{topic}" - %{site_title}'
         linked: '%{username} liên quan đến bài viết của bạn từ "%{topic}" - %{site_title}'
         watching_first_post: '%{username} đã tạo một chủ đề mới "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} gửi bài trong "%{topic}" - %{site_title}'
         confirm_title: "Đã bật thông báo - %{site_title}"
         confirm_body: "Sự thành công! Thông báo đã được kích hoạt."
         custom: "Thông báo từ %{username} trên %{site_title}"
@@ -3620,7 +3620,7 @@ vi:
         latest_version: "Mới nhất"
         problems_found: "Một số lời khuyên dựa trên cài đặt trang web hiện tại của bạn"
         new_features:
-          title: "\U0001F381 Các tính năng mới"
+          learn_more: "Tìm hiểu thêm..."
         last_checked: "Kiểm tra lần cuối"
         refresh_problems: "Làm mới"
         no_problems: "Không phát hiện vấn đề"
@@ -3946,7 +3946,7 @@ vi:
         not_enabled: "Không"
         change_settings_short: "Cấu hình"
         howto: "Plugin cài như thế nào?"
-        official: "Plugin chính thức"
+        author: "Bởi %{author}"
       navigation_menu:
         sidebar: "Thanh bên"
       backups:
