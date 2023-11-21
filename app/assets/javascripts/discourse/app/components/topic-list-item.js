@@ -40,14 +40,6 @@ export function navigateToTopic(topic, href) {
   const owner = getOwner(this);
   const router = owner.lookup("service:router");
   const session = owner.lookup("service:session");
-  const siteSettings = owner.lookup("service:site-settings");
-  const appEvents = owner.lookup("service:appEvents");
-
-  if (siteSettings.page_loading_indicator !== "slider") {
-    // With the slider, it feels nicer for the header to update once the rest of the topic content loads,
-    // so skip setting it early.
-    appEvents.trigger("header:update-topic", topic);
-  }
 
   session.set("lastTopicIdViewed", {
     topicId: topic.id,
