@@ -553,15 +553,13 @@ export function getCanonicalUrl(absoluteUrl) {
     ""
   );
 
-  if (canonicalUrl.searchParams.size > 0) {
-    const allowedSearchParams = new URLSearchParams();
-    for (const [key, value] of canonicalUrl.searchParams) {
-      if (ALLOWED_CANONICAL_PARAMS.includes(key)) {
-        allowedSearchParams.append(key, value);
-      }
+  const allowedSearchParams = new URLSearchParams();
+  for (const [key, value] of canonicalUrl.searchParams) {
+    if (ALLOWED_CANONICAL_PARAMS.includes(key)) {
+      allowedSearchParams.append(key, value);
     }
-    canonicalUrl.search = allowedSearchParams.toString();
   }
+  canonicalUrl.search = allowedSearchParams.toString();
 
   return canonicalUrl.toString();
 }
