@@ -21,6 +21,20 @@ module HasCustomFields
       types[key]
     end
 
+    def self.serialize(value, type)
+      if value.is_a?(Hash) || type == :json
+        value.to_json
+      elsif TrueClass === value
+        "t"
+      elsif FalseClass === value
+        "f"
+      elsif Integer === value
+        value.to_s
+      else
+        value
+      end
+    end
+
     def self.cast_custom_field(key, value, types, return_array = true)
       return value unless type = get_custom_field_type(types, key)
 
@@ -100,7 +114,7 @@ module HasCustomFields
 
     def get_custom_field_type(name)
       @custom_field_types ||= {}
-      @custom_field_types[name]
+      @custom_field_types[name] || :string
     end
 
     def preload_custom_fields(objects, fields)
@@ -236,52 +250,33 @@ module HasCustomFields
 
   def save_custom_fields(force = false)
     if force || !custom_fields_clean?
-      dup = @custom_fields.dup.with_indifferent_access
-      array_fields = {}
-
       ActiveRecord::Base.transaction do
-        _custom_fields.reload.each do |f|
-          if dup[f.name].is_a?(Array)
-            # we need to collect Arrays fully before we can compare them
-            if !array_fields.has_key?(f.name)
-              array_fields[f.name] = [f]
-            else
-              array_fields[f.name] << f
-            end
-          elsif dup[f.name].is_a?(Hash)
-            if dup[f.name].to_json != f.value
-              f.destroy!
-            else
-              dup.delete(f.name)
+        dup = @custom_fields.dup.with_indifferent_access
+        fields_by_key = _custom_fields.reload.group_by(&:name)
+
+        (dup.keys.to_set + fields_by_key.keys.to_set).each do |key|
+          fields = fields_by_key[key] || []
+          value = dup[key]
+          field_type = self.class.get_custom_field_type(key)
+
+          if Array === field_type
+            value = value || []
+            sub_type = field_type[0]
+
+            value.map! { |v| HasCustomFields::Helpers.serialize(v, sub_type) }
+
+            unless value == fields.map(&:value)
+              fields.each(&:destroy!)
+
+              value.each { |subv| _custom_fields.create!(name: key, value: subv) }
             end
           else
-            t = {}
-            self.class.append_custom_field(t, f.name, f.value)
+            value = HasCustomFields::Helpers.serialize(value, field_type) if value
 
-            if dup.has_key?(f.name) && dup[f.name] == t[f.name]
-              dup.delete(f.name)
-            else
-              f.destroy!
-            end
-          end
-        end
+            field = fields.find { |f| f.value == value }
+            fields.select { |f| f != field }.each(&:destroy!)
 
-        # let's iterate through our arrays and compare them
-        array_fields.each do |field_name, fields|
-          if fields.length == dup[field_name].length && fields.map(&:value) == dup[field_name]
-            dup.delete(field_name)
-          else
-            fields.each(&:destroy!)
-          end
-        end
-
-        dup.each do |k, v|
-          field_type = self.class.get_custom_field_type(k)
-
-          if v.is_a?(Array) && field_type != :json
-            v.each { |subv| _custom_fields.create!(name: k, value: subv) }
-          else
-            create_singular(k, v, field_type)
+            create_singular(key, value) if !field && value
           end
         end
       end
