@@ -148,7 +148,7 @@ acceptance("Admin - Site Settings", function (needs) {
   });
 
   test("category name is preserved", async function (assert) {
-    await visit("admin/site_settings/category/basic?filter=menu");
+    await visit("/admin/site_settings/category/basic?filter=menu");
     assert.strictEqual(
       currentURL(),
       "/admin/site_settings/category/basic?filter=menu"
@@ -156,7 +156,7 @@ acceptance("Admin - Site Settings", function (needs) {
   });
 
   test("shows all_results if current category has none", async function (assert) {
-    await visit("admin/site_settings");
+    await visit("/admin/site_settings");
 
     await click(".admin-nav .basic a");
     assert.strictEqual(currentURL(), "/admin/site_settings/category/basic");
