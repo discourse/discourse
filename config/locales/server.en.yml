@@ -2319,6 +2319,7 @@ en:
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
+    approve_unless_allowed_groups: "Posts for users not in these groups must be approved"
     approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
     approve_unless_staged: "New topics and posts for staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
@@ -2543,6 +2544,7 @@ en:
       anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
       here_mention_allowed_groups: "min_trust_level_for_here_mention"
       shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
+      approve_unless_allowed_groups: "approve_unless_trust_level"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -5234,6 +5236,7 @@ en:
     reasons:
       post_count: "The first few posts from every user must be approved by staff. See %{link}."
       trust_level: "Users at low trust levels must have replies approved by staff. See %{link}."
+      group: "Users not in the specified groups must have replies approved by staff. See %{link}."
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
       auto_silence_regex: "New user whose first post matches the %{link} setting."
