@@ -669,12 +669,8 @@ Category.reopenClass({
       limit: opts.limit,
     };
 
-    const cache_key = JSON.stringify(data);
-
-    const result = CATEGORY_ASYNC_SEARCH_CACHE[cache_key]
-      ? CATEGORY_ASYNC_SEARCH_CACHE[cache_key]
-      : await ajax("/categories/search", { data });
-    CATEGORY_ASYNC_SEARCH_CACHE[cache_key] = result;
+    const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=
+      await ajax("/categories/search", { data }));
 
     return result["categories"].map((category) =>
       Site.current().updateCategory(category)
