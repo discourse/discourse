@@ -87,6 +87,13 @@ module HasCustomFields
     end
 
     def register_custom_field_type(name, type)
+      if Array === type
+        Discourse.deprecate(
+          "Array types for custom fields are deprecated, use type :json instead",
+          drop_from: "3.3.0",
+        )
+      end
+
       @custom_field_types ||= {}
       @custom_field_types[name] = type
     end
