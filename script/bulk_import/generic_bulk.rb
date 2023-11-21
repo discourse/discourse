@@ -620,9 +620,9 @@ class BulkImport::Generic < BulkImport::Base
 
   def post_raw(row, group_names, user_names)
     raw = row["raw"]
-    placeholders = row["placeholders"].present? ? JSON.parse(row["placeholders"]) : nil
+    placeholders = row["placeholders"]&.then { |json| JSON.parse(json) }
 
-    if (polls = placeholders["polls"]).present?
+    if (polls = placeholders&.fetch("polls"))
       poll_mapping = polls.map { |poll| [poll["poll_id"], poll["placeholder"]] }.to_h
 
       poll_details = query(<<~SQL, { post_id: row["id"] })
@@ -643,7 +643,7 @@ class BulkImport::Generic < BulkImport::Base
       poll_details.close
     end
 
-    if (mentions = placeholders["mentions"]).present?
+    if (mentions = placeholders&.fetch("mentions"))
       mentions.each do |mention|
         name =
           if mention["type"] == "user"
@@ -657,7 +657,7 @@ class BulkImport::Generic < BulkImport::Base
       end
     end
 
-    if (event = placeholders["event"]).present?
+    if (event = placeholders&.fetch("event"))
       event_details = @source_db.get_first_row(<<~SQL, { event_id: event["event_id"] })
         SELECT *
           FROM events
@@ -669,10 +669,10 @@ class BulkImport::Generic < BulkImport::Base
 
     if row["upload_ids"].present? && @uploads_db
       upload_ids = JSON.parse(row["upload_ids"])
-      placeholders = (["?"] * upload_ids.size).join(",")
+      upload_ids_placeholders = (["?"] * upload_ids.size).join(",")
 
       query(
-        "SELECT id, markdown FROM uploads WHERE id IN (#{placeholders})",
+        "SELECT id, markdown FROM uploads WHERE id IN (#{upload_ids_placeholders})",
         upload_ids,
         db: @uploads_db,
       ).tap do |result_set|
