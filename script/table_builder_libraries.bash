@@ -3,10 +3,13 @@
 # Script used for updating depencies for the table builder/editor feature.
 # Updates the JSpreadsheet and jSuites libraries to the latest available versions.
 
-# Global Variables:
-SCSS_VENDOR=../app/assets/stylesheets/common/table-builder/vendor/
-JSPREADSHEET_VENDOR=../public/javascripts/jspreadsheet/
-JSUITES_VENDOR="../public/javascripts/jsuites/"
+# Get the directory of the script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Construct paths relative to the script directory
+SCSS_VENDOR="$SCRIPT_DIR/../app/assets/stylesheets/common/table-builder/vendor/"
+JSPREADSHEET_VENDOR="$SCRIPT_DIR/../public/javascripts/jspreadsheet/"
+JSUITES_VENDOR="$SCRIPT_DIR/../public/javascripts/jsuites/"
 
 JSUITES_JS_URL="https://jsuites.net/v4/jsuites.js"
 JSPREADSHEET_JS_URL="https://bossanova.uk/jspreadsheet/v4/jexcel.js"
@@ -35,10 +38,12 @@ JSPREADSHEET_JS_FILE_LOCATION=$JSPREADSHEET_VENDOR$JSPREADSHEET_NEW_JS_FILE
 
 # Remove all vendor related files:
 rm -r ${SCSS_VENDOR}*
-rm -r ${JS_VENDOR}
+rm -r ${JSUITES_VENDOR}
+rm -r ${JSPREADSHEET_VENDOR}
 
 # Recreate vendor directory
-mkdir $JS_VENDOR
+mkdir $JSUITES_VENDOR
+mkdir $JSPREADSHEET_VENDOR
 echo "Old vendor assets have been removed."
 
 
