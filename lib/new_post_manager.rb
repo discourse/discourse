@@ -92,7 +92,9 @@ class NewPostManager
       return :post_count
     end
 
-    return :group if !user.in_any_groups?(SiteSetting.approve_unless_allowed_groups_map)
+    if user.groups.any? && !user.in_any_groups?(SiteSetting.approve_unless_allowed_groups_map)
+      return :group
+    end
 
     if (
          manager.args[:title].present? &&
