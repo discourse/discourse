@@ -8,8 +8,8 @@ export default class ChatDraftsManager extends Service {
 
   async add(message, channelId, threadId) {
     try {
-      await this.persistDraft(message, channelId, threadId);
       this.drafts[this.key(channelId, threadId)] = message;
+      await this.persistDraft(message, channelId, threadId);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log("Couldn't save draft", e);
