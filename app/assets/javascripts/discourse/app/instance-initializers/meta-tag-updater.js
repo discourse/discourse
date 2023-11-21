@@ -22,7 +22,9 @@ export default {
       twitterTitle?.setAttribute("content", title);
       twitterUrl?.setAttribute("content", absoluteUrl);
 
-      canonicalUrl?.setAttribute("href", getCanonicalUrl(absoluteUrl));
+      if (canonicalUrl) {
+        canonicalUrl.setAttribute("href", getCanonicalUrl(absoluteUrl));
+      }
     });
   },
 };
