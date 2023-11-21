@@ -41,6 +41,7 @@ const SERVER_SIDE_ONLY = [
 const JUMP_END_BUFFER = 250;
 
 const ALLOWED_CANONICAL_PARAMS = ["page"];
+const TRAILING_SLASH_REGEX = /\/$/;
 
 export function rewritePath(path) {
   const params = path.split("?");
@@ -547,15 +548,20 @@ export function getEditCategoryUrl(category, subcategories, tab) {
 
 export function getCanonicalUrl(absoluteUrl) {
   const canonicalUrl = new URL(absoluteUrl);
-  canonicalUrl.pathname = canonicalUrl.pathname.replace(/\/$/, "");
+  canonicalUrl.pathname = canonicalUrl.pathname.replace(
+    TRAILING_SLASH_REGEX,
+    ""
+  );
 
-  const allowedSearchParams = new URLSearchParams();
-  for (const [key, value] of canonicalUrl.searchParams) {
-    if (ALLOWED_CANONICAL_PARAMS.includes(key)) {
-      allowedSearchParams.append(key, value);
+  if (canonicalUrl.searchParams.size > 0) {
+    const allowedSearchParams = new URLSearchParams();
+    for (const [key, value] of canonicalUrl.searchParams) {
+      if (ALLOWED_CANONICAL_PARAMS.includes(key)) {
+        allowedSearchParams.append(key, value);
+      }
     }
+    canonicalUrl.search = allowedSearchParams.toString();
   }
-  canonicalUrl.search = allowedSearchParams.toString();
 
   return canonicalUrl.toString();
 }
