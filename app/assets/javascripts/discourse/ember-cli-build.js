@@ -80,6 +80,7 @@ module.exports = function (defaults) {
             "../chat-lite",
             "../discourse-markdown-it",
             "../discourse-plugin",
+            "../discourse-plugins-v2",
           ],
         })
       ),

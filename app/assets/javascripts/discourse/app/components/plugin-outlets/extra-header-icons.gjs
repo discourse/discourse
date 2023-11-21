@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import Connectors from "./-virtual-extra-header-icons";
+import Connectors from "discourse-plugins-v2/connectors/extra-header-icons";
 
 export default class ExtraHeaderIcons extends Component {
   @service currentUser;

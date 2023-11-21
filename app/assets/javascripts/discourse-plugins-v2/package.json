@@ -1,19 +1,16 @@
 {
-  "name": "chat-lite",
+  "name": "discourse-plugins-v2",
   "version": "1.0.0",
   "private": true,
-  "description": "Discourse's chat plugin, but lite",
+  "description": "Discourse's v2 plugins",
   "author": "Discourse <team@discourse.org>",
   "license": "GPL-2.0-only",
   "keywords": [
-    "discourse-plugin",
     "ember-addon"
   ],
   "exports": {
-    "./addon-main.js": "./addon-main.cjs",
     "./connectors/extra-header-icons": "./dist/connectors/extra-header-icons.js",
-    "./markdown-features/scramble": "./dist/markdown-features/scramble.js",
-    "./package.json": "./package.json"
+    "./markdown-features": "./dist/markdown-features.js"
   },
   "files": [
     "addon-main.cjs",
@@ -26,7 +23,7 @@
   "dependencies": {
     "@embroider/addon-shim": "^1.0.0",
     "ember-auto-import": "^2.6.3",
-    "lodash": "^4.17.21"
+    "chat-lite": "*"
   },
   "peerDependencies": {
     "discourse-plugin": "*"
@@ -38,10 +35,12 @@
     "@babel/plugin-transform-class-static-block": "^7.20.0",
     "@babel/plugin-transform-typescript": "^7.22.15",
     "@babel/runtime": "^7.17.0",
+    "@embroider/addon-dev": "^4.1.0",
+    "@embroider/macros": "^1.13.3",
     "@rollup/plugin-babel": "^6.0.3",
     "babel-plugin-ember-template-compilation": "^2.2.0",
-    "discourse-plugin-dev": "^1.0.0",
     "ember-template-imports": "^4.0.0",
+    "fs-extra": "^11.1.1",
     "rollup": "^3.21.8"
   },
   "engines": {

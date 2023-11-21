@@ -1,7 +1,8 @@
+import { Addon } from "@embroider/addon-dev/rollup";
 import { babel } from "@rollup/plugin-babel";
-import Plugin from "discourse-plugin-dev/rollup";
+import { collectPluginFeatures } from "./lib/collect-plugin-features.cjs";
 
-const plugin = new Plugin({
+const addon = new Addon({
   srcDir: "src",
   destDir: "dist",
 });
@@ -9,11 +10,14 @@ const plugin = new Plugin({
 export default {
   // This provides defaults that work well alongside `publicEntrypoints` below.
   // You can augment this if you need to.
-  output: plugin.output(),
-
-  watch: "src/**/*",
+  output: addon.output(),
 
   plugins: [
+    collectPluginFeatures({
+      connectors: ["extra-header-icons"],
+      markdownFeatures: true,
+    }),
+
     // These are the modules that users should be able to import from your
     // addon. Anything not listed here may get optimized away.
     // By default all your JavaScript modules (**/*.js) will be importable.
@@ -21,15 +25,12 @@ export default {
     // up your addon's public API. Also make sure your package.json#exports
     // is aligned to the config here.
     // See https://github.com/embroider-build/embroider/blob/main/docs/v2-faq.md#how-can-i-define-the-public-exports-of-my-addon
-    plugin.publicEntrypoints(["**/*.js", "index.js"]),
-
-    // Ensure that any plugin features are exported from package.json.
-    plugin.exportPluginFeatures(),
+    addon.publicEntrypoints(["**/*.js"]),
 
     // Follow the V2 Addon rules about dependencies. Your code can import from
     // `dependencies` and `peerDependencies` as well as standard Ember-provided
     // package names.
-    plugin.dependencies(),
+    addon.dependencies(),
 
     // This babel config should *not* apply presets or compile away ES modules.
     // It exists only to provide development niceties for you, like automatic
@@ -42,10 +43,17 @@ export default {
       babelHelpers: "bundled",
     }),
 
+    // Ensure that standalone .hbs files are properly integrated as Javascript.
+    addon.hbs(),
+
     // Ensure that .gjs files are properly integrated as Javascript
-    plugin.gjs(),
+    addon.gjs(),
+
+    // addons are allowed to contain imports of .css files, which we want rollup
+    // to leave alone and keep in the published output.
+    addon.keepAssets(["**/*.css"]),
 
     // Remove leftover build artifacts when starting a new build.
-    plugin.clean(),
+    addon.clean(),
   ],
 };

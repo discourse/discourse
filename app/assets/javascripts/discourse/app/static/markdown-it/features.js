@@ -1,4 +1,4 @@
-import FeatureModules from "./-virtual-features";
+import FeatureModules from "discourse-plugins-v2/markdown-features";
 
 export default function loadPluginFeatures() {
   const features = [];
