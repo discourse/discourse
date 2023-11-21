@@ -2,7 +2,7 @@
 
 describe "Admin Dashboard New Features Page", type: :system do
   let(:new_features_page) { PageObjects::Pages::AdminDashboardNewFeatures.new }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   before { sign_in(admin) }
 
