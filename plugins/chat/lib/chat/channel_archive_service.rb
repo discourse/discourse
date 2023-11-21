@@ -108,12 +108,15 @@ module Chat
         # completed batch, so the UI can receive updates and show a progress
         # bar or something similar.
 
-        def create_post_from_batch(chat_messages)
+        def create_post_from_batch(chat_messages, split_thread_ranges)
+          # puts "split_thread_ranges"
+          # puts split_thread_ranges
           create_post(
             Chat::TranscriptService.new(
               chat_channel,
               chat_channel_archive.archived_by,
               messages_or_ids: chat_messages,
+              split_thread_ranges: split_thread_ranges,
               opts: {
                 no_link: true,
                 include_reactions: true,
@@ -123,33 +126,92 @@ module Chat
         end
 
         buffer = []
+        split_thread_ranges = {}
+        thread_ranges = {}
 
         chat_channel
           .chat_messages
           .order("created_at ASC")
           .find_in_batches(batch_size: ARCHIVED_MESSAGES_PER_POST) do |message_batch|
             thread_ids = message_batch.map(&:thread_id).compact.uniq
-            full_threads =
+            threads =
               chat_channel.chat_messages.where(thread_id: thread_ids).order("created_at ASC").to_a
 
-            complete_batch = (buffer + message_batch + full_threads).uniq { |message| message.id }
+            full_batch = (buffer + message_batch + threads).uniq { |message| message.id }
+            messages_chunk = full_batch.group_by { |msg| msg.thread_id || msg.id }.values.flatten
+
             buffer.clear
 
-            grouped_messages = complete_batch.group_by { |msg| msg.thread_id || msg.id }.values
+            if messages_chunk.size > ARCHIVED_MESSAGES_PER_POST
+              post_last_message = messages_chunk[ARCHIVED_MESSAGES_PER_POST - 1]
 
+              thread = threads.select { |msg| msg.thread_id == post_last_message.thread_id }
+              thread_size = thread.size - 1
+              thread_om = thread.first
+
+              last_thread_index = 0
+
+              (messages_chunk.size / ARCHIVED_MESSAGES_PER_POST + 1).times do |index|
+                if last_thread_index != thread_size
+                  if index == 0
+                    thread_index = thread.index(post_last_message)
+                  else
+                    mext_post_last_message =
+                      messages_chunk[(ARCHIVED_MESSAGES_PER_POST * (index + 1)) - 1]
+                    if mext_post_last_message.present? &&
+                         mext_post_last_message.thread_id.present? &&
+                         mext_post_last_message.thread_id == post_last_message.thread_id
+                      thread_index = last_thread_index + ARCHIVED_MESSAGES_PER_POST - 1
+                    else
+                      thread_index = thread_size
+                    end
+                  end
+
+                  range =
+                    I18n.t(
+                      "chat.transcript.split_thread_range",
+                      start: last_thread_index + 1,
+                      end: thread_index,
+                      total: thread_size,
+                    )
+
+                  split_thread_ranges[thread_om.thread_id] ||= []
+                  split_thread_ranges[thread_om.thread_id] << range
+                  last_thread_index = thread_index
+                end
+              end
+            end
             batch = []
-            grouped_messages.flatten.each do |message|
+            range_added = false
+
+            messages_chunk.each do |message|
+              # We duplicate the original message when it spans across multiple posts
+              if messages_chunk.size > ARCHIVED_MESSAGES_PER_POST && !message.thread_id.nil? &&
+                   message.thread_id == thread_om.thread_id && batch.empty? && message != thread_om
+                batch << thread_om
+
+                thread_ranges[thread_om.id] = split_thread_ranges[message.thread_id].first
+                split_thread_ranges[message.thread_id].slice!(0)
+              elsif split_thread_ranges.has_key?(message.thread_id) &&
+                    !split_thread_ranges[message.thread_id].empty? && range_added == false
+                thread_ranges[thread_om.id] = split_thread_ranges[message.thread_id].first
+                split_thread_ranges[message.thread_id].slice!(0)
+
+                range_added = true
+              end
+
               batch << message
               if batch.size >= ARCHIVED_MESSAGES_PER_POST
-                create_post_from_batch(batch)
+                create_post_from_batch(batch, thread_ranges)
                 batch.clear
+                thread_ranges = {}
               end
             end
 
             buffer += batch
           end
 
-        create_post_from_batch(buffer) unless buffer.empty?
+        create_post_from_batch(buffer, thread_ranges) unless buffer.empty?
 
         kick_all_users
         complete_archive

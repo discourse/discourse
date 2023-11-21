@@ -21,7 +21,13 @@ module Chat
     NO_LINK_ATTR = "noLink=\"true\""
 
     class TranscriptBBCode
-      attr_reader :channel, :multiquote, :chained, :no_link, :include_reactions, :thread_id
+      attr_reader :channel,
+                  :multiquote,
+                  :chained,
+                  :no_link,
+                  :include_reactions,
+                  :thread_id,
+                  :split_thread_ranges
 
       def initialize(
         channel: nil,
@@ -30,7 +36,8 @@ module Chat
         chained: false,
         no_link: false,
         include_reactions: false,
-        thread_id: nil
+        thread_id: nil,
+        split_thread_ranges: {}
       )
         @channel = channel
         @acting_user = acting_user
@@ -38,6 +45,7 @@ module Chat
         @chained = chained
         @no_link = no_link
         @include_reactions = include_reactions
+        @split_thread_ranges = split_thread_ranges
         @message_data = []
         @threads_markdown = {}
         @thread_id = thread_id
@@ -66,7 +74,7 @@ module Chat
 
         if thread_id
           attrs << thread_id_attr
-          attrs << thread_title_attr
+          attrs << thread_title_attr(@message_data.first[:message])
         end
 
         <<~MARKDOWN
@@ -126,14 +134,18 @@ module Chat
         "threadId=\"#{thread_id}\""
       end
 
-      def thread_title_attr
+      def thread_title_attr(message)
         thread = Chat::Thread.find(thread_id)
-        return if thread.title.blank?
-        "threadTitle=\"#{thread.title}\""
+        split_range = split_thread_ranges[message.id] if split_thread_ranges.has_key?(message.id)
+
+        thread_title =
+          thread.title.present? ? thread.title : I18n.t("chat.transcript.default_thread_title")
+        thread_title += " (#{split_range})" if split_range.present?
+        "threadTitle=\"#{thread_title}\""
       end
     end
 
-    def initialize(channel, acting_user, messages_or_ids: [], opts: {})
+    def initialize(channel, acting_user, messages_or_ids: [], split_thread_ranges: {}, opts: {})
       @channel = channel
       @acting_user = acting_user
 
@@ -143,6 +155,7 @@ module Chat
         @messages = messages_or_ids
       end
       @opts = opts
+      @split_thread_ranges = split_thread_ranges
     end
 
     def generate_markdown
@@ -159,6 +172,7 @@ module Chat
           chained: !all_messages_same_user,
           no_link: @opts[:no_link],
           thread_id: messages.first.thread_id,
+          split_thread_ranges: @split_thread_ranges,
           include_reactions: @opts[:include_reactions],
         )
 
@@ -178,6 +192,7 @@ module Chat
               chained: !all_messages_same_user,
               no_link: @opts[:no_link],
               thread_id: message.thread_id,
+              split_thread_ranges: @split_thread_ranges,
               include_reactions: @opts[:include_reactions],
             )
         end
@@ -236,6 +251,7 @@ module Chat
 
       # tie off the last open bbcode + render
       rendered_markdown << open_bbcode_tag.render
+      puts rendered_markdown.join("\n")
       rendered_markdown.join("\n")
     end
 
