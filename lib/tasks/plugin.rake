@@ -28,7 +28,7 @@ task "plugin:install_all_official" do
       repo += ".git"
     end
 
-    Concurrent::Promise.execute do
+    promises << Concurrent::Promise.execute do
       attempts ||= 1
       STDOUT.puts("Cloning '#{repo}' to '#{path}'...")
       system("git clone --quiet #{repo} #{path}", exception: true)
