@@ -37,9 +37,7 @@ export function showEntrance(e) {
 }
 
 export function navigateToTopic(topic, href) {
-  const owner = getOwner(this);
-  const historyStore = owner.lookup("service:history-store");
-
+  const historyStore = getOwner(this).lookup("service:history-store");
   historyStore.set("lastTopicIdViewed", topic.id);
 
   DiscourseURL.routeTo(href || topic.get("url"));

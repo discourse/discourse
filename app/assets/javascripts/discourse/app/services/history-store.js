@@ -21,7 +21,6 @@ export default class HistoryStore extends Service {
   #routeData = new Map();
   #uuid;
   #pendingStore;
-  #pendingTransition;
 
   get #currentStore() {
     if (this.#pendingStore) {
