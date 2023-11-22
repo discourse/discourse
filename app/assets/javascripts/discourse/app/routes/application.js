@@ -42,6 +42,7 @@ const ApplicationRoute = DiscourseRoute.extend({
   siteSettings: service(),
   clientErrorHandler: service(),
   login: service(),
+  historyStore: service(),
 
   get isOnlyOneExternalLoginMethod() {
     return (
@@ -61,6 +62,12 @@ const ApplicationRoute = DiscourseRoute.extend({
       this.loadingSlider.transitionEnded();
     });
     return false;
+  },
+
+  @action
+  willResolveModel(transition) {
+    this.historyStore.willResolveModel(transition);
+    return true;
   },
 
   actions: {
