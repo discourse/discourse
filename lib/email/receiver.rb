@@ -1068,7 +1068,9 @@ module Email
         )
       elsif destination.is_a?(Category)
         return false if user.staged? && !destination.email_in_allow_strangers
-        return false if !user.in_any_groups?(SiteSetting.email_in_allowed_groups_map)
+        if user.groups.any? && !user.in_any_groups?(SiteSetting.email_in_allowed_groups_map)
+          return false
+        end
 
         topic_user = embedded_user&.call || user
         create_topic(
