@@ -1,9 +1,13 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -27,6 +31,15 @@ import {
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
+import ChatOnResize from "../modifiers/chat/on-resize";
+import ChatScrollableList from "../modifiers/chat/scrollable-list";
+import ChatComposerThread from "./chat/composer/thread";
+import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
+import ChatSelectionManager from "./chat/selection-manager";
+import ChatThreadHeader from "./chat/thread/header";
+import Message from "./chat-message";
+import ChatSkeleton from "./chat-skeleton";
+import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatThread extends Component {
   @service appEvents;
@@ -35,6 +48,7 @@ export default class ChatThread extends Component {
   @service chatApi;
   @service chatComposerPresenceManager;
   @service chatHistory;
+  @service chatDraftsManager;
   @service chatThreadComposer;
   @service chatThreadPane;
   @service currentUser;
@@ -73,16 +87,21 @@ export default class ChatThread extends Component {
   }
 
   @action
-  didUpdateThread() {
+  setup(element) {
+    this.uploadDropZone = element;
+
     this.messagesManager.clear();
+    this.args.thread.draft =
+      this.chatDraftsManager.get(
+        this.args.thread.channel?.id,
+        this.args.thread.id
+      ) ||
+      ChatMessage.createDraftMessage(this.args.thread.channel, {
+        user: this.currentUser,
+        thread: this.args.thread,
+      });
     this.chatThreadComposer.focus();
     this.loadMessages();
-    this.resetComposerMessage();
-  }
-
-  @action
-  setUploadDropZone(element) {
-    this.uploadDropZone = element;
   }
 
   @action
@@ -346,7 +365,13 @@ export default class ChatThread extends Component {
 
   @action
   resetComposerMessage() {
-    this.chatThreadComposer.reset(this.args.thread);
+    this.args.thread.draft = ChatMessage.createDraftMessage(
+      this.args.thread.channel,
+      {
+        user: this.currentUser,
+        thread: this.args.thread,
+      }
+    );
   }
 
   async #sendNewMessage(message) {
@@ -387,6 +412,10 @@ export default class ChatThread extends Component {
     } catch (error) {
       this.#onSendError(message.id, error);
     } finally {
+      this.chatDraftsManager.remove(
+        this.args.thread.channel.id,
+        this.args.thread.id
+      );
       this.chatThreadPane.sending = false;
     }
   }
@@ -410,6 +439,10 @@ export default class ChatThread extends Component {
     } catch (e) {
       popupAjaxError(e);
     } finally {
+      this.chatDraftsManager.remove(
+        this.args.thread.channel.id,
+        this.args.thread.id
+      );
       this.chatThreadPane.sending = false;
     }
   }
@@ -449,4 +482,68 @@ export default class ChatThread extends Component {
     this._ignoreNextScroll = false;
     return prev;
   }
+
+  <template>
+    <div
+      class={{concatClass
+        "chat-thread"
+        (if this.messagesLoader.loading "loading")
+      }}
+      data-id={{@thread.id}}
+      {{didInsert this.setup}}
+      {{willDestroy this.teardown}}
+    >
+      {{#if @includeHeader}}
+        <ChatThreadHeader @channel={{@thread.channel}} @thread={{@thread}} />
+      {{/if}}
+
+      <div
+        class="chat-thread__body popper-viewport chat-messages-scroll"
+        {{didInsert this.setScrollable}}
+        {{ChatScrollableList
+          (hash
+            onScroll=this.onScroll onScrollEnd=this.onScrollEnd reverse=true
+          )
+        }}
+      >
+        <div
+          class="chat-messages-container"
+          {{ChatOnResize this.didResizePane (hash delay=100 immediate=true)}}
+        >
+          {{#each this.messagesManager.messages key="id" as |message|}}
+            <Message
+              @message={{message}}
+              @disableMouseEvents={{this.isScrolling}}
+              @resendStagedMessage={{this.resendStagedMessage}}
+              @context="thread"
+            />
+          {{/each}}
+
+          {{#unless this.messagesLoader.fetchedOnce}}
+            {{#if this.messagesLoader.loading}}
+              <ChatSkeleton />
+            {{/if}}
+          {{/unless}}
+        </div>
+      </div>
+
+      <ChatScrollToBottomArrow
+        @onScrollToBottom={{this.scrollToLatestMessage}}
+        @isVisible={{this.needsArrow}}
+      />
+
+      {{#if this.chatThreadPane.selectingMessages}}
+        <ChatSelectionManager @pane={{this.chatThreadPane}} />
+      {{else}}
+        <ChatComposerThread
+          @channel={{@channel}}
+          @thread={{@thread}}
+          @onSendMessage={{this.onSendMessage}}
+          @uploadDropZone={{this.uploadDropZone}}
+        />
+      {{/if}}
+
+      <ChatUploadDropZone @model={{@thread}} />
+    </div>
+  </template>
 }

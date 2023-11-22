@@ -539,61 +539,6 @@ RSpec.describe Chat::ChatController do
     end
   end
 
-  describe "#set_draft" do
-    fab!(:chat_channel) { Fabricate(:category_channel) }
-    let(:dm_channel) { Fabricate(:direct_message_channel) }
-
-    before { sign_in(user) }
-
-    it "can create and destroy chat drafts" do
-      expect {
-        post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { Chat::Draft.count }.by(1)
-
-      expect { post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id } }.to change {
-        Chat::Draft.count
-      }.by(-1)
-    end
-
-    it "cannot create chat drafts for a category channel the user cannot access" do
-      group = Fabricate(:group)
-      private_category = Fabricate(:private_category, group: group)
-      chat_channel.update!(chatable: private_category)
-
-      post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      expect(response.status).to eq(403)
-
-      GroupUser.create!(user: user, group: group)
-      expect {
-        post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { Chat::Draft.count }.by(1)
-    end
-
-    it "cannot create chat drafts for a direct message channel the user cannot access" do
-      post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
-      expect(response.status).to eq(403)
-
-      Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
-
-      expect {
-        post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
-      }.to change { Chat::Draft.count }.by(1)
-    end
-
-    it "cannot create a too long chat draft" do
-      SiteSetting.max_chat_draft_length = 100
-
-      post "/chat/drafts.json",
-           params: {
-             chat_channel_id: chat_channel.id,
-             data: { value: "a" * (SiteSetting.max_chat_draft_length + 1) }.to_json,
-           }
-
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to eq([I18n.t("chat.errors.draft_too_long")])
-    end
-  end
-
   describe "#message_link" do
     it "ensures message's channel can be seen" do
       channel = Fabricate(:category_channel, chatable: Fabricate(:category))

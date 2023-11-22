@@ -1,9 +1,14 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 import DiscourseURL from "discourse/lib/url";
@@ -11,8 +16,11 @@ import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
+import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
 import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
 import {
   FUTURE,
@@ -31,6 +39,18 @@ import {
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { stackingContextFix } from "../lib/chat-ios-hacks";
+import ChatOnResize from "../modifiers/chat/on-resize";
+import ChatScrollableList from "../modifiers/chat/scrollable-list";
+import ChatComposerChannel from "./chat/composer/channel";
+import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
+import ChatSelectionManager from "./chat/selection-manager";
+import ChatChannelPreviewCard from "./chat-channel-preview-card";
+import ChatFullPageHeader from "./chat-full-page-header";
+import ChatMentionWarnings from "./chat-mention-warnings";
+import Message from "./chat-message";
+import ChatNotices from "./chat-notices";
+import ChatSkeleton from "./chat-skeleton";
+import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatChannel extends Component {
   @service appEvents;
@@ -76,22 +96,13 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  setUploadDropZone(element) {
-    this.uploadDropZone = element;
-  }
-
-  @action
   setScrollable(element) {
     this.scrollable = element;
   }
 
   @action
-  setupListeners() {
-    onPresenceChange({ callback: this.onPresenceChangeCallback });
-  }
-
-  @action
-  teardownListeners() {
+  teardown() {
+    document.removeEventListener("keydown", this._autoFocus);
     this.#cancelHandlers();
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.subscriptionManager.teardown();
@@ -104,7 +115,11 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  didUpdateChannel() {
+  setup(element) {
+    this.uploadDropZone = element;
+    document.addEventListener("keydown", this._autoFocus);
+    onPresenceChange({ callback: this.onPresenceChangeCallback });
+
     this.messagesManager.clear();
 
     if (
@@ -114,14 +129,11 @@ export default class ChatChannel extends Component {
       this.chatChannelsManager.follow(this.args.channel);
     }
 
-    const existingDraft = this.chatDraftsManager.get({
-      channelId: this.args.channel.id,
-    });
-    if (existingDraft) {
-      this.composer.message = existingDraft;
-    } else {
-      this.resetComposerMessage();
-    }
+    this.args.channel.draft =
+      this.chatDraftsManager.get(this.args.channel?.id) ||
+      ChatMessage.createDraftMessage(this.args.channel, {
+        user: this.currentUser,
+      });
 
     this.composer.focus();
     this.loadMessages();
@@ -485,7 +497,7 @@ export default class ChatChannel extends Component {
 
   @action
   resetComposerMessage() {
-    this.composer.reset(this.args.channel);
+    this.args.channel.resetDraft(this.currentUser);
   }
 
   async #sendEditMessage(message) {
@@ -506,7 +518,7 @@ export default class ChatChannel extends Component {
       popupAjaxError(e);
     } finally {
       message.editing = false;
-      this.chatDraftsManager.remove({ channelId: this.args.channel.id });
+      this.resetComposerMessage();
       this.pane.sending = false;
     }
   }
@@ -541,7 +553,7 @@ export default class ChatChannel extends Component {
     } catch (error) {
       this._onSendError(message.id, error);
     } finally {
-      this.chatDraftsManager.remove({ channelId: this.args.channel.id });
+      this.resetComposerMessage();
       this.pane.sending = false;
     }
   }
@@ -597,16 +609,6 @@ export default class ChatChannel extends Component {
     DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL).then(() => {
       DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
     });
-  }
-
-  @action
-  addAutoFocusEventListener() {
-    document.addEventListener("keydown", this._autoFocus);
-  }
-
-  @action
-  removeAutoFocusEventListener() {
-    document.removeEventListener("keydown", this._autoFocus);
   }
 
   @bind
@@ -705,4 +707,92 @@ export default class ChatChannel extends Component {
     this._ignoreNextScroll = false;
     return prev;
   }
+
+  <template>
+    <div
+      class={{concatClass
+        "chat-channel"
+        (if this.messagesLoader.loading "loading")
+        (if this.pane.sending "chat-channel--sending")
+        (unless this.messagesLoader.fetchedOnce "chat-channel--not-loaded-once")
+      }}
+      {{willDestroy this.teardown}}
+      {{didInsert this.setup}}
+      {{didUpdate this.loadMessages @targetMessageId}}
+      data-id={{@channel.id}}
+    >
+      <ChatFullPageHeader
+        @channel={{@channel}}
+        @onCloseFullScreen={{this.onCloseFullScreen}}
+        @displayed={{this.includeHeader}}
+      />
+
+      <ChatNotices @channel={{@channel}} />
+
+      <ChatMentionWarnings />
+
+      <div
+        class="chat-messages-scroll chat-messages-container popper-viewport"
+        {{didInsert this.setScrollable}}
+        {{ChatScrollableList
+          (hash
+            onScroll=this.onScroll onScrollEnd=this.onScrollEnd reverse=true
+          )
+        }}
+      >
+        <div
+          class="chat-messages-container"
+          {{ChatOnResize this.didResizePane (hash delay=100 immediate=true)}}
+        >
+          {{#each this.messagesManager.messages key="id" as |message|}}
+            <Message
+              @message={{message}}
+              @disableMouseEvents={{this.isScrolling}}
+              @resendStagedMessage={{this.resendStagedMessage}}
+              @fetchMessagesByDate={{this.fetchMessagesByDate}}
+              @context="channel"
+            />
+          {{else}}
+            {{#unless this.messagesLoader.fetchedOnce}}
+              <ChatSkeleton />
+            {{/unless}}
+          {{/each}}
+        </div>
+
+        {{! at bottom even if shown at top due to column-reverse  }}
+        {{#if this.messagesLoader.loadedPast}}
+          <div class="all-loaded-message">
+            {{i18n "chat.all_loaded"}}
+          </div>
+        {{/if}}
+      </div>
+
+      <ChatScrollToBottomArrow
+        @onScrollToBottom={{this.scrollToLatestMessage}}
+        @isVisible={{this.needsArrow}}
+      />
+
+      {{#if this.pane.selectingMessages}}
+        <ChatSelectionManager
+          @enableMove={{and
+            (not @channel.isDirectMessageChannel)
+            @channel.canModerate
+          }}
+          @pane={{this.pane}}
+        />
+      {{else}}
+        {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
+          <ChatChannelPreviewCard @channel={{@channel}} />
+        {{else}}
+          <ChatComposerChannel
+            @channel={{@channel}}
+            @uploadDropZone={{this.uploadDropZone}}
+            @onSendMessage={{this.onSendMessage}}
+          />
+        {{/if}}
+      {{/if}}
+
+      <ChatUploadDropZone @model={{@channel}} />
+    </div>
+  </template>
 }
