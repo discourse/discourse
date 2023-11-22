@@ -77,12 +77,14 @@ class Plugin::Instance
   def self.find_all(parent_path)
     [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
-        source = File.read(path)
-        metadata = Plugin::Metadata.parse(source)
-        plugins << self.new(metadata, path)
-      end
+      Dir["#{parent_path}/*/plugin.rb"].sort.each { |path| plugins << parse_from_source(path) }
     end
+  end
+
+  def self.parse_from_source(path)
+    source = File.read(path)
+    metadata = Plugin::Metadata.parse(source)
+    self.new(metadata, path)
   end
 
   def initialize(metadata = nil, path = nil)
