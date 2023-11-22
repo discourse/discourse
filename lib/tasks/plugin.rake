@@ -29,20 +29,19 @@ task "plugin:install_all_official" do
     end
 
     Concurrent::Promise.execute do
-      attempts = 0
-      begin
-        attempts += 1
-        STDOUT.puts("Cloning '#{repo}' to '#{path}'...")
-        system("git clone --quiet #{repo} #{path}", exception: true)
-      rescue StandardError
-        if attempts >= 3
-          failures << repo
-          abort
-        end
-
-        STDOUT.puts "Failed to clone #{repo}... trying again..."
-        retry
+      attempts ||= 1
+      STDOUT.puts("Cloning '#{repo}' to '#{path}'...")
+      system("git clone --quiet #{repo} #{path}", exception: true)
+    rescue StandardError
+      if attempts == 3
+        failures << repo
+        abort
       end
+
+      STDOUT.puts "Failed to clone #{repo}... trying again..."
+      attempts += 1
+      retry
+    end
     end
   end
 
