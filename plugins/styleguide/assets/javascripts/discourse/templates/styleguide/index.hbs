@@ -2,7 +2,8 @@
   <div class="description">
     {{i18n "styleguide.welcome"}}
   </div>
-  <h1>BEM</h1>
+  <h1>Syntax</h1>
+  <h2>BEM</h2>
   <p>
     The guidelines outlines below strive to bring structure and consistency to
     our classnames. Additionally, with this approach the nesting of css is
@@ -14,13 +15,13 @@
     </ul>
   </p>
   <p>We use a slightly modified version of the BEM classname format.</p>
-  <h2>Block</h2>
+  <h3>Block</h3>
   For example
   <strong><code>d-modal</code></strong>
   <p>A block is a standalone component. Blocks can be used within blocks. It
     should be a "top-level" element, which could be used in its entirety in
     another place of the app. It has no dependencies on any parent class.</p>
-  <h2>Element</h2>
+  <h3>Element</h3>
   For example
   <strong><code>d-modal__header</code></strong>
   <p>
@@ -30,7 +31,7 @@
     <code>d-modal__header</code>
     will only work within the d-modal block, but not when placed elsewhere.
   </p>
-  <h2>Modifiers</h2>
+  <h3>Modifiers</h3>
   Examples
   <strong><code>--success</code>,
     <code>--large</code>,<code>--inline</code>,
@@ -68,7 +69,7 @@
     which is far more readable.
   </p>
 
-  <h3>Special modifiers</h3>
+  <h4>Special modifiers</h4>
   Some special prefixes are useful to identify modifiers as temporary states or
   condition. These are:
   <ul>
@@ -76,7 +77,7 @@
     <li><code>has-foo</code> = example: has-errors</li>
   </ul>
 
-  <h2>In Code</h2>
+  <h3>In Code</h3>
   <p>Even though the BEM convention avoids nesting, we can use SCSS to write the
     code nested. This is to taste, but I find it easier to read and write,
     because it will keep all relevant elements and modifiers grouped together
