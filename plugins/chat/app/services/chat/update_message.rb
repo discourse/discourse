@@ -81,8 +81,7 @@ module Chat
     def modify_message(contract:, message:, guardian:, uploads:, **)
       message.message = contract.message
       message.last_editor_id = guardian.user.id
-      message.cooked = ::Chat::Message.cook(contract.message, user_id: guardian.user.id)
-      message.cooked_version = ::Chat::Message::BAKED_VERSION
+      message.cook
 
       return if uploads&.size != contract.upload_ids.to_a.size
 
