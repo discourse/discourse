@@ -1,7 +1,6 @@
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -16,19 +15,11 @@ module(
     test("storing and retrieving message", async function (assert) {
       const message1 = fabricators.message();
 
-      pretender.post(`/chat/api/channels/${message1.channel.id}/drafts`, () => {
-        return response({});
-      });
-
       await this.subject.add(message1, message1.channel.id);
 
       assert.strictEqual(this.subject.get(message1.channel.id), message1);
 
       const message2 = fabricators.message();
-
-      pretender.post(`/chat/api/channels/${message2.channel.id}/drafts`, () => {
-        return response({});
-      });
 
       await this.subject.add(message2, message2.channel.id);
 
