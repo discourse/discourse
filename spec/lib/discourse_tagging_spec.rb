@@ -1479,6 +1479,11 @@ RSpec.describe DiscourseTagging do
       it "removes zero-width spaces" do
         expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
       end
+
+      it "removes multiple consecutive dashes" do
+        expect(DiscourseTagging.clean_tag("hello---world")).to eq("hello-world")
+        expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-accounting")
+      end
     end
   end
 
