@@ -34,7 +34,7 @@ end
 def setup_test_env(
   setup_multisite: false,
   create_db: true,
-  create_parallel_db: false,
+  create_parallel_dbs: false,
   install_all_official: false,
   update_all_plugins: false,
   plugins_to_remove: "",
@@ -47,7 +47,7 @@ def setup_test_env(
 
   success = true
   success &&= run_or_fail("bundle exec rake db:create") if create_db
-  success &&= run_or_fail("bundle exec rake parallel:create") if create_parallel_db
+  success &&= run_or_fail("bundle exec rake parallel:create") if create_parallel_dbs
   success &&= run_or_fail("bundle exec rake plugin:install_all_official") if install_all_official
   success &&= run_or_fail("bundle exec rake plugin:update_all") if update_all_plugins
 
@@ -61,7 +61,7 @@ def setup_test_env(
       end
   end
 
-  success &&= migrate_databases(parallel: create_parallel_db, load_plugins: load_plugins)
+  success &&= migrate_databases(parallel: create_parallel_dbs, load_plugins: load_plugins)
   success
 end
 
@@ -83,6 +83,10 @@ def system_tests_parallel_tests_processors_env
 end
 
 # Environment Variables (specific to this rake task)
+# => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all official plugins
+# => UPDATE_ALL_PLUGINS        set to 1 to update all plugins
+# => LOAD_PLUGINS              set to 1 to load plugins
+# => CREATE_PARALLEL_DATABASES set to 1 to setup parallel test databases
 desc "Setups up the test environment"
 task "docker:test:setup" do
   setup_redis
@@ -91,10 +95,10 @@ task "docker:test:setup" do
   setup_test_env(
     setup_multisite: true,
     create_db: true,
-    create_parallel_db: false,
-    load_plugins: false,
-    install_all_official: false,
-    update_all_plugins: false,
+    create_parallel_dbs: !!ENV["CREATE_PARALLEL_DATABASES"],
+    load_plugins: !!ENV["LOAD_PLUGINS"],
+    install_all_official: !!ENV["INSTALL_OFFICIAL_PLUGINS"],
+    update_all_plugins: !!ENV["UPDATE_ALL_PLUGINS"],
   )
 end
 
@@ -210,7 +214,7 @@ task "docker:test" do
         setup_test_env(
           setup_multisite: !ENV["JS_ONLY"],
           create_db: !ENV["SKIP_DB_CREATE"],
-          create_parallel_db: !!ENV["USE_TURBO"],
+          create_parallel_dbs: !!ENV["USE_TURBO"],
           install_all_official: !!ENV["INSTALL_OFFICIAL_PLUGINS"],
           update_all_plugins: !!ENV["UPDATE_ALL_PLUGINS"],
           plugins_to_remove: ENV["SKIP_INSTALL_PLUGINS"] || "",
