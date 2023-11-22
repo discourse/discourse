@@ -57,6 +57,10 @@ class NotificationsController < ApplicationController
 
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
+      notifications =
+        Notification.populate_acting_user(
+          notifications,
+        ) if SiteSetting.show_user_avatars_for_notifications
 
       json = {
         notifications: serialize_data(notifications, NotificationSerializer),
@@ -86,6 +90,10 @@ class NotificationsController < ApplicationController
       notifications = notifications.offset(offset).limit(limit)
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
+      notifications =
+        Notification.populate_acting_user(
+          notifications,
+        ) if SiteSetting.show_user_avatars_for_notifications
       render_json_dump(
         notifications: serialize_data(notifications, NotificationSerializer),
         total_rows_notifications: total_rows,

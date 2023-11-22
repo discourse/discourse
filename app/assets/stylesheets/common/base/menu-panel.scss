@@ -514,6 +514,7 @@
       padding: 0;
       align-self: flex-start;
       width: 100%;
+
       .d-icon {
         padding-top: 0.2em;
         margin-right: 0.5em;
@@ -554,6 +555,37 @@
     }
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
+  }
+}
+
+.user-menu.notification-avatars {
+  li.notification {
+    a {
+      .notification-avatar {
+        display: inline-table;
+        position: relative;
+        overflow: visible;
+        margin-right: 0.5em;
+
+        .avatar {
+          width: 3em;
+          height: 3em;
+        }
+        .d-icon {
+          display: block;
+          position: absolute;
+          right: -0.6em;
+          bottom: -0.1em;
+          background: var(--primary);
+          color: var(--secondary-very-high);
+          padding: 0.25em;
+          border-radius: 100%;
+        }
+      }
+
+      .d-icon {
+      }
+    }
   }
 }
 

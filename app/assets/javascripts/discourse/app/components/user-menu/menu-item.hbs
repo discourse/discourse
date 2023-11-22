@@ -4,7 +4,11 @@
     title={{this.linkTitle}}
     {{on "click" this.onClick}}
   >
-    {{d-icon this.icon}}
+    {{#if this.iconComponent}}
+      <this.iconComponent @data={{this.iconComponentArgs}} />
+    {{else}}
+      {{d-icon this.icon}}
+    {{/if}}
     <div>
       {{#if this.label}}
         <span class={{concat "item-label " this.labelClass}}>
