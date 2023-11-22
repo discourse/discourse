@@ -15,7 +15,6 @@ hu:
   poll:
     poll: "szavazás"
     invalid_argument: "Érvénytelen „%{value}” érték az „%{argument}” argumentumhoz."
-    multiple_polls_without_name: "Több szavazás is névtelen. Használja a „<code>name</code>” attribútumot, hogy egyedileg azonosítsa a szavazásokat."
     multiple_polls_with_same_name: "Több szavazás is ugyanazt a nevet használja: <strong>%{name}</strong>. Használja a „<code>name</code>” attribútumot, hogy egyedileg azonosítsa a szavazásokat."
     default_poll_must_have_at_least_1_option: "A szavazásnak legalább 1 lehetőséget kell tartalmaznia."
     named_poll_must_have_at_least_1_option: "A(z) <strong>%{name}</strong> szavazásnak legalább 1 lehetőséget kell tartalmaznia."

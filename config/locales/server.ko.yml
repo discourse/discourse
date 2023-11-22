@@ -1339,7 +1339,6 @@ ko:
     email_custom_headers: "사용자 지정 이메일 헤더의 파이프(|)로 구분된 목록"
     email_subject: "표준 이메일에 대한 사용자 지정 가능한 제목 형식입니다. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>을 참조하세요."
     detailed_404: "특정 주제에 액세스할 수 없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고: URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
-    enforce_second_factor: "사용자가 2단계 인증을 사용하도록 강제합니다. 모든 사용자에게 적용하려면 '모두'를 선택하세요. 운영진에게만 적용하려면 '운영진'을 선택하세요."
     force_https: "사이트가 HTTPS만을 사용하도록 강제합니다. 경고: HTTPS가 완벽히 구성되어 제대로 작동하는 것을 확인하기 전까지는 이 옵션을 활성화하지 마세요. CDN, 소셜 로그인, 외부 로고 / 종속성이 HTTPS와 호환하는지 확인하셨나요?"
     summary_score_threshold: "'이 주제 요약'에 포함되기 위한 게시물의 최소 점수"
     summary_posts_required: "'이 주제 요약'이 활성화되기 전 주제의 최소 게시물 수입니다. 이 설정에 대한 변경사항은 일주일 이내에 소급 적용됩니다."

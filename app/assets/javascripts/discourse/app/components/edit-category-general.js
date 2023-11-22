@@ -91,7 +91,7 @@ export default buildCategoryPanel("general", {
       parent_category_id: parseInt(parentCategoryId, 10),
       read_restricted: category.get("read_restricted"),
     });
-    return categoryBadgeHTML(c, { link: false });
+    return categoryBadgeHTML(c, { link: false, previewColor: true });
   },
 
   // We can change the parent if there are no children

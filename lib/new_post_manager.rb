@@ -92,7 +92,9 @@ class NewPostManager
       return :post_count
     end
 
-    return :trust_level if user.trust_level < SiteSetting.approve_unless_trust_level.to_i
+    if user.groups.any? && !user.in_any_groups?(SiteSetting.approve_unless_allowed_groups_map)
+      return :group
+    end
 
     if (
          manager.args[:title].present? &&
@@ -200,8 +202,10 @@ class NewPostManager
   end
 
   def self.queue_enabled?
-    SiteSetting.approve_post_count > 0 || SiteSetting.approve_unless_trust_level.to_i > 0 ||
-      SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
+    SiteSetting.approve_post_count > 0 ||
+      !(
+        SiteSetting.approve_unless_allowed_groups_map.include?(Group::AUTO_GROUPS[:trust_level_0])
+      ) || SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
       SiteSetting.approve_unless_staged || WordWatcher.words_for_action_exist?(:require_approval) ||
       handlers.size > 1
   end

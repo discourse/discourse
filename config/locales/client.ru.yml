@@ -1621,14 +1621,13 @@ ru:
           generic: "Аккаунт %{provider} будет использоваться для аутентификации."
       name:
         title: "Имя"
-        instructions: "ваше полное имя (необязательно)"
-        instructions_required: "Ваше полное имя"
+        instructions: "Ваше полное имя (необязательно)."
+        instructions_required: "Ваше полное имя."
         required: "Введите имя"
         too_short: "Имя слишком короткое"
         ok: "Допустимое имя"
       username:
         title: "Имя пользователя"
-        instructions: "имя пользователя должно быть уникальным, коротким и не должно содержать пробелов"
         short_instructions: "Пользователи могут упоминать вас как @%{username}"
         available: "Имя пользователя доступно"
         not_available: "Недоступно. Попробуйте %{suggestion}."
@@ -1825,7 +1824,7 @@ ru:
         same_as_username: "Пароль совпадает с именем пользователя."
         same_as_email: "Пароль совпадает с адресом электронной почты."
         ok: "Допустимый пароль."
-        instructions: "минимум символов: %{count}"
+        instructions: "Минимум символов: %{count}."
         required: "Введите пароль"
         confirm: "Да"
       summary:
@@ -2550,6 +2549,7 @@ ru:
         private_message: '%{username} отправил(а) вам личное сообщение в теме «%{topic}» — %{site_title}'
         linked: '%{username} добавил(а) ссылку на ваше сообщение в теме «%{topic}» —%{site_title}'
         watching_first_post: '%{username} создал(а) новую тему «%{topic}» —%{site_title}'
+        watching_category_or_tag: '%{username} опубликовал(а) запись в теме «%{topic}» —%{site_title}'
         confirm_title: "Уведомления включены —%{site_title}"
         confirm_body: "Готово! Уведомления включены."
         custom: "Уведомление от пользователя %{username} на сайте %{site_title}"
@@ -4579,7 +4579,7 @@ ru:
         latest_version: "Последняя версия"
         problems_found: "Несколько советов по текущим настройкам сайта"
         new_features:
-          title: "\U0001F381 Новые возможности"
+          learn_more: "Подробнее…"
         last_checked: "Последняя проверка"
         refresh_problems: "Обновить"
         no_problems: "Проблем не обнаружено."
@@ -4917,8 +4917,8 @@ ru:
         not_enabled: "Н"
         change_settings_short: "Настройки"
         howto: "Как установить плагин?"
-        official: "Официальный плагин"
         broken_route: "Не удается настроить ссылку на «%{name}». Отключите блокировщики рекламы и попробуйте перезагрузить страницу."
+        author: "Автором %{author}"
       navigation_menu:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"

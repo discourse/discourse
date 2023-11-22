@@ -322,7 +322,11 @@ zh_CN:
         disabled_user: "已禁用聊天"
         no_items: "无条目"
         create_group_placeholder: "群组聊天名称 (可选)"
+        participants_counter: "%{selection_count}/%{max} 参与者"
+        new_group_chat: "新群组聊天"
         filter: "筛选"
+        cant_add_more_members: "已达到最大成员数"
+        create_new_group_chat: "创建群组聊天"
       channel_edit_name_slug_modal:
         title: 编辑频道
         input_placeholder: 添加名称
@@ -334,10 +338,14 @@ zh_CN:
         input_placeholder: 添加描述
         description: 告诉人们这个频道的主题
       direct_message_creator:
+        add_to_channel: "添加到频道"
         title: 新消息
         prefix: "至："
         no_results: 没有结果
         selected_user_title: "取消选择 %{username}"
+        group_name: "群组聊天名称 (可选)"
+        members_counter:
+          other: "%{count}/%{max} 成员"
       channel:
         no_memberships: 此频道没有成员
         no_memberships_found: 找不到成员

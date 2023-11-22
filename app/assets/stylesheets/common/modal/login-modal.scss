@@ -253,7 +253,8 @@
     .user-fields .input-group {
       .user-field {
         &.text {
-          &.value-entered label.control-label {
+          &.value-entered label.alt-placeholder.control-label,
+          input:focus + label.alt-placeholder.control-label {
             top: -8px;
             left: calc(1em - 0.25em);
             background-color: var(--secondary);
@@ -261,12 +262,11 @@
             font-size: 14px;
             color: var(--primary-medium);
           }
-          label.control-label {
+          label.alt-placeholder.control-label {
             color: var(--primary-medium);
             font-size: 16px;
             position: absolute;
             pointer-events: none;
-            left: 1em;
             top: 12px;
             transition: 0.2s ease all;
             max-width: calc(100% - 2em);

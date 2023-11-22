@@ -1004,6 +1004,7 @@ RSpec.describe TopicView do
 
   describe "#reviewable_counts" do
     it "exclude posts queued because the category needs approval" do
+      Group.refresh_automatic_groups!
       category =
         Fabricate.create(
           :category,
