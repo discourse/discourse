@@ -690,14 +690,9 @@ class PostRevisor
   end
 
   def update_category_description
-    return unless category = Category.find_by(topic_id: @topic.id)
+    return unless (category = Category.find_by(topic_id: @topic.id))
 
-    doc = Nokogiri::HTML5.fragment(@post.cooked)
-    doc.css("img").remove
-
-    if html = doc.css("p").first&.inner_html&.strip
-      new_description = html unless html.starts_with?(Category.post_template[0..50])
-      category.update_column(:description, new_description)
+    if category.update_category_definition_from_cooked(@post.cooked)
       @category_changed = category
     else
       @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))

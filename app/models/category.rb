@@ -484,9 +484,21 @@ class Category < ActiveRecord::Base
       update_column(:topic_id, t.id)
       post = t.posts.build(raw: description || post_template, user: user)
       post.save!(validate: false)
-      update_column(:description, post.cooked) if description.present?
-
+      update_category_definition_from_cooked(post.cooked) if description.present?
       t
+    end
+  end
+
+  def update_category_definition_from_cooked(cooked)
+    doc = Nokogiri::HTML5.fragment(cooked)
+    doc.css("img").remove
+
+    if (html = doc.css("p").first&.inner_html&.strip)
+      new_description = html unless html.starts_with?(Category.post_template[0..50])
+      update_column(:description, new_description)
+      true
+    else
+      false
     end
   end
 
