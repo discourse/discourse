@@ -4,39 +4,51 @@ module HasCustomFields
   extend ActiveSupport::Concern
 
   module Helpers
-    def self.append_field(target, key, value, types)
+    CUSTOM_FIELD_TRUE ||= %w[1 t true T True TRUE].freeze
+  end
+
+  class FieldDescriptor < Struct.new(:type, :max_length)
+    def append_field(target, key, value)
       if target.has_key?(key)
         target[key] = [target[key]] if !target[key].is_a? Array
-        target[key] << cast_custom_field(key, value, types, _return_array = false)
+        target[key] << deserialize(key, value, false)
       else
-        target[key] = cast_custom_field(key, value, types)
+        target[key] = deserialize(key, value, true)
       end
     end
 
-    CUSTOM_FIELD_TRUE ||= %w[1 t true T True TRUE].freeze
+    def validate(obj, name, value)
+      return if value.nil?
 
-    def self.get_custom_field_type(types, key)
-      return unless types
+      size =
+        if Array === type || (type != :json && Array === value)
+          value.map { |v| serialize(v).bytesize }.max || 0
+        else
+          serialize(value).bytesize
+        end
 
-      types[key]
+      if size > max_length
+        obj.errors.add(
+          :base,
+          I18n.t("custom_fields.validations.max_value_length", max_value_length: max_length),
+        )
+      end
     end
 
-    def self.serialize(value, type)
-      if value.is_a?(Hash) || type == :json
+    def serialize(value)
+      if value.is_a?(Hash) || type == :json || (Array === type && type[0] == :json)
         value.to_json
       elsif TrueClass === value
         "t"
       elsif FalseClass === value
         "f"
-      elsif Integer === value
-        value.to_s
       else
-        value
+        value.to_s
       end
     end
 
-    def self.cast_custom_field(key, value, types, return_array = true)
-      return value unless type = get_custom_field_type(types, key)
+    def deserialize(key, value, return_array)
+      return value unless type = self.type
 
       array = nil
 
@@ -48,7 +60,7 @@ module HasCustomFields
       result =
         case type
         when :boolean
-          !!CUSTOM_FIELD_TRUE.include?(value)
+          !!Helpers::CUSTOM_FIELD_TRUE.include?(value)
         when :integer
           value.to_i
         when :json
@@ -60,7 +72,9 @@ module HasCustomFields
       array ? [result] : result
     end
 
-    def self.parse_json_value(value, key)
+    private
+
+    def parse_json_value(value, key)
       ::JSON.parse(value)
     rescue JSON::ParserError
       Rails.logger.warn(
@@ -70,8 +84,8 @@ module HasCustomFields
     end
   end
 
+  DEFAULT_FIELD_DESCRIPTOR = FieldDescriptor.new(:string, 10_000_000)
   CUSTOM_FIELDS_MAX_ITEMS = 100
-  CUSTOM_FIELDS_MAX_VALUE_LENGTH = 10_000_000
 
   module ClassMethods
     # To avoid n+1 queries, use this function to retrieve lots of custom fields in one go
@@ -97,10 +111,10 @@ module HasCustomFields
     end
 
     def append_custom_field(target, key, value)
-      HasCustomFields::Helpers.append_field(target, key, value, @custom_field_types)
+      get_custom_field_descriptor(key).append_field(target, key, value)
     end
 
-    def register_custom_field_type(name, type)
+    def register_custom_field_type(name, type, max_length: DEFAULT_FIELD_DESCRIPTOR.max_length)
       if Array === type
         Discourse.deprecate(
           "Array types for custom fields are deprecated, use type :json instead",
@@ -108,13 +122,11 @@ module HasCustomFields
         )
       end
 
-      @custom_field_types ||= {}
-      @custom_field_types[name] = type
+      custom_field_meta_data[name] = FieldDescriptor.new(type, max_length)
     end
 
-    def get_custom_field_type(name)
-      @custom_field_types ||= {}
-      @custom_field_types[name] || :string
+    def get_custom_field_descriptor(name)
+      custom_field_meta_data[name] || DEFAULT_FIELD_DESCRIPTOR
     end
 
     def preload_custom_fields(objects, fields)
@@ -142,9 +154,15 @@ module HasCustomFields
 
             preloaded.delete(name) if preloaded[name].nil?
 
-            HasCustomFields::Helpers.append_field(preloaded, name, value, @custom_field_types)
+            get_custom_field_descriptor(name).append_field(preloaded, name, value)
           end
       end
+    end
+
+    private
+
+    def custom_field_meta_data
+      @custom_field_meta_data ||= {}
     end
   end
 
@@ -257,14 +275,15 @@ module HasCustomFields
         (dup.keys.to_set + fields_by_key.keys.to_set).each do |key|
           fields = fields_by_key[key] || []
           value = dup[key]
-          field_type = self.class.get_custom_field_type(key)
+          descriptor = self.class.get_custom_field_descriptor(key)
+          field_type = descriptor.type
 
           if Array === field_type || (field_type != :json && Array === value)
             value = value || []
             value.compact!
             sub_type = field_type[0]
 
-            value.map! { |v| HasCustomFields::Helpers.serialize(v, sub_type) }
+            value.map! { |v| descriptor.serialize(v) }
 
             unless value == fields.map(&:value)
               fields.each(&:destroy!)
@@ -275,7 +294,7 @@ module HasCustomFields
             if value.nil?
               fields.each(&:destroy!)
             else
-              value = HasCustomFields::Helpers.serialize(value, field_type)
+              value = descriptor.serialize(value)
 
               field = fields.find { |f| f.value == value }
               fields.select { |f| f != field }.each(&:destroy!)
@@ -329,13 +348,8 @@ module HasCustomFields
   end
 
   def custom_fields_value_length
-    return if custom_fields.values.all? { _1.to_s.size <= CUSTOM_FIELDS_MAX_VALUE_LENGTH }
-    errors.add(
-      :base,
-      I18n.t(
-        "custom_fields.validations.max_value_length",
-        max_value_length: CUSTOM_FIELDS_MAX_VALUE_LENGTH,
-      ),
-    )
+    custom_fields.each do |name, value|
+      self.class.get_custom_field_descriptor(name).validate(self, name, value)
+    end
   end
 end
