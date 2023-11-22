@@ -65,7 +65,7 @@
     "@types/ember__template": "^4.0.5",
     "@types/ember__test": "^4.0.5",
     "@types/ember__utils": "^4.0.6",
-    "@types/jquery": "^3.5.28",
+    "@types/jquery": "^3.5.29",
     "@types/qunit": "^2.19.9",
     "@types/rsvp": "^4.0.8",
     "@uppy/aws-s3": "3.0.6",
