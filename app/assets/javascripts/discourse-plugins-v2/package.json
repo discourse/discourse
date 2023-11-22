@@ -22,8 +22,7 @@
   },
   "dependencies": {
     "@embroider/addon-shim": "^1.0.0",
-    "ember-auto-import": "^2.6.3",
-    "chat-lite": "*"
+    "ember-auto-import": "^2.6.3"
   },
   "peerDependencies": {
     "discourse-plugin": "*"
@@ -38,6 +37,8 @@
     "@embroider/addon-dev": "^4.1.0",
     "@embroider/macros": "^1.13.3",
     "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "babel-plugin-ember-template-compilation": "^2.2.0",
     "ember-template-imports": "^4.0.0",
     "fs-extra": "^11.1.1",

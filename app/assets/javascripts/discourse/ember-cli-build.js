@@ -77,10 +77,9 @@ module.exports = function (defaults) {
       app: RawHandlebarsCompiler(
         withSideWatch("app", {
           watching: [
-            "../chat-lite",
             "../discourse-markdown-it",
             "../discourse-plugin",
-            "../discourse-plugins-v2",
+            "../discourse-plugins-v2/dist",
           ],
         })
       ),

@@ -12,8 +12,7 @@
   "exports": {
     "./addon-main.js": "./addon-main.cjs",
     "./connectors/extra-header-icons": "./dist/connectors/extra-header-icons.js",
-    "./markdown-features/scramble": "./dist/markdown-features/scramble.js",
-    "./package.json": "./package.json"
+    "./markdown-features/scramble": "./dist/markdown-features/scramble.js"
   },
   "files": [
     "addon-main.cjs",

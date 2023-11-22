@@ -1,11 +1,16 @@
 import { Addon } from "@embroider/addon-dev/rollup";
 import { babel } from "@rollup/plugin-babel";
-import { collectPluginFeatures } from "./lib/collect-plugin-features.cjs";
+import commonjs from "@rollup/plugin-commonjs";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import { resolve } from "path";
+import { compilePluginFeatures } from "./lib/compile-plugin-features.cjs";
 
 const addon = new Addon({
   srcDir: "src",
   destDir: "dist",
 });
+
+const PluginsV2 = resolve("../../../../plugins-v2");
 
 export default {
   // This provides defaults that work well alongside `publicEntrypoints` below.
@@ -13,7 +18,19 @@ export default {
   output: addon.output(),
 
   plugins: [
-    collectPluginFeatures({
+    // Follow the V2 Addon rules about dependencies. Your code can import from
+    // `dependencies` and `peerDependencies` as well as standard Ember-provided
+    // package names.
+    addon.dependencies(),
+
+    nodeResolve({
+      modulePaths: [PluginsV2],
+      jail: PluginsV2,
+    }),
+
+    commonjs(),
+
+    compilePluginFeatures(PluginsV2, {
       connectors: ["extra-header-icons"],
       markdownFeatures: true,
     }),
@@ -27,11 +44,6 @@ export default {
     // See https://github.com/embroider-build/embroider/blob/main/docs/v2-faq.md#how-can-i-define-the-public-exports-of-my-addon
     addon.publicEntrypoints(["**/*.js"]),
 
-    // Follow the V2 Addon rules about dependencies. Your code can import from
-    // `dependencies` and `peerDependencies` as well as standard Ember-provided
-    // package names.
-    addon.dependencies(),
-
     // This babel config should *not* apply presets or compile away ES modules.
     // It exists only to provide development niceties for you, like automatic
     // template colocation.
@@ -42,16 +54,6 @@ export default {
       extensions: [".js", ".gjs"],
       babelHelpers: "bundled",
     }),
-
-    // Ensure that standalone .hbs files are properly integrated as Javascript.
-    addon.hbs(),
-
-    // Ensure that .gjs files are properly integrated as Javascript
-    addon.gjs(),
-
-    // addons are allowed to contain imports of .css files, which we want rollup
-    // to leave alone and keep in the published output.
-    addon.keepAssets(["**/*.css"]),
 
     // Remove leftover build artifacts when starting a new build.
     addon.clean(),
