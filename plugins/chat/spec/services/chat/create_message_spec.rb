@@ -43,7 +43,6 @@ RSpec.describe Chat::CreateMessage do
       end
 
       it "cooks the message" do
-        Jobs.run_immediately!
         expect(message).to be_cooked
       end
 
