@@ -78,6 +78,10 @@ def migrate_databases(parallel: false, load_plugins: false)
   success
 end
 
+def system_tests_parallel_tests_processors_env
+  "PARALLEL_TEST_PROCESSORS=#{Etc.nprocessors / 2}"
+end
+
 # Environment Variables (specific to this rake task)
 desc "Setups up the test environment"
 task "docker:test:setup" do
@@ -214,6 +218,8 @@ task "docker:test" do
         )
 
       unless ENV["JS_ONLY"]
+        @good &&= run_or_fail("bin/ember-cli --build") if ENV["RUN_SYSTEM_TESTS"]
+
         if ENV["WARMUP_TMP_FOLDER"]
           run_or_fail("bundle exec rspec ./spec/requests/groups_controller_spec.rb")
         end
@@ -236,14 +242,21 @@ task "docker:test" do
           end
 
           if ENV["RUN_SYSTEM_TESTS"]
-            @good &&= run_or_fail("bin/ember-cli --build")
-            @good &&= run_or_fail("timeout --verbose 1800 bundle exec rspec spec/system")
+            @good &&=
+              if ENV["USE_TURBO"]
+                run_or_fail(
+                  "#{system_tests_parallel_tests_processors_env} timeout --verbose 1800 bundle exec ./bin/turbo_rspec spec/system",
+                )
+              else
+                run_or_fail("timeout --verbose 1800 bundle exec rspec spec/system")
+              end
           end
         end
 
         unless ENV["SKIP_PLUGINS"]
           if ENV["SINGLE_PLUGIN"]
             @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
+
             if ENV["RUN_SYSTEM_TESTS"]
               @good &&=
                 run_or_fail(
@@ -254,11 +267,18 @@ task "docker:test" do
             fail_fast = "RSPEC_FAILFAST=1" unless ENV["SKIP_FAILFAST"]
             task = ENV["USE_TURBO"] ? "plugin:turbo_spec" : "plugin:spec"
             @good &&= run_or_fail("#{fail_fast} bundle exec rake #{task}")
+
             if ENV["RUN_SYSTEM_TESTS"]
               @good &&=
-                run_or_fail(
-                  "LOAD_PLUGINS=1 timeout --verbose 1600 bundle exec rspec plugins/*/spec/system".strip,
-                )
+                if ENV["USE_TURBO"]
+                  run_or_fail(
+                    "LOAD_PLUGINS=1 #{system_tests_parallel_tests_processors_env} timeout --verbose 1600 bundle exec ./bin/turbo_rspec plugins/*/spec/system",
+                  )
+                else
+                  run_or_fail(
+                    "LOAD_PLUGINS=1 timeout --verbose 1600 bundle exec rspec plugins/*/spec/system",
+                  )
+                end
             end
           end
         end
