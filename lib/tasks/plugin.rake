@@ -65,22 +65,8 @@ task "plugin:install", :repo do |t, args|
   end
 end
 
-desc "update all plugins"
-task "plugin:update_all" do |t|
-  # Loop through each directory
-  plugins = Dir.glob(File.expand_path("plugins/*")).select { |f| File.directory? f }
-  # run plugin:update
-  plugins.each do |plugin|
-    next unless File.directory?(plugin + "/.git")
-    Rake::Task["plugin:update"].invoke(plugin)
-    Rake::Task["plugin:update"].reenable
-  end
-  Rake::Task["plugin:versions"].invoke
-end
-
-desc "update a plugin"
-task "plugin:update", :plugin do |t, args|
-  plugin = ENV["PLUGIN"] || ENV["plugin"] || args[:plugin]
+def update_plugin(plugin)
+  plugin = ENV["PLUGIN"] || ENV["plugin"] || plugin
   plugin_path = plugin
   plugin = File.basename(plugin)
 
@@ -112,8 +98,28 @@ task "plugin:update", :plugin do |t, args|
     `git -C '#{plugin_path}' branch -u origin/main main`
   end
 
-  update_status = system("git -C '#{plugin_path}' pull --no-rebase")
+  update_status = system("git -C '#{plugin_path}' pull --quiet --no-rebase")
   abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
+end
+
+desc "update all plugins"
+task "plugin:update_all" do |t|
+  # Loop through each directory
+  plugins =
+    Dir
+      .glob(File.expand_path("plugins/*"))
+      .select { |f| File.directory?(f) && File.directory?("#{f}/.git") }
+
+  # run plugin:update
+  promises = plugins.map { |plugin| Concurrent::Promise.execute { update_plugin(plugin) } }
+  Concurrent::Promise.zip(*promises).value!
+
+  Rake::Task["plugin:versions"].invoke
+end
+
+desc "update a plugin"
+task "plugin:update", :plugin do |t, args|
+  update_plugin(args[:plugin])
 end
 
 desc "pull compatible plugin versions for all plugins"
