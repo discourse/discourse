@@ -8,14 +8,18 @@ task "plugin:install_all_official" do
 
   STDERR.puts "Allowing write to all repos!" if ENV["GIT_WRITE"]
 
+  promises = []
+  failures = []
+
   Plugin::Metadata::OFFICIAL_PLUGINS.each do |name|
     next if skip.include? name
+
     repo = "https://github.com/discourse/#{name}"
     dir = repo.split("/").last
     path = File.expand_path("plugins/" + dir)
 
     if Dir.exist? path
-      STDERR.puts "Skipping #{dir} cause it already exists!"
+      STDOUT.puts "Skipping #{dir} cause it already exists!"
       next
     end
 
@@ -24,16 +28,26 @@ task "plugin:install_all_official" do
       repo += ".git"
     end
 
-    attempts = 0
-    begin
-      attempts += 1
-      system("git clone #{repo} #{path}", exception: true)
-    rescue StandardError
-      abort("Failed to clone #{repo}") if attempts >= 3
-      STDERR.puts "Failed to clone #{repo}... trying again..."
-      retry
+    Concurrent::Promise.execute do
+      attempts = 0
+      begin
+        attempts += 1
+        STDOUT.puts("Cloning '#{repo}' to '#{path}'...")
+        system("git clone --quiet #{repo} #{path}", exception: true)
+      rescue StandardError
+        if attempts >= 3
+          failures << repo
+          abort
+        end
+
+        STDOUT.puts "Failed to clone #{repo}... trying again..."
+        retry
+      end
     end
   end
+
+  Concurrent::Promise.zip(*promises).value!
+  failures.each { |repo| STDOUT.puts "Failed to clone #{repo}" } if failures.present?
 end
 
 desc "install plugin"
