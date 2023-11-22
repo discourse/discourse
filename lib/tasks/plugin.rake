@@ -42,7 +42,6 @@ task "plugin:install_all_official" do
       attempts += 1
       retry
     end
-    end
   end
 
   Concurrent::Promise.zip(*promises).value!
