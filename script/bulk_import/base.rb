@@ -546,6 +546,8 @@ class BulkImport::Base
     updated_at
   ]
 
+  CATEGORY_CUSTOM_FIELD_COLUMNS ||= %i[category_id name value created_at updated_at]
+
   CATEGORY_GROUP_COLUMNS ||= %i[id category_id group_id permission_type created_at updated_at]
 
   CATEGORY_TAG_GROUP_COLUMNS ||= %i[category_id tag_group_id created_at updated_at]
@@ -813,6 +815,10 @@ class BulkImport::Base
 
   def create_categories(rows, &block)
     create_records(rows, "category", CATEGORY_COLUMNS, &block)
+  end
+
+  def create_category_custom_fields(rows, &block)
+    create_records(rows, "category_custom_field", CATEGORY_CUSTOM_FIELD_COLUMNS, &block)
   end
 
   def create_category_groups(rows, &block)
@@ -1137,6 +1143,12 @@ class BulkImport::Base
     end
 
     category
+  end
+
+  def process_category_custom_field(field)
+    field[:created_at] ||= NOW
+    field[:updated_at] ||= NOW
+    field
   end
 
   def process_category_group(category_group)

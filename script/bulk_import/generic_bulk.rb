@@ -38,6 +38,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
+    enable_required_plugins
     import_site_settings
 
     import_uploads
@@ -68,6 +69,7 @@ class BulkImport::Generic < BulkImport::Base
     import_tag_users
 
     import_categories
+    import_category_custom_fields
     import_category_tag_groups
     import_category_permissions
 
@@ -98,7 +100,6 @@ class BulkImport::Generic < BulkImport::Base
     update_topic_users
 
     import_user_stats
-    enable_category_settings
 
     import_permalink_normalizations
     import_permalinks
@@ -109,6 +110,32 @@ class BulkImport::Generic < BulkImport::Base
 
     @source_db.close
     @uploads_db.close if @uploads_db
+  end
+
+  def enable_required_plugins
+    puts "", "Enabling required plugins..."
+
+    required_plugin_names = @source_db.get_first_value(<<~SQL)&.then(&JSON.method(:parse))
+      SELECT value
+        FROM config
+       WHERE name = 'enable_required_plugins'
+    SQL
+
+    return if required_plugin_names.blank?
+
+    plugins_by_name = Discourse.plugins_by_name
+
+    required_plugin_names.each do |plugin_name|
+      if (plugin = plugins_by_name[plugin_name])
+        if !plugin.enabled? && plugin.configurable?
+          SiteSetting.set(plugin.enabled_site_setting, true)
+        end
+        puts "  #{plugin_name} plugin enabled"
+      else
+        puts "  ERROR: The #{plugin_name} plugin is required, but not installed."
+        exit 1
+      end
+    end
   end
 
   def import_site_settings
@@ -212,6 +239,25 @@ class BulkImport::Generic < BulkImport::Base
     categories.close
 
     puts "  Creating took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def import_category_custom_fields
+    puts "", "Importing category custom fields..."
+
+    category_custom_fields = query(<<~SQL)
+      SELECT *
+      FROM category_custom_fields
+      ORDER BY category_id, name
+    SQL
+
+    create_category_custom_fields(category_custom_fields) do |row|
+      category_id = category_id_from_imported_id(row["category_id"])
+      next if category_id.nil?
+
+      { category_id: category_id, name: row["name"], value: row["value"] }
+    end
+
+    category_custom_fields.close
   end
 
   def import_category_tag_groups
@@ -1933,26 +1979,6 @@ class BulkImport::Generic < BulkImport::Base
         FROM grants
        WHERE badges.id = grants.badge_id
          AND badges.grant_count <> grants.grant_count
-    SQL
-
-    puts "  Update took #{(Time.now - start_time).to_i} seconds."
-  end
-
-  def enable_category_settings
-    puts "", "Updating category settings..."
-
-    start_time = Time.now
-
-    DB.exec(<<~SQL)
-      INSERT INTO category_custom_fields (category_id, name, value, created_at, updated_at)
-      SELECT c.id, s.name, s.value, NOW(), NOW()
-        FROM categories c,
-             (
-               VALUES ('create_as_post_voting_default', 'true'), ('enable_accepted_answers', 'true')
-             ) AS s (name, value)
-       WHERE NOT EXISTS (
-                          SELECT 1 FROM category_custom_fields x WHERE x.category_id = c.id AND x.name = s.name
-                        )
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
