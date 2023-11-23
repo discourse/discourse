@@ -141,7 +141,7 @@ module Chat
 
             buffer.clear
 
-            if message_chunk.size > ARCHIVED_MESSAGES_PER_POST
+            if message_chunk.size > ARCHIVED_MESSAGES_PER_POST && !threads.empty?
               post_last_message = message_chunk[ARCHIVED_MESSAGES_PER_POST - 1]
 
               thread = threads.select { |msg| msg.thread_id == post_last_message.thread_id }
