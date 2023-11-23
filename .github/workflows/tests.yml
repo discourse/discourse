@@ -333,7 +333,7 @@ jobs:
 
       - name: Upgrade Ember
         if: matrix.updated_ember == true
-        run: script/switch_ember_version.rb 5  
+        run: script/switch_ember_version 5
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse

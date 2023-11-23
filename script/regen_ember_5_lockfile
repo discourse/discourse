@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+
+system("#{__dir__}/switch_ember_version", "5")
+
+# rubocop:disable Discourse/NoChdir
+Dir.chdir("#{__dir__}/../app/assets/javascripts") do
+  FileUtils.rm("yarn-ember5.lock")
+  FileUtils.cp("yarn-ember3.lock", "yarn-ember5.lock")
+  exec "yarn install"
+end
