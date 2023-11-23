@@ -343,21 +343,6 @@
   }
 }
 
-.discourse-local-dates-create-modal .modal-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-
-  &:before,
-  &:after {
-    content: none;
-  }
-
-  .advanced-mode-btn {
-    margin-left: auto;
-  }
-}
-
 .d-modal.discourse-local-dates-create-modal {
   .advanced-mode-btn {
     margin-left: auto;
