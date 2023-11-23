@@ -36,8 +36,18 @@ const chatTranscriptRule = {
       let metaDivToken = state.push("div_chat_transcript_meta", "div", 1);
       metaDivToken.attrs = [["class", "chat-transcript-meta"]];
       const channelToken = state.push("html_inline", "", 0);
+
+      const unescapedChannelName = performEmojiUnescape(channelName, {
+        getURL: options.getURL,
+        emojiSet: options.emojiSet,
+        emojiCDNUrl: options.emojiCDNUrl,
+        enableEmojiShortcuts: options.enableEmojiShortcuts,
+        inlineEmoji: options.inlineEmoji,
+        lazy: true,
+      });
+
       channelToken.content = I18n.t("chat.quote.original_channel", {
-        channel: channelName,
+        channel: unescapedChannelName,
         channelLink,
       });
       state.push("div_chat_transcript_meta", "div", -1);
@@ -55,8 +65,17 @@ const chatTranscriptRule = {
       threadTitleSpanToken.attrs = [["class", "chat-transcript-thread-title"]];
       const threadToken = state.push("html_inline", "", 0);
 
-      threadToken.content = threadTitle
-        ? threadTitle
+      const unescapedThreadTitle = performEmojiUnescape(threadTitle, {
+        getURL: options.getURL,
+        emojiSet: options.emojiSet,
+        emojiCDNUrl: options.emojiCDNUrl,
+        enableEmojiShortcuts: options.enableEmojiShortcuts,
+        inlineEmoji: options.inlineEmoji,
+        lazy: true,
+      });
+
+      threadToken.content = unescapedThreadTitle
+        ? unescapedThreadTitle
         : I18n.t("chat.quote.default_thread_title");
       state.push("span_thread_title_close", "span", -1);
     }

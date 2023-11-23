@@ -27,6 +27,11 @@
     border-bottom: 1px solid var(--primary-low);
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
+
+    img.emoji {
+      height: 1.1em;
+      width: 1.1em;
+    }
   }
 
   .chat-transcript-channel,
