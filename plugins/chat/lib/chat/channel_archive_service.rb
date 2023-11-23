@@ -109,8 +109,6 @@ module Chat
         # bar or something similar.
 
         def create_post_from_batch(chat_messages, split_thread_ranges)
-          # puts "split_thread_ranges"
-          # puts split_thread_ranges
           create_post(
             Chat::TranscriptService.new(
               chat_channel,
@@ -147,38 +145,39 @@ module Chat
 
               thread = threads.select { |msg| msg.thread_id == post_last_message.thread_id }
               thread_om = thread.first
-              next if thread_om.nil?
+              if !thread_om.nil?
+                thread_size = thread.size - 1
+                last_thread_index = 0
 
-              thread_size = thread.size - 1
-              last_thread_index = 0
-
-              (messages_chunk.size / ARCHIVED_MESSAGES_PER_POST + 1).times do |index|
-                if last_thread_index != thread_size
-                  if index == 0
-                    thread_index = thread.index(post_last_message)
-                  else
-                    mext_post_last_message =
-                      messages_chunk[(ARCHIVED_MESSAGES_PER_POST * (index + 1)) - 1]
-                    if mext_post_last_message.present? &&
-                         mext_post_last_message.thread_id.present? &&
-                         mext_post_last_message.thread_id == post_last_message.thread_id
-                      thread_index = last_thread_index + ARCHIVED_MESSAGES_PER_POST - 1
+                (messages_chunk.size / ARCHIVED_MESSAGES_PER_POST + 1).times do |index|
+                  if last_thread_index != thread_size
+                    if index == 0
+                      thread_index = thread.index(post_last_message)
                     else
-                      thread_index = thread_size
+                      next_post_last_message =
+                        messages_chunk[(ARCHIVED_MESSAGES_PER_POST * (index + 1)) - 1]
+
+                      if next_post_last_message.present? &&
+                           next_post_last_message.thread_id.present? &&
+                           next_post_last_message.thread_id == post_last_message.thread_id
+                        thread_index = last_thread_index + ARCHIVED_MESSAGES_PER_POST - 1
+                      else
+                        thread_index = thread_size
+                      end
                     end
+
+                    range =
+                      I18n.t(
+                        "chat.transcript.split_thread_range",
+                        start: last_thread_index + 1,
+                        end: thread_index,
+                        total: thread_size,
+                      )
+
+                    split_thread_ranges[thread_om.thread_id] ||= []
+                    split_thread_ranges[thread_om.thread_id] << range
+                    last_thread_index = thread_index
                   end
-
-                  range =
-                    I18n.t(
-                      "chat.transcript.split_thread_range",
-                      start: last_thread_index + 1,
-                      end: thread_index,
-                      total: thread_size,
-                    )
-
-                  split_thread_ranges[thread_om.thread_id] ||= []
-                  split_thread_ranges[thread_om.thread_id] << range
-                  last_thread_index = thread_index
                 end
               end
             end
@@ -202,11 +201,16 @@ module Chat
                 range_added = true
               end
 
-              batch << message
-              if batch.size >= ARCHIVED_MESSAGES_PER_POST
+              if message == thread_om && batch.size + 1 >= ARCHIVED_MESSAGES_PER_POST
+                batch_size = batch.size + 1
+              else
+                batch << message
+                batch_size = batch.size
+              end
+
+              if batch_size >= ARCHIVED_MESSAGES_PER_POST
                 create_post_from_batch(batch, thread_ranges)
                 batch.clear
-                thread_ranges = {}
               end
             end
 
