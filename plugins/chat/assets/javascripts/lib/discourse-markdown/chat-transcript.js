@@ -57,14 +57,35 @@ const chatTranscriptRule = {
       state.push("details_chat_transcript_wrap_open", "details", 1);
       state.push("summary_chat_transcript_open", "summary", 1);
 
-      let threadTitleSpanToken = state.push(
+      const threadToken = state.push("div_thread_open", "div", 1);
+      threadToken.attrs = [["class", "chat-transcript-thread"]];
+
+      const threadHeaderToken = state.push("div_thread_header_open", "div", 1);
+      threadHeaderToken.attrs = [["class", "chat-transcript-thread-header"]];
+
+      const thread_svg = state.push("svg_thread_header_open", "svg", 1);
+      thread_svg.block = false;
+      thread_svg.attrs = [
+        ["class", "fa d-icon d-icon-discourse-threads svg-icon svg-node"],
+      ];
+      state.push(thread_svg);
+      let thread_use = state.push("use_svg_thread_open", "use", 1);
+      thread_use.block = false;
+      thread_use.attrs = [["href", "#discourse-threads"]];
+      state.push(thread_use);
+      state.push(state.push("use_svg_thread_close", "use", -1));
+      state.push(state.push("svg_thread_header_close", "svg", -1));
+
+      const threadTitleContainerToken = state.push(
         "span_thread_title_open",
         "span",
         1
       );
-      threadTitleSpanToken.attrs = [["class", "chat-transcript-thread-title"]];
-      const threadToken = state.push("html_inline", "", 0);
+      threadTitleContainerToken.attrs = [
+        ["class", "chat-transcript-thread-header__title"],
+      ];
 
+      const threadTitleToken = state.push("html_inline", "", 0);
       const unescapedThreadTitle = performEmojiUnescape(threadTitle, {
         getURL: options.getURL,
         emojiSet: options.emojiSet,
@@ -73,11 +94,13 @@ const chatTranscriptRule = {
         inlineEmoji: options.inlineEmoji,
         lazy: true,
       });
-
-      threadToken.content = unescapedThreadTitle
+      threadTitleToken.content = unescapedThreadTitle
         ? unescapedThreadTitle
         : I18n.t("chat.quote.default_thread_title");
+
       state.push("span_thread_title_close", "span", -1);
+
+      state.push("div_thread_header_close", "div", -1);
     }
 
     let wrapperClasses = ["chat-transcript"];
@@ -215,6 +238,7 @@ const chatTranscriptRule = {
           content.substring(0, match.index)
         );
         state.push("html_raw", "", -1);
+        state.push("div_thread_close", "div", -1);
         state.push("summary_chat_transcript_close", "summary", -1);
         const token = state.push("html_raw", "", 1);
 
@@ -273,6 +297,8 @@ const chatTranscriptRule = {
 
 export function setup(helper) {
   helper.allowList([
+    "svg[class=fa d-icon d-icon-discourse-threads svg-icon svg-node]",
+    "use[href=#discourse-threads]",
     "div[class=chat-transcript]",
     "details[class=chat-transcript]",
     "div[class=chat-transcript chat-transcript-chained]",
@@ -292,7 +318,9 @@ export function setup(helper) {
     "div[data-username]",
     "div[data-datetime]",
     "a.chat-transcript-channel",
-    "span.chat-transcript-thread-title",
+    "div.chat-transcript-thread",
+    "div.chat-transcript-thread-header",
+    "span.chat-transcript-thread-header__title",
   ]);
 
   helper.registerOptions((opts, siteSettings) => {

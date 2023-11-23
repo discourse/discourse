@@ -34,11 +34,6 @@
     }
   }
 
-  .chat-transcript-channel,
-  .chat-transcript-thread {
-    font-size: var(--font-down-1-rem);
-  }
-
   .chat-transcript-separator {
     font-size: var(--font-down-3-rem);
     color: var(--primary-high);
@@ -70,8 +65,18 @@
     }
   }
 
-  summary > .chat-transcript-user {
-    margin-top: 0.5rem;
+  .topic-body .cooked & {
+    > details {
+      padding: 0.5rem;
+
+      > summary {
+        .chat-transcript-thread {
+          &-header {
+            margin-bottom: 0.5rem;
+          }
+        }
+      }
+    }
   }
 
   .chat-transcript-user-avatar .avatar {
