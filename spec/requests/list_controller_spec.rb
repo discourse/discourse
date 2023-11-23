@@ -239,9 +239,9 @@ RSpec.describe ListController do
         expect(response.parsed_body["topic_list"]["topics"].length).to eq(1)
         expect(response.parsed_body["topic_list"]["topics"][0]["id"]).to eq(topic.id)
         expect(response.parsed_body["topic_list"]["categories"].length).to eq(2)
-        expect(
-          response.parsed_body["topic_list"]["categories"].map { |c| c["id"] },
-        ).to contain_exactly(category.id, subcategory.id)
+        expect(response.parsed_body["topic_list"]["categories"].map { |c| c["id"] }).to eq(
+          [category.id, subcategory.id],
+        )
       end
 
       it "does not return categories if not true" do

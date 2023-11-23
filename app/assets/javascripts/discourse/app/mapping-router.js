@@ -5,7 +5,7 @@ import getURL from "discourse-common/lib/get-url";
 import applyRouterHomepageOverrides from "./lib/homepage-router-overrides";
 
 class BareRouter extends EmberRouter {
-  location = isTesting() ? "none" : "discourse-location";
+  location = isTesting() ? "none" : "history";
 
   setupRouter() {
     const didSetup = super.setupRouter(...arguments);

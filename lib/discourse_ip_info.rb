@@ -11,8 +11,10 @@ class DiscourseIpInfo
   end
 
   def open_db(path)
-    @loc_mmdb = mmdb_load(File.join(path, "GeoLite2-City.mmdb"))
-    @asn_mmdb = mmdb_load(File.join(path, "GeoLite2-ASN.mmdb"))
+    unless GlobalSetting.maxmind_license_key.blank?
+      @loc_mmdb = mmdb_load(File.join(path, "GeoLite2-City.mmdb"))
+      @asn_mmdb = mmdb_load(File.join(path, "GeoLite2-ASN.mmdb"))
+    end
     @cache = LruRedux::ThreadSafeCache.new(2000)
   end
 
@@ -105,6 +107,8 @@ class DiscourseIpInfo
           message: "IP #{ip} could not be looked up in MaxMind GeoLite2-City database.",
         )
       end
+    else
+      ret[:no_license] = true
     end
 
     if @asn_mmdb

@@ -31,7 +31,15 @@
 
         <dt>{{i18n "ip_lookup.location"}}</dt>
         <dd>
-          {{#if this.location.location}}
+          {{#if this.location.no_license}}
+            <a
+              href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {{i18n "ip_lookup.no_license"}}
+            </a>
+          {{else if this.location.location}}
             <a
               href="https://maps.google.com/maps?q={{this.location.latitude}},{{this.location.longitude}}"
               rel="noopener noreferrer"
