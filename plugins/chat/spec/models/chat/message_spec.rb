@@ -68,7 +68,7 @@ describe Chat::Message do
       RAW
 
       expect(cooked).to eq(<<~COOKED.chomp)
-      <pre><code class="lang-ruby">Widget.triangulate(argument: "no u")
+      <pre data-code-wrap="ruby"><code class="lang-ruby">Widget.triangulate(argument: "no u")
       </code></pre>
       COOKED
     end

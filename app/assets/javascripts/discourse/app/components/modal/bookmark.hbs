@@ -62,7 +62,7 @@
         <TimeShortcutPicker
           @timeShortcuts={{this.timeOptions}}
           @prefilledDatetime={{this.prefilledDatetime}}
-          @onTimeSelected={{action "onTimeSelected"}}
+          @onTimeSelected={{this.onTimeSelected}}
           @hiddenOptions={{this.hiddenTimeShortcutOptions}}
           @customLabels={{this.customTimeShortcutLabels}}
           @_itsatrap={{this._itsatrap}}
@@ -82,7 +82,7 @@
       id="save-bookmark"
       class="btn-primary"
     />
-    <DModalCancel @close={{action "closeWithoutSavingBookmark"}} />
+    <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
     {{#if this.showDelete}}
       <DButton
         @icon="trash-alt"

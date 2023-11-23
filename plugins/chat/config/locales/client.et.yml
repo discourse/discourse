@@ -59,6 +59,8 @@ et:
         tabs:
           members: Liikmed
           settings: Sätted
+      new_message_modal:
+        filter: "Filter"
       direct_message_creator:
         title: Uus sõnum
         prefix: "Kellele:"

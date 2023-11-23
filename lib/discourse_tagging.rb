@@ -724,8 +724,8 @@ module DiscourseTagging
     tag.strip!
     tag.gsub!(/[[:space:]]+/, "-")
     tag.gsub!(/[^[:word:][:punct:]]+/, "")
-    tag.squeeze!("-")
     tag.gsub!(TAGS_FILTER_REGEXP, "")
+    tag.squeeze!("-")
     tag[0...SiteSetting.max_tag_length]
   end
 

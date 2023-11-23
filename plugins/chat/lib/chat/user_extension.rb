@@ -13,6 +13,8 @@ module Chat
                dependent: :destroy
       has_many :chat_message_reactions, class_name: "Chat::MessageReaction", dependent: :destroy
       has_many :chat_mentions, class_name: "Chat::Mention"
+      has_many :direct_message_users, class_name: "Chat::DirectMessageUser"
+      has_many :direct_messages, through: :direct_message_users, class_name: "Chat::DirectMessage"
     end
   end
 end

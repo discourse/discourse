@@ -27,8 +27,6 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    get "/bootstrap" => "bootstrap#index"
-
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
     end
@@ -1584,6 +1582,16 @@ Discourse::Application.routes.draw do
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
     get "/theme-qunit" => "qunit#theme"
+
+    # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
+    # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
+    # handle it here.
+    if Rails.env.development?
+      get "/testem-theme-qunit/:testem_id/theme-qunit" => "qunit#theme",
+          :constraints => {
+            testem_id: /\d+/,
+          }
+    end
 
     post "/push_notifications/subscribe" => "push_notification#subscribe"
     post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"

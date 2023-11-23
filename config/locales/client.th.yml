@@ -847,8 +847,6 @@ th:
       second_factor_backup:
         disable: "ปิดใช้งาน"
       second_factor:
-        forgot_password: "ลืมรหัสผ่านใช่ไหม"
-        confirm_password_description: "กรุณายืนยันรหัสผ่านเพื่อดำเนินการต่อ"
         name: "ชื่อ"
         disable: "ปิดใช้งาน"
         delete: "ลบ"
@@ -921,14 +919,13 @@ th:
         confirm_modal_title: "เชื่อมต่อ%{provider}บัญชี"
       name:
         title: "ชื่อ"
-        instructions: "ชื่อเต็มของคุณ (ไม่บังคับ)"
-        instructions_required: "ชื่อเต็มของคุณ"
+        instructions: "ชื่อเต็มของคุณ (ไม่บังคับ)."
+        instructions_required: "ชื่อเต็มของคุณ."
         required: "กรุณากรอกชื่อ"
         too_short: "ชื่อของคุณสั้นไป"
         ok: "ชื่อของคุณเหมาะสม"
       username:
         title: "ชื่อผู้ใช้"
-        instructions: "ไม่เหมือนใคร, ไม่มีช่องว่าง, สั้น"
         short_instructions: "ผู้คนสามารถกล่าวถึงคุณโดย @%{username}"
         available: "ชื่อผู้ใช้ของคุณสามารถใช้ได้"
         not_available: "ใช้งานไม่ได้ กรุณาลอง%{suggestion}"
@@ -1063,7 +1060,7 @@ th:
         same_as_username: "รหัสผ่านเหมือนกับชื่อผู้ใช้ของคุณ"
         same_as_email: "รหัสผ่านเหมือนกับอีเมลของคุณ"
         ok: "รหัสผ่านของคุณเหมาะสม"
-        instructions: "อย่างน้อย %{count} ตัวอักษร"
+        instructions: "อย่างน้อย %{count} ตัวอักษร."
         required: "กรุณากรอกรหัสผ่าน"
       summary:
         title: "สรุปภาพรวม"
@@ -1461,6 +1458,7 @@ th:
         private_message: '%{username}ได้ส่งข้อความส่วนตัวไปหาคุณใน "%{topic}"-%{site_title}'
         linked: '%{username} ลิงค์โพสของคุณจาก "%{topic}" - %{site_title}'
         watching_first_post: '%{username}ได้สร้างกระทู้ใหม่ "%{topic}"-%{site_title}'
+        watching_category_or_tag: '%{username} โพสท์ใน "%{topic}" - %{site_title}'
         confirm_title: "เปิดการแจ้งเตือนแล้ว - %{site_title}"
         confirm_body: "สำเร็จแล้ว! การแจ้งเตือนถูกเปิดใช้งาน"
         custom: "การแจ้งเตือนจาก %{username} บน %{site_title}"
@@ -2475,8 +2473,7 @@ th:
         installed_version: "ติดตั้งแล้ว"
         latest_version: "ล่าสุด"
         new_features:
-          dismiss: "ซ่อน"
-          learn_more: "เรียนรู้เพิ่มเติม"
+          learn_more: "เรียนรู้เพิ่มเติม..."
         last_checked: "ตรวจล่าสุด"
         refresh_problems: "รีเฟรช"
         no_problems: "ไม่พบปัญหา"
@@ -2606,6 +2603,7 @@ th:
         is_enabled: "Y"
         not_enabled: "N"
         change_settings_short: "การตั้งค่า"
+        author: "โดย %{author}"
       backups:
         title: "สำรอง"
         menu:

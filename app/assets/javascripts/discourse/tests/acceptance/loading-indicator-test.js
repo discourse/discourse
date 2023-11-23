@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import {
   currentRouteName,
   getSettledState,
@@ -9,6 +10,9 @@ import { test } from "qunit";
 import AboutFixtures from "discourse/tests/fixtures/about";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+
+const SPINNER_SELECTOR =
+  "#main-outlet-wrapper .route-loading-spinner div.spinner";
 
 // Like settled(), but ignores timers, transitions and network requests
 function isMostlySettled() {
@@ -53,15 +57,15 @@ acceptance("Page Loading Indicator", function (needs) {
     const aboutRequest = await pendingRequest;
     await mostlySettled();
 
-    assert.strictEqual(currentRouteName(), "about_loading");
-    assert.dom("#main-outlet > div.spinner").exists();
+    assert.strictEqual(currentRouteName(), "discovery.latest");
+    assert.dom(SPINNER_SELECTOR).exists();
     assert.dom(".loading-indicator-container").doesNotExist();
 
     pretender.resolve(aboutRequest);
     await settled();
 
     assert.strictEqual(currentRouteName(), "about");
-    assert.dom("#main-outlet > div.spinner").doesNotExist();
+    assert.dom(SPINNER_SELECTOR).doesNotExist();
     assert.dom("#main-outlet section.about").exists();
   });
 
@@ -79,7 +83,7 @@ acceptance("Page Loading Indicator", function (needs) {
     await mostlySettled();
 
     assert.strictEqual(currentRouteName(), "discovery.latest");
-    assert.dom("#main-outlet > div.spinner").doesNotExist();
+    assert.dom(SPINNER_SELECTOR).doesNotExist();
 
     await waitUntil(() =>
       query(".loading-indicator-container").classList.contains("loading")
@@ -95,5 +99,20 @@ acceptance("Page Loading Indicator", function (needs) {
 
     assert.strictEqual(currentRouteName(), "about");
     assert.dom("#main-outlet section.about").exists();
+  });
+
+  test("it only performs one slide during nested loading events", async function (assert) {
+    this.siteSettings.page_loading_indicator = "slider";
+
+    await visit("/");
+
+    const service = getOwner(this).lookup("service:loading-slider");
+    service.on("stateChanged", (loading) => {
+      assert.step(`loading: ${loading}`);
+    });
+
+    await visit("/u/eviltrout/activity");
+
+    assert.verifySteps(["loading: true", "loading: false"]);
   });
 });

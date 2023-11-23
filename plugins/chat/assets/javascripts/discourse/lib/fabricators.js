@@ -52,21 +52,29 @@ function messageFabricator(args = {}) {
 
 function channelFabricator(args = {}) {
   const id = args.id || sequence++;
+  const chatable = args.chatable || categoryFabricator();
 
   const channel = ChatChannel.create({
     id,
     chatable_type:
-      args.chatable?.type ||
-      args.chatable_type ||
-      CHATABLE_TYPES.categoryChannel,
-    chatable_id: args.chatable?.id || args.chatable_id,
-    title: args.title || "General",
+      (chatable instanceof Category
+        ? CHATABLE_TYPES.categoryChannel
+        : CHATABLE_TYPES.directMessageChannel) ||
+      chatable?.type ||
+      args.chatable_type,
+    chatable_id: chatable?.id || args.chatable_id,
+    title: args.title
+      ? args.title
+      : chatable instanceof Category
+      ? "General"
+      : null,
     description: args.description,
-    chatable: args.chatable || categoryFabricator(),
+    chatable,
     status: args.status || CHANNEL_STATUSES.open,
-    slug: args.chatable?.slug || "general",
+    slug: chatable?.slug || chatable instanceof Category ? "general" : null,
     meta: Object.assign({ can_delete_self: true }, args.meta || {}),
     archive_failed: args.archive_failed ?? false,
+    memberships_count: args.memberships_count ?? 0,
   });
 
   channel.lastMessage = messageFabricator({ channel });
@@ -78,7 +86,7 @@ function categoryFabricator(args = {}) {
   return Category.create({
     id: args.id || sequence++,
     color: args.color || "D56353",
-    read_restricted: false,
+    read_restricted: args.read_restricted ?? false,
     name: args.name || "General",
     slug: args.slug || "general",
   });
@@ -86,8 +94,8 @@ function categoryFabricator(args = {}) {
 
 function directMessageFabricator(args = {}) {
   return ChatDirectMessage.create({
-    id: args.id || sequence++,
-    users: args.users || [userFabricator(), userFabricator()],
+    group: args.group ?? false,
+    users: args.users ?? [userFabricator(), userFabricator()],
   });
 }
 
@@ -96,6 +104,8 @@ function directMessageChannelFabricator(args = {}) {
     args.chatable ||
     directMessageFabricator({
       id: args.chatable_id || sequence++,
+      group: args.group ?? false,
+      users: args.users,
     });
 
   return channelFabricator(
@@ -103,6 +113,7 @@ function directMessageChannelFabricator(args = {}) {
       chatable_type: CHATABLE_TYPES.directMessageChannel,
       chatable_id: directMessage.id,
       chatable: directMessage,
+      memberships_count: directMessage.users.length,
     })
   );
 }

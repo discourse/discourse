@@ -1,279 +1,71 @@
 "use strict";
 
 const express = require("express");
-const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
 const fs = require("fs");
 const fsPromises = fs.promises;
 const { JSDOM } = require("jsdom");
-const { shouldLoadPlugins } = require("discourse-plugins");
 const { Buffer } = require("node:buffer");
-const { cwd, env } = require("node:process");
+const { env } = require("node:process");
+const { glob } = require("glob");
 
-// via https://stackoverflow.com/a/6248722/165668
-function generateUID() {
-  let firstPart = (Math.random() * 46656) | 0; // eslint-disable-line no-bitwise
-  let secondPart = (Math.random() * 46656) | 0; // eslint-disable-line no-bitwise
-  firstPart = ("000" + firstPart.toString(36)).slice(-3);
-  secondPart = ("000" + secondPart.toString(36)).slice(-3);
-  return firstPart + secondPart;
+async function listDistAssets() {
+  const files = await glob("**/*.js", { nodir: true, cwd: "dist/assets" });
+  return new Set(files);
 }
 
-function htmlTag(buffer, bootstrap) {
-  let classList = "";
-  if (bootstrap.html_classes) {
-    classList = ` class="${bootstrap.html_classes}"`;
-  }
-  buffer.push(`<html lang="${bootstrap.html_lang}"${classList}>`);
-}
+function updateScriptReferences({
+  chunkInfos,
+  dom,
+  selector,
+  attribute,
+  baseURL,
+  distAssets,
+}) {
+  const elements = dom.window.document.querySelectorAll(selector);
+  const handledEntrypoints = new Set();
 
-function head(buffer, bootstrap, headers, baseURL) {
-  if (bootstrap.csrf_token) {
-    buffer.push(`<meta name="csrf-param" content="authenticity_token">`);
-    buffer.push(`<meta name="csrf-token" content="${bootstrap.csrf_token}">`);
-  }
+  for (const el of elements) {
+    const entrypointName = el.dataset.discourseEntrypoint;
 
-  if (bootstrap.theme_id) {
-    buffer.push(
-      `<meta name="discourse_theme_id" content="${bootstrap.theme_id}">`
-    );
-  }
+    if (handledEntrypoints.has(entrypointName)) {
+      el.remove();
+      continue;
+    }
 
-  if (bootstrap.theme_color) {
-    buffer.push(`<meta name="theme-color" content="${bootstrap.theme_color}">`);
-  }
+    let chunks = chunkInfos[`assets/${entrypointName}.js`]?.assets;
 
-  if (bootstrap.authentication_data) {
-    buffer.push(
-      `<meta id="data-authentication" data-authentication-data="${encode(
-        bootstrap.authentication_data
-      )}">`
-    );
-  }
-
-  let setupData = "";
-  Object.keys(bootstrap.setup_data).forEach((sd) => {
-    let val = bootstrap.setup_data[sd];
-    if (val) {
-      if (Array.isArray(val)) {
-        val = JSON.stringify(val);
+    if (!chunks) {
+      if (distAssets.has(`${entrypointName}.js`)) {
+        chunks = [`assets/${entrypointName}.js`];
       } else {
-        val = val.toString();
+        // Not an ember-cli asset, do not rewrite
+        continue;
       }
-      setupData += ` data-${sd.replace(/\_/g, "-")}="${encode(val)}"`;
-    }
-  });
-  buffer.push(`<meta id="data-discourse-setup"${setupData} />`);
-
-  if (bootstrap.preloaded.currentUser) {
-    const user = JSON.parse(bootstrap.preloaded.currentUser);
-    let { admin, staff } = user;
-
-    if (staff) {
-      buffer.push(`<script defer src="${baseURL}assets/admin.js"></script>`);
     }
 
-    if (admin) {
-      buffer.push(`<script defer src="${baseURL}assets/wizard.js"></script>`);
-    }
-  }
+    const newElements = chunks.map((chunk) => {
+      const newElement = el.cloneNode(true);
+      newElement[attribute] = `${baseURL}${chunk}`;
+      newElement.dataset.emberCliRewritten = "true";
 
-  bootstrap.plugin_js.forEach((src) =>
-    buffer.push(`<script defer src="${src}"></script>`)
-  );
+      return newElement;
+    });
 
-  buffer.push(bootstrap.theme_html.translations);
-  buffer.push(bootstrap.theme_html.js);
-  buffer.push(bootstrap.theme_html.head_tag);
-  buffer.push(bootstrap.html.before_head_close);
-}
-
-function localeScript(buffer, bootstrap) {
-  buffer.push(`<script defer src="${bootstrap.locale_script}"></script>`);
-  (bootstrap.extra_locales || []).forEach((l) =>
-    buffer.push(`<script defer src="${l}"></script>`)
-  );
-}
-
-function beforeScriptLoad(buffer, bootstrap) {
-  buffer.push(bootstrap.html.before_script_load);
-}
-
-function discoursePreloadStylesheets(buffer, bootstrap) {
-  (bootstrap.stylesheets || []).forEach((s) => {
-    let link = `<link rel="preload" as="style" href="${s.href}">`;
-    buffer.push(link);
-  });
-}
-
-function discourseStylesheets(buffer, bootstrap) {
-  (bootstrap.stylesheets || []).forEach((s) => {
-    let attrs = [];
-    if (s.media) {
-      attrs.push(`media="${s.media}"`);
-    }
-    if (s.target) {
-      attrs.push(`data-target="${s.target}"`);
-    }
-    if (s.theme_id) {
-      attrs.push(`data-theme-id="${s.theme_id}"`);
-    }
-    if (s.class) {
-      attrs.push(`class="${s.class}"`);
-    }
-    let link = `<link rel="stylesheet" type="text/css" href="${
-      s.href
-    }" ${attrs.join(" ")}>`;
-    buffer.push(link);
-  });
-}
-
-function body(buffer, bootstrap) {
-  buffer.push(bootstrap.theme_html.header);
-  buffer.push(bootstrap.html.header);
-}
-
-function bodyFooter(buffer, bootstrap, headers) {
-  buffer.push(bootstrap.theme_html.body_tag);
-  buffer.push(bootstrap.html.before_body_close);
-
-  let v = generateUID();
-  buffer.push(`
-    <script
-      async
-      type="text/javascript"
-      id="mini-profiler"
-      src="/mini-profiler-resources/includes.js?v=${v}"
-      data-css-url="/mini-profiler-resources/includes.css?v=${v}"
-      data-version="${v}"
-      data-path="/mini-profiler-resources/"
-      data-horizontal-position="right"
-      data-vertical-position="top"
-      data-trivial="false"
-      data-children="false"
-      data-max-traces="20"
-      data-controls="false"
-      data-total-sql-count="false"
-      data-authorized="true"
-      data-toggle-shortcut="alt+p"
-      data-start-hidden="false"
-      data-collapse-results="true"
-      data-html-container="body"
-      data-hidden-custom-fields="x"
-      data-ids="${headers.get("x-miniprofiler-ids")}"
-    ></script>
-  `);
-}
-
-function hiddenLoginForm(buffer, bootstrap) {
-  if (!bootstrap.preloaded.currentUser) {
-    buffer.push(`
-      <form id='hidden-login-form' method="post" action="${bootstrap.login_path}" style="display: none;">
-        <input name="username" type="text"     id="signin_username">
-        <input name="password" type="password" id="signin_password">
-        <input name="redirect" type="hidden">
-        <input type="submit" id="signin-button">
-      </form>
-    `);
-  }
-}
-
-function preloaded(buffer, bootstrap) {
-  buffer.push(
-    `<div class="hidden" id="data-preloaded" data-preloaded="${encode(
-      JSON.stringify(bootstrap.preloaded)
-    )}"></div>`
-  );
-}
-
-const BUILDERS = {
-  "html-tag": htmlTag,
-  "before-script-load": beforeScriptLoad,
-  "discourse-preload-stylesheets": discoursePreloadStylesheets,
-  head,
-  body,
-  "discourse-stylesheets": discourseStylesheets,
-  "hidden-login-form": hiddenLoginForm,
-  preloaded,
-  "body-footer": bodyFooter,
-  "locale-script": localeScript,
-};
-
-function replaceIn(bootstrap, template, id, headers, baseURL) {
-  let buffer = [];
-  BUILDERS[id](buffer, bootstrap, headers, baseURL);
-  let contents = buffer.filter((b) => b && b.length > 0).join("\n");
-
-  if (id === "html-tag") {
-    return template.replace(`<html>`, contents);
-  } else {
-    return template.replace(`<!-- bootstrap-content ${id} -->`, contents);
-  }
-}
-
-function extractPreloadJson(html) {
-  const dom = new JSDOM(html);
-  const dataElement = dom.window.document.querySelector("#data-preloaded");
-
-  if (!dataElement || !dataElement.dataset) {
-    return;
-  }
-
-  return dataElement.dataset.preloaded;
-}
-
-async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
-  bootstrap.preloaded = Object.assign(JSON.parse(preload), bootstrap.preloaded);
-
-  Object.keys(BUILDERS).forEach((id) => {
-    template = replaceIn(bootstrap, template, id, response.headers, baseURL);
-  });
-  return template;
-}
-
-async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
-  try {
-    const template = await fsPromises.readFile(
-      path.join(cwd(), "dist", "index.html"),
-      "utf8"
-    );
-
-    let url = new URL(`${proxy}${baseURL}bootstrap.json`);
-    url.searchParams.append("for_url", req.url);
-
-    const forUrlSearchParams = new URL(req.url, "https://dummy-origin.invalid")
-      .searchParams;
-
-    const mobileView = forUrlSearchParams.get("mobile_view");
-    if (mobileView) {
-      url.searchParams.append("mobile_view", mobileView);
+    if (
+      entrypointName === "discourse" &&
+      el.tagName.toLowerCase() === "script"
+    ) {
+      const liveReload = dom.window.document.createElement("script");
+      liveReload.setAttribute("async", "");
+      liveReload.src = `${baseURL}ember-cli-live-reload.js`;
+      newElements.unshift(liveReload);
     }
 
-    const reqUrlSafeMode = forUrlSearchParams.get("safe_mode");
-    if (reqUrlSafeMode) {
-      url.searchParams.append("safe_mode", reqUrlSafeMode);
-    }
+    el.replaceWith(...newElements);
 
-    const navigationMenu = forUrlSearchParams.get("navigation_menu");
-    if (navigationMenu) {
-      url.searchParams.append("navigation_menu", navigationMenu);
-    }
-
-    const reqUrlPreviewThemeId = forUrlSearchParams.get("preview_theme_id");
-    if (reqUrlPreviewThemeId) {
-      url.searchParams.append("preview_theme_id", reqUrlPreviewThemeId);
-    }
-
-    const { default: fetch } = await import("node-fetch");
-    const res = await fetch(url, { headers: req.headers });
-    const json = await res.json();
-
-    return applyBootstrap(json.bootstrap, template, response, baseURL, preload);
-  } catch (error) {
-    throw new Error(
-      `Could not get ${proxy}${baseURL}bootstrap.json\n\n${error}`
-    );
+    handledEntrypoints.add(entrypointName);
   }
 }
 
@@ -364,22 +156,35 @@ async function handleRequest(proxy, baseURL, req, res) {
   res.status(response.status);
 
   if (isHTML) {
-    const responseText = await response.text();
-    const preloadJson = isHTML ? extractPreloadJson(responseText) : null;
+    const [responseText, chunkInfoText, distAssets] = await Promise.all([
+      response.text(),
+      fsPromises.readFile("dist/assets.json", "utf-8"),
+      listDistAssets(),
+    ]);
 
-    if (preloadJson) {
-      const html = await buildFromBootstrap(
-        proxy,
-        baseURL,
-        req,
-        response,
-        extractPreloadJson(responseText)
-      );
-      res.set("content-type", "text/html");
-      res.send(html);
-    } else {
-      res.send(responseText);
-    }
+    const chunkInfos = JSON.parse(chunkInfoText);
+
+    const dom = new JSDOM(responseText);
+
+    updateScriptReferences({
+      chunkInfos,
+      dom,
+      selector: "script[data-discourse-entrypoint]",
+      attribute: "src",
+      baseURL,
+      distAssets,
+    });
+
+    updateScriptReferences({
+      chunkInfos,
+      dom,
+      selector: "link[rel=preload][data-discourse-entrypoint]",
+      attribute: "href",
+      baseURL,
+      distAssets,
+    });
+
+    res.send(dom.serialize());
   } else {
     res.send(Buffer.from(await response.arrayBuffer()));
   }
@@ -390,63 +195,6 @@ module.exports = {
 
   isDevelopingAddon() {
     return true;
-  },
-
-  contentFor(type, config) {
-    if (shouldLoadPlugins() && type === "test-plugin-js") {
-      const scripts = [];
-
-      const pluginInfos = this.app.project
-        .findAddonByName("discourse-plugins")
-        .pluginInfos();
-
-      for (const {
-        pluginName,
-        directoryName,
-        hasJs,
-        hasAdminJs,
-      } of pluginInfos) {
-        if (hasJs) {
-          scripts.push({
-            src: `plugins/${directoryName}.js`,
-            name: pluginName,
-          });
-        }
-
-        if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
-          scripts.push({
-            src: `plugins/${directoryName}_extras.js`,
-            name: pluginName,
-          });
-        }
-
-        if (hasAdminJs) {
-          scripts.push({
-            src: `plugins/${directoryName}_admin.js`,
-            name: pluginName,
-          });
-        }
-      }
-
-      return scripts
-        .map(
-          ({ src, name }) =>
-            `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
-        )
-        .join("\n");
-    } else if (shouldLoadPlugins() && type === "test-plugin-tests-js") {
-      return this.app.project
-        .findAddonByName("discourse-plugins")
-        .pluginInfos()
-        .filter(({ hasTests }) => hasTests)
-        .map(
-          ({ directoryName, pluginName }) =>
-            `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
-        )
-        .join("\n");
-    } else if (shouldLoadPlugins() && type === "test-plugin-css") {
-      return `<link rel="stylesheet" href="${config.rootURL}bootstrap/plugin-css-for-tests.css" data-discourse-plugin="_all" />`;
-    }
   },
 
   serverMiddleware(config) {

@@ -131,7 +131,7 @@ acceptance("Topic - Edit timer", function (needs) {
   test("schedule publish to category - visible for a PM", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
-    const categoryChooser = selectKit(".modal-body .category-chooser");
+    const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     await visit("/t/pm-for-testing/12");
     await click(".toggle-admin-menu");
@@ -170,7 +170,7 @@ acceptance("Topic - Edit timer", function (needs) {
   test("schedule publish to category - visible for a private category", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
-    const categoryChooser = selectKit(".modal-body .category-chooser");
+    const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     // has private category id 24 (shared drafts)
     await visit("/t/some-topic/9");
@@ -210,7 +210,7 @@ acceptance("Topic - Edit timer", function (needs) {
   test("schedule publish to category - visible for an unlisted public topic", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
-    const categoryChooser = selectKit(".modal-body .category-chooser");
+    const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
     await visit("/t/internationalization-localization/280");
 

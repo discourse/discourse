@@ -8,7 +8,6 @@ import offsetCalculator from "discourse/lib/offset-calculator";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
-import User from "discourse/models/user";
 import { isTesting } from "discourse-common/config/environment";
 import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 
@@ -227,27 +226,10 @@ const DiscourseURL = EmberObject.extend({
 
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
-    // Rewrite /my/* urls
-    let myPath = getURL("/my/");
-    const fullPath = getURL(path);
-    if (fullPath.startsWith(myPath)) {
-      const currentUser = User.current();
-      if (currentUser) {
-        path = fullPath.replace(
-          myPath,
-          `${userPath(currentUser.get("username_lower"))}/`
-        );
-      } else {
-        return this.redirectTo("/login-preferences");
-      }
-    }
-
     // handle prefixes
     if (path.startsWith("/")) {
       path = withoutPrefix(path);
     }
-
-    path = rewritePath(path);
 
     if (typeof opts.afterRouteComplete === "function") {
       schedule("afterRender", opts.afterRouteComplete);
@@ -257,15 +239,9 @@ const DiscourseURL = EmberObject.extend({
       return;
     }
 
-    if (oldPath === path) {
-      // If navigating to the same path send an app event.
-      // Views can watch it and tell their controllers to refresh
+    if (oldPath === path || this.refreshedHomepage(oldPath, path)) {
+      // If navigating to the same path, refresh the route
       this.routerService.refresh();
-    }
-
-    // TODO: Extract into rules we can inject into the URL handler
-    if (this.navigatedToHome(oldPath, path, opts)) {
-      return;
     }
 
     // Navigating to empty string is the same as root
@@ -391,20 +367,13 @@ const DiscourseURL = EmberObject.extend({
     @param {String} oldPath the previous path we were on
     @param {String} path the path we're navigating to
   **/
-  navigatedToHome(oldPath, path) {
+  refreshedHomepage(oldPath, path) {
     const homepage = defaultHomepage();
 
-    if (
-      window.history &&
-      window.history.pushState &&
+    return (
       (path === "/" || path === "/" + homepage) &&
       (oldPath === "/" || oldPath === "/" + homepage)
-    ) {
-      this.routerService.refresh();
-      return true;
-    }
-
-    return false;
+    );
   },
 
   // This has been extracted so it can be tested.
@@ -454,15 +423,7 @@ const DiscourseURL = EmberObject.extend({
       elementId = split[1];
     }
 
-    // The default path has a hack to allow `/` to default to defaultHomepage
-    // via BareRouter.handleUrl
-    let transition;
-    if (path === "/" || path.substring(0, 2) === "/?") {
-      router._routerMicrolib.updateURL(path);
-      transition = router.handleURL(path);
-    } else {
-      transition = router.transitionTo(path);
-    }
+    const transition = router.transitionTo(path);
 
     transition._discourse_intercepted = true;
     transition._discourse_anchor = elementId;

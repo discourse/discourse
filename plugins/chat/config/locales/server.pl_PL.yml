@@ -55,6 +55,7 @@ pl_PL:
   chat:
     deleted_chat_username: usunięte
     errors:
+      users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
       channel_new_message_disallowed:
         archived: "Kanał jest zarchiwizowany, nie można wysyłać nowych wiadomości"

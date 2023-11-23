@@ -1,5 +1,22 @@
 // base styles for every modal popup used in Discourse
 
+.d-modal {
+  &__container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  // fixes modal placement on Android when keyboard is visible
+  html.keyboard-visible:not(.ios-device) & {
+    height: calc(100% - env(keyboard-inset-height));
+
+    .d-modal__container {
+      max-height: 100%;
+    }
+  }
+}
+
+//legacy
 .modal-open #main {
   overflow: hidden;
 }

@@ -66,15 +66,12 @@
       width: 100%;
     }
 
-    .mention.highlighted {
-      background: var(--tertiary-low);
-      color: var(--primary);
-      display: inline-block;
-      font-size: 0.93em;
-      font-weight: normal;
-      padding: 0 0.3em 0.07em;
-      border-radius: 0.6em;
-      text-decoration: none;
+    .mention {
+      @include mention;
+
+      &.highlighted {
+        background: var(--tertiary-low);
+      }
     }
 
     // Automatic aspect-ratio mapping https://developer.mozilla.org/en-US/docs/Web/Media/images/aspect_ratio_mapping

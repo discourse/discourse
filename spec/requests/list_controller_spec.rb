@@ -1160,10 +1160,14 @@ RSpec.describe ListController do
       ).to contain_exactly(topic.id)
     end
 
-    it "should respond with 403 response code for an anonymous user" do
+    it "should not return topics that an anon user is not allowed to view" do
       get "/filter.json"
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(200)
+
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+      ).to contain_exactly(topic.id)
     end
 
     it "should respond with 404 response code when `experimental_topics_filter` site setting has not been enabled" do

@@ -3,10 +3,10 @@
 
 RSpec.describe ApplicationHelper do
   describe "preload_script" do
-    def script_tag(url)
+    def script_tag(url, entrypoint)
       <<~HTML
-          <link rel="preload" href="#{url}" as="script">
-          <script defer src="#{url}"></script>
+          <link rel="preload" href="#{url}" as="script" data-discourse-entrypoint="#{entrypoint}">
+          <script defer src="#{url}" data-discourse-entrypoint="#{entrypoint}"></script>
       HTML
     end
 
@@ -57,33 +57,44 @@ RSpec.describe ApplicationHelper do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "br"
         link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(script_tag("https://s3cdn.com/assets/start-discourse.br.js"))
+        expect(link).to eq(
+          script_tag("https://s3cdn.com/assets/start-discourse.br.js", "start-discourse"),
+        )
       end
 
       it "gives s3 cdn if asset host is not set" do
         link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(script_tag("https://s3cdn.com/assets/start-discourse.js"))
+        expect(link).to eq(
+          script_tag("https://s3cdn.com/assets/start-discourse.js", "start-discourse"),
+        )
       end
 
       it "can fall back to gzip compression" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip"
         link = helper.preload_script("start-discourse")
-        expect(link).to eq(script_tag("https://s3cdn.com/assets/start-discourse.gz.js"))
+        expect(link).to eq(
+          script_tag("https://s3cdn.com/assets/start-discourse.gz.js", "start-discourse"),
+        )
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(script_tag("https://s3cdn.com/assets/start-discourse.js"))
+        expect(link).to eq(
+          script_tag("https://s3cdn.com/assets/start-discourse.js", "start-discourse"),
+        )
       end
 
       it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip, br"
         link = helper.preload_script("discourse/tests/theme_qunit_ember_jquery")
         expect(link).to eq(
-          script_tag("https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js"),
+          script_tag(
+            "https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js",
+            "discourse/tests/theme_qunit_ember_jquery",
+          ),
         )
       end
 

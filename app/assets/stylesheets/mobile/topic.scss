@@ -72,17 +72,6 @@
   }
 }
 
-#topic-progress-wrapper {
-  .topic-admin-menu-button .toggle-admin-menu {
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  #topic-progress {
-    border-top-right-radius: var(--d-border-radius);
-    border-top-left-radius: var(--d-border-radius);
-  }
-}
-
 .topic-error {
   padding: 18px;
   width: 90%;
@@ -119,6 +108,10 @@ sub sub {
   .select-kit.combo-box.category-chooser {
     width: 100%;
     margin-top: 0;
+  }
+
+  .topic-category {
+    margin-top: 0.25em;
   }
 }
 

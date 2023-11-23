@@ -1208,8 +1208,6 @@ lt:
         title: "Dviejų veiksnių autentifikavimas"
         enable: "Tvarkyti dviejų veiksnių autentifikavimą"
         disable_all: "Išjungti visus"
-        forgot_password: "Pamiršote slaptažodį?"
-        confirm_password_description: "Patvirtinkite slaptažodį norėdami tęsti"
         name: "Vardas"
         label: "Kodas"
         rate_limit: "Prašome palaukti prieš bandydami kitą autentifikavimo kodą."
@@ -1320,14 +1318,13 @@ lt:
           generic: "Jūsų %{provider} paskyra bus naudojama autentifikavimui."
       name:
         title: "Vardas"
-        instructions: "jūsų vardas pavardė (pasirinktinai)"
-        instructions_required: "Tavo pilnas vardas"
+        instructions: "Jūsų vardas pavardė (pasirinktinai)."
+        instructions_required: "Tavo pilnas vardas."
         required: "Prašome įvesti vardą"
         too_short: "Tavo slapyvardis yra per trumpas"
         ok: "Tavo slapyvardis yra tinkamas"
       username:
         title: "Vartotojo vardas"
-        instructions: "unikalus, be tarpelių, trumpas"
         short_instructions: "Vartotojai gali tave paminėti kaip @%{username}"
         available: "Vartotojo vardas nėra užimtas"
         not_available: "Negalimas. Gal pabandykite %{suggestion}?"
@@ -1505,7 +1502,7 @@ lt:
         same_as_username: "Tavo slaptažodis yra toks pat, kaip ir vartotojo vardas"
         same_as_email: "Tavo slaptažodis yra toks pat, kaip ir el. adresas."
         ok: "Jūsų slaptažodis yra tinkamas."
-        instructions: "bent jau %{count}simboliai"
+        instructions: "Bent jau %{count}simboliai."
         required: "Įveskite slaptažodį"
         confirm: "Patvirtinti"
       summary:
@@ -2020,6 +2017,7 @@ lt:
         private_message: '%{username} atsiuntė privačią žinutė "%{topic}" - %{site_title}'
         linked: '%{username} panaudojo tavo įrašą "%{topic}" - %{site_title}'
         watching_first_post: '%{username} sukūrė naują temą "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} paskelbė "%{topic}" - %{site_title}'
         confirm_title: "Pranešimai įgalinti - %{site_title}"
         confirm_body: "Pavyko! Pranešimai buvo įgalinti."
         custom: "Pranešimas nuo %{username} %{site_title}"
@@ -3559,9 +3557,7 @@ lt:
         latest_version: "Naujausia"
         problems_found: "Keletas patarimų, pagrįstų dabartiniais svetainės nustatymais"
         new_features:
-          title: "\U0001F381 Naujos funkcijos"
-          dismiss: "Praleisti"
-          learn_more: "Sužinoti daugiau"
+          learn_more: "Sužinoti daugiau..."
         last_checked: "Paskutinį kartą tikrinta"
         refresh_problems: "Atnaujinti"
         no_problems: "Nerasta jokių problemų"
@@ -3810,7 +3806,7 @@ lt:
         not_enabled: "Ne"
         change_settings_short: "Nustatymai"
         howto: "Kaip galiu instaliuoti plungin'us?"
-        official: "Oficialus papildinys"
+        author: "Pagal %{author}"
       backups:
         title: "Atsarginės kopijos"
         menu:

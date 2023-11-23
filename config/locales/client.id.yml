@@ -1097,8 +1097,6 @@ id:
         codes:
           title: "Kode Cadangan Dibuat"
       second_factor:
-        forgot_password: "Lupa password?"
-        confirm_password_description: "Harap konfirmasi password Anda untuk melanjutkan"
         name: "Nama"
         label: "Kode"
         show_key_description: "Masukkan secara manual"
@@ -1160,13 +1158,12 @@ id:
         confirm_modal_title: "Hubungkan Akun %{provider}"
       name:
         title: "Name"
-        instructions: "Nama lengkap anda (opsional)"
-        instructions_required: "Nama lengkap anda"
+        instructions: "Nama lengkap anda (opsional)."
+        instructions_required: "Nama lengkap anda."
         too_short: "Nama anda terlalu pendek"
         ok: "Nama anda terlihat bagus"
       username:
         title: "Nama Pengguna"
-        instructions: "unik, tidak ada spasi, pendek"
         short_instructions: "Orang dapat menyebut anda sebagai @%{username}"
         available: "Nama pengguna anda tersedia"
         not_available: "Tidak tersedia. Coba %{suggestion}?"
@@ -1272,7 +1269,7 @@ id:
         same_as_username: "Password dan nama pengguna kamu sama"
         same_as_email: "Password dan email kamu sama"
         ok: "Kata sandi Anda terlihat baik."
-        instructions: "paling tidak %{count} karakter"
+        instructions: "Paling tidak %{count} karakter."
         confirm: "Konfirmasi"
       summary:
         title: "Ringkasan"
@@ -2071,8 +2068,6 @@ id:
           never: "tidak pernah"
       dashboard:
         latest_version: "Terbaru"
-        new_features:
-          dismiss: "Bubar"
         last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
         moderators: "Moderator:"

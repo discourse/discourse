@@ -15,7 +15,6 @@ bs_BA:
   poll:
     poll: "anketa"
     invalid_argument: "Nevažeća vrijednost '%{value}' za argument '%{argument}'."
-    multiple_polls_without_name: "Postoji više anketa bez imena. Koristite atribut „ <code>name</code> “ da biste jedinstveno identifikovali vaše ankete."
     multiple_polls_with_same_name: "Postoji više anketa sa istim imenom: <strong>%{name}</strong> . Koristite atribut „ <code>name</code> “ da biste jedinstveno identifikovali vaše ankete."
     default_poll_must_have_at_least_1_option: "Anketa mora imati barem 1 opciju."
     named_poll_must_have_at_least_1_option: "Anketa imenovana <strong>%{name}</strong> mora imati barem 1 opciju."

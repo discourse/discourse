@@ -18,6 +18,11 @@
       />
     {{/if}}
 
+    <PluginOutlet
+      @name="search-menu-before-term-input"
+      @outletArgs={{hash openSearchMenu=this.open}}
+    />
+
     <SearchMenu::SearchTerm
       @searchTermChanged={{this.searchTermChanged}}
       @typeFilter={{this.typeFilter}}

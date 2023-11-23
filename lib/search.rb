@@ -236,6 +236,11 @@ class Search
     @in_title = false
 
     term = process_advanced_search!(term)
+    if !@order &&
+         SiteSetting.search_default_sort_order !=
+           SearchSortOrderSiteSetting.value_from_id(:relevance)
+      @order = SearchSortOrderSiteSetting.id_from_value(SiteSetting.search_default_sort_order)
+    end
 
     if term.present?
       @term = Search.prepare_data(term, Topic === @search_context ? :topic : nil)

@@ -938,17 +938,17 @@ acceptance("User menu - Dismiss button", function (needs) {
     await click(".user-menu .notifications-dismiss");
     assert.strictEqual(
       query(
-        ".dismiss-notification-confirmation .modal-body"
+        ".dismiss-notification-confirmation .d-modal__body"
       ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.default", { count: 10 }),
       "confirmation modal is shown when there are unread high pri notifications"
     );
 
-    await click(".modal-footer .btn-default"); // click cancel on the dismiss modal
+    await click(".d-modal__footer .btn-default"); // click cancel on the dismiss modal
     assert.notOk(markRead, "mark-read request isn't sent");
 
     await click(".user-menu .notifications-dismiss");
-    await click(".modal-footer .btn-primary"); // click confirm on the dismiss modal
+    await click(".d-modal__footer .btn-primary"); // click confirm on the dismiss modal
     assert.ok(markRead, "mark-read request is sent");
   });
 
@@ -976,7 +976,7 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     assert.strictEqual(
       query(
-        ".dismiss-notification-confirmation .modal-body"
+        ".dismiss-notification-confirmation .d-modal__body"
       ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
         count: 103,
@@ -985,7 +985,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     );
     assert.notOk(markRead, "mark-read request isn't sent");
 
-    await click(".modal-footer .btn-primary"); // confirm dismiss on the dismiss modal
+    await click(".d-modal__footer .btn-primary"); // confirm dismiss on the dismiss modal
 
     assert.notOk(
       exists("#quick-access-bookmarks ul li.notification"),
@@ -1032,7 +1032,7 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     assert.strictEqual(
       query(
-        ".dismiss-notification-confirmation .modal-body"
+        ".dismiss-notification-confirmation .d-modal__body"
       ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.messages", {
         count: 89,
@@ -1041,7 +1041,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     );
     assert.notOk(markRead, "mark-read request isn't sent");
 
-    await click(".modal-footer .btn-primary"); // confirm dismiss on the dismiss modal
+    await click(".d-modal__footer .btn-primary"); // confirm dismiss on the dismiss modal
 
     assert.notOk(
       exists("#quick-access-messages ul li.notification"),
