@@ -1254,6 +1254,13 @@ email:
   email_in_min_trust:
     default: 2
     enum: "TrustLevelSetting"
+    hidden: true
+  email_in_allowed_groups:
+    default: 12
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   email_in_authserv_id:
     default: ""
   email_in_spam_header:
