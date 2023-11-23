@@ -220,6 +220,7 @@ const chatTranscriptRule = {
 
         token.content = customMarkdownCookFn(content.substring(match.index));
         state.push("html_raw", "", -1);
+        state.push("details_chat_transcript_wrap_close", "details", -1);
       }
     } else {
       // rendering chat message content with limited markdown rule subset
@@ -265,9 +266,6 @@ const chatTranscriptRule = {
     }
 
     state.push("div_chat_transcript_messages", "div", -1);
-    if (threadId) {
-      state.push("details_chat_transcript_wrap_close", "details", -1);
-    }
     state.push("div_chat_transcript_wrap", "div", -1);
     return true;
   },
