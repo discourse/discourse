@@ -13,7 +13,7 @@ export default class DashboardNewFeatures extends Component {
 
   @bind
   loadNewFeatures() {
-    ajax("/admin/dashboard/new-features.json")
+    ajax("/admin/dashboard/whats-new.json")
       .then((json) => {
         this.newFeatures = json.new_features;
         this.isLoaded = true;
