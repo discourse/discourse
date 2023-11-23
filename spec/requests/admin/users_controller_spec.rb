@@ -1680,8 +1680,6 @@ RSpec.describe Admin::UsersController do
     shared_examples "IP info retrieval possible" do
       it "retrieves IP info" do
         ip = "81.2.69.142"
-        # Assign a dummy MaxMind license key, which is now checked in open_db
-        global_setting "maxmind_license_key", "dummy"
 
         DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
         Resolv::DNS.any_instance.stubs(:getname).with(ip).returns("ip-81-2-69-142.example.com")
@@ -1719,8 +1717,6 @@ RSpec.describe Admin::UsersController do
 
       it "prevents retrieval of IP info with a 404 response" do
         ip = "81.2.69.142"
-        # Assign a dummy MaxMind license key, which is now checked in open_db
-        global_setting "maxmind_license_key", "dummy"
 
         DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
         Resolv::DNS.any_instance.stubs(:getname).with(ip).returns("ip-81-2-69-142.example.com")
