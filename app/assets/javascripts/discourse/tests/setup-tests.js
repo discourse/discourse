@@ -417,7 +417,7 @@ function patchFailedAssertion() {
       // eslint-disable-next-line no-console
       console.warn(
         "ℹ️ Hint: when the assertion failed, the Ember runloop was not in a settled state. Maybe you missed an `await` further up the test? Or maybe you need to manually add `await settled()` before your assertion?",
-        getSettledState()
+        JSON.stringify(getSettledState())
       );
     }
 
