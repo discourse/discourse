@@ -2,7 +2,7 @@
 
 RSpec.describe NotificationSerializer do
   describe "#as_json" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:notification) { Fabricate(:notification, user: user) }
     let(:serializer) { NotificationSerializer.new(notification) }
     let(:json) { serializer.as_json }

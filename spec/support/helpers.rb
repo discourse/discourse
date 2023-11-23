@@ -184,6 +184,16 @@ module Helpers
     repo_dir
   end
 
+  def add_to_git_repo(repo_dir, files)
+    files.each do |name, data|
+      FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
+      File.write("#{repo_dir}/#{name}", data)
+      `cd #{repo_dir} && git add #{name}`
+    end
+    `cd #{repo_dir} && git commit -am 'add #{files.size} files'`
+    repo_dir
+  end
+
   def stub_const(target, const, value)
     old = target.const_get(const)
     target.send(:remove_const, const)

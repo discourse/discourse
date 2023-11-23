@@ -1330,8 +1330,6 @@ bg:
         title: "Двуфакторна автентификация"
         enable: "Управление на двуфакторна автентификация"
         disable_all: "Деактивиране на всички"
-        forgot_password: "Забравена парола?"
-        confirm_password_description: "Моля, потвърдете паролата за да продължите"
         name: "Име"
         label: "Код"
         rate_limit: "Моля, изчакайте, преди да опитате друг код за удостоверяване."
@@ -1459,14 +1457,13 @@ bg:
           generic: "Вашият %{provider} акаунт ще се използва за удостоверяване."
       name:
         title: "Име"
-        instructions: "вашето пълно име (опционално)"
-        instructions_required: "Вашето пълно име"
+        instructions: "Вашето пълно име (опционално)."
+        instructions_required: "Вашето пълно име."
         required: "Моля, въведете име"
         too_short: "Името е твърде кратко."
         ok: "Вашето име изглежда добре"
       username:
         title: "Потребителско име"
-        instructions: "уникално, без интервали"
         short_instructions: "Хора могат да Ви споменават като @%{username}"
         available: "Вашето потребителско име е свободно"
         not_available: "Не е налично. Пробвайте с %{suggestion}?"
@@ -1661,7 +1658,7 @@ bg:
         same_as_username: "Вашата парола е същата като вашето потребителско име."
         same_as_email: "Вашата парола е същата като вашия email."
         ok: "Вашата парола изглежда добре."
-        instructions: "поне %{count}знака"
+        instructions: "Поне %{count}знака."
         required: "Моля, въведете парола"
       summary:
         title: "Сумарно"
@@ -2021,12 +2018,6 @@ bg:
       topic_count:
         one: "%{count} тема в тази категория"
         other: "%{count} теми в тази категория"
-      plus_subcategories_title:
-        one: "%{name} и една подкатегория"
-        other: "%{name} и %{count} подкатегории"
-      plus_subcategories:
-        one: "+ %{count} подкатегория"
-        other: "+ %{count} подкатегории"
     select_kit:
       delete_item: "Изтрий %{name}"
       filter_by: "Филтриране по: %{name}"
@@ -2247,6 +2238,7 @@ bg:
         posted: '%{username} публикува в "%{topic}" - %{site_title}'
         private_message: '%{username} ви изпрати лично съобщение в "%{topic}" - %{site_title}'
         linked: '%{username} прикачи вашата публикация от "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} публикува в "%{topic}" - %{site_title}'
         confirm_title: "Включени известявания - %{site_title}"
         confirm_body: "Успех! Известяването е включено."
       titles:
@@ -3008,9 +3000,6 @@ bg:
       title: "Благодарим ви, че помагате да поддържаме дискусията цивилизована!"
       action: "Сигнализирай публикацията "
       take_action_options:
-        default:
-          title: "Предприеми действие "
-          details: "Достигнете границата от сигнали веднага, вместо да чакате за още сигнали от общността"
         suspend:
           title: "Отстрани потребител"
       notify_action: "Съобщение"
@@ -3020,7 +3009,6 @@ bg:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(скрит)"
       submit_tooltip: "Пусни скрит сигнал"
-      take_action_tooltip: "Достигнете границата от сигнали веднага, вместо да чакате за още сигнали от общността"
       cant: "Не може да сигнализирате за тази публикация в момента."
       notify_staff: "Съобщи лично на екипа"
       formatted_name:
@@ -3340,7 +3328,6 @@ bg:
           save: "Запази"
           delete: "Изтрий"
           delete_confirm: "Сигурни ли сте, че искате да изтриете този раздел?"
-          public: "Направете този раздел публичен и видим от всички"
           links:
             add: "Добавете друга връзка"
             delete: "Изтриване на връзката"
@@ -3396,6 +3383,9 @@ bg:
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
     form_templates:
+      upload_field:
+        upload: "Качи"
+        uploading: "Качване "
       errors:
         typeMismatch:
           default: "Моля, въведете валидна стойност."
@@ -3421,8 +3411,7 @@ bg:
         installed_version: "Инсталирани"
         latest_version: "Последни"
         new_features:
-          dismiss: "Отмени"
-          learn_more: "Научете повече"
+          learn_more: "Научете повече..."
         last_checked: "Последна проверка"
         refresh_problems: "Обнови"
         no_problems: "Не бяха открити проблеми."
@@ -3531,6 +3520,7 @@ bg:
         not_enabled: "N "
         change_settings_short: "Настройки"
         howto: "Как да инсталирам софтуерни приставки?"
+        author: "От %{author}"
       backups:
         title: "Бекъп"
         menu:

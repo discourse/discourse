@@ -12,7 +12,7 @@ RSpec.describe Theme do
 
   let(:guardian) { Guardian.new(user) }
 
-  let(:theme) { Fabricate(:theme, user: user) }
+  fab!(:theme) { Fabricate(:theme, user: user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
 
   it "can properly clean up color schemes" do
@@ -440,9 +440,8 @@ HTML
   end
 
   it "correctly caches theme ids" do
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
-    theme
     theme2 = Fabricate(:theme)
 
     expect(Theme.theme_ids).to contain_exactly(theme.id, theme2.id)
@@ -562,7 +561,7 @@ HTML
   end
 
   it "includes theme_uploads in settings" do
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -574,7 +573,7 @@ HTML
   end
 
   it "does not break on missing uploads in settings" do
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -589,7 +588,7 @@ HTML
 
   it "uses CDN url for theme_uploads in settings" do
     set_cdn_url("http://cdn.localhost")
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -602,7 +601,7 @@ HTML
 
   it "uses CDN url for settings of type upload" do
     set_cdn_url("http://cdn.localhost")
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
@@ -621,99 +620,6 @@ HTML
 
     json = JSON.parse(cached_settings(theme.id))
     expect(json["my_upload"]).to eq("http://cdn.localhost#{upload.url}")
-  end
-
-  describe "convert_settings" do
-    it "can migrate a list field to a string field with json schema" do
-      theme.set_field(
-        target: :settings,
-        name: :yaml,
-        value: "valid_json_schema_setting:\n  default: \"green,globe\"\n  type: \"list\"",
-      )
-      theme.save!
-
-      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-      setting.value = "red,globe|green,cog|brown,users"
-      theme.save!
-
-      expect(setting.type).to eq(ThemeSetting.types[:list])
-
-      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
-      theme.set_field(target: :settings, name: "yaml", value: yaml)
-      theme.save!
-
-      theme.convert_settings
-      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-
-      expect(JSON.parse(setting.value)).to eq(
-        JSON.parse(
-          '[{"color":"red","icon":"globe"},{"color":"green","icon":"cog"},{"color":"brown","icon":"users"}]',
-        ),
-      )
-      expect(setting.type).to eq(ThemeSetting.types[:string])
-    end
-
-    it "does not update setting if data does not validate against json schema" do
-      theme.set_field(
-        target: :settings,
-        name: :yaml,
-        value: "valid_json_schema_setting:\n  default: \"green,globe\"\n  type: \"list\"",
-      )
-      theme.save!
-
-      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-
-      # json_schema_settings.yaml defines only two properties per object and disallows additionalProperties
-      setting.value = "red,globe,hey|green,cog,hey|brown,users,nay"
-      theme.save!
-
-      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
-      theme.set_field(target: :settings, name: "yaml", value: yaml)
-      theme.save!
-
-      expect { theme.convert_settings }.to raise_error("Schema validation failed")
-
-      setting.value = "red,globe|green,cog|brown"
-      theme.save!
-
-      expect { theme.convert_settings }.not_to raise_error
-
-      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-      expect(setting.type).to eq(ThemeSetting.types[:string])
-    end
-
-    it "warns when the theme has modified the setting type but data cannot be converted" do
-      begin
-        @orig_logger = Rails.logger
-        Rails.logger = @fake_logger = FakeLogger.new
-
-        theme.set_field(
-          target: :settings,
-          name: :yaml,
-          value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"list\"",
-        )
-        theme.save!
-
-        setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-        setting.value = "red,globe"
-        theme.save!
-
-        theme.set_field(
-          target: :settings,
-          name: :yaml,
-          value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"string\"",
-        )
-        theme.save!
-
-        theme.convert_settings
-        expect(setting.value).to eq("red,globe")
-        expect(@fake_logger.warnings[0]).to include(
-          "Theme setting type has changed but cannot be converted.",
-        )
-      ensure
-        Rails.logger = @orig_logger
-      end
-    end
   end
 
   describe "theme translations" do
@@ -1040,6 +946,37 @@ HTML
     end
   end
 
+  describe "get_setting" do
+    before do
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        enabled:
+          type: bool
+          default: false
+        some_value:
+          type: string
+          default: "hello"
+      YAML
+
+      ThemeSetting.create!(
+        theme: theme,
+        data_type: ThemeSetting.types[:bool],
+        name: "super_feature_enabled",
+      )
+
+      theme.save!
+    end
+
+    it "returns the value of the setting when given a string represeting the setting name" do
+      expect(theme.get_setting("enabled")).to eq(false)
+      expect(theme.get_setting("some_value")).to eq("hello")
+    end
+
+    it "returns the value of the setting when given a symbol represeting the setting name" do
+      expect(theme.get_setting(:enabled)).to eq(false)
+      expect(theme.get_setting(:some_value)).to eq("hello")
+    end
+  end
+
   describe "#update_setting" do
     it "requests clients to refresh if `refresh: true`" do
       theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
@@ -1091,6 +1028,234 @@ HTML
           .filter { |m| m.channel == "/global/asset-version" }
 
       expect(messages.count).to eq(0)
+    end
+  end
+
+  describe "#migrate_settings" do
+    fab!(:settings_field) { Fabricate(:settings_theme_field, theme: theme, value: <<~YAML) }
+        integer_setting: 1
+        list_setting: "aa,bb"
+      YAML
+
+    fab!(:migration_field) { Fabricate(:migration_theme_field, theme: theme, version: 1) }
+
+    it "persists the results of the last pending migration to the database" do
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 1033);
+          settings.set("list_setting", "cc,dd");
+          return settings;
+        }
+      JS
+
+      Fabricate(:migration_theme_field, theme: theme, value: <<~JS, version: 2)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 9909);
+          settings.set("list_setting", "ee,ff");
+          return settings;
+        }
+      JS
+
+      theme.migrate_settings
+      expect(theme.get_setting("integer_setting")).to eq(9909)
+      expect(theme.get_setting("list_setting")).to eq("ee,ff")
+    end
+
+    it "doesn't allow arbitrary settings to be saved in the database" do
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("unknown_setting", 8834);
+          return settings;
+        }
+      JS
+      expect do theme.migrate_settings end.to raise_error(
+        Theme::SettingsMigrationError,
+        I18n.t(
+          "themes.import_error.migrations.unknown_setting_returned_by_migration",
+          name: "0001-some-name",
+          setting_name: "unknown_setting",
+        ),
+      )
+    end
+
+    it "allows changing a setting's type" do
+      theme.update_setting(:list_setting, "zz,aa")
+      theme.save!
+
+      setting_record = theme.theme_settings.where(name: "list_setting").first
+      expect(setting_record.data_type).to eq(ThemeSetting.types[:string])
+      expect(setting_record.value).to eq("zz,aa")
+
+      settings_field.update!(value: <<~YAML)
+        integer_setting: 1
+        list_setting:
+          default: aa|bb
+          type: list
+      YAML
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("list_setting", "zz|aa");
+          return settings;
+        }
+      JS
+      theme.reload
+
+      theme.migrate_settings
+
+      expect(theme.theme_settings.where(name: "list_setting").count).to eq(1)
+      setting_record = theme.theme_settings.where(name: "list_setting").first
+
+      expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
+      expect(setting_record.value).to eq("zz|aa")
+
+      expect(
+        theme.theme_settings_migrations.where(theme_field_id: migration_field.id).first.diff,
+      ).to eq(
+        "additions" => [{ "key" => "list_setting", "val" => "zz|aa" }],
+        "deletions" => [{ "key" => "list_setting", "val" => "zz,aa" }],
+      )
+    end
+
+    it "allows renaming a setting" do
+      theme.update_setting(:integer_setting, 11)
+      theme.save!
+
+      setting_record = theme.theme_settings.where(name: "integer_setting").first
+      expect(setting_record.value).to eq("11")
+
+      settings_field.update!(value: <<~YAML)
+        integer_setting_updated: 1
+        list_setting: "aa,bb"
+      YAML
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("integer_setting_updated", settings.get("integer_setting"));
+          return settings;
+        }
+      JS
+
+      theme.reload
+
+      theme.migrate_settings
+
+      expect(theme.theme_settings.where(name: "integer_setting").exists?).to eq(false)
+
+      setting_record = theme.theme_settings.where(name: "integer_setting_updated").first
+      expect(setting_record.value).to eq("11")
+
+      expect(
+        theme.theme_settings_migrations.where(theme_field_id: migration_field.id).first.diff,
+      ).to eq(
+        "additions" => [{ "key" => "integer_setting_updated", "val" => 11 }],
+        "deletions" => [{ "key" => "integer_setting", "val" => 11 }],
+      )
+    end
+
+    it "creates a ThemeSettingsMigration record for each migration" do
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 2);
+          settings.set("list_setting", "cc,dd");
+          return settings;
+        }
+      JS
+
+      second_migration_field =
+        Fabricate(:migration_theme_field, theme: theme, value: <<~JS, version: 2)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 3);
+          settings.set("list_setting", "ee,ff");
+          return settings;
+        }
+      JS
+
+      third_migration_field =
+        Fabricate(:migration_theme_field, theme: theme, value: <<~JS, version: 3)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 4);
+          settings.set("list_setting", "gg,hh");
+          return settings;
+        }
+      JS
+
+      theme.migrate_settings
+
+      records = theme.theme_settings_migrations.order(:version)
+
+      expect(records.count).to eq(3)
+
+      expect(records[0].version).to eq(1)
+      expect(records[0].name).to eq("some-name")
+      expect(records[0].theme_field_id).to eq(migration_field.id)
+      expect(records[0].diff).to eq(
+        "additions" => [
+          { "key" => "integer_setting", "val" => 2 },
+          { "key" => "list_setting", "val" => "cc,dd" },
+        ],
+        "deletions" => [],
+      )
+
+      expect(records[1].version).to eq(2)
+      expect(records[1].name).to eq("some-name")
+      expect(records[1].theme_field_id).to eq(second_migration_field.id)
+      expect(records[1].diff).to eq(
+        "additions" => [
+          { "key" => "integer_setting", "val" => 3 },
+          { "key" => "list_setting", "val" => "ee,ff" },
+        ],
+        "deletions" => [
+          { "key" => "integer_setting", "val" => 2 },
+          { "key" => "list_setting", "val" => "cc,dd" },
+        ],
+      )
+
+      expect(records[2].version).to eq(3)
+      expect(records[2].name).to eq("some-name")
+      expect(records[2].theme_field_id).to eq(third_migration_field.id)
+      expect(records[2].diff).to eq(
+        "additions" => [
+          { "key" => "integer_setting", "val" => 4 },
+          { "key" => "list_setting", "val" => "gg,hh" },
+        ],
+        "deletions" => [
+          { "key" => "integer_setting", "val" => 3 },
+          { "key" => "list_setting", "val" => "ee,ff" },
+        ],
+      )
+    end
+
+    it "allows removing an old setting that no longer exists" do
+      settings_field.update!(value: <<~YAML)
+        setting_that_will_be_removed: 1
+      YAML
+      theme.update_setting(:setting_that_will_be_removed, 1023)
+      theme.save!
+
+      settings_field.update!(value: <<~YAML)
+        new_setting: 1
+      YAML
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          if (settings.get("setting_that_will_be_removed") !== 1023) {
+            throw new Error(`expected setting_that_will_be_removed to be 1023, but it was instead ${settings.get("setting_that_will_be_removed")}.`);
+          }
+          settings.delete("setting_that_will_be_removed");
+          return settings;
+        }
+      JS
+      theme.reload
+      theme.migrate_settings
+      theme.reload
+
+      expect(theme.theme_settings.count).to eq(0)
+
+      records = theme.theme_settings_migrations
+      expect(records.size).to eq(1)
+
+      expect(records[0].diff).to eq(
+        "additions" => [],
+        "deletions" => [{ "key" => "setting_that_will_be_removed", "val" => 1023 }],
+      )
     end
   end
 

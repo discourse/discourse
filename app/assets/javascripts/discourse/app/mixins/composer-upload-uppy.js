@@ -634,21 +634,23 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.mobileUploadButton = document.getElementById(
         this.mobileFileUploaderId
       );
-      this.mobileUploadButtonEventListener = () => {
-        document.getElementById(this.fileUploadElementId).click();
-      };
-      this.mobileUploadButton.addEventListener(
+      this.mobileUploadButton?.addEventListener(
         "click",
-        this.mobileUploadButtonEventListener,
+        this._mobileUploadButtonEventListener,
         false
       );
     }
   },
 
+  @bind
+  _mobileUploadButtonEventListener() {
+    document.getElementById(this.fileUploadElementId).click();
+  },
+
   _unbindMobileUploadButton() {
     this.mobileUploadButton?.removeEventListener(
       "click",
-      this.mobileUploadButtonEventListener
+      this._mobileUploadButtonEventListener
     );
   },
 

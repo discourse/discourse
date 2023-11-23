@@ -12,7 +12,6 @@ hy:
     poll_minimum_trust_level_to_create: "Սահմանել հարցումներ ստեղծելու համար անհրաժեշտ վստահության նվազագույն մակարդակը"
   poll:
     invalid_argument: "'%{argument}' արգումենտի %{value} արժեքը սխալ է:"
-    multiple_polls_without_name: "Կան առանց անվան բազմակի հարցումներ: Օգտագործեք '<code>անուն</code>' հատկանիշը՝ Ձեր հարցումները եզակիորեն նույնականացնելու համար:"
     multiple_polls_with_same_name: "Կան նույն անվամբ բազմակի հարցումներ՝ <strong>%{name}</strong>: Օգտագործեք '<code>անուն</code>' ատրիբուտը՝ Ձեր հարցւոմները եզակիորեն նույնականացնելու համար:"
     default_poll_must_have_less_options:
       one: "Հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ"

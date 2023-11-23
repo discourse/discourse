@@ -157,7 +157,7 @@ module("Integration | Component | themes-list", function (hooks) {
     });
 
     await render(
-      hbs`<ThemesList @themes={{this.themes}} components=[] @currentTab={{this.currentTab}} />`
+      hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
     assert.ok(
@@ -176,7 +176,7 @@ module("Integration | Component | themes-list", function (hooks) {
     });
 
     await render(
-      hbs`<ThemesList @themes={{this.themes}} components=[] @currentTab={{this.currentTab}} />`
+      hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
     assert.ok(exists(".themes-list-filter"));

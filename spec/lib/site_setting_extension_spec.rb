@@ -281,7 +281,7 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe "remove_override" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     before do
       settings.setting(:test_override, "test")
@@ -836,7 +836,7 @@ RSpec.describe SiteSettingExtension do
 
   describe ".setup_methods" do
     describe "for uploads site settings" do
-      fab!(:upload) { Fabricate(:upload) }
+      fab!(:upload)
       fab!(:upload2) { Fabricate(:upload) }
 
       it "should return the upload record" do

@@ -59,7 +59,7 @@ module Chat
     private
 
     def fetch_channel(contract:, **)
-      ::Chat::Channel.strict_loading.includes(:chatable).find_by(id: contract.channel_id)
+      ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
     end
 
     def fetch_optional_membership(channel:, guardian:, **)

@@ -23,6 +23,7 @@
 
   &__trigger {
     display: inline-flex;
+    cursor: pointer;
 
     .touch & {
       @include unselectable;

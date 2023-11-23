@@ -71,7 +71,6 @@ export default class ChatMessageReaction extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     {{#if (and @reaction this.emojiUrl)}}
       <button
         type="button"

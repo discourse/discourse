@@ -290,6 +290,7 @@
       "categories extra";
     grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
     align-items: baseline;
+    gap: 0 0.5em;
     .header-title {
       grid-area: title;
     }
@@ -322,22 +323,14 @@
   .categories-wrapper {
     display: inline-flex;
     flex: 0 1 auto;
+    gap: 0 0.5em;
     @include ellipsis;
-    .badge-wrapper {
-      @include ellipsis;
-    }
   }
-  .badge-wrapper {
-    margin-right: 0.7em;
+  .badge-category__wrapper {
     min-width: 2.75em; // min needed for ellipsis
-  }
-  .badge-wrapper {
-    &.bullet,
-    &.bar,
-    &.none {
-      span.badge-category {
-        color: var(--header_primary-high);
-      }
+    @include ellipsis;
+    .badge-category {
+      color: var(--header_primary-high);
     }
   }
   .topic-header-extra {

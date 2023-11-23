@@ -73,7 +73,6 @@ sk:
       rebake_message: "Pregenerovať HTML"
       bookmark_message: "Záložka"
       save: "Uložiť"
-      return_to_threads_list: "Návrat k prebiehajúcim diskusiám"
       unread_threads_count:
         one: "Máte %{count} neprečítanú diskusiu"
         few: "Máte %{count} neprečítaných diskusií"
@@ -111,9 +110,9 @@ sk:
         default_search_placeholder: "#a-channel, @somebody alebo čokoľvek."
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@niekto"
-        user_search_placeholder: "...pridať ďalších používateľov"
         disabled_user: "má vypnutý chat"
         no_items: "Žiadne položky"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Upraviť kanál
         input_placeholder: Pridať meno
@@ -216,7 +215,6 @@ sk:
           other: "+%{count}"
       threads:
         open: "Otvoriť vlákno"
-        list: "Prebiehajúca diskusia"
         none: "Nezúčastňujete sa na žiadnych vláknach v tomto kanáli."
       draft_channel_screen:
         header: "Nová správa"

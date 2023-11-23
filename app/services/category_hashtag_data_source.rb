@@ -25,7 +25,7 @@ class CategoryHashtagDataSource
       item.relative_url = category.url
       item.id = category.id
 
-      # Single-level category heirarchy should be enough to distinguish between
+      # Single-level category hierarchy should be enough to distinguish between
       # categories here.
       item.ref = category.slug_ref
     end

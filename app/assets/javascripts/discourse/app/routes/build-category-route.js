@@ -1,13 +1,9 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { all, Promise } from "rsvp";
-import {
-  changeNewListSubset,
-  changeSort,
-  queryParams,
-  resetParams,
-} from "discourse/controllers/discovery-sortable";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 import Category from "discourse/models/category";
 import CategoryList from "discourse/models/category-list";
 import TopicList from "discourse/models/topic-list";
@@ -18,64 +14,63 @@ import {
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
+@disableImplicitInjections
 class AbstractCategoryRoute extends DiscourseRoute {
   @service composer;
   @service router;
+  @service store;
+  @service topicTrackingState;
+  @service("search") searchService;
+  @service historyStore;
 
   queryParams = queryParams;
 
-  model(modelParams) {
+  templateName = "discovery/list";
+  controllerName = "discovery/list";
+
+  async model(params, transition) {
     const category = Category.findBySlugPathWithID(
-      modelParams.category_slug_path_with_id
+      params.category_slug_path_with_id
     );
 
     if (!category) {
-      const parts = modelParams.category_slug_path_with_id.split("/");
-      if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
-        parts.pop();
-      }
-
-      return Category.reloadBySlugPath(parts.join("/")).then((result) => {
-        const record = this.store.createRecord("category", result.category);
-        record.setupGroupsAndPermissions();
-        this.site.updateCategory(record);
-        return { category: record, modelParams };
-      });
-    }
-
-    if (category) {
-      return { category, modelParams };
-    }
-  }
-
-  afterModel(model, transition) {
-    if (!model) {
       this.router.replaceWith("/404");
       return;
     }
-
-    const { category, modelParams } = model;
 
     if (
       this.routeConfig?.no_subcategories === undefined &&
       category.default_list_filter === "none" &&
       this.routeConfig?.filter === "default" &&
-      modelParams
+      params
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
       this.router.replaceWith(
         "discovery.categoryNone",
-        modelParams.category_slug_path_with_id
+        params.category_slug_path_with_id
       );
       return;
     }
 
-    this._setupNavigation(category);
-    return all([
-      this._createSubcategoryList(category),
-      this._retrieveTopicList(category, transition, modelParams),
-    ]);
+    const subcategoryListPromise = this._createSubcategoryList(category);
+    const topicListPromise = this._retrieveTopicList(
+      category,
+      transition,
+      params
+    );
+
+    const noSubcategories = !!this.routeConfig?.no_subcategories;
+    const filterType = this.filter(category).split("/")[0];
+
+    return {
+      category,
+      modelParams: params,
+      subcategoryList: await subcategoryListPromise,
+      list: await topicListPromise,
+      noSubcategories,
+      filterType,
+    };
   }
 
   filter(category) {
@@ -84,34 +79,15 @@ class AbstractCategoryRoute extends DiscourseRoute {
       : this.routeConfig?.filter;
   }
 
-  _setupNavigation(category) {
-    const noSubcategories =
-        this.routeConfig && !!this.routeConfig.no_subcategories,
-      filterType = this.filter(category).split("/")[0];
-
-    this.controllerFor("navigation/category").setProperties({
-      category,
-      filterType,
-      noSubcategories,
-    });
-  }
-
-  _createSubcategoryList(category) {
-    this._categoryList = null;
-
+  async _createSubcategoryList(category) {
     if (category.isParent && category.show_subcategory_list) {
-      return CategoryList.listForParent(this.store, category).then(
-        (list) => (this._categoryList = list)
-      );
+      return CategoryList.listForParent(this.store, category);
     }
-
-    // If we're not loading a subcategory list just resolve
-    return Promise.resolve();
   }
 
-  _retrieveTopicList(category, transition, modelParams) {
+  async _retrieveTopicList(category, transition, modelParams) {
     const findOpts = filterQueryParams(modelParams, this.routeConfig);
-    const extras = { cached: this.isPoppedState(transition) };
+    const extras = { cached: this.historyStore.isPoppedState };
 
     let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
     if (findOpts.no_subcategories) {
@@ -119,17 +95,16 @@ class AbstractCategoryRoute extends DiscourseRoute {
     }
     listFilter += `/l/${this.filter(category)}`;
 
-    return findTopicList(
+    const topicList = await findTopicList(
       this.store,
       this.topicTrackingState,
       listFilter,
       findOpts,
       extras
-    ).then((list) => {
-      TopicList.hideUniformCategory(list, category);
-      this.set("topics", list);
-      return list;
-    });
+    );
+    TopicList.hideUniformCategory(topicList, category);
+
+    return topicList;
   }
 
   titleToken() {
@@ -153,50 +128,18 @@ class AbstractCategoryRoute extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    const topics = this.topics,
-      category = model.category;
+    super.setupController(...arguments);
+    controller.bulkSelectHelper.clear();
+    this.searchService.searchContext = model.category.get("searchContext");
+    setTopicList(model.list);
 
-    let topicOpts = {
-      model: topics,
-      category,
-      period:
-        topics.get("for_period") ||
-        (model.modelParams && model.modelParams.period),
-      noSubcategories: this.routeConfig && !!this.routeConfig.no_subcategories,
-      expandAllPinned: true,
-    };
-
-    const p = category.get("params");
-    if (p && Object.keys(p).length) {
-      if (p.order !== undefined) {
-        topicOpts.order = p.order;
-      }
-      if (p.ascending !== undefined) {
-        topicOpts.ascending = p.ascending;
-      }
+    const p = model.category.params;
+    if (p?.order !== undefined) {
+      controller.order = p.order;
     }
-
-    this.controllerFor("discovery/topics").setProperties(topicOpts);
-    this.controllerFor("discovery/topics").bulkSelectHelper.clear();
-    this.searchService.searchContext = category.get("searchContext");
-    this.set("topics", null);
-  }
-
-  renderTemplate() {
-    this.render("navigation/category", { outlet: "navigation-bar" });
-
-    if (this._categoryList) {
-      this.render("discovery/categories", {
-        outlet: "header-list-container",
-        model: this._categoryList,
-      });
-    } else {
-      this.disconnectOutlet({ outlet: "header-list-container" });
+    if (p?.ascending !== undefined) {
+      controller.ascending = p.ascending;
     }
-    this.render("discovery/topics", {
-      controller: "discovery/topics",
-      outlet: "list-container",
-    });
   }
 
   deactivate() {
@@ -214,16 +157,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
   @action
   triggerRefresh() {
     this.refresh();
-  }
-
-  @action
-  changeSort(sortBy) {
-    changeSort.call(this, sortBy);
-  }
-
-  @action
-  changeNewListSubset(subset) {
-    changeNewListSubset.call(this, subset);
   }
 
   @action

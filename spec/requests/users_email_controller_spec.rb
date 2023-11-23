@@ -3,9 +3,9 @@
 require "rotp"
 
 RSpec.describe UsersEmailController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let!(:email_token) { Fabricate(:email_token, user: user) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator)
 
   describe "#confirm-new-email" do
     it "does not redirect to login for signed out accounts, this route works fine as anon user" do

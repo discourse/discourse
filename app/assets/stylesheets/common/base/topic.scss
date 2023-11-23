@@ -76,8 +76,8 @@ $topic-progress-height: 42px;
         display: flex;
         align-items: center;
         position: absolute;
-        right: 10px;
-        top: 10px;
+        right: 0px;
+        top: 8px;
         color: var(--primary);
         opacity: 0.5;
         font-size: var(--font-up-1);
@@ -99,6 +99,23 @@ $topic-progress-height: 42px;
     }
     .timeline-container .timeline-scroller-content {
       position: relative;
+    }
+  }
+  #topic-progress-wrapper {
+    .topic-admin-menu-button .toggle-admin-menu {
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--d-border-radius);
+      border-bottom-right-radius: 0;
+    }
+    #topic-progress {
+      border-radius: var(--d-border-radius);
+      overflow: hidden;
+    }
+    .topic-admin-menu-button-container + #topic-progress {
+      border-top-left-radius: 0;
+      border-top-right-radius: var(--d-border-radius);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: var(--d-border-radius);
     }
   }
 }
@@ -265,10 +282,6 @@ $topic-progress-height: 42px;
   }
 }
 
-a.badge-category {
-  margin-top: 5px;
-}
-
 #topic-title {
   .title-wrapper {
     display: flex;
@@ -282,9 +295,7 @@ a.badge-category {
     margin-bottom: 0;
     width: 100%;
   }
-  a.badge-category {
-    margin-top: 5px;
-  }
+
   a.edit-topic .d-icon {
     font-size: 0.8em;
   }

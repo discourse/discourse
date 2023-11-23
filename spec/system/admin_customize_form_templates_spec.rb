@@ -4,9 +4,9 @@ describe "Admin Customize Form Templates", type: :system do
   let(:form_template_page) { PageObjects::Pages::FormTemplate.new }
   let(:ace_editor) { PageObjects::Components::AceEditor.new }
 
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:form_template) { Fabricate(:form_template) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:admin)
+  fab!(:form_template)
+  fab!(:category)
 
   before do
     SiteSetting.experimental_form_templates = true

@@ -2,7 +2,7 @@
 
 RSpec.describe Chat::Api::SummariesController do
   fab!(:current_user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   let(:plugin) { Plugin::Instance.new }
 
   before do

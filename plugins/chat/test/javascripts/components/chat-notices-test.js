@@ -12,9 +12,7 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
 
   test("displays all notices for a channel", async function (assert) {
     this.channel = fabricators.channel();
-    this.manager = this.container.lookup(
-      "service:chatChannelPaneSubscriptionsManager"
-    );
+    this.manager = this.container.lookup("service:chatChannelNoticesManager");
     this.manager.handleNotice({
       channel_id: this.channel.id,
       text_content: "hello",
@@ -40,9 +38,7 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
 
   test("Notices can be cleared", async function (assert) {
     this.channel = fabricators.channel();
-    this.manager = this.container.lookup(
-      "service:chatChannelPaneSubscriptionsManager"
-    );
+    this.manager = this.container.lookup("service:chatChannelNoticesManager");
     this.manager.handleNotice({
       channel_id: this.channel.id,
       text_content: "hello",
@@ -66,9 +62,7 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
   });
   test("MentionWithoutMembership notice renders", async function (assert) {
     this.channel = fabricators.channel();
-    this.manager = this.container.lookup(
-      "service:chatChannelPaneSubscriptionsManager"
-    );
+    this.manager = this.container.lookup("service:chatChannelNoticesManager");
     const text = "Joffrey can't chat, hermano";
     this.manager.handleNotice({
       channel_id: this.channel.id,
@@ -91,7 +85,7 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       .dom(".mention-without-membership-notice__body__link")
       .hasText(I18n.t("chat.mention_warning.invite"));
 
-    pretender.put(`/chat/${this.channel.id}/invite`, () => {
+    pretender.post(`/chat/api/channels/${this.channel.id}/invites`, () => {
       return [200, { "Content-Type": "application/json" }, {}];
     });
 

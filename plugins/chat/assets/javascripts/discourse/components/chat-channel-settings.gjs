@@ -66,11 +66,21 @@ export default class ChatAboutScreen extends Component {
   );
 
   get canEditChannel() {
-    return this.chatGuardian.canEditChatChannel();
-  }
+    if (
+      this.args.channel.isCategoryChannel &&
+      this.chatGuardian.canEditChatChannel()
+    ) {
+      return true;
+    }
 
-  get shouldRenderTitleSection() {
-    return this.args.channel.isCategoryChannel;
+    if (
+      this.args.channel.isDirectMessageChannel &&
+      this.args.channel.chatable.group
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   get shouldRenderDescriptionSection() {
@@ -293,7 +303,7 @@ export default class ChatAboutScreen extends Component {
   }
 
   @action
-  onEditChannelName() {
+  onEditChannelTitle() {
     return this.modal.show(ChatModalEditChannelName, {
       model: this.args.channel,
     });
@@ -309,39 +319,37 @@ export default class ChatAboutScreen extends Component {
   <template>
     <div class="chat-channel-settings">
       <ChatForm as |form|>
-        {{#if this.shouldRenderTitleSection}}
-          <form.section @title={{this.titleSectionTitle}} as |section|>
-            <section.row>
-              <:default>
-                <div class="chat-channel-settings__name">
-                  {{replaceEmoji @channel.title}}
+        <form.section @title={{this.titleSectionTitle}} as |section|>
+          <section.row>
+            <:default>
+              <div class="chat-channel-settings__name">
+                {{replaceEmoji @channel.title}}
+              </div>
+
+              {{#if @channel.isCategoryChannel}}
+                <div class="chat-channel-settings__slug">
+                  <LinkTo
+                    @route="chat.channel"
+                    @models={{@channel.routeModels}}
+                  >
+                    /chat/c/{{@channel.slug}}/{{@channel.id}}
+                  </LinkTo>
                 </div>
+              {{/if}}
+            </:default>
 
-                {{#if @channel.isCategoryChannel}}
-                  <div class="chat-channel-settings__slug">
-                    <LinkTo
-                      @route="chat.channel"
-                      @models={{@channel.routeModels}}
-                    >
-                      /chat/c/{{@channel.slug}}/{{@channel.id}}
-                    </LinkTo>
-                  </div>
-                {{/if}}
-              </:default>
+            <:action>
+              {{#if this.canEditChannel}}
+                <DButton
+                  @label="chat.channel_settings.edit"
+                  @action={{this.onEditChannelTitle}}
+                  class="edit-name-slug-btn btn-flat"
+                />
+              {{/if}}
+            </:action>
 
-              <:action>
-                {{#if this.canEditChannel}}
-                  <DButton
-                    @label="chat.channel_settings.edit"
-                    @action={{this.onEditChannelName}}
-                    class="edit-name-slug-btn btn-flat"
-                  />
-                {{/if}}
-              </:action>
-
-            </section.row>
-          </form.section>
-        {{/if}}
+          </section.row>
+        </form.section>
 
         {{#if this.shouldRenderDescriptionSection}}
           <form.section @title={{this.descriptionSectionTitle}} as |section|>
@@ -567,7 +575,7 @@ export default class ChatAboutScreen extends Component {
                 @channel={{@channel}}
                 @options={{hash
                   joinClass="btn-primary"
-                  leaveClass="btn-flat"
+                  leaveClass="btn-danger"
                   joinIcon="sign-in-alt"
                   leaveIcon="sign-out-alt"
                 }}

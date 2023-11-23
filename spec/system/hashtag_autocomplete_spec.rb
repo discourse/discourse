@@ -100,6 +100,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   end
 
   it "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
+    Group.refresh_automatic_groups!
     topic_page.visit_topic_and_open_composer(topic)
 
     expect(topic_page).to have_expanded_composer
@@ -192,8 +193,58 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     end
   end
 
+  it "decorates the user activity stream hashtags" do
+    post =
+      Fabricate(
+        :post,
+        raw: "this is a #cool-cat category and a #cooltag tag",
+        topic: topic,
+        user: current_user,
+      )
+    UserActionManager.enable
+    UserActionManager.post_created(post)
+
+    visit("/u/#{current_user.username}/activity")
+    expect(find(".user-stream-item [data-post-id=\"#{post.id}\"]")["innerHTML"]).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: category.url,
+        "data-type": "category",
+        "data-slug": category.slug,
+        "data-id": category.id,
+        "aria-label": category.name,
+      },
+    ) do
+      with_tag(
+        "span",
+        with: {
+          class: "hashtag-category-badge hashtag-color--category-#{category.id}",
+        },
+      )
+    end
+    expect(find(".user-stream-item [data-post-id=\"#{post.id}\"]")["innerHTML"]).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
+        "aria-label": tag.name,
+      },
+    ) do
+      with_tag(
+        "svg",
+        with: {
+          class: "fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string",
+        },
+      ) { with_tag("use", with: { href: "#tag" }) }
+    end
+  end
+
   context "when a user cannot access the category for a hashtag cooked in another post" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:manager_group) { Fabricate(:group, name: "Managers") }
     fab!(:private_category) do
       Fabricate(:private_category, name: "Management", slug: "management", group: manager_group)

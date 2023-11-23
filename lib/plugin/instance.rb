@@ -50,7 +50,6 @@ class Plugin::Instance
   %i[
     assets
     color_schemes
-    before_auth_initializers
     initializers
     javascripts
     locales
@@ -78,12 +77,14 @@ class Plugin::Instance
   def self.find_all(parent_path)
     [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
-        source = File.read(path)
-        metadata = Plugin::Metadata.parse(source)
-        plugins << self.new(metadata, path)
-      end
+      Dir["#{parent_path}/*/plugin.rb"].sort.each { |path| plugins << parse_from_source(path) }
     end
+  end
+
+  def self.parse_from_source(path)
+    source = File.read(path)
+    metadata = Plugin::Metadata.parse(source)
+    self.new(metadata, path)
   end
 
   def initialize(metadata = nil, path = nil)
@@ -289,6 +290,13 @@ class Plugin::Instance
 
   def register_upload_in_use(&block)
     Upload.add_in_use_callback(&block)
+  end
+
+  # Registers a category custom field to be loaded when rendering a category list
+  # Example usage:
+  #   register_preloaded_category_custom_fields("custom_field")
+  def register_preloaded_category_custom_fields(field)
+    Site.preloaded_category_custom_fields << field
   end
 
   def custom_avatar_column(column)
@@ -510,11 +518,12 @@ class Plugin::Instance
     @git_repo ||= GitRepo.new(directory, name)
   end
 
-  def before_auth(&block)
-    if @before_auth_complete
-      raise "Auth providers must be registered before omniauth middleware. after_initialize is too late!"
-    end
-    before_auth_initializers << block
+  def discourse_owned?
+    parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
+    return false if !parsed_commit_url
+    github_org = parsed_commit_url.path.split("/")[1]
+    (github_org == "discourse" || github_org == "discourse-org") &&
+      parsed_commit_url.host == "github.com"
   end
 
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
@@ -539,11 +548,6 @@ class Plugin::Instance
         raise e unless e.message.try(:include?, "PG::UndefinedTable")
       end
     end
-  end
-
-  def notify_before_auth
-    before_auth_initializers.each { |callback| callback.call(self) }
-    @before_auth_complete = true
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -793,7 +797,7 @@ class Plugin::Instance
   end
 
   def auth_provider(opts)
-    before_auth do
+    after_initialize do
       provider = Auth::AuthProvider.new
 
       Auth::AuthProvider.auth_attributes.each do |sym|
@@ -1005,6 +1009,12 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
   end
 
+  # Registers a new email notification filter. Notification is passed into block, and if all
+  # filters return `true`, the email notification will be sent.
+  def register_email_notification_filter(&block)
+    DiscoursePluginRegistry.register_email_notification_filter(block, self)
+  end
+
   # Registers a new push notification filter. User and notification payload are passed into block, and if all
   # filters return `true`, the push notification will be sent.
   def register_push_notification_filter(&block)
@@ -1110,7 +1120,7 @@ class Plugin::Instance
   # but all stats will be shown on the /about.json route. For example take
   # this usage:
   #
-  # register_about_stat_group("chat_messages") do
+  # register_stat("chat_messages") do
   #   { last_day: 1, "7_days" => 10, "30_days" => 100, count: 1000, previous_30_days: 150 }
   # end
   #
@@ -1132,18 +1142,12 @@ class Plugin::Instance
   # group of stats is shown on the site About page in the Site Statistics
   # table. Some stats may be needed purely for reporting purposes and thus
   # do not need to be shown in the UI to admins/users.
-  def register_about_stat_group(plugin_stat_group_name, show_in_ui: false, &block)
+  def register_stat(name, show_in_ui: false, expose_via_api: false, &block)
     # We do not want to register and display the same group multiple times.
-    if DiscoursePluginRegistry.about_stat_groups.any? { |stat_group|
-         stat_group[:name] == plugin_stat_group_name
-       }
-      return
-    end
+    return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
 
-    DiscoursePluginRegistry.register_about_stat_group(
-      { name: plugin_stat_group_name, show_in_ui: show_in_ui, block: block },
-      self,
-    )
+    stat = Stat.new(name, show_in_ui: show_in_ui, expose_via_api: expose_via_api, &block)
+    DiscoursePluginRegistry.register_stat(stat, self)
   end
 
   ##
@@ -1252,6 +1256,14 @@ class Plugin::Instance
   # call will be skipped.
   def register_post_action_notify_user_handler(handler)
     DiscoursePluginRegistry.register_post_action_notify_user_handler(handler, self)
+  end
+
+  # We strip posts before detecting mentions, oneboxes, attachments etc.
+  # We strip those elements that shouldn't be detected. For example,
+  # a mention inside a quote should be ignored, so we strip it off.
+  # Using this API plugins can register their own post strippers.
+  def register_post_stripper(&block)
+    DiscoursePluginRegistry.register_post_stripper({ block: block }, self)
   end
 
   protected

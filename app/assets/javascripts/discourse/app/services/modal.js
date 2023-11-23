@@ -6,24 +6,10 @@ import { dasherize } from "@ember/string";
 import $ from "jquery";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated, {
+  withSilencedDeprecations,
+} from "discourse-common/lib/deprecated";
 import I18n from "discourse-i18n";
-
-// Known legacy modals in core. Silence deprecation warnings for these so the messages
-// don't cause unnecessary noise.
-const KNOWN_LEGACY_MODALS = [
-  "associate-account-confirm",
-  "avatar-selector",
-  "change-owner",
-  "change-post-notice",
-  "create-account",
-  "create-invite-bulk",
-  "create-invite",
-  "grant-badge",
-  "group-default-notifications",
-  "reject-reason-reviewable",
-  "reorder-categories",
-];
 
 const LEGACY_OPTS = new Set([
   "admin",
@@ -139,17 +125,15 @@ export default class ModalServiceWithLegacySupport extends ModalService {
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
-    if (!KNOWN_LEGACY_MODALS.includes(modal)) {
-      deprecated(
-        `Defining modals using a controller is deprecated. Use the component-based API instead. (modal: ${modal})`,
-        {
-          id: "discourse.modal-controllers",
-          since: "3.1",
-          dropFrom: "3.2",
-          url: "https://meta.discourse.org/t/268057",
-        }
-      );
-    }
+    deprecated(
+      `Defining modals using a controller is deprecated. Use the component-based API instead. (modal: ${modal})`,
+      {
+        id: "discourse.modal-controllers",
+        since: "3.1",
+        dropFrom: "3.2",
+        url: "https://meta.discourse.org/t/268057",
+      }
+    );
 
     const name = modal;
     const container = getOwner(this);
@@ -178,7 +162,12 @@ export default class ModalServiceWithLegacySupport extends ModalService {
 
     const modalName = `modal/${templateName}`;
     const fullName = opts.admin ? `admin/templates/${modalName}` : modalName;
-    route.render(fullName, renderArgs);
+
+    // Any use of the legacy modal system will trigger Discourse's own deprecation message
+    // so we can silence Ember's message here.
+    withSilencedDeprecations("route-render-template", () => {
+      route.render(fullName, renderArgs);
+    });
 
     if (opts.panels) {
       if (controller.actions.onSelectPanel) {
@@ -214,9 +203,16 @@ export default class ModalServiceWithLegacySupport extends ModalService {
       return;
     }
 
-    getOwner(this)
-      .lookup("route:application")
-      .render("hide-modal", { into: "application", outlet: "modalBody" });
+    const applicationRoute = getOwner(this).lookup("route:application");
+
+    // Any use of the legacy modal system will trigger Discourse's own deprecation message
+    // so we can silence Ember's message here.
+    withSilencedDeprecations("route-render-template", () => {
+      applicationRoute.render("hide-modal", {
+        into: "application",
+        outlet: "modalBody",
+      });
+    });
     $(".d-modal.fixed-modal").modal("hide");
 
     if (controller) {

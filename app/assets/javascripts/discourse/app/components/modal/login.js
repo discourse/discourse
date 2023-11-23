@@ -5,19 +5,25 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import { isWebauthnSupported } from "discourse/lib/webauthn";
+import {
+  getPasskeyCredential,
+  isWebauthnSupported,
+} from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
 import I18n from "discourse-i18n";
 
 export default class Login extends Component {
+  @service capabilities;
   @service dialog;
   @service siteSettings;
   @service site;
+  @service login;
 
   @tracked loggingIn = false;
   @tracked loggedIn = false;
@@ -25,8 +31,8 @@ export default class Login extends Component {
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
-  @tracked flash = this.args.model?.flash;
-  @tracked flashType = this.args.model?.flashType;
+  @tracked flash = this.args.model.flash;
+  @tracked flashType = this.args.model.flashType;
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked
   canLoginLocalWithEmail = this.siteSettings.enable_local_logins_via_email;
@@ -41,18 +47,9 @@ export default class Login extends Component {
   @tracked securityKeyAllowedCredentialIds;
   @tracked secondFactorToken;
 
-  constructor() {
-    super(...arguments);
-    if (this.args.model?.isExternalLogin) {
-      this.externalLogin(this.args.model.externalLoginMethod, {
-        signup: this.args.model.signup,
-      });
-    }
-  }
-
   get awaitingApproval() {
     return (
-      this.args.model?.awaitingApproval &&
+      this.args.model.awaitingApproval &&
       !this.canLoginLocal &&
       !this.canLoginLocalWithEmail
     );
@@ -90,7 +87,7 @@ export default class Login extends Component {
   get canUsePasskeys() {
     return (
       this.siteSettings.enable_local_logins &&
-      this.siteSettings.experimental_passkeys &&
+      this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
   }
@@ -107,6 +104,38 @@ export default class Login extends Component {
     return (
       this.args.model.canSignUp && !this.loggingIn && !this.showSecondFactor
     );
+  }
+
+  @action
+  async passkeyLogin(mediation = "optional") {
+    try {
+      const publicKeyCredential = await getPasskeyCredential(
+        (e) => this.dialog.alert(e),
+        mediation,
+        this.capabilities.isFirefox
+      );
+
+      if (publicKeyCredential) {
+        const authResult = await ajax("/session/passkey/auth.json", {
+          type: "POST",
+          data: { publicKeyCredential },
+        });
+
+        if (authResult && !authResult.error) {
+          const destinationUrl = cookie("destination_url");
+          if (destinationUrl) {
+            removeCookie("destination_url");
+            window.location.assign(destinationUrl);
+          } else {
+            window.location.reload();
+          }
+        } else {
+          this.dialog.alert(authResult.error);
+        }
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   @action
@@ -145,7 +174,7 @@ export default class Login extends Component {
   }
 
   @action
-  async login() {
+  async triggerLogin() {
     if (this.loginDisabled) {
       return;
     }
@@ -284,18 +313,14 @@ export default class Login extends Component {
   }
 
   @action
-  async externalLogin(loginMethod, { signup = false } = {}) {
+  async externalLoginAction(loginMethod) {
     if (this.loginDisabled) {
       return;
     }
-
-    try {
-      this.loggingIn = true;
-      await loginMethod.doLogin({ signup });
-      this.args.closeModal();
-    } catch {
-      this.loggingIn = false;
-    }
+    this.login.externalLogin(loginMethod, {
+      signup: false,
+      setLoggingIn: (value) => (this.loggingIn = value),
+    });
   }
 
   @action

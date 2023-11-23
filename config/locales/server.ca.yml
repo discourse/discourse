@@ -406,7 +406,8 @@ ca:
             name:
               same_as_password: "és igual que la vostra contrasenya."
             ip_address:
-              signup_not_allowed: "No es permet el registre des d'aquest compte."
+              blocked: "No es permeten nous registres des de la vostra adreça IP."
+              max_new_accounts_per_registration_ip: "No es permeten registres nous des de la vostra adreça IP (s'ha arribat al límit màxim). Contacteu amb un membre de l'equip responsable."
         user_email:
           attributes:
             user_id:
@@ -1223,8 +1224,6 @@ ca:
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
     content_security_policy_collect_reports: "Habilita la recol·lecció de reports de violació de CSP en /csp_reports"
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
-    top_menu: "Determineu quins elements apareixen en la navegació de la pàgina principal i en quin ordre. Per exemple, latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Determineu quins elements apareixen en el menú de publicacions i en qui ordre. Exemple: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Elements del menú que s'oculten per defecte en el menú de publicacions llevat que es faci clic en els tres punts d'expansió."
     share_links: "Determina quins elements apareixen en el diàleg de compartir i en qui ordre."
     site_contact_username: "Nom d'usuari vàlid de l'equip responsable des del qual s'envien tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
@@ -1390,7 +1389,6 @@ ca:
     min_title_similar_length: "Longitud mínima d'un títol abans que sigui consultat per a temes semblants."
     desktop_category_page_style: "Estil visual per a la pàgina /categories."
     category_colors: "Llista de valors de color hexadecimal permesos per a categories."
-    category_style: "Estil visual per a insígnies de categoria."
     dark_mode_none: "Cap"
     max_image_size_kb: "Mida màxima de càrrega d'imatge en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també. Les imatges més grans que aquest límit i més petites que client_max_body_size es redimensionaran en la càrrega."
     max_attachment_size_kb: "Mida màxima de càrrega de fitxers adjunts en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també."
@@ -1546,7 +1544,6 @@ ca:
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
     short_progress_text_threshold: "Després que el nombre de publicacions en un tema superi aquesta xifra, la barra de progrés només mostrarà el nombre actual de publicacions. Si voleu canviar l'amplada de la barra de progrés, cal modificar aquest valor."
     warn_reviving_old_topic_age: "Es mostra un avís quan algú comença una resposta a un tema on la darrera resposta té més dies que els indicats. Per a inhabilitar-ho, deixeu-ho a 0."
-    autohighlight_all_code: "Obliga l'ús de codi ressaltat per a tots els blocs de codi preformatat, fins i tot quan no n'hagin especificat el llenguatge."
     highlighted_languages: "Regles incloses de ressaltat de sintaxi. (Advertència: incloure-hi massa llenguatges pot afectar el rendiment.) Vegeu: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per a una demostració."
     embed_any_origin: "Permet el contingut incrustable independentment de l’origen. Això és necessari per a aplicacions mòbils amb HTML estàtic."
     embed_topics_list: "Permet incrustació HTML de llistes de temes"
@@ -1829,9 +1826,6 @@ ca:
       not_allowed: "no és permès d'aquest proveïdor de correu. Feu servir una altra adreça de correu."
       blocked: "no és permès"
       revoked: "No s'enviaran correus a '%{email}' fins a %{date}."
-    ip_address:
-      blocked: "No es permeten nous registres des de la vostra adreça IP."
-      max_new_accounts_per_registration_ip: "No es permeten registres nous des de la vostra adreça IP (s'ha arribat al límit màxim). Contacteu amb un membre de l'equip responsable."
     website:
       domain_not_allowed: "El lloc web no és vàlid. Els dominis permesos són: %{domains}"
     auto_rejected: "Rebutjat automàticament per edat. Vegeu el paràmetre de configuració auto_handle_queued_age."

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe "Admin Customize Themes", type: :system do
-  fab!(:color_scheme) { Fabricate(:color_scheme) }
-  fab!(:theme) { Fabricate(:theme) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:color_scheme)
+  fab!(:theme)
+  fab!(:admin)
 
   before { sign_in(admin) }
 
@@ -40,9 +40,19 @@ describe "Admin Customize Themes", type: :system do
 
       expect(admin_customize_themes_page).to have_no_inactive_themes
     end
+
+    it "selects the themes tab by default" do
+      visit("/admin/customize/themes")
+      expect(find(".themes-list-header")).to have_css(".themes-tab.active")
+    end
+
+    it "selects the component tab when visiting the theme-components route" do
+      visit("/admin/customize/theme-components")
+      expect(find(".themes-list-header")).to have_css(".components-tab.active")
+    end
   end
 
-  describe "when visiting the page to customize the theme" do
+  describe "when visiting the page to customize a single theme" do
     it "should allow admin to update the color scheme of the theme" do
       visit("/admin/customize/themes/#{theme.id}")
 

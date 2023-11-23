@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "User selector", type: :system do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:user) { with_search_indexer_enabled { Fabricate(:user, username: "someone") } }

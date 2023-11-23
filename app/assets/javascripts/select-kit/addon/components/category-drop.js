@@ -15,11 +15,9 @@ export const ALL_CATEGORIES_ID = "all-categories";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-drop"],
-  classNameBindings: ["categoryStyle"],
   classNames: ["category-drop"],
   value: readOnly("category.id"),
   content: readOnly("categoriesWithShortcuts.[]"),
-  categoryStyle: readOnly("siteSettings.category_style"),
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   navigateToEdit: false,
   editingCategory: false,

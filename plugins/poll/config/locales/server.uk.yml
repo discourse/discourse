@@ -15,7 +15,6 @@ uk:
   poll:
     poll: "опитування"
     invalid_argument: "Неправильне значення '%{value}' для аргументу '%{argument}'."
-    multiple_polls_without_name: "Існує кілька опитувань без імені. Використовуйте атрибут '<code>name</code>', щоб однозначно визначити свої опитування."
     multiple_polls_with_same_name: "Існує кілька опитувань з однаковою назвою: <strong>%{name}</strong> . Використовуйте атрибут '<code>name</code>', щоб однозначно визначити свої опитування."
     default_poll_must_have_at_least_1_option: "Опитування повинно мати принаймні 1 варіант."
     named_poll_must_have_at_least_1_option: "Опитування з назвою <strong>%{name}</strong> повинно мати принаймні 1 варіант."

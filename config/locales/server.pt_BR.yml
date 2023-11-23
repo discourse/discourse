@@ -568,7 +568,8 @@ pt_BR:
             name:
               same_as_password: "é igual à sua senha."
             ip_address:
-              signup_not_allowed: "Não é permitido cadastrar esta conta."
+              blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
+              max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Entre em contato com um membro da equipe."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1474,7 +1475,6 @@ pt_BR:
     blocked_onebox_domains: "Uma lista de domínios que nunca serão \"oneboxed\", por exemplo, wikipedia.org\n(símbolos coringas como \"*\" e \"?\" não são suportados)"
     block_onebox_on_redirect: "Bloqueie o Onebox para URLs que redirecionam."
     allowed_inline_onebox_domains: "Uma lista de domínios que serão colocados em miniatura no Onebox se forem vinculados sem um título"
-    enable_inline_onebox_on_all_domains: "Ignore a configuração do site inline_onebox_domain_whitelist e permita inclusões de Onebox em todos os domínios."
     force_custom_user_agent_hosts: "Hosts para os quais usar um agente do(a) usuário(a) do Onebox em todos os pedidos. (Especialmente útil para hosts que limitam acesso do agente do(a) usuário(a).)"
     max_oneboxes_per_post: "Quantidade máxima de Onebox em uma postagem."
     facebook_app_access_token: "Um token gerado do seu segredo e ID do app Facebook. Usado para gerar Oneboxes do Instagram."
@@ -1496,7 +1496,6 @@ pt_BR:
     email_custom_headers: "Uma lista delimitada por barras de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Acesse <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Fornece mais detalhes aos(às) usuários(as) sobre o motivo de não poderem acessar um tópico específico. Observação: isso não é tão seguro porque os(as) usuários(as) saberão se uma URL estiver vinculada a um tópico válido."
-    enforce_second_factor: "Obriga os(as) usuários(as) a ativar a autenticação de dois fatores. Selecione \"tudo\" para aplicar a todos os(as) usuários(as). Selecione \"equipe\" para aplicar somente aos(as) usuários(as) da equipe."
     force_https: "Obrigue seu site a usar apenas HTTPS. AVISO: NÃO ative até ter verificado se o HTTPS está totalmente configurado e funcionando em todos os lugares! Você verificou se seu CDN, todas as entradas com conta de rede social e logotipos e dependências externas também são compatíveis com HTTPS?"
     same_site_cookies: "Use os mesmos cookies do site, eles eliminam todos vetores de solicitação intersite forjada nos navegadores compatíveis (Lax ou Strict). Aviso: o Strict funcionará somente em sites que obrigam entrada com conta e usam um método de autenticação externo."
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída em \"Resumir este tópico\" "
@@ -1568,8 +1567,6 @@ pt_BR:
     invalidate_inactive_admin_email_after_days: "As contas de administrador(a) que não acessaram o site nesta quantidade de dias precisarão validar novamente seu endereço de e-mail antes de entrarem com a conta. Defina como 0 para desativar."
     include_secure_categories_in_tag_counts: "Ao ativar, a contagem de tópicos para uma etiqueta incluirá tópicos em categorias restritas de leitura para todos(as) os(as) usuários(as). Quando desativado, os(as) usuários(as) normais verão apenas uma contagem de tópicos para uma etiqueta em que todos os tópicos estão em categorias públicas."
     display_personal_messages_tag_counts: "Ao ativar, será exibida a contagem de mensagens pessoais com uma determinada etiqueta."
-    top_menu: "Determine os items que aparecem ao navegar pela página inicial e em qual ordem. Por exemplo: mais recentes|novos|não lidos|categorias|melhores|lidos|postados|favoritos"
-    post_menu: "Determine os itens e a ordem em que aparecem no menu de postagens. Por exemplo: curtir|editar|sinalizar|excluir|compartilhar|favorito|responder"
     post_menu_hidden_items: "Os items de menu para ocultar por padrão no menu de postagem, a menos que cliquem em uma elipse de expansão."
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento e em qual ordem."
     allow_username_in_share_links: "Permitir que nomes de usuário sejam incluídos em links de compartilhamento. Isso é útil para recompensar emblemas com base em visitantes únicos."
@@ -1814,7 +1811,6 @@ pt_BR:
     min_title_similar_length: "O tamanho mínimo de um título antes que seja verificado para tópicos semelhantes."
     desktop_category_page_style: "Estilo de visual para a página/categorias."
     category_colors: "Uma lista de valores hexadecimais de cor permitidos para categorias."
-    category_style: "Estilo de visual para emblemas de categoria."
     default_dark_mode_color_scheme_id: "O esquema de cores usado no modo escuro."
     dark_mode_none: "Nenhum"
     max_image_size_kb: "O tamanho de envio de imagem máximo em KB. Isso deve ser configurado em nginx (client_max_body_size)/apache ou proxy também. Imagens maiores do que esta e menores do que client_max_body_size serão redimensionadas para o tamanho do envio."
@@ -2016,9 +2012,7 @@ pt_BR:
     display_name_on_posts: "Exibir o nome completo do(a) usuário(a) em suas postagens, além de seu(sua) @username."
     show_time_gap_days: "Se duas postagens forem feitas com tantos dias de intervalo, mostre o intervalo de tempo no tópico."
     short_progress_text_threshold: "Após a quantidade de mensagens em um tópico ultrapassar este número, a barra de progresso exibirá apenas o número da postagem atual. Se você alterar a largura da barra de progresso, talvez seja necessário alterar este valor."
-    default_code_lang: "Realce de sintaxe em linguagem de programação padrão aplicado a blocos de código (auto, text, ruby, python etc.). Esse valor também deve estar presente na configuração do site 'linguagens realçadas'."
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico anterior a esta quantidade de dias, um aviso será exibido. Desative ao definir como 0."
-    autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não especificarem o idioma"
     highlighted_languages: "Regras de destaque de sintaxe incluídas. (Atenção: incluir muitos idiomas pode afetar o desempenho) consulte: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para ver uma demonstração"
     show_copy_button_on_codeblocks: "Adicione um botão ao Codeblocks para copiar conteúdo do bloco para a área de transferência do(a) usuário(a)."
     embed_any_origin: "Permita um conteúdo incorporado, seja qual for a origem. Isso é necessário para apps móveis com HTML estático."
@@ -2195,7 +2189,6 @@ pt_BR:
       reply_by_email_address_is_empty: "Você deve definir uma \"resposta por endereço de e-mail\" antes de ativar a resposta por e-mail."
       email_polling_disabled: "Você deve ativar a enquete POP3 ou manual, ou ter uma enquete personalizada ativada antes de ativar uma resposta por e-mail."
       user_locale_not_enabled: "Você deve primeiro ativar \"permitir localidade do(a) usuário(a)\" antes de ativar esta configuração."
-      personal_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não quiser que ninguém, exceto a equipe, envie PMs, escolha o grupo da equipe."
       invalid_regex: "Regex não é inválida ou permitida."
       invalid_regex_with_message: "A regex '%{regex}' tem um erro: %{message}"
       email_editable_enabled: "Você deve desativar o \"e-mail editável\" antes de ativar esta configuração."
@@ -2425,9 +2418,6 @@ pt_BR:
       blocked: "não é permitido."
       revoked: "Não enviará e-mails para \"%{email}\" até %{date}."
       does_not_exist: "N/D"
-    ip_address:
-      blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
-      max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Entre em contato com um membro da equipe."
     website:
       domain_not_allowed: "O site é inválido. Os domínios permitidos são: %{domains}"
     auto_rejected: "Rejeitado automaticamente devido à idade. Veja a configuração do site auto_handle_queued_age."

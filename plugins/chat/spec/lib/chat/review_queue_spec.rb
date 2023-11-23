@@ -9,7 +9,7 @@ describe Chat::ReviewQueue do
   fab!(:flagger) { Fabricate(:user) }
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:message) { Fabricate(:chat_message, user: message_poster, chat_channel: chat_channel) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   let(:guardian) { Guardian.new(flagger) }
   let(:admin_guardian) { Guardian.new(admin) }
@@ -116,10 +116,10 @@ describe Chat::ReviewQueue do
       end
 
       it "ignores the cooldown window when the message is edited" do
-        Chat::MessageUpdater.update(
+        Chat::UpdateMessage.call(
           guardian: Guardian.new(message.user),
-          chat_message: message,
-          new_content: "I'm editing this message. Please flag it.",
+          message_id: message.id,
+          message: "I'm editing this message. Please flag it.",
         )
 
         expect(second_flag_result).to include success: true

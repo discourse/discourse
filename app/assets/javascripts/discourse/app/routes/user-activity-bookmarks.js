@@ -1,4 +1,5 @@
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -6,6 +7,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
+  historyStore: service(),
   templateName: "user/bookmarks",
 
   queryParams: {
@@ -13,11 +15,11 @@ export default DiscourseRoute.extend({
     q: { refreshModel: true },
   },
 
-  model(params, transition) {
+  model(params) {
     const controller = this.controllerFor("user-activity-bookmarks");
 
     if (
-      this.isPoppedState(transition) &&
+      this.historyStore.isPoppedState &&
       this.session.bookmarksModel &&
       this.session.bookmarksModel.searchTerm === params.q
     ) {

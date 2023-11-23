@@ -1,3 +1,4 @@
+import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import {
   addSidebarPanel,
   addSidebarSection,
@@ -21,6 +22,10 @@ function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
 
     get route() {
       return this.adminSidebarNavLink.route;
+    }
+
+    get href() {
+      return this.adminSidebarNavLink.href;
     }
 
     get models() {
@@ -90,13 +95,80 @@ function defineAdminSection(
   return AdminNavSection;
 }
 
+export function useAdminNavConfig(navMap) {
+  const adminNavSections = [
+    {
+      text: "",
+      name: "root",
+      hideSectionHeader: true,
+      links: [
+        {
+          name: "Back to Forum",
+          route: "discovery.latest",
+          text: "Back to Forum",
+          icon: "arrow-left",
+        },
+        {
+          name: "Lobby",
+          route: "admin-revamp.lobby",
+          text: "Lobby",
+          icon: "home",
+        },
+        {
+          name: "legacy",
+          route: "admin",
+          text: "Legacy Admin",
+          icon: "wrench",
+        },
+      ],
+    },
+  ];
+
+  return adminNavSections.concat(navMap);
+}
+
+let adminSectionLinkClass = null;
+export function buildAdminSidebar(navConfig) {
+  navConfig.forEach((adminNavSectionData) => {
+    addSidebarSection(
+      (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+        // We only want to define the link class once even though we have many different sections.
+        adminSectionLinkClass =
+          adminSectionLinkClass ||
+          defineAdminSectionLink(BaseCustomSidebarSectionLink);
+
+        return defineAdminSection(
+          adminNavSectionData,
+          BaseCustomSidebarSection,
+          adminSectionLinkClass
+        );
+      },
+      ADMIN_PANEL
+    );
+  });
+}
+
 export default {
   initialize(owner) {
     this.currentUser = owner.lookup("service:currentUser");
+    this.siteSettings = owner.lookup("service:site-settings");
 
     if (!this.currentUser?.staff) {
       return;
     }
+
+    if (
+      !this.siteSettings.userInAnyGroups(
+        "enable_experimental_admin_ui_groups",
+        this.currentUser
+      )
+    ) {
+      return;
+    }
+
+    this.adminSidebarExperimentStateManager = owner.lookup(
+      "service:admin-sidebar-experiment-state-manager"
+    );
 
     addSidebarPanel(
       (BaseCustomSidebarPanel) =>
@@ -106,71 +178,8 @@ export default {
         }
     );
 
-    let adminSectionLinkClass = null;
-
-    // HACK: This is just an example, we need a better way of defining this data.
-    const adminNavSections = [
-      {
-        text: "",
-        name: "root",
-        hideSectionHeader: true,
-        links: [
-          {
-            name: "Back to Forum",
-            route: "discovery.latest",
-            text: "Back to Forum",
-            icon: "arrow-left",
-          },
-          {
-            name: "Lobby",
-            route: "admin-revamp.lobby",
-            text: "Lobby",
-            icon: "home",
-          },
-          {
-            name: "legacy",
-            route: "admin",
-            text: "Legacy Admin",
-            icon: "wrench",
-          },
-        ],
-      },
-      {
-        text: "Community",
-        name: "community",
-        links: [
-          {
-            name: "Item 1",
-            route: "admin-revamp.config.area",
-            routeModels: [{ area: "item-1" }],
-            text: "Item 1",
-          },
-          {
-            name: "Item 2",
-            route: "admin-revamp.config.area",
-            routeModels: [{ area: "item-2" }],
-            text: "Item 2",
-          },
-        ],
-      },
-    ];
-
-    adminNavSections.forEach((adminNavSectionData) => {
-      addSidebarSection(
-        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-          // We only want to define the link class once even though we have many different sections.
-          adminSectionLinkClass =
-            adminSectionLinkClass ||
-            defineAdminSectionLink(BaseCustomSidebarSectionLink);
-
-          return defineAdminSection(
-            adminNavSectionData,
-            BaseCustomSidebarSection,
-            adminSectionLinkClass
-          );
-        },
-        ADMIN_PANEL
-      );
-    });
+    const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
+    const navConfig = useAdminNavConfig(savedConfig || ADMIN_NAV_MAP);
+    buildAdminSidebar(navConfig, adminSectionLinkClass);
   },
 };

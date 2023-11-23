@@ -262,8 +262,6 @@ et:
               same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
               same_as_current: "ühtib sinu hetkel kehtiva parooliga."
               unique_characters: "sisaldab liiga palju korduvaid tähemärke. Palun kasuta turvalisemat parooli."
-            ip_address:
-              signup_not_allowed: "Sellelt kontolt pole liitumine lubatud."
         color_scheme_color:
           attributes:
             hex:

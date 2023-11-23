@@ -169,6 +169,7 @@ pt_BR:
       inline_to_message: "Mensagem #%{message_id} por %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat do Tópico %{topic_title}"
+      thread_title_connector: "em"
       x_members:
         one: "%{count} membro"
         other: "%{count} membros"

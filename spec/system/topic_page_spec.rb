@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Topic page", type: :system do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   before { Fabricate(:post, topic: topic, cooked: <<~HTML) }
     <h2 dir="ltr" id="toc-h2-testing" data-d-toc="toc-h2-testing" class="d-toc-post-heading">
@@ -46,6 +46,27 @@ describe "Topic page", type: :system do
       visit("/t/#{topic.slug}/#{topic.id}")
 
       expect(".codeblock-button-wrapper").to be_present
+    end
+  end
+
+  context "with a gap" do
+    before do
+      post2 = Fabricate(:post, topic: topic, cooked: "post2")
+      post3 = Fabricate(:post, topic: topic, cooked: "post3")
+      post4 = Fabricate(:post, topic: topic, cooked: "post4")
+
+      PostDestroyer.new(Discourse.system_user, post2).destroy
+      PostDestroyer.new(Discourse.system_user, post3).destroy
+
+      sign_in Fabricate(:admin)
+    end
+
+    it "displays the gap to admins, and alows them to expand it" do
+      visit "/t/#{topic.slug}/#{topic.id}"
+
+      expect(page).to have_css(".topic-post", count: 2)
+      find(".post-stream .gap").click()
+      expect(page).to have_css(".topic-post", count: 4)
     end
   end
 end

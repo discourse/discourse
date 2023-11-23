@@ -27,8 +27,6 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    get "/bootstrap" => "bootstrap#index"
-
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
     end
@@ -221,6 +219,7 @@ Discourse::Application.routes.draw do
 
       get "customize" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/themes" => "themes#index", :constraints => AdminConstraint.new
+      get "customize/theme-components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/colors" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/colors/:id" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/permalinks" => "permalinks#index", :constraints => AdminConstraint.new
@@ -1025,7 +1024,6 @@ Discourse::Application.routes.draw do
     get "posts/by-date/:topic_id/:date" => "posts#by_date"
     get "posts/:id/reply-history" => "posts#reply_history"
     get "posts/:id/reply-ids" => "posts#reply_ids"
-    get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
     get "posts/:username/deleted" => "posts#deleted_posts",
         :constraints => {
           username: RouteFormat.username,
@@ -1470,11 +1468,6 @@ Discourse::Application.routes.draw do
         :constraints => {
           format: /.*/,
         }
-    get "brotli_asset/*path" => "static#brotli_asset",
-        :format => false,
-        :constraints => {
-          format: /.*/,
-        }
 
     get "favicon/proxied" => "static#favicon", :format => false
 
@@ -1590,6 +1583,16 @@ Discourse::Application.routes.draw do
 
     get "/theme-qunit" => "qunit#theme"
 
+    # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
+    # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
+    # handle it here.
+    if Rails.env.development?
+      get "/testem-theme-qunit/:testem_id/theme-qunit" => "qunit#theme",
+          :constraints => {
+            testem_id: /\d+/,
+          }
+    end
+
     post "/push_notifications/subscribe" => "push_notification#subscribe"
     post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
 
@@ -1608,7 +1611,6 @@ Discourse::Application.routes.draw do
     delete "user-status" => "user_status#clear"
 
     resources :sidebar_sections, only: %i[index create update destroy]
-    post "/sidebar_sections/reorder" => "sidebar_sections#reorder"
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new

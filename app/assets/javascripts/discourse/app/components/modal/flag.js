@@ -36,7 +36,7 @@ export default class Flag extends Component {
       label: I18n.t("flagging.take_action"),
       actions: [
         {
-          id: "agree_and_keep",
+          id: "agree_and_hide",
           icon: "thumbs-up",
           label: I18n.t("flagging.take_action_options.default.title"),
           description: I18n.t("flagging.take_action_options.default.details"),

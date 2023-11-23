@@ -192,6 +192,14 @@ module PageObjects
         page.has_css?(".form-template-field__description", text: description)
       end
 
+      def has_post_error?(error)
+        page.has_css?(".popup-tip", text: error, visible: all)
+      end
+
+      def has_no_post_error?(error)
+        page.has_no_css?(".popup-tip", text: error, visible: all)
+      end
+
       def composer_input
         find("#{COMPOSER_ID} .d-editor .d-editor-input")
       end

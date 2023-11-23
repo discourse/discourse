@@ -1174,8 +1174,6 @@ ur:
         title: "دو عنصری کی تصدیق"
         enable: "دو فیکٹر توثیق انتظام"
         disable_all: "سبھی کو غیر فعال کریں۔"
-        forgot_password: "پاس ورڈ بھول گئے؟"
-        confirm_password_description: "جاری رکھنے کیلئے براہ کرم اپنے پاسوَرڈ کی تصدیق کریں"
         name: "نام"
         label: "کَوڈ"
         rate_limit: "دوبارہ توثیقی کوڈ کی کوشش کرنے سے پہلے براہ کرم تھوڑا انتظار کریں۔"
@@ -1290,14 +1288,13 @@ ur:
           generic: "آپ کا %{provider} اکاؤنٹ تصدیق کیلئے استعمال کیا جائے گا۔"
       name:
         title: "نام"
-        instructions: "آپ کا پورا نام (اختیاری)"
-        instructions_required: "آپ کا پورا نام"
+        instructions: "آپ کا پورا نام (اختیاری)."
+        instructions_required: "آپ کا پورا نام."
         required: "براہ کرم ایک نام درج کریں"
         too_short: "آپ کا نام بہت چھوٹا ہے"
         ok: "آپ کا نام صحیح لگ رہا ہے"
       username:
         title: "صارف کا نام"
-        instructions: "منفرد، کوئی خالی جگہ نہیں، مختصر"
         short_instructions: "لوگ آپ کا زکر @%{username} کے طور پر کر سکتے ہیں"
         available: "آپ کا صارف نام دستیاب ہے"
         not_available: "دستیاب نہیں۔ اِستعمال کریں %{suggestion}؟"
@@ -1490,7 +1487,7 @@ ur:
         same_as_username: "آپ کا پاسورڈ وہی ہے جو آپ کا صارف نام ہے۔"
         same_as_email: "آپ کا پاسورڈ وہی ہے جو آپ کا اِی میل ہے۔"
         ok: "آپ کا پاسورڈ صحیح لگ رہا ہے"
-        instructions: "کم از کم %{count} حروف"
+        instructions: "کم از کم %{count} حروف."
         required: "براہ کرم پاس ورڈ درج کریں"
         confirm: "تصدیق کریں"
       summary:
@@ -1774,12 +1771,6 @@ ur:
       topic_count:
         one: "اس زمرے میں %{count} موضوع"
         other: "اس زمرے میں %{count} موضوعات"
-      plus_subcategories_title:
-        one: "%{name} اور ایک ذیلی زمرہ"
-        other: "%{name} اور %{count} ذیلی زمرہ جات"
-      plus_subcategories:
-        one: "+ %{count} ذیلی زمرہ"
-        other: "+ %{count} ذیلی زمرہ جات"
     select_kit:
       delete_item: "%{name} مٹائیں"
       filter_by: "فلٹر بذریعہ: %{name}"
@@ -2036,6 +2027,7 @@ ur:
         private_message: '%{username} نے "%{topic}" میں آپ کو زاتی پیغام بھیجا - %{site_title}'
         linked: '%{username} نے "%{topic}" سے آپ کی پوسٹ کو لنک کیا - %{site_title}'
         watching_first_post: '%{username} نے ایک نیا ٹاپک "%{topic}" بنایا - %{site_title}'
+        watching_category_or_tag: '%{username} نے "%{topic}" میں پوسٹ کیا - %{site_title}'
         confirm_title: "نوٹیفکیشن فعال - %{site_title}"
         confirm_body: "کامیابی! اطلاعات فعال ہوگئی ہیں۔"
         custom: "%{username} کی طرف سے %{site_title} پر اطلاعات"
@@ -3017,8 +3009,7 @@ ur:
       action: "پوسٹ فلَیگ کریں"
       take_action_options:
         default:
-          title: "کارروائی کریں"
-          details: "بجائے مزید کمیونٹی کی طرف سے فلَیگز کا انتظارکرنے کے، فوری طور پرفلَیگز کی حد تک پہنچ جائیں"
+          title: "پوسٹ چھپائیں"
         suspend:
           title: "صارف معطل کریں"
           details: "نشان کی حد تک پہنچیں، اور صارف کو معطل کریں"
@@ -3035,7 +3026,6 @@ ur:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
       submit_tooltip: "نجی فلَیگ جمع کریں"
-      take_action_tooltip: "بجائے مزید کمیونٹی کی طرف سے فلَیگز کا انتظارکرنے کے، فوری طور پرفلَیگز کی حد تک پہنچ جائیں"
       cant: "معذرت، آپ اِس وقت اِس پوسٹکو فلَیگ نہیں کر سکتے۔"
       notify_staff: "عملے کو نجی طور پر مطلع کریں"
       formatted_name:
@@ -3584,6 +3574,9 @@ ur:
               content: "جائزہ لیں"
     until: "جب تک:"
     form_templates:
+      upload_field:
+        upload: "اَپ لوڈ"
+        uploading: "اَپ لوڈ کیا جا رہا ہے"
       errors:
         typeMismatch:
           default: "براہ کرم، ایک قابلِ قبول قدر درج کریں۔"
@@ -3616,9 +3609,7 @@ ur:
         latest_version: "تازہ ترین"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
         new_features:
-          title: "\U0001F381 نئی خصوصیات"
-          dismiss: "بر خاست کریں"
-          learn_more: "مزید جانیں"
+          learn_more: "مزید جانیں..."
         last_checked: "آخری دفعہ چیک کیا گیا"
         refresh_problems: "رِیفریش"
         no_problems: "کوئی مسائل نہیں پائے گئے۔"
@@ -3907,7 +3898,7 @@ ur:
         not_enabled: "N"
         change_settings_short: "سیٹِنگ"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
-        official: "آفیشل پلَگ اِن"
+        author: "%{author} کی طرف سے"
       backups:
         title: "بیک اَپس"
         menu:

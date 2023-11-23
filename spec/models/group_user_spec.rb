@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupUser do
-  fab!(:group) { Fabricate(:group) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:group)
+  fab!(:user)
 
   describe "callbacks" do
     it "increments and decrements `Group#user_count` when record is created and destroyed" do
@@ -43,8 +43,8 @@ RSpec.describe GroupUser do
   end
 
   describe "default category notifications" do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:group)
+    fab!(:user)
     fab!(:category1) { Fabricate(:category) }
     fab!(:category2) { Fabricate(:category) }
     fab!(:category3) { Fabricate(:category) }
@@ -136,8 +136,8 @@ RSpec.describe GroupUser do
   end
 
   describe "default tag notifications" do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:group)
+    fab!(:user)
     fab!(:tag1) { Fabricate(:tag) }
     fab!(:tag2) { Fabricate(:tag) }
     fab!(:tag3) { Fabricate(:tag) }
@@ -203,7 +203,7 @@ RSpec.describe GroupUser do
   end
 
   describe "#ensure_consistency!" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:group_2) { Fabricate(:group) }
 
     fab!(:pm_post) { Fabricate(:private_message_post) }
@@ -275,7 +275,7 @@ RSpec.describe GroupUser do
   end
 
   describe "#destroy!" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     it "removes `primary_group_id`, `flair_group_id` and exec `match_primary_group_changes` method on user model" do
       user = Fabricate(:user, primary_group: group, flair_group: group)

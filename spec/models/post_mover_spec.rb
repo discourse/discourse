@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe PostMover do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
+  fab!(:admin)
+  fab!(:evil_trout)
 
   describe "#move_types" do
     context "when verifying enum sequence" do
@@ -885,6 +885,27 @@ RSpec.describe PostMover do
             expect(new_post.version).to eq(2)
             expect(new_post.public_version).to eq(2)
             expect(new_post.post_revisions.size).to eq(1)
+          end
+
+          context "with subfolder installs" do
+            before { set_subfolder "/forum" }
+
+            it "creates a small action with correct post url" do
+              moved_to = topic.move_posts(user, [p2.id], destination_topic_id: destination_topic.id)
+              small_action = topic.posts.last
+
+              expect(small_action.post_type).to eq(Post.types[:small_action])
+
+              expected_text =
+                I18n.t(
+                  "move_posts.existing_topic_moderator_post",
+                  count: 1,
+                  topic_link: "[#{moved_to.title}](#{p2.reload.relative_url})",
+                  locale: :en,
+                )
+
+              expect(small_action.raw).to eq(expected_text)
+            end
           end
 
           context "with read state and other stats per user" do
@@ -2101,7 +2122,7 @@ RSpec.describe PostMover do
     end
 
     context "with messages" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       fab!(:another_user) { Fabricate(:user) }
       fab!(:regular_user) { Fabricate(:trust_level_4) }
       fab!(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
@@ -2437,7 +2458,7 @@ RSpec.describe PostMover do
 
     context "with banner topic" do
       fab!(:regular_user) { Fabricate(:trust_level_4) }
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       fab!(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
       fab!(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
       fab!(:p1) { Fabricate(:post, topic: banner_topic, user: evil_trout) }
@@ -2461,6 +2482,46 @@ RSpec.describe PostMover do
             banner_topic.move_posts(admin, [p2.id], destination_topic_id: personal_message.id)
           }.to raise_error(Discourse::InvalidParameters)
         end
+      end
+    end
+
+    context "with event trigger" do
+      fab!(:topic_1) { Fabricate(:topic) }
+      fab!(:topic_2) { Fabricate(:topic) }
+      fab!(:post_1) { Fabricate(:post, topic: topic_1) }
+      fab!(:post_2) { Fabricate(:post, topic: topic_1) }
+
+      it "receives 2 post moved event triggers for the first post" do
+        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_1.id])
+        events = DiscourseEvent.track_events { post_mover.to_topic(topic_2.id) }
+        filtered_events =
+          events.filter { |e| %i[first_post_moved post_moved].include? e[:event_name] }
+
+        expect(filtered_events.size).to eq(2)
+      end
+
+      it "uses first_post_moved trigger for first post" do
+        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_1.id])
+        events = DiscourseEvent.track_events(:first_post_moved) { post_mover.to_topic(topic_2.id) }
+        expect(events.size).to eq(1)
+
+        new_post = Post.find_by(topic_id: topic_2.id, post_number: 1)
+
+        event = events.first
+        expect(event[:event_name]).to eq(:first_post_moved)
+        expect(event[:params][0]).to eq(new_post)
+        expect(event[:params][1]).to eq(post_1)
+      end
+
+      it "uses post_moved trigger for other posts" do
+        post_mover = PostMover.new(topic_1, Discourse.system_user, [post_2.id])
+        events = DiscourseEvent.track_events(:post_moved) { post_mover.to_topic(topic_2.id) }
+        expect(events.size).to eq(1)
+
+        event = events.first
+        expect(event[:event_name]).to eq(:post_moved)
+        expect(event[:params][0]).to eq(post_2)
+        expect(event[:params][1]).to eq(topic_1.id)
       end
     end
   end

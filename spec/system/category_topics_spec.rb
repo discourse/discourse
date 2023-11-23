@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-describe "Viewing top topics on categories page", type: :system, js: true do
-  fab!(:user) { Fabricate(:user) }
-  let(:category_list) { PageObjects::Components::CategoryList.new }
-  let(:topic_view) { PageObjects::Components::TopicView.new }
-  fab!(:category) { Fabricate(:category) }
+describe "Viewing top topics on categories page", type: :system do
+  fab!(:user)
+  fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:post) { Fabricate(:post, topic: topic) }
+  let(:category_list) { PageObjects::Components::CategoryList.new }
+  let(:topic_view) { PageObjects::Components::TopicView.new }
 
   it "displays and updates new counter" do
     skip(<<~TEXT)

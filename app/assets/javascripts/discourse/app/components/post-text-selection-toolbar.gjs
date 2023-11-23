@@ -178,7 +178,6 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     {{! template-lint-disable no-invalid-interactive }}
     {{! template-lint-disable no-pointer-down-event-binding }}
     <div
@@ -213,6 +212,12 @@ export default class PostTextSelectionToolbar extends Component {
             />
           {{/if}}
 
+          <PluginOutlet
+            @name="quote-share-buttons-before"
+            @connectorTagName="span"
+            @outletArgs={{hash data=@data}}
+          />
+
           {{#if this.quoteSharingEnabled}}
             <span class="quote-sharing">
               {{#if this.quoteSharingShowLabel}}
@@ -236,6 +241,7 @@ export default class PostTextSelectionToolbar extends Component {
                 <PluginOutlet
                   @name="quote-share-buttons-after"
                   @connectorTagName="span"
+                  @outletArgs={{hash data=@data}}
                 />
               </span>
             </span>

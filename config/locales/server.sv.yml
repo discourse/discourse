@@ -568,7 +568,8 @@ sv:
             name:
               same_as_password: "är samma som ditt lösenord."
             ip_address:
-              signup_not_allowed: "Registrering är inte tillåtet från detta konto."
+              blocked: "Nya registreringar är inte tillåtna från din IP-adress."
+              max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1474,7 +1475,6 @@ sv:
     blocked_onebox_domains: "En lista över domäner som aldrig kommer att oneboxas t.ex. wikipedia.org\n(Jokertecken * ? stöds inte)"
     block_onebox_on_redirect: "Blockera onebox för webbadresser som omdirigerar."
     allowed_inline_onebox_domains: "En lista över domäner som placeras i onebox i miniatyrform om de länkas utan en rubrik"
-    enable_inline_onebox_on_all_domains: "Ignorera webbplatsinställningen inline_onebox_domain_allowlist och tillåt infogad onebox på alla domäner."
     force_custom_user_agent_hosts: "Värdar för vilka anpassad användaragent för onebox ska användas vid alla förfrågningar. (särskilt användbart för värdar som begränsar åtkomst av användaragent)."
     max_oneboxes_per_post: "Maximalt antal oneboxar i ett inlägg."
     facebook_app_access_token: "En token genererad från ditt Facebook-app-ID och hemlighet. Används för att skapa Instagram oneboxes."
@@ -1496,7 +1496,6 @@ sv:
     email_custom_headers: "En lista över anpassade e-postrubriker, avgränsad med vertikalstreck"
     email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Ger mer information till användarna om varför de inte kan komma åt ett visst ämne. Notera: Det här är mindre säkert eftersom användare vet om att en URL länkar till ett giltigt ämne."
-    enforce_second_factor: "Tvingar användare att aktivera tvåfaktorsautentisering. Välj 'alla' för att kräva det för alla användare. Välj 'personal' för att bara kräva det av personal."
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper/beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
     same_site_cookies: "Använd samma webbplatskakor, detta eliminerar alla vektorer för Cross Site Request Forgery på webbläsare som stöds (Löst eller Strikt). Varning: Strikt fungerar bara på webbplatser som tvingar inloggning och använder en extern autentiseringsmetod."
     summary_score_threshold: "Minsta poäng för att ett inlägg ska inkluderas i 'Sammanfatta det här ämnet'"
@@ -1568,8 +1567,6 @@ sv:
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
     display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
-    top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     allow_username_in_share_links: "Tillåt att användarnamn omfattas i delningslänkar. Detta är användbart för att tilldela utmärkelser baserat på unika besökare."
@@ -1814,7 +1811,6 @@ sv:
     min_title_similar_length: "Minsta längd för en rubrik innan den kommer att kontrolleras för liknande ämnen."
     desktop_category_page_style: "Visuell stil för /kategorier-sidan."
     category_colors: "En lista över tillåtna hexadecimala färgvärden för kategorier."
-    category_style: "Visuell stil för kategori-utmärkelser."
     default_dark_mode_color_scheme_id: "Färgschemat som används i mörkt läge."
     dark_mode_none: "Inga"
     max_image_size_kb: "Högsta bilduppladdningsstorlek i kB. Konfiguration krävs också i nginx (client_max_body_size) / apache eller proxy. Bilder större än detta eller mindre än client_max_body_size kommer vid uppladdning att ändras i storlek för att passa."
@@ -2016,9 +2012,7 @@ sv:
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
     short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
-    default_code_lang: "Standardprogrammeringsspråkets syntaxmarkering tillämpas på kodblock (auto, text, ruby, python etc). Detta värde måste också finnas i webbplatsinställningen `highlighted languages`."
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
-    autohighlight_all_code: "Tvångstillämpa syntaxmarkering på alla förformatterade kodblock även när de inte uttryckligt har specificerat språket."
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
     show_copy_button_on_codeblocks: "Lägg till en knapp till kodblock för att kopiera blockinnehållet till användarens urklipp."
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."
@@ -2194,7 +2188,6 @@ sv:
       reply_by_email_address_is_empty: "Du måste ställa in en 'reply by email address' innan du aktiverar svar via e-post."
       email_polling_disabled: "Du måste aktivera antingen manuell POP3-pollning eller ha en anpassad e-postpollare aktiverad innan du kan aktivera svar via e-post."
       user_locale_not_enabled: "Du måste först aktivera 'allow user locale' innan du aktiverar den här inställningen."
-      personal_message_enabled_groups_invalid: "Du måste ange minst en grupp för den här inställningen. Om du inte vill att någon förutom personal ska skicka PM, välj personalgrupp."
       invalid_regex: "Vanligt uttryck är ogiltigt eller inte tillåtet."
       invalid_regex_with_message: "Det har uppstått ett fel i regex '%{regex}': %{message}"
       email_editable_enabled: "Du måste inaktivera 'e-post kan redigeras' innan du aktiverar den här inställningen."
@@ -2424,9 +2417,6 @@ sv:
       blocked: "är inte tillåtet."
       revoked: "Kommer inte att skicka e-post till '%{email}' förrän %{date}."
       does_not_exist: "---"
-    ip_address:
-      blocked: "Nya registreringar är inte tillåtna från din IP-adress."
-      max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
     website:
       domain_not_allowed: "Webbsida är ogiltig. Tillåtna domäner är: %{domains}"
     auto_rejected: "Avvisas automatiskt på grund av ålder. Se webbplatsinställning auto_handle_queued_age ."

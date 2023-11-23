@@ -26,13 +26,19 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     fab!(:user_2) { Fabricate(:user, username: "elaine") }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { guardian: guardian, target_usernames: %w[lechuck elaine] } }
+    let(:target_usernames) { [user_1.username, user_2.username] }
+    let(:name) { "" }
+    let(:params) { { guardian: guardian, target_usernames: target_usernames, name: name } }
 
     before { Group.refresh_automatic_groups! }
 
     context "when all steps pass" do
       it "sets the service result as successful" do
         expect(result).to be_a_success
+      end
+
+      it "updates user count" do
+        expect(result.channel.user_count).to eq(3) # current user + user_1 + user_2
       end
 
       it "creates the channel" do
@@ -58,16 +64,59 @@ RSpec.describe Chat::CreateDirectMessageChannel do
       end
 
       context "when there is an existing direct message channel for the target users" do
-        before { described_class.call(params) }
+        context "when a name has been given" do
+          let(:target_usernames) { [user_1.username] }
+          let(:name) { "Monkey Island" }
 
-        it "does not create a channel" do
-          expect { result }.to not_change { Chat::Channel.count }.and not_change {
-                  Chat::DirectMessage.count
-                }
+          it "creates a second channel" do
+            described_class.call(params)
+
+            expect { result }.to change { Chat::Channel.count }.and change {
+                    Chat::DirectMessage.count
+                  }
+          end
         end
 
-        it "does not double-insert the channel memberships" do
-          expect { result }.not_to change { Chat::UserChatChannelMembership.count }
+        context "when the channel has more than one user" do
+          let(:target_usernames) { [user_1.username, user_2.username] }
+
+          it "creates a second channel" do
+            described_class.call(params)
+
+            expect { result }.to change { Chat::Channel.count }.and change {
+                    Chat::DirectMessage.count
+                  }
+          end
+        end
+
+        context "when the channel has one user and no name" do
+          let(:target_usernames) { [user_1.username] }
+
+          it "reuses the existing channel" do
+            existing_channel = described_class.call(params).channel
+
+            expect(result.channel.id).to eq(existing_channel.id)
+          end
+        end
+
+        context "when theres also a group channel with same users" do
+          let(:target_usernames) { [user_1.username] }
+
+          it "returns the non group existing channel" do
+            group_channel = described_class.call(params.merge(name: "cats")).channel
+            channel = described_class.call(params).channel
+
+            expect(result.channel.id).to_not eq(group_channel.id)
+            expect(result.channel.id).to eq(channel.id)
+          end
+        end
+      end
+
+      context "when a name is given" do
+        let(:name) { "Monkey Island" }
+
+        it "sets it as the channel name" do
+          expect(result.channel.name).to eq(name)
         end
       end
     end

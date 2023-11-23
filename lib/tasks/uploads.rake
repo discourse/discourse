@@ -965,6 +965,7 @@ def analyze_missing_s3
       %i[categories uploaded_logo_id],
       %i[categories uploaded_logo_dark_id],
       %i[categories uploaded_background_id],
+      %i[categories uploaded_background_dark_id],
       %i[custom_emojis upload_id],
       %i[theme_fields upload_id],
       %i[user_exports upload_id],

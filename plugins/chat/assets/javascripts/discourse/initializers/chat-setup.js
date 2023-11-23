@@ -112,7 +112,7 @@ export default {
         api.registerChatComposerButton({
           translatedLabel: "chat.summarization.title",
           id: "channel-summary",
-          icon: "magic",
+          icon: "discourse-sparkles",
           position: "dropdown",
           action: "showChannelSummaryModal",
         });

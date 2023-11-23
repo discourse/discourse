@@ -11,10 +11,10 @@ RSpec.describe TopicViewSerializer do
   # Ensure no suggested ids are cached cause that can muck up suggested
   use_redis_snapshotting
 
-  fab!(:topic) { Fabricate(:topic) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:topic)
+  fab!(:user)
   fab!(:user_2) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "#featured_link and #featured_link_root_domain" do
     fab!(:featured_link) { "http://meta.discourse.org" }
@@ -165,7 +165,7 @@ RSpec.describe TopicViewSerializer do
 
   describe "#suggested_group_name" do
     fab!(:pm) { Fabricate(:private_message_post).topic }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     before { Group.refresh_automatic_groups! }
 
@@ -194,8 +194,8 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe "when tags added to private message topics" do
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:moderator)
+    fab!(:tag)
     fab!(:pm) do
       Fabricate(
         :private_message_topic,
@@ -207,7 +207,7 @@ RSpec.describe TopicViewSerializer do
       )
     end
 
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:pm_between_reg_users) do
       Fabricate(
         :private_message_topic,
@@ -463,7 +463,7 @@ RSpec.describe TopicViewSerializer do
     end
 
     context "with can_edit" do
-      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:group_user)
       fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
       fab!(:topic) { Fabricate(:topic, category: category) }
       let(:user) { group_user.user }
@@ -584,7 +584,7 @@ RSpec.describe TopicViewSerializer do
 
   describe "#requested_group_name" do
     fab!(:pm) { Fabricate(:private_message_post).topic }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     it "should return the right group name when PM is a group membership request" do
       pm.custom_fields[:requested_group_id] = group.id

@@ -540,9 +540,8 @@ const User = RestModel.extend({
     });
   },
 
-  loadSecondFactorCodes(password) {
+  loadSecondFactorCodes() {
     return ajax("/u/second_factors.json", {
-      data: { password },
       type: "POST",
     });
   },

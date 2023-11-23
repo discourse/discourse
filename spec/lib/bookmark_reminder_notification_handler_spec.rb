@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe BookmarkReminderNotificationHandler do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   before { Discourse.redis.flushdb }
 

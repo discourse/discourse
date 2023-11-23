@@ -394,7 +394,8 @@ zh_TW:
             name:
               same_as_password: "與您的密碼相同"
             ip_address:
-              signup_not_allowed: "不能使用這個帳戶進行登入"
+              blocked: "不允許從你的 IP 地址註冊新使用者。"
+              max_new_accounts_per_registration_ip: "不允許從你的 IP 地址註冊新使用者（達到上限）。聯繫一個管理人員。"
         user_email:
           attributes:
             user_id:
@@ -1166,8 +1167,6 @@ zh_TW:
     slow_down_crawler_rate: "如果指定了slow_down_crawler_user_agents，則此速率將適用於所有抓取工具（請求之間的延遲秒數）"
     content_security_policy_collect_reports: "在 /csp_reports 啟用CSP違規報告蒐集"
     invalidate_inactive_admin_email_after_days: "在這幾天沒有訪問網站的管理員帳戶，在登入前需要重新驗證該管理員帳戶的電子郵件。設定為0禁用。"
-    top_menu: "選擇在主頁導航列包含哪些項目，以及排列次序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "確定在貼文功能表條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "貼文菜單中默認隱藏的按鈕，點擊省略號後顯示。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     site_contact_username: "以一個有效的工作成員帳號來發送所有自動化消息。如果保留空白，則會使用預設的系統帳號。"
@@ -1329,7 +1328,6 @@ zh_TW:
     min_title_similar_length: "開始檢查相似主題的貼文標題的最少長度。"
     desktop_category_page_style: "/categories 頁面的視覺樣式。"
     category_colors: "設定分類顏色的十六進制色彩值列表。"
-    category_style: "分類圖標的視覺樣式。"
     dark_mode_none: "無"
     max_attachment_size_kb: "允許使用者上傳的最大文件大小（以kB為單位）。確保也在nginx（client_max_body_size），apache 或代理中進行限制文件大小的設定。"
     authorized_extensions: "允許上傳文件的副檔名列表（'*' 表示允許所有文件類型）"
@@ -1471,7 +1469,6 @@ zh_TW:
     show_time_gap_days: "如果兩個貼文發表間隔多天，在主題中顯示時間間隔提示。"
     short_progress_text_threshold: "在主題中的貼文數超過這個設定後，進度條將只顯示當前的貼文數。如果你更改了進度條的寬度，你需要修改這個值。"
     warn_reviving_old_topic_age: "當有人開始回覆最後一貼超過一定天數前的主題時，將有一個警告顯示，不鼓勵他們復活一個老的討論。將其設置為 0 以禁用。"
-    autohighlight_all_code: "即使未顯示特定語言，仍為所有預編排程式套用程式碼顏色提示"
     highlighted_languages: "已包含語法突顯（Syntax Highlighting）規則。（警告：包含太多語言可能會影響論壇效能）請參閱：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>看更多範例。"
     embed_truncate: "截斷 embed 過的貼文"
     embed_support_markdown: "支持嵌入式討論話題的Markdown格式"
@@ -1713,9 +1710,6 @@ zh_TW:
       not_allowed: "本站不允許使用該郵箱服務商提供的電子郵箱，請使用其它郵箱位址。"
       blocked: "不被允許。"
       revoked: "在%{date}之前不發送郵件至“%{email}”"
-    ip_address:
-      blocked: "不允許從你的 IP 地址註冊新使用者。"
-      max_new_accounts_per_registration_ip: "不允許從你的 IP 地址註冊新使用者（達到上限）。聯繫一個管理人員。"
     website:
       domain_not_allowed: "網站無效。允許的域名有：%{domains}"
     auto_rejected: "由於年齡而被系統自動拒絕，請參閱「auto_handle_queued_age」網站設定"

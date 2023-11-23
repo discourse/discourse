@@ -15,11 +15,15 @@
   >
     <TopicDismissButtons
       @position="top"
-      @selectedTopics={{this.selected}}
+      @selectedTopics={{this.bulkSelectHelper.selected}}
       @model={{this.model}}
       @showResetNew={{this.showResetNew}}
       @showDismissRead={{this.showDismissRead}}
       @resetNew={{action "resetNew"}}
+      @dismissRead={{if
+        this.showDismissRead
+        (route-action "dismissReadTopics")
+      }}
     />
 
     {{#if (gt this.incomingCount 0)}}
@@ -43,24 +47,22 @@
       @topicList={{this.model}}
       @hideCategory={{this.hideCategory}}
       @showPosters={{this.showPosters}}
-      @bulkSelectEnabled={{this.bulkSelectEnabled}}
-      @bulkSelectAction={{action "refresh"}}
-      @selected={{this.selected}}
       @tagsForUser={{this.tagsForUser}}
       @canBulkSelect={{this.canBulkSelect}}
-      @toggleBulkSelect={{action "toggleBulkSelect"}}
-      @updateAutoAddTopicsToBulkSelect={{action
-        "updateAutoAddTopicsToBulkSelect"
-      }}
+      @bulkSelectHelper={{this.bulkSelectHelper}}
     />
 
     <TopicDismissButtons
       @position="bottom"
-      @selectedTopics={{this.selected}}
+      @selectedTopics={{this.bulkSelectHelper.selected}}
       @model={{this.model}}
       @showResetNew={{this.showResetNew}}
       @showDismissRead={{this.showDismissRead}}
       @resetNew={{action "resetNew"}}
+      @dismissRead={{if
+        this.showDismissRead
+        (route-action "dismissReadTopics")
+      }}
     />
 
     <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />

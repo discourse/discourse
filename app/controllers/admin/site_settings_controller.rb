@@ -33,7 +33,7 @@ class Admin::SiteSettingsController < Admin::AdminController
 
     case SiteSetting.type_supervisor.get_type(id)
     when :integer
-      value = value.gsub(/\D/, "")
+      value = value.tr("^-0-9", "")
     when :uploaded_image_list
       value = Upload.get_from_urls(value.split("|")).to_a
     end

@@ -81,6 +81,7 @@ class Site
                   :uploaded_logo,
                   :uploaded_logo_dark,
                   :uploaded_background,
+                  :uploaded_background_dark,
                   :tags,
                   :tag_groups,
                   :form_templates,

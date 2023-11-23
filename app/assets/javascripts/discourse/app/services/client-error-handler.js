@@ -83,10 +83,14 @@ export default class ClientErrorHandlerService extends Service {
 
     let html = `⚠️ ${escape(message)}`;
 
-    if (source && source.type === "theme") {
+    if (source?.type === "theme") {
       html += `<br/>${I18n.t("themes.error_caused_by", {
         name: escape(source.name),
         path: source.path,
+      })}`;
+    } else if (source?.type === "plugin") {
+      html += `<br/>${I18n.t("broken_plugin_alert", {
+        name: escape(source.name),
       })}`;
     }
 

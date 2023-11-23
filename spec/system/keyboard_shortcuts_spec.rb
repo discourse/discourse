@@ -32,7 +32,7 @@ RSpec.describe "Keyboard shortcuts", type: :system do
     end
 
     context "when on a public topic page" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       it "doesn't archive the topic" do
         topic_page.visit_topic(topic)

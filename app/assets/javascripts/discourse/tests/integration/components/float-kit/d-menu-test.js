@@ -152,7 +152,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
       hbs`<span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{true}}  />`
     );
     await open();
-    await click(".test");
+    await triggerEvent(".test", "pointerdown");
 
     assert.dom(".fk-d-menu").doesNotExist();
 
@@ -160,7 +160,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
       hbs`<span class="test">test</span><DMenu @inline={{true}} @label="label" @closeOnClickOutside={{false}}  />`
     );
     await open();
-    await click(".test");
+    await triggerEvent(".test", "pointerdown");
 
     assert.dom(".fk-d-menu").exists();
   });

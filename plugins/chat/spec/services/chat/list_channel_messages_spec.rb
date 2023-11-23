@@ -3,7 +3,7 @@
 RSpec.describe Chat::ListChannelMessages do
   subject(:result) { described_class.call(params) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:channel) { Fabricate(:chat_channel) }
 
   let(:guardian) { Guardian.new(user) }

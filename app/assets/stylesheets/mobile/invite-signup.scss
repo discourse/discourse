@@ -1,0 +1,15 @@
+#main-outlet-wrapper:has(.invites-show) {
+  padding: 0;
+}
+.invites-show {
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+
+  .invitation-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 2rem;
+  }
+}

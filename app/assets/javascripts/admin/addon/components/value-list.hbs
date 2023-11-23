@@ -12,7 +12,7 @@
           title={{value}}
           @value={{value}}
           class="value-input"
-          {{on "focusout" (fn (action "changeValue") index)}}
+          {{on "focusout" (fn this.changeValue index)}}
         />
 
         {{#if this.showUpDownButtons}}
@@ -37,6 +37,6 @@
   @nameProperty={{null}}
   @value={{this.newValue}}
   @content={{this.filteredChoices}}
-  @onChange={{action "selectChoice"}}
+  @onChange={{this.selectChoice}}
   @options={{hash allowAny=true none=this.noneKey}}
 />

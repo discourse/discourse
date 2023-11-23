@@ -1,12 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { inject as service } from "@ember/service";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export default class ChatThreadComposer extends Service {
   @service chat;
 
-  @tracked message;
   @tracked textarea;
 
   @action
@@ -20,27 +18,10 @@ export default class ChatThreadComposer extends Service {
   }
 
   @action
-  reset(thread) {
-    this.message = ChatMessage.createDraftMessage(thread.channel, {
-      user: this.currentUser,
-      thread,
-    });
-  }
-
-  @action
-  cancel() {
-    if (this.message.editing) {
-      this.reset(this.message.thread);
-    } else if (this.message.inReplyTo) {
-      this.message.inReplyTo = null;
-    }
-  }
-
-  @action
   edit(message) {
     this.chat.activeMessage = null;
     message.editing = true;
-    this.message = message;
+    message.thread.draft = message;
     this.focus({ refreshHeight: true, ensureAtEnd: true });
   }
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Jobs::AdminProblems do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   it "creates notification when problems persist for at least 2 days" do
     Discourse.redis.setex(AdminDashboardData.problems_started_key, 14.days.to_i, Time.zone.now.to_s)

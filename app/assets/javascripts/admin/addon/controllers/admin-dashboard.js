@@ -50,6 +50,11 @@ export default class AdminDashboardController extends Controller {
     return this.visibleTabs.includes("reports");
   }
 
+  @computed("visibleTabs")
+  get isNewFeaturesTabVisible() {
+    return this.visibleTabs.includes("features");
+  }
+
   fetchProblems() {
     if (this.isLoadingProblems) {
       return;

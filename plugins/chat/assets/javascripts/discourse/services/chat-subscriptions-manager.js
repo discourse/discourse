@@ -25,9 +25,9 @@ export default class ChatSubscriptionsManager extends Service {
     }
 
     this._channelSubscriptions.add(channel.id);
+    this._startChannelMentionsSubscription(channel);
 
     if (!channel.isDirectMessageChannel) {
-      this._startChannelMentionsSubscription(channel);
       this._startKickFromChannelSubscription(channel);
     }
 

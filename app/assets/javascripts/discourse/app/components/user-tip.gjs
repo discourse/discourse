@@ -75,7 +75,6 @@ export default class UserTip extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     <div {{this.registerTip}}>
       {{#if this.shouldRenderTip}}
         <span {{this.tip}}></span>

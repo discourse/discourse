@@ -453,7 +453,8 @@ vi:
             name:
               same_as_password: "là giống như mật khẩu hiện tại của bạn."
             ip_address:
-              signup_not_allowed: "Đăng ký không cho phép tài khoản này"
+              blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
+              max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1017,7 +1018,6 @@ vi:
     facebook_app_access_token: "Mã thông báo được tạo từ bí mật và ID ứng dụng Facebook của bạn. Được sử dụng để tạo hộp thư Instagram."
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
-    enforce_second_factor: "Buộc người dùng kích hoạt xác thực hai yếu tố. Chọn 'tất cả' để thực thi nó cho tất cả người dùng. Chọn 'nhân viên' để chỉ áp dụng cho người dùng là nhân viên."
     force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
@@ -1047,8 +1047,8 @@ vi:
     use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     content_security_policy_frame_ancestors: "Hạn chế người có thể nhúng trang web này vào iframe thông qua CSP. Kiểm soát các máy chủ được phép trên <a href='%{base_path}/admin/customize/embedding'>Nhúng</a>"
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
-    top_menu: "Xác định các mục nào hiển thị trong thanh điều hướng trang chủ, và theo thứ tự nào. Ví dụ latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Xác định các mục nào hiển thị trên menu bài viết, và theo thứ tự nào. Ví dụ like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "Xác định các mục nào hiển thị trong các điều khiển điều hướng trên trang chủ, và theo thứ tự nào."
+    post_menu: "Xác định các mục nào hiển thị trong bảng chọn bài đăng, và theo thứ tự nào."
     post_menu_hidden_items: "Các mục được để ẩn theo mặc định trong menu bài viết trừ khi click vào dấu '...' để mở rộng."
     share_links: "Xác định các mục nào hiển thị trên hộp thoại chia sẻ, và theo thứ tự nào."
     site_contact_username: "Tên tài khoản quản trị viên hợp lệ để gửi tất cả các thông báo tự động. Nếu để trống, tài khoản mặc định của hệ thống sẽ được sử dụng."
@@ -1194,7 +1194,6 @@ vi:
     title_fancy_entities: "Chuyển đổi các ký tự ASCII phổ biến thành các thực thể HTML ưa thích trong tiêu đề chủ đề, xem SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
-    category_style: "Style trực quan cho phù hiệu danh mục."
     dark_mode_none: "Không có gì"
     max_attachment_size_kb: "Kích thước file tải lên tối đa tính theo kB. đã cấu hình trong nginx (client_max_body_size) / apache hoặc proxy."
     authorized_extensions: "Danh sách định dạng file cho phép tải lên (sử dụng '*' để cho phép tất cả loại tập tin)"
@@ -1297,7 +1296,6 @@ vi:
     show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
     short_progress_text_threshold: "Sau khi số bài đăng của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của bài đăng hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này"
     warn_reviving_old_topic_age: "Khi ai đó trả lời chủ đề mà lần trả lời cuối cùng cũ hơn số ngày được thiết lập ở đây, hiển thị một cảnh báo. Vô hiệu hóa bằng cách đặt là 0."
-    autohighlight_all_code: "Highlight code bắt buộc đối với các đoạn mã thực thi ngay cả khi họ không chỉ định ngôn ngữ rõ ràng."
     embed_truncate: "Cắt ngắn các bài viết được nhúng."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
@@ -1362,7 +1360,6 @@ vi:
       pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
-      personal_message_enabled_groups_invalid: "Bạn phải chỉ định ít nhất một nhóm cho cài đặt này. Nếu bạn không muốn bất kỳ ai ngoại trừ nhân viên gửi PM, hãy chọn nhóm nhân viên."
       min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"
       max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
   search:
@@ -1495,9 +1492,6 @@ vi:
       blocked: "không được chấp nhận."
       revoked: "Sẽ không gửi email đến '%{email}' cho đến %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
-      max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
     website:
       domain_not_allowed: "Trang web không hợp lệ. Các miền được phép là: %{domains}"
     auto_rejected: "Bị từ chối tự động do tuổi tác. Xem cài đặt trang auto_handle_queued_age."

@@ -1,3 +1,5 @@
 <div class="admin-revamp__config-area">
-  Config Area ({{@model.area}})
+  {{#if @model.configAreaComponent}}
+    <@model.configAreaComponent />
+  {{/if}}
 </div>

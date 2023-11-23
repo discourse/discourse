@@ -98,7 +98,6 @@ export default class ChatMessageActionsMobile extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     {{#if (and this.site.mobileView this.chat.activeMessage.model.persisted)}}
       <div
         class={{concatClass

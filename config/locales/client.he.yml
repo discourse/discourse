@@ -252,6 +252,7 @@ he:
       error_caused_by: "נגרם על ידי ‚%{name}’. <a target='blank' href='%{path}'>יש ללחוץ כאן</a> כדי לעדכן, להגדיר מחדש או להשבית."
       only_admins: "(הודעה זו מופיע רק למנהלי האתר)"
     broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
+    broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
     s3:
       regions:
         ap_northeast_1: "אסיה ומדינות האוקיינוס השקט (טוקיו)"
@@ -405,6 +406,7 @@ he:
       copied: "הועתק!"
       copy: "העתקת קוד ללוח הגזירים"
       fullscreen: "הצגת קוד במסך מלא"
+      view_code: "הצגת קוד"
     drafts:
       label: "טיוטות"
       label_with_count: "טיוטות (%{count})"
@@ -508,7 +510,9 @@ he:
           name: "בונוס סוג"
           title: "לסוגים מסוימים של פריטים לסקירה ניתן להקצות בונוס על ידי הסגל כדי שהעדיפות שלהם תעלה."
       revise_and_reject_post:
+        title: "עריכת שינויים"
         reason: "סיבה"
+        send_pm: "שליחת הודעה פרטית"
         feedback: "משוב"
         custom_reason: "הוספת תיאור ברור של הסיבה"
         other_reason: "אחר…"
@@ -1513,8 +1517,6 @@ he:
         title: "אימות דו־שלבי"
         enable: "ניהול אימות דו־שלבי"
         disable_all: "להשבית הכול"
-        forgot_password: "שכחת את הסיסמה?"
-        confirm_password_description: "אנא אשר את סיסמתך בכדי להמשיך"
         name: "שם"
         label: "קוד"
         rate_limit: "אנא המתינו לפני שתנסו קוד אישור אחר."
@@ -1522,6 +1524,8 @@ he:
           יש לסרוק את קוד ה־QR הזה ביישומון נתמך (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) ולהקליד את קוד האימות שלך.
         disable_description: "נא למלא את קוד האישור מהיישומון שלך"
         show_key_description: "הכנס ידנית"
+        short_description: |
+          הגנה על החשבון שלך עם קודים חד־פעמיים לאבטחה או במפתחות אבטחה פיזיים.
         extended_description: |
           אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לסיסמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות יושבתו לאחר הפעלת אימות דו־שלבי בחשבונך."
@@ -1561,9 +1565,22 @@ he:
           edit_description: "שם מפתח אבטחה פיזי"
           name_required_error: "עליך לציין שם למפתח האבטחה שלך."
       passkeys:
+        rename_passkey: "שינוי שם מפתח גישה"
+        add_passkey: "הוספת מפתח גישה"
+        confirm_delete_passkey: "למחוק את מפתח הגישה הזה?"
+        passkey_successfully_created: "מעולה! מפתח הגישה החדש שלך נוצר."
+        rename_passkey_instructions: "נא לבחור שם למפתח הגישה שיסייע לך לזהות אותו, למשל, להשתמש בשם מנהל הסיסמאות שלך."
+        name:
+          default: "מפתח גישה ראשי"
         save: "שמירה"
+        title: "מפתחות גישה"
+        short_description: "מפתחות גישה הן חלופה לסיסמאות שמאמתות את הזיהוי שלך באופן ביומטרי (למשל: מגע, זיהוי פנים) או באמצעות קוד אישי/סיסמה במכשיר."
         added_prefix: "הוסיף"
         last_used_prefix: "שימוש אחרון"
+        never_used: "אף פעם לא היה בשימוש"
+        not_allowed_error: "הזמן שהוקצב לתהליך רישום מפתח הגישה פג או בוטל או אסור מלכתחילה."
+        already_added_error: "כבר רשמת את מפתח הגישה הזה. אין צורך לרשום אותו שוב."
+        confirm_button: "או להשתמש במפתח גישה"
       change_about:
         title: "שינוי בנוגע אליי"
         error: "ארעה שגיאה בשינוי ערך זה."
@@ -1646,14 +1663,14 @@ he:
           generic: "החשבון של אצל %{provider} ישמש לאימות."
       name:
         title: "שם"
-        instructions: "שמך המלא (רשות)"
-        instructions_required: "שמך המלא"
+        instructions: "שמך המלא (רשות)."
+        instructions_required: "שמך המלא."
         required: "נא למלא שם"
         too_short: "השם שלך קצר מידי"
         ok: "השם נראה טוב"
       username:
         title: "שם משתמש/ת"
-        instructions: "ייחודי, ללא רווחים, קצר"
+        instructions: "ייחודי, ללא רווחים, קצר."
         short_instructions: "אנשים יכולים לאזכר אותך בתור ‎@%{username}"
         available: "שם המשתמש שלך פנוי"
         not_available: "לא זמין. נסו %{suggestion}?"
@@ -1676,6 +1693,7 @@ he:
         instructions: "רישום חשבון דורש קוד הזמנה"
       auth_tokens:
         title: "מכשירים שהיו בשימוש לאחרונה"
+        short_description: "זאת רשימת המכשירים שנכנסו לחשבון שלך לאחרונה"
         details: "פרטים"
         log_out_all: "להוציא את כולם"
         not_you: "לא אתה?"
@@ -1851,7 +1869,10 @@ he:
       confirm_access:
         title: "אישור גישה"
         incorrect_password: "הסיסמה שמילאת שגויה."
+        incorrect_passkey: "מפתח הגישה הזה שגוי."
         logged_in_as: "נכנסת בשם: "
+        instructions: "נא לאשר את הזהות שלך כדי להשלים את הפעולה הזאת."
+        fine_print: "אנו מבקשים ממך לאשר את הזהות שלך כיוון שזאת פעולה שעלולה להיות רגישה. לאחר האימות, נבקש ממך לעבור אימות שוב רק כעבור כמה שעות של חוסר פעילות."
       password:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."
@@ -1859,9 +1880,10 @@ he:
         same_as_username: "הסיסמה שלך זהה לשם המשתמש/ת שלך."
         same_as_email: "הסיסמה שלך זהה לכתובת הדוא״ל שלך."
         ok: "הסיסמה שלך נראית טוב."
-        instructions: "לפחות %{count} תווים"
+        instructions: "לפחות %{count} תווים."
         required: "נא למלא סיסמה"
         confirm: "אישור"
+        incorrect_password: "הסיסמה שמילאת שגויה."
       summary:
         title: "סיכום"
         stats: "סטטיסטיקות"
@@ -2115,6 +2137,7 @@ he:
       action: "שכחתי את הסיסמה שלי"
       invite: "נא להקליד את שם המשתמש וכתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס סיסמה."
       invite_no_username: "נא להקליד את כתובת הדוא״ל שלך ואנו נשלח לך הודעה בדוא״ל לאיפוס ססמה."
+      email-username: "דוא״ל או שם משתמש"
       reset: "איפוס סיסמה"
       complete_username: "אם יש חשבון שעונה לשם המשתמש <b>%{username}</b>, תוך זמן קצר אמורה להגיע אליך הודעה בדוא״ל עם הנחיות לאיפוס הסיסמה שלך."
       complete_email: "אם החשבון עונה לכתובת <b>%{email}</b>, תוך זמן קצר אמורה להגיע אליך הודעה בדוא״ל עם הנחיות לאיפוס הסיסמה שלך."
@@ -2161,6 +2184,7 @@ he:
       security_key_no_matching_credential_error: "לא ניתן למצוא פרטי גישה במפתח האבטחה שסופק."
       security_key_support_missing_error: "המכשיר או הדפדפן הנוכחי שלך לא תומך בשימוש במפתחות אבטחה, נא להשתמש בשיטה אחרת."
       security_key_invalid_response_error: "תהליך אימות מפתח האבטחה נכשלה עקב תגובה שגויה."
+      passkey_security_error: "אירעה שגיאת אבטחה: %{message}"
       email_placeholder: "דוא״ל / שם משתמש"
       caps_lock_warning: "מקש Caps Lock לחוץ"
       error: "שגיאה לא ידועה"
@@ -2214,6 +2238,8 @@ he:
         name: "Discord"
         title: "כניסה עם Discord"
         sr_title: "כניסה עם Discord"
+      passkey:
+        name: "כניסה עם מפתח גישה"
       second_factor_toggle:
         totp: "להשתמש ביישומון אימות במקום"
         backup_code: "להשתמש בקוד גיבוי במקום"
@@ -2260,16 +2286,6 @@ he:
         two: "%{count} נושאים בקטגוריה הזו"
         many: "%{count} נושאים בקטגוריה הזו"
         other: "%{count} נושאים בקטגוריה הזו"
-      plus_subcategories_title:
-        one: "%{name} ותת־קטגוריה נוספת"
-        two: "%{name} ו־%{count} תת־קטגוריות"
-        many: "%{name} ו־%{count} תת־קטגוריות"
-        other: "%{name} ו־%{count} תת־קטגוריות"
-      plus_subcategories:
-        one: "+ תת־קטגוריה %{count}"
-        two: "+ %{count} תת־קטגוריות"
-        many: "+ %{count} תת־קטגוריות"
-        other: "+ %{count} תת־קטגוריות"
     select_kit:
       delete_item: "למחוק את %{name}"
       filter_by: "סינון לפי: %{name}"
@@ -2622,6 +2638,7 @@ he:
         private_message: '%{username} שלח לך הודעה פרטית ב"%{topic}" - %{site_title}'
         linked: 'הפוסט שלך קושר על ידי %{username} מתוך „%{topic}” - %{site_title}'
         watching_first_post: '%{username} יצר נושא חדש "%{topic}" - %{site_title}'
+        watching_category_or_tag: 'פרסום חדש של %{username} בנושא „%{topic}” - %{site_title}'
         confirm_title: "התראות הופעלו - %{site_title}"
         confirm_body: "הצלחה! התראות הופעלו"
         custom: "התראה מ־%{username} באתר %{site_title}"
@@ -3771,6 +3788,7 @@ he:
       logo: "תמונת לוגו לקטגוריה"
       logo_dark: "תמונת לוגו של קטגוריה במצב כהה"
       background_image: "תמונת רקע לקטגוריה"
+      background_image_dark: "תמונת רקע כהה לקטגוריה"
       badge_colors: "צבעי העיטורים"
       background_color: "צבע רקע"
       foreground_color: "צבע קדמי"
@@ -3889,8 +3907,8 @@ he:
       take_action: "נקיטת פעולה…"
       take_action_options:
         default:
-          title: "נקיטת פעולה"
-          details: "להגיע באופן מיידי למספר הדגלים הדרוש, במקום להמתין לדגלים נוספים מן הקהילה"
+          title: "הסתרת פוסט"
+          details: "להגיע לסף הסימון באופן מיידי, להסתיר את הפוסט ולהסכים עם כל הסימונים הממתינים"
         suspend:
           title: "השעיית משתמש"
           details: "להגיע למספר הדגלים הדרוש ולהשעות את המשתמש"
@@ -3907,7 +3925,7 @@ he:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(מוסתר)"
       submit_tooltip: "שלחו את הדגל הפרטי"
-      take_action_tooltip: "הגעה באופן מיידי למספר הדגלים האפשרי, במקום להמתין לדגלים נוספים מן הקהילה"
+      take_action_tooltip: "להגיע לסף הסימון באופן מיידי, להסתיר את הפוסט ולהסכים עם כל הסימונים הממתינים"
       cant: "סליחה, לא ניתן לדגל פוסט זה כרגע."
       notify_staff: "להודיע לסגל באופן פרטי"
       formatted_name:
@@ -4496,6 +4514,7 @@ he:
       sr_jump_bottom_button: "קפיצה לפוסט האחרון"
     fullscreen_table:
       expand_btn: "הרחבת טבלה"
+      view_table: "הצגת טבלה"
     second_factor_auth:
       redirect_after_success: "האימות הדו־שלבי הצליח. מתבצעת הפניה לעמוד הקודם…"
     sidebar:
@@ -4542,7 +4561,7 @@ he:
           delete: "מחיקה"
           delete_confirm: "למחוק את המקטע הזה?"
           reset_confirm: "לאפס את המקטע הזה לברירת המחדל?"
-          public: "להפוך את הסעיף הזה לציבורי וגלוי לכולם"
+          public: "גלוי לכולם"
           always_public: "התוכן בסעיף הזה הוא תמיד ציבורי"
           more_menu: "תפריט נוסף"
           links:
@@ -4649,10 +4668,12 @@ he:
     form_template_chooser:
       select_template: "בחירת תבניות טופס"
     form_templates:
+      upload_field:
+        upload: "העלאה"
+        uploading: "בהליכי העלאה"
       errors:
         valueMissing:
           default: "נא למלא את השדה הזה."
-          text: "נא למלא את השדה הזה."
           select-one: "נא לבחור פריט מהרשימה."
           select-multiple: "נא לבחור לפחות פריט אחד מהרשימה."
           checkbox: "נא לסמן תיבה זו כדי להמשיך."
@@ -4716,9 +4737,9 @@ he:
         latest_version: "אחרונה"
         problems_found: "עצה שמבוססת על הגדרות האתר הנוכחיות שלך"
         new_features:
-          title: "\U0001F381 תכונות חדשות"
-          dismiss: "התעלמות"
-          learn_more: "מידע נוסף"
+          title: "מה חדש"
+          previous_announcements: "אפשר לצפות בהכרזות הקודמות על יכולות ב־<a href='%{url}' target='_blank'>Discourse Meta</a>"
+          learn_more: "מידע נוסף…"
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"
         no_problems: "לא נמצאו בעיות."
@@ -5121,8 +5142,11 @@ he:
         not_enabled: "N"
         change_settings_short: "הגדרות"
         howto: "איך אני מתקין/ה הרחבות?"
-        official: "תוסף רשמי"
+        official: "תוסף רשמי של Discourse"
+        experimental: "תוסף ניסיוני"
         broken_route: "לא ניתן להגדיר את הקישור אל ‚%{name}’. כדאי לוודא שחוסמי פרסומות מושבתים ואז לנסות לטעון את הדף מחדש."
+        author: "מאת %{author}"
+        experimental_badge: "ניסיוני"
       navigation_menu:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"

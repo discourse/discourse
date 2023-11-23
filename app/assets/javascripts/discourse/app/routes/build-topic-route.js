@@ -1,16 +1,12 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import {
-  changeNewListSubset,
-  changeSort,
-  queryParams,
-  resetParams,
-} from "discourse/controllers/discovery-sortable";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepEqual } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
@@ -96,31 +92,37 @@ export async function findTopicList(
   return list;
 }
 
+@disableImplicitInjections
 class AbstractTopicRoute extends DiscourseRoute {
   @service screenTrack;
+  @service store;
+  @service topicTrackingState;
+  @service currentUser;
+  @service historyStore;
+
   queryParams = queryParams;
+  templateName = "discovery/list";
+  controllerName = "discovery/list";
 
-  beforeModel() {
-    this.controllerFor("navigation/default").set(
-      "filterType",
-      this.routeConfig.filter.split("/")[0]
-    );
-  }
-
-  model(data, transition) {
+  async model(data) {
     // attempt to stop early cause we need this to be called before .sync
     this.screenTrack.stop();
 
     const findOpts = filterQueryParams(data),
-      findExtras = { cached: this.isPoppedState(transition) };
+      findExtras = { cached: this.historyStore.isPoppedState };
 
-    return findTopicList(
+    const topicListPromise = findTopicList(
       this.store,
       this.topicTrackingState,
       this.routeConfig.filter,
       findOpts,
       findExtras
     );
+
+    return {
+      list: await topicListPromise,
+      filterType: this.routeConfig.filter.split("/")[0],
+    };
   }
 
   titleToken() {
@@ -135,40 +137,9 @@ class AbstractTopicRoute extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    const topicOpts = {
-      model,
-      category: null,
-      period: model.get("for_period") || model.get("params.period"),
-      expandAllPinned: false,
-      expandGloballyPinned: true,
-    };
-
-    this.controllerFor("discovery/topics").setProperties(topicOpts);
-    this.controllerFor("discovery/topics").bulkSelectHelper.clear();
-
-    this.controllerFor("navigation/default").set(
-      "canCreateTopic",
-      model.get("can_create_topic")
-    );
-  }
-
-  renderTemplate() {
-    this.render("navigation/default", { outlet: "navigation-bar" });
-
-    this.render("discovery/topics", {
-      controller: "discovery/topics",
-      outlet: "list-container",
-    });
-  }
-
-  @action
-  changeSort(sortBy) {
-    changeSort.call(this, sortBy);
-  }
-
-  @action
-  changeNewListSubset(subset) {
-    changeNewListSubset.call(this, subset);
+    super.setupController(...arguments);
+    controller.bulkSelectHelper.clear();
+    setTopicList(model.list);
   }
 
   @action
@@ -178,10 +149,10 @@ class AbstractTopicRoute extends DiscourseRoute {
 
   @action
   willTransition() {
-    if (this.routeConfig.filter === "top") {
-      User.currentProp("user_option.should_be_redirected_to_top", false);
-      if (User.currentProp("user_option.redirected_to_top")) {
-        User.currentProp("user_option.redirected_to_top.reason", null);
+    if (this.routeConfig.filter === "top" && this.currentUser) {
+      this.currentUser.set("user_option.should_be_redirected_to_top", false);
+      if (this.currentUser.user_option?.redirected_to_top) {
+        this.currentUser.set("user_option.redirected_to_top.reason", null);
       }
     }
     return super.willTransition(...arguments);

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe TagGroupsController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "#index" do
-    fab!(:tag_group) { Fabricate(:tag_group) }
+    fab!(:tag_group)
 
     describe "for a non staff user" do
       it "should not be accessible" do
@@ -20,7 +20,7 @@ RSpec.describe TagGroupsController do
     end
 
     describe "for a staff user" do
-      fab!(:admin) { Fabricate(:admin) }
+      fab!(:admin)
 
       before { sign_in(admin) }
 
@@ -40,7 +40,7 @@ RSpec.describe TagGroupsController do
   end
 
   describe "#search" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     let(:everyone) { Group::AUTO_GROUPS[:everyone] }
     let(:staff) { Group::AUTO_GROUPS[:staff] }

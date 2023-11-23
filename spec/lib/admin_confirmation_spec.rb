@@ -2,8 +2,8 @@
 
 require "admin_confirmation"
 RSpec.describe AdminConfirmation do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
 
   describe "create_confirmation" do
     it "raises an error for non-admins" do

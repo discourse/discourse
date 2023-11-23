@@ -10,7 +10,7 @@ RSpec.describe Jobs::InviteEmail do
       let (:mailer) {
         Mail::Message.new(to: "eviltrout@test.domain")
       }
-      fab!(:invite) { Fabricate(:invite) }
+      fab!(:invite)
 
       it "delegates to the test mailer" do
         Email::Sender.any_instance.expects(:send)

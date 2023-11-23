@@ -420,7 +420,12 @@ fi:
           name: "tyyppibonus"
           title: "Henkilökunta voi määrittää tietyille käsiteltävälle tyypeille bonuksen, jotta ne saavat korkeamman prioriteetin."
       revise_and_reject_post:
+        title: "Korjaa"
         reason: "Syy"
+        send_pm: "Lähetä YV"
+        feedback: "Palaute"
+        custom_reason: "Kuvaile syy selkeästi"
+        other_reason: "Muu..."
         optional: "valinnainen"
       stale_help: "<b>%{username}</b> on ratkaissut tämän käsiteltävän kohteen."
       claim_help:
@@ -1341,8 +1346,6 @@ fi:
         title: "Kaksivaiheinen tunnistus"
         enable: "Hallitse kaksivaiheista tunnistusta"
         disable_all: "Poista kaikki käytöstä"
-        forgot_password: "Unohditko salasanasi?"
-        confirm_password_description: "Jatka vahvistamalla salasanasi"
         name: "Nimi"
         label: "Koodi"
         rate_limit: "Odota hetki ennen toisen todennuskoodin kokeilemista."
@@ -1350,6 +1353,8 @@ fi:
           Skannaa QR-koodi tuetulla sovelluksella (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) ja syötä todennuskoodisi.
         disable_description: "Syötä sovelluksen tarjoama todennuskoodi"
         show_key_description: "Syötä manuaalisesti"
+        short_description: |
+          Suojaa tilisi kertakäyttöisillä suojauskoodeilla tai fyysisillä suojauslaitteilla.
         extended_description: |
           Kaksivaiheinen tunnistus lisää tilisi turvallisuutta vaatimalla kertakäyttöisen koodin salasanasi lisäksi. Koodeja voi luoda <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> ja <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-laitteilla.
         oauth_enabled_warning: "Huomioi, ettet voi kirjautua some-tilien avulla, jos kaksivaiheinen tunnistus on käytössä tililläsi."
@@ -1389,9 +1394,21 @@ fi:
           edit_description: "Tunnistautumislaitteen nimi"
           name_required_error: "Tunnistautumislaite tarvitsee nimen."
       passkeys:
+        rename_passkey: "Nimeä suojausavain uudelleen"
+        add_passkey: "Lisää suojausavain"
+        confirm_delete_passkey: "Haluatko varmasti poistaa tämän suojausavaimen?"
+        passkey_successfully_created: "Onnistui! Uusi suojausavaimesi on luotu."
+        rename_passkey_instructions: "Valitse suojausavaimelle nimi, jolla tunnistat sen helposti (esimerkiksi käyttämäsi salasananhallinnan nimi)."
+        name:
+          default: "Ensisijainen suojausavain"
         save: "Tallenna"
+        title: "Suojausavaimet"
+        short_description: "Suojausavaimet ovat perinteisen salasanan korvikkeita, joilla henkilöllisyytesi todennetaan biometrisesti (esim. sormenjäljellä tai kasvojen tunnistuksella) tai laitteen PIN-koodilla/salasanalla."
         added_prefix: "Lisättiin"
         last_used_prefix: "Viimeksi käytetty"
+        never_used: "Käyttämätön"
+        not_allowed_error: "Suojausavaimen rekisteröintiprosessi aikakatkaistiin, peruttiin tai sitä ei sallita."
+        already_added_error: "Olet jo rekisteröinyt tämän suojausavaimen. Sitä ei tarvitse rekisteröidä uudelleen."
       change_about:
         title: "Muokkaa kuvaustasi"
         error: "Arvon muuttamisessa tapahtui virhe."
@@ -1471,14 +1488,13 @@ fi:
           generic: "Palvelun %{provider} tiliäsi käytetään todentamiseen."
       name:
         title: "Nimi"
-        instructions: "koko nimesi (valinnainen)"
-        instructions_required: "Koko nimesi"
+        instructions: "Koko nimesi (valinnainen)."
+        instructions_required: "Koko nimesi."
         required: "Syötä nimesi"
         too_short: "Nimesi on liian lyhyt"
         ok: "Nimesi vaikuttaa hyvältä"
       username:
         title: "Käyttäjätunnus"
-        instructions: "uniikki, ei välilyöntejä, lyhyt"
         short_instructions: "Muut käyttäjät voivat mainita sinut nimellä @%{username}"
         available: "Käyttäjätunnus on vapaana"
         not_available: "Ei saatavilla. Entä %{suggestion}?"
@@ -1500,6 +1516,7 @@ fi:
         instructions: "Tilin rekisteröintiin tarvitaan kutsukoodi"
       auth_tokens:
         title: "Viimeksi käytetyt laitteet"
+        short_description: "Tämä on listaus laitteista, joilta on hiljattain kirjauduttu tilillesi."
         details: "Tiedot"
         log_out_all: "Kirjaudu ulos kaikkialta"
         not_you: "Etkö tämä ole sinä?"
@@ -1666,6 +1683,12 @@ fi:
             <p>Jokaiseen CSV-tiedoston sähköpostiosoitteeseen lähetetään kutsu, ja voit hallita sitä myöhemmin.</p>
           success: "Tiedoston lataaminen onnistui. Saat ilmoituksen viestillä, kun prosessi on valmis."
           error: "Tiedoston tulee olla CSV-muodossa."
+      confirm_access:
+        title: "Vahvista pääsy"
+        incorrect_password: "Syötetty salasana on virheellinen."
+        logged_in_as: "Olet kirjautunut tunnuksella: "
+        instructions: "Vahvista henkilöllisyytesi suorittaaksesi tämän toimenpiteen loppuun."
+        fine_print: "Pyydämme sinua todentamaan henkilöllisyytesi, koska tämä voi olla arkaluonteinen toimenpide. Kun olet tunnistautunut, todennusta pyydetään uudelleen vain muutaman tunnin käyttämättömyyden kuluttua."
       password:
         title: "Salasana"
         too_short: "Salasanasi on liian lyhyt."
@@ -1673,9 +1696,9 @@ fi:
         same_as_username: "Salasanasi on sama kuin käyttäjätunnuksesi."
         same_as_email: "Salasanasi on sama kuin sähköpostisosoitteesi."
         ok: "Salasana vaikuttaa hyvältä."
-        instructions: "vähintään %{count} merkkiä."
         required: "Syötä salasana"
         confirm: "Vahvista"
+        incorrect_password: "Syötetty salasana on virheellinen."
       summary:
         title: "Yhteenveto"
         stats: "Tilastot"
@@ -1996,6 +2019,8 @@ fi:
         name: "Discord"
         title: "Kirjaudu Discordilla"
         sr_title: "Kirjaudu Discordilla"
+      passkey:
+        name: "Kirjaudu suojausavaimella"
       second_factor_toggle:
         totp: "Käytä todentajasovellusta tämän sijaan"
         backup_code: "Käytä varakoodia tämän sijaan"
@@ -2038,12 +2063,6 @@ fi:
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"
-      plus_subcategories_title:
-        one: "%{name} ja yksi ala-alue"
-        other: "%{name} ja %{count} ala-aluetta"
-      plus_subcategories:
-        one: "+ %{count} ala-alue"
-        other: "+ %{count} ala-aluetta"
     select_kit:
       delete_item: "Poista %{name}"
       filter_by: "Suodata: %{name}"
@@ -2236,6 +2255,7 @@ fi:
           desc: Kuiskaukset näkyvät vain henkilökunnan jäsenille
         create_topic:
           label: "Uusi ketju"
+          desc: Aloita uusi ketju
         shared_draft:
           label: "Jaettu luonnos"
           desc: "Luonnostele ketju, joka näkyy vain määrätyille käyttäjille"
@@ -2334,6 +2354,7 @@ fi:
         private_message: '%{username} lähetti sinulle yksityisviestin ketjussa "%{topic}" – %{site_title}'
         linked: '%{username} linkitti viestiisi ketjusta "%{topic}" – %{site_title}'
         watching_first_post: '%{username} loi uuden ketjun "%{topic}" – %{site_title}'
+        watching_category_or_tag: '%{username} lähetti viestin ketjuun "%{topic}" – %{site_title}'
         confirm_title: "Ilmoitukset käytössä – %{site_title}"
         confirm_body: "Onnistui! Ilmoitukset ovat käytössä."
         custom: "Ilmoitus käyttäjältä %{username} sivustolla %{site_title}"
@@ -3338,6 +3359,7 @@ fi:
       logo: "Alueen logokuva"
       logo_dark: "Tumman tilan alueen logokuva"
       background_image: "Alueen taustakuva"
+      background_image_dark: "Kategorioiden tumma taustakuva"
       badge_colors: "Kunniamerkin värit"
       background_color: "Taustaväri"
       foreground_color: "Edustaväri"
@@ -3455,8 +3477,7 @@ fi:
       action: "Liputa viesti"
       take_action_options:
         default:
-          title: "Ryhdy toimiin"
-          details: "Ylitä lippujen kynnysmäärä välittömästi, odottamatta enempää yhteisön jäsenten liputuksia"
+          title: "Piilota viesti"
         suspend:
           title: "Hyllytä käyttäjä"
           details: "Ylitä lippujen kynnysmäärä ja hyllytä käyttäjä"
@@ -3473,7 +3494,6 @@ fi:
       ip_address_missing: "-"
       hidden_email_address: "(piilotettu)"
       submit_tooltip: "Lähetä yksityinen lippu"
-      take_action_tooltip: "Saavuta liputusraja välittömästi; ei tarvetta odottaa muiden käyttäjien liputuksia."
       cant: "Et valitettavasti voi liputtaa tätä viestiä tällä hetkellä."
       notify_staff: "Ilmoita henkilökunnalle yksityisesti"
       formatted_name:
@@ -4032,7 +4052,7 @@ fi:
           delete: "Poista"
           delete_confirm: "Oletko varma, että haluat poistaa tämän osion?"
           reset_confirm: "Haluatko varmasti palauttaa osion oletukset?"
-          public: "Tee tästä osiosta julkinen ja kaikille näkyvä"
+          public: "Näkyy kaikille"
           always_public: "Tämän osion sisältö on aina julkista"
           more_menu: "Lisää-valikko"
           links:
@@ -4137,10 +4157,12 @@ fi:
     form_template_chooser:
       select_template: "Valitse lomakemallit"
     form_templates:
+      upload_field:
+        upload: "Lataa"
+        uploading: "Ladataan"
       errors:
         valueMissing:
           default: "Täytä tämä kenttä."
-          text: "Täytä tämä kenttä."
           select-one: "Valitse kohde luettelosta."
           select-multiple: "Valitse vähintään yksi kohde luettelosta."
           checkbox: "Valitse tämä ruutu, jos haluat jatkaa."
@@ -4196,9 +4218,7 @@ fi:
         latest_version: "Uusin"
         problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
         new_features:
-          title: "\U0001F381 Uudet ominaisuudet"
-          dismiss: "Sulje"
-          learn_more: "Lue lisää"
+          learn_more: "Lisätietoja..."
         last_checked: "Viimeksi tarkistettu"
         refresh_problems: "Päivitä"
         no_problems: "Ongelmia ei löytynyt."
@@ -4523,8 +4543,8 @@ fi:
         not_enabled: "E"
         change_settings_short: "Asetukset"
         howto: "Kuinka asennan lisäosia?"
-        official: "Virallinen lisäosa"
         broken_route: "Linkin määrittäminen kohteeseen %{name} ei onnistu. Varmista, että mainostenesto-ohjelmat on poistettu käytöstä, ja kokeile ladata sivu uudelleen."
+        author: "Käyttäjältä %{author}"
       navigation_menu:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"

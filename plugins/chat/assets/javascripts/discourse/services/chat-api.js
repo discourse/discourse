@@ -313,11 +313,16 @@ export default class ChatApi extends Service {
    * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
-  saveDraft(channelId, data) {
-    return ajax("/chat/drafts", {
+  saveDraft(channelId, data, options = {}) {
+    let endpoint = `/chat/api/channels/${channelId}`;
+    if (options.threadId) {
+      endpoint += `/threads/${options.threadId}`;
+    }
+    endpoint += "/drafts";
+
+    return ajax(endpoint, {
       type: "POST",
       data: {
-        chat_channel_id: channelId,
         data,
       },
       ignoreUnsent: false,
@@ -386,10 +391,10 @@ export default class ChatApi extends Service {
    * @param {Array<number>} data.upload_ids - The uploads attached to the message after editing.
    */
   editMessage(channelId, messageId, data) {
-    return ajax(`/chat/${channelId}/edit/${messageId}`, {
-      type: "PUT",
-      data,
-    });
+    return this.#putRequest(
+      `/channels/${channelId}/messages/${messageId}`,
+      data
+    );
   }
 
   /**
@@ -473,9 +478,9 @@ export default class ChatApi extends Service {
    * @param {number} options.chat_message_id - A message ID to display in the invite.
    */
   invite(channelId, userIds, options = {}) {
-    return ajax(`/chat/${channelId}/invite`, {
-      type: "put",
-      data: { user_ids: userIds, chat_message_id: options.messageId },
+    return this.#postRequest(`/channels/${channelId}/invites`, {
+      user_ids: userIds,
+      message_id: options.messageId,
     });
   }
 
@@ -488,6 +493,18 @@ export default class ChatApi extends Service {
    */
   summarize(channelId, options = {}) {
     return this.#getRequest(`/channels/${channelId}/summarize`, options);
+  }
+
+  /**
+   * Add members to a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {Array<string>} usernames - The usernames of the users to add.
+   */
+  addMembersToChannel(channelId, usernames) {
+    return this.#postRequest(`/channels/${channelId}/memberships`, {
+      usernames,
+    });
   }
 
   get #basePath() {

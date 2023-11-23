@@ -57,7 +57,7 @@
                 @count={{userBadge.count}}
               /></td>
             <td>
-              <LinkTo @route="adminUser" @model={{userBadge.badge.granted_by}}>
+              <LinkTo @route="adminUser" @model={{userBadge.granted_by}}>
                 {{avatar userBadge.granted_by imageSize="tiny"}}
                 {{userBadge.granted_by.username}}
               </LinkTo>

@@ -314,7 +314,9 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("ellipses", async function (assert) {
-    await render(hbs`<DButton @translatedLabel="test label" @ellipsis=true />`);
+    await render(
+      hbs`<DButton @translatedLabel="test label" @ellipsis={{true}} />`
+    );
 
     assert.dom(".d-button-label").hasText("test label…");
   });

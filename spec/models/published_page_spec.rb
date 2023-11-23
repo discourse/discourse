@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PublishedPage, type: :model do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   it "has path and url helpers" do
     pp = PublishedPage.create!(topic: topic, slug: "hello-world")

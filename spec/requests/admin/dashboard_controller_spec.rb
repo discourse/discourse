@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::DashboardController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   before do
     AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])

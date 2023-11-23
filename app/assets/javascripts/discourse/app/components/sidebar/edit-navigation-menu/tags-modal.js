@@ -15,7 +15,7 @@ export default class extends Component {
   @tracked onlySelected = false;
   @tracked onlyUnSelected = false;
   @tracked tags = [];
-  @tracked tagsLoading = true;
+  @tracked tagsLoading;
   @tracked selectedTags = [...this.currentUser.sidebarTagNames];
 
   constructor() {
@@ -43,11 +43,13 @@ export default class extends Component {
     await this.store
       .findAll("listTag", findArgs)
       .then((tags) => {
-        this.tagsLoading = false;
         this.tags = tags;
       })
       .catch((error) => {
         popupAjaxError(error);
+      })
+      .finally(() => {
+        this.tagsLoading = false;
       });
   }
 
@@ -60,7 +62,7 @@ export default class extends Component {
       if (this.observer) {
         this.observer.disconnect();
       } else {
-        const root = document.querySelector(".modal-body");
+        const root = document.querySelector(".d-modal__body");
         const style = window.getComputedStyle(root);
         const marginTop = parseFloat(style.marginTop);
         const paddingTop = parseFloat(style.paddingTop);
@@ -74,7 +76,7 @@ export default class extends Component {
             });
           },
           {
-            root: document.querySelector(".modal-body"),
+            root: document.querySelector(".d-modal__body"),
             rootMargin: `0px 0px ${marginTop + paddingTop}px 0px`,
             threshold: 1.0,
           }

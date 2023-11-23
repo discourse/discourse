@@ -146,7 +146,7 @@
           id="edit-synonyms"
           class="btn-default"
         />
-        {{#if this.deleteAction}}
+        {{#if this.canAdminTag}}
           <DButton
             @action={{action "deleteTag"}}
             @icon="far-trash-alt"

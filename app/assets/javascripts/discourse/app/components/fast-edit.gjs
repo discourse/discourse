@@ -60,7 +60,6 @@ export default class FastEdit extends Component {
   }
 
   <template>
-    {{! template-lint-disable modifier-name-case }}
     {{! template-lint-disable no-pointer-down-event-binding }}
     {{! template-lint-disable no-invalid-interactive }}
     <div class="fast-edit-container" {{on "keydown" this.onKeydown}}>

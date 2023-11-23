@@ -149,7 +149,7 @@ describe Chat::ChannelFetcher do
       end
 
       context "when restricted category" do
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
         fab!(:group_user) { Fabricate(:group_user, group: group, user: user1) }
 
         it "does not include the category channel for member of group with readonly access" do

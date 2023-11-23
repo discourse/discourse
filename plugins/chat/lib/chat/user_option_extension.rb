@@ -20,7 +20,12 @@ module Chat
       end
 
       def base.chat_header_indicator_preferences
-        @chat_header_indicator_preferences ||= { all_new: 0, dm_and_mentions: 1, never: 2 }
+        @chat_header_indicator_preferences ||= {
+          all_new: 0,
+          dm_and_mentions: 1,
+          never: 2,
+          only_mentions: 3,
+        }
       end
 
       # Avoid attempting to override when autoloading

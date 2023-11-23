@@ -1,12 +1,12 @@
 <form id="login-form" method="post">
   <div id="credentials" class={{this.credentialsClass}}>
-    <div class="input-group">
+    <div class="input-group" {{did-insert this.passkeyConditionalLogin}}>
       <Input
         @value={{@loginName}}
         @type="email"
         id="login-account-name"
         class={{value-entered @loginName}}
-        autocomplete="username"
+        autocomplete={{if @canUsePasskeys "username webauthn" "username"}}
         autocorrect="off"
         autocapitalize="off"
         disabled={{@showSecondFactor}}

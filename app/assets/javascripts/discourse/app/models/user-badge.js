@@ -44,6 +44,11 @@ UserBadge.reopenClass({
       users[userJson.id] = User.create(userJson);
     });
 
+    json.granted_bies = json.granted_bies ?? [];
+    json.granted_bies.forEach(function (userJson) {
+      users[userJson.id] = User.create(userJson);
+    });
+
     // Create Topic objects.
     if (json.topics === undefined) {
       json.topics = [];

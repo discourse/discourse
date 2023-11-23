@@ -91,8 +91,12 @@ module SiteSettingExtension
     @shadowed_settings ||= []
   end
 
+  def hidden_settings_provider
+    @hidden_settings_provider ||= SiteSettings::HiddenProvider.new
+  end
+
   def hidden_settings
-    @hidden_settings ||= []
+    hidden_settings_provider.all
   end
 
   def refresh_settings
@@ -123,11 +127,12 @@ module SiteSettingExtension
       end
   end
 
+  def deprecated_settings
+    @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
+  end
+
   def settings_hash
     result = {}
-    deprecated_settings = Set.new
-
-    SiteSettings::DeprecatedSettings::SETTINGS.each { |s| deprecated_settings << s[0] }
 
     defaults.all.keys.each do |s|
       result[s] = if deprecated_settings.include?(s.to_s)
@@ -153,7 +158,12 @@ module SiteSettingExtension
       Hash[
         *@client_settings
           .map do |name|
-            value = self.public_send(name)
+            value =
+              if deprecated_settings.include?(name.to_s)
+                public_send(name, warn: false)
+              else
+                public_send(name)
+              end
             type = type_supervisor.get_type(name)
             value = value.to_s if type == :upload
             value = value.map(&:to_s).join("|") if type == :uploaded_image_list
@@ -199,6 +209,7 @@ module SiteSettingExtension
         opts = {
           setting: s,
           description: description(s),
+          keywords: keywords(s),
           default: default,
           value: value.to_s,
           category: categories[s],
@@ -216,6 +227,10 @@ module SiteSettingExtension
 
   def description(setting)
     I18n.t("site_settings.#{setting}", base_path: Discourse.base_path)
+  end
+
+  def keywords(setting)
+    I18n.t("site_settings.keywords.#{setting}", default: "")
   end
 
   def placeholder(setting)
@@ -584,14 +599,14 @@ module SiteSettingExtension
 
       categories[name] = opts[:category] || :uncategorized
 
-      hidden_settings << name if opts[:hidden]
+      hidden_settings_provider.add_hidden(name) if opts[:hidden]
 
       if GlobalSetting.respond_to?(name)
         val = GlobalSetting.public_send(name)
 
         unless val.nil? || (val == "")
           shadowed_val = val
-          hidden_settings << name
+          hidden_settings_provider.add_hidden(name)
           shadowed_settings << name
         end
       end

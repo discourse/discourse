@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { cancel, throttle } from "@ember/runloop";
+import { cancel, next, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DiscourseURL from "discourse/lib/url";
@@ -188,10 +188,12 @@ export default Component.extend({
   },
 
   @action
-  openInFullPage() {
+  async openInFullPage() {
     this.chatStateManager.storeAppURL();
     this.chatStateManager.prefersFullPage();
     this.chat.activeChannel = null;
+
+    await new Promise((resolve) => next(resolve));
 
     return DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
   },

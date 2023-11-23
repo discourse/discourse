@@ -35,6 +35,13 @@ export default class LocalLoginBody extends Component {
   }
 
   @action
+  passkeyConditionalLogin() {
+    if (this.args.canUsePasskeys) {
+      this.args.passkeyLogin("conditional");
+    }
+  }
+
+  @action
   togglePasswordMask() {
     this.maskPassword = !this.maskPassword;
   }

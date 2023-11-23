@@ -20,10 +20,10 @@
     "handlebars": "^4.7.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
+    "@babel/core": "^7.23.3",
     "@ember/optional-features": "^2.0.0",
     "@ember/string": "^3.1.1",
-    "@embroider/test-setup": "^3.0.2",
+    "@embroider/test-setup": "^3.0.3",
     "@glimmer/component": "^1.1.2",
     "@glimmer/syntax": "^0.84.3",
     "broccoli-asset-rev": "^3.0.0",

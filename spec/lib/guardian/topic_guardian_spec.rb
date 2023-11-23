@@ -1,75 +1,79 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicGuardian do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   fab!(:tl3_user) { Fabricate(:trust_level_3) }
   fab!(:tl4_user) { Fabricate(:trust_level_4) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:category) { Fabricate(:category) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:moderator)
+  fab!(:category)
+  fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:private_topic) { Fabricate(:topic, category: private_category) }
-  fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+  fab!(:private_message_topic)
 
   before { Guardian.enable_topic_can_see_consistency_check }
 
   after { Guardian.disable_topic_can_see_consistency_check }
 
   describe "#can_create_shared_draft?" do
+    before { Group.refresh_automatic_groups! }
+
     it "when shared_drafts are disabled" do
-      SiteSetting.shared_drafts_min_trust_level = "admin"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(Guardian.new(admin).can_create_shared_draft?).to eq(false)
     end
 
     it "when user is a moderator and access is set to admin" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "admin"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(Guardian.new(moderator).can_create_shared_draft?).to eq(false)
     end
 
     it "when user is a moderator and access is set to staff" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "staff"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:staff]
 
       expect(Guardian.new(moderator).can_create_shared_draft?).to eq(true)
     end
 
     it "when user is TL3 and access is set to TL2" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "2"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
 
       expect(Guardian.new(tl3_user).can_create_shared_draft?).to eq(true)
     end
   end
 
   describe "#can_see_shared_draft?" do
+    before { Group.refresh_automatic_groups! }
+
     it "when shared_drafts are disabled (existing shared drafts)" do
-      SiteSetting.shared_drafts_min_trust_level = "admin"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(Guardian.new(admin).can_see_shared_draft?).to eq(true)
     end
 
     it "when user is a moderator and access is set to admin" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "admin"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(Guardian.new(moderator).can_see_shared_draft?).to eq(false)
     end
 
     it "when user is a moderator and access is set to staff" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "staff"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:staff]
 
       expect(Guardian.new(moderator).can_see_shared_draft?).to eq(true)
     end
 
     it "when user is TL3 and access is set to TL2" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "2"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
 
       expect(Guardian.new(tl3_user).can_see_shared_draft?).to eq(true)
     end
@@ -130,11 +134,11 @@ RSpec.describe TopicGuardian do
 
   describe "#can_edit_topic?" do
     context "when the topic is a shared draft" do
-      let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+      let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true) }
 
       before do
         SiteSetting.shared_drafts_category = category.id
-        SiteSetting.shared_drafts_min_trust_level = "2"
+        SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       end
 
       it "returns false if the topic is a PM" do

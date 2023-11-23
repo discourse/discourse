@@ -2,8 +2,8 @@ import { reads } from "@ember/object/computed";
 import { cook } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
-import categoryFromId from "discourse-common/utils/category-macro";
 import discourseComputed from "discourse-common/utils/decorators";
+import Category from "./category";
 
 const PendingPost = RestModel.extend({
   expandedExcerpt: null,
@@ -22,7 +22,10 @@ const PendingPost = RestModel.extend({
     return userPath(username.toLowerCase());
   },
 
-  category: categoryFromId("category_id"),
+  @discourseComputed("category_id")
+  category() {
+    return Category.findById(this.category_id);
+  },
 });
 
 export default PendingPost;

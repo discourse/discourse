@@ -88,16 +88,15 @@
                 <td><Input @type="checkbox" @checked={{act.selected}} /></td>
                 <td>
                   <div class="scope-name">{{act.name}}</div>
-                  <span
-                    class="scope-tooltip"
-                    data-tooltip={{i18n
+                  <DTooltip
+                    @icon="question-circle"
+                    @content={{i18n
                       (concat
                         "admin.api.scopes.descriptions." resource "." act.key
                       )
+                      class="scope-tooltip"
                     }}
-                  >
-                    {{d-icon "question-circle"}}
-                  </span>
+                  />
                 </td>
                 <td>
                   <DButton

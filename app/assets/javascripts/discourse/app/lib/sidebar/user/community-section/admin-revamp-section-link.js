@@ -31,10 +31,9 @@ export default class AdminRevampSectionLink extends BaseSectionLink {
 
     return (
       this.currentUser.staff &&
-      this.currentUser.isInAnyGroups(
-        this.siteSettings.groupSettingArray(
-          "enable_experimental_admin_ui_groups"
-        )
+      this.siteSettings.userInAnyGroups(
+        "enable_experimental_admin_ui_groups",
+        this.currentUser
       )
     );
   }

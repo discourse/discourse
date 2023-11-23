@@ -29,6 +29,7 @@ class Category < ActiveRecord::Base
   belongs_to :uploaded_logo, class_name: "Upload"
   belongs_to :uploaded_logo_dark, class_name: "Upload"
   belongs_to :uploaded_background, class_name: "Upload"
+  belongs_to :uploaded_background_dark, class_name: "Upload"
 
   has_many :topics
   has_many :category_users
@@ -115,8 +116,13 @@ class Category < ActiveRecord::Base
 
   after_save do
     if saved_change_to_uploaded_logo_id? || saved_change_to_uploaded_logo_dark_id? ||
-         saved_change_to_uploaded_background_id?
-      upload_ids = [self.uploaded_logo_id, self.uploaded_logo_dark_id, self.uploaded_background_id]
+         saved_change_to_uploaded_background_id? || saved_change_to_uploaded_background_dark_id?
+      upload_ids = [
+        self.uploaded_logo_id,
+        self.uploaded_logo_dark_id,
+        self.uploaded_background_id,
+        self.uploaded_background_dark_id,
+      ]
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -1185,6 +1191,7 @@ end
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
 #  default_slow_mode_seconds                 :integer
 #  uploaded_logo_dark_id                     :integer
+#  uploaded_background_dark_id               :integer
 #
 # Indexes
 #

@@ -15,7 +15,6 @@ nl:
   poll:
     poll: "poll"
     invalid_argument: "Ongeldige waarde '%{value}' voor argument '%{argument}'."
-    multiple_polls_without_name: "Er zijn meerdere polls zonder naam. Gebruik het attribuut '<code>naam</code>' om je polls uniek te identificeren."
     multiple_polls_with_same_name: "Er zijn meerdere polls met dezelfde naam : <strong>%{name}</strong>. Gebruik het attribuut '<code>naam</code>' om je polls uniek te identificeren."
     default_poll_must_have_at_least_1_option: "De poll moet minstens 1 optie hebben."
     named_poll_must_have_at_least_1_option: "De poll met de naam <strong>%{name}</strong> moet minstens 1 optie hebben."

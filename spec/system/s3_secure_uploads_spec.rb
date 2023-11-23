@@ -110,7 +110,13 @@ describe "Uploading files in the composer to S3", type: :system do
 
       # Extra wait time is added because the job can slow down the processing of the request.
       img = first_post_img(wait: 10)
-      expect(img["src"]).not_to include("/secure-uploads")
+
+      # At first the image will be secure when created via the composer, usually the
+      # CookedPostProcessor job fixes this but running it immediately when creating the
+      # post doesn't work in the test, so we need to rebake here to get the correct result.
+      expect(page).to have_css("img[src*='secure-uploads']")
+      Post.last.rebake!
+      expect(page).not_to have_css("img[src*='secure-uploads']", wait: 5)
       topic = topic_page.current_topic
       expect(topic.first_post.uploads.first.secure).to eq(false)
     end

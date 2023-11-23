@@ -82,6 +82,16 @@ zh_CN:
       not_allowed_theme: "`%{repo}` 不在允许的主题列表中（请检查 `allowed_theme_repos` 全局设置）。"
       ssh_key_gone: "您安装主题等待的时间太长，并且 SSH 密钥已过期。请再试一次。"
       too_many_files: "主题中的文件数 (%{count}) 已超过允许的最大文件数 (%{limit})"
+      migrations:
+        invalid_filename: "迁移文件的文件名无效： %{filename}。文件名必须以 4 位数字开头，后跟连字符，然后是仅包含字母数字字符和连字符的名称。"
+        name_too_long:
+          other: "迁移名称太长。不应超过 %{count} 字符。"
+        too_many_pending_migrations: "该主题中有太多待处理的迁移。主题在一次更新中不允许引入超过 100 个迁移"
+        out_of_sequence: "迁移 '%{name}' 不按顺序进行。该主题的最后一次迁移的版本号为 %{current} ，高于新迁移的版本"
+        syntax_error: "无法运行迁移 '%{name}'，因为它有语法错误: %{error}"
+        exceeded_memory_limit: "迁移 '%{name}' 失败，因为它超出了内存限制"
+        timed_out: "迁移 '%{name}' 超时"
+        no_exported_function: "迁移 '%{name}' 没有导出执行迁移的函数"
     errors:
       component_no_user_selectable: "主题组件无法由用户选择"
       component_no_default: "主题组件不能是默认主题"
@@ -550,7 +560,8 @@ zh_CN:
             name:
               same_as_password: "与您的密码相同。"
             ip_address:
-              signup_not_allowed: "不允许从此帐户注册。"
+              blocked: "不允许从您的 IP 地址进行新注册。"
+              max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -1351,6 +1362,7 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
     v3_analytics_deprecated: "您的 Discourse 目前使用的是 Google Analytics（分析）3，2023 年 7 月后该版本将不受支持。立即<a href='https://meta.discourse.org/t/260498'>升级到Google Analytics（分析）4</a> ，以继续接收有价值的见解和分析，了解您的网站性能。"
+    category_style_deprecated: "你的 Discourse 目前使用的是过时的分类样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅 <a href='https://meta.discourse.org/t/282441'>移至单一类别风格网站设置</a> ，了解如何保留所选类别风格。"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1381,6 +1393,7 @@ zh_CN:
     search_query_log_max_size: "要保留的最大搜索查询量"
     search_query_log_max_retention_days: "保留搜索查询的最长时间（以天为单位）。"
     search_ignore_accents: "搜索文本时忽略注音。"
+    search_default_sort_order: "整页搜索的默认排序顺序"
     category_search_priority_low_weight: "应用于低类别搜索优先级排名的权重。"
     category_search_priority_high_weight: "应用于高类别搜索优先级排名的权重。"
     default_composer_category: "创建新话题时用于预填充类别下拉菜单的类别。"
@@ -1427,7 +1440,7 @@ zh_CN:
     blocked_onebox_domains: "一个永远不会被归类的域名列表，例如：wikipedia.org（不支持通配符*？）"
     block_onebox_on_redirect: "阻止重定向 URL 的归类。"
     allowed_inline_onebox_domains: "如果在没有标题的情况下链接，将以微型形式进行 Onebox 处理的网域列表"
-    enable_inline_onebox_on_all_domains: "忽略 inline_onebox_domain_allowlist 站点设置并在所有网域上允许内联 Onebox。"
+    enable_inline_onebox_on_all_domains: "忽略 allowed_inline_onebox_domains 站点设置并允许所有域上的内联 Onebox。"
     force_custom_user_agent_hosts: "对所有请求使用自定义 Onebox 用户代理的主机。（对于限制用户代理访问的主机特别有用）。"
     max_oneboxes_per_post: "帖子中的最大 Onebox 数量。"
     facebook_app_access_token: "从您的 Facebook 应用 ID 和密钥生成的令牌。用于生成 Instagram Onebox。"
@@ -1449,7 +1462,7 @@ zh_CN:
     email_custom_headers: "以 | 分隔的自定义电子邮件标头列表。"
     email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
-    enforce_second_factor: "强制用户启用双重身份验证。选择“所有”可以强制所有用户。选择“管理人员”仅强制管理人员。"
+    enforce_second_factor: "要求用户在访问 Discourse 界面前启用双因素身份验证。选择 \"全部\"，对所有用户强制执行。选择 \"管理人员\"，仅对管理人员用户执行。此设置不影响 API 或 \"DiscourseConnect 提供商 \"身份验证。"
     force_https: "强制您的站点仅使用 HTTPS。警告：在您验证 HTTPS 已完全设置并在任何地方都可以正常工作之前，请勿启用此功能！您是否检查过您的 CDN、所有社交登录以及任何外部徽标/依赖项，以确保它们都与 HTTPS 兼容？"
     same_site_cookies: "使用相同的站点 Cookie，它们在支持的浏览器上消除了所有跨站点请求伪造向量（宽松或严格）。警告：“严格”仅适用于强制登录并使用外部身份验证方法的站点。"
     summary_score_threshold: "将帖子包含在“总结此话题”中所需的最低分数"
@@ -1527,8 +1540,8 @@ zh_CN:
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
-    top_menu: "确定主页导航中显示的条目以及显示顺序。示例：latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "确定帖子菜单中显示的条目以及显示顺序。示例：like|edit|flag|delete|share|bookmark|reply"
+    top_menu: "确定主页导航中显示的条目，以及出现的顺序。"
+    post_menu: "确定帖子菜单中显示的条目，以及出现的顺序。"
     post_menu_hidden_items: "除非点击扩展省略号，否则在帖子菜单中默认隐藏的菜单项。"
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
@@ -1758,6 +1771,7 @@ zh_CN:
     here_mention: "用于 @ 提及的名称，允许特权用户通知参与话题的 'max_here_mentioned' 人。必须不是一个现有的用户名。"
     max_here_mentioned: "@here 提及的最大人数。"
     min_trust_level_for_here_mention: "允许提及 @here 的最低信任级别。"
+    here_mention_allowed_groups: "允许使用提及 @here 的群组。"
     create_thumbnails: "创建太大而无法放入帖子的缩略图和灯箱图片。"
     email_time_window_mins: "在发送任何通知电子邮件之前等待 (n) 分钟，让用户有机会编辑和完成他们的帖子。"
     personal_email_time_window_seconds: "在发送任何个人消息通知电子邮件之前等待 (n) 秒，让用户有机会编辑和完成他们的消息。"
@@ -1773,7 +1787,6 @@ zh_CN:
     min_title_similar_length: "检查有无类似话题之前的标题的最小长度。"
     desktop_category_page_style: "/categories 页面的视觉样式。"
     category_colors: "设置类别允许的十六进制颜色值列表。"
-    category_style: "类别徽章的视觉样式。"
     default_dark_mode_color_scheme_id: "在深色模式下使用的配色方案。"
     dark_mode_none: "无"
     max_image_size_kb: "最大图片上传大小（以 kB 为单位）。也必须在 nginx (client_max_body_size) / apache 或代理中配置。大于此值且小于 client_max_body_size 的图片将调整大小以适合上传。"
@@ -1928,6 +1941,7 @@ zh_CN:
     allow_anonymous_posting: "允许用户切换至匿名模式"
     allow_anonymous_likes: "允许匿名用户点赞帖子"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
+    anonymous_posting_allowed_groups: "启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
     allow_users_to_hide_profile: "允许用户隐藏他们的个人资料和状态"
@@ -1976,9 +1990,9 @@ zh_CN:
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
     short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
-    default_code_lang: "应用于代码块（auto、text、ruby、python 等）的默认编程语言语法高亮显示。此值还必须存在于 `highlighted languages` 站点设置中。"
+    default_code_lang: "应用于 markdown 代码块的默认编程语言语法高亮 (自动、文本、ruby、python 等)。该值还必须出现在 `highlighted languages` 站点设置中。"
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
-    autohighlight_all_code: "即使未显式声明语言，也强制向所有预格式化代码块应用代码高亮显示。"
+    autohighlight_all_code: "将语法高亮显示应用于 HTML <code> 块，即使它们没有指定语言。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
     show_copy_button_on_codeblocks: "向代码块添加一个按钮，以将块内容复制到用户的剪贴板。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用是必需的。"
@@ -2011,6 +2025,7 @@ zh_CN:
     approve_new_topics_unless_trust_level: "低于此信任级别的用户的新话题必须接受审批"
     approve_unless_staged: "暂存用户的新话题和帖子必须接受审批"
     notify_about_queued_posts_after: "如果有帖子等待审核的小时超过此数值，向所有版主发送通知。设置为 0 将禁用这些通知。"
+    reviewable_revision_reasons: "拒绝带有修订的可审查队列帖子时，可以选择的原因列表。其他也始终可用，允许输入自定义原因。"
     auto_close_messages_post_count: "消息被自动关闭前允许的最大帖子数（设置为 0 将禁用）"
     auto_close_topics_post_count: "话题被自动关闭前允许的最大帖子数（设置为 0 将禁用）"
     auto_close_topics_create_linked_topic: "在话题根据 'auto close topics post count' 设置被自动关闭后，创建一个新的链接话题"
@@ -2100,6 +2115,7 @@ zh_CN:
     city_for_disputes: "争议之城"
     shared_drafts_category: "通过为话题草稿指定类别来启用共享草稿功能。此类别中的话题将在管理人员用户的话题列表中被禁止。"
     shared_drafts_min_trust_level: "允许用户查看和编辑共享草稿。"
+    shared_drafts_allowed_groups: "允许这些组中的用户查看和编辑共享草稿。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "出现在通知角的徽章图标。建议使用具有透明度的 96×96 单色 PNG。"
     enable_desktop_push_notifications: "启用桌面推送通知"
@@ -2162,7 +2178,7 @@ zh_CN:
       reply_by_email_address_is_empty: "在启用通过电子邮件回复之前，您必须先设置 'reply by email address'。"
       email_polling_disabled: "您必须先启用手动、POP3 轮询或启用自定义邮件轮询器，然后才能通过电子邮件进行回复。"
       user_locale_not_enabled: "在启用此设置之前，您必须先启用 'allow user locale'。"
-      personal_message_enabled_groups_invalid: "您必须为此设置指定至少一个群组。如果您不希望管理人员以外的任何人发送 PM，请选择管理人员群组。"
+      at_least_one_group_required: "你必须为该设置指定至少一个组。"
       invalid_regex: "正则表达式无效或不被允许。"
       invalid_regex_with_message: "正则表达式 '%{regex}' 有一个错误：%{message}"
       email_editable_enabled: "在启用此设置之前，您必须先禁用 'email editable'。"
@@ -2192,6 +2208,9 @@ zh_CN:
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 站点设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
+    keywords:
+      here_mention_allowed_groups: "min_trust_level_for_here_mention"
+      shared_drafts_allowed_groups: "Shared_drafts_min_trust_level"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2387,9 +2406,6 @@ zh_CN:
       blocked: "不被允许。"
       revoked: "在 %{date}之前不会向 '%{email}' 发送电子邮件。"
       does_not_exist: "不适用"
-    ip_address:
-      blocked: "不允许从您的 IP 地址进行新注册。"
-      max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
     website:
       domain_not_allowed: "网站无效。允许的网域包括：%{domains}"
     auto_rejected: "因时限被自动拒绝。查看 auto_handle_queued_age 站点设置。"

@@ -22,7 +22,7 @@ RSpec.describe Chat::CreateMessage do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:other_user) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
@@ -34,7 +34,7 @@ RSpec.describe Chat::CreateMessage do
     let(:params) do
       { guardian: guardian, chat_channel_id: channel.id, message: content, upload_ids: [upload.id] }
     end
-    let(:message) { result[:message].reload }
+    let(:message) { result[:message_instance].reload }
 
     shared_examples "creating a new message" do
       it "saves the message" do
@@ -47,6 +47,7 @@ RSpec.describe Chat::CreateMessage do
       end
 
       it "creates mentions" do
+        Jobs.run_immediately!
         expect { result }.to change { Chat::Mention.count }.by(1)
       end
 
@@ -73,21 +74,15 @@ RSpec.describe Chat::CreateMessage do
         result
       end
 
-      it "enqueues a job to process message" do
-        result
-        expect_job_enqueued(job: Jobs::Chat::ProcessMessage, args: { chat_message_id: message.id })
+      it "can enqueue a job to process message" do
+        params[:process_inline] = false
+        expect_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
       end
 
-      it "notifies the new message" do
-        result
-        expect_job_enqueued(
-          job: Jobs::Chat::SendMessageNotifications,
-          args: {
-            chat_message_id: message.id,
-            timestamp: message.created_at.iso8601(6),
-            reason: "new",
-          },
-        )
+      it "can process a message inline" do
+        params[:process_inline] = true
+        Jobs::Chat::ProcessMessage.any_instance.expects(:execute).once
+        expect_not_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
       end
 
       it "triggers a Discourse event" do
@@ -340,7 +335,7 @@ RSpec.describe Chat::CreateMessage do
                   context "when message is not valid" do
                     let(:content) { "a" * (SiteSetting.chat_maximum_message_length + 1) }
 
-                    it { is_expected.to fail_with_an_invalid_model(:message) }
+                    it { is_expected.to fail_with_an_invalid_model(:message_instance) }
                   end
 
                   context "when message is valid" do

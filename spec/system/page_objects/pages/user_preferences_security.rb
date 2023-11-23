@@ -9,10 +9,10 @@ module PageObjects
       end
 
       def visit_second_factor(password)
-        click_link(class: "btn-second-factor")
+        click_button "Manage Two-Factor Authentication"
 
-        find(".second-factor input#password").fill_in(with: password)
-        find(".second-factor .btn-primary").click
+        find(".dialog-body input#password").fill_in(with: password)
+        find(".dialog-body .btn-primary").click
       end
     end
   end

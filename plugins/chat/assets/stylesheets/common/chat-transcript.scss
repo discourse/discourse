@@ -1,5 +1,6 @@
 .chat-transcript {
   @extend .chat-message-container;
+  box-sizing: border-box;
   min-height: 50px;
   padding: 12px;
   margin: 1rem 0;
@@ -24,8 +25,15 @@
     padding-bottom: 0.5rem;
   }
 
-  .chat-transcript-channel {
+  .chat-transcript-channel,
+  .chat-transcript-thread {
     font-size: var(--font-down-1-rem);
+  }
+
+  .chat-transcript-separator {
+    font-size: var(--font-down-3-rem);
+    color: var(--primary-high);
+    padding: 0 0.5rem;
   }
 
   .chat-transcript-username {
@@ -73,6 +81,17 @@
 
     .chat-transcript-reaction {
       @include chat-reaction;
+    }
+  }
+
+  .chat-transcript-images.onebox {
+    display: flex;
+    flex-wrap: wrap;
+    img {
+      width: auto;
+      max-height: 150px;
+      margin-right: 0.5rem;
+      margin-top: 0.5em;
     }
   }
 

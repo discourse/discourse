@@ -3,9 +3,9 @@
 RSpec.describe PostDestroyer do
   before { UserActionManager.enable }
 
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:moderator)
+  fab!(:admin)
+  fab!(:coding_horror)
   let(:post) { create_post }
 
   describe "destroy_old_hidden_posts" do
@@ -679,7 +679,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "deleting the second post in a topic" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let!(:post) { create_post(user: user) }
     let(:topic) { post.topic }
     fab!(:second_user) { coding_horror }
@@ -996,11 +996,11 @@ RSpec.describe PostDestroyer do
   end
 
   describe "internal links" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     let!(:second_post) { Fabricate(:post, topic: topic) }
     fab!(:other_topic) { Fabricate(:topic) }
     let!(:other_post) { Fabricate(:post, topic: other_topic) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let!(:base_url) { URI.parse(Discourse.base_url) }
     let!(:guardian) { Guardian.new }
     let!(:url) do
@@ -1039,7 +1039,7 @@ RSpec.describe PostDestroyer do
       PostDestroyer.delete_with_replies(reporter, post, defer_reply_flags: defer_reply_flags)
     end
 
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     let(:reporter) { Discourse.system_user }
     let(:reply) { Fabricate(:post, topic: post.topic) }
     let(:reviewable_reply) { PostActionCreator.off_topic(reporter, reply).reviewable }
@@ -1070,7 +1070,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "featured topics for user_profiles" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "clears the user_profiles featured_topic column" do
       user.user_profile.update(featured_topic: post.topic)
@@ -1080,7 +1080,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "permanent destroy" do
-    fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+    fab!(:private_message_topic)
     fab!(:private_post) { Fabricate(:private_message_post, topic: private_message_topic) }
     fab!(:post_action) { Fabricate(:post_action, post: private_post) }
     fab!(:reply) { Fabricate(:private_message_post, topic: private_message_topic) }
@@ -1149,7 +1149,7 @@ RSpec.describe PostDestroyer do
     # timestamps are rounded because postgres truncates the timestamp. that would cause the comparison if we compared
     # these timestamps with the one read from the database
     fab!(:first_post) { Fabricate(:post, created_at: 10.days.ago.round) }
-    fab!(:walter_white) { Fabricate(:walter_white) }
+    fab!(:walter_white)
     let!(:topic) { first_post.topic }
     let!(:reply) do
       Fabricate(:post, topic: topic, created_at: 5.days.ago.round, user: coding_horror)
@@ -1222,7 +1222,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "mailing_list_mode emails on recovery" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:post_1) { Fabricate(:post, topic: topic) }
     fab!(:post_2) { Fabricate(:post, topic: topic) }
 

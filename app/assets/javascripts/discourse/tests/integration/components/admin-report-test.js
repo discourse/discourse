@@ -21,11 +21,11 @@ module("Integration | Component | admin-report", function (hooks) {
       "it has a title"
     );
 
-    assert.strictEqual(
-      query(".header .info").getAttribute("data-tooltip"),
-      "New account registrations for this period",
-      "it has a description"
-    );
+    await click("[data-trigger]");
+
+    assert
+      .dom("[data-content]")
+      .hasText("New account registrations for this period");
 
     assert.strictEqual(
       query(

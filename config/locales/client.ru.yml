@@ -1491,8 +1491,6 @@ ru:
         title: "Двухфакторная аутентификация"
         enable: "Управление двухфакторной аутентификацией"
         disable_all: "Отключить всё"
-        forgot_password: "Забыли пароль?"
-        confirm_password_description: "Чтобы продолжить, подтвердите пароль"
         name: "Название"
         label: "Код"
         rate_limit: "Подождите, прежде чем попробовать другой код аутентификации."
@@ -1623,14 +1621,13 @@ ru:
           generic: "Аккаунт %{provider} будет использоваться для аутентификации."
       name:
         title: "Имя"
-        instructions: "ваше полное имя (необязательно)"
-        instructions_required: "Ваше полное имя"
+        instructions: "Ваше полное имя (необязательно)."
+        instructions_required: "Ваше полное имя."
         required: "Введите имя"
         too_short: "Имя слишком короткое"
         ok: "Допустимое имя"
       username:
         title: "Имя пользователя"
-        instructions: "имя пользователя должно быть уникальным, коротким и не должно содержать пробелов"
         short_instructions: "Пользователи могут упоминать вас как @%{username}"
         available: "Имя пользователя доступно"
         not_available: "Недоступно. Попробуйте %{suggestion}."
@@ -1827,7 +1824,7 @@ ru:
         same_as_username: "Пароль совпадает с именем пользователя."
         same_as_email: "Пароль совпадает с адресом электронной почты."
         ok: "Допустимый пароль."
-        instructions: "минимум символов: %{count}"
+        instructions: "Минимум символов: %{count}."
         required: "Введите пароль"
         confirm: "Да"
       summary:
@@ -2216,16 +2213,6 @@ ru:
         few: "%{count} темы в этой категории"
         many: "%{count} тем в этой категории"
         other: "%{count} темы в этой категории"
-      plus_subcategories_title:
-        one: "%{name} и %{count} подкатегория"
-        few: "%{name} и %{count} подкатегории"
-        many: "%{name} и %{count} подкатегорий"
-        other: "%{name} и %{count} подкатегории"
-      plus_subcategories:
-        one: "+ %{count} подкатегория"
-        few: "+ %{count} подкатегории"
-        many: "+ %{count} подкатегорий"
-        other: "+ %{count} подкатегории"
     select_kit:
       delete_item: "Удалить %{name}"
       filter_by: "Фильтровать по: %{name}"
@@ -2562,6 +2549,7 @@ ru:
         private_message: '%{username} отправил(а) вам личное сообщение в теме «%{topic}» — %{site_title}'
         linked: '%{username} добавил(а) ссылку на ваше сообщение в теме «%{topic}» —%{site_title}'
         watching_first_post: '%{username} создал(а) новую тему «%{topic}» —%{site_title}'
+        watching_category_or_tag: '%{username} опубликовал(а) запись в теме «%{topic}» —%{site_title}'
         confirm_title: "Уведомления включены —%{site_title}"
         confirm_body: "Готово! Уведомления включены."
         custom: "Уведомление от пользователя %{username} на сайте %{site_title}"
@@ -3798,8 +3786,7 @@ ru:
       action: "Пожаловаться на сообщение"
       take_action_options:
         default:
-          title: "Принять меры"
-          details: "Сымитировать пороговое количество жалоб, не дожидаясь их от сообщества"
+          title: "Скрыть сообщение"
         suspend:
           title: "Заблокировать пользователя"
           details: "Сымитировать пороговое количество жалоб и заблокировать пользователя"
@@ -3816,7 +3803,6 @@ ru:
       ip_address_missing: "(Н/Д)"
       hidden_email_address: "(скрыто)"
       submit_tooltip: "Отправить приватную жалобу"
-      take_action_tooltip: "Сымитировать пороговое количество жалоб, не дожидаясь их от сообщества"
       cant: "Вы не можете сейчас отправить жалобу на это сообщение."
       notify_staff: "Приватно сообщить персоналу"
       formatted_name:
@@ -4428,7 +4414,6 @@ ru:
           delete: "Удалить"
           delete_confirm: "Действительно удалить раздел?"
           reset_confirm: "Действительно сбросить раздел к состоянию по умолчанию?"
-          public: "Сделать раздел публичным и видимым для всех"
           always_public: "Контент в этом разделе всегда публичный"
           more_menu: "Меню «Еще»"
           links:
@@ -4535,10 +4520,12 @@ ru:
     form_template_chooser:
       select_template: "Выберите шаблоны форм"
     form_templates:
+      upload_field:
+        upload: "Загрузка"
+        uploading: "Загрузка"
       errors:
         valueMissing:
           default: "Заполните это поле."
-          text: "Заполните это поле."
           select-one: "Выберите пункт в списке."
           select-multiple: "Выберите как минимум один пункт в списке."
           checkbox: "Чтобы продолжить, поставьте этот флажок."
@@ -4592,9 +4579,7 @@ ru:
         latest_version: "Последняя версия"
         problems_found: "Несколько советов по текущим настройкам сайта"
         new_features:
-          title: "\U0001F381 Новые возможности"
-          dismiss: "Закрыть"
-          learn_more: "Подробнее"
+          learn_more: "Подробнее…"
         last_checked: "Последняя проверка"
         refresh_problems: "Обновить"
         no_problems: "Проблем не обнаружено."
@@ -4932,8 +4917,8 @@ ru:
         not_enabled: "Н"
         change_settings_short: "Настройки"
         howto: "Как установить плагин?"
-        official: "Официальный плагин"
         broken_route: "Не удается настроить ссылку на «%{name}». Отключите блокировщики рекламы и попробуйте перезагрузить страницу."
+        author: "Автором %{author}"
       navigation_menu:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"

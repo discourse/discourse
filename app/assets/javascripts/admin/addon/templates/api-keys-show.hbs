@@ -119,9 +119,9 @@
             <td>{{scope.resource}}</td>
             <td>
               {{scope.action}}
-              <span
-                class="scope-tooltip"
-                data-tooltip={{i18n
+              <DTooltip
+                @icon="question-circle"
+                @content={{i18n
                   (concat
                     "admin.api.scopes.descriptions."
                     scope.resource
@@ -129,9 +129,8 @@
                     scope.key
                   )
                 }}
-              >
-                {{d-icon "question-circle"}}
-              </span>
+                class="scope-tooltip"
+              />
             </td>
             <td>
               <DButton

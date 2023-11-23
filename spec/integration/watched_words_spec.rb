@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe WatchedWord do
-  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true) }
+  fab!(:admin)
+  fab!(:moderator)
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:first_post) { Fabricate(:post, topic: topic) }
 
   let(:require_approval_word) do

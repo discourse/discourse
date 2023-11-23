@@ -171,7 +171,7 @@ RSpec.describe Discourse do
   end
 
   describe "#site_contact_user" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:another_admin) { Fabricate(:admin) }
 
     it "returns the user specified by the site setting site_contact_username" do

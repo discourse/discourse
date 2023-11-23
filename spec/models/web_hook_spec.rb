@@ -650,7 +650,7 @@ RSpec.describe WebHook do
     end
 
     context "with user promoted hooks" do
-      fab!(:user_promoted_web_hook) { Fabricate(:user_promoted_web_hook) }
+      fab!(:user_promoted_web_hook)
       fab!(:another_user) { Fabricate(:user, trust_level: 2) }
 
       it "should pass the user to the webhook job when a user is promoted" do
@@ -670,7 +670,7 @@ RSpec.describe WebHook do
     end
 
     context "with like created hooks" do
-      fab!(:like_web_hook) { Fabricate(:like_web_hook) }
+      fab!(:like_web_hook)
       fab!(:another_user) { Fabricate(:user) }
 
       it "should pass the group id to the emit webhook job" do

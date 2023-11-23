@@ -4,12 +4,12 @@ module Chat
   class MessageProcessor
     include ::CookedProcessorMixin
 
-    def initialize(chat_message)
+    def initialize(chat_message, opts = {})
       @model = chat_message
       @previous_cooked = (chat_message.cooked || "").dup
       @with_secure_uploads = false
       @size_cache = {}
-      @opts = {}
+      @opts = opts
 
       cooked = Chat::Message.cook(chat_message.message, user_id: chat_message.last_editor_id)
       @doc = Loofah.html5_fragment(cooked)

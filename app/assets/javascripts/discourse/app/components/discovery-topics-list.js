@@ -2,10 +2,9 @@ import Component from "@ember/component";
 import { inject as service } from "@ember/service";
 import $ from "jquery";
 import LoadMore from "discourse/mixins/load-more";
-import UrlRefresh from "discourse/mixins/url-refresh";
 import { observes, on } from "discourse-common/utils/decorators";
 
-export default Component.extend(UrlRefresh, LoadMore, {
+export default Component.extend(LoadMore, {
   classNames: ["contents"],
   eyelineSelector: ".topic-list-item",
   documentTitle: service(),
@@ -40,16 +39,12 @@ export default Component.extend(UrlRefresh, LoadMore, {
         if (
           newTopics &&
           newTopics.length &&
-          this.autoAddTopicsToBulkSelect &&
-          this.bulkSelectEnabled
+          this.bulkSelectHelper?.bulkSelectEnabled
         ) {
-          this.addTopicsToBulkSelect(newTopics);
+          this.bulkSelectHelper.addTopics(newTopics);
         }
         if (moreTopicsUrl && $(window).height() >= $(document).height()) {
           this.send("loadMore");
-        }
-        if (this.loadingComplete) {
-          this.loadingComplete();
         }
       });
     },
