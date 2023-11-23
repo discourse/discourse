@@ -149,14 +149,13 @@ module Chat
                 thread_size = thread.size - 1
                 last_thread_index = 0
 
-                (messages_chunk.size / ARCHIVED_MESSAGES_PER_POST + 1).times do |index|
+                (messages_chunk.size.to_f / (ARCHIVED_MESSAGES_PER_POST - 1)).ceil.times do |index|
                   if last_thread_index != thread_size
                     if index == 0
                       thread_index = thread.index(post_last_message)
                     else
                       next_post_last_message =
-                        messages_chunk[(ARCHIVED_MESSAGES_PER_POST * (index + 1)) - 1]
-
+                        messages_chunk[(ARCHIVED_MESSAGES_PER_POST * (index + 1)) - index]
                       if next_post_last_message.present? &&
                            next_post_last_message.thread_id.present? &&
                            next_post_last_message.thread_id == post_last_message.thread_id
