@@ -313,7 +313,7 @@ describe Chat::TranscriptService do
         },
       ).generate_markdown
     expect(rendered).to eq(<<~MARKDOWN)
-    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" reactions="heart:bjorn" threadId="#{thread.id}"]
+    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" reactions="heart:bjorn" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
     an extremely insightful response :)
 
     [chat quote="brucechat;#{thread_reply_1.id};#{thread_reply_1.created_at.iso8601}" chained="true" reactions="+1:hvitserk;heart:sigurd"]
@@ -351,7 +351,7 @@ describe Chat::TranscriptService do
 
     rendered = service([thread_om.id, thread_reply_1.id, thread_reply_2.id]).generate_markdown
     expect(rendered).to eq(<<~MARKDOWN)
-    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" threadId="#{thread.id}"]
+    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
     reply to me!
 
     [chat quote="brucechat;#{thread_reply_1.id};#{thread_reply_1.created_at.iso8601}" chained="true"]
@@ -389,7 +389,7 @@ describe Chat::TranscriptService do
 
     channel_message_2 =
       Fabricate(:chat_message, user: user2, chat_channel: channel, message: "more?")
-    thread_2 = Fabricate(:chat_thread, channel: channel)
+    thread_2 = Fabricate(:chat_thread, channel: channel, title: "the second idea")
     thread_2_om =
       Fabricate(
         :chat_message,
@@ -426,7 +426,7 @@ describe Chat::TranscriptService do
     I need ideas
     [/chat]
 
-    [chat quote="brucechat;#{thread_1_om.id};#{thread_1_om.created_at.iso8601}" chained="true" threadId="#{thread_1.id}"]
+    [chat quote="brucechat;#{thread_1_om.id};#{thread_1_om.created_at.iso8601}" chained="true" threadId="#{thread_1.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
     this is my idea
 
     [chat quote="martinchat;#{thread_1_message.id};#{thread_1_message.created_at.iso8601}" chained="true"]
@@ -439,7 +439,7 @@ describe Chat::TranscriptService do
     more?
     [/chat]
 
-    [chat quote="brucechat;#{thread_2_om.id};#{thread_2_om.created_at.iso8601}" chained="true" threadId="#{thread_2.id}"]
+    [chat quote="brucechat;#{thread_2_om.id};#{thread_2_om.created_at.iso8601}" chained="true" threadId="#{thread_2.id}" threadTitle="the second idea"]
     another one
 
     [chat quote="martinchat;#{thread_2_message_1.id};#{thread_2_message_1.created_at.iso8601}" chained="true"]
