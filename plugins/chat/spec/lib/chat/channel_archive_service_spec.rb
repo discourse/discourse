@@ -88,8 +88,6 @@ describe Chat::ChannelArchiveService do
   describe "#execute" do
     def create_messages(num)
       num.times { Fabricate(:chat_message, chat_channel: channel) }
-
-      # num.times { |i| Fabricate(:chat_message, chat_channel: channel, message: "message #{i + 1}") }
     end
 
     def create_threaded_messages(num, title: nil)
@@ -97,10 +95,6 @@ describe Chat::ChannelArchiveService do
       thread =
         Fabricate(:chat_thread, channel: channel, title: title, original_message: original_message)
       (num - 1).times { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
-
-      # (num - 1).times do |i|
-      #   Fabricate(:chat_message, chat_channel: channel, thread: thread, message: "thread #{i + 1}")
-      # end
     end
 
     def start_archive
