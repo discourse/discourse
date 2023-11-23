@@ -89,7 +89,7 @@
 
   tbody {
     .category {
-      border-left: 6px solid var(--category-color, var(--primary-low));
+      border-left: 6px solid var(--category-badge-color, var(--primary-low));
       h3,
       h4 {
         line-height: var(--line-height-medium);
