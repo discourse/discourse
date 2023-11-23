@@ -159,6 +159,8 @@ const DiscourseURL = EmberObject.extend({
       path = this.router.currentURL.replace(/#.*$/, "") + path;
     }
 
+    path = withoutPrefix(path);
+
     if (this.router.currentURL !== path) {
       // Always use replaceState in the next runloop to prevent weird routes changing
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
