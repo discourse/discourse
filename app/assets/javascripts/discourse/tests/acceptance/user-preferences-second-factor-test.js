@@ -2,7 +2,7 @@ import {
   click,
   currentRouteName,
   fillIn,
-  triggerEvent,
+  triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -153,7 +153,7 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await click(".security-key-dropdown li[data-name='Edit']");
 
     await fillIn("input[name='security-key-name']", "keyname changed");
-    await triggerEvent(".d-modal__body form", "submit");
+    await triggerKeyEvent(".d-modal .btn-primary", "keydown", "Enter");
 
     assert
       .dom(".d-modal__container")

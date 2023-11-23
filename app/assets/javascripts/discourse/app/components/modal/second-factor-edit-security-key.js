@@ -9,11 +9,7 @@ export default class SecondFactorEditSecurityKey extends Component {
   maxSecondFactorNameLength = MAX_SECOND_FACTOR_NAME_LENGTH;
 
   @action
-  editSecurityKey(e) {
-    if (e) {
-      e.preventDefault();
-    }
-
+  editSecurityKey() {
     this.loading = true;
     this.args.model.user
       .updateSecurityKey(
