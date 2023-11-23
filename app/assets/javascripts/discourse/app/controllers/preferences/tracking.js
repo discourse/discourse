@@ -142,6 +142,27 @@ export default class extends Controller {
       .filter((t) => t);
   }
 
+  @computed(
+    "model.watched_category_ids",
+    "model.watched_first_post_category_ids",
+    "model.tracked_category_ids",
+    "model.muted_category_ids",
+    "model.regular_category_ids",
+    "siteSettings.mute_all_categories_by_default"
+  )
+  get selectedCategoryIds() {
+    return []
+      .concat(
+        this.model.watched_category_ids,
+        this.model.watched_first_post_category_ids,
+        this.model.tracked_category_ids,
+        this.siteSettings.mute_all_categories_by_default
+          ? this.model.regular_category_ids
+          : this.model.muted_category_ids
+      )
+      .filter((t) => t);
+  }
+
   @computed("siteSettings.remove_muted_tags_from_latest")
   get hideMutedTags() {
     return this.siteSettings.remove_muted_tags_from_latest !== "never";

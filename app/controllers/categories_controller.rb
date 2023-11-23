@@ -301,21 +301,22 @@ class CategoriesController < ApplicationController
   end
 
   def find
-    category = Category.find_by_slug_path_with_id(params[:category_slug_path_with_id])
-    raise Discourse::NotFound if category.blank?
-    guardian.ensure_can_see!(category)
+    categories = []
 
-    ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+    if params[:ids].present?
+      categories = Category.secured(guardian).where(id: params[:ids])
+    elsif params[:slug_path_with_id].present?
+      category = Category.find_by_slug_path_with_id(params[:slug_path_with_id])
+      raise Discourse::NotFound if category.blank?
+      guardian.ensure_can_see!(category)
 
-    render json: {
-             category: SiteCategorySerializer.new(category, scope: guardian, root: nil),
-             ancestors:
-               ActiveModel::ArraySerializer.new(
-                 ancestors,
-                 scope: guardian,
-                 each_serializer: SiteCategorySerializer,
-               ),
-           }
+      ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+      categories = [*ancestors, category]
+    end
+
+    raise Discourse::NotFound if categories.blank?
+
+    render_serialized(categories, SiteCategorySerializer, root: :categories)
   end
 
   def search

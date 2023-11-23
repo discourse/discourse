@@ -1,5 +1,4 @@
 import { computed } from "@ember/object";
-import { mapBy } from "@ember/object/computed";
 import Category from "discourse/models/category";
 import { makeArray } from "discourse-common/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -27,27 +26,70 @@ export default MultiSelectComponent.extend({
     if (!this.blockedCategories) {
       this.set("blockedCategories", []);
     }
-  },
 
-  content: computed("categories.[]", "blockedCategories.[]", function () {
-    const blockedCategories = makeArray(this.blockedCategories);
-    return Category.list().filter((category) => {
-      if (category.isUncategorizedCategory) {
-        if (this.options?.allowUncategorized !== undefined) {
-          return this.options.allowUncategorized;
+    if (this.siteSettings.lazy_load_categories) {
+      if (this.categoryIds) {
+        if (!Category.hasAsyncFoundAll(this.categoryIds)) {
+          Category.asyncFindByIds(this.categoryIds).then(() => {
+            this.notifyPropertyChange("categoryIds");
+          });
         }
-
-        return this.selectKit.options.allowUncategorized;
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "categoryIds is undefined, but lazy_load_categories is enabled"
+        );
       }
 
-      return (
-        this.categories.includes(category) ||
-        !blockedCategories.includes(category)
-      );
-    });
-  }),
+      if (this.blockedCategoryIds) {
+        if (!Category.hasAsyncFoundAll(this.blockedCategoryIds)) {
+          Category.asyncFindByIds(this.blockedCategoryIds).then(() => {
+            this.notifyPropertyChange("blockedCategoryIds");
+          });
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "blockedCategoryIds is undefined, but lazy_load_categories is enabled"
+        );
+      }
+    }
+  },
 
-  value: mapBy("categories", "id"),
+  content: computed(
+    "categories.[]",
+    "blockedCategories.[]",
+    "categoryIds.[]",
+    function () {
+      if (this.siteSettings.lazy_load_categories) {
+        return Category.findByIds(this.categoryIds);
+      }
+
+      const blockedCategories = makeArray(this.blockedCategories);
+      return Category.list().filter((category) => {
+        if (category.isUncategorizedCategory) {
+          if (this.options?.allowUncategorized !== undefined) {
+            return this.options.allowUncategorized;
+          }
+
+          return this.selectKit.options.allowUncategorized;
+        }
+
+        return (
+          this.categories.includes(category) ||
+          !blockedCategories.includes(category)
+        );
+      });
+    }
+  ),
+
+  value: computed("categories.[]", "categoryIds.[]", function () {
+    if (this.siteSettings.lazy_load_categories) {
+      return this.categoryIds;
+    }
+
+    return this.categories.map((c) => c.id);
+  }),
 
   modifyComponentForRow() {
     return "category-row";
@@ -58,15 +100,10 @@ export default MultiSelectComponent.extend({
       return this._super(filter);
     }
 
-    const rejectCategoryIds = new Set();
-    // Reject selected options
-    if (this.categories) {
-      this.categories.forEach((c) => rejectCategoryIds.add(c.id));
-    }
-    // Reject blocked categories
-    if (this.blockedCategories) {
-      this.blockedCategories.forEach((c) => rejectCategoryIds.add(c.id));
-    }
+    const rejectCategoryIds = new Set([
+      ...(this.categoryIds || []),
+      ...(this.blockedCategoryIds || []),
+    ]);
 
     return await Category.asyncSearch(filter, {
       includeUncategorized:

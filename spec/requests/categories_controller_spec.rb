@@ -1044,24 +1044,34 @@ RSpec.describe CategoriesController do
     fab!(:category) { Fabricate(:category, name: "Foo") }
     fab!(:subcategory) { Fabricate(:category, name: "Foobar", parent_category: category) }
 
-    it "returns the category" do
-      get "/categories/find.json",
-          params: {
-            category_slug_path_with_id: "#{category.slug}/#{category.id}",
-          }
+    context "with ids" do
+      it "returns the categories" do
+        get "/categories/find.json", params: { ids: [subcategory.id] }
 
-      expect(response.parsed_body["category"]["id"]).to eq(category.id)
-      expect(response.parsed_body["ancestors"]).to eq([])
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq([subcategory.id])
+      end
     end
 
-    it "returns the subcategory and ancestors" do
-      get "/categories/find.json",
-          params: {
-            category_slug_path_with_id: "#{subcategory.slug}/#{subcategory.id}",
-          }
+    context "with slug path" do
+      it "returns the category" do
+        get "/categories/find.json",
+            params: {
+              slug_path_with_id: "#{category.slug}/#{category.id}",
+            }
 
-      expect(response.parsed_body["category"]["id"]).to eq(subcategory.id)
-      expect(response.parsed_body["ancestors"].map { |c| c["id"] }).to eq([category.id])
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq([category.id])
+      end
+
+      it "returns the subcategory and ancestors" do
+        get "/categories/find.json",
+            params: {
+              slug_path_with_id: "#{subcategory.slug}/#{subcategory.id}",
+            }
+
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq(
+          [category.id, subcategory.id],
+        )
+      end
     end
   end
 
