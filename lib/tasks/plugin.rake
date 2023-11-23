@@ -170,18 +170,8 @@ end
 
 desc "install all plugin gems"
 task "plugin:install_all_gems" do |t|
-  # Left intentionally blank.
-  # When the app is being loaded, all missing gems are installed
-  # See: lib/plugin_gem.rb
-  puts "Done"
-end
-
-desc "install plugin gems"
-task "plugin:install_gems", :plugin do |t, args|
-  # Left intentionally blank.
-  # When the app is being loaded, all missing gems are installed
-  # See: lib/plugin_gem.rb
-  puts "Done"
+  ENV["LOAD_PLUGINS"] = "1"
+  Rake::Task["environment"].invoke
 end
 
 def spec(plugin, parallel: false, argv: nil)
