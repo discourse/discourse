@@ -85,6 +85,7 @@ module Chat
       @chat_channel_archive = chat_channel_archive
       @chat_channel = chat_channel_archive.chat_channel
       @chat_channel_title = chat_channel.title(chat_channel_archive.archived_by)
+      @archived_messages_ids = []
     end
 
     def execute
@@ -323,9 +324,8 @@ module Chat
           deleted_by_id: chat_channel_archive.archived_by.id,
         )
 
-        chat_channel_archive.update!(
-          archived_messages: chat_channel_archive.archived_messages + message_ids.length,
-        )
+        @archived_messages_ids = (@archived_messages_ids + message_ids).uniq
+        chat_channel_archive.update!(archived_messages: @archived_messages_ids.length)
       end
 
       Rails.logger.info(
