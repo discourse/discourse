@@ -1150,14 +1150,13 @@ bs_BA:
           generic: "Vaš %{provider} račun će biti korišten za prijavu."
       name:
         title: "Ime"
-        instructions: "vaše puno ime (opciono)"
-        instructions_required: "Vaše puno ime"
+        instructions: "Vaše puno ime (opciono)."
+        instructions_required: "Vaše puno ime."
         required: "Unesite ime"
         too_short: "Vaše ime je prekratko."
         ok: "Vaše ime izgleda ok."
       username:
         title: "Nadimak"
-        instructions: "unikatno, bez tipke praznog prostora, kratko"
         short_instructions: "Ljudi vas mogu spomenuti preko @%{username}."
         available: "Vaš nadimak je dostupan."
         not_available: "Nije dostupan. Pokušaj %{suggestion}?"
@@ -1304,7 +1303,7 @@ bs_BA:
         same_as_username: "Vaš pasword je isti kao vaše korisničko ime."
         same_as_email: "Vaš pasword je isti kao vaš email."
         ok: "Vaša lozinka dobro izgleda."
-        instructions: "minimalno %{count} karaktera"
+        instructions: "Minimalno %{count} karaktera."
         required: "Molimo unesite lozinku"
       summary:
         title: "Sumirano"
@@ -1766,6 +1765,7 @@ bs_BA:
         private_message: '%{username} vam je poslao/la poruku u "%{topic}" - %{site_title}'
         linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
         watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} je objavio/la "%{topic}" - %{site_title}'
         confirm_title: "Obavijesti uključene - %{site_title}"
         confirm_body: "Uspješno! Obavijesti su sada uključene."
         custom: "Obavijest od %{username} na %{site_title}"
@@ -3073,8 +3073,7 @@ bs_BA:
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         new_features:
-          dismiss: "Odpusti"
-          learn_more: "Saznaj više"
+          learn_more: "Saznaj više..."
         last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"
         no_problems: "No problems were found."
@@ -3304,7 +3303,7 @@ bs_BA:
         not_enabled: "Ne"
         change_settings_short: "Postavke"
         howto: "Kako instaliram pluginove?"
-        official: "Officionalni Plugin"
+        author: "Od %{author}"
       backups:
         title: "Backups"
         menu:

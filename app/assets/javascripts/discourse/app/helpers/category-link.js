@@ -31,6 +31,7 @@ export function addExtraIconRenderer(renderer) {
     @param {Boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
     @param {Boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
     @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
+    @param {Boolean} [opts.previewColor] If true, category color will be set as an inline style.
 **/
 export function categoryBadgeHTML(category, opts) {
   const { site, siteSettings } = helperContext();
@@ -73,6 +74,9 @@ export function categoryLinkHTML(category, options) {
     }
     if (options.link !== undefined) {
       categoryOptions.link = options.link;
+    }
+    if (options.previewColor) {
+      categoryOptions.previewColor = true;
     }
     if (options.extraClasses) {
       categoryOptions.extraClasses = options.extraClasses;
@@ -133,6 +137,11 @@ export function defaultCategoryLinkRenderer(category, opts) {
     ${dataAttributes} 
     data-drop-close="true" 
     class="${classNames}" 
+    ${
+      opts.previewColor
+        ? `style="--category-badge-color: #${category.color}"`
+        : ""
+    }
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
 

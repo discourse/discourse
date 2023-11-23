@@ -1551,6 +1551,7 @@ en:
     search_query_log_max_size: "Maximum amount of search queries to keep"
     search_query_log_max_retention_days: "Maximum amount of time to keep search queries, in days."
     search_ignore_accents: "Ignore accents when searching for text."
+    search_default_sort_order: "Default sort order for full-page search"
     category_search_priority_low_weight: "Weight applied to ranking for low category search priority."
     category_search_priority_high_weight: "Weight applied to ranking for high category search priority."
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
@@ -2139,6 +2140,8 @@ en:
     log_mail_processing_failures: "Log all email processing failures to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
+    email_in_allowed_groups: "Groups that are allowed to post new topics via email."
+
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "The email header to detect spam."
 
@@ -2318,7 +2321,9 @@ en:
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
+    approve_unless_allowed_groups: "Posts for users not in these groups must be approved"
     approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
+    approve_new_topics_unless_allowed_groups: "New topics for users not in these groups must be approved"
     approve_unless_staged: "New topics and posts for staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
     reviewable_revision_reasons: "List of reasons that can be selected when rejecting a reviewable queued post with a revision. Other is always available as well, which allows for a custom reason to be entered."
@@ -2542,6 +2547,9 @@ en:
       anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
       here_mention_allowed_groups: "min_trust_level_for_here_mention"
       shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
+      approve_unless_allowed_groups: "approve_unless_trust_level"
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
+      email_in_allowed_groups: "email_in_min_trust"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -5233,6 +5241,7 @@ en:
     reasons:
       post_count: "The first few posts from every user must be approved by staff. See %{link}."
       trust_level: "Users at low trust levels must have replies approved by staff. See %{link}."
+      group: "Users not in the specified groups must have replies approved by staff. See %{link}."
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
       auto_silence_regex: "New user whose first post matches the %{link} setting."

@@ -100,6 +100,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   end
 
   it "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
+    Group.refresh_automatic_groups!
     topic_page.visit_topic_and_open_composer(topic)
 
     expect(topic_page).to have_expanded_composer

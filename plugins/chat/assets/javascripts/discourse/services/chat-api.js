@@ -313,11 +313,16 @@ export default class ChatApi extends Service {
    * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
-  saveDraft(channelId, data) {
-    return ajax("/chat/drafts", {
+  saveDraft(channelId, data, options = {}) {
+    let endpoint = `/chat/api/channels/${channelId}`;
+    if (options.threadId) {
+      endpoint += `/threads/${options.threadId}`;
+    }
+    endpoint += "/drafts";
+
+    return ajax(endpoint, {
       type: "POST",
       data: {
-        chat_channel_id: channelId,
         data,
       },
       ignoreUnsent: false,

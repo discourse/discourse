@@ -377,6 +377,7 @@ en:
       copied: "copied!"
       copy: "copy code to clipboard"
       fullscreen: "show code in full screen"
+      view_code: "View code"
 
     drafts:
       label: "Drafts"
@@ -1077,6 +1078,7 @@ en:
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
       powered_by: "using <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copied"
+      no_license: "You must configure MaxMind to enable GeoIP information. This is configured using DISCOURSE_MAXMIND_LICENSE_KEY in your container config. If you are on a hosted Discourse service, contact your service provider."
 
     user_fields:
       none: "(select an option)"
@@ -2056,7 +2058,7 @@ en:
           other {# errors/minute}
         }.
 
-    learn_more: "learn more…"
+    learn_more: "Learn more…"
 
     mute: Mute
     unmute: Unmute
@@ -4454,6 +4456,7 @@ en:
       sr_jump_bottom_button: "Jump to the last post"
     fullscreen_table:
       expand_btn: "Expand Table"
+      view_table: "View Table"
 
     second_factor_auth:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
@@ -4676,9 +4679,9 @@ en:
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
         new_features:
-          title: "🎁 New Features"
-          dismiss: "Dismiss"
-          learn_more: "Learn more"
+          title: "What's new"
+          previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          learn_more: "Learn more..."
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
@@ -5074,8 +5077,11 @@ en:
         not_enabled: "N"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
-        official: "Official Plugin"
+        official: "Official Discourse Plugin"
+        experimental: "Experimental Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
+        author: "By %{author}"
+        experimental_badge: "experimental"
 
       navigation_menu:
         sidebar: "Sidebar"

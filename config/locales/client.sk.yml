@@ -906,13 +906,12 @@ sk:
         not_connected: "(nepripojený)"
       name:
         title: "Meno"
-        instructions: "vaše celé meno (nepovinné)"
-        instructions_required: "Vaše celé meno"
+        instructions: "Vaše celé meno (nepovinné)."
+        instructions_required: "Vaše celé meno."
         too_short: "Vaše meno je prikrátke"
         ok: "Vaše meno je v poriadku"
       username:
         title: "Používateľské meno"
-        instructions: "unikátne, bez medzier, krátke"
         short_instructions: "Ostatní vás môžu zmieniť ako @%{username}"
         available: "Vaše používateľské meno je voľné"
         not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
@@ -1030,7 +1029,7 @@ sk:
         same_as_username: "Vaše heslo je rovnaké ako používateľské meno."
         same_as_email: "Vaše heslo je rovnaké ako e-mail."
         ok: "Vaše heslo je v poriadku."
-        instructions: "aspoň %{count} znakov"
+        instructions: "Aspoň %{count} znakov."
       summary:
         title: "Zhrnutie"
         stats: "Štatistiky"
@@ -1337,6 +1336,7 @@ sk:
         replied: '%{username} vám odpovedal v "%{topic}" - %{site_title}'
         posted: '%{username} prispel v "%{topic}" - %{site_title}'
         linked: '%{username} odkázal na váš príspevok z "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} prispel v "%{topic}" - %{site_title}'
       titles:
         watching_first_post: "nová téma"
     upload_selector:
@@ -2347,8 +2347,7 @@ sk:
         installed_version: "Nainštalované"
         latest_version: "Najnovšie"
         new_features:
-          dismiss: "Zahodiť"
-          learn_more: "Zistiť viac"
+          learn_more: "Zistiť viac..."
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -2473,6 +2472,7 @@ sk:
         not_enabled: "N"
         change_settings_short: "Nastavenia"
         howto: "Ako nainštalujem pluginy?"
+        author: "Od %{author}"
       backups:
         title: "Zálohy"
         menu:

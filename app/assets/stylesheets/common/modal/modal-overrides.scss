@@ -307,14 +307,38 @@
   }
 }
 
+.d-modal.fullscreen-table-modal,
+.d-modal.fullscreen-code-modal {
+  .d-modal {
+    &__container {
+      max-height: 100vh;
+    }
+  }
+  .modal-close {
+    margin-left: auto;
+  }
+}
+
 .d-modal.fullscreen-table-modal {
   .d-modal {
     &__container {
-      max-width: $reply-area-max-width;
-      max-height: unset;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
     }
-    &__header {
-      justify-content: flex-end;
+    &__footer {
+      justify-content: space-between;
+    }
+  }
+}
+
+.d-modal.fullscreen-code-modal {
+  pre {
+    margin: 0;
+    code {
+      max-width: none;
+      max-height: none;
+      padding: 1rem;
+      white-space: pre;
     }
   }
 }

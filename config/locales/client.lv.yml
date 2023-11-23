@@ -1178,14 +1178,13 @@ lv:
         cancel: "Atcelt"
       name:
         title: "Vārds"
-        instructions: "jūsu pilnais vārds (neobligāti)"
-        instructions_required: "Jūsu pilnais vārds"
+        instructions: "Jūsu pilnais vārds (neobligāti)."
+        instructions_required: "Jūsu pilnais vārds."
         required: "Lūdzu, ievadiet vārdu"
         too_short: "Jūsu vārds ir pārāk īss"
         ok: "Jūsu vārds izskatās labi"
       username:
         title: "Lietotājvārds"
-        instructions: "unikāls, bez atstarpēm, īss"
         short_instructions: "Cilvēki var pieminēt jūs kā @%{username}"
         available: "Jūsu lietotājvārds ir pieejams"
         not_available: "Nav pieejams. Mēģiniet %{suggestion}?"
@@ -1338,7 +1337,7 @@ lv:
         same_as_username: "Jūsu parole ir tāda pati, kā jūsu lietotājvārds."
         same_as_email: "Jūsu parole ir tāda pati, kā jūsu e-pasts."
         ok: "Jūsu parole izskatās labi."
-        instructions: "vismaz %{count} rakstzīmes"
+        instructions: "Vismaz %{count} rakstzīmes."
         required: "Lūdzu, ievadiet paroli"
       summary:
         title: "Kopsavilkums"
@@ -1719,6 +1718,7 @@ lv:
         replied: '%{username} atbildēja jums "%{topic}" - %{site_title}'
         posted: '%{username} ierakstīja "%{topic}" - %{site_title}'
         linked: '%{username} ievietoja saiti uz jūsu ierakstu no "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} ierakstīja "%{topic}" - %{site_title}'
         confirm_body: "Veiksmi! Paziņojumi ir iespējoti."
       titles:
         mentioned: "minēts"
@@ -2802,8 +2802,7 @@ lv:
         installed_version: "Uzinstalēts"
         latest_version: "Pēdējais"
         new_features:
-          dismiss: "Nerādīt"
-          learn_more: "Uzzināt vairāk"
+          learn_more: "Uzzināt vairāk..."
         last_checked: "Pēdējā pārbaude"
         refresh_problems: "Pārlādēt"
         no_problems: "Problēmas nav atrastas."

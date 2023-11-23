@@ -132,6 +132,8 @@ module Chat
         message: contract.message,
         uploads: uploads,
         thread: thread,
+        cooked: ::Chat::Message.cook(contract.message, user_id: guardian.user.id),
+        cooked_version: ::Chat::Message::BAKED_VERSION,
       )
     end
 
@@ -182,6 +184,14 @@ module Chat
     end
 
     def process(channel:, message_instance:, contract:, **)
+      ::Chat::Publisher.publish_new!(channel, message_instance, contract.staged_id)
+      DiscourseEvent.trigger(
+        :chat_message_created,
+        message_instance,
+        channel,
+        message_instance.user,
+      )
+
       if contract.process_inline
         Jobs::Chat::ProcessMessage.new.execute(
           { chat_message_id: message_instance.id, staged_id: contract.staged_id },

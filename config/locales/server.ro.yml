@@ -818,6 +818,7 @@ ro:
     min_search_term_length: "Lungimea minimă a unui termen de căutare valid, în caractere."
     search_prefer_recent_posts: "Dacă ai un forum mare și căutarea este prea lentă, această opțiune încearcă să indexeze mai multe postări recente întâi."
     search_recent_posts_size: "Câte postări recente să fie ținute în index"
+    search_default_sort_order: "Ordine de sortare implicită pentru căutare pe întreaga pagină"
     allow_uncategorized_topics: "Permite crearea de subiecte fără categorie. ATENȚIE: Dacă o să ai postări fără categorie, va trebui să le identifici înainte să poți dezactiva din nou această setare."
     allow_duplicate_topic_titles: "Permite subiecte cu titluri duplicat sau identice."
     unique_posts_mins: "Câte minute până ce un utilizator poate posta din nou o postare cu același conținut"
@@ -838,6 +839,7 @@ ro:
     max_oneboxes_per_post: "Numărul maxim de utilizări onebox per post."
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
+    enforce_second_factor: "Cere utilizatorilor să-și activeze autentificarea în doi factori înainte de a putea accesa interfața de utilizare Discourse. Selectează „toți” pentru a o impune tuturor utilizatorilor. Selectează „echipă” pentru a o impune numai utilizatorilor din echipă. Această setare nu afectează autentificarea API sau a „furnizorului DiscourseConnect”."
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
@@ -1216,6 +1218,7 @@ ro:
   login:
     not_approved: "Contul tău nu a fost aprobat încă. Vei fi notificat prin email când ești gata să te autentifici."
     incorrect_username_email_or_password: "Nume de utilizator, email sau parolă incorecte"
+    incorrect_password_or_passkey: "Parolă sau cheie de acces incorectă"
     wait_approval: "Îți mulțumim pentru autentificare. Te vom anunța când contul dumneavoastră a fost aprobat."
     active: "Contul tău a fost activat și e gata să fie folosit."
     activate_email: "<p>Ești aproape gata! Am trimis un e-mail de activare către <b>%{email}</b>. Te rugăm să urmezi instrucțiunile din e-mail pentru a-ți activa contul.</p><p>Dacă nu ajunge, verifică dosarul spam.</p>"

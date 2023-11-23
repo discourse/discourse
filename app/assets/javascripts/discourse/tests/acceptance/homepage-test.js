@@ -29,6 +29,9 @@ acceptance("Dynamic homepage handling", function () {
     await router.transitionTo("/").followRedirects();
     assertOnLatest("/");
 
+    await router.transitionTo("discovery.index").followRedirects();
+    assertOnLatest("/");
+
     await click(".nav-item_latest a");
     assertOnLatest("/latest");
 
@@ -63,6 +66,9 @@ acceptance("Dynamic homepage handling", function () {
     assertOnCategories("/");
 
     await router.transitionTo("/").followRedirects();
+    assertOnCategories("/");
+
+    await router.transitionTo("discovery.index").followRedirects();
     assertOnCategories("/");
 
     await click(".nav-item_categories a");

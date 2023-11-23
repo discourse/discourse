@@ -117,6 +117,7 @@ export default class ChatChannelSubscriptionManager {
     stagedMessage.excerpt = data.chat_message.excerpt;
     stagedMessage.channel = channel;
     stagedMessage.createdAt = new Date(data.chat_message.created_at);
+    stagedMessage.cooked = data.chat_message.cooked;
 
     return stagedMessage;
   }
@@ -139,6 +140,8 @@ export default class ChatChannelSubscriptionManager {
   handleEditMessage(data) {
     const message = this.messagesManager.findMessage(data.chat_message.id);
     if (message) {
+      message.message = data.chat_message.message;
+      message.cooked = data.chat_message.cooked;
       message.excerpt = data.chat_message.excerpt;
       message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.edited = data.chat_message.edited;
@@ -231,5 +234,7 @@ export default class ChatChannelSubscriptionManager {
     if (message?.thread) {
       message.thread.preview = ChatThreadPreview.create(data.preview);
     }
+
+    message.thread.preview.yolo = 1;
   }
 }

@@ -105,6 +105,8 @@ class DiscourseIpInfo
           message: "IP #{ip} could not be looked up in MaxMind GeoLite2-City database.",
         )
       end
+    else
+      ret[:no_license] = true
     end
 
     if @asn_mmdb

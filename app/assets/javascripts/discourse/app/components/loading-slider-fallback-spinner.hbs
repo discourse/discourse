@@ -1,3 +1,5 @@
-{{#if this.loadingSlider.stillLoading}}
-  <div class="loading-slider-fallback-spinner">{{loading-spinner}}</div>
+{{#if this.shouldDisplay}}
+  <div class="route-loading-spinner">{{loading-spinner}}</div>
+  {{body-class "has-route-loading-spinner"}}
+  {{hide-application-footer}}
 {{/if}}

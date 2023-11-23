@@ -956,7 +956,6 @@ hu:
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
     apple_touch_icon: "Az Apple érintőképernyős készülékekhez használt ikon. Az átlátszó háttér nem ajánlott. Automatikusan átméreteződik 180x180-ra. Ha üresen hagyja, a large_icon lesz használva."
-    enforce_second_factor: "Kényszeríti a felhasználókat, hogy engedélyezzék a kétfaktoros hitelesítést. Válassza az 'all' lehetőséget, hogy érvényesítse az összes felhasználó számára. Válassza a „személyzet” lehetőséget, hogy csak a személyzet felhasználói számára érvényesítse."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
     content_security_policy_collect_reports: "Engedélyezze a CSP-szabálysértési jelentések gyűjtését /csp_reports címen."

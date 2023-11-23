@@ -495,8 +495,6 @@ te:
         cancel: "రద్దుచేయి"
       name:
         title: "పేరు"
-        instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)"
-        instructions_required: "మీ పూర్తి పేరు"
         too_short: "మీ పేరు మరీ చిన్నది"
         ok: "మీ పేరు బాగుంది"
       username:
@@ -1393,6 +1391,8 @@ te:
         version_check_pending: "మీరు ఇటీవలే ఉన్నతీకరించినట్టున్నారు. అద్భుతం!"
         installed_version: "ప్రతిష్టించబడింది"
         latest_version: "తాజా"
+        new_features:
+          learn_more: "మరింత తెలుసుకోండి..."
         last_checked: "చివరగా సరిచూసినది"
         refresh_problems: "తాజాపరుచు"
         no_problems: "ఎటువంటి సమస్యలూ కనిపించలేదు"
@@ -1477,6 +1477,7 @@ te:
         enabled: "చేతమైందా?"
         change_settings_short: "అమరికలు"
         howto: "పొడిగింతలు నేను ఎలా ప్రతిష్టించగలను?"
+        author: " %{author} రాసిన"
       backups:
         title: "బ్యాకప్పులు"
         menu:

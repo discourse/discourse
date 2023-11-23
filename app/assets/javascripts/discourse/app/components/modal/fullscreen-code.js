@@ -16,7 +16,7 @@ export default class FullscreenCode extends Component {
 
   @action
   applyCodeblockButtons(element) {
-    const modalElement = element.querySelector(".modal-body");
+    const modalElement = element.querySelector(".d-modal__body");
     highlightSyntax(modalElement, this.siteSettings, this.session);
 
     this.codeBlockButtons = new CodeblockButtons({
