@@ -1078,7 +1078,7 @@ en:
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
       powered_by: "using <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copied"
-      no_license: "Configure MaxMind to enable GeoIP information"
+      no_license: "You must configure MaxMind to enable GeoIP information. This is configured using DISCOURSE_MAXMIND_LICENSE_KEY in your container config. If you are on a hosted Discourse service, contact your service provider."
 
     user_fields:
       none: "(select an option)"

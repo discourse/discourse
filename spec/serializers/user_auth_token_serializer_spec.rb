@@ -4,7 +4,6 @@ RSpec.describe UserAuthTokenSerializer do
   fab!(:user) { Fabricate(:moderator) }
   let(:token) { UserAuthToken.generate!(user_id: user.id, client_ip: "2a02:ea00::", staff: true) }
   # Assign a dummy MaxMind license key, which is now checked in open_db
-  global_setting "maxmind_license_key", "dummy"
 
   before(:each) { DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb")) }
 
