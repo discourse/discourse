@@ -94,6 +94,8 @@
 
     .chat-transcript-reaction {
       @include chat-reaction;
+
+      pointer-events: none;
     }
   }
 
