@@ -1,4 +1,10 @@
-import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  fillIn,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
@@ -132,6 +138,26 @@ acceptance("User Preferences - Second Factor", function (needs) {
       query("#dialog-title").innerText.trim(),
       "Are you sure you want to disable two-factor authentication?"
     );
+  });
+
+  test("rename second factor security method", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
+    await visit("/u/eviltrout/preferences/second-factor");
+
+    assert.ok(
+      exists(".security-key .second-factor-item"),
+      "User has a physical security key"
+    );
+
+    await click(".security-key-dropdown .select-kit-header");
+    await click(".security-key-dropdown li[data-name='Edit']");
+
+    await fillIn("input[name='security-key-name']", "keyname changed");
+    await triggerEvent(".d-modal__body form", "submit");
+
+    assert
+      .dom(".d-modal__container")
+      .doesNotExist("modal is closed when form is submitted via keyboard");
   });
 });
 
