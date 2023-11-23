@@ -11,11 +11,11 @@ class TriggerPostRebakeCategoryStyleQuotes < ActiveRecord::Migration[7.0]
 
     chunk_size = 100_000
     while max_id > 0
-      ids = DB.query_single(<<~SQL, from: max_id, to: max_id - chunk_size)
+      ids = DB.query_single(<<~SQL, start: max_id - chunk_size, finish: max_id)
         SELECT id
         FROM posts
         WHERE cooked LIKE '%blockquote%'
-        AND id < :from and id >= :to
+        AND id >= :start AND id <= :finish
       SQL
 
       DB.exec(<<~SQL, ids: ids) if ids && ids.length > 0
