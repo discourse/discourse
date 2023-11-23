@@ -27,7 +27,7 @@ module Chat
                   :no_link,
                   :include_reactions,
                   :thread_id,
-                  :split_thread_ranges
+                  :thread_ranges
 
       def initialize(
         channel: nil,
@@ -37,7 +37,7 @@ module Chat
         no_link: false,
         include_reactions: false,
         thread_id: nil,
-        split_thread_ranges: {}
+        thread_ranges: {}
       )
         @channel = channel
         @acting_user = acting_user
@@ -45,7 +45,7 @@ module Chat
         @chained = chained
         @no_link = no_link
         @include_reactions = include_reactions
-        @split_thread_ranges = split_thread_ranges
+        @thread_ranges = thread_ranges
         @message_data = []
         @threads_markdown = {}
         @thread_id = thread_id
@@ -94,7 +94,7 @@ module Chat
             if msg_data[:message].thread_id.present?
               thread_data = @threads_markdown[msg_data[:message].thread_id]
 
-              if !thread_data.nil?
+              if thread_data.present?
                 rendered_message + "\n\n" + thread_data
               else
                 rendered_message
@@ -136,16 +136,16 @@ module Chat
 
       def thread_title_attr(message)
         thread = Chat::Thread.find(thread_id)
-        split_range = split_thread_ranges[message.id] if split_thread_ranges.has_key?(message.id)
+        range = thread_ranges[message.id] if thread_ranges.has_key?(message.id)
 
         thread_title =
           thread.title.present? ? thread.title : I18n.t("chat.transcript.default_thread_title")
-        thread_title += " (#{split_range})" if split_range.present?
+        thread_title += " (#{range})" if range.present?
         "threadTitle=\"#{thread_title}\""
       end
     end
 
-    def initialize(channel, acting_user, messages_or_ids: [], split_thread_ranges: {}, opts: {})
+    def initialize(channel, acting_user, messages_or_ids: [], thread_ranges: {}, opts: {})
       @channel = channel
       @acting_user = acting_user
 
@@ -155,7 +155,7 @@ module Chat
         @messages = messages_or_ids
       end
       @opts = opts
-      @split_thread_ranges = split_thread_ranges
+      @thread_ranges = thread_ranges
     end
 
     def generate_markdown
@@ -172,7 +172,7 @@ module Chat
           chained: !all_messages_same_user,
           no_link: @opts[:no_link],
           thread_id: messages.first.thread_id,
-          split_thread_ranges: @split_thread_ranges,
+          thread_ranges: @thread_ranges,
           include_reactions: @opts[:include_reactions],
         )
 
@@ -192,7 +192,7 @@ module Chat
               chained: !all_messages_same_user,
               no_link: @opts[:no_link],
               thread_id: message.thread_id,
-              split_thread_ranges: @split_thread_ranges,
+              thread_ranges: @thread_ranges,
               include_reactions: @opts[:include_reactions],
             )
         end

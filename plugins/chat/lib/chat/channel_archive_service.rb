@@ -109,13 +109,13 @@ module Chat
         # completed batch, so the UI can receive updates and show a progress
         # bar or something similar.
 
-        def create_post_from_batch(chat_messages, split_thread_ranges)
+        def create_post_from_batch(chat_messages, batch_thread_ranges)
           create_post(
             Chat::TranscriptService.new(
               chat_channel,
               chat_channel_archive.archived_by,
               messages_or_ids: chat_messages,
-              split_thread_ranges: split_thread_ranges,
+              thread_ranges: batch_thread_ranges,
               opts: {
                 no_link: true,
                 include_reactions: true,
@@ -125,8 +125,8 @@ module Chat
         end
 
         buffer = []
-        split_thread_ranges = {}
         thread_ranges = {}
+        batch_thread_ranges = {}
 
         chat_channel
           .chat_messages
@@ -136,30 +136,30 @@ module Chat
             threads =
               chat_channel.chat_messages.where(thread_id: thread_ids).order("created_at ASC").to_a
 
-            full_batch = (buffer + message_batch + threads).uniq { |message| message.id }
-            messages_chunk = full_batch.group_by { |msg| msg.thread_id || msg.id }.values.flatten
+            full_batch = (buffer + message_batch + threads).uniq { |msg| msg.id }
+            message_chunk = full_batch.group_by { |msg| msg.thread_id || msg.id }.values.flatten
 
             buffer.clear
 
-            if messages_chunk.size > ARCHIVED_MESSAGES_PER_POST
-              post_last_message = messages_chunk[ARCHIVED_MESSAGES_PER_POST - 1]
+            if message_chunk.size > ARCHIVED_MESSAGES_PER_POST
+              post_last_message = message_chunk[ARCHIVED_MESSAGES_PER_POST - 1]
 
               thread = threads.select { |msg| msg.thread_id == post_last_message.thread_id }
               thread_om = thread.first
+
               if !thread_om.nil?
                 thread_size = thread.size - 1
                 last_thread_index = 0
+                iterations = (message_chunk.size.to_f / (ARCHIVED_MESSAGES_PER_POST - 1)).ceil
 
-                (messages_chunk.size.to_f / (ARCHIVED_MESSAGES_PER_POST - 1)).ceil.times do |index|
+                iterations.times do |index|
                   if last_thread_index != thread_size
                     if index == 0
                       thread_index = thread.index(post_last_message)
                     else
                       next_post_last_message =
-                        messages_chunk[(ARCHIVED_MESSAGES_PER_POST * (index + 1)) - index]
-                      if next_post_last_message.present? &&
-                           next_post_last_message.thread_id.present? &&
-                           next_post_last_message.thread_id == post_last_message.thread_id
+                        message_chunk[(ARCHIVED_MESSAGES_PER_POST * (index + 1)) - index]
+                      if next_post_last_message&.thread_id == post_last_message&.thread_id
                         thread_index = last_thread_index + ARCHIVED_MESSAGES_PER_POST - 1
                       else
                         thread_index = thread_size
@@ -174,33 +174,35 @@ module Chat
                         total: thread_size,
                       )
 
-                    split_thread_ranges[thread_om.thread_id] ||= []
-                    split_thread_ranges[thread_om.thread_id] << range
+                    thread_ranges[thread_om.thread_id] ||= []
+                    thread_ranges[thread_om.thread_id] << range
                     last_thread_index = thread_index
                   end
                 end
               end
             end
+
             batch = []
-            range_added = false
+            batch_thread_added = false
 
-            messages_chunk.each do |message|
+            message_chunk.each do |message|
               # We duplicate the original message when it spans across multiple posts
-              if messages_chunk.size > ARCHIVED_MESSAGES_PER_POST && thread_om.present? &&
-                   !message.thread_id.nil? && message.thread_id == thread_om.thread_id &&
-                   batch.empty? && message != thread_om
-                batch << thread_om
 
-                thread_ranges[thread_om.id] = split_thread_ranges[message.thread_id].first
-                split_thread_ranges[message.thread_id].slice!(0)
-              elsif split_thread_ranges.has_key?(message.thread_id) &&
-                    !split_thread_ranges[message.thread_id].empty? && range_added == false
-                thread_ranges[thread_om.id] = split_thread_ranges[message.thread_id].first
-                split_thread_ranges[message.thread_id].slice!(0)
+              if thread_om.present?
+                if batch.empty? && message_chunk.size > ARCHIVED_MESSAGES_PER_POST &&
+                     message&.thread_id == thread_om&.thread_id && message != thread_om
+                  batch << thread_om
 
-                range_added = true
+                  batch_thread_ranges[thread_om.id] = thread_ranges[message.thread_id].first
+                  thread_ranges[message.thread_id].slice!(0)
+                elsif thread_ranges.has_key?(message.thread_id) &&
+                      thread_ranges[message.thread_id].present? && batch_thread_added == false
+                  batch_thread_ranges[thread_om.id] = thread_ranges[message.thread_id].first
+                  thread_ranges[message.thread_id].slice!(0)
+
+                  batch_thread_added = true
+                end
               end
-
               if message == thread_om && batch.size + 1 >= ARCHIVED_MESSAGES_PER_POST
                 batch_size = batch.size + 1
               else
@@ -209,7 +211,7 @@ module Chat
               end
 
               if batch_size >= ARCHIVED_MESSAGES_PER_POST
-                create_post_from_batch(batch, thread_ranges)
+                create_post_from_batch(batch, batch_thread_ranges)
                 batch.clear
               end
             end
@@ -217,7 +219,7 @@ module Chat
             buffer += batch
           end
 
-        create_post_from_batch(buffer, thread_ranges) unless buffer.empty?
+        create_post_from_batch(buffer, batch_thread_ranges) unless buffer.empty?
 
         kick_all_users
         complete_archive
