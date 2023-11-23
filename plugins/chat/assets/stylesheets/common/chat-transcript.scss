@@ -70,6 +70,12 @@
       padding: 0.5rem;
 
       > summary {
+        display: flex;
+
+        &::before {
+          line-height: 1;
+        }
+
         .chat-transcript-thread {
           &-header {
             margin-bottom: 0.5rem;
