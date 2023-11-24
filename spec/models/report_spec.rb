@@ -1153,6 +1153,8 @@ RSpec.describe Report do
         freeze_time DateTime.parse("2017-03-01 12:00")
 
         ip = [81, 2, 69, 142]
+        # Assign a dummy MaxMind license key, which is now checked in open_db
+        global_setting "maxmind_license_key", "dummy"
 
         DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
         Resolv::DNS
