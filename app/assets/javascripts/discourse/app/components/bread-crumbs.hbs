@@ -16,19 +16,7 @@
 {{#each this.categoryBreadcrumbs as |breadcrumb|}}
   {{#if breadcrumb.hasOptions}}
     <li
-      style={{html-safe
-        (if
-          breadcrumb.category
-          (concat
-            "--category-bg-color:#"
-            breadcrumb.category.color
-            "; "
-            "--category-text-color:#"
-            breadcrumb.category.text_color
-            ";"
-          )
-        )
-      }}
+      style={{if breadcrumb.category (category-variables breadcrumb.category)}}
     >
       <CategoryDrop
         @category={{breadcrumb.category}}
