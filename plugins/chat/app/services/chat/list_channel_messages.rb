@@ -84,11 +84,18 @@ module Chat
 
     def target_message_exists(channel:, guardian:, **)
       return true if context.target_message_id.blank?
+
       target_message =
         Chat::Message.with_deleted.find_by(id: context.target_message_id, chat_channel: channel)
       return false if target_message.blank?
+
       return true if !target_message.trashed?
-      target_message.user_id == guardian.user.id || guardian.is_staff?
+      if target_message.trashed? && target_message.user_id == guardian.user.id || guardian.is_staff?
+        return true
+      end
+
+      context.target_message_id = nil
+      true
     end
 
     def fetch_messages(channel:, contract:, guardian:, enabled_threads:, **)
