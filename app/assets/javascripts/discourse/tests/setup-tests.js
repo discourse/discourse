@@ -419,10 +419,19 @@ function patchFailedAssertion() {
 
   QUnit.assert.pushResult = function (resultInfo) {
     if (!resultInfo.result && !isSettled()) {
+      const settledState = getSettledState();
+      let stateString = Object.entries(settledState)
+        .filter(([, value]) => value === true)
+        .map(([key]) => key)
+        .join(", ");
+
+      if (settledState.pendingRequestCount > 0) {
+        stateString += `, pending requests: ${settledState.pendingRequestCount}`;
+      }
+
       // eslint-disable-next-line no-console
       console.warn(
-        "ℹ️ Hint: when the assertion failed, the Ember runloop was not in a settled state. Maybe you missed an `await` further up the test? Or maybe you need to manually add `await settled()` before your assertion?",
-        JSON.stringify(getSettledState())
+        `ℹ️ Hint: when the assertion failed, the Ember runloop was not in a settled state. Maybe you missed an \`await\` further up the test? Or maybe you need to manually add \`await settled()\` before your assertion? (${stateString})`
       );
     }
 
