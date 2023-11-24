@@ -171,6 +171,10 @@
       .je-tab--top {
         border: none;
         padding: 0;
+        color: var(--primary);
+        background: var(
+          --secondary
+        ) !important; // important is needed here to override inline styling on the element
       }
     }
 
@@ -242,6 +246,22 @@
           }
         }
       }
+    }
+
+    div[data-schematype="boolean"] {
+      label {
+        display: flex;
+        align-items: center;
+
+        input[type="checkbox"] {
+          margin-right: var(--space-1);
+        }
+      }
+    }
+
+    select option {
+      color: var(--primary);
+      background: var(--secondary);
     }
   }
 }
