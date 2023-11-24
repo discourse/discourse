@@ -1078,7 +1078,6 @@ en:
       confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
       powered_by: "using <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copied"
-      no_license: "Configure MaxMind to enable GeoIP information"
 
     user_fields:
       none: "(select an option)"
