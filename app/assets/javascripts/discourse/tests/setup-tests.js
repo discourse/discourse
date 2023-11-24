@@ -312,10 +312,6 @@ export default function setupTests(config) {
     applyPretender(ctx.module, pretender, pretenderHelpers());
 
     Session.resetCurrent();
-    if (setupData) {
-      const session = Session.current();
-      session.markdownItURL = setupData.markdownItUrl;
-    }
     User.resetCurrent();
 
     PreloadStore.reset();
