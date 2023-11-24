@@ -266,12 +266,6 @@ export default class StoreService extends Service {
     obj.__type = type;
     obj.__state = obj[adapter.primaryKey] ? "created" : "new";
 
-    // TODO: Have injections be automatic
-    obj.topicTrackingState = this.register.lookup(
-      "service:topic-tracking-state"
-    );
-    obj.keyValueStore = this.register.lookup("service:key-value-store");
-
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
     const model = klass.create(obj);
 
