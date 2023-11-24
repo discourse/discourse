@@ -456,7 +456,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing user options..."
 
     users = query(<<~SQL)
-      SELECT id, timezone
+      SELECT id, timezone, email_level, email_messages_level, email_digests
       FROM users
       WHERE timezone IS NOT NULL
       ORDER BY id
@@ -468,13 +468,12 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["id"])
       next if user_id && existing_user_ids.include?(user_id)
 
-      # TODO Update email settings before go-live
       {
         user_id: user_id,
         timezone: row["timezone"],
-        email_level: UserOption.email_level_types[:never],
-        email_messages_level: UserOption.email_level_types[:never],
-        email_digests: false,
+        email_level: row["email_level"],
+        email_messages_level: row["email_messages_level"],
+        email_digests: row["email_digests"],
       }
     end
 
@@ -593,7 +592,7 @@ class BulkImport::Generic < BulkImport::Base
         category_id: category_id,
         closed: to_boolean(row["closed"]),
         views: row["views"],
-        subtype: "question_answer", # TODO Make this configurable!!
+        subtype: row["subtype"],
       }
     end
 
