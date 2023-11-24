@@ -134,14 +134,25 @@ module Chat
           .find_in_batches(batch_size: ARCHIVED_MESSAGES_PER_POST) do |message_batch|
             thread_ids = message_batch.map(&:thread_id).compact.uniq
             threads =
-              chat_channel.chat_messages.where(thread_id: thread_ids).order("created_at ASC").to_a
+              chat_channel
+                .chat_messages
+                .where(
+                  thread_id:
+                    Chat::Message
+                      .select(:thread_id)
+                      .where(thread_id: thread_ids)
+                      .group(:thread_id)
+                      .having("count(*) > 1"),
+                )
+                .order("created_at ASC")
+                .to_a
 
             full_batch = (buffer + message_batch + threads).uniq { |msg| msg.id }
             message_chunk = full_batch.group_by { |msg| msg.thread_id || msg.id }.values.flatten
 
             buffer.clear
 
-            if message_chunk.size > ARCHIVED_MESSAGES_PER_POST && !threads.empty?
+            if message_chunk.size > ARCHIVED_MESSAGES_PER_POST
               post_last_message = message_chunk[ARCHIVED_MESSAGES_PER_POST - 1]
 
               thread = threads.select { |msg| msg.thread_id == post_last_message.thread_id }
