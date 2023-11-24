@@ -140,6 +140,12 @@ function setupToolbar() {
     .forEach((script) => pluginNames.add(script.dataset.discoursePlugin));
 
   QUnit.config.urlConfig.push({
+    id: "loop",
+    label: "Loop until failure",
+    value: "1",
+  });
+
+  QUnit.config.urlConfig.push({
     id: "target",
     label: "Target",
     value: ["core", "plugins", "all", "-----", ...Array.from(pluginNames)],
@@ -354,6 +360,14 @@ export default function setupTests(config) {
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
     QUnit.config.autostart = false;
+  }
+
+  if (getUrlParameter("loop")) {
+    QUnit.done(({ failed }) => {
+      if (failed === 0) {
+        window.location.reload();
+      }
+    });
   }
 
   handleLegacyParameters();
