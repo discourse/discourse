@@ -35,9 +35,10 @@ export function loadTopicView(topic, args) {
 
   return PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
     ajax(jsonUrl, { data })
-  ).then((json) => {
+  ).then(async (json) => {
     json.categories?.forEach((c) => topic.site.updateCategory(c));
     topic.updateFromJson(json);
+    await Topic.applyTransformations([topic]);
     return json;
   });
 }
