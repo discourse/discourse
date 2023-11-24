@@ -46,6 +46,7 @@ import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import { buildResolver } from "discourse-common/resolver";
 import Application from "../app";
+import { loadSprites } from "../lib/svg-sprite-loader";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -398,6 +399,14 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
+  if (!window.Testem) {
+    // Running in a dev server - svg sprites are available
+    // Using a fake 40-char version hash will redirect to the current one
+    loadSprites(
+      "/svg-sprite/localhost/svg--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js",
+      "fontawesome"
+    );
+  }
 
   if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();
