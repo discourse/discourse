@@ -51,7 +51,7 @@ class BulkImport::Generic < BulkImport::Base
     import_user_profiles
     import_user_options
     import_user_fields
-    import_user_custom_field_values
+    import_user_field_values
     import_single_sign_on_records
     import_muted_users
     import_user_histories
@@ -506,8 +506,8 @@ class BulkImport::Generic < BulkImport::Base
     user_fields.close
   end
 
-  def import_user_custom_field_values
-    puts "", "Importing user custom field values..."
+  def import_user_field_values
+    puts "", "Importing user field values..."
 
     discourse_field_mapping = UserField.pluck(:name, :id).to_h
 
@@ -524,9 +524,10 @@ class BulkImport::Generic < BulkImport::Base
 
     user_fields.close
 
+    # TODO make restriction to non-anonymized users configurable
     values = query(<<~SQL)
       SELECT v.*
-        FROM user_custom_field_values v
+        FROM user_field_values v
              JOIN users u ON v.user_id = u.id
        WHERE u.anonymized = FALSE
     SQL
