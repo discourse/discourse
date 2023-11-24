@@ -518,7 +518,6 @@ export default class ChatChannel extends Component {
       popupAjaxError(e);
     } finally {
       message.editing = false;
-      this.resetComposerMessage();
       this.pane.sending = false;
     }
   }
@@ -553,7 +552,6 @@ export default class ChatChannel extends Component {
     } catch (error) {
       this._onSendError(message.id, error);
     } finally {
-      this.resetComposerMessage();
       this.pane.sending = false;
     }
   }
