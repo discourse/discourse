@@ -42,6 +42,12 @@ RSpec.describe Plugin::Instance do
         plugin.git_repo.stubs(:url).returns("http://github.com/someguy/someguy-plugin")
         expect(plugin.discourse_owned?).to eq(false)
       end
+
+      it "returns false if the commit_url is missing because of git command issues" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns(nil)
+        expect(plugin.discourse_owned?).to eq(false)
+      end
     end
   end
 
