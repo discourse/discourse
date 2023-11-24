@@ -8,7 +8,7 @@ import ComboBox from "select-kit/components/combo-box";
 
 export default class RelativeTimePicker extends Component {
   @tracked duration;
-  @tracked selectedInterval = "mins";
+  @tracked selectedInterval;
 
   constructor() {
     super(...arguments);
