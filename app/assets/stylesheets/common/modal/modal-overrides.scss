@@ -342,3 +342,159 @@
     }
   }
 }
+
+.d-modal.discourse-local-dates-create-modal {
+  .advanced-mode-btn {
+    margin-left: auto;
+  }
+
+  .date-time-configuration {
+    display: flex;
+
+    .fake-input {
+      display: none;
+    }
+
+    .timezone-input {
+      width: 100%;
+
+      .select-kit-header {
+        .d-icon {
+          margin-right: 1em;
+        }
+
+        .caret-icon {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .date-time-control {
+      position: relative;
+      display: flex;
+      border: 1px solid var(--primary-low);
+
+      &.is-filled,
+      &.is-selected {
+        .date-time {
+          color: var(--primary);
+          background: var(--secondary);
+        }
+
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
+
+      &.from {
+        border-radius: 5px 5px 0 0;
+
+        .date-time {
+          border-radius: 5px 5px 0 0;
+        }
+
+        &.is-selected {
+          border-color: var(--tertiary);
+        }
+      }
+
+      &.to {
+        border-radius: 0 0 5px 5px;
+        margin-bottom: 1em;
+
+        .date-time {
+          border-radius: 0 0 5px 5px;
+          padding-right: 3em;
+        }
+
+        &.is-selected {
+          border-color: var(--tertiary);
+        }
+      }
+
+      .date-time {
+        color: var(--primary-medium);
+        background: var(--primary-very-low);
+        padding: 1em 0.5em 1em 2em;
+        border: 0;
+        outline: none;
+        flex: 1;
+        @include ellipsis;
+        width: 100%;
+        justify-content: flex-start;
+        &:focus {
+          background-color: var(--tertiary-50);
+        }
+      }
+
+      .d-icon {
+        position: absolute;
+        margin-top: auto;
+        margin-bottom: auto;
+        left: 0.5em;
+        top: 0;
+        bottom: 0;
+        color: var(--primary-medium);
+      }
+
+      .delete-to-date {
+        position: absolute;
+        margin-top: auto;
+        margin-bottom: auto;
+        right: 0;
+        width: 30px;
+        top: 0;
+        bottom: 0;
+        color: var(--primary-high);
+        border-radius: 0 0 5px 0;
+      }
+    }
+
+    .inputs-panel {
+      flex: 1;
+    }
+  }
+
+  .preview {
+    text-align: center;
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+
+    b {
+      margin-right: 0.5em;
+      margin-left: 0.5em;
+    }
+
+    b + p {
+      margin: 0;
+      display: inline-block;
+    }
+  }
+
+  .validation-error {
+    margin-bottom: 0.5em;
+  }
+
+  .format {
+    .format-input {
+      width: 280px;
+    }
+  }
+
+  .formats {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    .format {
+      .previewed-format {
+        color: var(--primary-medium);
+      }
+    }
+  }
+
+  .control-group.recurrence,
+  .control-group.format,
+  .control-group.timezones {
+    margin-top: 1em;
+  }
+}
