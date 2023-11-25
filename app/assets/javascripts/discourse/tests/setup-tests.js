@@ -50,6 +50,7 @@ import { loadSprites } from "../lib/svg-sprite-loader";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
+let cancelled = false;
 
 function AcceptanceModal(option, _relatedTarget) {
   return this.each(function () {
@@ -186,6 +187,7 @@ function setupToolbar() {
     }
 
     if (["INPUT", "SELECT", "LABEL"].includes(target.tagName)) {
+      cancelled = true;
       document.querySelector("#qunit-abort-tests-button")?.click();
     }
   });
@@ -364,7 +366,7 @@ export default function setupTests(config) {
 
   if (getUrlParameter("loop")) {
     QUnit.done(({ failed }) => {
-      if (failed === 0) {
+      if (failed === 0 && !cancelled) {
         window.location.reload();
       }
     });
