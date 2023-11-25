@@ -164,7 +164,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.strictEqual(
       query(".search-link .search-item-tag").textContent.trim(),
       "important",
-      "frst option includes tag"
+      "first option includes tag"
     );
 
     await fillIn("#search-term", "smth");
