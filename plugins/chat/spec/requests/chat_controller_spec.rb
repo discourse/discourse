@@ -32,43 +32,6 @@ RSpec.describe Chat::ChatController do
     Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
   end
 
-  describe "#enable_chat" do
-    context "with category as chatable" do
-      let!(:category) { Fabricate(:category) }
-      let(:channel) { Fabricate(:category_channel, chatable: category) }
-
-      it "ensures created channel can be seen" do
-        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-        sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-
-      # TODO: rewrite specs to ensure no exception is raised
-      it "ensures existing channel can be seen" do
-        Guardian.any_instance.expects(:can_join_chat_channel?)
-
-        sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-    end
-  end
-
-  describe "#disable_chat" do
-    context "with category as chatable" do
-      it "ensures category can be seen" do
-        category = Fabricate(:category)
-        channel = Fabricate(:category_channel, chatable: category)
-        message = Fabricate(:chat_message, chat_channel: channel)
-
-        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-        sign_in(admin)
-        post "/chat/disable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-    end
-  end
-
   describe "#rebake" do
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
 
@@ -573,60 +536,6 @@ RSpec.describe Chat::ChatController do
           }
 
       expect(response.status).to eq(429)
-    end
-  end
-
-  describe "#set_draft" do
-    fab!(:chat_channel) { Fabricate(:category_channel) }
-    let(:dm_channel) { Fabricate(:direct_message_channel) }
-
-    before { sign_in(user) }
-
-    it "can create and destroy chat drafts" do
-      expect {
-        post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { Chat::Draft.count }.by(1)
-
-      expect { post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id } }.to change {
-        Chat::Draft.count
-      }.by(-1)
-    end
-
-    it "cannot create chat drafts for a category channel the user cannot access" do
-      group = Fabricate(:group)
-      private_category = Fabricate(:private_category, group: group)
-      chat_channel.update!(chatable: private_category)
-
-      post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      expect(response.status).to eq(403)
-
-      GroupUser.create!(user: user, group: group)
-      expect {
-        post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { Chat::Draft.count }.by(1)
-    end
-
-    it "cannot create chat drafts for a direct message channel the user cannot access" do
-      post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
-      expect(response.status).to eq(403)
-
-      Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
-      expect {
-        post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
-      }.to change { Chat::Draft.count }.by(1)
-    end
-
-    it "cannot create a too long chat draft" do
-      SiteSetting.max_chat_draft_length = 100
-
-      post "/chat/drafts.json",
-           params: {
-             chat_channel_id: chat_channel.id,
-             data: { value: "a" * (SiteSetting.max_chat_draft_length + 1) }.to_json,
-           }
-
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to eq([I18n.t("chat.errors.draft_too_long")])
     end
   end
 

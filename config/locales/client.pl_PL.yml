@@ -349,7 +349,10 @@ pl_PL:
       our_moderators: "Moderatorzy"
       moderators: "Moderatorzy"
       stat:
+        all_time: "Cały czas"
         last_day: "24 godziny"
+        last_7_days: "7 dni"
+        last_30_days: "30 dni"
       like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Posty"
@@ -1114,6 +1117,7 @@ pl_PL:
     user:
       said: "%{username}:"
       profile: "Profil"
+      profile_possessive: "profil %{username}"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -1501,8 +1505,6 @@ pl_PL:
         title: "Uwierzytelnianie dwuskładnikowe"
         enable: "Zarządzaj uwierzytelnianiem dwuskładnikowym"
         disable_all: "Wyłącz wszystkie"
-        forgot_password: "Zapomniałeś/łaś hasła?"
-        confirm_password_description: "Potwierdź swoje hasło, aby kontynuować"
         name: "Imię"
         label: "Kod"
         rate_limit: "Poczekaj, zanim spróbujesz użyć innego kodu uwierzytelniającego."
@@ -1634,14 +1636,13 @@ pl_PL:
           generic: "Twoje konto %{provider} zostanie wykorzystane do uwierzytelnienia."
       name:
         title: "Pełna nazwa"
-        instructions: "twoja pełna nazwa (opcjonalnie)"
-        instructions_required: "Twoja pełna nazwa"
+        instructions: "Twoja pełna nazwa (opcjonalnie)."
+        instructions_required: "Twoja pełna nazwa."
         required: "Wprowadź imię"
         too_short: "Twoja nazwa jest zbyt krótka"
         ok: "Twoja nazwa jest ok"
       username:
         title: "Nazwa użytkownika"
-        instructions: "unikalna, bez spacji, krótka"
         short_instructions: "Inni mogą o tobie wspomnieć pisząc @%{username}"
         available: "Nazwa użytkownika jest dostępna"
         not_available: "Niedostępna. Może spróbuj %{suggestion}?"
@@ -1841,7 +1842,7 @@ pl_PL:
         same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło wygląda na poprawne."
-        instructions: "przynajmniej %{count} znaków"
+        instructions: "Przynajmniej %{count} znaków."
         required: "Wprowadź hasło"
         confirm: "Potwierdź"
       summary:
@@ -2009,7 +2010,7 @@ pl_PL:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}.
-    learn_more: "dowiedz się więcej…"
+    learn_more: "Dowiedz się więcej…"
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
@@ -2463,6 +2464,7 @@ pl_PL:
           desc: Szepty są widoczne tylko dla zespołu zarządzającego
         create_topic:
           label: "Nowy temat"
+          desc: Utwórz nowy temat
         shared_draft:
           label: "Udostępniony projekt"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
@@ -2585,6 +2587,7 @@ pl_PL:
         private_message: '%{username} wysłał Ci osobistą wiadomość w „%{topic}” - %{site_title}'
         linked: '%{username} linkuje do twojego wpisu z "%{topic}" - %{site_title}'
         watching_first_post: '%{username} utworzył(a) nowy temat „%{topic}” - %{site_title}'
+        watching_category_or_tag: '%{username} pisze w "%{topic}" - %{site_title}'
         confirm_title: "Powiadomienia włączone - %{site_title}"
         confirm_body: "Powodzenie! Powiadomienia zostały włączone."
         custom: "Powiadomienie od %{username} na %{site_title}"
@@ -3029,6 +3032,7 @@ pl_PL:
           false { lub <a href="{basePath}/latest">zobacz najnowsze tematy</a>}
           other {}
         }
+      created_at: "Utworzono: %{date}"
       bumped_at: "Ostatnie: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a> lub <a href='%{basePath}/latest'>przeglądaj najnowsze tematy</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a>, <a href='%{basePath}/latest'>zobacz najnowsze tematy</a> lub zobacz popularne:"
@@ -4662,9 +4666,7 @@ pl_PL:
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         new_features:
-          title: "\U0001F381 Nowe funkcje"
-          dismiss: "Odrzuć"
-          learn_more: "Dowiedz się więcej"
+          learn_more: "Dowiedz się więcej..."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -5002,8 +5004,8 @@ pl_PL:
         not_enabled: "N"
         change_settings_short: "Ustawienia"
         howto: "Jak zainstalować wtyczkę?"
-        official: "Oficjalna wtyczka"
         broken_route: "Nie można skonfigurować łącza do '%{name}'. Upewnij się, że blokery reklam są wyłączone i spróbuj ponownie załadować stronę."
+        author: "Przez %{author}"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"

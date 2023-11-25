@@ -104,6 +104,7 @@ module PageObjects
           selector += ".-persisted" if args[:persisted]
           selector += ".-staged" if args[:staged]
           selector += ".-deleted" if args[:deleted]
+          selector += ".-highlighted" if args[:highlighted]
           selector
         end
       end

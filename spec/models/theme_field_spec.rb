@@ -595,6 +595,57 @@ HTML
         expect(fr1.javascript_cache.content).to include("helloworld")
         expect(fr1.javascript_cache.content).to include("enval1")
       end
+
+      it "is recreated when data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
+      end
+
+      it "is recreated when fallback data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: {} }.deep_stringify_keys.to_yaml,
+        )
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
+      end
     end
 
     describe "prefix injection" do

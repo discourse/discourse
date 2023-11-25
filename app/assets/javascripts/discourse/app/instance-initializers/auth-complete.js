@@ -37,8 +37,8 @@ export default {
     }
 
     if (lastAuthResult) {
-      const router = owner.lookup("router:main");
-      router.one("didTransition", () => {
+      const router = owner.lookup("service:router");
+      router.one("routeDidChange", () => {
         next(() => {
           const options = JSON.parse(lastAuthResult);
 
@@ -46,7 +46,7 @@ export default {
             return;
           }
 
-          if (router.currentPath === "invites.show") {
+          if (router.currentRouteName === "invites.show") {
             owner
               .lookup("controller:invites-show")
               .authenticationComplete(options);

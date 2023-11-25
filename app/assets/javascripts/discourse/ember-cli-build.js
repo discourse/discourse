@@ -14,6 +14,8 @@ const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const withSideWatch = require("./lib/with-side-watch");
+const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -70,6 +72,12 @@ module.exports = function (defaults) {
       backburner:
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
     },
+
+    trees: {
+      app: RawHandlebarsCompiler(
+        withSideWatch("app", { watching: ["../discourse-markdown-it"] })
+      ),
+    },
   });
 
   // TODO: remove me
@@ -110,10 +118,6 @@ module.exports = function (defaults) {
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    funnel(`${vendorJs}/highlightjs`, {
-      files: ["highlight-test-bundle.min.js"],
-      destDir: "assets/highlightjs",
-    }),
     generateWorkboxTree(),
     concat(adminTree, {
       inputFiles: ["**/*.js"],
@@ -136,6 +140,12 @@ module.exports = function (defaults) {
         output: {
           publicPath: "auto",
         },
+        cache: isProduction
+          ? false
+          : {
+              type: "memory",
+              maxGenerations: 1,
+            },
         entry: {
           "assets/discourse.js/features/markdown-it.js": {
             import: "./static/markdown-it",

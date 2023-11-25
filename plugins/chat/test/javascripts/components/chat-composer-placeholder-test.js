@@ -36,6 +36,7 @@ module(
       this.channel = ChatChannel.create({
         chatable_type: "DirectMessage",
         chatable: {
+          group: true,
           users: [
             { name: "Tomtom" },
             { name: "Steaky" },

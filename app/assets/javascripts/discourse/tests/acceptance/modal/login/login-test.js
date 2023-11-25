@@ -11,7 +11,7 @@ acceptance("Modal - Login", function () {
     // you have to press the tab key twice to get to the login button
     await tab({ unRestrainTabIndex: true });
     await tab({ unRestrainTabIndex: true });
-    assert.dom(".modal-footer #login-button").isFocused();
+    assert.dom(".d-modal__footer #login-button").isFocused();
   });
 });
 
@@ -47,7 +47,7 @@ acceptance("Modal - Login - With 2FA", function (needs) {
 
 acceptance("Modal - Login - With Passkeys enabled", function (needs) {
   needs.settings({
-    experimental_passkeys: true,
+    enable_passkeys: true,
   });
 
   needs.pretender((server, helper) => {
@@ -72,7 +72,7 @@ acceptance("Modal - Login - With Passkeys enabled", function (needs) {
 
 acceptance("Modal - Login - With Passkeys disabled", function (needs) {
   needs.settings({
-    experimental_passkeys: false,
+    enable_passkeys: false,
   });
 
   test("Excludes passkeys button and conditional UI", async function (assert) {
@@ -87,7 +87,7 @@ acceptance("Modal - Login - With Passkeys disabled", function (needs) {
 acceptance("Modal - Login - Passkeys on mobile", function (needs) {
   needs.mobileView();
   needs.settings({
-    experimental_passkeys: true,
+    enable_passkeys: true,
   });
 
   needs.pretender((server, helper) => {

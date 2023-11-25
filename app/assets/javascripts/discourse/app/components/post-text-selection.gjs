@@ -209,6 +209,7 @@ export default class PostTextSelection extends Component {
         topic: this.args.topic,
         quoteState,
         insertQuote: this.insertQuote,
+        buildQuote: this.buildQuote,
         hideToolbar: this.hideToolbar,
       },
     };
@@ -269,6 +270,11 @@ export default class PostTextSelection extends Component {
   async insertQuote() {
     await this.args.selectText();
     await this.hideToolbar();
+  }
+
+  @action
+  async buildQuote() {
+    return await this.args.buildQuoteMarkdown();
   }
 
   <template>

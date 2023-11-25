@@ -2135,6 +2135,17 @@ RSpec.describe Post do
     end
   end
 
+  describe "relative_url" do
+    it "returns the correct post url with subfolder install" do
+      set_subfolder "/forum"
+      post = Fabricate(:post)
+
+      expect(post.relative_url).to eq(
+        "/forum/t/#{post.topic.slug}/#{post.topic.id}/#{post.post_number}",
+      )
+    end
+  end
+
   describe "public_posts_count_per_day" do
     before do
       freeze_time DateTime.parse("2017-03-01 12:00")

@@ -50,12 +50,18 @@
     </li>
   {{/if}}
 
+  {{#if this.isNewFeaturesTabVisible}}
+    <li class="navigation-item new-features">
+      <LinkTo @route="admin.dashboardNewFeatures" class="navigation-link">
+        {{i18n "admin.dashboard.new_features.title"}}
+      </LinkTo>
+    </li>
+  {{/if}}
+
   <PluginOutlet @name="admin-dashboard-tabs-after" />
 </ul>
 
 {{outlet}}
-
-<DashboardNewFeatures @tagName="div" />
 
 <span>
   <PluginOutlet @name="admin-dashboard-bottom" @connectorTagName="div" />

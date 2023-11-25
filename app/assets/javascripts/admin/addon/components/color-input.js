@@ -44,9 +44,9 @@ export default class ColorInput extends Component {
   }
 
   @action
-  onHexInput(color) {
+  onHexInput(event) {
     if (this.onChangeColor) {
-      this.onChangeColor(this.normalize(color || ""));
+      this.onChangeColor(this.normalize(event.target.value || ""));
     }
   }
 

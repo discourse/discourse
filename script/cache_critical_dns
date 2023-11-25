@@ -140,6 +140,12 @@ module DNSClient
   end
 end
 
+ResolvedAddress = Struct.new(:address, :priority) do |s|
+  def initialize(address:, priority: 0)
+    super(address, priority)
+  end
+end
+
 class Name
   include DNSClient
 
@@ -147,12 +153,18 @@ class Name
     @name = hostname
   end
 
+  # Resolves A and AAAA DNS RRs for @name.
+  # Returns an array of the type ResolvedAddress.
   def resolve
     dns_client_with_timeout do |dns_client|
-      [].tap do |addresses|
-        addresses.concat(dns_client.getresources(@name, Resolv::DNS::Resource::IN::A).map(&:address))
-        addresses.concat(dns_client.getresources(@name, Resolv::DNS::Resource::IN::AAAA).map(&:address))
-      end.map(&:to_s)
+      [].tap do |results|
+        dns_client.getresources(@name, Resolv::DNS::Resource::IN::A).map(&:address).each do |a|
+          results << ResolvedAddress.new(address: a.to_s)
+        end
+        dns_client.getresources(@name, Resolv::DNS::Resource::IN::AAAA).map(&:address).each do |aaaa|
+          results << ResolvedAddress.new(address: aaaa.to_s)
+        end
+      end
     end
   end
 end
@@ -165,18 +177,28 @@ class SRVName
     @prio_filter = prio_filter
   end
 
+  # Starts by resolving the SRV RRs for @name.
+  # For all returned targets, resolves the underlying A and AAAA RRs.
+  # Returns an array of the type ResolvedAddress.
   def resolve
     dns_client_with_timeout do |dns_client|
-      [].tap do |addresses|
+      [].tap do |results|
         targets = dns_client.getresources(@name, Resolv::DNS::Resource::IN::SRV)
         targets.delete_if { |t| !@prio_filter.within_threshold?(t.priority) }
-        addresses.concat(targets.map { |t| Name.new(t.target.to_s).resolve }.flatten)
+        targets.each do |t|
+          begin
+            Name.new(t.target.to_s).resolve.each do |ra|
+              results << ResolvedAddress.new(address: ra.address, priority: t.priority)
+            end
+          rescue Resolv::ResolvError, Resolv::ResolvTimeout
+          end
+        end
       end
     end
   end
 end
 
-CacheMeta = Struct.new(:first_seen, :last_seen)
+CacheMeta = Struct.new(:first_seen, :last_seen, :priority)
 
 class EmptyCacheError < StandardError; end
 
@@ -189,30 +211,45 @@ class ResolverCache
     @cached = {}
   end
 
-  # Returns a list of resolved addresses ordered by first seen time.  Most
-  # recently seen address is first.
-  # If an exception occurs during DNS resolution we return whatever addresses
-  # are cached.
+  # Resolve @name and return an array of resolved addresses.
+  # The order of returned addresses is as follows:
+  #   Addresses are ordered by priority and time they were first seen.
+  #   Addresses with lower numeric priority are always returned first.
+  #   Ties between addresses of equal priority are broken by ordering the
+  #   return value by the time an address was first observed by the cache.
+  #   Newer addresses, that appeared later in time, are returned ahead of older
+  #   addresses.
+  #
   # Addresses last seen more than 30 minutes ago are evicted from the cache.
+  # Upon any exception during DNS resolution, cached addresses are returned.
   # Raises EmptyCacheError if the cache is empty after DNS resolution and cache
-  # eviction is performed.
+  # eviction.
   def resolve
+    now = Time.now.utc
     begin
-      @name.resolve.each do |address|
+      @name.resolve.each do |ra|
+        address = ra.address
         if @cached[address]
-          @cached[address].last_seen = Time.now.utc
+          @cached[address].last_seen = now
+          @cached[address].priority = ra.priority
         else
-          @cached[address] = CacheMeta.new(Time.now.utc, Time.now.utc)
+          @cached[address] = CacheMeta.new(now, now, ra.priority)
         end
       end
     rescue Resolv::ResolvError, Resolv::ResolvTimeout
     end
 
-    @cached = @cached.delete_if { |_, meta| Time.now.utc - 30 * 60 > meta.last_seen }
+    @cached = @cached.delete_if { |_, meta| now - 30 * 60 > meta.last_seen }
     if @cached.empty?
       raise EmptyCacheError, "DNS resolver found no usable addresses"
     end
-    @cached.sort_by { |_, meta| meta.first_seen }.reverse.map(&:first)
+
+    @cached.sort_by do |_, meta|
+      [
+        meta.priority,
+        now - meta.first_seen,
+      ]
+    end.map(&:first).uniq
   end
 end
 

@@ -190,9 +190,15 @@
   .topic-item-stats__category-tags {
     margin-right: 0.5em;
     max-width: 90%;
+    line-height: var(--line-height-medium);
 
     .discourse-tags {
       display: inline;
+    }
+
+    .badge-category__wrapper {
+      vertical-align: bottom;
+      margin-right: 0.5em;
     }
 
     .badge-wrapper,
@@ -208,23 +214,6 @@
     .badge-wrapper {
       max-width: 100%;
       vertical-align: bottom;
-    }
-
-    .badge-wrapper {
-      &.bullet {
-        + .discourse-tags {
-          .discourse-tag {
-            vertical-align: bottom;
-          }
-        }
-      }
-      &.box {
-        + .discourse-tags {
-          .discourse-tag {
-            vertical-align: text-bottom;
-          }
-        }
-      }
     }
   }
 
@@ -377,10 +366,6 @@ tr.category-topic-link {
     td {
       padding-top: 15px;
     }
-  }
-
-  th .badge-category {
-    margin: 0;
   }
 
   .category-topic-link {

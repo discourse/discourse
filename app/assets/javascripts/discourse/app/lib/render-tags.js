@@ -68,7 +68,7 @@ export default function (topic, params) {
             isPrivateMessage,
             tagsForUser,
             tagName,
-          }) + " ";
+          }) + "";
       }
     }
 

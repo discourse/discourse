@@ -2,22 +2,13 @@
 
 module Chat
   class ChatController < ::Chat::BaseController
-    PAST_MESSAGE_LIMIT = 40
-    FUTURE_MESSAGE_LIMIT = 40
-    PAST = "past"
-    FUTURE = "future"
-    CHAT_DIRECTIONS = [PAST, FUTURE]
-
     # Other endpoints use set_channel_and_chatable_with_access_check, but
     # these endpoints require a standalone find because they need to be
     # able to get deleted channels and recover them.
-    before_action :find_chatable, only: %i[enable_chat disable_chat]
     before_action :find_chat_message, only: %i[rebake message_link]
     before_action :set_channel_and_chatable_with_access_check,
                   except: %i[
                     respond
-                    enable_chat
-                    disable_chat
                     message_link
                     set_user_chat_status
                     dismiss_retention_reminder
@@ -26,55 +17,6 @@ module Chat
 
     def respond
       render
-    end
-
-    def enable_chat
-      chat_channel = Chat::Channel.with_deleted.find_by(chatable_id: @chatable)
-
-      guardian.ensure_can_join_chat_channel!(chat_channel) if chat_channel
-
-      if chat_channel && chat_channel.trashed?
-        chat_channel.recover!
-      elsif chat_channel
-        return render_json_error I18n.t("chat.already_enabled")
-      else
-        chat_channel = @chatable.chat_channel
-        guardian.ensure_can_join_chat_channel!(chat_channel)
-      end
-
-      success = chat_channel.save
-      if success && chat_channel.chatable_has_custom_fields?
-        @chatable.custom_fields[Chat::HAS_CHAT_ENABLED] = true
-        @chatable.save!
-      end
-
-      if success
-        membership = Chat::ChannelMembershipManager.new(channel).follow(user)
-        render_serialized(chat_channel, Chat::ChannelSerializer, membership: membership)
-      else
-        render_json_error(chat_channel)
-      end
-
-      Chat::ChannelMembershipManager.new(channel).follow(user)
-    end
-
-    def disable_chat
-      chat_channel = Chat::Channel.with_deleted.find_by(chatable_id: @chatable)
-      guardian.ensure_can_join_chat_channel!(chat_channel)
-      return render json: success_json if chat_channel.trashed?
-      chat_channel.trash!(current_user)
-
-      success = chat_channel.save
-      if success
-        if chat_channel.chatable_has_custom_fields?
-          @chatable.custom_fields.delete(Chat::HAS_CHAT_ENABLED)
-          @chatable.save!
-        end
-
-        render json: success_json
-      else
-        render_json_error(chat_channel)
-      end
     end
 
     def react
@@ -175,19 +117,6 @@ module Chat
       end
     end
 
-    def set_draft
-      if params[:data].present?
-        Chat::Draft.find_or_initialize_by(
-          user: current_user,
-          chat_channel_id: @chat_channel.id,
-        ).update!(data: params[:data])
-      else
-        Chat::Draft.where(user: current_user, chat_channel_id: @chat_channel.id).destroy_all
-      end
-
-      render json: success_json
-    end
-
     private
 
     def preloaded_chat_message_query
@@ -207,11 +136,6 @@ module Chat
       query = query.includes(user: :user_status) if SiteSetting.enable_user_status
 
       query
-    end
-
-    def find_chatable
-      @chatable = Category.find_by(id: params[:chatable_id])
-      guardian.ensure_can_moderate_chat!(@chatable)
     end
 
     def find_chat_message

@@ -1505,7 +1505,6 @@ it:
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
     email_subject: "Formato oggetto personalizzabile per e-mail standard. Vedi <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Fornisce maggiori dettagli agli utenti sul perché non possono accedere a un argomento specifico. Nota: questo metodo è meno sicuro perché gli utenti sapranno se un URL si collega a un argomento valido."
-    enforce_second_factor: "Impone agli utenti di abilitare l'autenticazione a due fattori. Seleziona \"all\" per applicarlo a tutti gli utenti. Seleziona \"staff\" per applicarlo solo agli utenti staff."
     force_https: "Forza il tuo sito ad usare solo HTTPS. ATTENZIONE: NON abilitare questa opzione finché non hai verificato che HTTPS è pienamente configurato e sta funzionando ovunque! Hai verificato il tuo CDN, tutti gli accessi ai social ed ogni logo esterno / dipendenze per essere sicuro che sono anch'essi tutti compatibili con HTTPS?"
     same_site_cookies: "Utilizza gli stessi cookie del sito. In tal modo si eliminano tutti i vettori Cross Site Request Forgery nei browser supportati (Lax o Strict). Avviso: Strict funzionerà solo su siti che richiedono l'accesso e utilizzano un metodo di autenticazione esterno."
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
@@ -1811,6 +1810,7 @@ it:
     here_mention: "Nome utilizzato per una @menzione per consentire agli utenti privilegiati di avvisare fino a \"max_here_member\" persone che partecipano all'argomento. Non deve essere un nome utente esistente."
     max_here_mentioned: "Numero massimo di persone menzionate da @here."
     min_trust_level_for_here_mention: "Il livello di attendibilità minimo richiesto per menzionare @here."
+    here_mention_allowed_groups: "Gruppi a cui è consentito menzionare @qui."
     create_thumbnails: "Crea anteprime e lightbox delle immagini che sono troppo grandi per essere contenute in un messaggio."
     email_time_window_mins: "Aspetta (n) minuti prima di inviare email di notifica, per dare agli utenti la possibilità di modificare e completare i loro messaggi."
     personal_email_time_window_seconds: "Attendi (n) secondi prima di inviare qualsiasi email di notifica di messaggi personali, per dare agli utenti la possibilità di modificare e finalizzare i propri messaggi."
@@ -1826,7 +1826,6 @@ it:
     min_title_similar_length: "Lunghezza minima di un titolo che attiva il controllo su argomenti simili."
     desktop_category_page_style: "Stile visuale per la pagina /categorie."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
-    category_style: "Stile grafico dei distintivi relativi alle categorie."
     default_dark_mode_color_scheme_id: "Lo schema di colori usato in modalità scura."
     dark_mode_none: "Nessuno"
     max_image_size_kb: "La dimensione massima di un'immagine caricata in KB. Deve essere configurato anche in nginx (client_max_body_size) / apache o proxy. Le immagini più grandi di questa e più piccole di client_max_body_size verranno ridimensionate per adattarsi al caricamento."
@@ -2030,9 +2029,7 @@ it:
     display_name_on_posts: "Mostra il nome completo dell'utente sui messaggi oltre allo @username."
     show_time_gap_days: "Se due messaggi vengono creati dopo tale numero di giorni, mostrare l'intervallo di tempo nell'argomento."
     short_progress_text_threshold: "Quando il numero di messaggi di un argomento supera questo valore, la barra di avanzamento mostrerà solo il numero di messaggi attuale. Se modifichi l'ampiezza della barra di avanzamento, potresti dover cambiare questo valore."
-    default_code_lang: "La modalità predefinita per evidenziare la sintassi del linguaggio di programmazione applicata nei blocchi di codice (auto, testo, ruby, python ecc.). Questo valore deve essere presente anche nell'impostazione del sito `Lingue evidenziate`."
     warn_reviving_old_topic_age: "Quando qualcuno inizia a rispondere ad un argomento in cui l'ultima risposta è più vecchia di tale numero di giorni, verrà visualizzato un avviso. Disabilita impostando su 0."
-    autohighlight_all_code: "Forza l'evidenziazione della sintassi del codice nei blocchi di testo preformattato, anche se non è stato specificato il linguaggio di programmazione. "
     highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Attenzione: includere troppi linguaggi può influire sulle prestazioni) vedi: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per una demo"
     show_copy_button_on_codeblocks: "Aggiungi un pulsante ai blocchi di codice per copiare il contenuto del blocco negli appunti dell'utente."
     embed_any_origin: "Consenti contenuti incorporabili indipendentemente dall'origine. Questa impostazione è richiesta dalle app mobili con HTML statico."
@@ -2365,6 +2362,7 @@ it:
     not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via mail quando potrai collegarti."
     incorrect_username_email_or_password: "Nome utente, email o password errati"
     incorrect_password: "Password errata"
+    incorrect_password_or_passkey: "Password o passkey errata"
     wait_approval: "Grazie per esserti iscritto. Ti avvertiremo quando il tuo account sarà approvato."
     active: "Il tuo account è attivo e pronto all'uso."
     activate_email: "<p>Ci siamo quasi! Abbiamo mandato una email di attivazione a <b>%{email}</b>. Per favore segui le istruzioni contenute nell'email per attivare il tuo account.</p><p>Se l'email non ti arriva, controlla la tua cartella spam.</p>"
@@ -2684,7 +2682,7 @@ it:
         Moderatori%{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Feedback sul tuo argomento"
-      subject_template: "Feedback sul nuovo argomento intitolato \"%{topic_title}\""
+      subject_template: 'Feedback sul nuovo argomento intitolato "%{topic_title}"'
       text_body_template: |
         Ciao %{username},
 

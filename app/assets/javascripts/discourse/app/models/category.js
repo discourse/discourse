@@ -10,6 +10,7 @@ import getURL from "discourse-common/lib/get-url";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 const STAFF_GROUP_NAME = "staff";
+const CATEGORY_ASYNC_SEARCH_CACHE = {};
 
 const Category = RestModel.extend({
   permissions: null,
@@ -657,18 +658,19 @@ Category.reopenClass({
   async asyncSearch(term, opts) {
     opts ||= {};
 
-    const result = await ajax("/categories/search", {
-      data: {
-        term,
-        parent_category_id: opts.parentCategoryId,
-        include_uncategorized: opts.includeUncategorized,
-        select_category_ids: opts.selectCategoryIds,
-        reject_category_ids: opts.rejectCategoryIds,
-        include_subcategories: opts.includeSubcategories,
-        prioritized_category_id: opts.prioritizedCategoryId,
-        limit: opts.limit,
-      },
-    });
+    const data = {
+      term,
+      parent_category_id: opts.parentCategoryId,
+      include_uncategorized: opts.includeUncategorized,
+      select_category_ids: opts.selectCategoryIds,
+      reject_category_ids: opts.rejectCategoryIds,
+      include_subcategories: opts.includeSubcategories,
+      prioritized_category_id: opts.prioritizedCategoryId,
+      limit: opts.limit,
+    };
+
+    const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=
+      await ajax("/categories/search", { data }));
 
     return result["categories"].map((category) =>
       Site.current().updateCategory(category)

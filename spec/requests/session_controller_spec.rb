@@ -3043,14 +3043,14 @@ RSpec.describe SessionController do
 
   describe "#passkey_login" do
     it "returns 404 if feature is not enabled" do
-      SiteSetting.experimental_passkeys = false
+      SiteSetting.enable_passkeys = false
 
       post "/session/passkey/auth.json"
       expect(response.status).to eq(404)
     end
 
-    context "when experimental_passkeys is enabled" do
-      before { SiteSetting.experimental_passkeys = true }
+    context "when enable_passkeys is enabled" do
+      before { SiteSetting.enable_passkeys = true }
 
       it "fails if public key param is missing" do
         post "/session/passkey/auth.json"

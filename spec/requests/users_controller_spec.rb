@@ -5447,7 +5447,7 @@ RSpec.describe UsersController do
           ApplicationController
             .any_instance
             .expects(:secure_session)
-            .returns("confirmed-password-#{user1.id}" => "false")
+            .returns("confirmed-session-#{user1.id}" => "false")
           post "/users/create_second_factor_totp.json"
 
           expect(response.status).to eq(403)
@@ -5478,7 +5478,7 @@ RSpec.describe UsersController do
           ApplicationController
             .any_instance
             .stubs(:secure_session)
-            .returns("confirmed-password-#{user1.id}" => "true")
+            .returns("confirmed-session-#{user1.id}" => "true")
           post "/users/create_second_factor_totp.json"
 
           expect(response.status).to eq(200)
@@ -5704,7 +5704,7 @@ RSpec.describe UsersController do
             ApplicationController
               .any_instance
               .stubs(:secure_session)
-              .returns("confirmed-password-#{user1.id}" => "true")
+              .returns("confirmed-session-#{user1.id}" => "true")
           end
           it "should allow second factor backup for the user to be disabled" do
             put "/users/second_factor.json",
@@ -5744,7 +5744,7 @@ RSpec.describe UsersController do
           ApplicationController
             .any_instance
             .expects(:secure_session)
-            .returns("confirmed-password-#{user1.id}" => "false")
+            .returns("confirmed-session-#{user1.id}" => "false")
           put "/users/second_factors_backup.json"
 
           expect(response.status).to eq(403)
@@ -5775,7 +5775,7 @@ RSpec.describe UsersController do
           ApplicationController
             .any_instance
             .expects(:secure_session)
-            .returns("confirmed-password-#{user1.id}" => "true")
+            .returns("confirmed-session-#{user1.id}" => "true")
 
           put "/users/second_factors_backup.json"
 
@@ -5950,7 +5950,7 @@ RSpec.describe UsersController do
 
   describe "#create_passkey" do
     before do
-      SiteSetting.experimental_passkeys = true
+      SiteSetting.enable_passkeys = true
       stub_secure_session_confirmed
     end
 
@@ -5991,7 +5991,7 @@ RSpec.describe UsersController do
   end
 
   describe "#rename_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
 
     it "fails if no user is logged in" do
       put "/u/rename_passkey/NONE.json"
@@ -6044,7 +6044,7 @@ RSpec.describe UsersController do
   end
 
   describe "#delete_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
     fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
 
     it "fails if user does not have a confirmed session" do
@@ -6079,7 +6079,7 @@ RSpec.describe UsersController do
   end
 
   describe "#register_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
 
     it "fails if user is not logged in" do
       stub_secure_session_confirmed
@@ -6388,18 +6388,25 @@ RSpec.describe UsersController do
       end
     end
 
-    context "when the site settings allow second factors" do
+    context "when the site settings allow local logins" do
       before do
         SiteSetting.enable_local_logins = true
         SiteSetting.enable_discourse_connect = false
       end
 
-      context "when the password is wrong" do
-        it "returns incorrect password response" do
+      context "when params are incorrect" do
+        it "returns 400 response if no password or passkey is supplied" do
+          post "/u/confirm-session.json"
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"][0]).to include("Missing password or passkey")
+        end
+
+        it "returns incorrect response on a wrong password" do
           post "/u/confirm-session.json", params: { password: password }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body["error"]).to eq("Incorrect password")
+          expect(response.parsed_body["error"]).to eq("Incorrect password or passkey")
         end
       end
 
@@ -6411,6 +6418,69 @@ RSpec.describe UsersController do
           post "/u/confirm-session.json", params: { password: "8555039dd212cc66ec68" }
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).to eq(nil)
+        end
+      end
+
+      context "with an invalid passkey" do
+        it "returns invalid response" do
+          post "/u/confirm-session.json", params: { publicKeyCredential: "someboringstring" }
+
+          expect(response.status).to eq(401)
+
+          json = response.parsed_body
+          expect(json["errors"][0]).to eq(
+            I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+          )
+        end
+      end
+
+      context "with a valid passkey" do
+        fab!(:user2) { Fabricate(:user) }
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            user: user1,
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+            last_used: nil,
+            name: "passkey",
+          )
+        end
+
+        it "returns a successful response for the correct user" do
+          simulate_localhost_passkey_challenge
+          user1.create_or_fetch_secure_identifier
+
+          post "/u/confirm-session.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user1.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(nil)
+        end
+
+        it "returns invalid response when key belongs to a different user" do
+          sign_in(user2)
+          simulate_localhost_passkey_challenge
+          user2.create_or_fetch_secure_identifier
+
+          post "/u/confirm-session.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user2.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(401)
+
+          json = response.parsed_body
+          expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.ownership_error"))
         end
       end
     end

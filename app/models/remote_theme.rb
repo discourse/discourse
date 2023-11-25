@@ -80,8 +80,8 @@ class RemoteTheme < ActiveRecord::Base
     )
   end
 
-  # This is only used in the tests environment and is currently not supported for other environments
-  if Rails.env.test?
+  # This is only used in the development and test environment and is currently not supported for other environments
+  if Rails.env.test? || Rails.env.development?
     def self.import_theme_from_directory(directory)
       update_theme(ThemeStore::DirectoryImporter.new(directory))
     end

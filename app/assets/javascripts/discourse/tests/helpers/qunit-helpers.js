@@ -21,6 +21,7 @@ import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
+import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
@@ -227,6 +228,7 @@ export function testCleanup(container, app) {
   resetSidebarPanels();
   clearExtraHeaderIcons();
   resetOnKeyDownCallbacks();
+  resetOnKeyUpCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();
@@ -240,6 +242,7 @@ export function testCleanup(container, app) {
 
 function cleanupCssGeneratorTags() {
   document.querySelector("style#category-color-css-generator")?.remove();
+  document.querySelector("style#category-badge-css-generator")?.remove();
   document.querySelector("style#hashtag-css-generator")?.remove();
 }
 

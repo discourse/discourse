@@ -60,6 +60,8 @@ sl:
         tabs:
           members: Člani
           settings: Nastavitve
+      new_message_modal:
+        filter: "Filter"
       direct_message_creator:
         title: Novo zasebno sporočilo
         prefix: "Do:"

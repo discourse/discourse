@@ -34,7 +34,7 @@
       {{#each this.activeThemes as |theme|}}
         <ThemesListItem
           @theme={{theme}}
-          @navigateToTheme={{action "navigateToTheme" theme}}
+          @navigateToTheme={{fn this.navigateToTheme theme}}
         />
       {{/each}}
 
@@ -106,7 +106,7 @@
         <ThemesListItem
           @classNames="inactive-theme"
           @theme={{theme}}
-          @navigateToTheme={{action "navigateToTheme" theme}}
+          @navigateToTheme={{fn this.navigateToTheme theme}}
           @selectInactiveMode={{this.selectInactiveMode}}
         />
       {{/each}}

@@ -241,7 +241,7 @@ acceptance("User Preference - No Secondary Emails Allowed", function (needs) {
   needs.pretender(preferencesPretender);
   needs.settings({ max_allowed_secondary_emails: 0 });
 
-  test("Add Alternate Email Button is unvailable", async function (assert) {
+  test("Add Alternate Email Button is unavailable", async function (assert) {
     await visit("/u/eviltrout/preferences");
 
     assert.dom(".pref-email a").doesNotExist();

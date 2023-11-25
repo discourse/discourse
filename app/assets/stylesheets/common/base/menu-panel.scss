@@ -274,10 +274,6 @@
   .panel-body {
     overflow-y: auto;
   }
-
-  span.badge-category {
-    max-width: 100px;
-  }
 }
 
 .menu-links.columned {
@@ -369,22 +365,6 @@
       padding: 0;
       font-size: var(--font-down-1);
       line-height: var(--line-height-large);
-    }
-    .badge-wrapper {
-      &.bar,
-      &.bullet {
-        color: var(--primary);
-        padding: 0 0 0 0.15em;
-      }
-      &.box {
-        color: var(--secondary);
-        + a.badge.badge-notification {
-          padding-top: 2px;
-        }
-        span {
-          z-index: z("base") * -1;
-        }
-      }
     }
   }
 

@@ -56,8 +56,8 @@ export default class DTooltipInstance extends FloatKitInstance {
   }
 
   @action
-  async destroy() {
-    await this.close();
+  destroy() {
+    this.close();
     this.tearDownListeners();
   }
 }
