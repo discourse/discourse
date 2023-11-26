@@ -91,6 +91,7 @@ export default class AdminDashboardController extends Controller {
           if (versionChecks) {
             properties.versionCheck = VersionCheck.create(model.version_check);
           }
+          properties.hasUnseenFeatures = model.hasUnseenFeatures;
 
           this.setProperties(properties);
         })

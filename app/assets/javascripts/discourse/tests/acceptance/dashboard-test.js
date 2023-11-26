@@ -142,6 +142,11 @@ acceptance("Dashboard", function (needs) {
 
     await click(".dashboard .navigation-item.new-features .navigation-link");
 
+    assert.ok(
+      exists(
+        ".dashboard .navigation-item.new-features .navigation-link .emoji[title='gift']"
+      )
+    );
     assert.ok(exists(".dashboard-new-features"));
     assert.ok(exists("img.admin-new-feature-item__screenshot"));
   });
