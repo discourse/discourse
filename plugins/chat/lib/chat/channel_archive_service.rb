@@ -109,23 +109,7 @@ module Chat
         # completed batch, so the UI can receive updates and show a progress
         # bar or something similar.
 
-        def create_post_from_batch(chat_messages, batch_thread_ranges)
-          create_post(
-            Chat::TranscriptService.new(
-              chat_channel,
-              chat_channel_archive.archived_by,
-              messages_or_ids: chat_messages,
-              thread_ranges: batch_thread_ranges,
-              opts: {
-                no_link: true,
-                include_reactions: true,
-              },
-            ).generate_markdown,
-          ) { delete_message_batch(chat_messages.map(&:id)) }
-        end
-
         buffer = []
-        thread_ranges = {}
         batch_thread_ranges = {}
 
         chat_channel
@@ -159,37 +143,8 @@ module Chat
               thread_om = thread.first
 
               if !thread_om.nil?
-                thread_size = thread.size - 1
-                last_thread_index = 0
-                iterations = (message_chunk.size.to_f / (ARCHIVED_MESSAGES_PER_POST - 1)).ceil
-
-                iterations.times do |index|
-                  if last_thread_index != thread_size
-                    if index == 0
-                      thread_index = thread.index(post_last_message)
-                    else
-                      next_post_last_message =
-                        message_chunk[(ARCHIVED_MESSAGES_PER_POST * (index + 1)) - index]
-                      if next_post_last_message&.thread_id == post_last_message&.thread_id
-                        thread_index = last_thread_index + ARCHIVED_MESSAGES_PER_POST - 1
-                      else
-                        thread_index = thread_size
-                      end
-                    end
-
-                    range =
-                      I18n.t(
-                        "chat.transcript.split_thread_range",
-                        start: last_thread_index + 1,
-                        end: thread_index,
-                        total: thread_size,
-                      )
-
-                    thread_ranges[thread_om.thread_id] ||= []
-                    thread_ranges[thread_om.thread_id] << range
-                    last_thread_index = thread_index
-                  end
-                end
+                thread_ranges =
+                  calculate_thread_ranges(message_chunk, thread, thread_om, post_last_message)
               end
             end
 
@@ -241,6 +196,58 @@ module Chat
     end
 
     private
+
+    def create_post_from_batch(chat_messages, batch_thread_ranges)
+      create_post(
+        Chat::TranscriptService.new(
+          chat_channel,
+          chat_channel_archive.archived_by,
+          messages_or_ids: chat_messages,
+          thread_ranges: batch_thread_ranges,
+          opts: {
+            no_link: true,
+            include_reactions: true,
+          },
+        ).generate_markdown,
+      ) { delete_message_batch(chat_messages.map(&:id)) }
+    end
+
+    def calculate_thread_ranges(message_chunk, thread, thread_om, post_last_message)
+      ranges = {}
+      thread_size = thread.size - 1
+      last_thread_index = 0
+      iterations = (message_chunk.size.to_f / (ARCHIVED_MESSAGES_PER_POST - 1)).ceil
+
+      iterations.times do |index|
+        if last_thread_index != thread_size
+          if index == 0
+            thread_index = thread.index(post_last_message)
+          else
+            next_post_last_message =
+              message_chunk[(ARCHIVED_MESSAGES_PER_POST * (index + 1)) - index]
+            if next_post_last_message&.thread_id == post_last_message&.thread_id
+              thread_index = last_thread_index + ARCHIVED_MESSAGES_PER_POST - 1
+            else
+              thread_index = thread_size
+            end
+          end
+
+          range =
+            I18n.t(
+              "chat.transcript.split_thread_range",
+              start: last_thread_index + 1,
+              end: thread_index,
+              total: thread_size,
+            )
+
+          ranges[thread_om.thread_id] ||= []
+          ranges[thread_om.thread_id] << range
+          last_thread_index = thread_index
+        end
+      end
+
+      ranges
+    end
 
     def create_post(raw)
       pc = nil
