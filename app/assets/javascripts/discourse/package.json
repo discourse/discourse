@@ -116,7 +116,7 @@
     "imports-loader": "^4.0.1",
     "jquery": "^3.7.1",
     "js-yaml": "^4.1.0",
-    "jsdom": "^22.1.0",
+    "jsdom": "^23.0.0",
     "loader.js": "^4.7.0",
     "message-bus-client": "^4.3.8",
     "messageformat": "0.1.5",
