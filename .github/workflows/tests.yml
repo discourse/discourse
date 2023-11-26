@@ -117,6 +117,12 @@ jobs:
         if: matrix.target == 'plugins'
         run: bin/rake plugin:pull_compatible_all
 
+      - name: Plugin gems cache
+        uses: actions/cache@v3
+        with:
+          path: plugins/*/gems
+          key: ${{ runner.os }}-plugin-gems-${{matrix.ruby}}-${{ hashFiles('plugins/*/plugin.rb') }}
+
       - name: Checkout official themes
         if: matrix.target == 'themes' && matrix.build_type == 'system'
         run: bin/rake themes:clone_all_official
