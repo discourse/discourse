@@ -863,7 +863,7 @@ class Post < ActiveRecord::Base
       bypass_bump: bypass_bump,
       cooking_options: self.cooking_options,
       new_post: new_post,
-      post_id: id,
+      post_id: self.id,
       skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
 
@@ -1094,7 +1094,15 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML5.fragment(self.cooked)
-    selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
+    selectors =
+      fragments.css(
+        "a/@href",
+        "img/@src",
+        "source/@src",
+        "track/@src",
+        "video/@poster",
+        "div/@data-video-src",
+      )
 
     links =
       selectors
