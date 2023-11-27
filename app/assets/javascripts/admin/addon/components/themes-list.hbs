@@ -45,10 +45,10 @@
               {{#if this.selectInactiveMode}}
                 <Input
                   @type="checkbox"
-                  @checked={{(or
+                  @checked={{or
                     (eq this.allInactiveSelected true)
                     (eq this.someInactiveSelected true)
-                  )}}
+                  }}
                   class="toggle-all-inactive"
                   indeterminate={{this.someInactiveSelected}}
                   {{on "click" this.toggleAllInactive}}
@@ -89,7 +89,7 @@
                 <DButton
                   class="btn btn-delete"
                   @action={{this.deleteConfirmation}}
-                  @disabled={{(eq this.selectedCount 0)}}
+                  @disabled={{eq this.selectedCount 0}}
                 >
                   {{d-icon "trash-alt"}}
                   Delete
