@@ -197,6 +197,10 @@ en:
     summaries:
       no_targets: "There were no messages during the selected period."
 
+    transcript:
+      default_thread_title: "Thread"
+      split_thread_range: "messages %{start} to %{end} of %{total}"
+
   discourse_push_notifications:
     popup:
       chat_mention:
