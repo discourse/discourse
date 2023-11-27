@@ -73,7 +73,7 @@
     "@uppy/core": "3.0.4",
     "@uppy/drop-target": "2.0.1",
     "@uppy/utils": "5.4.3",
-    "@uppy/xhr-upload": "3.1.1",
+    "@uppy/xhr-upload": "3.5.0",
     "a11y-dialog": "8.0.4",
     "admin": "1.0.0",
     "babel-import-util": "^2.0.1",
