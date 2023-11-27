@@ -14,6 +14,7 @@ globalThis.deprecationWorkflow.config = {
       matchId: "discourse.decorate-widget.hamburger-widget-links",
     },
     {
+      // From: Ember 5.3. Until: Ember 6.0
       handler: "silence",
       matchId: "deprecate-implicit-route-model",
     },

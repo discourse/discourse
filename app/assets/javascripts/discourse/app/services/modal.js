@@ -60,6 +60,7 @@ class ModalService extends Service {
           raiseError: true,
         }
       );
+      return;
     }
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
