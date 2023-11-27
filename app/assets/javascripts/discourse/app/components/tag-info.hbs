@@ -10,13 +10,17 @@
             @input={{action (mut this.newTagName) value="target.value"}}
             @autofocus="true"
           />
-          <TextField
-            @id="edit-description"
+
+          <Textarea
+            id="edit-description"
             @value={{readonly this.tagInfo.description}}
-            @placeholder={{i18n "tagging.description"}}
-            @maxlength={{280}}
-            @input={{action (mut this.newTagDescription) value="target.value"}}
-            @autofocus="true"
+            placeholder={{i18n "tagging.description"}}
+            maxlength={{1000}}
+            {{on
+              "input"
+              (action (mut this.newTagDescription) value="target.value")
+            }}
+            autofocus="true"
           />
 
           <div class="edit-controls">

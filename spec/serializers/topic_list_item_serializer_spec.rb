@@ -44,7 +44,7 @@ RSpec.describe TopicListItemSerializer do
   describe "hidden tags" do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
-    let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+    let(:hidden_tag) { Fabricate(:tag, name: "hidden", description: "a" * 1000) }
     let(:staff_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
@@ -59,6 +59,11 @@ RSpec.describe TopicListItemSerializer do
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
 
       expect(json[:tags]).to eq([hidden_tag.name])
+    end
+
+    it "trucates description" do
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
+      expect(json[:tags_descriptions]).to eq({ "hidden" => "a" * 77 + "..." })
     end
 
     it "does not return hidden tag to non-staff" do
