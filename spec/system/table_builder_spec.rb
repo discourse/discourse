@@ -2,8 +2,6 @@
 
 RSpec.describe "Table Builder", system: true do
   fab!(:user) { Fabricate(:user) }
-
-  let!(:theme_component) { upload_theme_component }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:insert_table_modal) { PageObjects::Modals::InsertTable.new }
   let(:sample_table_md) {}
