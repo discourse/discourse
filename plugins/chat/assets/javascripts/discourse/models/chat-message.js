@@ -134,7 +134,6 @@ export default class ChatMessage {
   set deletedAt(value) {
     this._deletedAt = value;
     this.incrementVersion();
-    return this._deletedAt;
   }
 
   get cooked() {

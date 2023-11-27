@@ -160,7 +160,7 @@ export default class ComposerService extends Service {
   }
 
   set disableSubmit(value) {
-    return this.set("_disableSubmit", value);
+    this.set("_disableSubmit", value);
   }
 
   @computed("model.category", "skipFormTemplate")
@@ -188,7 +188,7 @@ export default class ComposerService extends Service {
   }
 
   set formTemplateInitialValues(values) {
-    return this.set("_formTemplateInitialValues", values);
+    this.set("_formTemplateInitialValues", values);
   }
 
   @action
@@ -265,7 +265,6 @@ export default class ComposerService extends Service {
       key: "toolbar-enabled",
       value: val ? "true" : "false",
     });
-    return val;
   }
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
