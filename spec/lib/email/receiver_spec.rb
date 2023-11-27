@@ -1704,6 +1704,7 @@ RSpec.describe Email::Receiver do
           :user,
           trust_level: SiteSetting.email_in_min_trust,
           user_emails: [Fabricate.build(:secondary_email, email: "existing@bar.com")],
+          refresh_auto_groups: true,
         )
 
       expect { process(:existing_user) }.to change(Topic, :count).by(1)
@@ -2079,7 +2080,7 @@ RSpec.describe Email::Receiver do
     end
 
     it "should skip validations for regular users" do
-      Fabricate(:user, email: "alice@foo.com")
+      Fabricate(:user, email: "alice@foo.com", refresh_auto_groups: true)
       expect { process(:mailinglist_short_message) }.to change { Topic.count }
     end
 
@@ -2088,8 +2089,8 @@ RSpec.describe Email::Receiver do
         category.set_permissions(everyone: :readonly)
         category.save!
 
-        Fabricate(:user, email: "alice@foo.com")
-        Fabricate(:user, email: "bob@bar.com")
+        Fabricate(:user, email: "alice@foo.com", refresh_auto_groups: true)
+        Fabricate(:user, email: "bob@bar.com", refresh_auto_groups: true)
       end
 
       it "should allow creating topic within read-only category" do
@@ -2106,7 +2107,7 @@ RSpec.describe Email::Receiver do
 
     it "ignores unsubscribe email" do
       SiteSetting.unsubscribe_via_email = true
-      Fabricate(:user, email: "alice@foo.com")
+      Fabricate(:user, email: "alice@foo.com", refresh_auto_groups: true)
 
       expect { process("mailinglist_unsubscribe") }.to_not change {
         ActionMailer::Base.deliveries.count

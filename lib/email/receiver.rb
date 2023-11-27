@@ -859,7 +859,7 @@ module Email
 
         user ||= stage_from_user
 
-        if user.groups.any? && !user.in_any_groups?(SiteSetting.email_in_allowed_groups_map) &&
+        if !user.staged? && !user.in_any_groups?(SiteSetting.email_in_allowed_groups_map) &&
              !sent_to_mailinglist_mirror?
           raise InsufficientTrustLevelError
         end
