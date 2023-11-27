@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Table Builder", system: true do
+describe "Table Builder", type: :system do
   fab!(:user) { Fabricate(:user) }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:insert_table_modal) { PageObjects::Modals::InsertTable.new }
