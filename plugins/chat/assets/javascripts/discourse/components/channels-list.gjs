@@ -106,7 +106,7 @@ export default class ChannelsList extends Component {
   }
 
   didRender() {
-    this._super(...arguments);
+    super.didRender(...arguments);
 
     schedule("afterRender", this._applyScrollPosition);
   }
