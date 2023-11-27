@@ -29,6 +29,7 @@ jobs:
         shell: yarn node {0}
         working-directory: app/assets/javascripts/discourse
         run: |
+          console.log(process.cwd())
           const version = require("ember-source/package.json").version;
           console.log("Version is", version);
           if(version.split(".")[0] !== 3){
