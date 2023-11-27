@@ -135,12 +135,15 @@ export default ComboBoxComponent.extend({
 
   async search(filter) {
     const opts = {
-      parentCategoryId: this.options.parentCategory?.id,
+      parentCategoryId: this.options.parentCategory?.id || -1,
       includeUncategorized: this.siteSettings.allow_uncategorized_topics,
     };
 
     if (this.siteSettings.lazy_load_categories) {
-      const results = await Category.asyncSearch(filter, { ...opts, limit: 5 });
+      const results = await Category.asyncSearch(filter, {
+        ...opts,
+        limit: 15,
+      });
       return this.shortcuts.concat(
         results.sort((a, b) => {
           if (a.parent_category_id && !b.parent_category_id) {
