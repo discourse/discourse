@@ -175,7 +175,7 @@ export default {
       function generatePopups(tables, attrs) {
         tables.forEach((table, index) => {
           const buttonWrapper = document.createElement("div");
-          buttonWrapper.classList.add("fullscreen-table-wrapper--buttons");
+          buttonWrapper.classList.add("fullscreen-table-wrapper__buttons");
 
           const tableEditorBtn = _createButton({
             classes: ["btn-edit-table"],

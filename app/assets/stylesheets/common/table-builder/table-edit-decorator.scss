@@ -1,8 +1,3 @@
-.open-popup-link {
-  display: inline;
-  margin-inline: 0.25em;
-}
-
 .btn-edit-table {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -11,7 +6,7 @@
   user-select: none;
 }
 
-.fullscreen-table-wrapper:hover .btn-edit-table {
+.fullscreen-table-wrapper:hover .fullscreen-table-wrapper__buttons button {
   opacity: 100%;
 }
 
