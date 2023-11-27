@@ -859,7 +859,12 @@ export default class ComposerService extends Service {
         group_link: groupLink,
       });
     } else if (userCount > 0) {
-      body = I18n.t("composer.group_mentioned", {
+      // Louder warning for a larger group.
+      const translationKey =
+        userCount >= 5
+          ? "composer.larger_group_mentioned"
+          : "composer.group_mentioned";
+      body = I18n.t(translationKey, {
         group: `@${name}`,
         count: userCount,
         group_link: groupLink,
