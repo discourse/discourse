@@ -466,6 +466,12 @@ export function applyDefaultHandlers(pretender) {
       return response(422, { errors: ["duplicate email"] });
     }
 
+    if (category.parent_category_id === 1002) {
+      return response(422, {
+        errors: ["subcategory nested under another subcategory"],
+      });
+    }
+
     return response({ category });
   });
 
