@@ -99,10 +99,12 @@ module.exports = function (defaults) {
     },
   });
 
-  // TODO: remove me
-  // Ember 3.28 still has some internal dependency on jQuery being a global,
-  // for the time being we will bring it in vendor.js
-  app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
+  if (EMBER_MAJOR_VERSION < 4) {
+    // TODO: remove me
+    // Ember 3.28 still has some internal dependency on jQuery being a global,
+    // for the time being we will bring it in vendor.js
+    app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
+  }
 
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(vendorJs + "bootbox.js");
@@ -177,7 +179,7 @@ module.exports = function (defaults) {
             if (
               !request.includes("-embroider-implicit") &&
               // TODO: delete special case for jquery when removing app.import() above
-              (request === "jquery" ||
+              ((EMBER_MAJOR_VERSION < 4 && request === "jquery") ||
                 request.startsWith("admin/") ||
                 request.startsWith("wizard/") ||
                 request.startsWith("discourse/plugins/") ||
