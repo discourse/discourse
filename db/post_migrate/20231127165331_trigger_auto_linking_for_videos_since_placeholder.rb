@@ -17,7 +17,7 @@ class TriggerAutoLinkingForVideosSincePlaceholder < ActiveRecord::Migration[7.0]
         SELECT id
         FROM posts
         WHERE cooked LIKE '%video-placeholder-container%'
-        AND id >= :start AND id <= :finish
+        AND id > :start AND id <= :finish
       SQL
 
       DB.exec(<<~SQL, ids: ids) if ids && ids.length > 0
