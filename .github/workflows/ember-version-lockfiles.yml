@@ -24,6 +24,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ ! -z "$(git status --porcelain)" ]; then
+            git config --global user.email "build@discourse.org"
+            git config --global user.name "discoursebuild"
             git add .
             git commit -m "Update lockfiles for ember version flag"
             git push
