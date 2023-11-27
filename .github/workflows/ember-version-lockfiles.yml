@@ -1,3 +1,5 @@
+# This workflow will run on dependabot pull requests to ensure that they update both the ember3 and ember5 lockfiles
+
 name: Ember Version Lockfiles
 
 on:
@@ -16,6 +18,8 @@ jobs:
           ref: ${{ github.head_ref }}
       - name: Move lockfile to correct location
         run: |
+          # Dependabot gets confused by the symlinks and dumps the updated lockfile in the root of the repo.
+          # Let's move it back to the correct location.
           if [[ -f yarn-ember3.lock ]]; then
             mv yarn-ember3.lock app/assets/javascripts/yarn-ember3.lock
           fi
