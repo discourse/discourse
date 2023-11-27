@@ -200,10 +200,9 @@ module Chat
 
     private
 
+    # It's used to call the TranscriptService, which will
+    # generate the markdown for a given set of messages.
     def create_post_from_batch(chat_messages, batch_thread_ranges)
-      # It's used to call the TranscriptService, which will
-      # generate the markdown for a given set of messages.
-
       create_post(
         Chat::TranscriptService.new(
           chat_channel,
@@ -218,11 +217,10 @@ module Chat
       ) { delete_message_batch(chat_messages.map(&:id)) }
     end
 
+    # Message batches can be greater than the maximum number of messages
+    # per post if we also include threads. This is used to calculate all
+    # the ranges when we split the threads that are included in the batch.
     def calculate_thread_ranges(message_chunk, thread, thread_om, post_last_message)
-      # Message batches can be greater than the maximum number of messages
-      # per post if we also include threads. This is used to calculate all
-      # the ranges when we split the threads that are included in the batch.
-
       ranges = {}
       thread_size = thread.size - 1
       last_thread_index = 0
