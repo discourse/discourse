@@ -1311,14 +1311,13 @@ da:
           generic: "Din %{provider}-konto vil blive brugt til godkendelse."
       name:
         title: "Navn"
-        instructions: "Dit fulde navn (valgfrit)"
-        instructions_required: "Dit fulde navn"
+        instructions: "Dit fulde navn (valgfrit)."
+        instructions_required: "Dit fulde navn."
         required: "Indtast venligst et navn"
         too_short: "Dit navn er for kort"
         ok: "Dit navn ser fint ud"
       username:
         title: "Brugernavn"
-        instructions: "unikt, ingen mellemrum, kort"
         short_instructions: "Folk kan nævne dig som @%{username}"
         available: "Dit brugernavn er tilgængeligt"
         not_available: "Ikke ledigt. Prøv %{suggestion}?"
@@ -1508,7 +1507,7 @@ da:
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
-        instructions: "mindst %{count} tegn"
+        instructions: "Mindst %{count} tegn."
         required: "Indtast venligst en adgangskode"
         confirm: "Bekræft"
       summary:
@@ -1639,7 +1638,7 @@ da:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/time} other {# fejl/time}}</a> har overskredet webstedets indstillingsgrænse på {limit, plural, one {# fejl/time} other {# fejl/time}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}.
-    learn_more: "lær mere…"
+    learn_more: "Lær mere…"
     mute: Ignorer
     unmute: Unmute
     last_post: Sidste indlæg
@@ -2095,6 +2094,7 @@ da:
         private_message: '%{username} sendte dig en privat besked i "%{topic}" - %{site_title}'
         linked: '%{username} linkede til dit indlæg fra "%{topic}" - %{site_title}'
         watching_first_post: '%{username} oprettet et nyt emne"%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} skrev i "%{topic}" - %{site_title}'
         confirm_title: "Notifikationer aktiveret - %{site_title}"
         confirm_body: "Succes! notifikationer er aktiveret."
         custom: "Notifikation fra %{username} på %{site_title}"
@@ -3699,9 +3699,7 @@ da:
         latest_version: "Seneste version"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         new_features:
-          title: "\U0001F381 Nye Funktioner"
-          dismiss: "Skjul"
-          learn_more: "Lær mere"
+          learn_more: "Lær mere..."
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
         no_problems: "Ingen problemer fundet."
@@ -3981,7 +3979,7 @@ da:
         not_enabled: "N"
         change_settings_short: "Indstillinger"
         howto: "Hvordan installerer jeg plugins?"
-        official: "Officielt plugin"
+        author: "Af %{author}"
       backups:
         title: "Backups"
         menu:

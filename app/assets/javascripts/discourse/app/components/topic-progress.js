@@ -177,6 +177,6 @@ export default Component.extend({
 
   @action
   goBack() {
-    this.attrs.jumpToPost(this.get("topic.last_read_post_number"));
+    this.jumpToPost(this.get("topic.last_read_post_number"));
   },
 });

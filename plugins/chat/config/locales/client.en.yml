@@ -445,6 +445,7 @@ en:
       quote:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat quote copied to clipboard"
+        default_thread_title: "Thread"
 
       notification_levels:
         never: "Never"

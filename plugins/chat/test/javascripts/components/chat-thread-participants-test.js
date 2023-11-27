@@ -17,13 +17,13 @@ module(
     });
 
     test("@includeOriginalMessageUser=true", async function (assert) {
-      const orignalMessageUser = fabricators.user({ username: "bob" });
+      const originalMessageUser = fabricators.user({ username: "bob" });
       this.thread = fabricators.thread({
-        original_message: fabricators.message({ user: orignalMessageUser }),
+        original_message: fabricators.message({ user: originalMessageUser }),
         preview: fabricators.threadPreview({
           channel: this.channel,
           participant_users: [
-            orignalMessageUser,
+            originalMessageUser,
             fabricators.user({ username: "alice" }),
           ],
         }),
@@ -35,13 +35,13 @@ module(
     });
 
     test("@includeOriginalMessageUser=false", async function (assert) {
-      const orignalMessageUser = fabricators.user({ username: "bob" });
+      const originalMessageUser = fabricators.user({ username: "bob" });
       this.thread = fabricators.thread({
-        original_message: fabricators.message({ user: orignalMessageUser }),
+        original_message: fabricators.message({ user: originalMessageUser }),
         preview: fabricators.threadPreview({
           channel: this.channel,
           participant_users: [
-            orignalMessageUser,
+            originalMessageUser,
             fabricators.user({ username: "alice" }),
           ],
         }),

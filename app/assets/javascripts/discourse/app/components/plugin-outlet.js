@@ -145,7 +145,11 @@ class PluginOutletWithTagNameWrapper extends ClassicComponent {
   // Overridden parentView to make this wrapper 'transparent'
   // Calling this will trigger the deprecation notice in PluginOutletComponent
   get parentView() {
-    return this._parentView.parentView;
+    // init() of CoreView calls `this.parentView`. That would trigger the deprecation notice,
+    // so skip it until this component is initialized.
+    if (this._state) {
+      return this._parentView.parentView;
+    }
   }
   set parentView(value) {
     this._parentView = value;

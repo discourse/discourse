@@ -1468,14 +1468,13 @@ sv:
           generic: "Ditt %{provider}-konto kommer att användas för autentisering."
       name:
         title: "Namn"
-        instructions: "ditt fullständiga namn (valfritt)"
-        instructions_required: "Ditt fullständiga namn"
+        instructions: "Ditt fullständiga namn (valfritt)."
+        instructions_required: "Ditt fullständiga namn."
         required: "Ange ett namn"
         too_short: "Ditt namn är för kort"
         ok: "Ditt namn ser bra ut"
       username:
         title: "Användarnamn"
-        instructions: "unikt, inga mellanrum, kort"
         short_instructions: "Du kan omnämnas som @%{username}"
         available: "Ditt användarnamn är tillgängligt"
         not_available: "Inte tillgängligt. Prova %{suggestion}?"
@@ -1670,7 +1669,7 @@ sv:
         same_as_username: "Ditt lösenord är detsamma som ditt användarnamn."
         same_as_email: "Ditt lösenord är detsamma som din e-postadress."
         ok: "Ditt lösenord ser bra ut."
-        instructions: "minst %{count} tecken"
+        instructions: "Minst %{count} tecken."
         required: "Ange ett lösenord"
         confirm: "Bekräfta"
       summary:
@@ -2325,6 +2324,7 @@ sv:
         private_message: '%{username} skickade dig ett privat meddelande i "%{topic}" - %{site_title}'
         linked: '%{username} länkade till ett inlägg du gjort från "%{topic}" - %{site_title}'
         watching_first_post: '%{username} skapade ett nytt ämne "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} skrev i "%{topic}" - %{site_title}'
         confirm_title: "Aviseringar aktiverade - %{site_title}"
         confirm_body: "Framgång! Meddelanden har aktiverats."
         custom: "Aviseringar från %{username} hos %{site_title}"
@@ -4176,9 +4176,7 @@ sv:
         latest_version: "Senaste"
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         new_features:
-          title: "\U0001F381 Nya funktioner"
-          dismiss: "Avfärda"
-          learn_more: "Läs mer"
+          learn_more: "Läs mer..."
         last_checked: "Senast kollad"
         refresh_problems: "Uppdatera"
         no_problems: "Inga problem upptäcktes."
@@ -4504,8 +4502,8 @@ sv:
         not_enabled: "N"
         change_settings_short: "Inställningar"
         howto: "Hur installerar jag tillägg?"
-        official: "Officiellt tillägg"
         broken_route: "Det går inte att konfigurera länken till '%{name}'. Se till att annonsblockerare är inaktiverade och försök ladda om sidan."
+        author: "Av %{author}"
       navigation_menu:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"

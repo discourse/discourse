@@ -4,7 +4,9 @@ class ReviewableScoreSerializer < ApplicationSerializer
   REASONS_AND_SETTINGS = {
     post_count: "approve_post_count",
     trust_level: "approve_unless_trust_level",
+    group: "approve_unless_allowed_groups",
     new_topics_unless_trust_level: "approve_new_topics_unless_trust_level",
+    new_topics_unless_allowed_groups: "approve_new_topics_unless_allowed_groups",
     fast_typer: "min_first_post_typing_time",
     auto_silence_regex: "auto_silence_first_post_regex",
     staged: "approve_unless_staged",

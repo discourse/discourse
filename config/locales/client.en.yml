@@ -377,6 +377,7 @@ en:
       copied: "copied!"
       copy: "copy code to clipboard"
       fullscreen: "show code in full screen"
+      view_code: "View code"
 
     drafts:
       label: "Drafts"
@@ -2056,7 +2057,7 @@ en:
           other {# errors/minute}
         }.
 
-    learn_more: "learn more…"
+    learn_more: "Learn more…"
 
     mute: Mute
     unmute: Unmute
@@ -2395,8 +2396,9 @@ en:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
         other: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} users. Nobody will be notified."
       group_mentioned:
-        one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
-        other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
+        one: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} person</a>."
+        other: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} people</a>."
+      larger_group_mentioned: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} people</a>. Are you sure?"
       cannot_see_mention:
         category: "You mentioned @%{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned @%{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this personal message."
@@ -4455,6 +4457,7 @@ en:
       sr_jump_bottom_button: "Jump to the last post"
     fullscreen_table:
       expand_btn: "Expand Table"
+      view_table: "View Table"
 
     second_factor_auth:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
@@ -4735,9 +4738,9 @@ en:
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
         new_features:
-          title: "🎁 New Features"
-          dismiss: "Dismiss"
-          learn_more: "Learn more"
+          title: "What's new"
+          previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          learn_more: "Learn more..."
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
@@ -5133,8 +5136,11 @@ en:
         not_enabled: "N"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
-        official: "Official Plugin"
+        official: "Official Discourse Plugin"
+        experimental: "Experimental Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
+        author: "By %{author}"
+        experimental_badge: "experimental"
 
       navigation_menu:
         sidebar: "Sidebar"

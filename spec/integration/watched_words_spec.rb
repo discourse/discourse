@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe WatchedWord do
-  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true) }
   fab!(:admin)
   fab!(:moderator)
 

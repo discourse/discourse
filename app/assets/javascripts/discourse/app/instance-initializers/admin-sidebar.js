@@ -150,7 +150,7 @@ export function buildAdminSidebar(navConfig) {
 
 export default {
   initialize(owner) {
-    this.currentUser = owner.lookup("service:currentUser");
+    this.currentUser = owner.lookup("service:current-user");
     this.siteSettings = owner.lookup("service:site-settings");
 
     if (!this.currentUser?.staff) {

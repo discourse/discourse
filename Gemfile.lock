@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: 0dc6c6d8fae333ac2dfd91e740eacd9a69b21562
+  revision: 7e069cf205177dd9d7f057dd6311babbe1a5b190
   specs:
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -63,7 +63,7 @@ GEM
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
-    aws-eventstream (1.2.0)
+    aws-eventstream (1.3.0)
     aws-partitions (1.583.0)
     aws-sdk-core (3.130.2)
       aws-eventstream (~> 1, >= 1.0.2)
@@ -92,7 +92,7 @@ GEM
     bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
-    bullet (7.1.3)
+    bullet (7.1.4)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
@@ -146,7 +146,7 @@ GEM
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
     fakeweb (1.3.0)
-    faraday (2.7.11)
+    faraday (2.7.12)
       base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
@@ -187,7 +187,7 @@ GEM
     json (2.6.3)
     json-schema (3.0.0)
       addressable (>= 2.8)
-    json_schemer (2.0.0)
+    json_schemer (2.1.0)
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       simpleidn (~> 0.2)
@@ -247,7 +247,7 @@ GEM
     mustache (1.1.1)
     net-http (0.4.0)
       uri
-    net-imap (0.4.5)
+    net-imap (0.4.6)
       date
       net-protocol
     net-pop (0.1.2)
@@ -256,17 +256,17 @@ GEM
       timeout
     net-smtp (0.4.0)
       net-protocol
-    nio4r (2.6.0)
-    nokogiri (1.15.4)
+    nio4r (2.6.1)
+    nokogiri (1.15.5)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.15.4-aarch64-linux)
+    nokogiri (1.15.5-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.15.4-arm64-darwin)
+    nokogiri (1.15.5-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.4-x86_64-darwin)
+    nokogiri (1.15.5-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.4-x86_64-linux)
+    nokogiri (1.15.5-x86_64-linux)
       racc (~> 1.4)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
@@ -324,7 +324,7 @@ GEM
       pry (>= 0.13, < 0.15)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-    public_suffix (5.0.3)
+    public_suffix (5.0.4)
     puma (6.4.0)
       nio4r (~> 2.0)
     racc (1.7.3)
@@ -396,7 +396,7 @@ GEM
     rspec-mocks (3.12.6)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
-    rspec-rails (6.0.3)
+    rspec-rails (6.1.0)
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       railties (>= 6.1)
@@ -487,7 +487,7 @@ GEM
     syntax_tree (6.1.1)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
-    test-prof (1.2.3)
+    test-prof (1.3.0)
     thor (1.3.0)
     timeout (0.4.1)
     tzinfo (2.0.6)
@@ -638,7 +638,7 @@ DEPENDENCIES
   rspec-html-matchers
   rspec-rails
   rss
-  rswag-specs
+  rswag-specs (= 2.11.0)
   rtlcss
   rubocop-discourse
   ruby-prof

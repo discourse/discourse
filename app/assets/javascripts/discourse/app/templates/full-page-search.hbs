@@ -145,7 +145,7 @@
             <ComboBox
               @value={{this.sortOrder}}
               @content={{this.sortOrders}}
-              @onChange={{action (mut this.sortOrder)}}
+              @onChange={{this.setSortOrder}}
               @id="search-sort-by"
               @options={{hash castInteger=true}}
             />

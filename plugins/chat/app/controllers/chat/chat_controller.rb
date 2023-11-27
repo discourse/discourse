@@ -117,19 +117,6 @@ module Chat
       end
     end
 
-    def set_draft
-      if params[:data].present?
-        Chat::Draft.find_or_initialize_by(
-          user: current_user,
-          chat_channel_id: @chat_channel.id,
-        ).update!(data: params[:data])
-      else
-        Chat::Draft.where(user: current_user, chat_channel_id: @chat_channel.id).destroy_all
-      end
-
-      render json: success_json
-    end
-
     private
 
     def preloaded_chat_message_query

@@ -3048,19 +3048,19 @@ RSpec.describe User do
 
       it "tracks old user record correctly" do
         expect do user.update_ip_address!("127.0.0.1") end.to change {
-          UserIpAddressHistory.where(user_id: user.id).count
+          UserIpAddressHistory.uncached { UserIpAddressHistory.where(user_id: user.id).count }
         }.by(1)
 
         freeze_time 10.minutes.from_now
 
         expect do user.update_ip_address!("0.0.0.0") end.to change {
-          UserIpAddressHistory.where(user_id: user.id).count
+          UserIpAddressHistory.uncached { UserIpAddressHistory.where(user_id: user.id).count }
         }.by(1)
 
         freeze_time 11.minutes.from_now
 
         expect do user.update_ip_address!("127.0.0.1") end.to_not change {
-          UserIpAddressHistory.where(user_id: user.id).count
+          UserIpAddressHistory.uncached { UserIpAddressHistory.where(user_id: user.id).count }
         }
 
         expect(
@@ -3070,7 +3070,7 @@ RSpec.describe User do
         freeze_time 12.minutes.from_now
 
         expect do user.update_ip_address!("0.0.0.1") end.not_to change {
-          UserIpAddressHistory.where(user_id: user.id).count
+          UserIpAddressHistory.uncached { UserIpAddressHistory.where(user_id: user.id).count }
         }
 
         expect(UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)).to eq(

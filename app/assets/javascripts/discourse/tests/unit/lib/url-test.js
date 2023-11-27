@@ -2,6 +2,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL, {
+  getCanonicalUrl,
   getCategoryAndTagUrl,
   prefixProtocol,
   userPath,
@@ -176,6 +177,40 @@ module("Unit | Utility | url", function (hooks) {
     assert.ok(
       DiscourseURL.replaceState.calledWith("#heading1"),
       "in-page anchors call replaceState with the url fragment"
+    );
+  });
+
+  test("getCanonicalUrl", function (assert) {
+    assert.strictEqual(
+      getCanonicalUrl("http://eviltrout.com/t/this-is-a-test/1/"),
+      "http://eviltrout.com/t/this-is-a-test/1",
+      "trailing slashes are removed"
+    );
+
+    assert.strictEqual(
+      getCanonicalUrl(
+        "http://eviltrout.com/t/this-is-a-test/1/?page=2&u=john&not_allowed=true"
+      ),
+      "http://eviltrout.com/t/this-is-a-test/1?page=2",
+      "disallowed query params are removed"
+    );
+
+    assert.strictEqual(
+      getCanonicalUrl("http://eviltrout.com/t/this-is-a-test/2"),
+      "http://eviltrout.com/t/this-is-a-test/2",
+      "canonical urls are not modified"
+    );
+
+    assert.strictEqual(
+      getCanonicalUrl("http://eviltrout.com/t/this-is-a-test/2/?"),
+      "http://eviltrout.com/t/this-is-a-test/2",
+      "trailing /? are removed"
+    );
+
+    assert.strictEqual(
+      getCanonicalUrl("http://eviltrout.com/t/this-is-a-test/2?"),
+      "http://eviltrout.com/t/this-is-a-test/2",
+      "trailing ? are removed"
     );
   });
 });

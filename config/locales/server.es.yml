@@ -1482,7 +1482,6 @@ es:
     email_custom_headers: "Lista de correos electrónicos separados por barras"
     email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Consulta <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciona más detalles a los usuarios acerca de por qué no pueden acceder a un tema en particular. Nota: esto es menos seguro dado que los usuarios sabrán si una URL enlaza a un tema válido."
-    enforce_second_factor: "Obligar a usar la autenticación de dos factores. Seleccionar «all» para obligar a todos y «staff» para obligar solo a usuarios que formen parte del personal."
     force_https: "Forzar al sitio a utilizar solo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión a través de redes sociales y cualquier logo externo / dependencia son compatibles con HTTPS?"
     same_site_cookies: "Solo usar cookies de este sitio (same site cookies), eliminando los vectores de ataque de Cross Site Request Forgery en aquellos navegadores compatibles (Lax o Strict). Advertencia: Strict solo funcionará en sitios que obliguen a iniciar sesión y usen un proveedor de autenticación externo."
     summary_score_threshold: "La puntuación mínima requerida para que una publicación se incluya en el «resumen de este tema»"

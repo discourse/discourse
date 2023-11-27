@@ -1488,14 +1488,13 @@ fi:
           generic: "Palvelun %{provider} tiliäsi käytetään todentamiseen."
       name:
         title: "Nimi"
-        instructions: "koko nimesi (valinnainen)"
-        instructions_required: "Koko nimesi"
+        instructions: "Koko nimesi (valinnainen)."
+        instructions_required: "Koko nimesi."
         required: "Syötä nimesi"
         too_short: "Nimesi on liian lyhyt"
         ok: "Nimesi vaikuttaa hyvältä"
       username:
         title: "Käyttäjätunnus"
-        instructions: "uniikki, ei välilyöntejä, lyhyt"
         short_instructions: "Muut käyttäjät voivat mainita sinut nimellä @%{username}"
         available: "Käyttäjätunnus on vapaana"
         not_available: "Ei saatavilla. Entä %{suggestion}?"
@@ -1697,7 +1696,6 @@ fi:
         same_as_username: "Salasanasi on sama kuin käyttäjätunnuksesi."
         same_as_email: "Salasanasi on sama kuin sähköpostisosoitteesi."
         ok: "Salasana vaikuttaa hyvältä."
-        instructions: "vähintään %{count} merkkiä."
         required: "Syötä salasana"
         confirm: "Vahvista"
         incorrect_password: "Syötetty salasana on virheellinen."
@@ -2356,6 +2354,7 @@ fi:
         private_message: '%{username} lähetti sinulle yksityisviestin ketjussa "%{topic}" – %{site_title}'
         linked: '%{username} linkitti viestiisi ketjusta "%{topic}" – %{site_title}'
         watching_first_post: '%{username} loi uuden ketjun "%{topic}" – %{site_title}'
+        watching_category_or_tag: '%{username} lähetti viestin ketjuun "%{topic}" – %{site_title}'
         confirm_title: "Ilmoitukset käytössä – %{site_title}"
         confirm_body: "Onnistui! Ilmoitukset ovat käytössä."
         custom: "Ilmoitus käyttäjältä %{username} sivustolla %{site_title}"
@@ -4219,9 +4218,7 @@ fi:
         latest_version: "Uusin"
         problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
         new_features:
-          title: "\U0001F381 Uudet ominaisuudet"
-          dismiss: "Sulje"
-          learn_more: "Lue lisää"
+          learn_more: "Lisätietoja..."
         last_checked: "Viimeksi tarkistettu"
         refresh_problems: "Päivitä"
         no_problems: "Ongelmia ei löytynyt."
@@ -4546,8 +4543,8 @@ fi:
         not_enabled: "E"
         change_settings_short: "Asetukset"
         howto: "Kuinka asennan lisäosia?"
-        official: "Virallinen lisäosa"
         broken_route: "Linkin määrittäminen kohteeseen %{name} ei onnistu. Varmista, että mainostenesto-ohjelmat on poistettu käytöstä, ja kokeile ladata sivu uudelleen."
+        author: "Käyttäjältä %{author}"
       navigation_menu:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"

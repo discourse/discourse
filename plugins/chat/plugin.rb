@@ -217,8 +217,8 @@ after_initialize do
       .where(user_id: object.id)
       .order(updated_at: :desc)
       .limit(20)
-      .pluck(:chat_channel_id, :data)
-      .map { |row| { channel_id: row[0], data: row[1] } }
+      .pluck(:chat_channel_id, :data, :thread_id)
+      .map { |row| { channel_id: row[0], data: row[1], thread_id: row[2] } }
   end
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }

@@ -42,6 +42,7 @@ const ApplicationRoute = DiscourseRoute.extend({
   siteSettings: service(),
   clientErrorHandler: service(),
   login: service(),
+  historyStore: service(),
 
   get isOnlyOneExternalLoginMethod() {
     return (
@@ -56,15 +57,17 @@ const ApplicationRoute = DiscourseRoute.extend({
 
   @action
   loading(transition) {
-    if (this.loadingSlider.enabled) {
-      this.loadingSlider.transitionStarted();
-      transition.promise.finally(() => {
-        this.loadingSlider.transitionEnded();
-      });
-      return false;
-    } else {
-      return true; // Use native ember loading implementation
-    }
+    this.loadingSlider.transitionStarted();
+    transition.finally(() => {
+      this.loadingSlider.transitionEnded();
+    });
+    return false;
+  },
+
+  @action
+  willResolveModel(transition) {
+    this.historyStore.willResolveModel(transition);
+    return true;
   },
 
   actions: {

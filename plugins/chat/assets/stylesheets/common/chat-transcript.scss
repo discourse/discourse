@@ -17,17 +17,21 @@
     border-bottom: 0;
   }
 
+  details > .chat-transcript-chained:first-of-type {
+    margin-top: 0.5rem;
+  }
+
   .chat-transcript-meta {
     color: var(--primary-high);
     font-size: var(--font-down-2-rem);
     border-bottom: 1px solid var(--primary-low);
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-  }
 
-  .chat-transcript-channel,
-  .chat-transcript-thread {
-    font-size: var(--font-down-1-rem);
+    img.emoji {
+      height: 1.1em;
+      width: 1.1em;
+    }
   }
 
   .chat-transcript-separator {
@@ -61,6 +65,26 @@
     }
   }
 
+  .topic-body .cooked & {
+    > details {
+      padding: 0.5rem;
+
+      > summary {
+        display: flex;
+
+        &::before {
+          line-height: 1;
+        }
+
+        .chat-transcript-thread {
+          &-header {
+            margin-bottom: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+
   .chat-transcript-user-avatar .avatar {
     aspect-ratio: 20 / 20;
   }
@@ -81,6 +105,8 @@
 
     .chat-transcript-reaction {
       @include chat-reaction;
+
+      pointer-events: none;
     }
   }
 

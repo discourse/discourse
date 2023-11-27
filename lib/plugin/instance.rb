@@ -77,12 +77,14 @@ class Plugin::Instance
   def self.find_all(parent_path)
     [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
-        source = File.read(path)
-        metadata = Plugin::Metadata.parse(source)
-        plugins << self.new(metadata, path)
-      end
+      Dir["#{parent_path}/*/plugin.rb"].sort.each { |path| plugins << parse_from_source(path) }
     end
+  end
+
+  def self.parse_from_source(path)
+    source = File.read(path)
+    metadata = Plugin::Metadata.parse(source)
+    self.new(metadata, path)
   end
 
   def initialize(metadata = nil, path = nil)
@@ -514,6 +516,15 @@ class Plugin::Instance
 
   def git_repo
     @git_repo ||= GitRepo.new(directory, name)
+  end
+
+  def discourse_owned?
+    return false if commit_hash.blank?
+    parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
+    return false if parsed_commit_url.blank?
+    github_org = parsed_commit_url.path.split("/")[1]
+    (github_org == "discourse" || github_org == "discourse-org") &&
+      parsed_commit_url.host == "github.com"
   end
 
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled

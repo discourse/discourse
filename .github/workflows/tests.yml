@@ -22,7 +22,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -116,6 +116,12 @@ jobs:
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins'
         run: bin/rake plugin:pull_compatible_all
+
+      - name: Plugin gems cache
+        uses: actions/cache@v3
+        with:
+          path: plugins/*/gems
+          key: ${{ runner.os }}-plugin-gems-${{matrix.ruby}}-${{ hashFiles('plugins/*/plugin.rb') }}
 
       - name: Checkout official themes
         if: matrix.target == 'themes' && matrix.build_type == 'system'
@@ -289,7 +295,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }})
+    name: core frontend (${{ matrix.browser }})${{ matrix.updated_ember && ' (Ember 5)' || '' }}
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
@@ -301,6 +307,10 @@ jobs:
       fail-fast: false
       matrix:
         browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+        updated_ember: [false]
+        include:
+          - browser: Chrome
+            updated_ember: true
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
@@ -326,6 +336,10 @@ jobs:
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
+
+      - name: Upgrade Ember
+        if: matrix.updated_ember == true
+        run: script/switch_ember_version 5
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse
