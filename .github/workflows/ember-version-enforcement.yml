@@ -26,7 +26,7 @@ jobs:
           cd app/assets/javascripts/discourse
           yarn install
       - name: "Check ember version"
-        shell: yarn node {0}
+        shell: cat {0} | node -
         working-directory: app/assets/javascripts/discourse
         run: |
           console.log(process.cwd())
