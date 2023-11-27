@@ -530,14 +530,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer (= 7.0.7)
-  actionpack (= 7.0.7)
-  actionview (= 7.0.7)
+  actionmailer
+  actionpack
+  actionview
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel (= 7.0.7)
-  activerecord (= 7.0.7)
-  activesupport (= 7.0.7)
+  activemodel
+  activerecord
+  activesupport
   addressable
   annotate
   aws-sdk-s3
@@ -624,7 +624,7 @@ DEPENDENCIES
   rails-dom-testing
   rails_failover
   rails_multisite
-  railties (= 7.0.7)
+  railties
   rake
   rb-fsevent
   rbtrace
