@@ -1,0 +1,36 @@
+name: Ember Version Enforcement
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+      - name: Yarn install
+        run: |
+          cd app/assets/javascripts/discourse
+          yarn install
+      - name: "Check ember version"
+        shell: node {0}
+        run: |
+          const version = require("ember-source/package.json").version;
+          console.log("Version is", version);
+          if(version.split(".")[0] !== 3){
+            console.log(`Ember has unexpectedly been upgraded to version ${version}. If this is intentional, remove this github workflow.`);
+            process.exit(1)
+          }
