@@ -75,7 +75,7 @@ export default Component.extend(
       this.set(
         "selectKit",
         EmberObject.create({
-          uniqueID: this.attrs?.id?.value || this.attrs?.id || guidFor(this),
+          uniqueID: this.id || guidFor(this),
           valueProperty: this.valueProperty,
           nameProperty: this.nameProperty,
           labelProperty: this.labelProperty,
@@ -1128,15 +1128,14 @@ export default Component.extend(
 
     _deprecateMutations() {
       this.actions ??= {};
-      this.attrs ??= {};
 
-      if (!this.attrs.onChange && !this.actions.onChange) {
+      if (!this.onChange && !this.actions.onChange) {
         this._deprecated(
           "Implicit mutation has been deprecated, please use `onChange` handler"
         );
 
         this.actions.onChange =
-          this.attrs.onSelect ||
+          this.onSelect ||
           this.actions.onSelect ||
           ((value) => this.set("value", value));
       }
