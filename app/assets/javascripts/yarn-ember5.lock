@@ -1954,6 +1954,11 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
+"@types/retry@0.12.2":
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/@types/retry/-/retry-0.12.2.tgz#ed279a64fa438bb69f2480eda44937912bb7480a"
+  integrity sha512-XISRgDJ2Tc5q4TRqvgJtzsRkFYNJzZrhTdtMoGVBttwzzQJkPnS3WWTFc7kuDRoPtPakl+T+OfdEUjYJj7Jbow==
+
 "@types/rimraf@^2.0.2", "@types/rimraf@^2.0.3":
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@types/rimraf/-/rimraf-2.0.5.tgz#368fb04d59630b727fc05a74d2ca557f64a8ef98"
@@ -2024,23 +2029,33 @@
     "@uppy/companion-client" "^3.1.2"
     "@uppy/utils" "^5.2.0"
 
-"@uppy/aws-s3@3.0.6":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@uppy/aws-s3/-/aws-s3-3.0.6.tgz#09916ad52fe87fd8f0380a37faf4c0ef0126f253"
-  integrity sha512-T+QC4u8/Dyh4qxW3E/Zy7LPTuT3K8dugrVPF3R3+cwfImmSusQZU6PYww3LhV8iumOwhgfsTll7ip0FcYCm2DA==
+"@uppy/aws-s3-multipart@^3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@uppy/aws-s3-multipart/-/aws-s3-multipart-3.9.0.tgz#b88a20c71aa76a26cd0e4ecb7f5feb92778346bb"
+  integrity sha512-xBhiB2jqcVOi4O3BbIrJlpRoFLCbKDes7ki6mGJ5TXTBt7fxRlvB/PwK1UTioG7fiecqskxQEA2uYWb80j+XNA==
   dependencies:
-    "@uppy/companion-client" "^3.1.2"
-    "@uppy/utils" "^5.2.0"
-    "@uppy/xhr-upload" "^3.1.1"
+    "@uppy/companion-client" "^3.6.0"
+    "@uppy/utils" "^5.6.0"
+
+"@uppy/aws-s3@3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@uppy/aws-s3/-/aws-s3-3.5.0.tgz#9b1c30579bf6c9e9a6666629abe5bb66f98e1be9"
+  integrity sha512-ygi+nGajSYhjXLMcmsU8M2MyvqA3JRIj/CkBVJPyR8JzNKcsUj75ehm7WRNgKs5KbGMHzc1y12QH+Ui9AnQzvQ==
+  dependencies:
+    "@uppy/aws-s3-multipart" "^3.9.0"
+    "@uppy/companion-client" "^3.6.0"
+    "@uppy/utils" "^5.6.0"
+    "@uppy/xhr-upload" "^3.5.0"
     nanoid "^4.0.0"
 
-"@uppy/companion-client@^3.1.2", "@uppy/companion-client@^3.1.3":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@uppy/companion-client/-/companion-client-3.1.3.tgz#b4889cfca6a1d60e044d0594a8da56304ba5d9fa"
-  integrity sha512-l70qOd4P9PSqxPDOFD1LMusDGGi36LCCiQko/e+Uw5hBtzN9vhAG5rQm242FlNoFdxK5T6jmfoZJSVel0UTvzg==
+"@uppy/companion-client@^3.1.2", "@uppy/companion-client@^3.6.0":
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/@uppy/companion-client/-/companion-client-3.6.1.tgz#dc6f1172a98988d17ffafe13ac2bd86b878ff7e0"
+  integrity sha512-UqerOPC2s2OTGliKcgkPn28XtxxLScNGGsV3gV5xGjN5LhWjKEsNXAmqFu9lsoAfL4PbDphVELvsuSmXkxVeig==
   dependencies:
-    "@uppy/utils" "^5.3.0"
+    "@uppy/utils" "^5.6.0"
     namespace-emitter "^2.0.1"
+    p-retry "^6.1.0"
 
 "@uppy/core@3.0.4":
   version "3.0.4"
@@ -2068,10 +2083,18 @@
   resolved "https://registry.yarnpkg.com/@uppy/store-default/-/store-default-3.0.3.tgz#37d0e95c8fd360b3283bca7fdf94cce7400008e7"
   integrity sha512-/zlvQNj4HjkthI+7dNdj/8mOlTg1Zb1gJ/ZsOxof0g3xXD+OAwm7asRnOwpfj2dos+lExdW/zMn8XsRGsuvb6Q==
 
-"@uppy/utils@5.4.3", "@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0", "@uppy/utils@^5.3.0", "@uppy/utils@^5.4.0":
+"@uppy/utils@5.4.3":
   version "5.4.3"
   resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.4.3.tgz#5d8c238805a35dec5b0d3cd4bea4e0a1b7e54584"
   integrity sha512-ewQTWQ5Wu1/ocz/lLCkhoXQwHLRktFK4CxrOsZmeCLK9LxjD1GOwSFjOuL199WDQKXiCle6SVlAJGQ3SDlXVkg==
+  dependencies:
+    lodash "^4.17.21"
+    preact "^10.5.13"
+
+"@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0", "@uppy/utils@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.6.0.tgz#07dd996353bd49738b79d8c9e232edf7cabbc07e"
+  integrity sha512-Blr6Po6a49niTugSzuguNtH9M1wSU4vdRnaGBsScv+JjcslzG3OkMmfnnhesj1ZIVyxMdVDjyPGXoqh4Wm2Dzg==
   dependencies:
     lodash "^4.17.21"
     preact "^10.5.13"
@@ -2085,13 +2108,13 @@
     "@uppy/utils" "^5.2.0"
     nanoid "^4.0.0"
 
-"@uppy/xhr-upload@^3.1.1":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-3.3.0.tgz#37b5f16467e32f39da4323113411b0ea159d4732"
-  integrity sha512-tgCVlNSBMj94iazCSQoOXfWYPAv6pZSzXK9ljkchKb2fjN6zmbkOJiQIaDUG+LxM/GX0qDi6sNNxUlhvz5cpbg==
+"@uppy/xhr-upload@^3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-3.5.0.tgz#e7890a0e1e4827310c07ca99401409abc8775fe7"
+  integrity sha512-dSmEjVu8spidRYYOxRI2qw9E/Jpiy1qKNdluay7YYPIJDd0tp/shkgB4Zk2CVGKKTatLccZKzjNlJ7nOyaikow==
   dependencies:
-    "@uppy/companion-client" "^3.1.3"
-    "@uppy/utils" "^5.4.0"
+    "@uppy/companion-client" "^3.6.0"
+    "@uppy/utils" "^5.6.0"
     nanoid "^4.0.0"
 
 "@webassemblyjs/ast@1.11.6", "@webassemblyjs/ast@^1.11.5":
@@ -7222,6 +7245,11 @@ is-negative-zero@^2.0.2:
   resolved "https://registry.yarnpkg.com/is-negative-zero/-/is-negative-zero-2.0.2.tgz#7bf6f03a28003b8b3965de3ac26f664d765f3150"
   integrity sha512-dqJvarLawXsFbNDeJW7zAz8ItJ9cd28YufuuFzh0G8pNHjJMnY08Dv7sYX2uF5UpQOwieAeOExEYAWWfu7ZZUA==
 
+is-network-error@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/is-network-error/-/is-network-error-1.0.0.tgz#757d7af42263f18f616626e63af12abb19002bbc"
+  integrity sha512-P3fxi10Aji2FZmHTrMPSNFbNC6nnp4U5juPAIjXPHkUNubi4+qK7vvdsaNpAUwXslhYm9oyjEYTxs1xd/+Ph0w==
+
 is-number-object@^1.0.4:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/is-number-object/-/is-number-object-1.0.7.tgz#59d50ada4c45251784e9904f5246c742f07a42fc"
@@ -8763,6 +8791,15 @@ p-locate@^6.0.0:
   dependencies:
     p-limit "^4.0.0"
 
+p-retry@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/p-retry/-/p-retry-6.1.0.tgz#ea5c188f9f818a5bfa89a27bdf043c74fa9be472"
+  integrity sha512-fJLEQ2KqYBJRuaA/8cKMnqhulqNM+bpcjYtXNex2t3mOXKRYPitAJt9NacSf8XAFzcYahSAbKpobiWDSqHSh2g==
+  dependencies:
+    "@types/retry" "0.12.2"
+    is-network-error "^1.0.0"
+    retry "^0.13.1"
+
 p-try@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-1.0.0.tgz#cbc79cdbaf8fd4228e13f621f2b1a237c1b207b3"
@@ -9459,6 +9496,11 @@ ret@~0.1.10:
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
   integrity sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==
+
+retry@^0.13.1:
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/retry/-/retry-0.13.1.tgz#185b1587acf67919d63b357349e03537b2484658"
+  integrity sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==
 
 reusify@^1.0.4:
   version "1.0.4"
