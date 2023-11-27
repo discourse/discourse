@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { reads } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import { emojiUnescape } from "discourse/lib/text";
 import {
   hasTrackedFilter,
@@ -16,6 +17,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const NavItem = EmberObject.extend({
+  topicTrackingState: service(),
+
   @discourseComputed("name")
   title: {
     get(name) {

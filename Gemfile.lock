@@ -638,7 +638,7 @@ DEPENDENCIES
   rspec-html-matchers
   rspec-rails
   rss
-  rswag-specs
+  rswag-specs (= 2.11.0)
   rtlcss
   rubocop-discourse
   ruby-prof

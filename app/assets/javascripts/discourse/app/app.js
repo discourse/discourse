@@ -44,6 +44,10 @@ const Discourse = Application.extend({
       Error.stackTraceLimit = Infinity;
     }
 
+    // Our scroll-manager service takes care of storing and restoring scroll position.
+    // Disable browser handling:
+    window.history.scrollRestoration = "manual";
+
     loadInitializers(this);
   },
 

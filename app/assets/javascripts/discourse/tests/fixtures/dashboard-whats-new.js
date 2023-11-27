@@ -1,5 +1,5 @@
 export default {
-  "/admin/dashboard/new-features.json": {
+  "/admin/dashboard/whats-new.json": {
     new_features: [
       {
         id: 1,

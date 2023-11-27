@@ -61,7 +61,6 @@ export default {
     session.serviceWorkerURL = setupData.serviceWorkerUrl;
     session.assetVersion = setupData.assetVersion;
     session.disableCustomCSS = setupData.disableCustomCss === "true";
-    session.markdownItURL = setupData.markdownItUrl;
 
     if (setupData.mbLastFileChangeId) {
       session.mbLastFileChangeId = parseInt(setupData.mbLastFileChangeId, 10);

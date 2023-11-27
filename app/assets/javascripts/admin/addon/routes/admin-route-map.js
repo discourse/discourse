@@ -15,7 +15,7 @@ export default function () {
         resetNamespace: true,
       });
       this.route("admin.dashboardNewFeatures", {
-        path: "/dashboard/new-features",
+        path: "/dashboard/whats-new",
         resetNamespace: true,
       });
     });
