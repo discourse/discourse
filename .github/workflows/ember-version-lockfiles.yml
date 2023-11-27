@@ -12,6 +12,8 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
       - name: Move lockfile to correct location
         run: |
           if [[ -f yarn-ember3.lock ]]; then
