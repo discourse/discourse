@@ -26,6 +26,10 @@ export default class RouteScrollManager extends Service {
 
   @bind
   routeWillChange() {
+    console.error(
+      "storing",
+      [this.scrollElement.scrollLeft, this.scrollElement.scrollTop].toString()
+    );
     this.historyStore.set(STORE_KEY, [
       this.scrollElement.scrollLeft,
       this.scrollElement.scrollTop,
@@ -43,6 +47,9 @@ export default class RouteScrollManager extends Service {
     }
 
     const scrollLocation = this.historyStore.get(STORE_KEY) || [0, 0];
+
+    console.error("restoring", scrollLocation.toString());
+
     schedule("afterRender", () => {
       this.scrollElement.scrollTo(...scrollLocation);
     });
