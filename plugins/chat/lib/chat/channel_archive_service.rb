@@ -152,17 +152,20 @@ module Chat
             batch_thread_added = false
 
             message_chunk.each do |message|
-              # We duplicate the original message when it spans across multiple posts
+              # When a thread spans across multiple posts and the first message is part of a thread in
+              # a previous post, we need to duplicate the original message to give context to the user.
 
               if thread_om.present?
                 if batch.empty? && message_chunk.size > ARCHIVED_MESSAGES_PER_POST &&
                      message&.thread_id == thread_om&.thread_id && message != thread_om
                   batch << thread_om
 
+                  # We determine the correct range for the current part of the thread.
                   batch_thread_ranges[thread_om.id] = thread_ranges[message.thread_id].first
                   thread_ranges[message.thread_id].slice!(0)
                 elsif thread_ranges.has_key?(message.thread_id) &&
                       thread_ranges[message.thread_id].present? && batch_thread_added == false
+                  # We determine the correct range for the current part of the thread.
                   batch_thread_ranges[thread_om.id] = thread_ranges[message.thread_id].first
                   thread_ranges[message.thread_id].slice!(0)
 
@@ -198,6 +201,9 @@ module Chat
     private
 
     def create_post_from_batch(chat_messages, batch_thread_ranges)
+      # It's used to call the TranscriptService, which will
+      # generate the markdown for a given set of messages.
+
       create_post(
         Chat::TranscriptService.new(
           chat_channel,
@@ -213,6 +219,10 @@ module Chat
     end
 
     def calculate_thread_ranges(message_chunk, thread, thread_om, post_last_message)
+      # Message batches can be greater than the maximum number of messages
+      # per post if we also include threads. This is used to calculate all
+      # the ranges when we split the threads that are included in the batch.
+
       ranges = {}
       thread_size = thread.size - 1
       last_thread_index = 0
