@@ -26,7 +26,7 @@ jobs:
           cd app/assets/javascripts/discourse
           yarn install
       - name: "Check ember version"
-        shell: node {0}
+        shell: yarn node {0}
         working-directory: app/assets/javascripts/discourse
         run: |
           const version = require("ember-source/package.json").version;
