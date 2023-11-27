@@ -31,7 +31,7 @@ jobs:
           node -e '
             const version = require("ember-source/package.json").version;
             console.log("Ember version is", version);
-            if(version.split(".")[0] !== 3){
+            if(version.split(".")[0] !== "3"){
               console.log(`Ember has unexpectedly been upgraded to version ${version}. If this is intentional, remove this github workflow.`);
               process.exit(1);
             }
