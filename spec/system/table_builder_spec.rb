@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 describe "Table Builder", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:composer) { PageObjects::Components::Composer.new }
   let(:insert_table_modal) { PageObjects::Modals::InsertTable.new }
-  let(:sample_table_md) {}
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post1) { create_post(user: user, topic: topic, raw: <<~RAW) }
         |Make   | Model   | Year|
