@@ -395,7 +395,7 @@ class BulkImport::Generic < BulkImport::Base
         original_username: row["original_username"],
         name: row["name"],
         email: row["email"],
-        external_id: sso_record&.fetch("external_id"),
+        external_id: sso_record&.fetch("external_id", nil),
         created_at: to_datetime(row["created_at"]),
         last_seen_at: to_datetime(row["last_seen_at"]),
         admin: row["admin"],
@@ -668,7 +668,7 @@ class BulkImport::Generic < BulkImport::Base
     raw = row["raw"]
     placeholders = row["placeholders"]&.then { |json| JSON.parse(json) }
 
-    if (polls = placeholders&.fetch("polls"))
+    if (polls = placeholders&.fetch("polls", nil))
       poll_mapping = polls.map { |poll| [poll["poll_id"], poll["placeholder"]] }.to_h
 
       poll_details = query(<<~SQL, { post_id: row["id"] })
@@ -689,7 +689,7 @@ class BulkImport::Generic < BulkImport::Base
       poll_details.close
     end
 
-    if (mentions = placeholders&.fetch("mentions"))
+    if (mentions = placeholders&.fetch("mentions", nil))
       mentions.each do |mention|
         name =
           if mention["type"] == "user"
@@ -703,7 +703,7 @@ class BulkImport::Generic < BulkImport::Base
       end
     end
 
-    if (event = placeholders&.fetch("event"))
+    if (event = placeholders&.fetch("event", nil))
       event_details = @source_db.get_first_row(<<~SQL, { event_id: event["event_id"] })
         SELECT *
           FROM events
