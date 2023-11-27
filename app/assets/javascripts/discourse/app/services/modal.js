@@ -5,6 +5,7 @@ import Service, { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import $ from "jquery";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
+import { EMBER_MAJOR_VERSION } from "discourse/lib/ember-version";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import deprecated, {
   withSilencedDeprecations,
@@ -23,6 +24,8 @@ const LEGACY_OPTS = new Set([
 
 @disableImplicitInjections
 class ModalService extends Service {
+  @service dialog;
+
   @tracked activeModal;
   @tracked opts = {};
 
@@ -43,6 +46,23 @@ class ModalService extends Service {
    * @returns {Promise} A promise that resolves when the modal is closed, with any data passed to closeModal
    */
   show(modal, opts) {
+    if (typeof modal === "string") {
+      this.dialog.alert(
+        `Error: the '${modal}' modal needs updating to work with the latest version of Discourse. See https://meta.discourse.org/t/268057.`
+      );
+      deprecated(
+        `Defining modals using a controller is no longer supported. Use the component-based API instead. (modal: ${modal})`,
+        {
+          id: "discourse.modal-controllers",
+          since: "3.1",
+          dropFrom: "3.2",
+          url: "https://meta.discourse.org/t/268057",
+          raiseError: true,
+        }
+      );
+      return;
+    }
+
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
     let resolveShowPromise;
@@ -50,7 +70,7 @@ class ModalService extends Service {
       resolveShowPromise = resolve;
     });
 
-    this.opts = opts || {};
+    this.opts = opts ??= {};
     this.activeModal = { component: modal, opts, resolveShowPromise };
 
     const unsupportedOpts = Object.keys(opts).filter((key) =>
@@ -75,7 +95,7 @@ class ModalService extends Service {
 }
 
 // Remove all logic below when legacy modals are dropped (deprecation: discourse.modal-controllers)
-export default class ModalServiceWithLegacySupport extends ModalService {
+class ModalServiceWithLegacySupport extends ModalService {
   @service appEvents;
 
   @tracked name;
@@ -261,3 +281,7 @@ export default class ModalServiceWithLegacySupport extends ModalService {
     return this.name && !this.activeModal;
   }
 }
+
+export default EMBER_MAJOR_VERSION >= 4
+  ? ModalService
+  : ModalServiceWithLegacySupport;
