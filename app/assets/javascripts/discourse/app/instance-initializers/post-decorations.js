@@ -234,11 +234,11 @@ export default {
           ".open-popup-link.btn-expand-table"
         );
 
-        expandTableBtn.removeEventListener(
+        expandTableBtn?.removeEventListener(
           "click",
           generateFullScreenTableModal
         );
-        editTableBtn.removeEventListener("click", generateSpreadsheetModal);
+        editTableBtn?.removeEventListener("click", generateSpreadsheetModal);
       }
 
       api.decorateCookedElement(
