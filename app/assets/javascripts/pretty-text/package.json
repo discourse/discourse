@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "discourse-common": "1.0.0",
-    "ember-auto-import": "^2.6.3",
+    "ember-auto-import": "^2.7.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0"
   },

@@ -88,7 +88,7 @@
     "discourse-i18n": "1.0.0",
     "discourse-markdown-it": "1.0.0",
     "discourse-plugins": "1.0.0",
-    "ember-auto-import": "^2.6.3",
+    "ember-auto-import": "^2.7.0",
     "ember-buffered-proxy": "^2.1.1",
     "ember-cached-decorator-polyfill": "^1.0.2",
     "ember-cli": "~5.0.0",
