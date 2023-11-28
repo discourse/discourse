@@ -92,12 +92,12 @@ class NewPostManager
       return :post_count
     end
 
-    if user.groups.any? && !user.in_any_groups?(SiteSetting.approve_unless_allowed_groups_map)
+    if !user.staged? && !user.in_any_groups?(SiteSetting.approve_unless_allowed_groups_map)
       return :group
     end
 
     if (
-         manager.args[:title].present? && user.groups.any? &&
+         manager.args[:title].present? && !user.staged? &&
            !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
        )
       return :new_topics_unless_allowed_groups
