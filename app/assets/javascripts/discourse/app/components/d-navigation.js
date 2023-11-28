@@ -22,16 +22,24 @@ export default Component.extend({
 
   // Should be a `readOnly` instead but some themes/plugins still pass
   // the `categories` property into this component
-  @discourseComputed("site.categoriesList")
-  categories(categoriesList) {
+  @discourseComputed()
+  categories() {
+    let categories = this.site.categoriesList;
+
+    if (!this.siteSettings.allow_uncategorized_topics) {
+      categories = categories.filter(
+        (category) => category.id !== this.site.uncategorized_category_id
+      );
+    }
+
     if (this.currentUser?.indirectly_muted_category_ids) {
-      return categoriesList.filter(
+      categories = categories.filter(
         (category) =>
           !this.currentUser.indirectly_muted_category_ids.includes(category.id)
       );
-    } else {
-      return categoriesList;
     }
+
+    return categories;
   },
 
   @discourseComputed("category")

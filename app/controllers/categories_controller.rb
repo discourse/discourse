@@ -11,6 +11,7 @@ class CategoriesController < ApplicationController
                    redirect
                    find_by_slug
                    visible_groups
+                   find
                    search
                  ]
 
@@ -299,6 +300,24 @@ class CategoriesController < ApplicationController
     render json: success_json.merge(groups: groups || [])
   end
 
+  def find
+    category = Category.find_by_slug_path_with_id(params[:category_slug_path_with_id])
+    raise Discourse::NotFound if category.blank?
+    guardian.ensure_can_see!(category)
+
+    ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+
+    render json: {
+             category: SiteCategorySerializer.new(category, scope: guardian, root: nil),
+             ancestors:
+               ActiveModel::ArraySerializer.new(
+                 ancestors,
+                 scope: guardian,
+                 each_serializer: SiteCategorySerializer,
+               ),
+           }
+  end
+
   def search
     term = params[:term].to_s.strip
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
@@ -334,10 +353,7 @@ class CategoriesController < ApplicationController
         ) if term.present?
 
     categories =
-      categories.where(
-        "id = :id OR parent_category_id = :id",
-        id: parent_category_id,
-      ) if parent_category_id.present?
+      categories.where(parent_category_id: parent_category_id) if parent_category_id.present?
 
     categories =
       categories.where.not(id: SiteSetting.uncategorized_category_id) if !include_uncategorized
@@ -358,7 +374,7 @@ class CategoriesController < ApplicationController
       END
     SQL
 
-    categories.order(:id)
+    categories = categories.order(:id)
 
     render json: categories, each_serializer: SiteCategorySerializer
   end

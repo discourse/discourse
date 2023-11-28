@@ -488,6 +488,22 @@ Category.reopenClass({
     return category;
   },
 
+  async asyncFindBySlugPathWithID(slugPathWithID) {
+    const result = await ajax("/categories/find", {
+      data: {
+        category_slug_path_with_id: slugPathWithID,
+      },
+    });
+
+    if (result["ancestors"]) {
+      result["ancestors"].map((category) =>
+        Site.current().updateCategory(category)
+      );
+    }
+
+    return Site.current().updateCategory(result.category);
+  },
+
   findBySlugPathWithID(slugPathWithID) {
     let parts = slugPathWithID.split("/").filter(Boolean);
     // slugs found by star/glob pathing in ember do not automatically url decode - ensure that these are decoded

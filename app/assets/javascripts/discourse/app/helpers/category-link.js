@@ -1,5 +1,6 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import categoryVariables from "discourse/helpers/category-variables";
 import { isRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -180,5 +181,9 @@ export function defaultCategoryLinkRenderer(category, opts) {
       })}
       </span>`;
   }
-  return `<${tagName} class="badge-category__wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
+
+  const style = categoryVariables(category);
+  const extraAttrs = style.string ? `style="${style}"` : "";
+
+  return `<${tagName} class="badge-category__wrapper ${extraClasses}" ${extraAttrs} ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }
