@@ -1,7 +1,6 @@
 export default function () {
   this.route("admin", { resetNamespace: true }, function () {
     this.route("dashboard", { path: "/" }, function () {
-      // eslint-disable-next-line ember/no-shadow-route-definition
       this.route("general", { path: "/" });
       this.route("admin.dashboardModeration", {
         path: "/dashboard/moderation",
@@ -173,7 +172,6 @@ export default function () {
           "adminSearchLogs",
           { path: "/search_logs", resetNamespace: true },
           function () {
-            // eslint-disable-next-line ember/no-unnecessary-index-route
             this.route("index", { path: "/" });
             this.route("term");
           }
@@ -217,7 +215,6 @@ export default function () {
       "adminPlugins",
       { path: "/plugins", resetNamespace: true },
       function () {
-        // eslint-disable-next-line ember/no-unnecessary-index-route
         this.route("index", { path: "/" });
       }
     );
@@ -228,7 +225,7 @@ export default function () {
   this.route("admin-revamp", { resetNamespace: true }, function () {
     this.route("lobby", { path: "/" }, function () {});
 
-    this.route("config", { path: "config" }, function () {
+    this.route("config", function () {
       this.route("area", { path: "/:area" });
     });
   });
