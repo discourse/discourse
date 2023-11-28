@@ -50,14 +50,6 @@
     {{/if}}
   </div>
 
-  <PluginOutlet
-    @name="search-menu-after-term-input"
-    @outletArgs={{hash
-      openSearchMenu=this.open
-      advancedSearchButtonHref=this.advancedSearchButtonHref
-    }}
-  />
-
   {{#if @inlineResults}}
     <SearchMenu::Results
       @loading={{this.loading}}
