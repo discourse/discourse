@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { cancel, next } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
@@ -20,17 +20,13 @@ export default class FloatKitInstance {
   content = null;
 
   @action
-  async show() {
+  show() {
     this.expanded = true;
-
-    await new Promise((resolve) => next(resolve));
   }
 
   @action
-  async close() {
+  close() {
     this.expanded = false;
-
-    await new Promise((resolve) => next(resolve));
   }
 
   @action

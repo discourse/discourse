@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserSecurityKey do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "name length validation" do
     it "doesn't allow the name to be longer than the limit" do

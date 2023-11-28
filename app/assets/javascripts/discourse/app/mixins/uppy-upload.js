@@ -47,6 +47,17 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     return {};
   },
 
+  /**
+   * Overridable for custom file validations, executed before uploading.
+   *
+   * @param {object} file
+   *
+   * @returns {boolean}
+   */
+  isUploadedFileAllowed() {
+    return true;
+  },
+
   uploadingOrProcessing: or("uploading", "processing"),
 
   @on("willDestroyElement")
@@ -112,7 +123,9 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           },
           this.validateUploadedFilesOptions()
         );
-        const isValid = validateUploadedFile(currentFile, validationOpts);
+        const isValid =
+          validateUploadedFile(currentFile, validationOpts) &&
+          this.isUploadedFileAllowed(currentFile);
         this.setProperties({
           uploadProgress: 0,
           uploading: isValid && this.autoStartUploads,
@@ -384,7 +397,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
         }
 
-        return ajax(getUrl(`${this.uploadRootPath}/generate-presigned-put`), {
+        return ajax(`${this.uploadRootPath}/generate-presigned-put`, {
           type: "POST",
           data,
         })
@@ -456,7 +469,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _completeExternalUpload(file) {
-    return ajax(getUrl(`${this.uploadRootPath}/complete-external-upload`), {
+    return ajax(`${this.uploadRootPath}/complete-external-upload`, {
       type: "POST",
       data: deepMerge(
         { unique_identifier: file.meta.uniqueUploadIdentifier },

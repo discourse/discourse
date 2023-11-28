@@ -49,6 +49,8 @@ da:
     bookmarkable:
       notification_title: "besked i %{channel_name}"
     personal_chat: "personlig chat"
+    onebox:
+      thread_title_connector: "i"
   discourse_push_notifications:
     popup:
       chat_mention:

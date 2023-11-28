@@ -26,7 +26,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     );
     assert.ok(query(publicKey), "shows public key");
 
-    await click(".modal-footer .d-modal-cancel");
+    await click(".d-modal__footer .d-modal-cancel");
 
     await click(".create-actions .btn-primary");
     await click("#remote");

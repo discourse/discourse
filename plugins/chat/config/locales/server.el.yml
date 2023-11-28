@@ -22,6 +22,8 @@ el:
         single_user: "%{username}"
     mention_warning:
       dismiss: "απόρριψη"
+    onebox:
+      thread_title_connector: "σε"
   discourse_push_notifications:
     popup:
       chat_mention:

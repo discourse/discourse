@@ -230,8 +230,8 @@ RSpec.describe Chat::Api::ChannelsController do
   end
 
   describe "#create" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:admin)
+    fab!(:category)
 
     let(:params) do
       {

@@ -6,7 +6,10 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 77
+  BASE_COMPILER_VERSION = 78
+
+  class SettingsMigrationError < StandardError
+  end
 
   attr_accessor :child_components
 
@@ -33,6 +36,7 @@ class Theme < ActiveRecord::Base
            through: :parent_theme_relation,
            source: :parent_theme
   has_many :color_schemes
+  has_many :theme_settings_migrations
   belongs_to :remote_theme, dependent: :destroy
   has_one :theme_modifier_set, dependent: :destroy
   has_one :theme_svg_sprite, dependent: :destroy
@@ -58,6 +62,9 @@ class Theme < ActiveRecord::Base
            class_name: "ThemeField"
   has_many :builder_theme_fields,
            -> { where("name IN (?)", ThemeField.scss_fields) },
+           class_name: "ThemeField"
+  has_many :migration_fields,
+           -> { where(target_id: Theme.targets[:migrations]) },
            class_name: "ThemeField"
 
   validate :component_validations
@@ -380,6 +387,7 @@ class Theme < ActiveRecord::Base
         extra_scss: 5,
         extra_js: 6,
         tests_js: 7,
+        migrations: 8,
       )
   end
 
@@ -828,22 +836,51 @@ class Theme < ActiveRecord::Base
     contents
   end
 
-  def convert_settings
-    settings.each do |setting|
-      setting_row = ThemeSetting.where(theme_id: self.id, name: setting.name.to_s).first
+  def migrate_settings(start_transaction: true)
+    block = -> do
+      runner = ThemeSettingsMigrationsRunner.new(self)
+      results = runner.run
 
-      if setting_row && setting_row.data_type != setting.type
-        if (
-             setting_row.data_type == ThemeSetting.types[:list] &&
-               setting.type == ThemeSetting.types[:string] && setting.json_schema.present?
-           )
-          convert_list_to_json_schema(setting_row, setting)
+      next if results.blank?
+
+      old_settings = self.theme_settings.pluck(:name)
+      self.theme_settings.destroy_all
+
+      final_result = results.last
+      final_result[:settings_after].each do |key, val|
+        self.update_setting(key.to_sym, val)
+      rescue Discourse::NotFound
+        if old_settings.include?(key)
+          final_result[:settings_after].delete(key)
         else
-          Rails.logger.warn(
-            "Theme setting type has changed but cannot be converted. \n\n #{setting.inspect}",
-          )
+          raise Theme::SettingsMigrationError.new(
+                  I18n.t(
+                    "themes.import_error.migrations.unknown_setting_returned_by_migration",
+                    name: final_result[:original_name],
+                    setting_name: key,
+                  ),
+                )
         end
       end
+
+      results.each do |res|
+        record =
+          ThemeSettingsMigration.new(
+            theme_id: self.id,
+            version: res[:version],
+            name: res[:name],
+            theme_field_id: res[:theme_field_id],
+          )
+        record.calculate_diff(res[:settings_before], res[:settings_after])
+        record.save!
+      end
+      self.save!
+    end
+
+    if start_transaction
+      self.transaction(&block)
+    else
+      block.call
     end
   end
 

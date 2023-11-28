@@ -186,7 +186,6 @@ fi:
       save: "Tallenna"
       select: "Valitse"
       return_to_list: "Palaa kanavaluetteloon"
-      return_to_threads_list: "Palaa aktiivisiin keskusteluihin"
       unread_threads_count:
         one: "Sinulla on %{count} lukematon keskustelu"
         other: "Sinulla on %{count} lukematonta keskustelua"
@@ -253,9 +252,9 @@ fi:
         default_search_placeholder: "#a-kanava, @joku tai mitä tahansa"
         default_channel_search_placeholder: "#a-kanava"
         default_user_search_placeholder: "@joku"
-        user_search_placeholder: "...lisää käyttäjiä"
         disabled_user: "on poistanut chatin käytöstä"
         no_items: "Ei kohteita"
+        filter: "Suodatin"
       channel_edit_name_slug_modal:
         title: Muokkaa kanavaa
         input_placeholder: Lisää nimi
@@ -373,7 +372,8 @@ fi:
         unfollow: "Poistu"
         admin_title: "Ylläpitäjä"
         settings_title: "Asetukset"
-        category_label: "Luokka"
+        info_title: "Kanavan tiedot"
+        category_label: "Kategoria"
         history_label: "Historia"
         members_label: "Jäsenet"
       admin:
@@ -445,9 +445,14 @@ fi:
           one: "%{commaSeparatedUsernames} ja %{count} muu kirjoittavat"
           other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
       retention_reminders:
+        indefinitely_short: "toistaiseksi"
+        indefinitely_long: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit pysyvästi."
         short:
           one: "%{count} päivä"
           other: "%{count} päivää"
+        long:
+          one: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit %{count} päivän ajan."
+          other: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit %{count} päivän ajan."
       flags:
         off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
         inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."
@@ -493,7 +498,6 @@ fi:
           other: "+%{count}"
       threads:
         open: "Avaa ketju"
-        list: "Käynnissä olevat keskustelut"
         none: "Et osallistu mihinkään viestiketjuun tällä kanavalla."
       draft_channel_screen:
         header: "Uusi viesti"

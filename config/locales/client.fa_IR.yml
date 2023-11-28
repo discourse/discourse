@@ -1152,8 +1152,6 @@ fa_IR:
         title: "ورود دو مرحله ای"
         enable: "مدیریت تایید هوییت دوعاملی"
         disable_all: "غیرفعال کردن همه"
-        forgot_password: "فراموشی گذرواژه؟"
-        confirm_password_description: "لطفا رمز عبور خود را تایید کنید تا ادامه دهیم."
         name: "نام"
         label: "کد"
         rate_limit: "لطفا قبل از اینکه کد احراز هویت دیگری را تست کنید کمی صبر کنید"
@@ -1255,14 +1253,13 @@ fa_IR:
           generic: "حساب کاربری%{provider} شما برای احراز‌هویت استفاده خواهد‌شد."
       name:
         title: "نام"
-        instructions: "نام و نام‌خانوادگی شما (اختیاری)"
-        instructions_required: "نام و نام خانوادگی شما"
+        instructions: "نام و نام‌خانوادگی شما (اختیاری)."
+        instructions_required: "نام و نام خانوادگی شما."
         required: "لطفاً یک نام وارد کنید"
         too_short: "نام انتخابی شما خیلی کوتاه است"
         ok: "نام انتخابی شما به نطر می رسد خوب است"
       username:
         title: "نام‌کاربری"
-        instructions: "یکتا، بدون فاصله، کوتاه"
         short_instructions: "کاربران دیگر می‌توانند با استفاده از @%{username} به شما اشاره کنند"
         available: "نام کاربری شما در دسترس است"
         not_available: "در دسترس نیست. این را امتحان کن %{suggestion} ؟"
@@ -1455,7 +1452,7 @@ fa_IR:
         same_as_username: "رمز عبورتان با نام کاربری شما برابر است."
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
         ok: "رمز عبور خوبی است."
-        instructions: "حداقل %{count} نویسه"
+        instructions: "حداقل %{count} نویسه."
         required: "لطفاً یک کلمه عبور وارد کنید"
         confirm: "تایید"
       summary:
@@ -1791,10 +1788,6 @@ fa_IR:
       enter: "وارد شدن "
     conditional_loading_section:
       loading: در حال بارگیری…
-    category_row:
-      plus_subcategories_title:
-        one: "%{name} و یک زیرشاخه"
-        other: "%{name} و %{count} زیر‌شاخه"
     select_kit:
       delete_item: "حذف %{name}"
       filter_by: "فیلتر توسط: %{name}"
@@ -2048,6 +2041,7 @@ fa_IR:
         private_message: '%{username} برای شما یک پیام خصوصی در "%{topic}" - %{site_title} ارسال کرد'
         linked: '%{username} در "%{topic}" - %{site_title} به نوشته‌ی شما پیوندی قرار داد'
         watching_first_post: '%{username} یک مبحث جدید در "%{topic}" - %{site_title} ساخته'
+        watching_category_or_tag: '%{username} در "%{topic}" - %{site_title} مطلبی نوشت'
         confirm_title: "آگاه‌سازی فعال شد - %{site_title}"
         confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
         custom: "آگاه‌سازی از طرف %{username} در %{site_title}"
@@ -2920,8 +2914,7 @@ fa_IR:
       action: "پرچم‌گذاری نوشته"
       take_action_options:
         default:
-          title: "اقدام"
-          details: "رسیدن سریع به آستانه پرچم، به جای انتظار برای پرچم انجمن"
+          title: "پنهان کردن نوشته"
         suspend:
           title: "کاربر تعلیق شده"
       notify_action: "پیام"
@@ -2931,7 +2924,6 @@ fa_IR:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
       submit_tooltip: "ثبت پرچم خصوصی"
-      take_action_tooltip: "رسیدن سریع به آستانه پرچم، به جای انتظار برای پرچم انجمن"
       cant: "متأسفیم، در حال حاضر نمی‌توانید روی این نوشته پرچم بگذارید."
       notify_staff: "همکاران را به صورت خصوصی مطلع کن"
       formatted_name:
@@ -3423,6 +3415,9 @@ fa_IR:
           label: انجمن
     until: "تا وقتی که:"
     form_templates:
+      upload_field:
+        upload: "بار گذاری"
+        uploading: "در حال بروز‌رسانی "
       errors:
         typeMismatch:
           default: "یک مقدار معتبر وارد کنید."
@@ -3453,8 +3448,7 @@ fa_IR:
         latest_version: "آخرین"
         problems_found: "چند توصیه براثاث تنظیمات فعلی سایت شما"
         new_features:
-          dismiss: "نخواستیم"
-          learn_more: "بیشتر بدانید"
+          learn_more: "بیشتر بدانید..."
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
         no_problems: "هیچ مشکلات پیدا نشد."
@@ -3672,7 +3666,7 @@ fa_IR:
         not_enabled: "خیر"
         change_settings_short: "تنظیمات"
         howto: "چگونه یک افزونه نصب کنیم؟"
-        official: "پلاگین رسمی"
+        author: "توسط %{author}"
       navigation_menu:
         sidebar: "نوار کناری"
       backups:

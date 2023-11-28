@@ -1,6 +1,7 @@
 .chat-onebox {
   .chat-onebox-body {
     .chat-onebox-title {
+      display: inline;
       margin-bottom: 3px;
     }
 
@@ -23,6 +24,17 @@
       .avatar {
         aspect-ratio: 30 / 30;
         margin-right: 0.25rem;
+      }
+    }
+
+    .chat-onebox-images.onebox {
+      display: flex;
+      flex-wrap: wrap;
+      img {
+        width: auto;
+        max-height: 150px;
+        margin-right: 0.5rem;
+        margin-top: 0.5em;
       }
     }
   }

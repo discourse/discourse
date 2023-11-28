@@ -25,7 +25,7 @@
   <div class="navigation-controls">
     {{#if this.site.mobileView}}
       {{#if this.currentUser.admin}}
-        <BulkSelectToggle @parentController="user-topics-list" />
+        <BulkSelectToggle @bulkSelectHelper={{this.bulkSelectHelper}} />
       {{/if}}
     {{/if}}
 

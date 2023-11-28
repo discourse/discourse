@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe BadgesController do
-  fab!(:badge) { Fabricate(:badge) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:badge)
+  fab!(:user)
 
   before { SiteSetting.enable_badges = true }
 

@@ -563,7 +563,8 @@ tr_TR:
             name:
               same_as_password: "şifrenizle aynı."
             ip_address:
-              signup_not_allowed: "Bu hesaptan kayıt yapılmasına izin verilmiyor."
+              blocked: "IP adresinizden yeni kayıtlara izin verilmiyor."
+              max_new_accounts_per_registration_ip: "IP adresinizden yeni kayıtlara izin verilmiyor (maksimum limite ulaşıldı). Bir personelle iletişime geçin."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1430,6 +1431,7 @@ tr_TR:
     search_query_log_max_size: "Saklanacak maksimum arama sorgusu miktarı"
     search_query_log_max_retention_days: "Arama sorgularını saklamak için gün cinsinden maksimum süre."
     search_ignore_accents: "Metin ararken aksanları yok sayın."
+    search_default_sort_order: "Tam sayfa arama için varsayılan sıralama düzeni"
     category_search_priority_low_weight: "Düşük kategori arama önceliği için sıralamaya uygulanan ağırlık."
     category_search_priority_high_weight: "Yüksek kategori arama önceliği için sıralamaya uygulanan ağırlık."
     default_composer_category: "Yeni bir konu oluştururken kategori açılır menüsünü önceden doldurmak için kullanılan kategori."
@@ -1476,7 +1478,7 @@ tr_TR:
     blocked_onebox_domains: "Asla tek kutulu olmayacak alan adlarının bir listesi, örneğin wikipedia.org\n(Joker karakter sembolleri * ? desteklenmez)"
     block_onebox_on_redirect: "Yönlendirme yapan URL'ler için onebox'ı engelleyin."
     allowed_inline_onebox_domains: "Başlık olmadan bağlantı verilirse minyatür formda onebox olarak gösterilecek alan adlarının listesi"
-    enable_inline_onebox_on_all_domains: "inline_onebox_domain_allowlist site ayarını yok sayın ve tüm alan adlarında satır içi onebox'a izin verin."
+    enable_inline_onebox_on_all_domains: "allowed_inline_onebox_domains site ayarını yok say ve tüm alan adlarında inline onebox'a izin ver."
     force_custom_user_agent_hosts: "Tüm isteklerde özel onebox kullanıcı aracısının kullanılacağı ana bilgisayarlar. (Özellikle kullanıcı aracısına göre erişimi sınırlayan ana bilgisayarlar için kullanışlıdır)."
     max_oneboxes_per_post: "Bir gönderideki maksimum onebox sayısı."
     facebook_app_access_token: "Facebook uygulama kimliğinizden ve gizli dizinizden oluşturulan bir belirteç. Instagram onebox'ları oluşturmak için kullanılır."
@@ -1498,7 +1500,7 @@ tr_TR:
     email_custom_headers: "Özel e-posta başlıklarının boruyla ayrılmış bir listesi"
     email_subject: "Standart e-postalar için özelleştirilebilir konu formatı. Bkz. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Kullanıcılara belirli bir konuya neden erişemedikleri hakkında daha fazla ayrıntı sağlar. Not: Bu daha az güvenlidir çünkü kullanıcılar bir URL'nin geçerli bir konuya bağlanıp bağlanmadığını bilir."
-    enforce_second_factor: "Kullanıcıları iki adımlı kimlik doğrulamayı etkinleştirmeye zorlar. Tüm kullanıcılara zorunlu kılmak için \"tümü\" seçeneğini belirleyin. Yalnızca personel kullanıcılarına uygulamak için \"personel\" seçeneğini belirleyin."
+    enforce_second_factor: "Kullanıcılardan Discourse kullanıcı arayüzüne erişmeden önce iki faktörlü kimlik doğrulamayı etkinleştirmelerini isteyin. Tüm kullanıcılara uygulamak için 'tümü' seçeneğini seçin. Yalnızca personel kullanıcılarına uygulamak için 'personel' seçeneğini seçin. Bu ayar API veya 'DiscourseConnect sağlayıcısı' kimlik doğrulamasını etkilemez."
     force_https: "Sitenizi yalnızca HTTPS kullanmaya zorlayın. UYARI: HTTPS'nin tamamen kurulduğunu ve kesinlikle her yerde çalıştığını doğrulayana kadar bunu etkinleştirmeyin! CDN'nizi, tüm sosyal girişlerinizi ve tüm harici logoları / bağımlılıkları da HTTPS uyumlu olduklarından emin olmak için kontrol ettiniz mi?"
     same_site_cookies: "Aynı site çerezlerini kullanın, desteklenen tarayıcılarda (Lax veya Strict) tüm Site İçi Talep Sahteciliği vektörlerini ortadan kaldırır. Uyarı: Strict yalnızca oturum açmaya zorlayan ve harici bir auth yöntemi kullanan sitelerde çalışır."
     summary_score_threshold: "Bir gönderinin \"Bu Konuyu Özetleyin\" bölümüne dahil edilmesi için gereken minimum puan"
@@ -1575,8 +1577,6 @@ tr_TR:
     invalidate_inactive_admin_email_after_days: "Bu kadar gün içinde siteyi ziyaret etmemiş olan yönetici hesaplarının oturum açmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
     include_secure_categories_in_tag_counts: "Etkinleştirildiğinde, bir etiket için konu sayısı, tüm kullanıcılar için okuma kısıtlamalı kategorilerdeki konuları içerecektir. Devre dışı bırakıldığında, normal kullanıcılara yalnızca tüm konuların herkese açık kategorilerde olduğu bir etiket için konu sayısı gösterilir."
     display_personal_messages_tag_counts: "Etkinleştirildiğinde, belirli bir etiketle etiketlenmiş kişisel mesajların sayısı görüntülenir."
-    top_menu: "Ana sayfa gezintisinde hangi ögelerin hangi sırada görüneceğini belirleyin. Örnek en son|yeni|okunmamış|kategoriler|popüler|okunmuş|gönderilmiş|yer imleri"
-    post_menu: "Gönderi menüsünde hangi ögelerin hangi sırayla görüneceğini belirleyin. Örnek beğen|düzenle|etiketle|sil|paylaş|yer imi ekle|yanıtla"
     post_menu_hidden_items: "Bir genişletme üç noktasına tıklanmadığı sürece yazı menüsünde varsayılan olarak gizlenecek menü ögeleri."
     share_links: "Paylaş iletişim kutusunda hangi ögelerin ve hangi sırada görüneceğini belirleyin."
     allow_username_in_share_links: "Kullanıcı adlarının paylaşım bağlantılarına dahil edilmesine izin verin. Bu, benzersiz ziyaretçilere dayalı rozetleri ödüllendirmek için kullanışlıdır."
@@ -1806,6 +1806,7 @@ tr_TR:
     here_mention: "Ayrıcalıklı kullanıcıların konuya katılan en fazla \"max_here_mentioned\" kişiye bildirimde bulunmasına izin vermek için @bahsetme için kullanılan ad. Mevcut bir kullanıcı adı olmamalıdır."
     max_here_mentioned: "@Burada bahsedilen maksimum kişi sayısı."
     min_trust_level_for_here_mention: "@Burada bahsedilmesine izin verilen minimum güven seviyesi."
+    here_mention_allowed_groups: "@here atıfı yapılmasına izin verilen gruplar."
     create_thumbnails: "Bir gönderiye sığmayacak kadar büyük küçük resimler ve ışık kutusu görüntüleri oluşturun."
     email_time_window_mins: "Kullanıcılara gönderilerini düzenleme ve son haline getirme şansı tanımak için herhangi bir bildirim e-postası göndermeden önce (n) dakika bekleyin."
     personal_email_time_window_seconds: "Kullanıcılara mesajlarını düzenleme ve son haline getirme şansı tanımak için herhangi bir kişisel mesaj bildirim e-postası göndermeden önce (n) saniye bekleyin."
@@ -1821,7 +1822,6 @@ tr_TR:
     min_title_similar_length: "Benzer konular için kontrol edilmeden önce bir başlığın minimum uzunluğu."
     desktop_category_page_style: "Kategoriler sayfası için görsel stil."
     category_colors: "Kategoriler için izin verilen onaltılık renk değerlerinin bir listesi."
-    category_style: "Kategori rozetleri için görsel stil."
     default_dark_mode_color_scheme_id: "Koyu moddayken kullanılan renk şeması."
     dark_mode_none: "Hiçbiri"
     max_image_size_kb: "KB cinsinden maksimum görüntü yükleme boyutu. Bu, nginx (client_max_body_size) / apache veya proxy'de de yapılandırılmalıdır. Bundan daha büyük ve client_max_body_size değerinden daha küçük görüntüler yükleme sırasında sığacak şekilde yeniden boyutlandırılır."
@@ -1976,6 +1976,7 @@ tr_TR:
     allow_anonymous_posting: "Kullanıcıların anonim moda geçmesine izin verin"
     allow_anonymous_likes: "Anonim kullanıcıların gönderileri beğenmelerine izin verin"
     anonymous_posting_min_trust_level: "Anonim gönderimi etkinleştirmek için gereken minimum güven seviyesi"
+    anonymous_posting_allowed_groups: "Anonim gönderimi etkinleştirmesine izin verilen gruplar"
     anonymous_account_duration_minutes: "Anonimliği korumak için her kullanıcı için her N dakikada bir yeni bir anonim hesap oluşturun. Örnek: 600 olarak ayarlanırsa son gönderiden itibaren 600 dakika geçer geçmez VE kullanıcı anonime geçerse yeni bir anonim hesap oluşturulur."
     hide_user_profiles_from_public: "Anonim kullanıcılar için kullanıcı kartlarını, kullanıcı profillerini ve kullanıcı dizinini devre dışı bırakın."
     allow_users_to_hide_profile: "Kullanıcıların profillerini ve varlıklarını gizlemelerine izin verin"
@@ -2024,9 +2025,9 @@ tr_TR:
     display_name_on_posts: "Bir kullanıcının @kullanıcı adına ek olarak gönderilerinde tam adını gösterin."
     show_time_gap_days: "Bu kadar gün arayla iki gönderi yapılmışsa aradaki zaman farkını konu içinde gösterin."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktıktan sonra, ilerleme çubuğu yalnızca geçerli gönderi sayısını gösterecektir. İlerleme çubuğunun genişliğini değiştirirseniz bu değeri değiştirmeniz gerekebilir."
-    default_code_lang: "Kod bloklarına uygulanan varsayılan programlama dili sözdizimi vurgulaması (auto, text, ruby, python vb.). Bu değer aynı zamanda \"highlighted languages\" site ayarında da bulunmalıdır."
+    default_code_lang: "Markdown kod bloklarına (otomatik, metin, ruby, python vb.) uygulanan varsayılan programlama dili sözdizimi vurgulaması. Bu değer aynı zamanda \"vurgulanan diller\" site ayarında da bulunmalıdır."
     warn_reviving_old_topic_age: "Biri son yanıtın şu kadar günden daha eski olduğu bir konuya yanıt vermeye başladığında, bir uyarı görüntülenir. 0'a ayarlayarak devre dışı bırakın."
-    autohighlight_all_code: "Dili açıkça belirtmemiş olsalar bile önceden biçimlendirilmiş tüm kod bloklarına kod vurgulamayı zorla uygulayın."
+    autohighlight_all_code: "Bir dil belirtmemiş olsalar bile HTML <code> bloklarına sözdizimi vurgulaması uygula."
     highlighted_languages: "Sözdizimi vurgulama kuralları dahil edildi. (Uyarı: Çok fazla dil eklemek performansı etkileyebilir) Demo için bkz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
     show_copy_button_on_codeblocks: "Blok içeriğini kullanıcının panosuna kopyalamak için codeblocks'a bir düğme ekleyin."
     embed_any_origin: "Kaynağından bağımsız olarak yerleştirilebilir içeriğe izin verin. Bu, statik HTML içeren mobil uygulamalar için gereklidir."
@@ -2145,6 +2146,7 @@ tr_TR:
     city_for_disputes: "Anlaşmazlıklar için şehir"
     shared_drafts_category: "Konu taslakları için bir kategori belirleyerek Paylaşılan Taslaklar özelliğini etkinleştirin. Bu kategorideki konular, personel kullanıcılar için konu listelerinden bastırılır."
     shared_drafts_min_trust_level: "Kullanıcıların Paylaşılan Taslakları görmesine ve düzenlemesine izin verin."
+    shared_drafts_allowed_groups: "Bu gruplardaki kullanıcıların Paylaşılan Taslakları görmesine ve düzenlemesine izin verin."
     push_notifications_prompt: "Kullanıcı onayı istemini gösterin."
     push_notifications_icon: "Bildirim köşesinde görünen rozet simgesi. Şeffaflığa sahip 96×96 monokromatik bir PNG önerilir."
     enable_desktop_push_notifications: "Masaüstü anlık bildirimlerini etkinleştirin"
@@ -2207,7 +2209,7 @@ tr_TR:
       reply_by_email_address_is_empty: "E-posta ile yanıtlamayı etkinleştirmeden önce bir \"yanıtlama e-postası\" ayarlamanız gerekiyor."
       email_polling_disabled: "E-posta ile yanıtlamayı etkinleştirmeden önce manuel, POP3 yoklamasını veya özel bir posta yoklayıcısını etkinleştirmeniz gerekir."
       user_locale_not_enabled: "Bu ayarı etkinleştirmeden önce \"kullanıcı yerel ayarına izin ver\" seçeneğini etkinleştirmeniz gerekiyor."
-      personal_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin kişisel mesaj göndermesini istemiyorsanız personel grubunu seçin."
+      at_least_one_group_required: "Bu ayar için en az bir grup belirtmelisiniz."
       invalid_regex: "Regex geçersiz veya izin verilmiyor."
       invalid_regex_with_message: "\"%{regex}\" regex'inde bir hata var: %{message}"
       email_editable_enabled: "Bu ayarı etkinleştirmeden önce \"e-posta düzenlenebilir\" seçeneğini devre dışı bırakmalısınız."
@@ -2357,6 +2359,7 @@ tr_TR:
     not_approved: "Hesabınız henüz onaylanmadı. Giriş yapmaya hazır olduğunuzda e-posta ile bilgilendirileceksiniz."
     incorrect_username_email_or_password: "Yanlış kullanıcı adı, e-posta veya şifre"
     incorrect_password: "Yanlış şifre"
+    incorrect_password_or_passkey: "Yanlış şifre veya şifre anahtarı"
     wait_approval: "Kaydolduğunuz için teşekkürler. Hesabınız onaylandığında sizi bilgilendireceğiz."
     active: "Hesabınız etkinleştirildi ve kullanıma hazır."
     activate_email: "<p>Neredeyse bitti! <b>%{email}</b>adresine bir aktivasyon postası gönderdik. Hesabınızı etkinleştirmek için lütfen postadaki talimatları izleyin.</p><p>Ulaşmazsa spam klasörünüzü kontrol edin.</p>"
@@ -2438,9 +2441,6 @@ tr_TR:
       blocked: "için izin verilmiyor."
       revoked: "%{date} tarihine kadar \"%{email}\" adresine e-posta göndermeyecek."
       does_not_exist: "Geçersiz"
-    ip_address:
-      blocked: "IP adresinizden yeni kayıtlara izin verilmiyor."
-      max_new_accounts_per_registration_ip: "IP adresinizden yeni kayıtlara izin verilmiyor (maksimum limite ulaşıldı). Bir personelle iletişime geçin."
     website:
       domain_not_allowed: "Web sitesi geçersiz. İzin verilen alan adları şunlardır: %{domains}"
     auto_rejected: "Yaş nedeniyle otomatik olarak reddedildi. auto_handle_queued_age site ayarına bakın."
@@ -2657,6 +2657,28 @@ tr_TR:
         Geribildirim: %{feedback}
 
         Aşağıdaki orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Teşekkürler,
+        %{site_name} Moderatörleri
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Gönderinizle ilgili geri bildirim"
+      subject_template: '"%{topic_title}" başlıklı yeni konu hakkında geri bildirim'
+      text_body_template: |
+        Merhaba %{username},
+
+        "%{topic_title}" başlıklı gönderinizi inceledik ve sizin için bazı geri bildirimlerimiz olacak.
+
+        Sebep: %{reason}
+
+        Geribildirim: %{feedback}
+
+        Aşağıda orijinal gönderinizi düzenleyebilir ve önerilen değişikliklerle yeniden gönderebilirsiniz veya herhangi bir sorunuz varsa bu mesajı yanıtlayabilirsiniz.
 
         --------
 

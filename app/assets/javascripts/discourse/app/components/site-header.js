@@ -9,6 +9,7 @@ import SwipeEvents from "discourse/lib/swipe-events";
 import Docking from "discourse/mixins/docking";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { isTesting } from "discourse-common/config/environment";
+import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
 
 const SiteHeaderComponent = MountWidget.extend(
@@ -23,7 +24,7 @@ const SiteHeaderComponent = MountWidget.extend(
     _topic: null,
     _itsatrap: null,
     _applicationElement: null,
-    _PANEL_WIDTH: 320,
+    _PANEL_WIDTH: 340,
     _swipeEvents: null,
 
     @observes(
@@ -387,7 +388,14 @@ const SiteHeaderComponent = MountWidget.extend(
 
           headerCloak.animate([{ opacity: 0 }], { fill: "forwards" });
           headerCloak.style.display = "block";
-          animationFinished.then(() => this._animateOpening(panel));
+
+          animationFinished.then(() => {
+            if (isTesting()) {
+              this._animateOpening(panel);
+            } else {
+              discourseLater(() => this._animateOpening(panel));
+            }
+          });
         }
 
         this._animate = false;

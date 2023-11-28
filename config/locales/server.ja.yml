@@ -543,7 +543,8 @@ ja:
             name:
               same_as_password: "はあなたのパスワードと同じです。"
             ip_address:
-              signup_not_allowed: "このアカウントから登録できません。"
+              blocked: "あなたの IP アドレスからの新規登録は許可されていません。"
+              max_new_accounts_per_registration_ip: "あなたの IP アドレスからの新規登録は許可されていません (登録可能な数を超えています)。スタッフメンバーにお問い合わせください。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -1407,7 +1408,6 @@ ja:
     blocked_onebox_domains: "wikipedia.org など、ワンボックスに表示されないドメインのリスト\n(ワイルドカード記号 * ? はサポートされていません)"
     block_onebox_on_redirect: "リダイレクトする URL のワンボックスをブロックします。"
     allowed_inline_onebox_domains: "タイトルなしでリンクされた場合、ミニチュア形式でワンボックス化されるドメインのリスト"
-    enable_inline_onebox_on_all_domains: "inline_onebox_domain_allowlist サイト設定を無視し、すべてのドメインでインラインのワンボックスを許可する。"
     force_custom_user_agent_hosts: "すべてのリクエストでカスタムワンボックスユーザーエージェントを使用するホスト (特にユーザーエージェントごとにアクセスを制限するホストで役立ちます)。"
     max_oneboxes_per_post: "投稿内のワンボックスの最大数。"
     facebook_app_access_token: "Facebook アプリ ID とシークレットから生成されるトークン。Instagram ワンボックスを生成するために使用されます。"
@@ -1429,7 +1429,6 @@ ja:
     email_custom_headers: "カスタムメールヘッダーのパイプ区切りのリスト"
     email_subject: "標準メールのカスタマイズ可能な件名形式。<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a> をご覧ください"
     detailed_404: "特定のトピックにアクセスできない詳細な理由をユーザーに提供します。注意: URL が有効なトピックにリンクしているかどうかがユーザーにわかるため、安全性が低くなります。"
-    enforce_second_factor: "ユーザーが二要素認証を有効にするように強制します。すべてのユーザーに適用する場合は 'すべて' を選択します。スタッフユーザーのみに適用する場合は 'スタッフ' を選択します。"
     force_https: "サイトが HTTPS のみを使用するように強制する。警告: HTTPS が完全にセットアップ済みであり、すべての場所で機能していることを確認するまで、これを有効にしないでください！CDN、すべてのソーシャルログイン、および外部ロゴ/依存関係がすべて HTTPS 対応であることを確認しましたか？"
     same_site_cookies: "同じサイト Cookie を使用する。サポートされているブラウザですべてのクロスサイトリクエストフォージェリ攻撃を排除します (Lax または Strict)。Strict は、ログインと外部認証方式の使用を強制するサイトでのみ動作します。"
     summary_score_threshold: "「このトピックを要約」に含まれるために必要な投稿の最低スコア"
@@ -1501,8 +1500,6 @@ ja:
     invalidate_inactive_admin_email_after_days: "この日数以上サイトを訪問していない管理者アカウントは、ログインする前にメールアドレスを再確認する必要があります。0 に設定すると無効になります。"
     include_secure_categories_in_tag_counts: "有効にすると、タグのトピック数には、すべてのユーザーに対して読み取りが制限されたカテゴリにあるトピックが含まれます。無効にすると、通常のユーザーは、すべてのトピックが公開カテゴリにあるタグのトピック数のみが表示されます。"
     display_personal_messages_tag_counts: "有効にすると、指定されたタグが付けられた個人メッセージの数が表示されます。"
-    top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "投稿メニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "展開ボタンがクリックされるまで、デフォルトで非表示にする投稿のメニュー項目。"
     share_links: "共有ダイアログに表示する項目、表示順を指定。"
     allow_username_in_share_links: "ユーザー名を共有リンクに含めることを許可します。これは、ユニークビジター数に応じてバッジを与えるのに役立ちます。"
@@ -1747,7 +1744,6 @@ ja:
     min_title_similar_length: "類似トピックのチェックに必要な最小タイトル長"
     desktop_category_page_style: "/categories ページの視覚的スタイル。"
     category_colors: "カテゴリに利用可能な 16 進数の色値のリスト"
-    category_style: "カテゴリバッジの視覚的スタイル"
     default_dark_mode_color_scheme_id: "ダークモードで使用される色スキーム。"
     dark_mode_none: "なし"
     max_image_size_kb: "最大画像アップロードサイズ (kB)。これは、nginx (client_max_body_size) / apache またはプロキシでも構成されている必要があります。これより大きいか、client_max_body_size より小さい画像は、アップロード時にフィットするようにサイズ変更されます。"
@@ -1949,9 +1945,7 @@ ja:
     display_name_on_posts: "投稿に、@username に加えてユーザーのフルネームを表示します。"
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
     short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
-    default_code_lang: "コードブロックに適用されるデフォルトのプログラミング言語シンタックスハイライト (auto、text、ruby、python など)。この値は、`highlighted languages` サイト設定にも含まれている必要があります。"
     warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
-    autohighlight_all_code: "明示的に言語を指定しなくても、すべての整形済みのコードブロックにコードハイライトを強制的に適用します。"
     highlighted_languages: "シンタックスハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> をご覧ください。"
     show_copy_button_on_codeblocks: "コードブロックに、ブロックのコンテンツをユーザーのクリップボードにコピーするボタンを追加します。"
     embed_any_origin: "オリジンに関係なく、埋め込み可能なコンテンツを許可する。これは静的 HTML を使用するモバイルアプリに必要です。"
@@ -2128,7 +2122,6 @@ ja:
       reply_by_email_address_is_empty: "メールによる返信を有効にする前に、'reply by email address' を設定する必要があります。"
       email_polling_disabled: "メールによる返信を有効にする前に、手動、POP3 ポーリング、またはカスタムメールポーラーのいずれかを有効にする必要があります。"
       user_locale_not_enabled: "この設定を有効にする前に 'allow user locale' を有効にする必要があります。"
-      personal_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外の人が PM を送信できないようにするには、スタッフグループを選択してください。"
       invalid_regex: "正規表現が無効であるか、許可されていません。"
       invalid_regex_with_message: "正規表現 '%{regex}' にエラーがあります: %{message}"
       email_editable_enabled: "この設定を有効にする前に 'email editable' を無効にする必要があります。"
@@ -2338,9 +2331,6 @@ ja:
       blocked: "は許可されていません。"
       revoked: "%{date} まで '%{email}' にメールは送信されません。"
       does_not_exist: "該当なし"
-    ip_address:
-      blocked: "あなたの IP アドレスからの新規登録は許可されていません。"
-      max_new_accounts_per_registration_ip: "あなたの IP アドレスからの新規登録は許可されていません (登録可能な数を超えています)。スタッフメンバーにお問い合わせください。"
     website:
       domain_not_allowed: "ウェブサイトは無効です。許可されるドメイン: %{domains}"
     auto_rejected: "年齢により自動的に拒否されました。auto_handle_queued_age サイト設定をご覧ください。"

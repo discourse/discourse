@@ -84,6 +84,8 @@ module PageObjects
           post_by_number(post).find(".bookmark.with-reminder").click
         when :reply
           post_by_number(post).find(".post-controls .reply").click
+        when :flag
+          post_by_number(post).find(".post-controls .create-flag").click
         end
       end
 

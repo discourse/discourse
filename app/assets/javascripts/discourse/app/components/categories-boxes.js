@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -10,7 +9,6 @@ export default Component.extend({
     "anyLogos:with-logos:no-logos",
     "hasSubcategories:with-subcategories",
   ],
-  noCategoryStyle: equal("siteSettings.category_style", "none"),
   lockIcon: "lock",
 
   @discourseComputed("categories.[].uploaded_logo.url")

@@ -2,8 +2,8 @@
 
 RSpec.describe Jobs::MassAwardBadge do
   describe "#execute" do
-    fab!(:badge) { Fabricate(:badge) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:badge)
+    fab!(:user)
     let(:email_mode) { "email" }
 
     it "creates the badge for an existing user" do

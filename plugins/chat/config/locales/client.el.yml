@@ -62,6 +62,7 @@ el:
           settings: Ρυθμίσεις
       new_message_modal:
         no_items: "Δεν υπάρχουν στοιχεία"
+        filter: "Φίλτρο"
       direct_message_creator:
         title: Νέο Μήνυμα
         prefix: "Προς:"

@@ -272,6 +272,8 @@ sl:
               same_as_password: "je enako kot vaše geslo."
             name:
               same_as_password: "je enako kot vaše geslo."
+            ip_address:
+              max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
         topic_timer:
           attributes:
             duration_minutes:
@@ -861,8 +863,6 @@ sl:
   user:
     email:
       does_not_exist: "N/A"
-    ip_address:
-      max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
     destroy_reasons:
       unused_staged_user: "Neuporabljen prirejen uporabnik"
   invite_mailer:

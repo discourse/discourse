@@ -7,20 +7,34 @@ RSpec.describe Chat::SearchChatable do
     fab!(:current_user) { Fabricate(:user, username: "bob-user") }
     fab!(:sam) { Fabricate(:user, username: "sam-user") }
     fab!(:charlie) { Fabricate(:user, username: "charlie-user") }
+    fab!(:alain) { Fabricate(:user, username: "alain-user") }
     fab!(:channel_1) { Fabricate(:chat_channel, name: "bob-channel") }
     fab!(:channel_2) { Fabricate(:direct_message_channel, users: [current_user, sam]) }
     fab!(:channel_3) { Fabricate(:direct_message_channel, users: [current_user, sam, charlie]) }
     fab!(:channel_4) { Fabricate(:direct_message_channel, users: [sam, charlie]) }
+    fab!(:channel_5) { Fabricate(:direct_message_channel, users: [current_user, charlie, alain]) }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { guardian: guardian, term: term } }
     let(:term) { "" }
+    let(:include_users) { false }
+    let(:include_category_channels) { false }
+    let(:include_direct_message_channels) { false }
+    let(:excluded_memberships_channel_id) { nil }
+    let(:params) do
+      {
+        guardian: guardian,
+        term: term,
+        include_users: include_users,
+        include_category_channels: include_category_channels,
+        include_direct_message_channels: include_direct_message_channels,
+        excluded_memberships_channel_id: excluded_memberships_channel_id,
+      }
+    end
 
     before do
       SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
       # simpler user search without having to worry about user search data
       SiteSetting.enable_names = false
-      return unless guardian.can_create_direct_message?
       channel_1.add(current_user)
     end
 
@@ -29,118 +43,144 @@ RSpec.describe Chat::SearchChatable do
         expect(result).to be_a_success
       end
 
-      it "returns chatables" do
+      it "cleans the term" do
+        params[:term] = "#bob"
+        expect(result.term).to eq("bob")
+
+        params[:term] = "@bob"
+        expect(result.term).to eq("bob")
+      end
+
+      it "fetches user memberships" do
         expect(result.memberships).to contain_exactly(
           channel_1.membership_for(current_user),
           channel_2.membership_for(current_user),
           channel_3.membership_for(current_user),
+          channel_5.membership_for(current_user),
         )
-        expect(result.category_channels).to contain_exactly(channel_1)
-        expect(result.direct_message_channels).to contain_exactly(channel_2, channel_3)
-        expect(result.users).to include(current_user, sam)
       end
 
-      it "doesn’t return direct message of other users" do
-        expect(result.direct_message_channels).to_not include(channel_4)
-      end
+      context "when including users" do
+        let(:include_users) { true }
 
-      context "with private channel" do
-        fab!(:private_channel_1) { Fabricate(:private_category_channel, name: "private") }
-        let(:term) { "#private" }
+        it "fetches users" do
+          expect(result.users).to include(current_user, sam, charlie, alain)
+        end
 
-        it "doesn’t return category channels you can't access" do
-          expect(result.category_channels).to_not include(private_channel_1)
+        it "can filter usernames" do
+          params[:term] = "sam"
+
+          expect(result.users).to contain_exactly(sam)
+        end
+
+        it "can filter users with a membership to a specific channel" do
+          params[:excluded_memberships_channel_id] = channel_1.id
+
+          expect(result.users).to_not include(current_user)
         end
       end
 
-      context "when public channels are disabled" do
-        it "does not return category channels" do
-          SiteSetting.enable_public_channels = false
+      context "when not including users" do
+        let(:include_users) { false }
 
-          expect(described_class.call(params).category_channels).to be_blank
+        it "doesn’t fetch users" do
+          expect(result.users).to be_nil
         end
       end
-    end
 
-    context "when term is prefixed with #" do
-      let(:term) { "#" }
+      context "when including category channels" do
+        let(:include_category_channels) { true }
 
-      it "doesn’t return users" do
-        expect(result.users).to be_blank
-        expect(result.category_channels).to contain_exactly(channel_1)
-        expect(result.direct_message_channels).to contain_exactly(channel_2, channel_3)
-      end
-    end
+        it "fetches category channels" do
+          expect(result.category_channels).to include(channel_1)
+        end
 
-    context "when term is prefixed with @" do
-      let(:term) { "@" }
+        it "can filter titles" do
+          searched_channel = Fabricate(:chat_channel, name: "beaver")
+          params[:term] = "beaver"
 
-      it "doesn’t return channels" do
-        expect(result.users).to include(current_user, sam)
-        expect(result.category_channels).to be_blank
-        expect(result.direct_message_channels).to be_blank
-      end
-    end
+          expect(result.category_channels).to contain_exactly(searched_channel)
+        end
 
-    context "when filtering" do
-      context "with full match" do
-        let(:term) { "bob" }
+        it "can filter slugs" do
+          searched_channel = Fabricate(:chat_channel, name: "beaver", slug: "something")
+          params[:term] = "something"
 
-        it "returns matching channels" do
-          expect(result.users).to contain_exactly(current_user)
+          expect(result.category_channels).to contain_exactly(searched_channel)
+        end
+
+        it "doesn’t include category channels you can't access" do
+          Fabricate(:private_category_channel)
+
           expect(result.category_channels).to contain_exactly(channel_1)
-          expect(result.direct_message_channels).to contain_exactly(channel_2, channel_3)
         end
       end
 
-      context "with partial match" do
-        let(:term) { "cha" }
+      context "when not including category channels" do
+        let(:include_category_channels) { false }
 
-        it "returns matching channels" do
-          expect(result.users).to contain_exactly(charlie)
-          expect(result.category_channels).to contain_exactly(channel_1)
-          expect(result.direct_message_channels).to contain_exactly(channel_3)
+        it "doesn’t fetch category channels" do
+          expect(result.category_channels).to be_nil
         end
       end
-    end
 
-    context "when filtering with non existing term" do
-      let(:term) { "xxxxxxxxxx" }
+      context "when including direct message channels" do
+        let(:include_direct_message_channels) { true }
 
-      it "returns matching channels" do
-        expect(result.users).to be_blank
-        expect(result.category_channels).to be_blank
-        expect(result.direct_message_channels).to be_blank
+        it "fetches direct message channels" do
+          expect(result.direct_message_channels).to contain_exactly(channel_2, channel_3, channel_5)
+        end
+
+        it "doesn’t fetches inaccessible direct message channels" do
+          expect(result.direct_message_channels).to_not include(channel_4)
+        end
+
+        it "can filter by title" do
+          searched_channel =
+            Fabricate(:direct_message_channel, users: [current_user, sam, charlie], name: "koala")
+          params[:term] = "koala"
+
+          expect(result.direct_message_channels).to contain_exactly(searched_channel)
+        end
+
+        it "can filter by slug" do
+          searched_channel =
+            Fabricate(
+              :direct_message_channel,
+              users: [current_user, sam, charlie],
+              slug: "capybara",
+            )
+          params[:term] = "capybara"
+
+          expect(result.direct_message_channels).to contain_exactly(searched_channel)
+        end
+
+        it "can filter by users" do
+          cedric = Fabricate(:user, username: "cedric")
+          searched_channel =
+            Fabricate(:direct_message_channel, users: [current_user, cedric], slug: "capybara")
+          searched_channel.add(cedric)
+          params[:term] = "cedric"
+
+          expect(result.direct_message_channels).to contain_exactly(searched_channel)
+        end
+
+        context "when also includes users" do
+          let(:include_users) { true }
+
+          it "excludes one to one direct message channels with user" do
+            expect(result.users).to include(sam)
+            expect(result.direct_message_channels).to contain_exactly(channel_3, channel_5)
+          end
+        end
       end
-    end
 
-    context "when filtering with @prefix" do
-      let(:term) { "@bob" }
+      context "when not including direct message channels" do
+        let(:include_direct_message_channels) { false }
 
-      it "returns matching channels" do
-        expect(result.users).to contain_exactly(current_user)
-        expect(result.category_channels).to be_blank
-        expect(result.direct_message_channels).to be_blank
-      end
-    end
-
-    context "when filtering with #prefix" do
-      let(:term) { "#bob" }
-
-      it "returns matching channels" do
-        expect(result.users).to be_blank
-        expect(result.category_channels).to contain_exactly(channel_1)
-        expect(result.direct_message_channels).to contain_exactly(channel_2, channel_3)
-      end
-    end
-
-    context "when current user can't created direct messages" do
-      let(:term) { "@bob" }
-
-      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
-
-      it "doesn’t return users" do
-        expect(result.users).to be_blank
+        it "doesn’t fetch direct message channels" do
+          expect(result.direct_message_channels).to be_nil
+        end
       end
     end
   end

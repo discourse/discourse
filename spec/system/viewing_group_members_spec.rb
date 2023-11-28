@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Viewing group members", type: :system do
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   fab!(:user_in_group_1) { Fabricate(:user).tap { |u| group.add(u) } }
   fab!(:user_in_group_2) { Fabricate(:user).tap { |u| group.add(u) } }
   fab!(:user_in_group_3) { Fabricate(:user).tap { |u| group.add(u) } }

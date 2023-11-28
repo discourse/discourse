@@ -97,7 +97,7 @@ export default MultiSelectComponent.extend({
         item = item.length ? item[0] : null;
       }
 
-      this.attrs.onChange && this.attrs.onChange(value, item);
+      this.onChange?.(value, item);
     },
   },
 });

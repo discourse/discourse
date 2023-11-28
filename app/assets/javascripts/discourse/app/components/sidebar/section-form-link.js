@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import discourseLater from "discourse-common/lib/later";
 
 export default class SectionFormLink extends Component {
   @tracked dragCssClass;
@@ -17,14 +18,14 @@ export default class SectionFormLink extends Component {
   @action
   dragHasStarted(event) {
     event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("linkId", this.args.link.objectId);
+    this.args.setDraggedLinkCallback(this.args.link);
     this.dragCssClass = "dragging";
   }
 
   @action
   dragOver(event) {
     event.preventDefault();
-    if (!this.dragCssClass) {
+    if (this.dragCssClass !== "dragging") {
       if (this.isAboveElement(event)) {
         this.dragCssClass = "drag-above";
       } else {
@@ -44,25 +45,23 @@ export default class SectionFormLink extends Component {
       this.dragCount === 0 &&
       (this.dragCssClass === "drag-above" || this.dragCssClass === "drag-below")
     ) {
-      this.dragCssClass = null;
+      discourseLater(() => {
+        this.dragCssClass = null;
+      }, 10);
     }
   }
 
   @action
   dropItem(event) {
     event.stopPropagation();
-    this.dragCounter = 0;
-    this.args.reorderCallback(
-      parseInt(event.dataTransfer.getData("linkId"), 10),
-      this.args.link,
-      this.isAboveElement(event)
-    );
+    this.dragCount = 0;
+    this.args.reorderCallback(this.args.link, this.isAboveElement(event));
     this.dragCssClass = null;
   }
 
   @action
   dragEnd() {
-    this.dragCounter = 0;
+    this.dragCount = 0;
     this.dragCssClass = null;
   }
 }

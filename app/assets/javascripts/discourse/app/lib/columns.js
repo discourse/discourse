@@ -85,7 +85,7 @@ export default class Columns {
 
     const wrapper = document.createElement("span");
     wrapper.classList.add("image-wrapper");
-    wrapper.append(item);
+    wrapper.appendChild(item.cloneNode());
     return wrapper;
   }
 

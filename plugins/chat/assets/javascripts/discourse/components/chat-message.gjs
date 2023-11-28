@@ -509,6 +509,7 @@ export default class ChatMessage extends Component {
           (if @message.highlighted "-highlighted")
           (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
           (if @message.staged "-staged" "-persisted")
+          (if @message.processed "-processed" "-not-processed")
           (if this.hasActiveState "-active")
           (if @message.bookmark "-bookmarked")
           (if @message.deletedAt "-deleted")

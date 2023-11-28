@@ -16,11 +16,13 @@ async function openFlagModal() {
 }
 
 async function pressEnter(element, modifier) {
-  const event = document.createEvent("Event");
-  event.initEvent("keydown", true, true);
-  event.key = "Enter";
-  event.keyCode = 13;
-  event[modifier] = true;
+  const event = new KeyboardEvent("keydown", {
+    bubbles: true,
+    cancelable: true,
+    key: "Enter",
+    keyCode: 13,
+    [modifier]: true,
+  });
   element.dispatchEvent(event);
   await settled();
 }
@@ -109,8 +111,14 @@ acceptance("flagging", function (needs) {
       exists("[data-value='agree_and_silence']"),
       "it shows the silence action option"
     );
-    await click("[data-value='agree_and_silence']");
-    assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
+    assert.ok(
+      exists("[data-value='agree_and_suspend']"),
+      "it shows the suspend action option"
+    );
+    assert.ok(
+      exists("[data-value='agree_and_hide']"),
+      "it shows the hide action option"
+    );
   });
 
   test("Can silence from take action", async function (assert) {
@@ -119,15 +127,16 @@ acceptance("flagging", function (needs) {
     await click("#radio_inappropriate");
     await selectKit(".reviewable-action-dropdown").expand();
     await click("[data-value='agree_and_silence']");
+    assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
-    assert.ok(exists(".modal-body"));
+    assert.ok(exists(".d-modal__body"));
     await fillIn("input.silence-reason", "for breaking the rules");
 
     await click(".perform-penalize");
-    assert.ok(!exists(".modal-body"));
+    assert.ok(!exists(".d-modal__body"));
   });
 
   test("Can delete spammer from spam", async function (assert) {

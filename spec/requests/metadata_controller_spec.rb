@@ -117,7 +117,7 @@ RSpec.describe MetadataController do
   end
 
   describe "opensearch.xml" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     it "returns the right output" do
       title = "MyApp"

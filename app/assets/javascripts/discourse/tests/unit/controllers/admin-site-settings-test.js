@@ -34,6 +34,7 @@ module("Unit | Controller | admin-site-settings", function (hooks) {
             description: "",
             value: "",
             setting: "digest_logo",
+            keywords: "capybara",
           }),
           SiteSetting.create({
             description: "",
@@ -71,5 +72,10 @@ module("Unit | Controller | admin-site-settings", function (hooks) {
       results[0].siteSettings[0].setting,
       "min_personal_message_post_length"
     );
+
+    // ensures keyword search is working
+    results = controller.performSearch("capybara", settings2);
+    assert.deepEqual(results[0].siteSettings.length, 1);
+    assert.deepEqual(results[0].siteSettings[0].setting, "digest_logo");
   });
 });

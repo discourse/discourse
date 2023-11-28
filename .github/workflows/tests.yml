@@ -22,7 +22,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -41,13 +41,21 @@ jobs:
 
       matrix:
         build_type: [backend, frontend, system, annotations]
-        target: [core, plugins]
+        target: [core, plugins, themes]
         ruby: ["3.2"]
         exclude:
           - build_type: annotations
             target: plugins
+          - build_type: annotations
+            target: themes
+          - build_type: backend
+            target: themes
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
+        include:
+          - build_type: system
+            target: chat
+            ruby: "3.2"
 
     steps:
       - name: Set working directory owner
@@ -76,8 +84,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.ruby }}-gem-
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
 
       - name: Setup gems
         run: |
@@ -97,8 +104,7 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
       - name: Yarn install
         run: yarn install --frozen-lockfile
@@ -110,6 +116,16 @@ jobs:
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins'
         run: bin/rake plugin:pull_compatible_all
+
+      - name: Plugin gems cache
+        uses: actions/cache@v3
+        with:
+          path: plugins/*/gems
+          key: ${{ runner.os }}-plugin-gems-${{matrix.ruby}}-${{ hashFiles('plugins/*/plugin.rb') }}
+
+      - name: Checkout official themes
+        if: matrix.target == 'themes' && matrix.build_type == 'system'
+        run: bin/rake themes:clone_all_official
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         run: |
@@ -129,7 +145,7 @@ jobs:
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
-        run: psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
+        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
 
       - name: Restore uploads from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -139,7 +155,7 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: |
           bin/rake db:create
-          bin/rake db:migrate
+          script/silence_successful_output bin/rake db:migrate
 
       - name: Create and migrate parallel databases
         if: >-
@@ -147,7 +163,7 @@ jobs:
           steps.app-cache.outputs.cache-hit != 'true'
         run: |
           bin/rake parallel:create
-          bin/rake parallel:migrate
+          script/silence_successful_output bin/rake parallel:migrate
 
       - name: Dump database for cache
         if: steps.app-cache.outputs.cache-hit != 'true'
@@ -210,6 +226,11 @@ jobs:
         run: QUNIT_WRITE_EXECUTION_FILE=1 QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
 
+      - name: Theme QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'themes'
+        run: DISCOURSE_DEV_DB=discourse_test QUNIT_PARALLEL=3 bin/rake themes:qunit_all_official
+        timeout-minutes: 15
+
       - uses: actions/upload-artifact@v3
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
         with:
@@ -230,7 +251,22 @@ jobs:
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+        run: |
+          GLOBIGNORE="plugins/chat/*";
+          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+        shell: bash
+        timeout-minutes: 30
+
+      - name: Chat System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'chat'
+        run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        timeout-minutes: 30
+
+      - name: Theme System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'themes'
+        run: |
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
+        shell: bash
         timeout-minutes: 30
 
       - name: Upload failed system test screenshots
@@ -259,7 +295,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }})
+    name: core frontend (${{ matrix.browser }})${{ matrix.updated_ember && ' (Ember 5)' || '' }}
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
@@ -271,6 +307,10 @@ jobs:
       fail-fast: false
       matrix:
         browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+        updated_ember: [false]
+        include:
+          - browser: Chrome
+            updated_ember: true
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
@@ -295,8 +335,11 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
+
+      - name: Upgrade Ember
+        if: matrix.updated_ember == true
+        run: script/switch_ember_version 5
 
       - name: Yarn install
         working-directory: ./app/assets/javascripts/discourse

@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   let(:serializer) { serializer_klass.new(user, scope: Guardian.new(user), root: false) }
 
   before { SiteSetting.navigation_menu = "sidebar" }
 
   describe "#sidebar_category_ids" do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:group)
+    fab!(:category)
     fab!(:category_2) { Fabricate(:category) }
     fab!(:private_category) { Fabricate(:private_category, group: group) }
 
@@ -98,7 +98,7 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
   end
 
   describe "#display_sidebar_tags" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     it "should not be included in serialised object when tagging has been disabled" do
       SiteSetting.tagging_enabled = false

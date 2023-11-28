@@ -27,9 +27,5 @@ export default Component.extend({
   @action
   onChangeValue(value) {
     this.set("field.value", value);
-
-    if (this.field.id === "homepage_style") {
-      this.wizard.trigger("homepageStyleChanged");
-    }
   },
 });

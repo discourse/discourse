@@ -17,7 +17,7 @@ RSpec.describe Jobs::NotifyMovedPosts do
     fab!(:p1) { Fabricate(:post) }
     fab!(:p2) { Fabricate(:post, user: Fabricate(:evil_trout), topic: p1.topic) }
     fab!(:p3) { Fabricate(:post, user: p1.user, topic: p1.topic) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     let(:moved_post_notifications) do
       Notification.where(notification_type: Notification.types[:moved_post])

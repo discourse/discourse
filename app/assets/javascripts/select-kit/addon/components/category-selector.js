@@ -33,8 +33,8 @@ export default MultiSelectComponent.extend({
     const blockedCategories = makeArray(this.blockedCategories);
     return Category.list().filter((category) => {
       if (category.isUncategorizedCategory) {
-        if (this.attrs.options?.allowUncategorized !== undefined) {
-          return this.attrs.options.allowUncategorized;
+        if (this.options?.allowUncategorized !== undefined) {
+          return this.options.allowUncategorized;
         }
 
         return this.selectKit.options.allowUncategorized;
@@ -70,8 +70,8 @@ export default MultiSelectComponent.extend({
 
     return await Category.asyncSearch(filter, {
       includeUncategorized:
-        this.attrs.options?.allowUncategorized !== undefined
-          ? this.attrs.options.allowUncategorized
+        this.options?.allowUncategorized !== undefined
+          ? this.options.allowUncategorized
           : this.selectKit.options.allowUncategorized,
       rejectCategoryIds: Array.from(rejectCategoryIds),
     });
@@ -94,9 +94,7 @@ export default MultiSelectComponent.extend({
 
   actions: {
     onChange(values) {
-      this.attrs.onChange(
-        values.map((v) => Category.findById(v)).filter(Boolean)
-      );
+      this.onChange(values.map((v) => Category.findById(v)).filter(Boolean));
       return false;
     },
   },

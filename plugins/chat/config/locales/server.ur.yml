@@ -29,6 +29,8 @@ ur:
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "غیر ascii حروف پر مشتمل ہے"
+    onebox:
+      thread_title_connector: "میں"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

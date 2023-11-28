@@ -12,10 +12,11 @@ de:
     poll_minimum_trust_level_to_create: "Erforderliche Vertrauensstufe, um Umfragen zu erstellen."
     poll_groupable_user_fields: "Eine Reihe von Benutzerfeldern, die verwendet werden können, um Umfrageergebnisse zu gruppieren und zu filtern."
     poll_export_data_explorer_query_id: "ID der Datenexplorer-Abfrage, die zum Exportieren von Umfrageergebnissen verwendet werden soll (0 zum Deaktivieren)."
+    poll_default_public: "Wenn du eine neue Umfrage erstellst, aktiviere standardmäßig die Option \"anzeigen, wer abgestimmt hat\"."
   poll:
     poll: "Umfrage"
     invalid_argument: "Ungültiger Wert „%{value}“ für Argument „%{argument}“."
-    multiple_polls_without_name: "Es gibt mehrere namenlose Umfragen. Benutze das Attribut „<code>name</code>“, um deine Umfragen eindeutig identifizierbar zu machen."
+    multiple_polls_without_name: "Wenn du mehrere Umfragen erstellst, füge eindeutige Namen hinzu, indem du <code>name=example</code> zu deinen <code>[poll]</code> Tags hinzufügst."
     multiple_polls_with_same_name: "Es gibt mehrere Umfragen mit demselben Namen: <strong>%{name}</strong>. Benutze das Attribut „<code>name</code>“, um deine Umfragen eindeutig identifizierbar zu machen."
     default_poll_must_have_at_least_1_option: "Umfrage muss mindestens eine Option haben."
     named_poll_must_have_at_least_1_option: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss mindestens eine Option haben."

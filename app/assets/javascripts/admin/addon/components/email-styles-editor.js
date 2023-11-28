@@ -30,7 +30,6 @@ export default class EmailStylesEditor extends Component {
 
   set editorContents(value) {
     this.styles.setField(this.fieldName, value);
-    return value;
   }
 
   @action

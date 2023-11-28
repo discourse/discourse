@@ -47,7 +47,6 @@ RSpec.describe ContentSecurityPolicy do
         %w[
           'self'
           http://test.localhost/assets/
-          http://test.localhost/brotli_asset/
           http://test.localhost/javascripts/
           http://test.localhost/plugins/
         ],
@@ -64,7 +63,6 @@ RSpec.describe ContentSecurityPolicy do
           http://test.localhost/sidekiq/
           http://test.localhost/mini-profiler-resources/
           http://test.localhost/assets/
-          http://test.localhost/brotli_asset/
           http://test.localhost/extra-locales/
           http://test.localhost/highlight-js/
           http://test.localhost/javascripts/
@@ -118,7 +116,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://cdn.com/assets/
-          https://cdn.com/brotli_asset/
           https://cdn.com/highlight-js/
           https://cdn.com/javascripts/
           https://cdn.com/plugins/
@@ -133,7 +130,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://s3-cdn.com/assets/
-          https://s3-cdn.com/brotli_asset/
           https://cdn.com/highlight-js/
           https://cdn.com/javascripts/
           https://cdn.com/plugins/
@@ -148,7 +144,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://s3-asset-cdn.com/assets/
-          https://s3-asset-cdn.com/brotli_asset/
           https://cdn.com/highlight-js/
           https://cdn.com/javascripts/
           https://cdn.com/plugins/
@@ -166,7 +161,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://cdn.com/forum/assets/
-          https://cdn.com/forum/brotli_asset/
           https://cdn.com/forum/highlight-js/
           https://cdn.com/forum/javascripts/
           https://cdn.com/forum/plugins/
@@ -181,7 +175,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://s3-cdn.com/assets/
-          https://s3-cdn.com/brotli_asset/
           https://cdn.com/forum/highlight-js/
           https://cdn.com/forum/javascripts/
           https://cdn.com/forum/plugins/

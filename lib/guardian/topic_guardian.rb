@@ -29,7 +29,7 @@ module TopicGuardian
   end
 
   def can_see_shared_draft?
-    @user.has_trust_level_or_staff?(SiteSetting.shared_drafts_min_trust_level)
+    @user.in_any_groups?(SiteSetting.shared_drafts_allowed_groups_map)
   end
 
   def can_create_whisper?

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::SendPushNotification do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:subscription) { Fabricate(:push_subscription) }
   let(:payload) { { notification_type: 1, excerpt: "Hello you" } }
 

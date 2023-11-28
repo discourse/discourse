@@ -495,8 +495,6 @@ te:
         cancel: "రద్దుచేయి"
       name:
         title: "పేరు"
-        instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)"
-        instructions_required: "మీ పూర్తి పేరు"
         too_short: "మీ పేరు మరీ చిన్నది"
         ok: "మీ పేరు బాగుంది"
       username:
@@ -1103,9 +1101,6 @@ te:
       title: "మా కమ్యునిటీని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు"
       action: "టపాను కేతనించు"
       take_action_options:
-        default:
-          title: "చర్య తీసుకో"
-          details: "మరిన్ని కమ్యునిటీ కేతనాల కోసం ఎదురు చూడకుండా ఇప్పుడే కేతన గట్టు చేరు"
         suspend:
           title: "సభ్యుడిని సస్పెండు చేయి"
       delete_spammer: "స్పామరును తొలగించు"
@@ -1113,7 +1108,6 @@ te:
       ip_address_missing: "వర్తించదు"
       hidden_email_address: "(దాయబడింది)"
       submit_tooltip: "ఒక ప్రైవేటు కేతనం అందించు"
-      take_action_tooltip: "మరిన్ని కమ్యునిటీ కేతనాల కోసం ఎదురు చూడకుండా ఇప్పుడే కేతన గట్టు చేరు"
       cant: "క్షమించాలి. ఇప్పుడు ఈ టపాను కేతనిచంలేరు."
       formatted_name:
         off_topic: "ఇది విషయాంతరం"
@@ -1371,6 +1365,9 @@ te:
             my_posts:
               content: "నా టపాలు"
     form_templates:
+      upload_field:
+        upload: "ఎక్కించు"
+        uploading: "ఎగుమతవుతోంది"
       errors:
         typeMismatch:
           default: "దయచేసి చెల్లే విలువ రాయండి"
@@ -1394,6 +1391,8 @@ te:
         version_check_pending: "మీరు ఇటీవలే ఉన్నతీకరించినట్టున్నారు. అద్భుతం!"
         installed_version: "ప్రతిష్టించబడింది"
         latest_version: "తాజా"
+        new_features:
+          learn_more: "మరింత తెలుసుకోండి..."
         last_checked: "చివరగా సరిచూసినది"
         refresh_problems: "తాజాపరుచు"
         no_problems: "ఎటువంటి సమస్యలూ కనిపించలేదు"
@@ -1478,6 +1477,7 @@ te:
         enabled: "చేతమైందా?"
         change_settings_short: "అమరికలు"
         howto: "పొడిగింతలు నేను ఎలా ప్రతిష్టించగలను?"
+        author: " %{author} రాసిన"
       backups:
         title: "బ్యాకప్పులు"
         menu:

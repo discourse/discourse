@@ -72,6 +72,7 @@ export default Component.extend({
       model: {
         title: dismissTitle,
         count: this.selectedTopics.length,
+        dismissRead: this.dismissRead,
       },
     });
   },

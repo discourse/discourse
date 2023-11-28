@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe StaffActionLogger do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   let(:logger) { described_class.new(admin) }
 
   describe "new" do
@@ -72,7 +72,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_topic_delete_recover" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     context "when deleting topic" do
       subject(:log_topic_delete_recover) do
@@ -120,7 +120,7 @@ RSpec.describe StaffActionLogger do
       described_class.new(admin).log_trust_level_change(user, old_trust_level, new_trust_level)
     end
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     let(:old_trust_level) { TrustLevel[0] }
     let(:new_trust_level) { TrustLevel[1] }
@@ -355,8 +355,8 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_badge_revoke" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:badge) { Fabricate(:badge) }
+    fab!(:user)
+    fab!(:badge)
     let(:user_badge) { BadgeGranter.grant(badge, user) }
 
     it "raises an error when argument is missing" do
@@ -510,7 +510,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_category_creation" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     it "raises an error when category is missing" do
       expect { logger.log_category_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -529,7 +529,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_lock_trust_level" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "raises an error when argument is missing" do
       expect { logger.log_lock_trust_level(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -549,7 +549,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_user_activate" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "raises an error when argument is missing" do
       expect { logger.log_user_activate(nil, nil) }.to raise_error(Discourse::InvalidParameters)
@@ -657,7 +657,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_topic_closed" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "raises an error when argument is missing" do
       expect { logger.log_topic_closed(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -674,7 +674,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_topic_archived" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "raises an error when argument is missing" do
       expect { logger.log_topic_archived(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -691,7 +691,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_post_staff_note" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
 
     it "raises an error when argument is missing" do
       expect { logger.log_topic_archived(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -717,7 +717,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_post_staff_note" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
 
     it "raises an error when argument is missing" do
       expect { logger.log_topic_archived(nil) }.to raise_error(Discourse::InvalidParameters)

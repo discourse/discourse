@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
-import { escapeExpression } from "discourse/lib/utilities";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -30,8 +29,8 @@ export default class ChatThread {
   @tracked threadMessageBusLastId;
   @tracked replyCount;
   @tracked tracking;
-  @tracked currentUserMembership = null;
-  @tracked preview = null;
+  @tracked currentUserMembership;
+  @tracked preview;
 
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
 
@@ -39,7 +38,6 @@ export default class ChatThread {
     this.id = args.id;
     this.channel = channel;
     this.status = args.status;
-    this.draft = args.draft;
     this.staged = args.staged;
     this.replyCount = args.reply_count;
 
@@ -59,11 +57,19 @@ export default class ChatThread {
     this.preview = ChatThreadPreview.create(args.preview);
   }
 
+  resetDraft(user) {
+    this.draft = ChatMessage.createDraftMessage(this.channel, {
+      user,
+      thread: this,
+    });
+  }
+
   async stageMessage(message) {
     message.id = guid();
     message.staged = true;
+    message.processed = false;
     message.draft = false;
-    message.createdAt ??= moment.utc().format();
+    message.createdAt = new Date();
     message.thread = this;
 
     this.messagesManager.addMessages([message]);
@@ -72,9 +78,5 @@ export default class ChatThread {
 
   get routeModels() {
     return [...this.channel.routeModels, this.id];
-  }
-
-  get escapedTitle() {
-    return escapeExpression(this.title);
   }
 }

@@ -250,7 +250,9 @@ class PostActionCreator
     end
 
     score = ReviewableFlaggedPost.find_by(target: @post)&.score || 0
-    @post.hide!(@post_action_type_id) if score >= Reviewable.score_required_to_hide_post
+    if score >= Reviewable.score_required_to_hide_post || @take_action
+      @post.hide!(@post_action_type_id)
+    end
   end
 
   # Special case: If you have TL3 and the user is TL0, and the flag is spam,

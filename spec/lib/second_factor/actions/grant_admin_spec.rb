@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe SecondFactor::Actions::GrantAdmin do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
 
   def cleanup_admin_confirmation_redis_keys
     keys = Discourse.redis.keys("admin-confirmation:*")

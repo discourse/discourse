@@ -19,6 +19,7 @@ import {
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -463,8 +464,10 @@ acceptance("Topic with title decorated", function (needs) {
   needs.user();
   needs.hooks.beforeEach(() => {
     withPluginApi("0.8.40", (api) => {
-      api.decorateTopicTitle((topic, node, topicTitleType) => {
-        node.innerText = `${node.innerText}-${topic.id}-${topicTitleType}`;
+      withSilencedDeprecations("discourse.decorate-topic-title", () => {
+        api.decorateTopicTitle((topic, node, topicTitleType) => {
+          node.innerText = `${node.innerText}-${topic.id}-${topicTitleType}`;
+        });
       });
     });
   });

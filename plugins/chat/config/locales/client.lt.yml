@@ -65,6 +65,7 @@ lt:
           settings: Nustatymai
       new_message_modal:
         no_items: "Nėra elementų"
+        filter: "Filtruoti"
       direct_message_creator:
         title: Nauja žinutė
         prefix: "Kam:"

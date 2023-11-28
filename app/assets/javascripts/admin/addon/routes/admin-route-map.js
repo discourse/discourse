@@ -15,6 +15,10 @@ export default function () {
         path: "/dashboard/reports",
         resetNamespace: true,
       });
+      this.route("admin.dashboardNewFeatures", {
+        path: "/dashboard/whats-new",
+        resetNamespace: true,
+      });
     });
 
     this.route(
@@ -58,6 +62,11 @@ export default function () {
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
           }
         );
+
+        this.route("adminCustomizeThemeComponents", {
+          path: "theme-components",
+          resetNamespace: true,
+        });
 
         this.route(
           "adminSiteText",

@@ -69,7 +69,6 @@
     @include form-item-sizing;
     font-weight: 500;
     overflow: hidden;
-    transition: all 0.25s;
     cursor: pointer;
     display: flex;
     align-items: stretch;
@@ -113,7 +112,8 @@
       }
 
       .name {
-        display: inline-block;
+        display: inline-flex;
+        gap: 0.5em;
         > .d-icon {
           margin-left: 0.5em;
           margin-right: 0;
@@ -127,10 +127,6 @@
       &.select-kit-selected-color {
         border-bottom-width: 5px;
         border-bottom-style: solid;
-      }
-
-      .badge-wrapper {
-        font-size: inherit;
       }
     }
 

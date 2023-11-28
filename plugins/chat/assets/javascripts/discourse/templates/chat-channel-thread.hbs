@@ -1,5 +1,7 @@
-<ChatThread
-  @thread={{this.model}}
-  @targetMessageId={{this.targetMessageId}}
-  @includeHeader={{true}}
-/>
+{{#each (array this.model) as |thread|}}
+  <ChatThread
+    @thread={{thread}}
+    @targetMessageId={{this.targetMessageId}}
+    @includeHeader={{true}}
+  />
+{{/each}}

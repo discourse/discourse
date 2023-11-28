@@ -591,7 +591,7 @@ class PostMover
               if posts.first.is_first_post?
                 "[#{destination_topic.title}](#{destination_topic.relative_url})"
               else
-                "[#{destination_topic.title}](#{posts.first.url})"
+                "[#{destination_topic.title}](#{posts.first.relative_url})"
               end
             ),
         )

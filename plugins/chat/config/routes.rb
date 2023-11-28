@@ -8,6 +8,8 @@ Chat::Engine.routes.draw do
     post "/channels" => "channels#create"
     put "/channels/read/" => "reads#update_all"
     put "/channels/:channel_id/read/:message_id" => "reads#update"
+    post "/channels/:channel_id/messages/:message_id/flags" => "channels_messages_flags#create"
+    post "/channels/:channel_id/drafts" => "channels_drafts#create"
     delete "/channels/:channel_id" => "channels#destroy"
     put "/channels/:channel_id" => "channels#update"
     get "/channels/:channel_id" => "channels#show"
@@ -15,8 +17,10 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/messages" => "channel_messages#index"
     put "/channels/:channel_id/messages/:message_id" => "channel_messages#update"
     post "/channels/:channel_id/messages/moves" => "channels_messages_moves#create"
+    post "/channels/:channel_id/invites" => "channels_invites#create"
     post "/channels/:channel_id/archives" => "channels_archives#create"
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
+    post "/channels/:channel_id/memberships" => "channels_memberships#create"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"
     post "/channels/:channel_id/memberships/me" => "channels_current_user_membership#create"
     put "/channels/:channel_id/notifications-settings/me" =>
@@ -36,6 +40,7 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
     get "/channels/:channel_id/threads/:thread_id/messages" => "channel_thread_messages#index"
     put "/channels/:channel_id/threads/:thread_id/read" => "thread_reads#update"
+    post "/channels/:channel_id/threads/:thread_id/drafts" => "channels_threads_drafts#create"
     put "/channels/:channel_id/threads/:thread_id/notifications-settings/me" =>
           "channel_threads_current_user_notifications_settings#update"
 
@@ -69,19 +74,14 @@ Chat::Engine.routes.draw do
   get "/browse/closed" => "chat#respond"
   get "/browse/open" => "chat#respond"
   get "/browse/archived" => "chat#respond"
-  post "/enable" => "chat#enable_chat"
-  post "/disable" => "chat#disable_chat"
   post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
   get "/message/:message_id" => "chat#message_link"
   put ":chat_channel_id/react/:message_id" => "chat#react"
   put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
-  post "/:chat_channel_id/:message_id/flag" => "chat#flag"
   post "/:chat_channel_id/quote" => "chat#quote_messages"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
-  put "/:chat_channel_id/invite" => "chat#invite_users"
-  post "/drafts" => "chat#set_draft"
   post "/:chat_channel_id" => "api/channel_messages#create"
-  put "/flag" => "chat#flag"
+
   get "/emojis" => "emojis#index"
 
   base_c_route = "/c/:channel_title/:channel_id"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableQueuedPostSerializer do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "new topic" do
     fab!(:reviewable) { Fabricate(:reviewable_queued_post_topic) }

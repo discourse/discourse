@@ -1,3 +1,6 @@
+/* global PublicKeyCredential */
+
+import { ajax } from "discourse/lib/ajax";
 import I18n from "discourse-i18n";
 
 export function stringToBuffer(str) {
@@ -16,6 +19,27 @@ export function bufferToBase64(buffer) {
 export function isWebauthnSupported() {
   return typeof PublicKeyCredential !== "undefined";
 }
+
+// The webauthn API only supports one auth attempt at a time
+// We need this service to cancel the previous attempt when a new one is started
+class WebauthnAbortService {
+  controller = undefined;
+
+  signal() {
+    if (this.controller) {
+      const abortError = new Error("Cancelling pending webauthn call");
+      abortError.name = "AbortError";
+      this.controller.abort(abortError);
+    }
+
+    this.controller = new AbortController();
+    return this.controller.signal;
+  }
+}
+
+// Need to use a singleton here to reset the active webauthn ceremony
+// Inspired by the BaseWebAuthnAbortService in https://github.com/MasterKale/SimpleWebAuthn
+export const WebauthnAbortHandler = new WebauthnAbortService();
 
 export function getWebauthnCredential(
   challenge,
@@ -49,6 +73,7 @@ export function getWebauthnCredential(
         // (this is only a hint, though, browser may still prompt)
         userVerification: "discouraged",
       },
+      signal: WebauthnAbortHandler.signal(),
     })
     .then((credential) => {
       // 3. If credential.response is not an instance of AuthenticatorAssertionResponse, abort the ceremony.
@@ -94,40 +119,32 @@ export function getWebauthnCredential(
     });
 }
 
-// The webauthn API only supports one auth attempt at a time
-// We need this service to cancel the previous attempt when a new one is started
-class WebauthnAbortService {
-  controller = undefined;
-
-  signal() {
-    if (this.controller) {
-      const abortError = new Error("Cancelling pending webauthn call");
-      abortError.name = "AbortError";
-      this.controller.abort(abortError);
-    }
-
-    this.controller = new AbortController();
-    return this.controller.signal;
-  }
-}
-
-// Need to use a singleton here to reset the active webauthn ceremony
-// Inspired by the BaseWebAuthnAbortService in https://github.com/MasterKale/SimpleWebAuthn
-const WebauthnAbortHandler = new WebauthnAbortService();
-
 export async function getPasskeyCredential(
-  challenge,
   errorCallback,
-  mediation = "optional"
+  mediation = "optional",
+  isFirefox = false
 ) {
   if (!isWebauthnSupported()) {
     return errorCallback(I18n.t("login.security_key_support_missing_error"));
   }
 
+  // we need to check isConditionalMediationAvailable for Firefox
+  // without it, Firefox will throw console errors
+  // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
+  // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
+  if (mediation === "conditional" && isFirefox) {
+    const isCMA = await PublicKeyCredential.isConditionalMediationAvailable();
+    if (!isCMA) {
+      return;
+    }
+  }
+
   try {
+    const resp = await ajax("/session/passkey/challenge.json");
+
     const credential = await navigator.credentials.get({
       publicKey: {
-        challenge: stringToBuffer(challenge),
+        challenge: stringToBuffer(resp.challenge),
         // https://www.w3.org/TR/webauthn-2/#user-verification
         // for passkeys (first factor), user verification should be marked as required
         // it ensures browser requests PIN or biometrics before authenticating
@@ -146,15 +163,31 @@ export async function getPasskeyCredential(
       userHandle: bufferToBase64(credential.response.userHandle),
     };
   } catch (error) {
-    if (error.name === "NotAllowedError") {
-      return errorCallback(I18n.t("login.security_key_not_allowed_error"));
-    } else if (error.name === "AbortError") {
+    if (error.name === "AbortError") {
       // no need to show an error when the cancelling a pending ceremony
       // this happens when switching from the conditional method (username input autofill)
       // to the optional method (login button) or vice versa
       return null;
+    }
+
+    if (mediation === "conditional") {
+      // The conditional method gets triggered in the background
+      // it's not helpful to show errors for it in the UI
+      // eslint-disable-next-line no-console
+      console.error(error);
+      return null;
+    }
+
+    if (error.name === "NotAllowedError") {
+      return errorCallback(I18n.t("login.security_key_not_allowed_error"));
+    } else if (error.name === "SecurityError") {
+      return errorCallback(
+        I18n.t("login.passkey_security_error", {
+          message: error.message,
+        })
+      );
     } else {
-      return errorCallback(error);
+      return errorCallback(error.message);
     }
   }
 }

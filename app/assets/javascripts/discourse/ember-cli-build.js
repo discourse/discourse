@@ -13,8 +13,29 @@ const DeprecationSilencer = require("deprecation-silencer");
 const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
+const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const withSideWatch = require("./lib/with-side-watch");
+const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
+const crypto = require("crypto");
+
+const EMBER_MAJOR_VERSION = parseInt(
+  require("ember-source/package.json").version.split(".")[0],
+  10
+);
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
+
+function filterForEmberVersion(tree) {
+  if (EMBER_MAJOR_VERSION < 4) {
+    return tree;
+  }
+
+  return funnel(tree, {
+    // d-modal-legacy includes a named outlet which would cause
+    // a build failure in modern Ember
+    exclude: ["**/components/d-modal-legacy.hbs"],
+  });
+}
 
 module.exports = function (defaults) {
   const discourseRoot = path.resolve("../../../..");
@@ -69,13 +90,25 @@ module.exports = function (defaults) {
       backburner:
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
     },
+
+    trees: {
+      app: filterForEmberVersion(
+        RawHandlebarsCompiler(
+          withSideWatch("app", { watching: ["../discourse-markdown-it"] })
+        )
+      ),
+    },
   });
+
+  if (EMBER_MAJOR_VERSION < 4) {
+    // TODO: remove me
+    // Ember 3.28 still has some internal dependency on jQuery being a global,
+    // for the time being we will bring it in vendor.js
+    app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
+  }
 
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(vendorJs + "bootbox.js");
-  app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
-    type: "test",
-  });
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
   app.import(
@@ -85,15 +118,11 @@ module.exports = function (defaults) {
 
   const discoursePluginsTree = app.project
     .findAddonByName("discourse-plugins")
-    .generatePluginsTree();
+    .generatePluginsTree(app.tests);
 
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
   const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
-
-  const markdownItBundleTree = app.project
-    .findAddonByName("pretty-text")
-    .treeForMarkdownItBundle();
 
   const testStylesheetTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
@@ -111,10 +140,6 @@ module.exports = function (defaults) {
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    funnel(`${vendorJs}/highlightjs`, {
-      files: ["highlight-test-bundle.min.js"],
-      destDir: "assets/highlightjs",
-    }),
     generateWorkboxTree(),
     concat(adminTree, {
       inputFiles: ["**/*.js"],
@@ -124,27 +149,49 @@ module.exports = function (defaults) {
       inputFiles: ["**/*.js"],
       outputFile: `assets/wizard.js`,
     }),
-    concat(markdownItBundleTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/markdown-it-bundle.js`,
-    }),
     generateScriptsTree(app),
     discoursePluginsTree,
     testStylesheetTree,
   ];
 
+  const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";
+  const cachebusterHash = crypto
+    .createHash("md5")
+    .update(assetCachebuster)
+    .digest("hex")
+    .slice(0, 8);
+
   const appTree = compatBuild(app, Webpack, {
+    staticAppPaths: ["static"],
     packagerOptions: {
       webpackConfig: {
         devtool: "source-map",
+        output: {
+          publicPath: "auto",
+          filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
+          chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
+        },
+        cache: isProduction
+          ? false
+          : {
+              type: "memory",
+              maxGenerations: 1,
+            },
+        entry: {
+          "assets/discourse.js/features/markdown-it.js": {
+            import: "./static/markdown-it",
+            dependOn: "assets/discourse.js",
+            runtime: false,
+          },
+        },
         externals: [
           function ({ request }, callback) {
             if (
               !request.includes("-embroider-implicit") &&
-              (request.startsWith("admin/") ||
+              // TODO: delete special case for jquery when removing app.import() above
+              ((EMBER_MAJOR_VERSION < 4 && request === "jquery") ||
+                request.startsWith("admin/") ||
                 request.startsWith("wizard/") ||
-                (request.startsWith("pretty-text/engines/") &&
-                  request !== "pretty-text/engines/discourse-markdown-it") ||
                 request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))
             ) {
@@ -160,7 +207,56 @@ module.exports = function (defaults) {
               exportsPresence: "error",
             },
           },
+          rules: [
+            {
+              test: require.resolve("bootstrap/js/modal"),
+              use: [
+                {
+                  loader: "imports-loader",
+                  options: {
+                    imports: {
+                      moduleName: "jquery",
+                      name: "jQuery",
+                    },
+                  },
+                },
+              ],
+            },
+          ],
         },
+        plugins: [
+          // The server use this output to map each asset to its chunks
+          new StatsWriterPlugin({
+            filename: "assets.json",
+            stats: {
+              all: false,
+              entrypoints: true,
+            },
+            transform({ entrypoints }) {
+              let names = Object.keys(entrypoints);
+              let output = {};
+
+              for (let name of names.sort()) {
+                let assets = entrypoints[name].assets.map(
+                  (asset) => asset.name
+                );
+
+                let parent = names.find((parentName) =>
+                  name.startsWith(parentName + "/")
+                );
+
+                if (parent) {
+                  name = name.slice(parent.length + 1);
+                  output[parent][name] = { assets };
+                } else {
+                  output[name] = { assets };
+                }
+              }
+
+              return JSON.stringify(output, null, 2);
+            },
+          }),
+        ],
       },
     },
   });

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Visit channel", type: :system do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:category)
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user) { Fabricate(:user) }
   fab!(:category_channel_1) { Fabricate(:category_channel) }

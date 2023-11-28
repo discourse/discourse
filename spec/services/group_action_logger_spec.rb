@@ -4,8 +4,8 @@ RSpec.describe GroupActionLogger do
   subject(:logger) { described_class.new(group_owner, group) }
 
   fab!(:group_owner) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:group)
+  fab!(:user)
 
   before { group.add_owner(group_owner) }
 

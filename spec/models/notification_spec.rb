@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Notification do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:user)
+  fab!(:coding_horror)
 
   before { NotificationEmailer.enable }
 
@@ -104,7 +104,7 @@ RSpec.describe Notification do
   end
 
   describe "high priority creation" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "automatically marks the notification as high priority if it is a high priority type" do
       notif =
@@ -142,7 +142,7 @@ RSpec.describe Notification do
   end
 
   describe "unread counts" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     context "with a regular notification" do
       it "increases unread_notifications" do
@@ -478,7 +478,7 @@ end
 
 # pulling this out cause I don't want an observer
 RSpec.describe Notification do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe ".prioritized_list" do
     def create(**opts)
@@ -695,8 +695,8 @@ RSpec.describe Notification do
 
     describe "#consolidate_membership_requests" do
       fab!(:group) { Fabricate(:group, name: "XXsssssddd") }
-      fab!(:user) { Fabricate(:user) }
-      fab!(:post) { Fabricate(:post) }
+      fab!(:user)
+      fab!(:post)
 
       def create_membership_request_notification
         Notification.consolidate_or_create!(
@@ -752,7 +752,7 @@ RSpec.describe Notification do
   end
 
   describe "purge_old!" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:notification1) { Fabricate(:notification, user: user) }
     fab!(:notification2) { Fabricate(:notification, user: user) }
     fab!(:notification3) { Fabricate(:notification, user: user) }
@@ -777,7 +777,7 @@ RSpec.describe Notification do
   end
 
   describe "do not disturb" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "creates a shelved_notification record when created while user is in DND" do
       user.do_not_disturb_timings.create(starts_at: Time.now, ends_at: 3.days.from_now)

@@ -51,13 +51,7 @@ describe "Thread preview", type: :system do
   context "when message has thread with deleted original message" do
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1, original_message: message_1) }
 
-    before do
-      Chat::TrashMessage.call(
-        message_id: message_1.id,
-        channel_id: channel_1.id,
-        guardian: message_1.user.guardian,
-      )
-    end
+    before { trash_message!(message_1, user: message_1.user) }
 
     it "shows preview" do
       chat_page.visit_channel(channel_1)

@@ -106,6 +106,7 @@ module PageObjects
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         composer.fill_in(with: text)
         click_send_message
+        expect(page).to have_no_css(".chat-message.-not-processed")
         click_composer
         text
       end
@@ -141,7 +142,7 @@ module PageObjects
 
       def edit_message(message, text = nil)
         messages.edit(message)
-        send_message(message.message + text) if text
+        send_message(message.message + " " + text) if text
       end
     end
   end

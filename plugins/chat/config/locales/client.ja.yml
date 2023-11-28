@@ -232,7 +232,6 @@ ja:
       save: "保存"
       select: "選択"
       return_to_list: "チャンネルリストに戻る"
-      return_to_threads_list: "進行中のディスカッションに戻る"
       unread_threads_count:
         other: "未読のディスカッションが %{count} 件あります"
       scroll_to_bottom: "一番下にスクロール"
@@ -297,9 +296,9 @@ ja:
         default_search_placeholder: "#a-channel、@somebody など"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@somebody"
-        user_search_placeholder: "...さらにユーザーを追加"
         disabled_user: "はチャットを無効にしました"
         no_items: "項目なし"
+        filter: "フィルタ"
       channel_edit_name_slug_modal:
         title: チャンネルを編集する
         input_placeholder: 名前を追加してください
@@ -517,7 +516,6 @@ ja:
           other: "+%{count} 件"
       threads:
         open: "スレッドを開く"
-        list: "進行中のディスカッション"
         none: "このチャンネルのどのスレッドにも参加していません。"
       draft_channel_screen:
         header: "新しいメッセージ"

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::GroupsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:group)
 
   describe "#create" do
     let(:group_params) do

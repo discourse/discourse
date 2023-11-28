@@ -41,7 +41,6 @@ export default class CommunitySection {
   @tracked links;
   @tracked moreLinks;
 
-  reorderable = false;
   hideSectionHeader = true;
 
   constructor({ section, owner }) {

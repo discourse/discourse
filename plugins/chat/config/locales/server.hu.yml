@@ -89,6 +89,7 @@ hu:
         is_already_in_use: "már használatban van"
     personal_chat: "személyes csevegés"
     onebox:
+      thread_title_connector: "ebben:"
       x_members:
         one: "%{count} tag"
         other: "%{count} tag"

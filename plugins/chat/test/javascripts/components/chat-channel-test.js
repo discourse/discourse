@@ -57,7 +57,7 @@ module(
         currentUserMembership: { following: true },
         meta: { can_join_chat_channel: false },
       });
-      this.appEvents = this.container.lookup("service:appEvents");
+      this.appEvents = this.container.lookup("service:app-events");
     });
 
     test("it shows status on mentions", async function (assert) {

@@ -1341,8 +1341,6 @@ nl:
         title: "Tweeledige verificatie"
         enable: "Tweeledige verificatie beheren"
         disable_all: "Alles uitschakelen"
-        forgot_password: "Wachtwoord vergeten?"
-        confirm_password_description: "Bevestig je wachtwoord om door te gaan"
         name: "Naam"
         label: "Code"
         rate_limit: "Wacht even voordat je een andere verificatiecode probeert."
@@ -1471,14 +1469,13 @@ nl:
           generic: "Je %{provider}-account wordt gebruikt voor verificatie."
       name:
         title: "Naam"
-        instructions: "uw volledige naam (optioneel)"
-        instructions_required: "Je volledige naam"
+        instructions: "Uw volledige naam (optioneel)."
+        instructions_required: "Je volledige naam."
         required: "Voer een naam in"
         too_short: "Je naam is te kort"
         ok: "Je naam ziet er goed uit"
       username:
         title: "Gebruikersnaam"
-        instructions: "uniek, geen spaties, kort"
         short_instructions: "Mensen kunnen je vermelden als @%{username}"
         available: "Je gebruikersnaam is beschikbaar"
         not_available: "Niet beschikbaar. %{suggestion} proberen?"
@@ -1673,7 +1670,7 @@ nl:
         same_as_username: "Je wachtwoord is hetzelfde als je gebruikersnaam."
         same_as_email: "Je wachtwoord is hetzelfde als je e-mailadres."
         ok: "Je wachtwoord ziet er goed uit."
-        instructions: "minimaal %{count} tekens"
+        instructions: "Minimaal %{count} tekens."
         required: "Voer een wachtwoord in"
         confirm: "Bevestigen"
       summary:
@@ -2038,12 +2035,6 @@ nl:
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
-      plus_subcategories_title:
-        one: "%{name} en één subcategorie"
-        other: "%{name} en %{count} subcategorieën"
-      plus_subcategories:
-        one: "+ %{count} subcategorie"
-        other: "+ %{count} subcategorieën"
     select_kit:
       delete_item: "%{name} verwijderen"
       filter_by: "Filteren op: %{name}"
@@ -2334,6 +2325,7 @@ nl:
         private_message: '%{username} heeft je een persoonlijk bericht gestuurd in ''%{topic}'' - %{site_title}'
         linked: '%{username} heeft een link naar je bericht geplaatst vanuit ''%{topic}'' - %{site_title}'
         watching_first_post: '%{username} heeft een nieuw topic gemaakt: ''%{topic}'' - %{site_title}'
+        watching_category_or_tag: '%{username} heeft een bericht geplaatst in ''%{topic}'' - %{site_title}'
         confirm_title: "Meldingen ingeschakeld - %{site_title}"
         confirm_body: "Gelukt! Meldingen zijn ingeschakeld."
         custom: "Melding van %{username} op %{site_title}"
@@ -3454,8 +3446,7 @@ nl:
       action: "Bericht markeren"
       take_action_options:
         default:
-          title: "Actie ondernemen"
-          details: "De markeerdrempel direct bereiken, in plaats van op meer markeringen door de community te wachten"
+          title: "Bericht verbergen"
         suspend:
           title: "Gebruiker schorsen"
           details: "De markeerdrempel bereiken en de gebruiker schorsen"
@@ -3472,7 +3463,6 @@ nl:
       ip_address_missing: "(N.v.t.)"
       hidden_email_address: "(verborgen)"
       submit_tooltip: "Stuur de privémarkering"
-      take_action_tooltip: "De markeerdrempel direct bereiken, in plaats van op meer markeringen door de community te wachten"
       cant: "Sorry, je kunt dit bericht momenteel niet markeren."
       notify_staff: "Medewerkers privémelding sturen"
       formatted_name:
@@ -4028,7 +4018,6 @@ nl:
           delete: "Verwijderen"
           delete_confirm: "Weet je zeker dat je deze sectie wilt verwijderen?"
           reset_confirm: "Weet je zeker dat je deze sectie wilt herstellen naar de standaardinstellingen?"
-          public: "Deze sectie openbaar en zichtbaar voor iedereen maken"
           always_public: "Content in deze sectie is altijd openbaar"
           more_menu: "Menu Meer"
           links:
@@ -4133,10 +4122,12 @@ nl:
     form_template_chooser:
       select_template: "Selecteer formuliersjablonen"
     form_templates:
+      upload_field:
+        upload: "Upload"
+        uploading: "Uploaden"
       errors:
         valueMissing:
           default: "Vul dit veld in."
-          text: "Vul dit veld in."
           select-one: "Selecteer een item in de lijst."
           select-multiple: "Selecteer ten minste één item in de lijst."
           checkbox: "Selecteer dit vakje als je verder wilt gaan."
@@ -4192,9 +4183,7 @@ nl:
         latest_version: "Nieuwste"
         problems_found: "Advies op basis van je huidige website-instellingen"
         new_features:
-          title: "\U0001F381 Nieuwe functies"
-          dismiss: "Negeren"
-          learn_more: "Meer informatie"
+          learn_more: "Meer informatie..."
         last_checked: "Laatst gecontroleerd"
         refresh_problems: "Vernieuwen"
         no_problems: "Er zijn geen problemen gevonden."
@@ -4520,8 +4509,8 @@ nl:
         not_enabled: "N"
         change_settings_short: "Instellingen"
         howto: "Hoe kan ik plug-ins installeren?"
-        official: "Officiële plug-in"
         broken_route: "Kan link naar '%{name}' niet configureren. Zorg dat advertentieblockers zijn uitgeschakeld en probeer de pagina opnieuw te laden."
+        author: "Van %{author}"
       navigation_menu:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"

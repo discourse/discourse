@@ -11,7 +11,7 @@ export default Controller.extend({
 
   @action
   goNext(response) {
-    const next = this.get("step.next");
+    const next = this.step.next;
 
     if (response?.refresh_required) {
       document.location = getUrl(`/wizard/steps/${next}`);

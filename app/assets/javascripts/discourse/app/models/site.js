@@ -124,6 +124,10 @@ const Site = RestModel.extend({
       newCategory = this.store.createRecord("category", newCategory);
       categories.pushObject(newCategory);
       this.categoriesById[categoryId] = newCategory;
+      newCategory.set(
+        "parentCategory",
+        this.categoriesById[newCategory.parent_category_id]
+      );
       return newCategory;
     }
   },

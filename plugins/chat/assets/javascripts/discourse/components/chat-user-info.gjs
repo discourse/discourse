@@ -12,14 +12,25 @@ export default class ChatUserInfo extends Component {
     return userPath(this.args.user.username);
   }
 
+  get interactive() {
+    return this.args.interactive ?? false;
+  }
+
   <template>
     {{#if @user}}
-      <a href={{this.userPath}} data-user-card={{@user.username}}>
-        <ChatUserAvatar @user={{@user}} @avatarSize={{this.avatarSize}} />
-      </a>
-      <a href={{this.userPath}} data-user-card={{@user.username}}>
+      <ChatUserAvatar
+        @user={{@user}}
+        @avatarSize={{this.avatarSize}}
+        @interactive={{this.interactive}}
+      />
+
+      {{#if this.interactive}}
+        <a href={{this.userPath}} data-user-card={{@user.username}}>
+          <ChatUserDisplayName @user={{@user}} />
+        </a>
+      {{else}}
         <ChatUserDisplayName @user={{@user}} />
-      </a>
+      {{/if}}
     {{/if}}
   </template>
 }

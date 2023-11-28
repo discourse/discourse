@@ -28,7 +28,7 @@
             <Input
               @type="checkbox"
               disabled={{not (get user this.penaltyField)}}
-              {{on "click" (action "selectUserId" user.id)}}
+              {{on "click" (fn this.selectUserId user.id)}}
             />
           </td>
           <td>{{avatar user imageSize="small"}} {{user.username}}</td>

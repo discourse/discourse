@@ -76,7 +76,7 @@
           {{~this.flash.text~}}
         </div>
 
-        {{yield}}
+        {{outlet "modalBody"}}
 
         {{#each this.errors as |error|}}
           <div class="alert alert-error">

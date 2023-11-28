@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Draft do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
 
   it { is_expected.to have_many(:upload_references).dependent(:delete_all) }
 

@@ -1,5 +1,9 @@
 {{#each this.filteredResultTypes as |resultType|}}
   <div class={{resultType.componentName}}>
+    <PluginOutlet
+      @name="search-menu-results-type-top"
+      @outletArgs={{hash resultType=resultType}}
+    />
     <ul
       class="list"
       aria-label={{concat (i18n "search.results") " " resultType.type}}

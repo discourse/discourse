@@ -20,7 +20,7 @@ RSpec.describe InlineOneboxer do
   end
 
   describe "caching" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     before { InlineOneboxer.invalidate(topic.url) }
 

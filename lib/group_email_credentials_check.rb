@@ -7,6 +7,9 @@
 # problem checks, and if any credentials have issues they will show up on
 # the admin dashboard as a high priority issue.
 class GroupEmailCredentialsCheck
+  def self.max_retries = 2
+  def self.retry_wait = 30.seconds
+
   def self.run
     errors = []
 

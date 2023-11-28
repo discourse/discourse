@@ -305,7 +305,8 @@ sk:
               same_as_email: "je také isté ako Váš email. Prosím použite bezpečnejšie heslo"
               same_as_current: "je také isté ako Vaše súčasné heslo"
             ip_address:
-              signup_not_allowed: "Registrácia z tohto účtu nie je povolená-"
+              blocked: "Nové registrácie nie sú povolené z Vašej IP adresy."
+              max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
         color_scheme_color:
           attributes:
             hex:
@@ -819,8 +820,6 @@ sk:
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     use_admin_ip_allowlist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
-    top_menu: "Určuje, ktoré položky sa zobrazia na navigácií na domovskej stránke a v akom poradí. Napríklad posledné|neprečítané|kategórie|naj|prečítané|záložky"
-    post_menu: "Určuje, ktoré položky sa objavia v menu príspevku a v akom poradí. Napríklad páči sa mi|upraviť|označiť|vymazať|zdieľať|záložka|odpovedať"
     post_menu_hidden_items: "Položky vo východzích nastaveniach menu schované pri príspevkovom menu, dokiaľ neni kliknuté na rozbaľovaciu elipsu."
     share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."
     site_contact_username: "Platné používateľské meno obsluhy, ktorá bude posielať automatizované správy. Pokiaľ je vynechané, použije sa východzí systémový účet. "
@@ -911,7 +910,6 @@ sk:
     allow_uppercase_posts: "Povoliť kapitálky v názve témy, alebo tele príspevku."
     min_title_similar_length: "Minimálna dĺžka nadpisu na spustenie kontroly na podobné témy."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
-    category_style: "Vizuálny štýl pre odznaky za kategórie."
     dark_mode_none: "Žiadny"
     max_attachment_size_kb: "Mmaximálna veľkosť vloženej prílohy v kB. Rovnako musí byť nastavená v nginx (client_max_body_size) / apache alebo na proxy."
     authorized_extensions: "Zoznam povolených príloh súborov ktoré je umožnené vkladať (použite '*' na vkladanie súborov všetkých typov)"
@@ -989,7 +987,6 @@ sk:
     show_time_gap_days: "Koľko dní musí uplynúť medzi dvoma príspevkami v téme, aby sa medzi nimi zobrazila časová medzera."
     short_progress_text_threshold: "Ak počet príspevkov v téme presiahne toto číslo, ukazateľ priebehu zobrazí iba aktuálne číslo príspevku. Túto hodnotu možno budete potrebovať zmeniť, ak zmeníte šírku ukazateľa priebehu."
     warn_reviving_old_topic_age: "Zobrazenie varovania, ak niekto začne odpovedať na tému, kde je posledná odpoveď staršia ako uvedený počet dní. Na vypnutie varozania zadajte 0."
-    autohighlight_all_code: "Zapnúť vysvietenie syntaxe kódu na všetky formátované bloky kódu, i keď nie je explicitne zadaný jazyk."
     embed_truncate: "Orezať vkladané príspevky."
     embed_post_limit: "Maximálny počet príspevkov na vloženie."
     embed_username_required: "Na vytvorenie téme je vyžadované používateľské meno."
@@ -1125,9 +1122,6 @@ sk:
     email:
       not_allowed: "nie je povolená od tohto poskytovateľa emailu. Prosím použite inú emailovú adresu. "
       blocked: "nie je povolená."
-    ip_address:
-      blocked: "Nové registrácie nie sú povolené z Vašej IP adresy."
-      max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
   unsubscribe_mailer:
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z %{site_title}"
   invite_password_instructions:

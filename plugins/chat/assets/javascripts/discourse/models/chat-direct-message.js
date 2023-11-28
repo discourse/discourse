@@ -7,13 +7,13 @@ export default class ChatDirectMessage {
     return new ChatDirectMessage(args);
   }
 
-  @tracked id;
   @tracked users = null;
+  @tracked group = false;
 
   type = CHATABLE_TYPES.directMessageChannel;
 
   constructor(args = {}) {
-    this.id = args.id;
+    this.group = args.group ?? false;
     this.users = this.#initUsers(args.users || []);
   }
 
@@ -21,9 +21,9 @@ export default class ChatDirectMessage {
     return users.map((user) => {
       if (!user || user instanceof User) {
         return user;
+      } else {
+        return User.create(user);
       }
-
-      return User.create(user);
     });
   }
 }

@@ -355,7 +355,8 @@ nb_NO:
               same_as_current: "er det samme som nåværende passord."
               unique_characters: "har for mange gjentatte tegn. Benytt et sikrere passord."
             ip_address:
-              signup_not_allowed: "Registrering er ikke tillatt fra denne kontoen."
+              blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
+              max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
         user_email:
           attributes:
             user_id:
@@ -1088,9 +1089,6 @@ nb_NO:
       blank: "Må være til stede"
     email:
       blocked: "er ikke tillatt."
-    ip_address:
-      blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
-      max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
   flags_dispositions:
     agreed: "Takk for at du sier ifra. Vi er enig at det er et problem her og vi ser på saken."
     disagreed: "Takk for at du sier ifra. Vi skal se på det. "

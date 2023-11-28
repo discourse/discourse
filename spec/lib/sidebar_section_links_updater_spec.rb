@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SidebarSectionLinksUpdater do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user2) { Fabricate(:user) }
 
   describe ".update_category_section_links" do
@@ -40,7 +40,7 @@ RSpec.describe SidebarSectionLinksUpdater do
   end
 
   describe ".update_tag_section_links" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
     fab!(:tag2) { Fabricate(:tag) }
 
     fab!(:user_tag_section_link) { Fabricate(:tag_sidebar_section_link, linkable: tag, user: user) }

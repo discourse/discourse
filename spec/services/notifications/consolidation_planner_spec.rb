@@ -5,7 +5,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
 
   describe "#consolidate_or_save!" do
     let(:threshold) { 1 }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:like_user) { "user1" }
 
     before { SiteSetting.notification_consolidation_threshold = threshold }

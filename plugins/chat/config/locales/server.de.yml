@@ -28,6 +28,9 @@ de:
     max_mentions_per_chat_message: "Maximale Anzahl von @name-Benachrichtigungen, die ein Benutzer in einer Chat-Nachricht verwenden kann."
     chat_max_direct_message_users: "Benutzer können nicht mehr als diese Anzahl anderer Benutzer hinzufügen, wenn sie eine neue Direktnachricht erstellen. Auf 0 setzen, um nur Nachrichten an sich selbst zuzulassen. Teammitglieder sind von dieser Einstellung ausgenommen."
     chat_allow_archiving_channels: "Dem Team erlauben, Nachrichten zu einem Thema zu archivieren, wenn sie einen Kanal schließen."
+    chat_editing_grace_period: "Für (n) Sekunden nach dem Senden eines Chats wird das (bearbeitete) Schlagwort nicht in der Chat-Nachricht angezeigt."
+    chat_editing_grace_period_max_diff_low_trust: "Maximale Anzahl von Zeichenänderungen, die in der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das (bearbeitete) Schlagwort in der Chat-Nachricht angezeigt (Vertrauensstufe 0 und 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die in der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das (bearbeitete) Schlagwort in der Chat-Nachricht angezeigt (Vertrauensstufe 2 und höher)."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
@@ -55,6 +58,7 @@ de:
   chat:
     deleted_chat_username: gelöscht
     errors:
+      users_cant_be_added_to_channel: "Diesem Kanal können keine Nutzer hinzugefügt werden."
       channel_exists_for_category: "Für diese Kategorie und diesen Namen existiert bereits ein Kanal"
       channel_new_message_disallowed:
         archived: "Der Kanal ist archiviert, es können keine neuen Nachrichten gesendet werden"
@@ -132,6 +136,9 @@ de:
         transcript_title: "Transkript früherer Nachrichten in %{channel_name}"
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} wurde von %{inviting_user}eingeladen."
+        other: "%{invited_users} sind von %{inviting_user}eingeladen worden."
       archive:
         first_post_raw: "Dieses Thema ist ein Archiv des Chat-Kanals [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -177,6 +184,7 @@ de:
       inline_to_message: "Nachricht #%{message_id} von %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat für Thema %{topic_title}"
+      thread_title_connector: "in"
       x_members:
         one: "%{count} Mitglied"
         other: "%{count} Mitglieder"

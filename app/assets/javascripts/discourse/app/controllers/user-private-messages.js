@@ -27,6 +27,7 @@ export function resetCustomUserNavMessagesDropdownRows() {
 export default class extends Controller {
   @service router;
   @controller user;
+  @controller userTopicsList;
 
   @tracked group;
   @tracked tagId;
@@ -37,6 +38,10 @@ export default class extends Controller {
   @readOnly("user.viewingSelf") viewingSelf;
   @readOnly("router.currentRoute.parent.name") currentParentRouteName;
   @readOnly("site.can_tag_pms") pmTaggingEnabled;
+
+  get bulkSelectHelper() {
+    this.userTopicsList.bulkSelectHelper;
+  }
 
   get messagesDropdownValue() {
     let value;

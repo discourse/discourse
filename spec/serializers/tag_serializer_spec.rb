@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe TagSerializer do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:tag) { Fabricate(:tag) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:tag)
+  fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:topic_in_public_category) { Fabricate(:topic, tags: [tag]) }
   fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category, tags: [tag]) }

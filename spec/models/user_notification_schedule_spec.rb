@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserNotificationSchedule do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "validations" do
     it "is invalid when no times are specified" do

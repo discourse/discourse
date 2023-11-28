@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe "DiscoursePoll endpoints" do
   describe "fetch voters for a poll" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:post) { Fabricate(:post, raw: "[poll public=true]\n- A\n- B\n[/poll]") }
 
     fab!(:post_with_multiple_poll) { Fabricate(:post, raw: <<~SQL) }
@@ -222,8 +222,8 @@ RSpec.describe "DiscoursePoll endpoints" do
     end
 
     context "when topic is in a private category" do
-      fab!(:admin) { Fabricate(:admin) }
-      fab!(:group) { Fabricate(:group) }
+      fab!(:admin)
+      fab!(:group)
       fab!(:private_category) { Fabricate(:private_category, group: group) }
       fab!(:private_topic) { Fabricate(:topic, category: private_category) }
       fab!(:private_post) { Fabricate(:post, topic: private_topic, raw: <<~SQL) }

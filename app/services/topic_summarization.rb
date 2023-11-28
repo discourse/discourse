@@ -35,7 +35,7 @@ class TopicSummarization
       content[:contents] << { poster: username, id: pn, text: raw }
     end
 
-    summarization_result = strategy.summarize(content, &on_partial_blk)
+    summarization_result = strategy.summarize(content, user, &on_partial_blk)
 
     cache_summary(summarization_result, targets_data.map(&:first), topic)
   end

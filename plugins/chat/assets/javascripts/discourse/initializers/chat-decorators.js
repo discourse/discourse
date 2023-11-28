@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
 import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";

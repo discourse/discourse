@@ -61,7 +61,7 @@ RSpec.describe StylesheetsController do
   end
 
   context "when there are enabled plugins" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     let(:plugin) do
       plugin = plugin_from_fixtures("my_plugin")

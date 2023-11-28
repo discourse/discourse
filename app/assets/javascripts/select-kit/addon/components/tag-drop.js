@@ -15,10 +15,9 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
-  classNameBindings: ["categoryStyle", "tagClass"],
+  classNameBindings: ["tagClass"],
   classNames: ["tag-drop"],
   value: readOnly("tagId"),
-  categoryStyle: setting("category_style"),
   maxTagSearchResults: setting("max_tag_search_results"),
   sortTagsAlphabetically: setting("tags_sort_alphabetically"),
   maxTagsInFilterList: setting("max_tags_in_filter_list"),

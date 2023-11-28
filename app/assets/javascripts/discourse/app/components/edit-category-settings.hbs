@@ -61,7 +61,7 @@
 
   {{#if this.siteSettings.enable_badges}}
     <section class="field allow-badges">
-      <label>
+      <label class="checkbox-label">
         <Input @type="checkbox" @checked={{this.category.allow_badges}} />
         {{i18n "category.allow_badges_label"}}
       </label>
@@ -83,7 +83,7 @@
   {{/if}}
 
   <section class="field navigate-to-first-post-after-read">
-    <label>
+    <label class="checkbox-label">
       <Input
         @type="checkbox"
         @checked={{this.category.navigate_to_first_post_after_read}}
@@ -93,14 +93,14 @@
   </section>
 
   <section class="field all-topics-wiki">
-    <label>
+    <label class="checkbox-label">
       <Input @type="checkbox" @checked={{this.category.all_topics_wiki}} />
       {{i18n "category.all_topics_wiki"}}
     </label>
   </section>
 
   <section class="field allow-unlimited-owner-edits-on-first-post">
-    <label>
+    <label class="checkbox-label">
       <Input
         @type="checkbox"
         @checked={{this.category.allow_unlimited_owner_edits_on_first_post}}
@@ -125,7 +125,7 @@
   {{/if}}
 
   <section class="field require-topic-approval">
-    <label>
+    <label class="checkbox-label">
       <Input
         @type="checkbox"
         @checked={{this.category.category_setting.require_topic_approval}}
@@ -135,7 +135,7 @@
   </section>
 
   <section class="field require-reply-approval">
-    <label>
+    <label class="checkbox-label">
       <Input
         @type="checkbox"
         @checked={{this.category.category_setting.require_reply_approval}}
@@ -172,7 +172,7 @@
           @onChange={{action "onAutoCloseDurationChange"}}
         />
       </div>
-      <label>
+      <label class="checkbox-label">
         <Input
           @type="checkbox"
           @checked={{this.category.auto_close_based_on_last_post}}
@@ -283,7 +283,7 @@
 
   {{#if this.isParentCategory}}
     <section class="field show-subcategory-list-field">
-      <label>
+      <label class="checkbox-label">
         <Input
           @type="checkbox"
           @checked={{this.category.show_subcategory_list}}
@@ -337,7 +337,7 @@
     </section>
 
     <section class="field email-in-allow-strangers">
-      <label>
+      <label class="checkbox-label">
         <Input
           @type="checkbox"
           @checked={{this.category.email_in_allow_strangers}}
@@ -347,7 +347,7 @@
     </section>
 
     <section class="field mailinglist-mirror">
-      <label>
+      <label class="checkbox-label">
         <Input @type="checkbox" @checked={{this.category.mailinglist_mirror}} />
         {{i18n "category.mailinglist_mirror"}}
       </label>

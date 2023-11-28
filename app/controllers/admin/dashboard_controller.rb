@@ -7,6 +7,7 @@ class Admin::DashboardController < Admin::StaffController
     if SiteSetting.version_checks?
       data.merge!(version_check: DiscourseUpdates.check_version.as_json)
     end
+    data.merge!(has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id))
 
     render json: data
   end
@@ -38,11 +39,15 @@ class Admin::DashboardController < Admin::StaffController
       has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
       release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"],
     }
+
+    mark_new_features_as_seen
+
     render json: data
   end
 
+  private
+
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
-    render json: success_json
   end
 end

@@ -157,7 +157,7 @@ class HtmlToMarkdown
   end
 
   def visit_a(node)
-    if node["href"].present? && node["href"].starts_with?(*allowed_hrefs)
+    if node["href"].present? && node["href"].start_with?(*allowed_hrefs)
       "[#{traverse(node)}](#{node["href"]})"
     else
       traverse(node)
@@ -169,9 +169,9 @@ class HtmlToMarkdown
 
     if @opts[:keep_img_tags]
       node.to_html
-    elsif @opts[:keep_cid_imgs] && node["src"].starts_with?("cid:")
+    elsif @opts[:keep_cid_imgs] && node["src"].start_with?("cid:")
       node.to_html
-    elsif node["src"].starts_with?(*ALLOWED_IMG_SRCS)
+    elsif node["src"].start_with?(*ALLOWED_IMG_SRCS)
       title = node["alt"].presence || node["title"].presence
       width = node["width"].to_i
       height = node["height"].to_i

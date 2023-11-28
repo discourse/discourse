@@ -886,7 +886,6 @@ et:
         copied_to_clipboard: "Kopeeritud lõikelauale"
         download_backup_codes: "Lae varukoodid alla"
       second_factor:
-        confirm_password_description: "Palun kinnita jätkamiseks oma parooli"
         name: "Nimi"
         label: "Kood"
         rate_limit: "Palun oota enne kui proovid mõnda teist autentimise koodi."
@@ -959,13 +958,12 @@ et:
         not_connected: "(pole ühendatud)"
       name:
         title: "Nimi"
-        instructions: "sinu täisnimi (mittekohustuslik)"
-        instructions_required: "Sinu täisnimi"
+        instructions: "Sinu täisnimi (mittekohustuslik)."
+        instructions_required: "Sinu täisnimi."
         too_short: "Sinu antud nimi on liiga lühike"
         ok: "Paistab, et nimega on asjad korras"
       username:
         title: "Kasutajanimi"
-        instructions: "unikaalne, tühikuteta, lühike"
         short_instructions: "Inimesed võivad sind mainda nimega @%{username}"
         available: "Sinu poolt valitud kasutajanimi on vaba"
         not_available: "Pole saadaval. Proovime %{suggestion}?"
@@ -1085,7 +1083,7 @@ et:
         same_as_username: "Parool ühtib sinu kasutajanimega."
         same_as_email: "Parool ühtib sinu meiliaadressiga."
         ok: "See parool on sobilik."
-        instructions: "vähemalt %{count} tähemärki"
+        instructions: "Vähemalt %{count} tähemärki."
       summary:
         title: "Kokkuvõte"
         stats: "Statistika"
@@ -1437,6 +1435,7 @@ et:
         replied: '%{username} vastas Sulle teemas "%{topic}" - %{site_title}'
         posted: '%{username} postitas teemasse "%{topic}" - %{site_title}'
         linked: '%{username} viitas Sinu postitusele teemas "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} postitas teemasse "%{topic}" - %{site_title}'
       titles:
         watching_first_post: "uus teema"
     upload_selector:
@@ -2149,8 +2148,7 @@ et:
       action: "Tähista postitus"
       take_action_options:
         default:
-          title: "Tegutse"
-          details: "Liigu kohe tähise künniseni, ilma kogukonnalt täiendavaid tähiseid ootamata"
+          title: "Peida postitus"
         suspend:
           title: "Peata kasutaja"
         silence:
@@ -2162,7 +2160,6 @@ et:
       ip_address_missing: "(asjassepuutumatu)"
       hidden_email_address: "(peidetud)"
       submit_tooltip: "Saada privaatne tähis"
-      take_action_tooltip: "Liigu kohe tähise künniseni, ilma kogukonnalt täiendavaid tähiseid ootamata"
       cant: "Vabandame, seda postitust ei saa praegu tähistada."
       notify_staff: "Hoiata meeskonda privaatselt"
       formatted_name:
@@ -2536,6 +2533,9 @@ et:
             review:
               content: "Vaata üle"
     form_templates:
+      upload_field:
+        upload: "Laadi üles"
+        uploading: "Laen üles"
       errors:
         typeMismatch:
           default: "Palun sisesta korrektne väärtus."
@@ -2562,8 +2562,7 @@ et:
         installed_version: "Paigaldatud"
         latest_version: "Viimased"
         new_features:
-          dismiss: "Ignoreeri"
-          learn_more: "Uuri veel"
+          learn_more: "Uuri veel..."
         last_checked: "Viimati kontrollitud"
         refresh_problems: "Värskenda"
         no_problems: "Probleeme ei tuvastatud."
@@ -2737,6 +2736,7 @@ et:
         not_enabled: "E"
         change_settings_short: "Sätted"
         howto: "Kuidas pluginaid paigaldada?"
+        author: "Autor %{author}"
       backups:
         title: "Varukoopiad"
         menu:

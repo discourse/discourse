@@ -8,6 +8,16 @@ end
 
 task "assets:precompile:build" do
   if ENV["SKIP_EMBER_CLI_COMPILE"] != "1"
+    ember_version = ENV["EMBER_VERSION"] || "3"
+
+    raise "Unknown ember version '#{ember_version}'" if !%w[3 5].include?(ember_version)
+
+    if ENV["EMBER_VERSION"] == "5"
+      puts "Upgrading to Ember 5..."
+      system("script/switch_ember_version", ember_version, exception: true, chdir: Rails.root)
+      system("yarn install", exception: true, chdir: "app/assets/javascripts/discourse")
+    end
+
     compile_command = "yarn --cwd app/assets/javascripts/discourse run ember build"
 
     heap_size_limit = check_node_heap_size_limit
@@ -34,6 +44,7 @@ task "assets:precompile:build" do
       exec "#{compile_command} && SKIP_EMBER_CLI_COMPILE=1 bin/rake assets:precompile"
     else
       system compile_command, exception: true
+      EmberCli.clear_cache!
     end
   end
 end
@@ -71,11 +82,6 @@ task "assets:precompile:before": %w[
 
   require "sprockets"
   require "digest/sha1"
-
-  # Add ember cli chunks
-  chunk_files = EmberCli.script_chunks.values.flatten.map { |name| "#{name}.js" }
-  map_files = chunk_files.map { |file| EmberCli.parse_source_map_path(file) }
-  Rails.configuration.assets.precompile.push(*chunk_files, *map_files)
 end
 
 task "assets:precompile:css" => "environment" do

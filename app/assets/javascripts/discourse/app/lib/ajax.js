@@ -70,6 +70,8 @@ export function ajax() {
     args = arguments[1];
   }
 
+  url = getURL(url);
+
   let ignoreUnsent = true;
   if (args.ignoreUnsent !== undefined) {
     ignoreUnsent = args.ignoreUnsent;
@@ -168,7 +170,7 @@ export function ajax() {
       args.headers["Discourse-Script"] = true;
     }
 
-    ajaxObj = $.ajax(getURL(url), args);
+    ajaxObj = $.ajax(url, args);
   }
 
   let promise;

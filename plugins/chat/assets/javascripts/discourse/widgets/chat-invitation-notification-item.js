@@ -38,8 +38,13 @@ createWidgetFrom(DefaultNotificationItem, "chat-invitation-notification-item", {
       title: data.chat_channel_title,
       slug: data.chat_channel_slug,
     });
-    return `/chat/c/${slug || "-"}/${data.chat_channel_id}/${
-      data.chat_message_id
-    }`;
+
+    let url = `/chat/c/${slug || "-"}/${data.chat_channel_id}`;
+
+    if (data.chat_message_id) {
+      url += `/${data.chat_message_id}`;
+    }
+
+    return url;
   },
 });

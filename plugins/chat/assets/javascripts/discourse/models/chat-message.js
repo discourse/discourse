@@ -26,6 +26,7 @@ export default class ChatMessage {
   @tracked selected;
   @tracked channel;
   @tracked staged;
+  @tracked processed = true;
   @tracked draftSaved;
   @tracked draft;
   @tracked createdAt;
@@ -64,6 +65,7 @@ export default class ChatMessage {
     this.draftSaved = args.draftSaved || args.draft_saved || false;
     this.firstOfResults = args.firstOfResults || args.first_of_results || false;
     this.staged = args.staged || false;
+    this.processed = args.processed || true;
     this.edited = args.edited || false;
     this.editing = args.editing || false;
     this.availableFlags = args.availableFlags || args.available_flags;
@@ -132,7 +134,6 @@ export default class ChatMessage {
   set deletedAt(value) {
     this._deletedAt = value;
     this.incrementVersion();
-    return this._deletedAt;
   }
 
   get cooked() {

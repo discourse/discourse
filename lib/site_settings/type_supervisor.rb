@@ -180,6 +180,17 @@ class SiteSettings::TypeSupervisor
       end
     end
 
+    if type == :integer
+      result[:min] = @validators[name].dig(:opts, :min) if @validators[name].dig(
+        :opts,
+        :min,
+      ).present?
+      result[:max] = @validators[name].dig(:opts, :max) if @validators[name].dig(
+        :opts,
+        :max,
+      ).present?
+    end
+
     result[:allow_any] = @allow_any[name] if type == :list
 
     result[:choices] = @choices[name] if @choices.has_key? name
