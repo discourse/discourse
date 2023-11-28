@@ -159,7 +159,7 @@ $hpad: 0.65em;
 @mixin default-focus() {
   border-color: var(--tertiary);
   outline: 1px solid var(--tertiary);
-  outline-offset: 0;
+  outline-offset: -2px;
 }
 
 @mixin fa-rotate($degrees, $rotation) {
