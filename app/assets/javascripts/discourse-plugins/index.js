@@ -92,6 +92,15 @@ function parsePluginName(pluginRbPath) {
   );
 }
 
+function isV2Plugin(packageJsonPath) {
+  try {
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+    return packageJson.keywords?.includes("discourse-plugin");
+  } catch {
+    return false;
+  }
+}
+
 module.exports = {
   name: require("./package").name,
 
@@ -117,7 +126,8 @@ module.exports = {
         (dirent) =>
           (dirent.isDirectory() || dirent.isSymbolicLink()) &&
           !dirent.name.startsWith(".") &&
-          fs.existsSync(path.resolve(root, dirent.name, "plugin.rb"))
+          fs.existsSync(path.resolve(root, dirent.name, "plugin.rb")) &&
+          !isV2Plugin(path.resolve(root, dirent.name, "package.json"))
       );
 
     return pluginDirectories.map((directory) => {

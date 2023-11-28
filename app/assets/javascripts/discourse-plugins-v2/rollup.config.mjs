@@ -10,7 +10,7 @@ const addon = new Addon({
   destDir: "dist",
 });
 
-const PluginsV2 = resolve("../../../../plugins-v2");
+const Plugins = resolve("../../../../plugins");
 
 export default {
   // This provides defaults that work well alongside `publicEntrypoints` below.
@@ -24,13 +24,13 @@ export default {
     addon.dependencies(),
 
     nodeResolve({
-      modulePaths: [PluginsV2],
-      jail: PluginsV2,
+      modulePaths: [Plugins],
+      jail: Plugins,
     }),
 
     commonjs(),
 
-    compilePluginFeatures(PluginsV2, {
+    compilePluginFeatures(Plugins, {
       connectors: ["extra-header-icons"],
       markdownFeatures: true,
     }),

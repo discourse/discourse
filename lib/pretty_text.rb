@@ -100,6 +100,12 @@ module PrettyText
       )
     end
 
+    apply_es6_file(
+      ctx: ctx,
+      path: "#{root_path}/discourse-plugins-v2/dist/markdown-features.js",
+      module_name: "discourse-plugins-v2/markdown-features",
+    )
+
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
 

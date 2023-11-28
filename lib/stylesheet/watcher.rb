@@ -58,6 +58,7 @@ module Stylesheet
                   file
                 end
               end
+              .filter { |dir| File.file?("#{dir}/plugin.rb") }
               .compact
 
           listener =

@@ -91,6 +91,21 @@ class Plugin::Instance
     @idx = 0
   end
 
+  def v2?
+    @v2 ||=
+      begin
+        !!package_json.dig("keywords")&.include?("discourse-plugin")
+      rescue StandardError
+        false
+      end
+  end
+
+  def package_json
+    @package_json ||= JSON.parse(File.read(File.join(File.dirname(path), "package.json")))
+  rescue StandardError
+    nil
+  end
+
   def register_anonymous_cache_key(key, &block)
     key_method = "key_#{key}"
     add_to_class(Middleware::AnonymousCache::Helper, key_method, &block)
@@ -903,16 +918,16 @@ class Plugin::Instance
 
   def js_asset_exists?
     # If assets/javascripts exists, ember-cli will output a .js file
-    File.exist?("#{File.dirname(@path)}/assets/javascripts")
+    !v2? && File.exist?("#{File.dirname(@path)}/assets/javascripts")
   end
 
   def extra_js_asset_exists?
-    File.exist?(extra_js_file_path)
+    !v2? && File.exist?(extra_js_file_path)
   end
 
   def admin_js_asset_exists?
     # If this directory exists, ember-cli will output a .js file
-    File.exist?("#{File.dirname(@path)}/admin/assets/javascripts")
+    !v2? && File.exist?("#{File.dirname(@path)}/admin/assets/javascripts")
   end
 
   # Receives an array with two elements:

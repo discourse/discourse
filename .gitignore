@@ -34,12 +34,15 @@
 
 # Plugins except for the bundled ones
 /plugins/*
+!/plugins/package.json
 !/plugins/discourse-details/
 !/plugins/discourse-local-dates
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
+!/plugins/discourse-plugin-dev/
 !/plugins/discourse-lazy-videos/
 !/plugins/chat/
+!/plugins/chat-lite/
 !/plugins/poll/
 !/plugins/styleguide
 !/plugins/spoiler-alert/
