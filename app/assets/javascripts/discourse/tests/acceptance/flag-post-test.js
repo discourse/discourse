@@ -16,11 +16,13 @@ async function openFlagModal() {
 }
 
 async function pressEnter(element, modifier) {
-  const event = document.createEvent("Event");
-  event.initEvent("keydown", true, true);
-  event.key = "Enter";
-  event.keyCode = 13;
-  event[modifier] = true;
+  const event = new KeyboardEvent("keydown", {
+    bubbles: true,
+    cancelable: true,
+    key: "Enter",
+    keyCode: 13,
+    [modifier]: true,
+  });
   element.dispatchEvent(event);
   await settled();
 }
