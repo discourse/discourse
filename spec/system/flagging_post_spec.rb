@@ -19,10 +19,12 @@ describe "Flagging post", type: :system do
       topic_page.click_post_action_button(post_to_flag, :flag)
       flag_modal.choose_type(:off_topic)
       flag_modal.take_action(:agree_and_hide)
+
       expect(
         topic_page.post_by_number(post_to_flag).ancestor(".topic-post.post-hidden"),
       ).to be_present
-      expect(other_flag.reload.agreed_at).to be_present
+
+      try_until_success { expect(other_flag.reload.agreed_at).to be_present }
     end
   end
 end
