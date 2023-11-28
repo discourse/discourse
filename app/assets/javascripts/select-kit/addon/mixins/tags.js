@@ -9,11 +9,7 @@ import I18n from "discourse-i18n";
 
 export default Mixin.create({
   searchTags(url, data, callback) {
-    return ajax(getURL(url), {
-      quietMillis: 200,
-      dataType: "json",
-      data,
-    })
+    return ajax(getURL(url), { data })
       .then((json) => callback(this, json))
       .catch(popupAjaxError);
   },
