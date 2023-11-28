@@ -20,7 +20,6 @@ export default class DesktopNotificationsConfig extends Component {
         <DButton
           @icon="bell-slash"
           @label="user.desktop_notifications.perm_denied_btn"
-          @action={{this.recheckPermission}}
           @disabled="true"
           class="btn-default"
         />
