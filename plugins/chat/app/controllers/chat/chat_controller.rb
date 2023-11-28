@@ -7,13 +7,7 @@ module Chat
     # able to get deleted channels and recover them.
     before_action :find_chat_message, only: %i[rebake message_link]
     before_action :set_channel_and_chatable_with_access_check,
-                  except: %i[
-                    respond
-                    message_link
-                    set_user_chat_status
-                    dismiss_retention_reminder
-                    flag
-                  ]
+                  except: %i[respond message_link set_user_chat_status dismiss_retention_reminder]
 
     def respond
       render
@@ -86,35 +80,6 @@ module Chat
           messages_or_ids: message_ids,
         ).generate_markdown
       render json: success_json.merge(markdown: markdown)
-    end
-
-    def flag
-      RateLimiter.new(current_user, "flag_chat_message", 4, 1.minutes).performed!
-
-      permitted_params =
-        params.permit(
-          %i[chat_message_id flag_type_id message is_warning take_action queue_for_review],
-        )
-
-      chat_message =
-        Chat::Message.includes(:chat_channel, :revisions).find(permitted_params[:chat_message_id])
-
-      flag_type_id = permitted_params[:flag_type_id].to_i
-
-      if !ReviewableScore.types.values.include?(flag_type_id)
-        raise Discourse::InvalidParameters.new(:flag_type_id)
-      end
-
-      set_channel_and_chatable_with_access_check(chat_channel_id: chat_message.chat_channel_id)
-
-      result =
-        Chat::ReviewQueue.new.flag_message(chat_message, guardian, flag_type_id, permitted_params)
-
-      if result[:success]
-        render json: success_json
-      else
-        render_json_error(result[:errors])
-      end
     end
 
     private
