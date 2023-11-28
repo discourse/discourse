@@ -21,9 +21,8 @@ export default function () {
     }
   );
 
-  // eslint-disable-next-line ember/routes-segments-snake-case
   this.route("topicBySlugOrId", {
-    path: "/t/:slugOrId",
+    path: "/t/:slug_or_id",
     resetNamespace: true,
   });
 
