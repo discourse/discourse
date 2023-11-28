@@ -278,7 +278,7 @@ table {
 input,
 select,
 textarea {
-  color: var(--d-input-bg-color--disabled);
+  color: var(--d-input-text-color);
   caret-color: currentColor;
 
   &[class*="span"] {
@@ -289,6 +289,7 @@ textarea {
   &[disabled],
   &[readonly] {
     cursor: not-allowed;
+    color: var(--d-input-text-color--disabled);
     background-color: var(--d-input-bg-color--disabled);
     border: var(--d-input-border--disabled);
   }
