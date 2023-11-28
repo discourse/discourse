@@ -1,15 +1,6 @@
-import { ajax } from "discourse/lib/ajax";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
-
-function initializePlugin(api) {
-  const siteSettings = api.container.lookup("site-settings:main");
-
-  if (siteSettings.checklist_enabled) {
-    api.decorateCookedElement(checklistSyntax);
-  }
-}
+import ajax from "discourse-plugin/utils/ajax";
+import I18n from "discourse-plugin/utils/i18n";
+import { iconHTML } from "discourse-plugin/utils/icon-library";
 
 function removeReadonlyClass(boxes) {
   boxes.forEach((e) => e.classList.remove("readonly"));
@@ -159,9 +150,6 @@ export function checklistSyntax(elem, postDecorator) {
 }
 
 export default {
-  name: "checklist",
-
-  initialize() {
-    withPluginApi("0.1", (api) => initializePlugin(api));
-  },
+  options: {},
+  handler: checklistSyntax,
 };

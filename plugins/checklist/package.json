@@ -1,0 +1,14 @@
+{
+  "name": "checklist",
+  "version": "1.0.0",
+  "private": true,
+  "keywords": ["discourse-plugin"],
+  "exports": {
+    "./events/decorate-cooked-element": "./assets/javascripts/events/decorate-cooked-element.js",
+    "./events/decorate-non-stream-cooked-element": "./assets/javascripts/events/decorate-non-stream-cooked-element.js",
+    "./markdown-features/checklist": "./assets/javascripts/markdown-features/checklist.js"
+  },
+  "peerDependencies": {
+    "discourse-plugin": "*"
+  }
+}
