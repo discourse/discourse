@@ -158,7 +158,7 @@ $hpad: 0.65em;
 
 @mixin default-focus() {
   border-color: var(--tertiary);
-  outline: 1px solid var(--tertiary);
+  outline: 2px solid var(--tertiary);
   outline-offset: -2px;
 }
 
