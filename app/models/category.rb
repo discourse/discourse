@@ -107,12 +107,13 @@ class Category < ActiveRecord::Base
   before_save :downcase_name
   before_save :ensure_category_setting
 
-  after_save :publish_discourse_stylesheet
-  after_save :publish_category
   after_save :reset_topic_ids_cache
   after_save :clear_subcategory_ids
+  after_save :clear_parent_ids
   after_save :clear_url_cache
   after_save :update_reviewables
+  after_save :publish_discourse_stylesheet
+  after_save :publish_category
 
   after_save do
     if saved_change_to_uploaded_logo_id? || saved_change_to_uploaded_logo_dark_id? ||
@@ -128,6 +129,8 @@ class Category < ActiveRecord::Base
   end
 
   after_destroy :reset_topic_ids_cache
+  after_destroy :clear_subcategory_ids
+  after_destroy :clear_parent_ids
   after_destroy :publish_category_deletion
   after_destroy :remove_site_settings
 
@@ -196,6 +199,19 @@ class Category < ActiveRecord::Base
 
   scope :post_create_allowed,
         ->(guardian) { scoped_to_permissions(guardian, POST_CREATION_PERMISSIONS) }
+
+  scope :with_ancestors, ->(id) { where(<<~SQL, id) }
+        id IN (
+          WITH RECURSIVE ancestors(category_id) AS (
+            SELECT ?
+            UNION
+            SELECT parent_category_id
+            FROM categories, ancestors
+            WHERE id = ancestors.category_id
+          )
+          SELECT category_id FROM ancestors
+        )
+      SQL
 
   delegate :post_template, to: "self.class"
 
@@ -843,9 +859,24 @@ class Category < ActiveRecord::Base
     self.where("string_to_array(email_in, '|') @> ARRAY[?]", Email.downcase(email)).first
   end
 
+  @@has_children = DistributedCache.new("has_children")
+
+  def self.has_children?(category_id)
+    @@has_children.defer_get_set(category_id.to_s) do
+      Category.where(parent_category_id: category_id).exists?
+    end
+  end
+
   def has_children?
-    @has_children ||= (id && Category.where(parent_category_id: id).exists?) ? :true : :false
-    @has_children == :true
+    !!id && Category.has_children?(id)
+  end
+
+  def self.clear_parent_ids
+    @@has_children.clear
+  end
+
+  def clear_parent_ids
+    Category.clear_parent_ids
   end
 
   def uncategorized?

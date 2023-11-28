@@ -568,7 +568,8 @@ nl:
             name:
               same_as_password: "is hetzelfde als je wachtwoord."
             ip_address:
-              signup_not_allowed: "Registratie vanaf dit account is niet toegestaan."
+              blocked: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan."
+              max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan (maximumlimiet bereikt). Neem contact op met een medewerker."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1474,7 +1475,6 @@ nl:
     blocked_onebox_domains: "Een lijst van domeinen die nooit worden ge-oneboxt, bijvoorbeeld wikipedia.org\n(Jokersymbolen *? worden niet ondersteund)"
     block_onebox_on_redirect: "Onebox blokkeren voor URL's die omleiden."
     allowed_inline_onebox_domains: "Een lijst van domeinen die in een onebox als miniatuur worden omgezet wanneer gekoppeld zonder titel"
-    enable_inline_onebox_on_all_domains: "Website-instelling inline_onebox_domain_allowlist negeren en inline onebox op alle domeinen toestaan."
     force_custom_user_agent_hosts: "Hosts waarvoor bij alle verzoeken de aangepaste onebox-useragent wordt gebruikt. (Met name handig voor hosts die toegang beperken via de useragent)."
     max_oneboxes_per_post: "Maximale aantal oneboxes in een bericht."
     facebook_app_access_token: "Een token, gegenereerd op basis van je Facebook-app-ID en -geheim. Gebruikt om Instagram-oneboxes te genereren."
@@ -1496,7 +1496,6 @@ nl:
     email_custom_headers: "Een lijst gescheiden door pijpsymbolen van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
-    enforce_second_factor: "Dwingt gebruikers om tweeledige verificatie in te schakelen. Selecteer 'alle' om dit voor alle gebruikers te doen. Selecteer 'medewerkers' om dit alleen voor medewerkers te doen."
     force_https: "Dwing gebruik van alleen HTTPS af voor je website. WAARSCHUWING: schakel dit NIET in voordat je hebt geverifieerd dat HTTPS volledig is geconfigureerd en echt overal werkt! Heb je ook je CDN, alle sociale aanmeldingen en eventuele externe logo's / afhankelijkheden gecontroleerd om zeker te weten dat ze allemaal compatibel met HTTPS zijn?"
     same_site_cookies: "Gebruik cookies van dezelfde website, ze elimineren alle Cross Site Request Forgery-vectoren op ondersteunde browsers (Laks of Strikt). Waarschuwing: strikt werkt alleen op websites die aanmelden afdwingen en een externe verificatiemethode gebruiken."
     summary_score_threshold: "De minimaal vereiste score voor een bericht om in 'Dit topic samenvatten' te worden opgenomen"
@@ -1568,8 +1567,6 @@ nl:
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."
-    top_menu: "Bepaal welke items in de navigatie op de startpagina worden weergegeven en in welke volgorde. Voorbeeld: latest|new|unread|categories|top|read|posted|bookmarks"
-    post_menu: "Bepaal welke items in het berichtmenu worden weergegeven en in welke volgorde. Voorbeeld: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "De menu-items die standaard in het berichtmenu moeten worden verborgen, totdat er op een uitvouw-ellipsis wordt geklikt."
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."
     allow_username_in_share_links: "Sta toe dat gebruikersnamen worden opgenomen in gedeelde links. Dit is handig om badges toe te kennen op basis van unieke bezoekers."
@@ -1814,7 +1811,6 @@ nl:
     min_title_similar_length: "De minimale lengte van een titel voordat er op vergelijkbare topics wordt gecontroleerd."
     desktop_category_page_style: "Visuele stijl voor de /categories-pagina."
     category_colors: "Een lijst van hexadecimale kleurwaarden die voor categorieën zijn toegestaan."
-    category_style: "Visuele stijl voor categoriebadges."
     default_dark_mode_color_scheme_id: "Het kleurenschema dat wordt gebruikt in donkere modus."
     dark_mode_none: "Geen"
     max_image_size_kb: "De maximale grootte van te uploaden afbeeldingen in kB. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy. Afbeeldingen die groter zijn dan deze waarde en kleiner dan client_max_body_size worden bij het uploaden verkleind."
@@ -2016,9 +2012,7 @@ nl:
     display_name_on_posts: "Volledige naam van een gebruiker weergeven bij berichten, naast de @gebruikersnaam."
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt, een tijdsgat in het topic weergeven."
     short_progress_text_threshold: "Als het aantal berichten in een topic hoger is dan dit getal, geeft de voortgangsbalk alleen het nummer van het huidige bericht weer. Als je de breedte van de voortgangsbalk wijzigt, moet je deze waarde mogelijk ook te wijzigen."
-    default_code_lang: "Standaard syntaxmarkering van programmeertaal toegepast op codeblokken (automatisch, tekst, Ruby, Python enz.). Deze waarde moet ook aanwezig zijn in de website-instelling 'gemarkeerde talen'."
     warn_reviving_old_topic_age: "Wanneer iemand begint te antwoorden op een topic waarin het laatste antwoord ouder is dan dit aantal dagen, wordt een waarschuwing weergegeven. Schakel uit door dit op 0 te zetten."
-    autohighlight_all_code: "Toepassen van codemarkering bij alle vooraf opgemaakte codeblokken afdwingen, zelfs als de codetaal niet expliciet is opgeven."
     highlighted_languages: "Opgenomen regels voor syntaxismarkering. (Waarschuwing: het opnemen van te veel talen kan prestaties beïnvloeden); bekijk <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> voor een demo."
     show_copy_button_on_codeblocks: "Voeg een knop toe aan codeblokken om de inhoud van het blok naar het klembord van de gebruiker te kopiëren."
     embed_any_origin: "Inbedbare inhoud toestaan, ongeacht oorsprong. Dit is vereist voor mobiele apps met statische HTML."
@@ -2195,7 +2189,6 @@ nl:
       reply_by_email_address_is_empty: "Je moet een 'reply by email address' instellen voordat je antwoorden via e-mail inschakelt."
       email_polling_disabled: "Je moet handmatige polling, POP3-polling of een aangepaste e-mailpoller inschakelen voordat je antwoorden via e-mail inschakelt."
       user_locale_not_enabled: "Je moet 'allow user locale' inschakelen voordat je deze instelling inschakelt."
-      personal_message_enabled_groups_invalid: "Je moet ten minste één groep opgeven voor deze instelling. Als je niet wilt dat iemand behalve medewerkers PB's stuurt, kies dan de medewerkersgroep."
       invalid_regex: "Regex is ongeldig of niet toegestaan."
       invalid_regex_with_message: "De reguliere expressie '%{regex}' bevat een fout: %{message}"
       email_editable_enabled: "Je moet 'email editable' uitschakelen voordat je deze instelling inschakelt."
@@ -2425,9 +2418,6 @@ nl:
       blocked: "is niet toegestaan."
       revoked: "Stuurt geen e-mails naar '%{email}' tot %{date}."
       does_not_exist: "N.v.t."
-    ip_address:
-      blocked: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan."
-      max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf je IP-adres zijn niet toegestaan (maximumlimiet bereikt). Neem contact op met een medewerker."
     website:
       domain_not_allowed: "Website is ongeldig. Toegestane domeinnamen zijn: %{domains}"
     auto_rejected: "Automatisch geweigerd vanwege leeftijd. Zie de website-instelling auto_handle_queued_age."

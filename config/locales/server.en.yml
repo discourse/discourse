@@ -92,6 +92,22 @@ en:
       not_allowed_theme: "`%{repo}` is not in the list of allowed themes (check `allowed_theme_repos` global setting)."
       ssh_key_gone: "You waited too long to install the theme and SSH key expired. Please try again."
       too_many_files: "The number of files (%{count}) in the theme has exceeded the maximum allowed number of files (%{limit})"
+      migrations:
+        invalid_filename: "Invalid filename for migration file: %{filename}. Filenames must begin with 4 digits followed by a hyphen and then a name that only contains alphanumeric characters with hyphens."
+        name_too_long:
+          one: "Migration name is too long. It shouldn't exceed %{count} character."
+          other: "Migration name is too long. It shouldn't exceed %{count} characters."
+        too_many_pending_migrations: "There are too many pending migrations in this theme. Themes are not allowed to introduce more than 100 migrations in a single update"
+        out_of_sequence: "Migration '%{name}' is out of sequence. The last migration for this theme had version number %{current} which is higher than the new migration"
+        syntax_error: "Failed to run migration '%{name}' because it has a syntax error: %{error}"
+        exceeded_memory_limit: "Migration '%{name}' failed because it exceeded the memory limit"
+        timed_out: "Migration '%{name}' timed out"
+        no_exported_function: "Migration '%{name}' doesn't export a function to perform the migration"
+        default_export_not_a_function: "Migration '%{name}' has a default export that's not a function. The default export must be the function that performs the migration"
+        no_returned_value: "Migration '%{name}' didn't return any value (or returned null or undefined). It must return a Map object"
+        wrong_return_type: "Migration '%{name}' returned an unknown data type. It must return a Map object"
+        runtime_error: "Migration '%{name}' encountered the following runtime error: %{error}"
+        unknown_setting_returned_by_migration: "Migrations '%{name}' returned a setting '%{setting_name}' which is not declared in the theme's settings.yml file"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
@@ -628,7 +644,8 @@ en:
             name:
               same_as_password: "is the same as your password."
             ip_address:
-              signup_not_allowed: "Signup is not allowed from this account."
+              blocked: "New registrations are not allowed from your IP address."
+              max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1534,6 +1551,7 @@ en:
     search_query_log_max_size: "Maximum amount of search queries to keep"
     search_query_log_max_retention_days: "Maximum amount of time to keep search queries, in days."
     search_ignore_accents: "Ignore accents when searching for text."
+    search_default_sort_order: "Default sort order for full-page search"
     category_search_priority_low_weight: "Weight applied to ranking for low category search priority."
     category_search_priority_high_weight: "Weight applied to ranking for high category search priority."
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
@@ -1581,7 +1599,7 @@ en:
     blocked_onebox_domains: "A list of domains that will never be oneboxed e.g. wikipedia.org\n(Wildcard symbols * ? not supported)"
     block_onebox_on_redirect: "Block onebox for URLs that redirect."
     allowed_inline_onebox_domains: "A list of domains that will be oneboxed in miniature form if linked without a title"
-    enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_allowlist site setting and allow inline onebox on all domains."
+    enable_inline_onebox_on_all_domains: "Ignore allowed_inline_onebox_domains site setting and allow inline onebox on all domains."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
     facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
@@ -1605,7 +1623,7 @@ en:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
-    enforce_second_factor: "Forces users to enable two-factor authentication. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only."
+    enforce_second_factor: "Require users to enable two-factor authentication before they can access the Discourse UI. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only. This setting does not affect API or 'DiscourseConnect provider' authentication."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     same_site_cookies: "Use same site cookies, they eliminate all Cross Site Request Forgery vectors on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use an external auth method."
 
@@ -1970,6 +1988,7 @@ en:
     here_mention: "Name used for a @mention to allow privileged users to notify up to 'max_here_mentioned' people participating in the topic. Must not be an existing username."
     max_here_mentioned: "Maximum number of mentioned people by @here."
     min_trust_level_for_here_mention: "The minimum trust level allowed to mention @here."
+    here_mention_allowed_groups: "Groups that are allowed to mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -1990,7 +2009,6 @@ en:
 
     desktop_category_page_style: "Visual style for the /categories page."
     category_colors: "A list of hexadecimal color values allowed for categories."
-    category_style: "Visual style for category badges."
     default_dark_mode_color_scheme_id: "The color scheme used when in dark mode."
     dark_mode_none: "None"
 
@@ -2122,6 +2140,8 @@ en:
     log_mail_processing_failures: "Log all email processing failures to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
+    email_in_allowed_groups: "Groups that are allowed to post new topics via email."
+
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "The email header to detect spam."
 
@@ -2177,6 +2197,7 @@ en:
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     allow_anonymous_likes: "Allow anonymous users to like posts"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
+    anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
@@ -2262,9 +2283,9 @@ en:
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to code blocks (auto, text, ruby, python etc.). This value must also be present in the `highlighted languages` site setting."
+    default_code_lang: "Default programming language syntax highlighting applied to markdown code blocks (auto, text, ruby, python etc.). This value must also be present in the `highlighted languages` site setting."
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
-    autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
+    autohighlight_all_code: "Apply syntax highlighting to HTML <code> blocks, even if they didn't specify a language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
     show_copy_button_on_codeblocks: "Add a button to codeblocks to copy the block contents to the user's clipboard."
 
@@ -2300,7 +2321,9 @@ en:
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
+    approve_unless_allowed_groups: "Posts for users not in these groups must be approved"
     approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
+    approve_new_topics_unless_allowed_groups: "New topics for users not in these groups must be approved"
     approve_unless_staged: "New topics and posts for staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
     reviewable_revision_reasons: "List of reasons that can be selected when rejecting a reviewable queued post with a revision. Other is always available as well, which allows for a custom reason to be entered."
@@ -2412,6 +2435,7 @@ en:
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
     shared_drafts_min_trust_level: "Allow users to see and edit Shared Drafts."
+    shared_drafts_allowed_groups: "Allow users in these groups to see and edit Shared Drafts."
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
@@ -2488,7 +2512,7 @@ en:
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
       email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
-      personal_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send PMs, choose the staff group."
+      at_least_one_group_required: "You must specify at least one group for this setting."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
@@ -2518,6 +2542,14 @@ en:
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
+
+    keywords:
+      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
+      here_mention_allowed_groups: "min_trust_level_for_here_mention"
+      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
+      approve_unless_allowed_groups: "approve_unless_trust_level"
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
+      email_in_allowed_groups: "email_in_min_trust"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2652,6 +2684,7 @@ en:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
     incorrect_password: "Incorrect password"
+    incorrect_password_or_passkey: "Incorrect password or passkey"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."
     activate_email: "<p>You’re almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
@@ -2748,9 +2781,6 @@ en:
       blocked: "is not allowed."
       revoked: "Won't be sending emails to '%{email}' until %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "New registrations are not allowed from your IP address."
-      max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
     website:
       domain_not_allowed: "Website is invalid. Allowed domains are: %{domains}"
     auto_rejected: "Rejected automatically due to age. See auto_handle_queued_age site setting."
@@ -2999,6 +3029,29 @@ en:
         Feedback: %{feedback}
 
         You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Thanks,
+        %{site_name} Moderators
+
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Feedback on your topic"
+      subject_template: 'Feedback on new topic titled "%{topic_title}"'
+      text_body_template: |
+        Hi %{username},
+
+        We've reviewed your new topic titled "%{topic_title}" and have some feedback for you.
+
+        Reason: %{reason}
+
+        Feedback: %{feedback}
+
+        You can edit your topic's original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
 
         --------
 
@@ -5188,6 +5241,7 @@ en:
     reasons:
       post_count: "The first few posts from every user must be approved by staff. See %{link}."
       trust_level: "Users at low trust levels must have replies approved by staff. See %{link}."
+      group: "Users not in the specified groups must have replies approved by staff. See %{link}."
       new_topics_unless_trust_level: "Users at low trust levels must have topics approved by staff. See %{link}."
       fast_typer: "New user typed their first post suspiciously fast, suspected bot or spammer behavior. See %{link}."
       auto_silence_regex: "New user whose first post matches the %{link} setting."

@@ -19,6 +19,7 @@ html.has-lightbox {
   --d-lightbox-primary: #ffffff;
   --d-lightbox-secondary: #000000;
   --d-lightbox-secondary-translucent: rgba(0, 0, 0, 0.25);
+  --d-lightbox-tertiary: #222222;
 }
 
 /* Lightbox element*/
@@ -280,11 +281,7 @@ html.has-lightbox {
     left: 0;
     height: 100%;
     width: 100%;
-    background-size: cover;
-    background-position: center;
-    filter: blur(15px) brightness(0.25);
-    background-color: var(--d-lightbox-secondary);
-    background-image: var(--d-lightbox-image-small-url);
+    background-color: var(--d-lightbox-tertiary);
   }
 
   &__main-image {

@@ -6,5 +6,5 @@ import { buildTagRoute } from "discourse/routes/tag-show";
 // be handled by the intersection logic. Defining tags-intersection as something separate avoids
 // that confusion.
 export default class extends buildTagRoute() {
-  controllerName = "tags.intersection";
+  controllerName = "tags-intersection";
 }

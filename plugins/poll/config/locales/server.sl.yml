@@ -15,7 +15,6 @@ sl:
   poll:
     poll: "anketa"
     invalid_argument: "Napačna vrednost '%{value}' za parameter '%{argument}'."
-    multiple_polls_without_name: "Vnesli ste več anket brez imena. Uporabite '<code>name</code>' lastnost za enolično določanje imena ankete."
     multiple_polls_with_same_name: "Vnesli ste več anket z enakim imenom: <strong>%{name}</strong>. Uporabite '<code>name</code>' lastnost za enolično določanje imena ankete."
     default_poll_must_have_at_least_1_option: "Anketa mora vsebovati vsaj eno izbiro."
     named_poll_must_have_at_least_1_option: "Anketa z imenom <strong>%{name}</strong> mora vsebovati vsaj eno izbiro."

@@ -4,8 +4,8 @@ require "cooked_post_processor"
 require "file_store/s3_store"
 
 RSpec.describe CookedPostProcessor do
-  fab!(:upload) { Fabricate(:upload) }
-  fab!(:large_image_upload) { Fabricate(:large_image_upload) }
+  fab!(:upload)
+  fab!(:large_image_upload)
   let(:upload_path) { Discourse.store.upload_path }
 
   describe "#post_process" do
@@ -125,7 +125,7 @@ RSpec.describe CookedPostProcessor do
       before { SiteSetting.enable_inline_onebox_on_all_domains = true }
 
       describe "internal links" do
-        fab!(:topic) { Fabricate(:topic) }
+        fab!(:topic)
         fab!(:post) { Fabricate(:post, raw: "Hello #{topic.url}") }
         let(:url) { topic.url }
 
@@ -1896,7 +1896,7 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "full quote on direct reply" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     let!(:post) { Fabricate(:post, topic: topic, raw: 'this is the "first" post') }
 
     let(:raw) { <<~RAW.strip }
@@ -2025,7 +2025,7 @@ RSpec.describe CookedPostProcessor do
 
   describe "full quote on direct reply with full name prioritization" do
     fab!(:user) { Fabricate(:user, name: "james, john, the third") }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     let!(:post) { Fabricate(:post, user: user, topic: topic, raw: 'this is the "first" post') }
 
     let(:raw) { <<~RAW.strip }
@@ -2158,7 +2158,7 @@ RSpec.describe CookedPostProcessor do
 
   describe "prioritizes full name in quotes" do
     fab!(:user) { Fabricate(:user, name: "james, john, the third") }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     let!(:post) { Fabricate(:post, user: user, topic: topic, raw: 'this is the "first" post') }
 
     before do

@@ -12,7 +12,7 @@ RSpec.describe FileStore::S3Store do
   let(:s3_object) { stub }
   let(:upload_path) { Discourse.store.upload_path }
 
-  fab!(:optimized_image) { Fabricate(:optimized_image) }
+  fab!(:optimized_image)
   let(:optimized_image_file) { file_from_fixtures("logo.png") }
   let(:uploaded_file) { file_from_fixtures("logo.png") }
   fab!(:upload) { Fabricate(:upload, sha1: Digest::SHA1.hexdigest("secret image string")) }

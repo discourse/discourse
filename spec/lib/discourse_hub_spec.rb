@@ -23,9 +23,9 @@ RSpec.describe DiscourseHub do
         DiscourseHub.stats_fetched_at = 8.days.ago
         json = JSON.parse(DiscourseHub.version_check_payload.to_json)
 
-        expect(json["topic_count"]).to be_present
-        expect(json["post_count"]).to be_present
-        expect(json["user_count"]).to be_present
+        expect(json["topics_count"]).to be_present
+        expect(json["posts_count"]).to be_present
+        expect(json["users_count"]).to be_present
         expect(json["topics_7_days"]).to be_present
         expect(json["topics_30_days"]).to be_present
         expect(json["posts_7_days"]).to be_present
@@ -34,7 +34,7 @@ RSpec.describe DiscourseHub do
         expect(json["users_30_days"]).to be_present
         expect(json["active_users_7_days"]).to be_present
         expect(json["active_users_30_days"]).to be_present
-        expect(json["like_count"]).to be_present
+        expect(json["likes_count"]).to be_present
         expect(json["likes_7_days"]).to be_present
         expect(json["likes_30_days"]).to be_present
         expect(json["installed_version"]).to be_present

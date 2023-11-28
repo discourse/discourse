@@ -52,13 +52,4 @@ class EmailValidator < ActiveModel::EachValidator
     Rails.configuration.respond_to?(:developer_emails) &&
       Rails.configuration.developer_emails.include?(value)
   end
-
-  def self.email_regex
-    Discourse.deprecate(
-      "EmailValidator.email_regex is deprecated. Please use EmailAddressValidator instead.",
-      output_in_test: true,
-      drop_from: "2.9.0",
-    )
-    EmailAddressValidator.email_regex
-  end
 end

@@ -4,7 +4,7 @@ RSpec.describe UploadValidator do
   subject(:validator) { described_class.new }
 
   describe "validate" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:filename) { "discourse.csv" }
     let(:csv_file) { file_from_fixtures(filename, "csv") }
 
@@ -103,7 +103,7 @@ RSpec.describe UploadValidator do
       end
 
       describe "for normal user" do
-        fab!(:user) { Fabricate(:user) }
+        fab!(:user)
 
         it "should not allow the upload" do
           expect(validator.validate(upload)).to eq(nil)

@@ -270,21 +270,20 @@ html.composer-open {
         max-width: 450px;
       }
 
-      // below needed for text-overflow: ellipsis;
       .selected-name {
         max-width: 100%;
         overflow: hidden;
         .name {
-          max-width: 100%;
-          overflow: hidden;
           display: flex;
-          .badge-wrapper {
+          font-size: var(--font-up-1);
+          max-width: 100%;
+          gap: 0 0.5em;
+          .badge-category {
             overflow: hidden;
           }
           // This prevents the first category from being too-truncated at the expense of a long subcategory
-          .badge-wrapper:first-of-type:not(:last-of-type) {
-            flex: 1 0 auto;
-            max-width: 50%;
+          > span:last-of-type:not(:first-of-type) {
+            flex-shrink: 10;
           }
         }
       }

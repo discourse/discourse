@@ -124,6 +124,7 @@ uk:
         title: "Показувати індикатор активності в заголовку"
         all_new: "Усі нові повідомлення"
         dm_and_mentions: "Прямі повідомлення та згадки"
+        only_mentions: "Тільки згадки"
         never: "Ніколи"
       separate_sidebar_mode:
         title: "Показувати окремі режими бічної панелі для форуму і чату"
@@ -283,7 +284,6 @@ uk:
       save: "Зберегти"
       select: "Вибрати"
       return_to_list: "Повернутися до списку каналів"
-      return_to_threads_list: "Повернутися до поточних дискусій"
       unread_threads_count:
         one: "У вас %{count} непрочитане обговорення"
         few: "У вас %{count} непрочитаних обговорень"
@@ -354,9 +354,9 @@ uk:
         default_search_placeholder: "#канал, @хтось або щось"
         default_channel_search_placeholder: "#канал"
         default_user_search_placeholder: "@хтось"
-        user_search_placeholder: "...додати більше користувачів"
         disabled_user: "вимкнув чат"
         no_items: "Немає елементів"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Редагувати канал
         input_placeholder: Додайте назву
@@ -589,11 +589,17 @@ uk:
           other: "%{commaSeparatedUsernames} та %{count} інших набирають текст"
       retention_reminders:
         indefinitely_short: "безстроково"
+        indefinitely_long: "У налаштуваннях чату налаштовано безстрокове збереження повідомлень каналу."
         short:
           one: "%{count} день"
           few: "%{count} дні"
           many: "%{count} днів"
           other: "%{count} днів"
+        long:
+          one: "У налаштуваннях чату встановлено збереження повідомлень каналу протягом %{count} дня."
+          few: "У налаштуваннях чату встановлено збереження повідомлень каналу протягом %{count} дні."
+          many: "У налаштуваннях чату встановлено збереження повідомлень каналу протягом %{count} днів."
+          other: "У налаштуваннях чату встановлено збереження повідомлень каналу протягом %{count} днів."
       flags:
         off_topic: "Це повідомлення не має відношення до поточної дискусії як визначено назвою каналів, і, ймовірно, має бути переміщене в інше місце."
         inappropriate: "Це повідомлення містить вміст, який розумна людина вважає образливим або порушенням <a href=\"%{basePath}/guidelines\">наших правил спільноти</a>."
@@ -643,7 +649,6 @@ uk:
           other: "+%{count}"
       threads:
         open: "Відкрийте тему"
-        list: "Поточні обговорення"
         none: "Ви не берете участі в жодній темі на цьому каналі."
       draft_channel_screen:
         header: "Нове повідомлення"

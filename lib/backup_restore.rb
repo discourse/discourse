@@ -101,6 +101,12 @@ module BackupRestore
           EXECUTE 'DROP VIEW IF EXISTS #{destination}.' || quote_ident(row.viewname) || ' CASCADE;';
           EXECUTE 'ALTER VIEW #{source}.' || quote_ident(row.viewname) || ' SET SCHEMA #{destination};';
         END LOOP;
+        -- move all <source> materialized views to <destination> schema
+        FOR row IN SELECT matviewname FROM pg_matviews WHERE schemaname = '#{source}' AND matviewowner = '#{owner}'
+        LOOP
+          EXECUTE 'DROP MATERIALIZED VIEW IF EXISTS #{destination}.' || quote_ident(row.matviewname) || ' CASCADE;';
+          EXECUTE 'ALTER MATERIALIZED VIEW #{source}.' || quote_ident(row.matviewname) || ' SET SCHEMA #{destination};';
+        END LOOP;
         -- move all <source> enums to <destination> enums
         FOR row IN (
           SELECT typname FROM pg_type t

@@ -158,7 +158,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
       hbs`<span class="test">test</span><DTooltip @inline={{true}} @label="label" @closeOnClickOutside={{true}} />`
     );
     await hover();
-    await click(".test");
+    await triggerEvent(".test", "pointerdown");
 
     assert.dom(".fk-d-tooltip").doesNotExist();
 
@@ -166,7 +166,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
       hbs`<span class="test">test</span><DTooltip @inline={{true}} @label="label" @closeOnClickOutside={{false}} />`
     );
     await hover();
-    await click(".test");
+    await triggerEvent(".test", "pointerdown");
 
     assert.dom(".fk-d-tooltip").exists();
   });

@@ -19,7 +19,7 @@ class Tag < ActiveRecord::Base
   validate :target_tag_validator,
            if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
   validate :name_validator
-  validates :description, length: { maximum: 280 }
+  validates :description, length: { maximum: 1000 }
 
   scope :where_name,
         ->(name) {
@@ -265,7 +265,7 @@ end
 #  updated_at         :datetime         not null
 #  pm_topic_count     :integer          default(0), not null
 #  target_tag_id      :integer
-#  description        :string
+#  description        :string(1000)
 #  public_topic_count :integer          default(0), not null
 #  staff_topic_count  :integer          default(0), not null
 #

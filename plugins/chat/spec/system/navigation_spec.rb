@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Navigation", type: :system do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:category)
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user) { Fabricate(:admin) }
-  fab!(:category_channel) { Fabricate(:category_channel) }
+  fab!(:category_channel)
   fab!(:category_channel_2) { Fabricate(:category_channel) }
   fab!(:message) { Fabricate(:chat_message, chat_channel: category_channel) }
   let(:chat_page) { PageObjects::Pages::Chat.new }

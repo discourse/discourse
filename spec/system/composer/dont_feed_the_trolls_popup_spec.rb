@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Composer don't feed the trolls popup", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:troll) { Fabricate(:user) }
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, user: user, topic: topic) }

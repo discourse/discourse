@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Viewing sidebar as logged in user", type: :system do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
   fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }

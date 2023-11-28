@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserUpdater do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:u1) { Fabricate(:user) }
   fab!(:u2) { Fabricate(:user) }
   fab!(:u3) { Fabricate(:user) }
@@ -33,8 +33,8 @@ RSpec.describe UserUpdater do
   end
 
   describe "#update" do
-    fab!(:category) { Fabricate(:category) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:category)
+    fab!(:tag)
     fab!(:tag2) { Fabricate(:tag) }
 
     it "saves user" do

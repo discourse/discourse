@@ -70,6 +70,7 @@ vi:
           settings: Cài đặt
       new_message_modal:
         no_items: "Không có mẫu nào"
+        filter: "Lọc"
       direct_message_creator:
         title: Tin nhắn mới
         prefix: "Tới:"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PresenceController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
 
   let(:ch1) { PresenceChannel.new("/test/public1") }
@@ -44,6 +44,25 @@ RSpec.describe PresenceController do
   end
 
   describe "#update" do
+    context "in readonly mode" do
+      use_redis_snapshotting
+
+      before { Discourse.enable_readonly_mode }
+
+      it "produces 503" do
+        sign_in(user)
+        client_id = SecureRandom.hex
+
+        post "/presence/update.json",
+             params: {
+               client_id: client_id,
+               present_channels: [ch1.name, ch2.name],
+             }
+
+        expect(response.status).to eq(503)
+      end
+    end
+
     it "works" do
       sign_in(user)
       client_id = SecureRandom.hex

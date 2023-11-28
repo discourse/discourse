@@ -7,7 +7,7 @@ RSpec.describe Chat::ParsedMentions do
   fab!(:channel_member_2) { Fabricate(:user) }
   fab!(:channel_member_3) { Fabricate(:user) }
   fab!(:not_a_channel_member) { Fabricate(:user) }
-  fab!(:chat_channel) { Fabricate(:chat_channel) }
+  fab!(:chat_channel)
 
   before do
     chat_channel.add(channel_member_1)

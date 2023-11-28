@@ -139,6 +139,10 @@ class CategoryList
 
     @categories = query.to_a
 
+    if Site.preloaded_category_custom_fields.any?
+      Category.preload_custom_fields(@categories, Site.preloaded_category_custom_fields)
+    end
+
     include_subcategories = @options[:include_subcategories] == true
 
     notification_levels = CategoryUser.notification_levels_for(@guardian.user)

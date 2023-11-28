@@ -3,8 +3,6 @@ globalThis.deprecationWorkflow.config = {
   // We're using RAISE_ON_DEPRECATION in environment.js instead of
   // `throwOnUnhandled` here since it is easier to toggle.
   workflow: [
-    { handler: "silence", matchId: "route-render-template" },
-    { handler: "silence", matchId: "route-disconnect-outlet" },
     {
       handler: "silence",
       matchId: "ember-this-fallback.this-property-fallback",
@@ -14,6 +12,11 @@ globalThis.deprecationWorkflow.config = {
     {
       handler: "silence",
       matchId: "discourse.decorate-widget.hamburger-widget-links",
+    },
+    {
+      // From: Ember 5.3. Until: Ember 6.0
+      handler: "silence",
+      matchId: "deprecate-implicit-route-model",
     },
   ],
 };

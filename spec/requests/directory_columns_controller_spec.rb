@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe DirectoryColumnsController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
 
   describe "#index" do
     it "returns all active directory columns" do

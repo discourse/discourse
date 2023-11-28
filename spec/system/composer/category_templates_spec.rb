@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Composer Form Templates", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:form_template_1) do
     Fabricate(
       :form_template,
@@ -370,6 +370,7 @@ describe "Composer Form Templates", type: :system do
     expect(find("#dialog-holder .dialog-body p", visible: :all)).to have_content(
       I18n.t("js.pick_files_button.unsupported_file_picked", { types: ".jpg, .png" }),
     )
+    expect(page).to have_no_css(".form-template-field__uploaded-files")
   end
 
   it "creates a post with multiple uploads" do
@@ -399,6 +400,22 @@ describe "Composer Form Templates", type: :system do
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
       ".video-placeholder-container",
     )
+  end
+
+  it "overrides uploaded file if allow_multiple false" do
+    topic_title = "Peter Parker's Medication"
+
+    category_page.visit(category_with_upload_template)
+    category_page.new_topic_button.click
+    attach_file "prescription-uploader",
+                "#{Rails.root}/spec/fixtures/images/logo.png",
+                make_visible: true
+    composer.fill_title(topic_title)
+    attach_file "prescription-uploader",
+                "#{Rails.root}/spec/fixtures/images/fake.jpg",
+                make_visible: true
+
+    expect(find(".form-template-field__uploaded-files")).to have_css("li", count: 1)
   end
 
   it "shows labels and descriptions when a form template is assigned to the category" do

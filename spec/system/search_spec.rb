@@ -2,7 +2,7 @@
 
 describe "Search", type: :system do
   let(:search_page) { PageObjects::Pages::Search.new }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is a test post in a test topic") }
 
   describe "when using full page search on mobile" do

@@ -239,7 +239,6 @@ nl:
       save: "Opslaan"
       select: "Selecteren"
       return_to_list: "Terug naar kanalenlijst"
-      return_to_threads_list: "Terug naar lopende discussies"
       unread_threads_count:
         one: "Je hebt %{count} ongelezen discussie"
         other: "Je hebt %{count} ongelezen discussies"
@@ -306,9 +305,9 @@ nl:
         default_search_placeholder: "#een-kanaal, @iemand of iets anders"
         default_channel_search_placeholder: "#een-kanaal"
         default_user_search_placeholder: "@iemand"
-        user_search_placeholder: "... voeg meer gebruikers toe"
         disabled_user: "heeft de chat uitgeschakeld"
         no_items: "Geen items"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Kanaal bewerken
         input_placeholder: Voeg een naam toe
@@ -546,7 +545,6 @@ nl:
           other: "+%{count}"
       threads:
         open: "Thread openen"
-        list: "Lopende discussies"
         none: "Je neemt niet deel aan discussies in dit kanaal."
       draft_channel_screen:
         header: "Nieuw bericht"

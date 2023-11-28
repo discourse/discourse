@@ -504,7 +504,8 @@ gl:
             name:
               same_as_password: "é igual ca o seu contrasinal."
             ip_address:
-              signup_not_allowed: "Non esta permitido rexistrarse desde esta conta."
+              blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
+              max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o seu enderezo IP (alcanzouse o límite). Contacte cun membro do equipo."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1302,7 +1303,6 @@ gl:
     show_pinned_excerpt_desktop: "Mostrar o extracto de temas pegados na vista de escritorio."
     post_onebox_maxlength: "Lonxitude máxima en caracteres dunha publicación de Discourse en formato caixa (onebox)."
     allowed_inline_onebox_domains: "Unha listaxe de dominios que se mostrarán en formato onebox en miniatura se son ligados sen un título"
-    enable_inline_onebox_on_all_domains: "Ignorar o axuste do sitio inline_onebox_domain_whitelist e permitir incluír onebox en todos os dominios."
     force_custom_user_agent_hosts: "Hosts que se utilizarán para o axente de usuario personalizado de onebox en todas as solicitudes (especialmente útil para hosts que limitan o acceso por axente de usuario)."
     max_oneboxes_per_post: "Número máximo de caixas (oneboxes) nunha publicación."
     facebook_app_access_token: "Un token xerado a partir do ID da súa app de Facebook e o seu segredo. Utilízase para xerar caixas (oneboxes) de Instagram."
@@ -1322,7 +1322,6 @@ gl:
     email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
     email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
-    enforce_second_factor: "Obriga os usuarios a activar a autenticación de dobre paso. Seleccione «todo» para aplicalo a todos os usuarios. Seleccione «equipo» para forzalo en usuarios do equipo."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída en «Resumir este tema»."
     summary_posts_required: "Número mínimo de publicacións antes de que «Resumir este tema» estea activado. Os cambios neste axuste aplicaranse retroactivamente despois dunha semana."
@@ -1376,8 +1375,6 @@ gl:
     content_security_policy_collect_reports: "Activar a recolección de informes de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restrinxir quen pode incorporar este sitio en iframes mediante CSP. O control de servidores permitidos en <a href='%{base_path}/admin/customize/embedding'>Incorporación</a>"
     invalidate_inactive_admin_email_after_days: "As contas administrativas que non visiten o sitio neste número de días terán que volver validar o seu enderezo electrónico antes de iniciar sesión. Estabelecer en 0 para desactivalo."
-    top_menu: "Determinar que elementos aparecen no menú de navegación da páxina de inicio e en que orde. Exemplo últimos|recentes|senler|categorías|destacados|publicados|marcadores"
-    post_menu: "Determinar os elementos que aparecen no menú de publicación e en que orde. Exemplo: gústame|editar|denunciar|eliminar|compartir|gardar en marcadores|responder"
     post_menu_hidden_items: "Os elementos do menú que se ocultan por defecto no menú de publicación salvo que se prema no botón para expandir as opcións."
     share_links: "Determinar que elementos aparecen no cadro de compartir e en que orde."
     site_contact_username: "Nome de usuario do membro do equipo desde onde se enviarán todas as mensaxes automáticas. Se se deixa en branco, utilizarase a conta predeterminada do sistema."
@@ -1581,7 +1578,6 @@ gl:
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."
     desktop_category_page_style: "Estilo visual para a páxina de /categorías."
     category_colors: "Unha listaxe de valores hexadecimais das cores permitidas para as categorías."
-    category_style: "Estilo visual para as insignias das categorías."
     default_dark_mode_color_scheme_id: "O esquema de cores empregado no modo escuro."
     dark_mode_none: "Ningún"
     max_image_size_kb: "O tamaño máximo dunha imaxe en kB. Isto configúrase en nginx (client_max_body_size) / apache ou proxy tamén. As imaxes cun tamaño superior e inferior ao client_max_body_size serán adaptadas para se axustar ao tamaño de subida."
@@ -1760,7 +1756,6 @@ gl:
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
     short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
     warn_reviving_old_topic_age: "Cando alguén comeza a responder a un tema onde a última resposta é máis antiga que uns días, amosará un aviso. Desactívase estabelecendo en 0."
-    autohighlight_all_code: "Forza a aplicación do resaltado de código en todos os bloques de código preformatados, mesmo aínda que non se especificase a linguaxe de xeito explícito."
     highlighted_languages: "Regras de realzado de sintaxe incluídas. (Aviso: incluír demasiadas linguaxes pode afectar o rendemento) véxase: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para unha demostración"
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_topics_list: "Admite a incorporación en HTML de listaxes de temas"
@@ -2098,9 +2093,6 @@ gl:
       blocked: "non está permitido."
       revoked: "Non se enviarán máis correos electrónicos a '%{email}' ata %{date}."
       does_not_exist: "N/D"
-    ip_address:
-      blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
-      max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o seu enderezo IP (alcanzouse o límite). Contacte cun membro do equipo."
     website:
       domain_not_allowed: "O sitio web non é válido. Os dominios permitidos son: %{domains}"
     auto_rejected: "Rexeitouse automaticamente debido á idade. Véxase o axuste do sitio auto_handle_queued_age."

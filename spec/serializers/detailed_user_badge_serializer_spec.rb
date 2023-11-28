@@ -2,9 +2,9 @@
 
 RSpec.describe DetailedUserBadgeSerializer do
   describe "#topic_id and #topic_title attributes" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:post) { Fabricate(:post) }
+    fab!(:user)
+    fab!(:admin)
+    fab!(:post)
     fab!(:badge) { Fabricate(:badge, show_posts: true) }
     fab!(:user_badge) { Fabricate(:user_badge, badge: badge, post_id: post.id) }
     let(:guardian) { Guardian.new(user_badge.user) }

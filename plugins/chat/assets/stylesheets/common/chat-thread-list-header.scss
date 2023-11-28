@@ -12,4 +12,13 @@
     display: flex;
     margin-left: auto;
   }
+
+  &__label span {
+    font-weight: bold;
+  }
+
+  &__label-channel {
+    display: block;
+    font-size: var(--font-down-1-rem);
+  }
 }

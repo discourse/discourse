@@ -34,7 +34,8 @@ RSpec.describe "CommonMark" do
           cooked.gsub!(%r{<span class="hashtag-raw">(.*)</span>}, "\\1")
           cooked.gsub!(%r{<a name="(.*)" class="anchor" href="#\1*"></a>}, "")
           # we support data-attributes which is not in the spec
-          cooked.gsub!("<pre data-code-startline=\"3\">", "<pre>")
+          cooked.gsub!(" data-code-startline=\"3\"", "")
+          cooked.gsub!(%r{ data-code-wrap="[^"]+"}, "")
           # we don't care about this
           cooked.gsub!("<blockquote>\n</blockquote>", "<blockquote></blockquote>")
           html.gsub!("<blockquote>\n</blockquote>", "<blockquote></blockquote>")

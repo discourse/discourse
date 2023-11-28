@@ -7,38 +7,44 @@ describe EmberCli do
     end
   end
 
-  describe ".parse_chunks_from_html" do
-    def generate_html
-      <<~HTML
-        <html>
-          <head>
-            <discourse-chunked-script entrypoint="discourse">
-              <script src="#{Discourse.base_path}/assets/firstchunk.js"></script>
-              <script src="#{Discourse.base_path}/assets/secondchunk.js"></script>
-            </discourse-chunked-script>
-          </head>
-          <body>
-            Hello world
-          </body>
-        </html>
-      HTML
+  describe "cache" do
+    after { EmberCli.clear_cache! }
+
+    def simulate_request_cache_clearance
+      # this method is defined by ActiveSupport::CurrentAttributes
+      # and is called before/after every web request
+      EmberCli.reset
     end
 
-    it "can parse chunks for a normal site" do
-      chunks = EmberCli.parse_chunks_from_html generate_html
-      expect(chunks["discourse"]).to eq(%w[firstchunk secondchunk])
+    context "in development" do
+      before { Rails.env.stubs(:development?).returns(true) }
+
+      it "cache works, and is cleared before/after each web request" do
+        EmberCli.cache[:foo] = "bar"
+        expect(EmberCli.cache[:foo]).to eq("bar")
+
+        simulate_request_cache_clearance
+
+        expect(EmberCli.cache[:foo]).to eq(nil)
+      end
     end
 
-    it "can parse chunks for a subfolder site" do
-      set_subfolder "/discuss"
+    context "in production" do
+      before { Rails.env.stubs(:development?).returns(false) }
 
-      html = generate_html
+      it "cache works, and can be cleared" do
+        EmberCli.cache[:foo] = "bar"
+        expect(EmberCli.cache[:foo]).to eq("bar")
 
-      # sanity check that our fixture is working
-      expect(html).to include("/discuss/assets/firstchunk.js")
+        simulate_request_cache_clearance
 
-      chunks = EmberCli.parse_chunks_from_html html
-      expect(chunks["discourse"]).to eq(%w[firstchunk secondchunk])
+        # In production, persists across requests
+        expect(EmberCli.cache[:foo]).to eq("bar")
+
+        # But still can be manually cleared
+        EmberCli.clear_cache!
+        expect(EmberCli.cache[:foo]).to eq(nil)
+      end
     end
   end
 end

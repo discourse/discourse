@@ -221,6 +221,8 @@ en:
 
     broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
 
+    broken_plugin_alert: "Caused by plugin '%{name}'"
+
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -375,6 +377,7 @@ en:
       copied: "copied!"
       copy: "copy code to clipboard"
       fullscreen: "show code in full screen"
+      view_code: "View code"
 
     drafts:
       label: "Drafts"
@@ -1461,8 +1464,6 @@ en:
         title: "Two-Factor Authentication"
         enable: "Manage Two-Factor Authentication"
         disable_all: "Disable All"
-        forgot_password: "Forgot password?"
-        confirm_password_description: "Please confirm your password to continue"
         name: "Name"
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
@@ -1526,6 +1527,7 @@ en:
         never_used: "Never Used"
         not_allowed_error: "The passkey registration process either timed out, was cancelled or is not allowed."
         already_added_error: "You have already registered this passkey. You don’t have to register it again."
+        confirm_button: "or use a passkey"
 
       change_about:
         title: "Change About Me"
@@ -1617,14 +1619,14 @@ en:
 
       name:
         title: "Name"
-        instructions: "your full name (optional)"
-        instructions_required: "Your full name"
+        instructions: "Your full name (optional)."
+        instructions_required: "Your full name."
         required: "Please enter a name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "unique, no spaces, short"
+        instructions: "Unique, no spaces, short."
         short_instructions: "People can mention you as @%{username}"
         available: "Your username is available"
         not_available: "Not available. Try %{suggestion}?"
@@ -1845,6 +1847,7 @@ en:
       confirm_access:
         title: "Confirm access"
         incorrect_password: "The entered password is incorrect."
+        incorrect_passkey: "That passkey is incorrect."
         logged_in_as: "You are logged in as: "
         instructions: "Please confirm your identity in order to complete this action."
         fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
@@ -1855,7 +1858,7 @@ en:
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
-        instructions: "at least %{count} characters"
+        instructions: "At least %{count} characters."
         required: "Please enter a password"
         confirm: "Confirm"
         incorrect_password: "The entered password is incorrect."
@@ -2054,7 +2057,7 @@ en:
           other {# errors/minute}
         }.
 
-    learn_more: "learn more…"
+    learn_more: "Learn more…"
 
     mute: Mute
     unmute: Unmute
@@ -2154,6 +2157,7 @@ en:
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       invite_no_username: "Enter your email address, and we'll send you a password reset email."
+      email-username: "Email or username"
       reset: "Reset Password"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
@@ -2203,6 +2207,7 @@ en:
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
       security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
       security_key_invalid_response_error: "The security key authentication process failed due to an invalid response."
+      passkey_security_error: "There was a security error: %{message}"
       email_placeholder: "Email / Username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
@@ -2390,8 +2395,9 @@ en:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
         other: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} users. Nobody will be notified."
       group_mentioned:
-        one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
-        other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
+        one: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} person</a>."
+        other: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} people</a>."
+      larger_group_mentioned: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} people</a>. Are you sure?"
       cannot_see_mention:
         category: "You mentioned @%{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned @%{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this personal message."
@@ -2633,6 +2639,7 @@ en:
         private_message: '%{username} sent you a personal message in "%{topic}" - %{site_title}'
         linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
         watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} posted in "%{topic}" - %{site_title}'
         confirm_title: "Notifications enabled - %{site_title}"
         confirm_body: "Success! Notifications have been enabled."
         custom: "Notification from %{username} on %{site_title}"
@@ -3854,8 +3861,8 @@ en:
       take_action: "Take Action…"
       take_action_options:
         default:
-          title: "Take Action"
-          details: "Reach the flag threshold immediately, rather than waiting for more community flags"
+          title: "Hide Post"
+          details: "Reach the flag threshold immediately, hide the post, and agree with all pending flags"
         suspend:
           title: "Suspend User"
           details: "Reach the flag threshold, and suspend the user"
@@ -3881,7 +3888,7 @@ en:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
       submit_tooltip: "Submit the private flag"
-      take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
+      take_action_tooltip: "Reach the flag threshold immediately, hide the post, and agree with all pending flags"
       cant: "Sorry, you can't flag this post at this time."
       notify_staff: "Notify staff privately"
       formatted_name:
@@ -4449,6 +4456,7 @@ en:
       sr_jump_bottom_button: "Jump to the last post"
     fullscreen_table:
       expand_btn: "Expand Table"
+      view_table: "View Table"
 
     second_factor_auth:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
@@ -4603,10 +4611,12 @@ en:
     form_template_chooser:
       select_template: "Select form templates"
     form_templates:
+      upload_field:
+        upload: "Upload"
+        uploading: "Uploading"
       errors:
         valueMissing:
           default: "Please fill out this field."
-          text: "Please fill out this field."
           select-one: "Please select an item in the list."
           select-multiple: "Please select at least one item in the list."
           checkbox: "Please check this box if you want to proceed."
@@ -4669,9 +4679,9 @@ en:
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
         new_features:
-          title: "🎁 New Features"
-          dismiss: "Dismiss"
-          learn_more: "Learn more"
+          title: "What's new"
+          previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          learn_more: "Learn more..."
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
@@ -5067,8 +5077,11 @@ en:
         not_enabled: "N"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
-        official: "Official Plugin"
+        official: "Official Discourse Plugin"
+        experimental: "Experimental Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
+        author: "By %{author}"
+        experimental_badge: "experimental"
 
       navigation_menu:
         sidebar: "Sidebar"

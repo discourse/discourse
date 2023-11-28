@@ -39,6 +39,20 @@ describe "Uploading files in chat messages", type: :system do
       expect(Chat::Message.last.uploads.count).to eq(1)
     end
 
+    it "adds dominant color attribute to images" do
+      chat.visit_channel(channel_1)
+      file_path = file_from_fixtures("logo.png", "images").path
+
+      attach_file(file_path) do
+        channel_page.open_action_menu
+        channel_page.click_action_button("chat-upload-btn")
+      end
+
+      channel_page.click_send_message
+
+      expect(channel_page.messages).to have_css(".chat-img-upload[data-dominant-color]", count: 1)
+    end
+
     it "allows uploading multiple files" do
       chat.visit_channel(channel_1)
 

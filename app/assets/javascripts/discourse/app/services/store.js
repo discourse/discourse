@@ -206,7 +206,7 @@ export default class StoreService extends Service {
   createRecord(type, attrs) {
     attrs = attrs || {};
     const adapter = this.adapterFor(type);
-    return !!attrs[adapter.primaryKey]
+    return attrs[adapter.primaryKey]
       ? this._hydrate(type, attrs)
       : this._build(type, attrs);
   }
@@ -265,12 +265,6 @@ export default class StoreService extends Service {
     obj.store = this;
     obj.__type = type;
     obj.__state = obj[adapter.primaryKey] ? "created" : "new";
-
-    // TODO: Have injections be automatic
-    obj.topicTrackingState = this.register.lookup(
-      "service:topic-tracking-state"
-    );
-    obj.keyValueStore = this.register.lookup("service:key-value-store");
 
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
     const model = klass.create(obj);

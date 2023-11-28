@@ -92,6 +92,8 @@ RSpec.describe "Chat channel", type: :system do
 
     context "with two sessions opened on same channel" do
       it "syncs the messages" do
+        Jobs.run_immediately!
+
         using_session(:tab_1) do
           sign_in(current_user)
           chat_page.visit_channel(channel_1)
@@ -275,8 +277,11 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     it "renders safe HTML like mentions (which are just links) in the reply-to" do
-      message_2.update!(message: "@#{other_user.username} <mark>not marked</mark>")
-      message_2.rebake!
+      update_message!(
+        message_2,
+        user: other_user,
+        text: "@#{other_user.username} <mark>not marked</mark>",
+      )
       chat_page.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(

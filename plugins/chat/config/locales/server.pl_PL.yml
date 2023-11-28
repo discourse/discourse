@@ -55,6 +55,7 @@ pl_PL:
   chat:
     deleted_chat_username: usunięte
     errors:
+      users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
       channel_new_message_disallowed:
         archived: "Kanał jest zarchiwizowany, nie można wysyłać nowych wiadomości"
@@ -188,6 +189,7 @@ pl_PL:
       inline_to_message: "Wiadomość #%{message_id} od %{username} - #%{chat_channel}"
       inline_to_channel: "Czat #%{chat_channel}"
       inline_to_topic_channel: "Czat dla tematu %{topic_title}"
+      thread_title_connector: "w"
       x_members:
         one: "%{count} członek"
         few: "%{count} członków"

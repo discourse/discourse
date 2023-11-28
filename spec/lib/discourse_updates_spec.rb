@@ -129,7 +129,7 @@ RSpec.describe DiscourseUpdates do
   end
 
   describe "new features" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:admin2) { Fabricate(:admin) }
     let!(:last_item_date) { 5.minutes.ago }
     let!(:sample_features) do
@@ -251,7 +251,7 @@ RSpec.describe DiscourseUpdates do
   end
 
   describe "#get_last_viewed_feature_date" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "returns an ActiveSupport::TimeWithZone object" do
       time = Time.zone.parse("2022-12-13T21:33:59Z")

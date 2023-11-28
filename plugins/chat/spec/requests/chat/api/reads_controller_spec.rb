@@ -11,7 +11,7 @@ RSpec.describe Chat::Api::ReadsController do
 
   describe "#read" do
     describe "marking a single message read" do
-      fab!(:chat_channel) { Fabricate(:chat_channel) }
+      fab!(:chat_channel)
       fab!(:other_user) { Fabricate(:user) }
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }

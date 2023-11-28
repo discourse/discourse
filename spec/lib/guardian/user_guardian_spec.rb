@@ -108,7 +108,7 @@ RSpec.describe UserGuardian do
 
     context "with hidden profile" do
       # Mixing Fabricate.build() and Fabricate() could cause ID clashes, so override :user
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       let(:hidden_user) do
         result = Fabricate(:user)

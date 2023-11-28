@@ -18,6 +18,8 @@ class GroupSmtpMailer < ActionMailer::Base
       authentication: GlobalSetting.smtp_authentication,
       enable_starttls_auto: from_group.smtp_ssl,
       return_response: true,
+      open_timeout: GlobalSetting.group_smtp_open_timeout,
+      read_timeout: GlobalSetting.group_smtp_read_timeout,
     }
 
     group_name = from_group.name_full_preferred

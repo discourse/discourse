@@ -1,9 +1,9 @@
 {{#each this.messages as |message|}}
   <ComposerMessage
     @message={{message}}
-    @closeMessage={{action "closeMessage"}}
+    @closeMessage={{this.closeMessage}}
     @shareModal={{fn (mut this.showShareModal) true}}
-    @switchPM={{action "switchPM"}}
+    @switchPM={{this.switchPM}}
   />
   {{#if this.showShareModal}}
     <Modal::ShareTopic

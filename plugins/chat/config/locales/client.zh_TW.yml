@@ -144,6 +144,7 @@ zh_TW:
         add_user_short: <span>新增使用者</span>
         open_channel: <span>開啟頻道</span>
         no_items: "沒有項目"
+        filter: "過濾"
       channel_edit_name_slug_modal:
         title: 編輯頻道
         name: 變更名稱
@@ -245,7 +246,6 @@ zh_TW:
           other: "+%{count}"
       threads:
         open: "開啟討論串"
-        list: "進行中的討論"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"

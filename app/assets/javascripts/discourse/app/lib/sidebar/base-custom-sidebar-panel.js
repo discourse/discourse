@@ -1,8 +1,10 @@
+import { tracked } from "@glimmer/tracking";
+
 /**
  * Base class representing a sidebar section header interface.
  */
 export default class BaseCustomSidebarPanel {
-  sections = [];
+  @tracked sections = [];
 
   /**
    * @returns {boolean} Controls whether the panel is hidden, which means that

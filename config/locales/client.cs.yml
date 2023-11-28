@@ -1272,8 +1272,6 @@ cs:
         title: "Dvoufaktorové ověření"
         enable: "Správa dvoufaktorového ověřování"
         disable_all: "Zakázat vše"
-        forgot_password: "Zapomněli jste heslo?"
-        confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         name: "Jméno"
         label: "Kód"
         rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
@@ -1398,14 +1396,13 @@ cs:
           disconnect: "Váš stávající %{provider} účet '%{account_description}' bude odpojen."
       name:
         title: "Jméno"
-        instructions: "vaše celé jméno (nepovinné)"
-        instructions_required: "Vaše celé jméno"
+        instructions: "Vaše celé jméno (nepovinné)."
+        instructions_required: "Vaše celé jméno."
         required: "Zadejte jméno"
         too_short: "Máte moc krátké jméno"
         ok: "Parádní jméno"
       username:
         title: "Uživatelské jméno"
-        instructions: "jedinečné, bez mezer, krátké"
         short_instructions: "Lidé vás mohou zmínit pomocí @%{username}"
         available: "Vaše uživatelské jméno je volné"
         not_available: "Není k dispozici. Co třeba %{suggestion}?"
@@ -1576,7 +1573,7 @@ cs:
         same_as_username: "Vaše heslo je stejné jako Vaše uživatelské jméno."
         same_as_email: "Vaše heslo je stejné jako váš e-mail."
         ok: "Vaše heslo je v pořádku."
-        instructions: "alespoň %{count} znaků"
+        instructions: "Alespoň %{count} znaků."
         required: "Zadejte prosím heslo"
       summary:
         title: "Souhrn"
@@ -2139,6 +2136,7 @@ cs:
         posted: '%{username} přispěl do "%{topic}" - %{site_title}'
         private_message: '%{username} vám poslal soukromou zprávu v "%{topic}" - %{site_title}'
         linked: '%{username} odkázal na vás příspěvek v "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} přispěl do "%{topic}" - %{site_title}'
         confirm_title: "Upozornění zapnuta - %{site_title}"
         confirm_body: "Upozornění úspěšně zapnuta."
         custom: "Oznámení od %{username} na %{site_title}"
@@ -3082,8 +3080,7 @@ cs:
       take_action: "Podniknout kroky..."
       take_action_options:
         default:
-          title: "Zakročit"
-          details: "Ihned dosáhni vlaječky prahu, než aby jsi čekal na více komunitních vlaječek"
+          title: "Schovat příspěvek"
         suspend:
           title: "Suspend User"
         silence:
@@ -3095,7 +3092,6 @@ cs:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrytý)"
       submit_tooltip: "Podat soukromé nahlášení"
-      take_action_tooltip: "Ihned dosáhni vlaječky prahu, než aby jsi čekal na více komunitních vlaječek"
       cant: "Bohužel nyní nemůžete tento příspěvek nahlásit."
       notify_staff: "Napište členům redakce soukromě"
       formatted_name:
@@ -3626,7 +3622,6 @@ cs:
           delete: "Smazat"
           delete_confirm: "Opravdu chcete odstranit tuto sekci?"
           reset_confirm: "Jste si jisti, že chcete resetovat tuto sekci na výchozí?"
-          public: "Zveřejnit tuto sekci a zobrazit pro všechny"
           always_public: "Obsah v této sekci je vždy veřejný"
           more_menu: "Další menu"
           links:
@@ -3697,10 +3692,12 @@ cs:
     form_template_chooser:
       select_template: "Vyberte šablony formulářů"
     form_templates:
+      upload_field:
+        upload: "Nahrát"
+        uploading: "Nahrává se"
       errors:
         valueMissing:
           default: "Vyplňte prosím toto pole."
-          text: "Vyplňte prosím toto pole."
           select-one: "Vyberte položku ze seznamu."
           select-multiple: "Vyberte prosím alespoň jednu položku v seznamu."
           checkbox: "Zaškrtněte toto políčko, pokud chcete pokračovat."
@@ -3744,9 +3741,7 @@ cs:
         latest_version: "Poslední verze"
         problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
         new_features:
-          title: "\U0001F381 Nové funkce"
-          dismiss: "Označit jako přečtené"
-          learn_more: "Více informací"
+          learn_more: "Více informací..."
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
         no_problems: "Nenalezeny žádné problémy."
@@ -4023,7 +4018,7 @@ cs:
         not_enabled: "N"
         change_settings_short: "Nastavení"
         howto: "Jak nainstaluji pluginy?"
-        official: "Oficiální plugin"
+        author: "Od uživatele %{author}"
       navigation_menu:
         sidebar: "Postranní panel"
       backups:

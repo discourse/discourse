@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { test } from "qunit";
 import { Promise } from "rsvp";
 import { cook } from "discourse/lib/text";

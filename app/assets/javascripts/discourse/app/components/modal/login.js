@@ -19,9 +19,11 @@ import escape from "discourse-common/lib/escape";
 import I18n from "discourse-i18n";
 
 export default class Login extends Component {
+  @service capabilities;
   @service dialog;
   @service siteSettings;
   @service site;
+  @service login;
 
   @tracked loggingIn = false;
   @tracked loggedIn = false;
@@ -29,8 +31,8 @@ export default class Login extends Component {
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
-  @tracked flash = this.args.model?.flash;
-  @tracked flashType = this.args.model?.flashType;
+  @tracked flash = this.args.model.flash;
+  @tracked flashType = this.args.model.flashType;
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked
   canLoginLocalWithEmail = this.siteSettings.enable_local_logins_via_email;
@@ -45,18 +47,9 @@ export default class Login extends Component {
   @tracked securityKeyAllowedCredentialIds;
   @tracked secondFactorToken;
 
-  constructor() {
-    super(...arguments);
-    if (this.args.model?.isExternalLogin) {
-      this.externalLogin(this.args.model.externalLoginMethod, {
-        signup: this.args.model.signup,
-      });
-    }
-  }
-
   get awaitingApproval() {
     return (
-      this.args.model?.awaitingApproval &&
+      this.args.model.awaitingApproval &&
       !this.canLoginLocal &&
       !this.canLoginLocalWithEmail
     );
@@ -94,7 +87,7 @@ export default class Login extends Component {
   get canUsePasskeys() {
     return (
       this.siteSettings.enable_local_logins &&
-      this.siteSettings.experimental_passkeys &&
+      this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
   }
@@ -116,12 +109,10 @@ export default class Login extends Component {
   @action
   async passkeyLogin(mediation = "optional") {
     try {
-      const response = await ajax("/session/passkey/challenge.json");
-
       const publicKeyCredential = await getPasskeyCredential(
-        response.challenge,
-        (errorMessage) => this.dialog.alert(errorMessage),
-        mediation
+        (e) => this.dialog.alert(e),
+        mediation,
+        this.capabilities.isFirefox
       );
 
       if (publicKeyCredential) {
@@ -131,7 +122,13 @@ export default class Login extends Component {
         });
 
         if (authResult && !authResult.error) {
-          window.location.reload();
+          const destinationUrl = cookie("destination_url");
+          if (destinationUrl) {
+            removeCookie("destination_url");
+            window.location.assign(destinationUrl);
+          } else {
+            window.location.reload();
+          }
         } else {
           this.dialog.alert(authResult.error);
         }
@@ -177,7 +174,7 @@ export default class Login extends Component {
   }
 
   @action
-  async login() {
+  async triggerLogin() {
     if (this.loginDisabled) {
       return;
     }
@@ -316,18 +313,14 @@ export default class Login extends Component {
   }
 
   @action
-  async externalLogin(loginMethod, { signup = false } = {}) {
+  async externalLoginAction(loginMethod) {
     if (this.loginDisabled) {
       return;
     }
-
-    try {
-      this.loggingIn = true;
-      await loginMethod.doLogin({ signup });
-      this.args.closeModal();
-    } catch {
-      this.loggingIn = false;
-    }
+    this.login.externalLogin(loginMethod, {
+      signup: false,
+      setLoggingIn: (value) => (this.loggingIn = value),
+    });
   }
 
   @action

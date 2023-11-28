@@ -6,7 +6,7 @@ RSpec.describe NotificationEmailer do
     NotificationEmailer.enable
   end
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
   # something is off with fabricator
@@ -271,6 +271,33 @@ RSpec.describe NotificationEmailer do
             expect(I18n.exists?(key)).to eq(true), "missing translation: #{key}"
           end
         end
+      end
+    end
+  end
+
+  describe "with plugin-added email_notification_filters" do
+    let!(:plugin) { Plugin::Instance.new }
+    let!(:notification) { create_notification(:quoted) }
+    let(:no_delay) { true }
+    let(:type) { :user_quoted }
+
+    after { DiscoursePluginRegistry.reset! }
+
+    it "sends email when all filters return true" do
+      plugin.register_email_notification_filter { |_| true }
+      plugin.register_email_notification_filter { |_| true }
+
+      expect_enqueued_with(job: :user_email, args: { type: type }) do
+        NotificationEmailer.process_notification(notification, no_delay: no_delay)
+      end
+    end
+
+    it "doesn't send email when all one filter returns false" do
+      plugin.register_email_notification_filter { |_| true }
+      plugin.register_email_notification_filter { |_| false }
+
+      expect_not_enqueued_with(job: :user_email, args: { type: type }) do
+        NotificationEmailer.process_notification(notification, no_delay: no_delay)
       end
     end
   end

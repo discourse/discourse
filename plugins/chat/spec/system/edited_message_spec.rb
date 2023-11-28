@@ -36,7 +36,8 @@ RSpec.describe "Edited message", type: :system do
     end
 
     it "runs decorators on the edited message" do
-      message_1 = Fabricate(:chat_message, chat_channel: channel_1, user: current_user)
+      message_1 =
+        Fabricate(:chat_message, chat_channel: channel_1, user: current_user, use_service: true)
       chat_page.visit_channel(channel_1)
 
       channel_page.edit_message(message_1, '[date=2025-03-10 timezone="Europe/Paris"]')

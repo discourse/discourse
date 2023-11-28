@@ -2,7 +2,7 @@
   {{#if this.isNotifyUser}}
     <h3>{{this.formattedName}}</h3>
     <div class="controls">
-      <label class="radio">
+      <label class="radio checkbox-label">
         <input
           id="radio_{{this.flag.name_key}}"
           {{on "click" (action "changePostActionType" this.flag)}}
@@ -38,7 +38,7 @@
     {{/if}}
   {{else}}
     <div class="controls {{this.flag.name_key}}">
-      <label class="radio">
+      <label class="radio checkbox-label">
         <input
           id="radio_{{this.flag.name_key}}"
           {{on "click" (action "changePostActionType" this.flag)}}

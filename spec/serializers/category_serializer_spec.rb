@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe CategorySerializer do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:group)
   fab!(:category) { Fabricate(:category, reviewable_by_group_id: group.id) }
 
   it "includes the reviewable by group name if enabled" do

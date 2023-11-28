@@ -126,8 +126,8 @@ class TopicEmbed < ActiveRecord::Base
     return if uri.blank?
 
     begin
-      html = uri.read
-    rescue OpenURI::HTTPError, Net::OpenTimeout
+      html = FinalDestination::HTTP.get(uri)
+    rescue OpenURI::HTTPError, Net::OpenTimeout, FinalDestination::SSRFDetector::DisallowedIpError
       return
     end
 

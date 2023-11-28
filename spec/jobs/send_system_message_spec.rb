@@ -14,7 +14,7 @@ RSpec.describe Jobs::SendSystemMessage do
   end
 
   context "with valid parameters" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "should call SystemMessage.create" do
       SystemMessage.any_instance.expects(:create).with("welcome_invite", {})

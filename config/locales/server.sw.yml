@@ -297,7 +297,8 @@ sw:
               same_as_current: "ni sawa na nywila unayotumia sasa."
               unique_characters: "ina herufi zilizorudiwa sana. Tafadhali tumia nywila iliyo salama zaidi."
             ip_address:
-              signup_not_allowed: "Hauruhusiwi kujiunga kupitia akaunti hii."
+              blocked: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao."
+              max_new_accounts_per_registration_ip: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao (kiwango cha juu kimefika). Wasiliana na mfanyakazi."
         user_email:
           attributes:
             user_id:
@@ -1023,9 +1024,6 @@ sw:
       not_allowed: "hairuhusiwi kutoka kwa mtoaji barua pepe. Tafadhali tumia barua pepe nyingine."
       blocked: "hairuhusiwi."
       revoked: "hatutatuma barua pepe kwenda kwa '%{email}' mpaka %{date}."
-    ip_address:
-      blocked: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao."
-      max_new_accounts_per_registration_ip: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao (kiwango cha juu kimefika). Wasiliana na mfanyakazi."
     website:
       domain_not_allowed: "Tovuti ni batili. Vikoa vinavyoruhusiwa ni: %{domains}"
     auto_rejected: "Imekataliwa otomatikali kwa sababu ya umri. Ona mpangilio wa tovuti wa auto_handle_queued_age"

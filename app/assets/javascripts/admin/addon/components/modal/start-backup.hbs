@@ -10,7 +10,7 @@
         }}</div>
     {{/if}}
     {{#if this.canManageUploadsInBackup}}
-      <label>
+      <label class="checkbox-label">
         <Input @type="checkbox" @checked={{this.includeUploads}} />
         {{i18n "admin.backups.operations.backup.include_uploads"}}
       </label>

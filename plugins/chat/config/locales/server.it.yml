@@ -55,6 +55,7 @@ it:
   chat:
     deleted_chat_username: eliminato
     errors:
+      users_cant_be_added_to_channel: "Impossibile aggiungere membri a questo canale."
       channel_exists_for_category: "Esiste già un canale per questa categoria e questo nome"
       channel_new_message_disallowed:
         archived: "Il canale è archiviato, non è possibile inviare nuovi messaggi"
@@ -177,6 +178,7 @@ it:
       inline_to_message: "Messaggio n.%{message_id} per %{username} – n.%{chat_channel}"
       inline_to_channel: "Chat n. %{chat_channel}"
       inline_to_topic_channel: "Chat per l'argomento %{topic_title}"
+      thread_title_connector: "in"
       x_members:
         one: "%{count} membro"
         other: "%{count} membri"

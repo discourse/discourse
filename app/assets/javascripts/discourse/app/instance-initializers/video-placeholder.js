@@ -13,7 +13,6 @@ export default {
         const overlay = wrapper.querySelector(".video-placeholder-overlay");
 
         parentDiv.style.cursor = "";
-        parentDiv.removeEventListener("click", handleVideoPlaceholderClick);
         overlay.innerHTML = spinnerHTML;
 
         const videoHTML = `
@@ -83,7 +82,7 @@ export default {
           container.addEventListener(
             "click",
             handleVideoPlaceholderClick.bind(null, helper),
-            false
+            { once: true }
           );
           overlay.innerHTML = `${iconHTML("play")}`;
           wrapper.appendChild(overlay);

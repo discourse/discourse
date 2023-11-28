@@ -13,6 +13,7 @@ export default class AdminCustomizeThemesRoute extends Route {
   queryParams = {
     repoUrl: null,
     repoName: null,
+    tab: null,
   };
 
   model() {
@@ -21,7 +22,17 @@ export default class AdminCustomizeThemesRoute extends Route {
 
   setupController(controller, model) {
     super.setupController(controller, model);
-    controller.set("editingTheme", false);
+
+    if (controller.tab) {
+      controller.setProperties({
+        editingTheme: false,
+        currentTab: controller.tab,
+
+        // this is to get rid of the queryString since we don't want it hanging around
+        tab: undefined,
+      });
+    }
+
     if (controller.repoUrl) {
       next(() => {
         this.modal.show(InstallThemeModal, {

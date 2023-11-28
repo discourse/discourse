@@ -14,7 +14,6 @@ class AdminUserListSerializer < BasicUserSerializer
              :created_at_age,
              :trust_level,
              :manual_locked_trust_level,
-             :flag_level,
              :username,
              :title,
              :avatar_template,

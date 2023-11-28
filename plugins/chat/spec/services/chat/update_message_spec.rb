@@ -56,6 +56,7 @@ RSpec.describe Chat::UpdateMessage do
         user: user,
         message: message,
         upload_ids: upload_ids,
+        use_service: true,
       )
     end
 
@@ -137,6 +138,14 @@ RSpec.describe Chat::UpdateMessage do
       expect(chat_message.reload.message).to eq(new_message)
     end
 
+    it "cooks the message" do
+      chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+      new_message = "Change **to** this!"
+
+      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+      expect(chat_message.reload.cooked).to eq("<p>Change <strong>to</strong> this!</p>")
+    end
+
     it "publishes a DiscourseEvent for updated messages" do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       events =
@@ -153,18 +162,20 @@ RSpec.describe Chat::UpdateMessage do
     it "publishes updated message to message bus" do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       new_content = "New content"
-      messages =
-        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
-          described_class.call(
-            guardian: guardian,
-            message_id: chat_message.id,
-            message: new_content,
-          )
-        end
 
-      expect(messages.count).to be(1)
-      message = messages[0].data
-      expect(message["chat_message"]["message"]).to eq(new_content)
+      processed_message =
+        MessageBus
+          .track_publish("/chat/#{public_chat_channel.id}") do
+            described_class.call(
+              guardian: guardian,
+              message_id: chat_message.id,
+              message: new_content,
+            )
+          end
+          .detect { |m| m.data["type"] == "edit" }
+          .data
+
+      expect(processed_message["chat_message"]["message"]).to eq(new_content)
     end
 
     context "with mentions" do
@@ -281,20 +292,21 @@ RSpec.describe Chat::UpdateMessage do
         chat_message = create_chat_message(user1, "This will be updated", public_chat_channel)
         new_content = "Hey @#{user2.username}"
 
-        messages =
-          MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
-            described_class.call(
-              guardian: guardian,
-              message_id: chat_message.id,
-              message: new_content,
-            )
-          end
+        processed_message =
+          MessageBus
+            .track_publish("/chat/#{public_chat_channel.id}") do
+              described_class.call(
+                guardian: guardian,
+                message_id: chat_message.id,
+                message: new_content,
+              )
+            end
+            .detect { |m| m.data["type"] == "processed" }
+            .data
 
-        expect(messages.count).to be(1)
-        message = messages[0].data
-        expect(message["chat_message"]["mentioned_users"].count).to eq(1)
-        mentioned_user = message["chat_message"]["mentioned_users"][0]
+        expect(processed_message["chat_message"]["mentioned_users"].count).to eq(1)
 
+        mentioned_user = processed_message["chat_message"]["mentioned_users"][0]
         expect(mentioned_user["id"]).to eq(user2.id)
         expect(mentioned_user["username"]).to eq(user2.username)
         expect(mentioned_user["status"]).to be_present
@@ -305,21 +317,21 @@ RSpec.describe Chat::UpdateMessage do
         SiteSetting.enable_user_status = false
         user2.set_status!("dentist", "tooth")
         chat_message = create_chat_message(user1, "This will be updated", public_chat_channel)
-        new_content = "Hey @#{user2.username}"
 
-        messages =
-          MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
-            described_class.call(
-              guardian: guardian,
-              message_id: chat_message.id,
-              message: new_content,
-            )
-          end
+        processed_message =
+          MessageBus
+            .track_publish("/chat/#{public_chat_channel.id}") do
+              described_class.call(
+                guardian: guardian,
+                message_id: chat_message.id,
+                message: "Hey @#{user2.username}",
+              )
+            end
+            .detect { |m| m.data["type"] == "processed" }
+            .data
 
-        expect(messages.count).to be(1)
-        message = messages[0].data
-        expect(message["chat_message"]["mentioned_users"].count).to be(1)
-        mentioned_user = message["chat_message"]["mentioned_users"][0]
+        expect(processed_message["chat_message"]["mentioned_users"].count).to be(1)
+        mentioned_user = processed_message["chat_message"]["mentioned_users"][0]
 
         expect(mentioned_user["status"]).to be_blank
       end
@@ -648,7 +660,7 @@ RSpec.describe Chat::UpdateMessage do
     end
 
     describe "watched words" do
-      fab!(:watched_word) { Fabricate(:watched_word) }
+      fab!(:watched_word)
 
       it "errors when a blocked word is present" do
         chat_message = create_chat_message(user1, "something", public_chat_channel)
@@ -774,6 +786,17 @@ RSpec.describe Chat::UpdateMessage do
         message_1.update!(last_editor: Discourse.system_user)
 
         expect { result }.to not_change { result.message.last_editor_id }
+      end
+
+      it "can enqueue a job to process message" do
+        params[:process_inline] = false
+        expect_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
+      end
+
+      it "can process a message inline" do
+        params[:process_inline] = true
+        Jobs::Chat::ProcessMessage.any_instance.expects(:execute).once
+        expect_not_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
       end
     end
 

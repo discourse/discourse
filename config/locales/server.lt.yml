@@ -450,7 +450,8 @@ lt:
             name:
               same_as_password: "yra toks pats kaip jūsų slaptažodis."
             ip_address:
-              signup_not_allowed: "Registracijos nėra galimos iš šios paskyros."
+              blocked: "Naujos registracijos neleidžiamos iš jūsų IP adreso."
+              max_new_accounts_per_registration_ip: "Naujos registracijos neleidžiamos iš jūsų IP adreso (pasiekta maksimali riba). Susisiekite su administracija."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1248,7 +1249,6 @@ lt:
     mobile_logo_dark: "Tamsios schemos alternatyva svetainės „mobiliojo logotipo“ nustatymui."
     large_icon: "Vaizdas naudojamas kaip kitų metaduomenų piktogramų pagrindas. Idealiu atveju turėtų būti didesnis nei 512 x 512. Jei paliksite tuščią, bus naudojamas logotipas_mažas."
     email_custom_headers: "Brūkšniais atskirtas pasirinktinių el. laiškų antraščių sąrašas"
-    enforce_second_factor: "Priverčia vartotojus įgalinti dviejų veiksnių autentifikavimą. Pasirinkite „viskas“, kad jis būtų taikomas visiems vartotojams. Pasirinkite „personalas“, kad jis būtų taikomas tik darbuotojams."
     force_https: "Priverskite savo svetainę naudoti tik HTTPS. ĮSPĖJIMAS: NEGALIMA to įjungti, kol nepatikrinate, kad HTTPS yra visiškai nustatytas ir veikia visiškai visur! Ar patikrinote savo CDN, visus socialinius prisijungimus ir visus išorinius logotipus / priklausomybes, kad įsitikintumėte, jog jie taip pat suderinami su HTTPS?"
     summary_score_threshold: "Minimalus balas, kurio reikia, kad įrašas būtų įtrauktas į „Apibendrinti šią temą“"
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"
@@ -1273,8 +1273,6 @@ lt:
     moderators_change_post_ownership: "Leisti moderatoriams pakeisti įrašo nuosavybę"
     use_admin_ip_allowlist: "Administratoriai gali prisijungti tik tuo atveju, jei yra IP adresas, apibrėžtas sąraše „Tikrinami IP“ (Administratorius> Žurnalai> Tikrinami IP)."
     blocked_ip_blocks: "Sąrašas privačių IP blokų, kurių niekada neturėtų tikrinti „Discourse“"
-    top_menu: "Nustatykite, kurie elementai rodomi pagrindinio puslapio navigacijoje ir kokia tvarka. Pavyzdys naujausios | naujos | neskaitytos | kategorijos | viršuje | skaityti | paskelbta | žymos"
-    post_menu: "Nustatykite, kurie elementai rodomi įrašų meniu ir kokia tvarka. Pavyzdys kaip | redaguoti | vėliava | ištrinti | bendrinti | žymėti | atsakyti"
     share_links: "Nustatykite, kurie elementai rodomi bendrinimo dialogo lange ir kokia tvarka."
     site_contact_username: "Tinkamas personalo vartotojo vardas, iš kurio siunčiami visi automatiniai pranešimai. Jei jis paliekamas tuščias, bus naudojama numatytoji sistemos paskyra."
     site_contact_group_name: "Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes."
@@ -1376,7 +1374,6 @@ lt:
     newuser_max_mentions_per_post: "Didžiausias @name pranešimų skaičius, kurį naujas vartotojas gali naudoti įraše."
     newuser_max_replies_per_topic: "Maksimalus atsakymų skaičius, kurį naujas vartotojas gali pateikti vienoje temoje, kol kas nors į juos atsakys."
     enable_mentions: "Leiskite vartotojams paminėti kitus vartotojus."
-    category_style: "Vizualus stilius kategorijos ženklelių."
     dark_mode_none: "Nieko"
     max_similar_results: "Kiek panašių temų rodyti virš redaktoriaus kuriant naują temą. Palyginimas pagrįstas pavadinimu ir tekstu."
     max_image_megapixels: "Didžiausias leistinas vaizdo megapikselių skaičius. Vaizdai su didesniu megapikselių skaičiumi bus atmesti."
@@ -1590,9 +1587,6 @@ lt:
       not_allowed: "neleidžiama iš šio el. pašto teikėjo. Prašome naudoti kitą el. pašto adresą."
       blocked: "negalimas."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Naujos registracijos neleidžiamos iš jūsų IP adreso."
-      max_new_accounts_per_registration_ip: "Naujos registracijos neleidžiamos iš jūsų IP adreso (pasiekta maksimali riba). Susisiekite su administracija."
     website:
       domain_not_allowed: "Svetainė netinkama. Leidžiami domenai yra: %{domains}"
     destroy_reasons:

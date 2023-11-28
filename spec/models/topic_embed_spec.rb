@@ -8,15 +8,15 @@ RSpec.describe TopicEmbed do
   it { is_expected.to validate_presence_of :embed_url }
 
   describe ".import" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { "http://eviltrout.com/123" }
     let(:contents) do
       "<p>hello world new post <a href='/hello'>hello</a> <img src='images/wat.jpg'></p>"
     end
-    fab!(:embeddable_host) { Fabricate(:embeddable_host) }
-    fab!(:category) { Fabricate(:category) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:embeddable_host)
+    fab!(:category)
+    fab!(:tag)
 
     it "returns nil when the URL is malformed" do
       expect(TopicEmbed.import(user, "invalid url", title, contents)).to eq(nil)
@@ -279,7 +279,7 @@ RSpec.describe TopicEmbed do
   end
 
   describe ".find_remote" do
-    fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+    fab!(:embeddable_host)
 
     describe ".title_scrub" do
       let(:url) { "http://eviltrout.com/123" }
@@ -299,10 +299,23 @@ RSpec.describe TopicEmbed do
         response = TopicEmbed.find_remote(url)
         expect(response.title).to eq("Through the Looking Glass")
       end
+
+      it "doesn't follow redirect when making request" do
+        FinalDestination.any_instance.stubs(:resolve).returns(URI("https://redirect.com"))
+        stub_request(:get, "https://redirect.com/").to_return(
+          status: 301,
+          body: "<title>Moved permanently</title>",
+          headers: {
+            "Location" => "https://www.example.org/",
+          },
+        )
+        response = TopicEmbed.find_remote(url)
+        expect(response.title).to eq("Moved permanently")
+      end
     end
 
     context 'with post with allowed classes "foo" and "emoji"' do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:url) { "http://eviltrout.com/123" }
       let(:contents) do
         "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>"
@@ -352,7 +365,7 @@ RSpec.describe TopicEmbed do
     end
 
     context "with post with no allowed classes" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:url) { "http://eviltrout.com/123" }
       let(:contents) do
         "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>"
@@ -441,7 +454,7 @@ RSpec.describe TopicEmbed do
     end
 
     context "with canonical links" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let(:title) { "How to turn a fish from good to evil in 30 seconds" }
       let(:url) { "http://eviltrout.com/123?asd" }
       let(:canonical_url) { "http://eviltrout.com/123" }

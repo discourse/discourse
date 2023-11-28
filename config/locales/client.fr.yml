@@ -1341,8 +1341,6 @@ fr:
         title: "Authentification à deux facteurs"
         enable: "Gérer l'authentification à deux facteurs"
         disable_all: "Tout désactiver"
-        forgot_password: "Mot de passe oublié ?"
-        confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         name: "Nom"
         label: "Code"
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'authentification."
@@ -1471,14 +1469,13 @@ fr:
           generic: "Votre compte %{provider} sera utilisé pour l'authentification."
       name:
         title: "Nom"
-        instructions: "votre nom complet (facultatif)"
-        instructions_required: "Votre nom complet"
+        instructions: "Votre nom complet (facultatif)."
+        instructions_required: "Votre nom complet."
         required: "Veuillez saisir un nom"
         too_short: "Votre nom est trop court"
         ok: "Votre nom a l'air correct"
       username:
         title: "Nom d'utilisateur"
-        instructions: "unique, sans espace, court"
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @%{username}"
         available: "Votre nom d'utilisateur est disponible"
         not_available: "Indisponible. Essayer %{suggestion} ?"
@@ -1673,7 +1670,7 @@ fr:
         same_as_username: "Votre mot de passe est identique à votre nom d'utilisateur."
         same_as_email: "Votre mot de passe est identique à votre adresse e-mail."
         ok: "Votre mot de passe semble correct."
-        instructions: "au moins %{count} caractères"
+        instructions: "Au moins %{count} caractères."
         required: "Veuillez saisir un mot de passe"
         confirm: "Confirmer"
       summary:
@@ -2038,12 +2035,6 @@ fr:
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
-      plus_subcategories_title:
-        one: "%{name} et une sous-catégorie"
-        other: "%{name} et %{count} sous-catégories"
-      plus_subcategories:
-        one: "+ %{count} sous-catégorie"
-        other: "+ %{count} sous-catégories"
     select_kit:
       delete_item: "Supprimer %{name}"
       filter_by: "Filtrer par : %{name}"
@@ -2334,6 +2325,7 @@ fr:
         private_message: '%{username} vous a envoyé un message direct dans « %{topic} » - %{site_title}'
         linked: '%{username} a inséré un lien vers votre message dans le sujet « %{topic} » - %{site_title}'
         watching_first_post: '%{username} a créé un nouveau sujet « %{topic} » - %{site_title}'
+        watching_category_or_tag: '%{username} a publié un message dans « %{topic} » - %{site_title}'
         confirm_title: "Notifications activées - %{site_title}"
         confirm_body: "Les notifications ont été activées."
         custom: "Notification de %{username} sur %{site_title}"
@@ -3457,8 +3449,7 @@ fr:
       action: "Signaler ce message"
       take_action_options:
         default:
-          title: "Intervenir"
-          details: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre d'autres signalements de la communauté."
+          title: "Masquer le message"
         suspend:
           title: "Suspendre l'utilisateur"
           details: "Atteindre le seuil de signalement et suspendre l'utilisateur"
@@ -3475,7 +3466,6 @@ fr:
       ip_address_missing: "(S.O.)"
       hidden_email_address: "(masqué)"
       submit_tooltip: "Soumettre le signalement privé"
-      take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre d'autres signalements de la communauté."
       cant: "Nous sommes désolés, vous ne pouvez pas signaler ce message pour le moment."
       notify_staff: "Notifier les responsables de manière privée"
       formatted_name:
@@ -4031,7 +4021,6 @@ fr:
           delete: "Supprimer"
           delete_confirm: "Voulez-vous vraiment supprimer cette section ?"
           reset_confirm: "Voulez-vous vraiment réinitialiser cette section par défaut ?"
-          public: "Rendre cette section publique et la rendre visible pour tous"
           always_public: "Le contenu de cette section est toujours public"
           more_menu: "Plus de menus"
           links:
@@ -4136,10 +4125,12 @@ fr:
     form_template_chooser:
       select_template: "Sélectionner des modèles de formulaire"
     form_templates:
+      upload_field:
+        upload: "Envoi"
+        uploading: "En cours d'envoi"
       errors:
         valueMissing:
           default: "Veuillez remplir ce champ."
-          text: "Veuillez remplir ce champ."
           select-one: "Veuillez sélectionner un élément dans la liste."
           select-multiple: "Veuillez sélectionner au moins un élément dans la liste."
           checkbox: "Veuillez cocher cette case si vous souhaitez continuer."
@@ -4195,9 +4186,7 @@ fr:
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         new_features:
-          title: "\U0001F381 Nouveautés"
-          dismiss: "Ignorer"
-          learn_more: "En savoir plus…"
+          learn_more: "En savoir plus…..."
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."
@@ -4523,8 +4512,8 @@ fr:
         not_enabled: "N"
         change_settings_short: "Paramètres"
         howto: "Comment installer des extensions ?"
-        official: "Extension officielle"
         broken_route: "Impossible de configurer le lien vers « %{name} ». Assurez-vous que les bloqueurs de publicités sont désactivés et essayez de recharger la page."
+        author: "Par %{author}"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"

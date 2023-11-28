@@ -4,10 +4,10 @@ require "discourse_ip_info"
 require "rotp"
 
 RSpec.describe Admin::UsersController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:coding_horror)
 
   describe "#index" do
     context "when logged in as an admin" do
@@ -312,7 +312,7 @@ RSpec.describe Admin::UsersController do
       end
 
       context "with webhook" do
-        fab!(:user_web_hook) { Fabricate(:user_web_hook) }
+        fab!(:user_web_hook)
 
         it "enqueues a user_suspended webhook event" do
           expect do
@@ -524,7 +524,7 @@ RSpec.describe Admin::UsersController do
       before { sign_in(admin) }
 
       context "with webhook" do
-        fab!(:user_web_hook) { Fabricate(:user_web_hook) }
+        fab!(:user_web_hook)
 
         it "enqueues a user_unsuspended webhook event" do
           user.update!(suspended_at: DateTime.now, suspended_till: 2.years.from_now)
@@ -758,7 +758,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#add_group" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1048,7 +1048,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#primary_group" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:another_user) { coding_horror }
     fab!(:another_group) { Fabricate(:group, title: "New") }
 

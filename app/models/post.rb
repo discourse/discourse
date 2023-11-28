@@ -567,15 +567,18 @@ class Post < ActiveRecord::Base
 
   def with_secure_uploads?
     return false if !SiteSetting.secure_uploads?
+    topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
+    return false if topic_including_deleted.blank?
 
     # NOTE: This is meant to be a stopgap solution to prevent secure uploads
     # in a single place (private messages) for sensitive admin data exports.
     # Ideally we would want a more comprehensive way of saying that certain
     # upload types get secured which is a hybrid/mixed mode secure uploads,
     # but for now this will do the trick.
-    return topic&.private_message? if SiteSetting.secure_uploads_pm_only?
+    return topic_including_deleted.private_message? if SiteSetting.secure_uploads_pm_only?
 
-    SiteSetting.login_required? || topic&.private_message? || topic&.category&.read_restricted?
+    SiteSetting.login_required? || topic_including_deleted.private_message? ||
+      topic_including_deleted.read_restricted_category?
   end
 
   def hide!(post_action_type_id, reason = nil, custom_message: nil)
@@ -644,6 +647,10 @@ class Post < ActiveRecord::Base
 
   def full_url
     "#{Discourse.base_url}#{url}"
+  end
+
+  def relative_url
+    "#{Discourse.base_path}#{url}"
   end
 
   def url(opts = nil)
@@ -859,7 +866,7 @@ class Post < ActiveRecord::Base
       bypass_bump: bypass_bump,
       cooking_options: self.cooking_options,
       new_post: new_post,
-      post_id: id,
+      post_id: self.id,
       skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
 
@@ -1090,7 +1097,15 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML5.fragment(self.cooked)
-    selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
+    selectors =
+      fragments.css(
+        "a/@href",
+        "img/@src",
+        "source/@src",
+        "track/@src",
+        "video/@poster",
+        "div/@data-video-src",
+      )
 
     links =
       selectors

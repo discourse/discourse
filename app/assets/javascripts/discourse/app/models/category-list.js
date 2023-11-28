@@ -1,4 +1,5 @@
 import ArrayProxy from "@ember/array/proxy";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { number } from "discourse/lib/formatter";
 import PreloadStore from "discourse/lib/preload-store";
@@ -103,7 +104,7 @@ CategoryList.reopenClass({
     return ajax(
       `/categories.json?parent_category_id=${category.get("id")}`
     ).then((result) => {
-      return CategoryList.create({
+      return EmberObject.create({
         categories: this.categoriesFrom(store, result),
         parentCategory: category,
       });

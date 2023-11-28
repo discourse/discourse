@@ -12,7 +12,6 @@
     "@glint/environment-ember-loose": "^1.1.0",
     "@glint/environment-ember-template-imports": "^1.1.0",
     "@glint/template": "^1.1.0",
-    "@highlightjs/cdn-assets": "11.8.0",
     "@json-editor/json-editor": "2.10.0",
     "@mixer/parallel-prettier": "^2.0.3",
     "ace-builds": "1.4.13",

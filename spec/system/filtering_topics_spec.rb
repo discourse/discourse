@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Filtering topics", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_query_filter) { PageObjects::Components::TopicQueryFilter.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
@@ -44,7 +44,7 @@ describe "Filtering topics", type: :system do
   end
 
   describe "when filtering by status" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:closed_topic) { Fabricate(:topic, closed: true) }
 
     it "should display the right topics when the status filter is used in the query string" do

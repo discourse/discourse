@@ -118,6 +118,7 @@ en:
         title: "Show activity indicator in header"
         all_new: "All New Messages"
         dm_and_mentions: "Direct Messages and Mentions"
+        only_mentions: "Only Mentions"
         never: "Never"
       separate_sidebar_mode:
         title: "Show separate sidebar modes for forum and chat"
@@ -258,7 +259,8 @@ en:
       save: "Save"
       select: "Select"
       return_to_list: "Return to channels list"
-      return_to_threads_list: "Return to ongoing discussions"
+      return_to_channel: "Return to channel"
+      return_to_threads_list: "Return to threads list"
       unread_threads_count:
         one: "You have %{count} unread discussion"
         other: "You have %{count} unread discussions"
@@ -308,6 +310,7 @@ en:
 
       members_view:
         filter_placeholder: Find members
+        add_member: Add Member
 
       about_view:
         associated_topic: Linked topic
@@ -331,9 +334,15 @@ en:
         default_search_placeholder: "#a-channel, @somebody or anything"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@somebody"
-        user_search_placeholder: "...add more users"
+        user_search_placeholder: "...add more members"
         disabled_user: "has disabled chat"
         no_items: "No items"
+        create_group_placeholder: "Group chat name (optional)"
+        participants_counter:  "%{selection_count}/%{max} participants"
+        new_group_chat: "New group chat"
+        filter: "Filter"
+        cant_add_more_members: "Maximum number of members reached"
+        create_new_group_chat: "Create group chat"
 
       channel_edit_name_slug_modal:
         title: Edit channel
@@ -348,10 +357,15 @@ en:
         description: Tell people what this channel is all about
 
       direct_message_creator:
+        add_to_channel: "Add to channel"
         title: New Message
         prefix: "To:"
         no_results: No results
         selected_user_title: "Deselect %{username}"
+        group_name: "Group chat name (optional)"
+        members_counter:
+          one: "%{count}/%{max} member"
+          other: "%{count}/%{max} members"
 
       channel:
         no_memberships: This channel has no members
@@ -431,6 +445,7 @@ en:
       quote:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat quote copied to clipboard"
+        default_thread_title: "Thread"
 
       notification_levels:
         never: "Never"
@@ -599,7 +614,7 @@ en:
           other: "+%{count}"
       threads:
         open: "Open Thread"
-        list: "Ongoing discussions"
+        list: "Threads"
         none: "You are not participating in any threads in this channel."
 
       draft_channel_screen:

@@ -17,7 +17,7 @@ RSpec.describe InlineOneboxController do
     end
 
     context "with topic link" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       it "returns information for a valid link" do
         get "/inline-onebox.json", params: { urls: [topic.url] }

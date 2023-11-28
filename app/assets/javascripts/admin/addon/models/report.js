@@ -154,7 +154,7 @@ export default class Report extends EmberObject {
             ),
           };
         });
-      } else {
+      } else if (report.modes[0] !== "radar") {
         report[filledField] = fillMissingDates(
           JSON.parse(JSON.stringify(report[dataField])),
           startDateFormatted,

@@ -80,7 +80,7 @@ module Chat
         on_failed_policy(:ensure_thread_matches_parent) do
           render_json_error(I18n.t("chat.errors.thread_does_not_match_parent"))
         end
-        on_model_errors(:message) do |model|
+        on_model_errors(:message_instance) do |model|
           render_json_error(model.errors.map(&:full_message).join(", "))
         end
       end

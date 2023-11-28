@@ -1097,8 +1097,6 @@ id:
         codes:
           title: "Kode Cadangan Dibuat"
       second_factor:
-        forgot_password: "Lupa password?"
-        confirm_password_description: "Harap konfirmasi password Anda untuk melanjutkan"
         name: "Nama"
         label: "Kode"
         show_key_description: "Masukkan secara manual"
@@ -1160,13 +1158,12 @@ id:
         confirm_modal_title: "Hubungkan Akun %{provider}"
       name:
         title: "Name"
-        instructions: "Nama lengkap anda (opsional)"
-        instructions_required: "Nama lengkap anda"
+        instructions: "Nama lengkap anda (opsional)."
+        instructions_required: "Nama lengkap anda."
         too_short: "Nama anda terlalu pendek"
         ok: "Nama anda terlihat bagus"
       username:
         title: "Nama Pengguna"
-        instructions: "unik, tidak ada spasi, pendek"
         short_instructions: "Orang dapat menyebut anda sebagai @%{username}"
         available: "Nama pengguna anda tersedia"
         not_available: "Tidak tersedia. Coba %{suggestion}?"
@@ -1272,7 +1269,7 @@ id:
         same_as_username: "Password dan nama pengguna kamu sama"
         same_as_email: "Password dan email kamu sama"
         ok: "Kata sandi Anda terlihat baik."
-        instructions: "paling tidak %{count} karakter"
+        instructions: "Paling tidak %{count} karakter."
         confirm: "Konfirmasi"
       summary:
         title: "Ringkasan"
@@ -1494,6 +1491,7 @@ id:
       emoji: "Emoji :)"
       options: "Pilihan"
       add_warning: "Ini adalah peringatan resmi."
+      esc_label: "abaikan pesan"
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Judul harus ada"
@@ -1775,6 +1773,7 @@ id:
       required_tag_group:
         delete: "Hapus"
       name: "Nama Kategori"
+      background_image_dark: "Gambar Latar Belakang Kategori Gelap"
       permissions:
         reply: "Balas"
       review_group_name: "nama grup"
@@ -2030,10 +2029,12 @@ id:
     form_template_chooser:
       select_template: "Pilih templat formulir"
     form_templates:
+      upload_field:
+        upload: "Unggah"
+        uploading: "Mengunggah"
       errors:
         valueMissing:
           default: "Harap isi kolom ini."
-          text: "Harap isi kolom ini."
           select-one: "Harap pilih item dalam daftar."
           select-multiple: "Pilih setidaknya satu item dalam daftar."
           checkbox: "Harap centang kotak ini jika Anda ingin melanjutkan."
@@ -2067,8 +2068,6 @@ id:
           never: "tidak pernah"
       dashboard:
         latest_version: "Terbaru"
-        new_features:
-          dismiss: "Bubar"
         last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
         moderators: "Moderator:"
@@ -2123,6 +2122,11 @@ id:
               status: "Memperbarui status topik. Status: ditutup, arsip, terlihat, disematkan. Diaktifkan: benar, salah. Tentukan kategori_id di sini dan di dalam muatan permintaan untuk hanya mengizinkan perubahan status pada topik-topik di dalam kategori tersebut."
             posts:
               list: Daftar post terbaru dan post pribadi. RSS juga didukung.
+            tag_groups:
+              list: Dapatkan daftar grup tag.
+              show: Dapatkan satu grup tag berdasarkan id.
+              create: Membuat grup tag.
+              update: Memperbarui grup tag yang ditentukan oleh id.
       web_hooks:
         edit: "Ubah"
         save: "Simpan"

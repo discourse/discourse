@@ -29,6 +29,10 @@
     {{/if}}
   </div>
 
+  <PluginOutlet
+    @name="admin-customize-theme-before-errors"
+    @outletArgs={{hash theme=this.model}}
+  />
   {{#each this.model.errors as |error|}}
     <div class="alert alert-error">{{error}}</div>
   {{/each}}
@@ -452,8 +456,11 @@
       </div>
     {{/if}}
 
+    <PluginOutlet
+      @name="admin-customize-theme-before-controls"
+      @outletArgs={{hash theme=this.model}}
+    />
     <div class="theme-controls">
-
       <a
         href={{this.previewUrl}}
         title={{i18n "admin.customize.explain_preview"}}

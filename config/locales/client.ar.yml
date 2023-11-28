@@ -1645,8 +1645,6 @@ ar:
         title: "المصادقة الثنائية"
         enable: "إدارة المصادقة الثنائية"
         disable_all: "إيقاف الكل"
-        forgot_password: "هل نسيت كلمة المرور؟"
-        confirm_password_description: "يُرجى تأكيد كلمة المرور للمتابعة"
         name: "الاسم"
         label: "الرمز"
         rate_limit: "يُرجى الانتظار قبل تجربة رمز مصادقة آخر."
@@ -1780,14 +1778,13 @@ ar:
           generic: "سيتم استخدام حسابك على %{provider} للمصادقة."
       name:
         title: "الاسم"
-        instructions: "اسمك بالكامل (اختياري)"
-        instructions_required: "اسمك بالكامل"
+        instructions: "اسمك بالكامل (اختياري)."
+        instructions_required: "اسمك بالكامل."
         required: "يُرجى إدخال اسم"
         too_short: "اسمك قصير جدًا"
         ok: "اسمك يبدو جيدًا"
       username:
         title: "اسم المستخدم"
-        instructions: "مميز، وبلا مسافات، وقصير"
         short_instructions: "يمكن للأشخاص الإشارة إليك هكذا: ⁨@%{username}⁩"
         available: "اسم المستخدم متوفر"
         not_available: "غير متاح. هل تريد تجربة %{suggestion}؟"
@@ -1989,7 +1986,7 @@ ar:
         same_as_username: "كلمة المرور تُطابق اسم المستخدم."
         same_as_email: "كلمة المرور تُطابق عنوان البريد الإلكتروني."
         ok: "تبدو كلمة مرورك جيدة."
-        instructions: "يجب ألا يقل عن %{count} حرف"
+        instructions: "يجب ألا يقل عن %{count} حرف."
         required: "يُرجى إدخال كلمة المرور"
         confirm: "تأكيد"
       summary:
@@ -2412,20 +2409,6 @@ ar:
         few: "%{count} موضوعات في هذه الفئة"
         many: "%{count} موضوعًا في هذه الفئة"
         other: "%{count} موضوع في هذه الفئة"
-      plus_subcategories_title:
-        zero: "%{name} و%{count} فئة فرعية"
-        one: "%{name} وفئة فرعية واحدة (%{count})"
-        two: "%{name} وفئتان فرعيتان (%{count})"
-        few: "%{name} و%{count} فئات فرعية"
-        many: "%{name} و%{count} فئة فرعية"
-        other: "%{name} و%{count} فئة فرعية"
-      plus_subcategories:
-        zero: "تصنيف فرعي + %{count} و تصنيفات فرعية"
-        one: "+ %{count} تصنيفات فرعية"
-        two: "+ %{count} تصنيف فرعي واحد و تصنيفات فرعية"
-        few: "+ %{count} فئات فرعية"
-        many: "+ %{count} فئة فرعية"
-        other: "+ %{count} فئة فرعية"
     select_kit:
       delete_item: "حذف %{name}"
       filter_by: "التصفية حسب: %{name}"
@@ -2817,6 +2800,7 @@ ar:
         private_message: 'أرسل %{username} إليك رسالة خاصة في "%{topic}" -‏ %{site_title}'
         linked: 'وضع %{username} رابطًا إلى منشورك في "%{topic}" - %{site_title}'
         watching_first_post: 'أنشأ %{username} موضوعًا جديدًا: "%{topic}" -‏ %{site_title}'
+        watching_category_or_tag: 'نشر %{username} في "%{topic}" - ‏%{site_title}'
         confirm_title: "تم تفعيل الإشعارات - %{site_title}"
         confirm_body: "تم بنجاح! تم تفعيل الإشعارات."
         custom: "إشعار من %{username} على %{site_title}"
@@ -4200,8 +4184,7 @@ ar:
       take_action: "اتخاذ إجراء…"
       take_action_options:
         default:
-          title: "اتخاذ إجراء"
-          details: "الوصول إلى الحد الأقصى للبلاغات على الفور بدلًا من انتظار المزيد من البلاغات من أعضاء المجتمع."
+          title: "إخفاء المنشور"
         suspend:
           title: "تعليق المستخدم"
           details: "الوصول إلى الحد الأقصى للبلاغات وتعليق المستخدم"
@@ -4218,7 +4201,6 @@ ar:
       ip_address_missing: "(لا يوجد)"
       hidden_email_address: "(مخفي)"
       submit_tooltip: "إرسال البلاغ الخاص"
-      take_action_tooltip: "الوصول إلى الحد الأقصى للبلاغات على الفور بدلًا من انتظار المزيد من البلاغات من أعضاء المجتمع."
       cant: "عذرًا، لا يمكنك الإبلاغ عن هذا المنشور في الوقت الحالي."
       notify_staff: "إرسال إشعار إلى فريق العمل بشكلٍ خاص"
       formatted_name:
@@ -4914,7 +4896,6 @@ ar:
           delete: "حذف"
           delete_confirm: "هل تريد بالتأكيد حذف هذا القسم؟"
           reset_confirm: "هل تريد بالتأكيد إعادة تعيين هذا القسم إلى الإعداد الافتراضي؟"
-          public: "جعل هذا القسم عامًا ومرئيًا للجميع"
           always_public: "دائمًا ما يكون المحتوى في هذا القسم عامًا"
           more_menu: "قائمة \"المزيد\""
           links:
@@ -5023,10 +5004,12 @@ ar:
     form_template_chooser:
       select_template: "التحديد من القوالب"
     form_templates:
+      upload_field:
+        upload: "تحميل"
+        uploading: "جارٍ الرفع"
       errors:
         valueMissing:
           default: "يُرجى ملء هذا الحقل."
-          text: "يُرجى ملء هذا الحقل."
           select-one: "يُرجى تحديد عنصر في القائمة."
           select-multiple: "يُرجى تحديد عنصر واحد على الأقل في القائمة."
           checkbox: "يُرجى تحديد هذا المربع إذا كنت تريد المتابعة."
@@ -5098,9 +5081,7 @@ ar:
         latest_version: "الحديثة"
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         new_features:
-          title: "\U0001F381 الميزات الجديدة"
-          dismiss: "تجاهل"
-          learn_more: "معرفة المزيد"
+          learn_more: "معرفة المزيد..."
         last_checked: "تاريخ آخر تحقُّق"
         refresh_problems: "تحديث"
         no_problems: "لم يتم العثور على مشكلات."
@@ -5451,8 +5432,8 @@ ar:
         not_enabled: "لا"
         change_settings_short: "الإعدادات"
         howto: "كيف يمكنني تثبيت الإضافات؟"
-        official: "المكوِّن الإضافي الرسمي"
         broken_route: "تتعذَّر تهيئة الرابط إلى \"%{name}\". تأكَّد من إيقاف كل أدوات حجب الإعلانات وحاول إعادة تحميل الصفحة."
+        author: "بواسطة %{author}"
       navigation_menu:
         sidebar: "الشريط الجانبي"
         header_dropdown: "القائمة المنسدلة للرأس"

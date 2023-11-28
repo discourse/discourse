@@ -3,7 +3,7 @@
 RSpec.describe Chat::ListChannelMessages do
   subject(:result) { described_class.call(params) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:channel) { Fabricate(:chat_channel) }
 
   let(:guardian) { Guardian.new(user) }
@@ -109,7 +109,9 @@ RSpec.describe Chat::ListChannelMessages do
       before { target_message.trash! }
 
       context "when user is regular" do
-        it { is_expected.to fail_a_policy(:target_message_exists) }
+        it "nullifies target_message_id" do
+          expect(result.target_message_id).to be_blank
+        end
       end
 
       context "when user is the message creator" do

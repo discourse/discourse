@@ -10,9 +10,9 @@ import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
-import categoryFromId from "discourse-common/utils/category-macro";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
+import Category from "./category";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -125,7 +125,10 @@ const Bookmark = RestModel.extend({
     return newTags;
   },
 
-  category: categoryFromId("category_id"),
+  @computed("category_id")
+  get category() {
+    return Category.findById(this.category_id);
+  },
 
   @discourseComputed("reminder_at", "currentUser")
   formattedReminder(bookmarkReminderAt, currentUser) {

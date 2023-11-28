@@ -1,0 +1,31 @@
+<aside class="onebox chat-onebox">
+  <article class="onebox-body chat-onebox-body">
+    <div class="chat-transcript-user">
+      <h3 class="chat-onebox-title">
+        <a href="/chat/c/-/{{channel_id}}/t/{{thread_id}}">
+          <span class="category-chat-badge" style="color: #{{color}}">
+            <svg class="fa d-icon d-icon-discourse-threads svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#discourse-threads"></use></svg>
+          </span>
+          <span class="clear-badge">{{thread_title}}</span>
+        </a>
+      </h3>
+      <span class="thread-title-connector">{{thread_title_connector}}</span>
+      <a href="/chat/c/-/{{channel_id}}">
+        <span class="category-chat-badge" style="color: #{{color}}">
+          <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
+        </span>
+        <span class="clear-badge">{{channel_name}}</span>
+      </a>
+    </div>
+    {{#cooked}}
+      <div class="chat-onebox-cooked">
+      {{{cooked}}}
+      </div>
+    {{/cooked}}
+    <div class="chat-onebox-images onebox">
+      {{#images}}
+        <img src="{{url}}" loading="lazy" alt="{{original_filename}}" width="{{width}}" height="{{height}}">
+      {{/images}}
+    </div>
+  </article>
+</aside>

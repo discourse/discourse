@@ -365,6 +365,16 @@ RSpec.describe HasCustomFields do
       end
     end
 
+    it "supports setting a maximum length" do
+      CustomFieldsTestItem.register_custom_field_type "foo", :string, max_length: 1
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields = { "foo" => "a" }
+      test_item.save!
+
+      test_item.custom_fields = { "foo" => "aa" }
+      expect { test_item.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
     describe "upsert_custom_fields" do
       it "upserts records" do
         test_item = CustomFieldsTestItem.create

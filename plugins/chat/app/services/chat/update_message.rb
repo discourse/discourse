@@ -18,6 +18,7 @@ module Chat
     contract
     model :message
     model :uploads, optional: true
+    step :enforce_system_membership
     policy :can_modify_channel_message
     policy :can_modify_message
 
@@ -30,34 +31,38 @@ module Chat
 
     class Contract
       attribute :message_id, :string
+      validates :message_id, presence: true
+
       attribute :message, :string
+      validates :message, presence: true, if: -> { upload_ids.blank? }
+
       attribute :upload_ids, :array
 
-      validates :message_id, presence: true
-      validates :message, presence: true, if: -> { upload_ids.blank? }
+      attribute :process_inline, :boolean, default: Rails.env.test?
     end
 
     private
 
+    def enforce_system_membership(guardian:, message:, **)
+      message.chat_channel.add(guardian.user) if guardian.user.is_system_user?
+    end
+
     def fetch_message(contract:, **)
-      ::Chat::Message
-        .strict_loading
-        .includes(
-          :chat_mentions,
-          :bookmarks,
-          :chat_webhook_event,
-          :uploads,
-          :revisions,
-          reactions: [:user],
-          thread: [:channel, last_message: [:user]],
-          chat_channel: [
-            :last_message,
-            :chat_channel_archive,
-            chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
-          ],
-          user: :user_status,
-        )
-        .find_by(id: contract.message_id)
+      ::Chat::Message.includes(
+        :chat_mentions,
+        :bookmarks,
+        :chat_webhook_event,
+        :uploads,
+        :revisions,
+        reactions: [:user],
+        thread: [:channel, last_message: [:user]],
+        chat_channel: [
+          :last_message,
+          :chat_channel_archive,
+          chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
+        ],
+        user: :user_status,
+      ).find_by(id: contract.message_id)
     end
 
     def fetch_uploads(contract:, guardian:, **)
@@ -76,6 +81,7 @@ module Chat
     def modify_message(contract:, message:, guardian:, uploads:, **)
       message.message = contract.message
       message.last_editor_id = guardian.user.id
+      message.cook
 
       return if uploads&.size != contract.upload_ids.to_a.size
 
@@ -88,9 +94,7 @@ module Chat
     end
 
     def save_message(message:, **)
-      message.cook
       message.save!
-      message.update_mentions
     end
 
     def save_revision(message:, guardian:, **)
@@ -127,13 +131,22 @@ module Chat
       chars_edited > max_edited_chars
     end
 
-    def publish(message:, guardian:, **)
-      ::Chat::Publisher.publish_edit!(message.chat_channel, message)
-      Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: message.id })
+    def publish(message:, guardian:, contract:, **)
+      edit_timestamp = context.revision&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
 
-      edit_timestamp = context.revision&.created_at || Time.zone.now
-      ::Chat::Notifier.notify_edit(chat_message: message, timestamp: edit_timestamp)
-      DiscourseEvent.trigger(:chat_message_edited, message, message.chat_channel, guardian.user)
+      ::Chat::Publisher.publish_edit!(message.chat_channel, message)
+      DiscourseEvent.trigger(:chat_message_edited, message, message.chat_channel, message.user)
+
+      if contract.process_inline
+        Jobs::Chat::ProcessMessage.new.execute(
+          { chat_message_id: message.id, edit_timestamp: edit_timestamp },
+        )
+      else
+        Jobs.enqueue(
+          Jobs::Chat::ProcessMessage,
+          { chat_message_id: message.id, edit_timestamp: edit_timestamp },
+        )
+      end
 
       if message.thread.present?
         ::Chat::Publisher.publish_thread_original_message_metadata!(message.thread)

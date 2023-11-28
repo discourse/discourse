@@ -683,13 +683,12 @@ sq:
         cancel: "Anulo"
       name:
         title: "Emri juaj"
-        instructions: "emri i plotë (opsional)"
-        instructions_required: "Emri i plotë"
+        instructions: "Emri i plotë (opsional)."
+        instructions_required: "Emri i plotë."
         too_short: "Emri juaj është shumë i shkurtër"
         ok: "Emri duket në rregull"
       username:
         title: "Emri i përdoruesit"
-        instructions: "unik, pa hapësira, i shkurtër"
         short_instructions: "Anëtarët e tjerë mund t'ju përmendin si @%{username}"
         available: "Emri është i disponueshëm"
         not_available: "Nuk është i disponueshëm. Provoni %{suggestion}?"
@@ -793,7 +792,7 @@ sq:
         same_as_username: "Fjalëkalimi është i njëjtë me emrin e përdoruesit."
         same_as_email: "Fjalëkalimi është i njëjtë me adresën email."
         ok: "Fjalëkalimi është i pranueshëm."
-        instructions: "të paktën %{count} shkronja"
+        instructions: "Të pakTën %{count} shkronja."
       summary:
         title: "Përmbledhja"
         stats: "Statistikat"
@@ -1073,6 +1072,7 @@ sq:
         replied: '%{username} ju u përgjigj në "%{topic}" - %{site_title}'
         posted: '%{username} postoi në "%{topic}" - %{site_title}'
         linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} postoi në "%{topic}" - %{site_title}'
       titles:
         watching_first_post: "temë e re"
     upload_selector:
@@ -1581,9 +1581,6 @@ sq:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Sinjalizo postimin"
       take_action_options:
-        default:
-          title: "Vepro"
-          details: "Kaloni direkt tek pragu i sinjalizimeve (dmth, mos prisni për sinjalizime të tjera nga komuniteti)"
         suspend:
           title: "Pezullo anëtarin"
       notify_action: "Mesazh"
@@ -1593,7 +1590,6 @@ sq:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(fshehur)"
       submit_tooltip: "Dërgoni sinjalizimin privatisht"
-      take_action_tooltip: "Kaloni direkt tek pragu i sinjalizimeve (dmth, mos prisni për sinjalizime të tjera nga komuniteti)"
       cant: "Na vjen keq, nuk mund të sinjalizoni këtë postim tani. "
       notify_staff: "Njoftoni stafin privatisht"
       formatted_name:
@@ -1951,6 +1947,9 @@ sq:
             my_posts:
               content: "Postimet e mia"
     form_templates:
+      upload_field:
+        upload: "Ngarko"
+        uploading: "Duke ngarkuar"
       errors:
         typeMismatch:
           default: "Ju lutem shkruani një vlerë të vlefshme."
@@ -1976,8 +1975,7 @@ sq:
         installed_version: "Instaluar"
         latest_version: "Të fundit"
         new_features:
-          dismiss: "Hiqe"
-          learn_more: "Mëso më shumë"
+          learn_more: "Mëso më shumë..."
         last_checked: "Verifikimi i fundit"
         refresh_problems: "Rifresko"
         no_problems: "Nuk u gjet asnjë gabim."
@@ -2083,6 +2081,7 @@ sq:
         not_enabled: "N"
         change_settings_short: "Rregullimet"
         howto: "Si mund të instaloj një plugin?"
+        author: "Nga %{author}"
       backups:
         title: "Rezervat"
         menu:

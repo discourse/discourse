@@ -20,9 +20,9 @@ import { flushMap } from "discourse/services/store";
 import deprecated from "discourse-common/lib/deprecated";
 import getURL from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
-import categoryFromId from "discourse-common/utils/category-macro";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
+import Category from "./category";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -198,7 +198,7 @@ const Topic = RestModel.extend({
   },
 
   set details(value) {
-    return (this._details = value);
+    this._details = value;
   },
 
   @discourseComputed("visible")
@@ -213,7 +213,10 @@ const Topic = RestModel.extend({
     return { type: "topic", id };
   },
 
-  category: categoryFromId("category_id"),
+  @discourseComputed("category_id")
+  category() {
+    return Category.findById(this.category_id);
+  },
 
   @discourseComputed("url")
   shareUrl(url) {

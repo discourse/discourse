@@ -53,6 +53,15 @@ module Chat
     end
 
     def summary_subject(user, grouped_messages)
+      if SiteSetting.private_email
+        return(
+          I18n.t(
+            "user_notifications.chat_summary.subject.private_message",
+            email_prefix: @email_prefix,
+          )
+        )
+      end
+
       all_channels = grouped_messages.keys
       grouped_channels = all_channels.partition { |c| !c.direct_message_channel? }
       channels = grouped_channels.first

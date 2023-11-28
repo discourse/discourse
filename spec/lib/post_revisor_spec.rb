@@ -3,12 +3,12 @@
 require "post_revisor"
 
 RSpec.describe PostRevisor do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user)
+  fab!(:coding_horror)
+  fab!(:admin)
+  fab!(:moderator)
   let(:post_args) { { user: newuser, topic: topic } }
 
   describe "TopicChanges" do
@@ -199,7 +199,7 @@ RSpec.describe PostRevisor do
   describe "editing tags" do
     subject(:post_revisor) { PostRevisor.new(post) }
 
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
 
     before do
       Jobs.run_immediately!
@@ -1079,7 +1079,7 @@ RSpec.describe PostRevisor do
     end
 
     context "when logging group moderator edits" do
-      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:group_user)
       fab!(:category) do
         Fabricate(:category, reviewable_by_group_id: group_user.group.id, topic: topic)
       end

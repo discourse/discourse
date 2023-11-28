@@ -8,8 +8,8 @@ RSpec.describe CategoryList do
     Topic.update_featured_topics = true
   end
 
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   let(:category_list) { CategoryList.new(Guardian.new(user), include_topics: true) }
 
   describe "security" do
@@ -129,7 +129,7 @@ RSpec.describe CategoryList do
   end
 
   context "when mute_all_categories_by_default enabled" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     before { SiteSetting.mute_all_categories_by_default = true }
 
@@ -355,6 +355,23 @@ RSpec.describe CategoryList do
       expect(prefetched_categories).not_to include(boring_category.id)
     ensure
       DiscoursePluginRegistry.clear_modifiers!
+    end
+  end
+
+  describe "with custom fields" do
+    fab!(:category) { Fabricate(:category, user: admin) }
+
+    before { category.upsert_custom_fields("bob" => "marley") }
+    after { Site.reset_preloaded_category_custom_fields }
+
+    it "can preloads custom fields" do
+      Site.preloaded_category_custom_fields << "bob"
+
+      expect(category_list.categories[-1].custom_field_preloaded?("bob")).to eq(true)
+    end
+
+    it "does not preload fields that were not set for preloading" do
+      expect(category_list.categories[-1].custom_field_preloaded?("bob")).to be_falsey
     end
   end
 end

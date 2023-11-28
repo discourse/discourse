@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 uk:
+  js:
+    spoiler:
+      title: Розмитий спойлер
+      label:
+        show: "Показати прихований вміст"
+    composer:
+      spoiler_text: "Цей текст буде розмитим"

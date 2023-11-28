@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::PullUserProfileHotlinkedImages do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
   let(:png) do

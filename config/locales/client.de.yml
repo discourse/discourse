@@ -196,6 +196,7 @@ de:
       error_caused_by: "Verursacht durch „%{name}“. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion zu aktualisieren, neu zu konfigurieren oder zu deaktivieren."
       only_admins: "(Diese Nachricht wird nur Website-Administratoren angezeigt)"
     broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
+    broken_plugin_alert: "Verursacht durch das Plugin '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -343,6 +344,7 @@ de:
       copied: "Kopiert!"
       copy: "Code in die Zwischenablage kopieren"
       fullscreen: "Code im Vollbildmodus zeigen"
+      view_code: "Code ansehen"
     drafts:
       label: "Entwürfe"
       label_with_count: "Entwürfe (%{count})"
@@ -1365,8 +1367,6 @@ de:
         title: "Zwei-Faktor-Authentifizierung"
         enable: "Zwei-Faktor-Authentifizierung verwalten"
         disable_all: "Alle deaktivieren"
-        forgot_password: "Passwort vergessen?"
-        confirm_password_description: "Bitte bestätige dein Passwort, um fortzufahren"
         name: "Name"
         label: "Code"
         rate_limit: "Bitte warte ein wenig, bevor du es mit einem anderen Authentifizierungscode versuchst."
@@ -1422,16 +1422,15 @@ de:
         rename_passkey_instructions: "Wähle einen Namen für den Hauptschlüssel, mit dem du ihn leicht identifizieren kannst, zum Beispiel den Namen deines Passwortmanagers."
         name:
           default: "Hauptpassschlüssel"
-          google_password_manager: "Google Passwort Manager"
-          icloud_keychain: "iCloud-Schlüsselbund"
         save: "Speichern"
         title: "Hauptschlüssel"
         short_description: "Hauptschlüssel ersetzen Passwörter, die deine Identität biometrisch (z.B. durch Berührung, FaceID) oder über eine Geräte-PIN/ein Passwort validieren."
         added_prefix: "Hinzugefügt"
         last_used_prefix: "Zuletzt verwendet"
         never_used: "Nie benutzt"
-        not_allowed_error: "Der Registrierungsvorgang für den Hauptschlüssel ist abgelaufen oder wurde abgebrochen."
+        not_allowed_error: "Bei der Registrierung des Hauptschlüssels wurde entweder das Zeitlimit überschritten, er wurde abgebrochen oder ist nicht zulässig."
         already_added_error: "Du hast diesen Hauptschlüssel bereits registriert. Du musst ihn nicht erneut registrieren."
+        confirm_button: "oder einen Hauptschlüssel verwenden"
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -1512,14 +1511,14 @@ de:
           generic: "Dein „%{provider}“-Konto wird für die Authentifizierung genutzt."
       name:
         title: "Name"
-        instructions: "dein vollständiger Name (optional)"
-        instructions_required: "Dein vollständiger Name"
+        instructions: "Dein vollständiger Name (optional)."
+        instructions_required: "Dein vollständiger Name."
         required: "Bitte gib einen Namen ein"
         too_short: "Dein Name ist zu kurz"
         ok: "Dein Name sieht in Ordnung aus"
       username:
         title: "Benutzername"
-        instructions: "einzigartig, keine Leerzeichen, kurz"
+        instructions: "Einzigartig, keine Leerzeichen, kurz."
         short_instructions: "Leute können dich mit @%{username} erwähnen"
         available: "Dein Benutzername ist verfügbar"
         not_available: "Nicht verfügbar. Wie wäre es mit %{suggestion}?"
@@ -1714,6 +1713,7 @@ de:
       confirm_access:
         title: "Zugriff bestätigen"
         incorrect_password: "Das eingegebene Passwort ist falsch."
+        incorrect_passkey: "Der Hauptschlüssel ist falsch."
         logged_in_as: "Du bist eingeloggt als: "
         instructions: "Bitte bestätige deine Identität, um diese Aktion abzuschließen."
         fine_print: "Wir bitten dich, deine Identität zu bestätigen, da dies eine potenziell sensible Aktion ist. Wenn du dich einmal authentifiziert hast, wirst du erst nach ein paar Stunden Inaktivität wieder aufgefordert, dich erneut zu authentifizieren."
@@ -1724,7 +1724,7 @@ de:
         same_as_username: "Dein Passwort entspricht deinem Benutzernamen."
         same_as_email: "Dein Passwort entspricht deiner E-Mail-Adresse."
         ok: "Dein Passwort sieht in Ordnung aus."
-        instructions: "mindestens %{count} Zeichen"
+        instructions: "Mindestens %{count} Zeichen."
         required: "Bitte Passwort eingeben"
         confirm: "Bestätigen"
         incorrect_password: "Das eingegebene Passwort ist falsch."
@@ -1877,7 +1877,7 @@ de:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} überschritten.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} überschritten.
-    learn_more: "mehr erfahren …"
+    learn_more: "Mehr erfahren …"
     mute: Stummschalten
     unmute: Stummschaltung aufheben
     last_post: Geschrieben
@@ -1959,6 +1959,7 @@ de:
       action: "Ich habe mein Passwort vergessen"
       invite: "Gib deinen Benutzernamen oder deine E-Mail-Adresse ein. Wir senden dir eine E-Mail zum Zurücksetzen des Passworts."
       invite_no_username: "Gib deine E-Mail-Adresse ein. Dann senden wir dir eine E-Mail zum Zurücksetzen des Passworts."
+      email-username: "E-Mail oder Benutzername"
       reset: "Passwort zurücksetzen"
       complete_username: "Wenn ein Benutzerkonto dem Benutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_email: "Wenn ein Benutzerkonto der E-Mail-Adresse <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
@@ -2005,6 +2006,7 @@ de:
       security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldedaten gefunden."
       security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
       security_key_invalid_response_error: "Der Authentifizierungsprozess des Sicherheitsschlüssels ist aufgrund einer ungültigen Antwort fehlgeschlagen."
+      passkey_security_error: "Es gab einen Sicherheitsfehler: %{message}"
       email_placeholder: "E-Mail/Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
@@ -2104,12 +2106,6 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
-      plus_subcategories_title:
-        one: "%{name} und eine Unterkategorie"
-        other: "%{name} und %{count} Unterkategorien"
-      plus_subcategories:
-        one: "+ %{count} Unterkategorie"
-        other: "+ %{count} Unterkategorien"
     select_kit:
       delete_item: "%{name} löschen"
       filter_by: "Filtern nach: %{name}"
@@ -2414,6 +2410,7 @@ de:
         private_message: '%{username} hat dir eine Nachricht geschickt in „%{topic}“ – %{site_title}'
         linked: '%{username} hat deinen Beitrag verlinkt in „%{topic}“ – %{site_title}'
         watching_first_post: '%{username} hat ein neues Thema „%{topic}“ erstellt – %{site_title}'
+        watching_category_or_tag: '%{username} hat geschrieben in „%{topic}“ – %{site_title}'
         confirm_title: "Benachrichtigungen aktiviert – %{site_title}"
         confirm_body: "Erfolgreich! Benachrichtigungen wurden aktiviert."
         custom: "Benachrichtigung von %{username} auf %{site_title}"
@@ -3443,6 +3440,7 @@ de:
       logo: "Logo für Kategorie"
       logo_dark: "Logobild der Kategorie „Dunkler Modus“"
       background_image: "Hintergrundbild für Kategorie"
+      background_image_dark: "Dunkle Kategorie Hintergrundbild"
       badge_colors: "Farben des Abzeichens"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
@@ -3561,8 +3559,8 @@ de:
       take_action: "Reagieren …"
       take_action_options:
         default:
-          title: "Reagieren"
-          details: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
+          title: "Beitrag verstecken"
+          details: "Erreiche die Markierungsschwelle sofort, verstecke den Beitrag und stimme allen ausstehenden Markierungen zu"
         suspend:
           title: "Benutzer sperren"
           details: "Erreiche den Meldungsschwellenwert und sperre den Benutzer"
@@ -3579,7 +3577,7 @@ de:
       ip_address_missing: "(nicht verfügbar)"
       hidden_email_address: "(versteckt)"
       submit_tooltip: "Private Meldung abschicken"
-      take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
+      take_action_tooltip: "Erreiche die Markierungsschwelle sofort, verstecke den Beitrag und stimme allen ausstehenden Markierungen zu"
       cant: "Entschuldige, du kannst diesen Beitrag derzeit nicht melden."
       notify_staff: "Team privat benachrichtigen"
       formatted_name:
@@ -4110,6 +4108,7 @@ de:
       sr_jump_bottom_button: "Zum letzten Beitrag springen"
     fullscreen_table:
       expand_btn: "Tabelle erweitern"
+      view_table: "Tabelle ansehen"
     second_factor_auth:
       redirect_after_success: "Die Zwei-Faktor-Authentifizierung war erfolgreich. Weiterleitung zur vorherigen Seite …"
     sidebar:
@@ -4152,7 +4151,7 @@ de:
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
           reset_confirm: "Bist du sicher, dass du diesen Abschnitt auf die Standardeinstellungen zurücksetzen willst?"
-          public: "Diesen Abschnitt öffentlich und für alle sichtbar machen"
+          public: "Für alle sichtbar"
           always_public: "Die Inhalte in diesem Abschnitt sind immer öffentlich"
           more_menu: "Menü „Mehr“"
           links:
@@ -4257,10 +4256,12 @@ de:
     form_template_chooser:
       select_template: "Formularvorlagen auswählen"
     form_templates:
+      upload_field:
+        upload: "Hochladen"
+        uploading: "Wird hochgeladen"
       errors:
         valueMissing:
           default: "Bitte fülle dieses Feld aus."
-          text: "Bitte fülle dieses Feld aus."
           select-one: "Bitte wähle ein Element aus der Liste aus."
           select-multiple: "Bitte wähle mindestens ein Element aus der Liste aus."
           checkbox: "Bitte markiere dieses Kästchen, wenn du fortfahren möchtest."
@@ -4316,9 +4317,9 @@ de:
         latest_version: "Neueste"
         problems_found: "Ein paar Ratschläge basierend auf deinen aktuellen Website-Einstellungen"
         new_features:
-          title: "\U0001F381 Neue Funktionen"
-          dismiss: "Verwerfen"
-          learn_more: "Mehr erfahren"
+          title: "Was ist neu"
+          previous_announcements: "Du kannst frühere Ankündigungen neuer Funktionen auf <a href='%{url}' target='_blank'>Discourse Meta</a>sehen."
+          learn_more: "Mehr erfahren …"
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."
@@ -4709,8 +4710,11 @@ de:
         not_enabled: "N"
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
-        official: "Offizielles Plug-in"
+        official: "Offizielles Discourse Plugin"
+        experimental: "Experimentelles Plugin"
         broken_route: "Link zu „%{name}“ kann nicht konfiguriert werden. Vergewissere dich, dass Werbeblocker deaktiviert sind, und versuche, die Seite neu zu laden."
+        author: "Von %{author}"
+        experimental_badge: "experimentell"
       navigation_menu:
         sidebar: "Seitenleiste"
         header_dropdown: "Kopfzeilen-Drop-down"

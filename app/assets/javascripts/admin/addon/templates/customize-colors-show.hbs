@@ -56,7 +56,7 @@
             @modelId={{this.model.id}}
           />
         {{else}}
-          <label>
+          <label class="checkbox-label">
             <Input @type="checkbox" @checked={{this.model.user_selectable}} />
             {{i18n "admin.customize.theme.color_scheme_user_selectable"}}
           </label>
@@ -65,7 +65,7 @@
 
       {{#unless this.model.theme_id}}
         <div class="pull-right">
-          <label>
+          <label class="checkbox-label">
             <Input @type="checkbox" @checked={{this.onlyOverridden}} />
             {{i18n "admin.settings.show_overriden"}}
           </label>

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DirectoryItemsController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
-  fab!(:walter_white) { Fabricate(:walter_white) }
+  fab!(:user)
+  fab!(:evil_trout)
+  fab!(:walter_white)
   fab!(:stage_user) { Fabricate(:staged, username: "stage_user") }
   fab!(:group) { Fabricate(:group, users: [evil_trout, stage_user]) }
 

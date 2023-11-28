@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "Admin Revamp | Sidebar Naviagion", type: :system do
-  fab!(:admin) { Fabricate(:admin) }
+describe "Admin Revamp | Sidebar Navigation", type: :system do
+  fab!(:admin)
   let(:sidebar_page) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before do
@@ -13,6 +13,7 @@ describe "Admin Revamp | Sidebar Naviagion", type: :system do
   it "navigates to the admin revamp from the sidebar" do
     visit("/latest")
     sidebar_page.click_section_link("Admin Revamp")
-    expect(page).to have_content("Admin Revamp Lobby")
+    expect(page).to have_content("Lobby")
+    expect(page).to have_content("Legacy Admin")
   end
 end

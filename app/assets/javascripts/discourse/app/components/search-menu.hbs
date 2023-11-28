@@ -18,6 +18,11 @@
       />
     {{/if}}
 
+    <PluginOutlet
+      @name="search-menu-before-term-input"
+      @outletArgs={{hash openSearchMenu=this.open}}
+    />
+
     <SearchMenu::SearchTerm
       @searchTermChanged={{this.searchTermChanged}}
       @typeFilter={{this.typeFilter}}
@@ -44,6 +49,14 @@
       </div>
     {{/if}}
   </div>
+
+  <PluginOutlet
+    @name="search-menu-after-term-input"
+    @outletArgs={{hash
+      openSearchMenu=this.open
+      advancedSearchButtonHref=this.advancedSearchButtonHref
+    }}
+  />
 
   {{#if @inlineResults}}
     <SearchMenu::Results

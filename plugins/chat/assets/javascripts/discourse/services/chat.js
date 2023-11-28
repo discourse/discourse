@@ -67,8 +67,9 @@ export default class Chat extends Service {
 
     return (
       this.currentUser.staff ||
-      this.currentUser.isInAnyGroups(
-        this.siteSettings.groupSettingArray("direct_message_enabled_groups")
+      this.siteSettings.userInAnyGroups(
+        "direct_message_enabled_groups",
+        this.currentUser
       )
     );
   }
@@ -182,11 +183,11 @@ export default class Chat extends Service {
       ...channelsView.direct_message_channels,
     ].forEach((channelObject) => {
       const storedChannel = this.chatChannelsManager.store(channelObject);
-      const storedDraft = (this.currentUser?.chat_drafts || []).find(
+      const storedDrafts = (this.currentUser?.chat_drafts || []).filter(
         (draft) => draft.channel_id === storedChannel.id
       );
 
-      if (storedDraft) {
+      storedDrafts.forEach((storedDraft) => {
         this.chatDraftsManager.add(
           ChatMessage.createDraftMessage(
             storedChannel,
@@ -194,9 +195,11 @@ export default class Chat extends Service {
               { user: this.currentUser },
               JSON.parse(storedDraft.data)
             )
-          )
+          ),
+          storedDraft.channel_id,
+          storedDraft.thread_id
         );
-      }
+      });
 
       if (channelsView.unread_thread_overview?.[storedChannel.id]) {
         storedChannel.threadsManager.unreadThreadOverview =
@@ -384,10 +387,10 @@ export default class Chat extends Service {
   // @param {array} usernames - The usernames to create or fetch the direct message
   // channel for. The current user will automatically be included in the channel
   // when it is created.
-  upsertDmChannelForUsernames(usernames) {
+  upsertDmChannelForUsernames(usernames, name = null) {
     return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
-      data: { target_usernames: usernames.uniq() },
+      data: { target_usernames: usernames.uniq(), name },
     })
       .then((response) => {
         const channel = this.chatChannelsManager.store(response.channel);

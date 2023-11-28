@@ -86,7 +86,12 @@
     <PluginOutlet
       @name="full-page-search-below-search-header"
       @connectorTagName="div"
-      @outletArgs={{hash search=this.searchTerm type=this.search_type}}
+      @outletArgs={{hash
+        search=this.searchTerm
+        type=this.search_type
+        model=this.model
+        addSearchResults=this.addSearchResults
+      }}
     />
 
     {{#if this.hasResults}}
@@ -140,7 +145,7 @@
             <ComboBox
               @value={{this.sortOrder}}
               @content={{this.sortOrders}}
-              @onChange={{action (mut this.sortOrder)}}
+              @onChange={{this.setSortOrder}}
               @id="search-sort-by"
               @options={{hash castInteger=true}}
             />
@@ -164,7 +169,7 @@
         <LoadMore @selector=".fps-result" @action={{action "loadMore"}}>
           {{#if (or this.usingDefaultSearchType this.customSearchType)}}
             <SearchResultEntries
-              @posts={{this.model.posts}}
+              @posts={{this.searchResultPosts}}
               @bulkSelectEnabled={{this.bulkSelectEnabled}}
               @selected={{this.selected}}
               @highlightQuery={{this.highlightQuery}}

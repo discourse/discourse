@@ -14,7 +14,6 @@ lt:
   poll:
     poll: "apklausa"
     invalid_argument: "Netinkama argumento „%{argument}“ reikšmė „%{value}“."
-    multiple_polls_without_name: "Yra keli baseinai be pavadinimo. Naudokite '<code> vardą </ code>' atributas vienareikšmiškai identifikuoti savo apklausas."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
     default_poll_must_have_at_least_1_option: "Apklausoje turi būti bent 1 pasirinkimas."
     named_poll_must_have_at_least_1_option: "Apklausa, pavadinta <strong>%{name}</strong> , turi turėti bent 1 variantą."
