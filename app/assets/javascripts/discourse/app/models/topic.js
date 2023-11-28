@@ -198,7 +198,7 @@ const Topic = RestModel.extend({
   },
 
   set details(value) {
-    return (this._details = value);
+    this._details = value;
   },
 
   @discourseComputed("visible")
