@@ -105,7 +105,7 @@ const chatTranscriptRule = {
 
     let wrapperClasses = ["chat-transcript"];
 
-    if (!!tagInfo.attrs.chained) {
+    if (tagInfo.attrs.chained) {
       wrapperClasses.push("chat-transcript-chained");
     }
 

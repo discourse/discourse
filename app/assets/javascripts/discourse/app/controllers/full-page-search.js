@@ -389,7 +389,7 @@ export default Controller.extend({
         Promise.resolve(categoryTagSearch)
           .then(async (results) => {
             const categories = results.filter((c) => Boolean(c.model));
-            const tags = results.filter((c) => !Boolean(c.model));
+            const tags = results.filter((c) => !c.model);
             const model = (await translateResults({ categories, tags })) || {};
             this.set("model", model);
           })
