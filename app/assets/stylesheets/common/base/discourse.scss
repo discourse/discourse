@@ -296,11 +296,7 @@ textarea {
   &:focus:required:invalid {
     color: var(--danger);
     border-color: var(--danger);
-  }
-
-  &:focus:required:invalid:focus {
-    border-color: var(--danger);
-    box-shadow: var(--shadow-focus-danger);
+    outline: 1px solid var(--danger);
   }
 }
 
