@@ -35,7 +35,8 @@ module HighlightJs
 
     cache_info = {
       lang_string: lang_string,
-      digest: Digest::SHA1.hexdigest(bundle(lang_string.split("|"))),
+      digest:
+        Digest::SHA1.hexdigest(bundle(lang_string.split("|")) + "|#{GlobalSetting.asset_url_salt}"),
     }
 
     cache[RailsMultisite::ConnectionManagement.current_db] = cache_info

@@ -16,6 +16,7 @@ const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
 const withSideWatch = require("./lib/with-side-watch");
 const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
+const crypto = require("crypto");
 
 const EMBER_MAJOR_VERSION = parseInt(
   require("ember-source/package.json").version.split(".")[0],
@@ -153,6 +154,13 @@ module.exports = function (defaults) {
     testStylesheetTree,
   ];
 
+  const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";
+  const cachebusterHash = crypto
+    .createHash("md5")
+    .update(assetCachebuster)
+    .digest("hex")
+    .slice(0, 8);
+
   const appTree = compatBuild(app, Webpack, {
     staticAppPaths: ["static"],
     packagerOptions: {
@@ -160,6 +168,8 @@ module.exports = function (defaults) {
         devtool: "source-map",
         output: {
           publicPath: "auto",
+          filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
+          chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
         },
         cache: isProduction
           ? false

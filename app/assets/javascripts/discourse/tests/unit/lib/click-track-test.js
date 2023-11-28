@@ -1,18 +1,34 @@
 import { setupTest } from "ember-qunit";
-import $ from "jquery";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender from "discourse/tests/helpers/create-pretender";
 import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setPrefix } from "discourse-common/lib/get-url";
 
 const track = ClickTrack.trackClick;
 
 function generateClickEventOn(selector) {
-  return $.Event("click", { currentTarget: fixture(selector) });
+  const event = new MouseEvent("click");
+  sinon.stub(event, "currentTarget").get(() => fixture(selector));
+  return event;
+}
+
+function badgeClickCount(assert, id, expected) {
+  track(generateClickEventOn(`#${id}`));
+  const badge = fixture(`#${id}`).querySelector("span.badge");
+  assert.strictEqual(parseInt(badge.innerHTML, 10), expected);
+}
+
+function testOpenInANewTab(description, clickEventModifier) {
+  test(description, async function (assert) {
+    const clickEvent = generateClickEventOn("a");
+    clickEventModifier(clickEvent);
+    assert.true(track(clickEvent));
+    assert.strictEqual(clickEvent.defaultPrevented, false);
+  });
 }
 
 module("Unit | Utility | click-track", function (hooks) {
@@ -21,7 +37,7 @@ module("Unit | Utility | click-track", function (hooks) {
   hooks.beforeEach(function () {
     logIn();
 
-    let win = { focus: function () {} };
+    const win = { focus: function () {} };
     sinon.stub(window, "open").returns(win);
     sinon.stub(win, "focus");
 
@@ -61,6 +77,10 @@ module("Unit | Utility | click-track", function (hooks) {
   });
 
   test("tracks internal URLs", async function (assert) {
+    pretender.get("/session/csrf", () => {
+      assert.true(false, "should not request a csrf token");
+    });
+
     sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
     const done = assert.async();
@@ -95,26 +115,28 @@ module("Unit | Utility | click-track", function (hooks) {
 
   test("routes to internal urls", async function (assert) {
     setPrefix("/forum");
-    pretender.get("/forum/session/csrf", () =>
-      response({
-        csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=",
-      })
-    );
-    pretender.post("/clicks/track", () => [200, {}, ""]);
+
+    pretender.get("/forum/session/csrf", () => {
+      assert.true(false, "should not request a csrf token");
+    });
+    pretender.get("/session/csrf", () => {
+      assert.true(false, "should not request a csrf token");
+    });
+
+    pretender.post("/clicks/track", () => {
+      assert.step("tracking");
+      return [200, {}, ""];
+    });
 
     await track(generateClickEventOn(".prefix-url"), null, {
       returnPromise: true,
     });
     assert.true(DiscourseURL.routeTo.calledWith("/forum/thing"));
+    assert.verifySteps(["tracking"]);
   });
 
   test("routes to absolute internal urls", async function (assert) {
     setPrefix("/forum");
-    pretender.get("/forum/session/csrf", () =>
-      response({
-        csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=",
-      })
-    );
     pretender.post("/clicks/track", () => [200, {}, ""]);
 
     await track(generateClickEventOn(".abs-prefix-url"), null, {
@@ -127,11 +149,6 @@ module("Unit | Utility | click-track", function (hooks) {
 
   test("redirects to internal urls with a different prefix", async function (assert) {
     setPrefix("/forum");
-    pretender.get("/forum/session/csrf", () =>
-      response({
-        csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=",
-      })
-    );
     sinon.stub(DiscourseURL, "redirectAbsolute");
 
     pretender.post("/clicks/track", () => [200, {}, ""]);
@@ -186,7 +203,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
   test("does not track right clicks inside quotes", async function (assert) {
     const event = generateClickEventOn(".quote a:first-child");
-    event.which = 3;
+    sinon.stub(event, "which").get(() => 3);
     assert.true(track(event));
   });
 
@@ -210,12 +227,6 @@ module("Unit | Utility | click-track", function (hooks) {
     assert.true(track(generateClickEventOn(".mailto")));
   });
 
-  function badgeClickCount(assert, id, expected) {
-    track(generateClickEventOn(`#${id}`));
-    const badge = fixture(`#${id}`).querySelector("span.badge");
-    assert.strictEqual(parseInt(badge.innerHTML, 10), expected);
-  }
-
   test("does not update badge clicks on my own link", async function (assert) {
     sinon.stub(User, "currentProp").withArgs("id").returns(314);
     badgeClickCount(assert, "with-badge", 1);
@@ -232,37 +243,28 @@ module("Unit | Utility | click-track", function (hooks) {
     badgeClickCount(assert, "with-badge", 2);
   });
 
-  function testOpenInANewTab(description, clickEventModifier) {
-    test(description, async function (assert) {
-      let clickEvent = generateClickEventOn("a");
-      clickEventModifier(clickEvent);
-      assert.true(track(clickEvent));
-      assert.strictEqual(clickEvent.defaultPrevented, undefined);
-    });
-  }
-
   testOpenInANewTab(
     "it opens in a new tab when pressing shift",
     (clickEvent) => {
-      clickEvent.shiftKey = true;
+      sinon.stub(clickEvent, "shiftKey").get(() => true);
     }
   );
 
   testOpenInANewTab(
     "it opens in a new tab when pressing meta",
     (clickEvent) => {
-      clickEvent.metaKey = true;
+      sinon.stub(clickEvent, "metaKey").get(() => true);
     }
   );
 
   testOpenInANewTab(
     "it opens in a new tab when pressing ctrl",
     (clickEvent) => {
-      clickEvent.ctrlKey = true;
+      sinon.stub(clickEvent, "ctrlKey").get(() => true);
     }
   );
 
   testOpenInANewTab("it opens in a new tab on middle click", (clickEvent) => {
-    clickEvent.button = 2;
+    sinon.stub(clickEvent, "button").get(() => 2);
   });
 });
