@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isPresent } from "@ember/utils";
+import $ from "jquery";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
