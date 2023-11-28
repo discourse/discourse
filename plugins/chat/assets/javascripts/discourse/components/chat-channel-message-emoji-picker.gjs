@@ -60,6 +60,7 @@ export default class ChatChannelMessageEmojiPicker extends Component {
 
   @action
   willDestroy() {
+    super.willDestroy(...arguments);
     this._popper?.destroy();
   }
 

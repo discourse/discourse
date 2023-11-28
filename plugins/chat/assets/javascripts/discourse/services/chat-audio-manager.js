@@ -34,7 +34,7 @@ export default class ChatAudioManager extends Service {
   }
 
   willDestroy() {
-    this._super(...arguments);
+    super.willDestroy(...arguments);
 
     this._audioCache = {};
   }

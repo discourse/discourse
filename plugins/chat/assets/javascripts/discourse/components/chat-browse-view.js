@@ -16,7 +16,7 @@ export default class ChatBrowseView extends Component {
   tagName = "";
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     if (!this.channelsCollection) {
       this.set("channelsCollection", this.chatApi.channels());
