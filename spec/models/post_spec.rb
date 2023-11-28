@@ -186,6 +186,17 @@ RSpec.describe Post do
           expect(post.with_secure_uploads?).to eq(true)
         end
 
+        context "when the topic is deleted" do
+          before do
+            topic.trash!
+            post.reload
+          end
+
+          it "returns true" do
+            expect(post.with_secure_uploads?).to eq(true)
+          end
+        end
+
         context "if secure_uploads_pm_only" do
           before { SiteSetting.secure_uploads_pm_only = true }
 
@@ -200,6 +211,14 @@ RSpec.describe Post do
 
         it "returns true" do
           expect(post.with_secure_uploads?).to eq(true)
+        end
+
+        context "when the topic is deleted" do
+          before { topic.trash! }
+
+          it "returns true" do
+            expect(post.with_secure_uploads?).to eq(true)
+          end
         end
 
         context "if secure_uploads_pm_only" do
