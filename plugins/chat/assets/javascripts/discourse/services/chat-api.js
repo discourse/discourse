@@ -34,6 +34,29 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Flags a message in a channel.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} messageId - The ID of the message to flag.
+   * @param {object} params - Params of the flag.
+   * @param {integer} params.flag_type_id
+   * @param {string} [params.message]
+   * @param {boolean} [params.is_warning]
+   * @param {boolean} [params.queue_for_review]
+   * @param {boolean} [params.take_action]
+   * @returns {Promise}
+   *
+   * @example
+   *
+   *    this.chatApi.flagMessage(5, 1);
+   */
+  flagMessage(channelId, messageId, params = {}) {
+    return this.#postRequest(
+      `/channels/${channelId}/messages/${messageId}/flags`,
+      params
+    );
+  }
+
+  /**
    * Get a thread in a channel by its ID.
    * @param {number} channelId - The ID of the channel.
    * @param {number} threadId - The ID of the thread.
