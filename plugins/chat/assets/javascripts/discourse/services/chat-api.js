@@ -51,7 +51,7 @@ export default class ChatApi extends Service {
    */
   flagMessage(channelId, messageId, params = {}) {
     return this.#postRequest(
-      `/channels/${channelId}/messages/${messageId}`,
+      `/channels/${channelId}/messages/${messageId}/flags`,
       params
     );
   }
