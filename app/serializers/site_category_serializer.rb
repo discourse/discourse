@@ -36,4 +36,19 @@ class SiteCategorySerializer < BasicCategorySerializer
   def include_required_tag_groups?
     SiteSetting.tagging_enabled
   end
+
+  def notification_level
+    return if !scope || scope.anonymous?
+
+    CategoryUser.where(user_id: scope.user.id, category_id: object.id).pick(:notification_level) ||
+      CategoryUser.default_notification_level
+  end
+
+  def permission
+    return if !scope || scope.anonymous?
+
+    if scope.is_admin? || Category.topic_create_allowed(scope).include?(object.id)
+      CategoryGroup.permission_types[:full]
+    end
+  end
 end

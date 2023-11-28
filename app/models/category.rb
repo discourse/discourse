@@ -109,7 +109,6 @@ class Category < ActiveRecord::Base
 
   after_save :reset_topic_ids_cache
   after_save :clear_subcategory_ids
-  after_save :clear_parent_ids
   after_save :clear_url_cache
   after_save :update_reviewables
   after_save :publish_discourse_stylesheet
@@ -130,7 +129,6 @@ class Category < ActiveRecord::Base
 
   after_destroy :reset_topic_ids_cache
   after_destroy :clear_subcategory_ids
-  after_destroy :clear_parent_ids
   after_destroy :publish_category_deletion
   after_destroy :remove_site_settings
 
@@ -226,6 +224,32 @@ class Category < ActiveRecord::Base
 
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
+
+  def self.preload_user_fields!(guardian, categories)
+    # Load notification levels
+    notification_levels = CategoryUser.notification_levels_for(guardian.user)
+    notification_levels.default = CategoryUser.default_notification_level
+
+    # Load permissions
+    allowed_topic_create_ids =
+      if !guardian.is_admin? && !guardian.is_anonymous?
+        Category.topic_create_allowed(guardian).where(id: categories.map(&:id)).pluck(:id).to_set
+      end
+
+    # Categories with children
+    with_children =
+      Category.where(parent_category_id: categories.map(&:id)).pluck(:parent_category_id).to_set
+
+    # Update category attributes
+    categories.each do |category|
+      category.notification_level = notification_levels[category[:id]]
+
+      category.permission = CategoryGroup.permission_types[:full] if guardian.is_admin? ||
+        allowed_topic_create_ids&.include?(category[:id])
+
+      category.has_children = with_children.include?(category[:id])
+    end
+  end
 
   def self.topic_id_cache
     @topic_id_cache ||= DistributedCache.new("category_topic_ids")
@@ -859,24 +883,9 @@ class Category < ActiveRecord::Base
     self.where("string_to_array(email_in, '|') @> ARRAY[?]", Email.downcase(email)).first
   end
 
-  @@has_children = DistributedCache.new("has_children")
-
-  def self.has_children?(category_id)
-    @@has_children.defer_get_set(category_id.to_s) do
-      Category.where(parent_category_id: category_id).exists?
-    end
-  end
-
   def has_children?
-    !!id && Category.has_children?(id)
-  end
-
-  def self.clear_parent_ids
-    @@has_children.clear
-  end
-
-  def clear_parent_ids
-    Category.clear_parent_ids
+    @has_children ||= (id && Category.where(parent_category_id: id).exists?) ? :true : :false
+    @has_children == :true
   end
 
   def uncategorized?
