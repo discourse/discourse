@@ -249,7 +249,7 @@ to serve API requests. For example:
         `);
       } finally {
         if (!res.headersSent) {
-          return next();
+          next();
         }
       }
     });
