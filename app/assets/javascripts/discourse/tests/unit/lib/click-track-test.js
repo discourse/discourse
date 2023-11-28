@@ -1,11 +1,11 @@
 import { setupTest } from "ember-qunit";
 import $ from "jquery";
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import sinon from "sinon";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setPrefix } from "discourse-common/lib/get-url";
 
@@ -60,32 +60,33 @@ module("Unit | Utility | click-track", function (hooks) {
       </div>`;
   });
 
-  skip("tracks internal URLs", async function (assert) {
+  test("tracks internal URLs", async function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
-      assert.ok(
+      assert.strictEqual(
         request.requestBody,
         "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
       );
       done();
+      return [200, {}, ""];
     });
 
-    assert.notOk(track(generateClickEventOn("#same-site")));
+    assert.false(track(generateClickEventOn("#same-site")));
   });
 
   test("does not track elements with no href", async function (assert) {
-    assert.ok(track(generateClickEventOn(".a-without-href")));
+    assert.true(track(generateClickEventOn(".a-without-href")));
   });
 
   test("does not track attachments", async function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
-    pretender.post("/clicks/track", () => assert.ok(false));
+    pretender.post("/clicks/track", () => assert.true(false));
 
-    assert.notOk(track(generateClickEventOn(".attachment")));
-    assert.ok(
+    assert.false(track(generateClickEventOn(".attachment")));
+    assert.true(
       DiscourseURL.redirectTo.calledWith(
         "http://discuss.domain.com/uploads/default/1234/1532357280.txt"
       )
@@ -94,100 +95,119 @@ module("Unit | Utility | click-track", function (hooks) {
 
   test("routes to internal urls", async function (assert) {
     setPrefix("/forum");
+    pretender.get("/forum/session/csrf", () =>
+      response({
+        csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=",
+      })
+    );
     pretender.post("/clicks/track", () => [200, {}, ""]);
+
     await track(generateClickEventOn(".prefix-url"), null, {
       returnPromise: true,
     });
-    assert.ok(DiscourseURL.routeTo.calledWith("/forum/thing"));
+    assert.true(DiscourseURL.routeTo.calledWith("/forum/thing"));
   });
 
   test("routes to absolute internal urls", async function (assert) {
     setPrefix("/forum");
+    pretender.get("/forum/session/csrf", () =>
+      response({
+        csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=",
+      })
+    );
     pretender.post("/clicks/track", () => [200, {}, ""]);
+
     await track(generateClickEventOn(".abs-prefix-url"), null, {
       returnPromise: true,
     });
-    assert.ok(
+    assert.true(
       DiscourseURL.routeTo.calledWith(window.location.origin + "/forum/thing")
     );
   });
 
   test("redirects to internal urls with a different prefix", async function (assert) {
     setPrefix("/forum");
+    pretender.get("/forum/session/csrf", () =>
+      response({
+        csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=",
+      })
+    );
     sinon.stub(DiscourseURL, "redirectAbsolute");
 
     pretender.post("/clicks/track", () => [200, {}, ""]);
     await track(generateClickEventOn(".diff-prefix-url"), null, {
       returnPromise: true,
     });
-    assert.ok(DiscourseURL.redirectAbsolute.calledWith("/thing"));
+    assert.true(DiscourseURL.redirectAbsolute.calledWith("/thing"));
   });
 
-  skip("tracks external URLs", async function (assert) {
+  test("tracks external URLs", async function (assert) {
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
-      assert.ok(
+      assert.strictEqual(
         request.requestBody,
         "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
       );
       done();
+      return [200, {}, ""];
     });
 
-    assert.notOk(track(generateClickEventOn("a")));
+    assert.false(track(generateClickEventOn("a")));
   });
 
-  skip("tracks external URLs when opening in another window", async function (assert) {
+  test("tracks external URLs when opening in another window", async function (assert) {
     User.currentProp("user_option.external_links_in_new_tab", true);
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
-      assert.ok(
+      assert.strictEqual(
         request.requestBody,
         "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
       );
       done();
+      return [200, {}, ""];
     });
 
-    assert.notOk(track(generateClickEventOn("a")));
-    assert.ok(window.open.calledWith("http://www.google.com", "_blank"));
+    assert.false(track(generateClickEventOn("a")));
+    assert.true(window.open.calledWith("http://www.google.com/", "_blank"));
   });
 
   test("does not track clicks on lightboxes", async function (assert) {
-    assert.notOk(track(generateClickEventOn(".lightbox")));
+    assert.false(track(generateClickEventOn(".lightbox")));
   });
 
   test("does not track clicks when forcibly disabled", async function (assert) {
-    assert.notOk(track(generateClickEventOn(".no-track-link")));
+    assert.false(track(generateClickEventOn(".no-track-link")));
   });
 
   test("does not track clicks on back buttons", async function (assert) {
-    assert.notOk(track(generateClickEventOn(".back")));
+    assert.false(track(generateClickEventOn(".back")));
   });
 
   test("does not track right clicks inside quotes", async function (assert) {
     const event = generateClickEventOn(".quote a:first-child");
     event.which = 3;
-    assert.ok(track(event));
+    assert.true(track(event));
   });
 
   test("does not track clicks links in quotes", async function (assert) {
     User.currentProp("user_option.external_links_in_new_tab", true);
-    assert.notOk(track(generateClickEventOn(".quote a:last-child")));
-    assert.ok(window.open.calledWith("https://google.com/", "_blank"));
+    assert.false(track(generateClickEventOn(".quote a:last-child")));
+    assert.true(window.open.calledWith("https://google.com/", "_blank"));
   });
 
   test("does not track clicks on hashtags for categories and tags", async function (assert) {
-    assert.notOk(track(generateClickEventOn(".hashtag")));
-    assert.notOk(track(generateClickEventOn(".hashtag-cooked")));
+    assert.false(track(generateClickEventOn(".hashtag")));
+    assert.false(track(generateClickEventOn(".hashtag-cooked")));
   });
 
   test("returns true for tracking mentions and group mentions so the card can appear", async function (assert) {
-    assert.ok(track(generateClickEventOn(".mention")));
-    assert.ok(track(generateClickEventOn(".mention-group")));
+    assert.true(track(generateClickEventOn(".mention")));
+    assert.true(track(generateClickEventOn(".mention-group")));
   });
 
   test("does not track clicks on mailto", async function (assert) {
-    assert.ok(track(generateClickEventOn(".mailto")));
+    assert.true(track(generateClickEventOn(".mailto")));
   });
 
   function badgeClickCount(assert, id, expected) {
@@ -216,8 +236,8 @@ module("Unit | Utility | click-track", function (hooks) {
     test(description, async function (assert) {
       let clickEvent = generateClickEventOn("a");
       clickEventModifier(clickEvent);
-      assert.ok(track(clickEvent));
-      assert.notOk(clickEvent.defaultPrevented);
+      assert.true(track(clickEvent));
+      assert.strictEqual(clickEvent.defaultPrevented, undefined);
     });
   }
 
