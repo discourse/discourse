@@ -556,6 +556,20 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
     );
   });
 
+  test("topic results - search result escapes html in topic title when use_pg_headlines_for_excerpt is true", async function (assert) {
+    this.siteSettings.use_pg_headlines_for_excerpt = true;
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
+
+    assert
+      .dom(
+        ".search-menu .search-result-topic .item:first-of-type .topic-title span.search-highlight"
+      )
+      .exists("html in the topic title is properly escaped");
+  });
+
   test("search menu keyboard navigation", async function (assert) {
     const container = ".search-menu .results";
     await visit("/");
