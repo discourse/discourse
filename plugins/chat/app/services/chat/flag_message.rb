@@ -17,10 +17,14 @@ module Chat
     #   @param [Guardian] guardian
     #   @param [Integer] channel_id of the channel
     #   @param [Integer] message_id of the message
-    #   @param [String] optional message, review queue option
-    #   @param [Boolean] optional is_warning, review queue option
-    #   @param [Boolean] optional take_action, review queue option
-    #   @param [Boolean] optional queue_for_review, review queue option
+    #   @param [Integer] flag_type_id - Type of flag to create
+    #   @param [String] optional message - Used when the flag type is notify_user or notify_moderators and we have to create
+    #     a separate PM.
+    #   @param [Boolean] optional is_warning - Staff can send warnings when using the notify_user flag.
+    #   @param [Boolean] optional take_action - Automatically approves the created reviewable and deletes the chat message.
+    #   @param [Boolean] optional queue_for_review - Adds a special reason to the reviewable score and creates the reviewable using
+    #     the force_review option.
+
     #   @return [Service::Base::Context]
     contract
     model :message
