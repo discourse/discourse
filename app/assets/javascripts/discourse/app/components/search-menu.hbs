@@ -20,7 +20,10 @@
 
     <PluginOutlet
       @name="search-menu-before-term-input"
-      @outletArgs={{hash openSearchMenu=this.open}}
+      @outletArgs={{hash
+        openSearchMenu=this.open
+        advancedSearchButtonHref=this.advancedSearchButtonHref
+      }}
     />
 
     <SearchMenu::SearchTerm
