@@ -3,13 +3,17 @@
 require "rails_helper"
 
 RSpec.describe PostsController do
-  let!(:user) { log_in }
+  let!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let!(:title) { "Testing Poll Plugin" }
 
-  before { SiteSetting.min_first_post_typing_time = 0 }
+  before do
+    SiteSetting.min_first_post_typing_time = 0
+    log_in_user(user)
+  end
 
   describe "polls" do
     it "works" do
+      Group.refresh_automatic_groups!
       post :create, params: { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }, format: :json
 
       expect(response.status).to eq(200)
@@ -375,7 +379,7 @@ RSpec.describe PostsController do
     before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
 
     it "invalidates the post" do
-      log_in_user(Fabricate(:user, trust_level: 1))
+      log_in_user(Fabricate(:user, trust_level: 1, refresh_auto_groups: true))
 
       post :create, params: { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }, format: :json
 
@@ -408,7 +412,7 @@ RSpec.describe PostsController do
     before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
 
     it "validates the post" do
-      log_in_user(Fabricate(:user, trust_level: 2))
+      log_in_user(Fabricate(:user, trust_level: 2, refresh_auto_groups: true))
 
       post :create, params: { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }, format: :json
 
@@ -423,7 +427,7 @@ RSpec.describe PostsController do
     before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
 
     it "validates the post" do
-      log_in_user(Fabricate(:user, trust_level: 3))
+      log_in_user(Fabricate(:user, trust_level: 3, refresh_auto_groups: true))
 
       post :create, params: { title: title, raw: "[poll]\n- A\n- B\n[/poll]" }, format: :json
 
@@ -453,7 +457,7 @@ RSpec.describe PostsController do
     before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
 
     it "validates the post" do
-      log_in_user(Fabricate(:user, trust_level: 1))
+      log_in_user(Fabricate(:user, trust_level: 1, refresh_auto_groups: true))
 
       post :create, params: { title: title, raw: title }, format: :json
 
