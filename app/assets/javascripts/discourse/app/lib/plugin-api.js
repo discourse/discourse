@@ -1835,7 +1835,7 @@ class PluginApi {
    * ```
    *
    */
-  downloadCalendar(title, dates, recurrenceRule) {
+  downloadCalendar(title, dates, recurrenceRule = null) {
     downloadCalendar(title, dates, recurrenceRule);
   }
 

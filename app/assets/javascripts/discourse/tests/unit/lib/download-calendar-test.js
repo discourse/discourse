@@ -16,7 +16,7 @@ module("Unit | Utility | download-calendar", function (hooks) {
     sinon.stub(win, "focus");
   });
 
-  test("correct data for Ics", function (assert) {
+  test("correct data for ICS", function (assert) {
     const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
     sinon.useFakeTimers({
       now,
@@ -46,7 +46,7 @@ END:VCALENDAR`
     );
   });
 
-  test("correct data for Ics when recurring event", function (assert) {
+  test("correct data for ICS when recurring event", function (assert) {
     const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
     sinon.useFakeTimers({
       now,
@@ -92,7 +92,7 @@ END:VCALENDAR`
     ]);
     assert.ok(
       window.open.calledWith(
-        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z/20211012T160000Z",
+        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z",
         "_blank",
         "noopener",
         "noreferrer"
@@ -113,7 +113,7 @@ END:VCALENDAR`
     );
     assert.ok(
       window.open.calledWith(
-        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z/20211012T160000Z&recur=RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR",
+        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z&recur=RRULE%3AFREQ%3DDAILY%3BBYDAY%3DMO%2CTU%2CWE%2CTH%2CFR",
         "_blank",
         "noopener",
         "noreferrer"

@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added `recurrence rule` option to `downloadCalendar`, this can be used to set recurring event in the calendar. 
+- Added `recurrenceRule` option to `downloadCalendar`, this can be used to set recurring events in the calendar. Rule syntax can be found at https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10.
 
 ## [1.15.0] - 2023-10-18
 

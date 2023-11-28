@@ -3,7 +3,7 @@ import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 
-export function downloadCalendar(title, dates, recurrenceRule) {
+export function downloadCalendar(title, dates, recurrenceRule = null) {
   const currentUser = User.current();
 
   const formattedDates = formatDates(dates);
@@ -39,16 +39,21 @@ export function downloadIcs(title, dates, recurrenceRule) {
 
 export function downloadGoogle(title, dates, recurrenceRule) {
   dates.forEach((date) => {
-    const encodedTitle = encodeURIComponent(title);
-    let link = `https://www.google.com/calendar/event?action=TEMPLATE&text=${encodedTitle}&dates=${_formatDateForGoogleApi(
-      date.startsAt
-    )}/${_formatDateForGoogleApi(date.endsAt)}`;
+    const link = new URL("https://www.google.com/calendar/event");
+    link.searchParams.append("action", "TEMPLATE");
+    link.searchParams.append("text", title);
+    link.searchParams.append(
+      "dates",
+      `${_formatDateForGoogleApi(date.startsAt)}/${_formatDateForGoogleApi(
+        date.endsAt
+      )}`
+    );
 
     if (recurrenceRule) {
-      link = link + `&recur=RRULE:${recurrenceRule}`;
+      link.searchParams.append("recur", `RRULE:${recurrenceRule}`);
     }
 
-    window.open(getURL(link).trim(), "_blank", "noopener", "noreferrer");
+    window.open(getURL(link.href).trim(), "_blank", "noopener", "noreferrer");
   });
 }
 
