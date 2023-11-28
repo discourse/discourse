@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { setting } from "discourse/lib/computed";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import NavItem from "discourse/models/nav-item";
@@ -14,6 +15,7 @@ export default Component.extend({
   dialog: service(),
   tagName: "",
   filterMode: tracked(),
+  fixedCategoryPositions: setting("fixed_category_positions"),
 
   @dependentKeyCompat
   get filterType() {
