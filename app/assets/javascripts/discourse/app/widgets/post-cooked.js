@@ -14,6 +14,7 @@ import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
+import Plugins from "discourse-plugins-v2/events/decorate-cooked-element";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -30,6 +31,13 @@ export function addDecorator(callback, { afterAdopt = false } = {}) {
 export function resetDecorators() {
   _beforeAdoptDecorators = [];
   _afterAdoptDecorators = [];
+}
+
+// TODO: probably do this lazily once per owner
+// TODO: take into account site settings/whether plugin is enabled
+for (const Plugin of Plugins) {
+  const { handler, options } = Plugin.module.default;
+  addDecorator(handler, options);
 }
 
 let detachedDocument = document.implementation.createHTMLDocument("detached");

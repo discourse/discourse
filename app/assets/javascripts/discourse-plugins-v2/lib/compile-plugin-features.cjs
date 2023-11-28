@@ -56,18 +56,20 @@ class PluginFeature {
   }
 }
 
-class Connector extends PluginFeature {
+class NamedPluginFeature extends PluginFeature {
+  #namespace;
   #name;
   #entryName;
 
-  constructor(name) {
+  constructor(namespace, name) {
     super();
+    this.#namespace = namespace;
     this.#name = name;
-    this.#entryName = `./connectors/${name}`;
+    this.#entryName = `./${namespace}/${name}`;
   }
 
   get fileName() {
-    return `connectors/${this.#name}.js`;
+    return `${this.#namespace}/${this.#name}.js`;
   }
 
   get entryName() {
@@ -107,7 +109,7 @@ function isPlugin(packageJson) {
 
 function compilePluginFeatures(
   pluginsDir,
-  { connectors = [], markdownFeatures = true } = {}
+  { connectors = [], events = [], markdownFeatures = true } = {}
 ) {
   return {
     name: "collect-plugin-features",
@@ -121,7 +123,11 @@ function compilePluginFeatures(
       const features = [];
 
       for (const name of connectors) {
-        features.push(new Connector(name));
+        features.push(new NamedPluginFeature("connectors", name));
+      }
+
+      for (const name of events) {
+        features.push(new NamedPluginFeature("events", name));
       }
 
       if (markdownFeatures) {
@@ -164,12 +170,6 @@ function compilePluginFeatures(
         outputFileSync(`./src/${feature.fileName}`, feature.content, {
           encoding: "utf8",
         });
-        // this.emitFile({
-        //   type: "prebuilt-chunk",
-        //   fileName: feature.fileName,
-        //   code: feature.content,
-        //   exports: ["default"],
-        // });
       }
 
       const hasChanges =

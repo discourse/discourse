@@ -10,6 +10,8 @@
   ],
   "exports": {
     "./connectors/extra-header-icons": "./dist/connectors/extra-header-icons.js",
+    "./events/decorate-cooked-element": "./dist/events/decorate-cooked-element.js",
+    "./events/decorate-non-stream-cooked-element": "./dist/events/decorate-non-stream-cooked-element.js",
     "./markdown-features": "./dist/markdown-features.js"
   },
   "files": [

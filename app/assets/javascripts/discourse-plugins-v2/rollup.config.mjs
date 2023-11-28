@@ -32,6 +32,7 @@ export default {
 
     compilePluginFeatures(Plugins, {
       connectors: ["extra-header-icons"],
+      events: ["decorate-cooked-element", "decorate-non-stream-cooked-element"],
       markdownFeatures: true,
     }),
 
