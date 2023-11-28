@@ -148,7 +148,7 @@ export default {
         data.append("topic_id", topicId);
         navigator.sendBeacon(getURL("/clicks/track"), data);
       } else {
-        trackPromise = ajax(getURL("/clicks/track"), {
+        trackPromise = ajax("/clicks/track", {
           type: "POST",
           data: {
             url: href,
