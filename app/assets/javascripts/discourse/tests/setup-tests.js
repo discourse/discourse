@@ -149,7 +149,14 @@ function setupToolbar() {
   QUnit.config.urlConfig.push({
     id: "target",
     label: "Target",
-    value: ["core", "plugins", "all", "-----", ...Array.from(pluginNames)],
+    value: [
+      "core",
+      "plugins",
+      "all",
+      "theme-qunit",
+      "-----",
+      ...Array.from(pluginNames),
+    ],
   });
 
   QUnit.begin(() => {
@@ -375,6 +382,9 @@ export default function setupTests(config) {
   handleLegacyParameters();
 
   const target = getUrlParameter("target") || "core";
+  if (target === "theme-qunit") {
+    window.location.href = window.location.origin + "/theme-qunit";
+  }
 
   const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
   const hasThemeJs = !!document.querySelector("script[data-theme-id]");
