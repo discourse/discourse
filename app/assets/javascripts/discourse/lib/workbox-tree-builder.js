@@ -29,7 +29,11 @@ module.exports = function generateWorkboxTree() {
   // Sprockets' default behaviour for these files is disabled via freedom_patches/sprockets.rb.
   const versionHash = crypto
     .createHash("md5")
-    .update(`${versions.join("|")}|${COMPILER_VERSION}`)
+    .update(
+      `${versions.join("|")}|${COMPILER_VERSION}|${
+        process.env["DISCOURSE_ASSET_URL_SALT"] || ""
+      }`
+    )
     .digest("hex");
 
   return funnel(mergeTrees(nodes), {
