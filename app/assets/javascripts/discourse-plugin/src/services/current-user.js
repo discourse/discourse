@@ -1,3 +1,3 @@
-import { lookupService } from "../utils";
+import lookupService from "../-private/lookup-service.js";
 
 export default lookupService("current-user");
