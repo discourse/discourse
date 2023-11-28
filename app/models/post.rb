@@ -567,15 +567,18 @@ class Post < ActiveRecord::Base
 
   def with_secure_uploads?
     return false if !SiteSetting.secure_uploads?
+    topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
+    return false if topic_including_deleted.blank?
 
     # NOTE: This is meant to be a stopgap solution to prevent secure uploads
     # in a single place (private messages) for sensitive admin data exports.
     # Ideally we would want a more comprehensive way of saying that certain
     # upload types get secured which is a hybrid/mixed mode secure uploads,
     # but for now this will do the trick.
-    return topic&.private_message? if SiteSetting.secure_uploads_pm_only?
+    return topic_including_deleted.private_message? if SiteSetting.secure_uploads_pm_only?
 
-    SiteSetting.login_required? || topic&.private_message? || topic&.category&.read_restricted?
+    SiteSetting.login_required? || topic_including_deleted.private_message? ||
+      topic_including_deleted.read_restricted_category?
   end
 
   def hide!(post_action_type_id, reason = nil, custom_message: nil)
