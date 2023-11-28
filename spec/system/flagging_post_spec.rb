@@ -13,6 +13,8 @@ describe "Flagging post", type: :system do
   describe "Using Take Action" do
     it "can select the default action to hide the post, agree with other flags, and reach the flag threshold" do
       other_flag = Fabricate(:flag, post: post_to_flag, user: Fabricate(:moderator))
+      other_flag_reviewable =
+        Fabricate(:reviewable_flagged_post, target: post_to_flag, created_by: other_flag.user)
       expect(other_flag.reload.agreed_at).to be_nil
       topic_page.visit_topic(post_to_flag.topic)
       topic_page.expand_post_actions(post_to_flag)
@@ -24,7 +26,10 @@ describe "Flagging post", type: :system do
         topic_page.post_by_number(post_to_flag).ancestor(".topic-post.post-hidden"),
       ).to be_present
 
-      try_until_success { expect(other_flag.reload.agreed_at).to be_present }
+      visit "/review/#{other_flag_reviewable.id}"
+
+      expect(page).to have_content(I18n.t("js.review.statuses.approved_flag.title"))
+      expect(page).to have_css(".reviewable-meta-data .status .approved")
     end
   end
 end
