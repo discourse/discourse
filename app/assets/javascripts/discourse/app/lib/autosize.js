@@ -119,9 +119,11 @@ function assign(ta, { setOverflowX = true, setOverflowY = true } = {}) {
     }
 
     if (startHeight !== ta.style.height) {
-      const evt = document.createEvent("Event");
-      evt.initEvent("autosize:resized", true, false);
-      ta.dispatchEvent(evt);
+      const event = new Event("autosize:resized", {
+        bubbles: true,
+        cancelable: false,
+      });
+      ta.dispatchEvent(event);
     }
   }
 
@@ -170,18 +172,24 @@ function exportDestroy(ta) {
   if (!(ta && ta.nodeName && ta.nodeName === "TEXTAREA")) {
     return;
   }
-  const evt = document.createEvent("Event");
-  evt.initEvent("autosize:destroy", true, false);
-  ta.dispatchEvent(evt);
+
+  const event = new Event("autosize:destroy", {
+    bubbles: true,
+    cancelable: false,
+  });
+  ta.dispatchEvent(event);
 }
 
 function exportUpdate(ta) {
   if (!(ta && ta.nodeName && ta.nodeName === "TEXTAREA")) {
     return;
   }
-  const evt = document.createEvent("Event");
-  evt.initEvent("autosize:update", true, false);
-  ta.dispatchEvent(evt);
+
+  const event = new Event("autosize:update", {
+    bubbles: true,
+    cancelable: false,
+  });
+  ta.dispatchEvent(event);
 }
 
 let autosize = (el, options) => {
