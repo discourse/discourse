@@ -131,7 +131,7 @@ export default class ChatChannelRow extends Component {
   }
 
   get leaveDirectMessageLabel() {
-    return I18n.t("chat.direct_messages.leave");
+    return I18n.t("chat.direct_messages.close");
   }
 
   get leaveChannelLabel() {

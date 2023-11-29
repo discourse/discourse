@@ -495,6 +495,7 @@ en:
         new: "Create a personal chat"
         create: "Go"
         leave: "Leave this personal chat"
+        close: "Close this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."
 
       incoming_webhooks:
