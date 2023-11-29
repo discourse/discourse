@@ -1018,6 +1018,7 @@ fr:
         ignore_no_users: "Vous n'ignorez aucun utilisateur."
         ignore_option: "Ignoré"
         ignore_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur et ses messages et réponses seront masqués."
+        add_ignored_user: "Ajouter…"
         mute_option: "En sourdine"
         mute_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur."
         normal_option: "Normal"
@@ -1497,6 +1498,7 @@ fr:
         instructions: "L'inscription nécessite un code d'invitation"
       auth_tokens:
         title: "Appareils utilisés récemment"
+        short_description: "Il s'agit d'une liste d'appareils qui se sont récemment connectés à votre compte."
         details: "Détails"
         log_out_all: "Se déconnecter partout"
         not_you: "Ce n'est pas vous ?"
@@ -2039,6 +2041,7 @@ fr:
       delete_item: "Supprimer %{name}"
       filter_by: "Filtrer par : %{name}"
       select_to_filter: "Sélectionner une valeur à filtrer"
+      default_header_text: "Sélectionnez…"
       no_content: Aucune correspondance trouvée
       results_count:
         one: "%{count} résultat"

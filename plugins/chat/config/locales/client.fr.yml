@@ -12,6 +12,7 @@ fr:
           chat: Discussion
         chat_separate_sidebar_mode:
           always: "Toujours"
+          fullscreen: "Lorsque le clavardage est en plein écran"
           never: "Jamais"
       logs:
         staff_actions:
@@ -107,6 +108,8 @@ fr:
         all_new: "Tous les nouveaux messages"
         dm_and_mentions: "Messages directs et mentions"
         never: "Jamais"
+      separate_sidebar_mode:
+        title: "Afficher des modes de barre latérale distincts pour le forum et le clavardage"
       enable: "Activer la discussion"
       flag: "Drapeau"
       emoji: "Insérer un émoji"
@@ -302,9 +305,9 @@ fr:
         add_user_long: <kbd>majuscule + clic</kbd> ou <kbd>majuscule + entrée</kbd><span>Ajouter @%{username}</span>
         add_user_short: <span>Ajouter un utilisateur</span>
         open_channel: <span>Ouvrir le canal</span>
-        default_search_placeholder: "#a-channel, @somebody ou quoi que ce soit"
-        default_channel_search_placeholder: "#a-channel"
-        default_user_search_placeholder: "@somebody"
+        default_search_placeholder: "#un-canal, @personne ou un nom"
+        default_channel_search_placeholder: "#un-canal"
+        default_user_search_placeholder: "@personne"
         disabled_user: "a désactivé la discussion"
         no_items: "Aucun élément"
         filter: "Filtrer"
