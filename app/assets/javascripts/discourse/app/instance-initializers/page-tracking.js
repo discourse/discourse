@@ -10,7 +10,8 @@ export default {
 
   initialize(owner) {
     // Tell our AJAX system to track a page transition
-    const router = owner.lookup("service:router");
+    // eslint-disable-next-line ember/no-private-routing-service
+    const router = owner.lookup("router:main");
     router.on("routeWillChange", this.handleRouteWillChange);
 
     let appEvents = owner.lookup("service:app-events");
