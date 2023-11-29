@@ -2094,10 +2094,6 @@ hr:
         one: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora konfiguriranog ograničenja spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
         few: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora konfiguriranog ograničenja spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
         other: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora koji je konfigurirao ograničenje spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
-      group_mentioned:
-        one: "Spominjući %{group}, te o tome obavijestiti <a href='%{group_link}'>%{count} osobe</a> - jeste li sigurni?"
-        few: "Spominjući %{group}, te o tome obavijestiti <a href='%{group_link}'>%{count} osobe</a> - jeste li sigurni?"
-        other: "Spominjući %{group}, te o tome obavijestiti <a href='%{group_link}'>%{count} ljudi</a> - jeste li sigurni?"
       cannot_see_mention:
         category: "Spomenuli ste @%{username} , ali oni neće biti obaviješteni jer nemaju pristup ovoj kategoriji. Morat ćete ih dodati u grupu koja ima pristup ovoj kategoriji."
         private: "Spomenuli ste @%{username} , ali oni neće biti obaviješteni jer ne mogu vidjeti ovu osobnu poruku. Morat ćete ih pozvati u ovu osobnu poruku."

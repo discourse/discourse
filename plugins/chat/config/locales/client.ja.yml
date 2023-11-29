@@ -374,6 +374,7 @@ ja:
       quote:
         original_channel: '最初に <a href="%{channelLink}">%{channel}</a> で送信されました'
         copy_success: "チャットの引用をクリップボードにコピーしました"
+        default_thread_title: "スレッド"
       notification_levels:
         never: "なし"
         mention: "メンションのみ"

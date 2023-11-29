@@ -178,6 +178,8 @@ fi:
         other: "ja %{count} muuta"
     summaries:
       no_targets: "Valitun ajanjakson aikana ei ollut viestejä."
+    transcript:
+      default_thread_title: "Ketju"
   discourse_push_notifications:
     popup:
       chat_mention:

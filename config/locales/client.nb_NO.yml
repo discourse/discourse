@@ -1767,9 +1767,6 @@ nb_NO:
       saved_local_draft_tip: "lagret lokalt"
       drafts_offline: "utkast offline"
       edit_conflict: "rediger konflikt"
-      group_mentioned:
-        one: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} én person</a> – er du sikker?"
-        other: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} folk</a> – er du sikker?"
       duplicate_link: "Det ser ut til at lenken din til <b>%{domain}</b> allerede ble publisert i emnet av <b>@%{username}</b> i <a href='%{post_url}'>et svar %{ago}</a>. Er du sikker på at du vil publisere den igjen?"
       reference_topic_title: "RE: %{title}"
       error:

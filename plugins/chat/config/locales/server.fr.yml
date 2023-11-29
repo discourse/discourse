@@ -178,6 +178,8 @@ fr:
         other: "et %{count} autres utilisateurs"
     summaries:
       no_targets: "Il n'y a eu aucun message pendant la période sélectionnée."
+    transcript:
+      default_thread_title: "Fil"
   discourse_push_notifications:
     popup:
       chat_mention:

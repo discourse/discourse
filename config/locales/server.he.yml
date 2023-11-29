@@ -1573,6 +1573,7 @@ he:
     search_query_log_max_size: "מספר מקסימלי של שאילתות חיפוש לשימור"
     search_query_log_max_retention_days: "הזמן המרבי לשמירת שאילתות חיפוש, בימים."
     search_ignore_accents: "התעלמות מסימנים דיאקריטיים בחיפוש אחר טקסט."
+    search_default_sort_order: "סדר מיון כברירת מחדל לחיפוש עמוד מלא"
     category_search_priority_low_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש נמוכה בקטגוריות."
     category_search_priority_high_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש גבוהה בקטגוריות."
     default_composer_category: "הקטגוריה המשמשת לאכלוס מראש של רשימת הקטגוריות הנפתחת בעת יצירת נושא חדש."
@@ -2073,6 +2074,7 @@ he:
     log_mail_processing_failures: "לתעד את כל שגיאות עיבוד הדוא״ל אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
     email_in: "לאפשר למשתמשים לפרסם נושאים חדשים דרך דוא״ל. לאחר הפעלת ההגדרה הזאת, יתאפשר לך להגדיר כתובות דוא״ל נכנסות לקבוצות ולקטגוריות."
     email_in_min_trust: "דרגת האמון המזערית הנדרשת למשתמש כדי לפרסם נושאים חדשים דרך הדוא״ל."
+    email_in_allowed_groups: "קבוצות שמורשות לפרסם נושאים חדשים דרך דוא״ל."
     email_in_authserv_id: "מזהה השירות מבצע בדיקות אימות על הודעות דוא״ל נכנסות. יש לעיין ב־<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> לקבלת הנחיות כיצד להגדיר זאת."
     email_in_spam_header: "כותרת הודעת הדוא״ל לאיתור ספאם."
     enable_imap: "הפעלת IMAP לסנכרון הודעות קבוצתיות."
@@ -2201,7 +2203,9 @@ he:
     emoji_deny_list: "סמלי האמוג׳י האלה לא יהיו זמינים לשימוש בתפריטים או בקודים מקוצרים."
     approve_post_count: "מספר הפוסטים ממשתמשים חדשים או בסיסיים שחייבים לאשר אותם"
     approve_unless_trust_level: "פוסטים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
+    approve_unless_allowed_groups: "פוסטים של משתמשים שאינם בקבוצות האלו דורשים אישור"
     approve_new_topics_unless_trust_level: "נושאים חדשים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
+    approve_new_topics_unless_allowed_groups: "נושאים חדשים של משתמשים שאינם בקבוצות האלו דורשים אישור"
     approve_unless_staged: "יש לאשר נושאים ופוסטים חדשים עבור משתמשים מבוימים"
     notify_about_queued_posts_after: "אם יש פוסטים שממתינים לסקירה מעבר לכמות כזו של שעות, יש לשלוח התראה לכל המפקחים. 0 משבית את ההתראות האלה."
     reviewable_revision_reasons: "רשימת סיבות שניתן לבחור בעת דחיית פוסט לסקירה שעומד בתור עם מהדורה. ‚אחר’ תמיד זמין בנוסף, הוא מאפשר לך לציין סיבה משלך."
@@ -2391,6 +2395,9 @@ he:
       anonymous_posting_allowed_groups: "(anonymous_posting_min_trust_level) דרגת אמון מזערית לפרסום אלמוני"
       here_mention_allowed_groups: "(anonymous_posting_min_trust_level) דרגת אמון מזערית לאזכור כאן"
       shared_drafts_allowed_groups: "(shared_drafts_min_trust_level) דרגת אימון מזערית לטיוטות משותפות"
+      approve_unless_allowed_groups: "approve_unless_trust_level (אישור למעט דרגות אמון)"
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level (לאשר נושאים חדשים אלמלא דרגת אמון)"
+      email_in_allowed_groups: "email_in_min_trust (אמון מזערי לדוא״ל)"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4916,6 +4923,7 @@ he:
     reasons:
       post_count: "הפוסטים הראשונים שמפורסמים על ידי משתמש כלשהו חייבים לעבור את אישור הסגל. למידע נוסף %{link}."
       trust_level: "התגובות של משתמשים בדרגות אמון נמוכות חייבות לעבור את אישור הסגל. למידע נוסף %{link}."
+      group: "משתמשים שאינם בקבוצות שצוינו חייבים שהתגובות שלהם תאושרנה על ידי הסגל. ר׳ %{link}"
       new_topics_unless_trust_level: "נושאים של משתמשים בדרגות אמון נמוכות חייבים לעבור את אישור הסגל. למידע נוסף %{link}."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. למידע נוסף %{link}."
       auto_silence_regex: "משתמש חדש שהפוסט הראשון שלו עונה להגדרה %{link}."

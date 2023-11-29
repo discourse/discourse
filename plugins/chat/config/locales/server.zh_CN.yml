@@ -177,6 +177,8 @@ zh_CN:
         other: "和其他 %{count} 人"
     summaries:
       no_targets: "在所选时间段内没有消息。"
+    transcript:
+      default_thread_title: "对话"
   discourse_push_notifications:
     popup:
       chat_mention:

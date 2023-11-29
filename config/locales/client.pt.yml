@@ -1850,9 +1850,6 @@ pt:
       edit_conflict: "editar conflito"
       esc: "esc"
       ok_proceed: "Ok, continuar"
-      group_mentioned:
-        one: "Ao usar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoa</a> – tem a certeza?"
-        other: "Ao mencionar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoas</a> – tem a certeza?"
       cannot_see_mention:
         category: "Mencionou %{username}, mas este utilizador não será notificado porque não têm acesso a esta categoria. Terá de o adicionar a um grupo que tenha acesso a esta categoria."
         muted_topic: "Mencionou @%{username}, mas não será possível notifica-lo pois o utilizador silenciou este tópico."

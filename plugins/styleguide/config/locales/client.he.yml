@@ -10,10 +10,13 @@ he:
       title: "מדריך סגנון"
       welcome: "כדי להתחיל, יש לבחור בסעיף מהתפריט שמימין."
       categories:
+        syntax: תחביר
         atoms: אטומים
         molecules: מולקולות
         organisms: אורגניזמים
       sections:
+        bem:
+          title: "BEM (מחליף רכיב מקטע)"
         typography:
           title: "טיפוגרפיה"
           example: "ברוך בואך ל־Discourse"

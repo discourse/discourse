@@ -396,6 +396,7 @@ nl:
       quote:
         original_channel: 'Oorspronkelijk gestuurd in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chatcitaat gekopieerd naar klembord"
+        default_thread_title: "Thread"
       notification_levels:
         never: "Nooit"
         mention: "Alleen voor vermeldingen"

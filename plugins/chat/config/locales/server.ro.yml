@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 ro:
+  system_messages:
+    private_channel_title: "Canal %{id}"
   chat:
     deleted_chat_username: șters
     errors:
@@ -39,6 +41,9 @@ ro:
         few: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
         other: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
       too_many_members: "%{first_identifier} are prea mulți membri. Nimeni nu a fost anunțat."
+    transcript:
+      default_thread_title: "Fir"
+      split_thread_range: "mesaje de la %{start} la %{end} din %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -48,6 +53,10 @@ ro:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      subject:
+        private_message: "[%{email_prefix}] Mesaj nou"
   unsubscribe:
     chat_summary:
       never: Niciodată

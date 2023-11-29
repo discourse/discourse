@@ -460,6 +460,7 @@ ar:
       quote:
         original_channel: 'تم إرساله في الأساس في <a href="%{channelLink}">%{channel}</a>'
         copy_success: "تم نسخ اقتباس الدردشة إلى الحافظة"
+        default_thread_title: "سلسلة الدردشة"
       notification_levels:
         never: "أبدًا"
         mention: "للإشارات فقط"

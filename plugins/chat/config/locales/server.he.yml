@@ -219,6 +219,8 @@ he:
         other: "ו־%{count} נוספים"
     summaries:
       no_targets: "לא היו הודעות במהלך התקופה הנבחרת."
+    transcript:
+      default_thread_title: "שרשור"
   discourse_push_notifications:
     popup:
       chat_mention:

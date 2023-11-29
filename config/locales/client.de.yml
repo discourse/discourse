@@ -2179,8 +2179,9 @@ de:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
         other: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzern. Deshalb wird niemand benachrichtigt."
       group_mentioned:
-        one: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Person</a> zu benachrichtigen – bist du dir sicher?"
-        other: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Personen</a> zu benachrichtigen – bist du dir sicher?"
+        one: "Wenn du %{group} erwähnst, wird <a href='%{group_link}'>%{count} die Person</a>benachrichtigen."
+        other: "Durch die Erwähnung von %{group} werden <a href='%{group_link}'>%{count} Personen</a>benachrichtigt."
+      larger_group_mentioned: "Wenn du %{group} erwähnst, werden <a href='%{group_link}'>%{count} und</a>benachrichtigt. Bist du sicher?"
       cannot_see_mention:
         category: "Du hast @%{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu, die Zugriff auf diese Kategorie hat."
         private: "Du hast @%{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser persönlichen Nachricht ein."
@@ -3156,7 +3157,7 @@ de:
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
     post:
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
-      quote_reply: "Zitat"
+      quote_reply: "Zitieren"
       quote_reply_shortcut: "Oder drücke q"
       quote_edit: "Bearbeiten"
       quote_edit_shortcut: "Oder drücke e"

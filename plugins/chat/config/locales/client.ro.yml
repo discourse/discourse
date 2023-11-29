@@ -116,6 +116,8 @@ ro:
         italic_text: "text italic"
         bold_text: "text aldin"
         send: "Trimite"
+      quote:
+        default_thread_title: "Fir"
       notification_levels:
         never: "Niciodată"
       settings:

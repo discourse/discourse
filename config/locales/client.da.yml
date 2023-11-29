@@ -1907,9 +1907,6 @@ da:
       group_mentioned_limit:
         one: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} bruger. Ingen bliver underrettet."
         other: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} brugere. Ingen bliver underrettet."
-      group_mentioned:
-        one: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} person</a> - vil du fortsætte?"
-        other: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} personer</a> - vil du fortsætte?"
       cannot_see_group_mention:
         not_mentionable: "Du kan ikke nævne gruppen @%{group}."
       duplicate_link: "Det ser ud til, at dit link til <b>%{domain}</b> allerede var sendt i emnet af <b>@ %{username}</b> i <a href='%{post_url}'>et svar på %{ago}</a> - er du sikker på, at du vil sende det igen?"

@@ -226,6 +226,8 @@ ko:
         bold_text: "굵게하기"
         code_text: "코드 텍스트"
         send: "보내기"
+      quote:
+        default_thread_title: "스레드"
       notification_levels:
         never: "알림 받지 않기"
       settings:

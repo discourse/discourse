@@ -202,6 +202,8 @@ ru:
         other: "и ещё %{count}"
     summaries:
       no_targets: "За выбранный период сообщений не было."
+    transcript:
+      default_thread_title: "Цепочка"
   discourse_push_notifications:
     popup:
       chat_mention:
