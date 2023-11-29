@@ -30,11 +30,11 @@ module Chat
              dependent: :destroy,
              foreign_key: :chat_message_id
     has_many :bookmarks,
-             -> {
+             -> do
                unscope(where: :bookmarkable_type).where(
                  bookmarkable_type: Chat::Message.polymorphic_name,
                )
-             },
+             end,
              as: :bookmarkable,
              dependent: :destroy
     has_many :upload_references,
@@ -53,21 +53,21 @@ module Chat
              foreign_key: :chat_message_id
 
     scope :in_public_channel,
-          -> {
+          -> do
             joins(:chat_channel).where(
               chat_channel: {
                 chatable_type: Chat::Channel.public_channel_chatable_types,
               },
             )
-          }
+          end
     scope :in_dm_channel,
-          -> {
+          -> do
             joins(:chat_channel).where(
               chat_channel: {
                 chatable_type: Chat::Channel.direct_channel_chatable_types,
               },
             )
-          }
+          end
     scope :created_before, ->(date) { where("chat_messages.created_at < ?", date) }
     scope :uncooked, -> { where("cooked_version <> ? or cooked_version IS NULL", BAKED_VERSION) }
 

@@ -170,7 +170,7 @@ class Category < ActiveRecord::Base
   scope :latest, -> { order("topic_count DESC") }
 
   scope :secured,
-        ->(guardian = nil) {
+        ->(guardian = nil) do
           ids = guardian.secure_category_ids if guardian
 
           if ids.present?
@@ -181,13 +181,13 @@ class Category < ActiveRecord::Base
           else
             where("NOT categories.read_restricted").references(:categories)
           end
-        }
+        end
 
   TOPIC_CREATION_PERMISSIONS ||= [:full]
   POST_CREATION_PERMISSIONS ||= %i[create_post full]
 
   scope :topic_create_allowed,
-        ->(guardian) {
+        ->(guardian) do
           scoped = scoped_to_permissions(guardian, TOPIC_CREATION_PERMISSIONS)
 
           if !SiteSetting.allow_uncategorized_topics && !guardian.is_staff?
@@ -195,7 +195,7 @@ class Category < ActiveRecord::Base
           end
 
           scoped
-        }
+        end
 
   scope :post_create_allowed,
         ->(guardian) { scoped_to_permissions(guardian, POST_CREATION_PERMISSIONS) }

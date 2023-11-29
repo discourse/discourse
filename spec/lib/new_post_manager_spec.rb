@@ -382,9 +382,9 @@ RSpec.describe NewPostManager do
           result
         end
 
-      @queue_handler = ->(manager) {
+      @queue_handler = ->(manager) do
         manager.args[:raw] =~ /queue me/ ? manager.enqueue("default") : nil
-      }
+      end
 
       NewPostManager.add_handler(&@counter_handler)
       NewPostManager.add_handler(&@queue_handler)
