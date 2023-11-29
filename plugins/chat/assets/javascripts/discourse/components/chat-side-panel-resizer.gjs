@@ -1,7 +1,5 @@
-import Component from "@glimmer/component";
+const ChatSidePanelResizer = <template>
+  <div class="chat-side-panel-resizer"></div>
+</template>;
 
-export default class extends Component {
-  <template>
-    <div class="chat-side-panel-resizer"></div>
-  </template>
-}
+export default ChatSidePanelResizer;

@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import ChatComposer from "../chat-composer";
 import ChatComposerMessageDetails from "../chat-composer-message-details";
 import ChatHeaderIcon from "../chat-header-icon";
@@ -15,25 +14,25 @@ import ChatModalThreadSettings from "../chat-modal-thread-settings";
 import ChatModalToggleChannelStatus from "../chat-modal-toggle-channel-status";
 import ChatThreadListItem from "../chat-thread-list-item";
 
-export default class extends Component {
-  <template>
-    <ChatMessage />
-    <ChatComposer />
-    <ChatThreadListItem />
-    <ChatComposerMessageDetails />
-    <ChatHeaderIcon />
+const ChatOrganism = <template>
+  <ChatMessage />
+  <ChatComposer />
+  <ChatThreadListItem />
+  <ChatComposerMessageDetails />
+  <ChatHeaderIcon />
 
-    <h2>Modals</h2>
+  <h2>Modals</h2>
 
-    <ChatModalArchiveChannel />
-    <ChatModalMoveMessageToChannel />
-    <ChatModalDeleteChannel />
-    <ChatModalEditChannelDescription />
-    <ChatModalEditChannelName />
-    <ChatModalThreadSettings />
-    <ChatModalCreateChannel />
-    <ChatModalToggleChannelStatus />
-    <ChatModalNewMessage />
-    <ChatModalChannelSummary />
-  </template>
-}
+  <ChatModalArchiveChannel />
+  <ChatModalMoveMessageToChannel />
+  <ChatModalDeleteChannel />
+  <ChatModalEditChannelDescription />
+  <ChatModalEditChannelName />
+  <ChatModalThreadSettings />
+  <ChatModalCreateChannel />
+  <ChatModalToggleChannelStatus />
+  <ChatModalNewMessage />
+  <ChatModalChannelSummary />
+</template>;
+
+export default ChatOrganism;
