@@ -13,8 +13,10 @@ module Plugin
             .backtrace_locations
             .lazy
             .map do |location|
+              resolved_path = location.absolute_path || location.path
+              next if resolved_path.nil?
               Pathname
-                .new(location.absolute_path)
+                .new(resolved_path)
                 .ascend
                 .lazy
                 .find { |path| path.parent == plugins_directory }
@@ -42,7 +44,7 @@ module Plugin
 
           ** INCOMPATIBLE PLUGIN **
 
-          You are unable to build Discourse due to errors in the plugin at
+          You are unable to start Discourse due to errors in the plugin at
           #{plugin_path}
 
           Please try removing this plugin and rebuilding again!
@@ -51,7 +53,7 @@ module Plugin
         STDERR.puts <<~TEXT
           ** PLUGIN FAILURE **
 
-          You are unable to build Discourse due to this error during plugin
+          You are unable to start Discourse due to this error during plugin
           initialization:
 
           #{error}
