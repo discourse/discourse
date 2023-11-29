@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import icon from "discourse-common/helpers/d-icon";
 
 const InputTip = <template>
