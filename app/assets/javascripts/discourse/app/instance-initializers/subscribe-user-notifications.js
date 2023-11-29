@@ -30,8 +30,7 @@ export default {
     this.appEvents = owner.lookup("service:app-events");
     this.siteSettings = owner.lookup("service:site-settings");
     this.site = owner.lookup("service:site");
-    // eslint-disable-next-line ember/no-private-routing-service
-    this.router = owner.lookup("main:router");
+    this.router = owner.lookup("service:router");
 
     this.reviewableCountsChannel = `/reviewable_counts/${this.currentUser.id}`;
 
