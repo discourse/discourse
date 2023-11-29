@@ -1,22 +1,18 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import icon from "discourse-common/helpers/d-icon";
 
-export default class InputTip extends Component {
-  get tipIcon() {
-    return iconHTML(this.args.validation.failed ? "times" : "check");
-  }
+const InputTip = <template>
+  <div
+    class="tip {{if @validation.failed 'bad' 'good'}}"
+    id={{@id}}
+    ...attributes
+  >
+    {{#if @validation.reason}}
+      {{icon (if @validation.failed "times" "check")}}
+      {{@validation.reason}}
+    {{/if}}
+  </div>
+</template>;
 
-  <template>
-    <div
-      class="tip {{if @validation.failed 'bad' 'good'}}"
-      id={{@id}}
-      ...attributes
-    >
-      {{#if @validation.reason}}
-        {{htmlSafe this.tipIcon}}
-        {{@validation.reason}}
-      {{/if}}
-    </div>
-  </template>
-}
+export default InputTip;
