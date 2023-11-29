@@ -429,6 +429,7 @@ de:
       quote:
         original_channel: 'Ursprünglich gesendet in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-Zitat in die Zwischenablage kopiert"
+        default_thread_title: "Thread"
       notification_levels:
         never: "Niemals"
         mention: "Nur für Erwähnungen"

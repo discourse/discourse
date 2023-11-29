@@ -1745,11 +1745,6 @@ sl:
       saved_local_draft_tip: "shranjeno lokalno"
       drafts_offline: "osnutki brez povezave"
       edit_conflict: "uredi spor"
-      group_mentioned:
-        one: "Z omembo %{group} boste obvestili <a href='%{group_link}'>%{count} osebo</a> – ali ste prepričani?"
-        two: "Z omembo %{group}boste obvestili <a href='%{group_link}'>%{count} osebi</a> – ali ste prepričani?"
-        few: "Z omembo %{group} boste obvestili <a href='%{group_link}'>%{count} osebe</a> – ali ste prepričani?"
-        other: "Z omembo %{group} boste obvestili <a href='%{group_link}'>%{count} oseb</a> – ali ste prepričani?"
       duplicate_link: "Povezava do <b>%{domain}</b> bila že objavljena v temi od <b>@%{username}</b> v <a href='%{post_url}'>odgovoru %{ago}</a> – ali ste prepričani, da jo želite objaviti še enkrat?"
       reference_topic_title: "RE: %{title}"
       error:

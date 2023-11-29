@@ -1553,9 +1553,6 @@ ca:
       saved_local_draft_tip: "desat localment"
       drafts_offline: "esborranys fora de línia"
       edit_conflict: "edita el conflicte"
-      group_mentioned:
-        one: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count}persona</a>. Esteu segur?"
-        other: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count} persones</a>. Esteu segur?"
       duplicate_link: "Sembla que l'enllaç a <b>%{domain}</b> ja havia estat publicat en el tema per <b>@%{username}</b> en <a href='%{post_url}'>una resposta %{ago}</a>. Esteu segur que voleu publicar-lo una altra vegada?"
       reference_topic_title: "RE: %{title}"
       error:

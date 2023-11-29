@@ -2125,8 +2125,9 @@ tr_TR:
         one: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
         other: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
       group_mentioned:
-        one: "%{group} grubundan bahsederek <a href='%{group_link}'>%{count} kişiye</a> bildirim göndermek üzeresiniz; emin misiniz?"
-        other: "%{group} grubundan bahsederek <a href='%{group_link}'>%{count} kişiye</a> bildirim göndermek üzeresiniz; emin misiniz?"
+        one: "%{group} adından bahsedildiğinde <a href='%{group_link}'>%{count} kişiye</a> bildirim gidecek."
+        other: "%{group} adından bahsedildiğinde <a href='%{group_link}'>%{count} kişiye</a> bildirim gidecek."
+      larger_group_mentioned: "%{group} adından bahsetmeniz <a href='%{group_link}'>%{count} insana</a> bildirim gitmesine neden olacak. Emin misiniz?"
       cannot_see_mention:
         category: "@%{username} adlı kullanıcıdan bahsettiniz, ancak kullanıcıya bildirim gönderilmeyecek çünkü kullanıcının bu kategoriye erişim izni yok. Kullanıcıyı bu kategoriye erişimi olan bir gruba eklemeniz gerekiyor."
         private: "@%{username} adlı kullanıcıdan bahsettiniz, ancak bildirim gönderilmeyecek çünkü kullanıcı bu kişisel mesajı göremiyor. Kullanıcıyı bu kişisel mesaja davet etmeniz gerekiyor."

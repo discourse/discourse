@@ -1756,9 +1756,10 @@ ro:
       saved_local_draft_tip: "salvat local"
       drafts_offline: "schiță offline"
       group_mentioned:
-        one: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>o persoană</a> – ești sigur?"
-        few: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>%{count} persoane</a> – ești sigur?"
-        other: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>%{count} de persoane</a> – ești sigur?"
+        one: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoană</a>."
+        few: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoane</a>."
+        other: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} de persoane</a>."
+      larger_group_mentioned: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoane</a>. Sigur faci asta?"
       duplicate_link: "Se pare că link-ul dv. către <b>%{domain}</b> a fost deja postat în cadrul discuției de către <b>@%{username}</b> în <a href='%{post_url}'> un răspuns %{ago} în urmă</a> – sunteți sigur că vreți să îl postați din nou?"
       error:
         title_missing: "Trebuie un titlu"

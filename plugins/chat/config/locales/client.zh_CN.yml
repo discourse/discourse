@@ -406,6 +406,7 @@ zh_CN:
       quote:
         original_channel: '最初在<a href="%{channelLink}">%{channel}</a>中发送。'
         copy_success: "聊天引用已复制到剪贴板"
+        default_thread_title: "对话"
       notification_levels:
         never: "永不"
         mention: "仅限提及"

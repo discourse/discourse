@@ -169,6 +169,8 @@ zh_TW:
         italic_text: "斜體字"
         bold_text: "粗體字"
         send: "傳送"
+      quote:
+        default_thread_title: "討論串"
       notification_levels:
         never: "永不"
       settings:

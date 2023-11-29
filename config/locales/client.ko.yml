@@ -1826,8 +1826,6 @@ ko:
       ok_proceed: "알겠습니다. 계속 진행하세요."
       group_mentioned_limit:
         other: "<b>경고!</b> <a href='%{group_link}'>%{group}</a> 그룹을 멘션했지만 이 그룹에는 관리자가 구성한 멘션 제한인 %{count}명의 사용자보다 많은 회원이 있습니다. 아무도 알림을 받지 않습니다."
-      group_mentioned:
-        other: "%{group} 그룹을 멘션하면 <a href='%{group_link}'>%{count}명의 사람</a>에게 알림이 전송됩니다. 계속할까요?"
       duplicate_link: "이 주제에는 이미 <b>@%{username}</b> 님이 <a href='%{post_url}'>%{ago}</a>에 게시한 <b>%{domain}</b> 링크가 있습니다. 그래도 다시 게시할까요?"
       reference_topic_title: "RE : %{title}"
       error:

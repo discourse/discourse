@@ -25,6 +25,12 @@ pl_PL:
           descriptions:
             chat:
               create_message: "Utwórz wiadomość na czacie w określonym kanale."
+      web_hooks:
+        chat_event:
+          group_name: "Zdarzenia czatu"
+          chat_message_created: "Wiadomość została utworzona"
+          chat_message_edited: "Wiadomość została edytowana"
+          chat_message_trashed: "Wiadomość została umieszczona w koszu"
     chat:
       text_copied: Tekst skopiowany do schowka
       link_copied: Link skopiowany do schowka
@@ -450,6 +456,7 @@ pl_PL:
       quote:
         original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
+        default_thread_title: "Wątek"
       notification_levels:
         never: "Nigdy"
         mention: "Tylko dla wzmianek"

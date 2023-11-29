@@ -57,6 +57,8 @@ sk:
       group_mentions_disabled: "%{first_identifier} nepovoľuje označovanie."
     summaries:
       no_targets: "Počas vybraného obdobia neboli zaznamenané žiadne správy."
+    transcript:
+      default_thread_title: "Vlákno"
   discourse_push_notifications:
     popup:
       chat_mention:

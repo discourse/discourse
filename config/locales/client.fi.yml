@@ -2126,9 +2126,6 @@ fi:
       group_mentioned_limit:
         one: "<b>Varoitus!</b> Olet maininnut ryhmän <a href='%{group_link}'>%{group}</a>, mutta ryhmässä on yli %{count} käyttäjä, mikä on ylläpitäjän asettama rajoitus maininnoille. Kukaan ei saa ilmoitusta."
         other: "<b>Varoitus!</b> Olet maininnut ryhmän <a href='%{group_link}'>%{group}</a>, mutta ryhmässä on yli %{count} käyttäjää, mikä on ylläpitäjän asettama rajoitus maininnoille. Kukaan ei saa ilmoitusta."
-      group_mentioned:
-        one: "Jos mainitset ryhmän %{group}, <a href='%{group_link}'>%{count} käyttäjä</a> saa ilmoituksen – oletko varma?"
-        other: "Jos mainitset ryhmän %{group}, <a href='%{group_link}'>%{count} käyttäjää</a> saa ilmoituksen – oletko varma?"
       cannot_see_mention:
         category: "Mainitsit käyttäjän @%{username}, mutta hän ei saa ilmoitusta, koska hänellä ei ole pääsyä tälle alueelle. Hänet täytyy lisätä ryhmään, jolla on pääsy alueelle."
         private: "Mainitsit käyttäjän @%{username}, mutta hän ei saa ilmoitusta, koska hän ei näe tätä yksityiskeskustelua. Hänet täytyy kutsua tähän yksityiskeskusteluun."

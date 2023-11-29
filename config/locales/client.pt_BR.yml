@@ -291,6 +291,9 @@ pt_BR:
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
+      user_count: "Cadastros"
+      active_user_count: "Usuários(as) ativos(as)"
+      contact: "Fale conosco"
       contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
     bookmarked:
       title: "Favorito"
@@ -2099,8 +2102,9 @@ pt_BR:
         one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário(a). Ninguém será notificado(a)."
         other: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuários(as). Ninguém será notificado(a)."
       group_mentioned:
-        one: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoa</a>. Tem certeza?"
-        other: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoas</a>. Tem certeza?"
+        one: "Mencionar %{group} irá notificar <a href='%{group_link}'>%{count} pessoa</a>."
+        other: "Mencionar %{group} irá notificar <a href='%{group_link}'>%{count} pessoas</a>."
+      larger_group_mentioned: "Mencionar %{group} irá notificar <a href='%{group_link}'>%{count} pessoas</a>. Prosseguir?"
       cannot_see_mention:
         category: "Você mencionou @%{username}, mas ele(a) não será notificado(a), pois não tem acesso a esta categoria. Você precisará adicioná-lo(a) ao grupo que tem acesso à categoria."
         private: "Você mencionou @%{username}, mas ele(a) não será notificado(a), pois não pode ver esta mensagem pessoal. Você precisará convidá-lo(a) para esta mensagem pessoal."

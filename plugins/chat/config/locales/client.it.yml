@@ -412,6 +412,7 @@ it:
       quote:
         original_channel: 'Inviato in origine in <a href="%{channelLink}">#%{channel}</a>'
         copy_success: "Citazione della chat copiata negli appunti"
+        default_thread_title: "Thread"
       notification_levels:
         never: "Mai"
         mention: "Solo per le menzioni"

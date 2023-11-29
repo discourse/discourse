@@ -1966,6 +1966,7 @@ de:
     log_mail_processing_failures: "Protokolliere alle Fehler bei der E-Mail-Verarbeitung unter <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Benutzern erlauben, neue Themen per E-Mail zu posten. Nachdem du diese Einstellung aktiviert hast, kannst du eingehende E-Mail-Adressen für Gruppen und Kategorien konfigurieren."
     email_in_min_trust: "Minimale Vertrauensstufe, um neue Themen per E-Mail erstellen zu können."
+    email_in_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen per E-Mail zu posten."
     email_in_authserv_id: "Die Kennung des Dienstes, der Authentifizierungsprüfungen für eingehende E-Mails durchführt. Siehe <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> für Hinweise zur Konfiguration."
     email_in_spam_header: "Die E-Mail-Kopfzeile, um Spam zu erkennen."
     enable_imap: "Aktiviere IMAP für die Synchronisation von Gruppen-Nachrichten."
@@ -2094,7 +2095,9 @@ de:
     emoji_deny_list: "Diese Emoji können nicht in Menüs oder Shortcodes verwendet werden."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzers oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
+    approve_unless_allowed_groups: "Beiträge für Benutzer, die nicht in diesen Gruppen sind, müssen genehmigt werden"
     approve_new_topics_unless_trust_level: "Neue Themen von Benutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
+    approve_new_topics_unless_allowed_groups: "Neue Themen für Benutzer, die nicht in diesen Gruppen sind, müssen genehmigt werden"
     approve_unless_staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl an Stunden auf ihre Überprüfung warten, sende eine Benachrichtigung an alle Moderatoren. Setze die Einstellung auf 0, um diese Benachrichtigungen zu deaktivieren."
     reviewable_revision_reasons: "Liste der Gründe, die ausgewählt werden können, wenn ein überprüfbarer Beitrag in der Warteschlange mit einer Revision abgelehnt wird. Andere ist auch immer verfügbar, damit ein benutzerdefinierter Grund eingegeben werden kann."
@@ -2284,6 +2287,9 @@ de:
       anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
       here_mention_allowed_groups: "min_trust_level_for_here_mention"
       shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
+      approve_unless_allowed_groups: "approve_unless_trust_level"
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
+      email_in_allowed_groups: "email_in_min_trust"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4764,6 +4770,7 @@ de:
     reasons:
       post_count: "Die ersten paar Beiträge jedes Benutzers müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
       trust_level: "Antworten von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
+      group: "Benutzer, die nicht zu den angegebenen Gruppen gehören, müssen ihre Antworten von den Mitarbeitern genehmigen lassen. Siehe %{link}."
       new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
       fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe %{link}."
       auto_silence_regex: "Neuer Benutzer, dessen erster Beitrag mit der %{link}-Einstellung übereinstimmt."

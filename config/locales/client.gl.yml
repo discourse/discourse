@@ -1736,9 +1736,6 @@ gl:
       group_mentioned_limit:
         one: "<b>Aviso!</b> Mencionou a <a href='%{group_link}'>%{group}</a>, con todo, este grupo ten máis membros có límite de mencións configurado polo administrador en %{count} usuario. Ninguén será avisado."
         other: "<b>Aviso!</b> Mencionou a <a href='%{group_link}'>%{group}</a>, con todo, este grupo ten máis membros có límite de mencións configurado polo administrador en %{count} usuarios. Ninguén será avisado."
-      group_mentioned:
-        one: "Ao mencionar %{group}, vai enviar a notificación a <a href='%{group_link}'>%{count} persoa</a>. Está seguro de querelo facer?"
-        other: "Ao mencionar %{group}, vai enviar a notificación a <a href='%{group_link}'>%{count} persoas</a>. Está seguro de querelo facer?"
       duplicate_link: "Parece que a súa ligazón a <b>%{domain}</b> xa foi publicada no tema por <b>@%{username}</b> e <a href='%{post_url}'>nunha resposta sobre %{ago}</a> Confirma que quere publicala de novo?"
       reference_topic_title: "RE: %{title}"
       error:

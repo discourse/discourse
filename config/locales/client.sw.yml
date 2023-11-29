@@ -1181,9 +1181,6 @@ sw:
       posting_not_on_topic: "Mada zipi unazotaka kuzijibu?"
       saved_local_draft_tip: "Imehifadhiwa kwenye mazingira yako"
       drafts_offline: "Miswadajaribio Nje ya Mtandao"
-      group_mentioned:
-        one: "Kwa kutaja %{group}, utamjulisha <a href='%{group_link}'>mtu mmoja</a> – una uhakika?"
-        other: "Kwa kutaja %{group}, utawajulisha <a href='%{group_link}'>%{count} watu</a> – una uhakika?"
       duplicate_link: "Inaonekana linki yako <b>%{domain}</b> imechapishwa tayari kwenye topiki na <b>@%{username}</b> kwenye <a href='%{post_url}'>jibu la %{ago}</a> – una uhakina unataka kuchapisha tena?"
       error:
         title_missing: "Kichwa cha habari ni muhimu"

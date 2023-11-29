@@ -2043,6 +2043,7 @@ pt_BR:
     approve_post_count: "A quantidade de postagens de um(a) usuário(a) novo(a) ou básico(a) que devem ser aprovadas"
     approve_unless_trust_level: "Postagens de usuários(as) abaixo deste nível de confiança devem ser aprovadas"
     approve_new_topics_unless_trust_level: "Novos tópicos de usuários(as) abaixo deste nível de confiança devem ser aprovados."
+    approve_new_topics_unless_allowed_groups: "Novos tópicos de usuários(as) que não estejam nestes grupos devem ser aprovados"
     approve_unless_staged: "Novos tópicos e postagens para usuários(as) encenados(as) devem ser aprovados"
     notify_about_queued_posts_after: "Se houver postagens que estão aguardando revisão por muitas horas, envie uma notificação a todos(as) os(as) moderadores(as). Defina como 0 para desativar essas notificações."
     auto_close_messages_post_count: "Quantidade máxima de postagens permitidas em uma mensagem antes de ser automaticamente fechada (0 para desativar)"

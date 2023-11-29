@@ -178,6 +178,9 @@ pt_BR:
         other: "e %{count} outros"
     summaries:
       no_targets: "Não houve mensagens durante o período selecionado."
+    transcript:
+      default_thread_title: "Tópico"
+      split_thread_range: "mensagens %{start} a %{end} de %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:

@@ -461,6 +461,7 @@ he:
       quote:
         original_channel: 'נשלח במקור ב־<a href="%{channelLink}">%{channel}</a>'
         copy_success: "ציטוט מהצ׳אט הועתק ללוח הגזירים"
+        default_thread_title: "שרשור"
       notification_levels:
         never: "לעולם לא"
         mention: "רק אזכורים"

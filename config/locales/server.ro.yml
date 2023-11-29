@@ -1031,6 +1031,7 @@ ro:
     pop3_polling_username: "Numele de utilizator al contului POP3 pentru retragerea emailurilor."
     pop3_polling_password: "Parola contului de POP3 pentru retragerea emailurilor."
     email_in_min_trust: "Nivelul minim de încredere de care are nevoie un utilizator pentru a i se permite să posteze noi subiecte prin email."
+    email_in_allowed_groups: "Grupuri cărora li se permite să publice subiecte noi prin email."
     email_prefix: "[Eticheta] e folosită în subiectul email-ului. Implicit va fi \"titlul\", dacă nu este setată altfel."
     email_site_title: "Titlul site-ului folosit ca expeditor de email-uri trimise de site. Implicit va fi 'titlu', dacă nu este setat altfel. Dacă 'titlul' conține caractere care nu sunt permise în email, folosiți această setare."
     minimum_topics_similar: "Câte subiecte trebuie să existe deja până ce câmpul subiecte similare este prezent când se compune o discuție nouă."
@@ -1087,7 +1088,9 @@ ro:
     emoji_set: "Cum ți-ar placea să fie emoji tăi?"
     approve_post_count: "Numărul de postări de la un utilizator simplu trebuie să fie aprobat"
     approve_unless_trust_level: "Postările utilizatorilor care au un nivel de încredere mai mic decât acesta trebuie să fie aprobate."
+    approve_unless_allowed_groups: "Mesajele pentru utilizatorii care nu fac parte din aceste grupuri trebuie să fie aprobate."
     approve_new_topics_unless_trust_level: "Crearea de subiecte noi pentru utilizatorii care se află sub acest nivel de încredere, trebuie aprobată"
+    approve_new_topics_unless_allowed_groups: "Subiectele noi pentru utilizatorii care nu fac parte din aceste grupuri trebuie să fie aprobate."
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "
     auto_close_topics_post_count: "Numărul maxim de postări permise într-un subiect înainte ca acesta să fie închis automat (0 pentru dezactivare)"
     code_formatting_style: "Butonul Cod din cadrul editorului va fi setat cu opțiunea implicită pe acest stil de formatare cod "
@@ -1150,6 +1153,9 @@ ro:
     keywords:
       here_mention_allowed_groups: "min_trust_level_for_here_mention"
       shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
+      approve_unless_allowed_groups: "approve_unless_trust_level"
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
+      email_in_allowed_groups: "email_in_min_trust"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
@@ -2069,6 +2075,8 @@ ro:
       low: "Scăzut"
       medium: "Medie"
       high: "Ridicată"
+    reasons:
+      group: "Utilizatorii care nu fac parte din grupurile specificate trebuie să aibă răspunsurile aprobate de echipă. Vezi %{link}."
     actions:
       agree:
         title: "Da"

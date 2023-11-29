@@ -2310,6 +2310,9 @@ ru:
       delete_rejected_email_after_days: "Значение этого параметра не может быть меньше значения «delete_email_logs_after_days» или больше %{max}."
       invalid_uncategorized_category_setting: '«Без категории» выбрать нельзя, если не разрешено оставлять темы без указания категории.'
       invalid_search_ranking_weights: "Недопустимое значение для весов в настройке сайта «search_ranking_weights». Пример: «{0.1,0.2,0.3,1.0}». Максимальное значение для каждого веса — 1."
+    keywords:
+      approve_unless_allowed_groups: "approve_unless_trust_level"
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

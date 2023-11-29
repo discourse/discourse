@@ -248,6 +248,7 @@ hu:
         send: "Küldés"
       quote:
         copy_success: "Csevegési idézet a vágólapra másolva"
+        default_thread_title: "Szál"
       notification_levels:
         never: "Soha"
         mention: "Csak megemlítésnél"

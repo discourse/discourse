@@ -396,6 +396,7 @@ sv:
       quote:
         original_channel: 'Ursprungligen skickad i <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chattcitat kopierat till urklipp"
+        default_thread_title: "Tråd"
       notification_levels:
         never: "Aldrig"
         mention: "Endast för omnämnanden"

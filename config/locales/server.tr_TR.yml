@@ -2057,7 +2057,9 @@ tr_TR:
     emoji_deny_list: "Bu emoji'ler menülerde veya kısa kodlarda kullanılamaz."
     approve_post_count: "Yeni veya temel bir kullanıcının onaylanması gereken gönderi miktarı"
     approve_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcıların gönderileri onaylanmalıdır"
+    approve_unless_allowed_groups: "Bu gruplarda yer almayan kullanıcıların gönderileri onaylanmalıdır"
     approve_new_topics_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcılar için yeni konular onaylanmalıdır"
+    approve_new_topics_unless_allowed_groups: "Bu gruplarda olmayan kullanıcılar için yeni konular onaylanmalıdır"
     approve_unless_staged: "Aşamalı kullanıcılar için yeni konular ve gönderiler onaylanmalıdır"
     notify_about_queued_posts_after: "Şu kadar saatten uzun süredir incelenmeyi bekleyen gönderiler varsa tüm moderatörlere bir bildirim gönderin. Bu bildirimleri devre dışı bırakmak için 0 olarak ayarlayın."
     reviewable_revision_reasons: "İncelenmek üzere sıraya alınmış bir gönderiyi revizyonla reddederken seçilebilecek nedenler listesi. Diğer seçeneğini de her zaman kullanabilirsiniz, ki bunu yaparsanız özel bir neden de girebilirsiniz."
@@ -4664,6 +4666,7 @@ tr_TR:
     reasons:
       post_count: "Her kullanıcının ilk birkaç gönderisi personel tarafından onaylanması gerekiyor. Bkz. %{link}."
       trust_level: "Düşük güven seviyesindeki kullanıcıların yanıtlarının personel tarafından onaylanması gerekiyor. Bkz. %{link}."
+      group: "Belirtilen gruplarda yer almayan kullanıcıların yanıtlarının personel tarafından onaylanması gerekir. Bkz. %{link}."
       new_topics_unless_trust_level: "Düşük güven seviyesindeki kullanıcıların konularının personel tarafından onaylanması gerekiyor. Bkz. %{link}."
       fast_typer: "Yeni kullanıcı ilk gönderisini şüpheli bir şekilde hızlı yazdı, bot veya spam davranışından şüpheleniliyor. Bkz. %{link}."
       auto_silence_regex: "İlk gönderisi %{link} ayarıyla eşleşen yeni kullanıcı."

@@ -10,10 +10,13 @@ de:
       title: "Styleguide"
       welcome: "Wähle einen Abschnitt aus dem linken Menü aus, um loszulegen."
       categories:
+        syntax: Syntax
         atoms: Atome
         molecules: Moleküle
         organisms: Organismen
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Typografie"
           example: "Willkommen bei Discourse"
