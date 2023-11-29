@@ -552,28 +552,38 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_category_custom_field_type(name, type)
-    reloadable_patch { |plugin| Category.register_custom_field_type(name, type) }
+  def register_category_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      Category.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_topic_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::Topic.register_custom_field_type(name, type) }
+  def register_topic_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Topic.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_post_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::Post.register_custom_field_type(name, type) }
+  def register_post_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Post.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_group_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::Group.register_custom_field_type(name, type) }
+  def register_group_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Group.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_user_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::User.register_custom_field_type(name, type) }
+  def register_user_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::User.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   def register_seedfu_fixtures(paths)
