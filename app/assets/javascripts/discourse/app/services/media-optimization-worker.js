@@ -53,6 +53,7 @@ export default class MediaOptimizationWorkerService extends Service {
     }
     await this.ensureAvailableWorker();
 
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
 
