@@ -93,8 +93,7 @@ export function register(user, router, appEvents) {
 
   navigator.serviceWorker.addEventListener("message", (event) => {
     if ("url" in event.data) {
-      const url = event.data.url;
-      router.handleURL(url);
+      router.transitionTo(event.data.url);
     }
   });
 }

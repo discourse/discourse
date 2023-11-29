@@ -51,7 +51,7 @@ acceptance("Auth Complete", function (needs) {
     withPluginApi("1.11.0", (api) => {
       api.addBeforeAuthCompleteCallback(() => {
         api.container
-          .lookup("router:main")
+          .lookup("service:router")
           .transitionTo("discovery.categories");
         return false;
       });

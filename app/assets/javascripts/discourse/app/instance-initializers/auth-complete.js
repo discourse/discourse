@@ -55,16 +55,16 @@ export default {
             const siteSettings = owner.lookup("service:site-settings");
 
             const loginError = (errorMsg, className, properties, callback) => {
-              const applicationRouter = owner.lookup("route:application");
+              const applicationRoute = owner.lookup("route:application");
               const applicationController = owner.lookup(
                 "controller:application"
               );
               modal.show(LoginModal, {
                 model: {
                   showNotActivated: (props) =>
-                    applicationRouter.send("showNotActivated", props),
+                    applicationRoute.send("showNotActivated", props),
                   showCreateAccount: (props) =>
-                    applicationRouter.send("showCreateAccount", props),
+                    applicationRoute.send("showCreateAccount", props),
                   canSignUp: applicationController.canSignUp,
                   flash: errorMsg,
                   flashType: className || "success",
