@@ -59,33 +59,28 @@ CategoryList.reopenClass({
       c.topics = c.topics.map((t) => Topic.create(t));
     }
 
-    switch (statPeriod) {
-      case "week":
-      case "month":
-        const stat = c[`topics_${statPeriod}`];
-        if (stat > 0) {
-          const unit = I18n.t(`categories.topic_stat_unit.${statPeriod}`);
+    const stat = c[`topics_${statPeriod}`];
 
-          c.stat = I18n.t("categories.topic_stat", {
-            count: stat, // only used to correctly pluralize the string
-            number: `<span class="value">${number(stat)}</span>`,
-            unit: `<span class="unit">${unit}</span>`,
-          });
+    if ((statPeriod === "week" || statPeriod === "month") && stat > 0) {
+      const unit = I18n.t(`categories.topic_stat_unit.${statPeriod}`);
 
-          c.statTitle = I18n.t(`categories.topic_stat_sentence_${statPeriod}`, {
-            count: stat,
-          });
+      c.stat = I18n.t("categories.topic_stat", {
+        count: stat, // only used to correctly pluralize the string
+        number: `<span class="value">${number(stat)}</span>`,
+        unit: `<span class="unit">${unit}</span>`,
+      });
 
-          c.pickAll = false;
-          break;
-        }
-      default:
-        c.stat = `<span class="value">${number(c.topics_all_time)}</span>`;
-        c.statTitle = I18n.t("categories.topic_sentence", {
-          count: c.topics_all_time,
-        });
-        c.pickAll = true;
-        break;
+      c.statTitle = I18n.t(`categories.topic_stat_sentence_${statPeriod}`, {
+        count: stat,
+      });
+
+      c.pickAll = false;
+    } else {
+      c.stat = `<span class="value">${number(c.topics_all_time)}</span>`;
+      c.statTitle = I18n.t("categories.topic_sentence", {
+        count: c.topics_all_time,
+      });
+      c.pickAll = true;
     }
 
     if (Site.currentProp("mobileView")) {
