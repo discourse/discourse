@@ -9,6 +9,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
  * When detected, we rewrite the URL to `/` before saving it to the Ember router and the browser.
  */
 export default function applyRouterHomepageOverrides(router) {
+  // eslint-disable-next-line ember/no-private-routing-service
   const microLib = router._routerMicrolib;
 
   for (const method of ["updateURL", "replaceURL"]) {
