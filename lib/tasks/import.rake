@@ -733,3 +733,24 @@ task "import:rebake_posts_with_polls" => :environment do
     print "\r%7d / %7d" % [current_count, max_count]
   end
 end
+
+desc "Rebake posts that contain events"
+task "import:rebake_posts_with_events" => :environment do
+  log "Rebaking posts with polls"
+
+  Jobs.run_immediately!
+
+  posts =
+    Post.where(
+      "EXISTS (SELECT 1 FROM discourse_post_event_events WHERE discourse_post_event_events.id = posts.id)",
+    )
+
+  max_count = posts.count
+  current_count = 0
+
+  posts.find_each do |post|
+    post.rebake!
+    current_count += 1
+    print "\r%7d / %7d" % [current_count, max_count]
+  end
+end
