@@ -247,7 +247,7 @@ GEM
     mustache (1.1.1)
     net-http (0.4.0)
       uri
-    net-imap (0.4.6)
+    net-imap (0.4.7)
       date
       net-protocol
     net-pop (0.1.2)
