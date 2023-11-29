@@ -610,6 +610,10 @@ aside.quote {
         color: var(--tertiary);
       }
     }
+
+    .d-button-label {
+      white-space: nowrap;
+    }
   }
 
   .quote-sharing {
