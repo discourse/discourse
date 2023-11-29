@@ -20,6 +20,7 @@ module Chat
     contract
     model :channel
     step :leave
+    step :recompute_users_count
 
     # @!visibility private
     class Contract
@@ -42,6 +43,13 @@ module Chat
           channel.remove(guardian.user)
         end
       end
+    end
+
+    def recompute_users_count(channel:, **)
+      channel.update!(
+        user_count: ::Chat::ChannelMembershipsQuery.count(channel),
+        user_count_stale: false,
+      )
     end
   end
 end

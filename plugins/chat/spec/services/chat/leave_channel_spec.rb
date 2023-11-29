@@ -23,12 +23,19 @@ RSpec.describe Chat::LeaveChannel do
     context "when all steps pass" do
       context "when category channel" do
         context "with existing membership" do
-          before { channel_1.add(current_user) }
+          before do
+            channel_1.add(current_user)
+            Chat::Channel.ensure_consistency!
+          end
 
           it "unfollows the channel" do
             membership = channel_1.membership_for(current_user)
 
             expect { result }.to change { membership.reload.following }.from(true).to(false)
+          end
+
+          it "recomputes user count" do
+            expect { result }.to change { channel_1.reload.user_count }.from(1).to(0)
           end
         end
 
@@ -45,6 +52,8 @@ RSpec.describe Chat::LeaveChannel do
             Fabricate(:direct_message_channel, group: true, users: [current_user, Fabricate(:user)])
           end
 
+          before { Chat::Channel.ensure_consistency! }
+
           it "leaves the channel" do
             membership = channel_1.membership_for(current_user)
 
@@ -54,6 +63,10 @@ RSpec.describe Chat::LeaveChannel do
             expect(
               channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,
             ).to eq(false)
+          end
+
+          it "recomputes user count" do
+            expect { result }.to change { channel_1.reload.user_count }.from(2).to(1)
           end
         end
 
@@ -70,6 +83,8 @@ RSpec.describe Chat::LeaveChannel do
             Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
           end
 
+          before { Chat::Channel.ensure_consistency! }
+
           it "unfollows the channel" do
             membership = channel_1.membership_for(current_user)
 
@@ -77,6 +92,10 @@ RSpec.describe Chat::LeaveChannel do
             expect(
               channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,
             ).to eq(true)
+          end
+
+          it "recomputes user count" do
+            expect { result }.to_not change { channel_1.reload.user_count }
           end
         end
 
