@@ -17,11 +17,11 @@ module Chat
                class_name: "Chat::Message"
 
     has_many :chat_messages,
-             -> {
+             -> do
                where("deleted_at IS NULL").order(
                  "chat_messages.created_at ASC, chat_messages.id ASC",
                )
-             },
+             end,
              foreign_key: :thread_id,
              primary_key: :id,
              class_name: "Chat::Message"

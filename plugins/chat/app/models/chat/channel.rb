@@ -48,17 +48,17 @@ module Chat
     before_validation :generate_auto_slug
 
     scope :with_categories,
-          -> {
+          -> do
             joins(
               "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
             )
-          }
+          end
     scope :public_channels,
-          -> {
+          -> do
             with_categories.where(chatable_type: public_channel_chatable_types).where(
               "categories.id IS NOT NULL",
             )
-          }
+          end
 
     delegate :empty?, to: :chat_messages, prefix: true
 

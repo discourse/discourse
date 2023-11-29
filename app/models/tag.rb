@@ -22,18 +22,18 @@ class Tag < ActiveRecord::Base
   validates :description, length: { maximum: 1000 }
 
   scope :where_name,
-        ->(name) {
+        ->(name) do
           name = Array(name).map(&:downcase)
           where("lower(tags.name) IN (?)", name)
-        }
+        end
 
   # tags that have never been used and don't belong to a tag group
   scope :unused,
-        -> {
+        -> do
           where(staff_topic_count: 0, pm_topic_count: 0, target_tag_id: nil).joins(
             "LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id",
           ).where("tgm.tag_id IS NULL")
-        }
+        end
 
   scope :used_tags_in_regular_topics,
         ->(guardian) { where("tags.#{Tag.topic_count_column(guardian)} > 0") }

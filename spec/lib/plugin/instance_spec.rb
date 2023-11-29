@@ -771,12 +771,12 @@ RSpec.describe Plugin::Instance do
           to: Notification.types[:code_review_commit_approved],
           threshold: 1,
           consolidation_window: 1.minute,
-          unconsolidated_query_blk: ->(notifications, _data) {
+          unconsolidated_query_blk: ->(notifications, _data) do
             notifications.where("(data::json ->> 'consolidated') IS NULL")
-          },
-          consolidated_query_blk: ->(notifications, _data) {
+          end,
+          consolidated_query_blk: ->(notifications, _data) do
             notifications.where("(data::json ->> 'consolidated') IS NOT NULL")
-          },
+          end,
         ).set_mutations(
           set_data_blk: ->(notification) { notification.data_hash.merge(consolidated: true) },
         )
