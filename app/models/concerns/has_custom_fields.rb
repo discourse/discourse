@@ -20,14 +20,7 @@ module HasCustomFields
     def validate(obj, name, value)
       return if value.nil?
 
-      size =
-        if Array === type || (type != :json && Array === value)
-          value.map { |v| serialize(v).bytesize }.max || 0
-        else
-          serialize(value).bytesize
-        end
-
-      if size > max_length
+      if serialize(value).bytesize > max_length
         obj.errors.add(
           :base,
           I18n.t("custom_fields.validations.max_value_length", max_value_length: max_length),
@@ -279,7 +272,7 @@ module HasCustomFields
           field_type = descriptor.type
 
           if Array === field_type || (field_type != :json && Array === value)
-            value = value || []
+            value = Array(value || [])
             value.compact!
             sub_type = field_type[0]
 
