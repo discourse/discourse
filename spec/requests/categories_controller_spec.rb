@@ -1096,6 +1096,17 @@ RSpec.describe CategoriesController do
           "Foobar",
         )
       end
+
+      it "can return only top-level categories" do
+        get "/categories/search.json", params: { parent_category_id: -1 }
+
+        expect(response.parsed_body["categories"].size).to eq(3)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Notfoo",
+        )
+      end
     end
 
     context "with include_uncategorized" do
