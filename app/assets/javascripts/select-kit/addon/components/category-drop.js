@@ -134,14 +134,10 @@ export default ComboBoxComponent.extend({
   ),
 
   async search(filter) {
-    const opts = {
-      parentCategoryId: this.options.parentCategory?.id || -1,
-      includeUncategorized: this.siteSettings.allow_uncategorized_topics,
-    };
-
     if (this.siteSettings.lazy_load_categories) {
       const results = await Category.asyncSearch(filter, {
-        ...opts,
+        parentCategoryId: this.options.parentCategory?.id || -1,
+        includeUncategorized: this.siteSettings.allow_uncategorized_topics,
         limit: 15,
       });
       return this.shortcuts.concat(
@@ -156,6 +152,10 @@ export default ComboBoxComponent.extend({
         })
       );
     }
+
+    const opts = {
+      parentCategoryId: this.options.parentCategory?.id,
+    };
 
     if (filter) {
       let results = Category.search(filter, opts);
