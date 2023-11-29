@@ -8,7 +8,11 @@ export default class InputTip extends Component {
   }
 
   <template>
-    <div class="tip {{if @validation.failed 'bad' 'good'}}">
+    <div
+      class="tip {{if @validation.failed 'bad' 'good'}}"
+      id={{@id}}
+      ...attributes
+    >
       {{#if @validation.reason}}
         {{htmlSafe this.tipIcon}}
         {{@validation.reason}}
