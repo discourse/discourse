@@ -12,6 +12,6 @@ class Chat::Api::ChannelsCurrentUserMembershipController < Chat::Api::ChannelsCo
   end
 
   def destroy
-    with_service(Chat::LeaveChannel)
+    with_service(Chat::LeaveChannel) { on_model_not_found(:channel) { raise Discourse::NotFound } }
   end
 end

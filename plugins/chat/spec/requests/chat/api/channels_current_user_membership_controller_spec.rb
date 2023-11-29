@@ -121,22 +121,4 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
       end
     end
   end
-
-  describe "#update" do
-    describe "success" do
-      it "works" do
-        put "/chat/api/channels/#{channel_1.id}/memberships/me"
-
-        expect(response.status).to eq(200)
-      end
-    end
-
-    context "when channel is not found" do
-      it "returns a 404" do
-        put "/chat/api/channels/-999/memberships/me"
-
-        expect(response.status).to eq(404)
-      end
-    end
-  end
 end

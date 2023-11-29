@@ -10,6 +10,7 @@ class Chat::Api::ChannelsCurrentUserMembershipFollowsController < Chat::Api::Cha
           root: "membership",
         )
       end
+      on_model_not_found(:channel) { raise Discourse::NotFound }
     end
   end
 end
