@@ -22,6 +22,9 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
     post "/channels/:channel_id/memberships" => "channels_memberships#create"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"
+    delete "/channels/:channel_id/memberships/me/follows" =>
+             "channels_current_user_membership_follows#destroy"
+    put "/channels/:channel_id/memberships/me" => "channels_current_user_membership#update"
     post "/channels/:channel_id/memberships/me" => "channels_current_user_membership#create"
     put "/channels/:channel_id/notifications-settings/me" =>
           "channels_current_user_notifications_settings#update"

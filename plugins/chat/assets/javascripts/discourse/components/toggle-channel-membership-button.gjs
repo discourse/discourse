@@ -6,10 +6,13 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
+
 export default class ToggleChannelMembershipButton extends Component {
   @service chat;
+  @service chatApi;
+
   @tracked isLoading = false;
-  onToggle = null;
+
   options = {};
 
   constructor() {
@@ -54,7 +57,7 @@ export default class ToggleChannelMembershipButton extends Component {
     return this.chat
       .followChannel(this.args.channel)
       .then(() => {
-        this.onToggle?.();
+        this.args.onJoin?.(this.args.channel);
       })
       .catch(popupAjaxError)
       .finally(() => {
@@ -67,22 +70,22 @@ export default class ToggleChannelMembershipButton extends Component {
   }
 
   @action
-  onLeaveChannel() {
+  async onLeaveChannel() {
     this.isLoading = true;
 
-    return this.chat
-      .unfollowChannel(this.args.channel)
-      .then(() => {
-        this.onToggle?.();
-      })
-      .catch(popupAjaxError)
-      .finally(() => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
+    try {
+      if (this.args.channel.chatable.group) {
+        await this.chatApi.leaveChannel(this.args.channel.id);
+      } else {
+        await this.chat.unfollowChannel(this.args.channel);
+      }
 
-        this.isLoading = false;
-      });
+      this.args.onLeave?.(this.args.channel);
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   <template>

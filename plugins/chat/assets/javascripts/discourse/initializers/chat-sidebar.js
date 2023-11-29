@@ -211,7 +211,7 @@ export default {
             suffixCSSClass = "urgent";
             hoverType = "icon";
             hoverValue = "times";
-            hoverTitle = I18n.t("chat.direct_messages.leave");
+            hoverTitle = I18n.t("chat.direct_messages.close");
 
             constructor({ channel, chatService, currentUser }) {
               super(...arguments);

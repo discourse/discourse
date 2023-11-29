@@ -29,12 +29,14 @@ const NOTIFICATION_LEVELS = [
 export default class ChatAboutScreen extends Component {
   @service chatApi;
   @service chatGuardian;
+  @service chatChannelsManager;
   @service currentUser;
   @service siteSettings;
   @service dialog;
   @service modal;
   @service site;
   @service toasts;
+  @service router;
 
   notificationLevels = NOTIFICATION_LEVELS;
 
@@ -310,6 +312,12 @@ export default class ChatAboutScreen extends Component {
   }
 
   @action
+  onLeaveChannel(channel) {
+    this.chatChannelsManager.remove(channel);
+    return this.router.transitionTo("chat");
+  }
+
+  @action
   onEditChannelDescription() {
     return this.modal.show(ChatModalEditChannelDescription, {
       model: this.args.channel,
@@ -573,6 +581,7 @@ export default class ChatAboutScreen extends Component {
             <:action>
               <ToggleChannelMembershipButton
                 @channel={{@channel}}
+                @onLeave={{this.onLeaveChannel}}
                 @options={{hash
                   joinClass="btn-primary"
                   leaveClass="btn-danger"

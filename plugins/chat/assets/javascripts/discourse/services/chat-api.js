@@ -293,9 +293,19 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   unfollowChannel(channelId) {
-    return this.#deleteRequest(`/channels/${channelId}/memberships/me`).then(
-      (result) => UserChatChannelMembership.create(result.membership)
-    );
+    return this.#deleteRequest(
+      `/channels/${channelId}/memberships/me/follows`
+    ).then((result) => UserChatChannelMembership.create(result.membership));
+  }
+
+  /**
+   * Destroys the membership of current user on a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @returns {Promise}
+   */
+  leaveChannel(channelId) {
+    return this.#deleteRequest(`/channels/${channelId}/memberships/me`);
   }
 
   /**
