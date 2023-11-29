@@ -68,8 +68,11 @@ pl_PL:
       generic: Wystąpił błąd podczas importowania tego motywu
       upload: "Błąd tworzenia zasobu do przesłania: %{name}. %{errors}"
       about_json: "Błąd importu: about.json nie istnieje lub jest nieprawidłowy. Czy to na pewno szablon Discourse?"
+      about_json_too_big: "Błąd importu: about.json jest większy niż limit %{limit} ."
       about_json_values: "Plik about.json zawiera niepoprawne wartości: %{errors}"
       modifier_values: "modyfikatory about.json zawierają nieprawidłowe wartości: %{errors}"
+      asset_too_big: "Zasób %{filename} jest większy niż limit %{limit}"
+      theme_too_big: "Motyw jest większy niż limit %{limit}"
       git: "Podczas klonowania repozytorium git wystąpił błąd: dostęp jest zabroniony albo repozytorium nie istnieje"
       git_ref_not_found: "Nie można sprawdzić odwołania git: %{ref}"
       git_unsupported_scheme: "Nie można sklonować repozytorium git: schemat nieobsługiwany"
@@ -78,6 +81,7 @@ pl_PL:
       unknown_file_type: "Przesłany plik nie spełnia wymagań poprawnego motywu Discourse."
       not_allowed_theme: "`%{repo}` nie jest na liście dozwolonych motywów (sprawdź globalne ustawienie `allowed_theme_repos`)."
       ssh_key_gone: "Czekałeś zbyt długo, aby zainstalować motyw, a klucz SSH wygasł. Spróbuj ponownie."
+      too_many_files: "Liczba plików (%{count}) w motywie przekroczyła maksymalną dozwoloną liczbę plików (%{limit})."
     errors:
       component_no_user_selectable: "Komponenty motywu nie mogą być dobieralne przez użytkowników"
       component_no_default: "Komponenty motywu nie mogą być domyślnym motywem"

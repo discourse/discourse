@@ -52,7 +52,7 @@ he:
           many: "פחות מ־%{count} שניות"
           other: "פחות מ־%{count} שניות"
         x_seconds:
-          one: "שנייה אחת"
+          one: "שנייה"
           two: "%{count} שניות"
           many: "%{count} שניות"
           other: "%{count} שניות"

@@ -6,7 +6,16 @@
 
 lt:
   js:
+    admin:
+      site_settings:
+        categories:
+          chat: Pokalbis
+    about:
+      chat_messages_count: "Pokalbių žinutės"
     chat:
+      dates:
+        time_tiny: "h:mm"
+      bot: "botas"
       create: "Sukurti"
       cancel: "Atšaukti"
       channel_settings:
@@ -14,6 +23,10 @@ lt:
         add: "Pridėti"
         join: "Prisijungti"
         leave: "Palikti"
+      channel_archive:
+        retry: "Bandykite dar kartą"
+      channels_list_popup:
+        browse: "Naršyti kanalus"
       close: "Uždaryti"
       delete: "Pašalinti"
       edited: "taisytas"
