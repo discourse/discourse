@@ -1,7 +1,5 @@
-import Component from "@glimmer/component";
+const ChatComposerSeparator = <template>
+  <div class="chat-composer-separator"></div>
+</template>;
 
-export default class ChatComposerSeparator extends Component {
-  <template>
-    <div class="chat-composer-separator"></div>
-  </template>
-}
+export default ChatComposerSeparator;
