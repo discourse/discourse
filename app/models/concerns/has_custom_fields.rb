@@ -114,7 +114,9 @@ module HasCustomFields
       get_custom_field_descriptor(key).append_field(target, key, value)
     end
 
-    def register_custom_field_type(name, type, max_length: DEFAULT_FIELD_DESCRIPTOR.max_length)
+    def register_custom_field_type(name, type, max_length: nil)
+      max_length ||= DEFAULT_FIELD_DESCRIPTOR.max_length
+
       if Array === type
         Discourse.deprecate(
           "Array types for custom fields are deprecated, use type :json instead",
