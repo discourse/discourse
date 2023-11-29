@@ -1106,8 +1106,12 @@ class BulkImport::Base
   end
 
   def process_category(category)
-    if category[:existing_id].present?
-      @categories[category[:imported_id].to_i] = category[:existing_id]
+    if (existing_category_id = category[:existing_id]).present?
+      if existing_category_id.is_a?(String)
+        existing_category_id = SiteSetting.get(category[:existing_id])
+      end
+
+      @categories[category[:imported_id].to_i] = existing_category_id
       category[:skip] = true
       return category
     end
