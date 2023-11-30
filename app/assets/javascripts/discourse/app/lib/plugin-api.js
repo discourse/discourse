@@ -141,7 +141,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.15.0";
+export const PLUGIN_API_VERSION = "1.16.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1835,7 +1835,7 @@ class PluginApi {
   }
 
   /**
-   * Download calendar modal which allow to pick between ICS and Google Calendar
+   * Download calendar modal which allow to pick between ICS and Google Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
    *
    * ```
    * api.downloadCalendar("title of the event", [
@@ -1843,12 +1843,14 @@ class PluginApi {
         startsAt: "2021-10-12T15:00:00.000Z",
         endsAt: "2021-10-12T16:00:00.000Z",
       },
-   * ]);
+   * ],
+   * "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
+   * );
    * ```
    *
    */
-  downloadCalendar(title, dates) {
-    downloadCalendar(title, dates);
+  downloadCalendar(title, dates, recurrenceRule = null) {
+    downloadCalendar(title, dates, recurrenceRule);
   }
 
   /**
