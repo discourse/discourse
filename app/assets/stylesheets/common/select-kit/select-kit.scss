@@ -72,6 +72,7 @@
     cursor: pointer;
     display: flex;
     align-items: stretch;
+    height: 100%;
     &:not(.btn) {
       border-radius: var(--d-input-border-radius);
       padding-left: 0.5em;
