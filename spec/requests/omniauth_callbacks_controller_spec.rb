@@ -1108,7 +1108,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       class Strategy
         include OmniAuth::Strategy
         def other_phase
-          [418, {}, "I am a teapot"]
+          [418, {}, ["I am a teapot"]]
         end
       end
 
