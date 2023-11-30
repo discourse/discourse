@@ -9,4 +9,13 @@
   .chat-retention-reminder-text {
     color: var(--primary-medium);
   }
+
+  &__leave-info {
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
 }
