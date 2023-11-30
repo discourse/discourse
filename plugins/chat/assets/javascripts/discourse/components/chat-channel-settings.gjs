@@ -9,6 +9,8 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import categoryBadge from "discourse/helpers/category-badge";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import icon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
@@ -591,7 +593,14 @@ export default class ChatAboutScreen extends Component {
               />
             </:action>
           </section.row>
+          {{#unless @channel.isCategoryChannel}}
+            <div class="chat-channel-settings__leave-info">
+              {{icon "exclamation-triangle"}}
+              {{i18n "chat.channel_settings.leave_groupchat_info"}}
+            </div>
+          {{/unless}}
         </form.section>
+
       </ChatForm>
     </div>
   </template>
