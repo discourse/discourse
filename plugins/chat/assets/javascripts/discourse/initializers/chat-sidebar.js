@@ -273,9 +273,15 @@ export default {
             }
 
             get title() {
-              return I18n.t("chat.placeholder_channel", {
-                channelName: this.channel.escapedTitle,
-              });
+              if (this.channel.chatable.group) {
+                return I18n.t("chat.placeholder_channel", {
+                  channelName: this.channel.escapedTitle,
+                });
+              } else {
+                return I18n.t("chat.placeholder_users", {
+                  commaSeparatedNames: this.channel.chatable.users[0].username,
+                });
+              }
             }
 
             get text() {
