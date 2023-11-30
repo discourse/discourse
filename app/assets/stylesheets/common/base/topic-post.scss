@@ -1648,10 +1648,13 @@ iframe {
 }
 
 .open-popup-link {
+  display: inline;
+  margin-inline: 0.25em;
   position: sticky;
   left: 1rem;
   opacity: 0%;
   white-space: nowrap;
+  transition: 0.25s ease-in-out opacity;
 }
 
 .fullscreen-table-wrapper {
@@ -1659,7 +1662,7 @@ iframe {
   display: block;
   position: relative;
 
-  &--buttons {
+  &__buttons {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
