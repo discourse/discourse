@@ -279,7 +279,7 @@ export default {
                 });
               } else {
                 return I18n.t("chat.placeholder_users", {
-                  commaSeparatedNames: this.channel.chatable.users[0].username,
+                  commaSeparatedNames: this.channel.escapedTitle,
                 });
               }
             }
