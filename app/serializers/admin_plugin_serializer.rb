@@ -11,8 +11,8 @@ class AdminPluginSerializer < ApplicationSerializer
              :enabled_setting,
              :has_settings,
              :is_official,
-             :is_experimental,
              :is_discourse_owned,
+             :label,
              :commit_hash,
              :commit_url,
              :meta_url,
@@ -79,8 +79,13 @@ class AdminPluginSerializer < ApplicationSerializer
     Plugin::Metadata::OFFICIAL_PLUGINS.include?(object.name)
   end
 
-  def is_experimental
-    object.metadata.experimental
+  def include_label?
+    is_discourse_owned
+  end
+
+  def label
+    return if !is_discourse_owned
+    object.metadata.label
   end
 
   def is_discourse_owned

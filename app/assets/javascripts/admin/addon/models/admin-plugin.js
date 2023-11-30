@@ -20,7 +20,7 @@ export default class AdminPlugin {
     this.id = args.id;
     this.isOfficial = args.is_official;
     this.isDiscourseOwned = args.is_discourse_owned;
-    this.isExperimental = args.is_experimental;
+    this.label = args.label;
     this.name = args.name;
     this.url = args.url;
     this.version = args.version;
@@ -57,16 +57,25 @@ export default class AdminPlugin {
     // translation, and we can handle things like SAML instead of showing them
     // as Saml from discourse-saml. We can fall back to the programattic version
     // though if needed.
+    let name;
     if (this.translatedCategoryName) {
-      return this.translatedCategoryName;
+      name = this.translatedCategoryName;
+    } else {
+      name = this.name
+        .split("-")
+        .map((word) => {
+          return capitalize(word);
+        })
+        .join(" ");
     }
 
-    return this.name
-      .split("-")
-      .map((word) => {
-        return capitalize(word);
-      })
-      .join(" ");
+    // Cuts down on repetition.
+    const discoursePrefix = "Discourse ";
+    if (name.startsWith(discoursePrefix)) {
+      name = name.slice(discoursePrefix.length);
+    }
+
+    return name;
   }
 
   get author() {

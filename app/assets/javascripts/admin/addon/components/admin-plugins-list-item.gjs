@@ -47,23 +47,15 @@ export default class AdminPluginsListItem extends Component {
           </div>
 
           <div class="badges">
-            {{#if @plugin.isExperimental}}
-              <span
-                class="admin-plugins-list__badge -experimental"
-                title={{i18n "admin.plugins.experimental"}}
-              >
-                {{i18n "admin.plugins.experimental_badge"}}
+            {{#if @plugin.label}}
+              <span class="admin-plugins-list__badge">
+                {{@plugin.label}}
               </span>
             {{/if}}
           </div>
         </div>
         <div class="admin-plugins-list__author">
           {{@plugin.author}}
-          {{#if @plugin.isOfficial}}
-            <span title={{i18n "admin.plugins.official"}}>{{icon
-                "fab-discourse"
-              }}</span>
-          {{/if}}
         </div>
         <div class="admin-plugins-list__about">
           {{@plugin.about}}
@@ -73,7 +65,7 @@ export default class AdminPluginsListItem extends Component {
               rel="noopener noreferrer"
               target="_blank"
             >
-              {{i18n "learn_more"}}
+              {{i18n "admin.plugins.learn_more"}}
             </a>
           {{/if}}
         </div>

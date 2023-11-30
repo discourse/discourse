@@ -5078,10 +5078,10 @@ en:
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
         official: "Official Discourse Plugin"
-        experimental: "Experimental Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
         author: "By %{author}"
         experimental_badge: "experimental"
+        learn_more: "Learn more"
 
       navigation_menu:
         sidebar: "Sidebar"
