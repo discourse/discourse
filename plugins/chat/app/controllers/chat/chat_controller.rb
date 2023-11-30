@@ -5,9 +5,9 @@ module Chat
     # Other endpoints use set_channel_and_chatable_with_access_check, but
     # these endpoints require a standalone find because they need to be
     # able to get deleted channels and recover them.
-    before_action :find_chat_message, only: %i[rebake message_link]
+    before_action :find_chat_message, only: %i[rebake]
     before_action :set_channel_and_chatable_with_access_check,
-                  except: %i[respond message_link set_user_chat_status dismiss_retention_reminder]
+                  except: %i[respond set_user_chat_status dismiss_retention_reminder]
 
     def respond
       render
@@ -30,17 +30,6 @@ module Chat
       guardian.ensure_can_rebake_chat_message!(@message)
       @message.rebake!(invalidate_oneboxes: true)
       render json: success_json
-    end
-
-    def message_link
-      raise Discourse::NotFound if @message.blank? || @message.deleted_at.present?
-      raise Discourse::NotFound if @message.chat_channel.blank?
-      set_channel_and_chatable_with_access_check(chat_channel_id: @message.chat_channel_id)
-      render json:
-               success_json.merge(
-                 chat_channel_id: @chat_channel.id,
-                 chat_channel_title: @chat_channel.title(current_user),
-               )
     end
 
     def set_user_chat_status
