@@ -142,6 +142,7 @@ export default class ChatMessageActionsDesktop extends Component {
                 @onReaction={{this.messageInteractor.react}}
                 @message={{this.message}}
                 @showCount={{false}}
+                @disableTooltip={{true}}
               />
             {{/each}}
           {{/if}}

@@ -19,7 +19,7 @@ export default class ChatMessageReaction extends Component {
   @tracked isActive = false;
 
   registerTooltip = modifier((element) => {
-    if (!this.popoverContent?.length) {
+    if (this.disableTooltip || !this.popoverContent?.length) {
       return;
     }
 
@@ -36,6 +36,10 @@ export default class ChatMessageReaction extends Component {
       instance?.destroy();
     };
   });
+
+  get disableTooltip() {
+    return this.args.disableTooltip ?? false;
+  }
 
   get showCount() {
     return this.args.showCount ?? true;
