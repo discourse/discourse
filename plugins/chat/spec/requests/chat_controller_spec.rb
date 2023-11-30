@@ -453,16 +453,4 @@ RSpec.describe Chat::ChatController do
       EXPECTED
     end
   end
-
-  describe "#message_link" do
-    it "ensures message's channel can be seen" do
-      channel = Fabricate(:category_channel, chatable: Fabricate(:category))
-      message = Fabricate(:chat_message, chat_channel: channel)
-
-      Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-      sign_in(Fabricate(:user))
-      get "/chat/message/#{message.id}.json"
-    end
-  end
 end
