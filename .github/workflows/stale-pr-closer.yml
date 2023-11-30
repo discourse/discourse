@@ -17,4 +17,3 @@ jobs:
           days-before-close: 14
           stale-pr-message: 'This pull request has been automatically marked as stale because it has been open for 60 days with no activity. To keep it open, remove the stale tag, push code, or add a comment. Otherwise, it will be closed in 14 days.'
           exempt-pr-labels: dependencies
-          operations-per-run: 1 # for testing
