@@ -7,6 +7,12 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.17.0] - 2023-11-30
+
+### Added
+
+- Introduces `forceDropdownAnimationForMenuPanels` API for forcing one or many Menu Panels (search-menu, user-menu, etc) to be rendered as a dropdown. This can be useful for plugins as the default behavior is to add a 'slide-in' behavior to a menu panel if you are viewing on a small screen. eg. mobile.
+
 ## [1.16.0] - 2023-11-17
 
 ### Added
