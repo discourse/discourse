@@ -583,9 +583,11 @@ export default class ChatAboutScreen extends Component {
               />
             </:action>
           </section.row>
-          <div class="chat-channel-settings__leave-info">
-            {{icon "exclamation-triangle"}}
-            {{I18n.t "chat.channel_settings.leave_groupchat_info"}}</div>
+          {{#unless @channel.isCategoryChannel}}
+            <div class="chat-channel-settings__leave-info">
+              {{icon "exclamation-triangle"}}
+              {{I18n.t "chat.channel_settings.leave_groupchat_info"}}</div>
+          {{/unless}}
         </form.section>
 
       </ChatForm>
