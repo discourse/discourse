@@ -825,7 +825,7 @@ en:
           imap_mailbox_not_selected: "You must select a Mailbox for this IMAP configuration or no mailboxes will be synced!"
           prefill:
             title: "Prefill with settings for:"
-            gmail: "GMail"
+            gmail: "Gmail"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
@@ -4658,7 +4658,7 @@ en:
           new_row: "at the end of a row to insert a new row."
           new_col: "at the end of a column to insert a new column."
           options: "Right-click on cells to access more options in a dropdown menu."
-        confirm_close: "Are you sure you want to close the table bulder? Any unsaved changes will be lost."
+        confirm_close: "Are you sure you want to close the table builder? Any unsaved changes will be lost."
       edit:
         btn_edit: "Edit Table"
         modal:
