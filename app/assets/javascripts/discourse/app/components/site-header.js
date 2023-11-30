@@ -12,7 +12,7 @@ import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
 
-let _menuPanelClassesToForceDropdownAnimation = [];
+let _menuPanelClassesToForceDropdown = [];
 
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
@@ -416,12 +416,12 @@ const SiteHeaderComponent = MountWidget.extend(
 );
 
 function menuPanelContainsClass(menuPanel) {
-  if (!_menuPanelClassesToForceDropdownAnimation) {
+  if (!_menuPanelClassesToForceDropdown) {
     return false;
   }
 
   // Check if any of the classNames are present in the node's classList
-  for (let className of _menuPanelClassesToForceDropdownAnimation) {
+  for (let className of _menuPanelClassesToForceDropdown) {
     if (menuPanel.classList.contains(className)) {
       // Found a matching class
       return true;
@@ -432,12 +432,12 @@ function menuPanelContainsClass(menuPanel) {
   return false;
 }
 
-export function forceDropdownAnimationForMenuPanels(classNames) {
+export function forceDropdownForMenuPanels(classNames) {
   // If classNames is a string, convert it to an array
   if (typeof classNames === "string") {
     classNames = [classNames];
   }
-  return _menuPanelClassesToForceDropdownAnimation.push(...classNames);
+  return _menuPanelClassesToForceDropdown.push(...classNames);
 }
 
 export default SiteHeaderComponent.extend({

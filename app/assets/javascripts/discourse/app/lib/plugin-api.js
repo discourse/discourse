@@ -24,7 +24,7 @@ import {
 } from "discourse/components/search-menu/results/random-quick-tip";
 import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
-import { forceDropdownAnimationForMenuPanels } from "discourse/components/site-header";
+import { forceDropdownForMenuPanels } from "discourse/components/site-header";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
@@ -1836,19 +1836,19 @@ class PluginApi {
   }
 
   /**
-   * Force a given menu panel (search-menu, user-menu, etc) to be displayed as dropdown if ANY of the passed `classNames` are included in the `classList` of a menu panel.
+   * Force a given menu panel (search-menu, user-menu) to be displayed as dropdown if ANY of the passed `classNames` are included in the `classList` of a menu panel.
    * This can be useful for plugins as the default behavior is to add a 'slide-in' behavior to a menu panel if you are viewing on a small screen. eg. mobile.
    * Sometimes when we are rendering the menu panel in a non-standard way we don't want this behavior and want to force the menu panel to be displayed as a dropdown.
    *
    * The `classNames` param can be passed as a single string or an array of strings. This way you can disable the 'slide-in' behavior for multiple menu panels.
    *
    * ```
-   * api.forceSearchMenuResultsAsDropdown(["search-menu-panel", "custom-class-for-menu-panel"]);
+   * api.forceDropdownForMenuPanels(["search-menu-panel", "user-menu"]);
    * ```
    *
    */
-  forceDropdownAnimationForMenuPanels(classNames) {
-    forceDropdownAnimationForMenuPanels(classNames);
+  forceDropdownForMenuPanels(classNames) {
+    forceDropdownForMenuPanels(classNames);
   }
 
   /**
