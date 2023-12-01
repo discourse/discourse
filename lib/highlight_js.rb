@@ -2,6 +2,7 @@
 
 module HighlightJs
   HIGHLIGHTJS_DIR ||= "#{Rails.root}/app/assets/javascripts/node_modules/@highlightjs/cdn-assets/"
+  VERSION ||= 1 # bump to invalidate caches following core changes
 
   def self.languages
     langs = Dir.glob(HIGHLIGHTJS_DIR + "languages/*.js").map { |path| File.basename(path)[0..-8] }
@@ -36,7 +37,9 @@ module HighlightJs
     cache_info = {
       lang_string: lang_string,
       digest:
-        Digest::SHA1.hexdigest(bundle(lang_string.split("|")) + "|#{GlobalSetting.asset_url_salt}"),
+        Digest::SHA1.hexdigest(
+          bundle(lang_string.split("|")) + "|#{VERSION}|#{GlobalSetting.asset_url_salt}",
+        ),
     }
 
     cache[RailsMultisite::ConnectionManagement.current_db] = cache_info
