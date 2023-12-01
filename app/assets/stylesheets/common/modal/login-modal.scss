@@ -88,6 +88,13 @@
     }
   }
 
+  .more-info,
+  .instructions {
+    color: var(--primary-medium);
+    min-height: 1.4em;
+    overflow-wrap: anywhere;
+  }
+
   .caps-lock-warning {
     color: var(--danger);
     font-size: var(--font-down-1);
