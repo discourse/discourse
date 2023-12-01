@@ -14,6 +14,6 @@ export default class Automation extends Controller {
 
   @action
   newAutomation() {
-    this.transitionToRoute("adminPlugins.discourse-automation.new");
+    this.router.transitionTo("adminPlugins.discourse-automation.new");
   }
 }

@@ -1,8 +1,11 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
 export default class AutomationNew extends Controller {
+  @service router;
+
   form = null;
   error = null;
 
@@ -19,7 +22,7 @@ export default class AutomationNew extends Controller {
       .save(this.form.getProperties("name", "script"))
       .then(() => {
         this._resetForm();
-        this.transitionToRoute(
+        this.router.transitionTo(
           "adminPlugins.discourse-automation.edit",
           automation.id
         );
