@@ -61,6 +61,7 @@ export const MENU = {
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
+    extraClassName: "popup-menu",
   },
   portalOutletId: "d-menu-portal-outlet",
 };
