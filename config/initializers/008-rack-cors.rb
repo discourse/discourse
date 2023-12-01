@@ -11,7 +11,7 @@ class Discourse::Cors
   end
 
   def call(env)
-    return @app.call(env) if !(GlobalSetting.enable_cors || GlobalSetting.cdn_url)
+    return @app.call(env) if !GlobalSetting.enable_cors && !GlobalSetting.cdn_url
 
     cors_origins = @global_origins || []
     cors_origins += SiteSetting.cors_origins.split("|") if SiteSetting.cors_origins.present?
