@@ -75,6 +75,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_topics
     import_posts
+    import_post_custom_fields
 
     import_polls
     import_poll_options
@@ -250,9 +251,16 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY category_id, name
     SQL
 
+    field_names =
+      query("SELECT DISTINCT name FROM category_custom_fields").map { |row| row["name"] }
+    existing_category_custom_fields =
+      CategoryCustomField.where(name: field_names).pluck(:category_id, :name).to_set
+
     create_category_custom_fields(category_custom_fields) do |row|
       category_id = category_id_from_imported_id(row["category_id"])
       next if category_id.nil?
+
+      next if existing_category_custom_fields.include?([category_id, row["name"]])
 
       { category_id: category_id, name: row["name"], value: row["value"] }
     end
@@ -802,6 +810,31 @@ class BulkImport::Generic < BulkImport::Base
     text << "]\n"
     text << "[/event]\n"
     text
+  end
+
+  def import_post_custom_fields
+    puts "", "Importing post custom fields..."
+
+    post_custom_fields = query(<<~SQL)
+      SELECT *
+      FROM post_custom_fields
+      ORDER BY post_id, name
+    SQL
+
+    field_names = query("SELECT DISTINCT name FROM post_custom_fields").map { |row| row["name"] }
+    existing_post_custom_fields =
+      PostCustomField.where(name: field_names).pluck(:post_id, :name).to_set
+
+    create_post_custom_fields(post_custom_fields) do |row|
+      post_id = post_id_from_imported_id(row["post_id"])
+      next if post_id.nil?
+
+      next if existing_post_custom_fields.include?([post_id, row["name"]])
+
+      { post_id: post_id, name: row["name"], value: row["value"] }
+    end
+
+    post_custom_fields.close
   end
 
   def import_polls
@@ -2040,7 +2073,14 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def query(sql, *bind_vars, db: @source_db)
-    db.prepare(sql).execute(*bind_vars)
+    result_set = db.prepare(sql).execute(*bind_vars)
+
+    if block_given?
+      yield result_set
+      result_set.close
+    else
+      result_set
+    end
   end
 
   def to_date(text)
