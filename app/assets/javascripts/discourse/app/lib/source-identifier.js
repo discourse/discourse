@@ -15,8 +15,14 @@ export default function identifySource(error) {
     return;
   }
 
-  const themeMatches =
-    error.stack.match(/\/theme-javascripts\/[\w-]+\.js/g) || [];
+  // Ignore the discourse-deprecation-collector plugin because it inserts itself
+  // into all deprecation stacks.
+  const stack = error.stack.replaceAll(
+    /^.*discourse-deprecation-collector.*$/gm,
+    ""
+  );
+
+  const themeMatches = stack.match(/\/theme-javascripts\/[\w-]+\.js/g) || [];
 
   for (const match of themeMatches) {
     const scriptElement = document.querySelector(`script[src*="${match}"`);
@@ -32,16 +38,14 @@ export default function identifySource(error) {
 
   if (DEBUG) {
     // Development (no fingerprinting)
-    plugin ??= error.stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
+    plugin ??= stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
 
     // Test files:
-    plugin ??= error.stack.match(
-      /assets\/plugins\/test\/([\w-]+)_tests\.js/
-    )?.[1];
+    plugin ??= stack.match(/assets\/plugins\/test\/([\w-]+)_tests\.js/)?.[1];
   }
 
   // Production (with fingerprints)
-  plugin ??= error.stack.match(
+  plugin ??= stack.match(
     /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.br)?\.js/
   )?.[1];
 
