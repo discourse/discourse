@@ -1649,7 +1649,7 @@ class PluginApi {
   }
 
   /**
-   * Used to set the min and max height for the topic timeline scroll area. Pass object with min/max key value pairs.
+   * Used to set the min and max height for the topic timeline scroll area on desktop. Pass object with min/max key value pairs.
    * Example:
    * api.setDesktopTopicTimelineScrollAreaHeight({ min: 50, max: 100 });
    **/
