@@ -10,6 +10,8 @@ require "url_helper"
 class FinalDestination
   class SSRFError < SocketError
   end
+  class UrlEncodingError < ArgumentError
+  end
 
   MAX_REQUEST_TIME_SECONDS = 10
   MAX_REQUEST_SIZE_BYTES = 5_242_880 # 1024 * 1024 * 5
@@ -457,6 +459,8 @@ class FinalDestination
 
   def normalized_url
     UrlHelper.normalized_encode(@url)
+  rescue ArgumentError => e
+    raise UrlEncodingError, e.message
   end
 
   def log(log_level, message)
