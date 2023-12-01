@@ -27,8 +27,19 @@
 [data-content][data-identifier="chat-message-reaction-tooltip"] {
   font-size: var(--font-down-1);
 
+  .fk-d-tooltip__inner-content {
+    display: block;
+  }
+
+  .new-span-classname-placeholder {
+    align-items: center;
+    display: inline-flex;
+    vertical-align: top;
+    height: 100%;
+  }
+
   .emoji {
-    padding-left: 0.5rem;
+    padding-left: 0.25rem;
   }
 }
 

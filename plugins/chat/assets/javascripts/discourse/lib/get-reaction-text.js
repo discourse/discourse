@@ -11,6 +11,7 @@ function filterUsernames(users, currentUser) {
 
 function reactionIncludingCurrentUser(reaction, currentUser) {
   if (reaction.count === 1) {
+    //reasonable sure something needs to happen here
     return I18n.t("chat.reactions.only_you", {
       emoji: reaction.emoji,
     });
