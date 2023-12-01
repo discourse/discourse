@@ -63,6 +63,9 @@ jobs:
           - build_type: frontend
             target: themes
             updated_ember: true
+          - build_type: system
+            target: chat
+            updated_ember: true
 
     steps:
       - name: Set working directory owner
