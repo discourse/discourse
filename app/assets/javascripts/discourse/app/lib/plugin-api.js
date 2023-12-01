@@ -24,7 +24,7 @@ import {
 } from "discourse/components/search-menu/results/random-quick-tip";
 import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
-import { setScrollAreaHeight } from "discourse/components/topic-timeline/container";
+import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
@@ -1650,10 +1650,10 @@ class PluginApi {
   /**
    * Used to set the min and max height for the topic timeline scroll area. Pass object with min/max key value pairs.
    * Example:
-   * api.setTopicTimelineScrollAreaHeight({ min: 50, max: 100 });
+   * api.setDesktopTopicTimelineScrollAreaHeight({ min: 50, max: 100 });
    **/
-  setTopicTimelineScrollAreaHeight(height) {
-    setScrollAreaHeight(height);
+  setDesktopTopicTimelineScrollAreaHeight(height) {
+    setDesktopScrollAreaHeight(height);
   }
 
   /**

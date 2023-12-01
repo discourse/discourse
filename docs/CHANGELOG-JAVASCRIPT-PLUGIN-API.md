@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added `setTopicTimelineScrollAreaHeight` function, which takes an object with min/max key value pairs as an argument. This is used to adjust the height of the topic timeline without CSS hacks, that break the functionality of the topic timeline.
+- Added `setDesktopTopicTimelineScrollAreaHeight` function, which takes an object with min/max key value pairs as an argument. This is used to adjust the height of the topic timeline on desktop without CSS hacks that break the functionality of the topic timeline.
 
 ## [1.15.0] - 2023-10-18
 

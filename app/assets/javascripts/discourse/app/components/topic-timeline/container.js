@@ -14,17 +14,17 @@ const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;
 const DEFAULT_MAX_SCROLLAREA_HEIGHT = 300;
 const LAST_READ_HEIGHT = 20;
 
-let minScrollAreaHeight = DEFAULT_MIN_SCROLLAREA_HEIGHT;
-let maxScrollAreaHeight = DEFAULT_MAX_SCROLLAREA_HEIGHT;
+let desktopMinScrollAreaHeight = DEFAULT_MIN_SCROLLAREA_HEIGHT;
+let desktopMaxScrollAreaHeight = DEFAULT_MAX_SCROLLAREA_HEIGHT;
 
-export function setScrollAreaHeight(
+export function setDesktopScrollAreaHeight(
   height = {
     min: DEFAULT_MIN_SCROLLAREA_HEIGHT,
     max: DEFAULT_MAX_SCROLLAREA_HEIGHT,
   }
 ) {
-  minScrollAreaHeight = height.min;
-  maxScrollAreaHeight = height.max;
+  desktopMinScrollAreaHeight = height.min;
+  desktopMaxScrollAreaHeight = height.max;
 }
 
 export default class TopicTimelineScrollArea extends Component {
@@ -131,7 +131,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get style() {
-    return htmlSafe(`height: ${scrollareaHeight()}px`);
+    return htmlSafe(`height: ${this.scrollareaHeight}px`);
   }
 
   get beforePadding() {
@@ -164,8 +164,27 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get topPosition() {
-    const bottom = scrollareaHeight() - LAST_READ_HEIGHT / 2;
+    const bottom = this.scrollareaHeight - LAST_READ_HEIGHT / 2;
     return this.lastReadTop > bottom ? bottom : this.lastReadTop;
+  }
+
+  get scrollareaHeight() {
+    const composerHeight =
+        document.getElementById("reply-control").offsetHeight || 0,
+      headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
+
+    // scrollarea takes up about half of the timeline's height
+    const availableHeight =
+      (window.innerHeight - composerHeight - headerHeight) / 2;
+
+    const minHeight = this.args.mobileView
+      ? DEFAULT_MIN_SCROLLAREA_HEIGHT
+      : desktopMinScrollAreaHeight;
+    const maxHeight = this.args.mobileView
+      ? DEFAULT_MAX_SCROLLAREA_HEIGHT
+      : desktopMaxScrollAreaHeight;
+
+    return Math.max(minHeight, Math.min(availableHeight, maxHeight));
   }
 
   get startDate() {
@@ -186,12 +205,14 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get lastReadHeight() {
-    return Math.round(this.lastReadPercentage * scrollareaHeight());
+    return Math.round(this.lastReadPercentage * this.scrollareaHeight);
   }
 
   @bind
   calculatePosition() {
-    this.timelineScrollareaStyle = htmlSafe(`height: ${scrollareaHeight()}px`);
+    this.timelineScrollareaStyle = htmlSafe(
+      `height: ${this.scrollareaHeight}px`
+    );
 
     const topic = this.args.model;
     const postStream = topic.postStream;
@@ -237,7 +258,7 @@ export default class TopicTimelineScrollArea extends Component {
     }
 
     this.before = this.scrollareaRemaining() * this.percentage;
-    this.after = scrollareaHeight() - this.before - SCROLLER_HEIGHT;
+    this.after = this.scrollareaHeight - this.before - SCROLLER_HEIGHT;
 
     if (this.percentage === null) {
       return;
@@ -245,7 +266,7 @@ export default class TopicTimelineScrollArea extends Component {
 
     if (this.hasBackPosition) {
       this.lastReadTop = Math.round(
-        this.lastReadPercentage * scrollareaHeight()
+        this.lastReadPercentage * this.scrollareaHeight
       );
       this.showButton =
         this.before + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
@@ -396,7 +417,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   scrollareaRemaining() {
-    return scrollareaHeight() - SCROLLER_HEIGHT;
+    return this.scrollareaHeight - SCROLLER_HEIGHT;
   }
 
   willDestroy() {
@@ -438,21 +459,6 @@ export default class TopicTimelineScrollArea extends Component {
   registerScroller(element) {
     this.scrollerElement = element;
   }
-}
-
-export function scrollareaHeight() {
-  const composerHeight =
-      document.getElementById("reply-control").offsetHeight || 0,
-    headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
-
-  // scrollarea takes up about half of the timeline's height
-  const availableHeight =
-    (window.innerHeight - composerHeight - headerHeight) / 2;
-
-  return Math.max(
-    minScrollAreaHeight,
-    Math.min(availableHeight, maxScrollAreaHeight)
-  );
 }
 
 export function timelineDate(date) {
