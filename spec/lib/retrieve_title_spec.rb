@@ -207,6 +207,12 @@ RSpec.describe RetrieveTitle do
 
       expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
     end
+
+    it "ignores URL encoding errors" do
+      described_class.stubs(:fetch_title).raises(FinalDestination::UrlEncodingError)
+
+      expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
+    end
   end
 
   describe ".fetch_title" do
