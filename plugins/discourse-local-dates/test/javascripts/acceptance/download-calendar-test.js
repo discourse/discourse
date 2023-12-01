@@ -90,7 +90,7 @@ acceptance(
         assert.deepEqual(
           [...arguments],
           [
-            `https://www.google.com/calendar/event?action=TEMPLATE&text=title%20to%20trim&dates=${startDate}T180000Z/${startDate}T190000Z`,
+            `https://www.google.com/calendar/event?action=TEMPLATE&text=title+to+trim&dates=${startDate}T180000Z%2F${startDate}T190000Z`,
             "_blank",
             "noopener",
             "noreferrer",

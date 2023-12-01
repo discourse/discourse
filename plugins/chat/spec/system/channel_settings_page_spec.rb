@@ -154,6 +154,37 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         expect(toasts).to have_success(I18n.t("js.saved"))
       }.to change { membership.reload.mobile_notification_level }.from("mention").to("never")
     end
+
+    it "can unfollow channel" do
+      membership = channel_1.membership_for(current_user)
+
+      chat_page.visit_channel_settings(channel_1)
+      click_button(I18n.t("js.chat.channel_settings.leave_channel"))
+
+      expect(page).to have_current_path("/chat/browse/open")
+      expect(membership.reload.following).to eq(false)
+    end
+
+    context "when group channel" do
+      fab!(:channel_1) do
+        Fabricate(:direct_message_channel, group: true, users: [current_user, Fabricate(:user)])
+      end
+
+      before { channel_1.add(current_user) }
+
+      it "can leave channel" do
+        membership = channel_1.membership_for(current_user)
+
+        chat_page.visit_channel_settings(channel_1)
+        click_button(I18n.t("js.chat.channel_settings.leave_channel"))
+
+        expect(page).to have_current_path("/chat/browse/open")
+        expect(Chat::UserChatChannelMembership.exists?(membership.id)).to eq(false)
+        expect(
+          channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,
+        ).to eq(false)
+      end
+    end
   end
 
   context "as staff" do

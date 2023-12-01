@@ -11,6 +11,8 @@ class Discourse::Cors
   end
 
   def call(env)
+    return @app.call(env) if !GlobalSetting.enable_cors && !GlobalSetting.cdn_url
+
     cors_origins = @global_origins || []
     cors_origins += SiteSetting.cors_origins.split("|") if SiteSetting.cors_origins.present?
     cors_origins = cors_origins.presence
@@ -32,9 +34,8 @@ class Discourse::Cors
   def self.apply_headers(cors_origins, env, headers)
     request_method = env["REQUEST_METHOD"]
 
-    if env["REQUEST_PATH"] =~ %r{/(javascripts|assets)/} &&
-         Discourse.is_cdn_request?(env, request_method)
-      Discourse.apply_cdn_headers(headers)
+    if headers["Access-Control-Allow-Origin"]
+      # Already configured. Probably by ApplicationController#apply_cdn_headers
     elsif cors_origins
       origin = nil
       if origin = env["HTTP_ORIGIN"]
@@ -54,6 +55,4 @@ class Discourse::Cors
   end
 end
 
-if GlobalSetting.enable_cors || GlobalSetting.cdn_url
-  Rails.configuration.middleware.insert_before ActionDispatch::Flash, Discourse::Cors
-end
+Rails.configuration.middleware.insert_before ActionDispatch::Flash, Discourse::Cors

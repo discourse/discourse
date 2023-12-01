@@ -21,7 +21,7 @@
     "express": "^4.18.2",
     "glob": "^10.3.10",
     "html-entities": "^2.4.0",
-    "jsdom": "^23.0.0",
+    "jsdom": "^23.0.1",
     "node-fetch": "^3.3.2"
   },
   "engines": {

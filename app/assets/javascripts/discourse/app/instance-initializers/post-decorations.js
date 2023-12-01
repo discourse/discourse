@@ -1,13 +1,18 @@
 import { schedule } from "@ember/runloop";
 import { create } from "virtual-dom";
 import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
+import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import lightbox from "discourse/lib/lightbox";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
+import { tokenRange } from "discourse/lib/utilities";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
@@ -106,21 +111,33 @@ export default {
         });
       });
 
-      function _createButton() {
+      function _createButton(props) {
         const openPopupBtn = document.createElement("button");
-        openPopupBtn.classList.add(
+        const defaultClasses = [
           "open-popup-link",
           "btn-default",
           "btn",
           "btn-icon",
-          "btn-expand-table",
-          "no-text"
-        );
-        const expandIcon = create(
-          iconNode("discourse-expand", { class: "expand-table-icon" })
-        );
-        openPopupBtn.title = I18n.t("fullscreen_table.expand_btn");
-        openPopupBtn.append(expandIcon);
+          "no-text",
+        ];
+
+        openPopupBtn.classList.add(...defaultClasses);
+
+        if (props.classes) {
+          openPopupBtn.classList.add(...props.classes);
+        }
+
+        if (props.title) {
+          openPopupBtn.title = I18n.t(props.title);
+        }
+
+        if (props.icon) {
+          const icon = create(
+            iconNode(props.icon.name, { class: props.icon?.class })
+          );
+          openPopupBtn.append(icon);
+        }
+
         return openPopupBtn;
       }
 
@@ -128,14 +145,64 @@ export default {
         return scrollWidth > clientWidth;
       }
 
-      function generateModal(event) {
+      function generateFullScreenTableModal(event) {
         const table = event.currentTarget.parentElement.nextElementSibling;
         const tempTable = table.cloneNode(true);
         modal.show(FullscreenTableModal, { model: { tableHtml: tempTable } });
       }
 
-      function generatePopups(tables) {
-        tables.forEach((table) => {
+      function generateSpreadsheetModal() {
+        const tableIndex = this.tableIndex;
+
+        return ajax(`/posts/${this.id}`, { type: "GET" })
+          .then((post) => {
+            parseAsync(post.raw).then((tokens) => {
+              const allTables = tokenRange(tokens, "table_open", "table_close");
+              const tableTokens = allTables[tableIndex];
+
+              modal.show(SpreadsheetEditor, {
+                model: {
+                  post,
+                  tableIndex,
+                  tableTokens,
+                },
+              });
+            });
+          })
+          .catch(popupAjaxError);
+      }
+
+      function generatePopups(tables, attrs) {
+        tables.forEach((table, index) => {
+          const buttonWrapper = document.createElement("div");
+          buttonWrapper.classList.add("fullscreen-table-wrapper__buttons");
+
+          const tableEditorBtn = _createButton({
+            classes: ["btn-edit-table"],
+            title: "table_builder.edit.btn_edit",
+            icon: {
+              name: "pencil-alt",
+              class: "edit-table-icon",
+            },
+          });
+
+          table.parentNode.setAttribute("data-table-index", index);
+          table.parentNode.classList.add("fullscreen-table-wrapper");
+
+          if (attrs.canEdit) {
+            buttonWrapper.append(tableEditorBtn);
+            tableEditorBtn.addEventListener(
+              "click",
+              generateSpreadsheetModal.bind({
+                tableIndex: index,
+                ...attrs,
+              }),
+              false
+            );
+          }
+
+          table.parentNode.insertBefore(buttonWrapper, table);
+
           if (!isOverflown(table.parentNode)) {
             return;
           }
@@ -144,28 +211,50 @@ export default {
             return;
           }
 
-          const popupBtn = _createButton();
-          table.parentNode.classList.add("fullscreen-table-wrapper");
-          // Create a button wrapper for case of multiple buttons (i.e. table builder extension)
-          const buttonWrapper = document.createElement("div");
-          buttonWrapper.classList.add("fullscreen-table-wrapper--buttons");
-          buttonWrapper.append(popupBtn);
-          popupBtn.addEventListener("click", generateModal, false);
+          const expandTableBtn = _createButton({
+            classes: ["btn-expand-table"],
+            title: "fullscreen_table.expand_btn",
+            icon: { name: "discourse-expand", class: "expand-table-icon" },
+          });
+          buttonWrapper.append(expandTableBtn);
+          expandTableBtn.addEventListener(
+            "click",
+            generateFullScreenTableModal,
+            false
+          );
           table.parentNode.insertBefore(buttonWrapper, table);
         });
       }
 
+      function cleanupPopupBtns() {
+        const editTableBtn = document.querySelector(
+          ".open-popup-link.btn-edit-table"
+        );
+        const expandTableBtn = document.querySelector(
+          ".open-popup-link.btn-expand-table"
+        );
+
+        expandTableBtn?.removeEventListener(
+          "click",
+          generateFullScreenTableModal
+        );
+        editTableBtn?.removeEventListener("click", generateSpreadsheetModal);
+      }
+
       api.decorateCookedElement(
-        (post) => {
+        (post, helper) => {
           schedule("afterRender", () => {
-            const tables = post.querySelectorAll("table");
-            generatePopups(tables);
+            const tables = post.querySelectorAll(".md-table table");
+            generatePopups(tables, helper.widget.attrs);
           });
         },
         {
           onlyStream: true,
+          id: "table-wrapper",
         }
       );
+
+      api.cleanupStream(cleanupPopupBtns);
     });
   },
 };

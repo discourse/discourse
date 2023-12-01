@@ -9,6 +9,7 @@ import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
+import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import {
   cannotPostAgain,
@@ -424,6 +425,14 @@ export default class ComposerService extends Service {
         })
       );
 
+      options.push(
+        this._setupPopupMenuOption({
+          action: "toggleSpreadsheet",
+          icon: "table",
+          label: "composer.insert_table",
+        })
+      );
+
       return options.concat(
         customPopupMenuOptions
           .map((option) => this._setupPopupMenuOption(option))
@@ -721,6 +730,16 @@ export default class ComposerService extends Service {
   @action
   toggleWhisper() {
     this.toggleProperty("model.whisper");
+  }
+
+  @action
+  toggleSpreadsheet() {
+    this.modal.show(SpreadsheetEditor, {
+      model: {
+        toolbarEvent: this.toolbarEvent,
+        tableTokens: null,
+      },
+    });
   }
 
   @action

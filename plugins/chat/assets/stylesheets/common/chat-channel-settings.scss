@@ -9,4 +9,17 @@
   .chat-retention-reminder-text {
     color: var(--primary-medium);
   }
+
+  &__leave-info {
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  .chat-form__section-content:has(.chat-channel-settings__leave-info) {
+    gap: 0.25rem;
+  }
 }

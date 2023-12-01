@@ -20,14 +20,7 @@ module HasCustomFields
     def validate(obj, name, value)
       return if value.nil?
 
-      size =
-        if Array === type || (type != :json && Array === value)
-          value.map { |v| serialize(v).bytesize }.max || 0
-        else
-          serialize(value).bytesize
-        end
-
-      if size > max_length
+      if serialize(value).bytesize > max_length
         obj.errors.add(
           :base,
           I18n.t("custom_fields.validations.max_value_length", max_value_length: max_length),
@@ -114,7 +107,9 @@ module HasCustomFields
       get_custom_field_descriptor(key).append_field(target, key, value)
     end
 
-    def register_custom_field_type(name, type, max_length: DEFAULT_FIELD_DESCRIPTOR.max_length)
+    def register_custom_field_type(name, type, max_length: nil)
+      max_length ||= DEFAULT_FIELD_DESCRIPTOR.max_length
+
       if Array === type
         Discourse.deprecate(
           "Array types for custom fields are deprecated, use type :json instead",
@@ -279,7 +274,7 @@ module HasCustomFields
           field_type = descriptor.type
 
           if Array === field_type || (field_type != :json && Array === value)
-            value = value || []
+            value = Array(value || [])
             value.compact!
             sub_type = field_type[0]
 
