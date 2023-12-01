@@ -85,12 +85,12 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
 
       before do
         Chat::Mention.create!(
-          notification: notification_1,
+          notifications: [notification_1],
           user: current_user,
           chat_message: message_1,
         )
         Chat::Mention.create!(
-          notification: notification_2,
+          notifications: [notification_2],
           user: current_user,
           chat_message: message_3,
         )
