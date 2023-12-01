@@ -591,6 +591,8 @@ class BulkImport::Generic < BulkImport::Base
         next
       end
 
+      next if topic_id_from_imported_id(row["id"]).present?
+
       {
         archetype: row["private_message"] ? Archetype.private_message : Archetype.default,
         imported_id: row["id"],
@@ -608,6 +610,9 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_topic_allowed_users
+    # FIXME: This is not working correctly because it imports only the first user from the list!
+    # Groups are ignored completely. And there is no check for existing records.
+
     puts "", "Importing topic_allowed_users..."
 
     topics = query(<<~SQL)
@@ -620,7 +625,7 @@ class BulkImport::Generic < BulkImport::Base
     added = 0
 
     create_topic_allowed_users(topics) do |row|
-      next unless topic_id = topic_id_from_imported_id(row["id"])
+      next unless (topic_id = topic_id_from_imported_id(row["id"]))
       imported_user_id = JSON.parse(row["private_message"])["user_ids"].first
       user_id = user_id_from_imported_id(imported_user_id)
       added += 1
