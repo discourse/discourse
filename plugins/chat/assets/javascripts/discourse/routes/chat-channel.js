@@ -5,6 +5,7 @@ import withChatChannel from "./chat-channel-decorator";
 @withChatChannel
 export default class ChatChannelRoute extends DiscourseRoute {
   @service site;
+  @service router;
 
   redirect(model) {
     if (this.site.mobileView) {
@@ -15,7 +16,7 @@ export default class ChatChannelRoute extends DiscourseRoute {
     const threadId = this.paramsFor("chat.channel.thread").threadId;
 
     if (!messageId && !threadId && model.threadsManager.unreadThreadCount > 0) {
-      this.transitionTo("chat.channel.threads", ...model.routeModels);
+      this.router.transitionTo("chat.channel.threads", ...model.routeModels);
     }
   }
 }
