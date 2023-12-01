@@ -1,6 +1,6 @@
 {{#if (and this.search.inTopicContext (not @searchTopics))}}
   <SearchMenu::BrowserSearchTip />
-{{else if (not @loading)}}
+{{else}}
   <div class="results">
     {{#if @suggestionKeyword}}
       <SearchMenu::Results::Assistant
