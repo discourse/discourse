@@ -7,6 +7,12 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.0] - 2023-12-1
+
+### Added
+
+- Added `setDesktopTopicTimelineScrollAreaHeight` function, which takes an object with min/max key value pairs as an argument. This is used to adjust the height of the topic timeline on desktop without CSS hacks that break the functionality of the topic timeline.
+
 ## [1.17.0] - 2023-11-30
 
 ### Added

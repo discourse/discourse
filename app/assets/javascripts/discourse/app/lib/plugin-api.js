@@ -25,6 +25,7 @@ import {
 import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { forceDropdownForMenuPanels } from "discourse/components/site-header";
+import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
@@ -142,7 +143,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.17.0";
+export const PLUGIN_API_VERSION = "1.18.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1645,6 +1646,15 @@ class PluginApi {
       { id: "discourse.decorate-plugin-outlet" }
     );
     addPluginOutletDecorator(outletName, callback, opts || {});
+  }
+
+  /**
+   * Used to set the min and max height for the topic timeline scroll area on desktop. Pass object with min/max key value pairs.
+   * Example:
+   * api.setDesktopTopicTimelineScrollAreaHeight({ min: 50, max: 100 });
+   **/
+  setDesktopTopicTimelineScrollAreaHeight(height) {
+    setDesktopScrollAreaHeight(height);
   }
 
   /**
