@@ -35,6 +35,7 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
+      EMBER_VERSION: ${{ (matrix.updated_ember && '5') || '3' }}
 
     strategy:
       fail-fast: false
