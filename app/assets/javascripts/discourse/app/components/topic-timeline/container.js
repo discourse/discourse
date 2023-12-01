@@ -10,9 +10,22 @@ import domUtils from "discourse-common/utils/dom-utils";
 import I18n from "discourse-i18n";
 
 export const SCROLLER_HEIGHT = 50;
-const MIN_SCROLLAREA_HEIGHT = 170;
-const MAX_SCROLLAREA_HEIGHT = 300;
+const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;
+const DEFAULT_MAX_SCROLLAREA_HEIGHT = 300;
 const LAST_READ_HEIGHT = 20;
+
+let minScrollAreaHeight = DEFAULT_MIN_SCROLLAREA_HEIGHT;
+let maxScrollAreaHeight = DEFAULT_MAX_SCROLLAREA_HEIGHT;
+
+export function setScrollAreaHeight(
+  height = {
+    min: DEFAULT_MIN_SCROLLAREA_HEIGHT,
+    max: DEFAULT_MAX_SCROLLAREA_HEIGHT,
+  }
+) {
+  minScrollAreaHeight = height.min;
+  maxScrollAreaHeight = height.max;
+}
 
 export default class TopicTimelineScrollArea extends Component {
   @service appEvents;
@@ -437,8 +450,8 @@ export function scrollareaHeight() {
     (window.innerHeight - composerHeight - headerHeight) / 2;
 
   return Math.max(
-    MIN_SCROLLAREA_HEIGHT,
-    Math.min(availableHeight, MAX_SCROLLAREA_HEIGHT)
+    minScrollAreaHeight,
+    Math.min(availableHeight, maxScrollAreaHeight)
   );
 }
 
