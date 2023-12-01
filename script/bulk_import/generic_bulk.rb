@@ -252,7 +252,7 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     field_names =
-      query("SELECT DISTINCT name FROM category_custom_fields").map { |row| row["name"] }
+      query("SELECT DISTINCT name FROM category_custom_fields") { _1.map { |row| row["name"] } }
     existing_category_custom_fields =
       CategoryCustomField.where(name: field_names).pluck(:category_id, :name).to_set
 
@@ -826,7 +826,8 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY post_id, name
     SQL
 
-    field_names = query("SELECT DISTINCT name FROM post_custom_fields").map { |row| row["name"] }
+    field_names =
+      query("SELECT DISTINCT name FROM post_custom_fields") { _1.map { |row| row["name"] } }
     existing_post_custom_fields =
       PostCustomField.where(name: field_names).pluck(:post_id, :name).to_set
 
