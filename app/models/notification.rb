@@ -411,6 +411,7 @@ end
 #  post_number       :integer
 #  post_action_id    :integer
 #  high_priority     :boolean          default(FALSE), not null
+#  parent_id         :integer
 #
 # Indexes
 #
@@ -421,4 +422,5 @@ end
 #  index_notifications_on_user_id_and_topic_id_and_post_number  (user_id,topic_id,post_number)
 #  index_notifications_read_or_not_high_priority                (user_id,id DESC,read,topic_id) WHERE (read OR (high_priority = false))
 #  index_notifications_unique_unread_high_priority              (user_id,id) UNIQUE WHERE ((NOT read) AND (high_priority = true))
+#  index_notifications_on_parent_id                             (parent_id)
 #
