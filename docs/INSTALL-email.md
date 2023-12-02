@@ -12,9 +12,10 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
 
 #### [Brevo, previously SendInBlue, GDPR][sb] &mdash; 9,000 email per month free
 
-    SMTP server address? smtp.sendinblue.com
-    SMTP user name?      [SMTP credentials for your domain under domains tab]
-    SMTP password?       [SMTP credentials for your domain under domains tab]
+    SMTP server address? smtp-relay.brevo.com
+    SMTP user name?      [SMTP credentials for your domain under [SMTP-Key tab](https://app.brevo.com/settings/keys/smtp)]
+    SMTP password?       [SMTP credentials for your domain under [SMTP-Key tab](https://app.brevo.com/settings/keys/smtp)]
+    Port:                587
     
 #### [Mailgun][gun] &mdash; 5k emails/month on a 3 month trial
 
