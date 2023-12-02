@@ -78,6 +78,9 @@ module RetrieveTitle
         stop_at_blocked_pages: true,
         max_redirects: max_redirects,
         initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit,
+        headers: {
+          Accept: "text/html,*/*",
+        },
       )
 
     current = nil
