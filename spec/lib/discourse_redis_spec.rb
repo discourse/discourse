@@ -208,13 +208,6 @@ RSpec.describe DiscourseRedis do
       expect(helper.eval(Discourse.redis, %w[key1 key2], %w[arg1 arg2])).to eq("arg1arg2key1key2")
     end
 
-    it "works with arguments" do
-      helper = DiscourseRedis::EvalHelper.new <<~LUA
-        return ARGV[1]..ARGV[2]..KEYS[1]..KEYS[2]
-      LUA
-      expect(helper.eval(Discourse.redis, %w[key1 key2], %w[arg1 arg2])).to eq("arg1arg2key1key2")
-    end
-
     it "uses evalsha correctly" do
       redis_proxy =
         Class

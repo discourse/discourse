@@ -88,9 +88,7 @@ RSpec.describe SidebarSiteSettingsBackfiller do
             :user_id,
           ),
         ).to contain_exactly(user.id, user2.id, user3.id)
-      end
 
-      it "creates the right sidebar section link records when categories are added" do
         backfiller =
           described_class.new(
             "default_navigation_menu_categories",

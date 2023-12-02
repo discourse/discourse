@@ -178,17 +178,5 @@ describe "Bookmarking posts and topics", type: :system do
         Bookmark.auto_delete_preferences[:on_owner_reply],
       )
     end
-
-    it "allows the user to choose a different auto delete preference for a bookmark" do
-      visit_topic_and_open_bookmark_modal(post)
-
-      bookmark_modal.save
-      expect(topic_page).to have_post_bookmarked(post)
-
-      bookmark = Bookmark.find_by(bookmarkable: post, user: current_user)
-      expect(bookmark.auto_delete_preference).to eq(
-        Bookmark.auto_delete_preferences[:on_owner_reply],
-      )
-    end
   end
 end

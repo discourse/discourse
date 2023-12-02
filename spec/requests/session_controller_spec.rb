@@ -1906,9 +1906,7 @@ RSpec.describe SessionController do
             I18n.t("login.incorrect_username_email_or_password"),
           )
         end
-      end
 
-      describe "invalid password" do
         it "should return an error with an invalid password if too long" do
           User.any_instance.expects(:confirm_password?).never
           post "/session.json",

@@ -48,9 +48,7 @@ RSpec.describe InlineUploads do
 
         This is an invalid `<img ...>` tag
         MD
-      end
 
-      it "should work with invalid img tags" do
         md = '<img data-id="<>">'
         expect(InlineUploads.process(md)).to eq(md)
       end

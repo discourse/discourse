@@ -1432,11 +1432,6 @@ RSpec.describe TopicsController do
       put "/t/99/mute.json"
       expect(response.status).to eq(403)
     end
-
-    it "needs you to be logged in" do
-      put "/t/99/unmute.json"
-      expect(response.status).to eq(403)
-    end
   end
 
   describe "#recover" do
