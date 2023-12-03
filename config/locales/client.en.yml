@@ -4308,7 +4308,7 @@ en:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
       edit_tag: "Edit tag name and description"
-      description: "Description"
+      description: "Description (max 1000 characters)"
       sort_by: "Sort by:"
       sort_by_count: "count"
       sort_by_name: "name"

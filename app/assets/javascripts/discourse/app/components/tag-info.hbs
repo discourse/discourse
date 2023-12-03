@@ -13,7 +13,7 @@
 
           <Textarea
             id="edit-description"
-            @value={{readonly this.tagInfo.description}}
+            @value={{readonly this.tagInfo.descriptionWithNewLines}}
             placeholder={{i18n "tagging.description"}}
             maxlength={{1000}}
             {{on
