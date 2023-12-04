@@ -3,36 +3,36 @@ import Service from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
-export default class BodyClassesService extends Service {
-  #helpers = new Map();
+export default class ElementClassesService extends Service {
+  #helpers = new Map(); // Map<Helper, string[]>
 
-  registerClasses(helper, classes) {
+  registerClasses(helper, element, classes) {
     if (this.#helpers.has(helper)) {
       const previousClasses = this.#helpers.get(helper);
 
       this.#helpers.set(helper, classes);
-      this.removeUnusedClasses(previousClasses);
+      this.removeUnusedClasses(element, previousClasses);
     } else {
       this.#helpers.set(helper, classes);
 
       registerDestructor(helper, () => {
         const previousClasses = this.#helpers.get(helper);
         this.#helpers.delete(helper);
-        this.removeUnusedClasses(previousClasses);
+        this.removeUnusedClasses(element, previousClasses);
       });
     }
 
-    for (const bodyClass of classes) {
-      document.body.classList.add(bodyClass);
+    for (const elementClass of classes) {
+      element.classList.add(elementClass);
     }
   }
 
-  removeUnusedClasses(classes) {
+  removeUnusedClasses(element, classes) {
     const remainingClasses = new Set([...this.#helpers.values()].flat());
 
-    for (const bodyClass of classes) {
-      if (!remainingClasses.has(bodyClass)) {
-        document.body.classList.remove(bodyClass);
+    for (const elementClass of classes) {
+      if (!remainingClasses.has(elementClass)) {
+        element.classList.remove(elementClass);
       }
     }
   }
