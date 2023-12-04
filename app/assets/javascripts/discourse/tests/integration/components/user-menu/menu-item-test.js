@@ -357,7 +357,7 @@ module(
 
       await render(template);
       assert.notOk(exists(".item-description"), "description is not rendered");
-      assert.ok(
+      assert.strictEqual(
         query("li").textContent.trim(),
         "notification label",
         "only label content is displayed"
@@ -390,7 +390,7 @@ module(
       );
 
       await render(template);
-      assert.ok(
+      assert.strictEqual(
         query("li").textContent.trim(),
         "notification description",
         "only notification description is displayed"

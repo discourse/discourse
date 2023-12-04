@@ -137,7 +137,7 @@ and a second group of images
       `[grid]${uploads[0]} ${uploads[1]} ${uploads[0]} ${uploads[1]}[/grid]`
     );
 
-    assert.ok(
+    assert.strictEqual(
       document.querySelectorAll(".d-editor-preview .d-image-grid-column")
         .length,
       2,
