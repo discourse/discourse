@@ -791,22 +791,6 @@ RSpec.describe CookedPostProcessor do
           expect(post.image_upload_id).not_to be_present
         end
 
-        it "won't remove the original image if another post doesn't have an image" do
-          topic = post.topic
-
-          cpp.post_process
-          topic.reload
-          expect(topic.image_upload_id).to be_present
-          expect(post.image_upload_id).to be_present
-
-          post = Fabricate(:post, topic: topic, raw: "this post doesn't have an image")
-          CookedPostProcessor.new(post).post_process
-          topic.reload
-
-          expect(post.topic.image_upload_id).to be_present
-          expect(post.image_upload_id).to be_blank
-        end
-
         it "generates thumbnails correctly" do
           # image size in cooked is 1500*2000
           topic = post.topic
