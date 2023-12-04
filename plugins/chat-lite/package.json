@@ -11,7 +11,6 @@
   ],
   "exports": {
     "./addon-main.js": "./addon-main.cjs",
-    "./connectors/below-site-header": "./dist/connectors/below-site-header.js",
     "./connectors/extra-header-icons": "./dist/connectors/extra-header-icons.js",
     "./connectors/sidebar-footer-actions": "./dist/connectors/sidebar-footer-actions.js",
     "./markdown-features/scramble": "./dist/markdown-features/scramble.js",

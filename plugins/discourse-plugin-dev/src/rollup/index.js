@@ -3,17 +3,20 @@ import exportPluginFeatures from "./export-plugin-features.js";
 
 export default class Plugin {
   #addon;
+  #srcDir;
+  #destDir;
 
   constructor({ srcDir = "src", destDir = "dist" } = {}) {
     this.#addon = new Addon({ srcDir, destDir });
-  }
-
-  publicEntrypoints(patterns) {
-    return this.#addon.publicEntrypoints(patterns);
+    this.#srcDir = srcDir;
+    this.#destDir = destDir;
   }
 
   exportPluginFeatures() {
-    return exportPluginFeatures();
+    return exportPluginFeatures({
+      srcDir: this.#srcDir,
+      destDir: this.#destDir,
+    });
   }
 
   dependencies() {

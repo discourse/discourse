@@ -1,11 +1,14 @@
 import fsx from "fs-extra";
+import path from "path";
+import walkSync from "walk-sync";
+
 const { readJsonSync, writeJsonSync } = fsx;
 
 const PluginFeatures = [
-  "./connectors/",
-  "./events/",
-  "./markdown-features/",
-  "./route-maps/",
+  "connectors/",
+  "events/",
+  "markdown-features/",
+  "route-maps/",
 ];
 
 function isPluginFeature(module) {
@@ -19,28 +22,64 @@ function isPluginFeature(module) {
   return false;
 }
 
-export default function exportPluginFeatures() {
+function normalizeFileExt(fileName) {
+  return fileName.replace(/(?<!\.d)\.ts|\.gjs|\.gts$/, ".js");
+}
+
+// Loosely based on publicEntrypoints from @embroider/addon-dev
+export default function exportPluginFeatures({ srcDir, destDir }) {
   return {
     name: "export-plugin-features",
+
+    async buildStart() {
+      this.addWatchFile(srcDir);
+
+      const matches = walkSync(srcDir, {
+        directories: false,
+        globs: ["**/*.js", "**/*.ts", "**/*.gjs", "**/*.gts"],
+      });
+
+      for (const name of matches) {
+        // the matched file, but with the extension swapped with .js
+        const normalizedName = normalizeFileExt(name);
+
+        if (isPluginFeature(normalizedName)) {
+          this.emitFile({
+            type: "chunk",
+            id: path.join(srcDir, name),
+            fileName: normalizedName,
+          });
+        }
+      }
+    },
+
     generateBundle(_, bundle) {
       const packageJson = readJsonSync("package.json");
       const originalExports = packageJson.exports;
-      const exports = { ...originalExports };
+      const exports =
+        typeof originalExports === "string"
+          ? { ".": originalExports }
+          : { ...originalExports };
 
       for (const moduleName of Object.keys(exports)) {
-        if (isPluginFeature(moduleName)) {
+        if (!moduleName.startsWith("./")) {
+          // Other than ".", this would be illegal. Should we warn about it?
+          continue;
+        }
+
+        const normalizedName = moduleName.slice(2) + ".js";
+
+        if (isPluginFeature(normalizedName)) {
           // we'll add this back later, as needed
           delete exports[moduleName];
         }
       }
 
       for (const moduleName of Object.keys(bundle)) {
-        const qualifiedName = `./${moduleName}`;
-
-        if (isPluginFeature(qualifiedName)) {
+        if (isPluginFeature(moduleName)) {
           // without .js
-          const entryName = qualifiedName.slice(0, -3);
-          exports[entryName] = `./dist/${moduleName}`;
+          const entryName = "./" + moduleName.slice(0, -3);
+          exports[entryName] = "./" + path.join(destDir, moduleName);
         }
       }
 

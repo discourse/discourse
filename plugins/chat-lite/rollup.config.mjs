@@ -11,18 +11,7 @@ export default {
   // You can augment this if you need to.
   output: plugin.output(),
 
-  watch: "src/**/*",
-
   plugins: [
-    // These are the modules that users should be able to import from your
-    // addon. Anything not listed here may get optimized away.
-    // By default all your JavaScript modules (**/*.js) will be importable.
-    // But you are encouraged to tweak this to only cover the modules that make
-    // up your addon's public API. Also make sure your package.json#exports
-    // is aligned to the config here.
-    // See https://github.com/embroider-build/embroider/blob/main/docs/v2-faq.md#how-can-i-define-the-public-exports-of-my-addon
-    plugin.publicEntrypoints(["**/*.js", "index.js"]),
-
     // Ensure that any plugin features are exported from package.json.
     plugin.exportPluginFeatures(),
 

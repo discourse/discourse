@@ -112,8 +112,11 @@ function compilePluginFeatures(
   { connectors = [], events = [], routeMaps = [], markdownFeatures = true } = {}
 ) {
   return {
-    name: "collect-plugin-features",
+    name: "compile-plugin-features",
+
     buildStart() {
+      this.addWatchFile(pluginsDir);
+
       emptyDirSync("./src");
 
       const packageJson = readJsonSync("package.json");
@@ -158,8 +161,6 @@ function compilePluginFeatures(
         }
 
         if (isPlugin(depJson)) {
-          this.addWatchFile(depPath);
-
           if (depJson.exports) {
             for (const feature of features) {
               feature.process(depJson.name, depJson.exports);
