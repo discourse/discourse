@@ -90,9 +90,19 @@ export function transformBasicPost(post) {
     userSuspended: post.user_suspended,
   };
 
-  _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));
+  return attachAdditionalAttributes(postAtts, { post });
+}
 
-  return postAtts;
+function attachAdditionalAttributes(attrs, populateFrom) {
+  _additionalAttributes.forEach((a) => {
+    if (typeof a === "function") {
+      a(attrs, populateFrom);
+    } else {
+      attrs[a] = populateFrom.post[a];
+    }
+  });
+
+  return attrs;
 }
 
 export default function transformPost(
@@ -297,7 +307,5 @@ export default function transformPost(
       postAtts.isDeleted && post.can_permanently_delete;
   }
 
-  _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));
-
-  return postAtts;
+  return attachAdditionalAttributes(postAtts, { post, details, topic });
 }

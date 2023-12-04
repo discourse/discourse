@@ -602,9 +602,9 @@ class PluginApi {
   }
 
   /**
-   * Add more attributes to the Post's `attrs` object passed through to widgets.
-   * You'll need to do this if you've added attributes to the serializer for a
-   * Post and want to use them when you're rendering.
+   * Add more attributes to the Post's `attrs` object passed through to widgets. For attributes serialized
+   * into the Post payload via a serializer, you can pass strings as the argument. The key value pair will
+   * be set on the `attrs` object.
    *
    * Example:
    *
@@ -613,6 +613,18 @@ class PluginApi {
    * api.includePostAttributes('poster_age', 'poster_height');
    * ```
    *
+   * To add attributes that don't directly correspond with an existing key-value pair, you can pass a function.
+   * This function should take the `attrs` object as the first argument and an object of variables as the second
+   * argument. The variables are accessed from the `populatedFrom` object, which can contain various properties.
+   * This approach is useful for dynamically setting key-value pairs in `attrs` based on topic attributes.
+   *
+   * Example:
+   * api.includePostAttributes((attrs, populatedFrom) => {
+   *   // Check conditions based on properties in populatedFrom to dynamically set attrs
+   *   if (populatedFrom.post_number === 1 && populatedFrom.details.notification_level === 3) {
+   *     attrs.watching = true;
+   *   }
+   * });
    **/
   includePostAttributes(...attributes) {
     includeAttributes(...attributes);
