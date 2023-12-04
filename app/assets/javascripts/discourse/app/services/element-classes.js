@@ -4,7 +4,8 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
 export default class ElementClassesService extends Service {
-  #helpers = new Map(); // Map<Helper, string[]>
+  /** @type Map<Helper, string[]> */
+  #helpers = new Map();
 
   registerClasses(helper, element, classes) {
     if (this.#helpers.has(helper)) {
