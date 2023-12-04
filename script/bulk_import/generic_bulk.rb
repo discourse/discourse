@@ -2082,8 +2082,9 @@ class BulkImport::Generic < BulkImport::Base
     result_set = db.prepare(sql).execute(*bind_vars)
 
     if block_given?
-      yield result_set
+      result = yield result_set
       result_set.close
+      result
     else
       result_set
     end
