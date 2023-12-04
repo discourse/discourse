@@ -385,19 +385,22 @@ module Oneboxer
   def self.local_topic(url, route, opts)
     if current_user = User.find_by(id: opts[:user_id])
       if current_category = Category.find_by(id: opts[:category_id])
-        return unless Guardian.new(current_user).can_see_category?(current_category)
+        return if !current_user.guardian.can_see_category?(current_category)
       end
 
       if current_topic = Topic.find_by(id: opts[:topic_id])
-        return unless Guardian.new(current_user).can_see_topic?(current_topic)
+        return if !current_user.guardian.can_see_topic?(current_topic)
       end
     end
 
-    return unless topic = Topic.find_by(id: route[:id] || route[:topic_id])
-    return if topic.private_message?
+    topic = Topic.find_by(id: route[:id] || route[:topic_id])
+    return if topic.blank? || topic.private_message?
 
+    # If we are oneboxing from one category to another, we need to use a basic guardian
+    # because some users can see more than others and we need the absolute baseline of
+    # access control here.
     if current_category.blank? || current_category.id != topic.category_id
-      return unless Guardian.new.can_see_topic?(topic)
+      return if !Guardian.basic_user.can_see_topic?(topic)
     end
 
     topic
