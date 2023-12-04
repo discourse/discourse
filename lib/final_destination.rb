@@ -86,6 +86,7 @@ class FinalDestination
         end
       )
     @stop_at_blocked_pages = @opts[:stop_at_blocked_pages]
+    @extra_headers = @opts[:headers]
   end
 
   def self.connection_timeout
@@ -120,6 +121,7 @@ class FinalDestination
       "Host" => @uri.hostname + (@include_port_in_host_header ? ":#{@uri.port}" : ""),
     }
 
+    result.merge!(@extra_headers) if @extra_headers
     result["Cookie"] = @cookie if @cookie
 
     result
