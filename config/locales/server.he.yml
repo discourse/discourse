@@ -82,6 +82,24 @@ he:
       not_allowed_theme: "‚%{repo}’ אינו ברשימת הנושאים המורשים (יש לבדוק את ההגדרה הגלובלית `allowed_theme_repos` - מאגרי ערכות עיצוב מורשים)."
       ssh_key_gone: "המתנת זמן רב מדי להתקנת ערכת העיצוב ותוקף מפתח ה־SSH פג. נא לנסות שוב."
       too_many_files: "מספר הקבצים (%{count}) בערכת העיצוב חרג ממספר הקבצים המרבי המותר (%{limit})"
+      migrations:
+        invalid_filename: "שם קובץ שגוי לקובץ הסבה: %{filename}. שמות הקבצים חייבים להתחיל ב־4 ספרות שלאחריהן מינוס ואז השם שמכיל רק תווים אלפאנומריים (אותיות וספרות) עם מינוסים."
+        name_too_long:
+          one: "שם ההסבה ארוך מדי. הוא לא יכול לחרוג מתו אחד."
+          two: "שם ההסבה ארוך מדי. הוא לא יכול לחרוג משני תווים."
+          many: "שם ההסבה ארוך מדי. הוא לא יכול לחרוג מ־%{count} תווים."
+          other: "שם ההסבה ארוך מדי. הוא לא יכול לחרוג מ־%{count} תווים."
+        too_many_pending_migrations: "יש יותר מדי הסבות ממתינות בערכת העיצוב הזאת. אסור לערכות עיצוב לקיים יותר מ־100 הסבות בעדכון יחיד"
+        out_of_sequence: "ההסבה ‚%{name}’ חרגה מהרצף. להסבה האחרונה לערכת העיצוב הזאת תועדה גרסה מספר %{current} שהיא עדכנית יותר מההסבה החדשה"
+        syntax_error: "הרצת ההסבה ‚%{name}’ נכשלה עקב שגיאת תחביר: %{error}"
+        exceeded_memory_limit: "ההסבה ‚%{name}’ נכשלה כי היא חרגע מכמות הזיכרון המרבית"
+        timed_out: "תם זמן ההסבה ‚%{name}’"
+        no_exported_function: "ההסבה ‚%{name}’ לא מייצאת פונקציה לביצוע ההסבה"
+        default_export_not_a_function: "להסבה ‚%{name}’ יש ייצוא ברירת מחדל שאינו פונקציה. ייצוא ברירת המחדל חייב להיות הפונקציה שמבצעת את ההסבה"
+        no_returned_value: "ההסבה ‚%{name}’ לא החזירה אף ערך (או שהחזירה ערך ריק או לא מוגדר). חייב לחזור עצם מסוג מפה (Map)"
+        wrong_return_type: "ההסבה ‚%{name}’ החזירה סוג נתונים לא מוכר. היא חייבת להחזיר עצם מסוג מפה (Map)"
+        runtime_error: "ההסבה ‚%{name}’ נתקלה בשגיאת זמן הריצה הבאה: %{error}"
+        unknown_setting_returned_by_migration: "ההסבות ‚%{name}’ החזירה את ההגדרה ‚%{setting_name}’ שאינה מוכרזת בקובץ ה־settings.yml של ערכת העיצוב"
     errors:
       component_no_user_selectable: "רכיבי ערכת העיצוב לא יכולים להיות לבחירת המשתמש"
       component_no_default: "רכיבי ערכת העיצוב לא יכולים להיות בררת המחדל של ערכת העיצוב"
@@ -1555,6 +1573,7 @@ he:
     search_query_log_max_size: "מספר מקסימלי של שאילתות חיפוש לשימור"
     search_query_log_max_retention_days: "הזמן המרבי לשמירת שאילתות חיפוש, בימים."
     search_ignore_accents: "התעלמות מסימנים דיאקריטיים בחיפוש אחר טקסט."
+    search_default_sort_order: "סדר מיון כברירת מחדל לחיפוש עמוד מלא"
     category_search_priority_low_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש נמוכה בקטגוריות."
     category_search_priority_high_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש גבוהה בקטגוריות."
     default_composer_category: "הקטגוריה המשמשת לאכלוס מראש של רשימת הקטגוריות הנפתחת בעת יצירת נושא חדש."
@@ -1623,7 +1642,7 @@ he:
     email_custom_headers: "רשימה מופרדת בקווים אנכיים (הסימון |) של כותרות דוא״ל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
-    enforce_second_factor: "מאלץ משתמשים להפעיל אימות דו־שלבי. יש לבחור ב‚הכול’ כדי לאלץ את כל המשתמשים. יש לבחור ב‚סגל’ כדי לאכוף על חברי סגל בלבד."
+    enforce_second_factor: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי לפני שתתאפשר להם גישה למנשק המשתמש של Discourse. יש לבחור ב‚הכול’ כדי לאכוף על כל המשתמשים. לבחור ב‚סגל’ כדי לאכוף על משתמשי סגל בלבד. ההגדרה הזאת לא חלה על ה־API או על האימות ‚ספק DiscourseConnect’."
     force_https: "אילוץ האתר שלך להשתמש ב־HTTPS בלבד. אזהרה: אין להפעיל זאת עד שווידאת ש־HTTPS מוגדר ועובד לחלוטין בכל מקום! בדקת שה־CDN, הכניסה דרך רשתות חברתיות ולוגואים / תלויות חיצוניות גם כן תומכים ב־HTTPS?"
     same_site_cookies: "להשתמש בעוגיות של אותו האתר, הן מבטלות משטחי הונאת בקשות בין אתרים (Cross Site Request Forgery - CSRF) בדפדפנים נתמכים (גמיש או נוקשה). אזהרה: נוקשה יעבוד רק על אתרים שמאלצים כניסה ומשתמשים בשיטת אימות חיצונית."
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפוסט ייכלל ב\"סיכום נושא זה\""
@@ -1932,6 +1951,7 @@ he:
     here_mention: "שם שישמש ל־@איזכור כדי לאפשר למשתמשים מורשים להודיע לכמות של עד ‚max_here_mentioned’ (כמות מאוזכרים מרבית במקום) אנשים שמשתתפים בנושא. לא יכול להיות שם משתמש קיים."
     max_here_mentioned: "מספר האנשים המרבי שמוזכרים על ידי ‎@here."
     min_trust_level_for_here_mention: "דרגת האמון המזערית המורשית להזכיר את ‎@here."
+    here_mention_allowed_groups: "קבוצות שמורשות לאזכר את ‎@here (@כאן)"
     create_thumbnails: "יצירת תמונות מוקטנות והארת תמונות גדולות מידי מלהיכלל בפוסט."
     email_time_window_mins: "להמתין (n) דקות בטרם כל שליחת התראה בדוא״ל, כדי לאפשר למשתמשים הזדמנות לערוך ולוודא באופן סופי את הפוסטים שלהם."
     personal_email_time_window_seconds: "להמתין (n) שניות בטרם שליחת הודעות בדוא״ל עם התראות על הודעות אישיות, כדי לתת למשתמשים הזדמנות לסיים את עריכת ההודעות שלהם."
@@ -1947,7 +1967,6 @@ he:
     min_title_similar_length: "האורך המינימלי של כותרת לפני שהיא נבדקת עבור איתור נושאים דומים."
     desktop_category_page_style: "סגנון ויזואלי לדף /categories."
     category_colors: "רשימה של ערכי צבעים הקסדצימליים מותרים לסימון קטגוריות."
-    category_style: "סגנון חזותי עבור עיטורי קטגוריות."
     default_dark_mode_color_scheme_id: "ערכת הצבעים לשימוש במצב כהה."
     dark_mode_none: "בלי"
     max_image_size_kb: "גודל ההעלאה המרבי בקילובתים. יש להגדיר זאת ב־nginx‏ (client_max_body_size) / apache או גם למתווך. תמונות שחורגות מהגודל הזה וקטנות מההגדרה client_max_body_size יערכו כך שגודלן יתאים להעלאה."
@@ -2055,6 +2074,7 @@ he:
     log_mail_processing_failures: "לתעד את כל שגיאות עיבוד הדוא״ל אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
     email_in: "לאפשר למשתמשים לפרסם נושאים חדשים דרך דוא״ל. לאחר הפעלת ההגדרה הזאת, יתאפשר לך להגדיר כתובות דוא״ל נכנסות לקבוצות ולקטגוריות."
     email_in_min_trust: "דרגת האמון המזערית הנדרשת למשתמש כדי לפרסם נושאים חדשים דרך הדוא״ל."
+    email_in_allowed_groups: "קבוצות שמורשות לפרסם נושאים חדשים דרך דוא״ל."
     email_in_authserv_id: "מזהה השירות מבצע בדיקות אימות על הודעות דוא״ל נכנסות. יש לעיין ב־<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> לקבלת הנחיות כיצד להגדיר זאת."
     email_in_spam_header: "כותרת הודעת הדוא״ל לאיתור ספאם."
     enable_imap: "הפעלת IMAP לסנכרון הודעות קבוצתיות."
@@ -2151,9 +2171,9 @@ he:
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפוסטים שלהם, בנוסף ל@שם_המשתמש שלהם."
     show_time_gap_days: "אם שני פוסטים נוצרים בהפרש כזה של ימים זה מזה, להציג את הפרש הזמן בנושא."
     short_progress_text_threshold: "לאחר שמספר הפוסטים בנושא עוברים את המספר הזה, מד ההתקדמות יציג רק את המספר של הפוסט הנוכחי. אם תשנו את רוחב מד ההתקדמות, ייתכן שתצטרכו לשנות ערך זה."
-    default_code_lang: "שפת התכנות כברירת המחדל להדגשת תחביר שחלה על מקטעי קוד (auto,‏ text,‏ ruby,‏ python וכו׳). ערך זה חייב להיות גם בהגדרת האתר `highlighted languages` (שפות מודגשות)."
+    default_code_lang: "שפת התכנות כברירת המחדל להדגשת תחביר שחלה על מקטעי קוד מסוג Markdown (auto,‏ text,‏ ruby,‏ python וכו׳). ערך זה חייב להיות גם בהגדרת האתר `highlighted languages` (שפות מודגשות)."
     warn_reviving_old_topic_age: "כשמשתמש מתחיל להגיב לנושא בו התגובה האחרונה נכתבה לפני למעלה מכמות זו של ימים, תופיע אזהרה. 0 להשבתה."
-    autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
+    autohighlight_all_code: "החלת הדגשת תחביר על מקטעי <code> ב־HTML, אפילו אם לא צוינה שפה."
     highlighted_languages: "כללי הדגשת תחביר להכללה. (אזהרה: הכללה של שפות רבות מדי פוגעת בביצועים) להדגמה: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
     show_copy_button_on_codeblocks: "הוספת כפתור למקטעי קוד כדי להעתיק את תוכני המקטע ללוח הגזירים של המשתמש."
     embed_any_origin: "לאפשר תוכן עם יכולת הטמעה ללא תלות במקור. נחוץ ליישומונים לנייד עם HTML סטטי."
@@ -2183,7 +2203,9 @@ he:
     emoji_deny_list: "סמלי האמוג׳י האלה לא יהיו זמינים לשימוש בתפריטים או בקודים מקוצרים."
     approve_post_count: "מספר הפוסטים ממשתמשים חדשים או בסיסיים שחייבים לאשר אותם"
     approve_unless_trust_level: "פוסטים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
+    approve_unless_allowed_groups: "פוסטים של משתמשים שאינם בקבוצות האלו דורשים אישור"
     approve_new_topics_unless_trust_level: "נושאים חדשים של משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
+    approve_new_topics_unless_allowed_groups: "נושאים חדשים של משתמשים שאינם בקבוצות האלו דורשים אישור"
     approve_unless_staged: "יש לאשר נושאים ופוסטים חדשים עבור משתמשים מבוימים"
     notify_about_queued_posts_after: "אם יש פוסטים שממתינים לסקירה מעבר לכמות כזו של שעות, יש לשלוח התראה לכל המפקחים. 0 משבית את ההתראות האלה."
     reviewable_revision_reasons: "רשימת סיבות שניתן לבחור בעת דחיית פוסט לסקירה שעומד בתור עם מהדורה. ‚אחר’ תמיד זמין בנוסף, הוא מאפשר לך לציין סיבה משלך."
@@ -2369,6 +2391,13 @@ he:
       delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
       invalid_uncategorized_category_setting: 'אי אפשר לבחור בקטגוריה „ללא קטגוריה” אם ‚הרשאת נושאים ללא קטגוריה’ אסורה.'
       invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
+    keywords:
+      anonymous_posting_allowed_groups: "(anonymous_posting_min_trust_level) דרגת אמון מזערית לפרסום אלמוני"
+      here_mention_allowed_groups: "(anonymous_posting_min_trust_level) דרגת אמון מזערית לאזכור כאן"
+      shared_drafts_allowed_groups: "(shared_drafts_min_trust_level) דרגת אימון מזערית לטיוטות משותפות"
+      approve_unless_allowed_groups: "approve_unless_trust_level (אישור למעט דרגות אמון)"
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level (לאשר נושאים חדשים אלמלא דרגת אמון)"
+      email_in_allowed_groups: "email_in_min_trust (אמון מזערי לדוא״ל)"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2527,6 +2556,7 @@ he:
     not_approved: "חשבונך טרם אושר. תישלח אליך הודעה בדוא״ל כשיהיה מוכן לכניסה."
     incorrect_username_email_or_password: "שם משתמש, דואר אלקטרוני או סיסמה לא נכונים"
     incorrect_password: "סיסמה שגויה"
+    incorrect_password_or_passkey: "סיסמה או מפתח גישה שגויים"
     wait_approval: "תודה על שנרשמת. אנחנו ניידע אותך כשהחשבון שלך יאושר."
     active: "החשבון שלך הופעל ומוכן לשימוש."
     activate_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה בדוא״ל אל <b>%{email}</b>. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
@@ -2868,7 +2898,7 @@ he:
         מפקחי %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "משוב על הנושא שלך"
-      subject_template: "משוב על נושא חדש שכותרתו „%{topic_title}”"
+      subject_template: 'משוב על נושא חדש שכותרתו „%{topic_title}”'
       text_body_template: |
         שלום %{username},
 
@@ -4893,6 +4923,7 @@ he:
     reasons:
       post_count: "הפוסטים הראשונים שמפורסמים על ידי משתמש כלשהו חייבים לעבור את אישור הסגל. למידע נוסף %{link}."
       trust_level: "התגובות של משתמשים בדרגות אמון נמוכות חייבות לעבור את אישור הסגל. למידע נוסף %{link}."
+      group: "משתמשים שאינם בקבוצות שצוינו חייבים שהתגובות שלהם תאושרנה על ידי הסגל. ר׳ %{link}"
       new_topics_unless_trust_level: "נושאים של משתמשים בדרגות אמון נמוכות חייבים לעבור את אישור הסגל. למידע נוסף %{link}."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. למידע נוסף %{link}."
       auto_silence_regex: "משתמש חדש שהפוסט הראשון שלו עונה להגדרה %{link}."
@@ -4955,6 +4986,8 @@ he:
         title: "לא"
       discard_post:
         title: "השלכת פוסט"
+      revise_and_reject_post:
+        title: "עריכת שינויים בפוסט…"
       ignore:
         title: "התעלמות"
       ignore_and_do_nothing:

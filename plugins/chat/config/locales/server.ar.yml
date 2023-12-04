@@ -220,6 +220,8 @@ ar:
         other: "و%{count} آخرين"
     summaries:
       no_targets: "لم تكن هناك رسائل خلال الفترة المحدَّدة."
+    transcript:
+      default_thread_title: "سلسلة الدردشة"
   discourse_push_notifications:
     popup:
       chat_mention:

@@ -34,9 +34,7 @@ export default class InitialOptions extends Component {
   }
 
   get termMatchesContextTypeKeyword() {
-    return this.search.activeGlobalSearchTerm?.match(MODIFIER_REGEXP)
-      ? true
-      : false;
+    return this.search.activeGlobalSearchTerm?.match(MODIFIER_REGEXP);
   }
 
   setAttributesForSearchContextType(type) {

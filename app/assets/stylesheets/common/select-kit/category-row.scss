@@ -8,15 +8,10 @@
       align-items: center;
       max-width: 100%;
       flex: 1 1 auto;
+      gap: 0 0.5em;
     }
     .category-desc p {
       margin: 0;
-    }
-    .category-status {
-      .badge-wrapper.box {
-        margin-bottom: 1px;
-        margin-top: 1px;
-      }
     }
     .category-desc {
       margin: 0;

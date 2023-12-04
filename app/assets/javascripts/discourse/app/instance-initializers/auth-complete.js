@@ -37,8 +37,8 @@ export default {
     }
 
     if (lastAuthResult) {
-      const router = owner.lookup("router:main");
-      router.one("didTransition", () => {
+      const router = owner.lookup("service:router");
+      router.one("routeDidChange", () => {
         next(() => {
           const options = JSON.parse(lastAuthResult);
 
@@ -46,7 +46,7 @@ export default {
             return;
           }
 
-          if (router.currentPath === "invites.show") {
+          if (router.currentRouteName === "invites.show") {
             owner
               .lookup("controller:invites-show")
               .authenticationComplete(options);
@@ -55,16 +55,16 @@ export default {
             const siteSettings = owner.lookup("service:site-settings");
 
             const loginError = (errorMsg, className, properties, callback) => {
-              const applicationRouter = owner.lookup("route:application");
+              const applicationRoute = owner.lookup("route:application");
               const applicationController = owner.lookup(
                 "controller:application"
               );
               modal.show(LoginModal, {
                 model: {
                   showNotActivated: (props) =>
-                    applicationRouter.send("showNotActivated", props),
+                    applicationRoute.send("showNotActivated", props),
                   showCreateAccount: (props) =>
-                    applicationRouter.send("showCreateAccount", props),
+                    applicationRoute.send("showCreateAccount", props),
                   canSignUp: applicationController.canSignUp,
                   flash: errorMsg,
                   flashType: className || "success",

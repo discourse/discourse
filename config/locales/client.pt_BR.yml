@@ -291,6 +291,9 @@ pt_BR:
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
+      user_count: "Cadastros"
+      active_user_count: "Usuários(as) ativos(as)"
+      contact: "Fale conosco"
       contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
     bookmarked:
       title: "Favorito"
@@ -1341,8 +1344,6 @@ pt_BR:
         title: "Autenticação de dois fatores"
         enable: "Gerenciar autenticação de dois fatores"
         disable_all: "Desativar tudo"
-        forgot_password: "Esqueceu a senha?"
-        confirm_password_description: "Confirme sua senha para continuar"
         name: "Nome"
         label: "Código"
         rate_limit: "Aguarde antes de tentar outro código de autenticação."
@@ -1471,14 +1472,13 @@ pt_BR:
           generic: "Sua conta %{provider} será usada para autenticação."
       name:
         title: "Nome"
-        instructions: "seu nome completo (opcional)"
-        instructions_required: "Seu nome completo"
+        instructions: "Seu nome completo (opcional)."
+        instructions_required: "Seu nome completo."
         required: "Digite um nome"
         too_short: "Seu nome é muito curto"
         ok: "Seu nome parece bom"
       username:
         title: "Nome do(a) usuário(a)"
-        instructions: "único, sem espaços, curto"
         short_instructions: "Você pode ser mencioado(a) usando @%{username}."
         available: "Seu nome do(a) usuário(a) está disponível"
         not_available: "Não está disponível. Tentar %{suggestion}?"
@@ -1673,7 +1673,7 @@ pt_BR:
         same_as_username: "A sua senha é igual ao seu nome do(a) usuário(a)."
         same_as_email: "A sua senha é igual ao seu e-mail."
         ok: "A sua senha parece boa."
-        instructions: "pelo menos %{count} caracteres"
+        instructions: "Pelo menos %{count} caracteres."
         required: "Digite uma senha"
         confirm: "Confirmar"
       summary:
@@ -2102,8 +2102,9 @@ pt_BR:
         one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário(a). Ninguém será notificado(a)."
         other: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuários(as). Ninguém será notificado(a)."
       group_mentioned:
-        one: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoa</a>. Tem certeza?"
-        other: "Ao mencionar %{group}, você está prestes a notificar <a href='%{group_link}'>%{count} pessoas</a>. Tem certeza?"
+        one: "Mencionar %{group} irá notificar <a href='%{group_link}'>%{count} pessoa</a>."
+        other: "Mencionar %{group} irá notificar <a href='%{group_link}'>%{count} pessoas</a>."
+      larger_group_mentioned: "Mencionar %{group} irá notificar <a href='%{group_link}'>%{count} pessoas</a>. Prosseguir?"
       cannot_see_mention:
         category: "Você mencionou @%{username}, mas ele(a) não será notificado(a), pois não tem acesso a esta categoria. Você precisará adicioná-lo(a) ao grupo que tem acesso à categoria."
         private: "Você mencionou @%{username}, mas ele(a) não será notificado(a), pois não pode ver esta mensagem pessoal. Você precisará convidá-lo(a) para esta mensagem pessoal."
@@ -2328,6 +2329,7 @@ pt_BR:
         private_message: '%{username} enviou uma mensagem pessoal em "%{topic}" - %{site_title}'
         linked: '%{username} vinculou sua postagem em "%{topic}" - %{site_title}'
         watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} postou em "%{topic}" - %{site_title}'
         confirm_title: "Notificações ativadas - %{site_title}"
         confirm_body: "Sucesso! As notificações foram ativadas."
         custom: "Notificação de %{username} em %{site_title}"
@@ -4179,9 +4181,7 @@ pt_BR:
         latest_version: "Última versão"
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"
         new_features:
-          title: "\U0001F381 Novos recursos"
-          dismiss: "Descartar"
-          learn_more: "Saiba mais"
+          learn_more: "Saiba mais..."
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema foi encontrado."
@@ -4507,8 +4507,8 @@ pt_BR:
         not_enabled: "N"
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
-        official: "Plugin oficial"
         broken_route: "Não foi possível configurar o link para \"%{name}\". Verifique se os bloqueadores de anúncios estão desativados e tente recarregar a página."
+        author: "De %{author}"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menu dropdown de cabeçalho"

@@ -12,11 +12,11 @@
     {{else}}
       {{d-icon "sign-in-alt"}}
     {{/if}}
-    {{b.title}}
+    <span class="btn-social-title">{{b.title}}</span>
   </button>
 {{/each}}
 
-{{#if this.canUsePasskeys}}
+{{#if this.showPasskeysButton}}
   <PasskeyLoginButton @passkeyLogin={{this.passkeyLogin}} />
 {{/if}}
 

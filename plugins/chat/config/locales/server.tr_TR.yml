@@ -33,6 +33,7 @@ tr_TR:
       direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."
       chat_upload_not_allowed_secure_uploads: "Güvenli yüklemeler site ayarı etkinleştirildiğinde sohbet yüklemelerine izin verilmez."
   system_messages:
+    private_channel_title: "Kanal %{id}"
     chat_channel_archive_complete:
       title: "Sohbet Kanalı Arşivlemesi Tamamlandı"
       subject_template: "Sohbet kanalı arşivlemesi başarıyla tamamlandı"
@@ -55,6 +56,7 @@ tr_TR:
   chat:
     deleted_chat_username: silindi
     errors:
+      users_cant_be_added_to_channel: "Bu kanala kullanıcı eklenemez."
       channel_exists_for_category: "Bu kategori ve ada sahip bir kanal zaten var"
       channel_new_message_disallowed:
         archived: "Kanal arşivlendi, yeni mesaj gönderilemez"
@@ -132,6 +134,9 @@ tr_TR:
         transcript_title: "%{channel_name} adlı kanaldaki önceki mesajların dökümü"
         transcript_body: "Size daha fazla bağlam sağlamak için bu konuşmadaki önceki mesajların bir dökümünü ekledik (en fazla on):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} %{inviting_user} tarafından davet edildi."
+        other: "%{invited_users} %{inviting_user} tarafından davet edildi."
       archive:
         first_post_raw: "Bu konu, [%{channel_name}](%{channel_url}) sohbet kanalının bir arşividir."
       messages_moved:
@@ -186,6 +191,8 @@ tr_TR:
         other: "ve %{count} üye daha"
     summaries:
       no_targets: "Seçilen dönemde mesaj yok."
+    transcript:
+      default_thread_title: "Konu"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -220,6 +227,7 @@ tr_TR:
         other: "Yeni sohbet mesajlarınız var"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Yeni mesaj"
         direct_message_from_1: "[%{email_prefix}] %{username} adlı kullanıcıdan yeni mesaj"
         direct_message_from_2: "[%{email_prefix}] %{username1} ve %{username2} adlı kullanıcılardan yeni mesaj"
         direct_message_from_more:

@@ -77,13 +77,15 @@ export default class ChatChannelsManager extends Service {
   }
 
   async unfollow(model) {
-    this.chatSubscriptionsManager.stopChannelSubscription(model);
-
-    return this.chatApi.unfollowChannel(model.id).then((membership) => {
-      model.currentUserMembership = membership;
-
+    try {
+      this.chatSubscriptionsManager.stopChannelSubscription(model);
+      model.currentUserMembership = await this.chatApi.unfollowChannel(
+        model.id
+      );
       return model;
-    });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @debounce(300)

@@ -1057,7 +1057,6 @@ zh_TW:
       second_factor:
         title: "兩步驟驗證"
         enable: "管理兩步驟驗證"
-        confirm_password_description: "請確認你的密碼以繼續"
         name: "名稱"
         label: "代碼"
         rate_limit: "嘗試其他驗證代碼前請稍後"
@@ -1135,14 +1134,13 @@ zh_TW:
         not_connected: "（無任何連結）"
       name:
         title: "名稱"
-        instructions: "您的全名 (選填)"
-        instructions_required: "您的暱稱"
+        instructions: "您的全名 (選填)."
+        instructions_required: "您的暱稱."
         required: "請輸入名稱"
         too_short: "你的暱稱太短。"
         ok: "你的暱稱符合要求。"
       username:
         title: "使用者名稱"
-        instructions: "獨一、無空格、短的"
         short_instructions: "其他人可以輸入 @%{username} 提及你。"
         available: "你的使用者名稱可以使用。"
         not_available: "無法使用，請試試看 %{suggestion}？"
@@ -1295,7 +1293,7 @@ zh_TW:
         same_as_username: "密碼與使用者名稱相同"
         same_as_email: "你的密碼與電郵相同。"
         ok: "你的密碼符合要求。"
-        instructions: "至少 %{count} 個字元"
+        instructions: "至少 %{count} 個字元."
       summary:
         title: "摘要"
         stats: "統計"
@@ -1593,8 +1591,6 @@ zh_TW:
       ok_proceed: "好的，繼續"
       group_mentioned_limit:
         other: "<b>提醒</b>你提及了<a href='%{group_link}'>%{group}</a>，但此群組的人數多於管理員配置的提及人數上限（%{count}位），因此不會有任何人收到通知。"
-      group_mentioned:
-        other: "提及 %{group} 時，你將通知 <a href='%{group_link}'>%{count} 人</a> － 確定嗎？"
       duplicate_link: "您連到<b>%{domain}</b>的連結已被<b>@%{username}</b><a href='%{post_url}'>於%{ago}前發在其他話題下的回覆</a>，確定要再次發佈嗎？"
       error:
         title_missing: "標題為必填欄位"
@@ -1739,6 +1735,7 @@ zh_TW:
         private_message: '%{username} 在 "%{topic}" 中私訊了你- %{site_title}'
         linked: '%{username}在“%{topic}”中連結了你的貼文 - %{site_title}'
         watching_first_post: '%{username} 在 "%{topic}"中開啟了新話題 - %{site_title}'
+        watching_category_or_tag: '%{username} 在"%{topic}" 中發文 - %{site_title}'
         confirm_title: "通知已啟用-%{site_title}"
         confirm_body: "成功! 通知已啟用"
         custom: "新的通知由%{username}在%{site_title}"
@@ -2971,9 +2968,7 @@ zh_TW:
         latest_version: "最新版本"
         problems_found: "根據您現在網站設定的建議"
         new_features:
-          title: "\U0001F381 新功能"
-          dismiss: "忽略"
-          learn_more: "了解更多"
+          learn_more: "了解更多..."
         last_checked: "上次檢查的時間"
         refresh_problems: "重新整理"
         no_problems: "未發現任何問題。"
@@ -3178,7 +3173,7 @@ zh_TW:
         not_enabled: "否"
         change_settings_short: "設定"
         howto: "如何安裝外掛?"
-        official: "官方套件"
+        author: "作者 %{author}"
       navigation_menu:
         sidebar: "側選單"
         legacy: "舊版"

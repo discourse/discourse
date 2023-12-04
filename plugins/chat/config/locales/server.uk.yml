@@ -36,6 +36,7 @@ uk:
       direct_message_enabled_groups_invalid: "Ви повинні вказати принаймні одну групу для цього параметра. Якщо ви не хочете, щоб хтось, крім членів команди обслуговування, надсилав приватні повідомлення, виберіть групу команди обслуговування."
       chat_upload_not_allowed_secure_uploads: "Завантаження чату не дозволяється, якщо ввімкнено налаштування безпечного завантаження."
   system_messages:
+    private_channel_title: "Канал %{id}"
     chat_channel_archive_complete:
       title: "Архівацію каналу чату завершено"
       subject_template: "Архівацію каналу чату успішно завершено"
@@ -58,6 +59,7 @@ uk:
   chat:
     deleted_chat_username: видалено
     errors:
+      users_cant_be_added_to_channel: "Користувачі не можуть бути додані до цього каналу."
       channel_exists_for_category: "Для цієї категорії та назви вже існує канал"
       channel_new_message_disallowed:
         archived: "Канал заархівований, нові повідомлення не надсилаються"
@@ -141,6 +143,11 @@ uk:
         transcript_title: "Зміст попередніх повідомлень в %{channel_name}"
         transcript_body: "Щоб надати вам більше контексту, ми включили зміст попередніх повідомлень у цій розмові (до десяти):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} був запрошений %{inviting_user}."
+        few: "%{invited_users} були запрошені %{inviting_user}."
+        many: "%{invited_users} були запрошені %{inviting_user}."
+        other: "%{invited_users} були запрошені %{inviting_user}."
       archive:
         first_post_raw: "Ця тема є архівом каналу чату [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -213,6 +220,8 @@ uk:
         other: "та %{count} інших"
     summaries:
       no_targets: "За вибраний період повідомлень не було."
+    transcript:
+      default_thread_title: "Нитка"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -249,6 +258,7 @@ uk:
         other: "У вас є нові повідомлення в чаті"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Нове повідомлення"
         direct_message_from_1: "[%{email_prefix}] Нове повідомлення від %{username}"
         direct_message_from_2: "[%{email_prefix}] Нове повідомлення від %{username1} і %{username2}"
         direct_message_from_more:

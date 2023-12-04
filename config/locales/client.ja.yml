@@ -1266,8 +1266,6 @@ ja:
         title: "二要素認証"
         enable: "二要素認証を管理"
         disable_all: "すべて無効化"
-        forgot_password: "パスワードを忘れましたか？"
-        confirm_password_description: "続行するにはパスワードを確認してください"
         name: "名前"
         label: "コード"
         rate_limit: "別の認証コードを試す前に、しばらくお待ちください。"
@@ -1395,14 +1393,13 @@ ja:
           generic: "あなたの %{provider} アカウントが認証に使用されます。"
       name:
         title: "名前"
-        instructions: "氏名 (オプション)"
-        instructions_required: "氏名"
+        instructions: "氏名 (オプション)."
+        instructions_required: "氏名."
         required: "名前を入力してください"
         too_short: "名前が短かすぎます"
         ok: "その名前で良さそうです"
       username:
         title: "ユーザー名"
-        instructions: "一意の短い名前、スペースの使用不可"
         short_instructions: "@%{username} であなたをメンションできます"
         available: "ユーザー名を使用できます"
         not_available: "利用できません。%{suggestion}を試しますか？"
@@ -1596,7 +1593,7 @@ ja:
         same_as_username: "パスワードとユーザー名が同じです。"
         same_as_email: "パスワードとメールアドレスが同じです。"
         ok: "そのパスワードで良さそうです。"
-        instructions: "%{count} 文字以上"
+        instructions: "%{count} 文字以上."
         required: "パスワードを入力してください"
         confirm: "確認"
       summary:
@@ -2008,8 +2005,6 @@ ja:
       ok_proceed: "OK、続行する"
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
-      group_mentioned:
-        other: "%{group} をメンションすると、<a href='%{group_link}'>%{count} 人</a> へ通知されます。よろしいですか？"
       cannot_see_mention:
         category: "@%{username} をメンションしましたが、このカテゴリへのアクセス権がないため通知されません。このカテゴリにアクセスできるグループに追加してください。"
         private: "@%{username} をメンションしましたが、この個人メッセージを見ることができないため通知されません。この個人メッセージに招待してください。"
@@ -2216,6 +2211,7 @@ ja:
         private_message: '「%{topic}」で %{username} があなたに個人メッセージを送信しました - %{site_title}'
         linked: '%{username} が「%{topic}」のあなたの投稿にリンクしました - %{site_title}'
         watching_first_post: '%{username} が新規トピック「%{topic}」を作成しました - %{site_title}'
+        watching_category_or_tag: '%{username} が「%{topic}」に投稿しました - %{site_title}'
         confirm_title: "通知を有効にしました - %{site_title}"
         confirm_body: "成功！通知を有効にしました！"
         custom: "%{username} からの通知（%{site_title}）"
@@ -3982,9 +3978,7 @@ ja:
         latest_version: "最新"
         problems_found: "現在のサイト設定に基づいたアドバイス"
         new_features:
-          title: "\U0001F381 新機能"
-          dismiss: "閉じる"
-          learn_more: "もっと読む"
+          learn_more: "もっと読む..."
         last_checked: "最終チェック"
         refresh_problems: "更新"
         no_problems: "問題は見つかりませんでした。"
@@ -4304,7 +4298,6 @@ ja:
         not_enabled: "いいえ"
         change_settings_short: "設定"
         howto: "プラグインをインストールするには？"
-        official: "公式プラグイン"
         broken_route: "'%{name}' へのリンクを構成できません。広告ブロッカーが無効になっていることを確認し、ページを再読み込みしてみてください。"
       navigation_menu:
         sidebar: "サイドバー"

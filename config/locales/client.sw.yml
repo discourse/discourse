@@ -737,7 +737,6 @@ sw:
         copy_to_clipboard_error: "Makosa kwenye Kunakili"
         copied_to_clipboard: "Nakili"
       second_factor:
-        confirm_password_description: "Thibitisha nywila yako kuendelea"
         name: "Jina"
         label: "Kodi"
         disable_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako"
@@ -798,13 +797,12 @@ sw:
         not_connected: "(haijaunganishwa)"
       name:
         title: "Jina"
-        instructions: "jina lako lote (sio lazima)"
-        instructions_required: "Jina lako lote"
+        instructions: "Jina lako lote (sio lazima)."
+        instructions_required: "Jina lako lote."
         too_short: "Jina lako ni fupi"
         ok: "Jina lako liko vizuri"
       username:
         title: "Jina la mtumiaji"
-        instructions: "kipekee, hakuna nafasi, fupi"
         short_instructions: "Watu wanaweza kukutaja kwa jina la @%{jina la mtumiaji}"
         available: "Jina la mtumiaji limepatikana"
         not_available: "Haijapatikana. Jaribu %{dokezo}?"
@@ -914,7 +912,7 @@ sw:
         same_as_username: "Nywila yako ni sawa na jina lako la utumiaji."
         same_as_email: "Nywila yako ni sawa na jina lako la utumiaji."
         ok: "Nywila yako iko sawa."
-        instructions: "herufi %{count} au zaidi"
+        instructions: "Herufi %{count} au zaidi."
       summary:
         title: "Muhtasari"
         stats: "Takwimu"
@@ -1183,9 +1181,6 @@ sw:
       posting_not_on_topic: "Mada zipi unazotaka kuzijibu?"
       saved_local_draft_tip: "Imehifadhiwa kwenye mazingira yako"
       drafts_offline: "Miswadajaribio Nje ya Mtandao"
-      group_mentioned:
-        one: "Kwa kutaja %{group}, utamjulisha <a href='%{group_link}'>mtu mmoja</a> – una uhakika?"
-        other: "Kwa kutaja %{group}, utawajulisha <a href='%{group_link}'>%{count} watu</a> – una uhakika?"
       duplicate_link: "Inaonekana linki yako <b>%{domain}</b> imechapishwa tayari kwenye topiki na <b>@%{username}</b> kwenye <a href='%{post_url}'>jibu la %{ago}</a> – una uhakina unataka kuchapisha tena?"
       error:
         title_missing: "Kichwa cha habari ni muhimu"
@@ -2297,8 +2292,7 @@ sw:
         installed_version: "Imesanikishwa"
         latest_version: "Hivi Karibuni"
         new_features:
-          dismiss: "Ondosha"
-          learn_more: "Jifunze zaidi"
+          learn_more: "Jifunze zaidi..."
         last_checked: "Mara ya Mwisho imeangaliwa"
         refresh_problems: "Rudisha Tena"
         no_problems: "Hakuna matatizo yaliyopatikana."
@@ -2454,7 +2448,7 @@ sw:
         not_enabled: "H"
         change_settings_short: "Mipangilio"
         howto: "Ninawekaje programu-jalizi?"
-        official: "Programu-jalizi Rasmi"
+        author: "Na %{author}"
       backups:
         title: "Machelezo"
         menu:

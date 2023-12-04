@@ -1,5 +1,3 @@
-import { HLJS_ALIASES } from "pretty-text/highlightjs-aliases";
-
 // we need a custom renderer for code blocks cause we have a slightly non compliant
 // format with special handling for text and so on
 const TEXT_CODE_CLASSES = ["text", "pre", "plain"];
@@ -52,15 +50,12 @@ function render(tokens, idx, options, env, slf, md) {
 
   let className;
 
-  const acceptableCodeClasses =
-    md.options.discourse.acceptableCodeClasses || [];
-
   if (TEXT_CODE_CLASSES.includes(tag)) {
     className = "lang-plaintext";
-  } else if (acceptableCodeClasses.includes(tag)) {
-    className = `lang-${tag}`;
+  } else if (tag === "auto") {
+    className = "lang-auto";
   } else {
-    className = "lang-plaintext";
+    className = `lang-${md.utils.escapeHtml(tag)}`;
     attributes["wrap"] = tag;
   }
 
@@ -79,21 +74,7 @@ function render(tokens, idx, options, env, slf, md) {
 
 export function setup(helper) {
   helper.registerOptions((opts, siteSettings) => {
-    let languageAliases = [];
-    const languages = (siteSettings.highlighted_languages || "")
-      .split("|")
-      .filter(Boolean);
-
-    languages.forEach((lang) => {
-      if (HLJS_ALIASES[lang]) {
-        languageAliases = languageAliases.concat(HLJS_ALIASES[lang]);
-      }
-    });
-
     opts.defaultCodeLang = siteSettings.default_code_lang;
-    opts.acceptableCodeClasses = languages
-      .concat(languageAliases)
-      .concat(["auto", "plaintext"]);
   });
 
   helper.allowList(["pre[data-code-*]"]);
@@ -101,10 +82,7 @@ export function setup(helper) {
   helper.allowList({
     custom(tag, name, value) {
       if (tag === "code" && name === "class") {
-        const m = /^lang\-(.+)$/.exec(value);
-        if (m) {
-          return helper.getOptions().acceptableCodeClasses.includes(m[1]);
-        }
+        return /^lang\-.+$/.test(value);
       }
     },
   });

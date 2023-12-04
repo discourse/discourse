@@ -3,7 +3,7 @@
 RSpec.describe BookmarkQuery do
   before { SearchIndexer.enable }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   def bookmark_query(user: nil, search_term: nil, per_page: nil)
     BookmarkQuery.new(user: user || self.user, search_term:, per_page:)
@@ -104,6 +104,8 @@ RSpec.describe BookmarkQuery do
 
       context "with custom bookmarkable fitering" do
         before { register_test_bookmarkable }
+
+        after { DiscoursePluginRegistry.reset! }
 
         let!(:bookmark5) do
           Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user, username: "bookmarkking"))

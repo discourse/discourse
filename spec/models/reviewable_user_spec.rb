@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableUser, type: :model do
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator)
   let(:user) do
     user = Fabricate(:user)
     user.activate
     user
   end
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "#actions_for" do
-    fab!(:reviewable) { Fabricate(:reviewable) }
+    fab!(:reviewable)
 
     it "returns correct actions in the pending state" do
       actions = reviewable.actions_for(Guardian.new(moderator))
@@ -56,8 +56,8 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   describe "#update_fields" do
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:reviewable) { Fabricate(:reviewable) }
+    fab!(:moderator)
+    fab!(:reviewable)
 
     it "doesn't raise errors with an empty update" do
       expect(reviewable.update_fields(nil, moderator)).to eq(true)
@@ -78,7 +78,7 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   describe "#perform" do
-    fab!(:reviewable) { Fabricate(:reviewable) }
+    fab!(:reviewable)
 
     context "when approving" do
       it "allows us to approve a user" do
@@ -230,17 +230,6 @@ RSpec.describe ReviewableUser, type: :model do
           },
         ) { @reviewable.perform(admin, :approve_user) }
       end
-    end
-
-    it "triggers a extensibility event" do
-      user && admin # bypass the user_created event
-      event =
-        DiscourseEvent
-          .track_events { ReviewableUser.find_by(target: user).perform(admin, :approve_user) }
-          .first
-
-      expect(event[:event_name]).to eq(:user_approved)
-      expect(event[:params].first).to eq(user)
     end
 
     it "triggers a extensibility event" do

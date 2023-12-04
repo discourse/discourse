@@ -25,6 +25,12 @@ pl_PL:
           descriptions:
             chat:
               create_message: "Utwórz wiadomość na czacie w określonym kanale."
+      web_hooks:
+        chat_event:
+          group_name: "Zdarzenia czatu"
+          chat_message_created: "Wiadomość została utworzona"
+          chat_message_edited: "Wiadomość została edytowana"
+          chat_message_trashed: "Wiadomość została umieszczona w koszu"
     chat:
       text_copied: Tekst skopiowany do schowka
       link_copied: Link skopiowany do schowka
@@ -310,6 +316,7 @@ pl_PL:
         yesterday: Wczoraj
       members_view:
         filter_placeholder: Znajdź członków
+        add_member: Dodaj członka
       about_view:
         associated_topic: Powiązany temat
         associated_category: Połączona kategoria
@@ -330,9 +337,15 @@ pl_PL:
         default_search_placeholder: "#kanał, @ktoś lub cokolwiek"
         default_channel_search_placeholder: "#kanał"
         default_user_search_placeholder: "@ktoś"
-        user_search_placeholder: "...dodaj więcej użytkowników"
+        user_search_placeholder: "...dodaj więcej członków"
         disabled_user: "wyłączył czat"
         no_items: "Brak elementu"
+        create_group_placeholder: "Nazwa czatu grupowego (opcjonalnie)"
+        participants_counter: "%{selection_count}/%{max} uczestników"
+        new_group_chat: "Nowy czat grupowy"
+        filter: "Filtr"
+        cant_add_more_members: "Osiągnięto maksymalną liczbę członków"
+        create_new_group_chat: "Utwórz czat grupowy"
       channel_edit_name_slug_modal:
         title: Edytuj kanał
         input_placeholder: Dodaj nazwę
@@ -344,10 +357,16 @@ pl_PL:
         input_placeholder: Dodaj opis
         description: Powiedz innym, o czym jest ten kanał
       direct_message_creator:
+        add_to_channel: "Dodaj do kanału"
         title: Nowa wiadomość
         prefix: "Do:"
         no_results: Brak wyników
         selected_user_title: "Odznacz %{username}"
+        members_counter:
+          one: "%{count}/%{max} członek"
+          few: "%{count}/%{max} członków"
+          many: "%{count}/%{max} członków"
+          other: "%{count}/%{max} członków"
       channel:
         no_memberships: Ten kanał nie ma członków
         no_memberships_found: Nie znaleziono członków
@@ -437,6 +456,7 @@ pl_PL:
       quote:
         original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
+        default_thread_title: "Wątek"
       notification_levels:
         never: "Nigdy"
         mention: "Tylko dla wzmianek"

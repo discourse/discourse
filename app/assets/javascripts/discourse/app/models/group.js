@@ -1,4 +1,5 @@
 import EmberObject from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
@@ -197,29 +198,64 @@ const Group = RestModel.extend({
     }
   },
 
-  @discourseComputed("watching_category_ids")
-  watchingCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  @dependentKeyCompat
+  get watchingCategories() {
+    return Category.findByIds(this.get("watching_category_ids"));
   },
 
-  @discourseComputed("tracking_category_ids")
-  trackingCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  set watchingCategories(categories) {
+    this.set(
+      "watching_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("watching_first_post_category_ids")
-  watchingFirstPostCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  @dependentKeyCompat
+  get trackingCategories() {
+    return Category.findByIds(this.get("tracking_category_ids"));
   },
 
-  @discourseComputed("regular_category_ids")
-  regularCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  set trackingCategories(categories) {
+    this.set(
+      "tracking_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("muted_category_ids")
-  mutedCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  @dependentKeyCompat
+  get watchingFirstPostCategories() {
+    return Category.findByIds(this.get("watching_first_post_category_ids"));
+  },
+
+  set watchingFirstPostCategories(categories) {
+    this.set(
+      "watching_first_post_category_ids",
+      categories.map((c) => c.id)
+    );
+  },
+
+  @dependentKeyCompat
+  get regularCategories() {
+    return Category.findByIds(this.get("regular_category_ids"));
+  },
+
+  set regularCategories(categories) {
+    this.set(
+      "regular_category_ids",
+      categories.map((c) => c.id)
+    );
+  },
+
+  @dependentKeyCompat
+  get mutedCategories() {
+    return Category.findByIds(this.get("muted_category_ids"));
+  },
+
+  set mutedCategories(categories) {
+    this.set(
+      "muted_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
   asJSON() {

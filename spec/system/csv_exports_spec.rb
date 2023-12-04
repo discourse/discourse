@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "CSV Exports", type: :system do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
   let(:time_format) { "%Y-%m-%d %H:%M:%S UTC" }
 

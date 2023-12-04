@@ -3,6 +3,15 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
+:root {
+  --d-input-bg-color: var(--secondary);
+  --d-input-text-color: var(--primary);
+  --d-input-border: 1px solid var(--primary-400);
+  --d-input-bg-color--disabled: var(--primary-low);
+  --d-input-text-color--disabled: var(--primary);
+  --d-input-border--disabled: 1px solid var(--primary-low);
+}
+
 // Animation Keyframes
 @keyframes ping {
   0% {
@@ -180,35 +189,6 @@ input {
   }
 }
 
-input,
-select,
-textarea {
-  color: var(--primary);
-  caret-color: currentColor;
-
-  &[class*="span"] {
-    float: none;
-    margin-left: 0;
-  }
-
-  &[disabled],
-  &[readonly] {
-    cursor: not-allowed;
-    background-color: var(--primary-low);
-    border-color: var(--primary-low);
-  }
-
-  &:focus:required:invalid {
-    color: var(--danger);
-    border-color: var(--danger);
-  }
-
-  &:focus:required:invalid:focus {
-    border-color: var(--danger);
-    box-shadow: var(--shadow-focus-danger);
-  }
-}
-
 input {
   &[type="text"],
   &[type="password"],
@@ -228,9 +208,9 @@ input {
     @include form-item-sizing;
     display: inline-block;
     margin-bottom: 9px;
-    color: var(--primary);
-    background-color: var(--secondary);
-    border: 1px solid var(--primary-400);
+    color: var(--d-input-text-color);
+    background-color: var(--d-input-bg-color);
+    border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
     &:focus {
       @include default-focus;
@@ -292,6 +272,32 @@ table {
     color: var(--primary-medium);
     text-align: left;
     padding: 0.5em;
+  }
+}
+
+input,
+select,
+textarea {
+  color: var(--d-input-text-color);
+  caret-color: currentColor;
+
+  &[class*="span"] {
+    float: none;
+    margin-left: 0;
+  }
+
+  &[disabled],
+  &[readonly] {
+    cursor: not-allowed;
+    color: var(--d-input-text-color--disabled);
+    background-color: var(--d-input-bg-color--disabled);
+    border: var(--d-input-border--disabled);
+  }
+
+  &:focus:required:invalid {
+    color: var(--danger);
+    border-color: var(--danger);
+    outline: 1px solid var(--danger);
   }
 }
 

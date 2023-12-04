@@ -260,15 +260,6 @@ basic:
     type: list
     list_type: compact
     default: "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|E45735"
-  category_style:
-    client: true
-    default: "bullet"
-    type: enum
-    choices:
-      - bar
-      - box
-      - bullet
-      - none
   max_category_nesting:
     client: true
     default: 2
@@ -425,6 +416,10 @@ login:
     client: true
     default: true
     validator: "EnableLocalLoginsViaEmailValidator"
+  enable_passkeys:
+    client: true
+    default: false
+    hidden: true
   allow_new_registrations:
     client: true
     default: true
@@ -960,6 +955,14 @@ posting:
   min_trust_level_for_here_mention:
     default: "2"
     enum: "TrustLevelAndStaffSetting"
+    hidden: true
+  here_mention_allowed_groups:
+    default: "12" # auto group trust_level_2
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   title_max_word_length:
     default: 30
     locale_default:
@@ -1062,9 +1065,23 @@ posting:
   approve_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  approve_unless_allowed_groups:
+    default: 10
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   approve_new_topics_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  approve_new_topics_unless_allowed_groups:
+    default: 10
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   approve_suspect_users:
     default: true
   approve_unless_staged:
@@ -1237,6 +1254,13 @@ email:
   email_in_min_trust:
     default: 2
     enum: "TrustLevelSetting"
+    hidden: true
+  email_in_allowed_groups:
+    default: 12
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   email_in_authserv_id:
     default: ""
   email_in_spam_header:
@@ -2181,10 +2205,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  experimental_passkeys:
-    client: true
-    default: false
-    hidden: true
   experimental_search_menu_groups:
     type: group_list
     list_type: compact
@@ -2390,6 +2410,11 @@ search:
   search_page_size:
     default: 50
     hidden: true
+  search_default_sort_order:
+    default: 0 # "relevance"
+    client: true
+    type: enum
+    enum: "SearchSortOrderSiteSetting"
 
 uncategorized:
   version_checks:
@@ -2935,12 +2960,13 @@ dashboard:
     client: true
     type: list
     list_type: compact
-    default: "moderation|security|reports"
+    default: "moderation|security|reports|features"
     allow_any: false
     choices:
       - moderation
       - security
       - reports
+      - features
   dashboard_general_tab_activity_metrics:
     client: true
     type: list

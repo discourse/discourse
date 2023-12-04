@@ -118,6 +118,7 @@ zh_CN:
         title: "在标题中显示活动指示器"
         all_new: "所有新消息"
         dm_and_mentions: "直接消息和提及"
+        only_mentions: "仅限提及"
         never: "永不"
       separate_sidebar_mode:
         title: "为论坛和聊天显示单独边栏模式"
@@ -250,6 +251,8 @@ zh_CN:
       save: "保存"
       select: "选择"
       return_to_list: "返回频道列表"
+      return_to_channel: "返回频道"
+      return_to_threads_list: "返回对话列表"
       unread_threads_count:
         other: "您有 %{count} 条未读讨论"
       scroll_to_bottom: "滚动到底部"
@@ -294,6 +297,7 @@ zh_CN:
         yesterday: 昨天
       members_view:
         filter_placeholder: 查找成员
+        add_member: 添加成员
       about_view:
         associated_topic: 链接的话题
         associated_category: 链接的类别
@@ -314,9 +318,15 @@ zh_CN:
         default_search_placeholder: "#一个频道、@ 某人或任何内容"
         default_channel_search_placeholder: "#一个频道"
         default_user_search_placeholder: "@ 某人"
-        user_search_placeholder: "…添加更多用户"
+        user_search_placeholder: "...添加更多成员"
         disabled_user: "已禁用聊天"
         no_items: "无条目"
+        create_group_placeholder: "群组聊天名称 (可选)"
+        participants_counter: "%{selection_count}/%{max} 参与者"
+        new_group_chat: "新群组聊天"
+        filter: "筛选"
+        cant_add_more_members: "已达到最大成员数"
+        create_new_group_chat: "创建群组聊天"
       channel_edit_name_slug_modal:
         title: 编辑频道
         input_placeholder: 添加名称
@@ -328,10 +338,14 @@ zh_CN:
         input_placeholder: 添加描述
         description: 告诉人们这个频道的主题
       direct_message_creator:
+        add_to_channel: "添加到频道"
         title: 新消息
         prefix: "至："
         no_results: 没有结果
         selected_user_title: "取消选择 %{username}"
+        group_name: "群组聊天名称 (可选)"
+        members_counter:
+          other: "%{count}/%{max} 成员"
       channel:
         no_memberships: 此频道没有成员
         no_memberships_found: 找不到成员
@@ -392,6 +406,7 @@ zh_CN:
       quote:
         original_channel: '最初在<a href="%{channelLink}">%{channel}</a>中发送。'
         copy_success: "聊天引用已复制到剪贴板"
+        default_thread_title: "对话"
       notification_levels:
         never: "永不"
         mention: "仅限提及"
@@ -540,6 +555,7 @@ zh_CN:
           other: "+%{count}"
       threads:
         open: "打开对话"
+        list: "对话"
         none: "您没有参与此频道中的任何对话。"
       draft_channel_screen:
         header: "新消息"

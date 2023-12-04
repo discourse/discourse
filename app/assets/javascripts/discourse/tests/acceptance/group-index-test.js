@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
@@ -143,5 +143,37 @@ acceptance("Group Members", function (needs) {
       exists(".bulk-select-buttons-wrap details"),
       "it shows menu button if something is selected"
     );
+  });
+});
+
+/**
+ * Workaround for https://github.com/tildeio/router.js/pull/335
+ */
+async function visitWithRedirects(url) {
+  try {
+    await visit(url);
+  } catch (error) {
+    const { message } = error;
+    if (message !== "TransitionAborted") {
+      throw error;
+    }
+    await settled();
+  }
+}
+
+acceptance("Old group route redirections", function () {
+  test("/group/discourse is redirected", async function (assert) {
+    await visitWithRedirects("/group/discourse");
+    assert.strictEqual(currentURL(), "/g/discourse");
+  });
+
+  test("/groups/discourse is redirected", async function (assert) {
+    await visitWithRedirects("/groups/discourse");
+    assert.strictEqual(currentURL(), "/g/discourse");
+  });
+
+  test("/groups is redirected", async function (assert) {
+    await visitWithRedirects("/groups");
+    assert.strictEqual(currentURL(), "/g");
   });
 });

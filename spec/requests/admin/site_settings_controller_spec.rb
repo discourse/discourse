@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::SiteSettingsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#index" do
     context "when logged in as an admin" do

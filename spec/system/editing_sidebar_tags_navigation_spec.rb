@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Editing sidebar tags navigation", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:tag1) { Fabricate(:tag, name: "tag").tap { |tag| Fabricate.times(3, :topic, tags: [tag]) } }
 
   fab!(:tag2) do
@@ -181,7 +181,7 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     Tag.delete_all
 
     tags =
-      (TagsController::LIST_LIMIT + 1).times.map.with_index do |index|
+      (TagsController::LIST_LIMIT + 50).times.map.with_index do |index|
         Fabricate(:tag, name: "Tag #{sprintf("%03d", index)}")
       end
 

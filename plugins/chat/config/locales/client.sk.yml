@@ -110,9 +110,9 @@ sk:
         default_search_placeholder: "#a-channel, @somebody alebo čokoľvek."
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@niekto"
-        user_search_placeholder: "...pridať ďalších používateľov"
         disabled_user: "má vypnutý chat"
         no_items: "Žiadne položky"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Upraviť kanál
         input_placeholder: Pridať meno
@@ -137,6 +137,8 @@ sk:
         italic_text: "zdôraznený text"
         bold_text: "výrazný text"
         send: "Odoslať"
+      quote:
+        default_thread_title: "Vlákno"
       notification_levels:
         never: "Nikdy"
       settings:

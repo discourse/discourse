@@ -1550,6 +1550,19 @@ export default Controller.extend(bufferedProperty("model"), {
     this.model.recover();
   },
 
+  @action
+  buildQuoteMarkdown() {
+    const { postId, buffer, opts } = this.quoteState;
+    const loadedPost = this.get("model.postStream").findLoadedPost(postId);
+    const promise = loadedPost
+      ? Promise.resolve(loadedPost)
+      : this.get("model.postStream").loadPost(postId);
+
+    return promise.then((post) => {
+      return buildQuote(post, buffer, opts);
+    });
+  },
+
   deleteTopic(opts = {}) {
     if (opts.force_destroy) {
       return this.model.destroy(this.currentUser, opts);

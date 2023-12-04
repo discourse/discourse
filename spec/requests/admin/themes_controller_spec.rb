@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ThemesController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   let! :repo do
     setup_git_repo("about.json" => { name: "discourse-branch-header" }.to_json)
@@ -73,12 +73,8 @@ RSpec.describe Admin::ThemesController do
         let(:uploaded_file) { Upload.find_by(original_filename: filename) }
         let(:response_json) { response.parsed_body }
 
-        before do
-          post "/admin/themes/upload_asset.json", params: { file: upload }
-          expect(response.status).to eq(201)
-        end
-
         it "reuses the original upload" do
+          post "/admin/themes/upload_asset.json", params: { file: upload }
           expect(response.status).to eq(201)
           expect(response_json["upload_id"]).to eq(uploaded_file.id)
         end

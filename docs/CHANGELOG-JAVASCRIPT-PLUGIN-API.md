@@ -7,6 +7,24 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.0] - 2023-12-1
+
+### Added
+
+- Added `setDesktopTopicTimelineScrollAreaHeight` function, which takes an object with min/max key value pairs as an argument. This is used to adjust the height of the topic timeline on desktop without CSS hacks that break the functionality of the topic timeline.
+
+## [1.17.0] - 2023-11-30
+
+### Added
+
+- Introduces `forceDropdownAnimationForMenuPanels` API for forcing one or many Menu Panels (search-menu, user-menu, etc) to be rendered as a dropdown. This can be useful for plugins as the default behavior is to add a 'slide-in' behavior to a menu panel if you are viewing on a small screen. eg. mobile.
+
+## [1.16.0] - 2023-11-17
+
+### Added
+
+- Added `recurrenceRule` option to `downloadCalendar`, this can be used to set recurring events in the calendar. Rule syntax can be found at https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10.
+
 ## [1.15.0] - 2023-10-18
 
 ### Added

@@ -5,9 +5,12 @@
 # https://translate.discourse.org/
 
 ro:
+  system_messages:
+    private_channel_title: "Canal %{id}"
   chat:
     deleted_chat_username: șters
     errors:
+      users_cant_be_added_to_channel: "Utilizatorii nu pot fi adăugați la acest canal."
       not_accepting_dms: "%{username} nu acceptă mesaje în acest moment."
     reviewables:
       actions:
@@ -18,6 +21,10 @@ ro:
         disagree:
           title: "Nu sunt de acord"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} a fost invitat de %{inviting_user}."
+        few: "%{invited_users} au fost invitați de %{inviting_user}."
+        other: "%{invited_users} au fost invitați de %{inviting_user}."
       dm_title:
         single_user: "%{username}"
     mention_warning:
@@ -34,6 +41,9 @@ ro:
         few: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
         other: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
       too_many_members: "%{first_identifier} are prea mulți membri. Nimeni nu a fost anunțat."
+    transcript:
+      default_thread_title: "Fir"
+      split_thread_range: "mesaje de la %{start} la %{end} din %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -43,6 +53,10 @@ ro:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      subject:
+        private_message: "[%{email_prefix}] Mesaj nou"
   unsubscribe:
     chat_summary:
       never: Niciodată

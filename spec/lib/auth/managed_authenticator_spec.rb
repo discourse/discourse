@@ -212,7 +212,7 @@ RSpec.describe Auth::ManagedAuthenticator do
     end
 
     describe "avatar on update" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let!(:associated) do
         UserAssociatedAccount.create!(user: user, provider_name: "myauth", provider_uid: "1234")
       end
@@ -244,7 +244,7 @@ RSpec.describe Auth::ManagedAuthenticator do
     end
 
     describe "profile on update" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let!(:associated) do
         UserAssociatedAccount.create!(user: user, provider_name: "myauth", provider_uid: "1234")
       end
@@ -279,7 +279,7 @@ RSpec.describe Auth::ManagedAuthenticator do
     end
 
     describe "avatar on create" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let!(:association) do
         UserAssociatedAccount.create!(provider_name: "myauth", provider_uid: "1234")
       end
@@ -302,7 +302,7 @@ RSpec.describe Auth::ManagedAuthenticator do
     end
 
     describe "profile on create" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let!(:association) do
         UserAssociatedAccount.create!(provider_name: "myauth", provider_uid: "1234")
       end
@@ -408,7 +408,7 @@ RSpec.describe Auth::ManagedAuthenticator do
   end
 
   describe "description_for_user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "returns empty string if no entry for user" do
       expect(authenticator.description_for_user(user)).to eq("")
@@ -439,7 +439,7 @@ RSpec.describe Auth::ManagedAuthenticator do
   end
 
   describe "revoke" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "raises exception if no entry for user" do
       expect { authenticator.revoke(user) }.to raise_error(Discourse::NotFound)

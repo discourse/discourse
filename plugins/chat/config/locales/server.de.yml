@@ -36,6 +36,7 @@ de:
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
       chat_upload_not_allowed_secure_uploads: "Chat-Uploads sind nicht erlaubt, wenn die Website-Einstellung für sichere Uploads aktiviert ist."
   system_messages:
+    private_channel_title: "Kanal %{id}"
     chat_channel_archive_complete:
       title: "Chat-Kanal-Archivierung abgeschlossen"
       subject_template: "Chat-Kanal-Archivierung erfolgreich abgeschlossen"
@@ -58,6 +59,7 @@ de:
   chat:
     deleted_chat_username: gelöscht
     errors:
+      users_cant_be_added_to_channel: "Diesem Kanal können keine Nutzer hinzugefügt werden."
       channel_exists_for_category: "Für diese Kategorie und diesen Namen existiert bereits ein Kanal"
       channel_new_message_disallowed:
         archived: "Der Kanal ist archiviert, es können keine neuen Nachrichten gesendet werden"
@@ -135,6 +137,9 @@ de:
         transcript_title: "Transkript früherer Nachrichten in %{channel_name}"
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} wurde von %{inviting_user}eingeladen."
+        other: "%{invited_users} sind von %{inviting_user}eingeladen worden."
       archive:
         first_post_raw: "Dieses Thema ist ein Archiv des Chat-Kanals [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -189,6 +194,9 @@ de:
         other: "und %{count} andere"
     summaries:
       no_targets: "Im ausgewählten Zeitraum gab es keine Nachrichten."
+    transcript:
+      default_thread_title: "Thread"
+      split_thread_range: "Nachrichten %{start} bis %{end} von %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -223,6 +231,7 @@ de:
         other: "Du hast neue Chat-Nachrichten"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Neue Nachricht"
         direct_message_from_1: "[%{email_prefix}] Neue Nachricht von %{username}"
         direct_message_from_2: "[%{email_prefix}] Neue Nachricht von %{username1} und %{username2}"
         direct_message_from_more:

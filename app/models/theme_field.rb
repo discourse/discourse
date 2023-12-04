@@ -19,7 +19,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   scope :find_by_theme_ids,
-        ->(theme_ids) {
+        ->(theme_ids) do
           return none unless theme_ids.present?
 
           where(theme_id: theme_ids).joins(
@@ -27,10 +27,10 @@ class ThemeField < ActiveRecord::Base
           SELECT #{theme_ids.map.with_index { |id, idx| "#{id.to_i} AS theme_id, #{idx} AS theme_sort_column" }.join(" UNION ALL SELECT ")}
         ) as X ON X.theme_id = theme_fields.theme_id",
           ).order("theme_sort_column")
-        }
+        end
 
   scope :filter_locale_fields,
-        ->(locale_codes) {
+        ->(locale_codes) do
           return none unless locale_codes.present?
 
           where(target_id: Theme.targets[:translations], name: locale_codes).joins(
@@ -41,20 +41,20 @@ class ThemeField < ActiveRecord::Base
               *locale_codes.map.with_index { |code, index| [code, index] },
             ),
           ).order("Y.locale_sort_column")
-        }
+        end
 
   scope :find_first_locale_fields,
-        ->(theme_ids, locale_codes) {
+        ->(theme_ids, locale_codes) do
           find_by_theme_ids(theme_ids)
             .filter_locale_fields(locale_codes)
             .reorder("X.theme_sort_column", "Y.locale_sort_column")
             .select("DISTINCT ON (X.theme_sort_column) *")
-        }
+        end
 
   scope :svg_sprite_fields,
-        -> {
+        -> do
           where(type_id: ThemeField.theme_var_type_ids, name: SvgSprite.theme_sprite_variable_name)
-        }
+        end
 
   def self.types
     @types ||=
@@ -664,6 +664,8 @@ class ThemeField < ActiveRecord::Base
           name: ThemeField.scss_fields + ThemeField.html_fields,
         )
       )
+    elsif translation_field? && name == "en" # en is fallback for all other locales
+      return theme.theme_fields.where(target_id: Theme.targets[:translations]).where.not(name: "en")
     end
     ThemeField.none
   end

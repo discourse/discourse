@@ -80,6 +80,10 @@ export default Component.extend({
   @action
   edit(event) {
     event?.preventDefault();
+    this.tagInfo.set(
+      "descriptionWithNewLines",
+      this.tagInfo.description?.replaceAll("<br>", "\n")
+    );
     this.setProperties({
       editing: true,
       newTagName: this.tag.id,
@@ -127,6 +131,7 @@ export default Component.extend({
   @action
   finishedEditing() {
     const oldTagName = this.tag.id;
+    this.newTagDescription = this.newTagDescription.replaceAll("\n", "<br>");
     this.tag
       .update({ id: this.newTagName, description: this.newTagDescription })
       .then((result) => {

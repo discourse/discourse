@@ -104,7 +104,7 @@ class Report
     @average = false
     @percent = false
     @higher_is_better = true
-    @modes = %i[table chart]
+    @modes = %i[table chart radar]
     @prev_data = nil
     @dates_filtering = true
     @available_filters = {}

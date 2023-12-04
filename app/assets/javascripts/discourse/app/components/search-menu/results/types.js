@@ -26,21 +26,29 @@ export default class Types extends Component {
     if (wantsNewWindow(event)) {
       return;
     }
-
-    event.preventDefault();
-    DiscourseURL.routeTo(event.currentTarget.href);
-    this.args.closeSearchMenu();
+    this.routeToSearchResult(event);
   }
 
   @action
-  onKeydown(e) {
-    if (e.key === "Escape") {
+  onKeydown(event) {
+    if (event.key === "Escape") {
       this.args.closeSearchMenu();
-      e.preventDefault();
+      event.preventDefault();
+      return false;
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.routeToSearchResult(event);
       return false;
     }
 
-    this.search.handleResultInsertion(e);
-    this.search.handleArrowUpOrDown(e);
+    this.search.handleResultInsertion(event);
+    this.search.handleArrowUpOrDown(event);
+  }
+
+  @action
+  routeToSearchResult(event) {
+    DiscourseURL.routeTo(event.target.href);
+    this.args.closeSearchMenu();
   }
 }

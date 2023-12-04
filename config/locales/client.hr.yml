@@ -1343,8 +1343,6 @@ hr:
         title: "Dvofaktorska autentifikacija"
         enable: "Upravljanje dvofaktorskom autentifikacijom"
         disable_all: "Onemogući sve"
-        forgot_password: "Zaboravili ste lozinku?"
-        confirm_password_description: "Molimo potvrdite svoju lozinku za nastavak"
         name: "Ime i prezime"
         label: "Šifra"
         rate_limit: "Pričekajte prije pokušaja drugog koda za provjeru autentičnosti."
@@ -1473,14 +1471,13 @@ hr:
           generic: "Vaš %{provider} račun koristit će se za provjeru autentičnosti."
       name:
         title: "Ime"
-        instructions: "Vaše ime i prezime (neobavezno)"
-        instructions_required: "Vaše ime i prezime"
+        instructions: "Vaše ime i prezime (neobavezno)."
+        instructions_required: "Vaše ime i prezime."
         required: "Unesite ime"
         too_short: "Ime vam je prekratko"
         ok: "Vaše ime dobro izgleda"
       username:
         title: "Korisničko ime"
-        instructions: "jedinstveno, bez razmaka, kratko"
         short_instructions: "Ljudi vas mogu spominjati kao @%{username}"
         available: "Vaše je korisničko ime slobodno"
         not_available: "Nije dostupno. Pokušajte %{suggestion}?"
@@ -1676,7 +1673,7 @@ hr:
         same_as_username: "Vaša lozinka je ista kao korisničko ime."
         same_as_email: "Vaša lozinka jednaka je vašoj e-pošti."
         ok: "Vaša zaporka dobro izgleda."
-        instructions: "minimalno %{count} znakova"
+        instructions: "Minimalno %{count} znakova."
         required: "Molimo unesite lozinku"
         confirm: "Potvrdi"
       summary:
@@ -2097,10 +2094,6 @@ hr:
         one: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora konfiguriranog ograničenja spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
         few: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora konfiguriranog ograničenja spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
         other: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora koji je konfigurirao ograničenje spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
-      group_mentioned:
-        one: "Spominjući %{group}, te o tome obavijestiti <a href='%{group_link}'>%{count} osobe</a> - jeste li sigurni?"
-        few: "Spominjući %{group}, te o tome obavijestiti <a href='%{group_link}'>%{count} osobe</a> - jeste li sigurni?"
-        other: "Spominjući %{group}, te o tome obavijestiti <a href='%{group_link}'>%{count} ljudi</a> - jeste li sigurni?"
       cannot_see_mention:
         category: "Spomenuli ste @%{username} , ali oni neće biti obaviješteni jer nemaju pristup ovoj kategoriji. Morat ćete ih dodati u grupu koja ima pristup ovoj kategoriji."
         private: "Spomenuli ste @%{username} , ali oni neće biti obaviješteni jer ne mogu vidjeti ovu osobnu poruku. Morat ćete ih pozvati u ovu osobnu poruku."
@@ -2338,6 +2331,7 @@ hr:
         private_message: '%{username} vam je poslao privatnu poruku u temi "%{topic}" - %{site_title}'
         linked: '%{username} se povezao s tvojom objavom "%{topic}" - %{site_title}'
         watching_first_post: '%{username} stvorio je novu temu "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} objavio u "%{topic}" - %{site_title}'
         confirm_title: "Obavijesti omogućene - %{site_title}"
         confirm_body: "Uspjeh! Obavijesti su omogućene."
         custom: "Obavijest od %{username} %{site_title}"
@@ -4191,9 +4185,7 @@ hr:
         latest_version: "Posljednje"
         problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
         new_features:
-          title: "\U0001F381 Nove značajke"
-          dismiss: "Skloni"
-          learn_more: "Saznajte više"
+          learn_more: "Saznajte više..."
         last_checked: "Zadnje provjereno"
         refresh_problems: "Osvježi"
         no_problems: "Nisu pronađeni problemi."
@@ -4499,8 +4491,8 @@ hr:
         not_enabled: "N"
         change_settings_short: "Postavke"
         howto: "Kako instalirati dodatke?"
-        official: "Službeni dodatak"
         broken_route: "Nije moguće konfigurirati vezu na '%{name}'. Provjerite jesu li programi za blokiranje oglasa onemogućeni i pokušajte ponovno učitati stranicu."
+        author: "Od %{author}"
       navigation_menu:
         sidebar: "Bočna traka"
         header_dropdown: "Padajući izbornik zaglavlja"

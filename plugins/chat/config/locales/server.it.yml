@@ -55,6 +55,7 @@ it:
   chat:
     deleted_chat_username: eliminato
     errors:
+      users_cant_be_added_to_channel: "Impossibile aggiungere membri a questo canale."
       channel_exists_for_category: "Esiste già un canale per questa categoria e questo nome"
       channel_new_message_disallowed:
         archived: "Il canale è archiviato, non è possibile inviare nuovi messaggi"
@@ -186,6 +187,8 @@ it:
         other: "e %{count} altri"
     summaries:
       no_targets: "Non ci sono stati messaggi durante il periodo selezionato."
+    transcript:
+      default_thread_title: "Thread"
   discourse_push_notifications:
     popup:
       chat_mention:

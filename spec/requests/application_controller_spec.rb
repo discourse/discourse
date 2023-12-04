@@ -128,7 +128,7 @@ RSpec.describe ApplicationController do
 
   describe "#redirect_to_second_factor_if_required" do
     let(:admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     before do
       admin # to skip welcome wizard at home page `/`
@@ -430,8 +430,8 @@ RSpec.describe ApplicationController do
     let!(:theme) { Fabricate(:theme, user_selectable: true) }
     let!(:theme2) { Fabricate(:theme, user_selectable: true) }
     let!(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
-    fab!(:user) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user)
+    fab!(:admin)
 
     before { sign_in(user) }
 
@@ -900,6 +900,13 @@ RSpec.describe ApplicationController do
       { HTTP_ACCEPT_LANGUAGE: locale }
     end
 
+    def locale_scripts(body)
+      Nokogiri::HTML5
+        .parse(body)
+        .css('script[src*="assets/locales/"]')
+        .map { |script| script.attributes["src"].value }
+    end
+
     context "with allow_user_locale disabled" do
       context "when accept-language header differs from default locale" do
         before do
@@ -909,9 +916,9 @@ RSpec.describe ApplicationController do
 
         context "with an anonymous user" do
           it "uses the default locale" do
-            get "/bootstrap.json", headers: headers("fr")
+            get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("en.js")
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
           end
         end
 
@@ -920,9 +927,9 @@ RSpec.describe ApplicationController do
             user = Fabricate(:user, locale: :fr)
             sign_in(user)
 
-            get "/bootstrap.json", headers: headers("fr")
+            get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("en.js")
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
           end
         end
       end
@@ -938,15 +945,15 @@ RSpec.describe ApplicationController do
 
         context "with an anonymous user" do
           it "uses the locale from the headers" do
-            get "/bootstrap.json", headers: headers("fr")
+            get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("fr.js")
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/fr.js")
           end
 
           it "doesn't leak after requests" do
-            get "/bootstrap.json", headers: headers("fr")
+            get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("fr.js")
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/fr.js")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE)
           end
         end
@@ -957,9 +964,9 @@ RSpec.describe ApplicationController do
           before { sign_in(user) }
 
           it "uses the user's preferred locale" do
-            get "/bootstrap.json", headers: headers("fr")
+            get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("fr.js")
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/fr.js")
           end
 
           it "serves a 404 page in the preferred locale" do
@@ -983,9 +990,9 @@ RSpec.describe ApplicationController do
           SiteSetting.set_locale_from_accept_language_header = true
           SiteSetting.default_locale = "en"
 
-          get "/bootstrap.json", headers: headers("zh-CN")
+          get "/latest", headers: headers("zh-CN")
           expect(response.status).to eq(200)
-          expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("zh_CN.js")
+          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
         end
       end
 
@@ -994,9 +1001,9 @@ RSpec.describe ApplicationController do
           SiteSetting.allow_user_locale = true
           SiteSetting.default_locale = "en"
 
-          get "/bootstrap.json", headers: headers("")
+          get "/latest", headers: headers("")
           expect(response.status).to eq(200)
-          expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("en.js")
+          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
         end
       end
     end
@@ -1011,18 +1018,18 @@ RSpec.describe ApplicationController do
 
         context "with an anonymous user" do
           it "uses the locale from the cookie" do
-            get "/bootstrap.json", headers: { Cookie: "locale=es" }
+            get "/latest", headers: { Cookie: "locale=es" }
             expect(response.status).to eq(200)
-            expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("es.js")
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/es.js")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
           end
         end
 
         context "when the preferred locale includes a region" do
           it "returns the locale and region separated by an underscore" do
-            get "/bootstrap.json", headers: { Cookie: "locale=zh-CN" }
+            get "/latest", headers: { Cookie: "locale=zh-CN" }
             expect(response.status).to eq(200)
-            expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("zh_CN.js")
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
           end
         end
       end
@@ -1032,9 +1039,9 @@ RSpec.describe ApplicationController do
           SiteSetting.allow_user_locale = true
           SiteSetting.default_locale = "en"
 
-          get "/bootstrap.json", headers: { Cookie: "" }
+          get "/latest", headers: { Cookie: "" }
           expect(response.status).to eq(200)
-          expect(response.parsed_body["bootstrap"]["locale_script"]).to end_with("en.js")
+          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
         end
       end
     end
@@ -1061,7 +1068,7 @@ RSpec.describe ApplicationController do
   end
 
   describe "Discourse-Rate-Limit-Error-Code header" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     before { RateLimiter.enable }
 
@@ -1152,7 +1159,7 @@ RSpec.describe ApplicationController do
   describe "#banner_json" do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
-    fab!(:banner_topic) { Fabricate(:banner_topic) }
+    fab!(:banner_topic)
     fab!(:p1) { Fabricate(:post, topic: banner_topic, raw: "A banner topic") }
 
     before do
@@ -1252,7 +1259,7 @@ RSpec.describe ApplicationController do
     end
 
     context "when user is regular user" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       before { sign_in(user) }
 

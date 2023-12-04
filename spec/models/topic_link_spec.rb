@@ -1,17 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicLink do
-  it { is_expected.to validate_presence_of :url }
-
-  def test_uri
-    URI.parse(Discourse.base_url)
-  end
-
+  let(:test_uri) { URI.parse(Discourse.base_url) }
   fab!(:topic) { Fabricate(:topic, title: "unique topic name") }
-
   fab!(:user) { topic.user }
+  fab!(:post)
 
-  fab!(:post) { Fabricate(:post) }
+  it { is_expected.to validate_presence_of :url }
 
   it "can't link to the same topic" do
     ftl = TopicLink.new(url: "/t/#{topic.id}", topic_id: topic.id, link_topic_id: topic.id)
@@ -25,7 +20,7 @@ RSpec.describe TopicLink do
       # prepare a title for one of the links
       stub_request(:get, non_png).with(
         headers: {
-          "Accept" => "*/*",
+          "Accept" => "text/html,*/*",
           "Accept-Encoding" => "gzip",
           "Host" => "b.com",
         },
@@ -104,7 +99,7 @@ RSpec.describe TopicLink do
 
     context "with topic link" do
       fab!(:other_topic) { Fabricate(:topic, user: user) }
-      fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:moderator)
 
       let(:post) { Fabricate(:post, topic: other_topic, user: user, raw: "some content") }
 
@@ -273,6 +268,7 @@ RSpec.describe TopicLink do
       let(:post) do
         Fabricate(:post, topic: topic, user: user, raw: "<a href='/faq'>faq link here</a>")
       end
+
       before { TopicLink.extract_from(post) }
 
       it "does not extract a link" do

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Search do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:admin)
+  fab!(:topic)
 
   before do
     SearchIndexer.enable
@@ -140,7 +140,7 @@ RSpec.describe Search do
   end
 
   describe "custom_eager_load" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic) }
 
     before do
@@ -1332,7 +1332,7 @@ RSpec.describe Search do
       end
 
       context "with non staff logged in" do
-        fab!(:user) { Fabricate(:user) }
+        fab!(:user)
 
         it "shows doesn't show group" do
           expect(search(user).groups.map(&:name)).to eq([])
@@ -1648,7 +1648,7 @@ RSpec.describe Search do
 
   describe "Advanced search" do
     describe "bookmarks" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let!(:bookmark_post1) { Fabricate(:post, raw: "boom this is a bookmarked post") }
       let!(:bookmark_post2) { Fabricate(:post, raw: "wow some other cool thing") }
 
@@ -1770,7 +1770,7 @@ RSpec.describe Search do
 
     context "when searching for posts made by users of a group" do
       fab!(:topic) { Fabricate(:topic, created_at: 3.months.ago) }
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       fab!(:user_2) { Fabricate(:user) }
       fab!(:user_3) { Fabricate(:user) }
       fab!(:group) { Fabricate(:group, name: "Like_a_Boss").tap { |g| g.add(user) } }
@@ -2003,7 +2003,30 @@ RSpec.describe Search do
       expect(Search.execute("with:images").posts.map(&:id)).to contain_exactly(post_uploaded.id)
     end
 
-    it "can find by latest" do
+    it "defaults to search_default_sort_order when no order is provided" do
+      topic1 = Fabricate(:topic, title: "I do not like that Sam I am", created_at: 1.minute.ago)
+      post1 = Fabricate(:post, topic: topic1, created_at: 10.minutes.ago)
+      post2 =
+        Fabricate(
+          :post,
+          raw: "that Sam I am, that Sam I am",
+          created_at: 5.minutes.ago,
+          topic: Fabricate(:topic, created_at: 1.hour.ago),
+        )
+
+      SiteSetting.search_default_sort_order = SearchSortOrderSiteSetting.value_from_id(:latest)
+
+      expect(Search.execute("sam").posts.map(&:id)).to eq([post2.id, post1.id])
+      expect(Search.execute("sam ORDER:LATEST").posts.map(&:id)).to eq([post2.id, post1.id])
+
+      SiteSetting.search_default_sort_order =
+        SearchSortOrderSiteSetting.value_from_id(:latest_topic)
+
+      expect(Search.execute("sam").posts.map(&:id)).to eq([post1.id, post2.id])
+      expect(Search.execute("sam ORDER:LATEST_TOPIC").posts.map(&:id)).to eq([post1.id, post2.id])
+    end
+
+    it "can order by latest" do
       topic1 = Fabricate(:topic, title: "I do not like that Sam I am")
       post1 = Fabricate(:post, topic: topic1, created_at: 10.minutes.ago)
       post2 = Fabricate(:post, raw: "that Sam I am, that Sam I am", created_at: 5.minutes.ago)
@@ -2014,7 +2037,7 @@ RSpec.describe Search do
       expect(Search.execute("l sam").posts.map(&:id)).to eq([post2.id, post1.id])
     end
 
-    it "can find by oldest" do
+    it "can order by oldest" do
       topic1 = Fabricate(:topic, title: "I do not like that Sam I am")
       post1 = Fabricate(:post, topic: topic1, raw: "sam is a sam sam sam") # score higher
 

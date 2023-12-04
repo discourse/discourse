@@ -21,7 +21,7 @@ class DummyCustomSummarization < Summarization::Base
     "dummy"
   end
 
-  def summarize(_content)
+  def summarize(_content, _user)
     @summarization_result.tap { |result| yield(result[:summary]) if block_given? }
   end
 end

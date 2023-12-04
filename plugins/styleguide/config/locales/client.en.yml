@@ -5,11 +5,14 @@ en:
       welcome: "To get started, choose a section from the menu on the left."
 
       categories:
+        syntax: Syntax
         atoms: Atoms
         molecules: Molecules
         organisms: Organisms
 
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Typography"
           example: "Welcome to Discourse"

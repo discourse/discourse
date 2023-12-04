@@ -98,9 +98,9 @@ id:
         default_search_placeholder: "#a-channel, @somebody atau apapun"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@somebody"
-        user_search_placeholder: "...menambahkan lebih banyak pengguna"
         disabled_user: "telah menonaktifkan obrolan"
         no_items: "Tidak ada item"
+        filter: "Filter"
       direct_message_creator:
         title: Pesan Baru
         prefix: "Kepada:"
@@ -111,6 +111,8 @@ id:
         types:
           category: "Kategori"
           topic: "Topik"
+      quote:
+        default_thread_title: "Utas"
       notification_levels:
         never: "Tidak pernah"
       settings:

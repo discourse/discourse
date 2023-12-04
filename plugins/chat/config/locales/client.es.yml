@@ -305,9 +305,9 @@ es:
         default_search_placeholder: "#un-canal, @alguien o lo que sea"
         default_channel_search_placeholder: "#un-canal"
         default_user_search_placeholder: "@alguien"
-        user_search_placeholder: "...añadir más usuarios"
         disabled_user: "ha desactivado el chat"
         no_items: "No hay elementos"
+        filter: "Filtro"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Añadir un nombre
@@ -396,6 +396,7 @@ es:
       quote:
         original_channel: 'Enviado originalmente en <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cita del chat copiada en el portapapeles"
+        default_thread_title: "Hilo"
       notification_levels:
         never: "Nunca"
         mention: "Solo para menciones"

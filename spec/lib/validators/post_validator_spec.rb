@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PostValidator do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   let(:post) { build(:post, topic: topic) }
   let(:validator) { PostValidator.new({}) }
 
@@ -24,7 +24,7 @@ RSpec.describe PostValidator do
 
     context "when post's topic is a PM between a human and a non human user" do
       fab!(:robot) { Fabricate(:bot) }
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       let(:topic) do
         Fabricate(
@@ -234,7 +234,7 @@ RSpec.describe PostValidator do
   end
 
   describe "unique_post_validator" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:post) { Fabricate(:post, raw: "Non PM topic body", user: user, topic: topic) }
     fab!(:pm_post) do
       Fabricate(:post, raw: "PM topic body", user: user, topic: Fabricate(:private_message_topic))
@@ -318,9 +318,9 @@ RSpec.describe PostValidator do
   end
 
   describe "force_edit_last_validator" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:other_user) { Fabricate(:user) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     before { SiteSetting.max_consecutive_replies = 2 }
 

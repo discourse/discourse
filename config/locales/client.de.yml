@@ -344,6 +344,7 @@ de:
       copied: "Kopiert!"
       copy: "Code in die Zwischenablage kopieren"
       fullscreen: "Code im Vollbildmodus zeigen"
+      view_code: "Code ansehen"
     drafts:
       label: "Entwürfe"
       label_with_count: "Entwürfe (%{count})"
@@ -1366,8 +1367,6 @@ de:
         title: "Zwei-Faktor-Authentifizierung"
         enable: "Zwei-Faktor-Authentifizierung verwalten"
         disable_all: "Alle deaktivieren"
-        forgot_password: "Passwort vergessen?"
-        confirm_password_description: "Bitte bestätige dein Passwort, um fortzufahren"
         name: "Name"
         label: "Code"
         rate_limit: "Bitte warte ein wenig, bevor du es mit einem anderen Authentifizierungscode versuchst."
@@ -1431,6 +1430,7 @@ de:
         never_used: "Nie benutzt"
         not_allowed_error: "Bei der Registrierung des Hauptschlüssels wurde entweder das Zeitlimit überschritten, er wurde abgebrochen oder ist nicht zulässig."
         already_added_error: "Du hast diesen Hauptschlüssel bereits registriert. Du musst ihn nicht erneut registrieren."
+        confirm_button: "oder einen Hauptschlüssel verwenden"
       change_about:
         title: "„Über mich“ ändern"
         error: "Beim Ändern dieses Wertes ist ein Fehler aufgetreten."
@@ -1511,14 +1511,14 @@ de:
           generic: "Dein „%{provider}“-Konto wird für die Authentifizierung genutzt."
       name:
         title: "Name"
-        instructions: "dein vollständiger Name (optional)"
-        instructions_required: "Dein vollständiger Name"
+        instructions: "Dein vollständiger Name (optional)."
+        instructions_required: "Dein vollständiger Name."
         required: "Bitte gib einen Namen ein"
         too_short: "Dein Name ist zu kurz"
         ok: "Dein Name sieht in Ordnung aus"
       username:
         title: "Benutzername"
-        instructions: "einzigartig, keine Leerzeichen, kurz"
+        instructions: "Einzigartig, keine Leerzeichen, kurz."
         short_instructions: "Leute können dich mit @%{username} erwähnen"
         available: "Dein Benutzername ist verfügbar"
         not_available: "Nicht verfügbar. Wie wäre es mit %{suggestion}?"
@@ -1713,6 +1713,7 @@ de:
       confirm_access:
         title: "Zugriff bestätigen"
         incorrect_password: "Das eingegebene Passwort ist falsch."
+        incorrect_passkey: "Der Hauptschlüssel ist falsch."
         logged_in_as: "Du bist eingeloggt als: "
         instructions: "Bitte bestätige deine Identität, um diese Aktion abzuschließen."
         fine_print: "Wir bitten dich, deine Identität zu bestätigen, da dies eine potenziell sensible Aktion ist. Wenn du dich einmal authentifiziert hast, wirst du erst nach ein paar Stunden Inaktivität wieder aufgefordert, dich erneut zu authentifizieren."
@@ -1723,7 +1724,7 @@ de:
         same_as_username: "Dein Passwort entspricht deinem Benutzernamen."
         same_as_email: "Dein Passwort entspricht deiner E-Mail-Adresse."
         ok: "Dein Passwort sieht in Ordnung aus."
-        instructions: "mindestens %{count} Zeichen"
+        instructions: "Mindestens %{count} Zeichen."
         required: "Bitte Passwort eingeben"
         confirm: "Bestätigen"
         incorrect_password: "Das eingegebene Passwort ist falsch."
@@ -1876,7 +1877,7 @@ de:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} überschritten.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} überschritten.
-    learn_more: "mehr erfahren …"
+    learn_more: "Mehr erfahren …"
     mute: Stummschalten
     unmute: Stummschaltung aufheben
     last_post: Geschrieben
@@ -1958,6 +1959,7 @@ de:
       action: "Ich habe mein Passwort vergessen"
       invite: "Gib deinen Benutzernamen oder deine E-Mail-Adresse ein. Wir senden dir eine E-Mail zum Zurücksetzen des Passworts."
       invite_no_username: "Gib deine E-Mail-Adresse ein. Dann senden wir dir eine E-Mail zum Zurücksetzen des Passworts."
+      email-username: "E-Mail oder Benutzername"
       reset: "Passwort zurücksetzen"
       complete_username: "Wenn ein Benutzerkonto dem Benutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_email: "Wenn ein Benutzerkonto der E-Mail-Adresse <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
@@ -2177,8 +2179,9 @@ de:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
         other: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzern. Deshalb wird niemand benachrichtigt."
       group_mentioned:
-        one: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Person</a> zu benachrichtigen – bist du dir sicher?"
-        other: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Personen</a> zu benachrichtigen – bist du dir sicher?"
+        one: "Wenn du %{group} erwähnst, wird <a href='%{group_link}'>%{count} die Person</a>benachrichtigen."
+        other: "Durch die Erwähnung von %{group} werden <a href='%{group_link}'>%{count} Personen</a>benachrichtigt."
+      larger_group_mentioned: "Wenn du %{group} erwähnst, werden <a href='%{group_link}'>%{count} und</a>benachrichtigt. Bist du sicher?"
       cannot_see_mention:
         category: "Du hast @%{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu, die Zugriff auf diese Kategorie hat."
         private: "Du hast @%{username} erwähnt, aber diese Person wird nicht benachrichtigt, da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser persönlichen Nachricht ein."
@@ -2408,6 +2411,7 @@ de:
         private_message: '%{username} hat dir eine Nachricht geschickt in „%{topic}“ – %{site_title}'
         linked: '%{username} hat deinen Beitrag verlinkt in „%{topic}“ – %{site_title}'
         watching_first_post: '%{username} hat ein neues Thema „%{topic}“ erstellt – %{site_title}'
+        watching_category_or_tag: '%{username} hat geschrieben in „%{topic}“ – %{site_title}'
         confirm_title: "Benachrichtigungen aktiviert – %{site_title}"
         confirm_body: "Erfolgreich! Benachrichtigungen wurden aktiviert."
         custom: "Benachrichtigung von %{username} auf %{site_title}"
@@ -3153,7 +3157,7 @@ de:
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
     post:
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
-      quote_reply: "Zitat"
+      quote_reply: "Zitieren"
       quote_reply_shortcut: "Oder drücke q"
       quote_edit: "Bearbeiten"
       quote_edit_shortcut: "Oder drücke e"
@@ -4105,6 +4109,7 @@ de:
       sr_jump_bottom_button: "Zum letzten Beitrag springen"
     fullscreen_table:
       expand_btn: "Tabelle erweitern"
+      view_table: "Tabelle ansehen"
     second_factor_auth:
       redirect_after_success: "Die Zwei-Faktor-Authentifizierung war erfolgreich. Weiterleitung zur vorherigen Seite …"
     sidebar:
@@ -4313,9 +4318,9 @@ de:
         latest_version: "Neueste"
         problems_found: "Ein paar Ratschläge basierend auf deinen aktuellen Website-Einstellungen"
         new_features:
-          title: "\U0001F381 Neue Funktionen"
-          dismiss: "Verwerfen"
-          learn_more: "Mehr erfahren"
+          title: "Was ist neu"
+          previous_announcements: "Du kannst frühere Ankündigungen neuer Funktionen auf <a href='%{url}' target='_blank'>Discourse Meta</a>sehen."
+          learn_more: "Mehr erfahren …"
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."
@@ -4706,8 +4711,11 @@ de:
         not_enabled: "N"
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
-        official: "Offizielles Plug-in"
+        official: "Offizielles Discourse Plugin"
+        experimental: "Experimentelles Plugin"
         broken_route: "Link zu „%{name}“ kann nicht konfiguriert werden. Vergewissere dich, dass Werbeblocker deaktiviert sind, und versuche, die Seite neu zu laden."
+        author: "Von %{author}"
+        experimental_badge: "experimentell"
       navigation_menu:
         sidebar: "Seitenleiste"
         header_dropdown: "Kopfzeilen-Drop-down"

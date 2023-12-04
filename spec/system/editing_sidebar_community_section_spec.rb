@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Editing Sidebar Community Section", type: :system do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:sidebar_header_dropdown) { PageObjects::Components::NavigationMenu::HeaderDropdown.new }

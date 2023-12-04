@@ -1431,6 +1431,7 @@ tr_TR:
     search_query_log_max_size: "Saklanacak maksimum arama sorgusu miktarı"
     search_query_log_max_retention_days: "Arama sorgularını saklamak için gün cinsinden maksimum süre."
     search_ignore_accents: "Metin ararken aksanları yok sayın."
+    search_default_sort_order: "Tam sayfa arama için varsayılan sıralama düzeni"
     category_search_priority_low_weight: "Düşük kategori arama önceliği için sıralamaya uygulanan ağırlık."
     category_search_priority_high_weight: "Yüksek kategori arama önceliği için sıralamaya uygulanan ağırlık."
     default_composer_category: "Yeni bir konu oluştururken kategori açılır menüsünü önceden doldurmak için kullanılan kategori."
@@ -1499,7 +1500,7 @@ tr_TR:
     email_custom_headers: "Özel e-posta başlıklarının boruyla ayrılmış bir listesi"
     email_subject: "Standart e-postalar için özelleştirilebilir konu formatı. Bkz. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Kullanıcılara belirli bir konuya neden erişemedikleri hakkında daha fazla ayrıntı sağlar. Not: Bu daha az güvenlidir çünkü kullanıcılar bir URL'nin geçerli bir konuya bağlanıp bağlanmadığını bilir."
-    enforce_second_factor: "Kullanıcıları iki adımlı kimlik doğrulamayı etkinleştirmeye zorlar. Tüm kullanıcılara zorunlu kılmak için \"tümü\" seçeneğini belirleyin. Yalnızca personel kullanıcılarına uygulamak için \"personel\" seçeneğini belirleyin."
+    enforce_second_factor: "Kullanıcılardan Discourse kullanıcı arayüzüne erişmeden önce iki faktörlü kimlik doğrulamayı etkinleştirmelerini isteyin. Tüm kullanıcılara uygulamak için 'tümü' seçeneğini seçin. Yalnızca personel kullanıcılarına uygulamak için 'personel' seçeneğini seçin. Bu ayar API veya 'DiscourseConnect sağlayıcısı' kimlik doğrulamasını etkilemez."
     force_https: "Sitenizi yalnızca HTTPS kullanmaya zorlayın. UYARI: HTTPS'nin tamamen kurulduğunu ve kesinlikle her yerde çalıştığını doğrulayana kadar bunu etkinleştirmeyin! CDN'nizi, tüm sosyal girişlerinizi ve tüm harici logoları / bağımlılıkları da HTTPS uyumlu olduklarından emin olmak için kontrol ettiniz mi?"
     same_site_cookies: "Aynı site çerezlerini kullanın, desteklenen tarayıcılarda (Lax veya Strict) tüm Site İçi Talep Sahteciliği vektörlerini ortadan kaldırır. Uyarı: Strict yalnızca oturum açmaya zorlayan ve harici bir auth yöntemi kullanan sitelerde çalışır."
     summary_score_threshold: "Bir gönderinin \"Bu Konuyu Özetleyin\" bölümüne dahil edilmesi için gereken minimum puan"
@@ -1805,6 +1806,7 @@ tr_TR:
     here_mention: "Ayrıcalıklı kullanıcıların konuya katılan en fazla \"max_here_mentioned\" kişiye bildirimde bulunmasına izin vermek için @bahsetme için kullanılan ad. Mevcut bir kullanıcı adı olmamalıdır."
     max_here_mentioned: "@Burada bahsedilen maksimum kişi sayısı."
     min_trust_level_for_here_mention: "@Burada bahsedilmesine izin verilen minimum güven seviyesi."
+    here_mention_allowed_groups: "@here atıfı yapılmasına izin verilen gruplar."
     create_thumbnails: "Bir gönderiye sığmayacak kadar büyük küçük resimler ve ışık kutusu görüntüleri oluşturun."
     email_time_window_mins: "Kullanıcılara gönderilerini düzenleme ve son haline getirme şansı tanımak için herhangi bir bildirim e-postası göndermeden önce (n) dakika bekleyin."
     personal_email_time_window_seconds: "Kullanıcılara mesajlarını düzenleme ve son haline getirme şansı tanımak için herhangi bir kişisel mesaj bildirim e-postası göndermeden önce (n) saniye bekleyin."
@@ -1820,7 +1822,6 @@ tr_TR:
     min_title_similar_length: "Benzer konular için kontrol edilmeden önce bir başlığın minimum uzunluğu."
     desktop_category_page_style: "Kategoriler sayfası için görsel stil."
     category_colors: "Kategoriler için izin verilen onaltılık renk değerlerinin bir listesi."
-    category_style: "Kategori rozetleri için görsel stil."
     default_dark_mode_color_scheme_id: "Koyu moddayken kullanılan renk şeması."
     dark_mode_none: "Hiçbiri"
     max_image_size_kb: "KB cinsinden maksimum görüntü yükleme boyutu. Bu, nginx (client_max_body_size) / apache veya proxy'de de yapılandırılmalıdır. Bundan daha büyük ve client_max_body_size değerinden daha küçük görüntüler yükleme sırasında sığacak şekilde yeniden boyutlandırılır."
@@ -2024,9 +2025,9 @@ tr_TR:
     display_name_on_posts: "Bir kullanıcının @kullanıcı adına ek olarak gönderilerinde tam adını gösterin."
     show_time_gap_days: "Bu kadar gün arayla iki gönderi yapılmışsa aradaki zaman farkını konu içinde gösterin."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktıktan sonra, ilerleme çubuğu yalnızca geçerli gönderi sayısını gösterecektir. İlerleme çubuğunun genişliğini değiştirirseniz bu değeri değiştirmeniz gerekebilir."
-    default_code_lang: "Kod bloklarına uygulanan varsayılan programlama dili sözdizimi vurgulaması (auto, text, ruby, python vb.). Bu değer aynı zamanda \"highlighted languages\" site ayarında da bulunmalıdır."
+    default_code_lang: "Markdown kod bloklarına (otomatik, metin, ruby, python vb.) uygulanan varsayılan programlama dili sözdizimi vurgulaması. Bu değer aynı zamanda \"vurgulanan diller\" site ayarında da bulunmalıdır."
     warn_reviving_old_topic_age: "Biri son yanıtın şu kadar günden daha eski olduğu bir konuya yanıt vermeye başladığında, bir uyarı görüntülenir. 0'a ayarlayarak devre dışı bırakın."
-    autohighlight_all_code: "Dili açıkça belirtmemiş olsalar bile önceden biçimlendirilmiş tüm kod bloklarına kod vurgulamayı zorla uygulayın."
+    autohighlight_all_code: "Bir dil belirtmemiş olsalar bile HTML <code> bloklarına sözdizimi vurgulaması uygula."
     highlighted_languages: "Sözdizimi vurgulama kuralları dahil edildi. (Uyarı: Çok fazla dil eklemek performansı etkileyebilir) Demo için bkz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
     show_copy_button_on_codeblocks: "Blok içeriğini kullanıcının panosuna kopyalamak için codeblocks'a bir düğme ekleyin."
     embed_any_origin: "Kaynağından bağımsız olarak yerleştirilebilir içeriğe izin verin. Bu, statik HTML içeren mobil uygulamalar için gereklidir."
@@ -2056,7 +2057,9 @@ tr_TR:
     emoji_deny_list: "Bu emoji'ler menülerde veya kısa kodlarda kullanılamaz."
     approve_post_count: "Yeni veya temel bir kullanıcının onaylanması gereken gönderi miktarı"
     approve_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcıların gönderileri onaylanmalıdır"
+    approve_unless_allowed_groups: "Bu gruplarda yer almayan kullanıcıların gönderileri onaylanmalıdır"
     approve_new_topics_unless_trust_level: "Bu güven seviyesinin altındaki kullanıcılar için yeni konular onaylanmalıdır"
+    approve_new_topics_unless_allowed_groups: "Bu gruplarda olmayan kullanıcılar için yeni konular onaylanmalıdır"
     approve_unless_staged: "Aşamalı kullanıcılar için yeni konular ve gönderiler onaylanmalıdır"
     notify_about_queued_posts_after: "Şu kadar saatten uzun süredir incelenmeyi bekleyen gönderiler varsa tüm moderatörlere bir bildirim gönderin. Bu bildirimleri devre dışı bırakmak için 0 olarak ayarlayın."
     reviewable_revision_reasons: "İncelenmek üzere sıraya alınmış bir gönderiyi revizyonla reddederken seçilebilecek nedenler listesi. Diğer seçeneğini de her zaman kullanabilirsiniz, ki bunu yaparsanız özel bir neden de girebilirsiniz."
@@ -2358,6 +2361,7 @@ tr_TR:
     not_approved: "Hesabınız henüz onaylanmadı. Giriş yapmaya hazır olduğunuzda e-posta ile bilgilendirileceksiniz."
     incorrect_username_email_or_password: "Yanlış kullanıcı adı, e-posta veya şifre"
     incorrect_password: "Yanlış şifre"
+    incorrect_password_or_passkey: "Yanlış şifre veya şifre anahtarı"
     wait_approval: "Kaydolduğunuz için teşekkürler. Hesabınız onaylandığında sizi bilgilendireceğiz."
     active: "Hesabınız etkinleştirildi ve kullanıma hazır."
     activate_email: "<p>Neredeyse bitti! <b>%{email}</b>adresine bir aktivasyon postası gönderdik. Hesabınızı etkinleştirmek için lütfen postadaki talimatları izleyin.</p><p>Ulaşmazsa spam klasörünüzü kontrol edin.</p>"
@@ -2666,7 +2670,7 @@ tr_TR:
         %{site_name} Moderatörleri
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Gönderinizle ilgili geri bildirim"
-      subject_template: "\"%{topic_title}\" başlıklı yeni konu hakkında geri bildirim"
+      subject_template: '"%{topic_title}" başlıklı yeni konu hakkında geri bildirim'
       text_body_template: |
         Merhaba %{username},
 
@@ -4662,6 +4666,7 @@ tr_TR:
     reasons:
       post_count: "Her kullanıcının ilk birkaç gönderisi personel tarafından onaylanması gerekiyor. Bkz. %{link}."
       trust_level: "Düşük güven seviyesindeki kullanıcıların yanıtlarının personel tarafından onaylanması gerekiyor. Bkz. %{link}."
+      group: "Belirtilen gruplarda yer almayan kullanıcıların yanıtlarının personel tarafından onaylanması gerekir. Bkz. %{link}."
       new_topics_unless_trust_level: "Düşük güven seviyesindeki kullanıcıların konularının personel tarafından onaylanması gerekiyor. Bkz. %{link}."
       fast_typer: "Yeni kullanıcı ilk gönderisini şüpheli bir şekilde hızlı yazdı, bot veya spam davranışından şüpheleniliyor. Bkz. %{link}."
       auto_silence_regex: "İlk gönderisi %{link} ayarıyla eşleşen yeni kullanıcı."

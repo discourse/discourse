@@ -1341,8 +1341,6 @@ nl:
         title: "Tweeledige verificatie"
         enable: "Tweeledige verificatie beheren"
         disable_all: "Alles uitschakelen"
-        forgot_password: "Wachtwoord vergeten?"
-        confirm_password_description: "Bevestig je wachtwoord om door te gaan"
         name: "Naam"
         label: "Code"
         rate_limit: "Wacht even voordat je een andere verificatiecode probeert."
@@ -1471,14 +1469,13 @@ nl:
           generic: "Je %{provider}-account wordt gebruikt voor verificatie."
       name:
         title: "Naam"
-        instructions: "uw volledige naam (optioneel)"
-        instructions_required: "Je volledige naam"
+        instructions: "Uw volledige naam (optioneel)."
+        instructions_required: "Je volledige naam."
         required: "Voer een naam in"
         too_short: "Je naam is te kort"
         ok: "Je naam ziet er goed uit"
       username:
         title: "Gebruikersnaam"
-        instructions: "uniek, geen spaties, kort"
         short_instructions: "Mensen kunnen je vermelden als @%{username}"
         available: "Je gebruikersnaam is beschikbaar"
         not_available: "Niet beschikbaar. %{suggestion} proberen?"
@@ -1673,7 +1670,7 @@ nl:
         same_as_username: "Je wachtwoord is hetzelfde als je gebruikersnaam."
         same_as_email: "Je wachtwoord is hetzelfde als je e-mailadres."
         ok: "Je wachtwoord ziet er goed uit."
-        instructions: "minimaal %{count} tekens"
+        instructions: "Minimaal %{count} tekens."
         required: "Voer een wachtwoord in"
         confirm: "Bevestigen"
       summary:
@@ -2101,9 +2098,6 @@ nl:
       group_mentioned_limit:
         one: "<b>Waarschuwing!</b> Je hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde vermeldingslimiet van %{count} gebruiker. Niemand krijgt een melding."
         other: "<b>Waarschuwing!</b> Je hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde vermeldingslimiet van %{count} gebruikers. Niemand krijgt een melding."
-      group_mentioned:
-        one: "Door %{group} te vermelden, krijgt <a href='%{group_link}'>%{count} persoon</a> een melding. Weet je het zeker?"
-        other: "Door %{group} te vermelden, krijgen <a href='%{group_link}'>%{count} personen</a> een melding. Weet je het zeker?"
       cannot_see_mention:
         category: "Je hebt @%{username} genoemd, maar de gebruiker ontvangt geen melding, omdat deze geen toegang heeft tot deze categorie. Je moet de gebruiker toevoegen aan een groep die toegang heeft tot deze categorie."
         private: "Je hebt @%{username} genoemd, maar de gebruiker ontvangt geen melding, omdat deze dit persoonlijke bericht niet kan zien. Je moet de gebruiker uitnodigen voor dit persoonlijke bericht."
@@ -2328,6 +2322,7 @@ nl:
         private_message: '%{username} heeft je een persoonlijk bericht gestuurd in ''%{topic}'' - %{site_title}'
         linked: '%{username} heeft een link naar je bericht geplaatst vanuit ''%{topic}'' - %{site_title}'
         watching_first_post: '%{username} heeft een nieuw topic gemaakt: ''%{topic}'' - %{site_title}'
+        watching_category_or_tag: '%{username} heeft een bericht geplaatst in ''%{topic}'' - %{site_title}'
         confirm_title: "Meldingen ingeschakeld - %{site_title}"
         confirm_body: "Gelukt! Meldingen zijn ingeschakeld."
         custom: "Melding van %{username} op %{site_title}"
@@ -4185,9 +4180,7 @@ nl:
         latest_version: "Nieuwste"
         problems_found: "Advies op basis van je huidige website-instellingen"
         new_features:
-          title: "\U0001F381 Nieuwe functies"
-          dismiss: "Negeren"
-          learn_more: "Meer informatie"
+          learn_more: "Meer informatie..."
         last_checked: "Laatst gecontroleerd"
         refresh_problems: "Vernieuwen"
         no_problems: "Er zijn geen problemen gevonden."
@@ -4513,8 +4506,8 @@ nl:
         not_enabled: "N"
         change_settings_short: "Instellingen"
         howto: "Hoe kan ik plug-ins installeren?"
-        official: "Officiële plug-in"
         broken_route: "Kan link naar '%{name}' niet configureren. Zorg dat advertentieblockers zijn uitgeschakeld en probeer de pagina opnieuw te laden."
+        author: "Van %{author}"
       navigation_menu:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"

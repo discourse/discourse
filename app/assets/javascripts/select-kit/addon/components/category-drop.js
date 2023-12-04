@@ -15,11 +15,9 @@ export const ALL_CATEGORIES_ID = "all-categories";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-drop"],
-  classNameBindings: ["categoryStyle"],
   classNames: ["category-drop"],
   value: readOnly("category.id"),
   content: readOnly("categoriesWithShortcuts.[]"),
-  categoryStyle: readOnly("siteSettings.category_style"),
   noCategoriesLabel: I18n.t("categories.no_subcategory"),
   navigateToEdit: false,
   editingCategory: false,
@@ -56,8 +54,7 @@ export default ComboBoxComponent.extend({
     return this.options.subCategory || false;
   }),
 
-  categoriesWithShortcuts: computed(
-    "categories.[]",
+  shortcuts: computed(
     "value",
     "selectKit.options.{subCategory,noSubcategories}",
     function () {
@@ -84,10 +81,14 @@ export default ComboBoxComponent.extend({
         });
       }
 
-      const results = this._filterUncategorized(this.categories || []);
-      return shortcuts.concat(results);
+      return shortcuts;
     }
   ),
+
+  categoriesWithShortcuts: computed("categories.[]", "shortcuts", function () {
+    const results = this._filterUncategorized(this.categories || []);
+    return this.shortcuts.concat(results);
+  }),
 
   modifyNoSelection() {
     if (this.selectKit.options.noSubcategories) {
@@ -133,23 +134,28 @@ export default ComboBoxComponent.extend({
   ),
 
   async search(filter) {
+    if (this.siteSettings.lazy_load_categories) {
+      const results = await Category.asyncSearch(filter, {
+        parentCategoryId: this.options.parentCategory?.id || -1,
+        includeUncategorized: this.siteSettings.allow_uncategorized_topics,
+        limit: 15,
+      });
+      return this.shortcuts.concat(
+        results.sort((a, b) => {
+          if (a.parent_category_id && !b.parent_category_id) {
+            return 1;
+          } else if (!a.parent_category_id && b.parent_category_id) {
+            return -1;
+          } else {
+            return 0;
+          }
+        })
+      );
+    }
+
     const opts = {
       parentCategoryId: this.options.parentCategory?.id,
-      includeUncategorized: this.siteSettings.allow_uncategorized_topics,
     };
-
-    if (this.siteSettings.lazy_load_categories) {
-      const results = await Category.asyncSearch(filter, { ...opts, limit: 5 });
-      return results.sort((a, b) => {
-        if (a.parent_category_id && !b.parent_category_id) {
-          return 1;
-        } else if (!a.parent_category_id && b.parent_category_id) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
-    }
 
     if (filter) {
       let results = Category.search(filter, opts);

@@ -784,13 +784,12 @@ sr:
         cancel: "Odustani"
       name:
         title: "Ime"
-        instructions: "vaše ime (opciono)"
-        instructions_required: "Vaše ime"
+        instructions: "Vaše ime (opciono)."
+        instructions_required: "Vaše ime."
         too_short: "Ime vam je prekratko"
         ok: "Vaše ime dobro izgleda"
       username:
         title: "Korisničko ime"
-        instructions: "jedinstveno, bez razmaka, kratko"
         short_instructions: "Ljudi vas mogu spominjati kao @%{username}"
         available: "Vaše korisničko ime slobodno"
         not_available: "Nije dostupno. Pokušajte %{suggestion}?"
@@ -881,7 +880,7 @@ sr:
         same_as_username: "Tvoja šifra je ista kao i tvoje korisničko ime."
         same_as_email: "Tvoja šifra je ista kao i tvoj email."
         ok: "Vaša šifra izgleda dobro."
-        instructions: "najmanje %{count} karaktera"
+        instructions: "Najmanje %{count} karaktera."
       summary:
         title: "Rezime"
         stats: "Statistike"
@@ -1859,8 +1858,7 @@ sr:
         installed_version: "Instalirano"
         latest_version: "Poslednje"
         new_features:
-          dismiss: "Одбаци"
-          learn_more: "Saznaj više"
+          learn_more: "Saznaj više..."
         last_checked: "Zadnje provereno"
         refresh_problems: "Osveži"
         no_problems: "Nisu pronađeni problemi."
@@ -1944,6 +1942,7 @@ sr:
         version: "Verzija"
         enabled: "Omgućeno"
         change_settings_short: "Podešavanje"
+        author: "Od %{author}"
       backups:
         title: "Sigurnosne kopije"
         menu:

@@ -1127,8 +1127,6 @@ sl:
         title: "Preverjanje v dveh korakih"
         enable: "Upravljajte preverjanje v dveh korakih"
         disable_all: "Onemogoči vse"
-        forgot_password: "Ste pozabili geslo?"
-        confirm_password_description: "Vnesite geslo za nadaljevanje"
         name: "Polno ime"
         label: "Koda"
         rate_limit: "Počakajte preden uporabite novo potrditveno kodo."
@@ -1237,14 +1235,13 @@ sl:
           generic: "Vaš %{provider} račun bo uporabljen za preverjanje pristnosti."
       name:
         title: "Polno ime"
-        instructions: "vaše polno ime (neobvezno)"
-        instructions_required: "Vaše polno ime"
+        instructions: "Vaše polno ime (neobvezno)."
+        instructions_required: "Vaše polno ime."
         required: "Vnesite ime"
         too_short: "Ime je prekratko"
         ok: "Vaše ime je ustrezno"
       username:
         title: "Uporabniško ime"
-        instructions: "unikatno, brez presledkov, kratko"
         short_instructions: "Ljudje vas lahko omenijo kot @%{username}"
         available: "Vaše uporabniško ime je prosto"
         not_available: "Ni na voljo. Poskusi %{suggestion}?"
@@ -1408,7 +1405,7 @@ sl:
         same_as_username: "Vaše geslo je enako kot uporabniško ime."
         same_as_email: "Vaše geslo je enako kot vaš e-naslov."
         ok: "Vaše geslo je videti v redu."
-        instructions: "vsaj %{count} znakov"
+        instructions: "Vsaj %{count} znakov."
         required: "Vnesite geslo"
       summary:
         title: "Vsebina"
@@ -1748,11 +1745,6 @@ sl:
       saved_local_draft_tip: "shranjeno lokalno"
       drafts_offline: "osnutki brez povezave"
       edit_conflict: "uredi spor"
-      group_mentioned:
-        one: "Z omembo %{group} boste obvestili <a href='%{group_link}'>%{count} osebo</a> – ali ste prepričani?"
-        two: "Z omembo %{group}boste obvestili <a href='%{group_link}'>%{count} osebi</a> – ali ste prepričani?"
-        few: "Z omembo %{group} boste obvestili <a href='%{group_link}'>%{count} osebe</a> – ali ste prepričani?"
-        other: "Z omembo %{group} boste obvestili <a href='%{group_link}'>%{count} oseb</a> – ali ste prepričani?"
       duplicate_link: "Povezava do <b>%{domain}</b> bila že objavljena v temi od <b>@%{username}</b> v <a href='%{post_url}'>odgovoru %{ago}</a> – ali ste prepričani, da jo želite objaviti še enkrat?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -1930,6 +1922,7 @@ sl:
         private_message: '%{username} vam je poslal zasebno sporočilo "%{topic}" - %{site_title}'
         linked: '%{username} je dodal povezavo na vaš prispevek iz "%{topic}" - %{site_title}'
         watching_first_post: '%{username} je ustvaril novo temo "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} je objavil v "%{topic}" - %{site_title}'
         confirm_title: "Obvestila omogočena - %{site_title}"
         confirm_body: "Uspelo! Obvestila so bila omogočena."
         custom: "Obvestilo od %{username} na %{site_title}"
@@ -3384,9 +3377,7 @@ sl:
         latest_version: "Najnovejše"
         problems_found: "Nekaj priporočil glede na vaše trenutne nastavitve strani"
         new_features:
-          title: "\U0001F381 Nove funkcije"
-          dismiss: "Opusti"
-          learn_more: "Več o tem"
+          learn_more: "Več o tem..."
         last_checked: "Nazadnje preverjeno"
         refresh_problems: "Osveži"
         no_problems: "Nismo našli problemov."
@@ -3563,6 +3554,7 @@ sl:
         not_enabled: "N"
         change_settings_short: "Nastavitve"
         howto: "Kako namestim vtičnike?"
+        author: "Od %{author}"
       backups:
         title: "Varnostne kopije"
         menu:

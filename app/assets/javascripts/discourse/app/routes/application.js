@@ -41,8 +41,10 @@ const ApplicationRoute = DiscourseRoute.extend({
   router: service(),
   siteSettings: service(),
   clientErrorHandler: service(),
+  login: service(),
+  historyStore: service(),
 
-  get includeExternalLoginMethods() {
+  get isOnlyOneExternalLoginMethod() {
     return (
       !this.siteSettings.enable_local_logins &&
       this.externalLoginMethods.length === 1
@@ -55,15 +57,17 @@ const ApplicationRoute = DiscourseRoute.extend({
 
   @action
   loading(transition) {
-    if (this.loadingSlider.enabled) {
-      this.loadingSlider.transitionStarted();
-      transition.promise.finally(() => {
-        this.loadingSlider.transitionEnded();
-      });
-      return false;
-    } else {
-      return true; // Use native ember loading implementation
-    }
+    this.loadingSlider.transitionStarted();
+    transition.finally(() => {
+      this.loadingSlider.transitionEnded();
+    });
+    return false;
+  },
+
+  @action
+  willResolveModel(transition) {
+    this.historyStore.willResolveModel(transition);
+    return true;
   },
 
   actions: {
@@ -240,17 +244,17 @@ const ApplicationRoute = DiscourseRoute.extend({
         : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this.modal.show(LoginModal, {
-        model: {
-          ...(this.includeExternalLoginMethods && {
-            isExternalLogin: true,
-            externalLoginMethod: this.externalLoginMethods[0],
-          }),
-          showNotActivated: (props) => this.send("showNotActivated", props),
-          showCreateAccount: (props) => this.send("showCreateAccount", props),
-          canSignUp: this.controller.canSignUp,
-        },
-      });
+      if (this.isOnlyOneExternalLoginMethod) {
+        this.login.externalLogin(this.externalLoginMethods[0]);
+      } else {
+        this.modal.show(LoginModal, {
+          model: {
+            showNotActivated: (props) => this.send("showNotActivated", props),
+            showCreateAccount: (props) => this.send("showCreateAccount", props),
+            canSignUp: this.controller.canSignUp,
+          },
+        });
+      }
     }
   },
 
@@ -259,14 +263,10 @@ const ApplicationRoute = DiscourseRoute.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.includeExternalLoginMethods) {
+      if (this.isOnlyOneExternalLoginMethod) {
         // we will automatically redirect to the external auth service
-        this.modal.show(LoginModal, {
-          model: {
-            isExternalLogin: true,
-            externalLoginMethod: this.externalLoginMethods[0],
-            signup: true,
-          },
+        this.login.externalLogin(this.externalLoginMethods[0], {
+          signup: true,
         });
       } else {
         this.modal.show(CreateAccount, { model: createAccountProps });

@@ -1011,8 +1011,6 @@ ca:
           title: "Codis de còpia de seguretat generats"
           description: "Cada un dels codis de còpia de seguretat es pot fer servir sols una vegada. Manteniu-los en algun lloc web segur però accessible. "
       second_factor:
-        forgot_password: "Heu oblidat la contrasenya?"
-        confirm_password_description: "Confirmeu la contrasenya per a continuar"
         name: "Nom"
         label: "Codi"
         rate_limit: "Espereu abans de provar un altre codi d'autenticació."
@@ -1106,13 +1104,12 @@ ca:
           generic: "El vostre compte %{provider} es farà servir per a l'autenticació."
       name:
         title: "Nom"
-        instructions: "el vostre nom complet (opcional)"
-        instructions_required: "El vostre nom complet"
+        instructions: "El vostre nom complet (opcional)."
+        instructions_required: "El vostre nom complet."
         too_short: "El vostre nom és massa curt"
         ok: "El vostre nom sona bé"
       username:
         title: "Nom d'usuari"
-        instructions: "únic, sense espais, breu"
         short_instructions: "La gent us pot mencionar com a @%{username}"
         available: "El nom d'usuari està disponible"
         not_available: "No està disponible. I si proveu amb %{suggestion}?"
@@ -1248,7 +1245,7 @@ ca:
         same_as_username: "La contrasenya és igual que el nom d'usuari."
         same_as_email: "La contrasenya és igual que el correu electrònic."
         ok: "La contrasenya té bon aspecte."
-        instructions: "com a mínim %{count} caràcters"
+        instructions: "Com a mínim %{count} caràcters."
         confirm: "Confirma"
       summary:
         title: "Resum"
@@ -1556,9 +1553,6 @@ ca:
       saved_local_draft_tip: "desat localment"
       drafts_offline: "esborranys fora de línia"
       edit_conflict: "edita el conflicte"
-      group_mentioned:
-        one: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count}persona</a>. Esteu segur?"
-        other: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count} persones</a>. Esteu segur?"
       duplicate_link: "Sembla que l'enllaç a <b>%{domain}</b> ja havia estat publicat en el tema per <b>@%{username}</b> en <a href='%{post_url}'>una resposta %{ago}</a>. Esteu segur que voleu publicar-lo una altra vegada?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -1704,6 +1698,7 @@ ca:
         private_message: '%{username} us ha enviat un missatge personal en "%{topic}" - %{site_title}'
         linked: '%{username} ha enllaçat la vostra publicació en "%{topic}" - %{site_title}'
         watching_first_post: '%{username} ha creat un tema nou "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} publicat en "%{topic}" - %{site_title}'
         confirm_title: "Notificacions activades - %{site_title}"
         confirm_body: "Èxit! S'han habilitat les notificacions."
         custom: "Notificació de %{username} sobre %{site_title}"
@@ -2917,8 +2912,7 @@ ca:
         latest_version: "Més recents"
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
         new_features:
-          dismiss: "Descarta-ho"
-          learn_more: "Per a saber-ne més"
+          learn_more: "Per a saber-ne més..."
         last_checked: "Comprovat per darrera vegada"
         refresh_problems: "Actualitza"
         no_problems: "No s'han trobat problemes."
@@ -3142,7 +3136,7 @@ ca:
         not_enabled: "N"
         change_settings_short: "Configuració"
         howto: "Com s'instal·len els connectors?"
-        official: "Connector (plugin) oficial"
+        author: "Per %{author}"
       backups:
         title: "Còpies de seguretat"
         menu:

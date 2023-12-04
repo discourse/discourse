@@ -55,7 +55,7 @@
               placementStrategy="absolute"
             }}
             @content={{@headerActions}}
-            @onChange={{action "handleMultipleHeaderActions"}}
+            @onChange={{this.handleMultipleHeaderActions}}
             @class="sidebar-section-header-dropdown"
           />
         {{/if}}

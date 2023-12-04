@@ -154,7 +154,7 @@ acceptance("Search - Anonymous", function (needs) {
     );
 
     assert.ok(
-      exists(`${contextSelector} span.badge-wrapper`),
+      exists(`${contextSelector} span.badge-category__wrapper`),
       "category badge is a span (i.e. not a link)"
     );
 
@@ -329,6 +329,43 @@ acceptance("Search - Anonymous", function (needs) {
     assert.notOk(exists(".search-advanced-options .in-likes"));
     assert.notOk(exists(".search-advanced-options .in-private"));
     assert.notOk(exists(".search-advanced-options .in-seen"));
+  });
+});
+
+acceptance("Search - Default sort order", function (needs) {
+  needs.user();
+  needs.settings({
+    search_default_sort_order: 1, // "latest"
+  });
+  needs.hooks.beforeEach(function () {
+    this.searchPreferencesManager = this.container.lookup(
+      "service:search-preferences-manager"
+    );
+    this.searchPreferencesManager.sortOrder = null;
+  });
+  needs.hooks.afterEach(function () {
+    this.searchPreferencesManager.sortOrder = null;
+  });
+
+  test("Default sort order is used if there is no preference in user key value store", async function (assert) {
+    await visit("/search?q=discourse");
+
+    const searchSortByDropdown = selectKit("#search-sort-by");
+    await searchSortByDropdown.expand();
+    assert.strictEqual(searchSortByDropdown.header().value(), "1");
+  });
+
+  test("User preference from SearchPreferencesManager key value store is used if present", async function (assert) {
+    this.searchPreferencesManager = this.container.lookup(
+      "service:search-preferences-manager"
+    );
+    this.searchPreferencesManager.sortOrder = 2; // "likes"
+
+    await visit("/search?q=discourse");
+
+    const searchSortByDropdown = selectKit("#search-sort-by");
+    await searchSortByDropdown.expand();
+    assert.strictEqual(searchSortByDropdown.header().value(), "2");
   });
 });
 
@@ -584,7 +621,7 @@ acceptance("Search - with tagging enabled", function (needs) {
       query(
         ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
       ).textContent.trim(),
-      "dev slow",
+      "devslow",
       "tags displayed in search results"
     );
   });
@@ -831,7 +868,7 @@ acceptance("Search - assistant", function (needs) {
     assert.ok(exists(query(firstCategory)));
 
     const firstResultSlug = query(
-      `${firstCategory} .category-name`
+      `${firstCategory} .badge-category__name`
     ).textContent.trim();
 
     await click(firstCategory);
@@ -857,8 +894,9 @@ acceptance("Search - assistant", function (needs) {
     await click("#search-button");
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug",
       "Category is displayed"
     );
@@ -885,8 +923,9 @@ acceptance("Search - assistant", function (needs) {
     );
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug"
     );
 

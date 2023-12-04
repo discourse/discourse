@@ -55,6 +55,7 @@ pl_PL:
   chat:
     deleted_chat_username: usunięte
     errors:
+      users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
       channel_new_message_disallowed:
         archived: "Kanał jest zarchiwizowany, nie można wysyłać nowych wiadomości"
@@ -130,10 +131,16 @@ pl_PL:
           title: "Wycofaj"
         ignore:
           title: "Nic nie rób"
+          description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} został zaproszony przez %{inviting_user}."
+        few: "%{invited_users} zostali zaproszeni przez %{inviting_user}."
+        many: "%{invited_users} zostali zaproszeni przez %{inviting_user}."
+        other: "%{invited_users} zostali zaproszeni przez %{inviting_user}."
       archive:
         first_post_raw: "Ten temat jest archiwum kanału czatu [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -157,6 +164,11 @@ pl_PL:
         few: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
         many: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
         other: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
+      invitations_sent:
+        one: "Zaproszenie wysłane"
+        few: "Zaproszenia wysłane"
+        many: "Zaproszenia wysłane"
+        other: "Zaproszenia wysłane"
       invite: "Zaproś do kanału"
       without_membership: "%{first_identifier} nie dołączył(a) do tego kanału."
       without_membership_multiple:
@@ -201,6 +213,9 @@ pl_PL:
         other: "i %{count} innych"
     summaries:
       no_targets: "W wybranym okresie nie było żadnych wiadomości."
+    transcript:
+      default_thread_title: "Wątek"
+      split_thread_range: "wiadomości od %{start} do %{end} z %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -237,6 +252,7 @@ pl_PL:
         other: "Masz nowe wiadomości na czacie"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Nowa wiadomość"
         direct_message_from_1: "[%{email_prefix}] Nowa wiadomość od %{username}"
         direct_message_from_2: "[%{email_prefix}] Nowa wiadomość od %{username1} i %{username2}"
         direct_message_from_more:

@@ -26,7 +26,7 @@ RSpec.describe PrettyText::Helpers do
         description: "Really great stuff here",
       )
     end
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "handles tags and categories based on slug with type suffix" do
       expect(

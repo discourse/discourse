@@ -160,17 +160,21 @@ TestProf::BeforeAll.configure do |config|
   end
 end
 
-if ENV["PREFABRICATION"] == "0"
-  module Prefabrication
-    def fab!(name, &blk)
+module Prefabrication
+  if ENV["PREFABRICATION"] == "0"
+    def fab!(name, **opts, &blk)
+      blk ||= proc { Fabricate(name) }
       let!(name, &blk)
     end
+  else
+    def fab!(name, **opts, &blk)
+      blk ||= proc { Fabricate(name) }
+      let_it_be(name, refind: true, **opts, &blk)
+    end
   end
-
-  RSpec.configure { |config| config.extend Prefabrication }
-else
-  TestProf::LetItBe.configure { |config| config.alias_to :fab!, refind: true }
 end
+
+RSpec.configure { |config| config.extend Prefabrication }
 
 PER_SPEC_TIMEOUT_SECONDS = 30
 

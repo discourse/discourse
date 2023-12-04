@@ -66,8 +66,8 @@ RSpec.describe Site do
   end
 
   describe "#categories" do
-    fab!(:category) { Fabricate(:category) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:category)
+    fab!(:user)
     let(:guardian) { Guardian.new(user) }
 
     it "omits read restricted categories" do
@@ -212,7 +212,7 @@ RSpec.describe Site do
   end
 
   describe "site_groups_query modifier" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
     fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
 

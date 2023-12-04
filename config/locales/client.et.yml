@@ -886,7 +886,6 @@ et:
         copied_to_clipboard: "Kopeeritud lõikelauale"
         download_backup_codes: "Lae varukoodid alla"
       second_factor:
-        confirm_password_description: "Palun kinnita jätkamiseks oma parooli"
         name: "Nimi"
         label: "Kood"
         rate_limit: "Palun oota enne kui proovid mõnda teist autentimise koodi."
@@ -959,13 +958,12 @@ et:
         not_connected: "(pole ühendatud)"
       name:
         title: "Nimi"
-        instructions: "sinu täisnimi (mittekohustuslik)"
-        instructions_required: "Sinu täisnimi"
+        instructions: "Sinu täisnimi (mittekohustuslik)."
+        instructions_required: "Sinu täisnimi."
         too_short: "Sinu antud nimi on liiga lühike"
         ok: "Paistab, et nimega on asjad korras"
       username:
         title: "Kasutajanimi"
-        instructions: "unikaalne, tühikuteta, lühike"
         short_instructions: "Inimesed võivad sind mainda nimega @%{username}"
         available: "Sinu poolt valitud kasutajanimi on vaba"
         not_available: "Pole saadaval. Proovime %{suggestion}?"
@@ -1085,7 +1083,7 @@ et:
         same_as_username: "Parool ühtib sinu kasutajanimega."
         same_as_email: "Parool ühtib sinu meiliaadressiga."
         ok: "See parool on sobilik."
-        instructions: "vähemalt %{count} tähemärki"
+        instructions: "Vähemalt %{count} tähemärki."
       summary:
         title: "Kokkuvõte"
         stats: "Statistika"
@@ -1327,9 +1325,6 @@ et:
       saved_local_draft_tip: "salvestatud lokaalselt"
       drafts_offline: "mustandid vallasrežiimis"
       edit_conflict: "muuda konflikti"
-      group_mentioned:
-        one: "Mainides %{group}, oled teavitamas <a href='%{group_link}'>%{count} inimest</a> – oled selles kindel?"
-        other: "Mainides %{group}, oled teavitamas <a href='%{group_link}'>%{count} inimest</a> – oled selles kindel?"
       error:
         title_missing: "Pealkiri on kohustuslik"
         try_like: "Oled sa proovinud %{heart} nuppu?"
@@ -1437,6 +1432,7 @@ et:
         replied: '%{username} vastas Sulle teemas "%{topic}" - %{site_title}'
         posted: '%{username} postitas teemasse "%{topic}" - %{site_title}'
         linked: '%{username} viitas Sinu postitusele teemas "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} postitas teemasse "%{topic}" - %{site_title}'
       titles:
         watching_first_post: "uus teema"
     upload_selector:
@@ -2563,8 +2559,7 @@ et:
         installed_version: "Paigaldatud"
         latest_version: "Viimased"
         new_features:
-          dismiss: "Ignoreeri"
-          learn_more: "Uuri veel"
+          learn_more: "Uuri veel..."
         last_checked: "Viimati kontrollitud"
         refresh_problems: "Värskenda"
         no_problems: "Probleeme ei tuvastatud."
@@ -2738,6 +2733,7 @@ et:
         not_enabled: "E"
         change_settings_short: "Sätted"
         howto: "Kuidas pluginaid paigaldada?"
+        author: "Autor %{author}"
       backups:
         title: "Varukoopiad"
         menu:

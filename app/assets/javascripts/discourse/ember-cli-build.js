@@ -14,8 +14,28 @@ const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const withSideWatch = require("./lib/with-side-watch");
+const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
+const crypto = require("crypto");
+
+const EMBER_MAJOR_VERSION = parseInt(
+  require("ember-source/package.json").version.split(".")[0],
+  10
+);
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
+
+function filterForEmberVersion(tree) {
+  if (EMBER_MAJOR_VERSION < 4) {
+    return tree;
+  }
+
+  return funnel(tree, {
+    // d-modal-legacy includes a named outlet which would cause
+    // a build failure in modern Ember
+    exclude: ["**/components/d-modal-legacy.hbs"],
+  });
+}
 
 module.exports = function (defaults) {
   const discourseRoot = path.resolve("../../../..");
@@ -70,12 +90,22 @@ module.exports = function (defaults) {
       backburner:
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
     },
+
+    trees: {
+      app: filterForEmberVersion(
+        RawHandlebarsCompiler(
+          withSideWatch("app", { watching: ["../discourse-markdown-it"] })
+        )
+      ),
+    },
   });
 
-  // TODO: remove me
-  // Ember 3.28 still has some internal dependency on jQuery being a global,
-  // for the time being we will bring it in vendor.js
-  app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
+  if (EMBER_MAJOR_VERSION < 4) {
+    // TODO: remove me
+    // Ember 3.28 still has some internal dependency on jQuery being a global,
+    // for the time being we will bring it in vendor.js
+    app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
+  }
 
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(vendorJs + "bootbox.js");
@@ -110,10 +140,6 @@ module.exports = function (defaults) {
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    funnel(`${vendorJs}/highlightjs`, {
-      files: ["highlight-test-bundle.min.js"],
-      destDir: "assets/highlightjs",
-    }),
     generateWorkboxTree(),
     concat(adminTree, {
       inputFiles: ["**/*.js"],
@@ -128,6 +154,13 @@ module.exports = function (defaults) {
     testStylesheetTree,
   ];
 
+  const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";
+  const cachebusterHash = crypto
+    .createHash("md5")
+    .update(assetCachebuster)
+    .digest("hex")
+    .slice(0, 8);
+
   const appTree = compatBuild(app, Webpack, {
     staticAppPaths: ["static"],
     packagerOptions: {
@@ -135,7 +168,15 @@ module.exports = function (defaults) {
         devtool: "source-map",
         output: {
           publicPath: "auto",
+          filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
+          chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
         },
+        cache: isProduction
+          ? false
+          : {
+              type: "memory",
+              maxGenerations: 1,
+            },
         entry: {
           "assets/discourse.js/features/markdown-it.js": {
             import: "./static/markdown-it",
@@ -148,7 +189,7 @@ module.exports = function (defaults) {
             if (
               !request.includes("-embroider-implicit") &&
               // TODO: delete special case for jquery when removing app.import() above
-              (request === "jquery" ||
+              ((EMBER_MAJOR_VERSION < 4 && request === "jquery") ||
                 request.startsWith("admin/") ||
                 request.startsWith("wizard/") ||
                 request.startsWith("discourse/plugins/") ||

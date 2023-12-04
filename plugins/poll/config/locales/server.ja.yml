@@ -15,7 +15,6 @@ ja:
   poll:
     poll: "投票"
     invalid_argument: "引数 '%{argument}' の値 '%{value}' が無効です。"
-    multiple_polls_without_name: "名前のない投票が複数あります。投票を一意に識別できるよう、'<code>name</code>' 属性を使用してください。"
     multiple_polls_with_same_name: "同じ名前の投票が複数あります: <strong>%{name}</strong>。投票を一意に識別できるよう、'<code>name</code>' 属性を使用してください。"
     default_poll_must_have_at_least_1_option: "投票には少なくとも 1 つのオプションが必要です。"
     named_poll_must_have_at_least_1_option: "<strong>%{name}</strong> という名前の投票には、少なくとも 1 つのオプションが必要です。"

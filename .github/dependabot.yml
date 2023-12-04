@@ -40,6 +40,17 @@ updates:
         versions:
           - "> 1.2.0"
           - "< 2"
+    groups:
+      rails:
+        patterns:
+          - "actionmailer"
+          - "actionpack"
+          - "actionview"
+          - "actionmodel"
+          - "activerecord"
+          - "activesupport"
+          - "railties"
+          - "sprockets-rails"
   - package-ecosystem: "npm"
     directory: "/app/assets/javascripts/"
     schedule:

@@ -8,7 +8,7 @@
           @result.topic_title_headline
         )
       }}
-        <span>{{replace-emoji @result.topic_title_headline}}</span>
+        <span>{{replace-emoji (html-safe @result.topic_title_headline)}}</span>
       {{else}}
         <SearchMenu::HighlightedSearch @string={{@result.topic.fancyTitle}} />
       {{/if}}

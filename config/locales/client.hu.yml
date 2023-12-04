@@ -1262,8 +1262,6 @@ hu:
         title: "Kétfaktoros hitelesítés"
         enable: "A kétfaktoros hitelesítés kezelése"
         disable_all: "Összes letiltása"
-        forgot_password: "Elfelejtette a jelszavát?"
-        confirm_password_description: "A folytatáshoz erősítse meg a jelszavát"
         name: "Név"
         label: "Kód"
         rate_limit: "Várjon, mielőtt egy másik hitelesítési kódot próbálna ki."
@@ -1390,14 +1388,13 @@ hu:
           generic: "Az Ön %{provider}-fiókját fogja használni a hitelesítéshez."
       name:
         title: "Név"
-        instructions: "a teljes neve (nem kötelező)"
-        instructions_required: "Az Ön teljes neve"
+        instructions: "A teljes neve (nem kötelező)."
+        instructions_required: "Az Ön teljes neve."
         required: "Adjon meg egy nevet"
         too_short: "A neve túl rövid"
         ok: "A neve megfelelő."
       username:
         title: "Felhasználónév"
-        instructions: "egyedi, szóközök nélkül, rövid"
         short_instructions: "A következőképpen említhetik meg: @%{username}"
         available: "A felhasználóneve elérhető"
         not_available: "Nem érhető el. Esetleg: %{suggestion}?"
@@ -1591,7 +1588,7 @@ hu:
         same_as_username: "A jelszava megegyezik a felhasználónevével."
         same_as_email: "A jelszava megegyezik az e-mail-címével."
         ok: "A jelszava megfelelőnek tűnik."
-        instructions: "legalább %{count} karakter"
+        instructions: "Legalább %{count} karakter."
         required: "Adjon meg egy jelszót"
         confirm: "Megerősít"
       summary:
@@ -1991,9 +1988,6 @@ hu:
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
         other: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
-      group_mentioned:
-        one: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
-        other: "A(z) %{group} csoport megemlítésével <a href='%{group_link}'>%{count} embert</a> fog értesíteni – biztos benne?"
       cannot_see_mention:
         category: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mivel nincs hozzáférése ehhez a kategóriához. Hozzá kell adnia egy olyan csoporthoz, amely hozzáfér ehhez a kategóriához."
         private: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mert nem tudja megnézni ezt a személyes üzenetet. Meg kell hívnia ehhez a személyes üzenethez."
@@ -2204,6 +2198,7 @@ hu:
         private_message: '%{username} személyes üzenetet küldött itt: „%{topic}” – %{site_title}'
         linked: '%{username} hivatkozott a bejegyzésére innen: „%{topic}” – %{site_title}'
         watching_first_post: '%{username} új témát hozott létre: „%{topic}” – %{site_title}'
+        watching_category_or_tag: '%{username} bejegyzést tett itt: „%{topic}” – %{site_title}'
         confirm_title: "Értesítések bekapcsolva – %{site_title}"
         confirm_body: "Siker! Értesítések engedélyezve."
         custom: "Értesítés %{username} felhasználótól itt: %{site_title}"
@@ -3699,9 +3694,7 @@ hu:
         latest_version: "Legfrissebb"
         problems_found: "Néhány tanács az aktuális webhelybeállítások alapján"
         new_features:
-          title: "\U0001F381 Új funkciók"
-          dismiss: "Elvetés"
-          learn_more: "Tudjon meg többet"
+          learn_more: "Tudjon meg többet..."
         last_checked: "Utoljára ellenőrizve:"
         refresh_problems: "Újratöltés"
         no_problems: "Nem találtunk semmilyen problémát."
@@ -3960,7 +3953,7 @@ hu:
         not_enabled: "N"
         change_settings_short: "Beállítások"
         howto: "Hogyan lehet plugin-eket telepíteni?"
-        official: "Hivatalos bővítmény"
+        author: "Szerző %{author}"
       navigation_menu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"

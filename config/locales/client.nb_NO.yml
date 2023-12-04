@@ -1127,8 +1127,6 @@ nb_NO:
         title: "To-faktor autentisering"
         enable: "deaktiver totrinnsverifisering"
         disable_all: "Deaktiver Alle"
-        forgot_password: "Glemt passord?"
-        confirm_password_description: "Bekreft passordet ditt for å fortsette"
         name: "Navn"
         label: "Kode"
         rate_limit: "Vennligst vent før du prøver en annen autentiseringskode."
@@ -1238,14 +1236,13 @@ nb_NO:
           generic: "Kontoen din på %{provider} vil bli brukt i autentisering."
       name:
         title: "Navn"
-        instructions: "ditt fulle navn (valgfritt)"
-        instructions_required: "Ditt fulle navn"
+        instructions: "Ditt fulle navn (valgfritt)."
+        instructions_required: "Ditt fulle navn."
         required: "Vennligst skriv inn et navn"
         too_short: "Navnet ditt er for kort."
         ok: "Navnet ditt ser bra ut."
       username:
         title: "Brukernavn"
-        instructions: "unikt, ingen mellomrom, kort"
         short_instructions: "Folk kan nevne deg som @%{username}."
         available: "Ditt brukernavn er tilgjengelig."
         not_available: "Ikke tilgjengelig. Prøv %{suggestion}?"
@@ -1430,7 +1427,7 @@ nb_NO:
         same_as_username: "Ditt passord er det samme som ditt brukernavn."
         same_as_email: "Ditt passord er det samme som din e-post."
         ok: "Passordet ditt ser bra ut"
-        instructions: "minst %{count} tegn"
+        instructions: "Minst %{count} tegn."
         required: "Skriv inn et passord"
       summary:
         title: "Oppsummering"
@@ -1770,9 +1767,6 @@ nb_NO:
       saved_local_draft_tip: "lagret lokalt"
       drafts_offline: "utkast offline"
       edit_conflict: "rediger konflikt"
-      group_mentioned:
-        one: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} én person</a> – er du sikker?"
-        other: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} folk</a> – er du sikker?"
       duplicate_link: "Det ser ut til at lenken din til <b>%{domain}</b> allerede ble publisert i emnet av <b>@%{username}</b> i <a href='%{post_url}'>et svar %{ago}</a>. Er du sikker på at du vil publisere den igjen?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -1934,6 +1928,7 @@ nb_NO:
         private_message: '%{username} sendte deg en personlig melding i "%{topic}" - %{site_title}'
         linked: '%{username} lenket til innlegget ditt i "%{topic}" - %{site_title}'
         watching_first_post: '%{username} opprettet et nytt emne "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} skrev noe i "%{topic}" - %{site_title}'
         confirm_title: "Varslinger aktivert - %{site_title}"
         confirm_body: "Suksess! Varslinger er nå aktivert."
         custom: "Varsling fra %{username} på %{site_title}"
@@ -3399,9 +3394,7 @@ nb_NO:
         latest_version: "Siste"
         problems_found: "Noen råd basert på gjeldende sideinnstillinger"
         new_features:
-          title: "\U0001F381 Nye funksjoner"
-          dismiss: "Avslå"
-          learn_more: "Finn ut mer"
+          learn_more: "Finn ut mer..."
         last_checked: "Sist sjekket"
         refresh_problems: "Last inn siden på nytt"
         no_problems: "Ingen problemer ble funnet."
@@ -3615,7 +3608,7 @@ nb_NO:
         not_enabled: "N"
         change_settings_short: "Innstillinger"
         howto: "Hvordan installerer jeg utvidelser?"
-        official: "Offisiell Plugin"
+        author: "Av %{author}"
       backups:
         title: "Sikkerhetskopier"
         menu:

@@ -1097,8 +1097,6 @@ gl:
         title: "Autenticación de dobre paso"
         enable: "Xestionar autenticación de dobre paso"
         disable_all: "Desactivar todos"
-        forgot_password: "Esqueceu o contrasinal?"
-        confirm_password_description: "Confirme o seu contrasinal para continuar"
         name: "Nome"
         label: "Código"
         rate_limit: "Agarde antes de tentalo con outro código de autenticación."
@@ -1209,14 +1207,13 @@ gl:
           generic: "Usarase a súa conta de %{provider} para a autenticación."
       name:
         title: "Nome"
-        instructions: "o seu nome completo (opcional)"
-        instructions_required: "Nome completo"
+        instructions: "O seu nOme cOmpletO (OpciOnal)."
+        instructions_required: "Nome completo."
         required: "Escriba un nome"
         too_short: "O nome é curto de mais"
         ok: "O nome parece correcto"
       username:
         title: "Nome de usuario"
-        instructions: "exclusivo, sen espazos, curto"
         short_instructions: "A xente pode mencionalo como @%{username}"
         available: "O nome de usuario está dispoñíbel"
         not_available: "Non dispoñíbel. Tentar %{suggestion}?"
@@ -1398,7 +1395,7 @@ gl:
         same_as_username: "O contrasinal é igual ao nome de usuario."
         same_as_email: "O contrasinal é igual ao correo electrónico."
         ok: "O contrasinal semella bo."
-        instructions: "como mínimo %{count} caracteres"
+        instructions: "Como mínimo %{count} caracteres."
         required: "Escriba un contrasinal"
         confirm: "Confirmar"
       summary:
@@ -1739,9 +1736,6 @@ gl:
       group_mentioned_limit:
         one: "<b>Aviso!</b> Mencionou a <a href='%{group_link}'>%{group}</a>, con todo, este grupo ten máis membros có límite de mencións configurado polo administrador en %{count} usuario. Ninguén será avisado."
         other: "<b>Aviso!</b> Mencionou a <a href='%{group_link}'>%{group}</a>, con todo, este grupo ten máis membros có límite de mencións configurado polo administrador en %{count} usuarios. Ninguén será avisado."
-      group_mentioned:
-        one: "Ao mencionar %{group}, vai enviar a notificación a <a href='%{group_link}'>%{count} persoa</a>. Está seguro de querelo facer?"
-        other: "Ao mencionar %{group}, vai enviar a notificación a <a href='%{group_link}'>%{count} persoas</a>. Está seguro de querelo facer?"
       duplicate_link: "Parece que a súa ligazón a <b>%{domain}</b> xa foi publicada no tema por <b>@%{username}</b> e <a href='%{post_url}'>nunha resposta sobre %{ago}</a> Confirma que quere publicala de novo?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -1914,6 +1908,7 @@ gl:
         private_message: '%{username} envioulle unha mensaxe privada sobre «%{topic}» - %{site_title}'
         linked: '%{username} ligou a súa publicación desde «%{topic}» - %{site_title}'
         watching_first_post: '%{username} creou un tema novo «%{topic}» - %{site_title}'
+        watching_category_or_tag: '%{username} publicou en "%{topic}" - %{site_title}'
         confirm_title: "Notificacións activadas - %{site_title}"
         confirm_body: "Perfecto! As notificacións están activadas."
         custom: "Notificación de %{username} en %{site_title}"
@@ -3348,9 +3343,7 @@ gl:
         latest_version: "Últimos"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
         new_features:
-          title: "Novas funcionalidades"
-          dismiss: "Desbotar"
-          learn_more: "Saber máis"
+          learn_more: "Saber máis..."
         last_checked: "Última comprobación"
         refresh_problems: "Actualizar"
         no_problems: "Non se atoparon problemas."
@@ -3611,7 +3604,7 @@ gl:
         not_enabled: "N"
         change_settings_short: "Configuración"
         howto: "Como podo instalar un complemento?"
-        official: "Complemento oficial"
+        author: "De %{author}"
       backups:
         title: "Copias de seguranza"
         menu:

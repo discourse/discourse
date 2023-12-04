@@ -134,6 +134,13 @@ RSpec.describe HasCustomFields do
       expect(db_item.custom_fields).to eq("a" => "b", "c" => "d")
     end
 
+    it "handles assigning singleton values to array fields" do
+      CustomFieldsTestItem.register_custom_field_type "array", [:integer]
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields = { "array" => "1" }
+      test_item.save
+    end
+
     it "handles arrays properly" do
       CustomFieldsTestItem.register_custom_field_type "array", [:integer]
       test_item = CustomFieldsTestItem.new
@@ -363,6 +370,16 @@ RSpec.describe HasCustomFields do
         item0.create_singular("rare", "diamond")
         expect(item0.reload.custom_fields["rare"]).to eq("diamond")
       end
+    end
+
+    it "supports setting a maximum length" do
+      CustomFieldsTestItem.register_custom_field_type "foo", :string, max_length: 1
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields = { "foo" => "a" }
+      test_item.save!
+
+      test_item.custom_fields = { "foo" => "aa" }
+      expect { test_item.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     describe "upsert_custom_fields" do

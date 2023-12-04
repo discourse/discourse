@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe StaticController do
-  fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload)
 
   describe "#favicon" do
     let(:filename) { "smallest.png" }
@@ -166,11 +166,6 @@ RSpec.describe StaticController do
       before { SiteSetting.login_required = true }
 
       %w[faq guidelines rules conduct].each do |page_name|
-        it "#{page_name} page redirects to login page for anon" do
-          get "/#{page_name}"
-          expect(response).to redirect_to "/login"
-        end
-
         it "#{page_name} page redirects to login page for anon" do
           get "/#{page_name}"
           expect(response).to redirect_to "/login"

@@ -111,8 +111,27 @@ class Plugin::Metadata
     required_version
     transpile_js
     meta_topic_id
+    label
   ]
   attr_accessor(*FIELDS)
+
+  MAX_FIELD_LENGTHS ||= {
+    name: 75,
+    about: 350,
+    authors: 200,
+    contact_emails: 200,
+    url: 500,
+    label: 20,
+  }
+
+  def meta_topic_id=(value)
+    @meta_topic_id =
+      begin
+        Integer(value)
+      rescue StandardError
+        nil
+      end
+  end
 
   def self.parse(text)
     metadata = self.new
@@ -129,12 +148,17 @@ class Plugin::Metadata
 
     unless line.empty?
       return false unless line[0] == "#"
-      attribute, *description = line[1..-1].split(":")
+      attribute, *value = line[1..-1].split(":")
 
-      description = description.join(":")
+      value = value.join(":")
       attribute = attribute.strip.gsub(/ /, "_").to_sym
 
-      self.public_send("#{attribute}=", description.strip) if FIELDS.include?(attribute)
+      if FIELDS.include?(attribute)
+        self.public_send(
+          "#{attribute}=",
+          value.strip.truncate(MAX_FIELD_LENGTHS[attribute] || 1000),
+        )
+      end
     end
 
     true

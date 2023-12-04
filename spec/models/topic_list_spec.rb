@@ -67,7 +67,7 @@ RSpec.describe TopicList do
     end
 
     describe "when there are tags restricted to a category" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:other_topic) { Fabricate(:topic) } # uncategorized
       fab!(:tag) { Fabricate(:tag, topics: [topic], categories: [category], name: "category-tag") }

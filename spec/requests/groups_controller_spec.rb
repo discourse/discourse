@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupsController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user2) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin)
+  fab!(:moderator)
 
   describe "#index" do
     let(:staff_group) do
@@ -410,7 +410,7 @@ RSpec.describe GroupsController do
     end
 
     describe "groups_index_query modifier" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
       fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
 
@@ -646,7 +646,7 @@ RSpec.describe GroupsController do
     end
 
     context "when include_custom_fields is true" do
-      fab!(:user_field) { Fabricate(:user_field) }
+      fab!(:user_field)
       let(:user_field_name) { "user_field_#{user_field.id}" }
       let!(:custom_user_field) do
         UserCustomField.create!(user_id: user.id, name: user_field_name, value: "A custom field")
@@ -1273,7 +1273,7 @@ RSpec.describe GroupsController do
 
     fab!(:user3) { Fabricate(:user, last_seen_at: nil, last_posted_at: nil, email: "c@test.org") }
 
-    fab!(:bot) { Fabricate(:bot) }
+    fab!(:bot)
     let(:group) { Fabricate(:group, users: [user1, user2, user3, bot]) }
 
     it "should allow members to be sorted by" do
@@ -1377,7 +1377,7 @@ RSpec.describe GroupsController do
   end
 
   describe "#edit" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     context "when user is not signed in" do
       it "should be forbidden" do
@@ -2402,7 +2402,7 @@ RSpec.describe GroupsController do
     end
 
     describe "groups_search_query modifier" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
       fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
 
@@ -2492,7 +2492,7 @@ RSpec.describe GroupsController do
     end
 
     describe "with varying category permissions" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
 
       before do
         category.set_permissions("#{group.name}": :full)

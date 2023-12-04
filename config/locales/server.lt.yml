@@ -1249,7 +1249,6 @@ lt:
     mobile_logo_dark: "Tamsios schemos alternatyva svetainės „mobiliojo logotipo“ nustatymui."
     large_icon: "Vaizdas naudojamas kaip kitų metaduomenų piktogramų pagrindas. Idealiu atveju turėtų būti didesnis nei 512 x 512. Jei paliksite tuščią, bus naudojamas logotipas_mažas."
     email_custom_headers: "Brūkšniais atskirtas pasirinktinių el. laiškų antraščių sąrašas"
-    enforce_second_factor: "Priverčia vartotojus įgalinti dviejų veiksnių autentifikavimą. Pasirinkite „viskas“, kad jis būtų taikomas visiems vartotojams. Pasirinkite „personalas“, kad jis būtų taikomas tik darbuotojams."
     force_https: "Priverskite savo svetainę naudoti tik HTTPS. ĮSPĖJIMAS: NEGALIMA to įjungti, kol nepatikrinate, kad HTTPS yra visiškai nustatytas ir veikia visiškai visur! Ar patikrinote savo CDN, visus socialinius prisijungimus ir visus išorinius logotipus / priklausomybes, kad įsitikintumėte, jog jie taip pat suderinami su HTTPS?"
     summary_score_threshold: "Minimalus balas, kurio reikia, kad įrašas būtų įtrauktas į „Apibendrinti šią temą“"
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"
@@ -1375,13 +1374,14 @@ lt:
     newuser_max_mentions_per_post: "Didžiausias @name pranešimų skaičius, kurį naujas vartotojas gali naudoti įraše."
     newuser_max_replies_per_topic: "Maksimalus atsakymų skaičius, kurį naujas vartotojas gali pateikti vienoje temoje, kol kas nors į juos atsakys."
     enable_mentions: "Leiskite vartotojams paminėti kitus vartotojus."
-    category_style: "Vizualus stilius kategorijos ženklelių."
     dark_mode_none: "Nieko"
     max_similar_results: "Kiek panašių temų rodyti virš redaktoriaus kuriant naują temą. Palyginimas pagrįstas pavadinimu ir tekstu."
     max_image_megapixels: "Didžiausias leistinas vaizdo megapikselių skaičius. Vaizdai su didesniu megapikselių skaičiumi bus atmesti."
     topic_views_heat_medium: "Po tiek peržiūrų rodinių laukas vidutiniškai paryškinamas."
     topic_views_heat_high: "Po šio daugybės peržiūrų, peržiūros laukas yra stipriai paryškintas."
     privacy_policy_url: "Jei turite Privatumo politikos dokumentą, talpinamą kitur, kurį norite naudoti, pateikite visą URL čia."
+    num_flaggers_to_close_topic: "Mažiausias unikalių pranešimų skaičius, kurio reikia, kad tema būtų automatiškai sustabdyta intervencijai"
+    num_hours_to_close_topic: "Valandų skaičius pristabdyti temą intervencijai."
     incoming_email_prefer_html: "Įeinantiems el. laiškams naudokite HTML, o ne tekstą."
     display_name_on_email_from: "Rodyti visus vardus el. pašte iš laukų"
     unsubscribe_via_email: "Leiskite naudotojams atšaukti el. laiškų prenumeratą išsiųsdami el. laišką, kurio temoje arba tekste yra „atsisakyti prenumeratos“."
@@ -2363,6 +2363,104 @@ lt:
     Redaguoti pirmutinį įrašą kad pakeisti turinį %{page_name} puslapio.
   guidelines_topic:
     title: "DUK/Gairės"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Tai civilizuota viešų diskusijų vieta](#civilizuota)
+
+      Prašome elgtis su šiuo diskusijų forumu taip pat pagarbiai, kaip ir su viešuoju parku. Mes taip pat esame bendri bendruomenės ištekliai &mdash; vieta, kurioje galima dalytis įgūdžiais, žiniomis ir interesais per nuolatinius pokalbius.
+
+      Tai nėra griežtos taisyklės. Tai gairės, padedančios žmogiškai įvertinti mūsų bendruomenę ir išlaikyti šią malonią, draugišką civilizuotų viešų diskusijų vietą.
+
+      <a name="improve"></a>
+
+      ## [Tobulinti diskusiją](#tobulinti)
+
+      Padėkite mums paversti šią svetainę puikia diskusijų vieta, visada įnešdami į diskusiją ką nors teigiamo, kad ir nedidelio. Jei nesate tikri, kad jūsų pranešimas prisideda prie pokalbio, apgalvokite, ką norite pasakyti, ir pabandykite vėliau.
+
+      Vienas iš būdų tobulinti diskusijas - atrasti jau vykstančias. Prieš atsakydami ar pradėdami savo temą, skirkite laiko čia esančių temų peržiūrai ir turėsite daugiau šansų sutikti kitų žmonių, kurie turi bendrų interesų.
+
+      Čia aptariamos temos mums svarbios, todėl norime, kad ir jūs elgtumėtės taip, tarsi jos jums būtų svarbios. Būkite pagarbūs temoms ir jas aptariantiems žmonėms, net jei nesutinkate su kai kuriais teiginiais.
+
+      <a name="agreeable"></a>
+
+      ## [Be Agreeable, Even When You Disagreeable](#pritariantis)
+
+      Galbūt norėsite atsakyti nesutikdami. Tai gerai. Tačiau nepamirškite _kritikuoti idėjų, o ne žmonių_. Venkite:
+
+      * Vardų įžeidinėjimo
+      * Ad hominem išpuolių
+      * Reagavimo į pranešimo toną, o ne į jo turinį
+      * Keisto prieštaravimo
+
+      Vietoj to pateikite apgalvotų įžvalgų, kurios pagerintų pokalbį.
+
+      <a name="participate"></a>
+
+      ## [Jūsų dalyvavimas svarbus](#participate)
+
+      Čia vykstantys pokalbiai užduoda toną kiekvienam naujai atvykusiam. Padėkite mums daryti įtaką šios bendruomenės ateičiai, pasirinkdami dalyvauti diskusijose, dėl kurių šis forumas tampa įdomia &mdash; vieta, ir vengdami tų, kurios to nedaro.
+
+      Diskursas suteikia įrankius, kurie leidžia bendruomenei kolektyviai nustatyti geriausius (ir blogiausius) įnašus: žymos, patinka, vėliavėlės, atsakymai, redagavimai, stebėjimas, nutildymas ir pan. Naudokitės šiomis priemonėmis, kad pagerintumėte savo ir visų kitų patirtį.
+
+      Palikime savo bendruomenę geresnę, nei ją radome.
+
+      <a name="flag-problems"></a>
+
+      ## [Jei matote problemą, pažymėkite ją](#flag-problems)
+
+      Moderatoriai turi ypatingus įgaliojimus; jie yra atsakingi už šį forumą. Tačiau jūs taip pat esate atsakingi už jį. Su jūsų pagalba moderatoriai gali būti bendruomenės pagalbininkais, o ne tik sargybiniais ar policininkais.
+
+      Pastebėję blogą elgesį, neatsakykite. Atsakydami skatinate blogą elgesį, nes jį pripažįstate, eikvojate savo energiją ir gaištate visų laiką. Tiesiog pažymėkite tai. Jei susikaups pakankamai žymų, bus imtasi veiksmų - automatiškai arba įsikišus moderatoriui.
+
+      Siekdami išlaikyti mūsų bendruomenę, moderatoriai pasilieka teisę bet kuriuo metu pašalinti bet kokį turinį ir bet kurio naudotojo paskyrą dėl bet kokios priežasties. Moderatoriai neperžiūri naujų pranešimų; moderatoriai ir svetainės operatoriai neprisiima jokios atsakomybės už bet kokį bendruomenės paskelbtą turinį.
+
+      <a name="be-civil"></a>
+
+      ## [Visada būkite mandagūs](#be-civil)
+
+      Niekas taip nesugriauna sveiko pokalbio kaip grubumas:
+
+      * Būkite mandagūs. Neskelbkite nieko, ką protingas žmogus laikytų įžeidžiančiu, užgauliu ar neapykantos kalba.
+      * Laikykitės švaros. Neskelbkite nieko nepadoraus ar seksualiai atviro.
+      * Gerbkite vieni kitus. Nepersekiokite ir neliūdėkite, neapsimetinėkite žmonėmis ir neatskleiskite jų asmeninės informacijos.
+      * Gerbkite mūsų forumą. Nesiųskite šlamšto ir kitaip nešiukšlinkite forumo.
+
+      Tai nėra konkretūs terminai su tiksliais apibrėžimais &mdash; venkite net _atrodymo_ bet kurio iš šių dalykų. Jei nesate tikri, paklauskite savęs, kaip jaustumėtės, jei jūsų pranešimas atsidurtų pirmajame pagrindinės naujienų svetainės puslapyje.
+
+      Tai viešas forumas, o paieškos sistemos indeksuoja šias diskusijas. Saugokite kalbą, nuorodas ir paveikslėlius, kad jie būtų saugūs šeimai ir draugams.
+
+      <a name="keep-tidy"></a>
+
+      ## [Keep It Tidy](#keep-tidy)
+
+      Pasistenkite sudėti daiktus į tinkamas vietas, kad galėtume daugiau laiko skirti diskusijoms ir mažiau tvarkytis. Taigi:
+
+      * Nepradėkite temos netinkamoje kategorijoje; perskaitykite kategorijų apibrėžimus.
+      * Neskelbkite to paties dalyko keliose temose.
+      * Neskelbkite atsakymų be turinio.
+      * Nenukreipkite temos, keisdami ją viduryje.
+      * Nepasirašinėkite savo pranešimų &mdash; prie kiekvieno pranešimo yra prisegta jūsų profilio informacija.
+
+      Užuot rašę "+1" arba "Pritariu", naudokite mygtuką "Patinka". Užuot kreipę esamą temą iš esmės kita linkme, naudokite "Atsakyti" kaip susietą temą.
+
+      <a name="stealing"></a>
+
+      ## [Post Only Your Own Stuff](#vogimas)
+
+      Negalite be leidimo skelbti nieko skaitmeninio, kas priklauso kam nors kitam. Negalite skelbti aprašymų, nuorodų į kieno nors intelektinę nuosavybę (programinę įrangą, vaizdo, garso įrašus, paveikslėlius) ar metodų, kaip ją pavogti, arba pažeisti bet kokį kitą įstatymą.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      Šią svetainę valdo jūsų [draugiški vietiniai darbuotojai](%{base_path}/apie) ir *jūs*, bendruomenė. Jei turite papildomų klausimų apie tai, kaip čia viskas turėtų veikti, atidarykite naują temą [svetainės atsiliepimų kategorijoje](%{base_path}/c/site-feedback) ir aptarkime! Jei iškilo kritinė ar skubi problema, kurios negalima išspręsti meta tema ar vėliavėle, susisiekite su mumis per [personalo puslapį](%{base_path}/about).
+
+      <a name="tos"></a>
+
+      ## [Paslaugų teikimo sąlygos](#tos)
+
+      Taip, teisinė kalba yra nuobodi, bet turime apsaugoti save &ndash; , o kartu ir jus bei jūsų duomenis &ndash; nuo nedraugiškų žmonių. Turime [Paslaugų teikimo sąlygas](%{base_path}/tos), kuriose aprašytas jūsų (ir mūsų) elgesys ir teisės, susijusios su turiniu, privatumu ir įstatymais. Norėdami naudotis šia paslauga, turite sutikti laikytis mūsų [TOS](%{base_path}/tos).
   tos_topic:
     title: "Paslaugų teikimo sąlygos"
   privacy_topic:

@@ -10,6 +10,8 @@ require "url_helper"
 class FinalDestination
   class SSRFError < SocketError
   end
+  class UrlEncodingError < ArgumentError
+  end
 
   MAX_REQUEST_TIME_SECONDS = 10
   MAX_REQUEST_SIZE_BYTES = 5_242_880 # 1024 * 1024 * 5
@@ -84,6 +86,7 @@ class FinalDestination
         end
       )
     @stop_at_blocked_pages = @opts[:stop_at_blocked_pages]
+    @extra_headers = @opts[:headers]
   end
 
   def self.connection_timeout
@@ -118,6 +121,7 @@ class FinalDestination
       "Host" => @uri.hostname + (@include_port_in_host_header ? ":#{@uri.port}" : ""),
     }
 
+    result.merge!(@extra_headers) if @extra_headers
     result["Cookie"] = @cookie if @cookie
 
     result
@@ -457,6 +461,8 @@ class FinalDestination
 
   def normalized_url
     UrlHelper.normalized_encode(@url)
+  rescue ArgumentError => e
+    raise UrlEncodingError, e.message
   end
 
   def log(log_level, message)

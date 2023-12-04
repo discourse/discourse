@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 describe "New topic list", type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:group) { Fabricate(:group, users: [user]) }
-  fab!(:category) { Fabricate(:category) }
-  fab!(:tag) { Fabricate(:tag) }
+  fab!(:category)
+  fab!(:tag)
 
   fab!(:new_reply) do
     Fabricate(:post).topic.tap do |topic|

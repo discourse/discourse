@@ -305,9 +305,9 @@ sv:
         default_search_placeholder: "#a-kanal, @någon eller något"
         default_channel_search_placeholder: "#en-kanal"
         default_user_search_placeholder: "@någon"
-        user_search_placeholder: "...lägg till fler användare"
         disabled_user: "har inaktiverat chatten"
         no_items: "Inga objekt"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Redigera kanal
         input_placeholder: Lägg till ett namn
@@ -396,6 +396,7 @@ sv:
       quote:
         original_channel: 'Ursprungligen skickad i <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chattcitat kopierat till urklipp"
+        default_thread_title: "Tråd"
       notification_levels:
         never: "Aldrig"
         mention: "Endast för omnämnanden"

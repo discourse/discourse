@@ -14,17 +14,40 @@ RSpec.describe Plugin::Instance do
       expect(plugin.name).to eq("plugin-name")
       expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
 
-      git_repo = plugin.git_repo
       plugin.git_repo.stubs(:latest_local_commit).returns("123456")
       plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
 
       expect(plugin.commit_hash).to eq("123456")
       expect(plugin.commit_url).to eq("http://github.com/discourse/discourse-plugin/commit/123456")
+      expect(plugin.discourse_owned?).to eq(true)
     end
 
     it "does not blow up on missing directory" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/frank_zappa")
       expect(plugins.count).to eq(0)
+    end
+  end
+
+  describe "git repo details" do
+    describe ".discourse_owned?" do
+      it "returns true if the plugin is on github in discourse-org or discourse orgs" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+        plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
+        expect(plugin.discourse_owned?).to eq(true)
+
+        plugin.git_repo.stubs(:url).returns("http://github.com/discourse-org/discourse-plugin")
+        expect(plugin.discourse_owned?).to eq(true)
+
+        plugin.git_repo.stubs(:url).returns("http://github.com/someguy/someguy-plugin")
+        expect(plugin.discourse_owned?).to eq(false)
+      end
+
+      it "returns false if the commit_url is missing because of git command issues" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns(nil)
+        expect(plugin.discourse_owned?).to eq(false)
+      end
     end
   end
 
@@ -707,7 +730,7 @@ RSpec.describe Plugin::Instance do
   end
 
   describe "#register_site_categories_callback" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     it "adds a callback to the Site#categories" do
       instance = Plugin::Instance.new
@@ -731,7 +754,7 @@ RSpec.describe Plugin::Instance do
 
   describe "#register_notification_consolidation_plan" do
     let(:plugin) { Plugin::Instance.new }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     after { DiscoursePluginRegistry.reset_register!(:notification_consolidation_plans) }
 
@@ -748,12 +771,12 @@ RSpec.describe Plugin::Instance do
           to: Notification.types[:code_review_commit_approved],
           threshold: 1,
           consolidation_window: 1.minute,
-          unconsolidated_query_blk: ->(notifications, _data) {
+          unconsolidated_query_blk: ->(notifications, _data) do
             notifications.where("(data::json ->> 'consolidated') IS NULL")
-          },
-          consolidated_query_blk: ->(notifications, _data) {
+          end,
+          consolidated_query_blk: ->(notifications, _data) do
             notifications.where("(data::json ->> 'consolidated') IS NOT NULL")
-          },
+          end,
         ).set_mutations(
           set_data_blk: ->(notification) { notification.data_hash.merge(consolidated: true) },
         )
@@ -808,15 +831,15 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  describe "#register_about_stat_group" do
+  describe "#register_stat" do
     let(:plugin) { Plugin::Instance.new }
 
     after { DiscoursePluginRegistry.reset! }
 
     it "registers an about stat group correctly" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_about_stat_group("some_group", show_in_ui: true) { stats }
-      expect(About.new.plugin_stats.with_indifferent_access).to match(
+      plugin.register_stat("some_group", show_in_ui: true) { stats }
+      expect(Stat.all_stats.with_indifferent_access).to match(
         hash_including(
           some_group_last_day: 1,
           some_group_7_days: 10,
@@ -828,15 +851,15 @@ RSpec.describe Plugin::Instance do
 
     it "hides the stat group from the UI by default" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_about_stat_group("some_group") { stats }
+      plugin.register_stat("some_group") { stats }
       expect(About.displayed_plugin_stat_groups).to eq([])
     end
 
     it "does not allow duplicate named stat groups" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_about_stat_group("some_group") { stats }
-      plugin.register_about_stat_group("some_group") { stats }
-      expect(DiscoursePluginRegistry.about_stat_groups.count).to eq(1)
+      plugin.register_stat("some_group") { stats }
+      plugin.register_stat("some_group") { stats }
+      expect(DiscoursePluginRegistry.stats.count).to eq(1)
     end
   end
 
@@ -845,7 +868,7 @@ RSpec.describe Plugin::Instance do
 
     after { DiscoursePluginRegistry.reset_register!(:user_destroyer_on_content_deletion_callbacks) }
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "calls the callback when the UserDestroyer runs with the delete_posts opt set to true" do
       callback_called = false

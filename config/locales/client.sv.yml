@@ -1339,8 +1339,6 @@ sv:
         title: "Tvåfaktorsautentisering"
         enable: "Hantera tvåfaktorsautentisering"
         disable_all: "Inaktivera alla"
-        forgot_password: "Glömt lösenordet?"
-        confirm_password_description: "Bekräfta lösenordet för att fortsätta"
         name: "Namn"
         label: "Kod"
         rate_limit: "Vänta innan du provar en annan autentiseringskod."
@@ -1470,14 +1468,13 @@ sv:
           generic: "Ditt %{provider}-konto kommer att användas för autentisering."
       name:
         title: "Namn"
-        instructions: "ditt fullständiga namn (valfritt)"
-        instructions_required: "Ditt fullständiga namn"
+        instructions: "Ditt fullständiga namn (valfritt)."
+        instructions_required: "Ditt fullständiga namn."
         required: "Ange ett namn"
         too_short: "Ditt namn är för kort"
         ok: "Ditt namn ser bra ut"
       username:
         title: "Användarnamn"
-        instructions: "unikt, inga mellanrum, kort"
         short_instructions: "Du kan omnämnas som @%{username}"
         available: "Ditt användarnamn är tillgängligt"
         not_available: "Inte tillgängligt. Prova %{suggestion}?"
@@ -1665,6 +1662,10 @@ sv:
             <p>Det skickas en inbjudan till varje e-postadress i din uppladdade CSV-fil och du kommer att kunna hantera den senare.</p>
           success: "Filen laddades upp. Du kommer att aviseras via meddelande när processen är klar."
           error: "Tyvärr bör filen vara i CSV-format."
+      confirm_access:
+        title: "Bekräfta åtkomst"
+        incorrect_password: "Det angivna lösenordet är felaktigt."
+        incorrect_passkey: "Det lösenordet är felaktigt."
       password:
         title: "Lösenord"
         too_short: "Ditt lösenord är för kort."
@@ -1672,9 +1673,10 @@ sv:
         same_as_username: "Ditt lösenord är detsamma som ditt användarnamn."
         same_as_email: "Ditt lösenord är detsamma som din e-postadress."
         ok: "Ditt lösenord ser bra ut."
-        instructions: "minst %{count} tecken"
+        instructions: "Minst %{count} tecken."
         required: "Ange ett lösenord"
         confirm: "Bekräfta"
+        incorrect_password: "Det angivna lösenordet är felaktigt."
       summary:
         title: "Sammanfattning"
         stats: "Statistik"
@@ -1874,6 +1876,9 @@ sv:
       disable: "Visa raderade inlägg"
     private_message_info:
       title: "Meddelande"
+      edit: "Lägg till eller ta bort…"
+      remove: "Ta bort…"
+      add: "Lägg till…"
       leave_message: "Vill du verkligen lämna detta meddelande?"
       remove_allowed_user: "Vill du verkligen ta bort %{name} från det här meddelandet?"
       remove_allowed_group: "Vill du verkligen ta bort %{name} från det här meddelandet?"
@@ -1894,6 +1899,7 @@ sv:
       title: "Skapa ditt konto"
       failed: "Något gick fel, kanske är denna e-postadress redan registrerad, prova länken Glömt lösenord"
       associate: "Har du redan ett konto? <a href='%{associate_link}'>Logga in</a> för att länka ditt %{provider}-konto."
+      activation_title: "Aktivera ditt konto"
     forgot_password:
       title: "Beställ nytt lösenord"
       action: "Jag har glömt mitt lösenord"
@@ -2100,9 +2106,6 @@ sv:
       group_mentioned_limit:
         one: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
         other: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
-      group_mentioned:
-        one: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} person</a> – är du säker?"
-        other: "Genom att nämna %{group}, så kommer du att avisera <a href='%{group_link}'>%{count} medlemmar</a> – är du säker?"
       cannot_see_mention:
         category: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte har tillgång till denna kategori. Du måste lägga till dem i en grupp som har tillgång till denna kategori."
         private: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
@@ -2327,6 +2330,7 @@ sv:
         private_message: '%{username} skickade dig ett privat meddelande i "%{topic}" - %{site_title}'
         linked: '%{username} länkade till ett inlägg du gjort från "%{topic}" - %{site_title}'
         watching_first_post: '%{username} skapade ett nytt ämne "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} skrev i "%{topic}" - %{site_title}'
         confirm_title: "Aviseringar aktiverade - %{site_title}"
         confirm_body: "Framgång! Meddelanden har aktiverats."
         custom: "Aviseringar från %{username} hos %{site_title}"
@@ -4178,9 +4182,7 @@ sv:
         latest_version: "Senaste"
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         new_features:
-          title: "\U0001F381 Nya funktioner"
-          dismiss: "Avfärda"
-          learn_more: "Läs mer"
+          learn_more: "Läs mer..."
         last_checked: "Senast kollad"
         refresh_problems: "Uppdatera"
         no_problems: "Inga problem upptäcktes."
@@ -4506,8 +4508,8 @@ sv:
         not_enabled: "N"
         change_settings_short: "Inställningar"
         howto: "Hur installerar jag tillägg?"
-        official: "Officiellt tillägg"
         broken_route: "Det går inte att konfigurera länken till '%{name}'. Se till att annonsblockerare är inaktiverade och försök ladda om sidan."
+        author: "Av %{author}"
       navigation_menu:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"

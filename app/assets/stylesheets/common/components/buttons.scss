@@ -322,9 +322,8 @@
     }
   }
   &.close {
-    padding: 0;
     background: transparent;
-    font-size: var(--font-up-3);
+    font-size: var(--font-up-2);
     .d-icon {
       color: var(--primary-high);
     }
@@ -335,6 +334,12 @@
         .d-icon {
           color: var(--primary);
         }
+      }
+    }
+    &:focus {
+      background: transparent;
+      .d-icon {
+        color: var(--primary);
       }
     }
   }
@@ -392,57 +397,55 @@
   }
 }
 
-.btn-transparent {
-  background: none;
-  border: 0;
-  color: var(--primary);
-
-  &.btn-primary,
-  &.btn-primary:focus,
-  &.btn-primary:hover {
-    .d-icon {
-      color: var(--tertiary) !important;
-    }
+@mixin btn-colors($btn-color) {
+  color: var(--#{$btn-color});
+  .d-icon {
+    color: currentColor;
   }
-  &.btn-danger,
-  &.btn-danger:focus,
-  &.btn-danger:hover {
-    .d-icon {
-      color: var(--danger) !important;
-    }
+  &:focus,
+  &:focus-visible {
+    color: var(--#{$btn-color}-hover);
   }
-  &.btn-success,
-  &.btn-success:focus,
-  &.btn-success:hover {
-    .d-icon {
-      color: var(--success) !important;
-    }
-  }
-
   .discourse-no-touch & {
     &:hover {
-      color: var(--primary);
-      background: var(--d-hover);
+      color: var(--#{$btn-color}-hover);
+    }
+  }
+}
+
+.btn-transparent {
+  &,
+  &.btn-default {
+    background: transparent !important;
+    border: 0;
+    color: var(--primary);
+    .d-icon {
+      color: var(--primary-high);
+    }
+    &:focus,
+    &:focus-visible {
+      color: var(--tertiary-hover);
       .d-icon {
-        color: var(--primary);
+        color: currentColor;
+      }
+    }
+    .discourse-no-touch & {
+      &:hover {
+        color: var(--tertiary-hover);
+        .d-icon {
+          color: currentColor;
+        }
       }
     }
   }
-
-  &:focus {
-    color: var(--primary);
-    background: var(--d-hover);
-    .d-icon {
-      color: var(--primary);
-    }
+  &.btn-primary {
+    @include btn-colors("tertiary");
   }
-
-  &:focus-visible {
-    color: var(--primary);
-    background: var(--d-hover);
-    .d-icon {
-      color: var(--primary);
-    }
+  &.btn-danger {
+    @include btn-colors("danger");
+  }
+  &.btn-success {
+    @include btn-colors("success");
   }
 }
 

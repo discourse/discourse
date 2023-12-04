@@ -683,13 +683,12 @@ sq:
         cancel: "Anulo"
       name:
         title: "Emri juaj"
-        instructions: "emri i plotë (opsional)"
-        instructions_required: "Emri i plotë"
+        instructions: "Emri i plotë (opsional)."
+        instructions_required: "Emri i plotë."
         too_short: "Emri juaj është shumë i shkurtër"
         ok: "Emri duket në rregull"
       username:
         title: "Emri i përdoruesit"
-        instructions: "unik, pa hapësira, i shkurtër"
         short_instructions: "Anëtarët e tjerë mund t'ju përmendin si @%{username}"
         available: "Emri është i disponueshëm"
         not_available: "Nuk është i disponueshëm. Provoni %{suggestion}?"
@@ -793,7 +792,7 @@ sq:
         same_as_username: "Fjalëkalimi është i njëjtë me emrin e përdoruesit."
         same_as_email: "Fjalëkalimi është i njëjtë me adresën email."
         ok: "Fjalëkalimi është i pranueshëm."
-        instructions: "të paktën %{count} shkronja"
+        instructions: "Të pakTën %{count} shkronja."
       summary:
         title: "Përmbledhja"
         stats: "Statistikat"
@@ -1006,9 +1005,6 @@ sq:
       posting_not_on_topic: "Cilës temë doni t'i përgjigjeni?"
       saved_local_draft_tip: "ruajtur lokalisht"
       drafts_offline: "draftet offline"
-      group_mentioned:
-        one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
-        other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
       error:
         title_missing: "Titulli është i nevojshëm"
         category_missing: "Duhet të zgjidhni një kategori"
@@ -1073,6 +1069,7 @@ sq:
         replied: '%{username} ju u përgjigj në "%{topic}" - %{site_title}'
         posted: '%{username} postoi në "%{topic}" - %{site_title}'
         linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} postoi në "%{topic}" - %{site_title}'
       titles:
         watching_first_post: "temë e re"
     upload_selector:
@@ -1975,8 +1972,7 @@ sq:
         installed_version: "Instaluar"
         latest_version: "Të fundit"
         new_features:
-          dismiss: "Hiqe"
-          learn_more: "Mëso më shumë"
+          learn_more: "Mëso më shumë..."
         last_checked: "Verifikimi i fundit"
         refresh_problems: "Rifresko"
         no_problems: "Nuk u gjet asnjë gabim."
@@ -2082,6 +2078,7 @@ sq:
         not_enabled: "N"
         change_settings_short: "Rregullimet"
         howto: "Si mund të instaloj një plugin?"
+        author: "Nga %{author}"
       backups:
         title: "Rezervat"
         menu:

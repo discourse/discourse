@@ -296,9 +296,9 @@ ja:
         default_search_placeholder: "#a-channel、@somebody など"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@somebody"
-        user_search_placeholder: "...さらにユーザーを追加"
         disabled_user: "はチャットを無効にしました"
         no_items: "項目なし"
+        filter: "フィルタ"
       channel_edit_name_slug_modal:
         title: チャンネルを編集する
         input_placeholder: 名前を追加してください
@@ -374,6 +374,7 @@ ja:
       quote:
         original_channel: '最初に <a href="%{channelLink}">%{channel}</a> で送信されました'
         copy_success: "チャットの引用をクリップボードにコピーしました"
+        default_thread_title: "スレッド"
       notification_levels:
         never: "なし"
         mention: "メンションのみ"

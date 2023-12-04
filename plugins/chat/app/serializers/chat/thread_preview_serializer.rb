@@ -7,8 +7,8 @@ module Chat
                :last_reply_id,
                :participant_count,
                :reply_count
-    has_many :participant_users, serializer: BasicUserSerializer, embed: :objects
-    has_one :last_reply_user, serializer: BasicUserSerializer, embed: :objects
+    has_many :participant_users, serializer: ::BasicUserSerializer, embed: :objects
+    has_one :last_reply_user, serializer: ::BasicUserSerializer, embed: :objects
 
     def initialize(object, opts)
       super(object, opts)

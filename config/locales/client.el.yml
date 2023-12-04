@@ -1113,8 +1113,6 @@ el:
           description: "Κάθε ένας από αυτούς τους εφεδρικούς κωδικούς μπορεί να χρησιμοποιηθεί μόνο μία φορά. Κρατήστε τους κάπου ασφαλείς αλλά προσβάσιμους."
       second_factor:
         disable_all: "Απενεργοποίηση όλων"
-        forgot_password: "Ξεχάσατε τον κωδικό?"
-        confirm_password_description: "Επιβεβαιώστε τον κωδικό πρόσβασης σας για να συνεχίσετε"
         name: "Όνομα"
         label: "Κωδικός"
         rate_limit: "Παρακαλώ περιμένετε πριν δοκιμάσετε έναν άλλο κωδικό ελέγχου ταυτότητας."
@@ -1215,14 +1213,13 @@ el:
           generic: "Ο %{provider} λογαριασμός σας θα χρησιμοποιηθεί για έλεγχο ταυτότητας."
       name:
         title: "Όνομα"
-        instructions: "το ονοματεπώνυμό σου (προαιρετικό)"
-        instructions_required: "Το ονοματεπώνυμό σου"
+        instructions: "Το ονοματεπώνυμό σου (προαιρετικό)."
+        instructions_required: "Το ονοματεπώνυμό σου."
         required: "Παρακαλώ εισαγάγετε ένα όνομα"
         too_short: "Το όνομά σου είναι πολύ μικρό"
         ok: "Το όνομά σου είναι καλό"
       username:
         title: "Όνομα Χρήστη"
-        instructions: "μοναδικό, χωρίς κενά, σύντομο"
         short_instructions: "Οι άλλοι μπορούν να αναφερθούν σε σένα με το @%{username} "
         available: "Το όνομα χρήστη είναι διαθέσιμο"
         not_available: "Δεν είναι διαθέσιμο. Δοκίμασε %{suggestion};"
@@ -1393,7 +1390,7 @@ el:
         same_as_username: "Ο κωδικός πρόσβασης που έδωσες είναι ο ίδιος με το όνομα χρήστη."
         same_as_email: "Ο κωδικός πρόσβασής σου είναι ίδιος με τη διεύθυνση email σου."
         ok: "Ο κωδικός πρόσβασης φαίνεται καλός."
-        instructions: "τουλάχιστον %{count} χαρακτήρες"
+        instructions: "Τουλάχιστον %{count} χαρακτήρες."
         required: "Παρακαλώ εισαγάγετε έναν κωδικό πρόσβασης"
       summary:
         title: "Περίληψη"
@@ -1741,9 +1738,6 @@ el:
       saved_local_draft_tip: "αποθηκεύτηκε τοπικά"
       drafts_offline: "τοπικά πρόχειρα"
       edit_conflict: "επεξεργασία διένεξης"
-      group_mentioned:
-        one: "Αναφέροντας %{group}, πρόκειται να λάβει ειδοποίηση <a href='%{group_link}'> %{count} άτομο</a> - είσαι βέβαιος;"
-        other: "Αναφέροντας το %{group}, πρόκειται να ειδοποίησεις <a href='%{group_link}'>%{count} μέλη</a> - είσαι σίγουρος;"
       duplicate_link: "Όπως φαίνετα ο σύνδεσμος σας προς <b>%{domain}</b> έχει ήδη αναρτηθεί στο νήμα από <b>@%{username}</b> σε μία <a href='%{post_url}'>απάντηση πριν από %{ago}</a> – θέλετε σίγουρα να αναρτήσετε τον σύνδεσμο ξανά;"
       reference_topic_title: "ΑΠ: %{title}"
       error:
@@ -1906,6 +1900,7 @@ el:
         private_message: 'Ο/Η %{username} σας έστειλε ένα προσωπικό μήνυμα στο "%{topic}" - %{site_title}'
         linked: '%{username} έκανε μια σύνδεση στην ανάρτηση που έκανες στο νήμα "%{topic}" - %{site_title}'
         watching_first_post: 'Ο/Η %{username} δημιούργησε ένα νέο θέμα "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} ανάρτησε στο "%{topic}" - %{site_title}'
         confirm_title: "Ενεργοποιημένες ειδοποιήσεις - %{site_title}"
         confirm_body: "Επιτυχία! Οι ειδοποιήσεις έχουν ενεργοποιηθεί."
         custom: "Ειδοποίηση από %{username} στο %{site_title}"
@@ -3345,8 +3340,7 @@ el:
         latest_version: "Τελευταία"
         problems_found: "Μερικές συμβουλές με βάση τις τρέχουσες ρυθμίσεις του ιστότοπού σας"
         new_features:
-          dismiss: "Απόρριψη"
-          learn_more: "Μάθε περισσότερα"
+          learn_more: "Μάθε περισσότερα..."
         last_checked: "Τελευταίος έλεγχος"
         refresh_problems: "Ανανέωση"
         no_problems: "Δεν βρέθηκε κανένα πρόβλημα."
@@ -3593,7 +3587,7 @@ el:
         not_enabled: "Ν"
         change_settings_short: "Ρυθμίσεις"
         howto: "Πως εγκαθιστώ πρόσθετα;"
-        official: "Επίσημο πρόσθετο"
+        author: "Του/της %{author}"
       backups:
         title: "Αντίγραφα ασφαλείας"
         menu:

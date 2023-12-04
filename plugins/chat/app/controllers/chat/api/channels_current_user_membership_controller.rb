@@ -12,10 +12,6 @@ class Chat::Api::ChannelsCurrentUserMembershipController < Chat::Api::ChannelsCo
   end
 
   def destroy
-    render_serialized(
-      channel_from_params.remove(current_user),
-      Chat::UserChannelMembershipSerializer,
-      root: "membership",
-    )
+    with_service(Chat::LeaveChannel) { on_model_not_found(:channel) { raise Discourse::NotFound } }
   end
 end

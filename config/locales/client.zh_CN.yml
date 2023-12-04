@@ -313,6 +313,7 @@ zh_CN:
       copied: "已复制！"
       copy: "将代码复制到剪贴板"
       fullscreen: "全屏显示代码"
+      view_code: "查看代码"
     drafts:
       label: "草稿"
       label_with_count: "草稿 (%{count})"
@@ -1291,8 +1292,6 @@ zh_CN:
         title: "双重身份验证"
         enable: "管理双重身份验证"
         disable_all: "全部禁用"
-        forgot_password: "忘记密码了？"
-        confirm_password_description: "请确认您的密码以继续"
         name: "名称"
         label: "代码"
         rate_limit: "请稍候，然后再尝试其他身份验证代码。"
@@ -1435,14 +1434,12 @@ zh_CN:
           generic: "您的 %{provider} 帐户将被用于身份验证。"
       name:
         title: "姓名"
-        instructions: "您的全名（可选）"
-        instructions_required: "您的全名"
+        instructions_required: "您的全名."
         required: "请输入姓名"
         too_short: "您的姓名过短"
         ok: "您的姓名没有问题"
       username:
         title: "用户名"
-        instructions: "独一无二，没有空格，简短"
         short_instructions: "其他人可以使用 @%{username} 来提及您"
         available: "您的用户名可用"
         not_available: "不可用，试试 %{suggestion}？"
@@ -1646,7 +1643,7 @@ zh_CN:
         same_as_username: "您的密码与您的用户名相同。"
         same_as_email: "您的密码与您的电子邮件相同。"
         ok: "您的密码没有问题。"
-        instructions: "至少 %{count} 个字符"
+        instructions: "至少 %{count} 个字符."
         required: "请输入密码"
         confirm: "确认"
         incorrect_password: "输入的密码不正确。"
@@ -1791,7 +1788,7 @@ zh_CN:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>超过了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>超过了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。
-    learn_more: "了解更多…"
+    learn_more: "了解更多"
     mute: 免打扰
     unmute: 取消免打扰
     last_post: 发布时间
@@ -2084,7 +2081,8 @@ zh_CN:
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
-        other: "提及 %{group} 时，您将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
+        other: "提及 %{group} 将通知 <a href='%{group_link}'>%{count} 人</a>。"
+      larger_group_mentioned: "提及 %{group} 将通知 <a href='%{group_link}'>%{count} 人</a>。你确定吗？"
       cannot_see_mention:
         category: "您提及了 @%{username}，但该用户无法访问此类别，因此不会收到通知。您需要将其添加到可以访问此类别的群组中。"
         private: "您提及了 @%{username}，但该用户无法访问此个人消息，因此不会收到通知。您需要邀请该用户加入此个人消息。"
@@ -2295,6 +2293,7 @@ zh_CN:
         private_message: '%{username} 在“%{topic}”中向您发送了个人消息 - %{site_title}'
         linked: '%{username} 链接到您在“%{topic}”中的帖子 - %{site_title}'
         watching_first_post: '%{username} 创建了新话题“%{topic}”- %{site_title}'
+        watching_category_or_tag: '%{username} 在“%{topic}”中发布了帖子 - %{site_title}'
         confirm_title: "已启用通知 - %{site_title}"
         confirm_body: "成功！已启用通知。"
         custom: "来自%{site_title}上 %{username} 的通知"
@@ -3903,6 +3902,7 @@ zh_CN:
       sr_jump_bottom_button: "跳到最后一个帖子"
     fullscreen_table:
       expand_btn: "展开表"
+      view_table: "查看表格"
     second_factor_auth:
       redirect_after_success: "第二重身份验证成功。正在重定向到之前的页面…"
     sidebar:
@@ -4104,9 +4104,9 @@ zh_CN:
         latest_version: "最新"
         problems_found: "基于您当前站点设置的一些建议"
         new_features:
-          title: "\U0001F381 新功能"
-          dismiss: "忽略"
-          learn_more: "了解详情"
+          title: "新功能"
+          previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
+          learn_more: "了解详情..."
         last_checked: "上次检查"
         refresh_problems: "刷新"
         no_problems: "找不到问题。"
@@ -4491,8 +4491,11 @@ zh_CN:
         not_enabled: "否"
         change_settings_short: "设置"
         howto: "如何安装插件？"
-        official: "官方插件"
+        official: "官方 Discourse 插件"
+        experimental: "实验性插件"
         broken_route: "无法配置“%{name}”的链接。确保禁用广告拦截器并尝试重新加载页面。"
+        author: "作者 %{author}"
+        experimental_badge: "实验性"
       navigation_menu:
         sidebar: "边栏"
         header_dropdown: "标题下拉菜单"

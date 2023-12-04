@@ -178,6 +178,8 @@ es:
         other: "y %{count} otros"
     summaries:
       no_targets: "No hubo mensajes durante el periodo seleccionado."
+    transcript:
+      default_thread_title: "Hilo"
   discourse_push_notifications:
     popup:
       chat_mention:

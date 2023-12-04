@@ -934,8 +934,6 @@ hy:
           title: "Պահուստային Կոդերը Գեներացվել են"
           description: "Այս պահուստային կոդերից յուրաքանչյուրը կարող է օգտագործվել միայն մեկ անգամ: Պահեք դրանք ապահով, բայց հասանելի վայրում:"
       second_factor:
-        forgot_password: "Մոռացե՞լ եք Գաղտնաբառը:"
-        confirm_password_description: "Շարունակելու համար խնդրում ենք հաստատել Ձեր գաղտնաբառը"
         name: "Անուն"
         label: "Կոդ"
         rate_limit: "Խնդրում ենք սպասել՝ նախքան մեկ այլ վավերացման կոդ փորձելը:"
@@ -1029,13 +1027,12 @@ hy:
           generic: "Ձեր %{provider} հաշիվը կօգտագործվի վավերացման համար:"
       name:
         title: "Անուն"
-        instructions: "Ձեր անուն ազգանունը (ընտրովի)"
-        instructions_required: "Ձեր անուն ազգանունը"
+        instructions: "Ձեր անուն ազգանունը (ընտրովի)."
+        instructions_required: "Ձեր անուն ազգանունը."
         too_short: "Ձեր անունը շատ կարճ է"
         ok: "Ձեր անունն ընդունված է"
       username:
         title: "Օգտանուն"
-        instructions: "եզակի, առանց բացատների, կարճ"
         short_instructions: "Մարդիկ կարող են հիշատակել Ձեզ որպես @%{username}"
         available: "Ձեր օգտանունը հասանելի է"
         not_available: "Հասանելի չէ: Փորձե՞լ %{suggestion}-ը:"
@@ -1174,7 +1171,7 @@ hy:
         same_as_username: "Ձեր գաղտնաբառը համընկնում է Ձեր օգտանվան հետ:"
         same_as_email: "Ձեր գաղտնաբառը համընկնում է Ձեր էլ. հասցեի հետ:"
         ok: "Ձեր գաղտնաբառն ընդունված է:"
-        instructions: "առնվազն %{count} սիմվոլ"
+        instructions: "Առնվազն %{count} սիմվոլ."
       summary:
         title: "Ամփոփում"
         stats: "Վիճակագրություն"
@@ -1474,9 +1471,6 @@ hy:
       saved_local_draft_tip: "պահված է տեղում"
       drafts_offline: "Օֆլայն սևագրեր"
       edit_conflict: "խմբագրել հակասությունը"
-      group_mentioned:
-        one: "Նշելով %{group} ՝ Դուք ծանուցում եք <a href='%{group_link}'>%{count} person</a> . Դուք համոզվա՞ծ եք:"
-        other: "Հիշատակելով %{group}-ը՝ Դուք ծանուցում կուղարկեք <a href='%{group_link}'>%{count} օգտագիրոջ</a>: Համոզվա՞ծ եք:"
       duplicate_link: "Կարծես թե դեպի <b>%{domain}</b> Ձեր հղումն արդեն իսկ հրապարակված է թեմայում <b>@%{username}</b>-ի <a href='%{post_url}'>պատասխանում %{ago}</a>: Դուք համոզվա՞ծ եք, որ ցանկանում եք այն կրկին հրապարակել:"
       reference_topic_title: "RE: %{title}"
       error:
@@ -1623,6 +1617,7 @@ hy:
         private_message: '%{username}-ը ուղարկել է Ձեզ անձնական հաղորդագրություն այստեղ՝ "%{topic}" - %{site_title}'
         linked: '%{username}-ը "%{topic}" - %{site_title}"-ից հղում է կատարել Ձեր գրառմանը:'
         watching_first_post: '%{username} -ը ստեղծել է նոր թեմա՝ "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} -ը գրառում է կատարել այստեղ՝ "%{topic}" - %{site_title}'
         confirm_title: "Ծանուցումները միացված են. %{site_title}"
         confirm_body: "Հաջողվեց! Ծանուցումները միացված են:"
         custom: "Ծանուցում %{username} -ից մինչև %{site_title}"
@@ -2891,8 +2886,7 @@ hy:
         latest_version: "Վերջինը"
         problems_found: "Որոշ խորհուրդներ՝ հիմնված Ձեր կայքի ընթացիկ կարգավորումների վրա"
         new_features:
-          dismiss: "Չեղարկել"
-          learn_more: "Իմանալ ավելին"
+          learn_more: "Իմանալ ավելին..."
         last_checked: "Վերջին ստուգումը՝ "
         refresh_problems: "Թարմացնել"
         no_problems: "Խնդիրներ չեն գտնվել:"
@@ -3121,7 +3115,7 @@ hy:
         not_enabled: "Ո"
         change_settings_short: "Կարգավորումներ"
         howto: "Ինչպե՞ս կարող եմ ես տեղադրել հավելումներ:"
-        official: "Պաշտոնական Հավելում"
+        author: "%{author}-Ի կողմԻց"
       backups:
         title: "Պահուստներ"
         menu:

@@ -252,9 +252,9 @@ fi:
         default_search_placeholder: "#a-kanava, @joku tai mitä tahansa"
         default_channel_search_placeholder: "#a-kanava"
         default_user_search_placeholder: "@joku"
-        user_search_placeholder: "...lisää käyttäjiä"
         disabled_user: "on poistanut chatin käytöstä"
         no_items: "Ei kohteita"
+        filter: "Suodatin"
       channel_edit_name_slug_modal:
         title: Muokkaa kanavaa
         input_placeholder: Lisää nimi
@@ -343,6 +343,7 @@ fi:
       quote:
         original_channel: 'Lähetetty alun perin kanavalla <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-lainaus kopioitiin leikepöydälle"
+        default_thread_title: "Ketju"
       notification_levels:
         never: "Ei koskaan"
         mention: "Vain maininnoissa"

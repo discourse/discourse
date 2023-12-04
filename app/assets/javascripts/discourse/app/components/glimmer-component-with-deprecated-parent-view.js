@@ -36,6 +36,7 @@ class GlimmerComponentWithParentViewManager extends CustomComponentManager {
  * when building backwards-compatible versions of components. Any use of the parentView property
  * of the component should be considered deprecated.
  */
+// eslint-disable-next-line ember/no-empty-glimmer-component-classes
 export default class GlimmerComponentWithDeprecatedParentView extends Component {}
 
 setInternalComponentManager(

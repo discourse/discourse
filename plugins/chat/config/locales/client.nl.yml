@@ -305,9 +305,9 @@ nl:
         default_search_placeholder: "#een-kanaal, @iemand of iets anders"
         default_channel_search_placeholder: "#een-kanaal"
         default_user_search_placeholder: "@iemand"
-        user_search_placeholder: "... voeg meer gebruikers toe"
         disabled_user: "heeft de chat uitgeschakeld"
         no_items: "Geen items"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Kanaal bewerken
         input_placeholder: Voeg een naam toe
@@ -396,6 +396,7 @@ nl:
       quote:
         original_channel: 'Oorspronkelijk gestuurd in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chatcitaat gekopieerd naar klembord"
+        default_thread_title: "Thread"
       notification_levels:
         never: "Nooit"
         mention: "Alleen voor vermeldingen"

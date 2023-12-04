@@ -138,6 +138,14 @@ RSpec.describe Chat::UpdateMessage do
       expect(chat_message.reload.message).to eq(new_message)
     end
 
+    it "cooks the message" do
+      chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+      new_message = "Change **to** this!"
+
+      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+      expect(chat_message.reload.cooked).to eq("<p>Change <strong>to</strong> this!</p>")
+    end
+
     it "publishes a DiscourseEvent for updated messages" do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       events =
@@ -293,7 +301,7 @@ RSpec.describe Chat::UpdateMessage do
                 message: new_content,
               )
             end
-            .detect { |m| m.data["type"] == "edit" }
+            .detect { |m| m.data["type"] == "processed" }
             .data
 
         expect(processed_message["chat_message"]["mentioned_users"].count).to eq(1)
@@ -319,7 +327,7 @@ RSpec.describe Chat::UpdateMessage do
                 message: "Hey @#{user2.username}",
               )
             end
-            .detect { |m| m.data["type"] == "edit" }
+            .detect { |m| m.data["type"] == "processed" }
             .data
 
         expect(processed_message["chat_message"]["mentioned_users"].count).to be(1)
@@ -652,7 +660,7 @@ RSpec.describe Chat::UpdateMessage do
     end
 
     describe "watched words" do
-      fab!(:watched_word) { Fabricate(:watched_word) }
+      fab!(:watched_word)
 
       it "errors when a blocked word is present" do
         chat_message = create_chat_message(user1, "something", public_chat_channel)

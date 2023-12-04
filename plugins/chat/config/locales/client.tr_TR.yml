@@ -303,6 +303,7 @@ tr_TR:
         yesterday: Dün
       members_view:
         filter_placeholder: Üye bul
+        add_member: Üye Ekle
       about_view:
         associated_topic: Bağlantılı konu
         associated_category: Bağlantılı kategori
@@ -323,9 +324,15 @@ tr_TR:
         default_search_placeholder: "#bir-kanal, @biri veya herhangi bir şey"
         default_channel_search_placeholder: "#bir-kanal"
         default_user_search_placeholder: "@biri"
-        user_search_placeholder: "...daha fazla kullanıcı ekleyin"
+        user_search_placeholder: "... daha fazla üye ekle"
         disabled_user: "sohbeti devre dışı bıraktı"
         no_items: "Öge yok"
+        create_group_placeholder: "Grup sohbeti adı (isteğe bağlı)"
+        participants_counter: "%{selection_count}/%{max} katılımcı"
+        new_group_chat: "Yeni grup sohbeti"
+        filter: "Filtrele"
+        cant_add_more_members: "Maksimum üye sayısına ulaşıldı"
+        create_new_group_chat: "Grup sohbeti oluştur"
       channel_edit_name_slug_modal:
         title: Kanalı düzenleyin
         input_placeholder: Ad ekleyin
@@ -337,10 +344,15 @@ tr_TR:
         input_placeholder: Açıklama ekle
         description: İnsanlara bu kanalın neyle ilgili olduğunu söyleyin
       direct_message_creator:
+        add_to_channel: "Kanala ekle"
         title: Yeni Mesaj
         prefix: "Kime:"
         no_results: Sonuç yok
         selected_user_title: "%{username} seçimini kaldır"
+        group_name: "Grup sohbeti adı (isteğe bağlı)"
+        members_counter:
+          one: "%{count}/%{max} üye"
+          other: "%{count}/%{max} üye"
       channel:
         no_memberships: Bu kanalda üye yok
         no_memberships_found: Üye bulunamadı
@@ -414,6 +426,7 @@ tr_TR:
       quote:
         original_channel: 'İlk olarak <a href="%{channelLink}">%{channel}</a> adlı kanalda gönderildi'
         copy_success: "Sohbet alıntısı panoya kopyalandı"
+        default_thread_title: "Konu"
       notification_levels:
         never: "Asla"
         mention: "Sadece bahsetmeler için"

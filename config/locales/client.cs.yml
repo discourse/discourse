@@ -1272,8 +1272,6 @@ cs:
         title: "Dvoufaktorové ověření"
         enable: "Správa dvoufaktorového ověřování"
         disable_all: "Zakázat vše"
-        forgot_password: "Zapomněli jste heslo?"
-        confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         name: "Jméno"
         label: "Kód"
         rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
@@ -1398,14 +1396,13 @@ cs:
           disconnect: "Váš stávající %{provider} účet '%{account_description}' bude odpojen."
       name:
         title: "Jméno"
-        instructions: "vaše celé jméno (nepovinné)"
-        instructions_required: "Vaše celé jméno"
+        instructions: "Vaše celé jméno (nepovinné)."
+        instructions_required: "Vaše celé jméno."
         required: "Zadejte jméno"
         too_short: "Máte moc krátké jméno"
         ok: "Parádní jméno"
       username:
         title: "Uživatelské jméno"
-        instructions: "jedinečné, bez mezer, krátké"
         short_instructions: "Lidé vás mohou zmínit pomocí @%{username}"
         available: "Vaše uživatelské jméno je volné"
         not_available: "Není k dispozici. Co třeba %{suggestion}?"
@@ -1576,7 +1573,7 @@ cs:
         same_as_username: "Vaše heslo je stejné jako Vaše uživatelské jméno."
         same_as_email: "Vaše heslo je stejné jako váš e-mail."
         ok: "Vaše heslo je v pořádku."
-        instructions: "alespoň %{count} znaků"
+        instructions: "Alespoň %{count} znaků."
         required: "Zadejte prosím heslo"
       summary:
         title: "Souhrn"
@@ -1976,11 +1973,6 @@ cs:
       edit_conflict: "upravit konflikt"
       esc: "esc"
       ok_proceed: "Ok, pokračovat"
-      group_mentioned:
-        one: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} člověka</a> – jste si jistý/á?"
-        few: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} lidi</a> – jste si jistý/á?"
-        many: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} lidí</a> – jste si jistý/á?"
-        other: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} lidí</a> – jste si jistý/á?"
       cannot_see_mention:
         category: "Zmínili jste uživatele @%{username}, ale oznámení se mu nepošle, protože nemá přístup do této kategorie. Budete jej muset přidat do skupiny, která má přístup do této kategorie."
         private: "Zmínili jste uživatele @%{username}, ale oznámení se mu nepošle, protože tuto osobní zprávu nevidí. Musíte ho pozvat do této osobní konverzace."
@@ -2139,6 +2131,7 @@ cs:
         posted: '%{username} přispěl do "%{topic}" - %{site_title}'
         private_message: '%{username} vám poslal soukromou zprávu v "%{topic}" - %{site_title}'
         linked: '%{username} odkázal na vás příspěvek v "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} přispěl do "%{topic}" - %{site_title}'
         confirm_title: "Upozornění zapnuta - %{site_title}"
         confirm_body: "Upozornění úspěšně zapnuta."
         custom: "Oznámení od %{username} na %{site_title}"
@@ -3743,9 +3736,7 @@ cs:
         latest_version: "Poslední verze"
         problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
         new_features:
-          title: "\U0001F381 Nové funkce"
-          dismiss: "Označit jako přečtené"
-          learn_more: "Více informací"
+          learn_more: "Více informací..."
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
         no_problems: "Nenalezeny žádné problémy."
@@ -4022,7 +4013,7 @@ cs:
         not_enabled: "N"
         change_settings_short: "Nastavení"
         howto: "Jak nainstaluji pluginy?"
-        official: "Oficiální plugin"
+        author: "Od uživatele %{author}"
       navigation_menu:
         sidebar: "Postranní panel"
       backups:

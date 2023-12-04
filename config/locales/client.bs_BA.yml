@@ -1051,8 +1051,6 @@ bs_BA:
           title: "Generirani sigurnosni kodovi"
           description: "Svaki od ovih rezervnih kodova može se koristiti samo jednom. Držite ih na sigurnom, ali pristupačnom mjestu."
       second_factor:
-        forgot_password: "Zaboravili ste password?"
-        confirm_password_description: "Molimo vas da potvrdite šifru kako bi nastavili"
         name: "Ime"
         label: "Šifra"
         rate_limit: "Pričekajte prije pokušaja drugog koda za provjeru autentičnosti."
@@ -1152,14 +1150,13 @@ bs_BA:
           generic: "Vaš %{provider} račun će biti korišten za prijavu."
       name:
         title: "Ime"
-        instructions: "vaše puno ime (opciono)"
-        instructions_required: "Vaše puno ime"
+        instructions: "Vaše puno ime (opciono)."
+        instructions_required: "Vaše puno ime."
         required: "Unesite ime"
         too_short: "Vaše ime je prekratko."
         ok: "Vaše ime izgleda ok."
       username:
         title: "Nadimak"
-        instructions: "unikatno, bez tipke praznog prostora, kratko"
         short_instructions: "Ljudi vas mogu spomenuti preko @%{username}."
         available: "Vaš nadimak je dostupan."
         not_available: "Nije dostupan. Pokušaj %{suggestion}?"
@@ -1306,7 +1303,7 @@ bs_BA:
         same_as_username: "Vaš pasword je isti kao vaše korisničko ime."
         same_as_email: "Vaš pasword je isti kao vaš email."
         ok: "Vaša lozinka dobro izgleda."
-        instructions: "minimalno %{count} karaktera"
+        instructions: "Minimalno %{count} karaktera."
         required: "Molimo unesite lozinku"
       summary:
         title: "Sumirano"
@@ -1618,10 +1615,6 @@ bs_BA:
       saved_local_draft_tip: "sačuvano lokalno"
       drafts_offline: "skicirano lokalno"
       edit_conflict: "uredi sukob"
-      group_mentioned:
-        one: "Spominjući %{group}, obavijestiti će te %{count} korisnika – da li ste sigurni?"
-        few: "Spominjući %{group}, obavijestiti će te <a href='%{group_link}'>%{count} korisnika</a> – da li ste sigurni?"
-        other: "Spominjući %{group}, obavijestiti će te <a href='%{group_link}'>%{count} korisnika</a> – da li ste sigurni?"
       duplicate_link: "Izgleda da vaš link ka <b>%{domain}</b> je već objavljen u temi od strane <b>@%{username}</b> u<a href='%{post_url}'>odgovoru prije %{ago}</a> – da li ste sigurni da želite ponovno objaviti link?"
       reference_topic_title: "RE:%{title}"
       error:
@@ -1768,6 +1761,7 @@ bs_BA:
         private_message: '%{username} vam je poslao/la poruku u "%{topic}" - %{site_title}'
         linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
         watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} je objavio/la "%{topic}" - %{site_title}'
         confirm_title: "Obavijesti uključene - %{site_title}"
         confirm_body: "Uspješno! Obavijesti su sada uključene."
         custom: "Obavijest od %{username} na %{site_title}"
@@ -3075,8 +3069,7 @@ bs_BA:
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         new_features:
-          dismiss: "Odpusti"
-          learn_more: "Saznaj više"
+          learn_more: "Saznaj više..."
         last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"
         no_problems: "No problems were found."
@@ -3306,7 +3299,7 @@ bs_BA:
         not_enabled: "Ne"
         change_settings_short: "Postavke"
         howto: "Kako instaliram pluginove?"
-        official: "Officionalni Plugin"
+        author: "Od %{author}"
       backups:
         title: "Backups"
         menu:

@@ -34,11 +34,11 @@ class RemoteTheme < ActiveRecord::Base
 
   has_one :theme, autosave: false
   scope :joined_remotes,
-        -> {
+        -> do
           joins("JOIN themes ON themes.remote_theme_id = remote_themes.id").where.not(
             remote_url: "",
           )
-        }
+        end
 
   validates_format_of :minimum_discourse_version,
                       :maximum_discourse_version,
@@ -80,8 +80,8 @@ class RemoteTheme < ActiveRecord::Base
     )
   end
 
-  # This is only used in the tests environment and is currently not supported for other environments
-  if Rails.env.test?
+  # This is only used in the development and test environment and is currently not supported for other environments
+  if Rails.env.test? || Rails.env.development?
     def self.import_theme_from_directory(directory)
       update_theme(ThemeStore::DirectoryImporter.new(directory))
     end

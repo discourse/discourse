@@ -292,6 +292,7 @@ it:
         yesterday: Ieri
       members_view:
         filter_placeholder: Trova membri
+        add_member: Aggiungi membro
       about_view:
         associated_topic: Argomento collegato
         associated_category: Categoria collegata
@@ -312,9 +313,15 @@ it:
         default_search_placeholder: "#uncanale, @qualcuno o altro"
         default_channel_search_placeholder: "#un-canale"
         default_user_search_placeholder: "@qualcuno"
-        user_search_placeholder: "...aggiungi altri utenti"
+        user_search_placeholder: "...aggiungi altri membri"
         disabled_user: "ha disabilitato la chat"
         no_items: "Nessun elemento"
+        create_group_placeholder: "Nome della chat di gruppo (facoltativo)"
+        participants_counter: "%{selection_count}/%{max} partecipanti"
+        new_group_chat: "Nuova chat di gruppo"
+        filter: "Filtro"
+        cant_add_more_members: "Numero massimo di membri raggiunto"
+        create_new_group_chat: "Crea chat di gruppo"
       channel_edit_name_slug_modal:
         title: Modifica canale
         input_placeholder: Aggiungi un nome
@@ -326,10 +333,12 @@ it:
         input_placeholder: Aggiungi una descrizione
         description: Spiega agli altri di cosa si occupa questo canale
       direct_message_creator:
+        add_to_channel: "Aggiungi al canale"
         title: Nuovo messaggio
         prefix: "A:"
         no_results: Nessun risultato
         selected_user_title: "Deseleziona %{username}"
+        group_name: "Nome della chat di gruppo (facoltativo)"
       channel:
         no_memberships: Questo canale non ha membri
         no_memberships_found: Nessun membro trovato
@@ -403,6 +412,7 @@ it:
       quote:
         original_channel: 'Inviato in origine in <a href="%{channelLink}">#%{channel}</a>'
         copy_success: "Citazione della chat copiata negli appunti"
+        default_thread_title: "Thread"
       notification_levels:
         never: "Mai"
         mention: "Solo per le menzioni"

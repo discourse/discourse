@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UploadsController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "#create" do
     it "requires you to be logged in" do
@@ -672,7 +672,7 @@ RSpec.describe UploadsController do
   end
 
   describe "#metadata" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     describe "when url is missing" do
       it "should return the right response" do

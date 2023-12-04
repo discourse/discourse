@@ -165,8 +165,11 @@ lt:
       facebook: "Dalintis „Facebook“"
       email: "Siųsti el. Paštu"
       url: "Nukopijuokite ir bendrinkite URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Nustatė diskusijas viešom %{when}"
+      open_topic: "Konvertuota tai į temą %{when}"
       private_topic: "Pakeisti temą į asmeninę žinutę 1%{when}"
       split_topic: "Padalinti temą %{when}"
       invited_user: "Pakvietė %{who} %{when}"
@@ -175,6 +178,8 @@ lt:
       removed_user: "Pašalino %{who} %{when}"
       removed_group: "Pašalino %{who} %{when}"
       autobumped: "Automatiškai pakelti %{when}"
+      tags_changed: "Žymos atnaujintos %{when}"
+      category_changed: "Kategorija atnaujinta %{when}"
       autoclosed:
         enabled: "Uždaryta %{when}"
         disabled: "Atidaryta %{when}"
@@ -196,16 +201,20 @@ lt:
       banner:
         enabled: "Padarė šią reklamjuostę %{when}. Ji pasirodys kiekvieno puslapio viršuje, kol jos neišjungs vartotojas."
         disabled: "Pašalinta ši reklamjuostė %{when}. Ji nebebus rodomaa kiekvieno puslapio viršuje."
+      forwarded: "Persiuntė aukščiau nurodytą el"
     topic_admin_menu: "temos veiksmai"
     skip_to_main_content: "Pereiti prie pagrindinio turinio"
+    skip_user_nav: "Pereiti prie profilio turinio"
     emails_are_disabled: "Visos išeinančios elektroninės žinutės buvo uždraustos administratoriaus. Jokių papildų įspėjamųjų žinučių nebus išsiųsta"
     emails_are_disabled_non_staff: "Siunčiamas el. laiškas buvo išjungtas ne darbuotojams."
     software_update_prompt:
       message: "Mes atnaujinome šią svetainę. <span>prašome perkrauti puslapį</span>, kitaip galite patirti nenumatytas klaidas."
       dismiss: "Praleisti"
+    bootstrap_mode: "Darbo pradžia"
     themes:
       default_description: "Numatytasis"
       broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente yra klaidų."
+      error_caused_by: "Sukėlė '%{name}'. <a target='blank' href='%{path}'>Spustelėkite čia</a> norėdami atnaujinti, iš naujo sukonfigūruoti arba išjungti."
       only_admins: "(šis pranešimas rodomas tik svetainės administratoriams)"
     broken_decorator_alert: "Įrašai gali būti rodomi netinkamai, nes vienas iš jūsų svetainės įrašo turinio dekoratorių iškėlė klaidą."
     s3:
@@ -313,6 +322,8 @@ lt:
       edit_bookmark: "Redaguoti žymę"
       clear_bookmarks: "Pašalinti žymes"
       help:
+        bookmark: "Spustelėkite norėdami pažymėti šią temą"
+        edit_bookmark: "Spustelėkite, jei norite redaguoti pažymėjimą šios įrašo šioje temoje"
         edit_bookmark_for_topic: "Spustelėkite, jei norite redaguoti šios temos žymę"
         unbookmark: "Paspausk, kad pašalintum visas žymęs šioje temoje"
         unbookmark_with_reminder: "Spustelėkite, kad pašalintumėte visas šios temos žymes ir priminimus"
@@ -338,6 +349,7 @@ lt:
         never: "Išsaugoti žymę"
         when_reminder_sent: "Ištrinti žymę"
         on_owner_reply: "Ištrinti žymę, kai atsakysiu"
+        clear_reminder: "Palikite pažymėtą ir išvalykite priminimą"
       search_placeholder: "Ieškokite žymių pagal pavadinimą, temos pavadinimą ar įrašo turinį"
       search: "Paieška"
       reminders:
@@ -413,6 +425,8 @@ lt:
         search: "Ieškoti žinutės"
         placeholder: "čia įveskite pranešimo pavadinimą, URL ar ID"
     review:
+      show_more: "Rodyti daugiau"
+      show_less: "Rodyti mažiau"
       order_by: "Rūšiuoti pagal"
       date_filter: "Paskelbta tarp"
       in_reply_to: "atsakant į"
@@ -524,9 +538,12 @@ lt:
       scores:
         about: "Šis balas apskaičiuojamas remiantis pranešėjo patikimumo lygiu, ankstesnių vėliavų tikslumu ir pranešimo elemento prioritetu."
         score: "Rezultatas"
+        date: "Ataskaitos data"
         type: "Priežastis"
         status: "Statusas"
         submitted_by: "Pranešė"
+        reviewed_by: "Apžvelgė"
+        reviewed_timestamp: "Apžvalgos data"
       statuses:
         pending:
           title: "Laukiama"
@@ -1039,6 +1056,7 @@ lt:
         perm_denied_expl: "Užklausa atmesta nes jūs to neleidote. Jaigu norite gauti perspėjimus, tai galite jūsų naršyklės nustatymuose."
         disable: "Išjungti Pranešimus"
         enable: "Galimi Pranešimai"
+        each_browser_note: "Pastaba: šį nustatymą turite pakeisti kiekvienoje naudojamoje naršyklėje. Visi pranešimai bus išjungti, kai yra „netrukdyti“ režimas, neatsižvelgiant į šį nustatymą."
         consent_prompt: "Ar norite gauti tiesioginius pranešimus, kai žmonės atsakys į jūsų įrašus?"
       dismiss: "Praleisti"
       dismiss_notifications: "Atmesti visus"
@@ -1208,8 +1226,6 @@ lt:
         title: "Dviejų veiksnių autentifikavimas"
         enable: "Tvarkyti dviejų veiksnių autentifikavimą"
         disable_all: "Išjungti visus"
-        forgot_password: "Pamiršote slaptažodį?"
-        confirm_password_description: "Patvirtinkite slaptažodį norėdami tęsti"
         name: "Vardas"
         label: "Kodas"
         rate_limit: "Prašome palaukti prieš bandydami kitą autentifikavimo kodą."
@@ -1320,14 +1336,13 @@ lt:
           generic: "Jūsų %{provider} paskyra bus naudojama autentifikavimui."
       name:
         title: "Vardas"
-        instructions: "jūsų vardas pavardė (pasirinktinai)"
-        instructions_required: "Tavo pilnas vardas"
+        instructions: "Jūsų vardas pavardė (pasirinktinai)."
+        instructions_required: "Tavo pilnas vardas."
         required: "Prašome įvesti vardą"
         too_short: "Tavo slapyvardis yra per trumpas"
         ok: "Tavo slapyvardis yra tinkamas"
       username:
         title: "Vartotojo vardas"
-        instructions: "unikalus, be tarpelių, trumpas"
         short_instructions: "Vartotojai gali tave paminėti kaip @%{username}"
         available: "Vartotojo vardas nėra užimtas"
         not_available: "Negalimas. Gal pabandykite %{suggestion}?"
@@ -1505,7 +1520,7 @@ lt:
         same_as_username: "Tavo slaptažodis yra toks pat, kaip ir vartotojo vardas"
         same_as_email: "Tavo slaptažodis yra toks pat, kaip ir el. adresas."
         ok: "Jūsų slaptažodis yra tinkamas."
-        instructions: "bent jau %{count}simboliai"
+        instructions: "Bent jau %{count}simboliai."
         required: "Įveskite slaptažodį"
         confirm: "Patvirtinti"
       summary:
@@ -1589,6 +1604,7 @@ lt:
       save: "Saugoti"
       set_custom_status: "Nustatyti pasirinktinę būseną"
       what_are_you_doing: "Ką darote?"
+      pause_notifications: "Pristabdyti pranešimus"
     errors:
       prev_page: "kai buvo bandyta užkrauti"
       reasons:
@@ -1639,8 +1655,11 @@ lt:
       hide_forever: "Ačiū ne!"
       hidden_for_session: "Gerai, paklausime rytoj. Jūs taip pat visada galite naudoti „Prisijungti“, kad sukurtumėte paskyrą."
       intro: "Sveiki! Panašu, kad jums patinka diskusija, tačiau dar nesate prisiregistravę prie paskyros."
+    offline_indicator:
+      refresh_page: "Atnaujinti puslapį"
     summary:
       disable: "Peržiūrėti visus Įrašus"
+      short_label: "Populiariausi Atsakymai"
     deleted_filter:
       enabled_description: "Šioje temoje yra ištrintų įrašų, kurie yra paslėpti."
       disabled_description: "Ištrinti temos įrašai vėl rodomi."
@@ -1698,6 +1717,8 @@ lt:
       username: "Vartotojas"
       password: "Slaptažodis"
       show_password: "Rodyti"
+      show_password_title: "Rodyti slaptažodį"
+      hide_password_title: "Slėpti slaptažodį"
       second_factor_title: "Dviejų veiksnių autentifikavimas"
       second_factor_description: "Prašome įvesti autentifikavimo kodą iš savo programos:"
       second_factor_backup: "Prisijunkite naudodami atsarginį kodą"
@@ -2020,6 +2041,7 @@ lt:
         private_message: '%{username} atsiuntė privačią žinutė "%{topic}" - %{site_title}'
         linked: '%{username} panaudojo tavo įrašą "%{topic}" - %{site_title}'
         watching_first_post: '%{username} sukūrė naują temą "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} paskelbė "%{topic}" - %{site_title}'
         confirm_title: "Pranešimai įgalinti - %{site_title}"
         confirm_body: "Pavyko! Pranešimai buvo įgalinti."
         custom: "Pranešimas nuo %{username} %{site_title}"
@@ -3422,6 +3444,8 @@ lt:
       enabled: "Saugus režimas įjungtas, norėdami išeiti iš saugaus režimo uždarykite šį naršyklės langą"
     image_removed: "(vaizdas pašalintas)"
     pause_notifications:
+      title: "Pristabdyti pranešimus apie..."
+      label: "Pristabdyti pranešimus"
       options:
         half_hour: "30 minučių"
         one_hour: "1 valanda"
@@ -3559,9 +3583,7 @@ lt:
         latest_version: "Naujausia"
         problems_found: "Keletas patarimų, pagrįstų dabartiniais svetainės nustatymais"
         new_features:
-          title: "\U0001F381 Naujos funkcijos"
-          dismiss: "Praleisti"
-          learn_more: "Sužinoti daugiau"
+          learn_more: "Sužinoti daugiau..."
         last_checked: "Paskutinį kartą tikrinta"
         refresh_problems: "Atnaujinti"
         no_problems: "Nerasta jokių problemų"
@@ -3584,7 +3606,7 @@ lt:
         show_traffic_report: "Show Detailed Traffic Report"
         community_health: Bendruomenės sveikata
         moderators_activity: Moderatorių veikla
-        whats_new_in_discourse: Kas aujo Discourse?
+        whats_new_in_discourse: Kas naujo Discourse?
         activity_metrics: Aktyvumas
         all_reports: "Visi pranešimai"
         general_tab: "Bendrieji"
@@ -3810,7 +3832,7 @@ lt:
         not_enabled: "Ne"
         change_settings_short: "Nustatymai"
         howto: "Kaip galiu instaliuoti plungin'us?"
-        official: "Oficialus papildinys"
+        author: "Pagal %{author}"
       backups:
         title: "Atsarginės kopijos"
         menu:

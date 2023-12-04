@@ -100,6 +100,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   end
 
   it "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
+    Group.refresh_automatic_groups!
     topic_page.visit_topic_and_open_composer(topic)
 
     expect(topic_page).to have_expanded_composer
@@ -243,7 +244,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   end
 
   context "when a user cannot access the category for a hashtag cooked in another post" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:manager_group) { Fabricate(:group, name: "Managers") }
     fab!(:private_category) do
       Fabricate(:private_category, name: "Management", slug: "management", group: manager_group)

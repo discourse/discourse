@@ -136,7 +136,7 @@ RSpec.describe "Chat channel", type: :system do
 
     it "jumps to the bottom of the channel" do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-      visit("/chat/message/#{message_1.id}")
+      visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
@@ -168,7 +168,7 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     xit "doesn’t scroll the pane" do
-      visit("/chat/message/#{message_1.id}")
+      visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       new_message = Fabricate(:chat_message, chat_channel: channel_1)
 

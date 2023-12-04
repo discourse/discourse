@@ -1194,8 +1194,6 @@ da:
         title: "To-faktor godkendelse"
         enable: "Administrer To-faktor godkendelse"
         disable_all: "Deaktiver alle"
-        forgot_password: "Glemt kodeord?"
-        confirm_password_description: "Bekræft dit kodeord for at fortsætte"
         name: "Navn"
         label: "Kode"
         rate_limit: "Vent venligst, før du prøver en anden godkendelseskode."
@@ -1313,14 +1311,13 @@ da:
           generic: "Din %{provider}-konto vil blive brugt til godkendelse."
       name:
         title: "Navn"
-        instructions: "Dit fulde navn (valgfrit)"
-        instructions_required: "Dit fulde navn"
+        instructions: "Dit fulde navn (valgfrit)."
+        instructions_required: "Dit fulde navn."
         required: "Indtast venligst et navn"
         too_short: "Dit navn er for kort"
         ok: "Dit navn ser fint ud"
       username:
         title: "Brugernavn"
-        instructions: "unikt, ingen mellemrum, kort"
         short_instructions: "Folk kan nævne dig som @%{username}"
         available: "Dit brugernavn er tilgængeligt"
         not_available: "Ikke ledigt. Prøv %{suggestion}?"
@@ -1510,7 +1507,7 @@ da:
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
-        instructions: "mindst %{count} tegn"
+        instructions: "Mindst %{count} tegn."
         required: "Indtast venligst en adgangskode"
         confirm: "Bekræft"
       summary:
@@ -1641,7 +1638,7 @@ da:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/time} other {# fejl/time}}</a> har overskredet webstedets indstillingsgrænse på {limit, plural, one {# fejl/time} other {# fejl/time}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}.
-    learn_more: "lær mere…"
+    learn_more: "Lær mere…"
     mute: Ignorer
     unmute: Unmute
     last_post: Sidste indlæg
@@ -1910,9 +1907,6 @@ da:
       group_mentioned_limit:
         one: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} bruger. Ingen bliver underrettet."
         other: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} brugere. Ingen bliver underrettet."
-      group_mentioned:
-        one: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} person</a> - vil du fortsætte?"
-        other: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} personer</a> - vil du fortsætte?"
       cannot_see_group_mention:
         not_mentionable: "Du kan ikke nævne gruppen @%{group}."
       duplicate_link: "Det ser ud til, at dit link til <b>%{domain}</b> allerede var sendt i emnet af <b>@ %{username}</b> i <a href='%{post_url}'>et svar på %{ago}</a> - er du sikker på, at du vil sende det igen?"
@@ -2097,6 +2091,7 @@ da:
         private_message: '%{username} sendte dig en privat besked i "%{topic}" - %{site_title}'
         linked: '%{username} linkede til dit indlæg fra "%{topic}" - %{site_title}'
         watching_first_post: '%{username} oprettet et nyt emne"%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} skrev i "%{topic}" - %{site_title}'
         confirm_title: "Notifikationer aktiveret - %{site_title}"
         confirm_body: "Succes! notifikationer er aktiveret."
         custom: "Notifikation fra %{username} på %{site_title}"
@@ -3701,9 +3696,7 @@ da:
         latest_version: "Seneste version"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         new_features:
-          title: "\U0001F381 Nye Funktioner"
-          dismiss: "Skjul"
-          learn_more: "Lær mere"
+          learn_more: "Lær mere..."
         last_checked: "Sidst kontrolleret"
         refresh_problems: "Opdatér"
         no_problems: "Ingen problemer fundet."
@@ -3983,7 +3976,7 @@ da:
         not_enabled: "N"
         change_settings_short: "Indstillinger"
         howto: "Hvordan installerer jeg plugins?"
-        official: "Officielt plugin"
+        author: "Af %{author}"
       backups:
         title: "Backups"
         menu:

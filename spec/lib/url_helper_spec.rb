@@ -166,8 +166,10 @@ RSpec.describe UrlHelper do
     end
 
     it "raises error if too long" do
-      expect do UrlHelper.normalized_encode("https://#{"a" * 100_000}.com") end.to raise_error(
+      long_url = "https://#{"a" * 2_000}.com"
+      expect do UrlHelper.normalized_encode(long_url) end.to raise_error(
         ArgumentError,
+        "URL starting with #{long_url[0..100]} is too long",
       )
     end
   end

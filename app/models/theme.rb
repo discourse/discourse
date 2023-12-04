@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 77
+  BASE_COMPILER_VERSION = 78
 
   class SettingsMigrationError < StandardError
   end
@@ -75,7 +75,7 @@ class Theme < ActiveRecord::Base
   scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
 
   scope :include_relations,
-        -> {
+        -> do
           includes(
             :child_themes,
             :parent_themes,
@@ -88,7 +88,7 @@ class Theme < ActiveRecord::Base
             :theme_translation_overrides,
             theme_fields: :upload,
           )
-        }
+        end
 
   def notify_color_change(color, scheme: nil)
     scheme ||= color.color_scheme

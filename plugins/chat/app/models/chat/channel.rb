@@ -27,6 +27,7 @@ module Chat
                class_name: "Chat::Message",
                foreign_key: :last_message_id,
                optional: true
+
     def last_message
       super || NullMessage.new
     end
@@ -47,17 +48,17 @@ module Chat
     before_validation :generate_auto_slug
 
     scope :with_categories,
-          -> {
+          -> do
             joins(
               "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
             )
-          }
+          end
     scope :public_channels,
-          -> {
+          -> do
             with_categories.where(chatable_type: public_channel_chatable_types).where(
               "categories.id IS NOT NULL",
             )
-          }
+          end
 
     delegate :empty?, to: :chat_messages, prefix: true
 
@@ -109,8 +110,28 @@ module Chat
 
     %i[allowed_user_ids allowed_group_ids chatable_url].each { |name| define_method(name) { nil } }
 
+    def ensure_slug_ok
+      if self.slug.present?
+        # if we don't unescape it first we strip the % from the encoded version
+        slug = SiteSetting.slug_generation_method == "encoded" ? CGI.unescape(self.slug) : self.slug
+        self.slug = Slug.for(slug, "", method: :encoded)
+
+        if self.slug.blank?
+          errors.add(:slug, :invalid)
+        elsif SiteSetting.slug_generation_method == "ascii" && !CGI.unescape(self.slug).ascii_only?
+          errors.add(:slug, I18n.t("chat.category_channel.errors.slug_contains_non_ascii_chars"))
+        elsif duplicate_slug?
+          errors.add(:slug, I18n.t("chat.category_channel.errors.is_already_in_use"))
+        end
+      end
+    end
+
     def membership_for(user)
-      user_chat_channel_memberships.find_by(user: user)
+      if user_chat_channel_memberships.loaded?
+        user_chat_channel_memberships.detect { |m| m.user_id == user.id }
+      else
+        user_chat_channel_memberships.find_by(user: user)
+      end
     end
 
     def add(user)
@@ -177,6 +198,7 @@ module Chat
             AND (users.suspended_till IS NULL OR users.suspended_till <= CURRENT_TIMESTAMP)
             AND NOT users.staged
             AND user_chat_channel_memberships.following
+            and users.id > 0
           GROUP BY user_chat_channel_memberships.chat_channel_id
         ) subquery
         WHERE channels.id = subquery.chat_channel_id

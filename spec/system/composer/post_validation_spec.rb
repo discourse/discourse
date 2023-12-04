@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-describe "Composer Post Validations", type: :system, js: true do
+describe "Composer Post Validations", type: :system do
   fab!(:tl0_user) { Fabricate(:user, trust_level: 0) }
   fab!(:tl1_user) { Fabricate(:user, trust_level: 1) }
   fab!(:tl2_user) { Fabricate(:user, trust_level: 2) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
   let(:composer) { PageObjects::Components::Composer.new }

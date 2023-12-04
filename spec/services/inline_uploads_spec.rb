@@ -4,7 +4,7 @@ RSpec.describe InlineUploads do
 
   describe ".process" do
     context "with local uploads" do
-      fab!(:upload) { Fabricate(:upload) }
+      fab!(:upload)
       fab!(:upload2) { Fabricate(:upload) }
       fab!(:upload3) { Fabricate(:upload) }
 
@@ -48,9 +48,7 @@ RSpec.describe InlineUploads do
 
         This is an invalid `<img ...>` tag
         MD
-      end
 
-      it "should work with invalid img tags" do
         md = '<img data-id="<>">'
         expect(InlineUploads.process(md)).to eq(md)
       end

@@ -1353,8 +1353,6 @@ es:
         title: "Autenticación de dos factores"
         enable: "Gestionar la autenticación de dos factores"
         disable_all: "Desactivar todo"
-        forgot_password: "¿Has olvidado tu contraseña?"
-        confirm_password_description: "Confirma tu contraseña para continuar"
         name: "Nombre"
         label: "Código"
         rate_limit: "Espera antes de intentar utilizar otro código de autenticación."
@@ -1484,14 +1482,13 @@ es:
           generic: "Tu cuenta de %{provider} se utilizará para la autenticación."
       name:
         title: "Nombre"
-        instructions: "tu nombre completo (opcional)"
-        instructions_required: "Tu nombre completo"
+        instructions: "Tu nombre completo (opcional)."
+        instructions_required: "Tu nombre completo."
         required: "Introduce un nombre"
         too_short: "Tu nombre es demasiado corto"
         ok: "Tu nombre parece adecuado"
       username:
         title: "Nombre de usuario"
-        instructions: "único, sin espacios y corto"
         short_instructions: "Los demás usuarios pueden mencionarte como @%{username}"
         available: "Tu nombre de usuario está disponible"
         not_available: "No disponible. ¿Quieres probar con %{suggestion}?"
@@ -1689,7 +1686,7 @@ es:
         same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
         same_as_email: "Tu contraseña es la misma que tu correo electrónico."
         ok: "Tu contraseña es válida."
-        instructions: "debe tener al menos %{count} caracteres"
+        instructions: "Debe tener al menos %{count} caracteres."
         required: "Introduce una contraseña"
         confirm: "Confirmar"
       summary:
@@ -1841,7 +1838,7 @@ es:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errores/hora}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/hora} other {# errores/hora}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minuto} other {# errores/minuto}}</a> excedió el límite de la configuración del sitio de {limit, plural, one {# error/minuto} other {# errores/minuto}}.
-    learn_more: "más información…"
+    learn_more: "Más información…"
     mute: Silenciar
     unmute: No silenciar
     last_post: Fecha de publicación
@@ -2135,9 +2132,6 @@ es:
       group_mentioned_limit:
         one: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuario) de una vez. No se notificará a nadie."
         other: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuarios) de una vez. No se notificará a nadie."
-      group_mentioned:
-        one: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} persona</a> ¿Seguro que quieres hacerlo?"
-        other: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} personas</a> ¿Seguro de que quieres hacerlo?"
       cannot_see_mention:
         category: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no tiene acceso a esta categoría. Tendrás que añadirle a un grupo que sí tenga acceso."
         private: "Has mencionado a @%{username}, pero no le va a llegar una notificación porque no puede ver este mensaje. Tendrás que invitarle al mensaje."
@@ -2366,6 +2360,7 @@ es:
         private_message: '%{username} te envió un mensaje personal en «%{topic}» - %{site_title}'
         linked: '%{username} enlazó tu publicación desde «%{topic}» - %{site_title}'
         watching_first_post: '%{username} creó un nuevo tema «%{topic}» - %{site_title}'
+        watching_category_or_tag: '%{username} publicó en «%{topic}» - %{site_title}'
         confirm_title: "Notificaciones activadas - %{site_title}"
         confirm_body: "¡Bien! Se han activado las notificaciones."
         custom: "Notificación de %{username} en %{site_title}"
@@ -4267,9 +4262,7 @@ es:
         latest_version: "Última"
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         new_features:
-          title: "\U0001F381 Novedades"
-          dismiss: "Descartar"
-          learn_more: "Más información"
+          learn_more: "Más información..."
         last_checked: "Ultima comprobación"
         refresh_problems: "Volver a cargar"
         no_problems: "No se ha encontrado ningún problema."
@@ -4596,8 +4589,8 @@ es:
         not_enabled: "N"
         change_settings_short: "Ajustes"
         howto: "¿Cómo instalo plugins?"
-        official: "Plugin oficial"
         broken_route: "No se puede configurar el enlace a «%{name}». Asegúrate de que los bloqueadores de publicidad están desactivados e intenta recargar la página."
+        author: "Por %{author}"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menú desplegable de encabezado"

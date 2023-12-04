@@ -2,9 +2,9 @@
 
 module Chat
   class DirectMessageSerializer < ApplicationSerializer
-    attributes :id
+    attribute :group
 
-    has_many :users, serializer: Chat::ChatableUserSerializer, embed: :objects
+    has_many :users, serializer: ::Chat::ChatableUserSerializer, embed: :objects
 
     def users
       users = object.direct_message_users.map(&:user).map { |u| u || Chat::NullUser.new }

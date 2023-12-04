@@ -258,6 +258,8 @@ de:
       save: "Speichern"
       select: "Auswählen"
       return_to_list: "Zurück zur Kanalliste"
+      return_to_channel: "Zurück zum Kanal"
+      return_to_threads_list: "Zurück zur Themenliste"
       unread_threads_count:
         one: "Du hast %{count} ungelesene Diskussion"
         other: "Du hast %{count} ungelesene Diskussionen"
@@ -304,6 +306,7 @@ de:
         yesterday: Gestern
       members_view:
         filter_placeholder: Mitglieder finden
+        add_member: Mitglied hinzufügen
       about_view:
         associated_topic: Verknüpftes Thema
         associated_category: Verknüpfte Kategorie
@@ -324,9 +327,15 @@ de:
         default_search_placeholder: "#ein-kanal, @jemand oder sonstiges"
         default_channel_search_placeholder: "#ein-kanal"
         default_user_search_placeholder: "@jemand"
-        user_search_placeholder: "... weitere Benutzer hinzufügen"
+        user_search_placeholder: "... weitere Mitglieder hinzufügen"
         disabled_user: "hat den Chat deaktiviert"
         no_items: "Keine Elemente"
+        create_group_placeholder: "Name des Gruppenchats (optional)"
+        participants_counter: "%{selection_count}/%{max} Teilnehmer"
+        new_group_chat: "Neuer Gruppenchat"
+        filter: "Filter"
+        cant_add_more_members: "Maximale Anzahl von Mitgliedern erreicht"
+        create_new_group_chat: "Gruppenchat erstellen"
       channel_edit_name_slug_modal:
         title: Kanal bearbeiten
         input_placeholder: Einen Namen hinzufügen
@@ -338,10 +347,15 @@ de:
         input_placeholder: Beschreibung hinzufügen
         description: Sag den Leuten, worum es in diesem Kanal geht
       direct_message_creator:
+        add_to_channel: "Zum Kanal hinzufügen"
         title: Neue Nachricht
         prefix: "An:"
         no_results: Keine Ergebnisse
         selected_user_title: "%{username} abwählen"
+        group_name: "Name des Gruppenchats (optional)"
+        members_counter:
+          one: "%{count}/%{max} Mitglied"
+          other: "%{count}/%{max} Mitglieder"
       channel:
         no_memberships: Dieser Kanal hat keine Mitglieder
         no_memberships_found: Keine Mitglieder gefunden
@@ -415,6 +429,7 @@ de:
       quote:
         original_channel: 'Ursprünglich gesendet in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-Zitat in die Zwischenablage kopiert"
+        default_thread_title: "Thread"
       notification_levels:
         never: "Niemals"
         mention: "Nur für Erwähnungen"
@@ -571,6 +586,7 @@ de:
           other: "+%{count}"
       threads:
         open: "Thread öffnen"
+        list: "Themen"
         none: "Du nimmst an keinem Thread in diesem Kanal teil."
       draft_channel_screen:
         header: "Neue Nachricht"

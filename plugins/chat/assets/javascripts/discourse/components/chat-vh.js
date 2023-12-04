@@ -12,7 +12,7 @@ export default class ChatVh extends Component {
   tagName = "";
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     if ("virtualKeyboard" in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
@@ -25,7 +25,7 @@ export default class ChatVh extends Component {
   }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.activeWindow?.removeEventListener("resize", this.setVH);
     lastVH = null;

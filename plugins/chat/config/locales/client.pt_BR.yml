@@ -305,9 +305,14 @@ pt_BR:
         default_search_placeholder: "#a-channel, @alguém ou alguma coisa"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@alguém"
-        user_search_placeholder: "... adicionar mais usuários"
+        user_search_placeholder: "... incluir mais membros"
         disabled_user: "desativou o chat"
         no_items: "Nenhum item"
+        create_group_placeholder: "Nome do Chat em grupo (opcional)"
+        new_group_chat: "Novo Chat em grupo"
+        filter: "Filtro"
+        cant_add_more_members: "Número máximo de membros atingido"
+        create_new_group_chat: "Criar Chat em grupo"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Adicionar um nome
@@ -323,6 +328,7 @@ pt_BR:
         prefix: "Para:"
         no_results: Nenhum resultado
         selected_user_title: "Desmarcar %{username}"
+        group_name: "Nome do Chat em grupo (opcional)"
       channel:
         no_memberships: Este canal não tem membros
         no_memberships_found: Nenhum membro encontrado
@@ -396,6 +402,7 @@ pt_BR:
       quote:
         original_channel: 'Originalmente enviado em <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Citação do chat copiada para área de transferência"
+        default_thread_title: "Tópico"
       notification_levels:
         never: "Nunca"
         mention: "Apenas para menções"

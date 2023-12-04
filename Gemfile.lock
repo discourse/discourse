@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: 0dc6c6d8fae333ac2dfd91e740eacd9a69b21562
+  revision: 3654e5ca7fb10dc84a921e7f06b7875eaf8729c3
   specs:
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -63,7 +63,7 @@ GEM
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
-    aws-eventstream (1.2.0)
+    aws-eventstream (1.3.0)
     aws-partitions (1.583.0)
     aws-sdk-core (3.130.2)
       aws-eventstream (~> 1, >= 1.0.2)
@@ -92,7 +92,7 @@ GEM
     bootsnap (1.17.0)
       msgpack (~> 1.2)
     builder (3.2.4)
-    bullet (7.1.3)
+    bullet (7.1.4)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
@@ -139,14 +139,14 @@ GEM
     docile (1.4.0)
     email_reply_trimmer (0.1.13)
     erubi (1.12.0)
-    excon (0.104.0)
+    excon (0.105.0)
     execjs (2.9.1)
     exifr (1.4.0)
-    fabrication (2.30.0)
+    fabrication (2.31.0)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
     fakeweb (1.3.0)
-    faraday (2.7.11)
+    faraday (2.7.12)
       base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
@@ -161,17 +161,16 @@ GEM
     gc_tracer (1.5.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (3.25.0)
-    google-protobuf (3.25.0-aarch64-linux)
-    google-protobuf (3.25.0-arm64-darwin)
-    google-protobuf (3.25.0-x86_64-darwin)
-    google-protobuf (3.25.0-x86_64-linux)
+    google-protobuf (3.25.1)
+    google-protobuf (3.25.1-aarch64-linux)
+    google-protobuf (3.25.1-arm64-darwin)
+    google-protobuf (3.25.1-x86_64-darwin)
+    google-protobuf (3.25.1-x86_64-linux)
     guess_html_encoding (0.0.11)
     hana (1.3.7)
     hashdiff (1.0.1)
     hashie (5.0.0)
     highline (2.1.0)
-    hkdf (1.0.0)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
     i18n (1.14.1)
@@ -188,7 +187,7 @@ GEM
     json (2.6.3)
     json-schema (3.0.0)
       addressable (>= 2.8)
-    json_schemer (2.0.0)
+    json_schemer (2.1.1)
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       simpleidn (~> 0.2)
@@ -213,7 +212,7 @@ GEM
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
     logster (2.13.1)
-    loofah (2.21.4)
+    loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     lru_redux (1.1.0)
@@ -248,7 +247,7 @@ GEM
     mustache (1.1.1)
     net-http (0.4.0)
       uri
-    net-imap (0.4.4)
+    net-imap (0.4.7)
       date
       net-protocol
     net-pop (0.1.2)
@@ -257,17 +256,17 @@ GEM
       timeout
     net-smtp (0.4.0)
       net-protocol
-    nio4r (2.5.9)
-    nokogiri (1.15.4)
+    nio4r (2.7.0)
+    nokogiri (1.15.5)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.15.4-aarch64-linux)
+    nokogiri (1.15.5-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.15.4-arm64-darwin)
+    nokogiri (1.15.5-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.4-x86_64-darwin)
+    nokogiri (1.15.5-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.4-x86_64-linux)
+    nokogiri (1.15.5-x86_64-linux)
       racc (~> 1.4)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
@@ -325,7 +324,7 @@ GEM
       pry (>= 0.13, < 0.15)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-    public_suffix (5.0.3)
+    public_suffix (5.0.4)
     puma (6.4.0)
       nio4r (~> 2.0)
     racc (1.7.3)
@@ -363,7 +362,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rbtrace (0.4.14)
+    rbtrace (0.5.0)
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
@@ -397,7 +396,7 @@ GEM
     rspec-mocks (3.12.6)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
-    rspec-rails (6.0.3)
+    rspec-rails (6.1.0)
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       railties (>= 6.1)
@@ -415,7 +414,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.57.2)
+    rubocop (1.58.0)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -423,14 +422,14 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.28.1, < 2.0)
+      rubocop-ast (>= 1.30.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.30.0)
       parser (>= 3.2.1.0)
     rubocop-capybara (2.19.0)
       rubocop (~> 1.41)
-    rubocop-discourse (3.4.0)
+    rubocop-discourse (3.4.1)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
     rubocop-factory_bot (2.24.0)
@@ -485,10 +484,10 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (3.0.0)
     stackprof (0.2.25)
-    syntax_tree (6.1.1)
+    syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
-    test-prof (1.2.3)
+    test-prof (1.3.0)
     thor (1.3.0)
     timeout (0.4.1)
     tzinfo (2.0.6)
@@ -499,7 +498,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.8.2)
+    unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
     unicorn (6.1.0)
       kgio (~> 2.6)
@@ -507,8 +506,7 @@ GEM
     uniform_notifier (1.16.0)
     uri (0.13.0)
     version_gem (1.1.3)
-    web-push (3.0.0)
-      hkdf (~> 1.0)
+    web-push (3.0.1)
       jwt (~> 2.0)
       openssl (~> 3.0)
     webmock (3.19.1)
@@ -532,14 +530,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer (= 7.0.7)
-  actionpack (= 7.0.7)
-  actionview (= 7.0.7)
+  actionmailer
+  actionpack
+  actionview
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel (= 7.0.7)
-  activerecord (= 7.0.7)
-  activesupport (= 7.0.7)
+  activemodel
+  activerecord
+  activesupport
   addressable
   annotate
   aws-sdk-s3
@@ -626,7 +624,7 @@ DEPENDENCIES
   rails-dom-testing
   rails_failover
   rails_multisite
-  railties (= 7.0.7)
+  railties
   rake
   rb-fsevent
   rbtrace
@@ -640,7 +638,7 @@ DEPENDENCIES
   rspec-html-matchers
   rspec-rails
   rss
-  rswag-specs
+  rswag-specs (= 2.11.0)
   rtlcss
   rubocop-discourse
   ruby-prof

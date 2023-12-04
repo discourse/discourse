@@ -335,9 +335,9 @@ ru:
         default_search_placeholder: "#канал, @пользователь или что-то другое"
         default_channel_search_placeholder: "#канал"
         default_user_search_placeholder: "@пользователь"
-        user_search_placeholder: "...добавить пользователей"
         disabled_user: "отключил(а) чат"
         no_items: "Нет компонентов"
+        filter: "Фильтр"
       channel_edit_name_slug_modal:
         title: Изменение канала
         input_placeholder: Укажите название
@@ -458,6 +458,7 @@ ru:
       quote:
         original_channel: 'Первоначально отправлено в <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Цитата из чата скопирована в буфер обмена"
+        default_thread_title: "Цепочка"
       notification_levels:
         never: "Никогда"
         mention: "Только для упоминаний"

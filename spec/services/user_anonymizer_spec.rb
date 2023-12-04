@@ -321,7 +321,7 @@ RSpec.describe UserAnonymizer do
     let(:old_ip) { "1.2.3.4" }
     let(:anon_ip) { "0.0.0.0" }
     let(:user) { Fabricate(:user, ip_address: old_ip, registration_ip_address: old_ip) }
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     let(:topic) { post.topic }
 
     it "doesn't anonymize ips by default" do

@@ -144,6 +144,7 @@ zh_TW:
         add_user_short: <span>新增使用者</span>
         open_channel: <span>開啟頻道</span>
         no_items: "沒有項目"
+        filter: "過濾"
       channel_edit_name_slug_modal:
         title: 編輯頻道
         name: 變更名稱
@@ -168,6 +169,8 @@ zh_TW:
         italic_text: "斜體字"
         bold_text: "粗體字"
         send: "傳送"
+      quote:
+        default_thread_title: "討論串"
       notification_levels:
         never: "永不"
       settings:

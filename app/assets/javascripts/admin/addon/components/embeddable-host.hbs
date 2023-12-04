@@ -4,7 +4,7 @@
     <Input
       @value={{this.buffered.host}}
       placeholder="example.com"
-      @enter={{action "save"}}
+      @enter={{this.save}}
       class="host-name"
       autofocus={{true}}
     />
@@ -14,7 +14,7 @@
     <Input
       @value={{this.buffered.allowed_paths}}
       placeholder="/blog/.*"
-      @enter={{action "save"}}
+      @enter={{this.save}}
       class="path-allowlist"
     />
   </td>

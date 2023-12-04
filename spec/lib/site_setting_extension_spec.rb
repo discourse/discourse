@@ -281,7 +281,7 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe "remove_override" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload)
 
     before do
       settings.setting(:test_override, "test")
@@ -832,59 +832,11 @@ RSpec.describe SiteSettingExtension do
 
       expect(client_settings["with_html"]).to eq("<script></script>rest")
     end
-
-    context "for deprecated settings" do
-      let(:fake_logger) { FakeLogger.new }
-
-      before do
-        @orig_logger = Rails.logger
-        Rails.logger = fake_logger
-      end
-
-      after { Rails.logger = @orig_logger }
-
-      it "does not log deprecation warnings" do
-        stub_const(
-          SiteSettings::DeprecatedSettings,
-          "SETTINGS",
-          [["use_https", "force_https", true, "0.0.1"]],
-        ) do
-          SiteSetting.setup_deprecated_methods
-          SiteSetting.client_settings_json_uncached
-          expect(fake_logger.warnings).to eq([])
-        end
-      end
-    end
-  end
-
-  describe ".settings_hash" do
-    context "for deprecated settings" do
-      let(:fake_logger) { FakeLogger.new }
-
-      before do
-        @orig_logger = Rails.logger
-        Rails.logger = fake_logger
-      end
-
-      after { Rails.logger = @orig_logger }
-
-      it "does not log deprecation warnings" do
-        stub_const(
-          SiteSettings::DeprecatedSettings,
-          "SETTINGS",
-          [["use_https", "force_https", true, "0.0.1"]],
-        ) do
-          SiteSetting.setup_deprecated_methods
-          SiteSetting.settings_hash
-          expect(fake_logger.warnings).to eq([])
-        end
-      end
-    end
   end
 
   describe ".setup_methods" do
     describe "for uploads site settings" do
-      fab!(:upload) { Fabricate(:upload) }
+      fab!(:upload)
       fab!(:upload2) { Fabricate(:upload) }
 
       it "should return the upload record" do

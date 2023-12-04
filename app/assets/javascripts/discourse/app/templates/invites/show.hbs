@@ -46,11 +46,14 @@
                 {{#unless this.isInviteLink}}
                   <InputTip
                     @validation={{this.emailValidation}}
-                    @id="account-email-validation"
+                    id="account-email-validation"
                   />
                 {{/unless}}
               {{else}}
-                <LoginButtons @externalLogin={{action "externalLogin"}} />
+                <LoginButtons
+                  @externalLogin={{action "externalLogin"}}
+                  @context="invite"
+                />
               {{/if}}
             {{/if}}
 
@@ -82,7 +85,7 @@
                     </label>
                     <InputTip
                       @validation={{this.emailValidation}}
-                      @id="account-email-validation"
+                      id="account-email-validation"
                     />
                     <div class="instructions">{{i18n
                         "user.email.instructions"
@@ -105,7 +108,7 @@
                   </label>
                   <InputTip
                     @validation={{this.usernameValidation}}
-                    @id="username-validation"
+                    id="username-validation"
                   />
                   <div class="instructions">{{i18n
                       "user.username.instructions"
@@ -147,7 +150,7 @@
                       <div class="create-account__password-tip-validation">
                         <InputTip
                           @validation={{this.passwordValidation}}
-                          @id="password-validation"
+                          id="password-validation"
                         />
                         <span
                           class="more-info"

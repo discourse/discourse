@@ -53,6 +53,8 @@ sq:
         tabs:
           members: Anëtarë
           settings: Rregullimet
+      new_message_modal:
+        filter: "Filtro"
       direct_message_creator:
         title: Mesazh i ri
         prefix: "Për:"

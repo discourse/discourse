@@ -342,6 +342,7 @@ tr_TR:
       copied: "kopyalandı!"
       copy: "kodu panoya kopyala"
       fullscreen: "kodu tam ekranda göster"
+      view_code: "Kodu görüntüle"
     drafts:
       label: "Taslaklar"
       label_with_count: "Taslaklar (%{count})"
@@ -1353,8 +1354,6 @@ tr_TR:
         title: "İki Adımlı Kimlik Doğrulama"
         enable: "İki Adımlı Kimlik Doğrulamayı Yönet"
         disable_all: "Tümünü Devre Dışı Bırak"
-        forgot_password: "Şifrenizi mi unuttunuz?"
-        confirm_password_description: "Devam etmek için lütfen şifrenizi onaylayın"
         name: "Ad"
         label: "Kod"
         rate_limit: "Lütfen başka bir kimlik doğrulama kodu denemeden önce bekleyin."
@@ -1404,6 +1403,7 @@ tr_TR:
         save: "Kaydet"
         added_prefix: "Eklendi"
         last_used_prefix: "Son Kullanılan"
+        confirm_button: "veya bir şifre anahtarı kullanın"
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
         error: "Bu değeri değiştirirken bir hata oluştu."
@@ -1483,14 +1483,14 @@ tr_TR:
           generic: "%{provider} hesabınız kimlik doğrulama için kullanılacak."
       name:
         title: "Ad"
-        instructions: "ad soyadı (opsiyonel)"
-        instructions_required: "Adınız Soyadınız"
+        instructions: "Ad soyAdı (opsiyonel)."
+        instructions_required: "Adınız Soyadınız."
         required: "Lütfen bir ad girin"
         too_short: "Adınız çok kısa"
         ok: "Adınız iyi görünüyor"
       username:
         title: "Kullanıcı adı"
-        instructions: "benzersiz, boşluksuz, kısa"
+        instructions: "Benzersiz, boşluksuz, kısa."
         short_instructions: "Kullanıcılar sizden @%{username} olarak bahsedebilirler"
         available: "Kullanıcı adı kullanılabilir"
         not_available: "Kullanılamıyor. Şunu deneyin: %{suggestion}"
@@ -1681,6 +1681,7 @@ tr_TR:
       confirm_access:
         title: "Erişimi onaylayın"
         incorrect_password: "Girilen şifre yanlış."
+        incorrect_passkey: "Bu şifre anahtarı yanlış."
         logged_in_as: "Şu kullanıcı ile giriş yaptınız: "
       password:
         title: "Şifre"
@@ -1689,7 +1690,7 @@ tr_TR:
         same_as_username: "Şifreniz kullanıcı adınızla aynı."
         same_as_email: "Şifreniz e-posta adresinizle aynı."
         ok: "Şifreniz iyi görünüyor."
-        instructions: "en az %{count} karakter"
+        instructions: "En az %{count} karakter."
         required: "lütfen bir şifre girin"
         confirm: "Onayla"
         incorrect_password: "Girilen şifre yanlış."
@@ -1841,6 +1842,7 @@ tr_TR:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site ayarlanmış limitini aştı {limit, plural, one {# hata/saat} other {# hata/saat}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site ayarlanmış limitlerini aştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}.
+    learn_more: "Daha fazla bilgi…"
     mute: Sessize al
     unmute: Sesi aç
     last_post: Gönderildi
@@ -1918,6 +1920,7 @@ tr_TR:
       action: "Şifremi unuttum"
       invite: "Kullanıcı adınızı veya e-posta adresinizi girin, size bir şifre sıfırlama e-postası gönderelim."
       invite_no_username: "E-posta adresinizi girin, size bir şifre sıfırlama e-postası gönderelim."
+      email-username: "E-posta veya kullanıcı adı"
       reset: "Şifreyi Sıfırlayın"
       complete_username: "<b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifrenizi nasıl sıfırlayacağınızı açıklayan bir e-posta alırsınız. "
       complete_email: "<b>%{email}</b> adresi ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifrenizi nasıl sıfırlayacağınızı açıklayan bir e-posta alırsınız."
@@ -2122,8 +2125,9 @@ tr_TR:
         one: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
         other: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
       group_mentioned:
-        one: "%{group} grubundan bahsederek <a href='%{group_link}'>%{count} kişiye</a> bildirim göndermek üzeresiniz; emin misiniz?"
-        other: "%{group} grubundan bahsederek <a href='%{group_link}'>%{count} kişiye</a> bildirim göndermek üzeresiniz; emin misiniz?"
+        one: "%{group} adından bahsedildiğinde <a href='%{group_link}'>%{count} kişiye</a> bildirim gidecek."
+        other: "%{group} adından bahsedildiğinde <a href='%{group_link}'>%{count} kişiye</a> bildirim gidecek."
+      larger_group_mentioned: "%{group} adından bahsetmeniz <a href='%{group_link}'>%{count} insana</a> bildirim gitmesine neden olacak. Emin misiniz?"
       cannot_see_mention:
         category: "@%{username} adlı kullanıcıdan bahsettiniz, ancak kullanıcıya bildirim gönderilmeyecek çünkü kullanıcının bu kategoriye erişim izni yok. Kullanıcıyı bu kategoriye erişimi olan bir gruba eklemeniz gerekiyor."
         private: "@%{username} adlı kullanıcıdan bahsettiniz, ancak bildirim gönderilmeyecek çünkü kullanıcı bu kişisel mesajı göremiyor. Kullanıcıyı bu kişisel mesaja davet etmeniz gerekiyor."
@@ -2349,6 +2353,7 @@ tr_TR:
         private_message: '%{username} "%{topic}" konusunda size kişisel bir mesaj gönderdi - %{site_title}'
         linked: '%{username}, "%{topic}" konusundaki gönderinize bağlantı yaptı - %{site_title}'
         watching_first_post: '%{username} yeni bir konu oluşturdu "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username}, "%{topic}" konusuna gönderi yaptı - %{site_title}'
         confirm_title: "Bildirimler etkinleştirildi - %{site_title}"
         confirm_body: "Başarılı! Bildirimler etkinleştirildi."
         custom: "%{site_title}'da %{username} adlı kullanıcıdan bildirim"
@@ -4017,6 +4022,7 @@ tr_TR:
       sr_jump_bottom_button: "Son gönderiye atla"
     fullscreen_table:
       expand_btn: "Tabloyu Genişlet"
+      view_table: "Tabloyu Görüntüle"
     second_factor_auth:
       redirect_after_success: "İkinci kimlik doğrulaması adımı başarılı. Önceki sayfaya yönlendiriliyor…"
     sidebar:
@@ -4225,9 +4231,9 @@ tr_TR:
         latest_version: "En son"
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
         new_features:
-          title: "\U0001F381 Yeni Özellikler"
-          dismiss: "Kapat"
-          learn_more: "Daha fazla bilgi"
+          title: "Yenilikler"
+          previous_announcements: "Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Meta'da görebilirsiniz</a>"
+          learn_more: "Daha fazla bilgi..."
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Hiçbir sorun bulunamadı."
@@ -4617,8 +4623,11 @@ tr_TR:
         not_enabled: "H"
         change_settings_short: "Ayarlar"
         howto: "Eklentileri nasıl yüklerim?"
-        official: "Resmi Eklenti"
+        official: "Resmi Discourse Eklentisi"
+        experimental: "Deneysel Eklenti"
         broken_route: "\"%{name}\" bağlantısı yapılandırılamıyor. Reklam engelleyicilerin devre dışı bırakıldığından emin olun ve sayfayı yeniden yüklemeyi deneyin."
+        author: "Yazan: %{author}"
+        experimental_badge: "deneysel"
       navigation_menu:
         sidebar: "Kenar çubuğu"
         header_dropdown: "Başlık Açılır Menüsü"

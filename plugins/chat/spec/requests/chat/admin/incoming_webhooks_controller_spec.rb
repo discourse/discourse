@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Chat::Admin::IncomingWebhooksController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
   fab!(:chat_channel1) { Fabricate(:category_channel) }
   fab!(:chat_channel2) { Fabricate(:category_channel) }
 

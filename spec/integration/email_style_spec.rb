@@ -25,7 +25,7 @@ RSpec.describe EmailStyle do
     context "with invite" do
       subject(:mail_html) { Email::Renderer.new(invite_mail).html }
 
-      fab!(:invite) { Fabricate(:invite) }
+      fab!(:invite)
 
       let(:invite_mail) { InviteMailer.send_invite(invite) }
 

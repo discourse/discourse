@@ -79,6 +79,8 @@ ro:
       chat_message_separator:
         today: Astăzi
         yesterday: Ieri
+      members_view:
+        add_member: Adaugă membru
       about_view:
         title: Titlu
         name: Nume
@@ -88,9 +90,23 @@ ro:
         tabs:
           members: Membri
           settings: Opțiuni
+      new_message_modal:
+        user_search_placeholder: "...adaugă mai mulți membri"
+        create_group_placeholder: "Nume grup discuție (opțional)"
+        participants_counter: "%{selection_count}/%{max} participanți"
+        new_group_chat: "Grup nou de discuție"
+        filter: "Filtru"
+        cant_add_more_members: "Numărul maxim de membri a fost atins"
+        create_new_group_chat: "Creează grup de discuție"
       direct_message_creator:
+        add_to_channel: "Adaugă la canal"
         title: Mesaj nou
         prefix: "Către:"
+        group_name: "Nume grup discuție (opțional)"
+        members_counter:
+          one: "%{count}/%{max} membru"
+          few: "%{count}/%{max} membri"
+          other: "%{count}/%{max} de membri"
       create_channel:
         type: "Tip"
         types:
@@ -100,6 +116,8 @@ ro:
         italic_text: "text italic"
         bold_text: "text aldin"
         send: "Trimite"
+      quote:
+        default_thread_title: "Fir"
       notification_levels:
         never: "Niciodată"
       settings:

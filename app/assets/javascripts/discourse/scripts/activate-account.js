@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-global-jquery */
 (function () {
   const $activateButton = $("#activate-account-button");
   $activateButton.on("click", function () {

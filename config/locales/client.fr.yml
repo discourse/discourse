@@ -1341,8 +1341,6 @@ fr:
         title: "Authentification à deux facteurs"
         enable: "Gérer l'authentification à deux facteurs"
         disable_all: "Tout désactiver"
-        forgot_password: "Mot de passe oublié ?"
-        confirm_password_description: "Merci de confirmer votre mot de passe pour continuer"
         name: "Nom"
         label: "Code"
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'authentification."
@@ -1471,14 +1469,13 @@ fr:
           generic: "Votre compte %{provider} sera utilisé pour l'authentification."
       name:
         title: "Nom"
-        instructions: "votre nom complet (facultatif)"
-        instructions_required: "Votre nom complet"
+        instructions: "Votre nom complet (facultatif)."
+        instructions_required: "Votre nom complet."
         required: "Veuillez saisir un nom"
         too_short: "Votre nom est trop court"
         ok: "Votre nom a l'air correct"
       username:
         title: "Nom d'utilisateur"
-        instructions: "unique, sans espace, court"
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @%{username}"
         available: "Votre nom d'utilisateur est disponible"
         not_available: "Indisponible. Essayer %{suggestion} ?"
@@ -1673,7 +1670,7 @@ fr:
         same_as_username: "Votre mot de passe est identique à votre nom d'utilisateur."
         same_as_email: "Votre mot de passe est identique à votre adresse e-mail."
         ok: "Votre mot de passe semble correct."
-        instructions: "au moins %{count} caractères"
+        instructions: "Au moins %{count} caractères."
         required: "Veuillez saisir un mot de passe"
         confirm: "Confirmer"
       summary:
@@ -2101,9 +2098,6 @@ fr:
       group_mentioned_limit:
         one: "<b>Attention !</b> Vous avez mentionné <a href='%{group_link}'>%{group}</a>, cependant ce groupe comprend plus de membres que le nombre limite de mentions de %{count} utilisateur configuré par l'administrateur. Personne ne sera notifié."
         other: "<b>Attention !</b> Vous avez mentionné <a href='%{group_link}'>%{group}</a>, cependant ce groupe comprend plus de membres que le nombre limite de mentions de %{count} utilisateurs configuré par l'administrateur. Personne ne sera notifié."
-      group_mentioned:
-        one: "En mentionnant %{group}, vous êtes sur le point de notifier <a href='%{group_link}'>%{count} personne</a>. Voulez-vous continuer ?"
-        other: "En mentionnant %{group}, vous êtes sur le point de notifier <a href='%{group_link}'>%{count} personnes</a>. Voulez-vous continuer ?"
       cannot_see_mention:
         category: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car la catégorie ne lui est pas accessible. Vous devez l'ajouter à un groupe ayant accès à cette catégorie."
         private: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car ce message direct ne lui est pas visible. Vous devez l'inviter à rejoindre ce message direct."
@@ -2328,6 +2322,7 @@ fr:
         private_message: '%{username} vous a envoyé un message direct dans « %{topic} » - %{site_title}'
         linked: '%{username} a inséré un lien vers votre message dans le sujet « %{topic} » - %{site_title}'
         watching_first_post: '%{username} a créé un nouveau sujet « %{topic} » - %{site_title}'
+        watching_category_or_tag: '%{username} a publié un message dans « %{topic} » - %{site_title}'
         confirm_title: "Notifications activées - %{site_title}"
         confirm_body: "Les notifications ont été activées."
         custom: "Notification de %{username} sur %{site_title}"
@@ -4188,9 +4183,7 @@ fr:
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         new_features:
-          title: "\U0001F381 Nouveautés"
-          dismiss: "Ignorer"
-          learn_more: "En savoir plus…"
+          learn_more: "En savoir plus…..."
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."
@@ -4516,8 +4509,8 @@ fr:
         not_enabled: "N"
         change_settings_short: "Paramètres"
         howto: "Comment installer des extensions ?"
-        official: "Extension officielle"
         broken_route: "Impossible de configurer le lien vers « %{name} ». Assurez-vous que les bloqueurs de publicités sont désactivés et essayez de recharger la page."
+        author: "Par %{author}"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"

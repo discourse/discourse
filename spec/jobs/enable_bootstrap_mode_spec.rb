@@ -2,7 +2,7 @@
 
 RSpec.describe Jobs::EnableBootstrapMode do
   describe ".execute" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     before { SiteSetting.bootstrap_mode_enabled = false }
 

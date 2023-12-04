@@ -1,4 +1,10 @@
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
@@ -158,7 +164,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.strictEqual(
       query(".search-link .search-item-tag").textContent.trim(),
       "important",
-      "frst option includes tag"
+      "first option includes tag"
     );
 
     await fillIn("#search-term", "smth");
@@ -203,13 +209,13 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     );
 
     assert.strictEqual(
-      secondOption.querySelector(".category-name").textContent.trim(),
+      secondOption.querySelector(".badge-category__name").textContent.trim(),
       "bug",
       "second option includes category slug"
     );
 
     assert.ok(
-      exists(`${contextSelector} span.badge-wrapper`),
+      exists(`${contextSelector} span.badge-category__wrapper`),
       "category badge is a span (i.e. not a link)"
     );
   });
@@ -481,6 +487,10 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
         ],
       })
     );
+
+    server.get("/t/2179.json", () => {
+      return helper.response({});
+    });
   });
 
   test("full page search - the right filters are shown", async function (assert) {
@@ -522,6 +532,42 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
       query(".search-menu .results .no-results").innerText,
       I18n.t("search.no_results")
     );
+  });
+
+  test("topic results - topic search scope - clicking a search result navigates to topic url", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+
+    const firstSearchResult =
+      ".search-menu .results li:nth-of-type(1) a.search-link";
+    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
+    assert.strictEqual(
+      query(firstSearchResult).getAttribute("href"),
+      firstTopicResultUrl
+    );
+
+    await click(firstSearchResult);
+    assert.strictEqual(
+      currentURL(),
+      firstTopicResultUrl,
+      "redirects to clicked search result url"
+    );
+  });
+
+  test("topic results - search result escapes html in topic title when use_pg_headlines_for_excerpt is true", async function (assert) {
+    this.siteSettings.use_pg_headlines_for_excerpt = true;
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
+
+    assert
+      .dom(
+        ".search-menu .search-result-topic .item:first-of-type .topic-title span.search-highlight"
+      )
+      .exists("html in the topic title is properly escaped");
   });
 
   test("search menu keyboard navigation", async function (assert) {
@@ -626,6 +672,30 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
     );
   });
 
+  // see https://meta.discourse.org/t/keyboard-navigation-messes-up-the-search-menu/285405
+  test("search menu keyboard navigation - on 'Enter' keydown navigate to selected search item url", async function (assert) {
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "J");
+    await click("#search-button");
+    await fillIn("#search-term", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+
+    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
+    assert.strictEqual(
+      document.activeElement.getAttribute("href"),
+      firstTopicResultUrl,
+      "first search result is highlighted"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+    assert.strictEqual(
+      currentURL(),
+      firstTopicResultUrl,
+      "redirects to selected search result url"
+    );
+  });
+
   test("initial options - recent search results", async function (assert) {
     await visit("/");
     await click("#search-button");
@@ -706,7 +776,7 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
       query(
         ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
       ).textContent.trim(),
-      "dev slow",
+      "devslow",
       "tags displayed in search results"
     );
   });
@@ -741,8 +811,9 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
     await click("#search-button");
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug",
       "Category is displayed"
     );
@@ -769,8 +840,9 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
     );
 
     assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
       "bug"
     );
 
@@ -996,7 +1068,7 @@ acceptance("Search - Glimmer - assistant", function (needs) {
 
     assert.strictEqual(
       query(
-        ".search-menu .results ul.search-menu-assistant .search-link .category-name"
+        ".search-menu .results ul.search-menu-assistant .search-link .badge-category__name"
       ).innerText,
       "support"
     );
@@ -1095,7 +1167,7 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     const firstCategory =
       ".search-menu .results ul.search-menu-assistant .search-link";
     const firstCategoryName = query(
-      `${firstCategory} .category-name`
+      `${firstCategory} .badge-category__name`
     ).innerText;
     await click(firstCategory);
 

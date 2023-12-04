@@ -1181,8 +1181,6 @@ pt:
         title: "Autenticação em Dois Passos"
         enable: "Gerir Autenticação em Dois Passos"
         disable_all: "Desativar Tudo"
-        forgot_password: "Esqueceu a palavra-passe?"
-        confirm_password_description: "Por favor confirme a sua palavra-passe para continuar"
         name: "Nome"
         label: "Código"
         rate_limit: "Por favor espere antes de voltar a tentar um código de autenticação."
@@ -1297,14 +1295,13 @@ pt:
           generic: "Sua conta de %{provider} '' será usada para autenticação."
       name:
         title: "Nome"
-        instructions: "o seu nome completo (opcional)"
-        instructions_required: "O seu nome completo"
+        instructions: "O seu nOme cOmpletO (OpciOnal)."
+        instructions_required: "O seu nome completo."
         required: "Por favor introduza um nome"
         too_short: "O seu nome é demasiado curto"
         ok: "O seu nome parece adequado"
       username:
         title: "Nome de Utilizador"
-        instructions: "único, sem espaços, curto"
         short_instructions: "As pessoas podem mencioná-lo como %{username}"
         available: "O seu nome de utilizador está disponível"
         not_available: "Não está disponível. Tente %{suggestion}?"
@@ -1490,7 +1487,7 @@ pt:
         same_as_username: "A sua palavra-passe é a mesma que o seu nome de utilizador."
         same_as_email: "A sua palavra-passe é a mesma que o seu e-mail."
         ok: "A sua palavra-passe parece estar bem."
-        instructions: "pelo menos %{count} carateres"
+        instructions: "Pelo menos %{count} carateres."
         required: "Por favor, digite uma senha"
       summary:
         title: "Resumo"
@@ -1853,9 +1850,6 @@ pt:
       edit_conflict: "editar conflito"
       esc: "esc"
       ok_proceed: "Ok, continuar"
-      group_mentioned:
-        one: "Ao usar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoa</a> – tem a certeza?"
-        other: "Ao mencionar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoas</a> – tem a certeza?"
       cannot_see_mention:
         category: "Mencionou %{username}, mas este utilizador não será notificado porque não têm acesso a esta categoria. Terá de o adicionar a um grupo que tenha acesso a esta categoria."
         muted_topic: "Mencionou @%{username}, mas não será possível notifica-lo pois o utilizador silenciou este tópico."
@@ -2030,6 +2024,7 @@ pt:
         private_message: '%{username} enviou-lhe uma mensagem privada em "%{topic}" - %{site_title}'
         linked: '%{username} ligou à sua publicação de "%{topic}" - %{site_title}'
         watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} publicou em "%{topic}" - %{site_title}'
         confirm_title: "Notificações ativas - %{site_title}"
         confirm_body: "Sucesso! As notificações foram ativadas."
         custom: "Notificação de %{username} em %{site_title}"
@@ -3480,9 +3475,7 @@ pt:
         latest_version: "Recentes"
         problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
         new_features:
-          title: "\U0001F381 Novos Recursos"
-          dismiss: "Marcar como visto"
-          learn_more: "Saiba mais"
+          learn_more: "Saiba mais..."
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema encontrado."
@@ -3734,6 +3727,7 @@ pt:
         not_enabled: "N"
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
+        author: "Por %{author}"
       navigation_menu:
         sidebar: "Barra Lateral"
       backups:

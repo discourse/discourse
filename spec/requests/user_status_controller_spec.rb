@@ -18,7 +18,7 @@ RSpec.describe UserStatusController do
     end
 
     describe "when feature is enabled and a user is logged in" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       before do
         sign_in(user)
@@ -58,7 +58,7 @@ RSpec.describe UserStatusController do
     end
 
     describe "feature is enabled and user is logged in" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       before do
         sign_in(user)

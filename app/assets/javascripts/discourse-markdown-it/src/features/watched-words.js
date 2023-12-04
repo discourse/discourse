@@ -61,7 +61,7 @@ export function setup(helper) {
           const word = toWatchedWord({ [regexpString]: options });
 
           matchers.push({
-            word: new RegExp(options.word, options.case_sensitive ? "" : "i"),
+            word: new RegExp(options.regexp, options.case_sensitive ? "" : "i"),
             pattern: createWatchedWordRegExp(word),
             replacement: options.replacement,
             link: false,
@@ -76,7 +76,7 @@ export function setup(helper) {
           const word = toWatchedWord({ [regexpString]: options });
 
           matchers.push({
-            word: new RegExp(options.word, options.case_sensitive ? "" : "i"),
+            word: new RegExp(options.regexp, options.case_sensitive ? "" : "i"),
             pattern: createWatchedWordRegExp(word),
             replacement: options.replacement,
             link: true,

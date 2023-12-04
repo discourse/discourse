@@ -68,8 +68,11 @@ pl_PL:
       generic: Wystąpił błąd podczas importowania tego motywu
       upload: "Błąd tworzenia zasobu do przesłania: %{name}. %{errors}"
       about_json: "Błąd importu: about.json nie istnieje lub jest nieprawidłowy. Czy to na pewno szablon Discourse?"
+      about_json_too_big: "Błąd importu: about.json jest większy niż limit %{limit} ."
       about_json_values: "Plik about.json zawiera niepoprawne wartości: %{errors}"
       modifier_values: "modyfikatory about.json zawierają nieprawidłowe wartości: %{errors}"
+      asset_too_big: "Zasób %{filename} jest większy niż limit %{limit}"
+      theme_too_big: "Motyw jest większy niż limit %{limit}"
       git: "Podczas klonowania repozytorium git wystąpił błąd: dostęp jest zabroniony albo repozytorium nie istnieje"
       git_ref_not_found: "Nie można sprawdzić odwołania git: %{ref}"
       git_unsupported_scheme: "Nie można sklonować repozytorium git: schemat nieobsługiwany"
@@ -78,6 +81,25 @@ pl_PL:
       unknown_file_type: "Przesłany plik nie spełnia wymagań poprawnego motywu Discourse."
       not_allowed_theme: "`%{repo}` nie jest na liście dozwolonych motywów (sprawdź globalne ustawienie `allowed_theme_repos`)."
       ssh_key_gone: "Czekałeś zbyt długo, aby zainstalować motyw, a klucz SSH wygasł. Spróbuj ponownie."
+      too_many_files: "Liczba plików (%{count}) w motywie przekroczyła maksymalną dozwoloną liczbę plików (%{limit})."
+      migrations:
+        invalid_filename: "Nieprawidłowa nazwa pliku migracji: %{filename}. Nazwy plików muszą zaczynać się od 4 cyfr, po których następuje myślnik, a następnie nazwa zawierająca tylko znaki alfanumeryczne z myślnikami."
+        name_too_long:
+          one: "Nazwa migracji jest zbyt długa. Nie powinna przekraczać %{count} znak."
+          few: "Nazwa migracji jest zbyt długa. Nie powinna przekraczać %{count} znaków."
+          many: "Nazwa migracji jest zbyt długa. Nie powinna przekraczać %{count} znaków."
+          other: "Nazwa migracji jest zbyt długa. Nie powinna przekraczać %{count} znaków."
+        too_many_pending_migrations: "W tym szablonie jest zbyt wiele oczekujących migracji. Motywy nie mogą wprowadzać więcej niż 100 migracji w jednej aktualizacji"
+        out_of_sequence: "Migracja '%{name}' jest poza kolejnością. Ostatnia migracja dla tego motywu miała numer wersji %{current}, który jest wyższy niż nowa migracja"
+        syntax_error: "Nie udało się uruchomić migracji '%{name}', ponieważ wystąpił błąd składni: %{error}"
+        exceeded_memory_limit: "Migracja '%{name}' nie powiodła się, ponieważ przekroczyła limit pamięci."
+        timed_out: "Upłynął limit czasu migracji '%{name}'."
+        no_exported_function: "Migracja '%{name}' nie eksportuje funkcji umożliwiającej wykonanie migracji"
+        default_export_not_a_function: "Migracja '%{name}' ma domyślny eksport, który nie jest funkcją. Domyślnym eksportem musi być funkcja, która wykonuje migrację"
+        no_returned_value: "Migracja '%{name}' nie zwróciła żadnej wartości (lub zwróciła wartość null lub niezdefiniowaną). Musi zwrócić obiekt Map"
+        wrong_return_type: "Migracja '%{name}' zwróciła nieznany typ danych. Musi zwrócić obiekt Map"
+        runtime_error: "Migracja '%{name}' napotkała następujący błąd wykonania: %{error}"
+        unknown_setting_returned_by_migration: "Migracje '%{name}' zwróciły ustawienie '%{setting_name}', które nie zostało zadeklarowane w pliku settings.yml motywu."
     errors:
       component_no_user_selectable: "Komponenty motywu nie mogą być dobieralne przez użytkowników"
       component_no_default: "Komponenty motywu nie mogą być domyślnym motywem"
@@ -325,6 +347,7 @@ pl_PL:
   delete_topic_failed: "Podczas usuwania tego tematu wystąpił błąd. Skontaktuj się z administratorem strony."
   reading_time: "Czas odczytu"
   likes: "Polubienia"
+  action_already_performed: "Ups! Wykonałeś już tę czynność. Czy możesz spróbować odświeżyć stronę?"
   too_many_replies:
     one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach jednego tematu."
     few: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do %{count} odpowiedzi w ramach jednego tematu."
@@ -1612,7 +1635,6 @@ pl_PL:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Konfigurowalny format tematyczny dla standardowych e-maili. Zobacz <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
-    enforce_second_factor: "Wymusza na użytkownikach włączenie uwierzytelniania dwuskładnikowego. Wybierz opcję 'wszystkie', aby wymusić na wszystkich użytkownikach. Wybierz 'personel', aby wymusić tylko użytkownikach z personelu."
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś/łaś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
     same_site_cookies: "Używaj plików cookie tej samej witryny, eliminują wszystkie wektory Cross Site Request Forgery w obsługiwanych przeglądarkach (Lax lub Strict). Ostrzeżenie: Strict będzie działać tylko w witrynach, które wymuszają logowanie i używają zewnętrznej metody uwierzytelniania."
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
@@ -1666,6 +1688,7 @@ pl_PL:
     ga_universal_tracking_code: "Kod śledzenia analityki Google, np: UA-12345678-9; zobacz <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Domena śledzenia analityki Google, np: mojawitryna.pl; zobacz <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach za pomocą Google Analythics. Wychodzące linki do tych domen będą miały dodatkowy identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>poradnik Cross-Domain Tracking od Google.</a>"
+    gtm_container_id: "Identyfikator kontenera menedżera tagów Google. np.: GTM-ABCD12E. <br/>Uwaga: Aby korzystać z GTM, gdy włączona jest polityka bezpieczeństwa treści (CSP), zapoznaj się z dokumentacją: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Zezwalaj moderatorom na tworzenie kategorii i grup oraz zarządzanie nimi"
     moderators_change_post_ownership: "Zezwalaj moderatorom na zmianę właściciela posta"
@@ -1687,6 +1710,7 @@ pl_PL:
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
     display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba wiadomości osobistych oznaczonych danym tagiem."
+    top_menu: "Określ, które elementy pojawiają się w nawigacji na stronie głównej i w jakiej kolejności."
     post_menu_hidden_items: "Elementy w menu, które w menu wpisu będą ukryte, chyba że kliknięty zostanie przycisk rozwijania."
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
     allow_username_in_share_links: "Zezwalaj na umieszczanie nazw użytkowników w linkach do udostępniania. Jest to przydatne, aby nagradzać odznaki na podstawie unikalnych odwiedzających."
@@ -1916,6 +1940,7 @@ pl_PL:
     here_mention: "Nazwa używana do @mention, aby umożliwić uprzywilejowanym użytkownikom powiadomienie maksymalnie 'max_here_mentioned' osób uczestniczących w temacie. Nie może to być istniejąca nazwa użytkownika."
     max_here_mentioned: "Maksymalna liczba osób oznaczonych przez @here."
     min_trust_level_for_here_mention: "Minimalny poziom zaufania do oznaczania @here."
+    here_mention_allowed_groups: "Grupy, które mogą wspominać @here."
     create_thumbnails: "Stwórz miniatury i obrazy lightbox, które są za duże, aby pasować do wpisu."
     email_time_window_mins: "Odczekaj (n) minut przed wysłaniem e-maila z powiadomieniem, aby dać użytkownikom szansę na edytowanie i ukończenie wpisów."
     personal_email_time_window_seconds: "Poczekaj (n) sekund przed wysłaniem powiadomienia na e-mail o prywatnej wiadomości, by użytkownicy mogli edytować i dokończyć swoje wiadomości."
@@ -1931,7 +1956,6 @@ pl_PL:
     min_title_similar_length: "Minimalna długość tytułu zanim zostanie sprawdzony z podobnymi tematami."
     desktop_category_page_style: "Styl wizualny dla strony kategorii."
     category_colors: "Lista kolorów w formacie hex do użycia w etykietach kategorii."
-    category_style: "Styl etykiet kategorii"
     default_dark_mode_color_scheme_id: "Schemat kolorów używany w trybie ciemnym."
     dark_mode_none: "Brak"
     max_image_size_kb: "Maksymalny rozmiar przesyłanego obrazu w kB. Należy to również skonfigurować w nginx (client_max_body_size) / apache lub proxy. Obrazy większe niż ta wartość i mniejsze niż client_max_body_size zostaną przeskalowane, aby zmieściły się podczas przesyłania."
@@ -2039,6 +2063,7 @@ pl_PL:
     log_mail_processing_failures: "Zapisz wszystkie błędy przetwarzania wiadomości e-mail w <a href='%{base_path}/logs' target='_blank'>/ logs</a>"
     email_in: "Zezwalaj użytkownikom na publikowanie nowych tematów za pośrednictwem poczty e-mail. Po włączeniu tego ustawienia będziesz mógł skonfigurować przychodzące adresy e-mail dla grup i kategorii."
     email_in_min_trust: "Minimalny poziom zaufania, który musi posiadać użytkownik, aby móc dodawać nowe wpisy w tematach poprzez email."
+    email_in_allowed_groups: "Grupy, które mogą publikować nowe tematy za pośrednictwem poczty elektronicznej."
     email_in_authserv_id: "Identyfikator usługi sprawdzającej autentyczność przychodzących wiadomości e-mail. Instrukcje dotyczące konfigurowania znajdują się na <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> ."
     email_in_spam_header: "Nagłówek e-maila do wykrywania spamu."
     enable_imap: "Włącz protokół IMAP do synchronizowania wiadomości grupowych."
@@ -2135,9 +2160,7 @@ pl_PL:
     display_name_on_posts: "Pokazuj imię i nazwisko użytkownika przy jego wpisach, a także jego @nazwę użytkownika."
     show_time_gap_days: "Jeśli dwa wpisy zostały dodane w dużej przerwie, wyświetl okres w temacie."
     short_progress_text_threshold: "Po tym jak liczba wpisów w tym temacie przekroczy ten numer, ten pasek postępu pokaże tylko bieżącą liczbę wpisów. Jeśli zmienisz szerokość paska postępu, możliwe, że będziesz musiał zmienić tą wartość."
-    default_code_lang: "Domyślne podświetlanie składni języka programowania stosowane do bloków kodu (auto, tekst, ruby, python itp.). Ta wartość musi być również obecna w ustawieniu witryny `highlighted languages`."
     warn_reviving_old_topic_age: "Kiedy ktoś rozpoczyna udziela odpowiedzi na dany temat, w którym ostatnia odpowiedź jest starsza niż tak wiele dni, wyświetlone zostanie ostrzeżenie. Wyłącz tą ustawienia ustawiając 0."
-    autohighlight_all_code: "Narzuć dodawanie podświetlenia kodu do wszystkich bloków kodu, w przypadku gdy nie jest dokładnie określony język."
     highlighted_languages: "Dołączone reguły podświetlania składni. (Ostrzeżenie: dołączenie zbyt wielu języków może wpłynąć na wydajność) Zobacz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>, aby zobaczyć wersję demonstracyjną"
     show_copy_button_on_codeblocks: "Dodaj przycisk do bloków kodu, aby skopiować zawartość bloku do schowka użytkownika."
     embed_any_origin: "Zezwalaj na osadzanie zawartości niezależnie od jej pochodzenia. Jest to wymagane w przypadku aplikacji mobilnych ze statycznym kodem HTML."
@@ -2168,6 +2191,7 @@ pl_PL:
     approve_post_count: "Liczba wpisów od nowego lub podstawowego użytkownika, które muszą zostać zatwierdzone"
     approve_unless_trust_level: "Wpisy użytkowników poniżej tego poziomu zaufania muszą być zatwierdzane"
     approve_new_topics_unless_trust_level: "Nowe tematy dodawane przez użytkowników z poziomem zaufania poniżej muszą zostać zaakceptowane"
+    approve_new_topics_unless_allowed_groups: "Nowe tematy dla użytkowników spoza tych grup muszą zostać zatwierdzone"
     approve_unless_staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone"
     notify_about_queued_posts_after: "Jeśli są posty, które czekały na sprawdzenie dłużej niż tyle godzin, wyślij powiadomienie do wszystkich moderatorów. Ustaw na 0, aby wyłączyć te powiadomienia."
     auto_close_messages_post_count: "Maksymalna liczba wpisów dozwolonych w wiadomości przed automatycznym zamknięciem (0 aby wyłączyć)"
@@ -2344,6 +2368,8 @@ pl_PL:
       delete_rejected_email_after_days: "To ustawienie nie może być niższe niż ustawienie delete_email_logs_after_days ani większe niż %{max}"
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
+    keywords:
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2559,6 +2585,12 @@ pl_PL:
     user:
       merge_user:
         updating_username: "Aktualizowanie nazwy użytkownika…"
+        merging_user_visits: "Łączenie wizyt użytkowników…"
+        updating_site_settings: "Aktualizowanie ustawień witryny…"
+        updating_user_stats: "Aktualizacja statystyk użytkowników…"
+        merging_user_attributes: "Łączenie atrybutów użytkownika…"
+        updating_user_ids: "Aktualizowanie identyfikatorów użytkownika…"
+        deleting_source_user: "Usuwanie użytkownika źródłowego…"
   user:
     deactivated: "Został dezaktywowany w związku ze zbyt dużą liczbą odrzuconych emaili na '%{email}'."
     deactivated_by_staff: "Wyłączone przez personel"
@@ -2811,6 +2843,30 @@ pl_PL:
         Jeśli jednak post zostanie ukryty przez społeczność po raz drugi, pozostanie ukryty, dopóki nie zostanie zaakceptowany przez personel.
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
+    reviewable_queued_post_revise_and_reject:
+      title: "Informacje zwrotne na temat Twojego postu"
+      subject_template: "Informacje zwrotne na temat Twojego postu w %{topic_title}"
+      text_body_template: |
+        Cześć %{username},
+
+        Przejrzeliśmy Twój post w [%{topic_title}](%{topic_url}) i mamy dla Ciebie pewne uwagi.
+
+        Powód: %{reason}
+
+        Informacja zwrotna: %{feedback}
+
+        Możesz edytować swój oryginalny post poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany, lub odpowiedzieć na tę wiadomość, jeśli masz jakiekolwiek pytania.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Dziękujemy,
+        moderatorzy %{site_name}
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Informacje zwrotne do Twojego tematu"
     post_hidden_again:
       title: "Post ukryty ponownie"
       subject_template: "Wpis ukryty przez społeczność, powiadomiono personel"
@@ -4969,6 +5025,7 @@ pl_PL:
       invalid_yaml: "nie jest prawidłowym ciągiem YAML"
       invalid_type: "zawiera nieprawidłowy typ szablonu: %{type} (prawidłowe typy to: %{valid_types})"
       missing_type: "brakuje typu pola"
+      missing_id: "brakuje identyfikatora pola"
       duplicate_ids: "ma zduplikowane identyfikatory"
   activemodel:
     errors:

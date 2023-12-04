@@ -284,6 +284,8 @@ uk:
       save: "Зберегти"
       select: "Вибрати"
       return_to_list: "Повернутися до списку каналів"
+      return_to_channel: "Повернутися на канал"
+      return_to_threads_list: "Повернутися до списку тем"
       unread_threads_count:
         one: "У вас %{count} непрочитане обговорення"
         few: "У вас %{count} непрочитаних обговорень"
@@ -334,6 +336,7 @@ uk:
         yesterday: Вчора
       members_view:
         filter_placeholder: Знайти учасників
+        add_member: Додати учасника
       about_view:
         associated_topic: Пов'язана тема
         associated_category: Пов'язана категорія
@@ -354,9 +357,15 @@ uk:
         default_search_placeholder: "#канал, @хтось або щось"
         default_channel_search_placeholder: "#канал"
         default_user_search_placeholder: "@хтось"
-        user_search_placeholder: "...додати більше користувачів"
+        user_search_placeholder: "...додати більше учасників"
         disabled_user: "вимкнув чат"
         no_items: "Немає елементів"
+        create_group_placeholder: "Назва групового чату (необов’язково)"
+        participants_counter: "%{selection_count}/%{max} учасників"
+        new_group_chat: "Новий груповий чат"
+        filter: "Filter"
+        cant_add_more_members: "Досягнуто максимальної кількості учасників"
+        create_new_group_chat: "Створити груповий чат"
       channel_edit_name_slug_modal:
         title: Редагувати канал
         input_placeholder: Додайте назву
@@ -368,10 +377,17 @@ uk:
         input_placeholder: Додати опис
         description: Розкажіть людям, про що цей канал
       direct_message_creator:
+        add_to_channel: "Додати до каналу"
         title: Нове повідомлення
         prefix: "До:"
         no_results: Немає результатів
         selected_user_title: "Зніміть позначку з %{username}"
+        group_name: "Назва групового чату (необов’язково)"
+        members_counter:
+          one: "%{count}/%{max} учасник"
+          few: "%{count}/%{max} учасники"
+          many: "%{count}/%{max} учасників"
+          other: "%{count}/%{max} учасників"
       channel:
         no_memberships: Цей канал не має учасників
         no_memberships_found: Учасників не знайдено
@@ -477,6 +493,7 @@ uk:
       quote:
         original_channel: 'Спочатку надіслано в <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Цитату чату скопійовано в буфер обміну"
+        default_thread_title: "Нитка"
       notification_levels:
         never: "Ніколи"
         mention: "Тільки для згадок"
@@ -649,6 +666,7 @@ uk:
           other: "+%{count}"
       threads:
         open: "Відкрийте тему"
+        list: "Потоки"
         none: "Ви не берете участі в жодній темі на цьому каналі."
       draft_channel_screen:
         header: "Нове повідомлення"
