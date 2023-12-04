@@ -39,9 +39,9 @@ RSpec.describe ForumsController do
 
     it "returns a 200 response if the cluster does match" do
       global_setting(:cluster_name, "mycluster")
-      get "/srv/status?cluster=abc"
-      expect(response.status).to eq(500)
-      expect(response.body).to include("not match")
+      get "/srv/status?cluster=mycluster"
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("not match")
     end
 
     it "returns a 200 response when given shutdown_ok" do
