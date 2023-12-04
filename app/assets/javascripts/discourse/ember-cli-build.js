@@ -141,16 +141,20 @@ module.exports = function (defaults) {
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     generateWorkboxTree(),
-    concat(adminTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/admin.js`,
-    }),
-    concat(wizardTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/wizard.js`,
-    }),
-    generateScriptsTree(app),
-    discoursePluginsTree,
+    applyTerser(
+      concat(adminTree, {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/admin.js`,
+      })
+    ),
+    applyTerser(
+      concat(wizardTree, {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/wizard.js`,
+      })
+    ),
+    applyTerser(generateScriptsTree(app)),
+    applyTerser(discoursePluginsTree),
     testStylesheetTree,
   ];
 
@@ -261,5 +265,5 @@ module.exports = function (defaults) {
     },
   });
 
-  return mergeTrees([appTree, applyTerser(mergeTrees(extraPublicTrees))]);
+  return mergeTrees([appTree, mergeTrees(extraPublicTrees)]);
 };
