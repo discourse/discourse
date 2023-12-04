@@ -1409,6 +1409,10 @@ email:
   require_change_email_confirmation: false
 
 files:
+  max_image_size:
+    client: true
+    default: 4096
+    type: file_size_restriction
   max_image_size_kb:
     client: true
     default: 4096

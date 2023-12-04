@@ -1,0 +1,14 @@
+<TextField
+  @class="file-size-input"
+  @value={{this.sizeValue}}
+  @maxlength={{this.maxlength}}
+  @onChange={{this.handleFileSizeChange}}
+/>
+
+<ComboBox
+  @class="file-size-unit-selector"
+  @valueProperty="value"
+  @content={{this.dropdownOptions}}
+  @value={{this.fileSizeUnit}}
+  @onChange={{action "onFileSizeUnitChange"}}
+/>

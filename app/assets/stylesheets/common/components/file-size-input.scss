@@ -1,0 +1,15 @@
+.file-size-picker {
+  display: flex;
+
+  .file-size-input {
+    margin-right: 0;
+  }
+  .file-size-input input {
+    width: 10px;
+  }
+  .file-size-unit-selector {
+    padding: 0;
+    border-left: none;
+    margin-bottom: 0;
+  }
+}
