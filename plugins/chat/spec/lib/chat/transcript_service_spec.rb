@@ -374,12 +374,38 @@ describe Chat::TranscriptService do
         chat_channel: channel,
         user: user1,
         thread: thread,
+        message: "has a reply",
+      )
+    thread_message =
+      Fabricate(
+        :chat_message,
+        user: user2,
+        chat_channel: channel,
+        message: "a reply",
+        thread: thread,
+      )
+    empty_thread_om =
+      Fabricate(
+        :chat_message,
+        chat_channel: channel,
+        user: user1,
+        thread: Fabricate(:chat_thread, channel: channel),
         message: "no replies",
       )
 
-    rendered = service([thread_om.id]).generate_markdown
+    thread.update!(replies_count: 1)
+    rendered = service([thread_om.id, thread_message.id, empty_thread_om.id]).generate_markdown
     expect(rendered).to eq(<<~MARKDOWN)
-    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}"]
+    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    has a reply
+
+    [chat quote="brucechat;#{thread_message.id};#{thread_message.created_at.iso8601}" chained="true"]
+    a reply
+    [/chat]
+
+    [/chat]
+
+    [chat quote="martinchat;#{empty_thread_om.id};#{empty_thread_om.created_at.iso8601}" chained="true"]
     no replies
     [/chat]
     MARKDOWN

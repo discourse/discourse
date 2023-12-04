@@ -76,7 +76,7 @@ module Chat
           message = @message_data.first[:message]
           thread = Chat::Thread.find(thread_id)
 
-          if thread.present? && thread.replies.count > 1
+          if thread.present? && thread.replies_count > 0
             attrs << thread_id_attr
             attrs << thread_title_attr(message, thread)
           end
@@ -247,10 +247,16 @@ module Chat
           end
           rendered_thread_markdown << thread_bbcode_tag.render
         end
-        open_bbcode_tag.add_thread_markdown(
-          thread_id: message_group.first.thread_id,
-          markdown: rendered_thread_markdown.join("\n"),
-        )
+        thread_id = message_group.first.thread_id
+        if thread_id.present?
+          thread = Chat::Thread.find(thread_id)
+          if thread&.replies_count > 0
+            open_bbcode_tag.add_thread_markdown(
+              thread_id: thread_id,
+              markdown: rendered_thread_markdown.join("\n"),
+            )
+          end
+        end
       end
 
       # tie off the last open bbcode + render
