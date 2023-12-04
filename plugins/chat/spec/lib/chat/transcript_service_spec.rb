@@ -366,6 +366,25 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
+  xit "doesn't add thread info for threads with no replies" do
+    thread = Fabricate(:chat_thread, channel: channel)
+    thread_om =
+      Fabricate(
+        :chat_message,
+        chat_channel: channel,
+        user: user1,
+        thread: thread,
+        message: "no replies",
+      )
+
+    rendered = service([thread_om.id]).generate_markdown
+    expect(rendered).to eq(<<~MARKDOWN)
+    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}"]
+    no replies
+    [/chat]
+    MARKDOWN
+  end
+
   xit "generates the correct markdown for multiple threads" do
     channel_message_1 =
       Fabricate(:chat_message, user: user1, chat_channel: channel, message: "I need ideas")

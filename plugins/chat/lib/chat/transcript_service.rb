@@ -73,8 +73,13 @@ module Chat
         attrs << reactions_attr if include_reactions
 
         if thread_id
-          attrs << thread_id_attr
-          attrs << thread_title_attr(@message_data.first[:message])
+          message = @message_data.first[:message]
+          thread = Chat::Thread.find(thread_id)
+
+          if thread.present? && thread.replies.count > 1
+            attrs << thread_id_attr
+            attrs << thread_title_attr(message, thread)
+          end
         end
 
         <<~MARKDOWN
@@ -134,8 +139,7 @@ module Chat
         "threadId=\"#{thread_id}\""
       end
 
-      def thread_title_attr(message)
-        thread = Chat::Thread.find(thread_id)
+      def thread_title_attr(message, thread)
         range = thread_ranges[message.id] if thread_ranges.has_key?(message.id)
 
         thread_title =
