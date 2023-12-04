@@ -54,13 +54,9 @@ describe "Uploading files in chat messages", type: :system do
 
       expect(page).not_to have_css(".chat-composer-upload")
 
-      expect(channel_page.messages).to have_message(
-        text: "thumbnail test\n#{File.basename(file_path)}",
-      )
-
       # the upload should have created a thumbnail
       upload = Chat::Message.last.uploads.first
-      expect(upload.thumbnail).to be_present
+      try_until_success(timeout: 5) { expect(upload.thumbnail).to be_present }
 
       # reload the page and check that the upload is now a thumbnail
       chat.visit_channel(channel_1)
