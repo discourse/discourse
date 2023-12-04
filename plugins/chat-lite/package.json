@@ -6,18 +6,15 @@
   "author": "Discourse <team@discourse.org>",
   "license": "GPL-2.0-only",
   "keywords": [
-    "discourse-plugin",
-    "ember-addon"
+    "discourse-plugin"
   ],
   "exports": {
-    "./addon-main.js": "./addon-main.cjs",
     "./connectors/extra-header-icons": "./dist/connectors/extra-header-icons.js",
     "./connectors/sidebar-footer-actions": "./dist/connectors/sidebar-footer-actions.js",
     "./markdown-features/scramble": "./dist/markdown-features/scramble.js",
     "./route-maps/app": "./dist/route-maps/app.js"
   },
   "files": [
-    "addon-main.cjs",
     "dist"
   ],
   "scripts": {
@@ -25,8 +22,6 @@
     "start": "rollup --config --watch --no-watch.clearScreen"
   },
   "dependencies": {
-    "@embroider/addon-shim": "^1.0.0",
-    "ember-auto-import": "^2.6.3",
     "lodash": "^4.17.21"
   },
   "peerDependencies": {
@@ -49,13 +44,5 @@
     "node": "16.* || >= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
-  },
-  "ember": {
-    "edition": "octane"
-  },
-  "ember-addon": {
-    "version": 2,
-    "type": "addon",
-    "main": "addon-main.cjs"
   }
 }
