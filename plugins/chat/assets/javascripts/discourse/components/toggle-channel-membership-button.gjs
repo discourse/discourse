@@ -108,7 +108,7 @@ export default class ToggleChannelMembershipButton extends Component {
         @name="chat-join-channel-button"
         @outletArgs={{hash
           onJoinChannel=this.onJoinChannel
-          channel=this.args.channel
+          channel=@channel
           icon=this.options.joinIcon
           title=this.options.joinTitle
           label=this.label
