@@ -48,7 +48,8 @@ export default class Types extends Component {
 
   @action
   routeToSearchResult(event) {
-    DiscourseURL.routeTo(event.target.href);
+    event.preventDefault();
+    DiscourseURL.routeTo(event.currentTarget.href);
     this.args.closeSearchMenu();
   }
 }
