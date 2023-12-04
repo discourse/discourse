@@ -78,11 +78,77 @@ class Guardian
     end
   end
 
+  # In some cases, we want a user that is not totally anonymous, but has
+  # the absolute baseline of access to the forum, acting like a TL0 user
+  # that is logged in. This represents someone who cannot access any secure
+  # categories or PMs but can read public topics.
+  class BasicUser
+    def blank?
+      false
+    end
+    def admin?
+      false
+    end
+    def staff?
+      false
+    end
+    def moderator?
+      false
+    end
+    def anonymous?
+      false
+    end
+    def approved?
+      true
+    end
+    def staged?
+      false
+    end
+    def silenced?
+      false
+    end
+    def is_system_user?
+      false
+    end
+    def bot?
+      false
+    end
+    def secure_category_ids
+      []
+    end
+    def groups
+      @groups ||= Group.where(id: Group::AUTO_GROUPS[:trust_level_0])
+    end
+    def has_trust_level?(level)
+      level == TrustLevel[0]
+    end
+    def has_trust_level_or_staff?(level)
+      has_trust_level?(level)
+    end
+    def email
+      nil
+    end
+    def whisperer?
+      false
+    end
+    def in_any_groups?(group_ids)
+      group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & groups.map(&:id)).any?
+    end
+  end
+
   attr_reader :request
 
   def initialize(user = nil, request = nil)
     @user = user.presence || AnonymousUser.new
     @request = request
+  end
+
+  def self.anon_user(request: nil)
+    new(AnonymousUser.new, request)
+  end
+
+  def self.basic_user(request: nil)
+    new(BasicUser.new, request)
   end
 
   def user

@@ -873,6 +873,10 @@ module Discourse
     @system_users[current_db] ||= User.find_by(id: SYSTEM_USER_ID)
   end
 
+  def self.basic_user
+    Guardian.basic_user
+  end
+
   def self.store
     if SiteSetting.Upload.enable_s3_uploads
       @s3_store_loaded ||= require "file_store/s3_store"

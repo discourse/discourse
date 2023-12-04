@@ -932,4 +932,92 @@ RSpec.describe Oneboxer do
       expect(Oneboxer.preview(url)).to eq("Custom Onebox for Wizard")
     end
   end
+
+  describe ".local_topic" do
+    fab!(:topic)
+    fab!(:user)
+
+    let(:url) { topic.url }
+    let(:route) { Discourse.route_for(url) }
+
+    context "when user_id is not provided" do
+      let(:opts) { {} }
+
+      it "returns nil if the topic is a private message" do
+        topic.update!(archetype: Archetype.private_message, category: nil)
+        expect(Oneboxer.local_topic(url, route, opts)).to eq(nil)
+      end
+
+      it "returns nil if basic user cannot see the topic" do
+        topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        expect(Oneboxer.local_topic(url, route, opts)).to eq(nil)
+      end
+
+      it "returns topic if basic user can see the topic" do
+        expect(Oneboxer.local_topic(url, route, opts)).to eq(topic)
+      end
+    end
+
+    context "when user_id is provided" do
+      context "when category_id is provided" do
+        fab!(:category)
+
+        let(:opts) { { category_id: category.id, user_id: user.id } }
+
+        before { topic.update!(category: category) }
+
+        it "returns nil if the user cannot see the category" do
+          category.update!(read_restricted: true)
+          expect(Oneboxer.local_topic(url, route, opts)).to eq(nil)
+        end
+
+        it "returns the topic if the user can see the category" do
+          expect(Oneboxer.local_topic(url, route, opts)).to eq(topic)
+        end
+
+        it "returns nil if basic user users cannot see the topic" do
+          topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+          expect(Oneboxer.local_topic(url, route, opts)).to eq(nil)
+        end
+
+        it "returns nil if the topic is a private message" do
+          topic.update!(archetype: Archetype.private_message, category: nil)
+          expect(Oneboxer.local_topic(url, route, opts)).to eq(nil)
+        end
+
+        context "when category_id is mismatched" do
+          fab!(:other_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+          before { topic.update!(category: other_category) }
+
+          it "returns nil if the basic user cannot see the topic" do
+            expect(Oneboxer.local_topic(url, route, opts)).to eq(nil)
+          end
+
+          it "returns topic if the basic user can see the topic" do
+            other_category.update!(read_restricted: false)
+            expect(Oneboxer.local_topic(url, route, opts)).to eq(topic)
+          end
+        end
+      end
+
+      context "when topic_id is provided" do
+        let(:opts) { { topic_id: topic.id, user_id: user.id } }
+
+        it "returns nil if the user cannot see the topic" do
+          topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+          expect(Oneboxer.local_topic(url, route, opts)).to eq(nil)
+        end
+
+        it "returns the topic if the user can see the topic" do
+          expect(Oneboxer.local_topic(url, route, opts)).to eq(topic)
+        end
+
+        it "returns nil if the topic is a private message" do
+          topic.update!(archetype: Archetype.private_message, category: nil)
+          expect(Oneboxer.local_topic(url, route, opts)).to eq(nil)
+        end
+      end
+    end
+  end
 end
