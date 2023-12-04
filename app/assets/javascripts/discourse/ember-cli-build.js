@@ -232,6 +232,17 @@ module.exports = function (defaults) {
             },
           }),
         ],
+        resolve: {
+          alias: {
+            // This is sort of an "optimization". We forked tracked-built-ins
+            // to make TrackedObject "observable" as CP key, but otherwise the
+            // package has the same compatible interface/same exports as the
+            // original. Since tracked-built-ins is needed as a dependency by
+            // some packages (currently ember-polaris-routing), this alias
+            // helps to avoid brining the same copy of code a second time.
+            "tracked-built-ins": "@ember-compat/tracked-built-ins",
+          },
+        },
       },
     },
   });

@@ -1,7 +1,12 @@
 import fsx from "fs-extra";
 const { readJsonSync, writeJsonSync } = fsx;
 
-const PluginFeatures = ["./connectors/", "./markdown-features/"];
+const PluginFeatures = [
+  "./connectors/",
+  "./events/",
+  "./markdown-features/",
+  "./route-maps/",
+];
 
 function isPluginFeature(module) {
   for (const prefix of PluginFeatures) {

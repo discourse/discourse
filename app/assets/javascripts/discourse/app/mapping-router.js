@@ -2,6 +2,7 @@ import EmberRouter from "@ember/routing/router";
 import Site from "discourse/models/site";
 import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
+import Plugins from "discourse-plugins-v2/route-maps/app";
 import applyRouterHomepageOverrides from "./lib/homepage-router-overrides";
 
 class BareRouter extends EmberRouter {
@@ -132,6 +133,23 @@ export function mapRoutes() {
     rootURL: getURL("/"),
   }).map(function () {
     tree.mapRoutes(this);
+
+    for (const {
+      name,
+      module: { default: callback },
+    } of Plugins) {
+      const [prefix] = name.split("/");
+
+      this.route(prefix, { path: prefix }, function () {
+        const mapper = this;
+        callback({
+          route(routeName, { path }) {
+            mapper.route(routeName, { path });
+          },
+        });
+      });
+    }
+
     this.route("unknown", { path: "*path" });
   });
 }

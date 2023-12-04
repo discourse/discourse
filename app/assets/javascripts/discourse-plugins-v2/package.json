@@ -10,8 +10,10 @@
   ],
   "exports": {
     "./connectors/extra-header-icons": "./dist/connectors/extra-header-icons.js",
+    "./connectors/sidebar-footer-actions": "./dist/connectors/sidebar-footer-actions.js",
     "./events/decorate-cooked-element": "./dist/events/decorate-cooked-element.js",
     "./events/decorate-non-stream-cooked-element": "./dist/events/decorate-non-stream-cooked-element.js",
+    "./route-maps/app": "./dist/route-maps/app.js",
     "./markdown-features": "./dist/markdown-features.js"
   },
   "files": [

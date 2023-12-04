@@ -31,8 +31,9 @@ export default {
     commonjs(),
 
     compilePluginFeatures(Plugins, {
-      connectors: ["extra-header-icons"],
+      connectors: ["extra-header-icons", "sidebar-footer-actions"],
       events: ["decorate-cooked-element", "decorate-non-stream-cooked-element"],
+      routeMaps: ["app"],
       markdownFeatures: true,
     }),
 

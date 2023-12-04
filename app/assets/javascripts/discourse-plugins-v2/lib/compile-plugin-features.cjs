@@ -109,7 +109,7 @@ function isPlugin(packageJson) {
 
 function compilePluginFeatures(
   pluginsDir,
-  { connectors = [], events = [], markdownFeatures = true } = {}
+  { connectors = [], events = [], routeMaps = [], markdownFeatures = true } = {}
 ) {
   return {
     name: "collect-plugin-features",
@@ -128,6 +128,10 @@ function compilePluginFeatures(
 
       for (const name of events) {
         features.push(new NamedPluginFeature("events", name));
+      }
+
+      for (const name of routeMaps) {
+        features.push(new NamedPluginFeature("route-maps", name));
       }
 
       if (markdownFeatures) {

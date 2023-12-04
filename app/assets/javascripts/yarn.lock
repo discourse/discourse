@@ -5389,6 +5389,13 @@ ember-on-resize-modifier@^2.0.2:
     ember-modifier "^3.2.7 || ^4.0.0"
     ember-resize-observer-service "^1.1.0"
 
+ember-polaris-routing@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/ember-polaris-routing/-/ember-polaris-routing-0.3.0.tgz#3f88ccb5e71b63805034fc032c686571e02b556c"
+  integrity sha512-tpgvdRCNCoCUIIDAf4XY2IDCbed3AeZZmsbEPLp1aT/wY5pIoJwSp4e8n7lMRB1CzcyXp3A9UNeOqPCBav50mg==
+  dependencies:
+    "@embroider/addon-shim" "^1.0.0"
+
 ember-polaris-service@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/ember-polaris-service/-/ember-polaris-service-0.5.0.tgz#a4f8054adff78f0cacb5ceacd6e347e8f688574a"
@@ -5500,6 +5507,13 @@ ember-source@~3.28.12:
     resolve "^1.17.0"
     semver "^7.3.4"
     silent-error "^1.1.1"
+
+ember-tasks@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/ember-tasks/-/ember-tasks-0.5.1.tgz#6c70cb9e544f369821612f0a5db34a221c4720cb"
+  integrity sha512-PhfHuOjUkkXI6kT/0b2f7UsK7dJoZbpSN2ttxrvY8tWCETYvaf2qjDgeT5hUrJcO1KkG58egBt0gheGTZTepPA==
+  dependencies:
+    "@embroider/addon-shim" "^1.0.0"
 
 ember-template-imports@^4.0.0:
   version "4.0.0"

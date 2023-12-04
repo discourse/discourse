@@ -108,6 +108,7 @@
     "ember-load-initializers": "^2.1.1",
     "ember-modifier": "^4.1.0",
     "ember-on-resize-modifier": "^2.0.2",
+    "ember-polaris-routing": "^0.3.0",
     "ember-polaris-service": "^0.5.0",
     "ember-production-deprecations": "1.0.0",
     "ember-qunit": "^6.2.0",

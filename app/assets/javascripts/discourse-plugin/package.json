@@ -11,6 +11,7 @@
   "exports": {
     ".": "./src/index.js",
     "./helpers/*": "./src/helpers/*.js",
+    "./routing/route": "./src/routing/route.js",
     "./services": "./src/services/index.js",
     "./services/*": "./src/services/*.js",
     "./utils/*": "./src/utils/*.js",
@@ -22,11 +23,13 @@
   ],
   "dependencies": {
     "@embroider/addon-shim": "^1.0.0",
-    "ember-auto-import": "^2.6.3"
+    "ember-auto-import": "^2.6.3",
+    "ember-tasks": "^0.5.1"
   },
   "peerDependencies": {
     "discourse-common": "1.0.0",
     "discourse-i18n": "1.0.0",
+    "ember-polaris-routing": "^0.3.0",
     "ember-polaris-service": "^0.5.0"
   },
   "engines": {
@@ -42,6 +45,11 @@
     "type": "addon",
     "main": "addon-main.cjs",
     "app-js": {},
-    "externals": ["discourse/lib/ajax"]
+    "externals": [
+      "discourse/lib/ajax"
+    ]
+  },
+  "devDependencies": {
+    "ember-tasks": "^0.5.1"
   }
 }
