@@ -253,10 +253,10 @@ module("Unit | Utility | autocomplete", function (hooks) {
     element.dispatchEvent(new KeyboardEvent("keyup", { key: "@" }));
 
     let list = document.querySelectorAll("#ac-testing ul li");
-    assert.strictEqual(2, list.length);
+    assert.strictEqual(list.length, 2);
 
     let selected = document.querySelectorAll("#ac-testing ul li a.selected");
-    assert.strictEqual(1, selected.length);
-    assert.strictEqual("test1", selected[0].innerText);
+    assert.strictEqual(selected.length, 1);
+    assert.strictEqual(selected[0].innerText, "test1");
   });
 });
