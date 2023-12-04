@@ -76,6 +76,7 @@ module Stylesheet
                 target = nil
                 target_match =
                   long.match(/admin|desktop|mobile|publish|wizard|wcag|color_definitions/)
+                target_match ||= "color_definitions" if long.match(/color_transformations/)
                 target = target_match[0] if target_match&.length
 
                 { basename: File.basename(long), target: target, plugin_name: plugin_name }

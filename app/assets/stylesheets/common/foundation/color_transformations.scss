@@ -3,24 +3,46 @@
 // all variables should have the !default flag
 
 //primary
-$primary-very-low: dark-light-diff($primary, $secondary, 97%, -82%) !default;
-$primary-low: dark-light-diff($primary, $secondary, 90%, -78%) !default;
-$primary-low-mid: dark-light-diff($primary, $secondary, 70%, -45%) !default;
-$primary-medium: dark-light-diff($primary, $secondary, 50%, -35%) !default;
-$primary-high: dark-light-diff($primary, $secondary, 30%, -25%) !default;
-$primary-very-high: dark-light-diff($primary, $secondary, 15%, -10%) !default;
+@function _dark-primary-shade($units) {
+  $primary-50-lightness: -72%;
+  $primary-900-lightness: -8%;
+  $step: math.div($primary-50-lightness - $primary-900-lightness, 850);
+  @return $primary-50-lightness - ($step * ($units - 50));
+}
 
-//primary-numbers
-$primary-50: dark-light-diff($primary, $secondary, 97%, -82%) !default;
-$primary-100: dark-light-diff($primary, $secondary, 94%, -80%) !default;
-$primary-200: dark-light-diff($primary, $secondary, 90%, -78%) !default;
-$primary-300: dark-light-diff($primary, $secondary, 80%, -60%) !default;
-$primary-400: dark-light-diff($primary, $secondary, 70%, -45%) !default;
-$primary-500: dark-light-diff($primary, $secondary, 60%, -40%) !default;
-$primary-600: dark-light-diff($primary, $secondary, 50%, -35%) !default;
-$primary-700: dark-light-diff($primary, $secondary, 38%, -30%) !default;
-$primary-800: dark-light-diff($primary, $secondary, 30%, -25%) !default;
-$primary-900: dark-light-diff($primary, $secondary, 15%, -10%) !default;
+@function _light-primary-shade($units) {
+  $primary-50-lightness: 90%;
+  $primary-900-lightness: 18%;
+  $step: math.div($primary-50-lightness - $primary-900-lightness, 850);
+  @return $primary-50-lightness - ($step * ($units - 50));
+}
+
+@function _numbered-primary($units) {
+  @return dark-light-diff(
+    $primary,
+    $secondary,
+    _light-primary-shade($units),
+    _dark-primary-shade($units)
+  );
+}
+
+$primary-50: _numbered-primary(50) !default;
+$primary-100: _numbered-primary(100) !default;
+$primary-200: _numbered-primary(200) !default;
+$primary-300: _numbered-primary(300) !default;
+$primary-400: _numbered-primary(400) !default;
+$primary-500: _numbered-primary(500) !default;
+$primary-600: _numbered-primary(600) !default;
+$primary-700: _numbered-primary(700) !default;
+$primary-800: _numbered-primary(800) !default;
+$primary-900: _numbered-primary(900) !default;
+
+$primary-very-low: $primary-50 !default;
+$primary-low: $primary-200 !default;
+$primary-low-mid: $primary-400 !default;
+$primary-medium: $primary-600 !default;
+$primary-high: $primary-800 !default;
+$primary-very-high: $primary-900 !default;
 
 $header_primary-low: blend-header-primary-background(10%) !default;
 $header_primary-low-mid: blend-header-primary-background(35%) !default;

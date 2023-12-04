@@ -7,6 +7,8 @@
 // --------------------------------------------------
 
 @use "sass:math";
+@use "sass:map";
+@use "./oklab" as oklab;
 
 $small-width: 800px !default;
 $medium-width: 995px !default;
@@ -179,11 +181,42 @@ $z-layers: (
   @if dc-color-brightness($adjusted-color) <
     dc-color-brightness($comparison-color)
   {
-    @return scale-color($adjusted-color, $lightness: $lightness);
+    @return oklab-scale-color($adjusted-color, $lightness: $lightness);
   } @else {
-    @return scale-color($adjusted-color, $lightness: $darkness);
+    @return oklab-scale-color($adjusted-color, $lightness: $darkness);
   }
 }
+
+/**
+  Scale a colour's luminance using the oklab color space. Eventually, this could be implemented
+  in the browser using css Relative Color Syntax. In native CSS, this function is equivelant to:
+  
+  ```css
+  // For lightness > 0
+  oklab(from var(--color) calc(L + ((1-L) * var(--lightness))) a b)
+  // For lightness < 0
+  oklab(from var(--color) calc(L + (L * var(--lightness)) a b)
+  ```
+**/
+@function oklab-scale-color($color, $lightness: 0) {
+  $current-oklab: oklab.rgb_to_oklab($color);
+  $current-lightness: map.get($current-oklab, "L");
+
+  $new-lightness: null;
+  @if ($lightness > 0) {
+    $new-lightness: $current-lightness +
+      ((1 - $current-lightness) * math.div($lightness, 100%));
+  } @else {
+    $new-lightness: $current-lightness +
+      ($current-lightness * math.div($lightness, 100%));
+  }
+
+  $transformed-oklab: map.set($current-oklab, "L", $new-lightness);
+  $transformed-rgb: oklab.oklab-to-rgb($transformed-oklab);
+
+  @return $transformed-rgb;
+}
+
 @function dark-light-choose($light-theme-result, $dark-theme-result) {
   @if is-light-color-scheme() {
     @return $light-theme-result;

@@ -1,0 +1,68 @@
+@use "sass:math";
+@use "sass:color";
+@use "sass:map";
+
+/**
+  Adapted from https://bottosson.github.io/posts/colorwrong and https://bottosson.github.io/posts/oklab/
+  (public domain)
+*/
+
+@function component-to-nonninear($x) {
+  @if $x >= 0.0031308 {
+    @return (1.055) * math.pow($x, math.div(1, 2.4)) - 0.055;
+  } @else {
+    @return 12.92 * $x;
+  }
+}
+
+@function component-to-linear($x) {
+  @if ($x >= 0.04045) {
+    @return math.pow(math.div($x + 0.055, 1 + 0.055), 2.4);
+  } @else {
+    @return math.div($x, 12.92);
+  }
+}
+
+@function rgb_to_oklab($color) {
+  $r: component-to-linear(math.div(color.red($color), 255));
+  $g: component-to-linear(math.div(color.green($color), 255));
+  $b: component-to-linear(math.div(color.blue($color), 255));
+
+  $l: 0.4122214708 * $r + 0.5363325363 * $g + 0.0514459929 * $b;
+  $m: 0.2119034982 * $r + 0.6806995451 * $g + 0.1073969566 * $b;
+  $s: 0.0883024619 * $r + 0.2817188376 * $g + 0.6299787005 * $b;
+
+  $l_: math.pow($l, math.div(1, 3));
+  $m_: math.pow($m, math.div(1, 3));
+  $s_: math.pow($s, math.div(1, 3));
+
+  @return (
+    "L": 0.2104542553 * $l_ + 0.793617785 * $m_ - 0.0040720468 * $s_,
+    "a": 1.9779984951 * $l_ - 2.428592205 * $m_ + 0.4505937099 * $s_,
+    "b": 0.0259040371 * $l_ + 0.7827717662 * $m_ - 0.808675766 * $s_
+  );
+}
+
+@function oklab_to_rgb($oklab) {
+  $L: map.get($oklab, "L");
+  $a: map.get($oklab, "a");
+  $b: map.get($oklab, "b");
+
+  $l_: $L + 0.3963377774 * $a + 0.2158037573 * $b;
+  $m_: $L - 0.1055613458 * $a - 0.0638541728 * $b;
+  $s_: $L - 0.0894841775 * $a - 1.291485548 * $b;
+
+  $l: math.pow($l_, 3);
+  $m: math.pow($m_, 3);
+  $s: math.pow($s_, 3);
+
+  $linear_r: +4.0767416621 * $l - 3.3077115913 * $m + 0.2309699292 * $s;
+  $linear_g: -1.2684380046 * $l + 2.6097574011 * $m - 0.3413193965 * $s;
+  $linear_b: -0.0041960863 * $l - 0.7034186147 * $m + 1.707614701 * $s;
+
+  $r: component-to-nonninear($linear_r);
+  $g: component-to-nonninear($linear_g);
+  $b: component-to-nonninear($linear_b);
+
+  @return rgb($r * 255, $g * 255, $b * 255);
+}
