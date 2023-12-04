@@ -305,6 +305,7 @@ describe Chat::TranscriptService do
       emoji: "money_mouth_face",
     )
 
+    thread.update!(replies_count: 2)
     rendered =
       service(
         [thread_om.id, thread_reply_1.id, thread_reply_2.id],
@@ -328,7 +329,7 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "generates a chat transcript for threaded messages" do
+  it "generates a chat transcript for threaded messages" do
     thread = Fabricate(:chat_thread, channel: channel)
     thread_om =
       Fabricate(
@@ -348,7 +349,7 @@ describe Chat::TranscriptService do
         thread: thread,
         message: "thanks",
       )
-
+    thread.update!(replies_count: 2)
     rendered = service([thread_om.id, thread_reply_1.id, thread_reply_2.id]).generate_markdown
     expect(rendered).to eq(<<~MARKDOWN)
     [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
@@ -366,7 +367,7 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "doesn't add thread info for threads with no replies" do
+  it "doesn't add thread info for threads with no replies" do
     thread = Fabricate(:chat_thread, channel: channel)
     thread_om =
       Fabricate(
@@ -411,7 +412,7 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "generates the correct markdown for multiple threads" do
+  it "generates the correct markdown for multiple threads" do
     channel_message_1 =
       Fabricate(:chat_message, user: user1, chat_channel: channel, message: "I need ideas")
     thread_1 = Fabricate(:chat_thread, channel: channel)
@@ -454,6 +455,8 @@ describe Chat::TranscriptService do
     thread_2_message_2 =
       Fabricate(:chat_message, chat_channel: channel, user: user2, thread: thread_2, message: "np")
 
+    thread_1.update!(replies_count: 1)
+    thread_2.update!(replies_count: 2)
     rendered =
       service(
         [

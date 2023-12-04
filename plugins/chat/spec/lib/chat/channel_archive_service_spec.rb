@@ -95,6 +95,7 @@ describe Chat::ChannelArchiveService do
       thread =
         Fabricate(:chat_thread, channel: channel, title: title, original_message: original_message)
       (num - 1).times { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
+      thread.update!(replies_count: num - 1)
     end
 
     def start_archive
@@ -150,7 +151,7 @@ describe Chat::ChannelArchiveService do
         expect(@channel_archive.chat_channel.chat_messages.count).to eq(0)
       end
 
-      xit "creates the correct posts for a channel with messages and threads" do
+      it "creates the correct posts for a channel with messages and threads" do
         create_messages(2)
         create_threaded_messages(6, title: "a new thread")
         create_messages(7)
