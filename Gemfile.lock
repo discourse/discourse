@@ -370,7 +370,7 @@ GEM
     redis (4.8.1)
     redis-namespace (1.11.0)
       redis (>= 4)
-    regexp_parser (2.8.2)
+    regexp_parser (2.8.3)
     request_store (1.5.1)
       rack (>= 1.4)
     rexml (3.2.6)
