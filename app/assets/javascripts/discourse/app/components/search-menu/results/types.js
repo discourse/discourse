@@ -26,7 +26,9 @@ export default class Types extends Component {
     if (wantsNewWindow(event)) {
       return;
     }
-    this.routeToSearchResult(event);
+
+    event.preventDefault();
+    this.routeToSearchResult(event.currentTarget.href);
   }
 
   @action
@@ -38,7 +40,7 @@ export default class Types extends Component {
     } else if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
-      this.routeToSearchResult(event);
+      this.routeToSearchResult(event.target.href);
       return false;
     }
 
@@ -47,8 +49,8 @@ export default class Types extends Component {
   }
 
   @action
-  routeToSearchResult(event) {
-    DiscourseURL.routeTo(event.target.href);
+  routeToSearchResult(href) {
+    DiscourseURL.routeTo(href);
     this.args.closeSearchMenu();
   }
 }
