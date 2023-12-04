@@ -242,16 +242,5 @@ RSpec.describe ReviewableUser, type: :model do
       expect(event[:event_name]).to eq(:user_approved)
       expect(event[:params].first).to eq(user)
     end
-
-    it "triggers a extensibility event" do
-      user && admin # bypass the user_created event
-      event =
-        DiscourseEvent
-          .track_events { ReviewableUser.find_by(target: user).perform(admin, :approve_user) }
-          .first
-
-      expect(event[:event_name]).to eq(:user_approved)
-      expect(event[:params].first).to eq(user)
-    end
   end
 end

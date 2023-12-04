@@ -80,11 +80,6 @@ RSpec.describe PublishedPagesController do
         end
       end
 
-      it "returns an error for an article you can't see" do
-        get "/pub/no-article-here-no-thx"
-        expect(response.status).to eq(404)
-      end
-
       context "when the article is valid" do
         before do
           SiteSetting.tagging_enabled = true
