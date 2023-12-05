@@ -42,6 +42,7 @@
       </div>
     {{else}}
       <div class="searching">
+        <PluginOutlet @name="search-menu-before-advanced-search" />
         {{#if this.search.activeGlobalSearchTerm}}
           <SearchMenu::ClearButton @clearSearch={{this.clearSearch}} />
         {{/if}}
