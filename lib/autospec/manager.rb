@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "listen"
-require "thread"
 require "fileutils"
 require "autospec/reload_css"
 require "autospec/base_runner"
