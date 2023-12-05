@@ -395,7 +395,7 @@ basic:
     choices:
       - spinner
       - slider
-  show_user_avatars_for_notifications:
+  show_user_menu_avatars:
     client: true
     default: false
 login:

@@ -60,7 +60,7 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
   }
 
   get iconComponent() {
-    return this.iconComponentArgs.avatarTemplate ? NotificationAvatar : null;
+    return this.siteSettings.show_user_menu_avatars ? NotificationAvatar : null;
   }
 
   get iconComponentArgs() {

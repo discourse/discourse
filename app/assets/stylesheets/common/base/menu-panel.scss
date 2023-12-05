@@ -558,11 +558,11 @@
   }
 }
 
-.user-menu.notification-avatars {
+.user-menu.show-avatars {
   li.notification {
     a {
       .notification-avatar {
-        display: inline-table;
+        display: flex;
         position: relative;
         overflow: visible;
         margin-right: 0.5em;
