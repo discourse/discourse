@@ -355,12 +355,8 @@ const TopicRoute = DiscourseRoute.extend({
 
   model(params, transition) {
     if (params.slug.match(ID_CONSTRAINT)) {
-      transition.abort();
-
-      DiscourseURL.routeTo(`/t/topic/${params.slug}/${params.id}`, {
-        replaceURL: true,
-      });
-
+      // URL with no slug - redirect to a URL with placeholder slug
+      this.router.transitionTo(`/t/-/${params.slug}/${params.id}`);
       return;
     }
 
