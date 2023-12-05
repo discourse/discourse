@@ -1619,8 +1619,6 @@ class User < ActiveRecord::Base
       secondary_match.mark_for_destruction
       primary_email.skip_validate_unique_email = true
     end
-
-    new_email
   end
 
   def emails
