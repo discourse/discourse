@@ -3553,6 +3553,8 @@ en:
         delete: "delete this post"
         undelete: "undelete this post"
         share: "share a link to this post"
+        copy_title: "copy a link to this post to clipboard"
+        link_copied: "Link copied!"
         more: "More"
         delete_replies:
           confirm: "Do you also want to delete the replies to this post?"
