@@ -209,7 +209,7 @@ module Discourse
     Logster.store = Logster::RedisStore.new(DiscourseRedis.new)
 
     # Deprecated
-    $redis = Discourse.redis # rubocop:disable Style/GlobalVars
+    $redis = Discourse.redis
 
     # we configure rack cache on demand in an initializer
     # our setup does not use rack cache and instead defers to nginx
