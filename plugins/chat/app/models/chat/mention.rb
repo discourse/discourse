@@ -20,12 +20,15 @@ end
 #
 #  id              :bigint           not null, primary key
 #  chat_message_id :integer          not null
-#  user_id         :integer          not null
+#  user_id         :integer
 #  notification_id :integer          not null
+#  target_id       :integer
+#  type            :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
 # Indexes
 #
-#  chat_mentions_index  (chat_message_id,user_id,notification_id) UNIQUE
+# index_chat_mentions_on_chat_message_id    (chat_message_id)
+# index_chat_mentions_on_target_id          (target_id)
 #
