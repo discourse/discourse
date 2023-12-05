@@ -107,7 +107,7 @@ GEM
       xpath (~> 3.2)
     cbor (0.5.9.6)
     certified (1.0.0)
-    cgi (0.4.0)
+    cgi (0.4.1)
     chunky_png (1.4.0)
     coderay (1.1.3)
     colored2 (4.0.0)
