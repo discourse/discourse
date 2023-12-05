@@ -245,10 +245,10 @@ class FinalDestination
       lambda do |chunk, _remaining_bytes, _total_bytes|
         response_body << chunk
         if response_body.bytesize > MAX_REQUEST_SIZE_BYTES
-          raise Excon::Errors::ExpectationFailed.new("response size too big: #{@uri.to_s}")
+          raise Excon::Errors::ExpectationFailed.new("response size too big: #{@uri}")
         end
         if Time.now - request_start_time > MAX_REQUEST_TIME_SECONDS
-          raise Excon::Errors::ExpectationFailed.new("connect timeout reached: #{@uri.to_s}")
+          raise Excon::Errors::ExpectationFailed.new("connect timeout reached: #{@uri}")
         end
       end
 

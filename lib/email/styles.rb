@@ -202,7 +202,7 @@ module Email
               "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
             i.replace(
               Nokogiri::HTML5.fragment(
-                "<p><a href='#{src_uri.to_s}'>#{CGI.escapeHTML(display_src)}</a><p>",
+                "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
               ),
             )
           rescue URI::Error
