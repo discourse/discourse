@@ -427,7 +427,7 @@ class FinalDestination
     return true if @uri.port == 80
 
     allowed_internal_hosts =
-      SiteSetting.allowed_internal_hosts&.split(/[|\n]/).filter_map { |aih| aih.strip.presence }
+      SiteSetting.allowed_internal_hosts&.split(/[|\n]/)&.filter_map { |aih| aih.strip.presence }
     return false if allowed_internal_hosts.empty? || SiteSetting.s3_endpoint.blank?
     return false if allowed_internal_hosts.none? { |aih| hostname_matches_s3_endpoint?(aih) }
 

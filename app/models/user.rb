@@ -153,7 +153,7 @@ class User < ActiveRecord::Base
   validates :primary_email, presence: true, unless: :skip_email_validation
   validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
   validates_associated :primary_email,
-                       message: ->(_, user_email) { user_email[:value]&.errors[:email]&.first }
+                       message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
 
   after_initialize :add_trust_level
 
