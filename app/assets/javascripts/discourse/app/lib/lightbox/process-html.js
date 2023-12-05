@@ -24,7 +24,7 @@ export async function processHTML({ container, selector, clickTarget }) {
         null;
 
       const _fullsizeURL =
-        item.dataset?.origSrc ||
+        item.dataset?.largeSrc ||
         item.href ||
         item.src ||
         innerImage.src ||

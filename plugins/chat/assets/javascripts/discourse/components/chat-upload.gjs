@@ -63,7 +63,8 @@ export default class ChatUpload extends Component {
     {{#if (eq this.type this.IMAGE_TYPE)}}
       <img
         class="chat-img-upload"
-        data-orig-src={{@upload.url}}
+        data-orig-src={{@upload.short_url}}
+        data-large-src={{@upload.url}}
         height={{this.size.height}}
         width={{this.size.width}}
         src={{this.imageUrl}}

@@ -50,22 +50,23 @@ describe "Uploading files in chat messages", type: :system do
         channel_page.click_action_button("chat-upload-btn")
       end
 
-      channel_page.send_message("thumbnail test")
+      channel_page.send_message("thumbnail")
 
-      expect(page).not_to have_css(".chat-composer-upload")
+      expect(channel_page).to have_no_css(".chat-composer-upload")
 
-      # the upload should have created a thumbnail
+      expect(channel_page.messages).to have_message(
+        text: "thumbnail\n#{File.basename(file_path)}",
+        persisted: true,
+      )
+
       upload = Chat::Message.last.uploads.first
-      try_until_success(timeout: 5) { expect(upload.thumbnail).to be_present }
-
-      # reload the page and check that the upload is now a thumbnail
-      chat.visit_channel(channel_1)
+      expect(upload.thumbnail).to be_present
 
       # image has src attribute with thumbnail url
       expect(channel_page).to have_css(".chat-uploads img[src$='#{upload.thumbnail.url}']")
 
-      # image has data-orig-src with original image src
-      expect(channel_page).to have_css(".chat-uploads img[data-orig-src$='#{upload.url}']")
+      # image has data-large-src with original image src
+      expect(channel_page).to have_css(".chat-uploads img[data-large-src$='#{upload.url}']")
     end
 
     it "adds dominant color attribute to images" do
