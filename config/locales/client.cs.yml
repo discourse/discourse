@@ -760,7 +760,6 @@ cs:
           imap_mailbox_not_selected: "Pro tuto konfiguraci IMAP musíte vybrat poštovní schránku, jinak nebudou synchronizovány žádné poštovní schránky!"
           prefill:
             title: "Předvyplnění s nastavením pro:"
-            gmail: "GMail"
           credentials:
             title: "Údaje"
             smtp_server: "SMTP server"
@@ -795,6 +794,7 @@ cs:
         tags:
           title: Štítky
           description: "Když budou uživatelé přidáni do této skupiny, jejich nastavení oznámení kategorie bude nastaveno na tyto výchozí hodnoty. Poté je mohou změnit."
+          watching_first_post_tags_instructions: "Uživatelé budou informováni o prvním novém příspěvku v každém novém tématu s těmito štítky."
           regular_tags_instructions: "Pokud jsou tyto značky ztlumeny, budou odtlumeny pro členy skupiny. Uživatelé budou upozorněni, pokud jsou zmíněni nebo někdo na jim odpoví."
           muted_tags_instructions: "Uživatelé nebudou upozorněni na nic o nových tématech s těmito značkami."
         logs:
@@ -3475,7 +3475,6 @@ cs:
         many: "Jsi si jist, že chceš smazat tento štítek a odstranit ho z %{count} témat, kterým je přiřazen?"
         other: "Jsi si jist, že chceš smazat tento štítek a odstranit ho z %{count} témat, kterým je přiřazen?"
       delete_confirm_no_topics: "Opravdu chceš smazat tento štítek? "
-      description: "Popis"
       sort_by: "Seřadit dle:"
       sort_by_count: "počtu"
       sort_by_name: "jména"
@@ -3708,6 +3707,18 @@ cs:
           url: "Zadejte platnou adresu URL."
         patternMismatch: "Porovnejte prosím požadovaný formát."
         badInput: "Zadejte prosím platný vstup."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Vstoupit"
+      edit:
+        modal:
+          cancel: "zrušit"
+          create: "Uložit"
+          reason: "proč byla nutná úprava?"
+      spreadsheet:
+        show: "Zobrazit"
+        about: "O fóru"
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -4014,6 +4025,7 @@ cs:
         change_settings_short: "Nastavení"
         howto: "Jak nainstaluji pluginy?"
         author: "Od uživatele %{author}"
+        learn_more: "Zjistit více"
       navigation_menu:
         sidebar: "Postranní panel"
       backups:

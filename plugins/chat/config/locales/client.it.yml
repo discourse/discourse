@@ -458,6 +458,7 @@ it:
         new: "Crea una chat personale"
         create: "Vai"
         leave: "Lascia questa chat personale"
+        close: "Chiudi questa chat personale"
         cannot_create: "Spiacenti, non puoi inviare messaggi diretti."
       incoming_webhooks:
         back: "Indietro"

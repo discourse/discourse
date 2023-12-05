@@ -107,6 +107,8 @@ fr:
         all_new: "Tous les nouveaux messages"
         dm_and_mentions: "Messages directs et mentions"
         never: "Jamais"
+      separate_sidebar_mode:
+        title: "Afficher des modes de barre latérale distincts pour le forum et le clavardag"
       enable: "Activer la discussion"
       flag: "Drapeau"
       emoji: "Insérer un émoji"

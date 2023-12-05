@@ -2712,7 +2712,6 @@ hy:
         one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որին այն վերագրված է:"
         other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը և հեռացնել այն %{count} թեմայից, որոնց այն վերագրված է:"
       delete_confirm_no_topics: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս թեգը:"
-      description: "Նկարագրույթուն"
       sort_by: "Դասավորել ըստ՝ "
       sort_by_count: "քանակի"
       sort_by_name: "անվան"
@@ -2859,6 +2858,18 @@ hy:
         typeMismatch:
           default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
           email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Մուտք"
+      edit:
+        modal:
+          cancel: "չեղարկել"
+          create: "Պահպանել"
+          reason: "Ո՞րն է խմբագրման պատճառը:"
+      spreadsheet:
+        show: "Ցուցադրել"
+        about: "Մասին"
   admin_js:
     admin:
       title: "Discourse Ադմին"
@@ -3116,6 +3127,7 @@ hy:
         change_settings_short: "Կարգավորումներ"
         howto: "Ինչպե՞ս կարող եմ ես տեղադրել հավելումներ:"
         author: "%{author}-Ի կողմԻց"
+        learn_more: "Իմանալ ավելին"
       backups:
         title: "Պահուստներ"
         menu:

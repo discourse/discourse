@@ -62,6 +62,7 @@ cs:
       generic: Při importu tohoto motivu došlo k chybě
       upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
       about_json: "Chyba importu: about.json neexistuje nebo je neplatný. Jste si jisti, že se jedná o Discourse motiv?"
+      about_json_too_big: "Chyba importu: about.json je větší než %{limit} limit."
   emails:
     incoming:
       default_subject: "Toto téma potřebuje nadpis"

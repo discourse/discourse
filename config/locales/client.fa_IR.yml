@@ -168,6 +168,7 @@ fa_IR:
       dismiss: "رد کردن"
     themes:
       default_description: "پیش‌فرض"
+    broken_plugin_alert: "ناشی ازافزونه \"%{name}\""
     s3:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
@@ -260,10 +261,16 @@ fa_IR:
       our_moderators: "مدیران ما"
       moderators: "مدیران"
       stat:
+        all_time: "همیشه"
         last_day: "۲۴ ساعت"
+        last_7_days: "۷ روزه"
+        last_30_days: "۳۰ روزه"
       like_count: "پسند‌ها "
       topic_count: "موضوعات"
       post_count: "نوشته‌ها"
+      user_count: "ثبت‌نام‌ها"
+      active_user_count: "کاربران فعال"
+      contact: "ارتباط با ما"
       contact_info: "در شرایط حساس و مسائل اضطراری مربوط به سایت٬‌ لطفا از طریق %{contact_info} با تماس بگیرید."
     bookmarked:
       title: "نشانک"
@@ -303,6 +310,7 @@ fa_IR:
       copied: "کپی شد!"
       copy: "کپی کد در کلیپ‌بورد"
       fullscreen: "نمایش کد در تمام صفحه"
+      view_code: "مشاهده کد"
     drafts:
       label: "پیش‌نویس‌ها"
       label_with_count: "پیش‌نویس «%{count}»"
@@ -391,7 +399,12 @@ fa_IR:
           name: "امتیاز را وارد کنید"
           title: "موارد قابل بررسی خاص می توانند کارمندان دارای امتیاز شوند تا اولویت آن ها را بیشتر کند."
       revise_and_reject_post:
+        title: "تجدید نظر کردن"
         reason: "دلیل"
+        send_pm: "ارسال پیام"
+        feedback: "بازخورد"
+        custom_reason: "شرح واضحی از دلیل ارائه دهید"
+        other_reason: "غیره…"
         optional: "اختیاری"
       stale_help: "این موردِ قابل بررسی توسط <b>%{username}</b> حل شده است."
       claim_help:
@@ -519,7 +532,9 @@ fa_IR:
         all:
           title: "همه چیز"
       context_question:
+        is_this_post: "آیا این %{reviewable_type}، %{reviewable_human_score_types} است؟"
         delimiter: "یا"
+        something_else_wrong: "آیا مشکلی در %{reviewable_type} وجود دارد؟"
       types:
         reviewable_flagged_post:
           title: "نوشته پرچم شده"
@@ -925,6 +940,7 @@ fa_IR:
     user:
       said: "%{username}:"
       profile: "نمایه"
+      profile_possessive: "نمایه‌ی %{username}"
       mute: "بی‌صدا"
       edit: "ویرایش تنظیمات"
       new_private_message: "پیام جدید"
@@ -1159,6 +1175,8 @@ fa_IR:
           این کد QR را در یک اپلیکیشن مورد تایید (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">آندروید</a> -- <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">IOS</a>) و کد احراز هویت خود را وارد کنید.
         disable_description: "لطفا کد احراز هویت را از اپلیکیشن خود وارد کنید"
         show_key_description: "دستی وارد کنید"
+        short_description: |
+          از حساب خود با کدهای امنیتی یکبار مصرف یا کلیدهای امنیتی فیزیکی محافظت کنید.
         extended_description: |
           احراز هویت دو عامله امنیت بیشتری به حساب کاربری شما میدهد، چرا که یک توکن یک بار مصرف علاوه بر رمز عبور خود خواهید داشت. توکن ها در ابزارهای <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اندروید</a> و <a href="https://www.google.com/search?q=authenticator+apps+for+ios">IOS</a> قابل تولید هستند.
         oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
@@ -1188,7 +1206,15 @@ fa_IR:
           edit_description: "نام کلیدهای امنیتی فیزیکی"
           name_required_error: "شما باید یک نام برای کلید امنیتی خود انتخاب کنید."
       passkeys:
+        rename_passkey: "تغییر نام کلید عبور"
+        add_passkey: "افزودن کلید عبور"
+        confirm_delete_passkey: "آیا مطمئنید که می‌خواهید این کلید عبور را حذف کنید؟"
+        passkey_successfully_created: "موفقیت! کلید عبور جدید شما ایجاد شد."
+        rename_passkey_instructions: "یک نام کلید عبور انتخاب کنید که به راحتی آن را شناسایی کنید، به عنوان مثال، از نام مدیر کلید عبور خود استفاده کنید."
+        name:
+          default: "کلید عبور اصلی"
         save: "ذخیره"
+        title: "کلیدهای عبور"
         added_prefix: "اضافه شده"
       change_about:
         title: "تغییر «درباره‌ی من»"
@@ -3219,7 +3245,6 @@ fa_IR:
       delete_tag: "حذف برچسب"
       delete_confirm_no_topics: "ایا از حذف این برچسب مطمعن هستید؟"
       edit_tag: "ویرایش نام و توضیحات برچسب"
-      description: "توضیحات"
       sort_by: "مرتب سازی بر اساس:"
       sort_by_count: "تعداد"
       sort_by_name: "نام"
@@ -3419,6 +3444,18 @@ fa_IR:
         typeMismatch:
           default: "یک مقدار معتبر وارد کنید."
           email: "لطفا یک آدرس ایمیل معتبر وارد کنید."
+    table_builder:
+      modal:
+        help:
+          enter_key: "وارد شدن "
+      edit:
+        modal:
+          cancel: "لغو"
+          create: "ذخیره"
+          reason: "چرا ویرایش می‌کنید؟"
+      spreadsheet:
+        show: "نشان دادن"
+        about: "درباره"
   admin_js:
     admin:
       title: "مدیر ارشد دیسکورس"
@@ -3664,6 +3701,7 @@ fa_IR:
         change_settings_short: "تنظیمات"
         howto: "چگونه یک افزونه نصب کنیم؟"
         author: "توسط %{author}"
+        learn_more: "بیشتر بدانید"
       navigation_menu:
         sidebar: "نوار کناری"
       backups:

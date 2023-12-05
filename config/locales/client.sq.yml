@@ -1830,7 +1830,6 @@ sq:
       tags: "Etiketat"
       add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"
-      description: "Përshkrimi"
       sort_by: "Rendit sipas:"
       sort_by_count: "numri"
       sort_by_name: "emër"
@@ -1951,6 +1950,15 @@ sq:
         typeMismatch:
           default: "Ju lutem shkruani një vlerë të vlefshme."
           email: "Ju lutemi të vendosni një email të vlefshëm."
+    table_builder:
+      edit:
+        modal:
+          cancel: "anulo"
+          create: "Ruaj"
+          reason: "pse jeni duke e redaktuar?"
+      spreadsheet:
+        show: "Shfaq"
+        about: "Rreth"
   admin_js:
     admin:
       title: "Administrator"
@@ -2079,6 +2087,7 @@ sq:
         change_settings_short: "Rregullimet"
         howto: "Si mund të instaloj një plugin?"
         author: "Nga %{author}"
+        learn_more: "Mëso më shumë"
       backups:
         title: "Rezervat"
         menu:

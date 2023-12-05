@@ -746,7 +746,6 @@ tr_TR:
           imap_mailbox_not_selected: "Bu IMAP yapılandırması için bir Posta Kutusu seçmelisiniz, yoksa hiçbir posta kutusu senkronize edilmez!"
           prefill:
             title: "Şu ayarlarla önceden doldurun:"
-            gmail: "GMail"
           credentials:
             title: "Kimlik bilgileri"
             smtp_server: "SMTP Sunucusu"
@@ -2114,6 +2113,7 @@ tr_TR:
       add_warning: "Bu resmi bir uyarıdır."
       toggle_whisper: "Fısıltıyı Aç/Kapat"
       toggle_unlisted: "Liste Dışı Aç/Kapat"
+      insert_table: "Tablo ekle"
       posting_not_on_topic: "Hangi konuya yanıt vermek istiyorsunuz?"
       saved_local_draft_tip: "yerel olarak kaydedildi"
       drafts_offline: "taslaklar çevrimdışı"
@@ -3890,7 +3890,7 @@ tr_TR:
         one: "Eş anlamlısı da silinecek."
         other: "%{count} eş anlamlısı da silinecek."
       edit_tag: "Etiket adını ve açıklamasını düzenle"
-      description: "Açıklama"
+      description: "Açıklama (en fazla 1000 karakter)"
       sort_by: "Sıralama ölçütü:"
       sort_by_count: "sayı"
       sort_by_name: "ad"
@@ -4203,6 +4203,62 @@ tr_TR:
           other: "Girdi en az %{count} olmalıdır."
         patternMismatch: "Lütfen istenen formata uyun."
         badInput: "Lütfen geçerli bir girdi girin."
+    table_builder:
+      title: "Tablo Oluşturucu"
+      modal:
+        title: "Tablo Oluşturucu"
+        create: "Tablo oluştur"
+        help:
+          title: "Elektronik Tablo Düzenleyiciyi kullanma"
+          enter_key: "Enter"
+          tab_key: "Sekme"
+          new_row: "yeni bir satır eklemek için bir satırın sonuna."
+          options: "Açılır menüde daha fazla seçeneğe erişmek için hücrelere sağ tıklayın."
+        confirm_close: "Tablo oluşturucuyu kapatmak istediğinizden emin misiniz? Kaydedilmemiş değişiklikler kaybolacaktır."
+      edit:
+        btn_edit: "Tabloyu düzenle"
+        modal:
+          title: "Tabloyu düzenle"
+          cancel: "iptal et"
+          create: "Kaydet"
+          reason: "neden düzenleme yapıyorsunuz?"
+          trigger_reason: "Düzenleme nedeni ekleyin"
+        default_edit_reason: "Tablo Düzenleyiciyle Tabloyu güncelle"
+      default_header:
+        col_1: "Sütun 1"
+        col_2: "Sütun 2"
+        col_3: "Sütun 3"
+        col_4: "Sütun 4"
+      spreadsheet:
+        no_records_found: "Kayıt bulunamadı"
+        show: "Göster"
+        entries: "girdiler"
+        about: "Hakkında"
+        prompts:
+          delete_selected_rows: "Seçili satırları silmek istediğinizden emin misiniz?"
+          delete_selected_cols: "Seçili sütunları silmek istediğinizden emin misiniz?"
+          will_destroy_merged_cells: "Bu eylem mevcut birleştirilmiş hücreleri yok edecek. Emin misiniz?"
+          will_clear_search_results: "Bu eylem mevcut birleştirilmiş hücreleri yok edecek. Emin misiniz?"
+          conflicts_with_merged_cells: "Birleştirilmiş başka bir hücre ile çakışma var"
+        invalid_merge_props: "Geçersiz birleştirilmiş özellikler"
+        cells_already_merged: "Hücre zaten birleştirildi"
+        no_cells_selected: "Hücre seçilmedi"
+        context_menu:
+          row:
+            before: "Öncesine yeni bir satır ekle"
+            after: "Sonrasına yeni bir satır ekle"
+            delete: "Seçili satırları sil"
+          col:
+            before: "Öncesine yeni bir sütun ekle"
+            after: "Sonrasına yeni bir sütun ekle"
+            delete: "Seçili sütunları sil"
+            rename: "Bu sütunu yeniden adlandırın"
+          order:
+            ascending: "Artan sıralama"
+            descending: "Azalan sıralama"
+          copy: "Kopyala..."
+          paste: "Yapıştır..."
+          save: "Farklı kaydet..."
   admin_js:
     type_to_filter: "filtrelemek için yazın…"
     admin:
@@ -4624,10 +4680,10 @@ tr_TR:
         change_settings_short: "Ayarlar"
         howto: "Eklentileri nasıl yüklerim?"
         official: "Resmi Discourse Eklentisi"
-        experimental: "Deneysel Eklenti"
         broken_route: "\"%{name}\" bağlantısı yapılandırılamıyor. Reklam engelleyicilerin devre dışı bırakıldığından emin olun ve sayfayı yeniden yüklemeyi deneyin."
         author: "Yazan: %{author}"
         experimental_badge: "deneysel"
+        learn_more: "Daha fazla bilgi"
       navigation_menu:
         sidebar: "Kenar çubuğu"
         header_dropdown: "Başlık Açılır Menüsü"

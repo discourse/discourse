@@ -2886,7 +2886,6 @@ bs_BA:
         one: "Pripadajući sinonim će također biti obrisan."
         few: "Pripadajućih %{count} sinonima će također biti obrisano."
         other: "Pripadajućih %{count} sinonima će također biti obrisano."
-      description: "Description"
       sort_by: "Sortiraj po:"
       sort_by_count: "brojenje"
       sort_by_name: "ime"
@@ -3042,6 +3041,18 @@ bs_BA:
       errors:
         typeMismatch:
           default: "Molim unesite ispravnu vrijednost."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Naprijed"
+      edit:
+        modal:
+          cancel: "otkaži"
+          create: "Save"
+          reason: "zašto pravite izmjenu?"
+      spreadsheet:
+        show: "Show"
+        about: "O nama"
   admin_js:
     admin:
       title: "Discourse Admin"
@@ -3300,6 +3311,7 @@ bs_BA:
         change_settings_short: "Postavke"
         howto: "Kako instaliram pluginove?"
         author: "Od %{author}"
+        learn_more: "Saznaj više"
       backups:
         title: "Backups"
         menu:

@@ -179,7 +179,6 @@ vi:
       default_tags_already_selected: "Bạn không thể chọn một thẻ được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Bạn không thể cho phép sử dụng kho lưu trữ S3 trừ khi bạn đã bật tính năng tải lên S3."
-      page_publishing_requirements: "Không thể bật xuất bản trang nếu phương tiện bảo mật được bật."
       s3_backup_requires_s3_settings: "Bạn không thể sử dụng S3 làm vị trí sao lưu trừ khi bạn đã cung cấp '%{setting_name}'."
       share_quote_facebook_requirements: "Bạn phải đặt id ứng dụng Facebook để bật tính năng chia sẻ báo giá cho Facebook."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Bạn không thể thực thi 2FA nếu DiscourseConnect được bật."

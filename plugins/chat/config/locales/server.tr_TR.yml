@@ -193,6 +193,7 @@ tr_TR:
       no_targets: "Seçilen dönemde mesaj yok."
     transcript:
       default_thread_title: "Konu"
+      split_thread_range: "toplam %{total} mesajın %{start} - %{end} arası"
   discourse_push_notifications:
     popup:
       chat_mention:
