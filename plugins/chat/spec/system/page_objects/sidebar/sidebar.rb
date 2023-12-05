@@ -14,10 +14,6 @@ module PageObjects
         find(PUBLIC_CHANNELS_SECTION_SELECTOR)
       end
 
-      def channels_section
-        find(PUBLIC_CHANNELS_SECTION_SELECTOR)
-      end
-
       def dms_section
         find(DM_CHANNELS_SECTION_SELECTOR)
       end

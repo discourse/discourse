@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UserPostBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
-  attr_reader :post_id
-
   def post_id
     post.id
   end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class FakeLogger
-  attr_reader :debug, :infos, :warnings, :errors, :fatals
   attr_accessor :level
 
   def initialize
