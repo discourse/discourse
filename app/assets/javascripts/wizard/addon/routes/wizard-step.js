@@ -1,13 +1,15 @@
+import { inject as service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class WizardStepRoute extends DiscourseRoute {
+  @service router;
+
   model(params) {
     const wizard = this.modelFor("wizard");
-    let step = wizard.findStep(params.step_id);
+    const step = wizard.findStep(params.step_id);
 
-    // should this be a redirect?
     if (!step) {
-      step = wizard.steps[0];
+      this.router.transitionTo("wizard.step", wizard.start);
     }
 
     return { wizard, step };
