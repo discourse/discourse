@@ -2298,7 +2298,7 @@ RSpec.describe Email::Receiver do
     let(:user) { Fabricate(:user) }
     let(:group) { Fabricate(:group, users: [user]) }
 
-    let (:email_1) {
+    let(:email_1) {
       <<~EMAIL
       MIME-Version: 1.0
       Date: Wed, 01 Jan 2019 12:00:00 +0200
@@ -2320,7 +2320,7 @@ RSpec.describe Email::Receiver do
       EMAIL
     }
 
-    let (:post_2) {
+    let(:post_2) {
       incoming_email =
         IncomingEmail.find_by(message_id: "7aN1uwcokt2xkfG3iYrpKmiuVhy4w9b5@mail.gmail.com")
 
@@ -2332,7 +2332,7 @@ RSpec.describe Email::Receiver do
       )
     }
 
-    let (:email_3) {
+    let(:email_3) {
       <<~EMAIL
       MIME-Version: 1.0
       Date: Wed, 01 Jan 2019 12:00:00 +0200

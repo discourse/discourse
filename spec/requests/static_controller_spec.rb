@@ -58,7 +58,7 @@ RSpec.describe StaticController do
   end
 
   describe "#cdn_asset" do
-    let (:site) {
+    let(:site) {
       RailsMultisite::ConnectionManagement.current_db
     }
 

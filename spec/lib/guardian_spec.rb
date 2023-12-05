@@ -1389,7 +1389,7 @@ RSpec.describe Guardian do
     end
 
     describe "a Post" do
-      let (:guardian) do
+      let(:guardian) do
         Guardian.new(user)
       end
 

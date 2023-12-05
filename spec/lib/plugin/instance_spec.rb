@@ -487,8 +487,8 @@ RSpec.describe Plugin::Instance do
       expect(
         JsLocaleHelper.find_message_format_locale(["foo_BAR"], fallback_to_english: true),
       ).to eq(locale[:message_format])
-      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq (locale[:moment_js])
-      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"], timezone_names: true)).to eq (
+      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq(locale[:moment_js])
+      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"], timezone_names: true)).to eq(
            locale[:moment_js_timezones]
          )
     end
@@ -516,7 +516,7 @@ RSpec.describe Plugin::Instance do
       expect(JsLocaleHelper.find_message_format_locale(["tup"], fallback_to_english: true)).to eq(
         locale[:message_format],
       )
-      expect(JsLocaleHelper.find_moment_locale(["tup"])).to eq (locale[:moment_js])
+      expect(JsLocaleHelper.find_moment_locale(["tup"])).to eq(locale[:moment_js])
     end
 
     it "correctly registers a new locale when some files exist in core" do
@@ -539,7 +539,7 @@ RSpec.describe Plugin::Instance do
       expect(JsLocaleHelper.find_message_format_locale(["tlh"], fallback_to_english: true)).to eq(
         locale[:message_format],
       )
-      expect(JsLocaleHelper.find_moment_locale(["tlh"])).to eq (locale[:moment_js])
+      expect(JsLocaleHelper.find_moment_locale(["tlh"])).to eq(locale[:moment_js])
     end
 
     it "does not register a new locale when the fallback locale does not exist" do

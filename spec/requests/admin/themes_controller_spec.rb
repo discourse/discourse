@@ -133,7 +133,7 @@ RSpec.describe Admin::ThemesController do
         expect do
           post "/admin/themes/import.json", params: { theme: uploaded_file }
           expect(response.status).to eq(201)
-        end.to change { Theme.count }.by (1)
+        end.to change { Theme.count }.by(1)
 
         json = response.parsed_body
 
@@ -321,7 +321,7 @@ RSpec.describe Admin::ThemesController do
 
         expect do post "/admin/themes/import.json", params: { theme: theme_archive } end.to change {
           Theme.count
-        }.by (0)
+        }.by(0)
 
         expect(response.status).to eq(422)
       end
@@ -331,7 +331,7 @@ RSpec.describe Admin::ThemesController do
 
         expect do post "/admin/themes/import.json", params: { theme: theme_archive } end.to change {
           Theme.count
-        }.by (1)
+        }.by(1)
         expect(response.status).to eq(201)
         json = response.parsed_body
 
@@ -354,7 +354,7 @@ RSpec.describe Admin::ThemesController do
                      bundle: theme_archive,
                      theme_id: other_existing_theme.id,
                    }
-            end.to change { Theme.count }.by (0)
+            end.to change { Theme.count }.by(0)
           end
         expect(response.status).to eq(201)
         json = response.parsed_body
@@ -377,7 +377,7 @@ RSpec.describe Admin::ThemesController do
 
         expect do
           post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: nil }
-        end.to change { Theme.count }.by (1)
+        end.to change { Theme.count }.by(1)
         expect(response.status).to eq(201)
         json = response.parsed_body
 

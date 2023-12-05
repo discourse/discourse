@@ -312,7 +312,7 @@ RSpec.describe UsersController do
               params: {
                 password: "hg9ow8yhg98oadminlonger",
               }
-        end.to change { UserHistory.count }.by (1)
+        end.to change { UserHistory.count }.by(1)
 
         user_history = UserHistory.last
         expect(user_history.target_user_id).to eq(user1.id)
@@ -836,13 +836,13 @@ RSpec.describe UsersController do
       end
 
       context "when normalize_emails is enabled" do
-        let (:email) {
+        let(:email) {
           "jane+100@gmail.com"
         }
-        let (:dupe_email) {
+        let(:dupe_email) {
           "jane+191@gmail.com"
         }
-        let! (:user) {
+        let!(:user) {
           Fabricate(:user, email: email, password: "strongpassword")
         }
 

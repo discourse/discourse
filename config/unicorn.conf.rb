@@ -23,12 +23,12 @@ listen ENV["UNICORN_LISTENER"] || "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:
 FileUtils.mkdir_p("#{discourse_path}/tmp/pids") if !File.exist?("#{discourse_path}/tmp/pids")
 
 # feel free to point this anywhere accessible on the filesystem
-pid (ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
+pid(ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
 if ENV["RAILS_ENV"] != "production"
   logger Logger.new(STDOUT)
   # we want a longer timeout in dev cause first request can be really slow
-  timeout (ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
+  timeout(ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
 else
   # By default, the Unicorn logger will write to stderr.
   # Additionally, some applications/frameworks log to stderr or stdout,
