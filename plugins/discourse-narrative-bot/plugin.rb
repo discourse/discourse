@@ -90,7 +90,7 @@ after_initialize do
     end
 
     class CertificatesController < ::ApplicationController
-      layout :false
+      layout false
       skip_before_action :check_xhr
       requires_login
 
