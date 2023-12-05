@@ -5,7 +5,6 @@ module Chat
     self.table_name = "chat_mentions"
     self.ignored_columns = %w[notification_id user_id]
 
-    belongs_to :user
     belongs_to :chat_message, class_name: "Chat::Message"
     has_many :mention_notifications,
              class_name: "Chat::MentionNotification",

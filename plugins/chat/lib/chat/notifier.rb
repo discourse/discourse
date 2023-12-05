@@ -83,10 +83,10 @@ module Chat
 
     def notify_edit
       already_notified_user_ids =
-        Chat::Mention
-          .where(chat_message: @chat_message)
-          .left_outer_joins(:notifications)
-          .where.not(notifications: { id: nil })
+        Notification
+          .where(notification_type: Notification.types[:chat_mention])
+          .joins("INNER JOIN chat_mentions ON chat_mentions.id = notifications.reference_id")
+          .where("chat_mentions.chat_message_id = ?", @chat_message.id)
           .pluck(:user_id)
 
       to_notify, inaccessible, all_mentioned_user_ids = list_users_to_notify
