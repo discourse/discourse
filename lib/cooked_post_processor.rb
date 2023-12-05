@@ -59,7 +59,7 @@ class CookedPostProcessor
   end
 
   def grant_badges
-    return if @post.user.blank? || !Guardian.new.can_see?(@post)
+    return if @post.user.blank? || !Guardian.basic_user.can_see?(@post)
 
     BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
     if @has_oneboxes
