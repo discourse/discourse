@@ -1,21 +1,25 @@
 details {
   position: relative;
-  background-color: var(--primary-very-low);
-  padding: 0.25rem 0.75rem;
-  margin-bottom: 0.5rem;
 
-  &:not([open]) {
-    &:hover,
-    &:focus,
-    &:focus-within {
-      background-color: var(--d-hover);
+  .topic-body .cooked &,
+  .d-editor-preview & {
+    background-color: var(--primary-very-low);
+    padding: 0.25rem 0.75rem;
+    margin-bottom: 0.5rem;
+
+    &:not([open]) {
+      &:hover,
+      &:focus,
+      &:focus-within {
+        background-color: var(--d-hover);
+      }
     }
-  }
 
-  aside.quote .title,
-  blockquote,
-  code {
-    background-color: rgba(var(--primary-rgb), 0.05);
+    aside.quote .title,
+    blockquote,
+    code {
+      background-color: rgba(var(--primary-rgb), 0.05);
+    }
   }
 }
 
@@ -66,55 +70,58 @@ summary::-webkit-details-marker {
   display: none;
 }
 
-.elided {
-  background-color: unset;
-  padding: 0;
+.topic-body .cooked,
+.d-editor-preview {
+  .elided {
+    background-color: unset;
+    padding: 0;
 
-  &:not([open]) {
-    //specificity needed to overrule non-elided
-    &:hover,
-    &:focus,
-    &:focus-within {
-      background-color: unset;
+    &:not([open]) {
+      //specificity needed to overrule non-elided
+      &:hover,
+      &:focus,
+      &:focus-within {
+        background-color: unset;
+      }
+
+      summary:hover {
+        background: var(--d-hover);
+      }
     }
 
-    summary:hover {
-      background: var(--d-hover);
+    &[open] {
+      background: var(--primary-very-low);
+      padding: 0.5rem 0.75rem;
+      summary {
+        padding: 0;
+      }
     }
-  }
 
-  &[open] {
-    background: var(--primary-very-low);
-    padding: 0.5rem 0.75rem;
+    summary:before {
+      content: "" !important;
+      display: none;
+    }
+
     summary {
-      padding: 0;
-    }
-  }
+      @include unselectable;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0.5rem 0.75rem;
+      color: var(--primary-medium);
+      background: var(--primary-very-low);
+      width: min-content;
+      line-height: 1;
 
-  summary:before {
-    content: "" !important;
-    display: none;
-  }
-
-  summary {
-    @include unselectable;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0.5rem 0.75rem;
-    color: var(--primary-medium);
-    background: var(--primary-very-low);
-    width: min-content;
-    line-height: 1;
-
-    &:hover,
-    &:focus,
-    &:focus-within {
-      color: var(--primary);
-      cursor: pointer;
+      &:hover,
+      &:focus,
+      &:focus-within {
+        color: var(--primary);
+        cursor: pointer;
+      }
     }
   }
 }
