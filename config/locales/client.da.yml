@@ -689,7 +689,6 @@ da:
           imap_disable_confirm: "Hvis du deaktiverer IMAP, vil alle IMAP-indstillinger blive nulstillet, og den tilknyttede funktion vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
           prefill:
             title: "Forudfyld med indstillinger for:"
-            gmail: "GMail"
           credentials:
             title: "Legitimationsoplysninger"
             smtp_server: "SMTP-server"
@@ -3450,7 +3449,6 @@ da:
         one: "Dets synonym slettes også."
         other: "Dets %{count} synonymer slettes også."
       edit_tag: "Rediger mærke navn og beskrivelse"
-      description: "Beskrivelse"
       sort_by: "Sortér efter:"
       sort_by_count: "antal"
       sort_by_name: "navn"
@@ -3668,6 +3666,18 @@ da:
         typeMismatch:
           default: "Indtast venligst en gyldig værdi."
           email: "Indtast venligst en gyldig email adresse."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Enter"
+      edit:
+        modal:
+          cancel: "annuller"
+          create: "Gem"
+          reason: "hvorfor redigerer du?"
+      spreadsheet:
+        show: "Vis"
+        about: "Om"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:
@@ -3977,6 +3987,7 @@ da:
         change_settings_short: "Indstillinger"
         howto: "Hvordan installerer jeg plugins?"
         author: "Af %{author}"
+        learn_more: "Lær mere"
       backups:
         title: "Backups"
         menu:

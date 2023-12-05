@@ -739,7 +739,6 @@ lt:
           imap_mailbox_not_selected: "Šiai IMAP konfigūracijai turite pasirinkti pašto dėžutę arba pašto dėžutės nebus sinchronizuojamos!"
           prefill:
             title: "Užpildykite nustatymus:"
-            gmail: "Gmail"
           credentials:
             title: "Įgaliojimai"
             smtp_server: "SMTP serveris"
@@ -3360,7 +3359,6 @@ lt:
       delete_tag: "Ištrinti žymą"
       delete_confirm_no_topics: "Ar tikrai norite ištrinti šią žymą?"
       edit_tag: "Redaguoti žymos pavadinimą ir aprašymą"
-      description: "Aprašymas"
       sort_by: "Rūšiuoti pagal:"
       sort_by_count: "skaičių"
       sort_by_name: "vardą"
@@ -3555,6 +3553,18 @@ lt:
         typeMismatch:
           default: "Prašome įrašyti tinkamą reikšmę."
           email: "Prašom įrašyti teisingą elektroninį adresą."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Įeiti"
+      edit:
+        modal:
+          cancel: "atšaukti"
+          create: "Išsaugoti"
+          reason: "kodėl jūs redaguojate?"
+      spreadsheet:
+        show: "Rodyti"
+        about: "Apie"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     admin:
@@ -3833,6 +3843,7 @@ lt:
         change_settings_short: "Nustatymai"
         howto: "Kaip galiu instaliuoti plungin'us?"
         author: "Pagal %{author}"
+        learn_more: "Sužinoti daugiau"
       backups:
         title: "Atsarginės kopijos"
         menu:

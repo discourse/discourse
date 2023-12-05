@@ -675,8 +675,6 @@ id:
           imap_title: "IMAP"
           imap_additional_settings: "Pengaturan Tambahan"
           imap_settings_valid: "Pengaturan IMAP valid."
-          prefill:
-            gmail: "GMail"
           credentials:
             title: "Kredensial"
             smtp_server: "Server SMTP"
@@ -2058,6 +2056,18 @@ id:
           other: "Masukan harus lebih dari %{count}."
         patternMismatch: "Harap sesuaikan dengan format yang diminta."
         badInput: "Harap masukkan masukan yang valid."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Enter"
+      edit:
+        modal:
+          cancel: "batal"
+          create: "Simpan"
+          reason: "mengapa Anda menyunting?"
+      spreadsheet:
+        show: "Tunjukkan"
+        about: "Tentang"
   admin_js:
     admin:
       title: "Admin Discourse"

@@ -27,6 +27,7 @@ ro:
       channel_settings:
         edit: "Modifică"
         add: "Adaugă"
+        leave_groupchat_info: "Dacă părăsești această discuție de grup, nu vei mai avea acces la ea și nu vei mai primi notificări legate de ea. Pentru a reveni, va trebui să te re-invite un membru al discuției de grup."
         join: "Alătură-te"
         leave: "Părăsește"
       channel_delete:
@@ -134,6 +135,8 @@ ro:
         category_label: "Categorie"
         history_label: "Istoric"
         members_label: "Membri"
+      direct_messages:
+        close: "Închide această conversație personală"
       incoming_webhooks:
         back: "Înapoi"
         description: "Descriere"

@@ -626,8 +626,6 @@ zh_TW:
           imap_title: "IMAP"
           imap_additional_settings: "其他設定"
           imap_settings_valid: "IMAP 設定有效。"
-          prefill:
-            gmail: "Gmail"
           credentials:
             smtp_server: "SMTP 伺服器"
             smtp_port: "SMTP 通訊埠"
@@ -2758,7 +2756,6 @@ zh_TW:
       delete_confirm:
         other: "您確定要刪除此標籤並將它從%{count}個話題中移除嗎？"
       delete_confirm_no_topics: "您是否確定要刪除這個標籤？"
-      description: "描述"
       sort_by: "排序方式："
       sort_by_count: "總數"
       sort_by_name: "名稱"
@@ -2944,6 +2941,15 @@ zh_TW:
       errors:
         typeMismatch:
           default: "請輸入一個有效的值。"
+    table_builder:
+      edit:
+        modal:
+          cancel: "取消"
+          create: "保存"
+          reason: "你為什麼做編輯?"
+      spreadsheet:
+        show: "顯示"
+        about: "關於"
   admin_js:
     admin:
       title: "論壇管理員"
@@ -3174,6 +3180,7 @@ zh_TW:
         change_settings_short: "設定"
         howto: "如何安裝外掛?"
         author: "作者 %{author}"
+        learn_more: "了解更多"
       navigation_menu:
         sidebar: "側選單"
         legacy: "舊版"

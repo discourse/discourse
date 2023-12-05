@@ -734,7 +734,6 @@ nl:
           imap_mailbox_not_selected: "Je moet een mailbox selecteren voor deze IMAP-configuratie, anders worden er geen mailboxen gesynchroniseerd!"
           prefill:
             title: "Vooraf invullen met instellingen voor:"
-            gmail: "GMail"
           credentials:
             title: "Aanmeldgegevens"
             smtp_server: "SMTP-server"
@@ -2089,6 +2088,7 @@ nl:
       add_warning: "Dit is een officiële waarschuwing."
       toggle_whisper: "Fluisteren in-/uitschakelen"
       toggle_unlisted: "Onzichtbaar in-/uitschakelen"
+      insert_table: "Tabel invoegen"
       posting_not_on_topic: "Op welk topic wil je antwoorden?"
       saved_local_draft_tip: "lokaal opgeslagen"
       drafts_offline: "concepten offline"
@@ -3841,7 +3841,6 @@ nl:
         one: "Het synoniem wordt ook verwijderd."
         other: "De %{count} synoniemen worden ook verwijderd."
       edit_tag: "Tagnaam en -beschrijving bewerken"
-      description: "Beschrijving"
       sort_by: "Sorteren op:"
       sort_by_count: "aantal"
       sort_by_name: "naam"
@@ -4152,6 +4151,61 @@ nl:
           other: "De invoer moet groter zijn dan %{count}."
         patternMismatch: "Zorg dat je de gevraagde notatie gebruikt."
         badInput: "Voer een geldige invoer in."
+    table_builder:
+      title: "Tabelbouwer"
+      modal:
+        title: "Tabelbouwer"
+        create: "Tabel bouwen"
+        help:
+          title: "Gebruik van de spreadsheeteditor"
+          enter_key: "Enter"
+          tab_key: "Tab"
+          new_row: "aan het einde van een rij om een nieuwe rij in te voegen."
+          options: "Rechtsklik op cellen voor meer opties in een vervolgkeuzemenu."
+      edit:
+        btn_edit: "Tabel bewerken"
+        modal:
+          title: "Tabel bewerken"
+          cancel: "annuleren"
+          create: "Opslaan"
+          reason: "waarom bewerk je?"
+          trigger_reason: "Reden voor bewerking toevoegen"
+        default_edit_reason: "Tabel bijwerken met tabeleditor"
+      default_header:
+        col_1: "Kolom 1"
+        col_2: "Kolom 2"
+        col_3: "Kolom 3"
+        col_4: "Kolom 4"
+      spreadsheet:
+        no_records_found: "Geen records gevonden"
+        show: "Weergeven"
+        entries: "vermeldingen"
+        about: "Over"
+        prompts:
+          delete_selected_rows: "Weet je zeker dat je de geselecteerde rijen wilt verwijderen?"
+          delete_selected_cols: "Weet je zeker dat je de geselecteerde kolommen wilt verwijderen?"
+          will_destroy_merged_cells: "Hierdoor worden alle bestaande samengevoegde cellen vernietigd. Weet je het zeker?"
+          will_clear_search_results: "Hierdoor worden alle bestaande samengevoegde cellen vernietigd. Weet je het zeker?"
+          conflicts_with_merged_cells: "Er is een conflict met een andere samengevoegde cel"
+        invalid_merge_props: "Ongeldige samengevoegde eigenschappen"
+        cells_already_merged: "Cel is al samengevoegd"
+        no_cells_selected: "Geen cellen geselecteerd"
+        context_menu:
+          row:
+            before: "Nieuwe rij invoegen voor"
+            after: "Nieuwe rij invoegen na"
+            delete: "Geselecteerde rijen verwijderen"
+          col:
+            before: "Nieuwe kolom invoegen voor"
+            after: "Nieuwe kolom invoegen na"
+            delete: "Geselecteerde kolommen verwijderen"
+            rename: "Deze kolom hernoemen"
+          order:
+            ascending: "Oplopend sorteren"
+            descending: "Aflopend sorteren"
+          copy: "Kopiëren..."
+          paste: "Plakken..."
+          save: "Opslaan als..."
   admin_js:
     type_to_filter: "typ om te filteren…"
     admin:
@@ -4508,6 +4562,7 @@ nl:
         howto: "Hoe kan ik plug-ins installeren?"
         broken_route: "Kan link naar '%{name}' niet configureren. Zorg dat advertentieblockers zijn uitgeschakeld en probeer de pagina opnieuw te laden."
         author: "Van %{author}"
+        learn_more: "Meer informatie"
       navigation_menu:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"

@@ -661,7 +661,6 @@ vi:
           imap_mailbox_not_selected: "Bạn phải chọn Hộp thư cho cấu hình IMAP này nếu không sẽ không có hộp thư nào được đồng bộ hóa!"
           prefill:
             title: "Điền sẵn các cài đặt cho:"
-            gmail: "GMail"
           credentials:
             title: "Thông tin đăng nhập"
             smtp_server: "Máy chủ SMTP"
@@ -3382,7 +3381,6 @@ vi:
       delete_confirm_synonyms:
         other: "%{count} từ đồng nghĩa của nó cũng sẽ bị xóa."
       edit_tag: "Chỉnh sửa tên thẻ và mô tả"
-      description: "Mô tả"
       sort_by: "Xếp theo:"
       sort_by_count: "đếm"
       sort_by_name: "tên"
@@ -3590,6 +3588,18 @@ vi:
         typeMismatch:
           default: "Hãy nhập giá trị hợp lệ."
           email: "Vùi lòng nhập một thư điện tử hợp lệ."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Nhập"
+      edit:
+        modal:
+          cancel: "hủy"
+          create: "Lưu lại"
+          reason: "Tại sao bạn sửa"
+      spreadsheet:
+        show: "Hiển thị"
+        about: "Giới thiệu"
   admin_js:
     type_to_filter: "gõ vào bộ lọc…"
     admin:
@@ -3945,6 +3955,7 @@ vi:
         change_settings_short: "Cấu hình"
         howto: "Plugin cài như thế nào?"
         author: "Bởi %{author}"
+        learn_more: "Tìm hiểu thêm"
       navigation_menu:
         sidebar: "Thanh bên"
       backups:

@@ -784,7 +784,6 @@ ro:
           imap_mailbox_not_selected: "Trebuie să selectezi o cutie poștală pentru această configurație IMAP, altfel nicio cutie poștală nu va fi sincronizată!"
           prefill:
             title: "Pre-completare cu setări pentru:"
-            gmail: "Gmail"
           credentials:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
@@ -1752,6 +1751,7 @@ ro:
       add_warning: "Aceasta este o avertizare oficială."
       toggle_whisper: "Comută modul discret"
       toggle_unlisted: "Comută modul nelistat"
+      insert_table: "Inserează tabel"
       posting_not_on_topic: "În care subiect vrei să răspunzi?"
       saved_local_draft_tip: "salvat local"
       drafts_offline: "schiță offline"
@@ -2926,7 +2926,7 @@ ro:
         few: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
         other: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
       delete_confirm_no_topics: "Ești sigur că vrei să ștergi această etichetă?"
-      description: "Descriere"
+      description: "Descriere (max. 1 000 de caractere)"
       sort_by: "Sortat după:"
       sort_by_count: "contor"
       sort_by_name: "nume"
@@ -3079,6 +3079,63 @@ ro:
       errors:
         typeMismatch:
           default: "Introduceţi o valoare validă."
+    table_builder:
+      title: "Constructor de tabel"
+      modal:
+        title: "Constructor de tabel"
+        create: "Construiește tabel"
+        help:
+          title: "Folosind Editorul de foi de calcul"
+          enter_key: "Introdu"
+          tab_key: "Filă"
+          new_row: "la sfârșitul unui rând pentru a introduce un rând nou."
+          new_col: "la sfârșitul unei coloane pentru a introduce o coloană nouă."
+          options: "Dă clic dreapta pe celule pentru a accesa mai multe opțiuni într-un meniu derulant."
+        confirm_close: "Sigur vrei să închizi constructorul de tabel? Toate modificările nesalvate vor fi pierdute."
+      edit:
+        btn_edit: "Editează tabel"
+        modal:
+          title: "Editează tabel"
+          cancel: "anulează"
+          create: "Salvează"
+          reason: "de ce editezi?"
+          trigger_reason: "Adăugă motiv pentru editare"
+        default_edit_reason: "Actualizează tabel cu editor de tabele"
+      default_header:
+        col_1: "Coloana 1"
+        col_2: "Coloana 2"
+        col_3: "Coloana 3"
+        col_4: "Coloana 4"
+      spreadsheet:
+        no_records_found: "Nu s-a găsit nicio înregistrare"
+        show: "Arată"
+        entries: "intrări"
+        about: "Despre"
+        prompts:
+          delete_selected_rows: "Sigur vrei să ștergi rândurile selectate?"
+          delete_selected_cols: "Sigur vrei să ștergi coloanele selectate?"
+          will_destroy_merged_cells: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
+          will_clear_search_results: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
+          conflicts_with_merged_cells: "Există un conflict cu o altă celulă fuzionată"
+        invalid_merge_props: "Proprietăți fuzionate nevalide"
+        cells_already_merged: "Celulă deja fuzionată"
+        no_cells_selected: "Nicio celulă selectată"
+        context_menu:
+          row:
+            before: "Introdu un rând nou înainte"
+            after: "Introdu un rând nou după"
+            delete: "Șterge rândurile selectate"
+          col:
+            before: "Introdu o coloană nouă înainte"
+            after: "Introdu o coloană nouă după"
+            delete: "Șterge coloanele selectate"
+            rename: "Redenumește această coloană"
+          order:
+            ascending: "Ordine crescătoare"
+            descending: "Ordine descrescătoare"
+          copy: "Copiază..."
+          paste: "Lipește..."
+          save: "Salvează ca..."
   admin_js:
     admin:
       title: "Admin Discourse"
@@ -3265,9 +3322,9 @@ ro:
         change_settings_short: "Setări"
         howto: "Cum instalez un plugin?"
         official: "Modul Discourse oficial"
-        experimental: "Modul experimental"
         author: "De %{author}"
         experimental_badge: "experimental"
+        learn_more: "Află mai multe"
       backups:
         title: "Backup-uri"
         menu:
