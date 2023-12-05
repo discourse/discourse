@@ -84,7 +84,7 @@ class Guardian
   # categories or PMs but can read public topics.
   class BasicUser
     def blank?
-      false
+      true
     end
     def admin?
       false
@@ -141,6 +141,8 @@ class Guardian
   def initialize(user = nil, request = nil)
     @user = user.presence || AnonymousUser.new
     @request = request
+    @fake = @user.is_a?(AnonymousUser) || @user.is_a?(BasicUser)
+    @authenticated = !@user.is_a?(AnonymousUser)
   end
 
   def self.anon_user(request: nil)
@@ -152,7 +154,7 @@ class Guardian
   end
 
   def user
-    @user.presence
+    @fake ? nil : @user
   end
   alias current_user user
 
@@ -161,7 +163,7 @@ class Guardian
   end
 
   def authenticated?
-    @user.present?
+    @authenticated
   end
 
   def is_admin?
