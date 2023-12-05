@@ -63,7 +63,7 @@ RSpec.describe Report do
         # 60 complete days:
         30
           .times
-          .each_with_object(application_requests) do |i|
+          .each do |i|
             application_requests.concat(
               [
                 {
@@ -76,7 +76,7 @@ RSpec.describe Report do
           end
         30
           .times
-          .each_with_object(application_requests) do |i|
+          .each do |i|
             application_requests.concat(
               [
                 {
