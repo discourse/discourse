@@ -267,7 +267,9 @@ class Autospec::Manager
           if k.match(file)
             puts "@@@@@@@@@@@@ #{file} matched a reloader for #{runner}" if @debug
             runner.reload
+            # rubocop:disable Lint/NonLocalExitFromIterator
             return
+            # rubocop:enable Lint/NonLocalExitFromIterator
           end
         end
         # watchers
