@@ -788,6 +788,7 @@ cs:
         tags:
           title: Štítky
           description: "Když budou uživatelé přidáni do této skupiny, jejich nastavení oznámení kategorie bude nastaveno na tyto výchozí hodnoty. Poté je mohou změnit."
+          watching_first_post_tags_instructions: "Uživatelé budou informováni o prvním novém příspěvku v každém novém tématu s těmito štítky."
           regular_tags_instructions: "Pokud jsou tyto značky ztlumeny, budou odtlumeny pro členy skupiny. Uživatelé budou upozorněni, pokud jsou zmíněni nebo někdo na jim odpoví."
           muted_tags_instructions: "Uživatelé nebudou upozorněni na nic o nových tématech s těmito značkami."
         logs:
