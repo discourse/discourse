@@ -127,16 +127,16 @@ module Chat
       # future we may want to update this more frequently.
       updated_thread_ids = DB.query_single <<~SQL
         WITH updated_threads AS (
-            UPDATE chat_threads ct
-            SET replies_count = COALESCE(subquery.new_count, 0)
-            FROM (
-                SELECT cm.thread_id, COUNT(cm.*) - 1 AS new_count
-                FROM chat_threads
-                LEFT JOIN chat_messages cm ON cm.thread_id = chat_threads.id AND cm.deleted_at IS NULL
-                GROUP BY cm.thread_id
-            ) AS subquery
-            WHERE ct.id = subquery.thread_id AND ct.replies_count IS DISTINCT FROM COALESCE(subquery.new_count, 0)
-            RETURNING ct.id AS thread_id
+          UPDATE chat_threads ct
+          SET replies_count = COALESCE(subquery.new_count, 0)
+          FROM (
+            SELECT cm.thread_id, COUNT(cm.*) - 1 AS new_count
+            FROM chat_threads
+            LEFT JOIN chat_messages cm ON cm.thread_id = chat_threads.id AND cm.deleted_at IS NULL
+            GROUP BY cm.thread_id
+          ) AS subquery
+          WHERE ct.id = subquery.thread_id AND ct.replies_count IS DISTINCT FROM COALESCE(subquery.new_count, 0)
+          RETURNING ct.id AS thread_id
         )
         SELECT thread_id
         FROM updated_threads;
