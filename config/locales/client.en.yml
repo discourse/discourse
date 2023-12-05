@@ -4661,6 +4661,7 @@ en:
 
       reports:
         title: "List of available reports"
+        meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
 
       dashboard:
         title: "Dashboard"
