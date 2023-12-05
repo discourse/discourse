@@ -1333,7 +1333,7 @@ RSpec.describe Report do
 
         expect(page_view_anon_report[:color]).to eql("#9BC53D")
         expect(page_view_anon_report[:data][0][:y]).to eql(1)
-      ensure
+      
       end
     end
   end
@@ -1378,7 +1378,7 @@ RSpec.describe Report do
 
         expect(user_api_report[:color]).to eql("#9BC53D")
         expect(user_api_report[:data][0][:y]).to eql(1)
-      ensure
+      
       end
     end
   end
