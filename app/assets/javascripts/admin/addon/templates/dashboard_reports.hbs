@@ -17,16 +17,16 @@
 
     <ul class="reports-list">
       {{#each this.filteredReports as |report|}}
-      <li class="report">
-        <LinkTo @route="adminReports.show" @model={{report.type}}>
-          <h3 class="report-title">{{report.title}}</h3>
-          {{#if report.description}}
-          <p class="report-description">
-            {{report.description}}
-          </p>
-          {{/if}}
-        </LinkTo>
-      </li>
+        <li class="report">
+          <LinkTo @route="adminReports.show" @model={{report.type}}>
+            <h3 class="report-title">{{report.title}}</h3>
+            {{#if report.description}}
+            <p class="report-description">
+              {{report.description}}
+            </p>
+            {{/if}}
+          </LinkTo>
+        </li>
       {{/each}}
     </ul>
   </div>
