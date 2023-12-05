@@ -1294,7 +1294,8 @@ class UsersController < ApplicationController
 
     if type.blank? || type == "system"
       upload_id = nil
-    elsif !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, user)
+    elsif !user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map) &&
+          !user.is_system_user?
       return render json: failed_json, status: 422
     else
       upload_id = params[:upload_id]

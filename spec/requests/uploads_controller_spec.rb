@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UploadsController do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   describe "#create" do
     it "requires you to be logged in" do
@@ -132,24 +132,21 @@ RSpec.describe UploadsController do
         )
       end
 
-      it "ensures allow_uploaded_avatars is enabled when uploading an avatar" do
-        SiteSetting.allow_uploaded_avatars = "disabled"
+      it "ensures user belongs to uploaded_avatars_allowed_groups when uploading an avatar" do
+        SiteSetting.uploaded_avatars_allowed_groups = "13"
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(422)
+
+        user.update!(trust_level: 3)
+        Group.refresh_automatic_groups!
+        post "/uploads.json", params: { file: logo, type: "avatar" }
+        expect(response.status).to eq(200)
       end
 
       it "ensures discourse_connect_overrides_avatar is not enabled when uploading an avatar" do
         SiteSetting.discourse_connect_overrides_avatar = true
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(422)
-      end
-
-      it "always allows admins to upload avatars" do
-        sign_in(Fabricate(:admin))
-        SiteSetting.allow_uploaded_avatars = "disabled"
-
-        post "/uploads.json", params: { file: logo, type: "avatar" }
-        expect(response.status).to eq(200)
       end
 
       it "allows staff to upload any file in PM" do

@@ -100,7 +100,7 @@ RSpec.describe ComposerMessagesFinder do
 
   describe ".check_avatar_notification" do
     let(:finder) { ComposerMessagesFinder.new(user, composer_action: "createTopic") }
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     context "with success" do
       let!(:message) { finder.check_avatar_notification }
@@ -143,8 +143,15 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "doesn't notify users if 'allow_uploaded_avatars' setting is disabled" do
-      SiteSetting.allow_uploaded_avatars = "disabled"
+      user.update!(trust_level: 3)
+      Group.refresh_automatic_groups!
+      user.reload
+
+      SiteSetting.uploaded_avatars_allowed_groups = ""
       expect(finder.check_avatar_notification).to be_blank
+
+      SiteSetting.uploaded_avatars_allowed_groups = "13"
+      expect(finder.check_avatar_notification).to be_present
     end
   end
 
