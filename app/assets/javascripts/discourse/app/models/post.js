@@ -392,6 +392,10 @@ const Post = RestModel.extend({
       type: "PUT",
     });
   },
+
+  get topicNotificationLevel() {
+    return this.topic.details.notification_level;
+  },
 });
 
 Post.reopenClass({
