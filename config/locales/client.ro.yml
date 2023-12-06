@@ -365,6 +365,7 @@ ro:
       copied: "copiat!"
       copy: "copiază cod în memoria temporară"
       fullscreen: "afișează cod în ecran complet"
+      view_code: "Vezi cod"
     drafts:
       label: "Ciorne"
       label_with_count: "Ciorne (%{count})"
@@ -783,7 +784,6 @@ ro:
           imap_mailbox_not_selected: "Trebuie să selectezi o cutie poștală pentru această configurație IMAP, altfel nicio cutie poștală nu va fi sincronizată!"
           prefill:
             title: "Pre-completare cu setări pentru:"
-            gmail: "Gmail"
           credentials:
             title: "Date de conectare"
             smtp_server: "Server SMTP"
@@ -1245,6 +1245,7 @@ ro:
       passkeys:
         save: "Salvare"
         added_prefix: "Adăugat"
+        confirm_button: "sau folosește o cheie de acces"
       change_about:
         title: "Schimbare date personale"
         error: "A apărut o eroare la schimbarea acestei valori."
@@ -1318,14 +1319,14 @@ ro:
           generic: "Contul tău %{provider} va fi folosit pentru autentificare."
       name:
         title: "Nume"
-        instructions: "Numele tău complet (opțional)"
-        instructions_required: "Numele tău complet"
+        instructions: "Numele tău complet (opțional)."
+        instructions_required: "Numele tău complet."
         required: "Te rugăm să introduci un nume"
         too_short: "Numele este prea scurt."
         ok: "Numele tău este OK."
       username:
         title: "Nume utilizator"
-        instructions: "unic, fără spații, scurt"
+        instructions: "Unic, fără spații, scurt."
         short_instructions: "Ceilalți te pot menționa ca @%{username}."
         available: "Numele de utilizator este disponibil."
         not_available: "Nu este disponibil. Încerci %{suggestion}?"
@@ -1457,6 +1458,8 @@ ro:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"
           error: "Scuze, fișierul trebuie să fie în format CSV."
+      confirm_access:
+        incorrect_passkey: "Această cheie de acces este incorectă."
       password:
         title: "Parolă"
         too_short: "Parola este prea scurtă."
@@ -1464,7 +1467,7 @@ ro:
         same_as_username: "Parolă identică cu numele de utilizator"
         same_as_email: "Parolă identică cu adresa de email"
         ok: "Parola dumneavoastră este OK."
-        instructions: "minimum %{count} caractere"
+        instructions: "Minim %{count} caractere."
         required: "Vă rugăm să introduceți o parolă"
       summary:
         title: "Sumar"
@@ -1574,6 +1577,7 @@ ro:
       enabled: "Acest site se află în modul exclusiv-citire. Te rugăm să continui să răsfoiești, însă sunt dezactivate acțiunile de răspuns, apreciere și altele. "
       login_disabled: "Autentificarea este dezactivată când siteul este în modul exclusiv-citire."
       logout_disabled: "Deautentificarea este dezactivată cât timp site-ul este în modul exclusiv-citire."
+    learn_more: "Află mai multe…"
     mute: Blochează
     unmute: Deblochează
     last_post: Postat
@@ -1623,6 +1627,7 @@ ro:
       title: "Resetare parolă"
       action: "Mi-am uitat parola"
       invite: "Introdu numele de utilizator sau adresa de email și-ți vom trimite un email pentru resetarea parolei."
+      email-username: "E-mail sau nume de utilizator"
       reset: "Resetare parolă"
       complete_username: "Dacă contul corespunde cu numele de utilizator <b>%{username}</b>, ar trebui să primești în scurt timp un email cu instrucțiunile de resetare a parolei."
       complete_email: "Dacă un cont corespunde cu <b>%{email}</b>, ar trebui să primești un email în cel mai scurt timp cu instrucțiunile de resetare a parolei."
@@ -1746,13 +1751,15 @@ ro:
       add_warning: "Aceasta este o avertizare oficială."
       toggle_whisper: "Comută modul discret"
       toggle_unlisted: "Comută modul nelistat"
+      insert_table: "Inserează tabel"
       posting_not_on_topic: "În care subiect vrei să răspunzi?"
       saved_local_draft_tip: "salvat local"
       drafts_offline: "schiță offline"
       group_mentioned:
-        one: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>o persoană</a> – ești sigur?"
-        few: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>%{count} persoane</a> – ești sigur?"
-        other: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>%{count} de persoane</a> – ești sigur?"
+        one: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoană</a>."
+        few: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoane</a>."
+        other: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} de persoane</a>."
+      larger_group_mentioned: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoane</a>. Sigur faci asta?"
       duplicate_link: "Se pare că link-ul dv. către <b>%{domain}</b> a fost deja postat în cadrul discuției de către <b>@%{username}</b> în <a href='%{post_url}'> un răspuns %{ago} în urmă</a> – sunteți sigur că vreți să îl postați din nou?"
       error:
         title_missing: "Trebuie un titlu"
@@ -1878,6 +1885,7 @@ ro:
         replied: '%{username} ți-a răspuns la "%{topic}" - %{site_title}'
         posted: '%{username} a postat în "%{topic}" - %{site_title}'
         linked: '%{username} a pus un link către postarea ta din "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} a publicat în discuția „%{topic}” - %{site_title}'
       titles:
         bookmark_reminder: "memento semn de carte"
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
@@ -2918,7 +2926,7 @@ ro:
         few: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
         other: "Ești sigur că vrei să ștergi această etichetă și să o scoți din %{count} subiecte care o folosesc?"
       delete_confirm_no_topics: "Ești sigur că vrei să ștergi această etichetă?"
-      description: "Descriere"
+      description: "Descriere (max. 1 000 de caractere)"
       sort_by: "Sortat după:"
       sort_by_count: "contor"
       sort_by_name: "nume"
@@ -2998,6 +3006,8 @@ ro:
       no_likes_title: "Încă nu ți-a plăcut niciun subiect"
       no_likes_body: "O modalitate excelentă de a intra și de a începe să contribui este să începi să citești conversațiile care au avut deja loc și să selectezi %{heartIcon} din postările care îți plac!"
       no_topics_title: "Încă nu aţi început niciun subiect"
+    fullscreen_table:
+      view_table: "Vezi tabel"
     sidebar:
       unread_count:
         one: "%{count} necitit"
@@ -3069,6 +3079,63 @@ ro:
       errors:
         typeMismatch:
           default: "Introduceţi o valoare validă."
+    table_builder:
+      title: "Constructor de tabel"
+      modal:
+        title: "Constructor de tabel"
+        create: "Construiește tabel"
+        help:
+          title: "Folosind Editorul de foi de calcul"
+          enter_key: "Introdu"
+          tab_key: "Filă"
+          new_row: "la sfârșitul unui rând pentru a introduce un rând nou."
+          new_col: "la sfârșitul unei coloane pentru a introduce o coloană nouă."
+          options: "Dă clic dreapta pe celule pentru a accesa mai multe opțiuni într-un meniu derulant."
+        confirm_close: "Sigur vrei să închizi constructorul de tabel? Toate modificările nesalvate vor fi pierdute."
+      edit:
+        btn_edit: "Editează tabel"
+        modal:
+          title: "Editează tabel"
+          cancel: "anulează"
+          create: "Salvează"
+          reason: "de ce editezi?"
+          trigger_reason: "Adăugă motiv pentru editare"
+        default_edit_reason: "Actualizează tabel cu editor de tabele"
+      default_header:
+        col_1: "Coloana 1"
+        col_2: "Coloana 2"
+        col_3: "Coloana 3"
+        col_4: "Coloana 4"
+      spreadsheet:
+        no_records_found: "Nu s-a găsit nicio înregistrare"
+        show: "Arată"
+        entries: "intrări"
+        about: "Despre"
+        prompts:
+          delete_selected_rows: "Sigur vrei să ștergi rândurile selectate?"
+          delete_selected_cols: "Sigur vrei să ștergi coloanele selectate?"
+          will_destroy_merged_cells: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
+          will_clear_search_results: "Această acțiune va distruge toate celulele existente fuzionate. Sigur?"
+          conflicts_with_merged_cells: "Există un conflict cu o altă celulă fuzionată"
+        invalid_merge_props: "Proprietăți fuzionate nevalide"
+        cells_already_merged: "Celulă deja fuzionată"
+        no_cells_selected: "Nicio celulă selectată"
+        context_menu:
+          row:
+            before: "Introdu un rând nou înainte"
+            after: "Introdu un rând nou după"
+            delete: "Șterge rândurile selectate"
+          col:
+            before: "Introdu o coloană nouă înainte"
+            after: "Introdu o coloană nouă după"
+            delete: "Șterge coloanele selectate"
+            rename: "Redenumește această coloană"
+          order:
+            ascending: "Ordine crescătoare"
+            descending: "Ordine descrescătoare"
+          copy: "Copiază..."
+          paste: "Lipește..."
+          save: "Salvează ca..."
   admin_js:
     admin:
       title: "Admin Discourse"
@@ -3090,8 +3157,9 @@ ro:
         installed_version: "Instalată"
         latest_version: "Ultima"
         new_features:
-          dismiss: "Înlătură"
-          learn_more: "Află mai multe"
+          title: "Ce este nou"
+          previous_announcements: "Poți vedea anunțurile anterioare privind noile caracteristici pe <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          learn_more: "Află mai multe..."
         last_checked: "Ultima verificare"
         refresh_problems: "Reîmprospătează"
         no_problems: "Nu a apărut nicio problemă."
@@ -3253,6 +3321,10 @@ ro:
         not_enabled: "N"
         change_settings_short: "Setări"
         howto: "Cum instalez un plugin?"
+        official: "Modul Discourse oficial"
+        author: "De %{author}"
+        experimental_badge: "experimental"
+        learn_more: "Află mai multe"
       backups:
         title: "Backup-uri"
         menu:

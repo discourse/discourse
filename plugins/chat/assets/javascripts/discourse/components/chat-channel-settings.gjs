@@ -9,6 +9,8 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import categoryBadge from "discourse/helpers/category-badge";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import icon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
@@ -29,12 +31,14 @@ const NOTIFICATION_LEVELS = [
 export default class ChatAboutScreen extends Component {
   @service chatApi;
   @service chatGuardian;
+  @service chatChannelsManager;
   @service currentUser;
   @service siteSettings;
   @service dialog;
   @service modal;
   @service site;
   @service toasts;
+  @service router;
 
   notificationLevels = NOTIFICATION_LEVELS;
 
@@ -310,6 +314,12 @@ export default class ChatAboutScreen extends Component {
   }
 
   @action
+  onLeaveChannel(channel) {
+    this.chatChannelsManager.remove(channel);
+    return this.router.transitionTo("chat");
+  }
+
+  @action
   onEditChannelDescription() {
     return this.modal.show(ChatModalEditChannelDescription, {
       model: this.args.channel,
@@ -573,6 +583,7 @@ export default class ChatAboutScreen extends Component {
             <:action>
               <ToggleChannelMembershipButton
                 @channel={{@channel}}
+                @onLeave={{this.onLeaveChannel}}
                 @options={{hash
                   joinClass="btn-primary"
                   leaveClass="btn-danger"
@@ -582,6 +593,12 @@ export default class ChatAboutScreen extends Component {
               />
             </:action>
           </section.row>
+          {{#if @channel.chatable.group}}
+            <div class="chat-channel-settings__leave-info">
+              {{icon "exclamation-triangle"}}
+              {{i18n "chat.channel_settings.leave_groupchat_info"}}
+            </div>
+          {{/if}}
         </form.section>
       </ChatForm>
     </div>

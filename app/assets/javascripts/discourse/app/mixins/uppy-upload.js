@@ -397,7 +397,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
         }
 
-        return ajax(getUrl(`${this.uploadRootPath}/generate-presigned-put`), {
+        return ajax(`${this.uploadRootPath}/generate-presigned-put`, {
           type: "POST",
           data,
         })
@@ -469,7 +469,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _completeExternalUpload(file) {
-    return ajax(getUrl(`${this.uploadRootPath}/complete-external-upload`), {
+    return ajax(`${this.uploadRootPath}/complete-external-upload`, {
       type: "POST",
       data: deepMerge(
         { unique_identifier: file.meta.uniqueUploadIdentifier },

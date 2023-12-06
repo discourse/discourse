@@ -113,6 +113,18 @@ module ChatSpecHelpers
     service_failed!(result) if result.failure?
     result
   end
+
+  def create_draft(channel, thread: nil, user: Discourse.system_user, data: { message: "draft" })
+    result =
+      ::Chat::UpsertDraft.call(
+        guardian: user.guardian,
+        channel_id: channel.id,
+        thread_id: thread&.id,
+        data: data.to_json,
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
 end
 
 RSpec.configure do |config|

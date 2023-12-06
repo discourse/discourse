@@ -412,6 +412,7 @@ it:
       quote:
         original_channel: 'Inviato in origine in <a href="%{channelLink}">#%{channel}</a>'
         copy_success: "Citazione della chat copiata negli appunti"
+        default_thread_title: "Thread"
       notification_levels:
         never: "Mai"
         mention: "Solo per le menzioni"
@@ -457,6 +458,7 @@ it:
         new: "Crea una chat personale"
         create: "Vai"
         leave: "Lascia questa chat personale"
+        close: "Chiudi questa chat personale"
         cannot_create: "Spiacenti, non puoi inviare messaggi diretti."
       incoming_webhooks:
         back: "Indietro"

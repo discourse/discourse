@@ -166,6 +166,8 @@ ja:
         other: "および他 %{count} 人"
     summaries:
       no_targets: "選択された期間中にメッセージはありませんでした。"
+    transcript:
+      default_thread_title: "スレッド"
   discourse_push_notifications:
     popup:
       chat_mention:

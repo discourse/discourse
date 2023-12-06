@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-private-routing-service */
 import { setOwner } from "@ember/application";
 import EmberObject from "@ember/object";
 import { next, schedule } from "@ember/runloop";
@@ -38,6 +39,9 @@ const SERVER_SIDE_ONLY = [
 // that we show a little bit of the post text even on mobile devices instead of
 // scrolling to "suggested topics".
 const JUMP_END_BUFFER = 250;
+
+const ALLOWED_CANONICAL_PARAMS = ["page"];
+const TRAILING_SLASH_REGEX = /\/$/;
 
 export function rewritePath(path) {
   const params = path.split("?");
@@ -158,6 +162,8 @@ const DiscourseURL = EmberObject.extend({
     if (path.startsWith("#")) {
       path = this.router.currentURL.replace(/#.*$/, "") + path;
     }
+
+    path = withoutPrefix(path);
 
     if (this.router.currentURL !== path) {
       // Always use replaceState in the next runloop to prevent weird routes changing
@@ -502,6 +508,24 @@ export function getEditCategoryUrl(category, subcategories, tab) {
     url += `/${tab}`;
   }
   return getURL(url);
+}
+
+export function getCanonicalUrl(absoluteUrl) {
+  const canonicalUrl = new URL(absoluteUrl);
+  canonicalUrl.pathname = canonicalUrl.pathname.replace(
+    TRAILING_SLASH_REGEX,
+    ""
+  );
+
+  const allowedSearchParams = new URLSearchParams();
+  for (const [key, value] of canonicalUrl.searchParams) {
+    if (ALLOWED_CANONICAL_PARAMS.includes(key)) {
+      allowedSearchParams.append(key, value);
+    }
+  }
+  canonicalUrl.search = allowedSearchParams.toString();
+
+  return canonicalUrl.toString();
 }
 
 export default _urlInstance;

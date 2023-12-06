@@ -34,11 +34,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     });
     await settled();
 
-    assert.ok(
-      query(".dialog-overlay").offsetWidth > 0,
-      true,
-      "overlay is visible"
-    );
+    assert.true(query(".dialog-overlay").offsetWidth > 0, "overlay is visible");
     assert.strictEqual(
       query(".dialog-body").innerText.trim(),
       "This is an error",
@@ -79,11 +75,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     });
     await settled();
 
-    assert.ok(
-      query(".dialog-overlay").offsetWidth > 0,
-      true,
-      "overlay is visible"
-    );
+    assert.true(query(".dialog-overlay").offsetWidth > 0, "overlay is visible");
     assert.strictEqual(
       query(".dialog-body").innerText.trim(),
       "This is an error",

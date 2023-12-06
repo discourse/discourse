@@ -10,6 +10,7 @@ import getURL from "discourse-common/lib/get-url";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 const STAFF_GROUP_NAME = "staff";
+const CATEGORY_ASYNC_SEARCH_CACHE = {};
 
 const Category = RestModel.extend({
   permissions: null,
@@ -487,6 +488,22 @@ Category.reopenClass({
     return category;
   },
 
+  async asyncFindBySlugPathWithID(slugPathWithID) {
+    const result = await ajax("/categories/find", {
+      data: {
+        category_slug_path_with_id: slugPathWithID,
+      },
+    });
+
+    if (result["ancestors"]) {
+      result["ancestors"].map((category) =>
+        Site.current().updateCategory(category)
+      );
+    }
+
+    return Site.current().updateCategory(result.category);
+  },
+
   findBySlugPathWithID(slugPathWithID) {
     let parts = slugPathWithID.split("/").filter(Boolean);
     // slugs found by star/glob pathing in ember do not automatically url decode - ensure that these are decoded
@@ -657,18 +674,19 @@ Category.reopenClass({
   async asyncSearch(term, opts) {
     opts ||= {};
 
-    const result = await ajax("/categories/search", {
-      data: {
-        term,
-        parent_category_id: opts.parentCategoryId,
-        include_uncategorized: opts.includeUncategorized,
-        select_category_ids: opts.selectCategoryIds,
-        reject_category_ids: opts.rejectCategoryIds,
-        include_subcategories: opts.includeSubcategories,
-        prioritized_category_id: opts.prioritizedCategoryId,
-        limit: opts.limit,
-      },
-    });
+    const data = {
+      term,
+      parent_category_id: opts.parentCategoryId,
+      include_uncategorized: opts.includeUncategorized,
+      select_category_ids: opts.selectCategoryIds,
+      reject_category_ids: opts.rejectCategoryIds,
+      include_subcategories: opts.includeSubcategories,
+      prioritized_category_id: opts.prioritizedCategoryId,
+      limit: opts.limit,
+    };
+
+    const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=
+      await ajax("/categories/search", { data }));
 
     return result["categories"].map((category) =>
       Site.current().updateCategory(category)

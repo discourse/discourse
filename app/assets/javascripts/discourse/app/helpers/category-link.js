@@ -1,5 +1,6 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import categoryVariables from "discourse/helpers/category-variables";
 import { isRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -31,6 +32,7 @@ export function addExtraIconRenderer(renderer) {
     @param {Boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
     @param {Boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
     @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
+    @param {Boolean} [opts.previewColor] If true, category color will be set as an inline style.
 **/
 export function categoryBadgeHTML(category, opts) {
   const { site, siteSettings } = helperContext();
@@ -74,6 +76,9 @@ export function categoryLinkHTML(category, options) {
     if (options.link !== undefined) {
       categoryOptions.link = options.link;
     }
+    if (options.previewColor) {
+      categoryOptions.previewColor = true;
+    }
     if (options.extraClasses) {
       categoryOptions.extraClasses = options.extraClasses;
     }
@@ -98,7 +103,7 @@ function buildTopicCount(count) {
 }
 
 export function defaultCategoryLinkRenderer(category, opts) {
-  let descriptionText = get(category, "description_text");
+  let descriptionText = escapeExpression(get(category, "description_text"));
   let restricted = get(category, "read_restricted");
   let url = opts.url
     ? opts.url
@@ -133,6 +138,11 @@ export function defaultCategoryLinkRenderer(category, opts) {
     ${dataAttributes} 
     data-drop-close="true" 
     class="${classNames}" 
+    ${
+      opts.previewColor
+        ? `style="--category-badge-color: #${category.color}"`
+        : ""
+    }
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
 
@@ -171,5 +181,9 @@ export function defaultCategoryLinkRenderer(category, opts) {
       })}
       </span>`;
   }
-  return `<${tagName} class="badge-category__wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
+
+  const style = categoryVariables(category);
+  const extraAttrs = style.string ? `style="${style}"` : "";
+
+  return `<${tagName} class="badge-category__wrapper ${extraClasses}" ${extraAttrs} ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }

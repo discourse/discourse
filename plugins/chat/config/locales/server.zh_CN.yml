@@ -55,6 +55,7 @@ zh_CN:
   chat:
     deleted_chat_username: 已删除
     errors:
+      users_cant_be_added_to_channel: "无法将用户添加到此频道。"
       channel_exists_for_category: "此类别和名称的频道已经存在"
       channel_new_message_disallowed:
         archived: "该频道已被归档，无法发送新消息"
@@ -129,6 +130,8 @@ zh_CN:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        other: "%{inviting_user} 已邀请 %{invited_users}。"
       archive:
         first_post_raw: "此话题是[%{channel_name}](%{channel_url})聊天频道的归档。"
       messages_moved:
@@ -174,6 +177,8 @@ zh_CN:
         other: "和其他 %{count} 人"
     summaries:
       no_targets: "在所选时间段内没有消息。"
+    transcript:
+      default_thread_title: "对话"
   discourse_push_notifications:
     popup:
       chat_mention:

@@ -571,7 +571,7 @@ be:
         cancel: "адмяніць"
       name:
         title: "Імя"
-        instructions_required: "Ваша поўнае імя"
+        instructions_required: "Ваша поўнае імя."
         too_short: "Ваша імя занадта кароткае"
         ok: "Ваша імя выглядае добра"
       username:
@@ -1312,7 +1312,6 @@ be:
       tags: "тэгі"
       choose_for_topic: "дадатковыя тэгі"
       add_synonyms: "дадаць"
-      description: "апісанне"
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
@@ -1418,6 +1417,14 @@ be:
         typeMismatch:
           default: "Калі ласка, увядзіце карэктнае значэнне."
           email: "Калі ласка, увядзіце верны email."
+    table_builder:
+      edit:
+        modal:
+          cancel: "адмена"
+          create: "захаваць"
+          reason: "чаму Вы рэдагуеце паведамленне?"
+      spreadsheet:
+        about: "Аб тэме"
   admin_js:
     admin:
       moderator: "Мадэратар"
@@ -1438,6 +1445,8 @@ be:
         version_check_pending: "Здаецца, Вы нядаўна здзейснілі абнаўлення. Выдатна!"
         installed_version: "устаноўленая"
         latest_version: "апошняя"
+        new_features:
+          learn_more: "Даведацца больш ..."
         last_checked: "апошняя праверка"
         refresh_problems: "абнавіць"
         no_problems: "Не выяўлена ніякіх праблем."

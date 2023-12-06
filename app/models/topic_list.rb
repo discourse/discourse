@@ -40,7 +40,6 @@ class TopicList
     :filter,
     :for_period,
     :per_page,
-    :top_tags,
     :current_user,
     :tags,
     :shared_drafts,
@@ -78,7 +77,7 @@ class TopicList
 
   def categories
     @categories ||=
-      topics.map { |t| [t.category, t.category&.parent_category] }.uniq.flatten.compact
+      topics.map { |t| [t.category&.parent_category, t.category] }.uniq.flatten.compact
   end
 
   def load_topics

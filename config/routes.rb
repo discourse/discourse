@@ -320,8 +320,7 @@ Discourse::Application.routes.draw do
       get "dashboard/moderation" => "dashboard#moderation"
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
-      get "dashboard/new-features" => "dashboard#new_features"
-      put "dashboard/mark-new-features-as-seen" => "dashboard#mark_new_features_as_seen"
+      get "dashboard/whats-new" => "dashboard#new_features"
 
       resources :dashboard, only: [:index] do
         collection { get "problems" }
@@ -1161,6 +1160,7 @@ Discourse::Application.routes.draw do
 
     resources :categories, except: %i[show new edit]
     post "categories/reorder" => "categories#reorder"
+    get "categories/find" => "categories#find"
     get "categories/search" => "categories#search"
 
     scope path: "category/:category_id" do

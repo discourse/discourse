@@ -186,6 +186,17 @@ RSpec.describe Post do
           expect(post.with_secure_uploads?).to eq(true)
         end
 
+        context "when the topic is deleted" do
+          before do
+            topic.trash!
+            post.reload
+          end
+
+          it "returns true" do
+            expect(post.with_secure_uploads?).to eq(true)
+          end
+        end
+
         context "if secure_uploads_pm_only" do
           before { SiteSetting.secure_uploads_pm_only = true }
 
@@ -200,6 +211,14 @@ RSpec.describe Post do
 
         it "returns true" do
           expect(post.with_secure_uploads?).to eq(true)
+        end
+
+        context "when the topic is deleted" do
+          before { topic.trash! }
+
+          it "returns true" do
+            expect(post.with_secure_uploads?).to eq(true)
+          end
         end
 
         context "if secure_uploads_pm_only" do
@@ -1628,6 +1647,7 @@ RSpec.describe Post do
 
   describe "uploads" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
+    fab!(:video_upload_2) { Fabricate(:upload, extension: "mp4") }
     fab!(:image_upload) { Fabricate(:upload) }
     fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
     fab!(:attachment_upload) { Fabricate(:upload, extension: "csv") }
@@ -1636,6 +1656,7 @@ RSpec.describe Post do
 
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
+    let(:video_2_url) { "#{base_url}#{video_upload_2.url}" }
     let(:audio_url) { "#{base_url}#{audio_upload.url}" }
 
     let(:raw_multiple) { <<~RAW }
@@ -1653,6 +1674,16 @@ RSpec.describe Post do
         <source src="#{audio_url}">
         <a href="#{audio_url}">#{audio_url}</a>
       </audio>
+
+      <div class="video-placeholder-container" data-video-src="#{video_2_url}" dir="ltr" style="cursor: pointer;">
+        <div class="video-placeholder-wrapper">
+          <div class="video-placeholder-overlay">
+            <svg class="fa d-icon d-icon-play svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
+              <use href="#play"></use>
+            </svg>
+          </div>
+        </div>
+      </div>
       RAW
 
     let(:post) { Fabricate(:post, raw: raw_multiple) }
@@ -1661,7 +1692,7 @@ RSpec.describe Post do
       post.link_post_uploads
 
       post.trash!
-      expect(UploadReference.count).to eq(6)
+      expect(UploadReference.count).to eq(7)
 
       post.destroy!
       expect(UploadReference.count).to eq(0)
@@ -1673,6 +1704,7 @@ RSpec.describe Post do
 
         expect(UploadReference.where(target: post).pluck(:upload_id)).to contain_exactly(
           video_upload.id,
+          video_upload_2.id,
           image_upload.id,
           audio_upload.id,
           attachment_upload.id,
@@ -1901,6 +1933,7 @@ RSpec.describe Post do
       upload5 = Fabricate(:upload)
       upload6 = Fabricate(:video_upload)
       upload7 = Fabricate(:upload, extension: "vtt")
+      upload8 = Fabricate(:video_upload)
 
       set_cdn_url "https://awesome.com/somepath"
 
@@ -1920,6 +1953,16 @@ RSpec.describe Post do
         <source src="#{Discourse.base_url}#{upload6.url}" type="video/mp4" />
         <track src="#{Discourse.base_url}#{upload7.url}" label="English" kind="subtitles" srclang="en" default />
       </video>
+
+      <div class="video-placeholder-container" data-video-src="#{Discourse.base_url}#{upload8.url}" dir="ltr" style="cursor: pointer;">
+        <div class="video-placeholder-wrapper">
+          <div class="video-placeholder-overlay">
+            <svg class="fa d-icon d-icon-play svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
+              <use href="#play"></use>
+            </svg>
+          </div>
+        </div>
+      </div>
       RAW
 
       urls = []
@@ -1938,6 +1981,7 @@ RSpec.describe Post do
         "#{Discourse.base_url}#{upload5.url}",
         "#{Discourse.base_url}#{upload6.url}",
         "#{Discourse.base_url}#{upload7.url}",
+        "#{Discourse.base_url}#{upload8.url}",
       )
 
       expect(paths).to contain_exactly(
@@ -1948,6 +1992,7 @@ RSpec.describe Post do
         upload5.url,
         upload6.url,
         upload7.url,
+        upload8.url,
       )
     end
 

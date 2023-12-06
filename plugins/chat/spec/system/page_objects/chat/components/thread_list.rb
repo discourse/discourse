@@ -43,10 +43,6 @@ module PageObjects
           ".chat-thread-list-item__last-reply-timestamp .relative-date[data-time='#{(last_reply.created_at.iso8601.to_time.to_f * 1000).to_i}']"
         end
 
-        def has_no_unread_item?(id)
-          component.has_no_css?(item_by_id_selector(id) + ".-is-unread")
-        end
-
         def has_unread_item?(id, count: nil)
           if count.nil?
             component.has_css?(item_by_id_selector(id) + ".-is-unread")

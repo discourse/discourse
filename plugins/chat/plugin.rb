@@ -217,8 +217,8 @@ after_initialize do
       .where(user_id: object.id)
       .order(updated_at: :desc)
       .limit(20)
-      .pluck(:chat_channel_id, :data)
-      .map { |row| { channel_id: row[0], data: row[1] } }
+      .pluck(:chat_channel_id, :data, :thread_id)
+      .map { |row| { channel_id: row[0], data: row[1], thread_id: row[2] } }
   end
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
@@ -252,6 +252,12 @@ after_initialize do
   add_to_serializer(:current_user_option, :chat_separate_sidebar_mode) do
     object.chat_separate_sidebar_mode
   end
+
+  add_to_serializer(
+    :upload,
+    :thumbnail,
+    include_condition: -> { SiteSetting.chat_enabled && SiteSetting.create_thumbnails },
+  ) { object.thumbnail }
 
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
     chat_channel_retention_days: :dismissed_channel_retention_reminder,

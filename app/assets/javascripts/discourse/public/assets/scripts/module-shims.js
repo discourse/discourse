@@ -16,12 +16,6 @@ define("I18n", [
   };
 });
 
-define("htmlbars-inline-precompile", ["exports"], function (exports) {
-  exports.default = function tag(strings) {
-    return Ember.Handlebars.compile(strings[0]);
-  };
-});
-
 define("ember-addons/ember-computed-decorators", [
   "discourse-common/utils/decorators",
   "discourse-common/lib/deprecated",
@@ -52,9 +46,8 @@ define("ember-jquery-legacy", ["exports"], function (exports) {
 // with native `@cached` support.
 const glimmerTracking = require("@glimmer/tracking");
 if (glimmerTracking.cached) {
-  console.error(
-    "@glimmer/tracking natively supports the @cached decorator. The polyfill can be removed."
-  );
+  // No-op. Can be removed once we're fully upgraded to Ember 4+
+  // Search juice: EMBER_MAJOR_VERSION < 4;
 } else {
   Object.defineProperty(glimmerTracking, "cached", {
     get: () => require("ember-cached-decorator-polyfill").cached,

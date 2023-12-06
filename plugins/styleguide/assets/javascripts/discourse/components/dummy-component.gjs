@@ -1,7 +1,5 @@
-import Component from "@glimmer/component";
+const DummyComponent = <template>
+  My custom component with foo: {{@model.foo}}
+</template>;
 
-export default class DummyComponent extends Component {
-  <template>
-    My custom component with foo: {{@model.foo}}
-  </template>
-}
+export default DummyComponent;

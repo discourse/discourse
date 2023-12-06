@@ -69,6 +69,7 @@ he:
         delete_channel: "מחיקת ערוץ"
         join_channel: "הצטרפות לערוץ"
         leave_channel: "יציאה מהערוץ"
+        leave_groupchat_info: "יציאה מהצ׳אט הקבוצתי הזה תשלול את הגישה שלך אליו ולא תאפשר לך לקבל התראות שקשורות אליו. כדי להצטרף מחדש צריכה להישלח אליך הזמנה מאחד מהחברים בצ׳אט הקבוצתי הזה."
         join: "הצטרף"
         leave: "עזוב"
         save_label:
@@ -324,6 +325,7 @@ he:
         yesterday: אתמול
       members_view:
         filter_placeholder: איתור חברים
+        add_member: הוספת חברים
       about_view:
         associated_topic: נושא מקושר
         associated_category: קטגוריה מקושרת
@@ -344,9 +346,15 @@ he:
         default_search_placeholder: "#ערוץ, @מישהם או כל דבר אחר"
         default_channel_search_placeholder: "#ערוץ"
         default_user_search_placeholder: "@מישהם"
+        user_search_placeholder: "…הוספת חברים נוספים"
         disabled_user: "השבית את הצ׳אט"
         no_items: "אין פריטים"
+        create_group_placeholder: "שם בצ׳אט הקבוצתי (רשות)"
+        participants_counter: "%{selection_count}/%{max} משתתפים"
+        new_group_chat: "צ׳אט קבוצתי חדש"
         filter: "סינון"
+        cant_add_more_members: "הגעת למספר החברים המרבי"
+        create_new_group_chat: "יצירת צ׳אט קבוצתי"
       channel_edit_name_slug_modal:
         title: עריכת ערוץ
         input_placeholder: הוספת שם
@@ -358,10 +366,17 @@ he:
         input_placeholder: הוספת תיאור
         description: כדי לספר לאנשים על מה הערוץ הזה
       direct_message_creator:
+        add_to_channel: "הוספה לערוץ"
         title: הודעה חדשה
         prefix: "אל:"
         no_results: אין תוצאות
         selected_user_title: "ביטול בחירת %{username}"
+        group_name: "שם צ׳אט קבוצתי (רשות)"
+        members_counter:
+          one: "%{count}/חבר"
+          two: "%{count}/%{max} חברים"
+          many: "%{count}/%{max} חברים"
+          other: "%{count}/%{max} חברים"
       channel:
         no_memberships: אין חברים בערוץ הזה
         no_memberships_found: לא נמצאו חברים
@@ -447,6 +462,7 @@ he:
       quote:
         original_channel: 'נשלח במקור ב־<a href="%{channelLink}">%{channel}</a>'
         copy_success: "ציטוט מהצ׳אט הועתק ללוח הגזירים"
+        default_thread_title: "שרשור"
       notification_levels:
         never: "לעולם לא"
         mention: "רק אזכורים"
@@ -492,6 +508,7 @@ he:
         new: "יצירת צ׳אט אישי"
         create: "קדימה"
         leave: "יציאה מהצ׳אט האישי הזה"
+        close: "סגירת הצ׳אט האישי הזה"
         cannot_create: "מחילה, אין לך אפשרות לשלוח הודעות ישירות."
       incoming_webhooks:
         back: "חזרה"

@@ -82,10 +82,7 @@
           "items": {}
         },
         "has_children": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "boolean"
         },
         "sort_order": {
           "type": [

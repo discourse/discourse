@@ -9,6 +9,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
  * When detected, we rewrite the URL to `/` before saving it to the Ember router and the browser.
  */
 export default function applyRouterHomepageOverrides(router) {
+  // eslint-disable-next-line ember/no-private-routing-service
   const microLib = router._routerMicrolib;
 
   for (const method of ["updateURL", "replaceURL"]) {
@@ -30,7 +31,11 @@ export function homepageDestination() {
 
 function rewriteIfNeeded(url, transition) {
   const intentUrl = transition?.intent?.url;
-  if (intentUrl?.startsWith(homepageDestination())) {
+  if (
+    intentUrl?.startsWith(homepageDestination()) ||
+    (transition?.intent.name === `discovery.${defaultHomepage()}` &&
+      transition?.intent.queryParams["_discourse_homepage_rewrite"])
+  ) {
     const params = url.split("?", 2)[1];
     url = "/";
     if (params) {

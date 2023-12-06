@@ -1832,7 +1832,7 @@ RSpec.describe SessionController do
       end
 
       it "prevents login by admins" do
-        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: admin.username, password: "myawesomepassword" }
         expect(response.status).not_to eq(200)
       end
     end
@@ -1906,9 +1906,7 @@ RSpec.describe SessionController do
             I18n.t("login.incorrect_username_email_or_password"),
           )
         end
-      end
 
-      describe "invalid password" do
         it "should return an error with an invalid password if too long" do
           User.any_instance.expects(:confirm_password?).never
           post "/session.json",

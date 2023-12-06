@@ -608,7 +608,6 @@ lv:
           imap_mailbox_not_selected: "Šai IMAP konfigurācijai ir jāizvēlas pastkaste, pretējā gadījumā neviena pastkaste netiks sinhronizēta!"
           prefill:
             title: "Iepriekš aizpildiet ar iestatījumiem:"
-            gmail: "GMail"
           credentials:
             title: "Atsauksme uz"
             smtp_server: "SMTP serveris"
@@ -1178,14 +1177,13 @@ lv:
         cancel: "Atcelt"
       name:
         title: "Vārds"
-        instructions: "jūsu pilnais vārds (neobligāti)"
-        instructions_required: "Jūsu pilnais vārds"
+        instructions: "Jūsu pilnais vārds (neobligāti)."
+        instructions_required: "Jūsu pilnais vārds."
         required: "Lūdzu, ievadiet vārdu"
         too_short: "Jūsu vārds ir pārāk īss"
         ok: "Jūsu vārds izskatās labi"
       username:
         title: "Lietotājvārds"
-        instructions: "unikāls, bez atstarpēm, īss"
         short_instructions: "Cilvēki var pieminēt jūs kā @%{username}"
         available: "Jūsu lietotājvārds ir pieejams"
         not_available: "Nav pieejams. Mēģiniet %{suggestion}?"
@@ -1338,7 +1336,7 @@ lv:
         same_as_username: "Jūsu parole ir tāda pati, kā jūsu lietotājvārds."
         same_as_email: "Jūsu parole ir tāda pati, kā jūsu e-pasts."
         ok: "Jūsu parole izskatās labi."
-        instructions: "vismaz %{count} rakstzīmes"
+        instructions: "Vismaz %{count} rakstzīmes."
         required: "Lūdzu, ievadiet paroli"
       summary:
         title: "Kopsavilkums"
@@ -1648,10 +1646,6 @@ lv:
       posting_not_on_topic: "Kurā tēmā vēlaties komentēt?"
       saved_local_draft_tip: "saglabāts lokāli"
       drafts_offline: "lokāls melnraksts"
-      group_mentioned:
-        zero: "Pieminot %{group}, neviens nesaņems paziņojumu, jo grupa ir tukša."
-        one: "Pieminot %{group}, šis cilvēks saņems paziņojumu – esat pārliecināti?"
-        other: "Pieminot %{group}, šiem <a href='%{group_link}'>%{count} cilvēki</a> saņems paziņojumu – esat pārliecināti?"
       duplicate_link: "Izskatās, ka jūsu saiti uz <b>%{domain}</b> tēmā jau ievietoja <b>@%{username}</b> <a href='%{post_url}'>ierakstā %{ago}</a> - vai jūs tiešām vēlaties to ievietot vēlreiz?"
       error:
         title_missing: "Vajadzīgs nosaukums"
@@ -1719,6 +1713,7 @@ lv:
         replied: '%{username} atbildēja jums "%{topic}" - %{site_title}'
         posted: '%{username} ierakstīja "%{topic}" - %{site_title}'
         linked: '%{username} ievietoja saiti uz jūsu ierakstu no "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} ierakstīja "%{topic}" - %{site_title}'
         confirm_body: "Veiksmi! Paziņojumi ir iespējoti."
       titles:
         mentioned: "minēts"
@@ -2652,7 +2647,6 @@ lv:
       tags: "Tagi"
       add_synonyms: "Pievienot"
       delete_tag: "Dzēst tagu"
-      description: "Apraksts"
       sort_by: "Kārtot pēc:"
       sort_by_count: "skaita"
       sort_by_name: "vārda"
@@ -2781,6 +2775,18 @@ lv:
         typeMismatch:
           default: "Lūdzu ievadiet derīgu vērtību "
           email: "Lūdzu ievadiet derīgu e-pasta adresi."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Ievadīt"
+      edit:
+        modal:
+          cancel: "atcelt"
+          create: "Saglabāt"
+          reason: "kāpēc jūs rediģējat?"
+      spreadsheet:
+        show: "Parādīt"
+        about: "Par"
   admin_js:
     admin:
       title: "Discourse administrators"
@@ -2802,8 +2808,7 @@ lv:
         installed_version: "Uzinstalēts"
         latest_version: "Pēdējais"
         new_features:
-          dismiss: "Nerādīt"
-          learn_more: "Uzzināt vairāk"
+          learn_more: "Uzzināt vairāk..."
         last_checked: "Pēdējā pārbaude"
         refresh_problems: "Pārlādēt"
         no_problems: "Problēmas nav atrastas."
@@ -2947,6 +2952,7 @@ lv:
         not_enabled: "Nē"
         change_settings_short: "Iestatījumi"
         howto: "Kā instalēt spraudņus?"
+        learn_more: "Uzzināt vairāk"
       backups:
         title: "Rezerves kopijas"
         menu:

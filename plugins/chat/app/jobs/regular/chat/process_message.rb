@@ -10,6 +10,7 @@ module Jobs
         ) do
           chat_message = ::Chat::Message.find_by(id: args[:chat_message_id])
           return if !chat_message
+
           processor =
             ::Chat::MessageProcessor.new(
               chat_message,
@@ -22,34 +23,19 @@ module Jobs
               cooked: processor.html,
               cooked_version: ::Chat::Message::BAKED_VERSION,
             )
-            chat_message.upsert_mentions
-
-            if args[:edit_timestamp]
-              ::Chat::Publisher.publish_edit!(chat_message.chat_channel, chat_message)
-              ::Chat::Notifier.new(chat_message, args[:edit_timestamp]).notify_edit
-              DiscourseEvent.trigger(
-                :chat_message_edited,
-                chat_message,
-                chat_message.chat_channel,
-                chat_message.user,
-              )
-            else
-              ::Chat::Publisher.publish_new!(
-                chat_message.chat_channel,
-                chat_message,
-                args[:staged_id],
-              )
-              ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
-              DiscourseEvent.trigger(
-                :chat_message_created,
-                chat_message,
-                chat_message.chat_channel,
-                chat_message.user,
-              )
-            end
-
-            ::Chat::Publisher.publish_processed!(chat_message)
           end
+
+          # we dont process mentions when creating/updating message so we always have to do it
+          chat_message.upsert_mentions
+
+          # notifier should be idempotent and not re-notify
+          if args[:edit_timestamp]
+            ::Chat::Notifier.new(chat_message, args[:edit_timestamp]).notify_edit
+          else
+            ::Chat::Notifier.new(chat_message, chat_message.created_at).notify_new
+          end
+
+          ::Chat::Publisher.publish_processed!(chat_message)
         end
       end
     end

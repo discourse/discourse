@@ -77,12 +77,14 @@ class Plugin::Instance
   def self.find_all(parent_path)
     [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
-        source = File.read(path)
-        metadata = Plugin::Metadata.parse(source)
-        plugins << self.new(metadata, path)
-      end
+      Dir["#{parent_path}/*/plugin.rb"].sort.each { |path| plugins << parse_from_source(path) }
     end
+  end
+
+  def self.parse_from_source(path)
+    source = File.read(path)
+    metadata = Plugin::Metadata.parse(source)
+    self.new(metadata, path)
   end
 
   def initialize(metadata = nil, path = nil)
@@ -516,6 +518,15 @@ class Plugin::Instance
     @git_repo ||= GitRepo.new(directory, name)
   end
 
+  def discourse_owned?
+    return false if commit_hash.blank?
+    parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
+    return false if parsed_commit_url.blank?
+    github_org = parsed_commit_url.path.split("/")[1]
+    (github_org == "discourse" || github_org == "discourse-org") &&
+      parsed_commit_url.host == "github.com"
+  end
+
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
   def on(event_name, &block)
     DiscourseEvent.on(event_name) { |*args, **kwargs| block.call(*args, **kwargs) if enabled? }
@@ -541,28 +552,38 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_category_custom_field_type(name, type)
-    reloadable_patch { |plugin| Category.register_custom_field_type(name, type) }
+  def register_category_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      Category.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_topic_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::Topic.register_custom_field_type(name, type) }
+  def register_topic_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Topic.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_post_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::Post.register_custom_field_type(name, type) }
+  def register_post_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Post.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_group_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::Group.register_custom_field_type(name, type) }
+  def register_group_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Group.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_user_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::User.register_custom_field_type(name, type) }
+  def register_user_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::User.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   def register_seedfu_fixtures(paths)

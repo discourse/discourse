@@ -24,6 +24,8 @@ import {
 } from "discourse/components/search-menu/results/random-quick-tip";
 import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
+import { forceDropdownForMenuPanels } from "discourse/components/site-header";
+import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
@@ -141,7 +143,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.15.0";
+export const PLUGIN_API_VERSION = "1.18.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1647,6 +1649,15 @@ class PluginApi {
   }
 
   /**
+   * Used to set the min and max height for the topic timeline scroll area on desktop. Pass object with min/max key value pairs.
+   * Example:
+   * api.setDesktopTopicTimelineScrollAreaHeight({ min: 50, max: 100 });
+   **/
+  setDesktopTopicTimelineScrollAreaHeight(height) {
+    setDesktopScrollAreaHeight(height);
+  }
+
+  /**
    * Allows altering the topic title in the topic list, and in the topic view
    *
    * topicTitleType can be `topic-title` or `topic-list-item-title`
@@ -1835,7 +1846,23 @@ class PluginApi {
   }
 
   /**
-   * Download calendar modal which allow to pick between ICS and Google Calendar
+   * Force a given menu panel (search-menu, user-menu) to be displayed as dropdown if ANY of the passed `classNames` are included in the `classList` of a menu panel.
+   * This can be useful for plugins as the default behavior is to add a 'slide-in' behavior to a menu panel if you are viewing on a small screen. eg. mobile.
+   * Sometimes when we are rendering the menu panel in a non-standard way we don't want this behavior and want to force the menu panel to be displayed as a dropdown.
+   *
+   * The `classNames` param can be passed as a single string or an array of strings. This way you can disable the 'slide-in' behavior for multiple menu panels.
+   *
+   * ```
+   * api.forceDropdownForMenuPanels(["search-menu-panel", "user-menu"]);
+   * ```
+   *
+   */
+  forceDropdownForMenuPanels(classNames) {
+    forceDropdownForMenuPanels(classNames);
+  }
+
+  /**
+   * Download calendar modal which allow to pick between ICS and Google Calendar. Optionally, recurrence rule can be specified - https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10
    *
    * ```
    * api.downloadCalendar("title of the event", [
@@ -1843,12 +1870,14 @@ class PluginApi {
         startsAt: "2021-10-12T15:00:00.000Z",
         endsAt: "2021-10-12T16:00:00.000Z",
       },
-   * ]);
+   * ],
+   * "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
+   * );
    * ```
    *
    */
-  downloadCalendar(title, dates) {
-    downloadCalendar(title, dates);
+  downloadCalendar(title, dates, recurrenceRule = null) {
+    downloadCalendar(title, dates, recurrenceRule);
   }
 
   /**

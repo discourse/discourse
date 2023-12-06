@@ -57,6 +57,8 @@ export default Controller.extend({
   composer: service(),
   modal: service(),
   appEvents: service(),
+  siteSettings: service(),
+  searchPreferencesManager: service(),
 
   bulkSelectEnabled: null,
   loading: false,
@@ -85,6 +87,12 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
+
+    this.set(
+      "sortOrder",
+      this.searchPreferencesManager.sortOrder ||
+        this.siteSettings.search_default_sort_order
+    );
 
     const searchTypes = [
       { name: I18n.t("search.type.default"), id: SEARCH_TYPE_DEFAULT },
@@ -381,7 +389,7 @@ export default Controller.extend({
         Promise.resolve(categoryTagSearch)
           .then(async (results) => {
             const categories = results.filter((c) => Boolean(c.model));
-            const tags = results.filter((c) => !Boolean(c.model));
+            const tags = results.filter((c) => !c.model);
             const model = (await translateResults({ categories, tags })) || {};
             this.set("model", model);
           })
@@ -484,6 +492,12 @@ export default Controller.extend({
       list,
       identifier,
     });
+  },
+
+  @action
+  setSortOrder(value) {
+    this.set("sortOrder", value);
+    this.searchPreferencesManager.sortOrder = value;
   },
 
   actions: {

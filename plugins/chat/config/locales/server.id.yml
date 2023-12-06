@@ -172,6 +172,8 @@ id:
         other: "dan %{count} lainnya"
     summaries:
       no_targets: "Tidak ada pesan selama periode yang dipilih."
+    transcript:
+      default_thread_title: "Utas"
   discourse_push_notifications:
     popup:
       chat_mention:

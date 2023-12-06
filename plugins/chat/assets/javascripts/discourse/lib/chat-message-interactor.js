@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/application";
+import { getOwner, setOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import BookmarkModal from "discourse/components/modal/bookmark";
@@ -360,7 +360,7 @@ export default class ChatMessageInteractor {
     model.user_id = this.message.user?.id;
     this.modal.show(FlagModal, {
       model: {
-        flagTarget: new ChatMessageFlag(),
+        flagTarget: new ChatMessageFlag(getOwner(this)),
         flagModel: model,
         setHidden: () => model.set("hidden", true),
       },

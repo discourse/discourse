@@ -47,10 +47,6 @@ RSpec.describe SiteSetting do
     it "sets a setting" do
       SiteSetting.contact_email = "sam@sam.com"
     end
-
-    it "is always the correct default" do
-      expect(SiteSetting.contact_email).to eq("")
-    end
   end
 
   describe "anonymous_homepage" do

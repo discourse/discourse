@@ -36,6 +36,7 @@ de:
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
       chat_upload_not_allowed_secure_uploads: "Chat-Uploads sind nicht erlaubt, wenn die Website-Einstellung für sichere Uploads aktiviert ist."
   system_messages:
+    private_channel_title: "Kanal %{id}"
     chat_channel_archive_complete:
       title: "Chat-Kanal-Archivierung abgeschlossen"
       subject_template: "Chat-Kanal-Archivierung erfolgreich abgeschlossen"
@@ -193,6 +194,9 @@ de:
         other: "und %{count} andere"
     summaries:
       no_targets: "Im ausgewählten Zeitraum gab es keine Nachrichten."
+    transcript:
+      default_thread_title: "Thread"
+      split_thread_range: "Nachrichten %{start} bis %{end} von %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -227,6 +231,7 @@ de:
         other: "Du hast neue Chat-Nachrichten"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Neue Nachricht"
         direct_message_from_1: "[%{email_prefix}] Neue Nachricht von %{username}"
         direct_message_from_2: "[%{email_prefix}] Neue Nachricht von %{username1} und %{username2}"
         direct_message_from_more:

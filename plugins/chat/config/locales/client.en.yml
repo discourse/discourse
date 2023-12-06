@@ -62,6 +62,7 @@ en:
         delete_channel: "Delete channel"
         join_channel: "Join channel"
         leave_channel: "Leave channel"
+        leave_groupchat_info: "By leaving this group chat, you will no longer have access to it and won’t receive notifications related to it. To rejoin, you will need to be re-invited by a member of the group chat."
         join: "Join"
         leave: "Leave"
         save_label:
@@ -445,6 +446,7 @@ en:
       quote:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat quote copied to clipboard"
+        default_thread_title: "Thread"
 
       notification_levels:
         never: "Never"
@@ -494,6 +496,7 @@ en:
         new: "Create a personal chat"
         create: "Go"
         leave: "Leave this personal chat"
+        close: "Close this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."
 
       incoming_webhooks:

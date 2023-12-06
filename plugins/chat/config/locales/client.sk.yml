@@ -137,6 +137,8 @@ sk:
         italic_text: "zdôraznený text"
         bold_text: "výrazný text"
         send: "Odoslať"
+      quote:
+        default_thread_title: "Vlákno"
       notification_levels:
         never: "Nikdy"
       settings:

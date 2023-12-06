@@ -54,7 +54,7 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label="review.moderation_history"
             @icon="list"
-            class="btn btn-transparent moderation-history"
+            class="btn popup-menu-btn moderation-history"
             @href={{this.reviewUrl}}
           />
         </li>
@@ -70,7 +70,7 @@ export default class AdminPostMenu extends Component {
             }}
             @icon="shield-alt"
             class={{concatClass
-              "btn btn-transparent toggle-post-type"
+              "btn popup-menu-btn toggle-post-type"
               (if @data.transformedPost.isModeratorAction "btn-success")
             }}
             @action={{fn this.topicAction "togglePostType"}}
@@ -89,7 +89,7 @@ export default class AdminPostMenu extends Component {
             }}
             title="post.controls.unhide"
             class={{concatClass
-              "btn btn-transparent"
+              "btn popup-menu-btn"
               (if @data.transformedPost.notice "change-notice" "add-notice")
               (if @data.transformedPost.notice "btn-success")
             }}
@@ -103,7 +103,7 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label="post.controls.unhide"
             @icon="far-eye"
-            class="btn btn-transparent unhide-post"
+            class="btn popup-menu-btn unhide-post"
             @action={{fn this.topicAction "unhidePost"}}
           />
         </li>
@@ -123,7 +123,7 @@ export default class AdminPostMenu extends Component {
             @label="post.controls.change_owner"
             @icon="user"
             title="post.controls.lock_post_description"
-            class="btn btn-transparent change-owner"
+            class="btn popup-menu-btn change-owner"
             @action={{fn this.topicAction "changePostOwner"}}
           />
         </li>
@@ -135,7 +135,7 @@ export default class AdminPostMenu extends Component {
             <DButton
               @label="post.controls.grant_badge"
               @icon="certificate"
-              class="btn btn-transparent grant-badge"
+              class="btn popup-menu-btn grant-badge"
               @action={{fn this.topicAction "grantBadge"}}
             />
           </li>
@@ -148,7 +148,7 @@ export default class AdminPostMenu extends Component {
               @icon="unlock"
               title="post.controls.unlock_post_description"
               class={{concatClass
-                "btn btn-transparent unlock-post"
+                "btn popup-menu-btn unlock-post"
                 (if @data.post.locked "btn-success")
               }}
               @action={{fn this.topicAction "unlockPost"}}
@@ -160,7 +160,7 @@ export default class AdminPostMenu extends Component {
               @label="post.controls.lock_post"
               @icon="lock"
               title="post.controls.lock_post_description"
-              class="btn btn-transparent lock-post"
+              class="btn popup-menu-btn lock-post"
               @action={{fn this.topicAction "lockPost"}}
             />
           </li>
@@ -172,7 +172,7 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label="post.controls.permanently_delete"
             @icon="trash-alt"
-            class="btn btn-transparent permanently-delete"
+            class="btn popup-menu-btn permanently-delete"
             @action={{fn this.topicAction "permanentlyDeletePost"}}
           />
         </li>
@@ -185,7 +185,7 @@ export default class AdminPostMenu extends Component {
               @label="post.controls.unwiki"
               @icon="far-edit"
               class={{concatClass
-                "btn btn-transparent wiki wikied"
+                "btn popup-menu-btn wiki wikied"
                 (if @data.transformedPost.wiki "btn-success")
               }}
               @action={{fn this.topicAction "toggleWiki"}}
@@ -196,7 +196,7 @@ export default class AdminPostMenu extends Component {
             <DButton
               @label="post.controls.wiki"
               @icon="far-edit"
-              class="btn btn-transparent wiki"
+              class="btn popup-menu-btn wiki"
               @action={{fn this.topicAction "toggleWiki"}}
             />
           </li>
@@ -208,7 +208,7 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label="post.controls.publish_page"
             @icon="file"
-            class="btn btn-transparent publish-page"
+            class="btn popup-menu-btn publish-page"
             @action={{fn this.topicAction "showPagePublish"}}
           />
         </li>
@@ -219,7 +219,7 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label="post.controls.rebake"
             @icon="sync-alt"
-            class="btn btn-transparent rebuild-html"
+            class="btn popup-menu-btn rebuild-html"
             @action={{fn this.topicAction "rebakePost"}}
           />
         </li>
@@ -231,7 +231,7 @@ export default class AdminPostMenu extends Component {
             @label={{button.label}}
             @translatedLabel={{button.translatedLabel}}
             @icon={{button.icon}}
-            class={{concatClass "btn btn-transparent" button.className}}
+            class={{concatClass "btn popup-menu-btn" button.className}}
             @action={{fn this.extraAction button}}
           />
         </li>

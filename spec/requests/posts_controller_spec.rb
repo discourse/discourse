@@ -827,6 +827,7 @@ RSpec.describe PostsController do
     before do
       SiteSetting.min_first_post_typing_time = 0
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      Group.refresh_automatic_groups!
     end
 
     context "with api" do
@@ -866,7 +867,7 @@ RSpec.describe PostsController do
       end
 
       it "returns a valid JSON response when the post is enqueued" do
-        SiteSetting.approve_unless_trust_level = 4
+        SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
 
         master_key = Fabricate(:api_key).key
 
@@ -1652,6 +1653,7 @@ RSpec.describe PostsController do
         it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
           SiteSetting.newuser_spam_host_threshold = 1
           sign_in(Fabricate(:user, trust_level: 0))
+          Group.refresh_automatic_groups!
 
           post "/posts.json",
                params: {

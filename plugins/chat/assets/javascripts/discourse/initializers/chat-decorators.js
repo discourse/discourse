@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
 import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
@@ -160,7 +161,7 @@ export default {
         },
         callbacks: {
           elementParse: (item) => {
-            item.src = item.el[0].src;
+            item.src = item.el[0].dataset.largeSrc || item.el[0].src;
           },
         },
       });

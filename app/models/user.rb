@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
 
   has_many :badges, through: :user_badges
   has_many :default_featured_user_badges,
-           -> {
+           -> do
              max_featured_rank =
                (
                  if SiteSetting.max_favorite_badges > 0
@@ -113,7 +113,7 @@ class User < ActiveRecord::Base
                  end
                )
              for_enabled_badges.grouped_with_count.where("featured_rank <= ?", max_featured_rank)
-           },
+           end,
            class_name: "UserBadge"
 
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
@@ -249,18 +249,18 @@ class User < ActiveRecord::Base
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
 
   scope :with_primary_email,
-        ->(email) {
+        ->(email) do
           joins(:user_emails).where(
             "lower(user_emails.email) IN (?) AND user_emails.primary",
             email,
           )
-        }
+        end
 
   scope :human_users, -> { where("users.id > 0") }
 
   # excluding fake users like the system user or anonymous users
   scope :real,
-        -> {
+        -> do
           human_users.where(
             "NOT EXISTS(
                      SELECT 1
@@ -268,7 +268,7 @@ class User < ActiveRecord::Base
                      WHERE a.user_id = users.id
                   )",
           )
-        }
+        end
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
@@ -281,16 +281,16 @@ class User < ActiveRecord::Base
   scope :not_staged, -> { where(staged: false) }
 
   scope :filter_by_username,
-        ->(filter) {
+        ->(filter) do
           if filter.is_a?(Array)
             where("username_lower ~* ?", "(#{filter.join("|")})")
           else
             where("username_lower ILIKE ?", "%#{filter}%")
           end
-        }
+        end
 
   scope :filter_by_username_or_email,
-        ->(filter) {
+        ->(filter) do
           if filter.is_a?(String) && filter =~ /.+@.+/
             # probably an email so try the bypass
             if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pick(:user_id)
@@ -311,10 +311,10 @@ class User < ActiveRecord::Base
               filter: "%#{filter}%",
             )
           end
-        }
+        end
 
   scope :watching_topic,
-        ->(topic) {
+        ->(topic) do
           joins(
             DB.sql_fragment(
               "LEFT JOIN category_users ON category_users.user_id = users.id AND category_users.category_id = :category_id",
@@ -333,7 +333,7 @@ class User < ActiveRecord::Base
             .where(
               "category_users.notification_level > 0 OR topic_users.notification_level > 0 OR tag_users.notification_level > 0",
             )
-        }
+        end
 
   module NewTopicDuration
     ALWAYS = -1

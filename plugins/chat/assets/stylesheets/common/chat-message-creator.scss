@@ -235,11 +235,16 @@
 .chat-message-creator__search-input {
   display: flex;
   align-items: center;
-  background: var(--secondary-very-high);
+  border: 1px solid var(--primary-400);
   width: 100%;
   box-sizing: border-box;
   height: 42px;
   padding: 0 0.5rem;
+
+  &:focus,
+  &:focus-within {
+    @include default-focus();
+  }
 
   &-container {
     display: flex;

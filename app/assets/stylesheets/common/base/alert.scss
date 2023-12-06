@@ -29,11 +29,15 @@
     color: var(--primary);
   }
   &.alert-info {
-    background-color: var(--tertiary-low);
+    background-color: var(--tertiary-very-low);
     color: var(--primary);
     &.clickable {
       color: var(--tertiary);
       z-index: z("base");
+    }
+    .d-icon {
+      color: var(--tertiary);
+      margin-right: 0.25em;
     }
   }
 }

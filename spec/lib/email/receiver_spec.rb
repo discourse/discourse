@@ -832,7 +832,7 @@ RSpec.describe Email::Receiver do
     end
 
     it "accepts emails with wrong reply key if the system knows about the forwarded email" do
-      Fabricate(:user, email: "bob@bar.com")
+      Fabricate(:user, email: "bob@bar.com", refresh_auto_groups: true)
       Fabricate(
         :incoming_email,
         raw: <<~RAW,
@@ -948,6 +948,7 @@ RSpec.describe Email::Receiver do
             Fabricate.build(:secondary_email, email: "discourse@bar.com"),
             Fabricate.build(:secondary_email, email: "someone@else.com"),
           ],
+          refresh_auto_groups: true,
         )
 
       user2 =
@@ -958,6 +959,7 @@ RSpec.describe Email::Receiver do
             Fabricate.build(:secondary_email, email: "team@bar.com"),
             Fabricate.build(:secondary_email, email: "wat@bar.com"),
           ],
+          refresh_auto_groups: true,
         )
 
       expect { process(:cc) }.to change(Topic, :count)
@@ -1534,8 +1536,8 @@ RSpec.describe Email::Receiver do
     end
 
     it "raises an InsufficientTrustLevelError when user's trust level isn't enough" do
-      Fabricate(:user, email: "existing@bar.com", trust_level: 3)
-      SiteSetting.email_in_min_trust = 4
+      Fabricate(:user, email: "existing@bar.com", trust_level: 3, refresh_auto_groups: true)
+      SiteSetting.email_in_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect { process(:existing_user) }.to raise_error(
         Email::Receiver::InsufficientTrustLevelError,
       )
@@ -1555,7 +1557,12 @@ RSpec.describe Email::Receiver do
       DiscourseEvent.on(:topic_created, &handler)
 
       user =
-        Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+        Fabricate(
+          :user,
+          email: "existing@bar.com",
+          trust_level: SiteSetting.email_in_min_trust,
+          refresh_auto_groups: true,
+        )
       group = Fabricate(:group)
 
       group.add(user)
@@ -1579,7 +1586,12 @@ RSpec.describe Email::Receiver do
     it "creates visible topic for ham" do
       SiteSetting.email_in_spam_header = "none"
 
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      Fabricate(
+        :user,
+        email: "existing@bar.com",
+        trust_level: SiteSetting.email_in_min_trust,
+        refresh_auto_groups: true,
+      )
       expect { process(:existing_user) }.to change { Topic.count }.by(1) # Topic created
 
       topic = Topic.last
@@ -1595,7 +1607,12 @@ RSpec.describe Email::Receiver do
       SiteSetting.email_in_spam_header = "X-Spam-Flag"
 
       user =
-        Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+        Fabricate(
+          :user,
+          email: "existing@bar.com",
+          trust_level: SiteSetting.email_in_min_trust,
+          refresh_auto_groups: true,
+        )
       expect { process(:spam_x_spam_flag) }.to change { ReviewableQueuedPost.count }.by(1)
       expect(user.reload.silenced?).to be(true)
     end
@@ -1604,7 +1621,12 @@ RSpec.describe Email::Receiver do
       SiteSetting.email_in_spam_header = "X-Spam-Status"
 
       user =
-        Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+        Fabricate(
+          :user,
+          email: "existing@bar.com",
+          trust_level: SiteSetting.email_in_min_trust,
+          refresh_auto_groups: true,
+        )
       expect { process(:spam_x_spam_status) }.to change { ReviewableQueuedPost.count }.by(1)
       expect(user.reload.silenced?).to be(true)
     end
@@ -1613,7 +1635,12 @@ RSpec.describe Email::Receiver do
       SiteSetting.email_in_spam_header = "X-SES-Spam-Verdict"
 
       user =
-        Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+        Fabricate(
+          :user,
+          email: "existing@bar.com",
+          trust_level: SiteSetting.email_in_min_trust,
+          refresh_auto_groups: true,
+        )
       expect { process(:spam_x_ses_spam_verdict) }.to change { ReviewableQueuedPost.count }.by(1)
       expect(user.reload.silenced?).to be(true)
     end
@@ -1622,7 +1649,12 @@ RSpec.describe Email::Receiver do
       SiteSetting.email_in_authserv_id = "example.com"
 
       user =
-        Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+        Fabricate(
+          :user,
+          email: "existing@bar.com",
+          trust_level: SiteSetting.email_in_min_trust,
+          refresh_auto_groups: true,
+        )
       expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
       expect(user.reload.silenced?).to be(false)
     end
@@ -1630,7 +1662,12 @@ RSpec.describe Email::Receiver do
     it "adds the 'elided' part of the original message when always_show_trimmed_content is enabled" do
       SiteSetting.always_show_trimmed_content = true
 
-      Fabricate(:user, email: "existing@bar.com", trust_level: SiteSetting.email_in_min_trust)
+      Fabricate(
+        :user,
+        email: "existing@bar.com",
+        trust_level: SiteSetting.email_in_min_trust,
+        refresh_auto_groups: true,
+      )
       expect { process(:forwarded_email_to_category) }.to change { Topic.count }.by(1) # Topic created
 
       new_post, = Post.last
@@ -1642,10 +1679,10 @@ RSpec.describe Email::Receiver do
     end
 
     it "works when approving is enabled" do
-      SiteSetting.approve_unless_trust_level = 4
+      SiteSetting.approve_unless_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
 
-      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
-      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3], refresh_auto_groups: true)
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4], refresh_auto_groups: true)
 
       category.set_permissions(Group[:trust_level_4] => :full)
       category.save!
@@ -1667,6 +1704,7 @@ RSpec.describe Email::Receiver do
           :user,
           trust_level: SiteSetting.email_in_min_trust,
           user_emails: [Fabricate.build(:secondary_email, email: "existing@bar.com")],
+          refresh_auto_groups: true,
         )
 
       expect { process(:existing_user) }.to change(Topic, :count).by(1)
@@ -1693,13 +1731,13 @@ RSpec.describe Email::Receiver do
     end
 
     it "lets an email in from a high-TL user" do
-      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4], refresh_auto_groups: true)
       expect { process(:tl4_user) }.to change(Topic, :count)
     end
 
     it "fails on email from a low-TL user" do
-      SiteSetting.email_in_min_trust = 4
-      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
+      SiteSetting.email_in_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3], refresh_auto_groups: true)
       expect { process(:tl3_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
     end
   end
@@ -2042,7 +2080,7 @@ RSpec.describe Email::Receiver do
     end
 
     it "should skip validations for regular users" do
-      Fabricate(:user, email: "alice@foo.com")
+      Fabricate(:user, email: "alice@foo.com", refresh_auto_groups: true)
       expect { process(:mailinglist_short_message) }.to change { Topic.count }
     end
 
@@ -2051,8 +2089,8 @@ RSpec.describe Email::Receiver do
         category.set_permissions(everyone: :readonly)
         category.save!
 
-        Fabricate(:user, email: "alice@foo.com")
-        Fabricate(:user, email: "bob@bar.com")
+        Fabricate(:user, email: "alice@foo.com", refresh_auto_groups: true)
+        Fabricate(:user, email: "bob@bar.com", refresh_auto_groups: true)
       end
 
       it "should allow creating topic within read-only category" do
@@ -2069,7 +2107,7 @@ RSpec.describe Email::Receiver do
 
     it "ignores unsubscribe email" do
       SiteSetting.unsubscribe_via_email = true
-      Fabricate(:user, email: "alice@foo.com")
+      Fabricate(:user, email: "alice@foo.com", refresh_auto_groups: true)
 
       expect { process("mailinglist_unsubscribe") }.to_not change {
         ActionMailer::Base.deliveries.count

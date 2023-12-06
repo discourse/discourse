@@ -15,7 +15,6 @@ gl:
   poll:
     poll: "enquisa"
     invalid_argument: "O valor «%{value}» non é válido para o argumento «%{argument}»."
-    multiple_polls_without_name: "Hai múltiplas enquisas sen nome. Utilice o atributo «<code>nome</code>» para singularizar as súas enquisas."
     multiple_polls_with_same_name: "Hai múltiplas enquisas co mesmo nome: <strong>%{name}</strong>. Utiliza o atributo «<code>nome</code>» para singularizar as súas enquisas."
     default_poll_must_have_at_least_1_option: "A enquisa debe ter polo menos unha opción"
     named_poll_must_have_at_least_1_option: "A enquisa chamada <strong>%{name}</strong> debe ter polo menos 1 opción."

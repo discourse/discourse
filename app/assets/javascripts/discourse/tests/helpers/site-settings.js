@@ -3,7 +3,6 @@ import { createSiteSettingsFromPreloaded } from "discourse/services/site-setting
 const CLIENT_SETTING_TEST_OVERRIDES = {
   title: "QUnit Discourse Tests",
   site_logo_url: "/assets/logo.png",
-  site_logo_url: "/assets/logo.png",
   site_logo_small_url: "/assets/logo-single.png",
   site_mobile_logo_url: "",
   site_favicon_url: "/images/discourse-logo-sketch-small.png",

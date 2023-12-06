@@ -58,7 +58,7 @@
             </label>
             <InputTip
               @validation={{this.emailValidation}}
-              @id="account-email-validation"
+              id="account-email-validation"
             />
             <span class="more-info">{{i18n "user.email.instructions"}}</span>
           </div>
@@ -84,7 +84,7 @@
 
             <InputTip
               @validation={{this.usernameValidation}}
-              @id="username-validation"
+              id="username-validation"
             />
             <span class="more-info">
               {{i18n "user.username.instructions"}}
@@ -112,7 +112,7 @@
 
               <InputTip
                 @validation={{this.nameValidation}}
-                @id="fullname-validation"
+                id="fullname-validation"
               />
               <span class="more-info">{{this.nameInstructions}}</span>
             {{/if}}
@@ -152,7 +152,7 @@
                 <div class="create-account__password-tip-validation">
                   <InputTip
                     @validation={{this.passwordValidation}}
-                    @id="password-validation"
+                    id="password-validation"
                   />
                   <span class="more-info">{{this.passwordInstructions}}</span>
                   <div
@@ -280,7 +280,7 @@
         {{loading-spinner size="large"}}
       {{/if}}
     </div>
-    {{#if this.hasAtLeastOneLoginButton}}
+    {{#if (and this.hasAtLeastOneLoginButton this.site.desktopView)}}
       <div class="login-right-side">
         <LoginButtons
           @externalLogin={{this.externalLogin}}

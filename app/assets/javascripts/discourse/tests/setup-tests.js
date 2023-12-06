@@ -46,9 +46,11 @@ import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import { buildResolver } from "discourse-common/resolver";
 import Application from "../app";
+import { loadSprites } from "../lib/svg-sprite-loader";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
+let cancelled = false;
 
 function AcceptanceModal(option, _relatedTarget) {
   return this.each(function () {
@@ -139,9 +141,22 @@ function setupToolbar() {
     .forEach((script) => pluginNames.add(script.dataset.discoursePlugin));
 
   QUnit.config.urlConfig.push({
+    id: "loop",
+    label: "Loop until failure",
+    value: "1",
+  });
+
+  QUnit.config.urlConfig.push({
     id: "target",
     label: "Target",
-    value: ["core", "plugins", "all", "-----", ...Array.from(pluginNames)],
+    value: [
+      "core",
+      "plugins",
+      "all",
+      "theme-qunit",
+      "-----",
+      ...Array.from(pluginNames),
+    ],
   });
 
   QUnit.begin(() => {
@@ -179,6 +194,7 @@ function setupToolbar() {
     }
 
     if (["INPUT", "SELECT", "LABEL"].includes(target.tagName)) {
+      cancelled = true;
       document.querySelector("#qunit-abort-tests-button")?.click();
     }
   });
@@ -312,10 +328,6 @@ export default function setupTests(config) {
     applyPretender(ctx.module, pretender, pretenderHelpers());
 
     Session.resetCurrent();
-    if (setupData) {
-      const session = Session.current();
-      session.markdownItURL = setupData.markdownItUrl;
-    }
     User.resetCurrent();
 
     PreloadStore.reset();
@@ -359,9 +371,20 @@ export default function setupTests(config) {
     QUnit.config.autostart = false;
   }
 
+  if (getUrlParameter("loop")) {
+    QUnit.done(({ failed }) => {
+      if (failed === 0 && !cancelled) {
+        window.location.reload();
+      }
+    });
+  }
+
   handleLegacyParameters();
 
   const target = getUrlParameter("target") || "core";
+  if (target === "theme-qunit") {
+    window.location.href = window.location.origin + "/theme-qunit";
+  }
 
   const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
   const hasThemeJs = !!document.querySelector("script[data-theme-id]");
@@ -398,6 +421,14 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
+  if (!window.Testem) {
+    // Running in a dev server - svg sprites are available
+    // Using a fake 40-char version hash will redirect to the current one
+    loadSprites(
+      "/svg-sprite/localhost/svg--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js",
+      "fontawesome"
+    );
+  }
 
   if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();
@@ -414,10 +445,19 @@ function patchFailedAssertion() {
 
   QUnit.assert.pushResult = function (resultInfo) {
     if (!resultInfo.result && !isSettled()) {
+      const settledState = getSettledState();
+      let stateString = Object.entries(settledState)
+        .filter(([, value]) => value === true)
+        .map(([key]) => key)
+        .join(", ");
+
+      if (settledState.pendingRequestCount > 0) {
+        stateString += `, pending requests: ${settledState.pendingRequestCount}`;
+      }
+
       // eslint-disable-next-line no-console
       console.warn(
-        "ℹ️ Hint: when the assertion failed, the Ember runloop was not in a settled state. Maybe you missed an `await` further up the test? Or maybe you need to manually add `await settled()` before your assertion?",
-        getSettledState()
+        `ℹ️ Hint: when the assertion failed, the Ember runloop was not in a settled state. Maybe you missed an \`await\` further up the test? Or maybe you need to manually add \`await settled()\` before your assertion? (${stateString})`
       );
     }
 

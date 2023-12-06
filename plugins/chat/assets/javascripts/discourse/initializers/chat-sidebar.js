@@ -211,7 +211,7 @@ export default {
             suffixCSSClass = "urgent";
             hoverType = "icon";
             hoverValue = "times";
-            hoverTitle = I18n.t("chat.direct_messages.leave");
+            hoverTitle = I18n.t("chat.direct_messages.close");
 
             constructor({ channel, chatService, currentUser }) {
               super(...arguments);
@@ -273,9 +273,15 @@ export default {
             }
 
             get title() {
-              return I18n.t("chat.placeholder_channel", {
-                channelName: this.channel.escapedTitle,
-              });
+              if (this.channel.chatable.group) {
+                return I18n.t("chat.placeholder_channel", {
+                  channelName: this.channel.escapedTitle,
+                });
+              } else {
+                return I18n.t("chat.placeholder_users", {
+                  commaSeparatedNames: this.channel.escapedTitle,
+                });
+              }
             }
 
             get text() {

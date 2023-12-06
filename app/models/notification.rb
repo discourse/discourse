@@ -25,14 +25,14 @@ class Notification < ActiveRecord::Base
         }
   scope :unread_type, ->(user, type, limit = 30) { unread_types(user, [type], limit) }
   scope :unread_types,
-        ->(user, types, limit = 30) {
+        ->(user, types, limit = 30) do
           where(user_id: user.id, read: false, notification_type: types)
             .visible
             .includes(:topic)
             .limit(limit)
-        }
+        end
   scope :prioritized,
-        ->(deprioritized_types = []) {
+        ->(deprioritized_types = []) do
           scope = order("notifications.high_priority AND NOT notifications.read DESC")
           if deprioritized_types.present?
             scope =
@@ -46,11 +46,11 @@ class Notification < ActiveRecord::Base
             scope = scope.order("NOT notifications.read DESC")
           end
           scope.order("notifications.created_at DESC")
-        }
+        end
   scope :for_user_menu,
-        ->(user_id, limit: 30) {
+        ->(user_id, limit: 30) do
           where(user_id: user_id).visible.prioritized.includes(:topic).limit(limit)
-        }
+        end
 
   attr_accessor :skip_send_email
 

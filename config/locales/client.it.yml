@@ -752,7 +752,6 @@ it:
           imap_mailbox_not_selected: "Devi selezionare una casella di posta per questa configurazione IMAP, altrimenti non verrà sincronizzata nessuna casella di posta!"
           prefill:
             title: "Precompila con impostazioni per:"
-            gmail: "GMail"
           credentials:
             title: "Credenziali"
             smtp_server: "Server SMTP"
@@ -1423,6 +1422,7 @@ it:
         last_used_prefix: "Ultimo uso"
         never_used: "Mai usata"
         already_added_error: "Hai già registrato questa passkey. Non devi registrarla di nuovo."
+        confirm_button: "o usa una passkey"
       change_about:
         title: "Modifica i dati personali"
         error: "Si è verificato un errore durante la modifica del valore."
@@ -1503,14 +1503,14 @@ it:
           generic: "Il tuo account %{provider} verrà utilizzato per l'autenticazione."
       name:
         title: "Nome"
-        instructions: "il tuo nome completo (opzionale)"
-        instructions_required: "Il tuo nome completo"
+        instructions: "Il tuo nome completo (opzionale)."
+        instructions_required: "Il tuo nome completo."
         required: "Inserisci un nome"
         too_short: "Il nome è troppo breve"
         ok: "Il nome sembra adeguato"
       username:
         title: "Nome utente"
-        instructions: "univoco, senza spazi, breve"
+        instructions: "Univoco, senza spazi, breve."
         short_instructions: "Gli utenti possono menzionarti scrivendo @%{username}"
         available: "Il nome utente è disponibile"
         not_available: "Non disponibile. Provare %{suggestion}?"
@@ -1705,6 +1705,7 @@ it:
       confirm_access:
         title: "Conferma accesso"
         incorrect_password: "La password inserita non è corretta."
+        incorrect_passkey: "La passkey non è corretta."
         logged_in_as: "Hai effettuato l'accesso come: "
         instructions: "Conferma la tua identità per completare questa azione."
         fine_print: "Ti chiediamo di confermare la tua identità perché si tratta di un'azione potenzialmente sensibile. Una volta autenticato, ti verrà chiesto di riautenticarti solo dopo alcune ore di inattività."
@@ -1715,7 +1716,7 @@ it:
         same_as_username: "La tua password è uguale al tuo nome utente."
         same_as_email: "La password coincide con l'email."
         ok: "La password è adeguata"
-        instructions: "almeno %{count} caratteri"
+        instructions: "Almeno %{count} caratteri."
         required: "Inserisci una password"
         confirm: "Conferma"
         incorrect_password: "La password inserita non è corretta."
@@ -1949,6 +1950,7 @@ it:
       action: "Ho dimenticato la password"
       invite: "Inserisci il nome utente o l'indirizzo email. Ti manderemo un'email per reimpostare la password."
       invite_no_username: "Inserisci il tuo indirizzo di posta elettronica e riceverai un'e-mail per reimpostare la password."
+      email-username: "Email o nome utente"
       reset: "Reimposta Password"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con le istruzioni per ripristinare la tua password."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email contenente le istruzioni per ripristinare la password."
@@ -2155,6 +2157,7 @@ it:
       add_warning: "Questo è un avvertimento ufficiale."
       toggle_whisper: "Attiva/Disattiva Sussurri"
       toggle_unlisted: "Rendi Invisibile"
+      insert_table: "Inserisci tabella"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saved_local_draft_tip: "salvato in locale"
       similar_topics: "Il tuo argomento è simile a…"
@@ -2166,8 +2169,9 @@ it:
         one: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzione di utente configurato dall'amministratore. Non ci saranno notifiche."
         other: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzioni di utenti configurato dall'amministratore. Non ci saranno notifiche."
       group_mentioned:
-        one: "Menzionando %{group}, una notifica sarà inviata a <a href='%{group_link}'>%{count} persona</a>. Vuoi procedere?"
-        other: "Menzionando %{group}, saranno inviate notifiche a <a href='%{group_link}'>%{count} persone</a>. Vuoi procedere?"
+        one: "Menzionando %{group} notificherai <a href='%{group_link}'>%{count} persona</a>."
+        other: "Menzionando %{group} notificherai <a href='%{group_link}'>%{count} persone</a>."
+      larger_group_mentioned: "Menzionando %{group} notificherai <a href='%{group_link}'>%{count} persone.a</a>. Vuoi procedere?"
       cannot_see_mention:
         category: "Hai menzionato %{username} ma non riceverà alcuna notifica perché non ha accesso a questa categoria. Dovrai aggiungerlo ad un gruppo che ha accesso a questa categoria."
         private: "Hai menzionato %{username} ma non riceverà alcuna notifica perché non ha accesso a questo messaggio privato. Dovrai invitarlo a questo messaggio privato."
@@ -2397,6 +2401,7 @@ it:
         private_message: '%{username} ti ha inviato un messaggio personale in "%{topic}" - %{site_title}'
         linked: '%{username} ha aggiunto un collegamento a un tuo messaggio da "%{topic}" - %{site_title}'
         watching_first_post: '%{username} ha creato il nuovo argomento "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} ha pubblicato qualcosa in "%{topic}" - %{site_title}'
         confirm_title: "Notifiche abilitate - %{site_title}"
         confirm_body: "Operazione riuscita! Le notifiche sono state abilitate."
         custom: "Notifica di %{username} su %{site_title}"
@@ -3956,7 +3961,7 @@ it:
         one: "Anche il suo sinonimo verrà eliminato."
         other: "I suoi %{count} sinonimi verranno a loro volta eliminati."
       edit_tag: "Modifica il nome e la descrizione dell’etichetta"
-      description: "Descrizione"
+      description: "Descrizione (max 1000 caratteri)"
       sort_by: "Ordina per:"
       sort_by_count: "conteggio"
       sort_by_name: "nome"
@@ -4269,6 +4274,61 @@ it:
           other: "L'input deve essere maggiore di %{count}."
         patternMismatch: "Per favore, rispetta il formato richiesto."
         badInput: "Per favore, inserisci un input valido."
+    table_builder:
+      title: "Costruttore di tabelle"
+      modal:
+        title: "Costruttore di tabelle"
+        create: "Costruisci tabella"
+        help:
+          title: "Utilizzo dell'editor di fogli di calcolo"
+          enter_key: "Invio"
+          tab_key: "Tab"
+          new_row: "alla fine di una riga per inserire una nuova riga."
+          options: "Fai clic con il tasto destro sulle celle per accedere a più opzioni in un menu a discesa."
+      edit:
+        btn_edit: "Modifica tabella"
+        modal:
+          title: "Modifica tabella"
+          cancel: "annulla"
+          create: "Salva"
+          reason: "perché stai modificando?"
+          trigger_reason: "Aggiungi il motivo della modifica"
+        default_edit_reason: "Aggiorna tabella con l'editor di tabelle"
+      default_header:
+        col_1: "Colonna 1"
+        col_2: "Colonna 2"
+        col_3: "Colonna 3"
+        col_4: "Colonna 4"
+      spreadsheet:
+        no_records_found: "Nessun record trovato"
+        show: "Mostra"
+        entries: "voci"
+        about: "Informazioni"
+        prompts:
+          delete_selected_rows: "Vuoi davvero eliminare le righe selezionate?"
+          delete_selected_cols: "Vuoi davvero eliminare le colonne selezionate?"
+          will_destroy_merged_cells: "Questa azione eliminerà tutte le celle unite esistenti. Continuare?"
+          will_clear_search_results: "Questa azione eliminerà tutte le celle unite esistenti. Continuare?"
+          conflicts_with_merged_cells: "C'è un conflitto con un'altra cella unita"
+        invalid_merge_props: "Proprietà unite non valide"
+        cells_already_merged: "Cella già unita"
+        no_cells_selected: "Nessuna cella selezionata"
+        context_menu:
+          row:
+            before: "Inserisci una nuova riga prima"
+            after: "Inserisci una nuova riga dopo"
+            delete: "Elimina le righe selezionate"
+          col:
+            before: "Inserisci una nuova colonna prima"
+            after: "Inserisci una nuova colonna dopo"
+            delete: "Elimina le colonne selezionate"
+            rename: "Rinomina questa colonna"
+          order:
+            ascending: "Ordine crescente"
+            descending: "Ordine decrescente"
+          copy: "Copia..."
+          paste: "Incolla..."
+          save: "Salva come..."
   admin_js:
     type_to_filter: "digita per filtrare…"
     admin:
@@ -4297,9 +4357,7 @@ it:
         latest_version: "Ultima"
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
         new_features:
-          title: "\U0001F381 Nuove funzionalità"
-          dismiss: "Ignora"
-          learn_more: "Scopri di più"
+          learn_more: "Scopri di più..."
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."
@@ -4648,8 +4706,9 @@ it:
         not_enabled: "N"
         change_settings_short: "Impostazioni"
         howto: "Come installo i plugin?"
-        official: "Plugin Ufficiale"
         broken_route: "Impossibile configurare il collegamento a '%{name}'. Assicurati che i blocchi degli annunci siano disabilitati e prova a ricaricare la pagina."
+        author: "Da %{author}"
+        learn_more: "Scopri di più"
       navigation_menu:
         sidebar: "Barra laterale"
         header_dropdown: "Intestazione a discesa"

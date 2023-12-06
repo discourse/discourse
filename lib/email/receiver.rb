@@ -859,7 +859,8 @@ module Email
 
         user ||= stage_from_user
 
-        if !user.has_trust_level?(SiteSetting.email_in_min_trust) && !sent_to_mailinglist_mirror?
+        if !user.staged? && !user.in_any_groups?(SiteSetting.email_in_allowed_groups_map) &&
+             !sent_to_mailinglist_mirror?
           raise InsufficientTrustLevelError
         end
 
@@ -1067,7 +1068,9 @@ module Email
         )
       elsif destination.is_a?(Category)
         return false if user.staged? && !destination.email_in_allow_strangers
-        return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
+        if user.groups.any? && !user.in_any_groups?(SiteSetting.email_in_allowed_groups_map)
+          return false
+        end
 
         topic_user = embedded_user&.call || user
         create_topic(

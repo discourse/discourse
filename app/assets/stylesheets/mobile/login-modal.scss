@@ -36,7 +36,6 @@
         flex: 1 1 calc(50% - 0.25em);
         font-size: var(--font-down-1);
         white-space: nowrap;
-        max-width: calc(50% - 0.125em);
         &:last-child {
           margin-right: auto;
         }

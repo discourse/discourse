@@ -9,6 +9,7 @@ import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
+import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import {
   cannotPostAgain,
@@ -160,7 +161,7 @@ export default class ComposerService extends Service {
   }
 
   set disableSubmit(value) {
-    return this.set("_disableSubmit", value);
+    this.set("_disableSubmit", value);
   }
 
   @computed("model.category", "skipFormTemplate")
@@ -188,7 +189,7 @@ export default class ComposerService extends Service {
   }
 
   set formTemplateInitialValues(values) {
-    return this.set("_formTemplateInitialValues", values);
+    this.set("_formTemplateInitialValues", values);
   }
 
   @action
@@ -265,7 +266,6 @@ export default class ComposerService extends Service {
       key: "toolbar-enabled",
       value: val ? "true" : "false",
     });
-    return val;
   }
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
@@ -422,6 +422,14 @@ export default class ComposerService extends Service {
           icon: "far-eye-slash",
           label: "composer.toggle_whisper",
           condition: "showWhisperToggle",
+        })
+      );
+
+      options.push(
+        this._setupPopupMenuOption({
+          action: "toggleSpreadsheet",
+          icon: "table",
+          label: "composer.insert_table",
         })
       );
 
@@ -725,6 +733,16 @@ export default class ComposerService extends Service {
   }
 
   @action
+  toggleSpreadsheet() {
+    this.modal.show(SpreadsheetEditor, {
+      model: {
+        toolbarEvent: this.toolbarEvent,
+        tableTokens: null,
+      },
+    });
+  }
+
+  @action
   toggleInvisible() {
     this.toggleProperty("model.unlistTopic");
   }
@@ -859,7 +877,12 @@ export default class ComposerService extends Service {
         group_link: groupLink,
       });
     } else if (userCount > 0) {
-      body = I18n.t("composer.group_mentioned", {
+      // Louder warning for a larger group.
+      const translationKey =
+        userCount >= 5
+          ? "composer.larger_group_mentioned"
+          : "composer.group_mentioned";
+      body = I18n.t(translationKey, {
         group: `@${name}`,
         count: userCount,
         group_link: groupLink,

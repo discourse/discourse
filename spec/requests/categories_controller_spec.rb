@@ -1040,6 +1040,31 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#find" do
+    fab!(:category) { Fabricate(:category, name: "Foo") }
+    fab!(:subcategory) { Fabricate(:category, name: "Foobar", parent_category: category) }
+
+    it "returns the category" do
+      get "/categories/find.json",
+          params: {
+            category_slug_path_with_id: "#{category.slug}/#{category.id}",
+          }
+
+      expect(response.parsed_body["category"]["id"]).to eq(category.id)
+      expect(response.parsed_body["ancestors"]).to eq([])
+    end
+
+    it "returns the subcategory and ancestors" do
+      get "/categories/find.json",
+          params: {
+            category_slug_path_with_id: "#{subcategory.slug}/#{subcategory.id}",
+          }
+
+      expect(response.parsed_body["category"]["id"]).to eq(subcategory.id)
+      expect(response.parsed_body["ancestors"].map { |c| c["id"] }).to eq([category.id])
+    end
+  end
+
   describe "#search" do
     fab!(:category) { Fabricate(:category, name: "Foo") }
     fab!(:subcategory) { Fabricate(:category, name: "Foobar", parent_category: category) }
@@ -1066,10 +1091,20 @@ RSpec.describe CategoriesController do
       it "returns categories" do
         get "/categories/search.json", params: { parent_category_id: category.id }
 
-        expect(response.parsed_body["categories"].size).to eq(2)
+        expect(response.parsed_body["categories"].size).to eq(1)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
-          "Foo",
           "Foobar",
+        )
+      end
+
+      it "can return only top-level categories" do
+        get "/categories/search.json", params: { parent_category_id: -1 }
+
+        expect(response.parsed_body["categories"].size).to eq(3)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Notfoo",
         )
       end
     end

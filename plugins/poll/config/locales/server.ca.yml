@@ -14,7 +14,6 @@ ca:
   poll:
     poll: "enquesta"
     invalid_argument: "El valor '%{value}' no és vàlid per a l'argument '%{argument}'."
-    multiple_polls_without_name: "Hi ha múltiples enquestes sense nom. Empreu l'atribut '<code>nom</code>' per a identificar inequívocament les enquestes."
     multiple_polls_with_same_name: "Hi ha múltiples enquestes amb el mateix nom: <strong>%{name}</strong>. Empreu l'atribut '<code>nom</code>' per a identificar inequívocament les enquestes."
     default_poll_must_have_less_options:
       one: "L'enquesta ha de tenir menys d'%{count} opció."

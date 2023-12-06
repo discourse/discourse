@@ -734,7 +734,6 @@ fr:
           imap_mailbox_not_selected: "Vous devez indiquer une boîte de réception dans ces paramètres IMAP, autrement aucune boîte de réception ne sera synchronisée !"
           prefill:
             title: "Renseigner les paramètres pour :"
-            gmail: "Gmail"
           credentials:
             title: "Identifiants"
             smtp_server: "Serveur SMTP"
@@ -1018,6 +1017,7 @@ fr:
         ignore_no_users: "Vous n'ignorez aucun utilisateur."
         ignore_option: "Ignoré"
         ignore_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur et ses messages et réponses seront masqués."
+        add_ignored_user: "Ajouter…"
         mute_option: "En sourdine"
         mute_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur."
         normal_option: "Normal"
@@ -1469,14 +1469,13 @@ fr:
           generic: "Votre compte %{provider} sera utilisé pour l'authentification."
       name:
         title: "Nom"
-        instructions: "votre nom complet (facultatif)"
-        instructions_required: "Votre nom complet"
+        instructions: "Votre nom complet (facultatif)."
+        instructions_required: "Votre nom complet."
         required: "Veuillez saisir un nom"
         too_short: "Votre nom est trop court"
         ok: "Votre nom a l'air correct"
       username:
         title: "Nom d'utilisateur"
-        instructions: "unique, sans espace, court"
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @%{username}"
         available: "Votre nom d'utilisateur est disponible"
         not_available: "Indisponible. Essayer %{suggestion} ?"
@@ -1498,6 +1497,7 @@ fr:
         instructions: "L'inscription nécessite un code d'invitation"
       auth_tokens:
         title: "Appareils utilisés récemment"
+        short_description: "Il s'agit d'une liste d'appareils qui se sont récemment connectés à votre compte."
         details: "Détails"
         log_out_all: "Se déconnecter partout"
         not_you: "Ce n'est pas vous ?"
@@ -1671,7 +1671,7 @@ fr:
         same_as_username: "Votre mot de passe est identique à votre nom d'utilisateur."
         same_as_email: "Votre mot de passe est identique à votre adresse e-mail."
         ok: "Votre mot de passe semble correct."
-        instructions: "au moins %{count} caractères"
+        instructions: "Au moins %{count} caractères."
         required: "Veuillez saisir un mot de passe"
         confirm: "Confirmer"
       summary:
@@ -2040,6 +2040,7 @@ fr:
       delete_item: "Supprimer %{name}"
       filter_by: "Filtrer par : %{name}"
       select_to_filter: "Sélectionner une valeur à filtrer"
+      default_header_text: Sélectionnez…
       no_content: Aucune correspondance trouvée
       results_count:
         one: "%{count} résultat"
@@ -2090,6 +2091,7 @@ fr:
       add_warning: "Ceci est un avertissement officiel."
       toggle_whisper: "Activer/désactiver le murmure"
       toggle_unlisted: "Activer/désactiver la visibilité"
+      insert_table: "Insérer un tableau"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
       saved_local_draft_tip: "enregistré sur votre appareil"
       drafts_offline: "brouillons hors ligne"
@@ -2099,9 +2101,6 @@ fr:
       group_mentioned_limit:
         one: "<b>Attention !</b> Vous avez mentionné <a href='%{group_link}'>%{group}</a>, cependant ce groupe comprend plus de membres que le nombre limite de mentions de %{count} utilisateur configuré par l'administrateur. Personne ne sera notifié."
         other: "<b>Attention !</b> Vous avez mentionné <a href='%{group_link}'>%{group}</a>, cependant ce groupe comprend plus de membres que le nombre limite de mentions de %{count} utilisateurs configuré par l'administrateur. Personne ne sera notifié."
-      group_mentioned:
-        one: "En mentionnant %{group}, vous êtes sur le point de notifier <a href='%{group_link}'>%{count} personne</a>. Voulez-vous continuer ?"
-        other: "En mentionnant %{group}, vous êtes sur le point de notifier <a href='%{group_link}'>%{count} personnes</a>. Voulez-vous continuer ?"
       cannot_see_mention:
         category: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car la catégorie ne lui est pas accessible. Vous devez l'ajouter à un groupe ayant accès à cette catégorie."
         private: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car ce message direct ne lui est pas visible. Vous devez l'inviter à rejoindre ce message direct."
@@ -2326,6 +2325,7 @@ fr:
         private_message: '%{username} vous a envoyé un message direct dans « %{topic} » - %{site_title}'
         linked: '%{username} a inséré un lien vers votre message dans le sujet « %{topic} » - %{site_title}'
         watching_first_post: '%{username} a créé un nouveau sujet « %{topic} » - %{site_title}'
+        watching_category_or_tag: '%{username} a publié un message dans « %{topic} » - %{site_title}'
         confirm_title: "Notifications activées - %{site_title}"
         confirm_body: "Les notifications ont été activées."
         custom: "Notification de %{username} sur %{site_title}"
@@ -3847,7 +3847,7 @@ fr:
         one: "Son synonyme sera aussi supprimé."
         other: "Ses %{count} synonymes seront aussi supprimés."
       edit_tag: "Modifier le nom et la description de l'étiquette"
-      description: "Description"
+      description: "Description (maximum 1000 caractères)"
       sort_by: "Trier par :"
       sort_by_count: "nombre"
       sort_by_name: "nom"
@@ -4158,6 +4158,61 @@ fr:
           other: "La saisie doit être supérieure à %{count}."
         patternMismatch: "Veuillez respecter le format demandé."
         badInput: "Veuillez saisir une entrée valide."
+    table_builder:
+      title: "Éditeur de tableaux"
+      modal:
+        title: "Éditeur de tableaux"
+        create: "Créer un tableau"
+        help:
+          title: "Utiliser l'éditeur de tableaux"
+          enter_key: "Entrée"
+          tab_key: "Tabulation"
+          new_row: "à la fin d'une ligne pour en insérer une nouvelle."
+          options: "Clic droit sur une cellule pour afficher des options contextuelles."
+      edit:
+        btn_edit: "Modifier le tableau"
+        modal:
+          title: "Modifier le tableau"
+          cancel: "annuler"
+          create: "Enregistrer"
+          reason: "pourquoi modifiez-vous le tableau ?"
+          trigger_reason: "Ajouter la raison de la modification"
+        default_edit_reason: "Modifier avec l'éditeur de tableaux"
+      default_header:
+        col_1: "Colonne 1"
+        col_2: "Colonne 2"
+        col_3: "Colonne 3"
+        col_4: "Colonne 4"
+      spreadsheet:
+        no_records_found: "Aucun enregistrement trouvé"
+        show: "Afficher"
+        entries: "entrées"
+        about: "À propos"
+        prompts:
+          delete_selected_rows: "Voulez-vous vraiment supprimer les lignes sélectionnées ?"
+          delete_selected_cols: "Voulez-vous vraiment supprimer les colonnes sélectionnées ?"
+          will_destroy_merged_cells: "Cette action détruira toutes les cellules fusionnées existantes. Voulez-vous continuer ?"
+          will_clear_search_results: "Cette action détruira toutes les cellules fusionnées existantes. Voulez-vous continuer ?"
+          conflicts_with_merged_cells: "Il y a un conflit avec une autre cellule fusionnée"
+        invalid_merge_props: "Propriétés fusionnées invalides"
+        cells_already_merged: "Cellule déjà fusionnée"
+        no_cells_selected: "Aucune cellule sélectionnée"
+        context_menu:
+          row:
+            before: "Insérer une nouvelle ligne avant"
+            after: "Insérer une nouvelle ligne après"
+            delete: "Supprimer les lignes sélectionnées"
+          col:
+            before: "Insérer une nouvelle colonne avant"
+            after: "Insérer une nouvelle colonne après"
+            delete: "Supprimer les colonnes sélectionnées"
+            rename: "Renommer cette colonne"
+          order:
+            ascending: "Ordre croissant"
+            descending: "Ordre décroissant"
+          copy: "Copier..."
+          paste: "Coller..."
+          save: "Enregistrer sous..."
   admin_js:
     type_to_filter: "filtrer les paramètres…"
     admin:
@@ -4186,9 +4241,7 @@ fr:
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         new_features:
-          title: "\U0001F381 Nouveautés"
-          dismiss: "Ignorer"
-          learn_more: "En savoir plus…"
+          learn_more: "En savoir plus…..."
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."
@@ -4514,8 +4567,9 @@ fr:
         not_enabled: "N"
         change_settings_short: "Paramètres"
         howto: "Comment installer des extensions ?"
-        official: "Extension officielle"
         broken_route: "Impossible de configurer le lien vers « %{name} ». Assurez-vous que les bloqueurs de publicités sont désactivés et essayez de recharger la page."
+        author: "Par %{author}"
+        learn_more: "En savoir plus…"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"

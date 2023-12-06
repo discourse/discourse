@@ -7,7 +7,7 @@
   "license": "GPL-2.0-only",
   "keywords": [],
   "dependencies": {
-    "@babel/standalone": "^7.23.3",
+    "@babel/standalone": "^7.23.5",
     "@zxing/text-encoding": "^0.9.0",
     "babel-plugin-ember-template-compilation": "^2.2.1",
     "content-tag": "^1.1.2",
@@ -19,7 +19,7 @@
     "handlebars": "^4.7.8",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "terser": "^5.24.0"
+    "terser": "^5.25.0"
   },
   "engines": {
     "node": "16.* || >= 18",

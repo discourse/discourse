@@ -14,17 +14,40 @@ RSpec.describe Plugin::Instance do
       expect(plugin.name).to eq("plugin-name")
       expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
 
-      git_repo = plugin.git_repo
       plugin.git_repo.stubs(:latest_local_commit).returns("123456")
       plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
 
       expect(plugin.commit_hash).to eq("123456")
       expect(plugin.commit_url).to eq("http://github.com/discourse/discourse-plugin/commit/123456")
+      expect(plugin.discourse_owned?).to eq(true)
     end
 
     it "does not blow up on missing directory" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/frank_zappa")
       expect(plugins.count).to eq(0)
+    end
+  end
+
+  describe "git repo details" do
+    describe ".discourse_owned?" do
+      it "returns true if the plugin is on github in discourse-org or discourse orgs" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+        plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
+        expect(plugin.discourse_owned?).to eq(true)
+
+        plugin.git_repo.stubs(:url).returns("http://github.com/discourse-org/discourse-plugin")
+        expect(plugin.discourse_owned?).to eq(true)
+
+        plugin.git_repo.stubs(:url).returns("http://github.com/someguy/someguy-plugin")
+        expect(plugin.discourse_owned?).to eq(false)
+      end
+
+      it "returns false if the commit_url is missing because of git command issues" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns(nil)
+        expect(plugin.discourse_owned?).to eq(false)
+      end
     end
   end
 
@@ -748,12 +771,12 @@ RSpec.describe Plugin::Instance do
           to: Notification.types[:code_review_commit_approved],
           threshold: 1,
           consolidation_window: 1.minute,
-          unconsolidated_query_blk: ->(notifications, _data) {
+          unconsolidated_query_blk: ->(notifications, _data) do
             notifications.where("(data::json ->> 'consolidated') IS NULL")
-          },
-          consolidated_query_blk: ->(notifications, _data) {
+          end,
+          consolidated_query_blk: ->(notifications, _data) do
             notifications.where("(data::json ->> 'consolidated') IS NOT NULL")
-          },
+          end,
         ).set_mutations(
           set_data_blk: ->(notification) { notification.data_hash.merge(consolidated: true) },
         )

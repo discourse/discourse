@@ -332,6 +332,43 @@ acceptance("Search - Anonymous", function (needs) {
   });
 });
 
+acceptance("Search - Default sort order", function (needs) {
+  needs.user();
+  needs.settings({
+    search_default_sort_order: 1, // "latest"
+  });
+  needs.hooks.beforeEach(function () {
+    this.searchPreferencesManager = this.container.lookup(
+      "service:search-preferences-manager"
+    );
+    this.searchPreferencesManager.sortOrder = null;
+  });
+  needs.hooks.afterEach(function () {
+    this.searchPreferencesManager.sortOrder = null;
+  });
+
+  test("Default sort order is used if there is no preference in user key value store", async function (assert) {
+    await visit("/search?q=discourse");
+
+    const searchSortByDropdown = selectKit("#search-sort-by");
+    await searchSortByDropdown.expand();
+    assert.strictEqual(searchSortByDropdown.header().value(), "1");
+  });
+
+  test("User preference from SearchPreferencesManager key value store is used if present", async function (assert) {
+    this.searchPreferencesManager = this.container.lookup(
+      "service:search-preferences-manager"
+    );
+    this.searchPreferencesManager.sortOrder = 2; // "likes"
+
+    await visit("/search?q=discourse");
+
+    const searchSortByDropdown = selectKit("#search-sort-by");
+    await searchSortByDropdown.expand();
+    assert.strictEqual(searchSortByDropdown.header().value(), "2");
+  });
+});
+
 acceptance("Search - Authenticated", function (needs) {
   needs.user();
   needs.settings({

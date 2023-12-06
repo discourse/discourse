@@ -30,7 +30,7 @@ export default {
     this.appEvents = owner.lookup("service:app-events");
     this.siteSettings = owner.lookup("service:site-settings");
     this.site = owner.lookup("service:site");
-    this.router = owner.lookup("router:main");
+    this.router = owner.lookup("service:router");
 
     this.reviewableCountsChannel = `/reviewable_counts/${this.currentUser.id}`;
 

@@ -178,6 +178,8 @@ nl:
         other: "en %{count} anderen"
     summaries:
       no_targets: "Er waren geen berichten tijdens de geselecteerde periode."
+    transcript:
+      default_thread_title: "Thread"
   discourse_push_notifications:
     popup:
       chat_mention:

@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import $ from "jquery";
 import { cook } from "discourse/lib/text";
 
 export default Component.extend({

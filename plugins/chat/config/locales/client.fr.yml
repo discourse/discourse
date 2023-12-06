@@ -107,6 +107,8 @@ fr:
         all_new: "Tous les nouveaux messages"
         dm_and_mentions: "Messages directs et mentions"
         never: "Jamais"
+      separate_sidebar_mode:
+        title: "Afficher des modes de barre latérale distincts pour le forum et le clavardag"
       enable: "Activer la discussion"
       flag: "Drapeau"
       emoji: "Insérer un émoji"
@@ -396,6 +398,7 @@ fr:
       quote:
         original_channel: 'Envoyé à l''origine dans le canal <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Citation de discussion copiée dans le presse-papiers"
+        default_thread_title: "Fil"
       notification_levels:
         never: "Jamais"
         mention: "Seulement pour les mentions"

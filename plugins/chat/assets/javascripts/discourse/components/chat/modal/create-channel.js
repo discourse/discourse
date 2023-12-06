@@ -40,6 +40,7 @@ export default class ChatModalCreateChannel extends Component {
   #generateSlugHandler = null;
 
   willDestroy() {
+    super.willDestroy(...arguments);
     cancel(this.#generateSlugHandler);
   }
 

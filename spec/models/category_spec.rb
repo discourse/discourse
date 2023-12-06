@@ -1298,6 +1298,8 @@ RSpec.describe Category do
     let(:guardian) { Guardian.new(admin) }
     fab!(:category)
 
+    before { Category.clear_parent_ids }
+
     describe "when category is uncategorized" do
       it "should return the reason" do
         category = Category.find(SiteSetting.uncategorized_category_id)

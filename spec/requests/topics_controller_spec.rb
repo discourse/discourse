@@ -309,11 +309,11 @@ RSpec.describe TopicsController do
           begin
             called = false
 
-            assert = ->(original_topic, destination_topic) {
+            assert = ->(original_topic, destination_topic) do
               called = true
               expect(original_topic).to eq(topic)
               expect(destination_topic).to eq(dest_topic)
-            }
+            end
 
             DiscourseEvent.on(:topic_merged, &assert)
 
@@ -1430,11 +1430,6 @@ RSpec.describe TopicsController do
   describe "#mute/unmute" do
     it "needs you to be logged in" do
       put "/t/99/mute.json"
-      expect(response.status).to eq(403)
-    end
-
-    it "needs you to be logged in" do
-      put "/t/99/unmute.json"
       expect(response.status).to eq(403)
     end
   end

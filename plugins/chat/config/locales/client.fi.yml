@@ -343,6 +343,7 @@ fi:
       quote:
         original_channel: 'Lähetetty alun perin kanavalla <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-lainaus kopioitiin leikepöydälle"
+        default_thread_title: "Ketju"
       notification_levels:
         never: "Ei koskaan"
         mention: "Vain maininnoissa"

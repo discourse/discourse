@@ -426,6 +426,7 @@ tr_TR:
       quote:
         original_channel: 'İlk olarak <a href="%{channelLink}">%{channel}</a> adlı kanalda gönderildi'
         copy_success: "Sohbet alıntısı panoya kopyalandı"
+        default_thread_title: "Konu"
       notification_levels:
         never: "Asla"
         mention: "Sadece bahsetmeler için"

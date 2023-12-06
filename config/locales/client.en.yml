@@ -377,6 +377,7 @@ en:
       copied: "copied!"
       copy: "copy code to clipboard"
       fullscreen: "show code in full screen"
+      view_code: "View code"
 
     drafts:
       label: "Drafts"
@@ -824,7 +825,7 @@ en:
           imap_mailbox_not_selected: "You must select a Mailbox for this IMAP configuration or no mailboxes will be synced!"
           prefill:
             title: "Prefill with settings for:"
-            gmail: "GMail"
+            gmail: "Gmail"
           credentials:
             title: "Credentials"
             smtp_server: "SMTP Server"
@@ -2056,7 +2057,7 @@ en:
           other {# errors/minute}
         }.
 
-    learn_more: "learn more…"
+    learn_more: "Learn more…"
 
     mute: Mute
     unmute: Unmute
@@ -2381,6 +2382,7 @@ en:
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
       toggle_unlisted: "Toggle Unlisted"
+      insert_table: "Insert Table"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to…"
@@ -2394,8 +2396,9 @@ en:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
         other: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} users. Nobody will be notified."
       group_mentioned:
-        one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
-        other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
+        one: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} person</a>."
+        other: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} people</a>."
+      larger_group_mentioned: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} people</a>. Are you sure?"
       cannot_see_mention:
         category: "You mentioned @%{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned @%{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this personal message."
@@ -3434,9 +3437,9 @@ en:
     post:
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
-      quote_reply_shortcut: "Or press q"
+      quote_reply_shortcut: "Quote (or press q)"
       quote_edit: "Edit"
-      quote_edit_shortcut: "Or press e"
+      quote_edit_shortcut: "Edit (or press e)"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
@@ -4305,7 +4308,7 @@ en:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
       edit_tag: "Edit tag name and description"
-      description: "Description"
+      description: "Description (max 1000 characters)"
       sort_by: "Sort by:"
       sort_by_count: "count"
       sort_by_name: "name"
@@ -4454,6 +4457,7 @@ en:
       sr_jump_bottom_button: "Jump to the last post"
     fullscreen_table:
       expand_btn: "Expand Table"
+      view_table: "View Table"
 
     second_factor_auth:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
@@ -4642,6 +4646,64 @@ en:
         patternMismatch: "Please match the requested format."
         badInput: "Please enter a valid input."
 
+    table_builder:
+      title: "Table Builder"
+      modal:
+        title: "Table Builder"
+        create: "Build Table"
+        help:
+          title: "Using the Spreadsheet Editor"
+          enter_key: "Enter"
+          tab_key: "Tab"
+          new_row: "at the end of a row to insert a new row."
+          new_col: "at the end of a column to insert a new column."
+          options: "Right-click on cells to access more options in a dropdown menu."
+        confirm_close: "Are you sure you want to close the table builder? Any unsaved changes will be lost."
+      edit:
+        btn_edit: "Edit Table"
+        modal:
+          title: "Edit Table"
+          cancel: "cancel"
+          create: "Save"
+          reason: "why are you editing?"
+          trigger_reason: "Add reason for edit"
+        default_edit_reason: "Update Table with Table Editor"
+      default_header:
+        col_1: "Column 1"
+        col_2: "Column 2"
+        col_3: "Column 3"
+        col_4: "Column 4"
+      spreadsheet:
+        no_records_found: "No records found"
+        show: "Show"
+        entries: "entries"
+        about: "About"
+        prompts:
+          delete_selected_rows: "Are you sure you want to delete the selected rows?"
+          delete_selected_cols: "Are you sure you want to delete the selected columns?"
+          will_destroy_merged_cells: "This action will destroy any existing merged cells. Are you sure?"
+          will_clear_search_results: "This action will destroy any existing merged cells. Are you sure?"
+          conflicts_with_merged_cells: "There is a conflict with another merged cell"
+        invalid_merge_props: "Invalid merged properties"
+        cells_already_merged: "Cell already merged"
+        no_cells_selected: "No cells selected"
+        context_menu:
+          row:
+            before: "Insert a new row before"
+            after: "Insert a new row after"
+            delete: "Delete selected rows"
+          col:
+            before: "Insert a new column before"
+            after: "Insert a new column after"
+            delete: "Delete selected columns"
+            rename: "Rename this column"
+          order:
+            ascending: "Order ascending"
+            descending: "Order descending"
+          copy: "Copy..."
+          paste: "Paste..."
+          save: "Save as..."
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     # This is a text input placeholder, keep the translation short
@@ -4659,6 +4721,7 @@ en:
 
       reports:
         title: "List of available reports"
+        meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
 
       dashboard:
         title: "Dashboard"
@@ -4676,9 +4739,9 @@ en:
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
         new_features:
-          title: "🎁 New Features"
-          dismiss: "Dismiss"
-          learn_more: "Learn more"
+          title: "What's new"
+          previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          learn_more: "Learn more..."
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
@@ -5074,8 +5137,11 @@ en:
         not_enabled: "N"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
-        official: "Official Plugin"
+        official: "Official Discourse Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
+        author: "By %{author}"
+        experimental_badge: "experimental"
+        learn_more: "Learn more"
 
       navigation_menu:
         sidebar: "Sidebar"

@@ -190,8 +190,8 @@ export default Component.extend({
             );
           }
 
-          if (this.attrs.remove) {
-            this.attrs.remove(performResult.remove_reviewable_ids);
+          if (this.remove) {
+            this.remove(performResult.remove_reviewable_ids);
           } else {
             return this.store.find("reviewable", reviewable.id);
           }

@@ -69,7 +69,9 @@ class UrlHelper
   def self.normalized_encode(uri)
     url = uri.to_s
 
-    raise ArgumentError.new(:uri, "URL is too long") if url.length > MAX_URL_LENGTH
+    if url.length > MAX_URL_LENGTH
+      raise ArgumentError.new("URL starting with #{url[0..100]} is too long")
+    end
 
     # Ideally we will jump straight to `Addressable::URI.normalized_encode`. However,
     # that implementation has some edge-case issues like https://github.com/sporkmonger/addressable/issues/472.

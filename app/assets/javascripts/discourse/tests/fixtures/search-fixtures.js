@@ -84,6 +84,7 @@ export default {
         yours: false,
         topic_id: 2179,
         topic_slug: "development-mode-super-slow",
+        topic_title_headline: "<span class='search-highlight'>Dev</span>opment mode super slow",
         display_username: "Bill Dudney",
         primary_group_name: null,
         version: 2,

@@ -1,15 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
+
 export default class ToggleChannelMembershipButton extends Component {
   @service chat;
+  @service chatApi;
+
   @tracked isLoading = false;
-  onToggle = null;
+
   options = {};
 
   constructor() {
@@ -54,7 +59,7 @@ export default class ToggleChannelMembershipButton extends Component {
     return this.chat
       .followChannel(this.args.channel)
       .then(() => {
-        this.onToggle?.();
+        this.args.onJoin?.(this.args.channel);
       })
       .catch(popupAjaxError)
       .finally(() => {
@@ -67,22 +72,22 @@ export default class ToggleChannelMembershipButton extends Component {
   }
 
   @action
-  onLeaveChannel() {
+  async onLeaveChannel() {
     this.isLoading = true;
 
-    return this.chat
-      .unfollowChannel(this.args.channel)
-      .then(() => {
-        this.onToggle?.();
-      })
-      .catch(popupAjaxError)
-      .finally(() => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
+    try {
+      if (this.args.channel.chatable.group) {
+        await this.chatApi.leaveChannel(this.args.channel.id);
+      } else {
+        await this.chat.unfollowChannel(this.args.channel);
+      }
 
-        this.isLoading = false;
-      });
+      this.args.onLeave?.(this.args.channel);
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   <template>
@@ -99,17 +104,30 @@ export default class ToggleChannelMembershipButton extends Component {
         }}
       />
     {{else}}
-      <DButton
-        @action={{this.onJoinChannel}}
-        @translatedLabel={{this.label}}
-        @translatedTitle={{this.options.joinTitle}}
-        @icon={{this.options.joinIcon}}
-        @disabled={{this.isLoading}}
-        class={{concatClass
-          "toggle-channel-membership-button -join"
-          this.options.joinClass
+      <PluginOutlet
+        @name="chat-join-channel-button"
+        @outletArgs={{hash
+          onJoinChannel=this.onJoinChannel
+          channel=@channel
+          icon=this.options.joinIcon
+          title=this.options.joinTitle
+          label=this.label
+          disabled=this.isLoading
         }}
-      />
+        @defaultGlimmer={{true}}
+      >
+        <DButton
+          @action={{this.onJoinChannel}}
+          @translatedLabel={{this.label}}
+          @translatedTitle={{this.options.joinTitle}}
+          @icon={{this.options.joinIcon}}
+          @disabled={{this.isLoading}}
+          class={{concatClass
+            "toggle-channel-membership-button -join"
+            this.options.joinClass
+          }}
+        />
+      </PluginOutlet>
     {{/if}}
   </template>
 }

@@ -396,6 +396,7 @@ es:
       quote:
         original_channel: 'Enviado originalmente en <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cita del chat copiada en el portapapeles"
+        default_thread_title: "Hilo"
       notification_levels:
         never: "Nunca"
         mention: "Solo para menciones"

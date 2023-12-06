@@ -9,7 +9,6 @@ sq:
     poll_maximum_options: "Numri maksimal i opsioneve të lejuara në një sondazh."
     poll_edit_window_mins: "Numri i minutave pas krijimit të postimit gjatë të cilave sondazhet mund të ndryshohen."
   poll:
-    multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
     default_poll_must_have_less_options:
       one: "Sondazhi duhet të ketë të paktën %{count} opsion."

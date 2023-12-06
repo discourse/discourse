@@ -650,8 +650,6 @@ el:
           imap_title: "IMAP"
           imap_additional_settings: "Πρόσθετες ρυθμίσεις"
           imap_settings_valid: "Έγκυρες ρυθμίσεις IMAP."
-          prefill:
-            gmail: "GMail"
           credentials:
             title: "Διαπιστευτήρια"
             smtp_server: "SMTP Server"
@@ -1213,14 +1211,13 @@ el:
           generic: "Ο %{provider} λογαριασμός σας θα χρησιμοποιηθεί για έλεγχο ταυτότητας."
       name:
         title: "Όνομα"
-        instructions: "το ονοματεπώνυμό σου (προαιρετικό)"
-        instructions_required: "Το ονοματεπώνυμό σου"
+        instructions: "Το ονοματεπώνυμό σου (προαιρετικό)."
+        instructions_required: "Το ονοματεπώνυμό σου."
         required: "Παρακαλώ εισαγάγετε ένα όνομα"
         too_short: "Το όνομά σου είναι πολύ μικρό"
         ok: "Το όνομά σου είναι καλό"
       username:
         title: "Όνομα Χρήστη"
-        instructions: "μοναδικό, χωρίς κενά, σύντομο"
         short_instructions: "Οι άλλοι μπορούν να αναφερθούν σε σένα με το @%{username} "
         available: "Το όνομα χρήστη είναι διαθέσιμο"
         not_available: "Δεν είναι διαθέσιμο. Δοκίμασε %{suggestion};"
@@ -1391,7 +1388,7 @@ el:
         same_as_username: "Ο κωδικός πρόσβασης που έδωσες είναι ο ίδιος με το όνομα χρήστη."
         same_as_email: "Ο κωδικός πρόσβασής σου είναι ίδιος με τη διεύθυνση email σου."
         ok: "Ο κωδικός πρόσβασης φαίνεται καλός."
-        instructions: "τουλάχιστον %{count} χαρακτήρες"
+        instructions: "Τουλάχιστον %{count} χαρακτήρες."
         required: "Παρακαλώ εισαγάγετε έναν κωδικό πρόσβασης"
       summary:
         title: "Περίληψη"
@@ -1739,9 +1736,6 @@ el:
       saved_local_draft_tip: "αποθηκεύτηκε τοπικά"
       drafts_offline: "τοπικά πρόχειρα"
       edit_conflict: "επεξεργασία διένεξης"
-      group_mentioned:
-        one: "Αναφέροντας %{group}, πρόκειται να λάβει ειδοποίηση <a href='%{group_link}'> %{count} άτομο</a> - είσαι βέβαιος;"
-        other: "Αναφέροντας το %{group}, πρόκειται να ειδοποίησεις <a href='%{group_link}'>%{count} μέλη</a> - είσαι σίγουρος;"
       duplicate_link: "Όπως φαίνετα ο σύνδεσμος σας προς <b>%{domain}</b> έχει ήδη αναρτηθεί στο νήμα από <b>@%{username}</b> σε μία <a href='%{post_url}'>απάντηση πριν από %{ago}</a> – θέλετε σίγουρα να αναρτήσετε τον σύνδεσμο ξανά;"
       reference_topic_title: "ΑΠ: %{title}"
       error:
@@ -1904,6 +1898,7 @@ el:
         private_message: 'Ο/Η %{username} σας έστειλε ένα προσωπικό μήνυμα στο "%{topic}" - %{site_title}'
         linked: '%{username} έκανε μια σύνδεση στην ανάρτηση που έκανες στο νήμα "%{topic}" - %{site_title}'
         watching_first_post: 'Ο/Η %{username} δημιούργησε ένα νέο θέμα "%{topic}" - %{site_title}'
+        watching_category_or_tag: '%{username} ανάρτησε στο "%{topic}" - %{site_title}'
         confirm_title: "Ενεργοποιημένες ειδοποιήσεις - %{site_title}"
         confirm_body: "Επιτυχία! Οι ειδοποιήσεις έχουν ενεργοποιηθεί."
         custom: "Ειδοποίηση από %{username} στο %{site_title}"
@@ -3129,7 +3124,6 @@ el:
       delete_confirm_synonyms:
         one: "Το συνώνυμό του θα διαγραφεί επίσης."
         other: "Τα %{count} συνώνυμά του θα διαγραφούν επίσης."
-      description: "Περιγραφή"
       sort_by: "Ταξινόμηση κατά:"
       sort_by_count: "άθροισμα"
       sort_by_name: "όνομα"
@@ -3316,6 +3310,18 @@ el:
         typeMismatch:
           default: "Παρακαλώ εισάγετε μια έγκυρη αξία."
           email: "Παρακαλώ δώσε μία έγκυρη διεύθυνση email."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Enter"
+      edit:
+        modal:
+          cancel: "ακύρωση"
+          create: "Αποθήκευση"
+          reason: "γιατί αναθεωρείς;"
+      spreadsheet:
+        show: "Εμφάνιση"
+        about: "Σχετικά"
   admin_js:
     admin:
       title: "Διαχειριστής"
@@ -3343,8 +3349,7 @@ el:
         latest_version: "Τελευταία"
         problems_found: "Μερικές συμβουλές με βάση τις τρέχουσες ρυθμίσεις του ιστότοπού σας"
         new_features:
-          dismiss: "Απόρριψη"
-          learn_more: "Μάθε περισσότερα"
+          learn_more: "Μάθε περισσότερα..."
         last_checked: "Τελευταίος έλεγχος"
         refresh_problems: "Ανανέωση"
         no_problems: "Δεν βρέθηκε κανένα πρόβλημα."
@@ -3591,7 +3596,8 @@ el:
         not_enabled: "Ν"
         change_settings_short: "Ρυθμίσεις"
         howto: "Πως εγκαθιστώ πρόσθετα;"
-        official: "Επίσημο πρόσθετο"
+        author: "Του/της %{author}"
+        learn_more: "Μάθε περισσότερα"
       backups:
         title: "Αντίγραφα ασφαλείας"
         menu:

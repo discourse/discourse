@@ -12,6 +12,8 @@ import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
 
+let _menuPanelClassesToForceDropdown = [];
+
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
   RerenderOnDoNotDisturbChange,
@@ -351,12 +353,17 @@ const SiteHeaderComponent = MountWidget.extend(
         return;
       }
 
-      const viewMode =
+      let viewMode =
         this.site.mobileView || this.site.narrowDesktopView
           ? "slide-in"
           : "drop-down";
 
       menuPanels.forEach((panel) => {
+        if (menuPanelContainsClass(panel)) {
+          viewMode = "drop-down";
+          this._animate = false;
+        }
+
         const headerCloak = document.querySelector(".header-cloak");
 
         panel.classList.remove("drop-down");
@@ -407,6 +414,31 @@ const SiteHeaderComponent = MountWidget.extend(
     },
   }
 );
+
+function menuPanelContainsClass(menuPanel) {
+  if (!_menuPanelClassesToForceDropdown) {
+    return false;
+  }
+
+  // Check if any of the classNames are present in the node's classList
+  for (let className of _menuPanelClassesToForceDropdown) {
+    if (menuPanel.classList.contains(className)) {
+      // Found a matching class
+      return true;
+    }
+  }
+
+  // No matching class found
+  return false;
+}
+
+export function forceDropdownForMenuPanels(classNames) {
+  // If classNames is a string, convert it to an array
+  if (typeof classNames === "string") {
+    classNames = [classNames];
+  }
+  return _menuPanelClassesToForceDropdown.push(...classNames);
+}
 
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],

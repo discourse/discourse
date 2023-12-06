@@ -2,6 +2,7 @@
 
 # name: styleguide
 # about: Preview how Widgets are Styled in Discourse
+# meta_topic_id: 167293
 # version: 0.2
 # author: Robin Ward
 

@@ -29,11 +29,14 @@ he:
     chat_max_direct_message_users: "משתמשים לא יכולים להוסיף יותר מכמות זו של משתמשים אחרים בעת יצירת הודעה ישירה חדשה. יש להגדיר ל־0 כדי לאפשר הודעות עצמיות. הסגל מוחרג מההגדרה הזאת."
     chat_allow_archiving_channels: "לאפשר לסגל להעביר הודעות לארכיון בנושא בעת סגירת ערוץ."
     chat_editing_grace_period: "במשך (n) שניות לאחר שליחת הודעה בצ׳אט, העריכה לא תציג את התגית (הערוכה) על ידי הודעת הצ׳אט."
+    chat_editing_grace_period_max_diff_low_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 0 ו־1)."
+    chat_editing_grace_period_max_diff_high_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 2 ומעלה)."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
       chat_upload_not_allowed_secure_uploads: "אסור להעלות לצ׳אט כשהגדרת האתר להעלאות מאובטחות מופעלת."
   system_messages:
+    private_channel_title: "ערוץ %{id}"
     chat_channel_archive_complete:
       title: "העברת ערוץ הצ׳אט לארכיון הושלמה"
       subject_template: "העברת ערוץ הצ׳אט לארכיון הושלמה בהצלחה"
@@ -56,6 +59,7 @@ he:
   chat:
     deleted_chat_username: נמחק
     errors:
+      users_cant_be_added_to_channel: "אי אפשר להוסיף משתמשים לערוץ הזה."
       channel_exists_for_category: "כבר קיים ערוץ לקטגוריה ולשם האלו"
       channel_new_message_disallowed:
         archived: "הערוץ נמצא בארכיון, לא ניתן לשלוח הודעות חדשות"
@@ -139,6 +143,11 @@ he:
         transcript_title: "תמלול הודעות קודמות בערוץ %{channel_name}"
         transcript_body: "כדי לתת לך יותר הקשר, הוספנו תמליל של (עד עשר) ההודעות הקודמות בשיחה זו:\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
+        two: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
+        many: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
+        other: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
       archive:
         first_post_raw: "הנושא הזה הוא הארכיון של ערוץ הצ׳אט [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -211,6 +220,9 @@ he:
         other: "ו־%{count} נוספים"
     summaries:
       no_targets: "לא היו הודעות במהלך התקופה הנבחרת."
+    transcript:
+      default_thread_title: "שרשור"
+      split_thread_range: "הודעות %{start} עד %{end} מתוך %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -247,6 +259,7 @@ he:
         other: "יש לך הודעות חדשות בצ׳אט"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] הודעה חדשה"
         direct_message_from_1: "[%{email_prefix}] הודעה חדשה מאת %{username}"
         direct_message_from_2: "[%{email_prefix}] הודעה חדשה שנשלחה מאת %{username1} וגם %{username2}"
         direct_message_from_more:

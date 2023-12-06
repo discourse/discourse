@@ -30,6 +30,7 @@ en:
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
       chat_upload_not_allowed_secure_uploads: "Chat uploads are not allowed when secure uploads site setting is enabled."
   system_messages:
+    private_channel_title: "Channel %{id}"
     chat_channel_archive_complete:
       title: "Chat Channel Archive Complete"
       subject_template: "Chat channel archive completed successfully"
@@ -196,6 +197,10 @@ en:
     summaries:
       no_targets: "There were no messages during the selected period."
 
+    transcript:
+      default_thread_title: "Thread"
+      split_thread_range: "messages %{start} to %{end} of %{total}"
+
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -233,6 +238,7 @@ en:
         other: "You have new chat messages"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] New message"
         direct_message_from_1: "[%{email_prefix}] New message from %{username}"
         direct_message_from_2: "[%{email_prefix}] New message from %{username1} and %{username2}"
         direct_message_from_more:

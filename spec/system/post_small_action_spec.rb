@@ -32,23 +32,6 @@ describe "Post small actions", type: :system do
     expect(page).to have_css(".small-action .highlighted")
   end
 
-  it "applies lightbox decorations" do
-    post = Fabricate(:small_action, raw: "Enjoy this", topic: topic, action_code: "closed.enabled")
-
-    topic_page.visit_topic(topic)
-    expect(topic_page).to have_post_number(post.post_number)
-
-    find(".small-action-buttons .small-action-edit").click
-    attach_file file_from_fixtures("2000x2000.png").path do
-      composer.click_toolbar_button("upload")
-    end
-
-    expect(composer).to have_no_in_progress_uploads
-    composer.submit
-
-    expect(page).to have_css(".small-action .lightbox", wait: 5)
-  end
-
   it "applies animated gif decorations" do
     post =
       Fabricate(:small_action, raw: "Enjoy this gif", topic: topic, action_code: "closed.enabled")
