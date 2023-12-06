@@ -183,7 +183,6 @@ da:
       default_tags_already_selected: "Du kan ikke vælge et mærke, der bruges i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere overførsler til S3 med mindre du har angivet 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Du kan ikke aktivere beholdning til S3, medmindre du har aktiveret S3-uploads."
-      page_publishing_requirements: "Sideudgivelse kan ikke aktiveres, hvis sikre medier er aktiveret."
       s3_backup_requires_s3_settings: "Du kan ikke bruge S3 som backupplacering, medmindre du har angivet '%{setting_name}'."
       s3_bucket_reused: "Du kan ikke bruge den samme spand til 's3_upload_bucket' og 's3_backup_bucket'. Vælg en anden spand, eller brug en anden sti til hver spand."
       share_quote_facebook_requirements: "Du skal indstille et Facebook-app-id for at aktivere citatdeling for Facebook."

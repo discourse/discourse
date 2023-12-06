@@ -739,7 +739,6 @@ fi:
           imap_mailbox_not_selected: "Sinun täytyy valita postilaatikko tälle IMAP-määritykselle, muuten postilaatikoita ei synkronoida!"
           prefill:
             title: "Esitäyttö asetuksilla:"
-            gmail: "Gmail"
           credentials:
             title: "Tunnistetiedot"
             smtp_server: "SMTP-palvelin"
@@ -2117,6 +2116,7 @@ fi:
       add_warning: "Tämä on virallinen varoitus."
       toggle_whisper: "Kuiskaus päälle/pois"
       toggle_unlisted: "Listaus päälle/pois"
+      insert_table: "Lisää taulukko"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saved_local_draft_tip: "tallennettu paikallisesti"
       drafts_offline: "offline-luonnokset"
@@ -3875,7 +3875,6 @@ fi:
         one: "Sen synonyymi poistetaan myös."
         other: "Sen %{count} synonyymiä poistetaan myös."
       edit_tag: "Muokkaa tunnisteen nimeä ja kuvausta"
-      description: "Kuvaus"
       sort_by: "Järjestys:"
       sort_by_count: "lukumäärä"
       sort_by_name: "nimi"
@@ -4187,6 +4186,61 @@ fi:
           other: "Syötteen täytyy olla enemmän kuin %{count}."
         patternMismatch: "Noudata pyydettyä muotoa."
         badInput: "Anna kelvollinen syöte."
+    table_builder:
+      title: "Taulukkotyökalu"
+      modal:
+        title: "Taulukkotyökalu"
+        create: "Luo taulukko"
+        help:
+          title: "Laskentataulukkoeditorin käyttäminen"
+          enter_key: "Enter"
+          tab_key: "Sarkain"
+          new_row: "rivin lopussa uuden rivin lisäämiseksi."
+          options: "Napsauta soluja hiiren kakkospainikkeella nähdäksesi lisää vaihtoehtoja avattavassa valikossa."
+      edit:
+        btn_edit: "Muokkaa taulukkoa"
+        modal:
+          title: "Muokkaa taulukkoa"
+          cancel: "peruuta"
+          create: "Tallenna"
+          reason: "miksi muokkaat viestiä?"
+          trigger_reason: "Lisää muokkauksen syy"
+        default_edit_reason: "Päivitä taulukko taulukkoeditorilla"
+      default_header:
+        col_1: "Sarake 1"
+        col_2: "Sarake 2"
+        col_3: "Sarake 3"
+        col_4: "Sarake 4"
+      spreadsheet:
+        no_records_found: "Tietueita ei löydy"
+        show: "Näytä"
+        entries: "merkintää"
+        about: "Tietoja"
+        prompts:
+          delete_selected_rows: "Oletko varma, että haluat poistaa valitut rivit?"
+          delete_selected_cols: "Oletko varma, että haluat poistaa valitut sarakkeet?"
+          will_destroy_merged_cells: "Tämä toiminto tuhoaa olemassa olevat yhdistetyt solut. Oletko varma?"
+          will_clear_search_results: "Tämä toiminto tuhoaa olemassa olevat yhdistetyt solut. Oletko varma?"
+          conflicts_with_merged_cells: "Ristiriita toisen yhdistetyn solun kanssa"
+        invalid_merge_props: "Virheelliset yhdistetyt omaisuudet"
+        cells_already_merged: "Solu on jo yhdistetty"
+        no_cells_selected: "Ei valittuja soluja"
+        context_menu:
+          row:
+            before: "Lisää uusi rivi ennen"
+            after: "Lisää uusi rivi perään"
+            delete: "Poista valitut rivit"
+          col:
+            before: "Lisää uusi sarake ennen"
+            after: "Lisää uusi sarake perään"
+            delete: "Poista valitut sarakkeet"
+            rename: "Nimeä tämä sarake uudelleen"
+          order:
+            ascending: "Nouseva järjestys"
+            descending: "Laskeva järjestys"
+          copy: "Kopioi..."
+          paste: "Liitä..."
+          save: "Tallenna nimellä..."
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi…"
     admin:
@@ -4542,6 +4596,7 @@ fi:
         howto: "Kuinka asennan lisäosia?"
         broken_route: "Linkin määrittäminen kohteeseen %{name} ei onnistu. Varmista, että mainostenesto-ohjelmat on poistettu käytöstä, ja kokeile ladata sivu uudelleen."
         author: "Käyttäjältä %{author}"
+        learn_more: "Lue lisää"
       navigation_menu:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"

@@ -416,6 +416,9 @@ ar:
       like_count: "تسجيلات الإعجاب"
       topic_count: "الموضوعات"
       post_count: "المنشورات"
+      user_count: "التسجيلات"
+      active_user_count: "المستخدِمون النشطون"
+      contact: "تواصل معنا"
       contact_info: "في حال حدوث مشكلة خطيرة أو أمر عاجل يؤثر على الموقع، يُرجى مراسلتنا على %{contact_info}."
     bookmarked:
       title: "وضع إشارة مرجعية"
@@ -461,6 +464,7 @@ ar:
       copied: "تم النسخ!"
       copy: "نسخ الرمز إلى الحافظة"
       fullscreen: "عرض الرمز في وضع ملء الشاشة"
+      view_code: "عرض الرمز"
     drafts:
       label: "المسودات"
       label_with_count: "المسودات (%{count})"
@@ -576,7 +580,12 @@ ar:
           name: "مكافأة النوع"
           title: "يمكن لفريق العمل تخصيص مكافأة لبعض الأنواع القابلة للمراجعة لمنحها أولوية أعلى."
       revise_and_reject_post:
+        title: "مراجعة"
         reason: "السبب"
+        send_pm: "إرسال رسالة"
+        feedback: "انطباع"
+        custom_reason: "قدم وصفًا واضحًا للسبب"
+        other_reason: "آخر..."
         optional: "اختياري"
       stale_help: "تم إجراء هذه المراجعة بواسطة <b>%{username}</b>."
       claim_help:
@@ -948,7 +957,7 @@ ar:
           imap_mailbox_not_selected: "يجب تحديد صندوق بريد لإعداد خادم IMAP وإلا فلن تتم مزامنة أي صناديق بريد!"
           prefill:
             title: "الملء المسبق بإعدادات:"
-            gmail: "GMail"
+            gmail: "Gmail"
           credentials:
             title: "بيانات الاعتماد"
             smtp_server: "خادم SMTP"
@@ -1229,6 +1238,7 @@ ar:
     user:
       said: "%{username}:"
       profile: "الملف الشخصي"
+      profile_possessive: "ملف %{username} الشخصي"
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive:
@@ -1691,7 +1701,9 @@ ar:
           edit_description: "اسم مفتاح الأمان المادي"
           name_required_error: "يجب عليك إدخال اسم لمفتاح الأمان."
       passkeys:
+        rename_passkey_instructions: "اختر اسم مفتاح المرور الذي سيتعرف عليه بسهولة، على سبيل المثال، استخدم اسم مدير كلمات مرورك."
         save: "حفظ"
+        short_description: "مفاتيح المرور هي بدائل لكلمات المرور تتحقق من هويتك بواسطة القياسات الحيوية (على سبيل المثال، اللمس أو معرف الوجه) أو عبر رقم التعريف الشخصي/كلمة المرور للجهاز."
         added_prefix: "تمت الإضافة"
         last_used_prefix: "آخر استخدام"
       change_about:
@@ -1979,6 +1991,9 @@ ar:
           progress: "رُفع %{progress}%…"
           success: "تم تحميل الملف بنجاح. سيتم إرسال إشعار إليك عبر رسالة عند اكتمال العملية."
           error: "عذرًا، يجب أن يكون الملف بتنسيق CSV."
+      confirm_access:
+        incorrect_password: "كلمة المرور المدخلة غير صحيحة."
+        logged_in_as: "أنت مسجل الدخول ك: "
       password:
         title: "كلمة المرور"
         too_short: "كلمة مرورك قصيرة جدًا."
@@ -1989,6 +2004,7 @@ ar:
         instructions: "يجب ألا يقل عن %{count} حرف."
         required: "يُرجى إدخال كلمة المرور"
         confirm: "تأكيد"
+        incorrect_password: "كلمة المرور المدخلة غير صحيحة."
       summary:
         title: "الملخص"
         stats: "الإحصاءات"
@@ -2258,11 +2274,13 @@ ar:
       title: "إنشاء حسابك"
       failed: "حدث خطأ ما. قد يكون هذا البريد الإلكتروني مسجلًا بالفعل. جرِّب رابط نسيان كلمة المرور"
       associate: "لديك حساب بالفعل؟ <a href='%{associate_link}'>سجِّل الدخول</a> لربط حسابك من %{provider}."
+      activation_title: "فعّل حسابك"
     forgot_password:
       title: "إعادة تعيين كلمة المرور"
       action: "نسيت كلمة مروري"
       invite: "أدخِل اسم المستخدم أو عنوان البريد الإلكتروني، وسنُرسل إليك رسالة إلكترونية لإعادة تعيين كلمة المرور."
       invite_no_username: "أدخل عنوان بريدك الإلكتروني، وسنُرسل إليك رسالة لإعادة تعيين كلمة المرور."
+      email-username: "البريد الإلكتروني أو اسم المستخدم"
       reset: "إعادة تعيين كلمة المرور"
       complete_username: "إذا تطابق أحد الحسابات مع اسم المستخدم <b>%{username}</b>، فستتلقى سريعًا رسالة إلكترونية تتضمَّن تعليمات عن كيفية إعادة تعيين كلمة المرور."
       complete_email: "إذا تطابق أحد الحسابات مع <b>%{email}</b>، فستتلقى سريعًا رسالة إلكترونية تتضمَّن تعليمات عن كيفية إعادة تعيين كلمة المرور."
@@ -2361,6 +2379,8 @@ ar:
         name: "Discord"
         title: "تسجيل الدخول باستخدام Discord"
         sr_title: "تسجيل الدخول باستخدام Discord"
+      passkey:
+        name: "تسجيل الدخول باستخدام مفتاح المرور"
       second_factor_toggle:
         totp: "استخدام تطبيق مصادقة بدلًا من ذلك"
         backup_code: "استخدام رمز احتياطي بدلًا من ذلك"
@@ -2482,12 +2502,14 @@ ar:
       add_warning: "هذا تحذير رسمي."
       toggle_whisper: "تفعيل الهمس"
       toggle_unlisted: "تفعيل إلغاء الإدراج"
+      insert_table: "إدراج جدول"
       posting_not_on_topic: "أي موضوع تريد الرد عليه؟"
       saved_local_draft_tip: "تم الحفظ محليًا"
       similar_topics: "موضوعك يشابه…"
       drafts_offline: "مسودات بلا اتصال"
       edit_conflict: "تعارض في التعديل"
       esc: "Esc"
+      esc_label: "تجاهل الرسالة"
       ok_proceed: "حسنًا، المتابعة"
       group_mentioned_limit:
         zero: "<b>تحذير!</b>لقد أشرت إلى <a href='%{group_link}'>%{group}</a>، لكن هذه المجموعة تتضمَّن عدد أعضاء أكثر من حد الإشارة الذي عيَّنه المسؤول وهو %{count} مستخدم. لن يتم إرسال إشعار إلى أي أحد."
@@ -2647,6 +2669,7 @@ ar:
           desc: تكون الهمسات مرئية لأعضاء فريق العمل فقط
         create_topic:
           label: "موضوع جديد"
+          desc: أنشئ موضوع جديد
         shared_draft:
           label: "مسودة مشتركة"
           desc: "إنشاء مسودة الموضوع ستكون مرئية للمستخدمين المسموح لهم فقط"
@@ -4697,7 +4720,6 @@ ar:
         many: "سيتم حذف مرادفاته (%{count}) أيضًا."
         other: "سيتم حذف مرادفاته (%{count}) أيضًا."
       edit_tag: "تعديل اسم الوسم ووصفه"
-      description: "الوصف"
       sort_by: "الترتيب حسب:"
       sort_by_count: "العدد"
       sort_by_name: "الاسم"
@@ -4839,6 +4861,7 @@ ar:
       sr_jump_bottom_button: "الانتقال إلى المنشور الأخير"
     fullscreen_table:
       expand_btn: "توسيع الجدول"
+      view_table: "عرض الجدول"
     second_factor_auth:
       redirect_after_success: "نجحت المصادقة الثنائية. جارٍ إعادة التوجيه إلى الصفحة السابقة…"
     sidebar:
@@ -4889,6 +4912,7 @@ ar:
           delete: "حذف"
           delete_confirm: "هل تريد بالتأكيد حذف هذا القسم؟"
           reset_confirm: "هل تريد بالتأكيد إعادة تعيين هذا القسم إلى الإعداد الافتراضي؟"
+          public: "مرئيّ للجميع"
           always_public: "دائمًا ما يكون المحتوى في هذا القسم عامًا"
           more_menu: "قائمة \"المزيد\""
           links:
@@ -5046,6 +5070,63 @@ ar:
           other: "يجب ان يكون الإدخال أطول من %{count}."
         patternMismatch: "يُرجى مطابقة التنسيق المطلوب."
         badInput: "يُرجى إدخال قيمة صالحة."
+    table_builder:
+      title: "أداة إنشاء الجداول"
+      modal:
+        title: "أداة إنشاء الجداول"
+        create: "إنشاء جدول"
+        help:
+          title: "استخدام محرر جداول البيانات"
+          enter_key: "Enter"
+          tab_key: "مفتاح Tab"
+          new_row: "في نهاية الصف لإدراج صف جديد."
+          new_col: "في نهاية العمود لإدراج عمود جديد."
+          options: "انقر بزر الماوس الأيمن على الخلايا للوصول إلى المزيد من الخيارات في القائمة المنسدلة."
+        confirm_close: "هل أنت متأكد أنك تريد إغلاق منشئ الجدول؟ سيتم فقدان أي تغييرات غير محفوظة."
+      edit:
+        btn_edit: "تعديل الجدول"
+        modal:
+          title: "تعديل الجدول"
+          cancel: "إلغاء"
+          create: "حفظ"
+          reason: "ما سبب التعديل؟"
+          trigger_reason: "أضِف سبب التعديل"
+        default_edit_reason: "تحديث الجدول باستخدام محرر الجداول"
+      default_header:
+        col_1: "العمود 1"
+        col_2: "العمود 2"
+        col_3: "العمود 3"
+        col_4: "العمود 4"
+      spreadsheet:
+        no_records_found: "لم يتم العثور على سجلات"
+        show: "إظهار"
+        entries: "إدخالات"
+        about: "نبذة"
+        prompts:
+          delete_selected_rows: "هل تريد بالتأكيد حذف الصفوف المحدَّدة؟"
+          delete_selected_cols: "هل تريد بالتأكيد حذف الأعمدة المحدَّدة؟"
+          will_destroy_merged_cells: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدموجة موجودة. هل أنت متأكد؟"
+          will_clear_search_results: "سيؤدي هذا الإجراء إلى تدمير أي خلايا مدموجة موجودة. هل أنت متأكد؟"
+          conflicts_with_merged_cells: "هناك تعارض مع خلية مدموجة أخرى"
+        invalid_merge_props: "خصائص الدمج غير صالحة"
+        cells_already_merged: "تم دمج الخلية بالفعل"
+        no_cells_selected: "لم يتم تحديد أي خلايا"
+        context_menu:
+          row:
+            before: "إدراج صف جديد قبله"
+            after: "إدراج صف جديد بعده"
+            delete: "حذف الصفوف المحدَّدة"
+          col:
+            before: "إدراج عمود جديد قبله"
+            after: "إدراج عمود جديد بعده"
+            delete: "حذف الأعمدة المحدَّدة"
+            rename: "إعادة تسمية هذا العمود"
+          order:
+            ascending: "ترتيب تصاعدي"
+            descending: "ترتيب تنازلي"
+          copy: "نسخ..."
+          paste: "لصق..."
+          save: "الحفظ باسم..."
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     admin:
@@ -5074,6 +5155,8 @@ ar:
         latest_version: "الحديثة"
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         new_features:
+          title: "ما الجديد"
+          previous_announcements: "يمكنك رؤية إعلانات الميزات الجديدة السابقة على <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "معرفة المزيد..."
         last_checked: "تاريخ آخر تحقُّق"
         refresh_problems: "تحديث"
@@ -5377,6 +5460,8 @@ ar:
         groups_filter_instructions: "لن يتم تشغيل خطافات الويب ذات الصلة إلا إذا كان الحدث مرتبطًا بمجموعات محدَّدة. اتركه فارغًا لتشغيل خطافات الويب لجميع المجموعات."
         groups_filter: "المجموعات المشغَّلة"
         delete_confirm: "هل تريد حذف خطاف الويب هذا؟"
+        tag_event:
+          group_name: "أحداث الوسم"
         like_event:
           post_liked: "عند تسجيل المستخدم إعجابه بمنشور."
         delivery_status:
@@ -5427,6 +5512,7 @@ ar:
         howto: "كيف يمكنني تثبيت الإضافات؟"
         broken_route: "تتعذَّر تهيئة الرابط إلى \"%{name}\". تأكَّد من إيقاف كل أدوات حجب الإعلانات وحاول إعادة تحميل الصفحة."
         author: "بواسطة %{author}"
+        learn_more: "معرفة المزيد"
       navigation_menu:
         sidebar: "الشريط الجانبي"
         header_dropdown: "القائمة المنسدلة للرأس"
@@ -5520,6 +5606,8 @@ ar:
         install: "تثبيت"
         delete: "حذف"
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
+        bulk_delete: "هل أنت متأكد؟"
+        bulk_themes_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت السمات التالية، ولن تكون قابلة للاستخدام من قبل أي مستخدم على موقعك بعد الآن:"
         color: "اللون"
         opacity: "الشفافية"
         copy: "تكرار"

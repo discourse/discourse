@@ -167,7 +167,6 @@ lt:
       default_tags_already_selected: "Negalite pasirinkti žymos, naudojamos kitame sąraše."
       s3_upload_bucket_is_required: "Negalite įgalinti įkėlimų į S3, jei nepateikėte „s3_upload_bucket“."
       enable_s3_uploads_is_required: "Negalite įgalinti S3 inventoriaus naudojimo, nebent įjungėte S3 įkėlimus."
-      page_publishing_requirements: "Puslapio publikavimo įjungti negalima, jei įjungta saugi laikmena."
       s3_backup_requires_s3_settings: "Negalite naudoti S3 kaip atsarginės vietos, nebent nurodėte „%{setting_name}“."
       share_quote_facebook_requirements: "Jei norite įgalinti „Facebook“ citatų bendrinimą, turite nustatyti „Facebook“ programos ID."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Negalite vykdyti 2FA, jei vietiniai prisijungimai išjungti."

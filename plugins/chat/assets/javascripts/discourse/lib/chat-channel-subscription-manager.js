@@ -127,6 +127,7 @@ export default class ChatChannelSubscriptionManager {
     if (message) {
       message.cooked = data.chat_message.cooked;
       message.processed = true;
+      message.incrementVersion();
     }
   }
 
@@ -234,7 +235,5 @@ export default class ChatChannelSubscriptionManager {
     if (message?.thread) {
       message.thread.preview = ChatThreadPreview.create(data.preview);
     }
-
-    message.thread.preview.yolo = 1;
   }
 }

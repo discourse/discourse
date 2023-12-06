@@ -3179,7 +3179,6 @@ sl:
         two: "Izbrisani bosta tudi njeni %{count} sopomenki."
         few: "Izbrisane bodo tudi njene %{count} sopomenke."
         other: "Izbrisanih bo tudi njenih %{count} sopomenk."
-      description: "Opis"
       sort_by: "Uredi po:"
       sort_by_count: "številu"
       sort_by_name: "imenu"
@@ -3350,6 +3349,18 @@ sl:
       errors:
         typeMismatch:
           default: "Vnesite veljavno vsebino"
+    table_builder:
+      modal:
+        help:
+          enter_key: "Enter"
+      edit:
+        modal:
+          cancel: "prekliči"
+          create: "Shrani"
+          reason: "zakaj spreminjate prispevek?"
+      spreadsheet:
+        show: "Prikaži"
+        about: "O nas"
   admin_js:
     admin:
       title: "Discourse Admin"
@@ -3555,6 +3566,7 @@ sl:
         change_settings_short: "Nastavitve"
         howto: "Kako namestim vtičnike?"
         author: "Od %{author}"
+        learn_more: "Več o tem"
       backups:
         title: "Varnostne kopije"
         menu:

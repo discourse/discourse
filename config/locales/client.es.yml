@@ -744,7 +744,6 @@ es:
           imap_mailbox_not_selected: "¡Debes seleccionar un buzón para esta configuración IMAP o no se sincronizarán los buzones de correo!"
           prefill:
             title: "Rellenar con los ajustes de:"
-            gmail: "GMail"
           credentials:
             title: "Credenciales"
             smtp_server: "Servidor SMTP"
@@ -2122,6 +2121,7 @@ es:
       add_warning: "Esta es una advertencia oficial."
       toggle_whisper: "Activar/desactivar susurro"
       toggle_unlisted: "Visible/Invisible"
+      insert_table: "Insertar tabla"
       posting_not_on_topic: "¿A qué tema quieres responder?"
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "Tu tema es similar a…"
@@ -3921,7 +3921,6 @@ es:
         one: "Su sinónimo también se eliminará"
         other: "Sus %{count} sinónimos también se eliminarán."
       edit_tag: "Editar el nombre y la descripción de la etiqueta"
-      description: "Descripción"
       sort_by: "Ordenar por:"
       sort_by_count: "cantidad"
       sort_by_name: "nombre"
@@ -4234,6 +4233,61 @@ es:
           other: "La entrada debe ser mayor que %{count}."
         patternMismatch: "Utiliza el formato solicitado."
         badInput: "Introduce una entrada válida."
+    table_builder:
+      title: "Creador de tablas"
+      modal:
+        title: "Creador de tablas"
+        create: "Crear tabla"
+        help:
+          title: "Usando el editor de hojas de cálculo"
+          enter_key: "Intro"
+          tab_key: "Tabulador"
+          new_row: "al final de una fila para insertar una nueva fila."
+          options: "Haz clic con el botón derecho en las celdas para acceder a más opciones en un menú desplegable."
+      edit:
+        btn_edit: "Editar tabla"
+        modal:
+          title: "Editar tabla"
+          cancel: "cancelar"
+          create: "Guardar"
+          reason: "¿Por qué lo estás editando?"
+          trigger_reason: "Añadir motivo de la edición"
+        default_edit_reason: "Actualizar tabla con el editor de tablas"
+      default_header:
+        col_1: "Columna 1"
+        col_2: "Columna 2"
+        col_3: "Columna 3"
+        col_4: "Columna 4"
+      spreadsheet:
+        no_records_found: "No se han encontrado registros"
+        show: "Mostrar"
+        entries: "entradas"
+        about: "Acerca de"
+        prompts:
+          delete_selected_rows: "¿Seguro que quieres eliminar las filas seleccionadas?"
+          delete_selected_cols: "¿Seguro que quieres eliminar las columnas seleccionadas?"
+          will_destroy_merged_cells: "Esta acción destruirá cualquier celda fusionada existente. ¿Estás seguro/a?"
+          will_clear_search_results: "Esta acción destruirá cualquier celda fusionada existente. ¿Estás seguro/a?"
+          conflicts_with_merged_cells: "Hay un conflicto con otra celda fusionada."
+        invalid_merge_props: "Propiedades fusionadas no válidas"
+        cells_already_merged: "Celda ya fusionada"
+        no_cells_selected: "No hay celdas seleccionadas"
+        context_menu:
+          row:
+            before: "Insertar una nueva fila antes"
+            after: "Insertar una nueva fila después"
+            delete: "Eliminar filas seleccionadas"
+          col:
+            before: "Insertar una nueva columna antes"
+            after: "Insertar una nueva columna después"
+            delete: "Eliminar columnas seleccionadas"
+            rename: "Cambiar el nombre de esta columna"
+          order:
+            ascending: "Orden ascendente"
+            descending: "Orden descendente"
+          copy: "Copiar..."
+          paste: "Pegar..."
+          save: "Guardar como..."
   admin_js:
     type_to_filter: "escribe para filtrar…"
     admin:
@@ -4591,6 +4645,7 @@ es:
         howto: "¿Cómo instalo plugins?"
         broken_route: "No se puede configurar el enlace a «%{name}». Asegúrate de que los bloqueadores de publicidad están desactivados e intenta recargar la página."
         author: "Por %{author}"
+        learn_more: "Más información"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menú desplegable de encabezado"

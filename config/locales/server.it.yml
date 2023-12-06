@@ -202,7 +202,6 @@ it:
       default_tags_already_selected: "Non è possibile selezionare un'etichetta utilizzata in un altro elenco."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti su S3 a meno che non imposti l'opzione 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Non puoi abilitare l'uso dell'inventario su S3 se non hai abilitato i caricamenti S3."
-      page_publishing_requirements: "La pubblicazione di pagine non può essere attivata se sono attivati i supporti sicuri."
       s3_backup_requires_s3_settings: "Non è possibile utilizzare S3 per i backup a meno che non sia stato fornito '%{setting_name}'."
       s3_bucket_reused: "Non puoi usare lo stesso bucket per 's3_upload_bucket' e 's3_backup_bucket'. Scegli un bucket differente, o un percorso diverso per ciascun bucket."
       secure_uploads_requirements: "I caricamenti e gli ACL S3 devono essere abilitati prima di abilitare i caricamenti sicuri."

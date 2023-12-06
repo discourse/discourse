@@ -734,7 +734,6 @@ sv:
           imap_mailbox_not_selected: "Du måste välja en brevlåda för den här IMAP-konfigurationen, annars synkroniseras inga brevlådor!"
           prefill:
             title: "Förfyll med inställningar för:"
-            gmail: "GMail"
           credentials:
             title: "Kontouppgifter"
             smtp_server: "SMTP Server"
@@ -3849,7 +3848,6 @@ sv:
         one: "Dess synonym kommer också att raderas."
         other: "Dess %{count} synonymer kommer också att raderas."
       edit_tag: "Redigera taggnamn och beskrivning"
-      description: "Beskrivning"
       sort_by: "Sortera efter:"
       sort_by_count: "summa"
       sort_by_name: "namn"
@@ -4154,6 +4152,18 @@ sv:
           other: "Inmatningen måste vara mer än %{count}."
         patternMismatch: "Matcha det begärda formatet."
         badInput: "Ange en giltig inmatning."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Retur"
+      edit:
+        modal:
+          cancel: "avbryt"
+          create: "Spara"
+          reason: "varför redigerar du?"
+      spreadsheet:
+        show: "Visa"
+        about: "Om"
   admin_js:
     type_to_filter: "skriv för att filtrera…"
     admin:
@@ -4510,6 +4520,7 @@ sv:
         howto: "Hur installerar jag tillägg?"
         broken_route: "Det går inte att konfigurera länken till '%{name}'. Se till att annonsblockerare är inaktiverade och försök ladda om sidan."
         author: "Av %{author}"
+        learn_more: "Läs mer"
       navigation_menu:
         sidebar: "Sidofält"
         header_dropdown: "Rullgardinsmeny för rubrik"

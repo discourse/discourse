@@ -117,6 +117,7 @@ export default class ChatChannelThreadSubscriptionManager {
     if (message) {
       message.cooked = data.chat_message.cooked;
       message.processed = true;
+      message.incrementVersion();
     }
   }
 

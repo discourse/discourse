@@ -202,7 +202,6 @@ fr:
       default_tags_already_selected: "Vous ne pouvez pas sélectionner une étiquette utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'envoi de fichiers sur S3 avant d'avoir renseigné le paramètre « s3_upload_bucket »."
       enable_s3_uploads_is_required: "Vous ne pouvez pas activer l'inventaire sur S3 avant d'avoir activé les envois S3."
-      page_publishing_requirements: "La publication de pages ne peut pas être activée si la sécurisation des médias est activée."
       s3_backup_requires_s3_settings: "Utiliser S3 comme emplacement de sauvegarde nécessite de renseigner le paramètre « %{setting_name} »."
       s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour « s3_upload_bucket » et « s3_backup_bucket ». Choisissez un autre bucket ou utilisez un chemin d'accès différent pour chaque bucket."
       secure_uploads_requirements: "Les téléversements S3 et les ACL S3 doivent être activés avant d'activer les téléversements sécurisés."

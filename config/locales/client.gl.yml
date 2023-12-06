@@ -3150,7 +3150,6 @@ gl:
       delete_confirm_synonyms:
         one: "Tamén se eliminará o seu sinónimo."
         other: "Tamén se eliminarán os seus %{count} sinónimos."
-      description: "Descrición"
       sort_by: "Ordenar por:"
       sort_by_count: "número"
       sort_by_name: "nome"
@@ -3316,6 +3315,18 @@ gl:
         typeMismatch:
           default: "Introduza un valor correcto."
           email: "Introduza un enderezo de correo electrónico correcto."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Intro"
+      edit:
+        modal:
+          cancel: "cancelar"
+          create: "Gardar"
+          reason: "por que o está editando?"
+      spreadsheet:
+        show: "Amosar"
+        about: "Verbo de"
   admin_js:
     admin:
       title: "Administrador de Discourse"
@@ -3605,6 +3616,7 @@ gl:
         change_settings_short: "Configuración"
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
+        learn_more: "Saber máis"
       backups:
         title: "Copias de seguranza"
         menu:

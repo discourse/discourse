@@ -706,7 +706,6 @@ zh_CN:
           imap_mailbox_not_selected: "您必须为此 IMAP 配置选择一个邮箱，否则将不会同步任何邮箱！"
           prefill:
             title: "使用设置预填充："
-            gmail: "Gmail"
           credentials:
             title: "凭据"
             smtp_server: "SMTP 服务器"
@@ -2070,6 +2069,7 @@ zh_CN:
       add_warning: "这是一个官方警告。"
       toggle_whisper: "切换密语"
       toggle_unlisted: "切换取消公开"
+      insert_table: "插入表"
       posting_not_on_topic: "您想回复哪个话题？"
       saved_local_draft_tip: "已保存到本地"
       similar_topics: "您的话题类似于…"
@@ -3770,7 +3770,6 @@ zh_CN:
       delete_confirm_synonyms:
         other: "其 %{count} 个同义词也将被删除。"
       edit_tag: "编辑标签名称和描述"
-      description: "描述"
       sort_by: "排序依据："
       sort_by_count: "计数"
       sort_by_name: "名称"
@@ -4076,6 +4075,61 @@ zh_CN:
           other: "输入必须大于 %{count}。"
         patternMismatch: "请匹配要求的格式。"
         badInput: "请输入有效的输入。"
+    table_builder:
+      title: "表生成器"
+      modal:
+        title: "表生成器"
+        create: "创建表"
+        help:
+          title: "使用电子表格编辑器"
+          enter_key: "Enter"
+          tab_key: "Tab"
+          new_row: "在行末尾插入新行。"
+          options: "右键点击单元格可访问下拉菜单中的更多选项。"
+      edit:
+        btn_edit: "编辑表"
+        modal:
+          title: "编辑表"
+          cancel: "取消"
+          create: "保存"
+          reason: "为何进行这次编辑？"
+          trigger_reason: "添加编辑原因"
+        default_edit_reason: "使用表编辑器更新表"
+      default_header:
+        col_1: "第 1 列"
+        col_2: "第 2 列"
+        col_3: "第 3 列"
+        col_4: "第 4 列"
+      spreadsheet:
+        no_records_found: "找不到记录"
+        show: "显示"
+        entries: "个条目"
+        about: "关于"
+        prompts:
+          delete_selected_rows: "确定要删除所选行吗？"
+          delete_selected_cols: "确定要删除所选列吗？"
+          will_destroy_merged_cells: "此操作将破坏任何现有的合并单元格。确定吗？"
+          will_clear_search_results: "此操作将破坏任何现有的合并单元格。确定吗？"
+          conflicts_with_merged_cells: "与另一合并单元格存在冲突"
+        invalid_merge_props: "合并属性无效"
+        cells_already_merged: "单元格已合并"
+        no_cells_selected: "未选择单元格"
+        context_menu:
+          row:
+            before: "在前面插入新行"
+            after: "在后面插入新行"
+            delete: "删除所选行"
+          col:
+            before: "在前面插入新列"
+            after: "在后面插入新列"
+            delete: "删除所选列"
+            rename: "重命名此列"
+          order:
+            ascending: "按升序排序"
+            descending: "按降序排序"
+          copy: "复制…"
+          paste: "粘贴…"
+          save: "另存为…"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -4492,10 +4546,10 @@ zh_CN:
         change_settings_short: "设置"
         howto: "如何安装插件？"
         official: "官方 Discourse 插件"
-        experimental: "实验性插件"
         broken_route: "无法配置“%{name}”的链接。确保禁用广告拦截器并尝试重新加载页面。"
         author: "作者 %{author}"
         experimental_badge: "实验性"
+        learn_more: "了解详情"
       navigation_menu:
         sidebar: "边栏"
         header_dropdown: "标题下拉菜单"
