@@ -22,7 +22,7 @@ module BulkImport
       @settings = YAML.load_file(settings_path, symbolize_names: true)
       @settings[:path_replacements] ||= []
 
-      @root_path = @settings[:root_path]
+      @root_paths = @settings[:root_paths]
       @output_db = create_connection(@settings[:output_db_path])
 
       initialize_output_db
@@ -160,12 +160,14 @@ module BulkImport
                 path = data_file.path
               else
                 relative_path = row["relative_path"]
-                path = File.join(@root_path, relative_path, row["filename"])
-                file_exists = File.exist?(path)
+                file_exists = false
 
-                if !file_exists
+                @root_paths.each do |root_path|
+                  path = File.join(root_path, relative_path, row["filename"])
+                  break if (file_exists = File.exist?(path))
+
                   @settings[:path_replacements].each do |from, to|
-                    path = File.join(@root_path, relative_path.sub(from, to), row["filename"])
+                    path = File.join(root_path, relative_path.sub(from, to), row["filename"])
                     break if (file_exists = File.exist?(path))
                   end
                 end

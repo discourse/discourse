@@ -1,7 +1,9 @@
 source_db_path: "/path/to/your/db.sqlite3"
 output_db_path: "/path/to/your/uploads.sqlite3"
 
-root_path: "/path/to/your/files"
+root_paths:
+  - "/path/to/your/files"
+  - "/path/to/more/files"
 
 # The number of threads to use for processing uploads is calculated as:
 #   thread_count = [number of cores] * [thread_count_factor]
