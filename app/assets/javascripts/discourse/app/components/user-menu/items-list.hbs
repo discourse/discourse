@@ -38,7 +38,12 @@
     />
   </div>
 {{else}}
-  {{component this.emptyStateComponent}}
+  <PluginOutlet
+    @name="user-menu-items-list-empty-state"
+    @outletArgs={{hash model=this}}
+  >
+    {{component this.emptyStateComponent}}
+  </PluginOutlet>
 {{/if}}
 <PluginOutlet
   @name="after-panel-body"
