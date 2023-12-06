@@ -2,7 +2,7 @@
 
 module Chat
   module UserNotificationsExtension
-    def chat_summary(user, _)
+    def chat_summary(user, _ = nil)
       guardian = Guardian.new(user)
       return unless guardian.can_chat?
 
