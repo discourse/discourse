@@ -1563,6 +1563,18 @@ class BulkImport::Generic < BulkImport::Base
     tag_groups.each do |row|
       tag_group = TagGroup.find_or_create_by!(name: row["name"])
       @tag_group_mapping[row["id"]] = tag_group.id
+
+      if (permissions = row["permissions"])
+        tag_group.permissions =
+          JSON
+            .parse(permissions)
+            .map do |p|
+              group_id = p["existing_group_id"] || group_id_from_imported_id(p["group_id"])
+              group_id ? [group_id, p["permission_type"]] : nil
+            end
+            .compact
+        tag_group.save!
+      end
     end
 
     tag_groups.close
