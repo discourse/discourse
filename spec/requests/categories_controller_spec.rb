@@ -1072,6 +1072,17 @@ RSpec.describe CategoriesController do
           [category.id, subcategory.id],
         )
       end
+
+      it "does not return hidden category" do
+        category.update!(read_restricted: true)
+
+        get "/categories/find.json",
+            params: {
+              slug_path_with_id: "#{category.slug}/#{category.id}",
+            }
+
+        expect(response.status).to eq(403)
+      end
     end
   end
 
