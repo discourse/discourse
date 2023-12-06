@@ -425,12 +425,16 @@ module(
       assert.true(
         queryAll(".chat-message-collapser-link-small")[0].innerHTML.includes(
           evilStringEscaped
-        )
+        ),
+        "evil string escaped"
       );
+      // eslint-disable-next-line no-console
+      console.log(queryAll(".chat-message-collapser-link-small")[1].innerHTML);
       assert.true(
         queryAll(".chat-message-collapser-link-small")[1].innerHTML.includes(
           "%3Cscript%3Esomeeviltitle%3C/script%3E"
-        )
+        ),
+        "evil script injection escaped"
       );
     });
 
