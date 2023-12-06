@@ -1897,6 +1897,9 @@ class UsersController < ApplicationController
     end
 
     if reminder_notifications.present?
+      if SiteSetting.show_user_menu_avatars
+        Notification.populate_acting_user(reminder_notifications)
+      end
       serialized_notifications =
         ActiveModel::ArraySerializer.new(
           reminder_notifications,

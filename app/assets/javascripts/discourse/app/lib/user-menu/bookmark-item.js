@@ -34,7 +34,8 @@ export default class UserMenuBookmarkItem extends UserMenuBaseItem {
   get topicId() {
     return this.bookmark.topic_id;
   }
-  get iconComponent() {
-    return;
+
+  get avatarTemplate() {
+    return this.bookmark.user.avatar_template;
   }
 }
