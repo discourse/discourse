@@ -2070,13 +2070,33 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY id
     SQL
 
-    existing_permalinks = Permalink.pluck(:topic_id).to_set
+    existing_permalinks = Permalink.where("topic_id IS NOT NULL").pluck(:topic_id).to_set
 
     create_permalinks(rows) do |row|
       topic_id = topic_id_from_imported_id(row["id"])
       next if !topic_id || existing_permalinks.include?(topic_id)
 
       { url: row["old_relative_url"], topic_id: topic_id }
+    end
+
+    rows.close
+
+    puts "", "Importing permalinks for categories..."
+
+    rows = query(<<~SQL)
+      SELECT id, old_relative_url
+        FROM categories
+       WHERE old_relative_url IS NOT NULL
+       ORDER BY id
+    SQL
+
+    existing_permalinks = Permalink.where("category_id IS NOT NULL").pluck(:category_id).to_set
+
+    create_permalinks(rows) do |row|
+      category_id = category_id_from_imported_id(row["id"])
+      next if !category_id || existing_permalinks.include?(category_id)
+
+      { url: row["old_relative_url"], category_id: category_id }
     end
 
     rows.close
