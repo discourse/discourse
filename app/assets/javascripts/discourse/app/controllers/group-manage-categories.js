@@ -23,8 +23,6 @@ export default Controller.extend({
     "model.muted_category_ids.[]"
   )
   selectedCategoryIds(watching, watchingFirst, tracking, regular, muted) {
-    return []
-      .concat(watching, watchingFirst, tracking, regular, muted)
-      .filter((t) => t);
+    return [].concat(watching, watchingFirst, tracking, regular, muted);
   },
 });

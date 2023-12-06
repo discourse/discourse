@@ -151,16 +151,14 @@ export default class extends Controller {
     "siteSettings.mute_all_categories_by_default"
   )
   get selectedCategoryIds() {
-    return []
-      .concat(
-        this.model.watched_category_ids,
-        this.model.watched_first_post_category_ids,
-        this.model.tracked_category_ids,
-        this.siteSettings.mute_all_categories_by_default
-          ? this.model.regular_category_ids
-          : this.model.muted_category_ids
-      )
-      .filter((t) => t);
+    return [].concat(
+      this.model.watched_category_ids,
+      this.model.watched_first_post_category_ids,
+      this.model.tracked_category_ids,
+      this.siteSettings.mute_all_categories_by_default
+        ? this.model.regular_category_ids
+        : this.model.muted_category_ids
+    );
   }
 
   @computed("siteSettings.remove_muted_tags_from_latest")
