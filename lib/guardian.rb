@@ -11,32 +11,6 @@ require "guardian/tag_guardian"
 require "guardian/topic_guardian"
 require "guardian/user_guardian"
 
-class GuardianUser
-  def initialize(user_alike)
-    @user_alike = user_alike
-  end
-
-  def actual
-    @user_alike
-  end
-
-  def fake?
-    if @user_alike.respond_to?(:fake?)
-      @user_alike.fake?
-    else
-      false
-    end
-  end
-
-  def authenticated?
-    if @user_alike.respond_to?(:authenticated?)
-      @user_alike.authenticated?
-    else
-      true
-    end
-  end
-end
-
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
   include BookmarkGuardian
@@ -53,12 +27,6 @@ class Guardian
   class AnonymousUser
     def blank?
       true
-    end
-    def fake?
-      true
-    end
-    def authenticated?
-      false
     end
     def admin?
       false
@@ -116,13 +84,7 @@ class Guardian
   # categories or PMs but can read public topics.
   class BasicUser
     def blank?
-      true
-    end
-    def fake?
-      true
-    end
-    def authenticated?
-      true
+      false
     end
     def admin?
       false
@@ -177,8 +139,7 @@ class Guardian
   attr_reader :request
 
   def initialize(user = nil, request = nil)
-    @guardian_user = GuardianUser.new(user.presence || AnonymousUser.new)
-    @user = @guardian_user.actual
+    @user = user.presence || AnonymousUser.new
     @request = request
   end
 
@@ -191,7 +152,7 @@ class Guardian
   end
 
   def user
-    @guardian_user.fake? ? nil : @user
+    @user.presence
   end
   alias current_user user
 
@@ -200,7 +161,7 @@ class Guardian
   end
 
   def authenticated?
-    @guardian_user.authenticated?
+    @user.present?
   end
 
   def is_admin?
