@@ -956,6 +956,14 @@ RSpec.describe Oneboxer do
       it "returns topic if basic user can see the topic" do
         expect(Oneboxer.local_topic(url, route, opts)).to eq(topic)
       end
+
+      context "for login_required" do
+        before { SiteSetting.login_required = true }
+
+        it "returns topic if basic user can see the topic" do
+          expect(Oneboxer.local_topic(url, route, opts)).to eq(topic)
+        end
+      end
     end
 
     context "when user_id is provided" do

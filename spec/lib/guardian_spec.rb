@@ -40,6 +40,44 @@ RSpec.describe Guardian do
     expect { Guardian.new(user) }.not_to raise_error
   end
 
+  it "can make a basic_user which is a fake user with minimal permissions" do
+    expect(Guardian.basic_user.guardian_user.actual).to be_a(Guardian::BasicUser)
+  end
+
+  it "can make an anonymous_user which is a fake user representing someone not logged in" do
+    expect(Guardian.anon_user.guardian_user.actual).to be_a(Guardian::AnonymousUser)
+  end
+
+  describe "authenticated?" do
+    it "returns true for basic_user" do
+      expect(Guardian.basic_user.authenticated?).to eq(true)
+    end
+
+    it "returns true for an actual user" do
+      expect(Guardian.new(user).authenticated?).to eq(true)
+    end
+
+    it "returns false for anon_user" do
+      expect(Guardian.anon_user.authenticated?).to eq(false)
+      expect(Guardian.new.authenticated?).to eq(false)
+    end
+  end
+
+  describe "user" do
+    it "returns nil for basic_user" do
+      expect(Guardian.basic_user.user).to eq(nil)
+    end
+
+    it "returns the user record for an actual user" do
+      expect(Guardian.new(user).user).to eq(user)
+    end
+
+    it "returns nil for anon_user" do
+      expect(Guardian.anon_user.user).to eq(nil)
+      expect(Guardian.new.user).to eq(nil)
+    end
+  end
+
   describe "link_posting_access" do
     it "is none for anonymous users" do
       expect(Guardian.new.link_posting_access).to eq("none")

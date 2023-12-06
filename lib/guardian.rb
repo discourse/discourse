@@ -115,6 +115,11 @@ class Guardian
   # that is logged in. This represents someone who cannot access any secure
   # categories or PMs but can read public topics.
   class BasicUser
+    # There are many guardian checks that expect an authenticated user
+    # to have an ID; let's make sure it's one that will never exist.
+    def id
+      -9_999_999
+    end
     def blank?
       true
     end
@@ -174,10 +179,10 @@ class Guardian
     end
   end
 
-  attr_reader :request
+  attr_reader :request, :guardian_user
 
   def initialize(user = nil, request = nil)
-    @guardian_user = GuardianUser.new(user.presence || AnonymousUser.new)
+    @guardian_user = GuardianUser.new(user.nil? ? AnonymousUser.new : user)
     @user = @guardian_user.actual
     @request = request
   end
