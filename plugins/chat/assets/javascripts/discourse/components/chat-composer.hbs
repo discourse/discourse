@@ -67,7 +67,7 @@
               tabindex={{if button.disabled -1 0}}
               {{on
                 "click"
-                (fn this.handleInlineButonAction button.action)
+                (fn this.handleInlineButtonAction button.action)
                 bubbles=false
               }}
               {{on "focus" (fn this.computeIsFocused true)}}
