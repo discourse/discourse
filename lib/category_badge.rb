@@ -25,8 +25,17 @@ module CategoryBadge
     category_url =
       opts[:absolute_url] ? "#{Discourse.base_url_no_prefix}#{category.url}" : category.url
 
+    # styles
+    styles = {
+      "--category-badge-color": "##{category.color}",
+      "--category-badge-text-color": "##{category.text_color}",
+    }
+    styles["--parent-category-badge-color"] = "##{parent_category.color}" if parent_category
+    style_value = styles.map { |k, v| "#{k}: #{ERB::Util.html_escape(v)};" }.join(" ")
+
     # category badge structure
     result << "<span data-category-id='#{category.id}'"
+    result << " style='#{style_value}'"
     result << " data-parent-category-id='#{parent_category.id}'" if parent_category
     result << " data-drop-close='true' class='#{class_names}' #{description}>"
     result << "<span class='badge-category__name'>"
