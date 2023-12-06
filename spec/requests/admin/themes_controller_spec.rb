@@ -319,9 +319,9 @@ RSpec.describe Admin::ThemesController do
       it "fails to import with an error if uploads are not allowed" do
         SiteSetting.theme_authorized_extensions = "nothing"
 
-        expect do post "/admin/themes/import.json", params: { theme: theme_archive } end.to change {
+        expect do post "/admin/themes/import.json", params: { theme: theme_archive } end.not_to change {
           Theme.count
-        }.by(0)
+        }
 
         expect(response.status).to eq(422)
       end
@@ -354,7 +354,7 @@ RSpec.describe Admin::ThemesController do
                      bundle: theme_archive,
                      theme_id: other_existing_theme.id,
                    }
-            end.to change { Theme.count }.by(0)
+            end.not_to change { Theme.count }
           end
         expect(response.status).to eq(201)
         json = response.parsed_body

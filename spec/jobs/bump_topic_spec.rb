@@ -27,7 +27,7 @@ RSpec.describe Jobs::BumpTopic do
 
     expect do
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
-    end.to change { topic.posts.count }.by(0)
+    end.not_to change { topic.posts.count }
 
     expect(topic.reload.public_topic_timer).to eq(nil)
   end
