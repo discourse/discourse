@@ -35,10 +35,6 @@ class GuardianUser
       true
     end
   end
-
-  def method_missing(method, *args, &block)
-    @user_alike.public_send(method, *args, &block)
-  end
 end
 
 # The guardian is responsible for confirming access to various site resources and operations
