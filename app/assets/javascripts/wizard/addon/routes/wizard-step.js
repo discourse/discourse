@@ -1,17 +1,17 @@
+import { inject as service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
+export default class WizardStepRoute extends DiscourseRoute {
+  @service router;
+
   model(params) {
-    const allSteps = this.modelFor("wizard").steps;
-    const step = allSteps.findBy("id", params.step_id);
-
-    return step || allSteps[0];
-  },
-
-  setupController(controller, step) {
     const wizard = this.modelFor("wizard");
-    this.controllerFor("wizard").set("currentStepId", step.id);
+    const step = wizard.findStep(params.step_id);
 
-    controller.setProperties({ step, wizard });
-  },
-});
+    if (!step) {
+      this.router.transitionTo("wizard.step", wizard.start);
+    }
+
+    return { wizard, step };
+  }
+}
