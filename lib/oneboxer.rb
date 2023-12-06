@@ -483,7 +483,7 @@ module Oneboxer
     return unless route[:category_slug_path_with_id]
     category = Category.find_by_slug_path_with_id(route[:category_slug_path_with_id])
 
-    if Guardian.new.can_see_category?(category)
+    if Guardian.basic_user.can_see_category?(category)
       args = {
         url: category.url,
         name: category.name,

@@ -114,7 +114,7 @@ module DiscoursePoll
               polls,
               each_serializer: PollSerializer,
               root: false,
-              scope: Guardian.new(nil),
+              scope: Guardian.basic_user,
             ).as_json
           post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
         end

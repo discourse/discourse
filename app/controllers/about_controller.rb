@@ -22,7 +22,7 @@ class AboutController < ApplicationController
     end
     category_topic_ids = Category.select(:topic_id).where.not(topic_id: nil)
     public_topics =
-      Topic.listable_topics.visible.secured(Guardian.new(nil)).where.not(id: category_topic_ids)
+      Topic.listable_topics.visible.secured(Guardian.anon_user).where.not(id: category_topic_ids)
     stats = { public_topic_count: public_topics.count }
     stats[:public_post_count] = public_topics.sum(:posts_count) - stats[:public_topic_count]
     render json: stats

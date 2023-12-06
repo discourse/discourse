@@ -47,6 +47,6 @@ class EmailController < ApplicationController
     user = User.find_by_email(@email)
     raise Discourse::NotFound unless user
     topic = Topic.find_by(id: params[:topic_id].to_i) if @topic_id
-    @topic = topic if topic && Guardian.new(nil).can_see?(topic)
+    @topic = topic if topic && Guardian.anon_user.can_see?(topic)
   end
 end
