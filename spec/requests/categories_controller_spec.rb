@@ -1050,6 +1050,14 @@ RSpec.describe CategoriesController do
 
         expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq([subcategory.id])
       end
+
+      it "does not return hidden category" do
+        category.update!(read_restricted: true)
+
+        get "/categories/find.json", params: { ids: [123_456_789] }
+
+        expect(response.status).to eq(404)
+      end
     end
 
     context "with slug path" do
