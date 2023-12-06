@@ -9,13 +9,13 @@ RSpec.describe "User card", type: :system do
   before { chat_system_bootstrap }
 
   shared_examples "not showing chat button" do
-    it "doesn’t show the chat buttton" do
+    it "doesn’t show the chat button" do
       expect(page).to have_no_css(".chat-user-card-btn")
     end
   end
 
   shared_examples "showing chat button" do
-    it "shows the chat buttton" do
+    it "shows the chat button" do
       expect(page).to have_css(".chat-user-card-btn")
     end
   end
