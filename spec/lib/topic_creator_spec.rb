@@ -24,6 +24,8 @@ RSpec.describe TopicCreator do
     }
   end
 
+  before { Group.refresh_automatic_groups! }
+
   describe "#create" do
     context "with topic success cases" do
       before do
@@ -49,7 +51,7 @@ RSpec.describe TopicCreator do
       end
 
       context "with regular user" do
-        before { SiteSetting.min_trust_to_create_topic = TrustLevel[0] }
+        before { SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
 
         it "should be possible for a regular user to create a topic" do
           expect(TopicCreator.create(user, Guardian.new(user), valid_attrs)).to be_valid
@@ -215,7 +217,7 @@ RSpec.describe TopicCreator do
 
         it "lets new user create a topic if they don't have sufficient trust level to tag topics" do
           SiteSetting.min_trust_level_to_tag_topics = 1
-          new_user = Fabricate(:newuser)
+          new_user = Fabricate(:newuser, refresh_auto_groups: true)
           topic =
             TopicCreator.create(
               new_user,
@@ -502,8 +504,8 @@ RSpec.describe TopicCreator do
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
-        it "min_trust_to_create_topic setting should not be checked when sending private message" do
-          SiteSetting.min_trust_to_create_topic = TrustLevel[4]
+        it "create_topic_allowed_groups setting should not be checked when sending private message" do
+          SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
