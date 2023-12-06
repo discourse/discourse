@@ -1,7 +1,15 @@
+import UserMenuIconAvatar from "discourse/components/user-menu/icon-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 
 export default class UserMenuBaseItem {
+  constructor() {
+    withPluginApi("1.18.0", (api) => {
+      this.site = api.container.lookup("service:site");
+      this.siteSettings = api.container.lookup("service:site-settings");
+    });
+  }
   get className() {}
 
   get linkHref() {
@@ -29,6 +37,20 @@ export default class UserMenuBaseItem {
   get descriptionClass() {}
 
   get topicId() {}
+
+  get avatarTemplate() {}
+
+  get iconComponent() {
+    return this.siteSettings.show_user_menu_avatars ? UserMenuIconAvatar : null;
+  }
+
+  get iconComponentArgs() {
+    return {
+      avatarTemplate:
+        this.avatarTemplate || this.site.system_user_avatar_template,
+      icon: this.icon,
+    };
+  }
 
   onClick({ event, closeUserMenu }) {
     if (wantsNewWindow(event)) {

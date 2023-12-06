@@ -559,17 +559,17 @@
 }
 
 .user-menu.show-avatars {
-  li.notification {
+  li {
     a {
-      .notification-avatar {
+      .icon-avatar {
         display: flex;
         position: relative;
         overflow: visible;
         margin-right: 0.5em;
 
         .avatar {
-          width: 3em;
-          height: 3em;
+          width: 2.75em;
+          height: 2.75em;
         }
         .d-icon {
           display: block;
@@ -580,6 +580,7 @@
           color: var(--secondary-very-high);
           padding: 0.25em;
           border-radius: 100%;
+          font-size: var(--font-down-1);
         }
       }
 

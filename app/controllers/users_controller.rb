@@ -1967,6 +1967,7 @@ class UsersController < ApplicationController
     end
 
     if unread_notifications.present?
+      Notification.populate_acting_user(unread_notifications) if SiteSetting.show_user_menu_avatars
       serialized_unread_notifications =
         ActiveModel::ArraySerializer.new(
           unread_notifications,
@@ -1981,6 +1982,7 @@ class UsersController < ApplicationController
     end
 
     if read_notifications.present?
+      Notification.populate_acting_user(read_notifications) if SiteSetting.show_user_menu_avatars
       serialized_read_notifications =
         ActiveModel::ArraySerializer.new(
           read_notifications,

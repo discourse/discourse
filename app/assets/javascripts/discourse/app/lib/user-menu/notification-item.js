@@ -1,4 +1,3 @@
-import NotificationAvatar from "discourse/components/user-menu/notification-avatar";
 import { setTransientHeader } from "discourse/lib/ajax";
 import cookie from "discourse/lib/cookie";
 import { getRenderDirector } from "discourse/lib/notification-types-manager";
@@ -59,15 +58,8 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
     return this.notification.topic_id;
   }
 
-  get iconComponent() {
-    return this.siteSettings.show_user_menu_avatars ? NotificationAvatar : null;
-  }
-
-  get iconComponentArgs() {
-    return {
-      avatarTemplate: this.notification.acting_user_avatar_template,
-      icon: this.icon,
-    };
+  get avatarTemplate() {
+    return this.notification.acting_user_avatar_template;
   }
 
   get #notificationName() {
