@@ -191,9 +191,9 @@ RSpec.describe DiscourseUpdates do
     it "correctly sees newly added features as unseen" do
       DiscourseUpdates.mark_new_features_as_seen(admin.id)
       expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
-      expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of (
-             last_item_date
-           )
+      expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of(
+        last_item_date,
+      )
 
       updated_features = [
         { "emoji" => "🤾", "title" => "Brand New Item", "created_at" => 2.minutes.ago },

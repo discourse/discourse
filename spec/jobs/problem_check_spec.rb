@@ -92,7 +92,6 @@ RSpec.describe Jobs::ProblemCheck do
   it "handles errors from a troublesome check" do
     AdminDashboardData.add_scheduled_problem_check(:test_identifier, TestCheck) do
       raise StandardError.new("something went wrong")
-      AdminDashboardData::Problem.new("polling issue")
     end
 
     described_class.new.execute(check_identifier: :test_identifier)

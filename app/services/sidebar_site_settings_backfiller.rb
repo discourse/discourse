@@ -67,7 +67,7 @@ class SidebarSiteSettingsBackfiller
       SELECT
         sidebar_section_links.user_id
       FROM sidebar_section_links
-      WHERE sidebar_section_links.linkable_type = '#{@linkable_klass.to_s}'
+      WHERE sidebar_section_links.linkable_type = '#{@linkable_klass}'
       AND sidebar_section_links.linkable_id IN (#{@removed_ids.join(",")})
       SQL
 
@@ -83,7 +83,7 @@ class SidebarSiteSettingsBackfiller
         SELECT
           DISTINCT(sidebar_section_links.user_id)
         FROM sidebar_section_links
-        WHERE sidebar_section_links.linkable_type = '#{@linkable_klass.to_s}'
+        WHERE sidebar_section_links.linkable_type = '#{@linkable_klass}'
         AND sidebar_section_links.linkable_id IN (#{@added_ids.join(",")})
       ) AND users.id > 0 AND NOT users.staged
       SQL

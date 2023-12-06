@@ -480,7 +480,7 @@ class TestEmojiUpdate < Minitest::Test
     puts "Runnings tests..."
     reporter = Minitest::SummaryReporter.new
     TestEmojiUpdate.run(reporter)
-    puts reporter.to_s
+    puts reporter
   end
 
   def image_path(style, name)

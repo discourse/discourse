@@ -180,8 +180,8 @@ def generate_admin_sidebar_nav_map
     end
   end
 
+  # rubocop:disable Lint/Void
   # Copy this JS to your browser to get the Ember routes.
-  #
   <<~JS
   let routeMap = {}
   for (const [key, value] of Object.entries(
@@ -207,7 +207,8 @@ def generate_admin_sidebar_nav_map
     routeMap[key] = route;
   }
   console.log(JSON.stringify(routeMap));
-JS
+  JS
+  # rubocop:enable Lint/Void
 
   # Paste the output below between ROUTE_MAP.
   #

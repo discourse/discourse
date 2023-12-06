@@ -7,9 +7,5 @@ module Jobs
     def quit_email_early?
       false
     end
-
-    def execute(args)
-      super(args)
-    end
   end
 end

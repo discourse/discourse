@@ -285,7 +285,7 @@ RSpec.describe TopicView do
           1,
         )
 
-        freeze_time (2.hours.from_now)
+        freeze_time(2.hours.from_now)
 
         TopicView.new(private_message.id, evil_trout)
         expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(
