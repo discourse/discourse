@@ -2,8 +2,6 @@
 
 module Chat
   class UserMessageBookmarkSerializer < UserBookmarkBaseSerializer
-    attr_reader :chat_message
-
     def title
       fancy_title
     end
