@@ -1,6 +1,10 @@
 <FileSizeInput
   @sizeValueKB={{readonly this.value}}
   @onChangeSize={{this.onChangeSize}}
+  @updateValidationMessage={{this.updateValidationMessage}}
+  @min={{if this.setting.min this.setting.min null}}
+  @max={{if this.setting.max this.setting.max null}}
+  @message={{this.validationMessage}}
 />
 
 <SettingValidationMessage @message={{this.validationMessage}} />

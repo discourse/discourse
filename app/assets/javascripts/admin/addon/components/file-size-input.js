@@ -2,6 +2,27 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 
+const ALLOWED_KEYS = [
+  "Enter",
+  "Backspace",
+  "Tab",
+  "Delete",
+  "ArrowLeft",
+  "ArrowUp",
+  "ArrowRight",
+  "ArrowDown",
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+];
+
 /**
   An input field for a file size.
 
@@ -12,6 +33,11 @@ export default class FileSizeInput extends Component {
     super.init(...arguments);
     let sizeValueKB = this.get("sizeValueKB");
     this.set("sizeValue", sizeValueKB);
+    this.set("fileSizeUnit", "kb");
+  }
+
+  keyDown(event) {
+    return ALLOWED_KEYS.includes(event.key);
   }
 
   @computed("dropdownOptions")
@@ -31,18 +57,33 @@ export default class FileSizeInput extends Component {
   }
 
   _onFileSizeChange(newSize) {
+    let max = this.max;
     switch (this.fileSizeUnit) {
       case "kb":
         this.set("fileSizeKB", newSize);
         break;
       case "mb":
         this.set("fileSizeKB", newSize * 1024);
+        max = max / 1024;
         break;
       case "gb":
         this.set("fileSizeKB", newSize * 1024 * 1024);
+        max = max / 1024 / 1024;
         break;
     }
-    this.onChangeSize(this.fileSizeKB);
+    if (this.fileSizeKB > this.max) {
+      this.updateValidationMessage(
+        I18n.toHumanSize(this.fileSizeKB * 1024) +
+          " is greater than the max allowed " +
+          I18n.toHumanSize(this.max * 1024)
+      );
+    } else {
+      this.onChangeSize(this.fileSizeKB);
+      this.updateValidationMessage(null);
+    }
+    console.log(this.fileSizeKB);
+    console.log(this.max);
+    console.log(this.message);
   }
 
   @action
