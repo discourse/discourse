@@ -105,7 +105,7 @@ after_initialize do
           end
       end
 
-      next if !Guardian.basic_user.can_preview_chat_channel?(chat_channel)
+      next if !Guardian.new.can_preview_chat_channel?(chat_channel)
 
       { url: url, title: title }
     end

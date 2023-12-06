@@ -169,7 +169,7 @@ module Middleware
       def theme_ids
         ids, _ = @request.cookies["theme_ids"]&.split("|")
         id = ids&.split(",")&.map(&:to_i)&.first
-        if id && Guardian.anon_user.allow_themes?([id])
+        if id && Guardian.new.allow_themes?([id])
           Theme.transform_ids(id)
         else
           []

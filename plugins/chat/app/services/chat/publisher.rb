@@ -52,7 +52,7 @@ module Chat
             message:
               Chat::MessageSerializer.new(
                 chat_message,
-                { scope: Guardian.anon_user, root: false },
+                { scope: anonymous_guardian, root: false },
               ).as_json,
           },
           permissions(chat_channel),
@@ -69,7 +69,7 @@ module Chat
             message:
               Chat::MessageSerializer.new(
                 chat_message,
-                { scope: Guardian.anon_user, root: false },
+                { scope: anonymous_guardian, root: false },
               ).as_json,
           },
           permissions(chat_channel),
@@ -258,7 +258,7 @@ module Chat
 
     def self.serialize_message_with_type(chat_message, type, options = {})
       Chat::MessageSerializer
-        .new(chat_message, { scope: Guardian.anon_user, root: :chat_message })
+        .new(chat_message, { scope: anonymous_guardian, root: :chat_message })
         .as_json
         .merge(type: type)
         .merge(options)
@@ -469,6 +469,10 @@ module Chat
         user_ids: channel.allowed_user_ids.presence,
         group_ids: channel.allowed_group_ids.presence,
       }.compact
+    end
+
+    def self.anonymous_guardian
+      Guardian.new(nil)
     end
   end
 end
