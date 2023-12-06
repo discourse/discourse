@@ -113,7 +113,7 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  handleInlineButonAction(buttonAction, event) {
+  handleInlineButtonAction(buttonAction, event) {
     event.stopPropagation();
 
     buttonAction();

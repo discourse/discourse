@@ -871,7 +871,7 @@ RSpec.describe Guardian do
       expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
     end
 
-    it "diallows secure categories with no access" do
+    it "disallows secure categories with no access" do
       secure_category = Fabricate(:category, read_restricted: true)
       post.topic.update!(category_id: secure_category.id)
 

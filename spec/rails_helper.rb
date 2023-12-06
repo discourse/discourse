@@ -234,7 +234,7 @@ RSpec.configure do |config|
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
 
-    # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is requried for
+    # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is required for
     # system tests to support running system tests in multiple processes. If we don't download the `chromedriver` binary
     # before running system tests in multiple processes, each process will end up calling the `selenium-manager` binary
     # to download the `chromedriver` binary at the same time but the problem is that the binary is being downloaded to
@@ -370,8 +370,8 @@ RSpec.configure do |config|
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
       if example.exception.nil? &&
-           (capybara_timout_error = example.metadata[:_capybara_timeout_exception])
-        raise capybara_timout_error
+           (capybara_timeout_error = example.metadata[:_capybara_timeout_exception])
+        raise capybara_timeout_error
       end
     end
 

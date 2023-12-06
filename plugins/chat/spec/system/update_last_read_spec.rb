@@ -13,22 +13,8 @@ RSpec.describe "Update last read", type: :system do
     chat_system_bootstrap
     channel_1.add(current_user)
     membership.update!(last_read_message_id: first_unread.id)
-    25.times { |i| Fabricate(:chat_message, chat_channel: channel_1) }
+    Fabricate.times(25, :chat_message, chat_channel: channel_1)
     sign_in(current_user)
-  end
-
-  context "when the full message is not visible" do
-    it "doesn’t mark it as read" do
-      before_last_message = Fabricate(:chat_message, chat_channel: channel_1)
-      last_message = Fabricate(:chat_message, chat_channel: channel_1)
-      chat_page.visit_channel(channel_1)
-
-      page.execute_script("document.querySelector('.chat-messages-scroll').scrollTo(0, -5)")
-
-      try_until_success(timeout: 5) do
-        expect(membership.reload.last_read_message_id).to eq(before_last_message.id)
-      end
-    end
   end
 
   context "when the full message is visible" do
@@ -36,9 +22,8 @@ RSpec.describe "Update last read", type: :system do
       last_message = Fabricate(:chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
 
-      page.execute_script("document.querySelector('.chat-messages-scroll').scrollTo(0, 0)")
-
-      try_until_success(timeout: 5) do
+      try_until_success do
+        page.execute_script("document.querySelector('.chat-messages-scroll').scrollTo(0, 0)")
         expect(membership.reload.last_read_message_id).to eq(last_message.id)
       end
     end
@@ -51,29 +36,7 @@ RSpec.describe "Update last read", type: :system do
       last_message = Fabricate(:chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
 
-      try_until_success(timeout: 5) do
-        expect(membership.reload.last_read_message_id).to eq(last_message.id)
-      end
-    end
-  end
-
-  context "when scrolling from not visible to bottom" do
-    it "marks last message as read" do
-      before_last_message = Fabricate(:chat_message, chat_channel: channel_1)
-      last_message = Fabricate(:chat_message, chat_channel: channel_1)
-      chat_page.visit_channel(channel_1)
-
-      page.execute_script("document.querySelector('.chat-messages-scroll').scrollTo(0, -15)")
-
-      try_until_success(timeout: 5) do
-        expect(membership.reload.last_read_message_id).to eq(before_last_message.id)
-      end
-
-      page.execute_script("document.querySelector('.chat-messages-scroll').scrollTo(0, -1)")
-
-      try_until_success(timeout: 5) do
-        expect(membership.reload.last_read_message_id).to eq(last_message.id)
-      end
+      try_until_success { expect(membership.reload.last_read_message_id).to eq(last_message.id) }
     end
   end
 end

@@ -18,7 +18,9 @@ RSpec.describe "Message user info", type: :system do
     it "shows user info on the message" do
       chat_page.visit_channel(channel_1)
 
-      expect(page.find("[data-id='#{message_1.id}']")).to have_css(".chat-message-avatar")
+      expect(page.find(".chat-message-container[data-id='#{message_1.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
     end
   end
 
@@ -29,8 +31,12 @@ RSpec.describe "Message user info", type: :system do
     it "shows user info only on first message" do
       chat_page.visit_channel(channel_1)
 
-      expect(page.find("[data-id='#{message_1.id}']")).to have_css(".chat-message-avatar")
-      expect(page.find("[data-id='#{message_2.id}']")).to have_no_css(".chat-message-avatar")
+      expect(page.find(".chat-message-container[data-id='#{message_1.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
+      expect(page.find(".chat-message-container[data-id='#{message_2.id}']")).to have_no_css(
+        ".chat-message-avatar",
+      )
     end
   end
 
@@ -42,7 +48,9 @@ RSpec.describe "Message user info", type: :system do
       message_1.trash!
       chat_page.visit_channel(channel_1)
 
-      expect(page.find("[data-id='#{message_2.id}']")).to have_css(".chat-message-avatar")
+      expect(page.find(".chat-message-container[data-id='#{message_2.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
     end
   end
 
@@ -50,13 +58,17 @@ RSpec.describe "Message user info", type: :system do
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-    it "shows user info only on boths messages" do
+    it "shows user info only on both messages" do
       Fabricate(:chat_webhook_event, chat_message: message_1)
       Fabricate(:chat_webhook_event, chat_message: message_2)
       chat_page.visit_channel(channel_1)
 
-      expect(page.find("[data-id='#{message_1.id}']")).to have_css(".chat-message-avatar")
-      expect(page.find("[data-id='#{message_2.id}']")).to have_css(".chat-message-avatar")
+      expect(page.find(".chat-message-container[data-id='#{message_1.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
+      expect(page.find(".chat-message-container[data-id='#{message_2.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
     end
   end
 
@@ -69,8 +81,12 @@ RSpec.describe "Message user info", type: :system do
     it "shows user info on both messages" do
       chat_page.visit_channel(channel_1)
 
-      expect(page.find("[data-id='#{message_1.id}']")).to have_css(".chat-message-avatar")
-      expect(page.find("[data-id='#{message_2.id}']")).to have_css(".chat-message-avatar")
+      expect(page.find(".chat-message-container[data-id='#{message_1.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
+      expect(page.find(".chat-message-container[data-id='#{message_2.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
     end
   end
 
@@ -83,8 +99,12 @@ RSpec.describe "Message user info", type: :system do
     it "shows user info on first message only" do
       chat_page.visit_channel(channel_1)
 
-      expect(page.find("[data-id='#{message_1.id}']")).to have_css(".chat-message-avatar")
-      expect(page.find("[data-id='#{message_2.id}']")).to have_no_css(".chat-message-avatar")
+      expect(page.find(".chat-message-container[data-id='#{message_1.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
+      expect(page.find(".chat-message-container[data-id='#{message_2.id}']")).to have_no_css(
+        ".chat-message-avatar",
+      )
     end
   end
 
@@ -98,9 +118,15 @@ RSpec.describe "Message user info", type: :system do
     it "shows user info on each message" do
       chat_page.visit_channel(channel_1)
 
-      expect(page.find("[data-id='#{message_1.id}']")).to have_css(".chat-message-avatar")
-      expect(page.find("[data-id='#{message_2.id}']")).to have_css(".chat-message-avatar")
-      expect(page.find("[data-id='#{message_3.id}']")).to have_css(".chat-message-avatar")
+      expect(page.find(".chat-message-container[data-id='#{message_1.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
+      expect(page.find(".chat-message-container[data-id='#{message_2.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
+      expect(page.find(".chat-message-container[data-id='#{message_3.id}']")).to have_css(
+        ".chat-message-avatar",
+      )
     end
   end
 end

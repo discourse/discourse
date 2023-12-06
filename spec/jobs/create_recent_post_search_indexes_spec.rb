@@ -9,7 +9,7 @@ RSpec.describe Jobs::CreateRecentPostSearchIndexes do
   before { SearchIndexer.enable }
 
   describe "#execute" do
-    it "should not create the index if requried posts size has not been reached" do
+    it "should not create the index if required posts size has not been reached" do
       SiteSetting.search_recent_posts_size = 1
       SiteSetting.search_enable_recent_regular_posts_offset_size = 3
 
