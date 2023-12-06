@@ -160,7 +160,7 @@ module Onebox
       end
 
       def set_from_normalizer_data(normalizer)
-        normalizer.data.keys.each do |k|
+        normalizer.data.each do |k, _|
           v = normalizer.send(k)
           @raw[k] ||= v unless v.nil?
         end
