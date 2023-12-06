@@ -14,7 +14,6 @@ if ARGV.include?("bbcode-to-md")
 end
 
 require "pg"
-require "set"
 require "redcarpet"
 require "htmlentities"
 

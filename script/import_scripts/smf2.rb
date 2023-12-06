@@ -6,7 +6,6 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 require "htmlentities"
 require "tsort"
-require "set"
 require "optparse"
 require "etc"
 require "open3"

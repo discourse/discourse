@@ -11,9 +11,7 @@ class ImportScripts::Sfn < ImportScripts::Base
   BATCH_SIZE = 100_000
   MIN_CREATED_AT = "2003-11-01"
 
-  def initialize
-    super
-  end
+  
 
   def execute
     load_external_users
