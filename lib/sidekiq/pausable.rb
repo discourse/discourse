@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-
 class SidekiqPauser
   TTL = 60
   PAUSED_KEY = "sidekiq_is_paused_v2"

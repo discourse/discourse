@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-
 module Concurrency
   module Logic
     class DeadEnd < StandardError

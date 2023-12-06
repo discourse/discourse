@@ -61,32 +61,28 @@ RSpec.describe Report do
         ]
 
         # 60 complete days:
-        30
-          .times
-          .each do |i|
-            application_requests.concat(
-              [
-                {
-                  date: (i + 1).days.ago.to_time,
-                  req_type: ApplicationRequest.req_types["http_total"],
-                  count: 10,
-                },
-              ],
-            )
-          end
-        30
-          .times
-          .each do |i|
-            application_requests.concat(
-              [
-                {
-                  date: (31 + i).days.ago.to_time,
-                  req_type: ApplicationRequest.req_types["http_total"],
-                  count: 100,
-                },
-              ],
-            )
-          end
+        30.times.each do |i|
+          application_requests.concat(
+            [
+              {
+                date: (i + 1).days.ago.to_time,
+                req_type: ApplicationRequest.req_types["http_total"],
+                count: 10,
+              },
+            ],
+          )
+        end
+        30.times.each do |i|
+          application_requests.concat(
+            [
+              {
+                date: (31 + i).days.ago.to_time,
+                req_type: ApplicationRequest.req_types["http_total"],
+                count: 100,
+              },
+            ],
+          )
+        end
 
         ApplicationRequest.insert_all(application_requests)
       end
@@ -1333,7 +1329,6 @@ RSpec.describe Report do
 
         expect(page_view_anon_report[:color]).to eql("#9BC53D")
         expect(page_view_anon_report[:data][0][:y]).to eql(1)
-      
       end
     end
   end
@@ -1378,7 +1373,6 @@ RSpec.describe Report do
 
         expect(user_api_report[:color]).to eql("#9BC53D")
         expect(user_api_report[:data][0][:y]).to eql(1)
-      
       end
     end
   end

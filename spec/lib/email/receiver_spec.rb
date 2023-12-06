@@ -2298,8 +2298,7 @@ RSpec.describe Email::Receiver do
     let(:user) { Fabricate(:user) }
     let(:group) { Fabricate(:group, users: [user]) }
 
-    let(:email_1) {
-      <<~EMAIL
+    let(:email_1) { <<~EMAIL }
       MIME-Version: 1.0
       Date: Wed, 01 Jan 2019 12:00:00 +0200
       Message-ID: <7aN1uwcokt2xkfG3iYrpKmiuVhy4w9b5@mail.gmail.com>
@@ -2318,9 +2317,8 @@ RSpec.describe Email::Receiver do
       libero quis, congue viverra sapien. Nulla sodales ac tellus a
       suscipit.
       EMAIL
-    }
 
-    let(:post_2) {
+    let(:post_2) do
       incoming_email =
         IncomingEmail.find_by(message_id: "7aN1uwcokt2xkfG3iYrpKmiuVhy4w9b5@mail.gmail.com")
 
@@ -2330,10 +2328,9 @@ RSpec.describe Email::Receiver do
           "Vestibulum rutrum tortor vitae arcu varius, non vestibulum ipsum tempor. Integer nibh libero, dignissim eu velit vel, interdum posuere mi. Aliquam erat volutpat. Pellentesque id nulla ultricies, eleifend ipsum non, fringilla purus. Aliquam pretium dolor lobortis urna volutpat, vel consectetur arcu porta. In non erat quis nibh gravida pharetra consequat vel risus. Aliquam rutrum consectetur est ac posuere. Praesent mattis nunc risus, a molestie lectus accumsan porta.",
         topic_id: incoming_email.topic_id,
       )
-    }
+    end
 
-    let(:email_3) {
-      <<~EMAIL
+    let(:email_3) { <<~EMAIL }
       MIME-Version: 1.0
       Date: Wed, 01 Jan 2019 12:00:00 +0200
       References: <7aN1uwcokt2xkfG3iYrpKmiuVhy4w9b5@mail.gmail.com> <topic/#{post_2.topic_id}/#{post_2.id}@test.localhost>
@@ -2357,7 +2354,6 @@ RSpec.describe Email::Receiver do
       iaculis mi, at hendrerit nisi turpis sit amet metus. Nulla egestas
       ante eget nisi luctus consectetur.
       EMAIL
-    }
 
     def receive(email_string)
       Email::Receiver.new(email_string, destinations: [group]).process!

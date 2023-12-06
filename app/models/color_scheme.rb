@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ColorScheme < ActiveRecord::Base
-
   CUSTOM_SCHEMES = {
     Dark: {
       "primary" => "dddddd",

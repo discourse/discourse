@@ -836,15 +836,9 @@ RSpec.describe UsersController do
       end
 
       context "when normalize_emails is enabled" do
-        let(:email) {
-          "jane+100@gmail.com"
-        }
-        let(:dupe_email) {
-          "jane+191@gmail.com"
-        }
-        let!(:user) {
-          Fabricate(:user, email: email, password: "strongpassword")
-        }
+        let(:email) { "jane+100@gmail.com" }
+        let(:dupe_email) { "jane+191@gmail.com" }
+        let!(:user) { Fabricate(:user, email: email, password: "strongpassword") }
 
         before do
           SiteSetting.hide_email_address_taken = true

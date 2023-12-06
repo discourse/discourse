@@ -489,8 +489,8 @@ RSpec.describe Plugin::Instance do
       ).to eq(locale[:message_format])
       expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq(locale[:moment_js])
       expect(JsLocaleHelper.find_moment_locale(["foo_BAR"], timezone_names: true)).to eq(
-           locale[:moment_js_timezones]
-         )
+        locale[:moment_js_timezones],
+      )
     end
 
     it "correctly registers a new locale using a fallback locale" do
