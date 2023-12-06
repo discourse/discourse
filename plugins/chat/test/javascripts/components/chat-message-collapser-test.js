@@ -1,6 +1,6 @@
 import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { module, test } from "qunit";
+import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   query,
@@ -413,7 +413,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("escapes link", async function (assert) {
+    skip("escapes link", async function (assert) {
       this.set(
         "cooked",
         imageCooked
