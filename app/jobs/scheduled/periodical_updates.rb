@@ -14,7 +14,7 @@ module Jobs
       (@call_count % 24) == 1
     end
 
-    def execute(_)
+    def execute(_ = nil)
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics(batched: true)
 
