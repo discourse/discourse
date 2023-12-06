@@ -1982,6 +1982,13 @@ class UsersController < ApplicationController
     if messages_list
       serialized_messages =
         serialize_data(messages_list, TopicListSerializer, scope: guardian, root: false)[:topics]
+      serialized_users =
+        if SiteSetting.show_user_menu_avatars
+          users = messages_list.topics.map { |t| t.posters.last.user }.flatten.compact.uniq(&:id)
+          serialize_data(users, BasicUserSerializer, scope: guardian, root: false)
+        else
+          []
+        end
     end
 
     if read_notifications.present?
@@ -1998,6 +2005,7 @@ class UsersController < ApplicationController
              unread_notifications: serialized_unread_notifications || [],
              read_notifications: serialized_read_notifications || [],
              topics: serialized_messages || [],
+             users: serialized_users || [],
            }
   end
 
