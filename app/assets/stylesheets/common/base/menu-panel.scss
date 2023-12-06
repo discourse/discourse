@@ -567,8 +567,8 @@
         overflow: visible;
         margin-right: 0.5em;
         flex-shrink: 0;
-        width: 2.5em;
-        height: 2.5em;
+        width: 2.25em;
+        height: 2.25em;
         padding: 0.125em 0;
 
         .avatar {
@@ -578,7 +578,7 @@
         .d-icon {
           display: block;
           position: absolute;
-          right: -0.625em;
+          right: -0.675em;
           bottom: -0.125em;
           background: var(--secondary);
           color: var(--primary-very-high);
