@@ -533,7 +533,7 @@
       width: 100%;
     }
     textarea {
-      font-family: monospace;
+      font-family: var(--d-font-family--monospace);
       resize: none;
       border-radius: 0;
       box-shadow: none;
