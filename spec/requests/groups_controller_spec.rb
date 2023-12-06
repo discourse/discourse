@@ -1931,7 +1931,7 @@ RSpec.describe GroupsController do
       end
 
       it "returns skipped_usernames response body when removing a valid user but is not a member of that group" do
-        delete "/groups/#{group.id}/members.json", params: { user_id: -1 }
+        delete "/groups/#{group.id}/members.json", params: { user_id: Discourse::SYSTEM_USER_ID }
 
         response_body = response.parsed_body
         expect(response.status).to eq(200)
