@@ -113,6 +113,8 @@ RSpec.describe UserBadgesController do
       end
 
       it "does not include the attributes for topics which the current user cannot see" do
+        sign_in(user)
+
         get "/user_badges.json", params: { badge_id: badge.id }
 
         expect(response.status).to eq(200)
