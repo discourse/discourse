@@ -215,7 +215,7 @@ RSpec.describe ApplicationHelper do
         dark_theme =
           Theme.create(
             name: "Dark",
-            user_id: -1,
+            user_id: Discourse::SYSTEM_USER_ID,
             color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id,
           )
         helper.request.env[:resolved_theme_id] = dark_theme.id
@@ -275,7 +275,7 @@ RSpec.describe ApplicationHelper do
         _dark_theme =
           Theme.create(
             name: "Dark",
-            user_id: -1,
+            user_id: Discourse::SYSTEM_USER_ID,
             color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id,
           )
       end
@@ -300,7 +300,7 @@ RSpec.describe ApplicationHelper do
         dark_theme =
           Theme.create(
             name: "Dark",
-            user_id: -1,
+            user_id: Discourse::SYSTEM_USER_ID,
             color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id,
           )
         helper.request.env[:resolved_theme_id] = dark_theme.id
@@ -798,7 +798,7 @@ RSpec.describe ApplicationHelper do
       dark_theme =
         Theme.create(
           name: "Dark",
-          user_id: -1,
+          user_id: Discourse::SYSTEM_USER_ID,
           color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id,
         )
       helper.request.env[:resolved_theme_id] = dark_theme.id

@@ -1022,7 +1022,7 @@ RSpec.describe Category do
       topic = Topic.find_by_id(post1.topic_id)
 
       TopicTimer.create!(
-        user_id: -1,
+        user_id: Discourse::SYSTEM_USER_ID,
         topic: topic,
         execute_at: 1.hour.from_now,
         status_type: TopicTimer.types[:bump],
