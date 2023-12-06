@@ -131,7 +131,7 @@ export default Component.extend({
   @action
   finishedEditing() {
     const oldTagName = this.tag.id;
-    this.newTagDescription = this.newTagDescription.replaceAll("\n", "<br>");
+    this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
     this.tag
       .update({ id: this.newTagName, description: this.newTagDescription })
       .then((result) => {
