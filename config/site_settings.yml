@@ -398,6 +398,7 @@ basic:
   show_user_menu_avatars:
     client: true
     default: false
+    hidden: true
 login:
   invite_only:
     refresh: true

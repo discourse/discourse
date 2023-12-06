@@ -566,25 +566,29 @@
         position: relative;
         overflow: visible;
         margin-right: 0.5em;
+        flex-shrink: 0;
+        width: 2.5em;
+        height: 2.5em;
+        padding: 0.125em 0;
 
         .avatar {
-          width: 2.75em;
-          height: 2.75em;
+          width: 100%;
+          height: 100%;
         }
         .d-icon {
           display: block;
           position: absolute;
-          right: -0.6em;
-          bottom: -0.1em;
-          background: var(--primary);
-          color: var(--secondary-very-high);
+          right: -0.625em;
+          bottom: -0.125em;
+          background: var(--secondary);
+          color: var(--primary-very-high);
           padding: 0.25em;
           border-radius: 100%;
           font-size: var(--font-down-1);
         }
       }
-
-      .d-icon {
+      & + div {
+        padding: 0.25em 0;
       }
     }
   }
