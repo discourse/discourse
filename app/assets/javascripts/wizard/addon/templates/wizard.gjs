@@ -5,9 +5,7 @@ import DiscourseLogo from "../components/discourse-logo";
 export default RouteTemplate(<template>
   {{hideApplicationFooter}}
   <div id="wizard-main">
-    <div class="discourse-logo">
-      <DiscourseLogo />
-    </div>
+    <DiscourseLogo />
 
     {{outlet}}
   </div>
