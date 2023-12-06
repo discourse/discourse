@@ -12,7 +12,7 @@ module Compression
 
     def compress(path, target_name)
       current_target = target_name
-      @strategies.reduce do |_, strategy|
+      @strategies.reduce(nil) do |_, strategy|
         compressed_path = strategy.compress(path, current_target)
         current_target = compressed_path.split("/").last
         compressed_path
