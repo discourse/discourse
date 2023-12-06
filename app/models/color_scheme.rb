@@ -277,8 +277,6 @@ class ColorScheme < ActiveRecord::Base
     },
   }
 
-  # rubocop:enable Layout/HashAlignment
-
   LIGHT_THEME_ID = "Light"
 
   def self.base_color_scheme_colors

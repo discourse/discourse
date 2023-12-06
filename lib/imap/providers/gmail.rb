@@ -185,7 +185,7 @@ module Imap
               end
               attr[name] = val
             end
-            return attr
+            attr
           end
 
           def label_data
@@ -213,9 +213,8 @@ module Imap
                 result.push(atom)
               end
             end
-            return name, result
+            [name, result]
           end
-          # rubocop:enable Style/RedundantReturn
         end
       end
     end
