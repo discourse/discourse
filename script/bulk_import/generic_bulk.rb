@@ -2081,6 +2081,26 @@ class BulkImport::Generic < BulkImport::Base
 
     rows.close
 
+    puts "", "Importing permalinks for posts..."
+
+    rows = query(<<~SQL)
+      SELECT id, old_relative_url
+        FROM posts
+       WHERE old_relative_url IS NOT NULL
+       ORDER BY id
+    SQL
+
+    existing_permalinks = Permalink.where("post_id IS NOT NULL").pluck(:post_id).to_set
+
+    create_permalinks(rows) do |row|
+      post_id = post_id_from_imported_id(row["id"])
+      next if !post_id || existing_permalinks.include?(post_id)
+
+      { url: row["old_relative_url"], post_id: post_id }
+    end
+
+    rows.close
+
     puts "", "Importing permalinks for categories..."
 
     rows = query(<<~SQL)
@@ -2097,6 +2117,49 @@ class BulkImport::Generic < BulkImport::Base
       next if !category_id || existing_permalinks.include?(category_id)
 
       { url: row["old_relative_url"], category_id: category_id }
+    end
+
+    rows.close
+
+    if @tag_mapping
+      puts "", "Importing permalinks for tags..."
+
+      rows = query(<<~SQL)
+        SELECT id, old_relative_url
+          FROM tags
+         WHERE old_relative_url IS NOT NULL
+         ORDER BY id
+      SQL
+
+      existing_permalinks = Permalink.where("tag_id IS NOT NULL").pluck(:tag_id).to_set
+
+      create_permalinks(rows) do |row|
+        tag_id = @tag_mapping[row["id"]]
+        next if !tag_id || existing_permalinks.include?(tag_id)
+
+        { url: row["old_relative_url"], tag_id: tag_id }
+      end
+
+      rows.close
+    else
+      puts "  Skipping import of topic tags because tags have not been imported."
+    end
+
+    puts "", "Importing permalinks for external/relative URLs..."
+
+    rows = query(<<~SQL)
+      SELECT url, external_url
+        FROM permalinks
+       WHERE external_url IS NOT NULL
+       ORDER BY url
+    SQL
+
+    existing_permalinks = Permalink.where("external_url IS NOT NULL").pluck(:external_url).to_set
+
+    create_permalinks(rows) do |row|
+      next if existing_permalinks.include?(row["external_url"])
+
+      { url: row["url"], external_url: row["external_url"] }
     end
 
     rows.close
