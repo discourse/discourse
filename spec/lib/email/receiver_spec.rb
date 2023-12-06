@@ -127,7 +127,7 @@ RSpec.describe Email::Receiver do
 
     describe "creating whisper post in PMs for staged users" do
       let(:email_address) { "linux-admin@b-s-c.co.jp" }
-      fab!(:user1) { Fabricate(:user) }
+      fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
       let(:user2) { Fabricate(:staged, email: email_address) }
       let(:topic) do
         Fabricate(
@@ -282,7 +282,7 @@ RSpec.describe Email::Receiver do
   describe "reply" do
     let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
     fab!(:category)
-    fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+    fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
     fab!(:topic) { create_topic(category: category, user: user) }
     fab!(:post) { create_post(topic: topic) }
 
@@ -1952,7 +1952,7 @@ RSpec.describe Email::Receiver do
     context "when email is a reply" do
       let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
       fab!(:category)
-      fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+      fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
       fab!(:user2) { Fabricate(:user, email: "someone_else@bar.com") }
       fab!(:topic) { create_topic(category: category, user: user) }
       fab!(:post) { create_post(topic: topic, user: user) }

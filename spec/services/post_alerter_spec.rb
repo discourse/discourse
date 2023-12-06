@@ -715,8 +715,8 @@ RSpec.describe PostAlerter do
     end
 
     it "doesn't notify the linked user if the user is staged and the category is restricted and allows strangers" do
-      staged_user = Fabricate(:staged)
-      group_member = Fabricate(:user)
+      staged_user = Fabricate(:staged, refresh_auto_groups: true)
+      group_member = Fabricate(:user, refresh_auto_groups: true)
       group.add(group_member)
 
       staged_user_post = create_post(user: staged_user, category: private_category)
@@ -2294,7 +2294,7 @@ RSpec.describe PostAlerter do
 
       post =
         PostCreator.create!(
-          Fabricate(:user),
+          Fabricate(:user, refresh_auto_groups: true),
           title: "one of my first topics",
           raw: "one of my first posts",
           category: category.id,

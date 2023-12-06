@@ -275,7 +275,7 @@ RSpec.describe TopicTrackingState do
   end
 
   describe "#publish_muted" do
-    let(:user) { Fabricate(:user, last_seen_at: Date.today) }
+    let(:user) { Fabricate(:user, last_seen_at: Date.today, refresh_auto_groups: true) }
     let(:post) { create_post(user: user) }
 
     include_examples("does not publish message for private topics", :publish_muted)
@@ -307,7 +307,7 @@ RSpec.describe TopicTrackingState do
   end
 
   describe "#publish_unmuted" do
-    let(:user) { Fabricate(:user, last_seen_at: Date.today) }
+    let(:user) { Fabricate(:user, last_seen_at: Date.today, refresh_auto_groups: true) }
     let(:second_user) { Fabricate(:user, last_seen_at: Date.today) }
     let(:third_user) { Fabricate(:user, last_seen_at: Date.today) }
     let(:post) { create_post(user: user) }

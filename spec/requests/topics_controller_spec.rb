@@ -8,8 +8,8 @@ RSpec.describe TopicsController do
 
   fab!(:pm) { Fabricate(:private_message_topic) }
 
-  fab!(:user)
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post_author1) { Fabricate(:user) }
   fab!(:post_author2) { Fabricate(:user) }
   fab!(:post_author3) { Fabricate(:user) }
@@ -18,9 +18,9 @@ RSpec.describe TopicsController do
   fab!(:post_author6) { Fabricate(:user) }
   fab!(:moderator)
   fab!(:admin)
-  fab!(:trust_level_0)
-  fab!(:trust_level_1)
-  fab!(:trust_level_4)
+  fab!(:trust_level_0) { Fabricate(:trust_level_0, refresh_auto_groups: true) }
+  fab!(:trust_level_1) { Fabricate(:trust_level_1, refresh_auto_groups: true) }
+  fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
 
   fab!(:category)
   fab!(:tracked_category) { Fabricate(:category) }
@@ -242,6 +242,7 @@ RSpec.describe TopicsController do
       before do
         sign_in(user)
         SiteSetting.enable_category_group_moderation = true
+        Group.refresh_automatic_groups!
       end
 
       it "moves the posts" do
