@@ -156,24 +156,6 @@ aside.onebox {
       }
     }
 
-    .github-body-container {
-      margin: 1em 0 0 0;
-      color: var(--primary-very-high);
-      max-height: 400px;
-      white-space: pre-wrap;
-      overflow-y: auto;
-      word-break: break-word;
-      font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
-        "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-      flex: 1 0 100%;
-      box-sizing: border-box;
-
-      .show-more {
-        // padding on right for larger hitzone
-        padding: 0.5em 1.5em 0em 0.25em;
-      }
-    }
-
     [style*="--aspect-ratio"] > :first-child {
       width: 100%;
     }
@@ -438,8 +420,27 @@ pre.onebox code {
 .onebox.githubcommit,
 .onebox.githubissue {
   .onebox-body {
+    display: grid;
+    grid-template-areas:
+      "icon title"
+      "icon branches"
+      "icon info"
+      "body body";
+    grid-template-columns: 2.5em 1fr;
+    gap: 0.25em 0.75em;
+
+    @include breakpoint(mobile-extra-large) {
+      gap: 0.25em 0.5em;
+      grid-template-columns: 1.5em 1fr;
+      grid-template-areas:
+        "icon title"
+        "branches branches"
+        "info info"
+        "body body";
+    }
+
     h4 {
-      margin-bottom: 5px;
+      margin-bottom: 0;
     }
 
     > .github-icon {
@@ -450,22 +451,26 @@ pre.onebox code {
   }
 
   .github-row {
-    display: flex;
+    display: contents;
   }
 
-  .github-icon-container {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
+  .github-icon-container,
+  .github-info-container {
+    display: contents;
   }
 
   .github-icon {
+    grid-area: icon;
+    align-self: center;
+    width: 100%;
+    height: 100%;
+    max-width: 2.15em;
+    margin: 0 auto;
     fill: var(--primary-high);
-    width: 40px;
-    height: 40px;
   }
 
   .branches {
+    grid-area: branches;
     font-size: var(--font-down-1);
     code {
       word-break: break-all;
@@ -478,18 +483,12 @@ pre.onebox code {
   }
 
   .github-info {
+    grid-area: info;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
-
-    > div {
-      margin: 2.5px 0;
-    }
-
-    > div:not(:last-child) {
-      margin-right: 15px;
-    }
+    gap: 0.15em 1em;
 
     .lines {
       font-weight: bold;
@@ -507,15 +506,26 @@ pre.onebox code {
     }
   }
 
+  .github-body-container {
+    grid-area: body;
+    margin: 1em 0 0 0;
+    color: var(--primary-very-high);
+    max-height: 400px;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    word-break: break-word;
+    font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
+      "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+    box-sizing: border-box;
+
+    .show-more {
+      // padding on right for larger hitzone
+      padding: 0.5em 1.5em 0em 0.25em;
+    }
+  }
+
   .onebox-avatar-inline {
-    height: 20px;
-    width: 20px;
     border-radius: 2px;
-    float: none;
-    margin: 0;
-    padding: 0;
-    vertical-align: middle;
-    max-width: none;
   }
 
   .labels span {
