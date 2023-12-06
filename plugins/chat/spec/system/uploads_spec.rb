@@ -12,6 +12,7 @@ describe "Uploading files in chat messages", type: :system do
 
   context "when uploading to a new message" do
     before do
+      Jobs.run_immediately!
       channel_1.add(current_user)
       sign_in(current_user)
     end
