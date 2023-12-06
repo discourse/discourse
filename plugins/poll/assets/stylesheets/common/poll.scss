@@ -65,6 +65,7 @@ div.poll {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
+      width: 100%;
       gap: 0.25em 0;
 
       @include breakpoint("mobile-extra-large", min-width) {
@@ -101,15 +102,24 @@ div.poll {
           display: flex;
           flex-direction: column;
           align-items: center;
+          .info-label,
+          .info-number {
+            margin: 0;
+          }
           + .poll-info_counts-count {
-            margin-top: 0.5em;
-            display: block;
-            .info-number {
-              margin-right: 0.33em;
-            }
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            min-width: 0;
+            gap: 0 0.33em;
+            margin: 0.5em;
             .info-number,
             .info-label {
               font-size: var(--font-up-1);
+              min-width: 0;
+              white-space: normal;
+              line-height: var(--line-height-medium);
             }
           }
         }
