@@ -1,9 +1,9 @@
-import BaseField from "./da-base-field";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
 import { TextArea } from "@ember/legacy-built-in-components";
-import PlaceholdersList from "../placeholders-list";
 import { action } from "@ember/object";
+import PlaceholdersList from "../placeholders-list";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class MessageField extends BaseField {
   <template>

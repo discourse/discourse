@@ -1,14 +1,33 @@
-import BaseField from "./da-base-field";
-import { action } from "@ember/object";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
-import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
-import I18n from "I18n";
-import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
+import I18n from "I18n";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class KeyValueField extends BaseField {
+  @tracked showJsonEditorModal = false;
+
+  jsonSchema = {
+    type: "array",
+    uniqueItems: true,
+    items: {
+      type: "object",
+      title: "group",
+      properties: {
+        key: {
+          type: "string",
+        },
+        value: {
+          type: "string",
+          format: "textarea",
+        },
+      },
+    },
+  };
+
   <template>
     <section class="field key-value-field">
       <div class="control-group">
@@ -34,26 +53,6 @@ export default class KeyValueField extends BaseField {
       </div>
     </section>
   </template>
-
-  @tracked showJsonEditorModal = false;
-
-  jsonSchema = {
-    type: "array",
-    uniqueItems: true,
-    items: {
-      type: "object",
-      title: "group",
-      properties: {
-        key: {
-          type: "string",
-        },
-        value: {
-          type: "string",
-          format: "textarea",
-        },
-      },
-    },
-  };
 
   get value() {
     return (

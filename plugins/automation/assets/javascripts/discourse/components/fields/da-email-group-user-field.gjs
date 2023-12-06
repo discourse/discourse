@@ -1,12 +1,15 @@
-import BaseField from "./da-base-field";
+import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
-import { hash } from "@ember/helper";
-import { tracked } from "@glimmer/tracking";
+import DAFieldLabel from "./da-field-label";
 
 export default class EmailGroupUserField extends BaseField {
+  @tracked recipients;
+  @tracked groups = [];
+
   <template>
     <section class="field email-group-user-field">
       <div class="control-group">
@@ -30,9 +33,6 @@ export default class EmailGroupUserField extends BaseField {
       </div>
     </section>
   </template>
-
-  @tracked recipients;
-  @tracked groups = [];
 
   @action
   updateRecipients(selected, content) {

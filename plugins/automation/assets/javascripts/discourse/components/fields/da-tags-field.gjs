@@ -1,8 +1,8 @@
-import BaseField from "./da-base-field";
 import { hash } from "@ember/helper";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
 import TagChooser from "select-kit/components/tag-chooser";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class TagsField extends BaseField {
   <template>

@@ -1,8 +1,8 @@
-import BaseField from "./da-base-field";
-import MultiSelect from "select-kit/components/multi-select";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
 import { hash } from "@ember/helper";
+import MultiSelect from "select-kit/components/multi-select";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class TextListField extends BaseField {
   <template>

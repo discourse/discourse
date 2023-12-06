@@ -1,8 +1,8 @@
-import BaseField from "./da-base-field";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
-import CategoryNotificationsButton from "select-kit/components/category-notifications-button";
 import { hash } from "@ember/helper";
+import CategoryNotificationsButton from "select-kit/components/category-notifications-button";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class CategoryNotficationLevelField extends BaseField {
   <template>

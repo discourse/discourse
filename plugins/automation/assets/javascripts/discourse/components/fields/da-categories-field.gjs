@@ -1,10 +1,10 @@
-import Category from "discourse/models/category";
-import { action } from "@ember/object";
-import BaseField from "./da-base-field";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
-import CategorySelector from "select-kit/components/category-selector";
 import { fn, hash } from "@ember/helper";
+import { action } from "@ember/object";
+import Category from "discourse/models/category";
+import CategorySelector from "select-kit/components/category-selector";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class CategoriesField extends BaseField {
   <template>

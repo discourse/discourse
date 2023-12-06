@@ -1,10 +1,10 @@
-import BaseField from "./da-base-field";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
 import { Input } from "@ember/component";
-import PlaceholdersList from "../placeholders-list";
-import { action } from "@ember/object";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import PlaceholdersList from "../placeholders-list";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class TextField extends BaseField {
   <template>

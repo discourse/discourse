@@ -1,10 +1,10 @@
-import BaseField from "./da-base-field";
-import { action } from "@ember/object";
 import { Input } from "@ember/component";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
-import DButton from "discourse/components/d-button";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class DateTimeField extends BaseField {
   <template>

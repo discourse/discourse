@@ -1,13 +1,15 @@
-import BaseField from "./da-base-field";
-import Group from "discourse/models/group";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
-import GroupChooser from "select-kit/components/group-chooser";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import Group from "discourse/models/group";
+import GroupChooser from "select-kit/components/group-chooser";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class GroupField extends BaseField {
+  @tracked allGroups = [];
+
   <template>
     <section class="field group-field">
       <div class="control-group">
@@ -27,8 +29,6 @@ export default class GroupField extends BaseField {
       </div>
     </section>
   </template>
-
-  @tracked allGroups = [];
 
   constructor() {
     super(...arguments);

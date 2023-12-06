@@ -1,10 +1,9 @@
-import I18n from "I18n";
-import BaseField from "./da-base-field";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
-import ComboBox from "select-kit/components/combo-box";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
+import I18n from "I18n";
+import ComboBox from "select-kit/components/combo-box";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class ChoicesField extends BaseField {
   <template>

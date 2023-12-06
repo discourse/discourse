@@ -1,18 +1,32 @@
-import BaseField from "./da-base-field";
-import I18n from "I18n";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { concat, fn } from "@ember/helper";
-import DAFieldLabel from "./da-field-label";
-import DButton from "discourse/components/d-button";
 import { Input } from "@ember/component";
-import PlaceholdersList from "../placeholders-list";
-import DEditor from "discourse/components/d-editor";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
+import { action } from "@ember/object";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
+import DButton from "discourse/components/d-button";
+import DEditor from "discourse/components/d-editor";
+import I18n from "I18n";
+import PlaceholdersList from "../placeholders-list";
+import BaseField from "./da-base-field";
+import DAFieldLabel from "./da-field-label";
 
 export default class PmsField extends BaseField {
+  @service dialog;
+
+  noPmCreatedLabel = I18n.t("discourse_automation.fields.pms.no_pm_created");
+
+  prefersEncryptLabel = I18n.t(
+    "discourse_automation.fields.pms.prefers_encrypt.label"
+  );
+
+  delayLabel = I18n.t("discourse_automation.fields.pms.delay.label");
+
+  pmTitleLabel = I18n.t("discourse_automation.fields.pms.title.label");
+
+  rawLabel = I18n.t("discourse_automation.fields.pms.raw.label");
+
   <template>
     <section class="field pms-field">
       {{#if @field.metadata.value.length}}
@@ -122,20 +136,6 @@ export default class PmsField extends BaseField {
       {{/each}}
     </section>
   </template>
-
-  @service dialog;
-
-  noPmCreatedLabel = I18n.t("discourse_automation.fields.pms.no_pm_created");
-
-  prefersEncryptLabel = I18n.t(
-    "discourse_automation.fields.pms.prefers_encrypt.label"
-  );
-
-  delayLabel = I18n.t("discourse_automation.fields.pms.delay.label");
-
-  pmTitleLabel = I18n.t("discourse_automation.fields.pms.title.label");
-
-  rawLabel = I18n.t("discourse_automation.fields.pms.raw.label");
 
   constructor() {
     super(...arguments);

@@ -1,10 +1,12 @@
-import BaseField from "./da-base-field";
-import MultiSelect from "select-kit/components/multi-select";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
 import { inject as service } from "@ember/service";
+import MultiSelect from "select-kit/components/multi-select";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class TrustLevelsField extends BaseField {
+  @service site;
+
   <template>
     <section class="field category-field">
       <div class="control-group">
@@ -22,6 +24,4 @@ export default class TrustLevelsField extends BaseField {
       </div>
     </section>
   </template>
-
-  @service site;
 }

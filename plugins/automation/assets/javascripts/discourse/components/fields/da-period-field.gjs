@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import BaseField from "./da-base-field";
-import ComboBox from "select-kit/components/combo-box";
 import { Input } from "@ember/component";
-import { action } from "@ember/object";
 import { hash } from "@ember/helper";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import I18n from "I18n";
+import ComboBox from "select-kit/components/combo-box";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class PeriodField extends BaseField {
   <template>

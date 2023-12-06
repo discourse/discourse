@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import { extractError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
+import { extractError } from "discourse/lib/ajax-error";
 
 export default class AutomationNew extends Controller {
   @service router;

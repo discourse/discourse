@@ -1,8 +1,8 @@
-import BaseField from "./da-base-field";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
-import PlaceholdersList from "../placeholders-list";
 import DEditor from "discourse/components/d-editor";
+import PlaceholdersList from "../placeholders-list";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class PostField extends BaseField {
   <template>

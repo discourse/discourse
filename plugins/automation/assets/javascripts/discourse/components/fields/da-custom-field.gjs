@@ -1,15 +1,16 @@
-import BaseField from "./da-base-field";
-import { action } from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { tracked } from "@glimmer/tracking";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
-import ComboBox from "select-kit/components/combo-box";
-import { hash } from "@ember/helper";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
+import ComboBox from "select-kit/components/combo-box";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class GroupField extends BaseField {
+  @service store;
+  @tracked allCustomFields = [];
+
   <template>
     <section class="field group-field" {{didInsert this.loadUserFields}}>
       <div class="control-group">
@@ -26,9 +27,6 @@ export default class GroupField extends BaseField {
       </div>
     </section>
   </template>
-
-  @service store;
-  @tracked allCustomFields = [];
 
   @bind
   loadUserFields() {

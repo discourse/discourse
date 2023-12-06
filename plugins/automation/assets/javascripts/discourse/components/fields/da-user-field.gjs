@@ -1,9 +1,9 @@
-import { action } from "@ember/object";
-import BaseField from "./da-base-field";
 import { hash } from "@ember/helper";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
+import { action } from "@ember/object";
 import UserChooser from "select-kit/components/user-chooser";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class UserField extends BaseField {
   <template>

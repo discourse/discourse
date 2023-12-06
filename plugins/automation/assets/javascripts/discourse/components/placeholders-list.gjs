@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
 
 export default class PlaceholdersList extends Component {
   <template>

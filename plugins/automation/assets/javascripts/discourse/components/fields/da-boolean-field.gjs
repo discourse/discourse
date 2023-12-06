@@ -1,9 +1,9 @@
-import BaseField from "./da-base-field";
 import { Input } from "@ember/component";
-import DAFieldLabel from "./da-field-label";
-import DAFieldDescription from "./da-field-description";
-import { action } from "@ember/object";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import BaseField from "./da-base-field";
+import DAFieldDescription from "./da-field-description";
+import DAFieldLabel from "./da-field-label";
 
 export default class BooleanField extends BaseField {
   <template>
