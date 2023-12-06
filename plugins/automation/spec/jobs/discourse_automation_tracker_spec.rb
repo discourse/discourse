@@ -78,6 +78,7 @@ describe Jobs::DiscourseAutomationTracker do
         raw: "Quelle est cette langueur Qui pénètre mon cœur ?",
         sender: "system",
         execute_at: Time.now,
+        target_usernames: ["system"],
       )
     end
 

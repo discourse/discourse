@@ -220,7 +220,7 @@ module DiscourseAutomation
               post_created = EncryptedPostCreator.new(sender, pm).create
             end
 
-            PostCreator.new(sender, pm).create if !post_created
+            PostCreator.new(sender, pm).create! if !post_created
           else
             Rails.logger.warn "[discourse-automation] Couldn’t send PM to user with username: `#{sender}`."
           end

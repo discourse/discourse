@@ -239,6 +239,22 @@ describe DiscourseAutomation::Scriptable do
           }.to change { Post.count }.by(1)
         end
       end
+
+      context "when pm exceeds max_post_length" do
+        it "throws an error" do
+          SiteSetting.max_post_length = 250
+
+          expect {
+            DiscourseAutomation::Scriptable::Utils.send_pm(
+              {
+                title: "Tell me and I forget.",
+                raw: "0123456789" * 25 + "a",
+                target_usernames: [user.username],
+              },
+            )
+          }.to raise_error(ActiveRecord::RecordNotSaved)
+        end
+      end
     end
   end
 end
