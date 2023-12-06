@@ -1988,7 +1988,7 @@ RSpec.describe Search do
 
       expect(
         Search
-          .execute("test created:@#{another_user.username}", guardian: Guardian.basic_user)
+          .execute("test created:@#{another_user.username}", guardian: Guardian.new())
           .posts
           .length,
       ).to eq(1)
