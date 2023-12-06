@@ -30,7 +30,7 @@ describe "Uploading files in chat messages", type: :system do
 
       channel_page.send_message("upload testing")
 
-      expect(page).not_to have_css(".chat-composer-upload")
+      expect(page).to have_no_css(".chat-composer-upload")
 
       expect(channel_page.messages).to have_message(
         text: "upload testing\n#{File.basename(file_path)}",
@@ -95,7 +95,7 @@ describe "Uploading files in chat messages", type: :system do
       expect(page).to have_css(".chat-composer-upload .preview .preview-img", count: 2)
       channel_page.send_message("upload testing")
 
-      expect(page).not_to have_css(".chat-composer-upload")
+      expect(page).to have_no_css(".chat-composer-upload")
       expect(channel_page.messages).to have_message(
         text: "upload testing\n#{I18n.t("js.chat.uploaded_files", count: 2)}",
         persisted: true,
@@ -123,7 +123,7 @@ describe "Uploading files in chat messages", type: :system do
 
       channel_page.send_message("upload testing")
 
-      expect(page).not_to have_css(".chat-composer-upload")
+      expect(page).to have_no_css(".chat-composer-upload")
 
       expect(channel_page.messages).to have_message(
         text: "upload testing\n#{File.basename(file_path)}",
@@ -178,7 +178,7 @@ describe "Uploading files in chat messages", type: :system do
 
       channel_page.click_send_message
 
-      expect(page).not_to have_css(".chat-composer-upload")
+      expect(page).to have_no_css(".chat-composer-upload")
       expect(page).to have_css(".chat-img-upload", count: 2)
 
       try_until_success(timeout: 5) { expect(message_2.reload.uploads.count).to eq(2) }
@@ -200,13 +200,13 @@ describe "Uploading files in chat messages", type: :system do
     it "does not show the action button for uploading files in public channels" do
       chat.visit_channel(channel_1)
       channel_page.open_action_menu
-      expect(page).not_to have_css(".chat-upload-btn")
+      expect(page).to have_no_css(".chat-upload-btn")
     end
 
     it "does not show the action button for uploading files in direct message channels" do
       chat.visit_channel(direct_message_channel_1)
       channel_page.open_action_menu
-      expect(page).not_to have_css(".chat-upload-btn")
+      expect(page).to have_no_css(".chat-upload-btn")
     end
   end
 end
