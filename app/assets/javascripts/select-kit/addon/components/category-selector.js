@@ -38,6 +38,8 @@ export default MultiSelectComponent.extend({
           return this.blockedCategories.map((c) => c.id);
         })
       );
+    } else if (!this.blockedCategoryIds) {
+      this.set("blockedCategoryIds", []);
     }
 
     if (this.siteSettings.lazy_load_categories) {
