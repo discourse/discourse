@@ -78,18 +78,17 @@ export function highlightPost(postNumber) {
     return;
   }
 
-  const element = container.querySelector(".topic-body, .small-action-desc");
+  container.querySelector(".tabLoc")?.focus();
+
+  const element = container.querySelector(".topic-body");
   if (!element || element.classList.contains("highlighted")) {
     return;
   }
 
   element.classList.add("highlighted");
-  element.setAttribute("tabindex", "0");
-  element.focus();
 
   const removeHighlighted = function () {
     element.classList.remove("highlighted");
-    element.removeAttribute("tabindex");
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
