@@ -58,7 +58,7 @@ export default function (helpers) {
             index: 4,
             fields: [
               { id: "company_name", type: "text", required: true },
-              { id: "styling_preview", type: "component" },
+              { id: "styling_preview", type: "styling-preview" },
             ],
             previous: "optional",
           },

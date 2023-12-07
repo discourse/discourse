@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { drawHeader } from "../../../lib/preview";
-import PreviewBaseComponent from "../components/-preview-base";
+import PreviewBaseComponent from "../styling-preview/-preview-base";
 
 export default PreviewBaseComponent.extend({
   width: 400,
