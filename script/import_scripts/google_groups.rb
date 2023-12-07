@@ -12,7 +12,6 @@ end
 
 require "fileutils"
 require "optparse"
-require "set"
 require "yaml"
 
 DEFAULT_OUTPUT_PATH = "/shared/import/data"

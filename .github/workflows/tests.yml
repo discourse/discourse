@@ -22,7 +22,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ matrix.updated_ember && ' (Ember 5)' || '' }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -35,6 +35,7 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
+      EMBER_VERSION: ${{ (matrix.updated_ember && '5') || '3' }}
 
     strategy:
       fail-fast: false
@@ -43,6 +44,7 @@ jobs:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins, themes]
         ruby: ["3.2"]
+        updated_ember: [false]
         exclude:
           - build_type: annotations
             target: plugins
@@ -56,6 +58,12 @@ jobs:
           - build_type: system
             target: chat
             ruby: "3.2"
+          - build_type: system
+            target: chat
+            updated_ember: true
+          - build_type: system
+            target: core
+            updated_ember: true
 
     steps:
       - name: Set working directory owner
@@ -106,6 +114,10 @@ jobs:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
+      - name: Upgrade Ember
+        if: matrix.updated_ember == true
+        run: script/switch_ember_version 5
+
       - name: Yarn install
         run: yarn install --frozen-lockfile
 
@@ -128,6 +140,7 @@ jobs:
         run: bin/rake themes:clone_all_official
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+        if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
@@ -241,8 +254,8 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
-      - name: Ensure latest minio binary installed for System Tests
-        if: matrix.build_type == 'system'
+      - name: Ensure latest minio binary installed for Core System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'core'
         run: bundle exec ruby script/install_minio_binaries.rb
 
       - name: Core System Tests

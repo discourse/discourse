@@ -182,7 +182,6 @@ ko:
       default_tags_already_selected: "다른 목록에서 사용된 태그는 선택할 수 없습니다."
       s3_upload_bucket_is_required: "'s3_upload_bucket'을 제공하지 않으면 S3 업로드를 활성화할 수 없습니다."
       enable_s3_uploads_is_required: "S3 업로드를 활성화하지 않으면 S3 인벤토리 사용을 활성화할 수 없습니다."
-      page_publishing_requirements: "보안 미디어를 활성화한 경우 페이지 게시를 활성화할 수 없습니다."
       s3_backup_requires_s3_settings: "'%{setting_name}' 설정을 제공하지 않으면 S3를 백업 위치로 사용할 수 없습니다."
       s3_bucket_reused: "'s3_upload_bucket' 및 's3_backup_bucket'에 동일한 버킷을 사용할 수 없습니다. 다른 버킷을 선택하거나 각 버킷에 다른 경로를 사용하세요."
       share_quote_facebook_requirements: "Facebook 인용 공유를 활성화하려면 Facebook 앱 ID를 설정해야 합니다."

@@ -44,7 +44,7 @@ class TagUser < ActiveRecord::Base
     tag_ids =
       if tags.empty?
         []
-      elsif tags.first&.is_a?(String)
+      elsif tags.first.is_a?(String)
         Tag.where_name(tags).pluck(:id)
       else
         tags

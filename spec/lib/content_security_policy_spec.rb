@@ -205,7 +205,6 @@ RSpec.describe ContentSecurityPolicy do
       end
 
       it "includes all EmbeddableHost" do
-        EmbeddableHost
         frame_ancestors = parse(policy)["frame-ancestors"]
         expect(frame_ancestors).to include("https://a.org")
         expect(frame_ancestors).to include("https://b.org")

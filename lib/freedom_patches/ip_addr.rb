@@ -26,7 +26,7 @@ class IPAddr
       if mask == 32
         to_s
       else
-        "#{to_s}/#{mask}"
+        "#{self}/#{mask}"
       end
     else
       nil

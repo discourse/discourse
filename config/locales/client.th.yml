@@ -2331,7 +2331,6 @@ th:
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
-      description: "รายละเอียด"
       sort_by: "เรียงโดย:"
       sort_by_count: "นับ"
       sort_by_name: "ชื่อ"
@@ -2455,6 +2454,18 @@ th:
         typeMismatch:
           default: "กรอกค่าที่ถูกต้อง"
           email: "กรุณาใส่อีเมลที่ถูกต้อง."
+    table_builder:
+      modal:
+        help:
+          enter_key: "เอ็นเทอร์"
+      edit:
+        modal:
+          cancel: "ยกเลิก"
+          create: "บันทึก"
+          reason: "ทำไมคุณถึงแก้ไข"
+      spreadsheet:
+        show: "แสดง"
+        about: "เกี่ยวกับ"
   admin_js:
     admin:
       title: "ผู้ดูแลระบบดิสคอส"
@@ -2604,6 +2615,7 @@ th:
         not_enabled: "N"
         change_settings_short: "การตั้งค่า"
         author: "โดย %{author}"
+        learn_more: "เรียนรู้เพิ่มเติม"
       backups:
         title: "สำรอง"
         menu:

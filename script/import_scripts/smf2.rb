@@ -6,7 +6,6 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 require "htmlentities"
 require "tsort"
-require "set"
 require "optparse"
 require "etc"
 require "open3"
@@ -369,7 +368,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     end
     body.gsub!(XListPattern) do |s|
       r = +"\n[ul]"
-      s.lines.each { |l| "#{r}[li]#{l.strip.sub(/^\[x\]\s*/, "")}[/li]" }
+      s.lines.each { |l| r += "[li]#{l.strip.sub(/^\[x\]\s*/, "")}[/li]" }
       "#{r}[/ul]\n"
     end
 

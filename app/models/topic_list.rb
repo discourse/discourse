@@ -40,7 +40,6 @@ class TopicList
     :filter,
     :for_period,
     :per_page,
-    :top_tags,
     :current_user,
     :tags,
     :shared_drafts,

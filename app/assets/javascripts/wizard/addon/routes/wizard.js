@@ -2,13 +2,13 @@ import Route from "@ember/routing/route";
 import DisableSidebar from "discourse/mixins/disable-sidebar";
 import Wizard from "wizard/models/wizard";
 
-export default Route.extend(DisableSidebar, {
+export default class WizardRoute extends Route.extend(DisableSidebar) {
   model() {
     return Wizard.load();
-  },
+  }
 
   activate() {
-    this._super(...arguments);
+    super.activate(...arguments);
 
     document.body.classList.add("wizard");
 
@@ -16,10 +16,10 @@ export default Route.extend(DisableSidebar, {
       showTop: false,
       showSiteHeader: false,
     });
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
 
     document.body.classList.remove("wizard");
 
@@ -27,5 +27,5 @@ export default Route.extend(DisableSidebar, {
       showTop: true,
       showSiteHeader: true,
     });
-  },
-});
+  }
+}

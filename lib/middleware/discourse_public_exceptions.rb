@@ -14,10 +14,6 @@ module Middleware
         ],
       )
 
-    def initialize(path)
-      super
-    end
-
     def call(env)
       # this is so so gnarly
       # sometimes we leak out exceptions prior to creating a controller instance

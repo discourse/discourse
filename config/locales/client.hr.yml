@@ -753,7 +753,6 @@ hr:
           imap_mailbox_not_selected: "Morate odabrati poštanski sandučić za ovu IMAP konfiguraciju jer se neće sinkronizirati nijedan poštanski sandučić!"
           prefill:
             title: "Unaprijed ispunite postavke za:"
-            gmail: "GMail"
           credentials:
             title: "Vjerodajnice"
             smtp_server: "SMTP poslužitelj"
@@ -3886,7 +3885,6 @@ hr:
         few: "Njegovi %{count} sinonima također će biti izbrisani."
         other: "Njegovi %{count} sinonimi također će biti izbrisani."
       edit_tag: "Uredite naziv i opis oznake"
-      description: "Opis"
       sort_by: "Sortiraj po:"
       sort_by_count: "količina"
       sort_by_name: "ime"
@@ -4157,6 +4155,18 @@ hr:
           other: "Unos mora biti veći od %{count}."
         patternMismatch: "Molimo uskladite s traženim formatom."
         badInput: "Unesite valjani unos."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Unesi"
+      edit:
+        modal:
+          cancel: "otkaži"
+          create: "Spremi"
+          reason: "zašto izmjenjujete?"
+      spreadsheet:
+        show: "Pokaži"
+        about: "O nama"
   admin_js:
     type_to_filter: "upišite za filtriranje…"
     admin:
@@ -4493,6 +4503,7 @@ hr:
         howto: "Kako instalirati dodatke?"
         broken_route: "Nije moguće konfigurirati vezu na '%{name}'. Provjerite jesu li programi za blokiranje oglasa onemogućeni i pokušajte ponovno učitati stranicu."
         author: "Od %{author}"
+        learn_more: "Saznajte više"
       navigation_menu:
         sidebar: "Bočna traka"
         header_dropdown: "Padajući izbornik zaglavlja"

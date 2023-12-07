@@ -1276,7 +1276,6 @@ te:
     tagging:
       tags: "ట్యాగులు"
       add_synonyms: "కలుపు"
-      description: "వివరణ"
       sort_by_name: "పేరు"
       filters:
         without_category: "%{filter} %{tag} విషయాలు"
@@ -1371,6 +1370,15 @@ te:
       errors:
         typeMismatch:
           default: "దయచేసి చెల్లే విలువ రాయండి"
+    table_builder:
+      edit:
+        modal:
+          cancel: "రద్దు"
+          create: "భద్రపరుచు"
+          reason: "మీరెందుకు సవరిస్తున్నారు?"
+      spreadsheet:
+        show: "చూపు"
+        about: "గురించి"
   admin_js:
     admin:
       title: "డిస్కోర్సు అధికారి"

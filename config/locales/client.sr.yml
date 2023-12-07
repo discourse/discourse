@@ -1737,7 +1737,6 @@ sr:
       download: "Preuzmi"
     tagging:
       add_synonyms: "Dodaj"
-      description: "Opis"
       sort_by_count: "broj"
       sort_by_name: "ime foruma"
       filters:
@@ -1837,6 +1836,15 @@ sr:
         typeMismatch:
           default: "Molimo unesite validnu vrednost"
           email: "Molimo unesite validnu e-mail adresu."
+    table_builder:
+      edit:
+        modal:
+          cancel: "otkaži"
+          create: "Sačuvaj"
+          reason: "zašto izmenjujete?"
+      spreadsheet:
+        show: "Pokaži"
+        about: "O nama"
   admin_js:
     admin:
       title: "Administrator"
@@ -1943,6 +1951,7 @@ sr:
         enabled: "Omgućeno"
         change_settings_short: "Podešavanje"
         author: "Od %{author}"
+        learn_more: "Saznaj više"
       backups:
         title: "Sigurnosne kopije"
         menu:

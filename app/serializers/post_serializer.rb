@@ -607,7 +607,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable_scores
-    reviewable&.reviewable_scores&.to_a || []
+    reviewable&.reviewable_scores.to_a
   end
 
   def user_custom_fields_object

@@ -243,9 +243,7 @@
     }
   }
 
-  &:not(.bookmark-reminder-modal):not(.history-modal):not(
-      .sidebar__edit-navigation-menu__modal
-    ) {
+  &:not(.bookmark-reminder-modal):not(.history-modal) {
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(
         .poll-breakdown
       ) {

@@ -858,7 +858,6 @@ pl_PL:
           imap_mailbox_not_selected: "Musisz wybrać skrzynkę pocztową dla tej konfiguracji IMAP, w przeciwnym razie żadna skrzynka pocztowa nie zostanie zsynchronizowana!"
           prefill:
             title: "Wstępne wypełnienie ustawieniami dla:"
-            gmail: "GMail"
           credentials:
             title: "Poświadczenia"
             smtp_server: "Serwer SMTP"
@@ -2338,6 +2337,7 @@ pl_PL:
       add_warning: "To jest oficjalne ostrzeżenie."
       toggle_whisper: "Przełącz szept"
       toggle_unlisted: "Przycisk ukrywania"
+      insert_table: "Wstaw tabelę"
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
       saved_local_draft_tip: "zapisano lokalnie"
       similar_topics: "Twój temat jest podobny do…"
@@ -4335,7 +4335,6 @@ pl_PL:
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
       edit_tag: "Edytuj nazwę tagu i opis"
-      description: "Opis"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
       sort_by_name: "nazwa"
@@ -4668,6 +4667,61 @@ pl_PL:
           other: "Dane wejściowe muszą być większe niż %{count}."
         patternMismatch: "Proszę dopasować żądany format."
         badInput: "Wprowadź prawidłowe dane wejściowe."
+    table_builder:
+      title: "Konstruktor tabeli"
+      modal:
+        title: "Konstruktor tabeli"
+        create: "Zbuduj tabelę"
+        help:
+          title: "Za pomocą edytora arkusza kalkulacyjnego"
+          enter_key: "Enter"
+          tab_key: "Tab"
+          new_row: "na końcu wiersza, aby wstawić nowy wiersz."
+          options: "Kliknij komórki prawym przyciskiem myszy, aby uzyskać dostęp do większej liczby opcji w menu rozwijanym."
+      edit:
+        btn_edit: "Edytuj tabelę"
+        modal:
+          title: "Edytuj tabelę"
+          cancel: "anuluj"
+          create: "Zapisz"
+          reason: "dlaczego edytujesz?"
+          trigger_reason: "Dodaj powód edycji"
+        default_edit_reason: "Zaktualizuj tabelę za pomocą edytora tabel"
+      default_header:
+        col_1: "Kolumna 1"
+        col_2: "Kolumna 2"
+        col_3: "Kolumna 3"
+        col_4: "Kolumna 4"
+      spreadsheet:
+        no_records_found: "Nie znaleziono rekordów"
+        show: "Pokaż"
+        entries: "elementy"
+        about: "O stronie"
+        prompts:
+          delete_selected_rows: "Czy na pewno chcesz usunąć wybrane wiersze?"
+          delete_selected_cols: "Czy na pewno chcesz usunąć wybrane kolumny?"
+          will_destroy_merged_cells: "Ta czynność zniszczy wszystkie istniejące scalone komórki. Jesteś pewien?"
+          will_clear_search_results: "Ta czynność zniszczy wszystkie istniejące scalone komórki. Jesteś pewien?"
+          conflicts_with_merged_cells: "Występuje konflikt z inną scaloną komórką"
+        invalid_merge_props: "Nieprawidłowe scalone właściwości"
+        cells_already_merged: "Komórka już scalona"
+        no_cells_selected: "Nie wybrano komórek"
+        context_menu:
+          row:
+            before: "Wstaw nowy wiersz przed"
+            after: "Wstaw nowy wiersz po"
+            delete: "Usuń wybrane wiersze"
+          col:
+            before: "Wstaw nową kolumnę przed"
+            after: "Wstaw nową kolumnę po"
+            delete: "Usuń wybrane kolumny"
+            rename: "Zmień nazwę tej kolumny"
+          order:
+            ascending: "Kolejność rosnąca"
+            descending: "Kolejność malejąca"
+          copy: "Kopiuj..."
+          paste: "Wklej..."
+          save: "Zapisz jako..."
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -5085,10 +5139,10 @@ pl_PL:
         change_settings_short: "Ustawienia"
         howto: "Jak zainstalować wtyczkę?"
         official: "Oficjalna wtyczka Discourse"
-        experimental: "Eksperymentalna wtyczka"
         broken_route: "Nie można skonfigurować łącza do '%{name}'. Upewnij się, że blokery reklam są wyłączone i spróbuj ponownie załadować stronę."
         author: "Przez %{author}"
         experimental_badge: "eksperymentalny"
+        learn_more: "Dowiedz się więcej"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"

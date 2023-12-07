@@ -67,6 +67,7 @@ de:
         delete_channel: "Kanal löschen"
         join_channel: "Kanal beitreten"
         leave_channel: "Kanal verlassen"
+        leave_groupchat_info: "Wenn du den Gruppenchat verlässt, hast du keinen Zugriff mehr darauf und erhältst keine Benachrichtigungen mehr. Um wieder teilzunehmen, musst du von einem Mitglied des Gruppenchats erneut eingeladen werden."
         join: "Beitreten"
         leave: "Verlassen"
         save_label:
@@ -475,6 +476,7 @@ de:
         new: "Persönlichen Chat erstellen"
         create: "Los"
         leave: "Diesen persönlichen Chat verlassen"
+        close: "Schließe diesen persönlichen Chat"
         cannot_create: "Du kannst leider keine Direktnachrichten senden."
       incoming_webhooks:
         back: "Zurück"

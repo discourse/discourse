@@ -10,6 +10,11 @@
       />
     </div>
 
+    <div class="alert alert-info">
+      {{d-icon "book"}}
+      {{html-safe (i18n "admin.reports.meta_doc")}}
+    </div>
+
     <ul class="reports-list">
       {{#each this.filteredReports as |report|}}
         <li class="report">

@@ -859,7 +859,6 @@ uk:
           imap_mailbox_not_selected: "Ви повинні вибрати поштову скриньку для цієї конфігурації IMAP, інакше жодна поштова скринька не буде синхронізована!"
           prefill:
             title: "Заповніть початкові налаштування для:"
-            gmail: "GMail"
           credentials:
             title: "Дані доступу"
             smtp_server: "SMTP-сервер"
@@ -4375,7 +4374,6 @@ uk:
         many: "Синоніми %{count} також будуть видалені."
         other: "Синоніми %{count} також будуть видалені."
       edit_tag: "Редагувати назву та опис теґу"
-      description: "Опис"
       sort_by: "Сортувати за:"
       sort_by_count: "Кількість"
       sort_by_name: "ім'я"
@@ -4708,6 +4706,18 @@ uk:
           other: "Введені дані повинні бути більше %{count}."
         patternMismatch: "Будь ласка, використовуйте правильний формат."
         badInput: "Будь ласка, введіть коректне значення."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Enter"
+      edit:
+        modal:
+          cancel: "скасувати"
+          create: "Зберегти"
+          reason: "чому ви редагуєте допис?"
+      spreadsheet:
+        show: "Показати"
+        about: "Про"
   admin_js:
     type_to_filter: "текст для пошуку…"
     admin:
@@ -5142,10 +5152,10 @@ uk:
         change_settings_short: "Налаштування"
         howto: "Як встановити плагін?"
         official: "Офіційний плагін Discourse"
-        experimental: "Експериментальний плагін"
         broken_route: "Не вдалося налаштувати посилання на «%{name}». Переконайтеся, що блокувальники реклами вимкнено, і спробуйте перезавантажити сторінку."
         author: "Від %{author}"
         experimental_badge: "експериментальний"
+        learn_more: "Дізнатися більше"
       navigation_menu:
         sidebar: "Бічна панель"
         header_dropdown: "Випадаючий заголовок"

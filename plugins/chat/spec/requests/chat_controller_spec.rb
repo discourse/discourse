@@ -354,14 +354,14 @@ RSpec.describe Chat::ChatController do
       sign_in(user)
       expect {
         post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "Category" }
-      }.to change { user.user_option.reload.dismissed_channel_retention_reminder }.to (true)
+      }.to change { user.user_option.reload.dismissed_channel_retention_reminder }.to(true)
     end
 
     it "sets `dismissed_dm_retention_reminder` to true" do
       sign_in(user)
       expect {
         post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "DirectMessage" }
-      }.to change { user.user_option.reload.dismissed_dm_retention_reminder }.to (true)
+      }.to change { user.user_option.reload.dismissed_dm_retention_reminder }.to(true)
     end
 
     it "doesn't error if the fields are already true" do

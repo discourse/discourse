@@ -14,7 +14,7 @@ module Jobs
       poll_pop3 if should_poll?
 
       DiscoursePluginRegistry.mail_pollers.each do |poller|
-        return if !poller.enabled?
+        next if !poller.enabled?
 
         poller.poll_mailbox(method(:process_popmail))
       end

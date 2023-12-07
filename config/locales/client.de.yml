@@ -757,7 +757,7 @@ de:
           imap_mailbox_not_selected: "Du musst ein Postfach für diese IMAP-Konfiguration auswählen, sonst werden keine Postfächer synchronisiert!"
           prefill:
             title: "Vorbefüllen mit Einstellungen für:"
-            gmail: "GMail"
+            gmail: "Gmail"
           credentials:
             title: "Anmeldedaten"
             smtp_server: "SMTP-Server"
@@ -2167,6 +2167,7 @@ de:
       add_warning: "Dies ist eine offizielle Warnung."
       toggle_whisper: "Flüstermodus umschalten"
       toggle_unlisted: "Sichtbarkeit umschalten"
+      insert_table: "Tabelle einfügen"
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit …"
@@ -3975,7 +3976,7 @@ de:
         one: "Das Synonym wird ebenfalls gelöscht."
         other: "Es werden %{count} weitere Synonyme ebenfalls gelöscht."
       edit_tag: "Name und Beschreibung des Schlagwortes bearbeiten"
-      description: "Beschreibung"
+      description: "Beschreibung (max. 1000 Zeichen)"
       sort_by: "Sortieren nach:"
       sort_by_count: "Anzahl"
       sort_by_name: "Name"
@@ -4290,6 +4291,63 @@ de:
           other: "Die Eingabe muss größer als %{count} sein."
         patternMismatch: "Bitte beachte das erforderliche Format."
         badInput: "Bitte stelle eine gültige Eingabe zur Verfügung."
+    table_builder:
+      title: "Tabellenersteller"
+      modal:
+        title: "Tabellenersteller"
+        create: "Tabelle erstellen"
+        help:
+          title: "Verwendung des Tabellenkalkulationseditors"
+          enter_key: "Enter"
+          tab_key: "Tabulatur"
+          new_row: "am Ende einer Zeile, um eine neue Zeile einzufügen."
+          new_col: "am Ende einer Spalte, um eine neue Spalte einzufügen."
+          options: "Klicke mit der rechten Maustaste auf eine Zelle, um weitere Optionen in einem Drop-down-Menü aufzurufen."
+        confirm_close: "Bist du sicher, dass du den Tabellenersteller schließen willst? Alle nicht gespeicherten Änderungen gehen dann verloren."
+      edit:
+        btn_edit: "Tabelle bearbeiten"
+        modal:
+          title: "Tabelle bearbeiten"
+          cancel: "Abbrechen"
+          create: "Speichern"
+          reason: "Welchen Grund gibt es für die Bearbeitung?"
+          trigger_reason: "Grund für die Bearbeitung hinzufügen"
+        default_edit_reason: "Tabelle per Tabelleneditor aktualisieren"
+      default_header:
+        col_1: "Spalte 1"
+        col_2: "Spalte 2"
+        col_3: "Spalte 3"
+        col_4: "Spalte 4"
+      spreadsheet:
+        no_records_found: "Keine Datensätze gefunden"
+        show: "Anzeigen"
+        entries: "Einträge"
+        about: "Über"
+        prompts:
+          delete_selected_rows: "Bist du sicher, dass du die ausgewählten Zeilen löschen willst?"
+          delete_selected_cols: "Bist du sicher, dass du die ausgewählten Spalten löschen willst?"
+          will_destroy_merged_cells: "Durch diese Aktion werden alle vorhandenen zusammengeführten Zellen zerstört. Bist du sicher?"
+          will_clear_search_results: "Durch diese Aktion werden alle vorhandenen zusammengeführten Zellen zerstört. Bist du sicher?"
+          conflicts_with_merged_cells: "Es liegt ein Konflikt mit einer anderen zusammengeführten Zelle vor"
+        invalid_merge_props: "Ungültige zusammengeführte Eigenschaften"
+        cells_already_merged: "Zelle bereits zusammengeführt"
+        no_cells_selected: "Keine Zellen ausgewählt"
+        context_menu:
+          row:
+            before: "Davor neue Zeile einfügen"
+            after: "Danach neue Zeile einfügen"
+            delete: "Ausgewählte Zeilen löschen"
+          col:
+            before: "Davor neue Spalte einfügen"
+            after: "Danach neue Spalte einfügen"
+            delete: "Ausgewählte Spalten löschen"
+            rename: "Diese Spalte umbenennen"
+          order:
+            ascending: "Reihenfolge aufsteigend"
+            descending: "Reihenfolge absteigend"
+          copy: "Kopieren …"
+          paste: "Einfügen …"
+          save: "Speichern als …"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -4712,10 +4770,10 @@ de:
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
         official: "Offizielles Discourse Plugin"
-        experimental: "Experimentelles Plugin"
         broken_route: "Link zu „%{name}“ kann nicht konfiguriert werden. Vergewissere dich, dass Werbeblocker deaktiviert sind, und versuche, die Seite neu zu laden."
         author: "Von %{author}"
         experimental_badge: "experimentell"
+        learn_more: "Mehr erfahren"
       navigation_menu:
         sidebar: "Seitenleiste"
         header_dropdown: "Kopfzeilen-Drop-down"

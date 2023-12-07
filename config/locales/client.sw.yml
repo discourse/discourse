@@ -2144,7 +2144,6 @@ sw:
       add_synonyms: "Ongeza"
       delete_tag: "futa lebo"
       delete_confirm_no_topics: "Una uhakika unataka kufuta lebo hii?"
-      description: "Maelezo"
       sort_by: "Pangilia kwa:"
       sort_by_count: "hesabu"
       sort_by_name: "jina"
@@ -2269,6 +2268,15 @@ sw:
         typeMismatch:
           default: "Tafadhali andika thamani sahihi."
           email: "Andika barua pepe iliyo sahihi."
+    table_builder:
+      edit:
+        modal:
+          cancel: "ghairi"
+          create: "Hifadhi"
+          reason: "kwa nini unahariri?"
+      spreadsheet:
+        show: "Onyesha"
+        about: "Kuhusu"
   admin_js:
     admin:
       title: "Kiongozi wa Discourse"
@@ -2449,6 +2457,7 @@ sw:
         change_settings_short: "Mipangilio"
         howto: "Ninawekaje programu-jalizi?"
         author: "Na %{author}"
+        learn_more: "Jifunze zaidi"
       backups:
         title: "Machelezo"
         menu:

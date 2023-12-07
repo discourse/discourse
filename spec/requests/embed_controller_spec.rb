@@ -356,7 +356,7 @@ RSpec.describe EmbedController do
                 embed_url: embed_url,
               },
               headers: {
-                "REFERER" => "http://eviltrout.com/wat/1-2-3.html",
+                "REFERER" => "https://discourse.org/blog-entry-1",
               }
 
           expect(response.status).to eq(200)

@@ -69,7 +69,7 @@ module Discourse
                 "Invalid version specifier operator for '#{req_operator} #{req_version}'. Operator must be one of <= or <"
         end
 
-        resolved_requirement = Gem::Requirement.new("#{req_operator} #{req_version.to_s}")
+        resolved_requirement = Gem::Requirement.new("#{req_operator} #{req_version}")
         resolved_requirement.satisfied_by?(parsed_target_version)
       end
 

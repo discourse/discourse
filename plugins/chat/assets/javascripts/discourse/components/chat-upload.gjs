@@ -7,7 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import eq from "truth-helpers/helpers/eq";
 
-export default class extends Component {
+export default class ChatUpload extends Component {
   @service siteSettings;
 
   @tracked loaded = false;
@@ -44,6 +44,10 @@ export default class extends Component {
     return { width: width * ratio, height: height * ratio };
   }
 
+  get imageUrl() {
+    return this.args.upload.thumbnail?.url ?? this.args.upload.url;
+  }
+
   get imageStyle() {
     if (this.args.upload.dominant_color && !this.loaded) {
       return htmlSafe(`background-color: #${this.args.upload.dominant_color};`);
@@ -60,9 +64,10 @@ export default class extends Component {
       <img
         class="chat-img-upload"
         data-orig-src={{@upload.short_url}}
+        data-large-src={{@upload.url}}
         height={{this.size.height}}
         width={{this.size.width}}
-        src={{@upload.url}}
+        src={{this.imageUrl}}
         style={{this.imageStyle}}
         loading="lazy"
         tabindex="0"

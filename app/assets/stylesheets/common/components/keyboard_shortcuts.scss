@@ -40,9 +40,6 @@
 
 #keyboard-shortcuts-help {
   box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: 80vh !important; // overrides a default modal !important for extra space
 
   .keyboard-shortcuts-help__container {
     columns: auto 20em;

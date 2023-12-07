@@ -32,7 +32,7 @@ RSpec.describe User do
     describe "default sidebar section links" do
       fab!(:category)
 
-      fab!(:secured_category) do |category|
+      fab!(:secured_category) do
         category = Fabricate(:category)
         category.permissions = { "staff" => :full }
         category.save!

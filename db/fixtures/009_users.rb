@@ -2,7 +2,7 @@
 
 # kind of odd, but we need it, we also need to nuke usage of User from inside migrations
 #  very poor form
-user = User.find_by("id <> -1 and username_lower = 'system'")
+user = User.find_by("id <> #{Discourse::SYSTEM_USER_ID} and username_lower = 'system'")
 if user
   user.username = UserNameSuggester.suggest("system")
   user.save
@@ -12,11 +12,11 @@ UserEmail.seed do |ue|
   ue.id = -1
   ue.email = "no_email"
   ue.primary = true
-  ue.user_id = -1
+  ue.user_id = Discourse::SYSTEM_USER_ID
 end
 
 User.seed do |u|
-  u.id = -1
+  u.id = Discourse::SYSTEM_USER_ID
   u.name = "system"
   u.username = "system"
   u.username_lower = "system"
@@ -28,12 +28,12 @@ User.seed do |u|
   u.trust_level = TrustLevel[4]
 end
 
-UserOption.where(user_id: -1).update_all(
+UserOption.where(user_id: Discourse::SYSTEM_USER_ID).update_all(
   email_messages_level: UserOption.email_level_types[:never],
   email_level: UserOption.email_level_types[:never],
 )
 
-Group.user_trust_level_change!(-1, TrustLevel[4])
+Group.user_trust_level_change!(Discourse::SYSTEM_USER_ID, TrustLevel[4])
 
 # User for the smoke tests
 if ENV["SMOKE"] == "1"
