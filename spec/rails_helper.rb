@@ -204,6 +204,20 @@ RSpec.configure do |config|
     config.color = true
   end
 
+  flaky_spec_retry_count = 2
+
+  if ENV["DISCOURSE_RETRY_AND_REPORT_FLAKY_SPECS"] == "true"
+    config.around(:each, type: :system) do |example|
+      FlakySpec::Retry.run(example, retry_count: flaky_spec_retry_count)
+    end
+
+    config.reporter.register_listener(FlakySpec::Listener.new, :example_passed, :seed, :stop)
+  end
+
+  config.around(:each, flaky_spec_retry: true) do |example|
+    FlakySpec::Retry.run(example, retry_count: flaky_spec_retry_count)
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -351,6 +365,7 @@ RSpec.configure do |config|
           if catch_error?(e, errors) && seconds != 0
             # This error will only have been raised if the timer expired
             timeout_error = CapybaraTimedOut.new(seconds, e)
+
             if RSpec.current_example
               # Store timeout for later, we'll only raise it if the test otherwise passes
               RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error

@@ -36,6 +36,7 @@ jobs:
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
       EMBER_VERSION: ${{ (matrix.updated_ember && '5') || '3' }}
+      DISCOURSE_RETRY_AND_REPORT_FLAKY_SPECS: ${{ matrix.build_type == 'system' }}
 
     strategy:
       fail-fast: false
@@ -282,12 +283,41 @@ jobs:
         shell: bash
         timeout-minutes: 30
 
+      - name: Check for failed system test screenshots
+        id: check-failed-system-test-screenshots
+        if: matrix.build_type == 'system'
+        run: |
+          if [ -f tmp/capybara/*.png ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
-        if: matrix.build_type == 'system' && failure()
+        if: matrix.build_type == 'system' && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
         with:
           name: failed-system-test-screenshots
           path: tmp/capybara/*.png
+
+      - name: Check for flaky test report
+        id: check-flaky-spec-report
+        if: matrix.build_type == 'system'
+        run: |
+          if [ -f tmp/flaky_spec_report_*.json ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: Upload flaky test report
+        uses: actions/upload-artifact@v3
+        if: matrix.build_type == 'system' && steps.check-flaky-spec-report.outputs.exists == 'true'
+        with:
+          name: flaky-test-report
+          path: tmp/flaky_spec_report_*.json
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
