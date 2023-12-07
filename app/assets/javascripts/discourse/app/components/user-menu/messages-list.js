@@ -83,7 +83,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
       topics.forEach((t) => {
         t.last_poster_avatar_template = usersById.get(
           t.lastPoster.user_id
-        ).avatar_template;
+        )?.avatar_template;
       });
     }
 
