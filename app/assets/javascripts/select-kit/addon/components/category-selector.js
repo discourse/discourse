@@ -1,4 +1,4 @@
-import { computed } from "@ember/object";
+import { computed, defineProperty } from "@ember/object";
 import Category from "discourse/models/category";
 import { makeArray } from "discourse-common/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -20,75 +20,67 @@ export default MultiSelectComponent.extend({
   init() {
     this._super(...arguments);
 
-    if (!this.categories) {
-      this.set("categories", []);
+    if (this.categories && !this.categoryIds) {
+      defineProperty(
+        this,
+        "categoryIds",
+        computed("categories.[]", function () {
+          return this.categories.map((c) => c.id);
+        })
+      );
+    } else if (!this.categoryIds) {
+      this.set("categoryIds", []);
     }
-    if (!this.blockedCategories) {
-      this.set("blockedCategories", []);
+
+    if (this.blockedCategories && !this.blockedCategoryIds) {
+      defineProperty(
+        this,
+        "blockedCategoryIds",
+        computed("blockedCategories.[]", function () {
+          return this.blockedCategories.map((c) => c.id);
+        })
+      );
+    } else if (!this.blockedCategoryIds) {
+      this.set("blockedCategoryIds", []);
     }
 
     if (this.siteSettings.lazy_load_categories) {
-      if (this.categoryIds) {
-        if (!Category.hasAsyncFoundAll(this.categoryIds)) {
-          Category.asyncFindByIds(this.categoryIds).then(() => {
-            this.notifyPropertyChange("categoryIds");
-          });
-        }
-      } else {
-        // eslint-disable-next-line no-console
-        console.warn(
-          "categoryIds is undefined, but lazy_load_categories is enabled"
-        );
-      }
+      const allCategoryIds = [
+        ...new Set([...this.categoryIds, ...this.blockedCategoryIds]),
+      ];
 
-      if (this.blockedCategoryIds) {
-        if (!Category.hasAsyncFoundAll(this.blockedCategoryIds)) {
-          Category.asyncFindByIds(this.blockedCategoryIds).then(() => {
-            this.notifyPropertyChange("blockedCategoryIds");
-          });
-        }
-      } else {
-        // eslint-disable-next-line no-console
-        console.warn(
-          "blockedCategoryIds is undefined, but lazy_load_categories is enabled"
-        );
+      if (!Category.hasAsyncFoundAll(allCategoryIds)) {
+        Category.asyncFindByIds(allCategoryIds).then(() => {
+          this.notifyPropertyChange("categoryIds");
+          this.notifyPropertyChange("blockedCategoryIds");
+        });
       }
     }
   },
 
-  content: computed(
-    "categories.[]",
-    "blockedCategories.[]",
-    "categoryIds.[]",
-    function () {
-      if (this.siteSettings.lazy_load_categories) {
-        return Category.findByIds(this.categoryIds);
-      }
+  content: computed("categoryIds.[]", "blockedCategoryIds.[]", function () {
+    if (this.siteSettings.lazy_load_categories) {
+      return Category.findByIds(this.categoryIds);
+    }
 
-      const blockedCategories = makeArray(this.blockedCategories);
-      return Category.list().filter((category) => {
-        if (category.isUncategorizedCategory) {
-          if (this.options?.allowUncategorized !== undefined) {
-            return this.options.allowUncategorized;
-          }
-
-          return this.selectKit.options.allowUncategorized;
+    return Category.list().filter((category) => {
+      if (category.isUncategorizedCategory) {
+        if (this.options?.allowUncategorized !== undefined) {
+          return this.options.allowUncategorized;
         }
 
-        return (
-          this.categories.includes(category) ||
-          !blockedCategories.includes(category)
-        );
-      });
-    }
-  ),
+        return this.selectKit.options.allowUncategorized;
+      }
 
-  value: computed("categories.[]", "categoryIds.[]", function () {
-    if (this.siteSettings.lazy_load_categories) {
-      return this.categoryIds;
-    }
+      return (
+        this.categoryIds.includes(category.id) ||
+        !this.blockedCategoryIds.includes(category.id)
+      );
+    });
+  }),
 
-    return this.categories.map((c) => c.id);
+  value: computed("categoryIds.[]", function () {
+    return this.categoryIds;
   }),
 
   modifyComponentForRow() {

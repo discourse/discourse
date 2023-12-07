@@ -12,8 +12,6 @@
 
     <CategorySelector
       @categoryIds={{this.model.watching_category_ids}}
-      @categories={{this.model.watchingCategories}}
-      @blockedCategories={{this.selectedCategories}}
       @blockedCategoryIds={{this.selectedCategoryIds}}
       @onChange={{action (mut this.model.watchingCategories)}}
     />
@@ -29,8 +27,6 @@
 
     <CategorySelector
       @categoryIds={{this.model.tracking_category_ids}}
-      @categories={{this.model.trackingCategories}}
-      @blockedCategories={{this.selectedCategories}}
       @blockedCategoryIds={{this.selectedCategoryIds}}
       @onChange={{action (mut this.model.trackingCategories)}}
     />
@@ -46,8 +42,6 @@
 
     <CategorySelector
       @categoryIds={{this.model.watching_first_post_category_ids}}
-      @categories={{this.model.watchingFirstPostCategories}}
-      @blockedCategories={{this.selectedCategories}}
       @blockedCategoryIds={{this.selectedCategoryIds}}
       @onChange={{action (mut this.model.watchingFirstPostCategories)}}
     />
@@ -65,8 +59,6 @@
 
     <CategorySelector
       @categoryIds={{this.model.regular_category_ids}}
-      @categories={{this.model.regularCategories}}
-      @blockedCategories={{this.selectedCategories}}
       @blockedCategoryIds={{this.selectedCategoryIds}}
       @onChange={{action (mut this.model.regularCategories)}}
     />
@@ -82,8 +74,6 @@
 
     <CategorySelector
       @categoryIds={{this.model.muted_category_ids}}
-      @categories={{this.model.mutedCategories}}
-      @blockedCategories={{this.selectedCategories}}
       @blockedCategoryIds={{this.selectedCategoryIds}}
       @onChange={{action (mut this.model.mutedCategories)}}
     />
