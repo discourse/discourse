@@ -1092,6 +1092,17 @@ RSpec.describe CategoriesController do
         expect(response.status).to eq(403)
       end
     end
+
+    it "returns user fields" do
+      sign_in(admin)
+
+      get "/categories/find.json", params: { slug_path_with_id: "#{category.slug}/#{category.id}" }
+
+      category = response.parsed_body["categories"].first
+      expect(category["notification_level"]).to eq(NotificationLevels.all[:regular])
+      expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
+      expect(category["has_children"]).to eq(true)
+    end
   end
 
   describe "#search" do
@@ -1225,6 +1236,17 @@ RSpec.describe CategoriesController do
 
         expect(response.parsed_body["categories"].size).to eq(2)
       end
+    end
+
+    it "returns user fields" do
+      sign_in(admin)
+
+      get "/categories/search.json", params: { select_category_ids: [category.id] }
+
+      category = response.parsed_body["categories"].first
+      expect(category["notification_level"]).to eq(NotificationLevels.all[:regular])
+      expect(category["permission"]).to eq(CategoryGroup.permission_types[:full])
+      expect(category["has_children"]).to eq(true)
     end
   end
 end
