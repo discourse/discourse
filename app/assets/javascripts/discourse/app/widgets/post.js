@@ -23,6 +23,7 @@ import PostCooked from "discourse/widgets/post-cooked";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import { isTesting } from "discourse-common/config/environment";
 import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -662,6 +663,12 @@ createWidget("post-contents", {
     }
 
     const shareUrl = new URL(postUrl, window.origin).toString();
+
+    // Can't use clipboard in JS tests.
+    if (isTesting()) {
+      return showCopyPostLinkAlert(postId);
+    }
+
     clipboardCopy(shareUrl)
       .then(() => {
         showCopyPostLinkAlert(postId);
