@@ -5,10 +5,10 @@ import { dasherize } from "@ember/string";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getUrl from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
+import imagePreviews from "./image-previews";
 
 export default Component.extend({
   classNames: ["wizard-container__image-upload"],
@@ -17,11 +17,7 @@ export default Component.extend({
 
   @discourseComputed("field.id")
   previewComponent(id) {
-    const componentName = `image-preview-${dasherize(id)}`;
-    const exists = getOwnerWithFallback(this).lookup(
-      `component:${componentName}`
-    );
-    return exists ? componentName : "wizard-image-preview";
+    return imagePreviews[dasherize(id)] ?? imagePreviews.generic;
   },
 
   didInsertElement() {

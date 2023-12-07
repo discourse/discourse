@@ -1,6 +1,8 @@
 import Component from "@ember/component";
 import { action, set } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
+import ColorPalettes from "select-kit/components/color-palettes";
+import ComboBox from "select-kit/components/combo-box";
 
 export default Component.extend({
   init() {
@@ -16,8 +18,8 @@ export default Component.extend({
   },
 
   @discourseComputed("field.id")
-  componentName(id) {
-    return id === "color_scheme" ? "color-palettes" : "combo-box";
+  component(id) {
+    return id === "color_scheme" ? ColorPalettes : ComboBox;
   },
 
   keyPress(e) {

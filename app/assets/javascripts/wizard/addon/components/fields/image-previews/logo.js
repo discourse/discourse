@@ -1,8 +1,8 @@
 import { action } from "@ember/object";
-import { drawHeader } from "wizard/lib/preview";
-import WizardPreviewBaseComponent from "./wizard-preview-base";
+import { drawHeader } from "../../../lib/preview";
+import PreviewBaseComponent from "../styling-preview/-preview-base";
 
-export default WizardPreviewBaseComponent.extend({
+export default PreviewBaseComponent.extend({
   width: 400,
   height: 100,
   image: null,
