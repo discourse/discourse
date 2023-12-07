@@ -102,7 +102,7 @@ export default class WizardStepComponent extends Component {
         return firstInvalidElement.focus();
       }
 
-      document.querySelector(".wizard-focusable:nth-of-type(1)").focus();
+      document.querySelector(".wizard-focusable:nth-of-type(1)")?.focus();
     });
   }
 
