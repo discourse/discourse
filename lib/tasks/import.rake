@@ -754,3 +754,25 @@ task "import:rebake_posts_with_events" => :environment do
     print "\r%7d / %7d" % [current_count, max_count]
   end
 end
+
+desc "Rebake posts that have tag"
+task "import:rebake_posts_with_tag", [:tag_name] => :environment do |_task, args|
+  log "Rebaking posts with tag"
+
+  Jobs.run_immediately!
+
+  posts =
+    Post.where(
+      "EXISTS (SELECT 1 FROM topic_tags JOIN tags ON tags.id = topic_tags.tag_id WHERE topic_tags.topic_id = posts.topic_id AND tags.name = ?)",
+      args[:tag_name],
+    )
+
+  max_count = posts.count
+  current_count = 0
+
+  posts.find_each do |post|
+    post.rebake!
+    current_count += 1
+    print "\r%7d / %7d" % [current_count, max_count]
+  end
+end
