@@ -514,8 +514,7 @@ pre.onebox code {
     white-space: pre-wrap;
     overflow-y: auto;
     word-break: break-word;
-    font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
-      "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+    font-family: var(--d-font-family--monospace);
     box-sizing: border-box;
 
     .show-more {
