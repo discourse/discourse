@@ -4,7 +4,12 @@
   <div class="results">
     <PluginOutlet
       @name="search-menu-results-top"
-      @outletArgs={{hash closeSearchMenu=@closeSearchMenu}}
+      @outletArgs={{hash
+        closeSearchMenu=@closeSearchMenu
+        searchTerm=this.search.activeGlobalSearchTerm
+        inTopicContext=this.search.inTopicContext
+        searchTopics=@searchTopics
+      }}
     />
     {{#if @suggestionKeyword}}
       <SearchMenu::Results::Assistant
