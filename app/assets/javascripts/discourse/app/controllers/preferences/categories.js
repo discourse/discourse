@@ -17,28 +17,27 @@ export default Controller.extend({
   },
 
   @discourseComputed(
-    "siteSettings.mute_all_categories_by_default",
-    "model.watchedCategories",
-    "model.watchedFirstPostCategories",
-    "model.trackedCategories",
-    "model.mutedCategories",
-    "model.regularCategories"
+    "model.watched_categoriy_ids",
+    "model.watched_first_post_categoriy_ids",
+    "model.tracked_categoriy_ids",
+    "model.muted_categoriy_ids",
+    "model.regular_category_ids",
+    "siteSettings.mute_all_categories_by_default"
   )
-  selectedCategories(
-    muteAllCategoriesByDefault,
+  selectedCategoryIds(
     watched,
     watchedFirst,
     tracked,
     muted,
-    regular
+    regular,
+    muteAllCategoriesByDefault
   ) {
-    let categories = [].concat(watched, watchedFirst, tracked);
-
-    categories = categories.concat(
+    return [].concat(
+      watched,
+      watchedFirst,
+      tracked,
       muteAllCategoriesByDefault ? regular : muted
     );
-
-    return categories.filter((t) => t);
   },
 
   @discourseComputed

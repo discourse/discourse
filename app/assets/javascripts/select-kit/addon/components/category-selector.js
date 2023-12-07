@@ -28,8 +28,6 @@ export default MultiSelectComponent.extend({
           return this.categories.map((c) => c.id);
         })
       );
-    } else if (!this.categoryIds) {
-      this.set("categoryIds", []);
     }
 
     if (this.blockedCategories && !this.blockedCategoryIds) {
@@ -40,8 +38,6 @@ export default MultiSelectComponent.extend({
           return this.blockedCategories.map((c) => c.id);
         })
       );
-    } else if (!this.blockedCategoryIds) {
-      this.set("blockedCategoryIds", []);
     }
 
     if (this.siteSettings.lazy_load_categories) {
