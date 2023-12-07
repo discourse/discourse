@@ -181,7 +181,7 @@ module PageObjects
       end
 
       def has_form_template_field_error?(error)
-        page.has_css?(".form-template-field__error", text: error, visible: all)
+        page.has_css?(".form-template-field__error", text: error, visible: :all)
       end
 
       def has_form_template_field_label?(label)
