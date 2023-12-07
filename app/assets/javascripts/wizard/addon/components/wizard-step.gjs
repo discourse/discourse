@@ -94,15 +94,15 @@ export default class WizardStepComponent extends Component {
   @action
   autoFocus() {
     schedule("afterRender", () => {
-      const $invalid = $(
+      const firstInvalidElement = document.querySelector(
         ".wizard-container__input.invalid:nth-of-type(1) .wizard-focusable"
       );
 
-      if ($invalid.length) {
-        return $invalid.focus();
+      if (firstInvalidElement) {
+        return firstInvalidElement.focus();
       }
 
-      $(".wizard-focusable:nth-of-type(1)").focus();
+      document.querySelector(".wizard-focusable:nth-of-type(1)").focus();
     });
   }
 
