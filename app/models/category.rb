@@ -226,6 +226,8 @@ class Category < ActiveRecord::Base
   attr_accessor :skip_category_definition
 
   def self.preload_user_fields!(guardian, categories)
+    category_ids = categories.map(&:id)
+
     # Load notification levels
     notification_levels = CategoryUser.notification_levels_for(guardian.user)
     notification_levels.default = CategoryUser.default_notification_level
@@ -233,12 +235,12 @@ class Category < ActiveRecord::Base
     # Load permissions
     allowed_topic_create_ids =
       if !guardian.is_admin? && !guardian.is_anonymous?
-        Category.topic_create_allowed(guardian).where(id: categories.map(&:id)).pluck(:id).to_set
+        Category.topic_create_allowed(guardian).where(id: category_ids).pluck(:id).to_set
       end
 
     # Categories with children
     with_children =
-      Category.where(parent_category_id: categories.map(&:id)).pluck(:parent_category_id).to_set
+      Category.where(parent_category_id: category_ids).pluck(:parent_category_id).to_set
 
     # Update category attributes
     categories.each do |category|
