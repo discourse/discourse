@@ -257,7 +257,7 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "generates reaction data for threaded messages" do
+  it "generates reaction data for threaded messages" do
     thread = Fabricate(:chat_thread, channel: channel)
     thread_om =
       Fabricate(
@@ -329,7 +329,7 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "generates a chat transcript for threaded messages" do
+  it "generates a chat transcript for threaded messages" do
     thread = Fabricate(:chat_thread, channel: channel)
     thread_om =
       Fabricate(
@@ -367,7 +367,7 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "doesn't add thread info for threads with no replies" do
+  it "doesn't add thread info for threads with no replies" do
     thread = Fabricate(:chat_thread, channel: channel)
     thread_om =
       Fabricate(
@@ -412,7 +412,7 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "generates the correct markdown for multiple threads" do
+  it "generates the correct markdown for multiple threads" do
     channel_message_1 =
       Fabricate(:chat_message, user: user1, chat_channel: channel, message: "I need ideas")
     thread_1 = Fabricate(:chat_thread, channel: channel)
