@@ -740,7 +740,7 @@ end
 
 desc "Rebake posts that contain events"
 task "import:rebake_uncooked_posts_with_events" => :environment do
-  log "Rebaking posts with polls"
+  log "Rebaking posts with events"
 
   Jobs.run_immediately!
 
