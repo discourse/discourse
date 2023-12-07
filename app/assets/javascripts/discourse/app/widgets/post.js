@@ -758,7 +758,11 @@ createWidget("post-article", {
   },
 
   html(attrs, state) {
-    const rows = [];
+    const rows = [
+      h("span.tabLoc", {
+        attributes: { "aria-hidden": true, tabindex: -1 },
+      }),
+    ];
     if (state.repliesAbove.length) {
       const replies = state.repliesAbove.map((p) => {
         return this.attach("embedded-post", p, {
