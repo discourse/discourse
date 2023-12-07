@@ -177,11 +177,11 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
   end
 
-  xit "loads more tags when the user scrolls views the last tag in the modal and there is more tags to load" do
+  it "loads more tags when the user scrolls views the last tag in the modal and there is more tags to load" do
     Tag.delete_all
 
     tags =
-      (TagsController::LIST_LIMIT + 50).times.map do |index|
+      (TagsController::LIST_LIMIT + 1).times.map do |index|
         Fabricate(:tag, name: "Tag #{sprintf("%03d", index)}")
       end
 
