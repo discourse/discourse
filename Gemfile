@@ -150,9 +150,7 @@ group :test, :development do
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
 
-  # Depreciation warnings that we can't act on is being printed out in the test output.
-  # See https://github.com/rswag/rswag/issues/703
-  gem "rswag-specs", "2.11.0"
+  gem "rswag-specs"
 
   gem "annotate"
 
