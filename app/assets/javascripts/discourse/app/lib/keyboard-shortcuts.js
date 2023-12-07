@@ -10,9 +10,7 @@ import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
 
 let extraKeyboardShortcutsHelp = {};
