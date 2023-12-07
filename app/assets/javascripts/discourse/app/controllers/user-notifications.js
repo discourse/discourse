@@ -18,19 +18,19 @@ export default Controller.extend({
     return this.filter && this.filter !== "all";
   },
 
-  @discourseComputed("model.content.@each.read")
+  @discourseComputed("model.items.@each.notification.read")
   allNotificationsRead() {
-    return !this.get("model.content").some(
-      (notification) => !notification.get("read")
+    return !this.model.items.some(
+      (item) => !item.notification.get("read")
     );
   },
 
-  @discourseComputed("isFiltered", "model.content.length")
+  @discourseComputed("isFiltered", "model.items.length")
   doesNotHaveNotifications(isFiltered, contentLength) {
     return !isFiltered && contentLength === 0;
   },
 
-  @discourseComputed("isFiltered", "model.content.length")
+  @discourseComputed("isFiltered", "model.items.length")
   nothingFound(isFiltered, contentLength) {
     return isFiltered && contentLength === 0;
   },
@@ -47,7 +47,7 @@ export default Controller.extend({
 
   async markRead() {
     await ajax("/notifications/mark-read", { type: "PUT" });
-    this.model.forEach((n) => n.set("read", true));
+    this.model.items.forEach((item) => item.notification.set("read", true));
   },
 
   actions: {
