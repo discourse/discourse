@@ -168,6 +168,7 @@ class UploadsController < ApplicationController
 
   def handle_secure_upload_request(upload, path_with_ext = nil)
     if upload.access_control_post_id.present?
+      raise Discourse::InvalidAccess if current_user.nil? && SiteSetting.login_required
       raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
     else
       return render_404 if current_user.nil?
