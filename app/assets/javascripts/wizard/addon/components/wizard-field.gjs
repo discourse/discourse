@@ -5,6 +5,39 @@ import { htmlSafe } from "@ember/template";
 import fields from "./fields";
 
 export default class WizardFieldComponent extends Component {
+  get field() {
+    return this.args.field;
+  }
+
+  get classes() {
+    let classes = ["wizard-container__field"];
+
+    let { type, id, invalid, disabled } = this.field;
+
+    classes.push(`${dasherize(type)}-field`);
+    classes.push(`${dasherize(type)}-${dasherize(id)}`);
+
+    if (invalid) {
+      classes.push("invalid");
+    }
+
+    if (disabled) {
+      classes.push("disabled");
+    }
+
+    return classes.join(" ");
+  }
+
+  get fieldClass() {
+    return `field-${dasherize(this.field.id)} wizard-focusable`;
+  }
+
+  get component() {
+    let { type } = this.field;
+    assert(`"${type}" is not a valid wizard field type`, type in fields);
+    return fields[type];
+  }
+
   <template>
     <div class={{this.classes}}>
       {{#if @field.label}}
@@ -47,37 +80,4 @@ export default class WizardFieldComponent extends Component {
       {{/if}}
     </div>
   </template>
-
-  get field() {
-    return this.args.field;
-  }
-
-  get classes() {
-    let classes = ["wizard-container__field"];
-
-    let { type, id, invalid, disabled } = this.field;
-
-    classes.push(`${dasherize(type)}-field`);
-    classes.push(`${dasherize(type)}-${dasherize(id)}`);
-
-    if (invalid) {
-      classes.push("invalid");
-    }
-
-    if (disabled) {
-      classes.push("disabled");
-    }
-
-    return classes.join(" ");
-  }
-
-  get fieldClass() {
-    return `field-${dasherize(this.field.id)} wizard-focusable`;
-  }
-
-  get component() {
-    let { type } = this.field;
-    assert(`"${type}" is not a valid wizard field type`, type in fields);
-    return fields[type];
-  }
 }

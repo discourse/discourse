@@ -4,6 +4,12 @@ import { dasherize } from "@ember/string";
 import components from "./components";
 
 export default class ComponentField extends Component {
+  get component() {
+    let id = dasherize(this.args.field.id);
+    assert(`"${id}" is not a valid wizard component`, id in components);
+    return components[id];
+  }
+
   <template>
     <this.component
       @wizard={{@wizard}}
@@ -12,10 +18,4 @@ export default class ComponentField extends Component {
       @fieldClass={{this.fieldClass}}
     />
   </template>
-
-  get component() {
-    let id = dasherize(this.args.field.id);
-    assert(`"${id}" is not a valid wizard component`, id in components);
-    return components[id];
-  }
 }

@@ -53,14 +53,6 @@ export default class WizardCanvasComponent extends Component {
   canvas = null;
   particles = null;
 
-  <template>
-    <canvas
-      class="wizard-canvas"
-      {{didInsert this.setup}}
-      {{willDestroy this.teardown}}
-    />
-  </template>
-
   get ready() {
     return this.canvas !== null;
   }
@@ -185,4 +177,12 @@ export default class WizardCanvasComponent extends Component {
     c.stroke();
     c.restore();
   }
+
+  <template>
+    <canvas
+      class="wizard-canvas"
+      {{didInsert this.setup}}
+      {{willDestroy this.teardown}}
+    />
+  </template>
 }

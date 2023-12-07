@@ -15,137 +15,6 @@ const i18n = (...args) => I18n.t(...args);
 export default class WizardStepComponent extends Component {
   @tracked saving = false;
 
-  <template>
-    <div
-      class="wizard-container__step {{@step.id}}"
-      {{didInsert this.autoFocus}}
-      {{didUpdate this.stepChanged @step.id}}
-    >
-      <div class="wizard-container__step-counter">
-        <span class="wizard-container__step-text">
-          {{i18n "wizard.step-text"}}
-        </span>
-        <span class="wizard-container__step-count">
-          {{i18n
-            "wizard.step"
-            current=@step.displayIndex
-            total=@wizard.totalSteps
-          }}
-        </span>
-      </div>
-
-      <div class="wizard-container">
-        <div class="wizard-container__step-contents">
-          <div class="wizard-container__step-header">
-            {{#if @step.emoji}}
-              <div class="wizard-container__step-header--emoji">
-                {{emoji @step.emoji}}
-              </div>
-            {{/if}}
-            {{#if @step.title}}
-              <h1 class="wizard-container__step-title">{{@step.title}}</h1>
-              {{#if @step.description}}
-                <p class="wizard-container__step-description">
-                  {{htmlSafe @step.description}}
-                </p>
-              {{/if}}
-            {{/if}}
-          </div>
-
-          <div class="wizard-container__step-container">
-            {{#if @step.fields}}
-              <div class="wizard-container__step-form">
-                {{#if this.includeSidebar}}
-                  <div class="wizard-container__sidebar">
-                    {{#each @step.fields as |field|}}
-                      {{#if field.showInSidebar}}
-                        <WizardField
-                          @field={{field}}
-                          @step={{@step}}
-                          @wizard={{@wizard}}
-                        />
-                      {{/if}}
-                    {{/each}}
-                  </div>
-                {{/if}}
-                <div class="wizard-container__fields">
-                  {{#each @step.fields as |field|}}
-                    {{#unless field.showInSidebar}}
-                      <WizardField
-                        @field={{field}}
-                        @step={{@step}}
-                        @wizard={{@wizard}}
-                      />
-                    {{/unless}}
-                  {{/each}}
-                </div>
-              </div>
-            {{/if}}
-          </div>
-        </div>
-
-        <div class="wizard-container__step-footer">
-          <div class="wizard-container__buttons-left">
-            {{#if this.showBackButton}}
-              <button
-                {{on "click" this.backStep}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button back"
-              >
-                {{i18n "wizard.back"}}
-              </button>
-            {{/if}}
-          </div>
-
-          <div class="wizard-container__buttons-right">
-            {{#if this.showFinishButton}}
-              <button
-                {{on "click" this.finish}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button finish"
-              >
-                {{i18n "wizard.finish"}}
-              </button>
-            {{else if this.showConfigureMore}}
-              <button
-                {{on "click" this.nextStep}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button configure-more"
-              >
-                {{i18n "wizard.configure_more"}}
-              </button>
-            {{/if}}
-
-            {{#if this.showJumpInButton}}
-              <button
-                {{on "click" this.jumpIn}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button primary jump-in"
-              >
-                {{i18n "wizard.jump_in"}}
-              </button>
-            {{else}}
-              <button
-                {{on "click" this.nextStep}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button primary next"
-              >
-                {{i18n "wizard.next"}}
-              </button>
-            {{/if}}
-
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </template>
-
   get wizard() {
     return this.args.wizard;
   }
@@ -298,4 +167,135 @@ export default class WizardStepComponent extends Component {
       this.autoFocus();
     }
   }
+
+  <template>
+    <div
+      class="wizard-container__step {{@step.id}}"
+      {{didInsert this.autoFocus}}
+      {{didUpdate this.stepChanged @step.id}}
+    >
+      <div class="wizard-container__step-counter">
+        <span class="wizard-container__step-text">
+          {{i18n "wizard.step-text"}}
+        </span>
+        <span class="wizard-container__step-count">
+          {{i18n
+            "wizard.step"
+            current=@step.displayIndex
+            total=@wizard.totalSteps
+          }}
+        </span>
+      </div>
+
+      <div class="wizard-container">
+        <div class="wizard-container__step-contents">
+          <div class="wizard-container__step-header">
+            {{#if @step.emoji}}
+              <div class="wizard-container__step-header--emoji">
+                {{emoji @step.emoji}}
+              </div>
+            {{/if}}
+            {{#if @step.title}}
+              <h1 class="wizard-container__step-title">{{@step.title}}</h1>
+              {{#if @step.description}}
+                <p class="wizard-container__step-description">
+                  {{htmlSafe @step.description}}
+                </p>
+              {{/if}}
+            {{/if}}
+          </div>
+
+          <div class="wizard-container__step-container">
+            {{#if @step.fields}}
+              <div class="wizard-container__step-form">
+                {{#if this.includeSidebar}}
+                  <div class="wizard-container__sidebar">
+                    {{#each @step.fields as |field|}}
+                      {{#if field.showInSidebar}}
+                        <WizardField
+                          @field={{field}}
+                          @step={{@step}}
+                          @wizard={{@wizard}}
+                        />
+                      {{/if}}
+                    {{/each}}
+                  </div>
+                {{/if}}
+                <div class="wizard-container__fields">
+                  {{#each @step.fields as |field|}}
+                    {{#unless field.showInSidebar}}
+                      <WizardField
+                        @field={{field}}
+                        @step={{@step}}
+                        @wizard={{@wizard}}
+                      />
+                    {{/unless}}
+                  {{/each}}
+                </div>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="wizard-container__step-footer">
+          <div class="wizard-container__buttons-left">
+            {{#if this.showBackButton}}
+              <button
+                {{on "click" this.backStep}}
+                disabled={{this.saving}}
+                type="button"
+                class="wizard-container__button back"
+              >
+                {{i18n "wizard.back"}}
+              </button>
+            {{/if}}
+          </div>
+
+          <div class="wizard-container__buttons-right">
+            {{#if this.showFinishButton}}
+              <button
+                {{on "click" this.finish}}
+                disabled={{this.saving}}
+                type="button"
+                class="wizard-container__button finish"
+              >
+                {{i18n "wizard.finish"}}
+              </button>
+            {{else if this.showConfigureMore}}
+              <button
+                {{on "click" this.nextStep}}
+                disabled={{this.saving}}
+                type="button"
+                class="wizard-container__button configure-more"
+              >
+                {{i18n "wizard.configure_more"}}
+              </button>
+            {{/if}}
+
+            {{#if this.showJumpInButton}}
+              <button
+                {{on "click" this.jumpIn}}
+                disabled={{this.saving}}
+                type="button"
+                class="wizard-container__button primary jump-in"
+              >
+                {{i18n "wizard.jump_in"}}
+              </button>
+            {{else}}
+              <button
+                {{on "click" this.nextStep}}
+                disabled={{this.saving}}
+                type="button"
+                class="wizard-container__button primary next"
+              >
+                {{i18n "wizard.next"}}
+              </button>
+            {{/if}}
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </template>
 }
