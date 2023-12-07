@@ -1,14 +1,11 @@
 import UserMenuIconAvatar from "discourse/components/user-menu/icon-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 
 export default class UserMenuBaseItem {
-  constructor() {
-    withPluginApi("1.18.0", (api) => {
-      this.site = api.container.lookup("service:site");
-      this.siteSettings = api.container.lookup("service:site-settings");
-    });
+  constructor({ siteSettings, site }) {
+    this.site = site;
+    this.siteSettings = siteSettings;
   }
   get className() {}
 

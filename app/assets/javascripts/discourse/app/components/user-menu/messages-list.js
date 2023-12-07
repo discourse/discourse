@@ -78,15 +78,12 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     await Topic.applyTransformations(topics);
 
     if (this.siteSettings.show_user_menu_avatars) {
-      // user avatar is not realized into the `posters` payload for topic list items, so we need
-      // to map the poster by user_id to serialized `users` to get an avatar for each item.
-      const usersById = {};
-      data.users.forEach((u) => {
-        usersById[u.id] = u;
-      });
+      // Populate avatar_template for lastPoster
+      const usersById = new Map(data.users.map((u) => [u.id, u]));
       topics.forEach((t) => {
-        t.last_poster_avatar_template =
-          usersById[t.lastPoster.user_id].avatar_template;
+        t.last_poster_avatar_template = usersById.get(
+          t.lastPoster.user_id
+        ).avatar_template;
       });
     }
 
@@ -109,7 +106,13 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
           })
         );
       } else {
-        content.push(new UserMenuMessageItem({ message: item }));
+        content.push(
+          new UserMenuMessageItem({
+            message: item,
+            siteSettings: this.siteSettings,
+            site: this.site,
+          })
+        );
       }
     });
 
