@@ -99,11 +99,13 @@ describe "Table Builder", type: :system do
       |Make | Model | Year|
       |--- | --- | ---|
       |Toyota | Supra | 1998|
-      |Nissan | Skyline | 1999|
+      |Nissan | Skyline GTR | 1999|
       |Honda | S2000 | 2001|
       RAW
 
-      expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
+      try_until_success do
+        expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
+      end
     end
 
     context "when adding an edit reason" do
