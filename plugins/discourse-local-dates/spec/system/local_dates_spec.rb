@@ -11,10 +11,10 @@ describe "Local dates", type: :system do
 
   before do
     create_post(user: current_user, topic: topic, title: "Date range test post", raw: <<~RAW)
-        First option: [date=#{year}-12-15 time=14:19:00 timezone="Asia/Singapore"]
-        Second option: [date=#{year}-12-15 time=01:20:00 timezone="Asia/Singapore"], or [date=#{year}-12-15 time=02:40:00 timezone="Asia/Singapore"]
-        Third option: [date-range from=#{year}-12-15T11:25:00 to=#{year}-12-16T00:26:00 timezone="Asia/Singapore"] or [date-range from=#{year}-12-22T11:57:00 to=#{year}-12-23T11:58:00 timezone="Asia/Singapore"]
-      RAW
+      First option: [date=#{year}-12-15 time=14:19:00 timezone="Asia/Singapore"]
+      Second option: [date=#{year}-12-15 time=01:20:00 timezone="Asia/Singapore"], or [date=#{year}-12-15 time=02:40:00 timezone="Asia/Singapore"]
+      Third option: [date-range from=#{year}-12-15T11:25:00 to=#{year}-12-16T00:26:00 timezone="Asia/Singapore"] or [date-range from=#{year}-12-22T11:57:00 to=#{year}-12-23T11:58:00 timezone="Asia/Singapore"]
+    RAW
   end
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
