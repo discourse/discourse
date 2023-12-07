@@ -133,6 +133,11 @@ GEM
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
+    discourse_api (2.0.1)
+      faraday (~> 2.7)
+      faraday-follow_redirects
+      faraday-multipart
+      rack (>= 1.6)
     discourse_dev_assets (0.0.4)
       faker (~> 2.16)
       literate_randomizer
@@ -150,6 +155,10 @@ GEM
       base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
+    faraday-follow_redirects (0.3.0)
+      faraday (>= 1, < 3)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
     faraday-net_http (3.0.2)
     faraday-retry (2.2.0)
       faraday (~> 2.0)
@@ -244,6 +253,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
+    multipart-post (2.3.0)
     mustache (1.1.1)
     net-http (0.4.0)
       uri
@@ -404,6 +414,8 @@ GEM
       rspec-expectations (~> 3.12)
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
+    rspec-retry (0.6.2)
+      rspec-core (> 3.3)
     rspec-support (3.12.1)
     rss (0.3.0)
       rexml
@@ -560,6 +572,7 @@ DEPENDENCIES
   digest
   discourse-fonts
   discourse-seed-fu
+  discourse_api
   discourse_dev_assets
   email_reply_trimmer
   excon
@@ -637,6 +650,7 @@ DEPENDENCIES
   rspec
   rspec-html-matchers
   rspec-rails
+  rspec-retry
   rss
   rswag-specs
   rtlcss

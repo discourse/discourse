@@ -131,6 +131,8 @@ group :test do
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
+  gem "rspec-retry", require: false
+  gem "discourse_api", require: false
 end
 
 group :test, :development do

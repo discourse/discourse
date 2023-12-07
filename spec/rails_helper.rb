@@ -203,6 +203,20 @@ RSpec.configure do |config|
     config.color = true
   end
 
+  if ENV["DISCOURSE_RETRY_AND_REPORT_FLAKY_SPECS"]
+    require "rspec/retry"
+
+    config.around(:each, type: :system) { |ex| ex.run_with_retry(retry: 2) }
+
+    config.reporter.register_listener(
+      FlakySpec::Listener.new,
+      :example_passed,
+      :example_failed,
+      :seed,
+      :stop,
+    )
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.

@@ -191,7 +191,7 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
 
     modal = sidebar.click_edit_tags_button
 
-    first_page_tags = tags.first(TagsController::LIST_LIMIT)
+    first_page_tags = tags.first(200)
 
     expect(modal).to have_tag_checkboxes(first_page_tags)
 
