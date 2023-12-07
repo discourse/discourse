@@ -17,6 +17,10 @@ module HasCustomFields
       end
     end
 
+    def array_type?
+      Array === type
+    end
+
     def validate(obj, name, value)
       return if value.nil?
 
@@ -29,7 +33,7 @@ module HasCustomFields
     end
 
     def serialize(value)
-      if value.is_a?(Hash) || type == :json || (Array === type && type[0] == :json)
+      if value.is_a?(Hash) || type == :json || (array_type? && type[0] == :json)
         value.to_json
       elsif TrueClass === value
         "t"
@@ -45,7 +49,7 @@ module HasCustomFields
 
       array = nil
 
-      if Array === type
+      if array_type?
         type = type[0]
         array = true if return_array
       end
@@ -110,14 +114,15 @@ module HasCustomFields
     def register_custom_field_type(name, type, max_length: nil)
       max_length ||= DEFAULT_FIELD_DESCRIPTOR.max_length
 
-      if Array === type
+      descriptor = FieldDescriptor.new(type, max_length)
+      custom_field_meta_data[name] = descriptor
+
+      if descriptor.array_type?
         Discourse.deprecate(
           "Array types for custom fields are deprecated, use type :json instead",
           drop_from: "3.3.0",
         )
       end
-
-      custom_field_meta_data[name] = FieldDescriptor.new(type, max_length)
     end
 
     def get_custom_field_descriptor(name)
@@ -273,7 +278,7 @@ module HasCustomFields
           descriptor = self.class.get_custom_field_descriptor(key)
           field_type = descriptor.type
 
-          if Array === field_type || (field_type != :json && Array === value)
+          if descriptor.array_type? || (field_type != :json && Array === value)
             value = Array(value || [])
             value.compact!
             sub_type = field_type[0]
@@ -344,7 +349,13 @@ module HasCustomFields
 
   def custom_fields_value_length
     custom_fields.each do |name, value|
-      self.class.get_custom_field_descriptor(name).validate(self, name, value)
+      descriptor = self.class.get_custom_field_descriptor(name)
+
+      if descriptor.array_type?
+        Array(value).each { |v| descriptor.validate(self, name, v) }
+      else
+        descriptor.validate(self, name, value)
+      end
     end
   end
 end

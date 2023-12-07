@@ -11,6 +11,7 @@ import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
+  chromeTest,
   count,
   exists,
   publishToMessageBus,
@@ -412,18 +413,22 @@ acceptance("Topic featured links", function (needs) {
     );
   });
 
-  test("Quoting a quote with replyAsNewTopic keeps the original poster name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-    await triggerKeyEvent(document, "keypress", "J");
-    await triggerKeyEvent(document, "keypress", "T");
+  // Using J/K on Firefox clean the text selection, so this won't work there
+  chromeTest(
+    "Quoting a quote with replyAsNewTopic keeps the original poster name",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_5 blockquote");
+      await triggerKeyEvent(document, "keypress", "J");
+      await triggerKeyEvent(document, "keypress", "T");
 
-    assert.ok(
-      query(".d-editor-input").value.includes(
-        'quote="codinghorror said, post:3, topic:280"'
-      )
-    );
-  });
+      assert.ok(
+        query(".d-editor-input").value.includes(
+          'quote="codinghorror said, post:3, topic:280"'
+        )
+      );
+    }
+  );
 
   test("Quoting by selecting text can mark the quote as full", async function (assert) {
     await visit("/t/internationalization-localization/280");

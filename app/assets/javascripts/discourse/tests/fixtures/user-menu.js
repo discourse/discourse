@@ -5,6 +5,7 @@ export default {
           id: 1713,
           user_id: 1,
           notification_type: 24,
+          acting_user_avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png",
           read: false,
           high_priority: true,
           created_at: "2022-08-05T17:27:24.873Z",
@@ -69,6 +70,7 @@ export default {
         id: 8315,
         user_id: 1,
         notification_type: 6,
+        acting_user_avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png",
         read: false,
         high_priority: true,
         created_at: "2022-08-05T17:27:24.873Z",
@@ -139,5 +141,9 @@ export default {
       }
     ],
     read_notifications: [],
+    users: [{id: 13,
+        username: "mixtape",
+        avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png"
+    }]
   }
 }

@@ -1101,3 +1101,36 @@ acceptance("User menu - Dismiss button", function (needs) {
     );
   });
 });
+
+acceptance("User menu - avatars", function (needs) {
+  needs.user();
+
+  needs.settings({
+    show_user_menu_avatars: true,
+  });
+
+  test("It shows user avatars for various notifications on all notifications pane", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    assert.ok(exists("li.notification.edited .icon-avatar"));
+    assert.ok(exists("li.notification.replied .icon-avatar"));
+  });
+
+  test("It shows user avatars for messages", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-messages");
+
+    assert.ok(exists("li.notification.private-message .icon-avatar"));
+    assert.ok(exists("li.message .icon-avatar"));
+  });
+
+  test("It shows user avatars for bookmark items and bookmark reminder notification items", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-bookmarks");
+
+    assert.ok(exists("li.notification.bookmark-reminder .icon-avatar"));
+    assert.ok(exists("li.bookmark .icon-avatar"));
+  });
+});

@@ -20,6 +20,7 @@ export default RouteTemplate(
         @wizard={{@model.wizard}}
         @goNext={{this.goNext}}
         @goBack={{this.goBack}}
+        @goHome={{this.goHome}}
       />
     </template>
 
@@ -47,6 +48,11 @@ export default RouteTemplate(
     @action
     goBack() {
       this.router.transitionTo("wizard.step", this.step.previous);
+    }
+
+    @action
+    goHome() {
+      this.router.transitionTo("discovery.latest");
     }
   }
 );

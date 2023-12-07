@@ -395,7 +395,9 @@ basic:
     choices:
       - spinner
       - slider
-
+  show_user_menu_avatars:
+    client: true
+    default: false
 login:
   invite_only:
     refresh: true

@@ -20,24 +20,47 @@ export default function (helpers) {
                 description: "Your name",
               },
             ],
-            next: "styling",
+            next: "hello-again",
           },
           {
-            id: "styling",
-            title: "Second step",
+            id: "hello-again",
+            title: "hello again",
             index: 1,
-            fields: [{ id: "some_title", type: "text" }],
+            fields: [
+              {
+                id: "nick_name",
+                type: "text",
+                required: false,
+                description: "Your nick name",
+              },
+            ],
             previous: "hello-world",
+            next: "ready",
+          },
+          {
+            id: "ready",
+            title: "your site is ready",
+            index: 2,
+            fields: [],
+            previous: "hello-again",
+            next: "optional",
+          },
+          {
+            id: "optional",
+            title: "Optional step",
+            index: 3,
+            fields: [{ id: "some_title", type: "text" }],
+            previous: "ready",
             next: "corporate",
           },
           {
             id: "corporate",
-            index: 2,
+            index: 4,
             fields: [
               { id: "company_name", type: "text", required: true },
-              { id: "styling_preview", type: "component" },
+              { id: "styling_preview", type: "styling-preview" },
             ],
-            previous: "styling",
+            previous: "optional",
           },
         ],
       },
@@ -47,11 +70,11 @@ export default function (helpers) {
   this.put("/wizard/steps/:id", (request) => {
     const body = parsePostData(request.requestBody);
 
-    if (body.fields.full_name === "Server Fail") {
+    if (body.fields?.full_name === "Server Fail") {
       return response(422, {
         errors: [{ field: "full_name", description: "Invalid name" }],
       });
-    } else if (body.fields.company_name === "Server Fail") {
+    } else if (body.fields?.company_name === "Server Fail") {
       return response(422, {
         errors: [
           { field: "company_name", description: "Invalid company name" },

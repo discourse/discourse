@@ -6,7 +6,7 @@ import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import PreloadStore from "discourse/lib/preload-store";
 import getUrl from "discourse-common/lib/get-url";
-import { darkLightDiff, drawHeader } from "wizard/lib/preview";
+import { darkLightDiff, drawHeader } from "../../../lib/preview";
 
 export const LOREM = `
 Lorem ipsum dolor sit amet,

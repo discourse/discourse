@@ -10,9 +10,7 @@ import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
 
 let extraKeyboardShortcutsHelp = {};
@@ -750,8 +748,11 @@ export default {
 
     for (const a of articles) {
       a.classList.remove("selected");
+      a.removeAttribute("tabindex");
     }
     article.classList.add("selected");
+    article.setAttribute("tabindex", "0");
+    article.focus();
 
     this.appEvents.trigger("keyboard:move-selection", {
       articles,
@@ -768,8 +769,7 @@ export default {
       );
     } else if (article.classList.contains("topic-post")) {
       return this._scrollTo(
-        article.querySelector("#post_1") ? 0 : articleTopPosition,
-        { focusTabLoc: true }
+        article.querySelector("#post_1") ? 0 : articleTopPosition
       );
     }
 
@@ -786,25 +786,11 @@ export default {
     this._scrollTo(articleTopPosition - window.innerHeight * scrollRatio);
   },
 
-  _scrollTo(scrollTop, opts = {}) {
+  _scrollTo(scrollTop) {
     window.scrollTo({
       top: scrollTop,
       behavior: "smooth",
     });
-
-    if (opts.focusTabLoc) {
-      window.addEventListener("scroll", this._onScrollEnds, { passive: true });
-    }
-  },
-
-  @bind
-  _onScrollEnds() {
-    window.removeEventListener("scroll", this._onScrollEnds, { passive: true });
-    discourseDebounce(this, this._onScrollEndsCallback, animationDuration);
-  },
-
-  _onScrollEndsCallback() {
-    document.querySelector(".topic-post.selected span.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {
