@@ -96,6 +96,10 @@ export default class Login extends Component {
     return findAll().length > 0 || this.canUsePasskeys;
   }
 
+  get hasNoLoginOptions() {
+    return !this.hasAtLeastOneLoginButton && !this.canLoginLocal;
+  }
+
   get loginButtonLabel() {
     return this.loggingIn ? "login.logging_in" : "login.title";
   }
