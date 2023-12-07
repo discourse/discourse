@@ -12,9 +12,11 @@
     {{#if this.hasNoLoginOptions}}
       <div class={{if this.site.desktopView "login-left-side"}}>
         <div class="login-welcome-header no-login-methods-configured">
+          <h1 class="login-title">{{i18n "login.no_login_methods.title"}}</h1>
+          <img />
           <p class="login-subheader">
             {{html-safe
-              (i18n "login.no_login_methods_configured" basePath=(base-path))
+              (i18n "login.no_login_methods.description" basePath=(base-path))
             }}
           </p>
         </div>
