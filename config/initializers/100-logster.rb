@@ -126,7 +126,7 @@ Discourse.plugins.each do |plugin|
   next if !plugin.metadata.url
 
   Logster.config.project_directories << {
-    path: "#{Rails.root.to_s}/plugins/#{plugin.directory_name}",
+    path: "#{Rails.root}/plugins/#{plugin.directory_name}",
     url: plugin.metadata.url,
   }
 end

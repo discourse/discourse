@@ -314,7 +314,7 @@ class StaffActionLogger
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:change_theme_setting],
-        subject: "#{theme.name}: #{setting_name.to_s}",
+        subject: "#{theme.name}: #{setting_name}",
         previous_value: previous_value,
         new_value: new_value,
       ),

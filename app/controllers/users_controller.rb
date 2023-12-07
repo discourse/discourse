@@ -225,7 +225,7 @@ class UsersController < ApplicationController
       end
     end
 
-    if params[:external_ids]&.is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+    if params[:external_ids].is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
       attributes[:user_associated_accounts] = []
 
       params[:external_ids].each do |provider_name, provider_uid|
@@ -716,7 +716,7 @@ class UsersController < ApplicationController
 
     # Handle associated accounts
     associations = []
-    if params[:external_ids]&.is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
+    if params[:external_ids].is_a?(ActionController::Parameters) && current_user&.admin? && is_api?
       params[:external_ids].each do |provider_name, provider_uid|
         authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
         raise Discourse::InvalidParameters.new(:external_ids) if !authenticator&.is_managed?

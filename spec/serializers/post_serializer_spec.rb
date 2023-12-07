@@ -94,7 +94,7 @@ RSpec.describe PostSerializer do
 
       expect(serializer[:user_suspended]).to eq(true)
 
-      freeze_time (2.months.from_now)
+      freeze_time(2.months.from_now)
 
       expect(serializer[:user_suspended]).to be_nil
     end

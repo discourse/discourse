@@ -15,7 +15,7 @@ module Stylesheet
         file += options[:theme_variables].to_s
         file += importer.theme_import(asset)
       elsif plugin_assets = Importer.plugin_assets[asset.to_s]
-        filename = "#{asset.to_s}.scss"
+        filename = "#{asset}.scss"
         options[:load_paths] = [] if options[:load_paths].nil?
         plugin_assets.each do |src|
           file += File.read src

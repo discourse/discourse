@@ -30,7 +30,7 @@ describe Chat::DirectMessage do
       user3 = Fabricate.build(:user, username: "chatdmregent")
 
       users = [user1, user2, user3].concat(
-        5.times.map.with_index { |i| Fabricate(:user, username: "chatdmuser#{i}") },
+        5.times.map { |i| Fabricate(:user, username: "chatdmuser#{i}") },
       )
       direct_message = Fabricate(:direct_message, users: users)
 

@@ -185,7 +185,7 @@ GEM
     in_threads (1.6.0)
     jmespath (1.6.2)
     json (2.7.1)
-    json-schema (3.0.0)
+    json-schema (4.1.1)
       addressable (>= 2.8)
     json_schemer (2.1.1)
       hana (~> 1.3)
@@ -329,7 +329,7 @@ GEM
       nio4r (~> 2.0)
     racc (1.7.3)
     rack (2.2.8)
-    rack-mini-profiler (3.1.1)
+    rack-mini-profiler (3.2.0)
       rack (>= 1.2.0)
     rack-protection (3.1.0)
       rack (~> 2.2, >= 2.2.4)
@@ -407,9 +407,9 @@ GEM
     rspec-support (3.12.1)
     rss (0.3.0)
       rexml
-    rswag-specs (2.11.0)
+    rswag-specs (2.13.0)
       activesupport (>= 3.1, < 7.2)
-      json-schema (>= 2.2, < 4.0)
+      json-schema (>= 2.2, < 5.0)
       railties (>= 3.1, < 7.2)
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
@@ -459,7 +459,7 @@ GEM
       google-protobuf (~> 3.23)
     sass-embedded (1.66.1-x86_64-linux-gnu)
       google-protobuf (~> 3.23)
-    selenium-webdriver (4.15.0)
+    selenium-webdriver (4.16.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -638,7 +638,7 @@ DEPENDENCIES
   rspec-html-matchers
   rspec-rails
   rss
-  rswag-specs (= 2.11.0)
+  rswag-specs
   rtlcss
   rubocop-discourse
   ruby-prof

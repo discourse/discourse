@@ -58,9 +58,7 @@ RSpec.describe StaticController do
   end
 
   describe "#cdn_asset" do
-    let (:site) {
-      RailsMultisite::ConnectionManagement.current_db
-    }
+    let(:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it "can serve assets" do
       begin

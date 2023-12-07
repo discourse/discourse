@@ -145,7 +145,7 @@ class Plugin::Instance
         begin
           "#{serializer.to_s.classify}Serializer".constantize
         rescue StandardError
-          "#{serializer.to_s}Serializer".constantize
+          "#{serializer}Serializer".constantize
         end
 
       # we have to work through descendants cause serializers may already be baked and cached

@@ -37,7 +37,7 @@ module Jobs
               end
             end
           Rails.logger.warn(
-            "Completed syncing ACL for upload ids in #{time.to_s}. IDs: #{args[:upload_ids].join(", ")}",
+            "Completed syncing ACL for upload ids in #{time}. IDs: #{args[:upload_ids].join(", ")}",
           )
         end
     end
