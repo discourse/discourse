@@ -1682,26 +1682,26 @@ RSpec.describe Guardian do
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
 
-      it "returns false when another user has too low trust level to edit wiki post" do
-        SiteSetting.min_trust_to_edit_wiki_post = 2
+      it "returns false when another user is not member of edit wiki post group" do
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
         post.wiki = true
-        coding_horror.trust_level = 1
+        Group.user_trust_level_change!(coding_horror.id, 1)
 
         expect(Guardian.new(coding_horror).can_edit?(post)).to be_falsey
       end
 
-      it "returns true when another user has adequate trust level to edit wiki post" do
-        SiteSetting.min_trust_to_edit_wiki_post = 2
+      it "returns true when another user is member of edit wiki post group" do
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
         post.wiki = true
-        coding_horror.trust_level = 2
+        Group.user_trust_level_change!(coding_horror.id, 2)
 
         expect(Guardian.new(coding_horror).can_edit?(post)).to be_truthy
       end
 
-      it "returns true for post author even when he has too low trust level to edit wiki post" do
-        SiteSetting.min_trust_to_edit_wiki_post = 2
+      it "returns true for post author even when author is not member of edit wiki post group" do
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
         post.wiki = true
-        post.user.trust_level = 1
+        Group.user_trust_level_change!(post.user, 1)
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end

@@ -445,7 +445,7 @@ RSpec.describe TopicViewSerializer do
     context "with can_edit_tags" do
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_to_edit_wiki_post = 2
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       end
 
       it "returns true when user can edit a wiki topic" do
@@ -456,8 +456,9 @@ RSpec.describe TopicViewSerializer do
         expect(json[:details][:can_edit_tags]).to be_nil
 
         user.update!(trust_level: 2)
+        Group.refresh_automatic_groups!
 
-        json = serialize_topic(topic, user)
+        json = serialize_topic(topic, user.reload)
         expect(json[:details][:can_edit_tags]).to eq(true)
       end
     end
