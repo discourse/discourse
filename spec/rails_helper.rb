@@ -176,6 +176,7 @@ end
 RSpec.configure { |config| config.extend Prefabrication }
 
 PER_SPEC_TIMEOUT_SECONDS = 30
+BROWSER_READ_TIMEOUT = 30
 
 RSpec.configure do |config|
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
@@ -387,7 +388,8 @@ RSpec.configure do |config|
           options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
-    driver_options = { browser: :chrome }
+    client = Selenium::WebDriver::Remote::Http::Default.new(read_timeout: BROWSER_READ_TIMEOUT)
+    driver_options = { browser: :chrome, http_client: client }
 
     if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
       driver_options[:browser] = :remote
