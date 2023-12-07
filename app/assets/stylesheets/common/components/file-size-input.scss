@@ -2,14 +2,14 @@
   display: flex;
 
   .file-size-input {
-    margin-right: 0;
+    flex: 1;
   }
-  .file-size-input input {
-    width: 10px;
-  }
+
   .file-size-unit-selector {
-    padding: 0;
-    border-left: none;
-    margin-bottom: 0;
+    flex: 0 0 8em;
+  }
+
+  .select-kit .select-kit-header {
+    border-left: 0;
   }
 }
