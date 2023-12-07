@@ -43,7 +43,9 @@ export default Component.extend(LoadMore, {
   },
 
   get toggleInTitle() {
-    return !this.bulkSelectHelper?.bulkSelectEnabled && this.canBulkSelect;
+    return (
+      !this.bulkSelectHelper?.bulkSelectEnabled && this.get("canBulkSelect")
+    );
   },
 
   @discourseComputed

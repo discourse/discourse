@@ -49,7 +49,6 @@ class RspecErrorTracker
       RspecErrorTracker.last_exception = e
       raise e
     end
-  ensure
   end
 end
 

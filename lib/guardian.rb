@@ -420,7 +420,7 @@ class Guardian
       end
 
       if (category = object.category) && category.read_restricted
-        return category.groups&.where(automatic: false).any? { |g| can_edit_group?(g) }
+        return category.groups&.where(automatic: false)&.any? { |g| can_edit_group?(g) }
       end
     end
 

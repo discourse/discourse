@@ -268,7 +268,7 @@ class SiteSettings::TypeSupervisor
     if (v = @validators[name])
       validator = v[:class].new(v[:opts])
       unless validator.valid_value?(val)
-        raise Discourse::InvalidParameters, "#{name.to_s}: #{validator.error_message}"
+        raise Discourse::InvalidParameters, "#{name}: #{validator.error_message}"
       end
     end
 

@@ -548,7 +548,7 @@ module PrettyText
 
         if a.classes.include?("lightbox")
           img = a.css("img[src]").first
-          srcset = img&.attributes["srcset"]&.value
+          srcset = img&.attributes&.[]("srcset")&.value
           if srcset
             # if available, use the first image from the srcset here
             # so we get the optimized image instead of the possibly huge original

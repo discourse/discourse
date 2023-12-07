@@ -50,7 +50,7 @@ RSpec.describe SitemapController do
   end
 
   describe "#page" do
-    before { Discourse.cache.delete("sitemap/#{1}/#{SiteSetting.sitemap_page_size}") }
+    before { Discourse.cache.delete("sitemap/1/#{SiteSetting.sitemap_page_size}") }
 
     it "returns a 404 if the sitemap doesn't exist" do
       get "/sitemap_999.xml"

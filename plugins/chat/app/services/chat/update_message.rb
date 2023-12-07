@@ -111,7 +111,7 @@ module Chat
 
     def should_create_revision(new_message, prev_message, guardian)
       max_seconds = SiteSetting.chat_editing_grace_period
-      seconds_since_created = Time.now.to_i - new_message&.created_at.iso8601.to_time.to_i
+      seconds_since_created = Time.now.to_i - new_message&.created_at&.iso8601&.to_time.to_i
       return true if seconds_since_created > max_seconds
 
       max_edited_chars =

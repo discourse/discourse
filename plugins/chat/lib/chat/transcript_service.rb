@@ -250,7 +250,7 @@ module Chat
         thread_id = message_group.first.thread_id
         if thread_id.present?
           thread = Chat::Thread.find(thread_id)
-          if thread&.replies_count > 0
+          if thread&.replies_count&.> 0
             open_bbcode_tag.add_thread_markdown(
               thread_id: thread_id,
               markdown: rendered_thread_markdown.join("\n"),

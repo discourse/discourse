@@ -14,7 +14,6 @@ if ARGV.include?("bbcode-to-md")
 end
 
 require "pg"
-require "set"
 require "redcarpet"
 require "htmlentities"
 
@@ -28,8 +27,6 @@ end
 class BulkImport::Base
   NOW ||= "now()"
   PRIVATE_OFFSET ||= 2**30
-
-  # rubocop:disable Layout/HashAlignment
 
   CHARSET_MAP = {
     "armscii8" => nil,
@@ -69,8 +66,6 @@ class BulkImport::Base
     "ujis" => Encoding::EucJP_ms,
     "utf8" => Encoding::UTF_8,
   }
-
-  # rubocop:enable Layout/HashAlignment
 
   def initialize
     charset = ENV["DB_CHARSET"] || "utf8"

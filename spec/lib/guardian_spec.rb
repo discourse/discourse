@@ -1389,9 +1389,7 @@ RSpec.describe Guardian do
     end
 
     describe "a Post" do
-      let (:guardian) do
-        Guardian.new(user)
-      end
+      let(:guardian) { Guardian.new(user) }
 
       it "isn't allowed when not logged in" do
         expect(Guardian.new(nil).post_can_act?(post, :vote)).to be_falsey
@@ -2519,7 +2517,6 @@ RSpec.describe Guardian do
         end
 
         let(:other_users_post_action) do
-          user.id = user.id
           post.id = 1
 
           a =

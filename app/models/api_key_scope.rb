@@ -279,7 +279,7 @@ class ApiKeyScope < ActiveRecord::Base
           engine_mount_path = nil if engine_mount_path == "/"
           set.routes.each do |route|
             defaults = route.defaults
-            action = "#{defaults[:controller].to_s}##{defaults[:action]}"
+            action = "#{defaults[:controller]}##{defaults[:action]}"
             path = route.path.spec.to_s.gsub(/\(\.:format\)/, "")
             api_supported_path =
               (
