@@ -23,6 +23,10 @@ describe "Topic list focus", type: :system do
     )&.to_i
   end
 
+  def focussed_post_id
+    page.evaluate_script("document.activeElement.closest('.onscreen-post')?.dataset.postId")&.to_i
+  end
+
   it "refocusses last clicked topic when going back to topic list" do
     visit("/latest")
     expect(page).to have_css("body.navigation-topics")
@@ -102,5 +106,16 @@ describe "Topic list focus", type: :system do
     page.go_back
     expect(page).to have_css("body.navigation-topics")
     expect(focussed_topic_id).to eq(oldest_topic.id)
+  end
+
+  it "sets focus to the last post when navigating to a topic" do
+    extra_posts = Fabricate.times(5, :post, topic: topics[2])
+
+    visit("/latest")
+
+    discovery.topic_list.visit_topic_last_reply_via_keyboard(topics[2])
+    find("body").native.send_keys(:tab)
+
+    expect(focussed_post_id).to eq(topics[2].posts.last.id)
   end
 end
