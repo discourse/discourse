@@ -3,6 +3,7 @@
 module Chat
   class Mention < ActiveRecord::Base
     self.table_name = "chat_mentions"
+    self.ignored_columns = ["notification_id"]
 
     belongs_to :user
     belongs_to :chat_message, class_name: "Chat::Message"
