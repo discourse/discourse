@@ -531,15 +531,7 @@ export default createWidget("header", {
           );
         }
       } else if (state.hamburgerVisible) {
-        if (
-          attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
-          !attrs.sidebarEnabled ||
-          this.site.narrowDesktopView
-        ) {
-          panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
-        } else {
-          panels.push(this.attach("hamburger-menu"));
-        }
+        panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
       } else if (state.userVisible) {
         panels.push(this.attach("revamped-user-menu-wrapper", {}));
       }
