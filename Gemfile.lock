@@ -123,8 +123,6 @@ GEM
     crass (1.0.6)
     css_parser (1.16.0)
       addressable
-    dartsass-ruby (3.0.2)
-      sass-embedded (~> 1.54, < 1.67)
     date (3.3.4)
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
@@ -162,7 +160,6 @@ GEM
     gc_tracer (1.5.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (3.25.1)
     google-protobuf (3.25.1-aarch64-linux)
     google-protobuf (3.25.1-arm64-darwin)
     google-protobuf (3.25.1-x86_64-darwin)
@@ -195,7 +192,6 @@ GEM
     jwt (2.7.1)
     kgio (2.11.4)
     language_server-protocol (3.17.0.3)
-    libv8-node (18.16.0.0)
     libv8-node (18.16.0.0-aarch64-linux)
     libv8-node (18.16.0.0-arm64-darwin)
     libv8-node (18.16.0.0-x86_64-darwin)
@@ -230,7 +226,6 @@ GEM
       rack (>= 1.1.3)
     method_source (1.0.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.5)
     mini_racer (0.8.0)
       libv8-node (~> 18.16.0.0)
     mini_scheduler (0.16.0)
@@ -258,9 +253,6 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.15.5)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.15.5-aarch64-linux)
       racc (~> 1.4)
     nokogiri (1.15.5-arm64-darwin)
@@ -450,19 +442,18 @@ GEM
     sanitize (6.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sass-embedded (1.66.1)
+    sass-embedded (1.69.5-aarch64-linux-gnu)
       google-protobuf (~> 3.23)
-      rake (>= 13.0.0)
-    sass-embedded (1.66.1-aarch64-linux-gnu)
+    sass-embedded (1.69.5-arm64-darwin)
       google-protobuf (~> 3.23)
-    sass-embedded (1.66.1-arm64-darwin)
+    sass-embedded (1.69.5-x86_64-darwin)
       google-protobuf (~> 3.23)
-    sass-embedded (1.66.1-x86_64-darwin)
-      google-protobuf (~> 3.23)
-    sass-embedded (1.66.1-x86_64-linux-gnu)
+    sass-embedded (1.69.5-x86_64-linux-gnu)
       google-protobuf (~> 3.23)
     selenium-devtools (0.120.0)
       selenium-webdriver (~> 4.2)
+    sassc-embedded (1.68.6)
+      sass-embedded (~> 1.68)
     selenium-webdriver (4.16.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -527,7 +518,7 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin-20
-  ruby
+  arm64-darwin-22
   x86_64-darwin-18
   x86_64-darwin-19
   x86_64-darwin-20
@@ -559,7 +550,6 @@ DEPENDENCIES
   cose
   cppjieba_rb
   css_parser
-  dartsass-ruby
   diffy
   digest
   discourse-fonts
@@ -650,6 +640,7 @@ DEPENDENCIES
   rubyzip
   sanitize
   selenium-devtools
+  sassc-embedded
   selenium-webdriver (~> 4.14)
   shoulda-matchers!
   sidekiq

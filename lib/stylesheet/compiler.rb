@@ -56,7 +56,6 @@ module Stylesheet
           source_map_file: source_map_file,
           source_map_contents: true,
           load_paths: load_paths,
-          validate_source_map_path: false,
         )
 
       result = engine.render
