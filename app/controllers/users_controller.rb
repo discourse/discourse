@@ -1751,7 +1751,11 @@ class UsersController < ApplicationController
       raise Discourse::NotFound
     end
 
-    raise Discourse::InvalidAccess.new unless current_user && secure_session_confirmed?
+    raise Discourse::InvalidAccess.new if !current_user
+
+    just_created = current_user.created_at > 5.minutes.ago
+
+    raise Discourse::InvalidAccess.new unless just_created || secure_session_confirmed?
   end
 
   def revoke_account
