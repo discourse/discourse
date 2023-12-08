@@ -84,8 +84,11 @@ export function highlightPost(postNumber) {
   }
 
   element.classList.add("highlighted");
-  element.setAttribute("tabindex", "0");
-  element.focus();
+
+  if (postNumber > 1) {
+    element.setAttribute("tabindex", "0");
+    element.focus();
+  }
 
   const removeHighlighted = function () {
     element.classList.remove("highlighted");
