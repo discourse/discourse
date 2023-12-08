@@ -25,6 +25,9 @@ import I18n from "discourse-i18n";
 
 acceptance("Topic", function (needs) {
   needs.user();
+  needs.settings({
+    post_menu: "read|like|share|flag|edit|bookmark|delete|admin|reply|copyLink",
+  });
   needs.pretender((server, helper) => {
     server.get("/c/2/visible_groups.json", () =>
       helper.response(200, {
@@ -85,6 +88,16 @@ acceptance("Topic", function (needs) {
     await click(".topic-post:first-child button.share");
 
     assert.ok(exists(".share-topic-modal"), "it shows the share modal");
+  });
+
+  test("Copy Link Button", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:first-child button.post-action-menu__copy-link");
+
+    assert.ok(
+      exists(".post-action-menu__copy-link-checkmark"),
+      "it shows the Link Copied! message"
+    );
   });
 
   test("Showing and hiding the edit controls", async function (assert) {

@@ -4,6 +4,10 @@ import { h } from "virtual-dom";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import {
+  recentlyCopiedPostLink,
+  showCopyPostLinkAlert,
+} from "discourse/lib/copy-post-link";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import {
@@ -12,13 +16,14 @@ import {
 } from "discourse/lib/settings";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
-import { formatUsername } from "discourse/lib/utilities";
+import { clipboardCopy, formatUsername } from "discourse/lib/utilities";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import hbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import { isTesting } from "discourse-common/config/environment";
 import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -640,6 +645,38 @@ createWidget("post-contents", {
           model: { category: topic.category, topic, post },
         });
     });
+  },
+
+  copyLink() {
+    // Copying the link to clipboard on mobile doesn't make sense.
+    if (this.site.mobileView) {
+      return this.share();
+    }
+
+    const post = this.findAncestorModel();
+    const postUrl = post.shareUrl;
+    const postId = post.id;
+
+    // Do nothing if the user just copied the link.
+    if (recentlyCopiedPostLink(postId)) {
+      return;
+    }
+
+    const shareUrl = new URL(postUrl, window.origin).toString();
+
+    // Can't use clipboard in JS tests.
+    if (isTesting()) {
+      return showCopyPostLinkAlert(postId);
+    }
+
+    clipboardCopy(shareUrl)
+      .then(() => {
+        showCopyPostLinkAlert(postId);
+      })
+      .catch(() => {
+        // If the clipboard copy fails for some reason, may as well show the old modal.
+        this.share();
+      });
   },
 
   init() {

@@ -331,9 +331,18 @@ registerButton("replies", (attrs, state, siteSettings) => {
 registerButton("share", () => {
   return {
     action: "share",
+    icon: "d-post-share",
     className: "share",
     title: "post.controls.share",
+  };
+});
+
+registerButton("copyLink", () => {
+  return {
+    action: "copyLink",
     icon: "d-post-share",
+    className: "post-action-menu__copy-link",
+    title: "post.controls.copy_title",
   };
 });
 
