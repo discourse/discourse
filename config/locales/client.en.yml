@@ -2271,7 +2271,7 @@ en:
         security_key: "Use a security key instead"
       no_login_methods:
         title: "No login methods"
-        description: "No login methods are configured. Administrators can visit <a href='%{basePath}/u/admin-login' target='_blank'>%{basePath}/u/admin-login</a> to reconfigure the site."
+        description: "No login methods are configured. Administrators can visit <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> to reconfigure the site."
     invites:
       accept_title: "Invitation"
       welcome_to: "Welcome to %{site_name}!"

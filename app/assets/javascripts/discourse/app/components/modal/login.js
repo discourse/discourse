@@ -16,6 +16,7 @@ import {
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
 export default class Login extends Component {
@@ -108,6 +109,10 @@ export default class Login extends Component {
     return (
       this.args.model.canSignUp && !this.loggingIn && !this.showSecondFactor
     );
+  }
+
+  get adminLoginPath() {
+    return getURL("/u/admin-login");
   }
 
   @action

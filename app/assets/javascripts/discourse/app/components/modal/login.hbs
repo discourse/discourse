@@ -16,7 +16,7 @@
           <img />
           <p class="login-subheader">
             {{html-safe
-              (i18n "login.no_login_methods.description" basePath=(base-path))
+              (i18n "login.no_login_methods.description" (hash adminLoginPath=this.adminLoginPath))
             }}
           </p>
         </div>
