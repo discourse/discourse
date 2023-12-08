@@ -81,6 +81,15 @@
         float: none;
       }
     }
+    &:not(.show-avatars) {
+      li.notification {
+        padding: 0.5em 0;
+
+        .d-icon {
+          font-size: var(--font-up-2);
+        }
+      }
+    }
   }
 
   .expand-item,
