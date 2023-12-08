@@ -86,7 +86,7 @@ RSpec.describe ShrinkUploadedImage do
     it "returns false when the upload is above the size limit" do
       post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
       post.link_post_uploads
-      SiteSetting.max_image_size_kb = 0.001 # 1 byte
+      SiteSetting.max_image_size_kb = 0
 
       result =
         ShrinkUploadedImage.new(
