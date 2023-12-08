@@ -2270,6 +2270,9 @@ en:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
         security_key: "Use a security key instead"
+      no_login_methods:
+        title: "No login methods"
+        description: "No login methods are configured. Administrators can visit <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> to reconfigure the site."
     invites:
       accept_title: "Invitation"
       welcome_to: "Welcome to %{site_name}!"

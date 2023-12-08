@@ -117,3 +117,20 @@ acceptance("Modal - Login - Passkeys on mobile", function (needs) {
     assert.dom(".dialog-body").exists();
   });
 });
+
+acceptance("Modal - Login - With no way to login", function (needs) {
+  needs.settings({
+    enable_local_logins: false,
+    enable_facebook_logins: false,
+  });
+  needs.site({ auth_providers: [] });
+
+  test("Displays a helpful message", async function (assert) {
+    await visit("/");
+    await click("header .login-button");
+
+    assert.dom("#login-account-name").doesNotExist();
+    assert.dom("#login-button").doesNotExist();
+    assert.dom(".no-login-methods-configured").exists();
+  });
+});
