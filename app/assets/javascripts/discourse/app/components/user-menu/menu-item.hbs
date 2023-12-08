@@ -27,7 +27,7 @@
 
     <PluginOutlet @name="menu-item-end" @outletArgs={{hash item=this}}>
       {{#if this.endComponent}}
-        <this.endComponent @data={{endComponentArgs}} />
+        <this.endComponent @data={{this.endComponentArgs}} />
       {{/if}}
     </PluginOutlet>
   </a>

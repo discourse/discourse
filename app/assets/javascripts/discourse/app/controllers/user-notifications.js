@@ -33,15 +33,15 @@ export default Controller.extend({
 
   @discourseComputed("model.content.@each")
   items() {
-    return this.model.map((n) => {
+    return this.model.map((notification) => {
       const props = {
         appEvents: this.appEvents,
         currentUser: this.currentUser,
         siteSettings: this.siteSettings,
         site: this.site,
-        notification: n,
+        notification,
         endComponent: RelativeDate,
-        endComponentArgs: { date: n.created_at },
+        endComponentArgs: { date: notification.created_at },
       };
       return new UserMenuNotificationItem(props);
     });
