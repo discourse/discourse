@@ -6,10 +6,13 @@ export default DiscourseRoute.extend(ViewingActionType, {
   controllerName: "user-notifications",
   queryParams: { filter: { refreshModel: true } },
 
-  async model(params) {
+  model(params) {
     const username = this.modelFor("user").get("username");
 
-    if (this.currentUser.username === username || this.currentUser.admin) {
+    if (
+      this.get("currentUser.username") === username ||
+      this.get("currentUser.admin")
+    ) {
       return this.store.find("notification", {
         username,
         filter: params.filter,

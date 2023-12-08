@@ -5,11 +5,21 @@ import UserMenuBaseItem from "discourse/lib/user-menu/base-item";
 import getURL from "discourse-common/lib/get-url";
 
 export default class UserMenuNotificationItem extends UserMenuBaseItem {
-  constructor({ notification, appEvents, currentUser, siteSettings, site }) {
+  constructor({
+    notification,
+    endComponent,
+    endComponentArgs,
+    appEvents,
+    currentUser,
+    siteSettings,
+    site,
+  }) {
     super(...arguments);
     this.appEvents = appEvents;
-    this.notification = notification;
     this.currentUser = currentUser;
+    this.endComponent = endComponent;
+    this.endComponentArgs = endComponentArgs;
+    this.notification = notification;
     this.siteSettings = siteSettings;
     this.site = site;
 

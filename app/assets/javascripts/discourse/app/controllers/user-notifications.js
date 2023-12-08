@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
+import RelativeDate from "discourse/components/relative-date";
 import { ajax } from "discourse/lib/ajax";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import getURL from "discourse-common/lib/get-url";
@@ -39,6 +40,8 @@ export default Controller.extend({
         siteSettings: this.siteSettings,
         site: this.site,
         notification: n,
+        endComponent: RelativeDate,
+        endComponentArgs: { date: n.created_at },
       };
       return new UserMenuNotificationItem(props);
     });
@@ -51,12 +54,12 @@ export default Controller.extend({
     );
   },
 
-  @discourseComputed("isFiltered", "model.length")
+  @discourseComputed("isFiltered", "model.content.length")
   doesNotHaveNotifications(isFiltered, contentLength) {
     return !isFiltered && contentLength === 0;
   },
 
-  @discourseComputed("isFiltered", "model.length")
+  @discourseComputed("isFiltered", "model.content.length")
   nothingFound(isFiltered, contentLength) {
     return isFiltered && contentLength === 0;
   },
@@ -73,7 +76,7 @@ export default Controller.extend({
 
   async markRead() {
     await ajax("/notifications/mark-read", { type: "PUT" });
-    this.model.forEach((item) => item.notification.set("read", true));
+    this.model.forEach((notification) => notification.set("read", true));
   },
 
   actions: {

@@ -46,7 +46,7 @@
     color: var(--primary);
   }
 
-  .time,
+  .relative-date,
   .delete-info,
   .draft-type {
     line-height: var(--line-height-small);
@@ -71,12 +71,12 @@
 
   .user-notifications-list {
     li.notification {
-      padding: 0.5em 0;
+      padding: 0.25em 0;
 
       a {
         align-items: center;
       }
-      .time {
+      .relative-date {
         margin-left: auto;
         float: none;
       }
