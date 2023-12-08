@@ -2,6 +2,9 @@
   .d-modal.login-modal,
   .d-modal.create-account {
     .d-modal {
+      &__container {
+        width: 100%;
+      }
       &__body {
         flex-direction: column;
         gap: unset;
