@@ -450,10 +450,10 @@ GEM
       google-protobuf (~> 3.23)
     sass-embedded (1.69.5-x86_64-linux-gnu)
       google-protobuf (~> 3.23)
-    selenium-devtools (0.120.0)
-      selenium-webdriver (~> 4.2)
     sassc-embedded (1.68.6)
       sass-embedded (~> 1.68)
+    selenium-devtools (0.120.0)
+      selenium-webdriver (~> 4.2)
     selenium-webdriver (4.16.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -639,8 +639,8 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
-  selenium-devtools
   sassc-embedded
+  selenium-devtools
   selenium-webdriver (~> 4.14)
   shoulda-matchers!
   sidekiq
