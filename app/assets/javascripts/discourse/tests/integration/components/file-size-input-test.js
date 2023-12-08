@@ -69,7 +69,7 @@ module("Integration | Component | file-size-input", function (hooks) {
 
     assert.equal(
       this.get("message"),
-      "12 MB [en.file_size_input.error.size_too_large] 8 MB",
+      "12 MB is greater than the max allowed 8 MB",
       "A message is showed when the input is greater than the max"
     );
 
