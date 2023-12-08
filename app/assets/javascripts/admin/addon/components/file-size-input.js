@@ -58,9 +58,9 @@ export default class FileSizeInput extends Component {
   @computed("dropdownOptions")
   get dropdownOptions() {
     return [
-      { label: "kb", value: "kb" },
-      { label: "mb", value: "mb" },
-      { label: "gb", value: "gb" },
+      { label: I18n.t("number.human.storage_units.units.kb"), value: "kb" },
+      { label: I18n.t("number.human.storage_units.units.mb"), value: "mb" },
+      { label: I18n.t("number.human.storage_units.units.gb"), value: "gb" },
     ];
   }
 
@@ -86,7 +86,9 @@ export default class FileSizeInput extends Component {
     if (this.fileSizeKB > this.max) {
       this.updateValidationMessage(
         I18n.toHumanSize(this.fileSizeKB * 1024) +
-          " is greater than the max allowed " +
+          " " +
+          I18n.t("file_size_input.error.size_too_large") +
+          " " +
           I18n.toHumanSize(this.max * 1024)
       );
       // Removes the green save checkmark button
@@ -99,36 +101,23 @@ export default class FileSizeInput extends Component {
 
   @action
   onFileSizeUnitChange(newUnit) {
-    this.set("unitChanged", true);
     if (this.fileSizeUnit === "kb" && newUnit === "mb") {
-      this.fileSize = this.get("sizeValue");
-      let calculatedSize = this.fileSize / 1024;
-      this.set("sizeValue", calculatedSize);
+      this.set("sizeValue", this.get("sizeValue") / 1024);
     }
     if (this.fileSizeUnit === "kb" && newUnit === "gb") {
-      this.fileSize = this.get("sizeValue");
-      let calculatedSize = this.fileSize / 1024 / 1024;
-      this.set("sizeValue", calculatedSize);
+      this.set("sizeValue", this.get("sizeValue") / 1024 / 1024);
     }
     if (this.fileSizeUnit === "mb" && newUnit === "kb") {
-      this.fileSize = this.get("sizeValue");
-      let calculatedSize = this.fileSize * 1024;
-      this.set("sizeValue", calculatedSize);
+      this.set("sizeValue", this.get("sizeValue") * 1024);
     }
     if (this.fileSizeUnit === "mb" && newUnit === "gb") {
-      this.fileSize = this.get("sizeValue");
-      let calculatedSize = this.fileSize / 1024;
-      this.set("sizeValue", calculatedSize);
+      this.set("sizeValue", this.get("sizeValue") / 1024);
     }
     if (this.fileSizeUnit === "gb" && newUnit === "mb") {
-      this.fileSize = this.get("sizeValue");
-      let calculatedSize = this.fileSize * 1024;
-      this.set("sizeValue", calculatedSize);
+      this.set("sizeValue", this.get("sizeValue") * 1024);
     }
     if (this.fileSizeUnit === "gb" && newUnit === "kb") {
-      this.fileSize = this.get("sizeValue");
-      let calculatedSize = this.fileSize * 1024 * 1024;
-      this.set("sizeValue", calculatedSize);
+      this.set("sizeValue", this.get("sizeValue") * 1024 * 1024);
     }
     this.set("fileSizeUnit", newUnit);
   }
