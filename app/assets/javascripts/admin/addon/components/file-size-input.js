@@ -33,6 +33,7 @@ export default class FileSizeInput extends Component {
   init() {
     super.init(...arguments);
     let sizeValueKB = this.get("sizeValueKB");
+    this.set("originalSizeKB", sizeValueKB);
     this.set("sizeValue", sizeValueKB);
     this._defaultUnit(sizeValueKB);
   }
@@ -88,6 +89,8 @@ export default class FileSizeInput extends Component {
           " is greater than the max allowed " +
           I18n.toHumanSize(this.max * 1024)
       );
+      // Removes the green save checkmark button
+      this.onChangeSize(this.originalSizeKB);
     } else {
       this.onChangeSize(this.fileSizeKB);
       this.updateValidationMessage(null);
