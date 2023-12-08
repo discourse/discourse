@@ -819,10 +819,10 @@ export default {
       );
     } else if (document.querySelector(".topic-list")) {
       return document.querySelectorAll(".topic-list .topic-list-item");
-    } else if ((categoriesTopicsList = this.categoriesTopicsList())) {
-      return categoriesTopicsList;
     } else if (document.querySelector(".search-results")) {
       return document.querySelectorAll(".search-results .fps-result");
+    } else if ((categoriesTopicsList = this.categoriesTopicsList())) {
+      return categoriesTopicsList;
     }
   },
 
