@@ -11,8 +11,8 @@
       {{i18n "groups.notifications.watching.title"}}</label>
 
     <CategorySelector
-      @categoryIds={{this.model.watching_category_ids}}
-      @blockedCategoryIds={{this.selectedCategoryIds}}
+      @categories={{this.model.watchingCategories}}
+      @blockedCategories={{this.selectedCategories}}
       @onChange={{action (mut this.model.watchingCategories)}}
     />
 
@@ -26,8 +26,8 @@
       {{i18n "groups.notifications.tracking.title"}}</label>
 
     <CategorySelector
-      @categoryIds={{this.model.tracking_category_ids}}
-      @blockedCategoryIds={{this.selectedCategoryIds}}
+      @categories={{this.model.trackingCategories}}
+      @blockedCategories={{this.selectedCategories}}
       @onChange={{action (mut this.model.trackingCategories)}}
     />
 
@@ -41,8 +41,8 @@
       {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
     <CategorySelector
-      @categoryIds={{this.model.watching_first_post_category_ids}}
-      @blockedCategoryIds={{this.selectedCategoryIds}}
+      @categories={{this.model.watchingFirstPostCategories}}
+      @blockedCategories={{this.selectedCategories}}
       @onChange={{action (mut this.model.watchingFirstPostCategories)}}
     />
 
@@ -58,8 +58,8 @@
       {{i18n "groups.notifications.regular.title"}}</label>
 
     <CategorySelector
-      @categoryIds={{this.model.regular_category_ids}}
-      @blockedCategoryIds={{this.selectedCategoryIds}}
+      @categories={{this.model.regularCategories}}
+      @blockedCategories={{this.selectedCategories}}
       @onChange={{action (mut this.model.regularCategories)}}
     />
 
@@ -73,8 +73,8 @@
       {{i18n "groups.notifications.muted.title"}}</label>
 
     <CategorySelector
-      @categoryIds={{this.model.muted_category_ids}}
-      @blockedCategoryIds={{this.selectedCategoryIds}}
+      @categories={{this.model.mutedCategories}}
+      @blockedCategories={{this.selectedCategories}}
       @onChange={{action (mut this.model.mutedCategories)}}
     />
 
