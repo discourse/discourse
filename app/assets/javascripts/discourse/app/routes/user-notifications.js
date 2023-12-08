@@ -16,7 +16,6 @@ export default DiscourseRoute.extend(ViewingActionType, {
       return this.store.find("notification", {
         username,
         filter: params.filter,
-        limit: 10,
       });
     }
   },
