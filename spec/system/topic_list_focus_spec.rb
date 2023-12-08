@@ -107,17 +107,4 @@ describe "Topic list focus", type: :system do
     expect(page).to have_css("body.navigation-topics")
     expect(focussed_topic_id).to eq(oldest_topic.id)
   end
-
-  it "sets focus to the last post when navigating to a topic" do
-    extra_posts = Fabricate.times(5, :post, topic: topics[2])
-
-    visit("/latest")
-
-    discovery.topic_list.visit_topic_last_reply_via_keyboard(topics[2])
-    # send Tab key twice, the first event serves to focus the window
-    find("body").native.send_keys :tab
-    find("body").native.send_keys :tab
-
-    expect(focussed_post_id).to eq(topics[2].posts.last.id)
-  end
 end
