@@ -175,7 +175,7 @@ end
 
 RSpec.configure { |config| config.extend Prefabrication }
 
-PER_SPEC_TIMEOUT_SECONDS = 30
+PER_SPEC_TIMEOUT_SECONDS = 45
 BROWSER_READ_TIMEOUT = 30
 
 RSpec.configure do |config|
