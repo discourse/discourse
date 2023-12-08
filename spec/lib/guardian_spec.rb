@@ -1226,9 +1226,13 @@ RSpec.describe Guardian do
       end
 
       it "is false if user has not met minimum trust level" do
+        SiteSetting.min_trust_to_create_topic = 1
         SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(
-          Guardian.new(Fabricate(:user, trust_level: 0)).can_create?(Topic, plain_category),
+          Guardian.new(Fabricate(:user, trust_level: 0, refresh_auto_groups: true)).can_create?(
+            Topic,
+            plain_category,
+          ),
         ).to be_falsey
       end
 
@@ -2198,6 +2202,7 @@ RSpec.describe Guardian do
     end
 
     it "returns false for user with insufficient trust level" do
+      SiteSetting.min_trust_to_create_topic = 3
       SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
       expect(Guardian.new(user).can_create_topic?(topic)).to eq(false)
     end

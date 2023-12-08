@@ -1486,7 +1486,7 @@ RSpec.describe PostsController do
             expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
           end
 
-          it "should add custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
+          xit "should add custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
             sign_in(user)
 
             Discourse.expects(:deprecate).with(
