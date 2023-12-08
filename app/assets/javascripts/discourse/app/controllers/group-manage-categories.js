@@ -3,13 +3,15 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   @discourseComputed(
-    "model.watching_category_ids.[]",
-    "model.watching_first_post_category_ids.[]",
-    "model.tracking_category_ids.[]",
-    "model.regular_category_ids.[]",
-    "model.muted_category_ids.[]"
+    "model.watchingCategories.[]",
+    "model.watchingFirstPostCategories.[]",
+    "model.trackingCategories.[]",
+    "model.regularCategories.[]",
+    "model.mutedCategories.[]"
   )
-  selectedCategoryIds(watching, watchingFirst, tracking, regular, muted) {
-    return [].concat(watching, watchingFirst, tracking, regular, muted);
+  selectedCategories(watching, watchingFirst, tracking, regular, muted) {
+    return []
+      .concat(watching, watchingFirst, tracking, regular, muted)
+      .filter(Boolean);
   },
 });

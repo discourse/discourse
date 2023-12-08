@@ -1,4 +1,5 @@
-import { computed, defineProperty } from "@ember/object";
+import { computed } from "@ember/object";
+import { mapBy } from "@ember/object/computed";
 import Category from "discourse/models/category";
 import { makeArray } from "discourse-common/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -20,47 +21,12 @@ export default MultiSelectComponent.extend({
   init() {
     this._super(...arguments);
 
-    if (this.categories && !this.categoryIds) {
-      defineProperty(
-        this,
-        "categoryIds",
-        computed("categories.[]", function () {
-          return this.categories.map((c) => c.id);
-        })
-      );
-    }
-
-    if (this.blockedCategories && !this.blockedCategoryIds) {
-      defineProperty(
-        this,
-        "blockedCategoryIds",
-        computed("blockedCategories.[]", function () {
-          return this.blockedCategories.map((c) => c.id);
-        })
-      );
-    } else if (!this.blockedCategoryIds) {
-      this.set("blockedCategoryIds", []);
-    }
-
-    if (this.siteSettings.lazy_load_categories) {
-      const allCategoryIds = [
-        ...new Set([...this.categoryIds, ...this.blockedCategoryIds]),
-      ];
-
-      if (!Category.hasAsyncFoundAll(allCategoryIds)) {
-        Category.asyncFindByIds(allCategoryIds).then(() => {
-          this.notifyPropertyChange("categoryIds");
-          this.notifyPropertyChange("blockedCategoryIds");
-        });
-      }
+    if (!this.blockedCategories) {
+      this.set("blockedCategories", []);
     }
   },
 
-  content: computed("categoryIds.[]", "blockedCategoryIds.[]", function () {
-    if (this.siteSettings.lazy_load_categories) {
-      return Category.findByIds(this.categoryIds);
-    }
-
+  content: computed("categories.[]", "blockedCategories.[]", function () {
     return Category.list().filter((category) => {
       if (category.isUncategorizedCategory) {
         if (this.options?.allowUncategorized !== undefined) {
@@ -71,15 +37,13 @@ export default MultiSelectComponent.extend({
       }
 
       return (
-        this.categoryIds.includes(category.id) ||
-        !this.blockedCategoryIds.includes(category.id)
+        this.categories.includes(category) ||
+        !this.blockedCategories.includes(category)
       );
     });
   }),
 
-  value: computed("categoryIds.[]", function () {
-    return this.categoryIds;
-  }),
+  value: mapBy("categories", "id"),
 
   modifyComponentForRow() {
     return "category-row";
@@ -91,8 +55,8 @@ export default MultiSelectComponent.extend({
     }
 
     const rejectCategoryIds = new Set([
-      ...(this.categoryIds || []),
-      ...(this.blockedCategoryIds || []),
+      ...this.categories.map((c) => c.id),
+      ...this.blockedCategories.map((c) => c.id),
     ]);
 
     return await Category.asyncSearch(filter, {

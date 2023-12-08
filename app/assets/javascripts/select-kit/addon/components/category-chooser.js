@@ -31,6 +31,8 @@ export default ComboBoxComponent.extend({
       this.siteSettings.lazy_load_categories &&
       !Category.hasAsyncFoundAll([this.value])
     ) {
+      // eslint-disable-next-line no-console
+      console.warn("Category selected with category-chooser was not loaded");
       Category.asyncFindByIds([this.value]).then(() => {
         this.notifyPropertyChange("value");
       });

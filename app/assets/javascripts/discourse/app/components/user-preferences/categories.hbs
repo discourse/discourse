@@ -9,8 +9,8 @@
         }}</a>
     {{/if}}
     <CategorySelector
-      @categoryIds={{@model.watched_category_ids}}
-      @blockedCategoryIds={{@selectedCategoryIds}}
+      @categories={{@model.watchedCategories}}
+      @blockedCategories={{@selectedCategories}}
       @onChange={{action (mut @model.watchedCategories)}}
     />
   </div>
@@ -26,8 +26,8 @@
         }}</a>
     {{/if}}
     <CategorySelector
-      @categoryIds={{@model.tracked_category_ids}}
-      @blockedCategoryIds={{@selectedCategoryIds}}
+      @categories={{@model.trackedCategories}}
+      @blockedCategories={{@selectedCategories}}
       @onChange={{action (mut @model.trackedCategories)}}
     />
   </div>
@@ -41,8 +41,8 @@
     <label>{{d-icon "d-watching-first"}}
       {{i18n "user.watched_first_post_categories"}}</label>
     <CategorySelector
-      @categoryIds={{@model.watched_first_post_category_ids}}
-      @blockedCategoryIds={{@selectedCategoryIds}}
+      @categories={{@model.watchedFirstPostCategories}}
+      @blockedCategories={{@selectedCategories}}
       @onChange={{action (mut @model.watchedFirstPostCategories)}}
     />
   </div>
@@ -56,8 +56,8 @@
     >
       <label>{{d-icon "d-regular"}} {{i18n "user.regular_categories"}}</label>
       <CategorySelector
-        @categoryIds={{@model.regular_category_ids}}
-        @blockedCategoryIds={{@selectedCategoryIds}}
+        @categories={{@model.regularCategories}}
+        @blockedCategories={{@selectedCategories}}
         @onChange={{action (mut @model.regularCategories)}}
       />
     </div>
@@ -75,8 +75,8 @@
       {{/if}}
 
       <CategorySelector
-        @categoryIds={{@model.muted_category_ids}}
-        @blockedCategoryIds={{@selectedCategoryIds}}
+        @categories={{@model.mutedCategories}}
+        @blockedCategories={{@selectedCategories}}
         @onChange={{action (mut @model.mutedCategories)}}
       />
     </div>

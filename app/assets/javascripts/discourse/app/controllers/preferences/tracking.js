@@ -122,22 +122,24 @@ export default class extends Controller {
   }
 
   @computed(
-    "model.watched_category_ids",
-    "model.watched_first_post_category_ids",
-    "model.tracked_category_ids",
-    "model.muted_category_ids",
-    "model.regular_category_ids",
+    "model.watchedCategories",
+    "model.watchedFirstPostCategories",
+    "model.trackedCategories",
+    "model.mutedCategories",
+    "model.regularCategories",
     "siteSettings.mute_all_categories_by_default"
   )
-  get selectedCategoryIds() {
-    return [].concat(
-      this.model.watched_category_ids,
-      this.model.watched_first_post_category_ids,
-      this.model.tracked_category_ids,
-      this.siteSettings.mute_all_categories_by_default
-        ? this.model.regular_category_ids
-        : this.model.muted_category_ids
-    );
+  get selectedCategories() {
+    return []
+      .concat(
+        this.model.watchedCategories,
+        this.model.watchedFirstPostCategories,
+        this.model.trackedCategories,
+        this.siteSettings.mute_all_categories_by_default
+          ? this.model.regularCategories
+          : this.model.mutedCategories
+      )
+      .filter(Boolean);
   }
 
   @computed("siteSettings.remove_muted_tags_from_latest")
