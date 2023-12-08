@@ -68,7 +68,7 @@ export default {
         id: 5678,
         notification_type: NOTIFICATION_TYPES.membership_request_accepted,
         acting_user_avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png",
-        read: true,
+        read: false,
         post_number: null,
         topic_id: null,
         slug: null,
