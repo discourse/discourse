@@ -16,7 +16,7 @@ module("Integration | Component | file-size-input", function (hooks) {
     await render(hbs`
       <FileSizeInput
         @sizeValueKB={{readonly this.value}}
-        @classNames="file-size-input-test"
+        class="file-size-input-test"
         @onChangeSize={{this.onChangeSize}}
         @updateValidationMessage={{this.updateValidationMessage}}
         @max=4096
@@ -29,18 +29,18 @@ module("Integration | Component | file-size-input", function (hooks) {
     await selectKit(".file-size-unit-selector").expand();
     await selectKit(".file-size-unit-selector").selectRowByValue("kb");
 
-    let fileSize = this.element.querySelector(".file-size-input").value;
-
-    assert.equal(fileSize, 4096, "value is changed when the unit is changed");
+    assert
+      .dom(".file-size-input")
+      .hasValue("4096", "value is change when then unit is changed");
 
     await click(".file-size-unit-selector");
 
     await selectKit(".file-size-unit-selector").expand();
     await selectKit(".file-size-unit-selector").selectRowByValue("mb");
 
-    fileSize = this.element.querySelector(".file-size-input").value;
-
-    assert.equal(fileSize, 4, "value is changed when the unit is changed");
+    assert
+      .dom(".file-size-input")
+      .hasValue("4", "value is changed when the unit is changed");
   });
 
   test("file size input error message", async function (assert) {
@@ -57,7 +57,7 @@ module("Integration | Component | file-size-input", function (hooks) {
     await render(hbs`
       <FileSizeInput
         @sizeValueKB={{readonly this.value}}
-        @classNames="file-size-input-test"
+        class="file-size-input-test"
         @onChangeSize={{this.onChangeSize}}
         @updateValidationMessage={{this.updateValidationMessage}}
         @max={{this.max}}
@@ -69,7 +69,7 @@ module("Integration | Component | file-size-input", function (hooks) {
 
     assert.equal(
       this.get("message"),
-      "12 MB is greater than the max allowed 8 MB",
+      "12 MB [en.file_size_input.error.size_too_large] 8 MB",
       "A message is showed when the input is greater than the max"
     );
 

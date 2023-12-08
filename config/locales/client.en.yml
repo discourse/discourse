@@ -2344,6 +2344,10 @@ en:
       from: From
       to: To
 
+    file_size_input:
+      error:
+        size_too_large: is greater than the max allowed
+
     emoji_picker:
       filter_placeholder: Search for emoji
       smileys_&_emotion: Smileys and Emotion
