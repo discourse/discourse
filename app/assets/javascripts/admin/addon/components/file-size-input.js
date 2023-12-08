@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
+import I18n from "discourse-i18n";
 
 const ALLOWED_KEYS = [
   "Enter",
@@ -33,7 +34,20 @@ export default class FileSizeInput extends Component {
     super.init(...arguments);
     let sizeValueKB = this.get("sizeValueKB");
     this.set("sizeValue", sizeValueKB);
+    this._defaultUnit(sizeValueKB);
+  }
+
+  _defaultUnit(sizeValueKB) {
     this.set("fileSizeUnit", "kb");
+    if (sizeValueKB <= 1024) {
+      this.onFileSizeUnitChange("kb");
+    }
+    if (sizeValueKB > 1024 && sizeValueKB <= 1024 * 1024) {
+      this.onFileSizeUnitChange("mb");
+    }
+    if (sizeValueKB > 1024 * 1024) {
+      this.onFileSizeUnitChange("gb");
+    }
   }
 
   keyDown(event) {
@@ -57,18 +71,15 @@ export default class FileSizeInput extends Component {
   }
 
   _onFileSizeChange(newSize) {
-    let max = this.max;
     switch (this.fileSizeUnit) {
       case "kb":
         this.set("fileSizeKB", newSize);
         break;
       case "mb":
         this.set("fileSizeKB", newSize * 1024);
-        max = max / 1024;
         break;
       case "gb":
         this.set("fileSizeKB", newSize * 1024 * 1024);
-        max = max / 1024 / 1024;
         break;
     }
     if (this.fileSizeKB > this.max) {
@@ -81,9 +92,6 @@ export default class FileSizeInput extends Component {
       this.onChangeSize(this.fileSizeKB);
       this.updateValidationMessage(null);
     }
-    console.log(this.fileSizeKB);
-    console.log(this.max);
-    console.log(this.message);
   }
 
   @action
