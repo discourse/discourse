@@ -69,9 +69,18 @@
     }
   }
 
-  .notification .time {
-    margin-left: auto;
-    float: none;
+  .user-notifications-list {
+    li.notification {
+      padding: 0.5em 0;
+
+      a {
+        align-items: center;
+      }
+      .time {
+        margin-left: auto;
+        float: none;
+      }
+    }
   }
 
   .expand-item,
@@ -100,27 +109,6 @@
 
   .remove-draft {
     float: right;
-  }
-
-  .notification {
-    li {
-      display: inline-block;
-    }
-
-    p {
-      display: inline-block;
-
-      span:first-child {
-        color: var(--primary);
-      }
-    }
-
-    // common/base/header.scss
-    .fa,
-    .icon {
-      color: var(--primary-med-or-secondary-med);
-      font-size: var(--font-up-4);
-    }
   }
 
   .excerpt {

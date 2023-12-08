@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import { ajax } from "discourse/lib/ajax";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -10,27 +11,52 @@ import I18n from "discourse-i18n";
 
 export default Controller.extend({
   modal: service(),
+  appEvents: service(),
+  currentUser: service(),
+  siteSettings: service(),
+  site: service(),
+
   queryParams: ["filter"],
   filter: "all",
+
+  get listContainerClassNames() {
+    return `user-notifications-list ${
+      this.siteSettings.show_user_menu_avatars ? "show-avatars" : ""
+    }`;
+  },
 
   @discourseComputed("filter")
   isFiltered() {
     return this.filter && this.filter !== "all";
   },
 
-  @discourseComputed("model.items.@each.notification.read")
+  @discourseComputed("model.content.@each")
+  items() {
+    return this.model.map((n) => {
+      const props = {
+        appEvents: this.appEvents,
+        currentUser: this.currentUser,
+        siteSettings: this.siteSettings,
+        site: this.site,
+        notification: n,
+      };
+      return new UserMenuNotificationItem(props);
+    });
+  },
+
+  @discourseComputed("model.content.@each.read")
   allNotificationsRead() {
-    return !this.model.items.some(
-      (item) => !item.notification.get("read")
+    return !this.get("model.content").some(
+      (notification) => !notification.get("read")
     );
   },
 
-  @discourseComputed("isFiltered", "model.items.length")
+  @discourseComputed("isFiltered", "model.length")
   doesNotHaveNotifications(isFiltered, contentLength) {
     return !isFiltered && contentLength === 0;
   },
 
-  @discourseComputed("isFiltered", "model.items.length")
+  @discourseComputed("isFiltered", "model.length")
   nothingFound(isFiltered, contentLength) {
     return isFiltered && contentLength === 0;
   },
@@ -47,7 +73,7 @@ export default Controller.extend({
 
   async markRead() {
     await ajax("/notifications/mark-read", { type: "PUT" });
-    this.model.items.forEach((item) => item.notification.set("read", true));
+    this.model.forEach((item) => item.notification.set("read", true));
   },
 
   actions: {

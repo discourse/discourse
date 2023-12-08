@@ -22,10 +22,13 @@
   {{#if this.nothingFound}}
     <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
   {{else}}
-    {{#each this.model.items as |item|}}
-      <UserMenu::MenuItem @item={{item}}/>
-    {{/each}}
-    <ConditionalLoadingSpinner @condition={{this.loading}} />
-    {{!--  <UserNotificationsLarge @notifications={{this.model}} />  --}}
+    <div class={{this.listContainerClassNames}}>
+      <LoadMore @selector=".notification" @action={{action "loadMore"}}>
+        {{#each this.items as |item|}}
+          <UserMenu::MenuItem @item={{item}} />
+        {{/each}}
+      </LoadMore>
+      <ConditionalLoadingSpinner @condition={{this.loading}} />
+    </div>
   {{/if}}
 {{/if}}
