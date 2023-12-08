@@ -470,7 +470,7 @@ class Upload < ActiveRecord::Base
     secure_status_did_change = self.secure? != mark_secure
     self.update(secure_params(mark_secure, reason, source))
 
-    if Discourse.store.external? && secure_status_did_change && SiteSetting.s3_use_acls
+    if secure_status_did_change && SiteSetting.s3_use_acls && Discourse.store.external?
       begin
         Discourse.store.update_upload_ACL(self)
       rescue Aws::S3::Errors::NotImplemented => err
