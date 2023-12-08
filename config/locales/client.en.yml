@@ -220,6 +220,7 @@ en:
       only_admins: "(this message is only shown to site administrators)"
 
     broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
+    broken_page_change_alert: "An onPageChange handler raised an error. Check the browser developer tools for more information."
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
 
