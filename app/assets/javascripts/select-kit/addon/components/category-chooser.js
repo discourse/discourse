@@ -24,6 +24,19 @@ export default ComboBoxComponent.extend({
     prioritizedCategoryId: null,
   },
 
+  init() {
+    this._super(...arguments);
+
+    if (
+      this.siteSettings.lazy_load_categories &&
+      !Category.hasAsyncFoundAll([this.value])
+    ) {
+      Category.asyncFindByIds([this.value]).then(() => {
+        this.notifyPropertyChange("value");
+      });
+    }
+  },
+
   modifyComponentForRow() {
     return "category-row";
   },
