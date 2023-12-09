@@ -42,11 +42,11 @@
     </nav>
 
     <DcFilterInput
-      @class="filter-input"
+      {{did-insert (action this.focusFilterInput)}}
       @filterAction={{this.debouncedFiltering}}
       @icons={{hash right="search"}}
-      placeholder={{i18n "chat.browse.filter_input_placeholder"}}
-      {{did-insert (action this.focusFilterInput)}}
+      @placeholder={{i18n "chat.browse.filter_input_placeholder"}}
+      class="filter-input"
     />
   </div>
 

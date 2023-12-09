@@ -67,9 +67,9 @@ export default class ChatChannelTitle extends Component {
               </span>
               {{#if this.showUserStatus}}
                 <UserStatusMessage
-                  @class="chat-channel-title__user-status-message"
                   @status={{get this.users "0.status"}}
                   @showDescription={{if this.site.mobileView "true"}}
+                  class="chat-channel-title__user-status-message"
                 />
               {{/if}}
               <PluginOutlet

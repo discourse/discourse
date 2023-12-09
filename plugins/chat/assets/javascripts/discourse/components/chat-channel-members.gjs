@@ -3,11 +3,11 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import DiscourseURL, { userPath } from "discourse/lib/url";
+import autoFocus from "discourse/modifiers/auto-focus";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import icon from "discourse-common/helpers/d-icon";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -30,12 +30,6 @@ export default class ChatChannelMembers extends Component {
   filterPlaceholder = I18n.t("chat.members_view.filter_placeholder");
   noMembershipsFoundLabel = I18n.t("chat.channel.no_memberships_found");
   noMembershipsLabel = I18n.t("chat.channel.no_memberships");
-
-  focusInput = modifier((element) => {
-    schedule("afterRender", () => {
-      element.focus();
-    });
-  });
 
   onEnter = modifier((element, [callback]) => {
     const handler = (event) => {
@@ -138,11 +132,11 @@ export default class ChatChannelMembers extends Component {
     {{else}}
       <div class="chat-channel-members">
         <DcFilterInput
-          @class="chat-channel-members__filter"
+          {{autoFocus}}
           @filterAction={{this.mutFilter}}
           @icons={{hash right="search"}}
-          placeholder={{this.filterPlaceholder}}
-          {{this.focusInput}}
+          @placeholder={{this.filterPlaceholder}}
+          class="chat-channel-members__filter"
         />
 
         <ul class="chat-channel-members__list" {{this.fill}}>

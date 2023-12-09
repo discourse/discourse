@@ -9,9 +9,9 @@
   />
 {{else}}
   <LoadMore
-    @class="paginated-topics-list"
     @selector=".paginated-topics-list .topic-list .topic-list-item"
     @action={{action "loadMore"}}
+    class="paginated-topics-list"
   >
     <TopicDismissButtons
       @position="top"

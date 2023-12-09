@@ -18,13 +18,13 @@
 
 {{#if @model.sharedDrafts}}
   <TopicList
-    @class="shared-drafts"
     @listTitle="shared_drafts.title"
     @top={{this.top}}
     @hideCategory="true"
     @category={{@category}}
     @topics={{@model.sharedDrafts}}
     @discoveryList={{true}}
+    class="shared-drafts"
   />
 {{/if}}
 

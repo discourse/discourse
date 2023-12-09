@@ -30,21 +30,22 @@ export default class DcFilterInput extends Component {
   <template>
     <div
       class={{concatClass
-        @class
         "dc-filter-input-container"
-        (if this.isFocused " is-focused")
+        (if this.isFocused "is-focused")
       }}
+      ...attributes
     >
       {{#if @icons.left}}
         {{icon @icons.left class="-left"}}
       {{/if}}
 
       <Input
-        class="dc-filter-input"
-        @value={{@value}}
-        {{on "input" (if @filterAction @filterAction (noop))}}
         {{this.focusState}}
-        ...attributes
+        {{on "input" (if @filterAction @filterAction (noop))}}
+        @value={{@value}}
+        autofocus={{if @autofocus "autofocus"}}
+        placeholder={{@placeholder}}
+        class="dc-filter-input"
       />
 
       {{yield}}

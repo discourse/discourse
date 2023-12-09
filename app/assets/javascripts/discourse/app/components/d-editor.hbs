@@ -4,11 +4,11 @@
     {{#if this.showFormTemplateForm}}
       {{#if (gt @formTemplateIds.length 1)}}
         <FormTemplateChooser
-          @class="composer-select-form-template"
           @filteredIds={{@formTemplateIds}}
           @value={{this.selectedFormTemplateId}}
           @onChange={{this.updateSelectedFormTemplateId}}
           @options={{hash maximum=1}}
+          class="composer-select-form-template"
         />
       {{/if}}
       <form id="form-template-form">
@@ -33,10 +33,10 @@
                     @content={{this.popupMenuOptions}}
                     @onChange={{this.onPopupMenuAction}}
                     @onOpen={{action b.action b}}
-                    @class={{b.className}}
                     @tabindex={{-1}}
                     @onKeydown={{this.rovingButtonBar}}
                     @options={{hash icon=b.icon focusAfterOnChange=false}}
+                    class={{b.className}}
                   />
                 {{else}}
                   <DButton
@@ -60,13 +60,13 @@
           @autocomplete="off"
           @tabindex={{this.tabindex}}
           @value={{this.value}}
-          @class="d-editor-input"
           @placeholder={{this.placeholderTranslated}}
           @aria-label={{this.placeholderTranslated}}
           @disabled={{this.disabled}}
           @input={{this.change}}
           @focusIn={{action "focusIn"}}
           @focusOut={{action "focusOut"}}
+          class="d-editor-input"
         />
         <PopupInputTip @validation={{this.validation}} />
         <PluginOutlet
