@@ -9,7 +9,7 @@ import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import or from "truth-helpers/helpers/or";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import ChatChannelTitle from "./chat-channel-title";
+import ChannelTitle from "./channel-title";
 
 export default class ReviewableChatMessage extends Component {
   @service store;
@@ -30,7 +30,7 @@ export default class ReviewableChatMessage extends Component {
           @reviewable.target_id
         }}
       >
-        <ChatChannelTitle @channel={{this.chatChannel}} />
+        <ChannelTitle @channel={{this.chatChannel}} />
       </LinkTo>
     </div>
 
