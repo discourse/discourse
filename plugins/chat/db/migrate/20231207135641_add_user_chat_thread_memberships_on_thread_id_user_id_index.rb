@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-class AddOpenThreadingEnabledCategoryChannelIndex < ActiveRecord::Migration[7.0]
+class AddUserChatThreadMembershipsOnThreadIdUserIdIndex < ActiveRecord::Migration[7.0]
   disable_ddl_transaction!
 
   def up
-    # to keep
     execute <<~SQL
     DROP INDEX CONCURRENTLY IF EXISTS idx_user_chat_thread_memberships_on_thread_id_user_id
     SQL
@@ -17,7 +16,7 @@ class AddOpenThreadingEnabledCategoryChannelIndex < ActiveRecord::Migration[7.0]
 
   def down
     execute <<~SQL
-    DROP INDEX CONCURRENTLY IF EXISTS index_open_threading_enabled_category
+    DROP INDEX CONCURRENTLY IF EXISTS idx_user_chat_thread_memberships_on_thread_id_user_id
     SQL
   end
 end
