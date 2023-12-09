@@ -45,6 +45,7 @@ export default class ChatFullPageHeader extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-invalid-interactive }}
     {{#if (and this.chatStateManager.isFullPageActive this.displayed)}}
       <div
         class={{concatClass
