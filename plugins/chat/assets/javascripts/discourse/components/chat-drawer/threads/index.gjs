@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import I18n from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
 import ChatDrawerHeader from "discourse/plugins/chat/discourse/components/chat-drawer/header";
 import ChatDrawerHeaderBackLink from "discourse/plugins/chat/discourse/components/chat-drawer/header/back-link";
 import ChatDrawerHeaderRightActions from "discourse/plugins/chat/discourse/components/chat-drawer/header/right-actions";
