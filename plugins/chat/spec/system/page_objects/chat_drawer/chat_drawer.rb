@@ -37,6 +37,22 @@ module PageObjects
         channel_index.has_no_unread_channel?(channel)
       end
 
+      def has_user_threads_section?
+        has_css?(".chat__user-threads-row-container[href='/chat/threads']")
+      end
+
+      def has_unread_user_threads?
+        has_css?(".chat__user-threads-row .chat__unread-indicator")
+      end
+
+      def has_no_unread_user_threads?
+        has_no_css?(".chat__user-threads-row .chat__unread-indicator")
+      end
+
+      def click_user_threads
+        find(".chat__user-threads-row").click
+      end
+
       def maximize
         mouseout
         find("#{VISIBLE_DRAWER} .chat-drawer-header__full-screen-btn").click

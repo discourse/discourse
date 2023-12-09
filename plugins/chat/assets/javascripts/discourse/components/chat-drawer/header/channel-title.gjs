@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
-import ChatChannelTitle from "../../chat-channel-title";
+import ChannelTitle from "../../channel-title";
 
 export default class ChatDrawerChannelHeaderTitle extends Component {
   @service chatStateManager;
@@ -20,7 +20,7 @@ export default class ChatDrawerChannelHeaderTitle extends Component {
           class="chat-drawer-header__title"
         >
           <div class="chat-drawer-header__top-line">
-            <ChatChannelTitle @channel={{@channel}} />
+            <ChannelTitle @channel={{@channel}} />
           </div>
         </LinkTo>
       {{else}}
@@ -30,13 +30,13 @@ export default class ChatDrawerChannelHeaderTitle extends Component {
           class="chat-drawer-header__title"
         >
           <div class="chat-drawer-header__top-line">
-            <ChatChannelTitle @channel={{@channel}}>
+            <ChannelTitle @channel={{@channel}}>
               {{#if @channel.tracking.unreadCount}}
                 <span class="chat-unread-count">
                   {{@channel.tracking.unreadCount}}
                 </span>
               {{/if}}
-            </ChatChannelTitle>
+            </ChannelTitle>
           </div>
         </div>
       {{/if}}

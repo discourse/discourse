@@ -15,8 +15,8 @@ import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import eq from "truth-helpers/helpers/eq";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatChannelMetadata from "discourse/plugins/chat/discourse/components/chat-channel-metadata";
-import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
 
 const FADEOUT_CLASS = "-fade-out";
@@ -184,7 +184,7 @@ export default class ChatChannelRow extends Component {
         {{(if this.shouldReset (modifier this.onReset))}}
         style={{this.rowStyle}}
       >
-        <ChatChannelTitle @channel={{@channel}} />
+        <ChannelTitle @channel={{@channel}} />
         <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
 
         {{#if

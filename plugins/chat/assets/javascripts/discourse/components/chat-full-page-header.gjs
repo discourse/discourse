@@ -7,10 +7,10 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import and from "truth-helpers/helpers/and";
 import or from "truth-helpers/helpers/or";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
 import ThreadsListButton from "discourse/plugins/chat/discourse/components/chat/thread/threads-list-button";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
-import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 
 export default class ChatFullPageHeader extends Component {
   @service chatStateManager;
@@ -63,7 +63,7 @@ export default class ChatFullPageHeader extends Component {
             @models={{@channel.routeModels}}
             class="chat-channel-title-wrapper"
           >
-            <ChatChannelTitle @channel={{@channel}} />
+            <ChannelTitle @channel={{@channel}} />
           </LinkTo>
 
           {{#if (or @channel.threadingEnabled this.site.desktopView)}}

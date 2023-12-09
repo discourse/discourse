@@ -8,9 +8,9 @@ import formatDate from "discourse/helpers/format-date";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import i18n from "discourse-common/helpers/i18n";
 import gt from "truth-helpers/helpers/gt";
+import ThreadUnreadIndicator from "discourse/plugins/chat/discourse/components/thread-unread-indicator";
 import ChatThreadParticipants from "../../chat-thread-participants";
 import ChatUserAvatar from "../../chat-user-avatar";
-import UnreadIndicator from "./item/unread-indicator";
 
 export default class ChatThreadListItem extends Component {
   @service router;
@@ -45,7 +45,7 @@ export default class ChatThreadListItem extends Component {
               {{/if}}
             </div>
             <div class="chat-thread-list-item__unread-indicator">
-              <UnreadIndicator @thread={{@thread}} />
+              <ThreadUnreadIndicator @thread={{@thread}} />
             </div>
           </div>
 

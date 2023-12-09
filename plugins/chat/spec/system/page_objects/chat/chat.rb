@@ -53,6 +53,11 @@ module PageObjects
         has_finished_loading?
       end
 
+      def visit_user_threads
+        visit("/chat/threads")
+        has_no_css?(".spinner")
+      end
+
       def visit_thread(thread)
         visit(thread.url)
         has_css?(".chat-thread:not(.loading)[data-id=\"#{thread.id}\"]")

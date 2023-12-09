@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 
-export default class ChatThreadListItemUnreadIndicator extends Component {
+export default class ChatThreadUnreadIndicator extends Component {
   get unreadCount() {
     return this.args.thread.tracking.unreadCount;
   }
