@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
@@ -38,6 +39,11 @@ export default class ChatFullPageHeader extends Component {
     });
   }
 
+  @action
+  trapMouse(event) {
+    event.stopPropagation();
+  }
+
   <template>
     {{#if (and this.chatStateManager.isFullPageActive this.displayed)}}
       <div
@@ -45,6 +51,7 @@ export default class ChatFullPageHeader extends Component {
           "chat-full-page-header"
           (unless @channel.isFollowing "-not-following")
         }}
+        {{on "mousemove" this.trapMouse}}
       >
         <div class="chat-channel-header-details">
           {{#if this.site.mobileView}}
