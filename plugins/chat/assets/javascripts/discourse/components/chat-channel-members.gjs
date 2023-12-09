@@ -135,8 +135,8 @@ export default class ChatChannelMembers extends Component {
           {{autoFocus}}
           @filterAction={{this.mutFilter}}
           @icons={{hash right="search"}}
-          @placeholder={{this.filterPlaceholder}}
-          class="chat-channel-members__filter"
+          @containerClass="chat-channel-members__filter"
+          placeholder={{this.filterPlaceholder}}
         />
 
         <ul class="chat-channel-members__list" {{this.fill}}>
