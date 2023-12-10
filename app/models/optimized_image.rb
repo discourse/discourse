@@ -192,7 +192,9 @@ class OptimizedImage < ActiveRecord::Base
       extension = File.extname(opts[:filename] || ext_path || path)[1..-1]
     end
 
-    raise Discourse::InvalidAccess if !extension || !extension.match?(IM_DECODERS)
+    if !extension || !extension.match?(IM_DECODERS)
+      raise Discourse::InvalidAccess.new("Unsupported extension: #{extension}")
+    end
     "#{extension}:#{path}"
   end
 
