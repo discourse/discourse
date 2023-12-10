@@ -93,7 +93,7 @@ module Chat
           ],
         )
         .joins(
-          "LEFT JOIN user_chat_thread_memberships ON chat_threads.id = user_chat_thread_memberships.thread_id AND user_chat_thread_memberships.user_id = #{guardian.user.id} AND user_chat_thread_memberships.notification_level IN (#{::Chat::UserChatThreadMembership.notification_levels[:muted]})",
+          "LEFT JOIN user_chat_thread_memberships ON chat_threads.id = user_chat_thread_memberships.thread_id AND user_chat_thread_memberships.user_id = #{guardian.user.id} AND user_chat_thread_memberships.notification_level NOT IN (#{::Chat::UserChatThreadMembership.notification_levels[:muted]})",
         )
         .joins(
           "LEFT JOIN chat_messages AS last_message ON chat_threads.last_message_id = last_message.id",
