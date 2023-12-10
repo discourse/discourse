@@ -245,7 +245,7 @@ if ENV["IMPORT"] == "1"
   gem "parallel", require: false
 end
 
-if ENV["GENERIC_IMPORT"] == "1"
+group :generic_import, optional: true do
   gem "sqlite3"
   gem "redcarpet"
 end
