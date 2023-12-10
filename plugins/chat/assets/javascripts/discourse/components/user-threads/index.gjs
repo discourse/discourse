@@ -44,7 +44,7 @@ export default class UserThreads extends Component {
 
   @cached
   get threadsCollection() {
-    return this.chatApi.myThreads(this.handleLoadedThreads);
+    return this.chatApi.userThreads(this.handleLoadedThreads);
   }
 
   @action

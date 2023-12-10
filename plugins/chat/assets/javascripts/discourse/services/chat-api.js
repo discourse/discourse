@@ -313,7 +313,7 @@ export default class ChatApi extends Service {
    *
    * @returns {Promise}
    */
-  myThreads(handler) {
+  userThreads(handler) {
     return new Collection(`${this.#basePath}/me/threads`, handler);
   }
 
