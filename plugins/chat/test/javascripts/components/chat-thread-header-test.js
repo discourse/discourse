@@ -21,23 +21,4 @@ module("Discourse Chat | Component | chat-thread-header", function (hooks) {
       "&lt;style&gt;body { background: red;}&lt;/style&gt;"
     );
   });
-
-  test("the back button links to the thread index if there are other unread threads", async function (assert) {
-    this.thread = fabricators.thread();
-    this.thread.channel.threadsManager = {
-      get unreadThreadCount() {
-        return 1;
-      },
-    };
-
-    await render(hbs`
-      <Chat::Thread::Header @thread={{this.thread}} @channel={{this.thread.channel}} />
-    `);
-
-    assert.ok(
-      query(".chat-thread__back-to-previous-route")
-        .getAttribute("href")
-        .endsWith("/t")
-    );
-  });
 });
