@@ -38,7 +38,7 @@ module Service
       #   context.fail!("failure": "something went wrong")
       # @return [Context]
       def fail!(context = {})
-        fail(context)
+        self.fail(context)
         raise Failure, self
       end
 

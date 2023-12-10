@@ -11,7 +11,7 @@ RSpec.describe ThemeSettingsParser do
 
   class Loader
     def initialize
-      @settings ||= []
+      @settings = []
       load_settings
     end
 

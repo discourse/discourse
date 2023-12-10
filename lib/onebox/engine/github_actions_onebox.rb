@@ -69,7 +69,6 @@ module Onebox
             status = "success"
           elsif raw["conclusion"] == "failure"
             status = "failure"
-          elsif raw["conclusion"] == "cancelled"
           end
         elsif raw["status"] == "in_progress"
           status = "pending"

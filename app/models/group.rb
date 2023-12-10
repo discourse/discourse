@@ -474,7 +474,7 @@ class Group < ActiveRecord::Base
     group_users
       .pluck(:user_id, :notification_level)
       .each do |user_id, notification_level|
-        next if user_id == -1
+        next if user_id == Discourse::SYSTEM_USER_ID
         next if user_id == topic.user_id
         next if ignore_existing && TopicUser.where(user_id: user_id, topic_id: topic.id).exists?
 

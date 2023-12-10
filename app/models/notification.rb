@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Notification < ActiveRecord::Base
+  attr_accessor :acting_user
+  attr_accessor :acting_username
+
   belongs_to :user
   belongs_to :topic
 
@@ -347,6 +350,25 @@ class Notification < ActiveRecord::Base
     else
       []
     end
+  end
+
+  def self.populate_acting_user(notifications)
+    usernames =
+      notifications.map do |notification|
+        notification.acting_username =
+          (
+            notification.data_hash[:username] || notification.data_hash[:display_username] ||
+              notification.data_hash[:mentioned_by_username] ||
+              notification.data_hash[:invited_by_username]
+          )&.downcase
+      end
+
+    users = User.where(username_lower: usernames.uniq).index_by(&:username_lower)
+    notifications.each do |notification|
+      notification.acting_user = users[notification.acting_username]
+    end
+
+    notifications
   end
 
   def unread_high_priority?

@@ -799,7 +799,8 @@ class PluginApi {
    ```
    **/
   onPageChange(fn) {
-    this.onAppEvent("page:changed", (data) => fn(data.url, data.title));
+    const callback = wrapWithErrorHandler(fn, "broken_page_change_alert");
+    this.onAppEvent("page:changed", (data) => callback(data.url, data.title));
   }
 
   /**

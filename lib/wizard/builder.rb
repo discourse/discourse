@@ -194,7 +194,7 @@ class Wizard
         style.add_choice("latest")
         CategoryPageStyle.values.each { |page| style.add_choice(page[:value]) }
 
-        step.add_field(id: "styling_preview", type: "component")
+        step.add_field(id: "styling_preview", type: "styling-preview")
 
         step.on_update do |updater|
           updater.update_setting(:base_font, updater.fields[:body_font])

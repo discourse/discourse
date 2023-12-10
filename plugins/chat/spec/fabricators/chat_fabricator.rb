@@ -16,7 +16,7 @@ Fabricator(:chat_channel, class_name: "Chat::Channel") do
   end
   chatable { Fabricate(:category) }
   type do |attrs|
-    if attrs[:chatable_type] == "Category" || attrs[:chatable]&.is_a?(Category)
+    if attrs[:chatable_type] == "Category" || attrs[:chatable].is_a?(Category)
       "CategoryChannel"
     else
       "DirectMessageChannel"

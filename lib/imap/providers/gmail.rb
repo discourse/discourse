@@ -141,7 +141,6 @@ module Imap
           # This is done so we can extract X-GM-LABELS, X-GM-MSGID, and
           # X-GM-THRID, all Gmail extended attributes.
           #
-          # rubocop:disable Style/RedundantReturn
           def msg_att(n)
             match(T_LPAR)
             attr = {}
@@ -186,7 +185,7 @@ module Imap
               end
               attr[name] = val
             end
-            return attr
+            attr
           end
 
           def label_data
@@ -214,9 +213,8 @@ module Imap
                 result.push(atom)
               end
             end
-            return name, result
+            [name, result]
           end
-          # rubocop:enable Style/RedundantReturn
         end
       end
     end

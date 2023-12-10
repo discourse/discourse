@@ -41,4 +41,8 @@ export default class UserMenuMessageItem extends UserMenuBaseItem {
   get topicId() {
     return this.message.id;
   }
+
+  get avatarTemplate() {
+    return this.message.last_poster_avatar_template;
+  }
 }

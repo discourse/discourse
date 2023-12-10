@@ -855,7 +855,7 @@
     border: 0;
     cursor: auto;
     outline: none;
-    font-family: monospace;
+    font-family: var(--d-font-family--monospace);
     &:focus {
       box-shadow: none;
       border-color: var(--primary-low);

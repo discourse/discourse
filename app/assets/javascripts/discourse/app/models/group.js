@@ -200,6 +200,15 @@ const Group = RestModel.extend({
 
   @dependentKeyCompat
   get watchingCategories() {
+    if (
+      this.siteSettings.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.watching_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_category_ids).then(() =>
+        this.notifyPropertyChange("watching_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("watching_category_ids"));
   },
 
@@ -212,6 +221,15 @@ const Group = RestModel.extend({
 
   @dependentKeyCompat
   get trackingCategories() {
+    if (
+      this.siteSettings.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.tracking_category_ids)
+    ) {
+      Category.asyncFindByIds(this.tracking_category_ids).then(() =>
+        this.notifyPropertyChange("tracking_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("tracking_category_ids"));
   },
 
@@ -224,6 +242,15 @@ const Group = RestModel.extend({
 
   @dependentKeyCompat
   get watchingFirstPostCategories() {
+    if (
+      this.siteSettings.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.watching_first_post_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_first_post_category_ids).then(() =>
+        this.notifyPropertyChange("watching_first_post_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("watching_first_post_category_ids"));
   },
 
@@ -236,6 +263,15 @@ const Group = RestModel.extend({
 
   @dependentKeyCompat
   get regularCategories() {
+    if (
+      this.siteSettings.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.regular_category_ids)
+    ) {
+      Category.asyncFindByIds(this.regular_category_ids).then(() =>
+        this.notifyPropertyChange("regular_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("regular_category_ids"));
   },
 
@@ -248,6 +284,15 @@ const Group = RestModel.extend({
 
   @dependentKeyCompat
   get mutedCategories() {
+    if (
+      this.siteSettings.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.muted_category_ids)
+    ) {
+      Category.asyncFindByIds(this.muted_category_ids).then(() =>
+        this.notifyPropertyChange("muted_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("muted_category_ids"));
   },
 

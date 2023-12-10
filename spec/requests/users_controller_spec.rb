@@ -312,7 +312,7 @@ RSpec.describe UsersController do
               params: {
                 password: "hg9ow8yhg98oadminlonger",
               }
-        end.to change { UserHistory.count }.by (1)
+        end.to change { UserHistory.count }.by(1)
 
         user_history = UserHistory.last
         expect(user_history.target_user_id).to eq(user1.id)
@@ -836,15 +836,9 @@ RSpec.describe UsersController do
       end
 
       context "when normalize_emails is enabled" do
-        let (:email) {
-          "jane+100@gmail.com"
-        }
-        let (:dupe_email) {
-          "jane+191@gmail.com"
-        }
-        let! (:user) {
-          Fabricate(:user, email: email, password: "strongpassword")
-        }
+        let(:email) { "jane+100@gmail.com" }
+        let(:dupe_email) { "jane+191@gmail.com" }
+        let!(:user) { Fabricate(:user, email: email, password: "strongpassword") }
 
         before do
           SiteSetting.hide_email_address_taken = true
@@ -7056,6 +7050,18 @@ RSpec.describe UsersController do
         notifications = response.parsed_body["notifications"]
         expect(notifications.size).to eq(1)
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+      end
+
+      context "with `show_user_menu_avatars` setting enabled" do
+        before { SiteSetting.show_user_menu_avatars = true }
+
+        it "serializes acting_user_avatar into notifications" do
+          get "/u/#{user.username}/user-menu-bookmarks"
+          expect(response.status).to eq(200)
+
+          first_notification = response.parsed_body["notifications"].first
+          expect(first_notification["acting_user_avatar_template"]).to be_present
+        end
       end
     end
   end

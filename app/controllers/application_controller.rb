@@ -463,7 +463,7 @@ class ApplicationController < ActionController::Base
     return unless guardian.can_enable_safe_mode?
 
     safe_mode = params[SAFE_MODE]
-    if safe_mode&.is_a?(String)
+    if safe_mode.is_a?(String)
       safe_mode = safe_mode.split(",")
       request.env[NO_THEMES] = safe_mode.include?(NO_THEMES) || safe_mode.include?(LEGACY_NO_THEMES)
       request.env[NO_PLUGINS] = safe_mode.include?(NO_PLUGINS)
