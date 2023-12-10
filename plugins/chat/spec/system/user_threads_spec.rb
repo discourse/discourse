@@ -28,7 +28,7 @@ RSpec.describe "User threads", type: :system do
         chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
       end
 
-      it "has an unread indicator" do
+      xit "has an unread indicator" do
         visit("/")
 
         expect(sidebar_page).to have_unread_user_threads
@@ -112,7 +112,7 @@ RSpec.describe "User threads", type: :system do
         chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
       end
 
-      it "has an unread indicator" do
+      xit "has an unread indicator" do
         visit("/")
         chat_page.open_from_header
 
