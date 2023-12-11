@@ -161,6 +161,26 @@ RSpec.describe "Navigation", type: :system do
           expect(page).to have_current_path("#{category_channel.relative_url}/t")
           expect(thread_list_page).to have_loaded
         end
+
+        context "when there are unread threads" do
+          fab!(:thread_2) { Fabricate(:chat_thread, channel: category_channel, use_service: true) }
+
+          before { Fabricate(:chat_message, thread: thread_2, use_service: true) }
+
+          it "goes back to the thread list when clicking the back button", mobile: true do
+            chat_page.visit_channel(category_channel)
+            channel_page.message_thread_indicator(thread.original_message).click
+            thread_page.send_message
+            thread_page.back
+            channel_page.message_thread_indicator(thread_2.original_message).click
+            Fabricate(:chat_message, thread: thread, use_service: true)
+
+            expect(thread_page).to have_unread_list_indicator(count: 1)
+            expect(thread_page).to have_back_link_to_thread_list(category_channel)
+            thread_page.back
+            expect(page).to have_current_path("#{category_channel.relative_url}/t")
+          end
+        end
       end
     end
 
