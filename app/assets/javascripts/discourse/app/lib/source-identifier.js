@@ -2,6 +2,12 @@ import DEBUG from "@glimmer/env";
 import PreloadStore from "discourse/lib/preload-store";
 import getURL from "discourse-common/lib/get-url";
 
+const BROWSER_EXTENSION_PROTOCOLS = [
+  "moz-extension://",
+  "chrome-extension://",
+  "webkit-masked-url://",
+];
+
 export default function identifySource(error) {
   if (!error || !error.stack) {
     try {
@@ -21,6 +27,12 @@ export default function identifySource(error) {
     /^.*discourse-deprecation-collector.*$/gm,
     ""
   );
+
+  if (BROWSER_EXTENSION_PROTOCOLS.any((p) => stack.includes(p))) {
+    return {
+      type: "browser-extension",
+    };
+  }
 
   const themeMatches = stack.match(/\/theme-javascripts\/[\w-]+\.js/g) || [];
 
@@ -72,6 +84,8 @@ export function consolePrefix(error, source) {
     return `[THEME ${source.id} '${source.name}']`;
   } else if (source && source.type === "plugin") {
     return `[PLUGIN ${source.name}]`;
+  } else if (source && source.type === "browser-extension") {
+    return "[BROWSER EXTENSION]";
   }
 
   return "";
