@@ -128,6 +128,13 @@ const Site = RestModel.extend({
         "parentCategory",
         this.categoriesById[newCategory.parent_category_id]
       );
+      if (newCategory.parentCategory) {
+        newCategory.parentCategory.subcategories.pushObject(newCategory);
+      }
+      newCategory.set(
+        "subcategories",
+        this.categories.filterBy("parent_category_id", categoryId)
+      );
       return newCategory;
     }
   },
