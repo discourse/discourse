@@ -1,8 +1,11 @@
-/*
+/* originally based on github.com style (c) Vasily Polovnyov <vast@whiteants.net> */
 
-github.com style (c) Vasily Polovnyov <vast@whiteants.net>
-
-*/
+p > code,
+li > code,
+pre > code {
+  color: var(--primary-very-high);
+  background: var(--hljs-bg);
+}
 
 .hljs {
   display: block;
@@ -18,8 +21,6 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 .hljs-keyword,
-.javascript .hljs-title,
-.nginx .hljs-title,
 .hljs-subst,
 .hljs-request,
 .hljs-status {
@@ -27,16 +28,14 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
   font-weight: bold;
 }
 
-.hljs-number,
-.ruby .hljs-constant {
+.hljs-number {
   color: var(--hljs-number);
 }
 
 .hljs-string,
 .hljs-tag .hljs-string,
 .hljs-template-tag,
-.hljs-template-variable,
-.tex .hljs-formula {
+.hljs-template-variable {
   color: var(--hljs-string);
 }
 
@@ -45,31 +44,23 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-quote,
 .hljs-operator,
 .hljs-selector-pseudo,
-.hljs-selector-tag,
-.coffeescript .hljs-params,
-.scss .hljs-meta {
+.hljs-selector-tag {
   color: var(--hljs-string);
   font-weight: bold;
 }
 
-.javascript .hljs-title,
-.lisp .hljs-title,
-.clojure .hljs-title,
 .hljs-subst {
   font-weight: normal;
 }
 
-.hljs-class .hljs-title,
-.haskell .hljs-type,
-.vhdl .hljs-literal,
-.tex .hljs-command {
+.hljs-class .hljs-title {
   color: var(--hljs-literal);
   font-weight: bold;
 }
 
 .hljs-tag,
-.hljs-tag .hljs-title,
-.django .hljs-tag .hljs-keyword {
+.hljs-punctuation,
+.hljs-tag .hljs-title {
   color: var(--hljs-tag);
   font-weight: normal;
 }
@@ -78,9 +69,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-selector-attr,
 .hljs-selector-class,
 .hljs-selector-id,
-.css .hljs-keyword,
-.hljs-variable,
-.lisp .hljs-body {
+.hljs-variable {
   color: var(--hljs-attribute);
 }
 
@@ -89,23 +78,13 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 .hljs-symbol,
-.ruby .hljs-symbol .hljs-string,
-.lisp .hljs-keyword,
-.tex .hljs-special,
 .hljs-prompt {
   color: var(--hljs-symbol);
 }
 
 .hljs-built_in,
-.lisp .hljs-title,
-.clojure .hljs-built_in,
 .hljs-builtin-name {
   color: var(--hljs-builtin-name);
-}
-
-.meta {
-  color: var(--primary-medium);
-  font-weight: bold;
 }
 
 .hljs-deletion {
@@ -114,10 +93,6 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 .hljs-addition {
   background: var(--success-low);
-}
-
-.diff .hljs-meta {
-  color: var(--primary-low);
 }
 
 .hljs-section {
@@ -137,18 +112,3 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-strong {
   font-weight: bold;
 }
-
-/*
---------------------------------------------------------------------------------
-|                       SHOULD NOT BE REMOVED                                  |
---------------------------------------------------------------------------------
-*/
-
-p > code,
-li > code,
-pre > code {
-  color: var(--primary-very-high);
-  background: var(--hljs-bg);
-}
-
-// removed some unnecessary styles here
