@@ -53,6 +53,7 @@ export default Controller.extend(CanCheckEmails, {
       await this.modal.show(SecondFactorAddTotp, {
         model: {
           secondFactor: this.model,
+          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
           markDirty: () => this.markDirty(),
           onError: (e) => this.handleError(e),
         },
@@ -68,6 +69,7 @@ export default Controller.extend(CanCheckEmails, {
       await this.modal.show(SecondFactorAddSecurityKey, {
         model: {
           secondFactor: this.model,
+          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
           markDirty: this.markDirty,
           onError: this.handleError,
         },
