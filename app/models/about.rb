@@ -18,8 +18,6 @@ class About
   include ActiveModel::Serialization
   include StatsCacheable
 
-  attr_accessor :moderators, :admins
-
   def self.stats_cache_key
     "about-stats"
   end

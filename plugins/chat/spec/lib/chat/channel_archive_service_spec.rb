@@ -95,6 +95,7 @@ describe Chat::ChannelArchiveService do
       thread =
         Fabricate(:chat_thread, channel: channel, title: title, original_message: original_message)
       (num - 1).times { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
+      thread.update!(replies_count: num - 1)
     end
 
     def start_archive

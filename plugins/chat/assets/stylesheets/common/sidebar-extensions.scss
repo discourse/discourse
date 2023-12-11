@@ -35,6 +35,12 @@
     }
   }
 
+  .sidebar-section-wrapper.sidebar-section[data-section-name="my-threads"] {
+    .sidebar-section-content {
+      padding-bottom: 0;
+    }
+  }
+
   .sidebar-container {
     .channels-list {
       color: var(--primary);

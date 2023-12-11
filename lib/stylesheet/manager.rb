@@ -293,7 +293,7 @@ class Stylesheet::Manager
           data = {
             target: target,
             theme_id: theme_id,
-            theme_name: theme&.name.downcase,
+            theme_name: theme&.name&.downcase,
             remote: theme.remote_theme_id?,
           }
           builder = Builder.new(target: target, theme: theme, manager: self)

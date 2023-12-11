@@ -192,7 +192,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.ok(!exists(".who-liked a.trigger-user-card"));
   });
 
-  test(`like count with no likes`, async function (assert) {
+  test("like count with no likes", async function (assert) {
     this.set("args", { likeCount: 0 });
 
     await render(
@@ -203,11 +203,23 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("share button", async function (assert) {
+    this.siteSettings.post_menu += "|share";
     this.set("args", { shareUrl: "http://share-me.example.com" });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
     assert.ok(exists(".actions button.share"), "it renders a share button");
+  });
+
+  test("copy link button", async function (assert) {
+    this.set("args", { shareUrl: "http://share-me.example.com" });
+
+    await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
+
+    assert.ok(
+      exists(".actions button.post-action-menu__copy-link"),
+      "it renders a copy link button"
+    );
   });
 
   test("liking", async function (assert) {

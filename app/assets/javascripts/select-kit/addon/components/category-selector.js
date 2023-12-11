@@ -21,16 +21,12 @@ export default MultiSelectComponent.extend({
   init() {
     this._super(...arguments);
 
-    if (!this.categories) {
-      this.set("categories", []);
-    }
     if (!this.blockedCategories) {
       this.set("blockedCategories", []);
     }
   },
 
   content: computed("categories.[]", "blockedCategories.[]", function () {
-    const blockedCategories = makeArray(this.blockedCategories);
     return Category.list().filter((category) => {
       if (category.isUncategorizedCategory) {
         if (this.options?.allowUncategorized !== undefined) {
@@ -42,7 +38,7 @@ export default MultiSelectComponent.extend({
 
       return (
         this.categories.includes(category) ||
-        !blockedCategories.includes(category)
+        !this.blockedCategories.includes(category)
       );
     });
   }),
@@ -58,15 +54,10 @@ export default MultiSelectComponent.extend({
       return this._super(filter);
     }
 
-    const rejectCategoryIds = new Set();
-    // Reject selected options
-    if (this.categories) {
-      this.categories.forEach((c) => rejectCategoryIds.add(c.id));
-    }
-    // Reject blocked categories
-    if (this.blockedCategories) {
-      this.blockedCategories.forEach((c) => rejectCategoryIds.add(c.id));
-    }
+    const rejectCategoryIds = new Set([
+      ...this.categories.map((c) => c.id),
+      ...this.blockedCategories.map((c) => c.id),
+    ]);
 
     return await Category.asyncSearch(filter, {
       includeUncategorized:

@@ -100,6 +100,12 @@ export default class ChannelsList extends Component {
     }`;
   }
 
+  get hasUnreadThreads() {
+    return this.chatChannelsManager.publicMessageChannels.some(
+      (channel) => channel.unreadThreadsCount > 0
+    );
+  }
+
   @action
   toggleChannelSection(section) {
     this.args.toggleSection(section);
@@ -160,6 +166,24 @@ export default class ChannelsList extends Component {
       {{didInsert this.computeHasScrollbar}}
       {{onResize this.computeResizedEntries}}
     >
+      <div class="channels-list-container user-threads-section">
+        <LinkTo @route="chat.threads" class="chat__user-threads-row-container">
+          <div class="chat__user-threads-row">
+
+            <span class="chat__user-threads-row__title">
+              {{dIcon "discourse-threads" class="chat__user-threads-row__icon"}}
+              {{i18n "chat.my_threads.title"}}
+            </span>
+
+            {{#if this.hasUnreadThreads}}
+              <div class="chat__unread-indicator">
+                <div class="chat__unread-indicator__number">&nbsp;</div>
+              </div>
+            {{/if}}
+          </div>
+        </LinkTo>
+      </div>
+
       {{#if this.displayPublicChannels}}
         <div class="chat-channel-divider public-channels-section">
           {{#if this.inSidebar}}

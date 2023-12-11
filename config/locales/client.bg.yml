@@ -723,7 +723,6 @@ bg:
           imap_mailbox_not_selected: "Трябва да изберете пощенска кутия за тази IMAP конфигурация или пощенските кутии няма да се синхронизират!"
           prefill:
             title: "Предварително попълване с настройки за:"
-            gmail: "Gmail"
           credentials:
             title: "Данни за удостоверяване"
             smtp_server: "SMTP сървър"
@@ -3248,7 +3247,6 @@ bg:
       choose_for_topic: "етикети по желание"
       add_synonyms: "Добави"
       delete_tag: "Изтрийте таг"
-      description: "Описание"
       sort_by: "Сортирай по:"
       sort_by_count: "брой"
       sort_by_name: "име"
@@ -3387,6 +3385,18 @@ bg:
         typeMismatch:
           default: "Моля, въведете валидна стойност."
           email: "Моля, въведете валиден имейл адрес."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Въведете"
+      edit:
+        modal:
+          cancel: "прекрати"
+          create: "Запази "
+          reason: "защо редактирате ?"
+      spreadsheet:
+        show: "Покажи"
+        about: "Относно"
   admin_js:
     admin:
       title: "Discourse Админ"
@@ -3518,6 +3528,7 @@ bg:
         change_settings_short: "Настройки"
         howto: "Как да инсталирам софтуерни приставки?"
         author: "От %{author}"
+        learn_more: "Научете повече"
       backups:
         title: "Бекъп"
         menu:

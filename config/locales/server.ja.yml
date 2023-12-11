@@ -195,7 +195,6 @@ ja:
       default_tags_already_selected: "別のリストに使用されているタグを選択できません。"
       s3_upload_bucket_is_required: "'s3_upload_bucket' を入力しない限り、S3 へのアップロードを有効にすることはできません。"
       enable_s3_uploads_is_required: "S3 アップロードが有効でない限り、S3 インベントリを 使用できません。"
-      page_publishing_requirements: "セキュリティで保護されているメディアが有効である場合、ページの公開を有効にできません。"
       s3_backup_requires_s3_settings: "'%{setting_name}' が入力されていない場合、S3 をバックアップとして使用することはできません。"
       s3_bucket_reused: "'s3_upload_bucket' and 's3_backup_bucket' に同じバケットを使用することはできません。別のバケットを選択するか、バケットごとに異なるパスを使用してください。"
       secure_uploads_requirements: "安全なアップロードを有効にする前に、S3 アップロードと S3 ACL を有効にする必要があります。"

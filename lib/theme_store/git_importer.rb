@@ -62,7 +62,7 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
 
     redirected_uri = FinalDestination.resolve(first_clone_uri.to_s, http_verb: :get)
 
-    if redirected_uri&.path.ends_with?("/info/refs")
+    if redirected_uri&.path&.ends_with?("/info/refs")
       redirected_uri.path.gsub!(%r{/info/refs\z}, "")
       redirected_uri.query = nil
       redirected_uri

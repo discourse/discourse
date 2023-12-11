@@ -20,7 +20,7 @@ RSpec.describe SpamRule::FlagSockpuppets do
       before { SiteSetting.flag_sockpuppets = true }
 
       it "flags posts when it should" do
-        rule.expects(:reply_is_from_sockpuppet?).returns(:true)
+        rule.expects(:reply_is_from_sockpuppet?).returns(true)
         rule.expects(:flag_sockpuppet_users).once
         expect(perform).to eq(true)
       end

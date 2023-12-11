@@ -2736,7 +2736,6 @@ ca:
         one: "Esteu segur que voleu suprimir aquesta etiqueta i eliminar-la del tema %{count} al qual és assignada?"
         other: "Esteu segur que voleu suprimir aquesta etiqueta i eliminar-la dels %{count} temes als quals és assignada?"
       delete_confirm_no_topics: "Esteu segur que voleu suprimir aquesta etiqueta?"
-      description: "Descripció"
       sort_by: "Ordena per:"
       sort_by_count: "comptabilitza"
       sort_by_name: "nom"
@@ -2885,6 +2884,18 @@ ca:
         typeMismatch:
           default: "Introduïu un valor vàlid."
           email: "Introduïu una adreça vàlida de correu electrònic."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Retorn"
+      edit:
+        modal:
+          cancel: "cancel·la"
+          create: "Desa"
+          reason: "per què ho editeu?"
+      spreadsheet:
+        show: "Mostra"
+        about: "Quant a"
   admin_js:
     admin:
       title: "Administració de Discourse"
@@ -3137,6 +3148,7 @@ ca:
         change_settings_short: "Configuració"
         howto: "Com s'instal·len els connectors?"
         author: "Per %{author}"
+        learn_more: "Per a saber-ne més"
       backups:
         title: "Còpies de seguretat"
         menu:

@@ -7,7 +7,7 @@ describe "Table Builder", type: :system do
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post1) { create_post(user: user, topic: topic, raw: <<~RAW) }
         |Make   | Model   | Year|
-        |-------| ------- | ----|
+        |--- | --- | ---|
         |Toyota | Supra   | 1998|
         |Nissan | Skyline | 1999|
         |Honda  | S2000  | 2001|
@@ -97,13 +97,15 @@ describe "Table Builder", type: :system do
 
       updated_post = <<~RAW
       |Make | Model | Year|
-      |-------| ------- | ----|
+      |--- | --- | ---|
       |Toyota | Supra | 1998|
-      |Nissan | Skyline | 1999|
+      |Nissan | Skyline GTR | 1999|
       |Honda | S2000 | 2001|
       RAW
 
-      expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
+      try_until_success do
+        expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
+      end
     end
 
     context "when adding an edit reason" do

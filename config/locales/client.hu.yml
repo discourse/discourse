@@ -716,7 +716,6 @@ hu:
           imap_mailbox_not_selected: "Választani kell egy postaládát ehhez az IMAP-beállításhoz, különben egyetlen postafiók sem lesz szinkronizálva."
           prefill:
             title: "Beállítások előre kitöltése ehhez:"
-            gmail: "GMail"
           credentials:
             title: "Hitelesítő adatok"
             smtp_server: "SMTP-kiszolgáló"
@@ -3441,7 +3440,6 @@ hu:
       delete_tag: "Címke törlése"
       delete_confirm_no_topics: "Biztos vagy benne hogy elakarod távolítani ezt a címkét?"
       edit_tag: "Címke nevének és leírásának szerkesztése"
-      description: "Leírás"
       sort_by: "Rendezés"
       sort_by_count: "besorol"
       sort_by_name: "név"
@@ -3668,6 +3666,18 @@ hu:
         typeMismatch:
           default: "Adjon meg egy érvényes dátumot."
           email: "Adjon meg egy érvényes e-mail-címet."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Enter"
+      edit:
+        modal:
+          cancel: "mégse"
+          create: "Mentés"
+          reason: "miért szerkeszt?"
+      spreadsheet:
+        show: "Megjelenítés"
+        about: "Névjegy"
   admin_js:
     admin:
       title: "Discourse Admin"
@@ -3954,6 +3964,7 @@ hu:
         change_settings_short: "Beállítások"
         howto: "Hogyan lehet plugin-eket telepíteni?"
         author: "Szerző %{author}"
+        learn_more: "Tudjon meg többet"
       navigation_menu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"

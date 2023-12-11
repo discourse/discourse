@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
@@ -102,17 +104,30 @@ export default class ToggleChannelMembershipButton extends Component {
         }}
       />
     {{else}}
-      <DButton
-        @action={{this.onJoinChannel}}
-        @translatedLabel={{this.label}}
-        @translatedTitle={{this.options.joinTitle}}
-        @icon={{this.options.joinIcon}}
-        @disabled={{this.isLoading}}
-        class={{concatClass
-          "toggle-channel-membership-button -join"
-          this.options.joinClass
+      <PluginOutlet
+        @name="chat-join-channel-button"
+        @outletArgs={{hash
+          onJoinChannel=this.onJoinChannel
+          channel=@channel
+          icon=this.options.joinIcon
+          title=this.options.joinTitle
+          label=this.label
+          disabled=this.isLoading
         }}
-      />
+        @defaultGlimmer={{true}}
+      >
+        <DButton
+          @action={{this.onJoinChannel}}
+          @translatedLabel={{this.label}}
+          @translatedTitle={{this.options.joinTitle}}
+          @icon={{this.options.joinIcon}}
+          @disabled={{this.isLoading}}
+          class={{concatClass
+            "toggle-channel-membership-button -join"
+            this.options.joinClass
+          }}
+        />
+      </PluginOutlet>
     {{/if}}
   </template>
 }

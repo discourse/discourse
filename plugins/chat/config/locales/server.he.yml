@@ -36,6 +36,7 @@ he:
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
       chat_upload_not_allowed_secure_uploads: "אסור להעלות לצ׳אט כשהגדרת האתר להעלאות מאובטחות מופעלת."
   system_messages:
+    private_channel_title: "ערוץ %{id}"
     chat_channel_archive_complete:
       title: "העברת ערוץ הצ׳אט לארכיון הושלמה"
       subject_template: "העברת ערוץ הצ׳אט לארכיון הושלמה בהצלחה"
@@ -221,6 +222,7 @@ he:
       no_targets: "לא היו הודעות במהלך התקופה הנבחרת."
     transcript:
       default_thread_title: "שרשור"
+      split_thread_range: "הודעות %{start} עד %{end} מתוך %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -257,6 +259,7 @@ he:
         other: "יש לך הודעות חדשות בצ׳אט"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] הודעה חדשה"
         direct_message_from_1: "[%{email_prefix}] הודעה חדשה מאת %{username}"
         direct_message_from_2: "[%{email_prefix}] הודעה חדשה שנשלחה מאת %{username1} וגם %{username2}"
         direct_message_from_more:

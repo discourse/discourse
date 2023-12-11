@@ -49,7 +49,7 @@ describe "Thread tracking state | full page", type: :system do
 
       expect(thread_page).to have_no_unread_list_indicator
 
-      thread_page.back_to_previous_route
+      thread_page.back
 
       expect(thread_list_page).to have_no_unread_item(thread.id)
     end

@@ -209,7 +209,6 @@ zh_CN:
       default_tags_already_selected: "您不能选择在另一个列表中使用的标签。"
       s3_upload_bucket_is_required: "除非提供 's3_upload_bucket'，否则您无法启用上传到 S3。"
       enable_s3_uploads_is_required: "除非已启用 S3 上传，否则您无法启用 S3 清单使用情况。"
-      page_publishing_requirements: "如果启用了安全媒体，则无法启用页面发布。"
       s3_backup_requires_s3_settings: "除非提供 '%{setting_name}'，否则无法将 S3 用作备份位置。"
       s3_bucket_reused: "您无法将同一个存储桶同时用作 's3_upload_bucket' 和 's3_backup_bucket'。请选择一个不同的存储桶或为每个存储桶使用不同的路径。"
       secure_uploads_requirements: "在启用安全上传之前，必须先启用 S3 上传和 S3 ACL。"

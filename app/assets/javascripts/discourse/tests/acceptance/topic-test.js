@@ -11,6 +11,7 @@ import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
+  chromeTest,
   count,
   exists,
   publishToMessageBus,
@@ -25,6 +26,9 @@ import I18n from "discourse-i18n";
 
 acceptance("Topic", function (needs) {
   needs.user();
+  needs.settings({
+    post_menu: "read|like|share|flag|edit|bookmark|delete|admin|reply|copyLink",
+  });
   needs.pretender((server, helper) => {
     server.get("/c/2/visible_groups.json", () =>
       helper.response(200, {
@@ -85,6 +89,16 @@ acceptance("Topic", function (needs) {
     await click(".topic-post:first-child button.share");
 
     assert.ok(exists(".share-topic-modal"), "it shows the share modal");
+  });
+
+  test("Copy Link Button", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:first-child button.post-action-menu__copy-link");
+
+    assert.ok(
+      exists(".post-action-menu__copy-link-checkmark"),
+      "it shows the Link Copied! message"
+    );
   });
 
   test("Showing and hiding the edit controls", async function (assert) {
@@ -412,18 +426,22 @@ acceptance("Topic featured links", function (needs) {
     );
   });
 
-  test("Quoting a quote with replyAsNewTopic keeps the original poster name", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await selectText("#post_5 blockquote");
-    await triggerKeyEvent(document, "keypress", "J");
-    await triggerKeyEvent(document, "keypress", "T");
+  // Using J/K on Firefox clean the text selection, so this won't work there
+  chromeTest(
+    "Quoting a quote with replyAsNewTopic keeps the original poster name",
+    async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      await selectText("#post_5 blockquote");
+      await triggerKeyEvent(document, "keypress", "J");
+      await triggerKeyEvent(document, "keypress", "T");
 
-    assert.ok(
-      query(".d-editor-input").value.includes(
-        'quote="codinghorror said, post:3, topic:280"'
-      )
-    );
-  });
+      assert.ok(
+        query(".d-editor-input").value.includes(
+          'quote="codinghorror said, post:3, topic:280"'
+        )
+      );
+    }
+  );
 
   test("Quoting by selecting text can mark the quote as full", async function (assert) {
     await visit("/t/internationalization-localization/280");

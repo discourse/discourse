@@ -202,7 +202,7 @@ module Email
               "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
             i.replace(
               Nokogiri::HTML5.fragment(
-                "<p><a href='#{src_uri.to_s}'>#{CGI.escapeHTML(display_src)}</a><p>",
+                "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
               ),
             )
           rescue URI::Error
@@ -517,9 +517,11 @@ module Email
                   "style"
                 ] = "background-color: #{bg_color}; color: #{SiteSetting.email_accent_fg_color}; border-top: 4px solid #{bg_color}; border-right: 6px solid #{bg_color}; border-bottom: 4px solid #{bg_color}; border-left: 6px solid #{bg_color}; display: inline-block; font-weight: bold;"
               end
+              # rubocop:disable Lint/NonLocalExitFromIterator
               return
             end
           return
+          # rubocop:enable Lint/NonLocalExitFromIterator
         end
     end
 

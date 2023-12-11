@@ -752,7 +752,6 @@ it:
           imap_mailbox_not_selected: "Devi selezionare una casella di posta per questa configurazione IMAP, altrimenti non verrà sincronizzata nessuna casella di posta!"
           prefill:
             title: "Precompila con impostazioni per:"
-            gmail: "GMail"
           credentials:
             title: "Credenziali"
             smtp_server: "Server SMTP"
@@ -2158,6 +2157,7 @@ it:
       add_warning: "Questo è un avvertimento ufficiale."
       toggle_whisper: "Attiva/Disattiva Sussurri"
       toggle_unlisted: "Rendi Invisibile"
+      insert_table: "Inserisci tabella"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saved_local_draft_tip: "salvato in locale"
       similar_topics: "Il tuo argomento è simile a…"
@@ -3961,7 +3961,7 @@ it:
         one: "Anche il suo sinonimo verrà eliminato."
         other: "I suoi %{count} sinonimi verranno a loro volta eliminati."
       edit_tag: "Modifica il nome e la descrizione dell’etichetta"
-      description: "Descrizione"
+      description: "Descrizione (max 1000 caratteri)"
       sort_by: "Ordina per:"
       sort_by_count: "conteggio"
       sort_by_name: "nome"
@@ -4274,6 +4274,61 @@ it:
           other: "L'input deve essere maggiore di %{count}."
         patternMismatch: "Per favore, rispetta il formato richiesto."
         badInput: "Per favore, inserisci un input valido."
+    table_builder:
+      title: "Costruttore di tabelle"
+      modal:
+        title: "Costruttore di tabelle"
+        create: "Costruisci tabella"
+        help:
+          title: "Utilizzo dell'editor di fogli di calcolo"
+          enter_key: "Invio"
+          tab_key: "Tab"
+          new_row: "alla fine di una riga per inserire una nuova riga."
+          options: "Fai clic con il tasto destro sulle celle per accedere a più opzioni in un menu a discesa."
+      edit:
+        btn_edit: "Modifica tabella"
+        modal:
+          title: "Modifica tabella"
+          cancel: "annulla"
+          create: "Salva"
+          reason: "perché stai modificando?"
+          trigger_reason: "Aggiungi il motivo della modifica"
+        default_edit_reason: "Aggiorna tabella con l'editor di tabelle"
+      default_header:
+        col_1: "Colonna 1"
+        col_2: "Colonna 2"
+        col_3: "Colonna 3"
+        col_4: "Colonna 4"
+      spreadsheet:
+        no_records_found: "Nessun record trovato"
+        show: "Mostra"
+        entries: "voci"
+        about: "Informazioni"
+        prompts:
+          delete_selected_rows: "Vuoi davvero eliminare le righe selezionate?"
+          delete_selected_cols: "Vuoi davvero eliminare le colonne selezionate?"
+          will_destroy_merged_cells: "Questa azione eliminerà tutte le celle unite esistenti. Continuare?"
+          will_clear_search_results: "Questa azione eliminerà tutte le celle unite esistenti. Continuare?"
+          conflicts_with_merged_cells: "C'è un conflitto con un'altra cella unita"
+        invalid_merge_props: "Proprietà unite non valide"
+        cells_already_merged: "Cella già unita"
+        no_cells_selected: "Nessuna cella selezionata"
+        context_menu:
+          row:
+            before: "Inserisci una nuova riga prima"
+            after: "Inserisci una nuova riga dopo"
+            delete: "Elimina le righe selezionate"
+          col:
+            before: "Inserisci una nuova colonna prima"
+            after: "Inserisci una nuova colonna dopo"
+            delete: "Elimina le colonne selezionate"
+            rename: "Rinomina questa colonna"
+          order:
+            ascending: "Ordine crescente"
+            descending: "Ordine decrescente"
+          copy: "Copia..."
+          paste: "Incolla..."
+          save: "Salva come..."
   admin_js:
     type_to_filter: "digita per filtrare…"
     admin:
@@ -4653,6 +4708,7 @@ it:
         howto: "Come installo i plugin?"
         broken_route: "Impossibile configurare il collegamento a '%{name}'. Assicurati che i blocchi degli annunci siano disabilitati e prova a ricaricare la pagina."
         author: "Da %{author}"
+        learn_more: "Scopri di più"
       navigation_menu:
         sidebar: "Barra laterale"
         header_dropdown: "Intestazione a discesa"

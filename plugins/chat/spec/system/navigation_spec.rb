@@ -141,7 +141,7 @@ RSpec.describe "Navigation", type: :system do
         thread_list_page.open_thread(thread)
         expect(side_panel_page).to have_open_thread(thread)
         expect(thread_page).to have_back_link_to_thread_list(category_channel)
-        thread_page.back_to_previous_route
+        thread_page.back
         expect(page).to have_current_path("#{category_channel.relative_url}/t")
         expect(thread_list_page).to have_loaded
       end
@@ -157,7 +157,7 @@ RSpec.describe "Navigation", type: :system do
           thread_list_page.open_thread(thread)
           expect(side_panel_page).to have_open_thread(thread)
           expect(thread_page).to have_back_link_to_thread_list(category_channel)
-          thread_page.back_to_previous_route
+          thread_page.back
           expect(page).to have_current_path("#{category_channel.relative_url}/t")
           expect(thread_list_page).to have_loaded
         end
@@ -193,7 +193,7 @@ RSpec.describe "Navigation", type: :system do
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel_page).to have_open_thread(thread)
         expect(thread_page).to have_back_link_to_thread_list(category_channel)
-        thread_page.back_to_previous_route
+        thread_page.back
         expect(page).to have_current_path("#{category_channel.relative_url}/t")
         expect(thread_list_page).to have_loaded
       end
@@ -208,7 +208,7 @@ RSpec.describe "Navigation", type: :system do
           channel_page.message_thread_indicator(thread.original_message).click
           expect(side_panel_page).to have_open_thread(thread)
           expect(thread_page).to have_back_link_to_channel(category_channel)
-          thread_page.back_to_previous_route
+          thread_page.back
           expect(page).to have_current_path("#{category_channel.relative_url}")
           expect(side_panel_page).to be_closed
         end

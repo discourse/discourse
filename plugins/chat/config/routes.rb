@@ -4,7 +4,8 @@ Chat::Engine.routes.draw do
   namespace :api, defaults: { format: :json } do
     get "/chatables" => "chatables#index"
     get "/channels" => "channels#index"
-    get "/channels/me" => "current_user_channels#index"
+    get "/me/channels" => "current_user_channels#index"
+    get "/me/threads" => "current_user_threads#index"
     post "/channels" => "channels#create"
     put "/channels/read/" => "reads#update_all"
     put "/channels/:channel_id/read/:message_id" => "reads#update"
@@ -72,6 +73,7 @@ Chat::Engine.routes.draw do
 
   # chat_controller routes
   get "/" => "chat#respond"
+  get "/threads" => "chat#respond"
   get "/browse" => "chat#respond"
   get "/browse/all" => "chat#respond"
   get "/browse/closed" => "chat#respond"

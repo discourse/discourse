@@ -76,12 +76,10 @@ export default class ChatThreadList extends Component {
   // NOTE: This replicates sort logic from the server. We need this because
   // the thread unread count + last reply date + time update when new messages
   // are sent to the thread, and we want the list to react in realtime to this.
+  @cached
   get sortedThreads() {
     return this.threadsManager.threads
-      .filter(
-        (thread) =>
-          thread.currentUserMembership && !thread.originalMessage.deletedAt
-      )
+      .filter((thread) => !thread.originalMessage.deletedAt)
       .sort((threadA, threadB) => {
         // If both are unread we just want to sort by last reply date + time descending.
         if (threadA.tracking.unreadCount && threadB.tracking.unreadCount) {
@@ -186,6 +184,7 @@ export default class ChatThreadList extends Component {
         {{/if}}
 
         <div class="chat-thread-list__items" {{this.fill}}>
+
           {{#each this.sortedThreads key="id" as |thread|}}
             <ChatThreadListItem
               @thread={{thread}}

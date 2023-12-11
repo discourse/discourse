@@ -30,27 +30,31 @@ export default class ChatThreadHeader extends Component {
 
   get backLink() {
     const prevPage = this.chatHistory.previousRoute?.name;
-    let route, title;
+    let route, title, models;
 
     if (prevPage === "chat.channel.threads") {
       route = "chat.channel.threads";
       title = I18n.t("chat.return_to_threads_list");
+      models = this.args.channel.routeModels;
     } else if (prevPage === "chat.channel.index" && !this.site.mobileView) {
       route = "chat.channel.threads";
       title = I18n.t("chat.return_to_threads_list");
+      models = this.args.channel.routeModels;
     } else if (!this.currentUser.isInDoNotDisturb() && this.unreadCount > 0) {
       route = "chat.channel.threads";
       title = I18n.t("chat.return_to_threads_list");
+      models = this.args.channel.routeModels;
+    } else if (prevPage === "chat.threads") {
+      route = "chat.threads";
+      title = I18n.t("chat.my_threads.title");
+      models = [];
     } else {
       route = "chat.channel.index";
       title = I18n.t("chat.return_to_channel");
+      models = this.args.channel.routeModels;
     }
 
-    return {
-      route,
-      models: this.args.channel.routeModels,
-      title,
-    };
+    return { route, models, title };
   }
 
   get canChangeThreadSettings() {

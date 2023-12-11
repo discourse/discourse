@@ -300,7 +300,7 @@ RSpec.describe InvitesController do
       context "when topic is private" do
         fab!(:group)
 
-        fab!(:secured_category) do |category|
+        fab!(:secured_category) do
           category = Fabricate(:category)
           category.permissions = { group.name => :full }
           category.save!

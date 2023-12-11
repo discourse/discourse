@@ -2,6 +2,15 @@
   <SearchMenu::BrowserSearchTip />
 {{else}}
   <div class="results">
+    <PluginOutlet
+      @name="search-menu-results-top"
+      @outletArgs={{hash
+        closeSearchMenu=@closeSearchMenu
+        searchTerm=this.search.activeGlobalSearchTerm
+        inTopicContext=this.search.inTopicContext
+        searchTopics=@searchTopics
+      }}
+    />
     {{#if @suggestionKeyword}}
       <SearchMenu::Results::Assistant
         @suggestionKeyword={{@suggestionKeyword}}
@@ -26,11 +35,6 @@
           @searchTermChanged={{@searchTermChanged}}
         />
       {{/if}}
-
-      <PluginOutlet
-        @name="search-menu-results-top"
-        @outletArgs={{hash closeSearchMenu=@closeSearchMenu}}
-      />
 
       {{#if (and @searchTopics this.resultTypesWithComponent)}}
         {{! render results after a search has been performed }}

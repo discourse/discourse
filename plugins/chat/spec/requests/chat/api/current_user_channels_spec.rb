@@ -13,7 +13,7 @@ describe Chat::Api::CurrentUserChannelsController do
   describe "#index" do
     context "as anonymous user" do
       it "returns an error" do
-        get "/chat/api/channels/me"
+        get "/chat/api/me/channels"
         expect(response.status).to eq(403)
       end
     end
@@ -25,7 +25,7 @@ describe Chat::Api::CurrentUserChannelsController do
       end
 
       it "returns an error" do
-        get "/chat/api/channels/me"
+        get "/chat/api/me/channels"
 
         expect(response.status).to eq(403)
       end
@@ -39,7 +39,7 @@ describe Chat::Api::CurrentUserChannelsController do
       it "returns public channels with memberships" do
         channel = Fabricate(:category_channel)
         channel.add(current_user)
-        get "/chat/api/channels/me"
+        get "/chat/api/me/channels"
 
         expect(response.parsed_body["public_channels"][0]["id"]).to eq(channel.id)
       end
@@ -49,7 +49,7 @@ describe Chat::Api::CurrentUserChannelsController do
         channel = Fabricate(:private_category_channel, group: group)
         group.add(current_user)
         channel.add(current_user)
-        get "/chat/api/channels/me"
+        get "/chat/api/me/channels"
 
         expect(response.parsed_body["public_channels"][0]["id"]).to eq(channel.id)
       end
@@ -58,21 +58,21 @@ describe Chat::Api::CurrentUserChannelsController do
         group = Fabricate(:group)
         channel = Fabricate(:private_category_channel, group: group)
         channel.add(current_user) # TODO: we should error here
-        get "/chat/api/channels/me"
+        get "/chat/api/me/channels"
 
         expect(response.parsed_body["public_channels"]).to be_blank
       end
 
       it "returns dm channels you are part of" do
         dm_channel = Fabricate(:direct_message_channel, users: [current_user])
-        get "/chat/api/channels/me"
+        get "/chat/api/me/channels"
 
         expect(response.parsed_body["direct_message_channels"][0]["id"]).to eq(dm_channel.id)
       end
 
       it "doesn’t return dm channels from other users" do
         Fabricate(:direct_message_channel)
-        get "/chat/api/channels/me"
+        get "/chat/api/me/channels"
 
         expect(response.parsed_body["direct_message_channels"]).to be_blank
       end
@@ -81,7 +81,7 @@ describe Chat::Api::CurrentUserChannelsController do
         Fabricate(:direct_message_channel, users: [current_user])
         channel = Fabricate(:category_channel)
         channel.add(current_user)
-        get "/chat/api/channels/me"
+        get "/chat/api/me/channels"
 
         expect(response.status).to eq(200)
 
@@ -112,7 +112,7 @@ describe Chat::Api::CurrentUserChannelsController do
             channel = Fabricate(:category_channel)
             channel.add(current_user)
             channel.chatable.destroy!
-            get "/chat/api/channels/me"
+            get "/chat/api/me/channels"
 
             expect(response.status).to eq(200)
             expect(response.parsed_body["public_channels"]).to be_blank
@@ -123,7 +123,7 @@ describe Chat::Api::CurrentUserChannelsController do
           it "doesn’t return the channel" do
             channel = Fabricate(:direct_message_channel, users: [current_user])
             channel.chatable.destroy!
-            get "/chat/api/channels/me"
+            get "/chat/api/me/channels"
 
             expect(response.status).to eq(200)
             expect(response.parsed_body["direct_message_channels"]).to be_blank

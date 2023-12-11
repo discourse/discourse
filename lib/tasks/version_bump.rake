@@ -384,7 +384,7 @@ task "version_bump:stage_security_fixes", [:base] do |t, args|
   base = args[:base]
   raise "Unknown base: #{base.inspect}" unless %w[stable main].include?(base)
 
-  fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",").map(&:strip)
+  fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
   raise "No branches specified in SECURITY_FIX_REFS env" if fix_refs.nil? || fix_refs.empty?
 
   fix_refs.each do |ref|

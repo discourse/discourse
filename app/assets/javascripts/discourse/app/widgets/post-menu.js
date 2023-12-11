@@ -331,9 +331,18 @@ registerButton("replies", (attrs, state, siteSettings) => {
 registerButton("share", () => {
   return {
     action: "share",
+    icon: "d-post-share",
     className: "share",
     title: "post.controls.share",
+  };
+});
+
+registerButton("copyLink", () => {
+  return {
+    action: "copyLink",
     icon: "d-post-share",
+    className: "post-action-menu__copy-link",
+    title: "post.controls.copy_title",
   };
 });
 
@@ -773,6 +782,7 @@ export default createWidget("post-menu", {
     this.menu.show(event.target, {
       identifier: "admin-post-menu",
       component: AdminPostMenu,
+      extraClassName: "popup-menu",
       data: {
         scheduleRerender: this.scheduleRerender.bind(this),
         transformedPost: this.attrs,

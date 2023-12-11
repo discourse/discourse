@@ -1832,7 +1832,7 @@ RSpec.describe SessionController do
       end
 
       it "prevents login by admins" do
-        post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+        post "/session.json", params: { login: admin.username, password: "myawesomepassword" }
         expect(response.status).not_to eq(200)
       end
     end

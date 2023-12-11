@@ -9,6 +9,7 @@ import formatDate from "discourse/helpers/format-date";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
+import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
 import ChatThreadParticipants from "./chat-thread-participants";
 import ChatUserAvatar from "./chat-user-avatar";
@@ -21,6 +22,10 @@ export default class ChatMessageThreadIndicator extends Component {
   @service site;
 
   @tracked isActive = false;
+
+  get interactiveUser() {
+    return this.args.interactiveUser ?? true;
+  }
 
   @action
   setup(element) {
@@ -37,7 +42,11 @@ export default class ChatMessageThreadIndicator extends Component {
       this.element.addEventListener("touchCancel", this.cancelTouch);
     }
 
-    this.element.addEventListener("click", this.openThread, {
+    this.element.addEventListener("mousedown", this.openThread, {
+      passive: true,
+    });
+
+    this.element.addEventListener("keydown", this.openThread, {
       passive: true,
     });
   }
@@ -55,7 +64,11 @@ export default class ChatMessageThreadIndicator extends Component {
       this.element.removeEventListener("touchCancel", this.cancelTouch);
     }
 
-    this.element.removeEventListener("click", this.openThread, {
+    this.element.removeEventListener("mousedown", this.openThread, {
+      passive: true,
+    });
+
+    this.element.removeEventListener("keydown", this.openThread, {
       passive: true,
     });
   }
@@ -84,7 +97,25 @@ export default class ChatMessageThreadIndicator extends Component {
   }
 
   @bind
-  openThread() {
+  openThread(event) {
+    if (event.type === "keydown" && event.key !== "Enter") {
+      return;
+    }
+
+    // handle middle mouse
+    if (event.type === "mousedown" && (event.which === 2 || event.shiftKey)) {
+      window.open(
+        getURL(
+          this.router.urlFor(
+            "chat.channel.thread",
+            ...this.args.message.thread.routeModels
+          )
+        ),
+        "_blank"
+      );
+      return;
+    }
+
     this.chat.activeMessage = null;
 
     this.router.transitionTo(
@@ -103,12 +134,14 @@ export default class ChatMessageThreadIndicator extends Component {
       {{willDestroy this.teardown}}
       role="button"
       title={{i18n "chat.threads.open"}}
+      tabindex="0"
     >
 
       <div class="chat-message-thread-indicator__last-reply-avatar">
         <ChatUserAvatar
           @user={{@message.thread.preview.lastReplyUser}}
           @avatarSize="small"
+          @interactive={{this.interactiveUser}}
         />
       </div>
 

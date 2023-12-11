@@ -146,7 +146,7 @@ RSpec.describe "tasks/uploads" do
           end
 
           it "does not attempt to update the acl" do
-            Discourse.store.expects(:update_upload_ACL).with(upload2).never
+            FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload2).never
             invoke_task
           end
         end
