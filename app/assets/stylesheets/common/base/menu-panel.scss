@@ -560,6 +560,7 @@
 .user-notifications-list.show-avatars {
   li {
     a {
+      align-items: center;
       padding: 0.15em 0;
 
       .icon-avatar {
@@ -570,7 +571,7 @@
         flex-shrink: 0;
         width: 2em;
         height: 2em;
-        margin: 0.3em 1.1em 0 0;
+        margin: 0.3em 1em 0 0;
 
         .avatar {
           width: 100%;
