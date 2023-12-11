@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import FileSizeInput from "admin/components/file-size-input";
 import SettingValidationMessage from "admin/components/setting-validation-message";
-import { htmlSafe } from "@ember/template";
-import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
 
 export default class FileSizeRestriction extends Component {
   @tracked _validationMessage;
@@ -26,14 +26,15 @@ export default class FileSizeRestriction extends Component {
 
   <template>
     <FileSizeInput
-      @sizeValueKB={{this.args.value}}
+      @sizeValueKB={{@value}}
       @onChangeSize={{fn (mut @value)}}
       @updateValidationMessage={{this.updateValidationMessage}}
-      @min={{if this.args.setting.min this.args.setting.min null}}
-      @max={{if this.args.setting.max this.args.setting.max null}}
+      @min={{if @setting.min @setting.min null}}
+      @max={{if @setting.max @setting.max null}}
       @message={{this.validationMessage}}
     />
 
     <SettingValidationMessage @message={{this.validationMessage}} />
-    <div class="desc">{{htmlSafe this.args.setting.description}}</div>
+    <div class="desc">{{htmlSafe @setting.description}}</div>
   </template>
+}

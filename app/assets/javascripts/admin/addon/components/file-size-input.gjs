@@ -2,9 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { classNames } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
 import TextField from "discourse/components/text-field";
+import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 const ALLOWED_KEYS = [
