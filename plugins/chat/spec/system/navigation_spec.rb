@@ -170,7 +170,7 @@ RSpec.describe "Navigation", type: :system do
           it "goes back to the thread list when clicking the back button", mobile: true do
             chat_page.visit_channel(category_channel)
             channel_page.message_thread_indicator(thread.original_message).click
-            thread_page.send_message("reply to thread")
+            thread_page.send_message
             thread_page.back_to_previous_route
             channel_page.message_thread_indicator(thread_2.original_message).click
             Fabricate(:chat_message, thread: thread, use_service: true)
