@@ -6519,6 +6519,15 @@ RSpec.describe UsersController do
       expect(response.parsed_body["failed"]).to eq("FAILED")
     end
 
+    it "responds with a 'success' result if user was recently created" do
+      sign_in(user1)
+      user1.update(created_at: Time.now.utc - 4.minutes)
+
+      get "/u/trusted-session.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+    end
+
     it "response with 'success' on a confirmed session" do
       user2 = Fabricate(:user, password: "8555039dd212cc66ec68")
       sign_in(user2)
