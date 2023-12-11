@@ -50,7 +50,7 @@ module PageObjects
       end
 
       def click_user_threads
-        find(".chat__user-threads-row").click
+        find(".chat__thread-title__name").click
       end
 
       def maximize
