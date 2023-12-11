@@ -88,6 +88,7 @@ export default class UserThreads extends Component {
                 <ThreadIndicator
                   @message={{thread.originalMessage}}
                   @interactiveUser={{false}}
+                  @interactiveThread={{false}}
                 />
               </div>
             </div>
