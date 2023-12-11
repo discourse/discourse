@@ -27,6 +27,10 @@ export default class ChatMessageThreadIndicator extends Component {
     return this.args.interactiveUser ?? true;
   }
 
+  get interactiveThread() {
+    return this.args.interactiveThread ?? true;
+  }
+
   @action
   setup(element) {
     this.element = element;
@@ -42,13 +46,15 @@ export default class ChatMessageThreadIndicator extends Component {
       this.element.addEventListener("touchCancel", this.cancelTouch);
     }
 
-    this.element.addEventListener("mousedown", this.openThread, {
-      passive: true,
-    });
+    if (this.interactiveThread) {
+      this.element.addEventListener("mousedown", this.openThread, {
+        passive: true,
+      });
 
-    this.element.addEventListener("keydown", this.openThread, {
-      passive: true,
-    });
+      this.element.addEventListener("keydown", this.openThread, {
+        passive: true,
+      });
+    }
   }
 
   @action
@@ -64,13 +70,15 @@ export default class ChatMessageThreadIndicator extends Component {
       this.element.removeEventListener("touchCancel", this.cancelTouch);
     }
 
-    this.element.removeEventListener("mousedown", this.openThread, {
-      passive: true,
-    });
+    if (this.interactiveThread) {
+      this.element.removeEventListener("mousedown", this.openThread, {
+        passive: true,
+      });
 
-    this.element.removeEventListener("keydown", this.openThread, {
-      passive: true,
-    });
+      this.element.removeEventListener("keydown", this.openThread, {
+        passive: true,
+      });
+    }
   }
 
   @bind
@@ -134,7 +142,7 @@ export default class ChatMessageThreadIndicator extends Component {
       {{willDestroy this.teardown}}
       role="button"
       title={{i18n "chat.threads.open"}}
-      tabindex="0"
+      tabindex={{if this.interactiveThread "0" "-1"}}
     >
 
       <div class="chat-message-thread-indicator__last-reply-avatar">
