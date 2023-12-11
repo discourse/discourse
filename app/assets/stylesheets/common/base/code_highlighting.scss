@@ -15,7 +15,8 @@ pre > code {
 
 .hljs-comment,
 .hljs-doctag,
-.hljs-code {
+.hljs-code,
+.hljs-meta {
   color: var(--hljs-comment);
   font-style: italic;
 }
@@ -35,7 +36,8 @@ pre > code {
 .hljs-string,
 .hljs-tag .hljs-string,
 .hljs-template-tag,
-.hljs-template-variable {
+.hljs-template-variable,
+.hljs-type {
   color: var(--hljs-string);
 }
 
@@ -44,7 +46,8 @@ pre > code {
 .hljs-quote,
 .hljs-operator,
 .hljs-selector-pseudo,
-.hljs-selector-tag {
+.hljs-selector-tag,
+.hljs-link {
   color: var(--hljs-string);
   font-weight: bold;
 }
@@ -53,6 +56,7 @@ pre > code {
   font-weight: normal;
 }
 
+.hljs-literal,
 .hljs-class .hljs-title {
   color: var(--hljs-literal);
   font-weight: bold;
@@ -63,6 +67,11 @@ pre > code {
 .hljs-tag .hljs-title {
   color: var(--hljs-tag);
   font-weight: normal;
+}
+
+.hljs-tag .hljs-attr,
+.hljs-tag .hljs-name {
+  color: var(--hljs-attribute);
 }
 
 .hljs-attribute,
