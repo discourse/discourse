@@ -7,7 +7,7 @@ export default class RelativeDate extends Component {
       return this.memoizedDatetime;
     }
 
-    this.memoizedDatetime = new Date(this.args.data.date);
+    this.memoizedDatetime = new Date(this.args.date);
     return this.memoizedDatetime;
   }
 
