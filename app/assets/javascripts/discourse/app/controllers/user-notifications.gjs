@@ -44,7 +44,6 @@ export default class UserNotificationsController extends Controller {
         endComponent: <template>
           <RelativeDate @date={{notification.created_at}} />
         </template>,
-        endComponentArgs: { date: notification.created_at },
       };
       return new UserMenuNotificationItem(props);
     });

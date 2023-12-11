@@ -8,7 +8,6 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
   constructor({
     notification,
     endComponent,
-    endComponentArgs,
     appEvents,
     currentUser,
     siteSettings,
@@ -18,7 +17,6 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
     this.appEvents = appEvents;
     this.currentUser = currentUser;
     this.endComponent = endComponent;
-    this.endComponentArgs = endComponentArgs;
     this.notification = notification;
     this.siteSettings = siteSettings;
     this.site = site;
