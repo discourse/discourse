@@ -377,7 +377,7 @@ RSpec.configure do |config|
     end
 
     # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
-    browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "SEVERE"
+    browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "WARNING"
 
     chrome_browser_options =
       Selenium::WebDriver::Chrome::Options
@@ -531,6 +531,8 @@ RSpec.configure do |config|
       lines << "~~~~~ END DRIVER LOGS ~~~~~"
     end
 
+    js_logs = page.driver.browser.logs.get(:browser)
+
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
     if ENV["SELENIUM_DISABLE_VERBOSE_JS_LOGS"].blank?
@@ -547,11 +549,10 @@ RSpec.configure do |config|
 
         if !skip_js_errors
           lines << "~~~~~~~ JS LOGS ~~~~~~~"
-          logs = page.driver.browser.logs.get(:browser)
-          if logs.empty?
+          if js_logs.empty?
             lines << "(no logs)"
           else
-            logs.each do |log|
+            js_logs.each do |log|
               # System specs are full of image load errors that are just noise, no need
               # to log this.
               if (
@@ -567,6 +568,16 @@ RSpec.configure do |config|
           lines << "~~~~~ END JS LOGS ~~~~~"
         end
       end
+    end
+
+    js_logs.each do |log|
+      next if log.level != "WARNING"
+      deprecation_id = log.message[/\[deprecation id: ([^\]]+)\]/, 1]
+      next if deprecation_id.nil?
+
+      deprecations = RSpec.current_example.metadata[:js_deprecations] ||= {}
+      deprecations[deprecation_id] ||= 0
+      deprecations[deprecation_id] += 1
     end
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
