@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { action } from "@ember/object";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import RelativeDate from "discourse/components/relative-date";
 import { ajax } from "discourse/lib/ajax";
