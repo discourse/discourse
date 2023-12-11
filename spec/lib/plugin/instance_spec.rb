@@ -28,6 +28,54 @@ RSpec.describe Plugin::Instance do
     end
   end
 
+  describe "get_stats" do
+    after { DiscoursePluginRegistry.reset! }
+
+    it "returns core stats" do
+      stats = Plugin::Instance.get_stats
+      expect(stats.keys).to contain_exactly(
+        :topics_last_day,
+        :topics_7_days,
+        :topics_30_days,
+        :topics_count,
+        :posts_last_day,
+        :posts_7_days,
+        :posts_30_days,
+        :posts_count,
+        :users_last_day,
+        :users_7_days,
+        :users_30_days,
+        :users_count,
+        :active_users_last_day,
+        :active_users_7_days,
+        :active_users_30_days,
+        :likes_last_day,
+        :likes_7_days,
+        :likes_30_days,
+        :likes_count,
+      )
+    end
+
+    it "returns stats registered by plugins" do
+      plugin = Plugin::Instance.new
+      stats_name = "plugin_stats"
+      plugin.register_stat(stats_name) do
+        { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
+      end
+
+      stats = Plugin::Instance.get_stats
+
+      expect(stats.with_indifferent_access).to match(
+        hash_including(
+          "#{stats_name}_last_day": 1,
+          "#{stats_name}_7_days": 10,
+          "#{stats_name}_30_days": 100,
+          "#{stats_name}_count": 1000,
+        ),
+      )
+    end
+  end
+
   describe "git repo details" do
     describe ".discourse_owned?" do
       it "returns true if the plugin is on github in discourse-org or discourse orgs" do
