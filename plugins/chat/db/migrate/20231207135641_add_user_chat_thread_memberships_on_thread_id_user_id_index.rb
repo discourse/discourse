@@ -9,7 +9,7 @@ class AddUserChatThreadMembershipsOnThreadIdUserIdIndex < ActiveRecord::Migratio
     SQL
 
     execute <<~SQL
-    CREATE INDEX idx_user_chat_thread_memberships_on_thread_id_user_id
+    CREATE INDEX CONCURRENTLY idx_user_chat_thread_memberships_on_thread_id_user_id
     ON user_chat_thread_memberships (thread_id, user_id);
     SQL
   end
