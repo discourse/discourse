@@ -47,6 +47,7 @@ class CategoriesController < ApplicationController
       include_topics: include_topics(parent_category),
       include_subcategories: include_subcategories,
       tag: params[:tag],
+      page: params[:page],
     }
 
     @category_list = CategoryList.new(guardian, category_options)
@@ -407,6 +408,7 @@ class CategoriesController < ApplicationController
       is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: false,
+      page: params[:page],
     }
 
     topic_options = { per_page: CategoriesController.topics_per_page, no_definitions: true }
