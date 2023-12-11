@@ -8,7 +8,7 @@ const PreferenceCheckbox = <template>
       <Input @type="checkbox" @checked={{@checked}} disabled={{@disabled}} />
 
       {{#if @labelCount}}
-        {{i18n @labelkey count=@labelCount}}
+        {{i18n @labelKey count=@labelCount}}
       {{else}}
         {{i18n @labelKey}}
       {{/if}}
