@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Chat::Api::CurrentUserThreadsController < Chat::Api::ChannelsController
+class Chat::Api::CurrentUserThreadsController < Chat::ApiController
   def index
     with_service(::Chat::LookupUserThreads) do
       on_success do
