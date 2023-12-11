@@ -560,15 +560,18 @@
 .user-notifications-list.show-avatars {
   li {
     a {
+      align-items: center;
+      padding: 0.15em 0;
+
       .icon-avatar {
         display: flex;
         position: relative;
         overflow: visible;
         margin-right: 0.5em;
         flex-shrink: 0;
-        width: 2.25em;
-        height: 2.25em;
-        padding: 0.125em 0;
+        width: 2em;
+        height: 2em;
+        margin: 0.3em 1em 0 0;
 
         .avatar {
           width: 100%;
@@ -577,18 +580,21 @@
         .d-icon {
           display: block;
           position: absolute;
-          right: -0.675em;
-          bottom: -0.125em;
-          background: var(--secondary);
-          color: var(--primary-very-high);
-          padding: 0.25em;
+          right: -1.25em;
+          top: -0.5em;
+          padding: 0.2em;
           border-radius: 100%;
-          font-size: var(--font-down-1);
+          background: var(--secondary);
+          color: var(--tertiary);
         }
       }
       & + div {
         padding: 0.25em 0;
       }
+    }
+    &.unread a .d-icon {
+      background: var(--tertiary);
+      color: var(--secondary);
     }
   }
 }
