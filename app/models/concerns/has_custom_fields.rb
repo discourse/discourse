@@ -84,7 +84,7 @@ module HasCustomFields
   DEFAULT_FIELD_DESCRIPTOR = FieldDescriptor.new(:string, 10_000_000)
   CUSTOM_FIELDS_MAX_ITEMS = 100
 
-  module ClassMethods
+  class_methods do
     # To avoid n+1 queries, use this function to retrieve lots of custom fields in one go
     # and create a "sideloaded" version for easy querying by id.
     def custom_fields_for_ids(ids, allowed_fields)
@@ -167,8 +167,6 @@ module HasCustomFields
   end
 
   included do
-    extend ClassMethods
-
     has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
 
     validate :custom_fields_max_items, unless: :custom_fields_clean?
