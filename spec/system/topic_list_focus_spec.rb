@@ -23,6 +23,10 @@ describe "Topic list focus", type: :system do
     )&.to_i
   end
 
+  def focussed_post_id
+    page.evaluate_script("document.activeElement.closest('.onscreen-post')?.dataset.postId")&.to_i
+  end
+
   it "refocusses last clicked topic when going back to topic list" do
     visit("/latest")
     expect(page).to have_css("body.navigation-topics")

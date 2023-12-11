@@ -1,11 +1,11 @@
 {{#if this.canAdminGroup}}
   <div class="control-group">
-    <label class="control-label">{{i18n
-        "admin.groups.manage.interaction.visibility"
-      }}</label>
-    <label for="visiblity">{{i18n
-        "admin.groups.manage.interaction.visibility_levels.title"
-      }}</label>
+    <label class="control-label">
+      {{i18n "admin.groups.manage.interaction.visibility"}}
+    </label>
+    <label>
+      {{i18n "admin.groups.manage.interaction.visibility_levels.title"}}
+    </label>
 
     <ComboBox
       @name="alias"
@@ -23,9 +23,9 @@
   </div>
 
   <div class="control-group">
-    <label for="visiblity">{{i18n
-        "admin.groups.manage.interaction.members_visibility_levels.title"
-      }}</label>
+    <label>
+      {{i18n "admin.groups.manage.interaction.members_visibility_levels.title"}}
+    </label>
 
     <ComboBox
       @name="alias"
@@ -47,9 +47,9 @@
 {{/if}}
 
 <div class="control-group">
-  <label class="control-label">{{i18n
-      "groups.manage.interaction.posting"
-    }}</label>
+  <label class="control-label">
+    {{i18n "groups.manage.interaction.posting"}}
+  </label>
   <label for="alias">{{i18n "groups.alias_levels.mentionable"}}</label>
 
   <ComboBox
@@ -91,12 +91,12 @@
 
 {{#if this.showEmailSettings}}
   <div class="control-group">
-    <label class="control-label">{{i18n
-        "admin.groups.manage.interaction.email"
-      }}</label>
-    <label for="incoming_email">{{i18n
-        "admin.groups.manage.interaction.incoming_email"
-      }}</label>
+    <label class="control-label">
+      {{i18n "admin.groups.manage.interaction.email"}}
+    </label>
+    <label for="incoming_email">
+      {{i18n "admin.groups.manage.interaction.incoming_email"}}
+    </label>
 
     <TextField
       @name="incoming_email"
@@ -120,9 +120,9 @@
   </div>
 {{/if}}
 
-<label class="control-label">{{i18n
-    "groups.manage.interaction.notification"
-  }}</label>
+<label class="control-label">
+  {{i18n "groups.manage.interaction.notification"}}
+</label>
 
 <div class="control-group">
   <label>{{i18n "groups.notification_level"}}</label>

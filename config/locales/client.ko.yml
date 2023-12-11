@@ -648,7 +648,6 @@ ko:
           imap_mailbox_not_selected: "이 IMAP 구성에 대해 메일함을 선택해야합니다. 그렇지 않으면 메일함이 동기화되지 않습니다!"
           prefill:
             title: "다음 설정으로 미리 채우기:"
-            gmail: "Gmail"
           credentials:
             title: "크리덴셜"
             smtp_server: "SMTP 서버"
@@ -3317,7 +3316,6 @@ ko:
       delete_confirm_synonyms:
         other: "%{count}개의 동의어도 삭제됩니다."
       edit_tag: "태그 이름 및 설명 편집"
-      description: "설명"
       sort_by: "정렬 기준:"
       sort_by_count: "개수"
       sort_by_name: "이름"
@@ -3520,6 +3518,18 @@ ko:
       errors:
         typeMismatch:
           default: "유효한 값을 입력하십시오."
+    table_builder:
+      modal:
+        help:
+          enter_key: "시작하다"
+      edit:
+        modal:
+          cancel: "취소"
+          create: "저장"
+          reason: "왜 편집 중입니까?"
+      spreadsheet:
+        show: "보기"
+        about: "소개"
   admin_js:
     type_to_filter: "필터 입력..."
     admin:
@@ -3833,6 +3843,7 @@ ko:
         change_settings_short: "설정"
         howto: "플러그인은 어떻게 설치하나요?"
         author: "%{author}에 의해"
+        learn_more: "더 보기"
       navigation_menu:
         sidebar: "사이드바"
       backups:

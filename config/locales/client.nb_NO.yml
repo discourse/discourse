@@ -657,7 +657,6 @@ nb_NO:
           imap_mailbox_not_selected: "Du må velge en Mailbox for denne IMAP-konfigurasjonen, eller ingen e-postbokser vil bli synkronisert!"
           prefill:
             title: "Forhåndsfyll med innstillinger for:"
-            gmail: "GMail"
           credentials:
             title: "Legitimasjon"
             smtp_server: "SMTP Server"
@@ -3188,7 +3187,6 @@ nb_NO:
       delete_confirm_synonyms:
         one: "Synonymen vil også bli slettet."
         other: "Dets %{count} synonymer vil også bli slettet."
-      description: "Beskrivelse"
       sort_by: "Sorter etter:"
       sort_by_count: "antall"
       sort_by_name: "navn"
@@ -3366,6 +3364,18 @@ nb_NO:
         typeMismatch:
           default: "Skriv inn en gyldig verdi."
           email: "Oppgi en gyldig e-postadresse."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Angi"
+      edit:
+        modal:
+          cancel: "avbryt"
+          create: "Lagre"
+          reason: "hvorfor endrer du?"
+      spreadsheet:
+        show: "Vis"
+        about: "Om"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -3609,6 +3619,7 @@ nb_NO:
         change_settings_short: "Innstillinger"
         howto: "Hvordan installerer jeg utvidelser?"
         author: "Av %{author}"
+        learn_more: "Finn ut mer"
       backups:
         title: "Sikkerhetskopier"
         menu:

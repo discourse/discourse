@@ -24,6 +24,21 @@ export default ComboBoxComponent.extend({
     prioritizedCategoryId: null,
   },
 
+  init() {
+    this._super(...arguments);
+
+    if (
+      this.siteSettings.lazy_load_categories &&
+      !Category.hasAsyncFoundAll([this.value])
+    ) {
+      // eslint-disable-next-line no-console
+      console.warn("Category selected with category-chooser was not loaded");
+      Category.asyncFindByIds([this.value]).then(() => {
+        this.notifyPropertyChange("value");
+      });
+    }
+  },
+
   modifyComponentForRow() {
     return "category-row";
   },

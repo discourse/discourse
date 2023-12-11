@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
-import ChatChannelTitle from "./chat-channel-title";
+import ChannelTitle from "./channel-title";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
 export default class ChatChannelPreviewCard extends Component {
@@ -27,7 +27,7 @@ export default class ChatChannelPreviewCard extends Component {
         (unless this.showJoinButton "-no-button")
       }}
     >
-      <ChatChannelTitle @channel={{@channel}} />
+      <ChannelTitle @channel={{@channel}} />
       {{#if this.hasDescription}}
         <p class="chat-channel-preview-card__description">
           {{@channel.description}}

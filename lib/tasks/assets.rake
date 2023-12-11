@@ -18,7 +18,7 @@ task "assets:precompile:build" do
       system("yarn install", exception: true, chdir: "app/assets/javascripts/discourse")
     end
 
-    compile_command = "yarn --cwd app/assets/javascripts/discourse run ember build"
+    compile_command = "CI=1 yarn --cwd app/assets/javascripts/discourse run ember build"
 
     heap_size_limit = check_node_heap_size_limit
 

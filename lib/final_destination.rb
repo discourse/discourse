@@ -86,6 +86,7 @@ class FinalDestination
         end
       )
     @stop_at_blocked_pages = @opts[:stop_at_blocked_pages]
+    @extra_headers = @opts[:headers]
   end
 
   def self.connection_timeout
@@ -120,6 +121,7 @@ class FinalDestination
       "Host" => @uri.hostname + (@include_port_in_host_header ? ":#{@uri.port}" : ""),
     }
 
+    result.merge!(@extra_headers) if @extra_headers
     result["Cookie"] = @cookie if @cookie
 
     result
@@ -243,10 +245,10 @@ class FinalDestination
       lambda do |chunk, _remaining_bytes, _total_bytes|
         response_body << chunk
         if response_body.bytesize > MAX_REQUEST_SIZE_BYTES
-          raise Excon::Errors::ExpectationFailed.new("response size too big: #{@uri.to_s}")
+          raise Excon::Errors::ExpectationFailed.new("response size too big: #{@uri}")
         end
         if Time.now - request_start_time > MAX_REQUEST_TIME_SECONDS
-          raise Excon::Errors::ExpectationFailed.new("connect timeout reached: #{@uri.to_s}")
+          raise Excon::Errors::ExpectationFailed.new("connect timeout reached: #{@uri}")
         end
       end
 
@@ -425,7 +427,7 @@ class FinalDestination
     return true if @uri.port == 80
 
     allowed_internal_hosts =
-      SiteSetting.allowed_internal_hosts&.split(/[|\n]/).filter_map { |aih| aih.strip.presence }
+      SiteSetting.allowed_internal_hosts&.split(/[|\n]/)&.filter_map { |aih| aih.strip.presence }
     return false if allowed_internal_hosts.empty? || SiteSetting.s3_endpoint.blank?
     return false if allowed_internal_hosts.none? { |aih| hostname_matches_s3_endpoint?(aih) }
 

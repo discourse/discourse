@@ -13,7 +13,7 @@ export default class UnknownRoute extends DiscourseRoute {
       return;
     }
 
-    const rewrittenPath = rewritePath(path);
+    const rewrittenPath = path && rewritePath(path);
     if (rewrittenPath !== path) {
       this.router.transitionTo(rewrittenPath);
       return;

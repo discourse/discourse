@@ -61,7 +61,7 @@
         },
         "permission": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },
@@ -82,7 +82,10 @@
           "items": {}
         },
         "has_children": {
-          "type": "boolean"
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "sort_order": {
           "type": [

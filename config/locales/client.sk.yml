@@ -2322,7 +2322,6 @@ sk:
       choose_for_topic: "voliteľné štítky"
       add_synonyms: "Pridať"
       delete_tag: "Zmazať štítok"
-      description: "Popis"
       sort_by: "Zoradiť podľa:"
       sort_by_count: "počtu"
       sort_by_name: "mena"
@@ -2452,6 +2451,15 @@ sk:
         typeMismatch:
           default: "Prosím zadajte platnú hodnotu."
           email: "Zadajte prosím platný email."
+    table_builder:
+      edit:
+        modal:
+          cancel: "zrušiť"
+          create: "Uložiť"
+          reason: "prečo upravujete?"
+      spreadsheet:
+        show: "Zobraziť"
+        about: "O stránke"
   admin_js:
     type_to_filter: "filtrovať..."
     admin:
@@ -2671,9 +2679,9 @@ sk:
         change_settings_short: "Nastavenia"
         howto: "Ako nainštalujem pluginy?"
         official: "Oficiálny plugin Discourse"
-        experimental: "Experimentálny plugin"
         author: "Od %{author}"
         experimental_badge: "experimentálne"
+        learn_more: "Zistite viac"
       backups:
         title: "Zálohy"
         menu:

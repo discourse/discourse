@@ -4,6 +4,10 @@ import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-use
 
 export default class ChatThreadParticipants extends Component {
   get showParticipants() {
+    if (!this.args.thread) {
+      return;
+    }
+
     if (this.includeOriginalMessageUser) {
       return this.participantsUsers.length > 1;
     }

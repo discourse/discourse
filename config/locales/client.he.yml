@@ -859,7 +859,7 @@ he:
           imap_mailbox_not_selected: "עליך לבחור תיבת דואר עבור תצורת IMAP זו, אחרת לא יסונכרנו תיבות דואר כלל!"
           prefill:
             title: "מילוי הגדרות מראש עבור:"
-            gmail: "GMail"
+            gmail: "Gmail"
           credentials:
             title: "פרטי גישה"
             smtp_server: "שרת SMTP"
@@ -2353,6 +2353,7 @@ he:
       add_warning: "זוהי אזהרה רשמית."
       toggle_whisper: "הפעלת לחישה"
       toggle_unlisted: "סימון/אי-סימון כלא-ברשימות"
+      insert_table: "הוספת טבלה"
       posting_not_on_topic: "לאיזה נושא רצית להגיב?"
       saved_local_draft_tip: "נשמר מקומית"
       similar_topics: "הנושא שלך דומה ל…"
@@ -2366,6 +2367,12 @@ he:
         two: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
         many: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
         other: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
+      group_mentioned:
+        one: "אזכור %{group} יודיע ל<a href='%{group_link}'>מישהו או מישהי</a>."
+        two: "אזכור %{group} יודיע ל<a href='%{group_link}'>שני אנשים</a>."
+        many: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>."
+        other: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>."
+      larger_group_mentioned: "אזכור %{group} יודיע ל־<a href='%{group_link}'>%{count} אנשים</a>. להמשיך?"
       cannot_see_mention:
         category: "אזכרת את ‎@%{username} אבל לא תישלח התראה עקב העדר גישה לקטגוריה הזו. עליך להוסיף את מי שאוזכר לקבוצה שיש לה גישה לקטגוריה הזאת."
         private: "אזכרת את ‎@%{username} אבל לא תישלח התראה עקב העדר גישה לצפייה בהודעה האישית הזאת. עליך להזמין את מי שאוזכר להודעה האישית הזאת."
@@ -4371,7 +4378,6 @@ he:
         many: "%{count} המילים הנרדפות שקשורות אליה תימחקנה גם כן."
         other: "%{count} המילים הנרדפות שקשורות אליה תימחקנה גם כן."
       edit_tag: "עריכת שם התגית ותיאורה"
-      description: "תיאור"
       sort_by: "סידור לפי:"
       sort_by_count: "ספירה"
       sort_by_name: "שם"
@@ -4704,6 +4710,63 @@ he:
           other: "הקלט חייב להיות יותר מ־%{count}."
         patternMismatch: "נא לתאם מול התבנית המבוקשת."
         badInput: "נא למלא קלט תקין."
+    table_builder:
+      title: "בונה טבלאות"
+      modal:
+        title: "בונה טבלאות"
+        create: "בניית טבלה"
+        help:
+          title: "באמצעות עורך גיליונות הנתונים"
+          enter_key: "Enter"
+          tab_key: "Tab"
+          new_row: "בסוף השורה כדי להוסיף שורה חדשה."
+          new_col: "בסוף עמודה כדי להוסיף עמודה חדשה"
+          options: "לחיצה ימנית על תאים מעניקה גישה לאפשרויות נוספות דרך תפריט נפתח."
+        confirm_close: "לסגור את בונה הטבלאות? שינויים שלא שמרת יאבדו."
+      edit:
+        btn_edit: "עריכת טבלה"
+        modal:
+          title: "עריכת טבלה"
+          cancel: "ביטול"
+          create: "שמירה"
+          reason: "מה סיבת העריכה?"
+          trigger_reason: "הוספת סיבה לעריכה"
+        default_edit_reason: "עדכון טבלה עם עורך טבלאות"
+      default_header:
+        col_1: "עמודה 1"
+        col_2: "עמודה 2"
+        col_3: "עמודה 3"
+        col_4: "עמודה 4"
+      spreadsheet:
+        no_records_found: "לא נמצאו רשומות"
+        show: "הצגה"
+        entries: "רשומות"
+        about: "על אודות"
+        prompts:
+          delete_selected_rows: "למחוק את השורות הנבחרות?"
+          delete_selected_cols: "למחוק את העמודות הנבחרות?"
+          will_destroy_merged_cells: "פעולה זו תשמיד את התאים הממוזגים באשר הם. להמשיך?"
+          will_clear_search_results: "פעולה זו תשמיד את התאים הממוזגים באשר הם. להמשיך?"
+          conflicts_with_merged_cells: "קיימת סתירה עם תא ממוזג אחר"
+        invalid_merge_props: "מאפיינים ממוזגים שגויים"
+        cells_already_merged: "התא כבר מוזג"
+        no_cells_selected: "לא נבחרו תאים"
+        context_menu:
+          row:
+            before: "הוספת שורה חדשה לפני"
+            after: "הוספת שורה חדשה אחרי"
+            delete: "מחיקת השורות הנבחרות"
+          col:
+            before: "הוספת עמודה חדשה לפני"
+            after: "הוספת עמודה חדשה אחרי"
+            delete: "מחיקת העמודות הנבחרות"
+            rename: "שינוי שם העמודה הזאת"
+          order:
+            ascending: "סדר עולה"
+            descending: "סדר יורד"
+          copy: "העתקה…"
+          paste: "הדבקה…"
+          save: "שמירה בשם…"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     admin:
@@ -5138,10 +5201,10 @@ he:
         change_settings_short: "הגדרות"
         howto: "איך אני מתקין/ה הרחבות?"
         official: "תוסף רשמי של Discourse"
-        experimental: "תוסף ניסיוני"
         broken_route: "לא ניתן להגדיר את הקישור אל ‚%{name}’. כדאי לוודא שחוסמי פרסומות מושבתים ואז לנסות לטעון את הדף מחדש."
         author: "מאת %{author}"
         experimental_badge: "ניסיוני"
+        learn_more: "מידע נוסף"
       navigation_menu:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"

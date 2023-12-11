@@ -143,11 +143,6 @@ RSpec.describe Emoji do
       expect(emoji.group).to eq("flags")
     end
 
-    it "sets the group of the emoji" do
-      emoji = Emoji.create_from_db_item("name" => "scotland")
-      expect(emoji.group).to eq("flags")
-    end
-
     it "doesn’t create emoji when group is unknown" do
       emoji = Emoji.create_from_db_item("name" => "white_hair")
       expect(emoji).to be_nil

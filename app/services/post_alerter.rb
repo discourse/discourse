@@ -51,8 +51,10 @@ class PostAlerter
   def self.push_notification(user, payload)
     return if user.do_not_disturb?
 
-    DiscoursePluginRegistry.push_notification_filters.each do |filter|
-      return unless filter.call(user, payload)
+    if DiscoursePluginRegistry.push_notification_filters.any? { |filter|
+         !filter.call(user, payload)
+       }
+      return
     end
 
     if user.push_subscriptions.exists?
@@ -600,7 +602,7 @@ class PostAlerter
       display_username: opts[:display_username] || post.user.username,
     }
 
-    opts[:custom_data].each { |k, v| notification_data[k] = v } if opts[:custom_data]&.is_a?(Hash)
+    opts[:custom_data].each { |k, v| notification_data[k] = v } if opts[:custom_data].is_a?(Hash)
 
     if group = opts[:group]
       notification_data[:group_id] = group.id

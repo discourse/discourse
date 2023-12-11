@@ -133,8 +133,8 @@ RSpec.describe UserMerger do
     end
 
     it "merges drafts" do
-      key_topic_17 = "#{Draft::EXISTING_TOPIC}#{17}"
-      key_topic_19 = "#{Draft::EXISTING_TOPIC}#{19}"
+      key_topic_17 = "#{Draft::EXISTING_TOPIC}17"
+      key_topic_19 = "#{Draft::EXISTING_TOPIC}19"
 
       create_draft(source_user, Draft::NEW_TOPIC, "new topic draft by alice1")
       create_draft(source_user, key_topic_17, "draft by alice1")

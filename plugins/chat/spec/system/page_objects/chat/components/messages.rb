@@ -16,10 +16,6 @@ module PageObjects
           page.find(context)
         end
 
-        def flag(message)
-          find(message).secondary_action("flag")
-        end
-
         def copy_link(message)
           find(message).secondary_action("copyLink")
         end

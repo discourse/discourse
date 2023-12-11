@@ -48,9 +48,7 @@ RSpec.describe InlineUploads do
 
         This is an invalid `<img ...>` tag
         MD
-      end
 
-      it "should work with invalid img tags" do
         md = '<img data-id="<>">'
         expect(InlineUploads.process(md)).to eq(md)
       end
@@ -675,7 +673,7 @@ RSpec.describe InlineUploads do
         #{upload.url}
         <img src="#{upload.url}" alt="some image">
         test<img src="#{upload2.url}" alt="some image">test
-        <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path).to_s}" alt="some image">
+        <img src="#{URI.join(SiteSetting.s3_cdn_url, URI.parse(upload2.url).path)}" alt="some image">
         MD
 
         expect(InlineUploads.process(md)).to eq(<<~MD)

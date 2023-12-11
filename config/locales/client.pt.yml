@@ -689,7 +689,6 @@ pt:
           imap_mailbox_not_selected: "Tem de selecionar uma caixa de correio para esta configuração IMAP ou nenhuma caixa de correio será sincronizada!"
           prefill:
             title: "Preencher com configurações para:"
-            gmail: "GMail"
           credentials:
             title: "Credenciais"
             smtp_server: "Servidor SMTP"
@@ -3275,7 +3274,6 @@ pt:
       delete_confirm_synonyms:
         one: "Seu sinônimo também será excluído."
         other: "Seus %{count} sinônimos também serão excluídos."
-      description: "Descrição"
       sort_by: "Ordenar por:"
       sort_by_count: "contagem"
       sort_by_name: "nome"
@@ -3448,6 +3446,18 @@ pt:
         typeMismatch:
           default: "Por favor introduza um valor válido."
           email: "Por favor introduza um endereço de email válido."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Entrar"
+      edit:
+        modal:
+          cancel: "cancelar"
+          create: "Guardar"
+          reason: "Porque está a editar?"
+      spreadsheet:
+        show: "Mostrar"
+        about: "Sobre"
   admin_js:
     admin:
       title: "Administração Discourse"
@@ -3728,6 +3738,7 @@ pt:
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
         author: "Por %{author}"
+        learn_more: "Saiba mais"
       navigation_menu:
         sidebar: "Barra Lateral"
       backups:

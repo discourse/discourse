@@ -174,7 +174,7 @@ RSpec.describe TopicsBulkAction do
 
           revision = topic.first_post.revisions.last
           expect(revision).to be_present
-          expect(revision.modifications).to eq ({ "category_id" => [old_category_id, category.id] })
+          expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
         end
 
         it "doesn't do anything when category stays the same" do

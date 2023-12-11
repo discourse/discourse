@@ -192,10 +192,10 @@ class UsersEmailController < ApplicationController
     if token
       if type == :old
         @change_request =
-          token.user&.email_change_requests.where(old_email_token_id: token.id).first
+          token.user&.email_change_requests&.where(old_email_token_id: token.id)&.first
       elsif type == :new
         @change_request =
-          token.user&.email_change_requests.where(new_email_token_id: token.id).first
+          token.user&.email_change_requests&.where(new_email_token_id: token.id)&.first
       end
     end
 

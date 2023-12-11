@@ -3,7 +3,6 @@
 # Helper functions for dealing with errors and objects that have
 # child objects with errors
 module HasErrors
-  attr_reader :errors
   attr_accessor :forbidden, :not_found, :conflict
 
   def errors

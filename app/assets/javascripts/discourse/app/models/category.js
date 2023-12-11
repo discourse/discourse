@@ -462,6 +462,26 @@ Category.reopenClass({
     return categories;
   },
 
+  hasAsyncFoundAll(ids) {
+    const loadedCategoryIds = Site.current().loadedCategoryIds || new Set();
+    return ids.every((id) => loadedCategoryIds.has(id));
+  },
+
+  async asyncFindByIds(ids = []) {
+    const result = await ajax("/categories/find", { data: { ids } });
+
+    const categories = result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
+
+    // Update loadedCategoryIds list
+    const loadedCategoryIds = Site.current().loadedCategoryIds || new Set();
+    ids.forEach((id) => loadedCategoryIds.add(id));
+    Site.current().set("loadedCategoryIds", loadedCategoryIds);
+
+    return categories;
+  },
+
   findBySlugAndParent(slug, parentCategory) {
     if (this.slugEncoded()) {
       slug = encodeURI(slug);
@@ -490,18 +510,14 @@ Category.reopenClass({
 
   async asyncFindBySlugPathWithID(slugPathWithID) {
     const result = await ajax("/categories/find", {
-      data: {
-        category_slug_path_with_id: slugPathWithID,
-      },
+      data: { slug_path_with_id: slugPathWithID },
     });
 
-    if (result["ancestors"]) {
-      result["ancestors"].map((category) =>
-        Site.current().updateCategory(category)
-      );
-    }
+    const categories = result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
 
-    return Site.current().updateCategory(result.category);
+    return categories[categories.length - 1];
   },
 
   findBySlugPathWithID(slugPathWithID) {

@@ -27,6 +27,10 @@ export default class ChatDrawerThread extends Component {
     if (this.chatHistory.previousRoute?.name === "chat.channel.threads") {
       link.title = I18n.t("chat.return_to_threads_list");
       link.route = "chat.channel.threads";
+    } else if (this.chatHistory.previousRoute?.name === "chat.threads") {
+      link.title = I18n.t("chat.my_threads.title");
+      link.route = "chat.threads";
+      link.models = [];
     } else {
       link.title = I18n.t("chat.return_to_channel");
       link.route = "chat.channel";

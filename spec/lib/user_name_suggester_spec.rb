@@ -72,8 +72,8 @@ RSpec.describe UserNameSuggester do
       end
     end
 
-    it "removes leading character if it is not alphanumeric" do
-      expect(UserNameSuggester.suggest(".myname")).to eq("myname")
+    it "replaces the leading character with _ if it is not alphanumeric" do
+      expect(UserNameSuggester.suggest("=myname")).to eq("_myname")
     end
 
     it "allows leading _" do
@@ -93,12 +93,16 @@ RSpec.describe UserNameSuggester do
       expect(UserNameSuggester.suggest("my.name")).to eq("my.name")
     end
 
-    it "remove leading dots" do
-      expect(UserNameSuggester.suggest(".myname")).to eq("myname")
+    it "replaces multiple dots in the middle with _" do
+      expect(UserNameSuggester.suggest("my..name")).to eq("my_name")
     end
 
-    it "remove trailing dots" do
-      expect(UserNameSuggester.suggest("myname.")).to eq("myname")
+    it "removes leading dots" do
+      expect(UserNameSuggester.suggest("..myname")).to eq("myname")
+    end
+
+    it "removes trailing dots" do
+      expect(UserNameSuggester.suggest("myname..")).to eq("myname")
     end
 
     it "handles usernames with a sequence of 2 or more special chars" do

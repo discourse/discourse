@@ -57,7 +57,7 @@ class BookmarkQuery
 
           # this is purely to make the query easy to read and debug, otherwise it's
           # all mashed up into a massive ball in MiniProfiler :)
-          "---- #{bookmarkable.model.to_s} bookmarkable ---\n\n #{interim_results.to_sql}"
+          "---- #{bookmarkable.model} bookmarkable ---\n\n #{interim_results.to_sql}"
         end
         .compact
 

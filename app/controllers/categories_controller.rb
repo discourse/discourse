@@ -47,6 +47,7 @@ class CategoriesController < ApplicationController
       include_topics: include_topics(parent_category),
       include_subcategories: include_subcategories,
       tag: params[:tag],
+      page: params[:page],
     }
 
     @category_list = CategoryList.new(guardian, category_options)
@@ -301,21 +302,24 @@ class CategoriesController < ApplicationController
   end
 
   def find
-    category = Category.find_by_slug_path_with_id(params[:category_slug_path_with_id])
-    raise Discourse::NotFound if category.blank?
-    guardian.ensure_can_see!(category)
+    categories = []
 
-    ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+    if params[:ids].present?
+      categories = Category.secured(guardian).where(id: params[:ids])
+    elsif params[:slug_path_with_id].present?
+      category = Category.find_by_slug_path_with_id(params[:slug_path_with_id])
+      raise Discourse::NotFound if category.blank?
+      guardian.ensure_can_see!(category)
 
-    render json: {
-             category: SiteCategorySerializer.new(category, scope: guardian, root: nil),
-             ancestors:
-               ActiveModel::ArraySerializer.new(
-                 ancestors,
-                 scope: guardian,
-                 each_serializer: SiteCategorySerializer,
-               ),
-           }
+      ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+      categories = [*ancestors, category]
+    end
+
+    raise Discourse::NotFound if categories.blank?
+
+    Category.preload_user_fields!(guardian, categories)
+
+    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
   end
 
   def search
@@ -382,7 +386,9 @@ class CategoriesController < ApplicationController
 
     categories = categories.order(:id)
 
-    render json: categories, each_serializer: SiteCategorySerializer
+    Category.preload_user_fields!(guardian, categories)
+
+    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
   end
 
   private
@@ -402,6 +408,7 @@ class CategoriesController < ApplicationController
       is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: false,
+      page: params[:page],
     }
 
     topic_options = { per_page: CategoriesController.topics_per_page, no_definitions: true }

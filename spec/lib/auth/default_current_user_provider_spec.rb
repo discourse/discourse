@@ -8,9 +8,6 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
   class TestProvider < Auth::DefaultCurrentUserProvider
     attr_reader :env
-    def initialize(env)
-      super(env)
-    end
 
     def cookie_jar
       @cookie_jar ||= ActionDispatch::Request.new(env).cookie_jar

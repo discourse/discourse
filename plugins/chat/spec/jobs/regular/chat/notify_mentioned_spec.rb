@@ -58,7 +58,7 @@ describe Jobs::Chat::NotifyMentioned do
       .track_publish("/chat/notification-alert/#{user.id}") do
         job.execute(
           chat_message_id: message.id,
-          timestamp: message.created_at,
+          timestamp: message.created_at.to_s,
           to_notify_ids_map: to_notify_ids_map,
           already_notified_user_ids: already_notified_user_ids,
         )
@@ -69,7 +69,7 @@ describe Jobs::Chat::NotifyMentioned do
   def track_core_notification(user: user_2, message:, to_notify_ids_map:)
     job.execute(
       chat_message_id: message.id,
-      timestamp: message.created_at,
+      timestamp: message.created_at.to_s,
       to_notify_ids_map: to_notify_ids_map,
     )
 
@@ -186,7 +186,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       job.execute(
         chat_message_id: message.id,
-        timestamp: message.created_at,
+        timestamp: message.created_at.to_s,
         to_notify_ids_map: to_notify_ids_map,
       )
     end
@@ -215,7 +215,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       job.execute(
         chat_message_id: message.id,
-        timestamp: message.created_at,
+        timestamp: message.created_at.to_s,
         to_notify_ids_map: to_notify_ids_map,
       )
     end
@@ -259,7 +259,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       job.execute(
         chat_message_id: message.id,
-        timestamp: message.created_at,
+        timestamp: message.created_at.to_s,
         to_notify_ids_map: to_notify_ids_map,
       )
     end

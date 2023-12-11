@@ -58,14 +58,17 @@ jobs:
           - build_type: system
             target: chat
             ruby: "3.2"
+          - build_type: system
+            target: chat
+            updated_ember: true
+          - build_type: system
+            target: core
+            updated_ember: true
           - build_type: frontend
             target: plugins
             updated_ember: true
           - build_type: frontend
             target: themes
-            updated_ember: true
-          - build_type: system
-            target: chat
             updated_ember: true
 
     steps:
@@ -143,6 +146,7 @@ jobs:
         run: bin/rake themes:clone_all_official
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+        if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
@@ -256,8 +260,8 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
-      - name: Ensure latest minio binary installed for System Tests
-        if: matrix.build_type == 'system'
+      - name: Ensure latest minio binary installed for Core System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'core'
         run: bundle exec ruby script/install_minio_binaries.rb
 
       - name: Core System Tests

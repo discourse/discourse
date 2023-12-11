@@ -132,7 +132,7 @@
   }
 
   .markdown {
-    font-family: monospace;
+    font-family: var(--d-font-family--monospace);
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;

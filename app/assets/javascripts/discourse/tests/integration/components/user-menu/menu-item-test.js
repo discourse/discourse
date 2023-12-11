@@ -357,7 +357,7 @@ module(
 
       await render(template);
       assert.notOk(exists(".item-description"), "description is not rendered");
-      assert.ok(
+      assert.strictEqual(
         query("li").textContent.trim(),
         "notification label",
         "only label content is displayed"
@@ -390,7 +390,7 @@ module(
       );
 
       await render(template);
-      assert.ok(
+      assert.strictEqual(
         query("li").textContent.trim(),
         "notification description",
         "only notification description is displayed"
@@ -400,7 +400,7 @@ module(
   }
 );
 
-function getMessage(overrides = {}) {
+function getMessage(overrides = {}, siteSettings, site) {
   const message = deepMerge(
     cloneJSON(
       PrivateMessagesFixture["/topics/private-messages/eviltrout.json"]
@@ -409,7 +409,7 @@ function getMessage(overrides = {}) {
     overrides
   );
 
-  return new UserMenuMessageItem({ message });
+  return new UserMenuMessageItem({ message, siteSettings, site });
 }
 
 module(
@@ -422,7 +422,11 @@ module(
     test("item description is the fancy title of the message", async function (assert) {
       this.set(
         "item",
-        getMessage({ fancy_title: "This is a <b>safe</b> title!" })
+        getMessage(
+          { fancy_title: "This is a <b>safe</b> title!" },
+          this.siteSettings,
+          this.site
+        )
       );
       await render(template);
       assert.strictEqual(
@@ -438,7 +442,7 @@ module(
   }
 );
 
-function getBookmark(overrides = {}) {
+function getBookmark(overrides = {}, siteSettings, site) {
   const bookmark = deepMerge(
     {
       id: 6,
@@ -480,7 +484,7 @@ function getBookmark(overrides = {}) {
     overrides
   );
 
-  return new UserMenuBookmarkItem({ bookmark });
+  return new UserMenuBookmarkItem({ bookmark, siteSettings, site });
 }
 
 module(
@@ -491,7 +495,7 @@ module(
     const template = hbs`<UserMenu::MenuItem @item={{this.item}}/>`;
 
     test("uses bookmarkable_url for the href", async function (assert) {
-      this.set("item", getBookmark());
+      this.set("item", getBookmark({}, this.siteSettings, this.site));
       await render(template);
       assert.ok(
         query("li.bookmark a").href.endsWith("/t/this-bookmarkable-url/227/1")
@@ -501,7 +505,11 @@ module(
     test("item label is the bookmarked post author", async function (assert) {
       this.set(
         "item",
-        getBookmark({ user: { username: "bookmarkPostAuthor" } })
+        getBookmark(
+          { user: { username: "bookmarkPostAuthor" } },
+          this.siteSettings,
+          this.site
+        )
       );
       await render(template);
       assert.strictEqual(
@@ -511,7 +519,14 @@ module(
     });
 
     test("item description is the bookmark title", async function (assert) {
-      this.set("item", getBookmark({ title: "Custom bookmark title" }));
+      this.set(
+        "item",
+        getBookmark(
+          { title: "Custom bookmark title" },
+          this.siteSettings,
+          this.site
+        )
+      );
       await render(template);
       assert.strictEqual(
         query("li.bookmark .item-description").textContent.trim(),

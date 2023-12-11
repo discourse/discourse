@@ -650,8 +650,6 @@ el:
           imap_title: "IMAP"
           imap_additional_settings: "Πρόσθετες ρυθμίσεις"
           imap_settings_valid: "Έγκυρες ρυθμίσεις IMAP."
-          prefill:
-            gmail: "GMail"
           credentials:
             title: "Διαπιστευτήρια"
             smtp_server: "SMTP Server"
@@ -3126,7 +3124,6 @@ el:
       delete_confirm_synonyms:
         one: "Το συνώνυμό του θα διαγραφεί επίσης."
         other: "Τα %{count} συνώνυμά του θα διαγραφούν επίσης."
-      description: "Περιγραφή"
       sort_by: "Ταξινόμηση κατά:"
       sort_by_count: "άθροισμα"
       sort_by_name: "όνομα"
@@ -3313,6 +3310,18 @@ el:
         typeMismatch:
           default: "Παρακαλώ εισάγετε μια έγκυρη αξία."
           email: "Παρακαλώ δώσε μία έγκυρη διεύθυνση email."
+    table_builder:
+      modal:
+        help:
+          enter_key: "Enter"
+      edit:
+        modal:
+          cancel: "ακύρωση"
+          create: "Αποθήκευση"
+          reason: "γιατί αναθεωρείς;"
+      spreadsheet:
+        show: "Εμφάνιση"
+        about: "Σχετικά"
   admin_js:
     admin:
       title: "Διαχειριστής"
@@ -3588,6 +3597,7 @@ el:
         change_settings_short: "Ρυθμίσεις"
         howto: "Πως εγκαθιστώ πρόσθετα;"
         author: "Του/της %{author}"
+        learn_more: "Μάθε περισσότερα"
       backups:
         title: "Αντίγραφα ασφαλείας"
         menu:

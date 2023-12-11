@@ -2404,7 +2404,6 @@ et:
       choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"
       delete_tag: "Kustuta silt"
-      description: "Kirjeldus"
       sort_by: "Järjesta:"
       sort_by_count: "üldarv"
       sort_by_name: "nimi"
@@ -2537,6 +2536,15 @@ et:
         typeMismatch:
           default: "Palun sisesta korrektne väärtus."
           email: "Sisesta palun korrektne meiliaadress."
+    table_builder:
+      edit:
+        modal:
+          cancel: "tühista"
+          create: "Salvesta"
+          reason: "miks sa seda muudad?"
+      spreadsheet:
+        show: "Näita"
+        about: "Teave"
   admin_js:
     admin:
       title: "Discourse Admin"
@@ -2734,6 +2742,7 @@ et:
         change_settings_short: "Sätted"
         howto: "Kuidas pluginaid paigaldada?"
         author: "Autor %{author}"
+        learn_more: "Uuri veel"
       backups:
         title: "Varukoopiad"
         menu:

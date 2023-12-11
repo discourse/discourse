@@ -55,7 +55,7 @@ RSpec.describe CommonPasswords do
 
     it "loads the passwords file if redis has an empty list" do
       Discourse.redis.without_namespace.stubs(:scard).returns(0)
-      described_class.expects(:load_passwords).returns(["password"])
+      described_class.expects(:load_passwords).returns([])
       list = described_class.password_list
       expect(list).to respond_to(:include?)
     end

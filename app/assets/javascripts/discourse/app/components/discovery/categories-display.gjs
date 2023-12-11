@@ -7,6 +7,7 @@ import CategoriesBoxes from "discourse/components/categories-boxes";
 import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
 import CategoriesOnly from "discourse/components/categories-only";
 import CategoriesWithFeaturedTopics from "discourse/components/categories-with-featured-topics";
+import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SubcategoriesWithFeaturedTopics from "discourse/components/subcategories-with-featured-topics";
 
@@ -80,6 +81,18 @@ export default class CategoriesDisplay extends Component {
       @connectorTagName="div"
       @outletArgs={{hash categories=@categories topics=@topics}}
     />
-    <this.categoriesComponent @categories={{@categories}} @topics={{@topics}} />
+    {{#if this.siteSettings.lazy_load_categories}}
+      <LoadMore @selector=".category" @action={{@loadMore}}>
+        <this.categoriesComponent
+          @categories={{@categories}}
+          @topics={{@topics}}
+        />
+      </LoadMore>
+    {{else}}
+      <this.categoriesComponent
+        @categories={{@categories}}
+        @topics={{@topics}}
+      />
+    {{/if}}
   </template>
 }

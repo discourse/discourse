@@ -116,7 +116,9 @@ export default class ChatChannelThreadSubscriptionManager {
     const message = this.messagesManager.findMessage(data.chat_message.id);
     if (message) {
       message.cooked = data.chat_message.cooked;
+      message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.processed = true;
+      message.incrementVersion();
     }
   }
 

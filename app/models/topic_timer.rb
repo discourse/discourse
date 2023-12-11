@@ -30,10 +30,6 @@ class TopicTimer < ActiveRecord::Base
   before_save do
     self.created_at ||= Time.zone.now if execute_at
     self.public_type = self.public_type?
-
-    if (will_save_change_to_execute_at? && !attribute_in_database(:execute_at).nil?) ||
-         will_save_change_to_user_id?
-    end
   end
 
   # These actions are in place to make sure the topic is in the correct

@@ -173,7 +173,8 @@ export default class TagShowRoute extends DiscourseRoute {
     );
     const model = this.currentModel;
 
-    if (model?.tag?.id) {
+    const tag = model?.tag?.id;
+    if (tag && tag !== NONE) {
       if (model.category) {
         return I18n.t("tagging.filters.with_category", {
           filter: filterText,

@@ -161,7 +161,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
         expect { Jobs::EnqueueDigestEmails.new.execute(nil) }.to change(
           Jobs::UserEmail.jobs,
           :size,
-        ).by (1)
+        ).by(1)
       end
 
       # The job didn't actually run, so fake the user_stat update
@@ -171,7 +171,7 @@ RSpec.describe Jobs::EnqueueDigestEmails do
         expect { Jobs::EnqueueDigestEmails.new.execute(nil) }.to change(
           Jobs::UserEmail.jobs,
           :size,
-        ).by (1)
+        ).by(1)
       end
 
       user1.user_stat.update(digest_attempted_at: Time.zone.now)

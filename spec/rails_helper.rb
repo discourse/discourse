@@ -49,7 +49,6 @@ class RspecErrorTracker
       RspecErrorTracker.last_exception = e
       raise e
     end
-  ensure
   end
 end
 
@@ -176,7 +175,8 @@ end
 
 RSpec.configure { |config| config.extend Prefabrication }
 
-PER_SPEC_TIMEOUT_SECONDS = 30
+PER_SPEC_TIMEOUT_SECONDS = 45
+BROWSER_READ_TIMEOUT = 30
 
 RSpec.configure do |config|
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
@@ -235,7 +235,7 @@ RSpec.configure do |config|
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
 
-    # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is requried for
+    # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is required for
     # system tests to support running system tests in multiple processes. If we don't download the `chromedriver` binary
     # before running system tests in multiple processes, each process will end up calling the `selenium-manager` binary
     # to download the `chromedriver` binary at the same time but the problem is that the binary is being downloaded to
@@ -371,8 +371,8 @@ RSpec.configure do |config|
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
       if example.exception.nil? &&
-           (capybara_timout_error = example.metadata[:_capybara_timeout_exception])
-        raise capybara_timout_error
+           (capybara_timeout_error = example.metadata[:_capybara_timeout_exception])
+        raise capybara_timeout_error
       end
     end
 
@@ -388,7 +388,8 @@ RSpec.configure do |config|
           options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
-    driver_options = { browser: :chrome }
+    client = Selenium::WebDriver::Remote::Http::Default.new(read_timeout: BROWSER_READ_TIMEOUT)
+    driver_options = { browser: :chrome, http_client: client }
 
     if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
       driver_options[:browser] = :remote

@@ -11,7 +11,7 @@ function ControllerShim(resolverName, deprecationId) {
       deprecated(
         `${resolverName} no longer exists, and this shim will eventually be removed. To fetch information about the current discovery route, use the discovery service instead.`,
         {
-          deprecationId,
+          id: deprecationId,
         }
       );
     }

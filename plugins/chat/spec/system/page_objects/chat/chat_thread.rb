@@ -68,7 +68,7 @@ module PageObjects
         header.has_css?(".chat-thread__back-to-previous-route[href='#{channel.relative_url}']")
       end
 
-      def back_to_previous_route
+      def back
         header.find(".chat-thread__back-to-previous-route").click
       end
 

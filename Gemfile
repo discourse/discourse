@@ -128,6 +128,7 @@ group :test do
   gem "minitest", require: false
   gem "simplecov", require: false
   gem "selenium-webdriver", "~> 4.14", require: false
+  gem "selenium-devtools", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
@@ -150,9 +151,7 @@ group :test, :development do
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
 
-  # Depreciation warnings that we can't act on is being printed out in the test output.
-  # See https://github.com/rswag/rswag/issues/703
-  gem "rswag-specs", "2.11.0"
+  gem "rswag-specs"
 
   gem "annotate"
 
@@ -217,7 +216,7 @@ gem "logstash-logger", require: false
 gem "logster"
 
 # A fork of sassc with dart-sass support
-gem "dartsass-ruby"
+gem "sassc-embedded"
 
 gem "rotp", require: false
 
@@ -246,7 +245,7 @@ if ENV["IMPORT"] == "1"
   gem "parallel", require: false
 end
 
-if ENV["GENERIC_IMPORT"] == "1"
+group :generic_import, optional: true do
   gem "sqlite3"
   gem "redcarpet"
 end
