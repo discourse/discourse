@@ -949,6 +949,7 @@ aside.quote {
   .small-action-desc.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }
+  // Disable animation so deleted status is visible immediately
   .deleted .topic-body.highlighted .cooked {
     animation: none;
   }
