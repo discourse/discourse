@@ -89,6 +89,7 @@ export default class UserThreads extends Component {
                   @message={{thread.originalMessage}}
                   @interactiveUser={{false}}
                   @interactiveThread={{false}}
+                  tabindex="-1"
                 />
               </div>
             </div>
