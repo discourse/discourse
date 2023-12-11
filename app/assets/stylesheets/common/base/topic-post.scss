@@ -1450,6 +1450,11 @@ span.mention {
     .btn {
       margin-right: 0.5em;
       white-space: nowrap;
+
+      .d-icon {
+        color: inherit;
+      }
+
       &.btn-remind {
         background: var(--primary-very-low);
         margin-right: auto;
