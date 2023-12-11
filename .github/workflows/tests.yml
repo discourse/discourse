@@ -57,7 +57,6 @@ jobs:
         include:
           - build_type: system
             target: chat
-            ruby: "3.2"
           - build_type: system
             target: chat
             updated_ember: true
