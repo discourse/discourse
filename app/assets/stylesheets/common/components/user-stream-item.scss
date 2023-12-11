@@ -70,8 +70,11 @@
   }
 
   .user-notifications-list {
+    padding-top: 0;
+
     li.notification {
       padding: 0.25em 0;
+      border-bottom: 1px solid var(--primary-low);
 
       a {
         align-items: center;
@@ -83,9 +86,10 @@
     }
     &:not(.show-avatars) {
       li.notification {
-        padding: 0.5em 0;
+        padding: 0.75em 0;
 
         .d-icon {
+          padding-top: 0;
           font-size: var(--font-up-2);
         }
       }
