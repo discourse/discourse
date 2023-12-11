@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
@@ -7,10 +8,10 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import and from "truth-helpers/helpers/and";
 import or from "truth-helpers/helpers/or";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
 import ThreadsListButton from "discourse/plugins/chat/discourse/components/chat/thread/threads-list-button";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
-import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 
 export default class ChatFullPageHeader extends Component {
   @service chatStateManager;
@@ -38,13 +39,20 @@ export default class ChatFullPageHeader extends Component {
     });
   }
 
+  @action
+  trapMouse(event) {
+    event.stopPropagation();
+  }
+
   <template>
+    {{! template-lint-disable no-invalid-interactive }}
     {{#if (and this.chatStateManager.isFullPageActive this.displayed)}}
       <div
         class={{concatClass
           "chat-full-page-header"
           (unless @channel.isFollowing "-not-following")
         }}
+        {{on "mousemove" this.trapMouse}}
       >
         <div class="chat-channel-header-details">
           {{#if this.site.mobileView}}
@@ -63,7 +71,7 @@ export default class ChatFullPageHeader extends Component {
             @models={{@channel.routeModels}}
             class="chat-channel-title-wrapper"
           >
-            <ChatChannelTitle @channel={{@channel}} />
+            <ChannelTitle @channel={{@channel}} />
           </LinkTo>
 
           {{#if (or @channel.threadingEnabled this.site.desktopView)}}

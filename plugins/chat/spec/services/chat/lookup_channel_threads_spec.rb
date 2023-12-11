@@ -113,11 +113,14 @@ RSpec.describe ::Chat::LookupChannelThreads do
     before do
       [thread_1, thread_2, thread_3].each.with_index do |t, index|
         t.original_message.update!(created_at: (index + 1).weeks.ago)
+        t.update!(replies_count: 2)
         t.add(current_user)
       end
     end
 
     describe "model - threads" do
+      before { channel_1.add(current_user) }
+
       it { is_expected.to be_a_success }
 
       it "orders threads by the last reply created_at timestamp" do
@@ -153,9 +156,13 @@ RSpec.describe ::Chat::LookupChannelThreads do
 
         it "sorts very old unreads to top over recency, and sorts both unreads and other threads by recency" do
           thread_4 = Fabricate(:chat_thread, channel: channel_1)
+          thread_4.update!(replies_count: 2)
           thread_5 = Fabricate(:chat_thread, channel: channel_1)
+          thread_5.update!(replies_count: 2)
           thread_6 = Fabricate(:chat_thread, channel: channel_1)
+          thread_6.update!(replies_count: 2)
           thread_7 = Fabricate(:chat_thread, channel: channel_1)
+          thread_7.update!(replies_count: 2)
 
           [thread_4, thread_5, thread_6, thread_7].each do |t|
             t.add(current_user)
@@ -202,15 +209,23 @@ RSpec.describe ::Chat::LookupChannelThreads do
         expect(result.threads.map(&:id)).to eq([thread_1.id, thread_2.id, thread_3.id])
       end
 
-      it "only returns threads where the user has their thread notification level as tracking or regular" do
+      it "returns every threads of the channel, no matter the tracking notification level or membership" do
         thread_4 = Fabricate(:chat_thread, channel: channel_1)
-        thread_4.add(current_user)
-        thread_4.membership_for(current_user).update!(
+        thread_4.update!(replies_count: 2)
+
+        expect(result.threads.map(&:id)).to match_array(
+          [thread_1.id, thread_2.id, thread_3.id, thread_4.id],
+        )
+      end
+
+      it "doesnt return muted threads" do
+        thread = Fabricate(:chat_thread, channel: channel_1)
+        thread.add(current_user)
+        thread.membership_for(current_user).update!(
           notification_level: ::Chat::UserChatThreadMembership.notification_levels[:muted],
         )
-        Fabricate(:chat_thread, channel: channel_1)
 
-        expect(result.threads.map(&:id)).to eq([thread_1.id, thread_2.id, thread_3.id])
+        expect(result.threads.map(&:id)).to_not include(thread.id)
       end
 
       it "does not count deleted messages for sort order" do

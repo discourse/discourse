@@ -429,7 +429,7 @@ module(
       );
       assert.true(
         queryAll(".chat-message-collapser-link-small")[1].innerHTML.includes(
-          "%3Cscript%3Esomeeviltitle%3C/script%3E"
+          "&lt;script&gt;someeviltitle&lt;/script&gt;"
         )
       );
     });

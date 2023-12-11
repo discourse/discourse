@@ -491,6 +491,9 @@ en:
           create_export: "Create export"
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
+      my_threads:
+        title: My threads
+
       direct_messages:
         title: "Personal chat"
         new: "Create a personal chat"

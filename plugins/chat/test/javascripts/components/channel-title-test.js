@@ -6,13 +6,13 @@ import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
-module("Discourse Chat | Component | chat-channel-title", function (hooks) {
+module("Discourse Chat | Component | <ChannelTitle />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("category channel", async function (assert) {
     this.channel = fabricators.channel();
 
-    await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
+    await render(hbs`<ChannelTitle @channel={{this.channel}} />`);
 
     assert.strictEqual(
       query(".chat-channel-title__category-badge").getAttribute("style"),
@@ -30,7 +30,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
       title: "<div class='xss'>evil</div>",
     });
 
-    await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
+    await render(hbs`<ChannelTitle @channel={{this.channel}} />`);
 
     assert.false(exists(".xss"));
   });
@@ -40,7 +40,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
       chatable: fabricators.category({ read_restricted: true }),
     });
 
-    await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
+    await render(hbs`<ChannelTitle @channel={{this.channel}} />`);
 
     assert.true(exists(".d-icon-lock"));
   });
@@ -50,7 +50,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
       chatable: fabricators.category({ read_restricted: false }),
     });
 
-    await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
+    await render(hbs`<ChannelTitle @channel={{this.channel}} />`);
 
     assert.false(exists(".d-icon-lock"));
   });
@@ -62,7 +62,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
       }),
     });
 
-    await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
+    await render(hbs`<ChannelTitle @channel={{this.channel}} />`);
 
     const user = this.channel.chatable.users[0];
 
@@ -79,7 +79,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
     });
     this.channel.chatable.group = true;
 
-    await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
+    await render(hbs`<ChannelTitle @channel={{this.channel}} />`);
 
     const users = this.channel.chatable.users;
 

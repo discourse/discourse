@@ -1,0 +1,23 @@
+.chat__user-threads__thread-indicator {
+  padding-top: 1rem;
+
+  .chat-message-thread-indicator {
+    margin: 0;
+  }
+}
+
+.chat__user-threads__title {
+  .chat-channel-title__name {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+}
+
+.chat__user-threads__thread {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--primary-low);
+
+  &-container {
+    padding: 1rem 1rem 0 1rem;
+  }
+}
