@@ -79,7 +79,7 @@ RSpec.describe "multiple invites" do
                    },
                    example: [],
                  },
-                 successfully_created_invites: {
+                 successful_invitations: {
                    type: :array,
                    example: [
                      {

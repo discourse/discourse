@@ -263,6 +263,16 @@ RSpec.describe InvitesController do
       expect(response.status).to eq(403)
     end
 
+    it "creates multiple invites for multiple emails" do
+      sign_in(user)
+
+      post "/invites.json", params: { email: %w[test@example.com test1@example.com bademail] }
+      expect(response.status).to eq(200)
+      json = JSON(response.body)
+      expect(json["failed_invitations"].length).to eq(1)
+      expect(json["successful_invitations"].length).to eq(2)
+    end
+
     context "while logged in" do
       before { sign_in(user) }
 
