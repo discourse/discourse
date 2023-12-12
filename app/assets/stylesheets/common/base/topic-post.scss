@@ -942,29 +942,23 @@ aside.quote {
     border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
   }
+}
 
-  @media (prefers-reduced-motion: no-preference) {
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
-    }
+@media (prefers-reduced-motion: no-preference) {
+  .topic-body.highlighted .cooked,
+  .small-action-desc.highlighted {
+    animation: background-fade-highlight 2.5s ease-out;
+  }
+  // Disable animation so deleted status is visible immediately
+  .deleted .topic-body.highlighted .cooked {
+    animation: none;
   }
 }
 
-.topic-body:not(.deleted),
-.small-action-desc {
-  @media (prefers-reduced-motion: no-preference) {
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
-    }
-  }
-  &.highlighted:focus-visible {
+.small-action-desc,
+.topic-body {
+  &:focus-visible {
     outline: none;
-  }
-  .deleted & {
-    // Disable so the deleted background is visible immediately
-    &.highlighted {
-      animation: none;
-    }
   }
 }
 
@@ -1450,6 +1444,11 @@ span.mention {
     .btn {
       margin-right: 0.5em;
       white-space: nowrap;
+
+      .d-icon {
+        color: inherit;
+      }
+
       &.btn-remind {
         background: var(--primary-very-low);
         margin-right: auto;

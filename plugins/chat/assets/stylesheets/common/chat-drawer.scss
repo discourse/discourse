@@ -260,9 +260,12 @@ a.chat-drawer-header__title {
 }
 
 .chat-drawer-content {
+  @include chat-scrollbar();
   box-sizing: border-box;
   height: 100%;
   min-height: 1px;
   padding-bottom: 0.25em;
   position: relative;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }

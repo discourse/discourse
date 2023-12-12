@@ -45,6 +45,10 @@ export default class ChatThread {
       ? ChatMessage.create(channel, args.original_message)
       : null;
 
+    if (this.originalMessage) {
+      this.originalMessage.thread = this;
+    }
+
     this.title = args.title;
 
     if (args.current_user_membership) {

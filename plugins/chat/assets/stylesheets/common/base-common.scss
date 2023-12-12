@@ -199,7 +199,6 @@ body.has-full-page-chat {
   background: var(--d-content-background);
 
   .chat-full-page-header {
-    border-top: 1px solid var(--primary-low);
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
     z-index: 3;
@@ -364,7 +363,6 @@ html.has-full-page-chat {
 
       .main-chat-outlet {
         min-height: 0;
-        overflow: hidden;
       }
     }
   }

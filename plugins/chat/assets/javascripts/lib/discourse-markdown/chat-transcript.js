@@ -30,6 +30,7 @@ const chatTranscriptRule = {
       return;
     }
 
+    const isThread = threadId && content.includes("[chat");
     let wrapperDivToken = state.push("div_chat_transcript_wrap", "div", 1);
 
     if (channelName && multiQuote) {
@@ -53,7 +54,7 @@ const chatTranscriptRule = {
       state.push("div_chat_transcript_meta", "div", -1);
     }
 
-    if (threadId) {
+    if (isThread) {
       state.push("details_chat_transcript_wrap_open", "details", 1);
       state.push("summary_chat_transcript_open", "summary", 1);
 
@@ -227,7 +228,7 @@ const chatTranscriptRule = {
     let messagesToken = state.push("div_chat_transcript_messages", "div", 1);
     messagesToken.attrs = [["class", "chat-transcript-messages"]];
 
-    if (threadId) {
+    if (isThread) {
       const regex = /\[chat/i;
       const match = regex.exec(content);
 

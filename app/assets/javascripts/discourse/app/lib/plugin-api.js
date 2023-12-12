@@ -75,7 +75,6 @@ import {
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { includeAttributes } from "discourse/lib/transform-post";
-import DiscourseURL from "discourse/lib/url";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
@@ -134,7 +133,6 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
@@ -526,50 +524,7 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
-    this._deprecateDecoratingHamburgerWidgetLinks(name, fn);
     decorateWidget(name, fn);
-  }
-
-  /**
-   * This is a bridge to support the legacy hamburger widget links that are added by decorating the widgets. This can
-   * be removed once the legacy hamburger widget no longer exists.
-   */
-  _deprecateDecoratingHamburgerWidgetLinks(name, fn) {
-    if (
-      name === "hamburger-menu:generalLinks" ||
-      name === "hamburger-menu:footerLinks"
-    ) {
-      deprecated(
-        `Usage of \`api.decorateWidget('${name}')\` is deprecated, please use \`api.addCommunitySectionLink\` instead.`,
-        {
-          id: "discourse.decorate-widget.hamburger-widget-links",
-          since: "3.2",
-          dropFrom: "3.3",
-        }
-      );
-
-      const { href, route, label, rawLabel, className } = fn();
-      const textContent = rawLabel || I18n.t(label);
-
-      const args = {
-        name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
-        title: textContent,
-        text: textContent,
-      };
-
-      if (href) {
-        if (DiscourseURL.isInternal(href)) {
-          args.href = href;
-        } else {
-          // Skip external links support for now
-          return;
-        }
-      } else {
-        args.route = route;
-      }
-
-      this.addCommunitySectionLink(args, name.match(/footerLinks/));
-    }
   }
 
   /**
