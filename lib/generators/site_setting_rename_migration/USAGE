@@ -1,5 +1,5 @@
 Description:
-    Generates migration from old site setting name into new site setting name.
+    Generates migration to rename a site setting name from an old name to a new site setting name. This assumes that the new setting is the same data format as the old one.
 
 Example:
     bin/rails generate site_setting_rename_migration old_setting_name new_setting_name
