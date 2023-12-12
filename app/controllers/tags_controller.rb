@@ -142,6 +142,10 @@ class TagsController < ::ApplicationController
 
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
+      if request.original_url.end_with? "/"
+        redirect_to(request.fullpath, status: :moved_permanently)
+        return
+      end
       @tag_id = params[:tag_id].force_encoding("UTF-8")
       @additional_tags =
         params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }

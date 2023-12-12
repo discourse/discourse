@@ -1082,6 +1082,15 @@ RSpec.describe ListController do
         )
       end
     end
+
+    context "with trailing slash" do
+      it "redirects to URL without trailing slash" do
+        get "/c/#{category.slug}/#{category.id}/"
+
+        expect(response).to have_http_status(301)
+        expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
+      end
+    end
   end
 
   describe "shared drafts" do

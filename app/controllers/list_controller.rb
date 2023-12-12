@@ -416,6 +416,7 @@ class ListController < ApplicationController
 
       return redirect_to path(url), status: 301
     end
+    return redirect_to path(request.fullpath), status: 301 if request.original_url.end_with? "/"
 
     @description_meta =
       if @category.uncategorized?

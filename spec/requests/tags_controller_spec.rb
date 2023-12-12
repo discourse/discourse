@@ -895,6 +895,15 @@ RSpec.describe TagsController do
         end
       end
     end
+
+    context "with trailing slash" do
+      it "redirects to URL without trailing slash" do
+        get "/tag/#{tag.name}/"
+
+        expect(response).to have_http_status(301)
+        expect(response).to redirect_to("/tag/#{tag.name}")
+      end
+    end
   end
 
   describe "#show_top" do
