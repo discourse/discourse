@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
 
 export default class ChatNavbar extends Component {
@@ -20,7 +21,7 @@ export default class ChatNavbar extends Component {
   }
 
   <template>
-    <div class="chat-navbar-container">
+    <div class="chat-navbar-container" style="top: {{(headerOffset)}}px">
       <nav class="chat-navbar">
         {{#if (has-block "current")}}
           <span class="chat-navbar__current">
