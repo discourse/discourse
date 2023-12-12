@@ -388,8 +388,7 @@ RSpec.configure do |config|
           options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
-    client = Selenium::WebDriver::Remote::Http::Default.new(read_timeout: BROWSER_READ_TIMEOUT)
-    driver_options = { browser: :chrome, http_client: client }
+    driver_options = { browser: :chrome }
 
     if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
       driver_options[:browser] = :remote
