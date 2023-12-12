@@ -14,11 +14,11 @@ RSpec.describe Guardian do
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
   fab!(:plain_category) { Fabricate(:category) }
 
-  fab!(:trust_level_0) { Fabricate(:user, trust_level: 0) }
-  fab!(:trust_level_1) { Fabricate(:user, trust_level: 1) }
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2) }
-  fab!(:trust_level_3) { Fabricate(:user, trust_level: 3) }
-  fab!(:trust_level_4) { Fabricate(:user, trust_level: 4) }
+  fab!(:trust_level_0) { Fabricate(:user, trust_level: 0, refresh_auto_groups: true) }
+  fab!(:trust_level_1) { Fabricate(:user, trust_level: 1, refresh_auto_groups: true) }
+  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2, refresh_auto_groups: true) }
+  fab!(:trust_level_3) { Fabricate(:user, trust_level: 3, refresh_auto_groups: true) }
+  fab!(:trust_level_4) { Fabricate(:user, trust_level: 4, refresh_auto_groups: true) }
   fab!(:another_admin) { Fabricate(:admin) }
   fab!(:coding_horror)
 
@@ -1678,6 +1678,7 @@ RSpec.describe Guardian do
 
       it "returns false when trying to edit a topic with no trust" do
         SiteSetting.min_trust_to_edit_post = 2
+        SiteSetting.edit_post_allowed_groups = 12
         post.user.trust_level = 1
 
         expect(Guardian.new(topic.user).can_edit?(topic)).to be_falsey
@@ -1685,6 +1686,7 @@ RSpec.describe Guardian do
 
       it "returns false when trying to edit a post with no trust" do
         SiteSetting.min_trust_to_edit_post = 2
+        SiteSetting.edit_post_allowed_groups = 12
         post.user.trust_level = 1
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
@@ -1731,7 +1733,6 @@ RSpec.describe Guardian do
           SiteSetting.shared_drafts_category = category.id
           SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
           Fabricate(:shared_draft, topic: topic)
-          Group.refresh_automatic_groups!
         end
 
         it "returns true if a shared draft exists" do
@@ -1769,7 +1770,8 @@ RSpec.describe Guardian do
 
       describe "post edit time limits" do
         context "when post is older than post_edit_time_limit" do
-          let(:topic) { Fabricate(:topic) }
+          let(:user) { Fabricate(:user, refresh_auto_groups: true) }
+          let(:topic) { Fabricate(:topic, user: user) }
           let(:old_post) do
             Fabricate(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago)
           end
