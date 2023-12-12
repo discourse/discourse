@@ -765,38 +765,6 @@
   }
 }
 
-.large-notifications {
-  margin: 0;
-}
-
-.large-notification {
-  display: flex;
-  align-items: center;
-
-  a {
-    display: flex;
-    align-items: center;
-
-    .d-icon {
-      margin-right: 0.5em;
-    }
-
-    span:first-child {
-      color: var(--primary);
-    }
-
-    // Can remove this once other languages have removed html from i18n values
-    div {
-      .fa {
-        display: none;
-      }
-      p {
-        margin: 0;
-      }
-    }
-  }
-}
-
 .second-factor {
   .second-factor-item {
     width: 100%;
@@ -855,7 +823,7 @@
     border: 0;
     cursor: auto;
     outline: none;
-    font-family: monospace;
+    font-family: var(--d-font-family--monospace);
     &:focus {
       box-shadow: none;
       border-color: var(--primary-low);

@@ -148,16 +148,11 @@ module SystemHelpers
   end
 
   def using_browser_timezone(timezone, &example)
-    previous_browser_timezone = ENV["TZ"]
-
-    ENV["TZ"] = timezone
-
     using_session(timezone) do |session|
+      page.driver.browser.devtools.emulation.set_timezone_override(timezone_id: timezone)
       freeze_time(&example)
       session.quit
     end
-
-    ENV["TZ"] = previous_browser_timezone
   end
 
   # When using parallelism, Capybara's `using_session` method can cause

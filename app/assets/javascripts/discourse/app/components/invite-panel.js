@@ -267,8 +267,11 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("isPM")
-  errorMessage(isPM) {
+  @discourseComputed("isPM", "ajaxError")
+  errorMessage(isPM, ajaxError) {
+    if (ajaxError) {
+      return ajaxError;
+    }
     return isPM
       ? I18n.t("topic.invite_private.error")
       : I18n.t("topic.invite_reply.error");
@@ -326,14 +329,9 @@ export default Component.extend({
 
     const onerror = (e) => {
       if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-        this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+        this.set("ajaxError", e.jqXHR.responseJSON.errors[0]);
       } else {
-        this.set(
-          "errorMessage",
-          this.isPM
-            ? I18n.t("topic.invite_private.error")
-            : I18n.t("topic.invite_reply.error")
-        );
+        this.set("ajaxError", null);
       }
       model.setProperties({ saving: false, error: true });
     };
@@ -397,14 +395,9 @@ export default Component.extend({
       })
       .catch((e) => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-          this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+          this.set("ajaxError", e.jqXHR.responseJSON.errors[0]);
         } else {
-          this.set(
-            "errorMessage",
-            this.isPM
-              ? I18n.t("topic.invite_private.error")
-              : I18n.t("topic.invite_reply.error")
-          );
+          this.set("ajaxError", null);
         }
         model.setProperties({ saving: false, error: true });
       });

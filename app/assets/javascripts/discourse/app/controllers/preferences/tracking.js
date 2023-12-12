@@ -139,7 +139,7 @@ export default class extends Controller {
           ? this.model.regularCategories
           : this.model.mutedCategories
       )
-      .filter((t) => t);
+      .filter(Boolean);
   }
 
   @computed("siteSettings.remove_muted_tags_from_latest")

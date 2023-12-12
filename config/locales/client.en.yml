@@ -220,6 +220,7 @@ en:
       only_admins: "(this message is only shown to site administrators)"
 
     broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
+    broken_page_change_alert: "An onPageChange handler raised an error. Check the browser developer tools for more information."
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
 
@@ -2269,6 +2270,9 @@ en:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
         security_key: "Use a security key instead"
+      no_login_methods:
+        title: "No login methods"
+        description: "No login methods are configured. Administrators can visit <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> to reconfigure the site."
     invites:
       accept_title: "Invitation"
       welcome_to: "Welcome to %{site_name}!"
@@ -3553,6 +3557,8 @@ en:
         delete: "delete this post"
         undelete: "undelete this post"
         share: "share a link to this post"
+        copy_title: "copy a link to this post to clipboard"
+        link_copied: "Link copied!"
         more: "More"
         delete_replies:
           confirm: "Do you also want to delete the replies to this post?"

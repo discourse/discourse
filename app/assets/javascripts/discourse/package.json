@@ -27,8 +27,8 @@
     "pretty-text": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.5",
-    "@babel/standalone": "^7.23.5",
+    "@babel/core": "^7.23.6",
+    "@babel/standalone": "^7.23.6",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
@@ -127,7 +127,7 @@
     "select-kit": "1.0.0",
     "sinon": "^17.0.1",
     "source-map": "^0.7.4",
-    "terser": "^5.25.0",
+    "terser": "^5.26.0",
     "truth-helpers": "1.0.0",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",

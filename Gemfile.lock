@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: 3654e5ca7fb10dc84a921e7f06b7875eaf8729c3
+  revision: f2db1f2f56b3327e945d343fa19663e59a1ac2ba
   specs:
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -57,7 +57,7 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    addressable (2.8.5)
+    addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
@@ -87,6 +87,7 @@ GEM
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
       rouge (>= 1.0.0)
+    bigdecimal (3.1.4)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
     bootsnap (1.17.0)
@@ -122,8 +123,6 @@ GEM
     crass (1.0.6)
     css_parser (1.16.0)
       addressable
-    dartsass-ruby (3.0.2)
-      sass-embedded (~> 1.54, < 1.67)
     date (3.3.4)
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
@@ -161,7 +160,6 @@ GEM
     gc_tracer (1.5.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (3.25.1)
     google-protobuf (3.25.1-aarch64-linux)
     google-protobuf (3.25.1-arm64-darwin)
     google-protobuf (3.25.1-x86_64-darwin)
@@ -194,7 +192,6 @@ GEM
     jwt (2.7.1)
     kgio (2.11.4)
     language_server-protocol (3.17.0.3)
-    libv8-node (18.16.0.0)
     libv8-node (18.16.0.0-aarch64-linux)
     libv8-node (18.16.0.0-arm64-darwin)
     libv8-node (18.16.0.0-x86_64-darwin)
@@ -229,7 +226,6 @@ GEM
       rack (>= 1.1.3)
     method_source (1.0.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.5)
     mini_racer (0.8.0)
       libv8-node (~> 18.16.0.0)
     mini_scheduler (0.16.0)
@@ -257,9 +253,6 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.15.5)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.15.5-aarch64-linux)
       racc (~> 1.4)
     nokogiri (1.15.5-arm64-darwin)
@@ -280,7 +273,8 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 4)
-    oj (3.16.1)
+    oj (3.16.2)
+      bigdecimal (~> 3.1)
     omniauth (1.9.2)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
@@ -329,7 +323,7 @@ GEM
       nio4r (~> 2.0)
     racc (1.7.3)
     rack (2.2.8)
-    rack-mini-profiler (3.2.0)
+    rack-mini-profiler (3.3.0)
       rack (>= 1.2.0)
     rack-protection (3.1.0)
       rack (~> 2.2, >= 2.2.4)
@@ -367,6 +361,7 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.8.0)
+    redcarpet (3.6.0)
     redis (4.8.1)
     redis-namespace (1.11.0)
       redis (>= 4)
@@ -414,7 +409,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.58.0)
+    rubocop (1.59.0)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -448,17 +443,18 @@ GEM
     sanitize (6.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sass-embedded (1.66.1)
+    sass-embedded (1.69.5-aarch64-linux-gnu)
       google-protobuf (~> 3.23)
-      rake (>= 13.0.0)
-    sass-embedded (1.66.1-aarch64-linux-gnu)
+    sass-embedded (1.69.5-arm64-darwin)
       google-protobuf (~> 3.23)
-    sass-embedded (1.66.1-arm64-darwin)
+    sass-embedded (1.69.5-x86_64-darwin)
       google-protobuf (~> 3.23)
-    sass-embedded (1.66.1-x86_64-darwin)
+    sass-embedded (1.69.5-x86_64-linux-gnu)
       google-protobuf (~> 3.23)
-    sass-embedded (1.66.1-x86_64-linux-gnu)
-      google-protobuf (~> 3.23)
+    sassc-embedded (1.68.6)
+      sass-embedded (~> 1.68)
+    selenium-devtools (0.120.0)
+      selenium-webdriver (~> 4.2)
     selenium-webdriver (4.16.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -482,6 +478,10 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    sqlite3 (1.6.9-aarch64-linux)
+    sqlite3 (1.6.9-arm64-darwin)
+    sqlite3 (1.6.9-x86_64-darwin)
+    sqlite3 (1.6.9-x86_64-linux)
     sshkey (3.0.0)
     stackprof (0.2.25)
     syntax_tree (6.2.0)
@@ -523,7 +523,7 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin-20
-  ruby
+  arm64-darwin-22
   x86_64-darwin-18
   x86_64-darwin-19
   x86_64-darwin-20
@@ -555,7 +555,6 @@ DEPENDENCIES
   cose
   cppjieba_rb
   css_parser
-  dartsass-ruby
   diffy
   digest
   discourse-fonts
@@ -629,6 +628,7 @@ DEPENDENCIES
   rb-fsevent
   rbtrace
   rchardet
+  redcarpet
   redis
   redis-namespace
   rinku
@@ -645,12 +645,15 @@ DEPENDENCIES
   ruby-readability
   rubyzip
   sanitize
+  sassc-embedded
+  selenium-devtools
   selenium-webdriver (~> 4.14)
   shoulda-matchers!
   sidekiq
   simplecov
   sprockets!
   sprockets-rails
+  sqlite3
   sshkey
   stackprof
   syntax_tree

@@ -273,7 +273,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   listCurrentUserChannels() {
-    return this.#getRequest("/channels/me");
+    return this.#getRequest("/me/channels");
   }
 
   /**
@@ -306,6 +306,15 @@ export default class ChatApi extends Service {
    */
   leaveChannel(channelId) {
     return this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+  }
+
+  /**
+   * Get the list of tracked threads for the current user.
+   *
+   * @returns {Promise}
+   */
+  userThreads(handler) {
+    return new Collection(`${this.#basePath}/me/threads`, handler);
   }
 
   /**

@@ -35,8 +35,7 @@ body.dragging {
 /***********************/
 code,
 pre {
-  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
-    "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+  font-family: var(--d-font-family--monospace);
 }
 
 // this removes the unwanted top margin on a paragraph under a heading

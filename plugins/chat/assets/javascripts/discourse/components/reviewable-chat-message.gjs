@@ -8,15 +8,15 @@ import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import or from "truth-helpers/helpers/or";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import ChatChannelTitle from "./chat-channel-title";
 
 export default class ReviewableChatMessage extends Component {
   @service store;
   @service chatChannelsManager;
 
   @cached
-  get chatChannel() {
+  get channel() {
     return ChatChannel.create(this.args.reviewable.chat_channel);
   }
 
@@ -25,12 +25,12 @@ export default class ReviewableChatMessage extends Component {
       <LinkTo
         @route="chat.channel.near-message"
         @models={{array
-          this.chatChannel.slugifiedTitle
-          this.chatChannel.id
+          this.channel.slugifiedTitle
+          this.channel.id
           @reviewable.target_id
         }}
       >
-        <ChatChannelTitle @channel={{this.chatChannel}} />
+        <ChannelTitle @channel={{this.channel}} />
       </LinkTo>
     </div>
 

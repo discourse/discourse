@@ -5,9 +5,9 @@ import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
-import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
 
 export default class ChatChannelMessageEmojiPicker extends Component {
   @service chatChannelInfoRouteOriginManager;
@@ -64,7 +64,7 @@ export default class ChatChannelMessageEmojiPicker extends Component {
           {{/if}}
         </div>
 
-        <ChatChannelTitle @channel={{@channel}} />
+        <ChannelTitle @channel={{@channel}} />
 
         {{#if this.canEditChannel}}
           <DButton

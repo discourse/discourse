@@ -220,12 +220,16 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     thread.add(thread.original_message_user)
 
     if transients[:with_replies]
-      Fabricate.times(
-        transients[:with_replies],
-        :chat_message,
-        thread: thread,
-        use_service: transients[:use_service],
-      )
+      Fabricate
+        .times(
+          transients[:with_replies],
+          :chat_message,
+          thread: thread,
+          use_service: transients[:use_service],
+        )
+        .each { |message| thread.add(message.user) }
+
+      thread.update!(replies_count: transients[:with_replies])
     end
   end
 end

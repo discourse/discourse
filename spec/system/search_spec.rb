@@ -4,11 +4,14 @@ describe "Search", type: :system do
   let(:search_page) { PageObjects::Pages::Search.new }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is a test post in a test topic") }
+  fab!(:topic2) { Fabricate(:topic, title: "Another test topic") }
+  fab!(:post2) { Fabricate(:post, topic: topic2, raw: "This is another test post in a test topic") }
 
   describe "when using full page search on mobile" do
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
+      SearchIndexer.index(topic2, force: true)
     end
 
     after { SearchIndexer.disable }
@@ -34,6 +37,26 @@ describe "Search", type: :system do
 
       expect(search_page).to have_no_search_result
       expect(search_page.heading_text).to eq("Search")
+    end
+
+    it "navigates search results using J/K keys" do
+      visit("/search")
+
+      search_page.type_in_search("test")
+      search_page.click_search_button
+
+      expect(search_page).to have_search_result
+
+      results = all(".fps-result")
+
+      page.send_keys("j")
+      expect(results.first["class"]).to include("selected")
+
+      page.send_keys("j")
+      expect(results.last["class"]).to include("selected")
+
+      page.send_keys("k")
+      expect(results.first["class"]).to include("selected")
     end
   end
 

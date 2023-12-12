@@ -5,11 +5,19 @@ import UserMenuBaseItem from "discourse/lib/user-menu/base-item";
 import getURL from "discourse-common/lib/get-url";
 
 export default class UserMenuNotificationItem extends UserMenuBaseItem {
-  constructor({ notification, appEvents, currentUser, siteSettings, site }) {
+  constructor({
+    notification,
+    endComponent,
+    appEvents,
+    currentUser,
+    siteSettings,
+    site,
+  }) {
     super(...arguments);
     this.appEvents = appEvents;
-    this.notification = notification;
     this.currentUser = currentUser;
+    this.endComponent = endComponent;
+    this.notification = notification;
     this.siteSettings = siteSettings;
     this.site = site;
 
@@ -56,6 +64,10 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
 
   get topicId() {
     return this.notification.topic_id;
+  }
+
+  get avatarTemplate() {
+    return this.notification.acting_user_avatar_template;
   }
 
   get #notificationName() {

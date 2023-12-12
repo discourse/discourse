@@ -46,6 +46,7 @@ class SiteSerializer < ApplicationSerializer
     :denied_emojis,
     :tos_url,
     :privacy_policy_url,
+    :system_user_avatar_template,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -330,6 +331,14 @@ class SiteSerializer < ApplicationSerializer
 
   def include_privacy_policy_url?
     privacy_policy_url.present?
+  end
+
+  def system_user_avatar_template
+    Discourse.system_user.avatar_template
+  end
+
+  def include_system_user_avatar_template?
+    SiteSetting.show_user_menu_avatars
   end
 
   private

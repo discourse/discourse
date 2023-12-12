@@ -193,15 +193,16 @@ basic:
     client: true
     type: list
     list_type: simple
-    default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "read|like|copyLink|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
       - read
+      - copyLink
+      - share
       - like
       - edit
       - flag
       - delete
-      - share
       - bookmark
       - admin
       - reply
@@ -395,7 +396,9 @@ basic:
     choices:
       - spinner
       - slider
-
+  show_user_menu_avatars:
+    client: true
+    default: false
 login:
   invite_only:
     refresh: true

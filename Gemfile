@@ -128,6 +128,7 @@ group :test do
   gem "minitest", require: false
   gem "simplecov", require: false
   gem "selenium-webdriver", "~> 4.14", require: false
+  gem "selenium-devtools", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
@@ -215,7 +216,7 @@ gem "logstash-logger", require: false
 gem "logster"
 
 # A fork of sassc with dart-sass support
-gem "dartsass-ruby"
+gem "sassc-embedded"
 
 gem "rotp", require: false
 
@@ -244,7 +245,7 @@ if ENV["IMPORT"] == "1"
   gem "parallel", require: false
 end
 
-if ENV["GENERIC_IMPORT"] == "1"
+group :generic_import, optional: true do
   gem "sqlite3"
   gem "redcarpet"
 end

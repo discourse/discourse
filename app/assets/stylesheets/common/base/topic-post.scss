@@ -67,6 +67,7 @@
     vertical-align: middle;
     a {
       color: var(--primary-high-or-secondary-low);
+      outline-offset: -1px;
     }
   }
   .fa {
@@ -941,16 +942,23 @@ aside.quote {
     border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
   }
-  @media (prefers-reduced-motion: no-preference) {
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
-    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .topic-body.highlighted .cooked,
+  .small-action-desc.highlighted {
+    animation: background-fade-highlight 2.5s ease-out;
   }
-  .deleted & {
-    // Disable so the deleted background is visible immediately
-    &.highlighted {
-      animation: none;
-    }
+  // Disable animation so deleted status is visible immediately
+  .deleted .topic-body.highlighted .cooked {
+    animation: none;
+  }
+}
+
+.small-action-desc,
+.topic-body {
+  &:focus-visible {
+    outline: none;
   }
 }
 
@@ -1139,6 +1147,10 @@ blockquote > *:last-child {
 .small-action {
   display: flex;
   align-items: center;
+
+  &:focus-visible {
+    outline: none;
+  }
 
   &.deleted {
     background-color: var(--danger-low-mid);
@@ -1432,6 +1444,11 @@ span.mention {
     .btn {
       margin-right: 0.5em;
       white-space: nowrap;
+
+      .d-icon {
+        color: inherit;
+      }
+
       &.btn-remind {
         background: var(--primary-very-low);
         margin-right: auto;
