@@ -13,6 +13,7 @@ export default class IframedHtml extends Component {
   }
 
   <template>
+    {{! template-lint-disable require-iframe-title }}
     <iframe
       {{didInsert this.writeHtml}}
       sandbox="allow-same-origin"
