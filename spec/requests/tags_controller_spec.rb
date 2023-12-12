@@ -900,7 +900,7 @@ RSpec.describe TagsController do
       it "redirects to URL without trailing slash" do
         get "/tag/#{tag.name}/"
 
-        expect(response).to have_http_status(301)
+        expect(response).to have_http_status :moved_permanently
         expect(response).to redirect_to("/tag/#{tag.name}")
       end
     end

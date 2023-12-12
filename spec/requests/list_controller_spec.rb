@@ -1087,7 +1087,7 @@ RSpec.describe ListController do
       it "redirects to URL without trailing slash" do
         get "/c/#{category.slug}/#{category.id}/"
 
-        expect(response).to have_http_status(301)
+        expect(response).to have_http_status :moved_permanently
         expect(response).to redirect_to("/c/#{category.slug}/#{category.id}")
       end
     end
