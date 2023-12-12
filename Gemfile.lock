@@ -124,7 +124,7 @@ GEM
     css_parser (1.16.0)
       addressable
     date (3.3.4)
-    debug_inspector (1.1.0)
+    debug_inspector (1.2.0)
     diff-lcs (1.5.0)
     diffy (3.4.2)
     digest (3.1.1)
