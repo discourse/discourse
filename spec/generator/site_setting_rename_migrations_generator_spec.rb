@@ -10,18 +10,18 @@ RSpec.describe SiteSettingRenameMigrationGenerator, type: :generator do
     described_class.start(%w[site_description contact_email], destination_root: "#{Rails.root}/tmp")
     file_path = "#{Rails.root}/tmp/db/migrate/20100101120000_rename_site_description_setting.rb"
 
-    expected_content = <<-EXPECTED_CONTENT
-# frozen_string_literal: true
+    expected_content = <<~EXPECTED_CONTENT
+      # frozen_string_literal: true
 
-class RenameSiteDescriptionSetting < ActiveRecord::Migration[7.0]
-  def up
-    execute "UPDATE site_settings SET name = 'contact_email' WHERE name = 'site_description'"
-  end
+      class RenameSiteDescriptionSetting < ActiveRecord::Migration[7.0]
+        def up
+          execute "UPDATE site_settings SET name = 'contact_email' WHERE name = 'site_description'"
+        end
 
-  def down
-    execute "UPDATE site_settings SET name = 'site_description' WHERE name = 'contact_email'"
-  end
-end
+        def down
+          execute "UPDATE site_settings SET name = 'site_description' WHERE name = 'contact_email'"
+        end
+      end
     EXPECTED_CONTENT
 
     expect(File.read(file_path)).to eq(expected_content)

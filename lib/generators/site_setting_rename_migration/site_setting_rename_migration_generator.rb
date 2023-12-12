@@ -12,18 +12,18 @@ class SiteSettingRenameMigrationGenerator < Rails::Generators::Base
     validate_setting_name!(old_name)
     validate_setting_name!(new_name)
 
-    create_file file_path, <<-MIGRATION_FILE
-# frozen_string_literal: true
+    create_file file_path, <<~MIGRATION_FILE
+      # frozen_string_literal: true
 
-class #{class_name} < ActiveRecord::Migration[7.0]
-  def up
-    execute "UPDATE site_settings SET name = '#{new_name}' WHERE name = '#{old_name}'"
-  end
+      class #{class_name} < ActiveRecord::Migration[7.0]
+        def up
+          execute "UPDATE site_settings SET name = '#{new_name}' WHERE name = '#{old_name}'"
+        end
 
-  def down
-    execute "UPDATE site_settings SET name = '#{old_name}' WHERE name = '#{new_name}'"
-  end
-end
+        def down
+          execute "UPDATE site_settings SET name = '#{old_name}' WHERE name = '#{new_name}'"
+        end
+      end
     MIGRATION_FILE
   end
 
