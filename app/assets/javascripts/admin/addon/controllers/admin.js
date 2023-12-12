@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { alias } from "@ember/object/computed";
+import { readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -7,7 +7,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default class AdminController extends Controller {
   @service router;
 
-  @alias("siteSettings.enable_admin_sidebar_navigation") showAdminSidebar;
+  @readOnly("siteSettings.enable_admin_sidebar_navigation") showAdminSidebar;
 
   @discourseComputed("siteSettings.enable_group_directory")
   showGroups(enableGroupDirectory) {
