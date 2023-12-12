@@ -7,13 +7,12 @@
   &-container {
     padding-inline: 1rem;
     position: sticky;
-    top: var(--header-offset);
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
     height: 50px;
     box-sizing: border-box;
     display: flex;
-    z-index: z("header") - 1;
+    z-index: z("header");
   }
 }
 
