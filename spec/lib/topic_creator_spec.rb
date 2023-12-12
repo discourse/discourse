@@ -641,6 +641,18 @@ RSpec.describe TopicCreator do
       it "is valid for an admin" do
         expect(TopicCreator.new(admin, Guardian.new(admin), unlisted_attrs).valid?).to eq(true)
       end
+
+      context "when embedded" do
+        let(:embedded_unlisted_attrs) do
+          unlisted_attrs.merge(embed_url: "http://eviltrout.com/stupid-url")
+        end
+
+        it "is valid for a non-staff user" do
+          expect(TopicCreator.new(user, Guardian.new(user), embedded_unlisted_attrs).valid?).to eq(
+            true,
+          )
+        end
+      end
     end
   end
 end

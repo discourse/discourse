@@ -198,7 +198,9 @@ module TopicGuardian
     can_moderate?(topic) || can_perform_action_available_to_group_moderators?(topic)
   end
 
-  alias can_create_unlisted_topic? can_toggle_topic_visibility?
+  def can_create_unlisted_topic?(topic, has_topic_embed = false)
+    can_toggle_topic_visibility?(topic) || has_topic_embed
+  end
 
   def can_convert_topic?(topic)
     return false if topic.blank?
