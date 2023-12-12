@@ -2900,9 +2900,7 @@ ja:
     post:
       confirm_delete: "この投稿を削除してもよろしいですか？"
       quote_reply: "引用"
-      quote_reply_shortcut: "または q を押す"
       quote_edit: "編集"
-      quote_edit_shortcut: "または e を押す"
       quote_share: "共有"
       edit_reason: "理由: "
       post_number: "投稿 %{number}"

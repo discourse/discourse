@@ -1237,7 +1237,6 @@ ca:
     topics_per_period_in_top_summary: "Nombre de temes principals en el resum per defecte de temes principals."
     topics_per_period_in_top_page: "Nombre de temes principals que es mostren en els temes principals expandits amb \"mostra'n més\"."
     redirect_users_to_top_page: "Redirigeix automàticament els usuaris nous i absents durant molt de temps al capdamunt de la pàgina."
-    top_page_default_timeframe: "Temps predeterminat per a la pàgina més vista"
     moderators_view_emails: "Permet als moderadors veure els correus electrònics dels usuaris"
     prioritize_username_in_ux: "Mostra el nom d'usuari primer en la pàgina d'usuari, targeta d'usuari i publicacions (si està desactivat, el nom es mostra primer)"
     enable_rich_text_paste: "Habilita la conversió automàtica d'HTML a Markdown quan s'enganxa text en el tauler de redacció (experimental)"

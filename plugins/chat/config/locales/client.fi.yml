@@ -322,18 +322,6 @@ fi:
           topic: "Ketju"
       reviewable:
         type: "Chat-viesti"
-      reactions:
-        only_you: "Reagoit emojilla :%{emoji}:"
-        you_and_single_user: "Sinä ja %{username} reagoitte emojilla :%{emoji}:"
-        you_and_multiple_users: "Sinä, %{commaSeparatedUsernames} ja %{username} reagoitte emojilla :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Sinä, %{commaSeparatedUsernames} ja %{count} muu reagoitte emojilla :%{emoji}:"
-          other: "Sinä, %{commaSeparatedUsernames} ja %{count} muuta reagoitte emojilla :%{emoji}:"
-        single_user: "%{username} reagoivat emojilla :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} ja %{username} reagoivat emojilla :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} ja %{count} muu reagoivat emojilla :%{emoji}:"
-          other: "%{commaSeparatedUsernames} ja %{count} muuta reagoivat emojilla :%{emoji}:"
       composer:
         toggle_toolbar: "Vaihda työkalupalkki"
         italic_text: "korostettu teksti"

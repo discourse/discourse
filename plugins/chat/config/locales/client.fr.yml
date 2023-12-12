@@ -377,18 +377,6 @@ fr:
           topic: "Sujet"
       reviewable:
         type: "Message de discussion"
-      reactions:
-        only_you: "Vous avez réagi avec :%{emoji}:"
-        you_and_single_user: "Vous et %{username} avez réagi avec :%{emoji}:"
-        you_and_multiple_users: "Vous, %{commaSeparatedUsernames} et %{username} avez réagi avec :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Vous, %{commaSeparatedUsernames} et %{count} autre utilisateur avez réagi avec :%{emoji}:"
-          other: "Vous, %{commaSeparatedUsernames} et %{count} autres utilisateurs avez réagi avec :%{emoji}:"
-        single_user: "%{username} a réagi avec :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} et %{username} ont réagi avec :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} et %{count} autre utilisateur ont réagi avec :%{emoji}:"
-          other: "%{commaSeparatedUsernames} et %{count} autres utilisateurs ont réagi avec :%{emoji}:"
       composer:
         toggle_toolbar: "Basculer la barre d'outils"
         italic_text: "texte souligné"

@@ -238,8 +238,6 @@ hu:
           topic: "Téma"
       reviewable:
         type: "Csevegőüzenet"
-      reactions:
-        only_you: "Ezzel reagált: :%{emoji}:"
       composer:
         toggle_toolbar: "Eszköztár be/ki"
         italic_text: "dőlt szöveg"

@@ -1582,7 +1582,6 @@ sv:
     topics_per_period_in_top_summary: "Standardinställning för antal toppämnen som visas i toppämnessammanfattningen."
     topics_per_period_in_top_page: "Antal toppämnen som visas i den utvidgade 'Visa mer'-toppämnen."
     redirect_users_to_top_page: "Omdirigera automatiskt nya och långtidsfrånvarande användare till början av sidan."
-    top_page_default_timeframe: "Standardtidsram för mest sedda-sidan"
     moderators_view_emails: "Tillåt moderatorer att se användares e-post"
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (om detta inaktiverats så visas namnet först)"
     enable_rich_text_paste: "Aktivera automatisk HTML vid Markdown-konvertering när du klistrar in text i redigeraren. (Experimentell)"

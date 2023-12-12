@@ -438,21 +438,16 @@ he:
       reviewable:
         type: "הודעת צ׳אט"
       reactions:
-        only_you: "הגבת עם :%{emoji}:"
-        you_and_single_user: "הגבת יחד עם %{username} את האמוג׳י :%{emoji}:"
-        you_and_multiple_users: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{username} את האמוג׳י :%{emoji}:"
+        only_you: "<span>הגבת עם </span>:%{emoji}:"
+        you_and_single_user: "<span>הגבת יחד עם %{username} את האמוג׳י </span>:%{emoji}:"
+        you_and_multiple_users: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועם %{username} את האמוג׳י </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י :%{emoji}:"
-          two: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{count} נוספים את האמוג׳י :%{emoji}:"
-          many: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{count} נוספים את האמוג׳י :%{emoji}:"
-          other: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{count} נוספים את האמוג׳י :%{emoji}:"
-        single_user: "האמוג׳י שנוסף ע״י %{username} הוא :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} ו־%{username} הגיבו את האמוג׳י :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
-          two: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
-          many: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
-          other: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
+          one: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
+          two: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
+          many: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
+          other: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
+        single_user: "<span>התגובה של %{username} היא </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} וגם %{username} הגיבו עם </span>:%{emoji}:"
       composer:
         toggle_toolbar: "החלפת מצב סרגל כלים"
         italic_text: "טקסט נטוי"
@@ -503,6 +498,8 @@ he:
           description: "פעולה זו תייצא את כל ההודעות מכל הערוצים."
           create_export: "יצירת ייצוא"
           export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
+      my_threads:
+        title: השרשורים שלי
       direct_messages:
         title: "צ׳אט אישי"
         new: "יצירת צ׳אט אישי"

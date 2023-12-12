@@ -252,6 +252,7 @@ he:
       error_caused_by: "נגרם על ידי ‚%{name}’. <a target='blank' href='%{path}'>יש ללחוץ כאן</a> כדי לעדכן, להגדיר מחדש או להשבית."
       only_admins: "(הודעה זו מופיע רק למנהלי האתר)"
     broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
+    broken_page_change_alert: "מטפל ב־onPageChange הרים שגיאה. כלי המפתחים יציגו לך פרטים נוספים על כך."
     broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
     s3:
       regions:
@@ -2244,6 +2245,9 @@ he:
         totp: "להשתמש ביישומון אימות במקום"
         backup_code: "להשתמש בקוד גיבוי במקום"
         security_key: "להשתמש במפתח אבטחה במקום"
+      no_login_methods:
+        title: "אין שיטות כניסה"
+        description: "לא מוגדרות שיטות כניסה. מנהלי מערכת יכולים לבקר ב־<a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> כדי להגדיר את האתר מחדש."
     invites:
       accept_title: "הזמנה"
       welcome_to: "ברוך בואך אל %{site_name}!"
@@ -3469,9 +3473,9 @@ he:
     post:
       confirm_delete: "למחוק את הפוסט הזה?"
       quote_reply: "ציטוט"
-      quote_reply_shortcut: "או ללחוץ על q"
+      quote_reply_shortcut: "ציטוט (או בלחיצה על q)"
       quote_edit: "עריכה"
-      quote_edit_shortcut: "או ללחוץ על e"
+      quote_edit_shortcut: "עריכה (או בלחיצה על e)"
       quote_share: "שיתוף"
       edit_reason: "סיבה: "
       post_number: "פוסט %{number}"
@@ -3592,6 +3596,8 @@ he:
         delete: "מחק פוסט זה"
         undelete: "שחזר פוסט זה"
         share: "שיתוף קישור לפוסט זה"
+        copy_title: "העתקת קישור לפוסט זה ללוח הגזירים"
+        link_copied: "הקישור הועתק!"
         more: "עוד"
         delete_replies:
           confirm: "למחוק את התגובות לפוסט הזה?"
@@ -4378,6 +4384,7 @@ he:
         many: "%{count} המילים הנרדפות שקשורות אליה תימחקנה גם כן."
         other: "%{count} המילים הנרדפות שקשורות אליה תימחקנה גם כן."
       edit_tag: "עריכת שם התגית ותיאורה"
+      description: "תיאור (1000 תווים לכל היותר)"
       sort_by: "סידור לפי:"
       sort_by_count: "ספירה"
       sort_by_name: "שם"
@@ -4779,6 +4786,7 @@ he:
           never: "אף פעם"
       reports:
         title: "רשימת דיווחים זמינים"
+        meta_doc: "אפשר לעיין ב<a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>תיעוד</a> שלנו לסקירה מפורטת של הדוחות."
       dashboard:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"

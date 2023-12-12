@@ -1180,7 +1180,6 @@ zh_TW:
     topics_per_period_in_top_summary: "預設推薦話題的顯示數量"
     topics_per_period_in_top_page: "在展開 \"顯示更多\" 推薦話題列表的顯示數量"
     redirect_users_to_top_page: "將新使用者或長時間未使用的使用者自動重新導向至熱門頁面"
-    top_page_default_timeframe: "頂部查看頁面的預設時間表"
     moderators_view_emails: "允許版主瀏覽使用者 email"
     prioritize_username_in_ux: "在使用者頁、使用者卡片和貼文上優先顯示使用者名（未選時，暱稱將先顯示）"
     enable_rich_text_paste: "自動啟用 HTML 轉換 Markdown 格式（實驗性功能）"

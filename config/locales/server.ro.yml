@@ -871,7 +871,7 @@ ro:
     topics_per_period_in_top_summary: "Numărul celor mai bune subiecte afișate în rezumatul implicit al celor mai bune subiecte."
     topics_per_period_in_top_page: "Numărul celor mai bune subiecte afișat când se selectează 'Afișează mai multe' cele mai bune subiecte."
     redirect_users_to_top_page: "Redirecționează automat noii utilizatorii noi și cei absenți de multă vreme, către vârful paginii."
-    top_page_default_timeframe: "Perioada implicită pentru pagina cea mai vizualizată"
+    top_page_default_timeframe: "Perioada de timp implicită din prima pagină pentru utilizatorii anonimi (se ajustează automat pentru utilizatorii conectați pe baza ultimei lor vizite)."
     prioritize_username_in_ux: "Afișează întâi nume utilizator pe pagina utilizator, pe cardul utilizator și în postări (dacă e dezactivat, se afișează întâi numele)"
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     enable_badges: "Activează sistemul de ecusoane"
@@ -950,6 +950,7 @@ ro:
     tl3_links_no_follow: "Nu scoate parametrul rel=nofollow din linkurile postate de utilizatori cu nivelul de încredere 3."
     min_trust_to_create_topic: "Nivelul de încredere minim necesar pentru a crea un subiect nou."
     min_trust_to_edit_wiki_post: "Nivelul de încredere minim necesar pentru a edita o postare marcată ca wiki."
+    edit_wiki_post_allowed_groups: "Grupuri cărora li se permite să editeze articole marcate ca wiki."
     min_trust_to_edit_post: "Nivelul de încredere minim necesar pentru a edita postări."
     min_trust_to_allow_self_wiki: "Nivelul de încredere minim necesar pentru transformarea propriilor mesaje în wiki."
     newuser_max_links: "Câte linkuri poate adăuga un nou utilizator într-o postare."
@@ -1078,7 +1079,7 @@ ro:
     short_progress_text_threshold: "După ce numărul de postări într-un subiect devine mai mare decât acest număr, bara de progres va afișa doar numărul postării curente. Dacă schiimbi lățimea barei de progres, va trebui să schimbi această valoare."
     default_code_lang: "Evidențierea implicită a sintaxei limbajului de programare aplicată blocurilor de cod markdown (auto, text, ruby, python etc.). Această valoare trebuie să fie prezentă și în setarea `limbaje evidențiate` a site-ului."
     warn_reviving_old_topic_age: "Când cineva răspunde la un subiect unde ultimul răspuns e mai vechi decât atâtea zile, va fi afișată o avertizare. Dezactivează prin alegerea cifrei 0."
-    autohighlight_all_code: "Aplică evidențierea sintaxei la blocurile <code> HTML , chiar dacă acestea nu au specificată o limbă."
+    autohighlight_all_code: "Aplică evidențierea sintaxei la blocurile de tip &lt;code&gt; HTML, chiar dacă nu au specificat un limbaj. Pentru a configura blocurile de cod scrise în markdown, folosește setarea „limbaj de programare implicit”."
     embed_truncate: "Retează postările încorporate."
     allowed_href_schemes: "Alte tipuri de linkuri permise, în afară de http și https."
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
@@ -1127,6 +1128,7 @@ ro:
     min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
+    show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1157,6 +1159,7 @@ ro:
       approve_unless_allowed_groups: "approve_unless_trust_level"
       approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
       email_in_allowed_groups: "email_in_min_trust"
+      edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
