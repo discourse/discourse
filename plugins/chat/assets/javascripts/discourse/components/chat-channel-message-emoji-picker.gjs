@@ -66,12 +66,12 @@ export default class ChatChannelMessageEmojiPicker extends Component {
 
   <template>
     <ChatEmojiPicker
+      {{this.listenToBodyScroll}}
       @context="chat-channel-message"
       @didInsert={{this.didInsert}}
       @willDestroy={{this.willDestroy}}
       @didSelectEmoji={{this.didSelectEmoji}}
-      @class="hidden"
-      {{this.listenToBodyScroll}}
+      class="hidden"
     />
   </template>
 }

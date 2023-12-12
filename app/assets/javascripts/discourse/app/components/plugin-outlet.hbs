@@ -15,9 +15,9 @@
           @args={{this.outletArgs}}
           @deprecatedArgs={{@deprecatedArgs}}
           @outletArgs={{this.outletArgsWithDeprecations}}
-          @class={{c.classicClassNames}}
           @tagName={{or @connectorTagName ""}}
           @layout={{c.template}}
+          class={{c.classicClassNames}}
         />
       {{/if}}
     {{/each}}
@@ -39,9 +39,9 @@
         @args={{this.outletArgs}}
         @deprecatedArgs={{@deprecatedArgs}}
         @outletArgs={{this.outletArgsWithDeprecations}}
-        @class={{c.classicClassNames}}
         @tagName={{or @connectorTagName ""}}
         @layout={{c.template}}
+        class={{c.classicClassNames}}
       >{{yield}}</PluginConnector>
     {{/if}}
   {{else}}

@@ -329,10 +329,10 @@ export default class SpreadsheetEditor extends Component {
       <:footer>
         <div class="primary-actions">
           <DButton
-            @class="btn-insert-table"
             @label={{this.modalAttributes.insertTable.title}}
             @icon={{this.modalAttributes.insertTable.icon}}
             @action={{this.insertTable}}
+            class="btn-insert-table"
           />
 
           <DModalCancel @close={{this.interceptCloseModal}} />
@@ -345,7 +345,7 @@ export default class SpreadsheetEditor extends Component {
                 @icon="info-circle"
                 @title="table_builder.edit.modal.trigger_reason"
                 @action={{this.showEditReasonField}}
-                @class="btn-edit-reason"
+                class="btn-edit-reason"
               />
               {{#if this.showEditReason}}
                 <TextField

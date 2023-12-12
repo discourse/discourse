@@ -77,9 +77,9 @@
 
 <section class="user-content" id="user-content">
   <LoadMore
-    @class="notification-history user-stream"
     @selector=".user-stream .notification"
     @action={{action "loadMore"}}
+    class="notification-history user-stream"
   >
     {{outlet}}
     <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
