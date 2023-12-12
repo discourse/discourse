@@ -29,14 +29,10 @@ end
   end
 
   it "raises an error when old name is incorrect" do
-    expect { described_class.start(%w[wrong_name contact_email]) }.to raise_error(
-      described_class::ArgumentError,
-    )
+    expect { described_class.start(%w[wrong_name contact_email]) }.to raise_error(ArgumentError)
   end
 
   it "raises an error when new name is incorrect" do
-    expect { described_class.start(%w[site_description wrong_name]) }.to raise_error(
-      described_class::ArgumentError,
-    )
+    expect { described_class.start(%w[site_description wrong_name]) }.to raise_error(ArgumentError)
   end
 end

@@ -4,9 +4,6 @@ class SiteSettingRenameMigrationGenerator < Rails::Generators::Base
   argument :old_name, type: :string, banner: "old setting name", required: true
   argument :new_name, type: :string, banner: "new setting name", required: true
 
-  class ArgumentError < StandardError
-  end
-
   def create_migration_file
     timestamp = Time.zone.now.to_s.tr("^0-9", "")[0..13]
     file_path = "db/migrate/#{timestamp}_rename_#{old_name}_setting.rb"
