@@ -12,7 +12,7 @@
     height: 50px;
     box-sizing: border-box;
     display: flex;
-    z-index: z("header");
+    z-index: z("header") - 1;
   }
 }
 
