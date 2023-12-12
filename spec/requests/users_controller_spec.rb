@@ -3342,8 +3342,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
       end
 
-      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is disabled" do
-        SiteSetting.allow_uploaded_avatars = "disabled"
+      it "raises an error when selecting the custom/uploaded avatar and uploaded_avatars_allowed_groups is disabled" do
+        SiteSetting.uploaded_avatars_allowed_groups = ""
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3353,8 +3353,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
       end
 
-      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is admin" do
-        SiteSetting.allow_uploaded_avatars = "admin"
+      it "raises an error when selecting the custom/uploaded avatar and uploaded_avatars_allowed_groups is admin" do
+        SiteSetting.uploaded_avatars_allowed_groups = "1"
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3363,6 +3363,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
 
         user1.update!(admin: true)
+        Group.refresh_automatic_groups!
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3371,8 +3372,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
       end
 
-      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is staff" do
-        SiteSetting.allow_uploaded_avatars = "staff"
+      it "raises an error when selecting the custom/uploaded avatar and uploaded_avatars_allowed_groups is staff" do
+        SiteSetting.uploaded_avatars_allowed_groups = "3"
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3381,6 +3382,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
 
         user1.update!(moderator: true)
+        Group.refresh_automatic_groups!
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3389,8 +3391,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
       end
 
-      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is a trust level" do
-        SiteSetting.allow_uploaded_avatars = "3"
+      it "raises an error when selecting the custom/uploaded avatar and uploaded_avatars_allowed_groups is a trust level" do
+        SiteSetting.uploaded_avatars_allowed_groups = "13"
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3399,6 +3401,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
 
         user1.update!(trust_level: 3)
+        Group.refresh_automatic_groups!
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3408,7 +3411,7 @@ RSpec.describe UsersController do
       end
 
       it "ignores the upload if picking a system avatar" do
-        SiteSetting.allow_uploaded_avatars = "disabled"
+        SiteSetting.uploaded_avatars_allowed_groups = ""
         another_upload = Fabricate(:upload)
 
         put "/u/#{user1.username}/preferences/avatar/pick.json",
@@ -3422,7 +3425,7 @@ RSpec.describe UsersController do
       end
 
       it "raises an error if the type is invalid" do
-        SiteSetting.allow_uploaded_avatars = "disabled"
+        SiteSetting.uploaded_avatars_allowed_groups = ""
         another_upload = Fabricate(:upload)
 
         put "/u/#{user1.username}/preferences/avatar/pick.json",
