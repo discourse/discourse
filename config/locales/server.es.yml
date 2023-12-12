@@ -1568,7 +1568,6 @@ es:
     topics_per_period_in_top_summary: "Número de temas destacados que se muestran en el resumen de temas destacados."
     topics_per_period_in_top_page: "Número de temas destacados que se muestran en la vista expandida al hacer clic en «ver más»."
     redirect_users_to_top_page: "Redirigir automáticamente a la página de destacados a los usuarios nuevos y a los que se ausenten durante largo tiempo."
-    top_page_default_timeframe: "Período de tiempo por defecto para la página de temas destacados"
     moderators_view_emails: "Permitir que los moderadores puedan ver los correos electrónicos de los usuarios"
     prioritize_username_in_ux: "Mostrar el nombre de usuario primero en la página de usuario, tarjeta de usuario y publicaciones (cuando está desactivado, el nombre se muestra primero)"
     enable_rich_text_paste: "Activar conversión automática de HTML a Markdown al pegar texto en el compositor. (Experimental)"

@@ -196,6 +196,7 @@ tr_TR:
       error_caused_by: "\"%{name}\" neden oldu. Güncellemek, yeniden yapılandırmak veya devre dışı bırakmak için <a target='blank' href='%{path}'>buraya tıklayın</a>."
       only_admins: "(bu mesaj sadece site yöneticilerine gösterilir)"
     broken_decorator_alert: "Sitenizdeki içerik dekoratörlerinden biri bir hataya neden olduğundan gönderiler doğru görüntülenmeyebilir."
+    broken_page_change_alert: "Bir onPageChange işleyicisi hata verdi. Daha fazla bilgi için tarayıcı geliştirici araçlarını kontrol edin."
     s3:
       regions:
         ap_northeast_1: "Asya Pasifik (Tokyo)"
@@ -2021,6 +2022,9 @@ tr_TR:
         totp: "Bunun yerine bir kimlik doğrulama uygulaması kullanın"
         backup_code: "Bunun yerine bir yedekleme kodu kullanın"
         security_key: "Bunun yerine bir güvenlik anahtarı kullanın"
+      no_login_methods:
+        title: "Oturum açma yöntemi yok"
+        description: "Hiçbir oturum açma yöntemi yapılandırılmamış. Yöneticiler siteyi yeniden yapılandırmak için <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> adresini ziyaret edebilir."
     invites:
       accept_title: "Davet"
       welcome_to: "%{site_name}'a hoş geldiniz!"
@@ -3090,9 +3094,9 @@ tr_TR:
     post:
       confirm_delete: "Bu gönderiyi silmek istediğinize emin misiniz?"
       quote_reply: "Alıntı"
-      quote_reply_shortcut: "Veya q'ya basın"
+      quote_reply_shortcut: "Alıntı yapın (veya q tuşuna basın)"
       quote_edit: "Düzenle"
-      quote_edit_shortcut: "Veya e'ye basın"
+      quote_edit_shortcut: "Düzenle (veya e tuşuna bas)"
       quote_share: "Paylaş"
       edit_reason: "Sebep: "
       post_number: "%{number}. gönderi"
@@ -3192,6 +3196,8 @@ tr_TR:
         delete: "bu gönderiyi sil"
         undelete: "bu gönderiyi silme işlemini geri al"
         share: "bu gönderiye bir bağlantı paylaş"
+        copy_title: "bu yazının bağlantısını panoya kopyala"
+        link_copied: "Bağlantı kopyalandı!"
         more: "Daha fazla"
         delete_replies:
           confirm: "Bu gönderiye verilen yanıtları da silmek istiyor musunuz?"

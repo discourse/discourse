@@ -163,8 +163,6 @@ zh_TW:
           topic: "話題"
       reviewable:
         type: "聊天訊息"
-      reactions:
-        single_user: "%{username} 以 :%{emoji}: 回應"
       composer:
         italic_text: "斜體字"
         bold_text: "粗體字"

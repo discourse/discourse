@@ -391,18 +391,6 @@ it:
           topic: "Argomento"
       reviewable:
         type: "Messaggio di chat"
-      reactions:
-        only_you: "Hai reagito con :%{emoji}:"
-        you_and_single_user: "Tu e %{username} avete reagito con :%{emoji}:"
-        you_and_multiple_users: "Tu, %{commaSeparatedUsernames} e %{username} avete reagito con :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Tu, %{commaSeparatedUsernames} e %{count} altro avete reagito con :%{emoji}:"
-          other: "Tu, %{commaSeparatedUsernames} e altri %{count} avete reagito con :%{emoji}:"
-        single_user: "%{username} ha reagito con :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} e %{username} hanno reagito con :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} e %{count} altro avete reagito con :%{emoji}:"
-          other: "%{commaSeparatedUsernames} e altri %{count} avete reagito con :%{emoji}:"
       composer:
         toggle_toolbar: "Attiva barra degli strumenti"
         italic_text: "testo in evidenza"
@@ -453,6 +441,8 @@ it:
           description: "Questo esporta tutti i messaggi da tutti i canali."
           create_export: "Crea esportazione"
           export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
+      my_threads:
+        title: I miei thread
       direct_messages:
         title: "Chat personale"
         new: "Crea una chat personale"

@@ -1592,7 +1592,6 @@ fi:
     topics_per_period_in_top_summary: "Ketjujen lukumäärä, joka näytetään oletuksena Suositut-listauksissa."
     topics_per_period_in_top_page: "Ketjujen lukumäärä, joka näytetään laajennetussa Suositut-listauksessa."
     redirect_users_to_top_page: "Ohjaa uudet ja kauan poissa olleet käyttäjät automaattisesti Suositut-sivulle."
-    top_page_default_timeframe: "Suositut-sivun oletusaikajakso."
     moderators_view_emails: "Salli valvojien tarkastella käyttäjien sähköpostiosoitteita"
     prioritize_username_in_ux: "Näytä käyttäjätunnus ensimmäisenä käyttäjäsivulla, -kortissa ja viesteissä (jos poistetaan käytöstä, nimi näytetään ensin)"
     enable_rich_text_paste: "Ota käyttöön automaattinen muunnos HTML:stä Markdowniin, kun tekstiä liitetään kirjoitusalueelle (kokeellinen)."

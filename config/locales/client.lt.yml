@@ -2648,9 +2648,7 @@ lt:
       deleted_by_author_simple: "(pašalinta autoriaus)"
     post:
       quote_reply: "Citata"
-      quote_reply_shortcut: "Arba paspauskite q"
       quote_edit: "Redaguoti"
-      quote_edit_shortcut: "Arba paspauskite e"
       quote_share: "Pasidalinti"
       edit_reason: "Priežastis:"
       post_number: "įrašas %{number}"

@@ -224,6 +224,7 @@ ro:
       error_caused_by: "Cauzat de '%{name}'. <a target='blank' href='%{path}'>Clic aici</a> pentru a actualiza, reconfigura sau dezactiva."
       only_admins: "(acest mesaj este afișat doar pentru administratorii site-ului)"
     broken_decorator_alert: "Este posibil ca articolele să nu fie afișate corect deoarece unul dintre decoratorii de conținut al articolelor de pe site-ul tău a generat o eroare."
+    broken_page_change_alert: "Un gestionar onPageChange a ridicat o eroare. Verifică instrumentele de dezvoltare ale navigatorului pentru mai multe informații."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -1700,6 +1701,9 @@ ro:
         name: "GitHub"
       discord:
         name: "Discord"
+      no_login_methods:
+        title: "Nicio metodă de conectare"
+        description: "Nicio metodă de conectare nu este configurată. Administratorii pot vizita <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> pentru a reconfigura site-ul."
     invites:
       accept_title: "Initație"
       welcome_to: "Bine ai venit la %{site_name}!"
@@ -2363,7 +2367,9 @@ ro:
           other: "Ai selectat <b>%{count}</b> de mesaje."
     post:
       quote_reply: "Citează"
+      quote_reply_shortcut: "Citează (sau apasă q)"
       quote_edit: "Editează"
+      quote_edit_shortcut: "Editează (sau apasă e)"
       quote_share: "Distribuie"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea %{number}"
@@ -2425,6 +2431,8 @@ ro:
         delete: "șterge această postare"
         undelete: "restaurează această postare"
         share: "distribuie un link către această postare"
+        copy_title: "copiază o legătură către această postare în clipboard"
+        link_copied: "Legătură copiată!"
         more: "Mai mult"
         delete_replies:
           confirm: "Dorești să ștergi și răspunsurile la această postare?"
@@ -3144,6 +3152,8 @@ ro:
         remove_muted_tags_from_latest:
           always: "întotdeauna"
           never: "niciodată"
+      reports:
+        meta_doc: "Explorează <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentația</a> pentru o prezentare generală detaliată a rapoartelor."
       dashboard:
         title: "Panou de control"
         version: "Versiune"

@@ -168,6 +168,7 @@ zh_CN:
       error_caused_by: "由 '%{name}' 引起。<a target='blank' href='%{path}'>点击此处</a>进行更新、重新配置或禁用。"
       only_admins: "（此消息仅向站点管理员显示）"
     broken_decorator_alert: "帖子可能无法正确显示，因为您的站点上的其中一个帖子内容装饰器引发错误。"
+    broken_page_change_alert: "onPageChange 处理程序出错。请查看浏览器开发工具了解更多信息。"
     broken_plugin_alert: "由插件 '%{name}' 引起"
     s3:
       regions:
@@ -706,6 +707,7 @@ zh_CN:
           imap_mailbox_not_selected: "您必须为此 IMAP 配置选择一个邮箱，否则将不会同步任何邮箱！"
           prefill:
             title: "使用设置预填充："
+            gmail: "Gmail"
           credentials:
             title: "凭据"
             smtp_server: "SMTP 服务器"
@@ -1354,6 +1356,7 @@ zh_CN:
         never_used: "从未使用过"
         not_allowed_error: "Passkey 注册过程超时、被取消或不允许。"
         already_added_error: "你已经注册了此 Passkeys。无需再次注册。"
+        confirm_button: "或使用密钥 passkey"
       change_about:
         title: "更改自我介绍"
         error: "更改此值时出错。"
@@ -1433,6 +1436,7 @@ zh_CN:
           generic: "您的 %{provider} 帐户将被用于身份验证。"
       name:
         title: "姓名"
+        instructions: "你的全名 (可选)。"
         instructions_required: "您的全名."
         required: "请输入姓名"
         too_short: "您的姓名过短"
@@ -2999,9 +3003,7 @@ zh_CN:
     post:
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
-      quote_reply_shortcut: "或按 q"
       quote_edit: "编辑"
-      quote_edit_shortcut: "或按 e"
       quote_share: "分享"
       edit_reason: "原因："
       post_number: "帖子 %{number}"
@@ -4142,6 +4144,7 @@ zh_CN:
           never: "从不"
       reports:
         title: "可用报告列表"
+        meta_doc: "请浏览我们的 <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>文档</a> ，了解报告的详细概述。"
       dashboard:
         title: "信息中心"
         last_updated: "信息中心更新："

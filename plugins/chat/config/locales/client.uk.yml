@@ -470,21 +470,21 @@ uk:
       reviewable:
         type: "Повідомлення чату"
       reactions:
-        only_you: "Ви відреагували :%{emoji}:"
-        you_and_single_user: "Ви та %{username} відреагували :%{emoji}:"
-        you_and_multiple_users: "Ви, %{commaSeparatedUsernames} і %{username} відреагували :%{emoji}:"
+        only_you: "<span>Ви відреагували </span>:%{emoji}:"
+        you_and_single_user: "<span>Ви та %{username} відреагували </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Ви, %{commaSeparatedUsernames} та %{username} відреагували </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "Ви, %{commaSeparatedUsernames} та %{count} інший відреагували:%{emoji}:"
-          few: "Ви, %{commaSeparatedUsernames} та %{count} інших відреагували:%{emoji}:"
-          many: "Ви, %{commaSeparatedUsernames} та %{count} інших відреагували:%{emoji}:"
-          other: "Ви, %{commaSeparatedUsernames} та %{count} інших відреагували:%{emoji}:"
-        single_user: "%{username} відреагував:%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} і %{username} відреагували:%{emoji}:"
+          one: "<span>Ви, %{commaSeparatedUsernames} та %{count} відреагували на </span>:%{emoji}:"
+          few: "<span>Ви, %{commaSeparatedUsernames} та %{count} відреагували на </span>:%{emoji}:"
+          many: "<span>Ви, %{commaSeparatedUsernames} та %{count} відреагували на </span>:%{emoji}:"
+          other: "<span>Ви, %{commaSeparatedUsernames} та %{count} та інші відреагували на </span>:%{emoji}:"
+        single_user: "<span>%{username} відреагували на </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} і %{username} відреагували </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
-          few: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
-          many: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
-          other: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} та %{count} інший відреагували з </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} та %{count} інших відреагували з </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} та %{count} інших відреагували з </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} і %{count} інших відреагували </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Перемикання панелі інструментів"
         italic_text: "виділення тексту курсивом"
@@ -535,6 +535,8 @@ uk:
           description: "Це експортує всі повідомлення з усіх каналів."
           create_export: "Створити експорт"
           export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
+      my_threads:
+        title: Мої теми
       direct_messages:
         title: "Особистий чат"
         new: "Створити особистий чат"

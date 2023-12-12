@@ -1557,7 +1557,7 @@ zh_CN:
     topics_per_period_in_top_summary: "默认热门话题总结中显示的热门话题数。"
     topics_per_period_in_top_page: "在展开的“显示更多”热门话题中显示的热门话题数。"
     redirect_users_to_top_page: "自动将新用户和长期缺席的用户重定向到热门页面。"
-    top_page_default_timeframe: "热门页面的默认时间范围。"
+    top_page_default_timeframe: "匿名用户的默认顶部页面时间段 (登录用户可根据其最后一次访问自动调整)。"
     moderators_view_emails: "允许版主查看用户电子邮件"
     prioritize_username_in_ux: "在用户页面、用户卡片和帖子上先显示用户名（先显示禁用名称时）"
     enable_rich_text_paste: "将文本粘贴到编辑器中时启用 HTML 到 Markdown 的自动转换。（实验性）"
@@ -1747,6 +1747,7 @@ zh_CN:
     min_trust_to_create_topic: "创建新话题所需的最低信任级别。"
     allow_flagging_staff: "如果启用，用户可以举报来自管理人员帐户的帖子。"
     min_trust_to_edit_wiki_post: "编辑标记为 Wiki 的帖子所需的最低信任级别。"
+    edit_wiki_post_allowed_groups: "允许编辑标记为 Wiki 帖子的群组。"
     min_trust_to_edit_post: "编辑帖子所需的最低信任级别。"
     min_trust_to_allow_self_wiki: "制作用户自己的帖子 Wiki 所需的最低信任级别。"
     min_trust_to_send_messages: "已弃用，请改用 'personal message enabled groups' 设置。创建新的个人消息所需的最低信任级别。"
@@ -1991,7 +1992,6 @@ zh_CN:
     short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
     default_code_lang: "应用于 markdown 代码块的默认编程语言语法高亮 (自动、文本、ruby、python 等)。该值还必须出现在 `highlighted languages` 站点设置中。"
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
-    autohighlight_all_code: "将语法高亮显示应用于 HTML <code> 块，即使它们没有指定语言。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
     show_copy_button_on_codeblocks: "向代码块添加一个按钮，以将块内容复制到用户的剪贴板。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用是必需的。"
@@ -2150,6 +2150,7 @@ zh_CN:
     enable_experimental_lightbox: "实验性：将默认图片灯箱替换为全新设计。"
     experimental_form_templates: "实验性：启用表单模板功能。 <b>启用后，</b> 可在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>管理模板。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
+    show_user_menu_avatars: "在用户菜单中显示用户头像"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2210,6 +2211,7 @@ zh_CN:
     keywords:
       here_mention_allowed_groups: "min_trust_level_for_here_mention"
       shared_drafts_allowed_groups: "Shared_drafts_min_trust_level"
+      edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

@@ -795,7 +795,6 @@ sw:
     topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
     topics_per_period_in_top_page: "Idadi ya mada za juu zitakazo onyeshwa kwenye upande wa 'Onyesha Zaidi' mada za juu."
     redirect_users_to_top_page: "Otomatikali watumiaji wapya na wale ambao hawapo watapelekwa juu ya ukurasa."
-    top_page_default_timeframe: "Chaguo-msingi la mda wa fremu kwa ajili ya kurasa wa juu wa kuangalia."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
     enable_badges: "Ruhusu mfumo wa beji"
     new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."

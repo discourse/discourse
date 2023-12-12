@@ -381,18 +381,6 @@ pt_BR:
           topic: "Tópico"
       reviewable:
         type: "Mensagem de chat"
-      reactions:
-        only_you: "Você reagiu com :%{emoji}:"
-        you_and_single_user: "Você e %{username} reagiram com :%{emoji}:"
-        you_and_multiple_users: "Você, %{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
-          other: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
-        single_user: "%{username} reagiu com :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
-          other: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
       composer:
         toggle_toolbar: "Ativar/desativar barra de ferramentas"
         italic_text: "texto enfatizado"

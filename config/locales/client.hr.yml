@@ -3085,9 +3085,7 @@ hr:
     post:
       confirm_delete: "Jeste li sigurni da želite izbrisati ovaj post?"
       quote_reply: "Citat"
-      quote_reply_shortcut: "Ili pritisnite q"
       quote_edit: "Izmijeni"
-      quote_edit_shortcut: "Ili pritisnite e"
       quote_share: "Podijelite"
       edit_reason: "Razlog:"
       post_number: "objava %{number}"

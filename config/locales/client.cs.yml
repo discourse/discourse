@@ -2742,7 +2742,6 @@ cs:
           other: "Máte označeno <b>%{count}</b> příspěvků."
     post:
       quote_reply: "Cituj"
-      quote_reply_shortcut: "Nebo stiskněte q"
       quote_edit: "Upravit"
       quote_share: "Sdílet"
       edit_reason: "Důvod: "

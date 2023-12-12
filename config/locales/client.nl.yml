@@ -3050,9 +3050,7 @@ nl:
     post:
       confirm_delete: "Weet je zeker dat je dit bericht wilt verwijderen?"
       quote_reply: "Citeren"
-      quote_reply_shortcut: "Of druk op q"
       quote_edit: "Bewerken"
-      quote_edit_shortcut: "Of druk op e"
       quote_share: "Delen"
       edit_reason: "Reden: "
       post_number: "bericht %{number}"

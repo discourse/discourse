@@ -2621,9 +2621,7 @@ pt:
       deleted_by_author_simple: "(tópico excluído pelo autor)"
     post:
       quote_reply: "Citar"
-      quote_reply_shortcut: "Ou pressione q"
       quote_edit: "Editar"
-      quote_edit_shortcut: "Ou pressione e"
       quote_share: "Partilhar"
       edit_reason: "Motivo:"
       post_number: "publicação %{number}"

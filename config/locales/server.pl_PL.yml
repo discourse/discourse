@@ -1726,7 +1726,6 @@ pl_PL:
     topics_per_period_in_top_summary: "Liczba tematów wyświetlanych w domyślnym podsumowaniu najbardziej popularnych tematów."
     topics_per_period_in_top_page: "Liczba tematów wyświetlanych w widoku 'Pokaż więcej' na ekranie popularnych tematów."
     redirect_users_to_top_page: "Automatycznie kieruj nowych i długo nieobecnych użytkowników na stronę główną."
-    top_page_default_timeframe: "Domyślne ramy czasowe dla strony widoku z góry."
     moderators_view_emails: "Zezwalaj moderatorom na przeglądanie wiadomości e-mail użytkowników"
     prioritize_username_in_ux: "Pokaż nazwę użytkownika jako pierwszą na stronie użytkownika, jego karcie i w postach (gdy opcja jest wyłączona, pełna nazwa jest wyświetlana jako pierwsza)"
     enable_rich_text_paste: "Włącz automatyczną konwersję HTML do Markdown podczas wklejania tekstu do kompozytora. (Eksperymentalny)"

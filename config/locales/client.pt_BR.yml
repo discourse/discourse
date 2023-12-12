@@ -3057,9 +3057,7 @@ pt_BR:
     post:
       confirm_delete: "Tem certeza de que deseja excluir esta postagem?"
       quote_reply: "Citação"
-      quote_reply_shortcut: "Ou pressione Q"
       quote_edit: "Editar"
-      quote_edit_shortcut: "Ou pressione E"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
       post_number: "postagem %{number}"
@@ -3158,6 +3156,8 @@ pt_BR:
         delete: "excluir esta postagem"
         undelete: "recuperar esta postagem"
         share: "compartilhar o link desta postagem"
+        copy_title: "copiar um link desta postagem para a área de transferência"
+        link_copied: "Link copiado!"
         more: "Mais"
         delete_replies:
           confirm: "Você também deseja excluir as respostas desta postagem?"
@@ -3848,6 +3848,7 @@ pt_BR:
         one: "Seu sinônimo também será excluído."
         other: "Seus %{count} sinônimos também serão excluídos."
       edit_tag: "Edite o nome e descrição da etiqueta"
+      description: "Descrição (máximo de 1000 caracteres)"
       sort_by: "Ordenar por"
       sort_by_count: "quantidade"
       sort_by_name: "nome"
@@ -4221,6 +4222,7 @@ pt_BR:
           never: "nunca"
       reports:
         title: "Lista de relatórios disponíveis"
+        meta_doc: "Explore nossa <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentação</a> para uma visão detalhada dos relatórios."
       dashboard:
         title: "Painel de controle"
         last_updated: "Painel de controle atualizado:"

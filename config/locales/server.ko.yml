@@ -1414,7 +1414,6 @@ ko:
     topics_per_period_in_top_summary: "디폴트 주요 주제 요약에 표시할 주요 주제 수입니다."
     topics_per_period_in_top_page: "주요 주제에서 '더 보기'를 펼칠 때 표시할 주요 주제 수입니다."
     redirect_users_to_top_page: "신규 사용자와 오랜만에 방문한 사용자를 주요 페이지로 자동 리디렉션합니다."
-    top_page_default_timeframe: "주요 페이지용 디폴트 타임라인입니다."
     moderators_view_emails: "운영자가 사용자 이메일을 볼 수 있도록 허용"
     prioritize_username_in_ux: "아이디를 사용자 페이지, 사용자 카드 및 게시물에 가장 먼저 표시(비활성화 시 이름이 가장 먼저 표시됨)"
     enable_rich_text_paste: "작성기에 텍스트를 붙여 넣을 때 HTML에서 Markdown으로의 자동 변환을 활성화합니다. (실험단계)"
