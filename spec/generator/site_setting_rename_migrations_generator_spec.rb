@@ -5,7 +5,7 @@ require "rails/generators"
 require "generators/site_setting_rename_migration/site_setting_rename_migration_generator"
 
 RSpec.describe SiteSettingRenameMigrationGenerator, type: :generator do
-  it "is generating correct migration" do
+  it "generates the correct migration" do
     freeze_time DateTime.parse("2010-01-01 12:00")
     described_class.start(%w[site_description contact_email], destination_root: "#{Rails.root}/tmp")
     file_path = "#{Rails.root}/tmp/db/migrate/20100101120000_rename_site_description_setting.rb"
