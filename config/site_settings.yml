@@ -1393,6 +1393,7 @@ email:
   email_total_attachment_size_limit_kb:
     default: 0
     max: 51200
+    type: file_size_restriction
   post_excerpts_in_emails: false
   raw_email_max_length: 220000
   raw_rejected_email_max_length: 4000
@@ -1418,6 +1419,7 @@ files:
     client: true
     default: 4096
     max: 1024000
+    type: file_size_restriction
   max_image_megapixels:
     default: 40
     min: 5
@@ -1426,6 +1428,7 @@ files:
     hidden: true
     default: 50000
     max: 1024000
+    type: file_size_restriction
   theme_authorized_extensions:
     default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js"
     type: list
@@ -1488,6 +1491,7 @@ files:
     default: 1024
     min: 1
     max: 10240
+    type: file_size_restriction
   secure_uploads_pm_only:
     default: false
     hidden: true

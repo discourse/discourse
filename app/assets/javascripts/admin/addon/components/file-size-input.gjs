@@ -91,6 +91,9 @@ export default class FileSizeInput extends Component {
 
   @action
   onFileSizeUnitChange(newUnit) {
+    if (this.fileSizeUnit === "kb" && newUnit === "kb") {
+      this.pendingSizeValue = this.sizeValue;
+    }
     if (this.fileSizeUnit === "kb" && newUnit === "mb") {
       this.pendingSizeValue = this.sizeValue / 1024;
     }

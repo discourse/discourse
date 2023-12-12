@@ -7,6 +7,26 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 module("Integration | Component | file-size-input", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("file size unit selector kb", async function (assert) {
+    this.set("value", 1024);
+    this.set("max", 4096);
+    this.set("onChangeSize", function () {});
+    this.set("updateValidationMessage", function () {});
+
+    await render(hbs`
+      <FileSizeInput
+        @sizeValueKB={{readonly this.value}}
+        class="file-size-input-test"
+        @onChangeSize={{this.onChangeSize}}
+        @updateValidationMessage={{this.updateValidationMessage}}
+        @max=4096
+        @message=""
+      />
+    `);
+
+    assert.dom(".file-size-input").hasValue("1024", "value is present");
+  });
+
   test("file size unit selector", async function (assert) {
     this.set("value", 4096);
     this.set("max", 8192);
