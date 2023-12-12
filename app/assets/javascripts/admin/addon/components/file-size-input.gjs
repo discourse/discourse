@@ -7,27 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import TextField from "discourse/components/text-field";
 import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
-
-const ALLOWED_KEYS = [
-  "Enter",
-  "Backspace",
-  "Tab",
-  "Delete",
-  "ArrowLeft",
-  "ArrowUp",
-  "ArrowRight",
-  "ArrowDown",
-  "0",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-];
+import { allowOnlyNumericInput } from "discourse/lib/utilities";
 
 const UNIT_KB = "kb";
 const UNIT_MB = "mb";
@@ -62,9 +42,7 @@ export default class FileSizeInput extends Component {
 
   @action
   keyDown(event) {
-    if (!ALLOWED_KEYS.includes(event.key)) {
-      event.preventDefault();
-    }
+    allowOnlyNumericInput(event);
   }
 
   get dropdownOptions() {
@@ -126,17 +104,21 @@ export default class FileSizeInput extends Component {
       this.pendingSizeValue = this.sizeValue / 1024;
     }
     if (this.fileSizeUnit === "gb" && newUnit === "mb") {
-      this.pendingSizeValue = this.sizeValue * 1024;
+      this.pendingSizeValue = Math.round(this.sizeValue * 1024);
     }
     if (this.fileSizeUnit === "gb" && newUnit === "kb") {
-      this.pendingSizeValue = this.sizeValue * 1024 * 1024;
+      this.pendingSizeValue = Math.round(this.sizeValue * 1024 * 1024);
     }
     this.pendingFileSizeUnit = newUnit;
   }
 
   @action
   applySizeValueChanges() {
-    this.sizeValue = this.pendingSizeValue;
+    if (this.pendingSizeValue < 1) {
+      this.sizeValue = Number.parseFloat(this.pendingSizeValue).toFixed(6);
+    } else {
+      this.sizeValue = this.pendingSizeValue;
+    }
   }
 
   @action

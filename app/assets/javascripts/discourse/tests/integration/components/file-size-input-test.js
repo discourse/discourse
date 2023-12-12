@@ -41,6 +41,30 @@ module("Integration | Component | file-size-input", function (hooks) {
     assert
       .dom(".file-size-input")
       .hasValue("4", "value is changed when the unit is changed");
+
+    await click(".file-size-unit-selector");
+
+    await selectKit(".file-size-unit-selector").expand();
+    await selectKit(".file-size-unit-selector").selectRowByValue("gb");
+
+    assert
+      .dom(".file-size-input")
+      .hasValue(
+        "0.003906",
+        "value is changed when the unit is changed and only has 6 decimal places"
+      );
+
+    await click(".file-size-unit-selector");
+
+    await selectKit(".file-size-unit-selector").expand();
+    await selectKit(".file-size-unit-selector").selectRowByValue("mb");
+
+    assert
+      .dom(".file-size-input")
+      .hasValue(
+        "4",
+        "value is changed backed to original size with no decimal places"
+      );
   });
 
   test("file size input error message", async function (assert) {
