@@ -52,9 +52,7 @@ after_initialize do
         config.allowed_user_ids += topic.allowed_users.pluck(:id)
         config.allowed_group_ids += topic.allowed_groups.pluck(:id)
       elsif post.wiki
-        config.allowed_group_ids << Group::AUTO_GROUPS[
-          :"trust_level_#{SiteSetting.min_trust_to_edit_wiki_post}"
-        ]
+        config.allowed_group_ids += SiteSetting.edit_wiki_post_allowed_groups_map
       end
 
       if !topic.private_message? && SiteSetting.edit_all_post_groups.present?
