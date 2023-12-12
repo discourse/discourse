@@ -6,7 +6,9 @@ export default class IconAvatar extends Component {
   <template>
     <div class="icon-avatar">
       {{avatar @data.avatarTemplate "small"}}
-      {{dIcon @data.icon}}
+      <div class="icon-avatar__icon-wrapper">
+        {{dIcon @data.icon}}
+      </div>
     </div>
   </template>
 }
