@@ -57,12 +57,17 @@ jobs:
         include:
           - build_type: system
             target: chat
-            ruby: "3.2"
           - build_type: system
             target: chat
             updated_ember: true
           - build_type: system
             target: core
+            updated_ember: true
+          - build_type: frontend
+            target: plugins
+            updated_ember: true
+          - build_type: frontend
+            target: themes
             updated_ember: true
 
     steps:

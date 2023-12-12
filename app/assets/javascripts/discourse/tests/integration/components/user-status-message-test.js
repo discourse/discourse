@@ -121,7 +121,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     this.set("status", { emoji: "tooth", description: "off to dentist" });
 
     await render(
-      hbs`<UserStatusMessage @status={{this.status}} @class="foo" />`
+      hbs`<UserStatusMessage @status={{this.status}} class="foo" />`
     );
 
     assert

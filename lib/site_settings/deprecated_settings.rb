@@ -19,6 +19,7 @@ module SiteSettings::DeprecatedSettings
       "3.3",
     ],
     ["email_in_min_trust", "email_in_allowed_groups", false, "3.3"],
+    ["min_trust_to_edit_wiki_post", "edit_wiki_post_allowed_groups", false, "3.3"],
   ]
 
   def setup_deprecated_methods

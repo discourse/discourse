@@ -113,6 +113,20 @@ ro:
         types:
           category: "Categorie"
           topic: "Discuție"
+      reactions:
+        only_you: "<span>Ai reacționat cu </span>:%{emoji}:"
+        you_and_single_user: "<span>Tu și %{username} ați reacționat cu </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Tu, %{commaSeparatedUsernames} și %{username} ați reacționat cu </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+          few: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+          other: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+        single_user: "<span>%{username} a reacționat cu </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} și %{username} au reacționat cu </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
       composer:
         italic_text: "text italic"
         bold_text: "text aldin"
@@ -135,6 +149,8 @@ ro:
         category_label: "Categorie"
         history_label: "Istoric"
         members_label: "Membri"
+      my_threads:
+        title: Firele mele
       direct_messages:
         close: "Închide această conversație personală"
       incoming_webhooks:

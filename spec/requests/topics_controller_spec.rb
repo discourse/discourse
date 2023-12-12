@@ -1877,7 +1877,7 @@ RSpec.describe TopicsController do
           end
 
           it "can add a tag to wiki topic" do
-            SiteSetting.min_trust_to_edit_wiki_post = 2
+            SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
             topic.first_post.update!(wiki: true)
             sign_in(user_2)
 
@@ -1887,6 +1887,7 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(403)
             user_2.update!(trust_level: 2)
+            Group.refresh_automatic_groups!
 
             expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
               topic.reload.first_post.revisions.count

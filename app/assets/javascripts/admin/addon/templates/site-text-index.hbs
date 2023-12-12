@@ -4,9 +4,9 @@
   <TextField
     @value={{this.q}}
     @placeholderKey="admin.site_text.search"
-    @class="no-blur site-text-search"
     @autofocus="true"
     @key-up={{this.search}}
+    class="no-blur site-text-search"
   />
 
   <div class="reseed">
@@ -27,8 +27,8 @@
         @content={{this.availableLocales}}
         @value={{this.locale}}
         @onChange={{this.updateLocale}}
-        @class="locale-search"
         @options={{hash filterable=true}}
+        class="locale-search"
       />
     </div>
 

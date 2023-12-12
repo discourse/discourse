@@ -215,11 +215,6 @@ ko:
           topic: "글"
       reviewable:
         type: "채팅 메시지"
-      reactions:
-        you_and_single_user: "당신과 %{username}이 :%{emoji}:로 반응했습니다"
-        you_and_multiple_users: "당신, %{commaSeparatedUsernames}, %{username}이 :%{emoji}:로 반응했습니다"
-        you_multiple_users_and_more:
-          other: "당신, %{commaSeparatedUsernames} 외 %{count}명이 :%{emoji}:로 반응했습니다"
       composer:
         toggle_toolbar: "툴바 전환"
         italic_text: "강조하기"

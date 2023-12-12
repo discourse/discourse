@@ -202,8 +202,6 @@ fa_IR:
           topic: "موضوعات"
       reviewable:
         type: "پیام گفتگو"
-      reactions:
-        only_you: "شما با :%{emoji}: واکنش نشان دادید"
       composer:
         italic_text: "متن تاکید شده"
         bold_text: "نوشته‌ی ضخیم "

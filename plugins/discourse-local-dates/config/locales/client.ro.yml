@@ -10,27 +10,28 @@ ro:
       relative_dates:
         today: Astăzi la %{time}
         tomorrow: Mâine la %{time}
-        yesterday: Ieri %{time}
+        yesterday: Ieri la %{time}
         countdown:
           passed: data a trecut
-      title: Introdu data / ora
+      title: Introdu data/ora
       create:
         form:
           insert: Introdu
           advanced_mode: Mod avansat
-          simple_mode: Modul simplu
-          format_description: "Format utilizat pentru a afișa data utilizatorului. Utilizați Z pentru a afișa decalajul de timp și zz pentru numele fusului orar."
+          simple_mode: Mod simplu
+          format_description: "Format utilizat pentru a afișa data utilizatorului. Folosește Z pentru a afișa decalajul și zz pentru numele fusului orar."
           timezones_title: Fusuri orare de afișat
           timezones_description: Fusurile orare vor fi utilizate pentru a afișa datele în previzualizare și în rezervă.
           recurring_title: Recurență
-          recurring_description: "Definiți recurența unui eveniment. De asemenea, puteți edita manual opțiunea recurentă generată de formular și puteți utiliza una dintre următoarele chei: ani, trimestre, luni, săptămâni, zile, ore, minute, secunde, milisecunde."
-          recurring_none: Nicio recurență
-          invalid_date: Data invalidă, asigurați-vă că data și ora sunt corecte
+          recurring_description: "Definește recurența unui eveniment. De asemenea, poți edita manual opțiunea recurentă generată de formular și poți utiliza una dintre următoarele chei: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Fără recurență
+          invalid_date: Dată invalidă, asigură-te că data și ora sunt corecte
           date_title: Dată
-          time_title: Timp
-          format_title: Formatul datei
+          time_title: Oră
+          format_title: Format dată
           timezone: Fus orar
-          until: Pana cand...
+          until: Pana la...
+          current_timezone: "Fus orar actual:"
           recurring:
             every_day: "În fiecare zi"
             every_week: "În fiecare săptămână"
@@ -40,3 +41,4 @@ ro:
             every_three_months: "La fiecare trei luni"
             every_six_months: "La fiecare șase luni"
             every_year: "În fiecare an"
+      default_title: "Eveniment %{site_name}"

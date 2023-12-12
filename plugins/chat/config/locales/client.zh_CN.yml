@@ -388,15 +388,15 @@ zh_CN:
       reviewable:
         type: "聊天消息"
       reactions:
-        only_you: "您回应了 :%{emoji}:"
-        you_and_single_user: "您和 %{username} 回应了 :%{emoji}:"
-        you_and_multiple_users: "您、%{commaSeparatedUsernames} 和 %{username} 回应了 :%{emoji}:"
+        only_you: "<span>你做出了反应</span>:%{emoji}:"
+        you_and_single_user: "<span>你和 %{username} 的反应是 </span>:%{emoji}:"
+        you_and_multiple_users: "<span>你、 %{commaSeparatedUsernames} 和 %{username} 的反应是 </span>:%{emoji}:"
         you_multiple_users_and_more:
-          other: "您、%{commaSeparatedUsernames} 和其他 %{count} 人回应了 :%{emoji}:"
-        single_user: "%{username} 回应了 :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} 和 %{username} 回应了 :%{emoji}:"
+          other: "<span>你、 %{commaSeparatedUsernames} 和 %{count} 位其他人的反应是 </span>:%{emoji}:"
+        single_user: "<span>%{username} 的反应 </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} 和 %{username} 的反应 </span>:%{emoji}:"
         multiple_users_and_more:
-          other: "%{commaSeparatedUsernames} 和其他 %{count} 人回应了 :%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} 和 %{count} 位其他人的反应是 </span>:%{emoji}:"
       composer:
         toggle_toolbar: "切换工具栏"
         italic_text: "斜体"

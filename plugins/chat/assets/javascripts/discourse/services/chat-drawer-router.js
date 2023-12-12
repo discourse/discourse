@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { inject as service } from "@ember/service";
 import ChatDrawerChannel from "discourse/plugins/chat/discourse/components/chat-drawer/channel";
+import ChatDrawerChannelThreads from "discourse/plugins/chat/discourse/components/chat-drawer/channel-threads";
 import ChatDrawerIndex from "discourse/plugins/chat/discourse/components/chat-drawer/index";
 import ChatDrawerThread from "discourse/plugins/chat/discourse/components/chat-drawer/thread";
 import ChatDrawerThreads from "discourse/plugins/chat/discourse/components/chat-drawer/threads";
@@ -36,12 +37,15 @@ const ROUTES = {
     },
   },
   "chat.channel.threads": {
-    name: ChatDrawerThreads,
+    name: ChatDrawerChannelThreads,
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
       };
     },
+  },
+  "chat.threads": {
+    name: ChatDrawerThreads,
   },
   chat: { name: ChatDrawerIndex },
   "chat.channel.near-message": {

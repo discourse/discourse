@@ -78,12 +78,10 @@ acceptance("User Routes", function (needs) {
       "has the body class"
     );
 
-    const $links = queryAll(".item.notification a");
+    const $links = queryAll(".notification a");
 
     assert.ok(
-      $links[2].href.includes(
-        "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
-      )
+      $links[2].href.includes("/u/eviltrout/notifications/likes-received")
     );
 
     updateCurrentUser({ moderator: true, admin: false });

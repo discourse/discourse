@@ -30,19 +30,19 @@ describe "Thread list in side panel | full page", type: :system do
 
     before { chat_system_user_bootstrap(user: other_user, channel: channel) }
 
-    it "does not show existing threads in the channel if the user is not tracking them" do
-      Fabricate(:chat_thread, original_message: thread_om, channel: channel, use_service: true)
+    it "it shows threads in the channel even if the user is not tracking them" do
+      thread_1 =
+        Fabricate(
+          :chat_thread,
+          original_message: thread_om,
+          channel: channel,
+          with_replies: 1,
+          use_service: true,
+        )
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
-      expect(page).to have_content(I18n.t("js.chat.threads.none"))
-    end
 
-    it "does not show new threads in the channel in the thread list if the user is not tracking them" do
-      chat_page.visit_channel(channel)
-      Fabricate(:chat_message, chat_channel: channel, in_reply_to: thread_om, use_service: true)
-      channel_page.open_thread_list
-
-      expect(page).to have_content(I18n.t("js.chat.threads.none"))
+      expect(thread_list_page).to have_thread(thread_1)
     end
 
     describe "when the user creates a new thread" do

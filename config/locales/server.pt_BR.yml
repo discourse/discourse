@@ -1582,7 +1582,6 @@ pt_BR:
     topics_per_period_in_top_summary: "Quantidade de melhores tópicos exibidos no resumo de melhores tópicos padrão."
     topics_per_period_in_top_page: "Quantidade de melhores tópicos exibidos nos melhores tópicos de \"Exibir mais\" expandido."
     redirect_users_to_top_page: "Redirecione automaticamente usuários(as) novos(as) e ausentes há muito tempo para a melhor página."
-    top_page_default_timeframe: "Intervalo de tempo padrão para a página de melhores exibições. "
     moderators_view_emails: "Permitir que moderadores(as) visualizem e-mails de usuários(as)"
     prioritize_username_in_ux: "Mostrar primeiro o nome de usuário(a) na página do(a) usuário(a), cartão de usuário(a) e postagens (ao desativar, o nome será mostrado primeiro)"
     enable_rich_text_paste: "Ative a conversão automática de HTML para Markdown ao colar texto no compositor. (Experimental)"

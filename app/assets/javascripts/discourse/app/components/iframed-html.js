@@ -3,8 +3,7 @@ import Component from "@ember/component";
 export default Component.extend({
   tagName: "iframe",
   html: null,
-  className: "",
-  classNameBindings: ["html:iframed-html", "className"],
+  classNameBindings: ["html:iframed-html"],
   sandbox: "allow-same-origin",
   attributeBindings: ["sandbox:sandbox"],
 

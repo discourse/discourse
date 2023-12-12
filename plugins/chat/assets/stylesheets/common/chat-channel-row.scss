@@ -79,6 +79,7 @@
       padding: 0;
       font-size: var(--font-up-1);
       justify-content: center;
+      flex-shrink: 0;
     }
 
     &__avatar {

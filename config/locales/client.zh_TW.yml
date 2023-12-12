@@ -2210,9 +2210,7 @@ zh_TW:
           other: "你已選擇了 <b>%{count}</b> 篇貼文。"
     post:
       quote_reply: "引用"
-      quote_reply_shortcut: "或按 q 鍵"
       quote_edit: "編輯"
-      quote_edit_shortcut: "或按 e 鍵"
       quote_share: "分享"
       edit_reason: "原因: "
       post_number: "貼文 %{number}"

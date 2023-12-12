@@ -1630,7 +1630,7 @@ de:
     topics_per_period_in_top_summary: "Anzahl der Themen, die in der Standard-Zusammenfassung der angesagten Themen angezeigt werden."
     topics_per_period_in_top_page: "Anzahl der Themen, die unter „Mehr anzeigen“ für angesagte Themen angezeigt werden."
     redirect_users_to_top_page: "Verweise neue und länger abwesende Benutzer automatisch zur Seite „Angesagt“."
-    top_page_default_timeframe: "Standard-Zeitfenster für die Seite „Angesagt“."
+    top_page_default_timeframe: "Standardzeitraum für die Startseite für anonyme Nutzer (passt sich automatisch für eingeloggte Nutzer an, basierend auf ihrem letzten Besuch)."
     moderators_view_emails: "Erlaube Moderatoren, Benutzer-E-Mails einzusehen."
     prioritize_username_in_ux: "Zeige den Benutzernamen auf der Benutzerseite, der Benutzerkarte und in Beiträgen an erster Stelle (wenn deaktiviert, wird der Name an erster Stelle angezeigt)"
     enable_rich_text_paste: "Aktiviere automatische Umwandlung von HTML in Markdown beim Einfügen von Text in den Editor. (Experimentell)"
@@ -1820,6 +1820,7 @@ de:
     min_trust_to_create_topic: "Minimale Vertrauensstufe, um ein neues Thema zu erstellen."
     allow_flagging_staff: "Wenn aktiviert, können Benutzer auch Beiträge von Team-Konten melden."
     min_trust_to_edit_wiki_post: "Minimale Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
+    edit_wiki_post_allowed_groups: "Gruppen, die als Wiki markierte Beiträge bearbeiten dürfen."
     min_trust_to_edit_post: "Minimale Vertrauensstufe, um Beiträge bearbeiten zu können."
     min_trust_to_allow_self_wiki: "Minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki-Eintrag zu erstellen."
     min_trust_to_send_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Die Mindestvertrauensstufe, die zum Erstellen neuer persönlicher Nachrichten erforderlich ist."
@@ -2065,7 +2066,7 @@ de:
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die Breite des Fortschrittsbalkens verändert wird."
     default_code_lang: "Standardmäßige Syntaxhervorhebung der Programmiersprache, die auf Markdown-Codeblöcke angewendet wird (auto, text, ruby, python usw.). Dieser Wert muss auch in der Site-Einstellung \"Hervorgehobene Sprachen\" enthalten sein."
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
-    autohighlight_all_code: "Wende die Syntaxhervorhebung auf HTML <code> Blöcke an, auch wenn sie keine Sprache angegeben haben."
+    autohighlight_all_code: "Wende die Syntaxhervorhebung auf HTML-verfasste &lt;code&gt; Blöcke an, auch wenn sie keine Sprache angegeben haben. Um Markdown-Codeblöcke zu konfigurieren, verwende die Einstellung \"default code lang\"."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
     show_copy_button_on_codeblocks: "Eine Schaltfläche zu Codeblöcken hinzufügen, um den Inhalt des Blocks in die Zwischenablage des Benutzers zu kopieren."
     embed_any_origin: "Einbettbare Inhalte unabhängig vom Ursprung erlauben. Dies ist für mobile Apps mit statischem HTML erforderlich."
@@ -2226,6 +2227,7 @@ de:
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion der Formularvorlagen. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
+    show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2290,6 +2292,7 @@ de:
       approve_unless_allowed_groups: "approve_unless_trust_level"
       approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
       email_in_allowed_groups: "email_in_min_trust"
+      edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

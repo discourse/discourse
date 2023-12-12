@@ -7,6 +7,7 @@ root_paths:
 
 # The number of threads to use for processing uploads is calculated as:
 #   thread_count = [number of cores] * [thread_count_factor]
+# The thread count will be doubled if uploads are stored on S3 because there's a higher latency.
 thread_count_factor: 1.5
 
 # Delete uploads from the output database that are not found in the source database.

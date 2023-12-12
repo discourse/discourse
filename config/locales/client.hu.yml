@@ -2840,9 +2840,7 @@ hu:
     post:
       confirm_delete: "Biztos, hogy törli ezt a bejegyzést?"
       quote_reply: "Idézet"
-      quote_reply_shortcut: "Vagy nyomja meg a q gombot"
       quote_edit: "Szerkesztés"
-      quote_edit_shortcut: "Vagy nyomja meg az e gombot"
       quote_share: "Megosztás"
       edit_reason: "Ok: "
       post_number: "%{number}. bejegyzés"

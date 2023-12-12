@@ -167,7 +167,7 @@ export default class RelativeTimePicker extends Component {
         @content={{this.intervals}}
         @value={{this.selectedInterval}}
         @onChange={{this.onChangeInterval}}
-        @class="relative-time-intervals"
+        class="relative-time-intervals"
       />
     </div>
   </template>

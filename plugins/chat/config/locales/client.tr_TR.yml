@@ -405,18 +405,6 @@ tr_TR:
           topic: "Konu"
       reviewable:
         type: "Sohbet mesajı"
-      reactions:
-        only_you: ":%{emoji}: ile tepki verdiniz"
-        you_and_single_user: "Siz ve %{username}, :%{emoji}: ile tepki verdiniz"
-        you_and_multiple_users: "Siz, %{commaSeparatedUsernames} ve %{username}, :%{emoji}: ile tepki verdiniz"
-        you_multiple_users_and_more:
-          one: "Siz, %{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdiniz"
-          other: "Siz, %{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdiniz"
-        single_user: "%{username} :%{emoji}: ile tepki verdi"
-        multiple_users: "%{commaSeparatedUsernames} ve %{username}, :%{emoji}: ile tepki verdi"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdi"
-          other: "%{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdi"
       composer:
         toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"

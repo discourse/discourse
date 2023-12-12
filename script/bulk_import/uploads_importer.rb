@@ -623,15 +623,6 @@ module BulkImport
       end
     end
 
-    def format_datetime(value)
-      value ? value.utc.iso8601 : nil
-    end
-
-    def format_boolean(value)
-      return nil if value.nil?
-      value ? 1 : 0
-    end
-
     def configure_site_settings
       settings = @settings[:site_settings]
 

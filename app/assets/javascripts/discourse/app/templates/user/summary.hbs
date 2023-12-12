@@ -108,7 +108,7 @@
   />
 
   <div class="top-section">
-    <UserSummarySection @title="top_replies" @class="replies-section pull-left">
+    <UserSummarySection @title="top_replies" class="replies-section pull-left">
       <UserSummaryTopicsList
         @type="replies"
         @items={{this.model.replies}}
@@ -124,7 +124,7 @@
       </UserSummaryTopicsList>
     </UserSummarySection>
 
-    <UserSummarySection @title="top_topics" @class="topics-section pull-right">
+    <UserSummarySection @title="top_topics" class="topics-section pull-right">
       <UserSummaryTopicsList
         @type="topics"
         @items={{this.model.topics}}
@@ -142,7 +142,7 @@
   </div>
 
   <div class="top-section">
-    <UserSummarySection @title="top_links" @class="links-section pull-left">
+    <UserSummarySection @title="top_links" class="links-section pull-left">
       {{#if this.model.links.length}}
         <ul>
           {{#each this.model.links as |link|}}
@@ -184,7 +184,7 @@
 
     <UserSummarySection
       @title="most_replied_to_users"
-      @class="summary-user-list replied-section pull-right"
+      class="summary-user-list replied-section pull-right"
     >
       <UserSummaryUsersList
         @none="no_replies"
@@ -199,7 +199,7 @@
   <div class="top-section most-liked-section">
     <UserSummarySection
       @title="most_liked_by"
-      @class="summary-user-list liked-by-section pull-left"
+      class="summary-user-list liked-by-section pull-left"
     >
       <UserSummaryUsersList
         @none="no_likes"
@@ -212,7 +212,7 @@
 
     <UserSummarySection
       @title="most_liked_users"
-      @class="summary-user-list liked-section pull-right"
+      class="summary-user-list liked-section pull-right"
     >
       <UserSummaryUsersList
         @none="no_likes"
@@ -228,7 +228,7 @@
     <div class="top-section top-categories-section">
       <UserSummarySection
         @title="top_categories"
-        @class="summary-category-list pull-left"
+        class="summary-category-list pull-left"
       >
         <table>
           <thead>

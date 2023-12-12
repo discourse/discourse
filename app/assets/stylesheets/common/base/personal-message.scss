@@ -69,15 +69,6 @@
     }
   }
 
-  .topic-body.highlighted {
-    animation: none;
-    @media (prefers-reduced-motion: no-preference) {
-      .cooked {
-        animation: background-fade-highlight 2.5s ease-out;
-      }
-    }
-  }
-
   .topic-avatar,
   .topic-body {
     border: none;

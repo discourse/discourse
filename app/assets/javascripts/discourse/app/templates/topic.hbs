@@ -63,9 +63,9 @@
 
             {{#if this.showCategoryChooser}}
               <CategoryChooser
-                @class="small"
                 @value={{this.buffered.category_id}}
                 @onChange={{action "topicCategoryChanged"}}
+                class="small"
               />
             {{/if}}
 
@@ -164,7 +164,7 @@
             />
           </h1>
 
-          <TopicCategory @topic={{this.model}} @class="topic-category" />
+          <TopicCategory @topic={{this.model}} class="topic-category" />
         {{/if}}
       </TopicTitle>
 
@@ -218,10 +218,10 @@
       <PluginOutlet @name="above-timeline" @connectorTagName="div" />
 
       <TopicNavigation
-        @class="topic-navigation"
         @topic={{this.model}}
         @jumpToDate={{action "jumpToDate"}}
         @jumpToIndex={{action "jumpToIndex"}}
+        class="topic-navigation"
         as |info|
       >
         <PluginOutlet

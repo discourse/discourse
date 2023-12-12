@@ -2463,9 +2463,7 @@ el:
     post:
       confirm_delete: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την ανάρτηση;"
       quote_reply: "Παράθεση"
-      quote_reply_shortcut: "Ή πατήστε q"
       quote_edit: "Επεξεργασία"
-      quote_edit_shortcut: "Ή πατήστε e"
       quote_share: "Κοινοποίηση"
       edit_reason: "Αιτία:"
       post_number: "ανάρτηση %{number}"

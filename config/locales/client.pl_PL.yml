@@ -3441,9 +3441,7 @@ pl_PL:
     post:
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
-      quote_reply_shortcut: "Lub naciśnij q"
       quote_edit: "Edytuj"
-      quote_edit_shortcut: "Lub naciśnij e"
       quote_share: "Udostępnij"
       edit_reason: "Powód"
       post_number: "wpis %{number}"

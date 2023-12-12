@@ -1,7 +1,8 @@
 {{#if @status}}
   <DTooltip
     @identifier="user-status-message-tooltip"
-    class={{concat-class "user-status-message" @class}}
+    class="user-status-message"
+    ...attributes
   >
     <:trigger>
       {{emoji @status.emoji skipTitle=true}}
