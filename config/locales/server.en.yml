@@ -1961,7 +1961,7 @@ en:
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
-    edit_wiki_post_allowed_groups: "Groups that are allowed to edit post marked as wiki."
+    edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki."
 
     min_trust_to_edit_post: "The minimum trust level required to edit posts."
 
