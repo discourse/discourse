@@ -1,13 +1,19 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "bundler/setup"
-Bundler.setup(:migrations)
+require_relative "common/application"
 
-require "zeitwerk"
-require "active_support/core_ext/object/blank"
-require "active_support/inflector"
-require "thor"
+gemfile do
+  source "https://rubygems.org"
+
+  ruby "~> 3.2.2"
+
+  gem "activesupport"
+  gem "extralite-bundle"
+  gem "msgpack"
+  gem "thor"
+  gem "zeitwerk"
+end
 
 module Migrations
   loader = Zeitwerk::Loader.new
@@ -41,6 +47,8 @@ module Migrations
 
         Migrations::IntermediateDb.reset!(Convert.output_database_path)
         Migrations::IntermediateDb.migrate(Convert.output_database_path)
+
+        require_relative "converters/pepper/main"
       end
 
       desc "version", "Print the version"
