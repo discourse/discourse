@@ -2346,7 +2346,7 @@ en:
 
     file_size_input:
       error:
-        size_too_large: is greater than the max allowed
+        size_too_large: "%{provided_file_size} is greater than the max allowed %{max_file_size}"
 
     emoji_picker:
       filter_placeholder: Search for emoji

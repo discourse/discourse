@@ -7,13 +7,7 @@ import FileSizeInput from "admin/components/file-size-input";
 import SettingValidationMessage from "admin/components/setting-validation-message";
 
 export default class FileSizeRestriction extends Component {
-  @tracked _validationMessage;
-
-  constructor() {
-    super(...arguments);
-
-    this._validationMessage = this.args.validationMessage;
-  }
+  @tracked _validationMessage = this.args.validationMessage;
 
   @action
   updateValidationMessage(message) {

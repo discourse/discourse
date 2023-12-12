@@ -47,9 +47,9 @@ module("Integration | Component | file-size-input", function (hooks) {
     this.set("value", 4096);
     this.set("max", 8192);
     this.set("onChangeSize", function () {});
-    this.set("message", "");
+    //this.set("message", "");
 
-    let updateValidationMessage = function (message) {
+    let updateValidationMessage = (message) => {
       this.set("message", message);
     };
     this.set("updateValidationMessage", updateValidationMessage);

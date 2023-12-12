@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import TextField from "discourse/components/text-field";
 import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -29,6 +29,10 @@ const ALLOWED_KEYS = [
   "9",
 ];
 
+const UNIT_KB = "kb";
+const UNIT_MB = "mb";
+const UNIT_GB = "gb";
+
 export default class FileSizeInput extends Component {
   @tracked fileSizeUnit;
   @tracked sizeValue;
@@ -44,15 +48,15 @@ export default class FileSizeInput extends Component {
   }
 
   _defaultUnit() {
-    this.fileSizeUnit = "kb";
+    this.fileSizeUnit = UNIT_KB;
     if (this.originalSizeKB <= 1024) {
-      this.onFileSizeUnitChange("kb");
+      this.onFileSizeUnitChange(UNIT_KB);
     }
     if (this.originalSizeKB > 1024 && this.originalSizeKB <= 1024 * 1024) {
-      this.onFileSizeUnitChange("mb");
+      this.onFileSizeUnitChange(UNIT_MB);
     }
     if (this.originalSizeKB > 1024 * 1024) {
-      this.onFileSizeUnitChange("gb");
+      this.onFileSizeUnitChange(UNIT_GB);
     }
   }
 
@@ -65,9 +69,9 @@ export default class FileSizeInput extends Component {
 
   get dropdownOptions() {
     return [
-      { label: I18n.t("number.human.storage_units.units.kb"), value: "kb" },
-      { label: I18n.t("number.human.storage_units.units.mb"), value: "mb" },
-      { label: I18n.t("number.human.storage_units.units.gb"), value: "gb" },
+      { label: I18n.t("number.human.storage_units.units.kb"), value: UNIT_KB },
+      { label: I18n.t("number.human.storage_units.units.mb"), value: UNIT_MB },
+      { label: I18n.t("number.human.storage_units.units.gb"), value: UNIT_GB },
     ];
   }
 
@@ -94,11 +98,10 @@ export default class FileSizeInput extends Component {
     }
     if (fileSizeKB > this.args.max) {
       this.args.updateValidationMessage(
-        I18n.toHumanSize(fileSizeKB * 1024) +
-          " " +
-          I18n.t("file_size_input.error.size_too_large") +
-          " " +
-          I18n.toHumanSize(this.args.max * 1024)
+        I18n.t("file_size_input.error.size_too_large", {
+          provided_file_size: I18n.toHumanSize(fileSizeKB * 1024),
+          max_file_size: I18n.toHumanSize(this.args.max * 1024),
+        })
       );
       // Removes the green save checkmark button
       this.args.onChangeSize(this.originalSizeKB);
