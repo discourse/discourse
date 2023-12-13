@@ -1630,7 +1630,7 @@ RSpec.describe TopicsController do
         end
       end
 
-      describe "with permission" do
+      context "with permission" do
         fab!(:post_hook) { Fabricate(:post_web_hook) }
         fab!(:topic_hook) { Fabricate(:topic_web_hook) }
 
@@ -1887,8 +1887,7 @@ RSpec.describe TopicsController do
             end.not_to change { topic.reload.first_post.revisions.count }
 
             expect(response.status).to eq(403)
-            user_2.update!(trust_level: 2)
-            Group.refresh_automatic_groups!
+            user_2.groups << Group.find_by(name: "trust_level_2")
 
             expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
               topic.reload.first_post.revisions.count
@@ -3600,8 +3599,6 @@ RSpec.describe TopicsController do
       end
 
       context "with private message" do
-        before_all { Group.refresh_automatic_groups! }
-
         fab!(:group) do
           Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
             g.add(user_2)
@@ -4529,8 +4526,6 @@ RSpec.describe TopicsController do
       fab!(:topic) { Fabricate(:topic, user: user) }
       fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
-      before { Group.refresh_automatic_groups! }
-
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
         put "/t/#{topic.id}/convert-topic/private.json"
@@ -4556,8 +4551,6 @@ RSpec.describe TopicsController do
     describe "converting private message to public topic" do
       fab!(:topic) { Fabricate(:private_message_topic, user: user) }
       fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
-
-      before { Group.refresh_automatic_groups! }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
@@ -4961,10 +4954,7 @@ RSpec.describe TopicsController do
 
         fab!(:moderator_pm) { Fabricate(:private_message_topic, user: moderator) }
 
-        before do
-          SiteSetting.max_allowed_message_recipients = 2
-          Group.refresh_automatic_groups!
-        end
+        before { SiteSetting.max_allowed_message_recipients = 2 }
 
         it "doesn't allow normal users to invite" do
           post "/t/#{pm.id}/invite.json", params: { user: user_2.username }
@@ -5292,8 +5282,6 @@ RSpec.describe TopicsController do
   end
 
   describe "#private_message_reset_new" do
-    before_all { Group.refresh_automatic_groups! }
-
     fab!(:group) do
       Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user_2) }
     end
@@ -5412,8 +5400,6 @@ RSpec.describe TopicsController do
   end
 
   describe "#archive_message" do
-    before_all { Group.refresh_automatic_groups! }
-
     fab!(:group) do
       Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user) }
     end

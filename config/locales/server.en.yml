@@ -1965,6 +1965,7 @@ en:
     edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki."
 
     min_trust_to_edit_post: "The minimum trust level required to edit posts."
+    edit_post_allowed_groups: "Groups that are allowed to edit posts."
 
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
@@ -2557,6 +2558,7 @@ en:
       edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
       uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
       create_topic_allowed_groups: "min_trust_to_create_topic"
+      edit_post_allowed_groups: "min_trust_to_edit_post"
 
     placeholder:
       discourse_connect_provider_secrets:
