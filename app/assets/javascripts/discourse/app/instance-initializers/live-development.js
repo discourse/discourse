@@ -9,21 +9,20 @@ export default {
     this.messageBus = owner.lookup("service:message-bus");
     this.session = owner.lookup("service:session");
 
-    // Preserve preview_theme_id=## and pp=async-flamegraph parameters across pages
+    const PRESERVED_QUERY_PARAMS = ["preview_theme_id", "pp", "safe_mode"];
     const params = new URLSearchParams(window.location.search);
-    const previewThemeId = params.get("preview_theme_id");
-    const flamegraph = params.get("pp") === "async-flamegraph";
-    if (flamegraph || previewThemeId !== null) {
+    const preservedParamValues = PRESERVED_QUERY_PARAMS.map((p) => [
+      p,
+      params.get(p),
+    ]).filter(([, v]) => v);
+    if (preservedParamValues.length) {
       ["replaceState", "pushState"].forEach((funcName) => {
         const originalFunc = window.history[funcName];
 
         window.history[funcName] = (stateObj, name, rawUrl) => {
           const url = new URL(rawUrl, window.location);
-          if (previewThemeId !== null) {
-            url.searchParams.set("preview_theme_id", previewThemeId);
-          }
-          if (flamegraph) {
-            url.searchParams.set("pp", "async-flamegraph");
+          for (const [param, value] of preservedParamValues) {
+            url.searchParams.set(param, value);
           }
 
           return originalFunc.call(window.history, stateObj, name, url.href);
