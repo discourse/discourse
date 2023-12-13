@@ -8,9 +8,6 @@ let limit = DEFAULT_LIMIT;
 export function setNotificationsLimit(newLimit) {
   limit = newLimit;
 }
-export function resetNotificationsLimit() {
-  limit = DEFAULT_LIMIT;
-}
 
 export default DiscourseRoute.extend(ViewingActionType, {
   controllerName: "user-notifications",
