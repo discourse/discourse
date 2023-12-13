@@ -71,9 +71,9 @@ export default class UserThreads extends Component {
   }
 
   <template>
-    <div class="dcp-user-threads" {{this.fill}}>
+    <div class="c-user-threads" {{this.fill}}>
       {{#each this.threadsCollection.items as |thread|}}
-        <div class="dcp-user-thread" data-id={{thread.id}}>
+        <div class="c-user-thread" data-id={{thread.id}}>
           <ThreadTitle @thread={{thread}} />
           <ChannelTitle @channel={{thread.channel}} />
 
