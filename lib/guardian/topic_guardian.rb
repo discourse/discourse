@@ -48,8 +48,11 @@ module TopicGuardian
   def can_create_topic?(parent)
     is_staff? ||
       (
-        user && user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
-          can_create_post?(parent) && Category.topic_create_allowed(self).limit(1).count == 1
+        user &&
+          (
+            user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i ||
+              user.in_any_groups?(SiteSetting.create_topic_allowed_groups_map)
+          ) && can_create_post?(parent) && Category.topic_create_allowed(self).any?
       )
   end
 
@@ -198,7 +201,9 @@ module TopicGuardian
     can_moderate?(topic) || can_perform_action_available_to_group_moderators?(topic)
   end
 
-  alias can_create_unlisted_topic? can_toggle_topic_visibility?
+  def can_create_unlisted_topic?(topic, has_topic_embed = false)
+    can_toggle_topic_visibility?(topic) || has_topic_embed
+  end
 
   def can_convert_topic?(topic)
     return false if topic.blank?
@@ -330,7 +335,7 @@ module TopicGuardian
     return true if can_edit_topic?(topic)
 
     if topic&.first_post&.wiki &&
-         (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+         @user.in_any_groups?(SiteSetting.edit_wiki_post_allowed_groups_map)
       return can_create_post?(topic)
     end
 

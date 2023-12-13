@@ -1339,7 +1339,7 @@ RSpec.describe User do
   end
 
   describe "flag_linked_posts_as_spam" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin)
     fab!(:post) do
       PostCreator.new(
@@ -1925,7 +1925,7 @@ RSpec.describe User do
   end
 
   describe "staff info" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:moderator)
 
     describe "#number_of_flags_given" do

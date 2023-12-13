@@ -3147,9 +3147,7 @@ it:
     post:
       confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"
-      quote_reply_shortcut: "Oppure premi \"q\""
       quote_edit: "Modifica"
-      quote_edit_shortcut: "Oppure premi \"e\""
       quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"

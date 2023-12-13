@@ -8,8 +8,8 @@ RSpec.describe TopicsController do
 
   fab!(:pm) { Fabricate(:private_message_topic) }
 
-  fab!(:user)
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post_author1) { Fabricate(:user) }
   fab!(:post_author2) { Fabricate(:user) }
   fab!(:post_author3) { Fabricate(:user) }
@@ -18,9 +18,9 @@ RSpec.describe TopicsController do
   fab!(:post_author6) { Fabricate(:user) }
   fab!(:moderator)
   fab!(:admin)
-  fab!(:trust_level_0)
-  fab!(:trust_level_1)
-  fab!(:trust_level_4)
+  fab!(:trust_level_0) { Fabricate(:trust_level_0, refresh_auto_groups: true) }
+  fab!(:trust_level_1) { Fabricate(:trust_level_1, refresh_auto_groups: true) }
+  fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
 
   fab!(:category)
   fab!(:tracked_category) { Fabricate(:category) }
@@ -242,6 +242,7 @@ RSpec.describe TopicsController do
       before do
         sign_in(user)
         SiteSetting.enable_category_group_moderation = true
+        Group.refresh_automatic_groups!
       end
 
       it "moves the posts" do
@@ -1629,7 +1630,7 @@ RSpec.describe TopicsController do
         end
       end
 
-      describe "with permission" do
+      context "with permission" do
         fab!(:post_hook) { Fabricate(:post_web_hook) }
         fab!(:topic_hook) { Fabricate(:topic_web_hook) }
 
@@ -1877,7 +1878,7 @@ RSpec.describe TopicsController do
           end
 
           it "can add a tag to wiki topic" do
-            SiteSetting.min_trust_to_edit_wiki_post = 2
+            SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
             topic.first_post.update!(wiki: true)
             sign_in(user_2)
 
@@ -1886,7 +1887,7 @@ RSpec.describe TopicsController do
             end.not_to change { topic.reload.first_post.revisions.count }
 
             expect(response.status).to eq(403)
-            user_2.update!(trust_level: 2)
+            user_2.groups << Group.find_by(name: "trust_level_2")
 
             expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
               topic.reload.first_post.revisions.count
@@ -3598,8 +3599,6 @@ RSpec.describe TopicsController do
       end
 
       context "with private message" do
-        before_all { Group.refresh_automatic_groups! }
-
         fab!(:group) do
           Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
             g.add(user_2)
@@ -4527,8 +4526,6 @@ RSpec.describe TopicsController do
       fab!(:topic) { Fabricate(:topic, user: user) }
       fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
-      before { Group.refresh_automatic_groups! }
-
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
         put "/t/#{topic.id}/convert-topic/private.json"
@@ -4554,8 +4551,6 @@ RSpec.describe TopicsController do
     describe "converting private message to public topic" do
       fab!(:topic) { Fabricate(:private_message_topic, user: user) }
       fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
-
-      before { Group.refresh_automatic_groups! }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
@@ -4959,10 +4954,7 @@ RSpec.describe TopicsController do
 
         fab!(:moderator_pm) { Fabricate(:private_message_topic, user: moderator) }
 
-        before do
-          SiteSetting.max_allowed_message_recipients = 2
-          Group.refresh_automatic_groups!
-        end
+        before { SiteSetting.max_allowed_message_recipients = 2 }
 
         it "doesn't allow normal users to invite" do
           post "/t/#{pm.id}/invite.json", params: { user: user_2.username }
@@ -5290,8 +5282,6 @@ RSpec.describe TopicsController do
   end
 
   describe "#private_message_reset_new" do
-    before_all { Group.refresh_automatic_groups! }
-
     fab!(:group) do
       Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user_2) }
     end
@@ -5410,8 +5400,6 @@ RSpec.describe TopicsController do
   end
 
   describe "#archive_message" do
-    before_all { Group.refresh_automatic_groups! }
-
     fab!(:group) do
       Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user) }
     end

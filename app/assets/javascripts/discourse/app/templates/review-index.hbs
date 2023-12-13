@@ -87,12 +87,12 @@
         <EmailGroupUserChooser
           @value={{this.filterUsername}}
           @onChange={{action "updateFilterUsername"}}
-          @class="user-selector"
           @options={{hash
             maximum=1
             excludeCurrentUser=false
             fullWidthWrap=true
           }}
+          class="user-selector"
         />
       </div>
 

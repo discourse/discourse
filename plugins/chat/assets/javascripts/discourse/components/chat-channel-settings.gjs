@@ -418,12 +418,12 @@ export default class ChatAboutScreen extends Component {
                     @content={{this.notificationLevels}}
                     @value={{@channel.currentUserMembership.desktopNotificationLevel}}
                     @valueProperty="value"
-                    @class="chat-channel-settings__selector chat-channel-settings__desktop-notifications-selector"
                     @onChange={{fn
                       this.saveNotificationSettings
                       "desktopNotificationLevel"
                       "desktop_notification_level"
                     }}
+                    class="chat-channel-settings__selector chat-channel-settings__desktop-notifications-selector"
                   />
                 </:action>
               </section.row>
@@ -436,12 +436,12 @@ export default class ChatAboutScreen extends Component {
                     @content={{this.notificationLevels}}
                     @value={{@channel.currentUserMembership.mobileNotificationLevel}}
                     @valueProperty="value"
-                    @class="chat-channel-settings__selector chat-channel-settings__mobile-notifications-selector"
                     @onChange={{fn
                       this.saveNotificationSettings
                       "mobileNotificationLevel"
                       "mobile_notification_level"
                     }}
+                    class="chat-channel-settings__selector chat-channel-settings__mobile-notifications-selector"
                   />
                 </:action>
               </section.row>

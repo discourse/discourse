@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::TruncateUserFlagStats do
-  fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
 
   before do
     # We might make this a site setting eventually

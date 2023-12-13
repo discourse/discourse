@@ -1582,7 +1582,6 @@ fr:
     topics_per_period_in_top_summary: "Nombre de meilleurs sujets affichés dans le résumé par défaut des meilleurs sujets."
     topics_per_period_in_top_page: "Nombre de meilleurs sujets affichés lorsqu'on sélectionne « Voir plus » des meilleurs sujets."
     redirect_users_to_top_page: "Rediriger automatiquement les nouveaux utilisateurs et les longues absences sur la page Top."
-    top_page_default_timeframe: "Période par défaut pour la page la plus vue."
     moderators_view_emails: "Permettre aux modérateurs de voir les adresses e-mail des utilisateurs"
     prioritize_username_in_ux: "Afficher le nom d'utilisateur en premier sur la page d'un utilisateur, sa carte et ses messages (si cette option est désactivée, le nom complet est affiché en premier)"
     enable_rich_text_paste: "Permettre la conversion automatique du HTML en Markdown lorsque du texte est collé dans l'éditeur. (Expérimental)"

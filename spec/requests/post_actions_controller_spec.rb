@@ -257,7 +257,7 @@ RSpec.describe PostActionsController do
       end
 
       it "doesn't pass take_action through if the user isn't staff" do
-        sign_in(Fabricate(:user))
+        sign_in(Fabricate(:user, refresh_auto_groups: true))
 
         post "/post_actions.json",
              params: {

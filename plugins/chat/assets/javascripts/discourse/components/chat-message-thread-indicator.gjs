@@ -135,6 +135,7 @@ export default class ChatMessageThreadIndicator extends Component {
       role="button"
       title={{i18n "chat.threads.open"}}
       tabindex="0"
+      ...attributes
     >
 
       <div class="chat-message-thread-indicator__last-reply-avatar">

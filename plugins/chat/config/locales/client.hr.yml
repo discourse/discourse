@@ -210,19 +210,6 @@ hr:
         types:
           category: "Kategorija"
           topic: "Tema"
-      reactions:
-        you_and_single_user: "Vi i %{username} ste reagirali s :%{emoji}:"
-        you_and_multiple_users: "Vi, %{commaSeparatedUsernames} i %{username} ste reagirali s :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Vi, %{commaSeparatedUsernames} i još %{count} ste reagirali s :%{emoji}:"
-          few: "Vi, %{commaSeparatedUsernames} i još njih %{count} ste reagirali s :%{emoji}:"
-          other: "Vi, %{commaSeparatedUsernames} i još njih %{count} ste reagirali s :%{emoji}:"
-        single_user: "%{username} je reagirao s :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} i %{username} reagirali su s :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} i još %{count} reagirali su s :%{emoji}:"
-          few: "%{commaSeparatedUsernames} i još %{count} reagirali su s :%{emoji}:"
-          other: "%{commaSeparatedUsernames} i još %{count} reagirali su s :%{emoji}:"
       composer:
         italic_text: "naglašen tekst"
         bold_text: "jaki text"

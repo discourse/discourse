@@ -129,10 +129,6 @@ sk:
         types:
           category: "Kategória"
           topic: "Témy"
-      reactions:
-        you_and_single_user: "Vy a %{username} ste reagovali s :%{emoji}:"
-        you_and_multiple_users: "Vy, %{commaSeparatedUsernames} a %{username} ste reagovali s :%{emoji}:"
-        single_user: "%{username} reagoval s :%{emoji}:"
       composer:
         italic_text: "zdôraznený text"
         bold_text: "výrazný text"

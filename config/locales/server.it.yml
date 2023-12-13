@@ -1596,7 +1596,6 @@ it:
     topics_per_period_in_top_summary: "Numero di argomenti popolari mostrati nel riepilogo di default."
     topics_per_period_in_top_page: "Numero di argomenti popolari mostrati nella vista espansa 'Mostra Altro'"
     redirect_users_to_top_page: "Reindirizza automaticamente i nuovi utenti e quelli assenti da tempo sulla pagina degli argomenti popolari."
-    top_page_default_timeframe: "Intervallo di tempo predefinito per la pagina degli argomenti di punta."
     moderators_view_emails: "Consenti ai moderatori di visualizzare le email degli utenti"
     prioritize_username_in_ux: "Nella pagina utente mostra prima il nome utente, la sua scheda e i suoi messaggi (quando l'opzione è disabilitata viene mostrato prima il nome)"
     enable_rich_text_paste: "Abilita la conversione automatica da HTML a Markdown quando si incolla del testo nel composer. (Sperimentale)"

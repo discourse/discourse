@@ -433,22 +433,6 @@ ru:
           topic: "Тема"
       reviewable:
         type: "Сообщение чата"
-      reactions:
-        only_you: "Вы отреагировали при помощи эмодзи :%{emoji}:"
-        you_and_single_user: "Вы и %{username} отреагировали при помощи эмодзи :%{emoji}:"
-        you_and_multiple_users: "Вы, %{commaSeparatedUsernames} и %{username} отреагировали при помощи эмодзи :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Вы, %{commaSeparatedUsernames} и еще %{count} пользователь отреагировали при помощи эмодзи :%{emoji}:"
-          few: "Вы, %{commaSeparatedUsernames} и еще %{count} пользователя отреагировали при помощи эмодзи :%{emoji}:"
-          many: "Вы, %{commaSeparatedUsernames} и еще %{count} пользователей отреагировали при помощи эмодзи :%{emoji}:"
-          other: "Вы, %{commaSeparatedUsernames} и еще %{count} пользователя отреагировали при помощи эмодзи :%{emoji}:"
-        single_user: "Пользователь %{username} отреагировал при помощи эмодзи :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} и %{username} отреагировали при помощи эмодзи :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} и еще %{count} пользователь отреагировали при помощи эмодзи :%{emoji}:"
-          few: "%{commaSeparatedUsernames} и еще %{count} пользователя отреагировали при помощи эмодзи :%{emoji}:"
-          many: "%{commaSeparatedUsernames} и еще %{count} пользователей отреагировали при помощи эмодзи :%{emoji}:"
-          other: "%{commaSeparatedUsernames} и еще %{count} пользователя отреагировали при помощи эмодзи :%{emoji}:"
       composer:
         toggle_toolbar: "Переключить панель инструментов"
         italic_text: "текст, выделенный курсивом"

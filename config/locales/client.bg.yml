@@ -2735,9 +2735,7 @@ bg:
       deleted_by_author_simple: "(темата е изтрита от автора)"
     post:
       quote_reply: "Цитат"
-      quote_reply_shortcut: "Или натиснете q"
       quote_edit: "Редактирай"
-      quote_edit_shortcut: "Или натиснете e"
       quote_share: "Споделяне"
       edit_reason: "Причина: "
       post_number: "публикация %{number} "

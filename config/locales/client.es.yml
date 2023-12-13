@@ -3107,9 +3107,7 @@ es:
     post:
       confirm_delete: "¿Seguro que quieres eliminar esta publicación?"
       quote_reply: "Citar"
-      quote_reply_shortcut: "O pulsa q"
       quote_edit: "Editar"
-      quote_edit_shortcut: "O pulsa e"
       quote_share: "Compartir"
       edit_reason: "Motivo: "
       post_number: "publicación %{number}"

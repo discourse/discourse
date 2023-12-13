@@ -431,22 +431,6 @@ pl_PL:
           topic: "Temat"
       reviewable:
         type: "Wiadomość na czacie"
-      reactions:
-        only_you: "Zareagowałeś z :%{emoji}:"
-        you_and_single_user: "Ty i %{username} zareagowaliście za pomocą :%{emoji}:"
-        you_and_multiple_users: "Ty, %{commaSeparatedUsernames} i %{username} zareagowaliście za pomocą :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Ty, %{commaSeparatedUsernames} i %{count} inny zareagowaliście za pomocą :%{emoji}:"
-          few: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
-          many: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
-          other: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
-        single_user: "%{username} zareagował za pomocą :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} i %{username} zareagowali za pomocą :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
-          few: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
-          many: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
-          other: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
       composer:
         toggle_toolbar: "Przełącz pasek narzędzi"
         italic_text: "wyróżniony tekst"

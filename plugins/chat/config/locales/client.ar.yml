@@ -431,26 +431,6 @@ ar:
           topic: "الموضوع"
       reviewable:
         type: "رسالة دردشة"
-      reactions:
-        only_you: "لقد تفاعلت باستخدام :%{emoji}:"
-        you_and_single_user: "لقد تفاعلت أنت و%{username} بالرمز التعبيري :%{emoji}:"
-        you_and_multiple_users: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{username} بالرمز التعبيري :%{emoji}:"
-        you_multiple_users_and_more:
-          zero: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري :%{emoji}:"
-          one: "لقد تفاعلت أنت و%{commaSeparatedUsernames} ومستخدم واحد (%{count}) آخر بالرمز التعبيري :%{emoji}:"
-          two: "لقد تفاعلت أنت و%{commaSeparatedUsernames} ومستخدمان (%{count}) آخران بالرمز التعبيري :%{emoji}:"
-          few: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدمين آخرين بالرمز التعبيري :%{emoji}:"
-          many: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدمًا آخر بالرمز التعبيري :%{emoji}:"
-          other: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري :%{emoji}:"
-        single_user: "لقد تفاعل المستخدم %{username} بالرمز التعبيري :%{emoji}:"
-        multiple_users: "لقد تفاعل %{commaSeparatedUsernames} و%{username} بالرمز التعبيري :%{emoji}:"
-        multiple_users_and_more:
-          zero: "لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري :%{emoji}:"
-          one: "لقد تفاعل %{commaSeparatedUsernames} ومستخدم واحد (%{count}) آخر بالرمز التعبيري :%{emoji}:"
-          two: "لقد تفاعل %{commaSeparatedUsernames} ومستخدمان (%{count}) آخران بالرمز التعبيري :%{emoji}:"
-          few: "لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدمين آخرين بالرمز التعبيري :%{emoji}:"
-          many: "لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدمًا آخر بالرمز التعبيري :%{emoji}:"
-          other: "لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري :%{emoji}:"
       composer:
         toggle_toolbar: "تشغيل شريط الأدوات"
         italic_text: "نص بارز"

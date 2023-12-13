@@ -2,7 +2,7 @@
 
 RSpec.describe PostAction do
   it "triggers the 'flag_reviewed' event when there was at least one flag" do
-    admin = Fabricate(:admin)
+    admin = Fabricate(:admin, refresh_auto_groups: true)
 
     post = Fabricate(:post)
     events = DiscourseEvent.track_events { PostDestroyer.new(admin, post).destroy }

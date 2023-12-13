@@ -185,7 +185,7 @@ RSpec.describe "users" do
       response "200", "avatar updated" do
         expected_response_schema = load_spec_schema("success_ok_response")
 
-        let(:user) { Fabricate(:user) }
+        let(:user) { Fabricate(:user, refresh_auto_groups: true) }
         let(:username) { user.username }
         let(:upload) { Fabricate(:upload, user: user) }
         let(:params) { { "upload_id" => upload.id, "type" => "uploaded" } }

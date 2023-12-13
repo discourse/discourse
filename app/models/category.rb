@@ -886,8 +886,8 @@ class Category < ActiveRecord::Base
   end
 
   def has_children?
-    @has_children ||= (id && Category.where(parent_category_id: id).exists?) ? :true : :false
-    @has_children == :true
+    return @has_children if defined?(@has_children)
+    @has_children = (id && Category.where(parent_category_id: id).exists?)
   end
 
   def uncategorized?

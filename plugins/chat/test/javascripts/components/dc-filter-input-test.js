@@ -19,8 +19,8 @@ module("Discourse Chat | Component | dc-filter-input", function (hooks) {
     assert.true(exists(".d-icon-bell.-right"));
   });
 
-  test("Class attribute", async function (assert) {
-    await render(hbs`<DcFilterInput @class="foo" />`);
+  test("containerClass argument", async function (assert) {
+    await render(hbs`<DcFilterInput @containerClass="foo" />`);
 
     assert.true(exists(".dc-filter-input-container.foo"));
   });

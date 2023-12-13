@@ -1,5 +1,7 @@
 chat:
-  - plugins/chat/**/*
+  - changed_files:
+      - any-glob-to-any-file: plugins/chat/**/*
 
 migration:
-  - migrations/**/*
+  - changed_files:
+      - any-glob-to-any-file: migrations/**/*

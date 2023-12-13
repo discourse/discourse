@@ -48,7 +48,7 @@ export default class ReviewableBundledAction extends Component {
           placement=this.placement
           translatedNone=@bundle.label
         }}
-        @class={{concatClass
+        class={{concatClass
           "reviewable-action-dropdown"
           "btn-icon-text"
           (dasherize this.first.id)

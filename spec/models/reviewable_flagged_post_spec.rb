@@ -5,14 +5,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     ReviewableFlaggedPost.default_visible.pending.count
   end
 
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post)
-  fab!(:moderator)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
 
   it "sets `potential_spam` when a spam flag is added" do
     reviewable = PostActionCreator.off_topic(user, post).reviewable
     expect(reviewable.potential_spam?).to eq(false)
-    PostActionCreator.spam(Fabricate(:user), post)
+    PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
     expect(reviewable.reload.potential_spam?).to eq(true)
   end
 

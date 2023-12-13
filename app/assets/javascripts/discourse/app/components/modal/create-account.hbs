@@ -97,9 +97,9 @@
                 @disabled={{this.nameDisabled}}
                 @value={{this.model.accountName}}
                 @id="new-account-name"
-                @class={{value-entered this.model.accountName}}
                 aria-describedby="fullname-validation"
                 aria-invalid={{this.nameValidation.failed}}
+                class={{value-entered this.model.accountName}}
               />
               <label class="alt-placeholder" for="new-account-name">
                 {{i18n "user.name.title"}}
@@ -133,13 +133,13 @@
             {{#if this.passwordRequired}}
               <PasswordField
                 @value={{this.accountPassword}}
-                @class={{value-entered this.accountPassword}}
                 @type={{if this.maskPassword "password" "text"}}
                 @autocomplete="current-password"
                 @capsLockOn={{this.capsLockOn}}
                 aria-describedby="password-validation"
                 aria-invalid={{this.passwordValidation.failed}}
                 id="new-account-password"
+                class={{value-entered this.accountPassword}}
               />
               <label class="alt-placeholder" for="new-account-password">
                 {{i18n "user.password.title"}}
@@ -218,16 +218,13 @@
             <div class="user-fields">
               {{#each this.userFields as |f|}}
                 <div class="input-group">
-                  {{! adding the value-entered class here to
-                      be able to detect if the user field has a value
-                      entered }}
                   <UserField
                     {{on "focus" this.userInputFocus}}
                     {{on "focusout" this.userInputFocusOut}}
                     @field={{f.field}}
                     @value={{f.value}}
-                    @class={{value-entered f.value}}
                     @validation={{f.validation}}
+                    class={{value-entered f.value}}
                   />
                 </div>
               {{/each}}

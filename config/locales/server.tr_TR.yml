@@ -1592,7 +1592,6 @@ tr_TR:
     topics_per_period_in_top_summary: "Varsayılan popüler konular özetinde gösterilen popüler konuların sayısı."
     topics_per_period_in_top_page: "Genişletilmiş \"Daha Fazla Göster\" popüler konularında gösterilen popüler konuların sayısı."
     redirect_users_to_top_page: "Yeni ve uzun süredir bulunmayan kullanıcıları otomatik olarak üst sayfaya yönlendirin."
-    top_page_default_timeframe: "Üst sayfa için varsayılan zaman dilimi."
     moderators_view_emails: "Moderatörlerin kullanıcı e-postalarını görüntülemesine izin ver"
     prioritize_username_in_ux: "Kullanıcı sayfasında, kullanıcı kartında ve gönderilerde önce kullanıcı adını göster (devre dışı bırakıldığında önce ad gösterilir)"
     enable_rich_text_paste: "Besteciye metin yapıştırırken otomatik HTML'den Markdown'a dönüştürmeyi etkinleştirin. (Deneysel)"
@@ -2026,7 +2025,6 @@ tr_TR:
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktıktan sonra, ilerleme çubuğu yalnızca geçerli gönderi sayısını gösterecektir. İlerleme çubuğunun genişliğini değiştirirseniz bu değeri değiştirmeniz gerekebilir."
     default_code_lang: "Markdown kod bloklarına (otomatik, metin, ruby, python vb.) uygulanan varsayılan programlama dili sözdizimi vurgulaması. Bu değer aynı zamanda \"vurgulanan diller\" site ayarında da bulunmalıdır."
     warn_reviving_old_topic_age: "Biri son yanıtın şu kadar günden daha eski olduğu bir konuya yanıt vermeye başladığında, bir uyarı görüntülenir. 0'a ayarlayarak devre dışı bırakın."
-    autohighlight_all_code: "Bir dil belirtmemiş olsalar bile HTML <code> bloklarına sözdizimi vurgulaması uygula."
     highlighted_languages: "Sözdizimi vurgulama kuralları dahil edildi. (Uyarı: Çok fazla dil eklemek performansı etkileyebilir) Demo için bkz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
     show_copy_button_on_codeblocks: "Blok içeriğini kullanıcının panosuna kopyalamak için codeblocks'a bir düğme ekleyin."
     embed_any_origin: "Kaynağından bağımsız olarak yerleştirilebilir içeriğe izin verin. Bu, statik HTML içeren mobil uygulamalar için gereklidir."
@@ -2183,6 +2181,7 @@ tr_TR:
     enable_experimental_lightbox: "DENEYSEL: Varsayılan görüntü lightbox'ını yenilenen tasarımla değiştirin."
     experimental_form_templates: "DENEYSEL: Form şablonları özelliğini etkinleştirin. <b>Etkinleştirildikten sonra,</b> bu şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> altında yönetin."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
+    show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
       invalid_email: "Geçersiz e-posta adresi."

@@ -410,17 +410,17 @@ de:
       reviewable:
         type: "Chat-Nachricht"
       reactions:
-        only_you: "Du hast reagiert mit :%{emoji}:"
-        you_and_single_user: "Du und %{username} haben mit :%{emoji}: reagiert"
-        you_and_multiple_users: "Du, %{commaSeparatedUsernames} und %{username} haben mit :%{emoji}: reagiert"
+        only_you: "<span>Du hast mit reagiert mit </span>:%{emoji}:"
+        you_and_single_user: "<span>Du und %{username} habt reagiert mit </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Du, %{commaSeparatedUsernames} und %{username} haben reagiert mit </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "Du, %{commaSeparatedUsernames} und %{count} andere Person haben mit :%{emoji}: reagiert"
-          other: "Du, %{commaSeparatedUsernames} und %{count} andere haben mit :%{emoji}: reagiert"
-        single_user: "%{username} hat mit :%{emoji}: reagiert"
-        multiple_users: "%{commaSeparatedUsernames} und %{username} haben mit :%{emoji}: reagiert"
+          one: "<span>Du, %{commaSeparatedUsernames} und %{count} weitere Person haben reagiert mit </span>:%{emoji}:"
+          other: "<span>Du, %{commaSeparatedUsernames} und %{count} andere Personen haben reagiert mit </span>::%{emoji}:"
+        single_user: "<span>%{username} reagierte mit </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} und %{username} reagierten mit </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} und %{count} andere Person haben mit :%{emoji}: reagiert"
-          other: "%{commaSeparatedUsernames} und %{count} andere haben mit :%{emoji}: reagiert"
+          one: "<span>%{commaSeparatedUsernames} und %{count} andere Person reagierten mit </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} und %{count} andere Personen reagierten mit </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Symbolleiste umschalten"
         italic_text: "hervorgehobener Text"
@@ -471,6 +471,8 @@ de:
           description: "Dadurch werden alle Nachrichten aus allen Kanälen exportiert."
           create_export: "Export erstellen"
           export_has_started: "Der Export hat begonnen. Du erhältst eine PN, wenn er abgeschlossen ist."
+      my_threads:
+        title: Meine Threads
       direct_messages:
         title: "Persönlicher Chat"
         new: "Persönlichen Chat erstellen"

@@ -149,8 +149,6 @@ da:
           topic: "Emne"
       reviewable:
         type: "Chatbesked"
-      reactions:
-        only_you: "Du reagerede med :%{emoji}:"
       composer:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"

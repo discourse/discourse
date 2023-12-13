@@ -3079,9 +3079,7 @@ fi:
     post:
       confirm_delete: "Oletko varma, että haluat poistaa tämän viestin?"
       quote_reply: "Lainaa"
-      quote_reply_shortcut: "Tai paina q"
       quote_edit: "Muokkaa"
-      quote_edit_shortcut: "Tai paina e"
       quote_share: "Jaa"
       edit_reason: "Syy: "
       post_number: "viesti %{number}"

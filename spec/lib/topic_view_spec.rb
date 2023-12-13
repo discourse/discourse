@@ -3,7 +3,7 @@
 require "topic_view"
 
 RSpec.describe TopicView do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:moderator)
   fab!(:admin)
   fab!(:topic)

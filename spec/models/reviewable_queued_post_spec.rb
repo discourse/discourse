@@ -2,7 +2,7 @@
 
 RSpec.describe ReviewableQueuedPost, type: :model do
   fab!(:category)
-  fab!(:moderator)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
 
   describe "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }

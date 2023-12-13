@@ -98,20 +98,10 @@ export default class AvatarSelectorModal extends Component {
   }
 
   get siteSettingMatches() {
-    const allowUploadedAvatars = this.siteSettings.allow_uploaded_avatars;
-    switch (allowUploadedAvatars) {
-      case "disabled":
-        return false;
-      case "staff":
-        return this.currentUser.staff;
-      case "admin":
-        return this.currentUser.admin;
-      default:
-        return (
-          this.currentUser.trust_level >= parseInt(allowUploadedAvatars, 10) ||
-          this.currentUser.staff
-        );
-    }
+    return this.siteSettings.userInAnyGroups(
+      "uploaded_avatars_allowed_groups",
+      this.currentUser
+    );
   }
 
   @action

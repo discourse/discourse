@@ -78,7 +78,7 @@ module PostGuardian
         (
           is_flag && not(already_did_flagging) &&
             (
-              @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_flag_posts]) ||
+              @user.in_any_groups?(SiteSetting.flag_post_allowed_groups_map) ||
                 post.topic.private_message?
             )
         ) ||
@@ -159,11 +159,11 @@ module PostGuardian
       return true
     end
 
-    if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+    if post.wiki && @user.in_any_groups?(SiteSetting.edit_wiki_post_allowed_groups_map)
       return can_create_post?(post.topic)
     end
 
-    return false if @user.trust_level < SiteSetting.min_trust_to_edit_post
+    return false if !trusted_with_edits?
 
     if is_my_own?(post)
       return false if @user.silenced?
@@ -370,6 +370,11 @@ module PostGuardian
   end
 
   private
+
+  def trusted_with_edits?
+    @user.trust_level >= SiteSetting.min_trust_to_edit_post ||
+      @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
+  end
 
   def can_create_post_in_topic?(topic)
     if !SiteSetting.enable_system_message_replies? && topic.try(:subtype) == "system_message"

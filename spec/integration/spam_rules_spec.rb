@@ -5,8 +5,8 @@ RSpec.describe "spam rules for users" do
   describe "auto-silence users based on flagging" do
     fab!(:admin) # needed to send a system message
     fab!(:moderator)
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:user2) { Fabricate(:user, refresh_auto_groups: true) }
 
     before do
       SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:disabled]
@@ -16,7 +16,7 @@ RSpec.describe "spam rules for users" do
     end
 
     context "when spammer is a new user" do
-      fab!(:spammer) { Fabricate(:user, trust_level: TrustLevel[0]) }
+      fab!(:spammer) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
 
       context "when spammer post is not flagged enough times" do
         let!(:spam_post) { create_post(user: spammer) }
@@ -98,7 +98,7 @@ RSpec.describe "spam rules for users" do
     end
 
     context "when spammer has trust level basic" do
-      let(:spammer) { Fabricate(:user, trust_level: TrustLevel[1]) }
+      let(:spammer) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
 
       context "when one spam post is flagged enough times by enough users" do
         let!(:spam_post) { Fabricate(:post, user: spammer) }

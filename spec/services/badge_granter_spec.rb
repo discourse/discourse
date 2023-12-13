@@ -396,8 +396,8 @@ RSpec.describe BadgeGranter do
   end
 
   describe "update_badges" do
-    fab!(:user)
-    fab!(:liker) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:liker) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "grants autobiographer" do
       user.user_profile.bio_raw = "THIS IS MY bio it a long bio I like my bio"

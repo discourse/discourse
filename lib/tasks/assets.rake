@@ -22,14 +22,9 @@ task "assets:precompile:build" do
 
     heap_size_limit = check_node_heap_size_limit
 
-    if heap_size_limit < 1024
-      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 1024MB. Setting --max-old-space-size=1024."
-      compile_command = "NODE_OPTIONS='--max-old-space-size=1024' #{compile_command}"
-    end
-
     if heap_size_limit < 2048
-      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Disabling Webpack parallelization with JOBS=0 to conserve memory."
-      compile_command = "JOBS=0 #{compile_command}"
+      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Setting --max-old-space-size=2048."
+      compile_command = "NODE_OPTIONS='--max-old-space-size=2048' #{compile_command}"
     end
 
     compile_command = "EMBER_ENV=production #{compile_command}" if ENV["EMBER_ENV"].nil?

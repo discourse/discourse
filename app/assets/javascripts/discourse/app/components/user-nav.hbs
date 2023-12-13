@@ -1,7 +1,7 @@
 <section class="user-navigation user-navigation-primary">
   <HorizontalOverflowNav
-    @className="main-nav nav user-nav"
     @ariaLabel="User primary"
+    class="main-nav nav user-nav"
   >
     {{#unless @user.profile_hidden}}
       <DNavigationItem @route="user.summary" class="user-nav__summary">

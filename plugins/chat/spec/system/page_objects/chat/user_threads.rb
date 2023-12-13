@@ -9,7 +9,9 @@ module PageObjects
       end
 
       def open_thread(thread)
-        find(".chat__user-threads__thread-container[data-id='#{thread.id}']").click
+        find(
+          ".chat__user-threads__thread-container[data-id='#{thread.id}'] .chat__thread-title__name",
+        ).click
       end
     end
   end

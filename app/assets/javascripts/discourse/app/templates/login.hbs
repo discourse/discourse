@@ -17,16 +17,16 @@
         {{#if this.application.canSignUp}}
           <DButton
             @action={{route-action "showCreateAccount"}}
-            @class="btn-primary sign-up-button"
             @label="sign_up"
+            class="btn-primary sign-up-button"
           />
         {{/if}}
 
         <DButton
           @action={{route-action "showLogin"}}
-          @class="btn-primary login-button"
           @icon="user"
           @label="log_in"
+          class="btn-primary login-button"
         />
       </div>
     </div>
