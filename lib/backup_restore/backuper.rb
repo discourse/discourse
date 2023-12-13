@@ -51,6 +51,7 @@ module BackupRestore
       @backup_filename
     ensure
       delete_old
+      delete_prior_to_n_days
       clean_up
       notify_user
       log "Finished!"
@@ -356,6 +357,15 @@ module BackupRestore
       store.delete_old
     rescue => ex
       log "Something went wrong while deleting old backups.", ex
+    end
+
+    def delete_prior_to_n_days
+      return if Rails.env.development?
+
+      log "Deleting backups prior to n days..."
+      store.delete_prior_to_n_days
+    rescue => ex
+      log "Something went wrong while deleting backups prior to n days....", ex
     end
 
     def notify_user
