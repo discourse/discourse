@@ -1798,6 +1798,13 @@ trust:
   tl4_delete_posts_and_topics:
     default: false
     client: true
+    hidden: true
+  delete_all_posts_and_topics_allowed_groups:
+    default: ""
+    type: group_list
+    allow_any: false
+    refresh: true
+    client: true
   edit_all_topic_groups:
     default: "13"
     type: group_list

@@ -1954,6 +1954,7 @@ en:
     tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
     tl4_delete_posts_and_topics: "Allow TL4 users to delete posts and topics created by other users. TL4 users will also be able to see deleted topics and posts."
+    delete_all_posts_and_topics_allowed_groups: "Groups allowed to delete posts and topics created by other users. These groups will also be able to see deleted topics and posts."
     edit_all_topic_groups: "Allow users in this group to edit other users' topic titles, tags, and categories"
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
@@ -2561,6 +2562,7 @@ en:
       create_topic_allowed_groups: "min_trust_to_create_topic"
       edit_post_allowed_groups: "min_trust_to_edit_post"
       flag_post_allowed_groups: "min_trust_to_flag_posts"
+      tl4_delete_posts_and_topics: "delete_all_posts_and_topics_allowed_groups"
 
     placeholder:
       discourse_connect_provider_secrets:

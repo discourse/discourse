@@ -487,8 +487,10 @@ const Topic = RestModel.extend({
               (group) => group.name === this.category?.reviewable_by_group_name
             ) &&
             !(
-              this.siteSettings.tl4_delete_posts_and_topics &&
-              deleted_by.trust_level >= 4
+              this.siteSettings.delete_all_posts_and_topics_allowed_groups &&
+              deleted_by.isInAnyGroups(
+                this.siteSettings.delete_all_posts_and_topics_allowed_groups
+              )
             ))
         ) {
           DiscourseURL.redirectTo("/");
