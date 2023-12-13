@@ -1,5 +1,3 @@
-import DiscourseURL from "discourse/lib/url";
-import { isDevelopment } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -28,11 +26,6 @@ export default {
           return originalFunc.call(window.history, stateObj, name, url.href);
         };
       });
-    }
-
-    // Useful to export this for debugging purposes
-    if (isDevelopment()) {
-      window.DiscourseURL = DiscourseURL;
     }
 
     // Observe file changes
