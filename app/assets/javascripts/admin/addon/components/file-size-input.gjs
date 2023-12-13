@@ -118,7 +118,7 @@ export default class FileSizeInput extends Component {
 
   @action
   applySizeValueChanges() {
-    if (this.pendingSizeValue < 1) {
+    if (this.pendingSizeValue < 1 && this.pendingSizeValue > 0) {
       this.sizeValue = Number.parseFloat(this.pendingSizeValue).toFixed(6);
     } else {
       this.sizeValue = this.pendingSizeValue;
