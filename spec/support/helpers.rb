@@ -39,7 +39,11 @@ module Helpers
 
   def create_topic(args = {})
     args[:title] ||= "This is my title #{Helpers.next_seq}"
-    user = args.delete(:user) || Fabricate(:user)
+    user = args.delete(:user)
+    if !user
+      user = Fabricate(:user)
+      Group.refresh_automatic_groups!
+    end
     guardian = Guardian.new(user)
     args[:category] = args[:category].id if args[:category].is_a?(Category)
     TopicCreator.create(user, guardian, args)

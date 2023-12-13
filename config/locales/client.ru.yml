@@ -3350,9 +3350,7 @@ ru:
     post:
       confirm_delete: "Действительно удалить сообщение?"
       quote_reply: "Ответить с цитированием"
-      quote_reply_shortcut: "Или нажмите Q"
       quote_edit: "Изменить"
-      quote_edit_shortcut: "Или нажмите E"
       quote_share: "Поделиться"
       edit_reason: "Причина: "
       post_number: "сообщение %{number}"

@@ -64,7 +64,7 @@ export default class ChatModalChannelSummary extends Component {
           @content={{this.sinceOptions}}
           @onChange={{this.summarize}}
           @valueProperty="value"
-          @class="summarization-since"
+          class="summarization-since"
         />
         <ConditionalLoadingSection @isLoading={{this.loading}}>
           <p class="summary-area">{{this.summary}}</p>

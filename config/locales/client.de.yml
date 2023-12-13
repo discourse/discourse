@@ -196,6 +196,7 @@ de:
       error_caused_by: "Verursacht durch „%{name}“. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion zu aktualisieren, neu zu konfigurieren oder zu deaktivieren."
       only_admins: "(Diese Nachricht wird nur Website-Administratoren angezeigt)"
     broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
+    broken_page_change_alert: "Ein onPageChange-Handler hat einen Fehler ausgelöst. Überprüfe die Entwicklerwerkzeuge des Browsers für weitere Informationen."
     broken_plugin_alert: "Verursacht durch das Plugin '%{name}'"
     s3:
       regions:
@@ -2066,6 +2067,9 @@ de:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"
         security_key: "Stattdessen einen Sicherheitsschlüssel verwenden"
+      no_login_methods:
+        title: "Keine Anmeldemethoden"
+        description: "Es sind keine Anmeldemethoden konfiguriert. Administratoren können <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> besuchen, um die Seite neu zu konfigurieren."
     invites:
       accept_title: "Einladung"
       welcome_to: "Willkommen bei %{site_name}!"
@@ -3159,9 +3163,9 @@ de:
     post:
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
-      quote_reply_shortcut: "Oder drücke q"
+      quote_reply_shortcut: "Zitieren (oder q drücken)"
       quote_edit: "Bearbeiten"
-      quote_edit_shortcut: "Oder drücke e"
+      quote_edit_shortcut: "Bearbeiten (oder drücke e)"
       quote_share: "Teilen"
       edit_reason: "Grund: "
       post_number: "Beitrag %{number}"
@@ -3262,6 +3266,8 @@ de:
         delete: "diesen Beitrag löschen"
         undelete: "diesen Beitrag wiederherstellen"
         share: "Link zu diesem Beitrag teilen"
+        copy_title: "Kopiere einen Link zu diesem Beitrag in die Zwischenablage"
+        link_copied: "Link kopiert!"
         more: "Mehr"
         delete_replies:
           confirm: "Möchtest du auch die Antworten auf diesen Beitrag löschen?"
@@ -4360,6 +4366,7 @@ de:
           never: "nie"
       reports:
         title: "Verfügbare Berichte"
+        meta_doc: "Schau Dir unsere <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>Dokumentation</a> an, um einen detaillierten Überblick über die Berichte zu erhalten."
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard aktualisiert:"

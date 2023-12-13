@@ -1797,6 +1797,7 @@ ar:
         ok: "اسمك يبدو جيدًا"
       username:
         title: "اسم المستخدم"
+        instructions: "مميز، وبلا مسافات، وقصير."
         short_instructions: "يمكن للأشخاص الإشارة إليك هكذا: ⁨@%{username}⁩"
         available: "اسم المستخدم متوفر"
         not_available: "غير متاح. هل تريد تجربة %{suggestion}؟"
@@ -3723,9 +3724,7 @@ ar:
     post:
       confirm_delete: "هل تريد بالتأكيد حذف هذا المنشور؟"
       quote_reply: "اقتباس"
-      quote_reply_shortcut: "أو اضغط على q"
       quote_edit: "تعديل"
-      quote_edit_shortcut: "أو اضغط على e"
       quote_share: "مشاركة"
       edit_reason: "السبب: "
       post_number: "المنشور %{number}"
@@ -5462,8 +5461,12 @@ ar:
         delete_confirm: "هل تريد حذف خطاف الويب هذا؟"
         tag_event:
           group_name: "أحداث الوسم"
+        user_badge_event:
+          group_name: "أحداث الشارة"
         like_event:
           post_liked: "عند تسجيل المستخدم إعجابه بمنشور."
+        user_promoted_event:
+          user_promoted: "تتم ترقية المستخدم"
         delivery_status:
           title: "حالة التسليم"
           inactive: "غير نشط"
@@ -5510,8 +5513,10 @@ ar:
         not_enabled: "لا"
         change_settings_short: "الإعدادات"
         howto: "كيف يمكنني تثبيت الإضافات؟"
+        official: "إضافة Discourse الرسمي"
         broken_route: "تتعذَّر تهيئة الرابط إلى \"%{name}\". تأكَّد من إيقاف كل أدوات حجب الإعلانات وحاول إعادة تحميل الصفحة."
         author: "بواسطة %{author}"
+        experimental_badge: "تجريبي"
         learn_more: "معرفة المزيد"
       navigation_menu:
         sidebar: "الشريط الجانبي"
@@ -5608,6 +5613,7 @@ ar:
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
         bulk_delete: "هل أنت متأكد؟"
         bulk_themes_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت السمات التالية، ولن تكون قابلة للاستخدام من قبل أي مستخدم على موقعك بعد الآن:"
+        bulk_components_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت المكونات التالية، ولن تكون قابلة للاستخدام من قبل أي مستخدم على موقعك بعد الآن:"
         color: "اللون"
         opacity: "الشفافية"
         copy: "تكرار"

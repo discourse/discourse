@@ -3057,9 +3057,7 @@ sv:
     post:
       confirm_delete: "Är du säker på att du vill radera det här inlägget?"
       quote_reply: "Citat"
-      quote_reply_shortcut: "Eller tryck på q"
       quote_edit: "Redigera"
-      quote_edit_shortcut: "Eller tryck på e"
       quote_share: "Dela"
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"

@@ -106,7 +106,7 @@ module Chat
       end
     end
 
-    def excerpt(max_length: 50)
+    def excerpt(max_length: 100)
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
       return message if UrlHelper.relaxed_parse(message).is_a?(URI)
 
@@ -117,7 +117,7 @@ module Chat
       PrettyText.excerpt(cooked, max_length, strip_links: true, keep_mentions: true)
     end
 
-    def censored_excerpt(max_length: 50)
+    def censored_excerpt(max_length: 100)
       WordWatcher.censor(excerpt(max_length: max_length))
     end
 

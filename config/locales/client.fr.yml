@@ -3056,9 +3056,7 @@ fr:
     post:
       confirm_delete: "Voulez-vous vraiment supprimer ce message ?"
       quote_reply: "Citer"
-      quote_reply_shortcut: "Ou appuyez sur q"
       quote_edit: "Modifier"
-      quote_edit_shortcut: "Ou appuyez sur e"
       quote_share: "Partager"
       edit_reason: "Raison : "
       post_number: "message %{number}"

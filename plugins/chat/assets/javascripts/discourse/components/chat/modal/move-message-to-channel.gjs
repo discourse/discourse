@@ -83,10 +83,10 @@ export default class ChatModalMoveMessageToChannel extends Component {
         {{/if}}
 
         <ChatChannelChooser
-          @class="chat-modal-move-message-to-channel__channel-chooser"
           @content={{this.availableChannels}}
           @value={{this.destinationChannelId}}
           @nameProperty="title"
+          class="chat-modal-move-message-to-channel__channel-chooser"
         />
       </:body>
       <:footer>

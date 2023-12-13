@@ -388,6 +388,7 @@ RSpec.describe NewPostManager do
 
       NewPostManager.add_handler(&@counter_handler)
       NewPostManager.add_handler(&@queue_handler)
+      Group.refresh_automatic_groups!
     end
 
     after { NewPostManager.clear_handlers! }
@@ -691,7 +692,7 @@ RSpec.describe NewPostManager do
   end
 
   describe "via email with a spam failure" do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:admin) { Fabricate(:admin) }
 
     it "silences users if its their first post" do
@@ -728,7 +729,7 @@ RSpec.describe NewPostManager do
   end
 
   describe "via email with an authentication results failure" do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:admin) { Fabricate(:admin) }
 
     it "doesn't silence users" do

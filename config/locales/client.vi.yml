@@ -2667,9 +2667,7 @@ vi:
     post:
       confirm_delete: "Bạn có chắc chắn muốn xóa bài đăng này không?"
       quote_reply: "Trích dẫn"
-      quote_reply_shortcut: "Hoặc nhấn q"
       quote_edit: "Sửa"
-      quote_edit_shortcut: "Hoặc nhấn e"
       quote_share: "Chia sẻ"
       edit_reason: "Lý do: "
       post_number: "bài viết %{number}"

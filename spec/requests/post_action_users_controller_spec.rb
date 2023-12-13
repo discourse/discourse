@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PostActionUsersController do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:post) { Fabricate(:post, user: sign_in(user)) }
 
   describe "index" do

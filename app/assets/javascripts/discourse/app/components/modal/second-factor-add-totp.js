@@ -61,6 +61,9 @@ export default class SecondFactorAddTotp extends Component {
         this.args.model.markDirty();
         this.errorMessage = null;
         this.args.closeModal();
+        if (this.args.model.enforcedSecondFactor) {
+          window.location.reload();
+        }
       })
       .catch((error) => this.args.model.onError(error))
       .finally(() => (this.loading = false));

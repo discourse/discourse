@@ -30,10 +30,10 @@ class UploadsController < ApplicationController
     type =
       (params[:upload_type].presence || params[:type].presence).parameterize(separator: "_")[0..50]
 
-    if type == "avatar" && !me.admin? &&
+    if type == "avatar" &&
          (
            SiteSetting.discourse_connect_overrides_avatar ||
-             !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, me)
+             !me.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
          )
       return render json: failed_json, status: 422
     end

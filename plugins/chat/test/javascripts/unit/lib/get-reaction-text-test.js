@@ -23,7 +23,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, currentUser),
-      "You reacted with :heart:"
+      "<span>You reacted with </span>:heart:"
     );
   });
 
@@ -38,7 +38,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, currentUser),
-      "You and martin reacted with :heart:"
+      "<span>You and martin reacted with </span>:heart:"
     );
   });
 
@@ -55,7 +55,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, currentUser),
-      "You, user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12, user13, user14 and 1 other reacted with :heart:"
+      "<span>You, user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12, user13, user14 and 1 other reacted with </span>:heart:"
     );
   });
 
@@ -72,7 +72,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, currentUser),
-      "You, user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11 and user12 reacted with :heart:"
+      "<span>You, user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11 and user12 reacted with </span>:heart:"
     );
   });
 
@@ -86,7 +86,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, currentUser),
-      "You reacted with :heart:"
+      "<span>You reacted with </span>:heart:"
     );
   });
 
@@ -101,7 +101,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, currentUser),
-      "You and martin reacted with :heart:"
+      "<span>You and martin reacted with </span>:heart:"
     );
   });
 
@@ -118,7 +118,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, currentUser),
-      "You, user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12, user13, user14 and 1 other reacted with :heart:"
+      "<span>You, user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12, user13, user14 and 1 other reacted with </span>:heart:"
     );
   });
 
@@ -135,7 +135,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, currentUser),
-      "You, user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11 and user12 reacted with :heart:"
+      "<span>You, user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11 and user12 reacted with </span>:heart:"
     );
   });
 
@@ -148,7 +148,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, fabricators.user()),
-      "martin reacted with :heart:"
+      "<span>martin reacted with </span>:heart:"
     );
   });
 
@@ -162,7 +162,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, fabricators.user()),
-      "claude and martin reacted with :heart:"
+      "<span>claude and martin reacted with </span>:heart:"
     );
   });
 
@@ -177,7 +177,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, fabricators.user()),
-      "user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12, user13, user14 and 1 other reacted with :heart:"
+      "<span>user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12, user13, user14 and 1 other reacted with </span>:heart:"
     );
   });
 
@@ -192,7 +192,7 @@ module("Discourse Chat | Unit | get-reaction-text", function () {
 
     assert.strictEqual(
       getReactionText(reaction, fabricators.user()),
-      "user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12 and user13 reacted with :heart:"
+      "<span>user0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12 and user13 reacted with </span>:heart:"
     );
   });
 });

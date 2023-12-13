@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryList
+  CATEGORIES_PER_PAGE = 25
+
   include ActiveModel::Serialization
 
   cattr_accessor :preloaded_topic_custom_fields
@@ -134,6 +136,12 @@ class CategoryList
       ) if @options[:parent_category_id].present?
 
     query = self.class.order_categories(query)
+
+    if SiteSetting.lazy_load_categories
+      page = [1, @options[:page].to_i].max
+      query = query.limit(CATEGORIES_PER_PAGE).offset((page - 1) * CATEGORIES_PER_PAGE)
+    end
+
     query =
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 

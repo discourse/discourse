@@ -1515,7 +1515,6 @@ ja:
     topics_per_period_in_top_summary: "デフォルトの人気トピックの要約に表示される人気トピックの数"
     topics_per_period_in_top_page: "人気トピックの 'もっと表示' を展開したときに、人気トピックに表示する人気トピックの数"
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトする"
-    top_page_default_timeframe: "トップビューページのデフォルトの時間枠。"
     moderators_view_emails: "モデレーターによるユーザーメールの閲覧を許可する"
     prioritize_username_in_ux: "ユーザーページ、ユーザーカード、および投稿の最初にユーザー名を表示する (無効にすると先に名前が表示されます)"
     enable_rich_text_paste: "テキストをコンポーザーに貼り付ける際に、HTML からマークダウンへの自動変換を有効にする (実験的)。"

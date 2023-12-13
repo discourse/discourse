@@ -1582,7 +1582,6 @@ nl:
     topics_per_period_in_top_summary: "Aantal weergegeven toptopics in het standaard toptopics-overzicht."
     topics_per_period_in_top_page: "Aantal weergegeven toptopics in de uitgevouwen 'Meer weergeven'-toptopics."
     redirect_users_to_top_page: "Nieuwe en lang afwezige gebruikers automatisch omleiden naar de top-pagina."
-    top_page_default_timeframe: "Standaard tijdspanne voor de top-overzichtspagina."
     moderators_view_emails: "Moderators mogen e-mails van gebruikers bekijken"
     prioritize_username_in_ux: "Eerst gebruikersnaam weergeven op gebruikerspagina, gebruikerskaart en in berichten (wanneer uitgeschakeld, wordt eerst de naam weergegeven)"
     enable_rich_text_paste: "Automatische conversie van HTML naar Markdown bij het plakken van tekst in de editor inschakelen. (Experimenteel)"

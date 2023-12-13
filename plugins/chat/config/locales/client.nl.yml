@@ -375,18 +375,6 @@ nl:
           topic: "Topic"
       reviewable:
         type: "Chatbericht"
-      reactions:
-        only_you: "Je hebt gereageerd met :%{emoji}:"
-        you_and_single_user: "Jij en %{username} hebben gereageerd met :%{emoji}:"
-        you_and_multiple_users: "Jij, %{commaSeparatedUsernames} en %{username} hebben gereageerd met :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Jij, %{commaSeparatedUsernames} en %{count} ander hebben gereageerd met :%{emoji}:"
-          other: "Jij, %{commaSeparatedUsernames} en %{count} anderen hebben gereageerd met :%{emoji}:"
-        single_user: "%{username} heeft gereageerd met :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} en %{username} hebben gereageerd met :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} en %{count} ander hebben gereageerd met :%{emoji}:"
-          other: "%{commaSeparatedUsernames} en %{count} anderen hebben gereageerd met :%{emoji}:"
       composer:
         toggle_toolbar: "Werkbalk schakelen"
         italic_text: "Cursieve tekst"

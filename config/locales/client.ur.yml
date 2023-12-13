@@ -2648,9 +2648,7 @@ ur:
       deleted_by_author_simple: "(مضمون مصنف نے مٹایا ہے)"
     post:
       quote_reply: "اقتباس کریں"
-      quote_reply_shortcut: "یا q دبائیں"
       quote_edit: "ترمیم"
-      quote_edit_shortcut: "یا e دبائیں"
       quote_share: "شیئر"
       edit_reason: "وجہ: "
       post_number: "پوسٹ %{number}"

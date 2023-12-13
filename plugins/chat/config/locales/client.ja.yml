@@ -355,16 +355,6 @@ ja:
           topic: "トピック"
       reviewable:
         type: "チャットメッセージ"
-      reactions:
-        only_you: ":%{emoji}: でリアクションしました"
-        you_and_single_user: "あなたと %{username} が :%{emoji}: でリアクションしました"
-        you_and_multiple_users: "あなた、%{commaSeparatedUsernames} と %{username} が :%{emoji}: でリアクションしました"
-        you_multiple_users_and_more:
-          other: "あなた、%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました"
-        single_user: "%{username} が :%{emoji}: でリアクションしました"
-        multiple_users: "%{commaSeparatedUsernames} と %{username} が :%{emoji}: でリアクションしました"
-        multiple_users_and_more:
-          other: "%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました"
       composer:
         toggle_toolbar: "ツールバーの切り替え"
         italic_text: "強調文字"

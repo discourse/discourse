@@ -40,6 +40,10 @@ export default class ChatThreadHeader extends Component {
       route = "chat.channel.threads";
       title = I18n.t("chat.return_to_threads_list");
       models = this.args.channel.routeModels;
+    } else if (!this.currentUser.isInDoNotDisturb() && this.unreadCount > 0) {
+      route = "chat.channel.threads";
+      title = I18n.t("chat.return_to_threads_list");
+      models = this.args.channel.routeModels;
     } else if (prevPage === "chat.threads") {
       route = "chat.threads";
       title = I18n.t("chat.my_threads.title");
@@ -74,6 +78,10 @@ export default class ChatThreadHeader extends Component {
 
   get headerTitle() {
     return this.args.thread?.title ?? I18n.t("chat.thread.label");
+  }
+
+  get unreadCount() {
+    return this.args.channel.threadsManager.unreadThreadCount;
   }
 
   @action

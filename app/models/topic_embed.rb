@@ -72,19 +72,11 @@ class TopicEmbed < ActiveRecord::Base
           cook_method: cook_method,
           category: category_id || eh.try(:category_id),
           tags: SiteSetting.tagging_enabled ? tags : nil,
+          embed_url: url,
+          embed_content_sha1: content_sha1,
         }
-        create_args[:visible] = false if SiteSetting.embed_unlisted?
 
-        creator = PostCreator.new(user, create_args)
-        post = creator.create
-        if post.present?
-          TopicEmbed.create!(
-            topic_id: post.topic_id,
-            embed_url: url,
-            content_sha1: content_sha1,
-            post_id: post.id,
-          )
-        end
+        post = PostCreator.create(user, create_args)
       end
     else
       absolutize_urls(url, contents)

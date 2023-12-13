@@ -8,7 +8,7 @@
   <ScrollTracker
     @name="full-page-search"
     @tag={{this.searchTerm}}
-    @class="hidden"
+    class="hidden"
   />
 
   <div class="search-header" role="search">
@@ -24,11 +24,11 @@
     <div class="search-bar">
       <SearchTextField
         @value={{this.searchTerm}}
-        @class="full-page-search search no-blur search-query"
         @aria-label={{i18n "search.search_term_label"}}
         @enter={{action "search" (hash collapseFilters=true)}}
         @hasAutofocus={{this.hasAutofocus}}
         @aria-controls="search-result-count"
+        class="full-page-search search no-blur search-query"
       />
       <ComboBox
         @id="search-type"
@@ -258,7 +258,7 @@
                 {{#if this.model.users}}
                   <div class="user-items">
                     {{#each this.model.users as |user|}}
-                      <UserLink @user={{user}} @class="fps-user-item">
+                      <UserLink @user={{user}} class="fps-user-item">
                         {{avatar user imageSize="large"}}
 
                         <div class="user-titles">

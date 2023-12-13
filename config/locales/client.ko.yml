@@ -2623,9 +2623,7 @@ ko:
     post:
       confirm_delete: "정말 이 게시물을 삭제하시겠습니까?"
       quote_reply: "인용하기"
-      quote_reply_shortcut: "또는 q를 누르세요"
       quote_edit: "편집"
-      quote_edit_shortcut: "또는 e를 누르세요"
       quote_share: "공유"
       edit_reason: "사유: "
       post_number: "%{number}번째 글"

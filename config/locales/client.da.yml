@@ -2710,9 +2710,7 @@ da:
       deleted_by_author_simple: "(emne slettet af forfatteren)"
     post:
       quote_reply: "Citér"
-      quote_reply_shortcut: "Eller tryk på q"
       quote_edit: "Rediger"
-      quote_edit_shortcut: "Eller tryk på e"
       quote_share: "Del"
       edit_reason: "Grund: "
       post_number: "indlæg %{number}"
