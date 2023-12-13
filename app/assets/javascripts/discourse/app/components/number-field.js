@@ -1,36 +1,13 @@
 import TextField from "discourse/components/text-field";
+import { allowOnlyNumericInput } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-
-const ALLOWED_KEYS = [
-  "Enter",
-  "Backspace",
-  "Tab",
-  "Delete",
-  "ArrowLeft",
-  "ArrowUp",
-  "ArrowRight",
-  "ArrowDown",
-  "0",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-];
 
 export default TextField.extend({
   classNameBindings: ["invalid"],
 
   keyDown: function (event) {
-    return (
-      ALLOWED_KEYS.includes(event.key) ||
-      (event.key === "-" && this._minNumber && this._minNumber < 0)
-    );
+    allowOnlyNumericInput(event, this._minNumber && this._minNumber < 0);
   },
 
   get _minNumber() {

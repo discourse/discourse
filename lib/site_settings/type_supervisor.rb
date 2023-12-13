@@ -55,6 +55,7 @@ class SiteSettings::TypeSupervisor
         emoji_list: 24,
         html_deprecated: 25,
         tag_group_list: 26,
+        file_size_restriction: 27,
       )
   end
 
@@ -180,7 +181,7 @@ class SiteSettings::TypeSupervisor
       end
     end
 
-    if type == :integer
+    if type == :integer || type == :file_size_restriction
       result[:min] = @validators[name].dig(:opts, :min) if @validators[name].dig(
         :opts,
         :min,
@@ -303,6 +304,8 @@ class SiteSettings::TypeSupervisor
     when self.class.types[:group]
       GroupSettingValidator
     when self.class.types[:integer]
+      IntegerSettingValidator
+    when self.class.types[:file_size_restriction]
       IntegerSettingValidator
     when self.class.types[:regex]
       RegexSettingValidator
