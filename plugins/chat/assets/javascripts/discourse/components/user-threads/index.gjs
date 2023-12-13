@@ -71,25 +71,20 @@ export default class UserThreads extends Component {
   }
 
   <template>
-    <div class="chat__user-threads-container">
-      <div class="chat__user-threads" {{this.fill}}>
+    <div class="chat-user-threads">
+      <div class="chat-user-threads__index" {{this.fill}}>
         {{#each this.threadsCollection.items as |thread|}}
-          <div
-            class="chat__user-threads__thread-container"
-            data-id={{thread.id}}
-          >
-            <div class="chat__user-threads__thread">
-              <div class="chat__user-threads__title">
-                <ThreadTitle @thread={{thread}} />
-                <ChannelTitle @channel={{thread.channel}} />
-              </div>
+          <div class="chat-user-threads__thread" data-id={{thread.id}}>
+            <ThreadTitle @thread={{thread}} />
+            <ChannelTitle @channel={{thread.channel}} />
 
-              <div class="chat__user-threads__thread-indicator">
-                <ThreadIndicator
-                  @message={{thread.originalMessage}}
-                  @interactiveUser={{false}}
-                />
-              </div>
+            <div class="chat__user-threads__thread-indicator">
+              <ThreadIndicator
+                @message={{thread.originalMessage}}
+                @interactiveUser={{false}}
+                @interactiveThread={{false}}
+                tabindex="-1"
+              />
             </div>
           </div>
         {{/each}}

@@ -26,6 +26,24 @@
       }
     }
 
+    .chat-channel-row {
+      &.--threads {
+        color: var(--primary);
+        padding-inline: 1.5rem;
+        font-size: var(--font-up-1-rem);
+        border: 0;
+
+        .chat-channel-title {
+          gap: 0.5rem;
+        }
+
+        .chat__unread-indicator {
+          width: 8px;
+          height: 8px;
+        }
+      }
+    }
+
     .chat-user-avatar {
       + .chat-channel-title__usernames {
         margin-left: 1rem;
