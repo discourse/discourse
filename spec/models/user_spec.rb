@@ -1925,7 +1925,7 @@ RSpec.describe User do
   end
 
   describe "staff info" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:moderator)
 
     describe "#number_of_flags_given" do

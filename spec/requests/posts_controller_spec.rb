@@ -81,7 +81,7 @@ end
 
 RSpec.describe PostsController do
   fab!(:admin)
-  fab!(:moderator)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_trust_level_0) { Fabricate(:trust_level_0, refresh_auto_groups: true) }
   fab!(:user_trust_level_1) { Fabricate(:trust_level_1, refresh_auto_groups: true) }

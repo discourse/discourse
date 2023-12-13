@@ -95,7 +95,7 @@ RSpec.describe Guardian do
   end
 
   describe "#post_can_act?" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:post)
 
     describe "an anonymous user" do
@@ -233,19 +233,18 @@ RSpec.describe Guardian do
     end
 
     describe "trust levels" do
+      before { user.change_trust_level!(TrustLevel[0]) }
+
       it "returns true for a new user liking something" do
-        user.trust_level = TrustLevel[0]
         expect(Guardian.new(user).post_can_act?(post, :like)).to be_truthy
       end
 
       it "returns false for a new user flagging as spam" do
-        user.trust_level = TrustLevel[0]
         expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
       end
 
       it "returns true for a new user flagging as spam if enabled" do
-        SiteSetting.min_trust_to_flag_posts = 0
-        user.trust_level = TrustLevel[0]
+        SiteSetting.flag_post_allowed_groups = 0
         expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
       end
 

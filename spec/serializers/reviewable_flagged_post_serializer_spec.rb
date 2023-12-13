@@ -5,7 +5,7 @@ RSpec.describe ReviewableFlaggedPostSerializer do
 
   it "includes the user fields for review" do
     p0 = Fabricate(:post)
-    reviewable = PostActionCreator.spam(Fabricate(:user), p0).reviewable
+    reviewable = PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), p0).reviewable
     json =
       ReviewableFlaggedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
     expect(json[:cooked]).to eq(p0.cooked)

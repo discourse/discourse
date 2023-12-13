@@ -12,9 +12,9 @@ RSpec.describe TopicViewSerializer do
   use_redis_snapshotting
 
   fab!(:topic)
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user) }
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   describe "#featured_link and #featured_link_root_domain" do
     fab!(:featured_link) { "http://meta.discourse.org" }
@@ -329,11 +329,13 @@ RSpec.describe TopicViewSerializer do
   context "with flags" do
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:other_post) { Fabricate(:post, topic: topic) }
+    fab!(:flagger_1) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:flagger_2) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "will return reviewable counts on posts" do
-      r = PostActionCreator.inappropriate(Fabricate(:user), post).reviewable
+      r = PostActionCreator.inappropriate(flagger_1, post).reviewable
       r.perform(admin, :agree_and_keep)
-      PostActionCreator.spam(Fabricate(:user), post)
+      PostActionCreator.spam(flagger_2, post)
 
       json = serialize_topic(topic, admin)
       p0 = json[:post_stream][:posts][0]
