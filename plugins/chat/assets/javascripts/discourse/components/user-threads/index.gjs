@@ -71,30 +71,29 @@ export default class UserThreads extends Component {
   }
 
   <template>
-    <div class="chat-user-threads">
-      <div class="chat-user-threads__index" {{this.fill}}>
-        {{#each this.threadsCollection.items as |thread|}}
-          <div class="chat-user-threads__thread" data-id={{thread.id}}>
-            <ThreadTitle @thread={{thread}} />
-            <ChannelTitle @channel={{thread.channel}} />
+    <div class="dcp-user-threads" {{this.fill}}>
+      {{#each this.threadsCollection.items as |thread|}}
+        <div class="dcp-user-thread" data-id={{thread.id}}>
+          <ThreadTitle @thread={{thread}} />
+          <ChannelTitle @channel={{thread.channel}} />
 
-            <ThreadIndicator
-              @message={{thread.originalMessage}}
-              @interactiveUser={{false}}
-              @interactiveThread={{false}}
-              tabindex="-1"
-            />
-          </div>
-        {{/each}}
-
-        <div {{this.loadMore}}>
-          <br />
+          <ThreadIndicator
+            @message={{thread.originalMessage}}
+            @interactiveUser={{false}}
+            @interactiveThread={{false}}
+            tabindex="-1"
+          />
         </div>
+      {{/each}}
 
-        <ConditionalLoadingSpinner
-          @condition={{this.threadsCollection.loading}}
-        />
+      <div {{this.loadMore}}>
+        <br />
       </div>
+
+      <ConditionalLoadingSpinner
+        @condition={{this.threadsCollection.loading}}
+      />
+
     </div>
   </template>
 }

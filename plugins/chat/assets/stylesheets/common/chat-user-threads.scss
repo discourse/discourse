@@ -1,14 +1,12 @@
-.chat-user-threads {
-  .chat__unread-indicator {
+.dcp-user-thread {
+  padding-block: 1.25rem;
+  margin-inline: 1rem;
+  border-bottom: 1px solid var(--primary-low);
+
+  .dcp-unread-indicator {
     width: 8px;
     height: 8px;
     align-self: flex-start;
-  }
-
-  &__thread {
-    padding-block: 1.25rem;
-    margin-inline: 1rem;
-    border-bottom: 1px solid var(--primary-low);
   }
 
   .chat-message-thread-indicator {
