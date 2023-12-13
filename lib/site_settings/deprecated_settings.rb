@@ -21,6 +21,7 @@ module SiteSettings::DeprecatedSettings
     ["email_in_min_trust", "email_in_allowed_groups", false, "3.3"],
     ["min_trust_to_edit_wiki_post", "edit_wiki_post_allowed_groups", false, "3.3"],
     ["allow_uploaded_avatars", "uploaded_avatars_allowed_groups", false, "3.3"],
+    ["min_trust_to_create_topic", "create_topic_allowed_groups", false, "3.3"],
   ]
 
   def setup_deprecated_methods

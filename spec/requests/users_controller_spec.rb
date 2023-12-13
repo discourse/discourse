@@ -17,7 +17,7 @@ RSpec.describe UsersController do
 
   # Unfortunately, there are tests that depend on the user being created too
   # late for fab! to work.
-  let(:user_deferred) { Fabricate(:user) }
+  let(:user_deferred) { Fabricate(:user, refresh_auto_groups: true) }
 
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
@@ -4205,7 +4205,7 @@ RSpec.describe UsersController do
             flair_color: "#999999",
             flair_icon: "icon",
           )
-        liker = Fabricate(:user, flair_group: group)
+        liker = Fabricate(:user, flair_group: group, refresh_auto_groups: true)
         create_and_like_post(user_deferred, liker)
 
         get "/u/#{user_deferred.username_lower}/summary.json"

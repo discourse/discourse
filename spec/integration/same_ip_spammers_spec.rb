@@ -3,9 +3,9 @@
 
 RSpec.describe "spammers on same IP" do
   let(:ip_address) { "182.189.119.174" }
-  let!(:spammer1) { Fabricate(:user, ip_address: ip_address) }
-  let!(:spammer2) { Fabricate(:user, ip_address: ip_address) }
-  let(:spammer3) { Fabricate(:user, ip_address: ip_address) }
+  let!(:spammer1) { Fabricate(:user, ip_address: ip_address, refresh_auto_groups: true) }
+  let!(:spammer2) { Fabricate(:user, ip_address: ip_address, refresh_auto_groups: true) }
+  let(:spammer3) { Fabricate(:user, ip_address: ip_address, refresh_auto_groups: true) }
 
   context "when flag_sockpuppets is disabled" do
     let!(:first_post) { create_post(user: spammer1) }
@@ -47,7 +47,13 @@ RSpec.describe "spammers on same IP" do
 
     context "when first user is not new" do
       let!(:old_user) do
-        Fabricate(:user, ip_address: ip_address, created_at: 2.days.ago, trust_level: TrustLevel[1])
+        Fabricate(
+          :user,
+          ip_address: ip_address,
+          created_at: 2.days.ago,
+          trust_level: TrustLevel[1],
+          refresh_auto_groups: true,
+        )
       end
 
       context "when first user starts a topic" do

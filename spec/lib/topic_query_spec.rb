@@ -11,9 +11,9 @@ RSpec.describe TopicQuery do
   #   work.
   #
   #   We should use be more explicit in communicating how the clock moves
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-  fab!(:creator) { Fabricate(:user) }
+  fab!(:creator) { Fabricate(:user, refresh_auto_groups: true) }
   let(:topic_query) { TopicQuery.new(user) }
 
   fab!(:tl4_user) { Fabricate(:trust_level_4) }

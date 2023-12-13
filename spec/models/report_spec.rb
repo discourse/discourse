@@ -559,7 +559,7 @@ RSpec.describe Report do
         arpit = Fabricate(:user)
         sam = Fabricate(:user)
 
-        jeff = Fabricate(:user, created_at: 1.day.ago)
+        jeff = Fabricate(:user, created_at: 1.day.ago, refresh_auto_groups: true)
         post = create_post(user: jeff, created_at: 1.day.ago)
         PostActionCreator.like(arpit, post)
         PostActionCreator.like(sam, post)

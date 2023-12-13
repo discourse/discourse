@@ -6,7 +6,7 @@ RSpec.describe AnonymousShadowCreator do
   end
 
   context "when anonymous posting is enabled" do
-    fab!(:user) { Fabricate(:user, trust_level: 3) }
+    fab!(:user) { Fabricate(:user, trust_level: 3, refresh_auto_groups: true) }
 
     before do
       SiteSetting.allow_anonymous_posting = true
@@ -16,7 +16,6 @@ RSpec.describe AnonymousShadowCreator do
 
     it "returns no shadow if the user is not in a group that is allowed to anonymously post" do
       user = Fabricate(:user, trust_level: 0)
-      Group.refresh_automatic_groups!
       expect(AnonymousShadowCreator.get(user)).to eq(nil)
     end
 
@@ -34,6 +33,7 @@ RSpec.describe AnonymousShadowCreator do
       shadow2 = AnonymousShadowCreator.get(user)
 
       expect(shadow.id).to eq(shadow2.id)
+      Group.refresh_automatic_groups!
       create_post(user: shadow)
 
       user.reload

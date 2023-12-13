@@ -241,6 +241,7 @@ RSpec.describe TrustLevel3Requirements do
   describe "num_topics_replied_to" do
     it "counts topics in which user replied in last 100 days" do
       user.save
+      Group.refresh_automatic_groups!
 
       _not_a_reply = create_post(user: user) # user created the topic, so it doesn't count
 

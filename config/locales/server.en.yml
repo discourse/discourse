@@ -1958,6 +1958,7 @@ en:
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    create_topic_allowed_groups: "Groups that are allowed to create new topics."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
@@ -2555,6 +2556,7 @@ en:
       email_in_allowed_groups: "email_in_min_trust"
       edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
       uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
+      create_topic_allowed_groups: "min_trust_to_create_topic"
 
     placeholder:
       discourse_connect_provider_secrets:

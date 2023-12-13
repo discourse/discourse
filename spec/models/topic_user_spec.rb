@@ -75,7 +75,7 @@ RSpec.describe TopicUser do
   fab!(:user)
 
   let(:topic) do
-    u = Fabricate(:user)
+    u = Fabricate(:user, refresh_auto_groups: true)
     guardian = Guardian.new(u)
     TopicCreator.create(u, guardian, title: "this is my topic title")
   end
