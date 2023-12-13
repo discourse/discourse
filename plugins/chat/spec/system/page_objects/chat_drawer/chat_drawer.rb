@@ -38,19 +38,19 @@ module PageObjects
       end
 
       def has_user_threads_section?
-        has_css?(".chat__user-threads-row-container[href='/chat/threads']")
+        has_css?(".chat-channel-row.--threads[href='/chat/threads']")
       end
 
       def has_unread_user_threads?
-        has_css?(".chat__user-threads-row .chat__unread-indicator")
+        has_css?(".chat-channel-row.--threads .c-unread-indicator")
       end
 
       def has_no_unread_user_threads?
-        has_no_css?(".chat__user-threads-row .chat__unread-indicator")
+        has_no_css?(".chat-channel-row.--threads .c-unread-indicator")
       end
 
       def click_user_threads
-        find(".chat__user-threads-row").click
+        find(".chat-channel-row.--threads").click
       end
 
       def maximize
