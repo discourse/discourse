@@ -67,11 +67,12 @@ module("Integration | Component | file-size-input", function (hooks) {
     await selectKit(".file-size-unit-selector").expand();
     await selectKit(".file-size-unit-selector").selectRowByValue("gb");
 
+    // TODO: Implement rounding or limit to X digits.
     assert
       .dom(".file-size-input")
       .hasValue(
-        "0.003906",
-        "value is changed when the unit is changed and only has 6 decimal places"
+        "0.00390625",
+        "value is changed when the unit is changed to gb"
       );
 
     await click(".file-size-unit-selector");

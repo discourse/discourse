@@ -108,21 +108,17 @@ export default class FileSizeInput extends Component {
       this.pendingSizeValue = this.sizeValue / 1024;
     }
     if (this.fileSizeUnit === "gb" && newUnit === "mb") {
-      this.pendingSizeValue = Math.round(this.sizeValue * 1024);
+      this.pendingSizeValue = this.sizeValue * 1024;
     }
     if (this.fileSizeUnit === "gb" && newUnit === "kb") {
-      this.pendingSizeValue = Math.round(this.sizeValue * 1024 * 1024);
+      this.pendingSizeValue = this.sizeValue * 1024 * 1024;
     }
     this.pendingFileSizeUnit = newUnit;
   }
 
   @action
   applySizeValueChanges() {
-    if (this.pendingSizeValue < 1 && this.pendingSizeValue > 0) {
-      this.sizeValue = Number.parseFloat(this.pendingSizeValue).toFixed(6);
-    } else {
-      this.sizeValue = this.pendingSizeValue;
-    }
+    this.sizeValue = this.pendingSizeValue;
   }
 
   @action
