@@ -200,7 +200,7 @@ RSpec.describe Report do
           freeze_time DateTime.parse("2017-03-01 12:00")
 
           if arg == :flag
-            user = Fabricate(:user)
+            user = Fabricate(:user, refresh_auto_groups: true)
             topic = Fabricate(:topic, user: user)
             builder = ->(dt) do
               PostActionCreator.create(
@@ -462,7 +462,7 @@ RSpec.describe Report do
       before do
         3.times { Fabricate(:user, admin: true) }
         2.times { Fabricate(:user, moderator: true) }
-        UserSilencer.silence(Fabricate(:user), Fabricate.build(:admin))
+        UserSilencer.silence(Fabricate(:user, refresh_auto_groups: true), Fabricate.build(:admin))
         Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
       end
 
@@ -590,7 +590,7 @@ RSpec.describe Report do
     include_examples "no data"
 
     context "with flags" do
-      let(:flagger) { Fabricate(:user) }
+      let(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
       let(:post) { Fabricate(:post, user: flagger) }
 
       before { freeze_time }
@@ -689,7 +689,7 @@ RSpec.describe Report do
 
     let(:sam) { Fabricate(:user, moderator: true, username: "sam") }
 
-    let(:jeff) { Fabricate(:user, moderator: true, username: "jeff") }
+    let(:jeff) { Fabricate(:user, moderator: true, username: "jeff", refresh_auto_groups: true) }
 
     include_examples "no data"
 
@@ -848,7 +848,7 @@ RSpec.describe Report do
       include_examples "with data x/y"
 
       before(:each) do
-        user = Fabricate(:user)
+        user = Fabricate(:user, refresh_auto_groups: true)
         topic = Fabricate(:topic, user: user)
         post0 = Fabricate(:post, topic: topic, user: user)
         post1 = Fabricate(:post, topic: Fabricate(:topic, category: c1, user: user), user: user)
@@ -1078,8 +1078,8 @@ RSpec.describe Report do
   end
 
   describe "user_flagging_ratio" do
-    let(:joffrey) { Fabricate(:user, username: "joffrey") }
-    let(:robin) { Fabricate(:user, username: "robin") }
+    let(:joffrey) { Fabricate(:user, username: "joffrey", refresh_auto_groups: true) }
+    let(:robin) { Fabricate(:user, username: "robin", refresh_auto_groups: true) }
     let(:moderator) { Fabricate(:moderator) }
     let(:user) { Fabricate(:user) }
 

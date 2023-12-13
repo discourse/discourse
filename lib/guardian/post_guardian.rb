@@ -78,7 +78,7 @@ module PostGuardian
         (
           is_flag && not(already_did_flagging) &&
             (
-              @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_flag_posts]) ||
+              @user.in_any_groups?(SiteSetting.flag_post_allowed_groups_map) ||
                 post.topic.private_message?
             )
         ) ||
