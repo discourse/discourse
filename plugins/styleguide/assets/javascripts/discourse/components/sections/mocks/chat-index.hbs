@@ -4,10 +4,10 @@
   <div class="channels-list">
     chat index list of channels as-is
   </div>
-    <nav class="chat-index__footer-nav">
-      <DButton class="btn-flat chat-index__footer-item -active" @icon="users" aria-label="Switch to DM list" @translatedLabel="DMs"/>
-      <DButton class="btn-flat chat-index__footer-item" @icon="comments" aria-label="Switch to channel list" @translatedLabel="Channels"/>
-      <DButton class="btn-flat chat-index__footer-item" @icon="discourse-threads" aria-label="Switch to my threads list" @translatedLabel="My Threads"/>
+    <nav class="c-footer">
+      <DButton class="btn-flat c-footer__item --active" @icon="users" aria-label="Switch to DM list" @translatedLabel="DMs"/>
+      <DButton class="btn-flat c-footer__item" @icon="comments" aria-label="Switch to channel list" @translatedLabel="Channels"/>
+      <DButton class="btn-flat c-footer__item" @icon="discourse-threads" aria-label="Switch to my threads list" @translatedLabel="My Threads"/>
     </nav>
 </div>
 </div>
@@ -43,16 +43,16 @@ padding: 0;
     padding-bottom: 0;
     }
     
-    .chat-index__footer-nav {
+    .c-footer {
      grid-area: footer;
      background: var(--secondary);
     border-top: 1px solid var(--primary-low);
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
     }
 
-    .chat-index__footer-item {
+    .c-footer__item {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -71,7 +71,7 @@ padding: 0;
         color: var(--primary-medium);
       }
     }
-    .chat-index__footer-item.-active {
+    .c-footer__item.--active {
         .d-icon,
         .d-button-label {
           color: var(--quaternary);
