@@ -48,11 +48,8 @@ module TopicGuardian
   def can_create_topic?(parent)
     is_staff? ||
       (
-        user &&
-          (
-            user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i ||
-              user.in_any_groups?(SiteSetting.create_topic_allowed_groups_map)
-          ) && can_create_post?(parent) && Category.topic_create_allowed(self).any?
+        user && user.in_any_groups?(SiteSetting.create_topic_allowed_groups_map) &&
+          can_create_post?(parent) && Category.topic_create_allowed(self).any?
       )
   end
 
