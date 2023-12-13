@@ -15,9 +15,6 @@ const _beforeLoadMoreCallbacks = [];
 export function addBeforeLoadMoreCallback(fn) {
   _beforeLoadMoreCallbacks.push(fn);
 }
-export function resetBeforeLoadMoreCallbacks() {
-  _beforeLoadMoreCallbacks.clear();
-}
 
 export default class UserNotificationsController extends Controller {
   @service modal;
