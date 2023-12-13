@@ -42,11 +42,11 @@ module PageObjects
       end
 
       def has_unread_user_threads?
-        has_css?(".chat__user-threads-row .chat__unread-indicator")
+        has_css?(".chat__user-threads-row .dcp-unread-indicator")
       end
 
       def has_no_unread_user_threads?
-        has_no_css?(".chat__user-threads-row .chat__unread-indicator")
+        has_no_css?(".chat__user-threads-row .dcp-unread-indicator")
       end
 
       def click_user_threads

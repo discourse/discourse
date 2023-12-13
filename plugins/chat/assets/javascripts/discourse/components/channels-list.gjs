@@ -173,8 +173,8 @@ export default class ChannelsList extends Component {
           {{i18n "chat.my_threads.title"}}
         </span>
         {{#if this.hasUnreadThreads}}
-          <div class="chat__unread-indicator">
-            <div class="chat__unread-indicator__number">&nbsp;</div>
+          <div class="dcp-unread-indicator">
+            <div class="dcp-unread-indicator__number">&nbsp;</div>
           </div>
         {{/if}}
       </LinkTo>
