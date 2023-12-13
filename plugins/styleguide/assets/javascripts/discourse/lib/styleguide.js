@@ -10,7 +10,6 @@ import dropdowns from "../components/sections/atoms/dropdowns";
 import topicLink from "../components/sections/atoms/topic-link";
 import topicStatuses from "../components/sections/atoms/topic-statuses";
 import chatIndex from "../components/sections/mocks/chat-index";
-import chatThreadView from "../components/sections/mocks/chat-thread-view";
 import breadCrumbs from "../components/sections/molecules/bread-crumbs";
 import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
@@ -107,7 +106,6 @@ const SECTIONS = [
   { component: suggestedTopics, category: "organisms", id: "suggested-topics" },
   { component: userAbout, category: "organisms", id: "user-about" },
   { component: chatIndex, category: "mocks", id: "chat-index" },
-  { component: chatThreadView, category: "mocks", id: "chat-thread-view" },
 ];
 
 export function addSection(section) {
