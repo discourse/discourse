@@ -19,6 +19,7 @@ module TurboTests
           extra_failure_lines: @rspec_example.metadata[:extra_failure_lines],
           run_duration_ms: @rspec_example.metadata[:run_duration_ms],
           process_pid: Process.pid,
+          js_deprecations: @rspec_example.metadata[:js_deprecations],
         },
         location_rerun_argument: @rspec_example.location_rerun_argument,
       }
