@@ -5073,6 +5073,8 @@ en:
     no_themes: "Disable themes and theme components"
     no_unofficial_plugins: "Disable unofficial client-side plugin customizations"
     no_plugins: "Disable all client-side plugin customizations"
+    deprecation_error_description: "To check for compatibility with upcoming Discourse updates, you can make Javascript deprecations raise an error:"
+    deprecation_error_label: Make Javascript deprecations raise an error
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
   wizard:

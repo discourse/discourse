@@ -22,6 +22,17 @@
     <%= t 'safe_mode.no_plugins' %>
     </label>
     </p>
+
+    <p>
+      <%= t 'safe_mode.deprecation_error_description' %>  
+    </p>
+    <p>
+    <label>
+    <%= check_box_tag 'deprecation_errors', true, false %>
+    <%= t 'safe_mode.deprecation_error_label' %>
+    </label>
+    </p>
+
     <p>
       <%= submit_tag t('safe_mode.enter'), class: 'btn btn-danger' %>
       <%- if flash[:must_select] %>
