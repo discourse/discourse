@@ -78,14 +78,12 @@ export default class UserThreads extends Component {
             <ThreadTitle @thread={{thread}} />
             <ChannelTitle @channel={{thread.channel}} />
 
-            <div class="chat__user-threads__thread-indicator">
-              <ThreadIndicator
-                @message={{thread.originalMessage}}
-                @interactiveUser={{false}}
-                @interactiveThread={{false}}
-                tabindex="-1"
-              />
-            </div>
+            <ThreadIndicator
+              @message={{thread.originalMessage}}
+              @interactiveUser={{false}}
+              @interactiveThread={{false}}
+              tabindex="-1"
+            />
           </div>
         {{/each}}
 
