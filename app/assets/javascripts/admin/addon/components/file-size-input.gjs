@@ -5,9 +5,9 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import TextField from "discourse/components/text-field";
+import { allowOnlyNumericInput } from "discourse/lib/utilities";
 import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
-import { allowOnlyNumericInput } from "discourse/lib/utilities";
 
 const UNIT_KB = "kb";
 const UNIT_MB = "mb";
@@ -31,11 +31,12 @@ export default class FileSizeInput extends Component {
     this.fileSizeUnit = UNIT_KB;
     if (this.originalSizeKB <= 1024) {
       this.onFileSizeUnitChange(UNIT_KB);
-    }
-    if (this.originalSizeKB > 1024 && this.originalSizeKB <= 1024 * 1024) {
+    } else if (
+      this.originalSizeKB > 1024 &&
+      this.originalSizeKB <= 1024 * 1024
+    ) {
       this.onFileSizeUnitChange(UNIT_MB);
-    }
-    if (this.originalSizeKB > 1024 * 1024) {
+    } else if (this.originalSizeKB > 1024 * 1024) {
       this.onFileSizeUnitChange(UNIT_GB);
     }
   }
@@ -132,7 +133,7 @@ export default class FileSizeInput extends Component {
   <template>
     <div class="file-size-picker">
       <TextField
-        @class="file-size-input"
+        class="file-size-input"
         @value={{this.sizeValue}}
         @onChange={{this.handleFileSizeChange}}
         {{on "keydown" this.keyDown}}
@@ -140,7 +141,7 @@ export default class FileSizeInput extends Component {
         {{didUpdate this.applySizeValueChanges this.pendingSizeValue}}
       />
       <ComboBox
-        @class="file-size-unit-selector"
+        class="file-size-unit-selector"
         @valueProperty="value"
         @content={{this.dropdownOptions}}
         @value={{this.fileSizeUnit}}

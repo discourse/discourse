@@ -10,8 +10,8 @@ module("Integration | Component | file-size-input", function (hooks) {
   test("file size unit selector kb", async function (assert) {
     this.set("value", 1024);
     this.set("max", 4096);
-    this.set("onChangeSize", function () {});
-    this.set("updateValidationMessage", function () {});
+    this.set("onChangeSize", () => {});
+    this.set("updateValidationMessage", () => {});
 
     await render(hbs`
       <FileSizeInput
@@ -30,8 +30,8 @@ module("Integration | Component | file-size-input", function (hooks) {
   test("file size unit selector", async function (assert) {
     this.set("value", 4096);
     this.set("max", 8192);
-    this.set("onChangeSize", function () {});
-    this.set("updateValidationMessage", function () {});
+    this.set("onChangeSize", () => {});
+    this.set("updateValidationMessage", () => {});
 
     await render(hbs`
       <FileSizeInput
@@ -90,8 +90,7 @@ module("Integration | Component | file-size-input", function (hooks) {
   test("file size input error message", async function (assert) {
     this.set("value", 4096);
     this.set("max", 8192);
-    this.set("onChangeSize", function () {});
-    //this.set("message", "");
+    this.set("onChangeSize", () => {});
 
     let updateValidationMessage = (message) => {
       this.set("message", message);
@@ -111,16 +110,16 @@ module("Integration | Component | file-size-input", function (hooks) {
 
     await fillIn(".file-size-input", 12);
 
-    assert.equal(
-      this.get("message"),
+    assert.strictEqual(
+      this.message,
       "12 MB is greater than the max allowed 8 MB",
       "A message is showed when the input is greater than the max"
     );
 
     await fillIn(".file-size-input", 4);
 
-    assert.equal(
-      this.get("message"),
+    assert.strictEqual(
+      this.message,
       null,
       "The message is cleared when the input is less than the max"
     );
