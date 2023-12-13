@@ -11,6 +11,14 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
+const _beforeLoadMoreCallbacks = [];
+export function addBeforeLoadMoreCallback(fn) {
+  _beforeLoadMoreCallbacks.push(fn);
+}
+export function resetBeforeLoadMoreCallbacks() {
+  _beforeLoadMoreCallbacks.clear();
+}
+
 export default class UserNotificationsController extends Controller {
   @service modal;
   @service appEvents;
@@ -102,6 +110,14 @@ export default class UserNotificationsController extends Controller {
 
   @action
   loadMore() {
+    if (
+      _beforeLoadMoreCallbacks.length &&
+      !_beforeLoadMoreCallbacks.some((fn) => fn(this))
+    ) {
+      // Return early if any callbacks return false, short-circuiting the default loading more logic
+      return;
+    }
+
     this.model.loadMore();
   }
 }

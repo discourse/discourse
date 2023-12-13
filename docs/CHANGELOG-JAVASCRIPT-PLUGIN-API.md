@@ -7,6 +7,14 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.19.0] - 2023-12-13
+
+### Added
+
+- Added `setNotificationsLimit` function, which sets a new limit for how many notifications are loaded for the user notifications route
+
+- Added `addBeforeLoadMoreNotificationsCallback` function, which takes a function as the argument. All added callbacks are evaluated before `loadMore` is triggered for user notifications. If any callback returns false, notifications will not be loaded.
+
 ## [1.18.0] - 2023-12-1
 
 ### Added

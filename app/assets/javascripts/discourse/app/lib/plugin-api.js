@@ -31,6 +31,7 @@ import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profil
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
+import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import {
   addExtraIconRenderer,
@@ -88,6 +89,7 @@ import {
   addSaveableUserOptionField,
 } from "discourse/models/user";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
+import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import {
   addToHeaderIcons,
@@ -817,6 +819,21 @@ class PluginApi {
    */
   registerCustomPostMessageCallback(type, callback) {
     registerCustomPostMessageCallback1(type, callback);
+  }
+
+  /**
+   * Registers a callback that will be evaluated when infinite scrolling would cause
+   * more notifications to be loaded. This can be used to prevent loading more unless
+   * a specific condition is met.
+   *
+   * Example:
+   *
+   * api.addBeforeLoadMoreNotificationsCallback((controller) => {
+   *   return controller.allowLoadMore;
+   * });
+   */
+  addBeforeLoadMoreNotificationsCallback(fn) {
+    addBeforeLoadMoreNotificationsCallback(fn);
   }
 
   /**
@@ -1771,6 +1788,18 @@ class PluginApi {
    **/
   setNewCategoryDefaultColors(backgroundColor, textColor) {
     setNewCategoryDefaultColors(backgroundColor, textColor);
+  }
+
+  /**
+   * Change the number of notifications that are loaded at /my/notifications
+   *
+   * ```
+   * api.setNotificationsLimit(20)
+   * ```
+   *
+   **/
+  setNotificationsLimit(limit) {
+    setNotificationsLimit(limit);
   }
 
   /**
