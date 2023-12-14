@@ -1483,7 +1483,7 @@ RSpec.describe PostsController do
             expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
           end
 
-          xit "should add custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
+          it "should add custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
             sign_in(user)
 
             post "/posts.json",
