@@ -1760,6 +1760,13 @@ trust:
     default: 2
     enum: "TrustLevelSetting"
     client: true
+  ignore_allowed_groups:
+    default: "12"
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   send_tl2_promotion_message: true

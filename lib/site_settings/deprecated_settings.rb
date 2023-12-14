@@ -32,6 +32,7 @@ module SiteSettings::DeprecatedSettings
       "3.3",
     ],
     ["min_trust_level_to_allow_invite", "invite_allowed_groups", false, "3.3"],
+    ["min_trust_level_to_allow_ignore", "ignore_allowed_groups", false, "3.3"],
   ]
 
   def setup_deprecated_methods

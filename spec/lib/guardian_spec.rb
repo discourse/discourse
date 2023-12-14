@@ -3467,7 +3467,7 @@ RSpec.describe Guardian do
   end
 
   describe "#can_ignore_user?" do
-    before { SiteSetting.min_trust_level_to_allow_ignore = 1 }
+    before { SiteSetting.ignore_allowed_groups = Group::AUTO_GROUPS[:trust_level_1] }
 
     let(:guardian) { Guardian.new(trust_level_2) }
 
@@ -3498,21 +3498,21 @@ RSpec.describe Guardian do
       end
     end
 
-    context "when ignorer's trust level is below min_trust_level_to_allow_ignore" do
+    context "when ignorer is not in requred trust level group" do
       let(:guardian) { Guardian.new(trust_level_0) }
       it "does not allow ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(false)
       end
     end
 
-    context "when ignorer's trust level is equal to min_trust_level_to_allow_ignore site setting" do
+    context "when ignorer is in the required trust level group" do
       let(:guardian) { Guardian.new(trust_level_1) }
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
     end
 
-    context "when ignorer's trust level is above min_trust_level_to_allow_ignore site setting" do
+    context "when ignorer is in a higher than required trust level group" do
       let(:guardian) { Guardian.new(trust_level_3) }
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
