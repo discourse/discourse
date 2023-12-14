@@ -425,7 +425,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     it "can change the tags, and can create new tags" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       tba =
         TopicsBulkAction.new(
           topic.user,
@@ -440,7 +440,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     it "can change the tags but not create new ones" do
-      SiteSetting.min_trust_to_create_tag = 4
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       tba =
         TopicsBulkAction.new(
           topic.user,
@@ -494,7 +494,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     it "can append new or existing tags" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       tba =
         TopicsBulkAction.new(
           topic.user,
@@ -517,7 +517,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user can't create new topics" do
-      before { SiteSetting.min_trust_to_create_tag = 4 }
+      before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
       it "can append existing tags but doesn't append new tags" do
         tba =

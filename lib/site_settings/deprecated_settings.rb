@@ -34,6 +34,7 @@ module SiteSettings::DeprecatedSettings
     ["min_trust_level_to_allow_invite", "invite_allowed_groups", false, "3.3"],
     ["min_trust_level_to_allow_ignore", "ignore_allowed_groups", false, "3.3"],
     ["min_trust_to_allow_self_wiki", "self_wiki_allowed_groups", false, "3.3"],
+    ["min_trust_to_create_tag", "create_tag_allowed_groups", false, "3.3"],
   ]
 
   OVERRIDE_TL_GROUP_SETTINGS = %w[
@@ -52,6 +53,7 @@ module SiteSettings::DeprecatedSettings
     min_trust_level_to_allow_user_card_background
     min_trust_level_to_allow_invite
     min_trust_level_to_allow_ignore
+    min_trust_to_create_tag
   ]
 
   def group_to_tl(old_setting, new_setting)
