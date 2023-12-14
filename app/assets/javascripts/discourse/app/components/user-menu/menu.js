@@ -197,13 +197,7 @@ export default class UserMenu extends Component {
   @tracked currentNotificationTypes;
 
   get classNames() {
-    let classes = [
-      "user-menu",
-      "revamped",
-      "menu-panel",
-      "drop-down",
-      `current-tab__${this.currentTabId}`,
-    ];
+    let classes = ["user-menu", "revamped", "menu-panel", "drop-down"];
     if (this.siteSettings.show_user_menu_avatars) {
       classes.push("show-avatars");
     }
