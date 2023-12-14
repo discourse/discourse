@@ -303,7 +303,7 @@ jobs:
 
       - name: Create flaky tests report artifact
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
-        run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}.json
+        run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.job }}.json
 
       - name: Upload flaky tests report
         uses: actions/upload-artifact@v3
