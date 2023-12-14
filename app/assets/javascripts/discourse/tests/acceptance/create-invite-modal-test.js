@@ -5,6 +5,7 @@ import {
   exists,
   fakeTime,
   loggedInUser,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
@@ -239,6 +240,21 @@ acceptance(
       await visit("/u/eviltrout/invited/pending");
       await click(".user-invite-buttons .btn:first-child");
       assert.ok(!exists(".invite-to-topic"));
+    });
+  }
+);
+
+acceptance(
+  "Invites - Populates Edit Invite Form with saved invite data",
+  function (needs) {
+    needs.user();
+
+    test("shows correct saved data in form", async function (assert) {
+      await visit("/u/eviltrout/invited/pending");
+      await click(
+        ".user-invite-list tbody tr:nth-child(1) .invite-actions .btn:nth-child(1)"
+      ); // first invite edit button
+      assert.equal(query("#invite-max-redemptions").value, 10);
     });
   }
 );
