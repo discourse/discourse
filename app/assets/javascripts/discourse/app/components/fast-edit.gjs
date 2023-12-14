@@ -91,8 +91,8 @@ export default class FastEdit extends Component {
           @name="fast-edit-footer-after"
           @defaultGlimmer={{true}}
           @outletArgs={{hash
-            initialValue=this.args.initialValue
-            newValue=this.args.newValue
+            initialValue=@initialValue
+            newValue=@newValue
             updateValue=this.updateValueProperty
           }}
         />
