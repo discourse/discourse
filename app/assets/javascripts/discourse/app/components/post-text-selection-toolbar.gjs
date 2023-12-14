@@ -190,7 +190,7 @@ export default class PostTextSelectionToolbar extends Component {
         <PluginOutlet
           @name="post-text-buttons"
           @defaultGlimmer={{true}}
-          @outletArgs={{hash data=@data}}
+          @outletArgs={{hash data=@data post=this.post}}
         >
           {{#if this.embedQuoteButton}}
             <DButton
