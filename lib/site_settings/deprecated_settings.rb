@@ -25,6 +25,12 @@ module SiteSettings::DeprecatedSettings
     ["min_trust_to_edit_post", "edit_post_allowed_groups", false, "3.3"],
     ["min_trust_to_flag_posts", "flag_post_allowed_groups", false, "3.3"],
     ["tl4_delete_posts_and_topics", "delete_all_posts_and_topics_allowed_groups", false, "3.3"],
+    [
+      "min_trust_level_to_allow_user_card_background",
+      "user_card_background_allowed_groups",
+      false,
+      "3.3",
+    ],
   ]
 
   def setup_deprecated_methods
