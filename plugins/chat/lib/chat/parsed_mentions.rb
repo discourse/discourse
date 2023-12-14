@@ -116,7 +116,9 @@ module Chat
 
     def cooked_stripped(message)
       cooked = Nokogiri::HTML5.fragment(message.cooked)
-      cooked.css(".chat-transcript .mention, .chat-transcript .mention-group").remove
+      cooked.css(
+        ".chat-transcript .mention, .chat-transcript .mention-group, aside.quote .mention, aside.quote .mention-group",
+      ).remove
       cooked
     end
 
