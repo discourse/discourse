@@ -4,7 +4,12 @@ import {
   CustomComponentManager,
   setInternalComponentManager,
 } from "@glimmer/manager";
-import { valueForRef } from "@glimmer/reference";
+import * as REFERENCE from "@glimmer/reference";
+
+const unwrapReactive =
+  typeof REFERENCE.unwrapReactive === "function"
+    ? REFERENCE.unwrapReactive
+    : REFERENCE.valueForRef;
 
 class GlimmerComponentWithParentViewManager extends CustomComponentManager {
   create(
@@ -20,7 +25,7 @@ class GlimmerComponentWithParentViewManager extends CustomComponentManager {
     result.component.parentView = dynamicScope.view;
     dynamicScope.view = result.component;
 
-    result.component._target = valueForRef(callerSelfRef);
+    result.component._target = unwrapReactive(callerSelfRef);
 
     return result;
   }
