@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UserCustomField < ActiveRecord::Base
+  include CustomField
+
   belongs_to :user
 
   scope :searchable,
