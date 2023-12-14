@@ -4325,6 +4325,11 @@ content-tag@^1.1.2:
   resolved "https://registry.yarnpkg.com/content-tag/-/content-tag-1.1.2.tgz#a7adddfdd2d44c9418b795c91ee04c55f570a997"
   integrity sha512-AZkfc6TUmW+/RbZJioPzOQPAHHXqyqK4B0GNckJDjBAPK3SyGrMfn21bfFky/qwi5uoLph5sjAHUkO3CL6/IgQ==
 
+content-tag@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/content-tag/-/content-tag-1.2.1.tgz#5bb23443d2ddf316657994fb333fdc1d4a161be8"
+  integrity sha512-aKOsM+GojHMvRuqOa+qamATA3IEK9QksXcIX2NSGHpU5euNhrg6mZFT3Z7kDuNz55sH9NRPJKqeGhkhaq9ED2w==
+
 content-type@~1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/content-type/-/content-type-1.0.5.tgz#8b773162656d1d1086784c8f23a54ce6d73d7918"
