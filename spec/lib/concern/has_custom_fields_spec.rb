@@ -17,6 +17,8 @@ RSpec.describe HasCustomFields do
       end
 
       class CustomFieldsTestItemCustomField < ActiveRecord::Base
+        include CustomField
+
         belongs_to :custom_fields_test_item
       end
     end
@@ -194,6 +196,30 @@ RSpec.describe HasCustomFields do
 
       db_item = CustomFieldsTestItem.find(test_item.id)
       expect(db_item.custom_fields).to eq("a" => %w[b 10 d])
+    end
+
+    it "that are true can be fetched" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
+
+      test_item.save!
+
+      expect(
+        CustomFieldsTestItemCustomField
+          .true_fields
+          .where(custom_fields_test_item_id: test_item.id)
+          .count,
+      ).to eq(0)
+
+      test_item.custom_fields["bool"] = true
+      test_item.save!
+
+      expect(
+        CustomFieldsTestItemCustomField
+          .true_fields
+          .where(custom_fields_test_item_id: test_item.id)
+          .count,
+      ).to eq(1)
     end
 
     it "supports type coercion" do
