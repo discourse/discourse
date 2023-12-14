@@ -252,7 +252,7 @@ acceptance(
     test("shows correct saved data in form", async function (assert) {
       await visit("/u/eviltrout/invited/pending");
       await click(
-        ".user-invite-list tbody tr:nth-child(1) .invite-actions .btn:nth-child(1)"
+        ".user-invite-list tbody tr:first-child .invite-actions .btn:first-child"
       ); // first invite edit button
       assert.equal(query("#invite-max-redemptions").value, 10);
     });
