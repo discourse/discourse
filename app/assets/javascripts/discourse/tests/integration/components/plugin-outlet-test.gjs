@@ -466,6 +466,22 @@ module(
       await render(hbs`<PluginOutlet @name="test-name" />`);
       assert.dom(".gjs-test").hasText("Hello world from gjs");
     });
+
+    test("throws errors for invalid components", function (assert) {
+      assert.throws(() => {
+        extraConnectorComponent("test-name/blah", <template>
+          hello world
+        </template>);
+      }, /invalid outlet name/);
+
+      assert.throws(() => {
+        extraConnectorComponent("test-name", {});
+      }, /klass is not an Ember component/);
+
+      assert.throws(() => {
+        extraConnectorComponent("test-name", class extends Component {});
+      }, /connector component has no associated template/);
+    });
   }
 );
 

@@ -31,6 +31,11 @@ export function extraConnectorComponent(outletName, klass) {
   if (!hasInternalComponentManager(klass)) {
     throw new Error("klass is not an Ember component");
   }
+  if (!getComponentTemplate(klass)) {
+    throw new Error(
+      "connector component has no associated template. Ensure the template is colocated or authored with gjs."
+    );
+  }
   if (outletName.includes("/")) {
     throw new Error("invalid outlet name");
   }
