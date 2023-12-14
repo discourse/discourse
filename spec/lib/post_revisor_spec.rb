@@ -291,6 +291,17 @@ RSpec.describe PostRevisor do
           ),
         )
       end
+
+      describe "with PMs" do
+        fab!(:pm) { Fabricate(:private_message_topic) }
+        let(:first_post) { create_post(user: admin, topic: pm, allow_uncategorized_topics: false) }
+        fab!(:category) { Fabricate(:category, topic_count: 1) }
+        it "Does not create a category change small_action post when converting to a topic" do
+          expect do
+            TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
+          end.to change { category.reload.topic_count }.by(1)
+        end
+      end
     end
   end
 
