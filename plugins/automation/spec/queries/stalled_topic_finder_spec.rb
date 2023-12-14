@@ -3,7 +3,7 @@
 require_relative "../discourse_automation_helper"
 
 describe StalledTopicFinder do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   before do
     SiteSetting.discourse_automation_enabled = true

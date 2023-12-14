@@ -11,7 +11,7 @@ describe "PostCreatedEdited" do
   let(:parent_category) { Fabricate(:category_with_definition) }
   let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: parent_category.id) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED)
   end
@@ -218,7 +218,7 @@ describe "PostCreatedEdited" do
 
     context "when the post is being created from an incoming email" do
       let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
-      fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+      fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
       fab!(:topic) { create_topic(user: user) }
       fab!(:post) { create_post(topic: topic) }
 
