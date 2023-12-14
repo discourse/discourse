@@ -1439,7 +1439,7 @@ RSpec.describe Guardian do
     it "returns true when tl4 can delete posts and topics" do
       PostDestroyer.new(moderator, topic.first_post).destroy
       expect(Guardian.new(trust_level_4).can_recover_topic?(topic)).to be_falsey
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(trust_level_4).can_recover_topic?(topic.reload)).to be_truthy
     end
 
@@ -2297,7 +2297,7 @@ RSpec.describe Guardian do
 
       it "returns true when tl4 can delete posts and topics" do
         expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_falsey
-        SiteSetting.tl4_delete_posts_and_topics = true
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
         expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_truthy
       end
 
@@ -2349,7 +2349,7 @@ RSpec.describe Guardian do
 
       it "returns true when tl4 can delete posts and topics" do
         expect(Guardian.new(trust_level_4).can_delete?(post)).to be_falsey
-        SiteSetting.tl4_delete_posts_and_topics = true
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
         expect(Guardian.new(trust_level_4).can_delete?(post)).to be_truthy
       end
 
@@ -2622,7 +2622,7 @@ RSpec.describe Guardian do
 
     it "returns true when tl4 can delete posts and topics" do
       expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_falsey
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_truthy
     end
   end

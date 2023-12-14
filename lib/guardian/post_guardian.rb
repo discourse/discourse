@@ -207,7 +207,7 @@ module PostGuardian
 
     return true if is_staff? || is_category_group_moderator?(post.topic&.category)
 
-    return true if SiteSetting.tl4_delete_posts_and_topics && user.has_trust_level?(TrustLevel[4])
+    return true if user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
 
     # Can't delete posts in archived topics unless you are staff
     return false if post.topic&.archived?
@@ -354,7 +354,7 @@ module PostGuardian
 
   def can_see_deleted_posts?(category = nil)
     is_staff? || is_category_group_moderator?(category) ||
-      (SiteSetting.tl4_delete_posts_and_topics && @user.has_trust_level?(TrustLevel[4]))
+      @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
   end
 
   def can_view_raw_email?(post)
