@@ -89,4 +89,8 @@
       right: -9px;
     }
   }
+
+  html.rtl & {
+    left: unset;
+  }
 }
