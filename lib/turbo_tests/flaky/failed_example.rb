@@ -34,6 +34,14 @@ module TurboTests
         @failed_example.location_rerun_argument
       end
 
+      def exception_name
+        @failed_example.execution_result.exception.class.name
+      end
+
+      def exception_message
+        @failed_example.execution_result.exception.message
+      end
+
       SCREENSHOT_PREFIX = "[Screenshot Image]: "
 
       # Unfortunately this has to be parsed from the output because `ActionDispatch` is just printing the path instead of
@@ -56,6 +64,8 @@ module TurboTests
         {
           message_lines:,
           description:,
+          exception_message:,
+          exception_name:,
           backtrace:,
           failure_screenshot_path:,
           location_rerun_argument:,

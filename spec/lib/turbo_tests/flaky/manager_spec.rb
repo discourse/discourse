@@ -79,6 +79,9 @@ RSpec.describe TurboTests::Flaky::Manager do
               "message_lines" =>
                 "Failure/Error: Unable to infer file and line number from backtrace\n\nStandardError:\n  some error\n\n  [Screenshot Image]: /some/path/to/screenshot.png",
               "description" => "rspec example 1",
+              "exception_message" =>
+                "some error\n\n[Screenshot Image]: /some/path/to/screenshot.png",
+              "exception_name" => "StandardError",
               "backtrace" => ["some backtrace"],
               "failure_screenshot_path" => "/some/path/to/screenshot.png",
               "location_rerun_argument" => "./spec/lib/turbo_tests/flaky/manager_spec.rb:7",
@@ -88,6 +91,8 @@ RSpec.describe TurboTests::Flaky::Manager do
               "message_lines" =>
                 "Failure/Error: Unable to infer file and line number from backtrace\n\nStandardError:\n  some error",
               "description" => "rspec example 2",
+              "exception_message" => "some error",
+              "exception_name" => "StandardError",
               "backtrace" => ["some backtrace"],
               "failure_screenshot_path" => nil,
               "location_rerun_argument" => "./spec/lib/turbo_tests/flaky/manager_spec.rb:22",
