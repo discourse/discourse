@@ -107,11 +107,19 @@ module Chat
     end
 
     def parse_mentions(message)
-      Nokogiri::HTML5.fragment(message.cooked).css(".mention").map(&:text)
+      cooked_stripped(message).css(".mention").map(&:text)
     end
 
     def parse_group_mentions(message)
-      Nokogiri::HTML5.fragment(message.cooked).css(".mention-group").map(&:text)
+      cooked_stripped(message).css(".mention-group").map(&:text)
+    end
+
+    def cooked_stripped(message)
+      cooked = Nokogiri::HTML5.fragment(message.cooked)
+      cooked.css(
+        ".chat-transcript .mention, .chat-transcript .mention-group, aside.quote .mention, aside.quote .mention-group",
+      ).remove
+      cooked
     end
 
     def normalize(mentions)
