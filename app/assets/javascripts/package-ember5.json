@@ -26,7 +26,7 @@
   ],
   "resolutions": {
     "**/unset-value": "2.0.1",
-    "**/ember-source": "5.4.0"
+    "**/ember-source": "emberjs/ember.js#spike-error-recovery-integration-dist"
   },
   "devDependencies": {
     "patch-package": "^8.0.0",
