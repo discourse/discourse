@@ -28,11 +28,11 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  describe "get_stats" do
+  describe "stats" do
     after { DiscoursePluginRegistry.reset! }
 
     it "returns core stats" do
-      stats = Plugin::Instance.get_stats
+      stats = Plugin::Instance.stats
       expect(stats.keys).to contain_exactly(
         :topics_last_day,
         :topics_7_days,
@@ -63,7 +63,7 @@ RSpec.describe Plugin::Instance do
         { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
       end
 
-      stats = Plugin::Instance.get_stats
+      stats = Plugin::Instance.stats
 
       expect(stats.with_indifferent_access).to match(
         hash_including(

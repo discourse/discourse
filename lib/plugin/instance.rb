@@ -75,7 +75,7 @@ class Plugin::Instance
   end
 
   # This method returns Core stats + stats registered by plugins
-  def self.get_stats
+  def self.stats
     Stat.all_stats
   end
 
