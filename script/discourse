@@ -24,6 +24,7 @@ class DiscourseCLI < Thor
     "regexp_replace" documentation in the PostgreSQL manual for more
     details.
 
+    With --assume-yes option, do not ask for confirmation.
 
     Examples:
 
@@ -33,6 +34,7 @@ class DiscourseCLI < Thor
   TEXT
   option :global, type: :boolean
   option :regex, type: :boolean
+  option :assume_yes, type: :boolean
   def remap(from, to)
     load_rails
     require 'db_helper'
@@ -43,11 +45,14 @@ class DiscourseCLI < Thor
       puts "Rewriting all occurrences of #{from} to #{to}"
     end
     puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS" if options[:global]
-    puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
-    text = STDIN.gets
-    if text.strip.upcase != "YES"
-      puts "aborting."
-      exit 1
+
+    unless options[:assume_yes]
+      puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
+      text = STDIN.gets
+      if text.strip.upcase != "YES"
+        puts "aborting."
+        exit 1
+      end
     end
 
     if options[:global]
