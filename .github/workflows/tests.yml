@@ -55,6 +55,10 @@ jobs:
             target: themes
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
+        include:
+          - build_type: system
+            target: chat
+            updated_ember: true
 
     steps:
       - name: Set working directory owner
