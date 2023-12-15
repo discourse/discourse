@@ -69,27 +69,6 @@ export default class CreateAccount extends Component.extend(
     }
   }
 
-  // used for animating the label inside of inputs
-  @bind
-  userInputFocus(event) {
-    const userField = event.target.parentElement.parentElement;
-    if (!userField.classList.contains("value-entered")) {
-      userField.classList.toggle("value-entered");
-    }
-  }
-
-  // used for animating the label inside of inputs
-  @bind
-  userInputFocusOut(event) {
-    const userField = event.target.parentElement.parentElement;
-    if (
-      event.target.value.length === 0 &&
-      userField.classList.contains("value-entered")
-    ) {
-      userField.classList.toggle("value-entered");
-    }
-  }
-
   @bind
   actionOnEnter(event) {
     if (!this.submitDisabled && event.key === "Enter") {
@@ -382,7 +361,6 @@ export default class CreateAccount extends Component.extend(
       accountPasswordConfirm: this.accountHoneypot,
     };
 
-    const userFields = this.userFields;
     const destinationUrl = this.get("model.authOptions.destination_url");
 
     if (!isEmpty(destinationUrl)) {
@@ -390,9 +368,9 @@ export default class CreateAccount extends Component.extend(
     }
 
     // Add the userFields to the data
-    if (!isEmpty(userFields)) {
+    if (!isEmpty(this.userFields)) {
       attrs.userFields = {};
-      userFields.forEach(
+      this.userFields.forEach(
         (f) => (attrs.userFields[f.get("field.id")] = f.get("value"))
       );
     }
