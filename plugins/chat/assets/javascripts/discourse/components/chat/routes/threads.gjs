@@ -5,7 +5,7 @@ import UserThreads from "discourse/plugins/chat/discourse/components/user-thread
 
 export default class ChatRoutesThreads extends Component {
   <template>
-    <div class="chat__routes-threads">
+    <div class="c-routes-threads">
       <Navbar as |navbar|>
         <navbar.BackButton />
         <navbar.Title

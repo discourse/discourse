@@ -78,7 +78,7 @@ export default class ChatRoutesBrowse extends Component {
 
   <template>
     <div
-      class="chat__routes-browse"
+      class="c-routes-browse"
       {{didUpdate this.load @status}}
       {{didInsert this.load @status}}
     >

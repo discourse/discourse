@@ -245,67 +245,6 @@ body.has-full-page-chat {
   }
 }
 
-.chat-full-page-header__left-actions {
-  display: flex;
-  align-items: stretch;
-}
-
-.chat-full-page-header__title {
-  display: flex;
-  align-items: stretch;
-}
-
-.chat-full-page-header__right-actions {
-  align-items: stretch;
-  display: flex;
-  flex-grow: 1;
-  gap: 0.5rem;
-  font-size: var(--font-up-1);
-  justify-content: flex-end;
-}
-
-.chat-full-page-header {
-  box-sizing: border-box;
-
-  .chat-channel-header-details {
-    display: flex;
-    align-items: stretch;
-    flex: 1;
-    max-width: 100%;
-
-    .chat-channel-archive-status {
-      text-align: right;
-      padding-right: 1em;
-    }
-  }
-
-  .chat-channel-title {
-    margin: 0;
-    max-width: 100%;
-
-    .d-icon:not(.d-icon-lock) {
-      height: 1.25em;
-      width: 1.25em;
-    }
-
-    .category-chat-name,
-    .dm-username {
-      font-weight: 700;
-      font-size: var(--font-up-1);
-      line-height: var(--font-up-1);
-    }
-
-    .dm-usernames {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  .chat-channel-retry-archive {
-    display: flex;
-    margin-top: 1em;
-  }
-}
-
 .user-preferences .chat-setting .controls {
   margin-bottom: 0;
 }

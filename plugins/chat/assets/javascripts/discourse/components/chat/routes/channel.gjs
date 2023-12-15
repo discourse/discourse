@@ -8,7 +8,7 @@ export default class ChatRoutesChannel extends Component {
   @service site;
 
   <template>
-    <div class="chat__routes-channel">
+    <div class="c-routes-channel">
       <Navbar as |navbar|>
         {{#if this.site.mobileView}}
           <navbar.BackButton />

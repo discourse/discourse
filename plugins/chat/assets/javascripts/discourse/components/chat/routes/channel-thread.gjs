@@ -5,7 +5,7 @@ import Thread from "discourse/plugins/chat/discourse/components/chat-thread";
 
 export default class ChatRoutesChannelThread extends Component {
   <template>
-    <div class="chat__routes-channel-thread">
+    <div class="c-routes-channel-thread">
       {{#each (array @thread) as |thread|}}
         <ThreadHeader @thread={{thread}} />
 

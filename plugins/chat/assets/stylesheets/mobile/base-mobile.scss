@@ -25,7 +25,7 @@ html.has-full-page-chat {
         grid-template-columns: 1fr;
         grid-template-areas: "threads";
 
-        .chat__routes-channel {
+        .c-routes-channel {
           display: none;
         }
       }
@@ -54,13 +54,6 @@ html.has-full-page-chat {
   .chat-drawer {
     width: 100%;
   }
-
-  .chat-full-page-header {
-    background-color: var(--secondary);
-    padding: 0 10px;
-    height: 50px;
-    min-height: 50px;
-  }
 }
 
 .sidebar-container .channels-list .chat-channel-divider {
@@ -74,18 +67,6 @@ html.has-full-page-chat {
 .create-channel-modal {
   .modal-inner-container {
     width: 95%;
-  }
-}
-
-.chat-full-page-header {
-  .chat-channel-header-details {
-    .chat-channel-retry-archive {
-      flex-direction: column;
-
-      .chat-channel-archive-failed-retry {
-        margin-top: 0.5em;
-      }
-    }
   }
 }
 
