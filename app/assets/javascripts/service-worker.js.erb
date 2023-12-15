@@ -121,6 +121,11 @@ workbox.routing.registerRoute(
       return false;
     }
 
+    // Exclude videos from service worker
+    if (args.event.request.headers.has('range')) {
+      return false;
+    }
+
     var matching = cdnUrls.filter(
       function(url) {
         return args.url.href.startsWith(url);
