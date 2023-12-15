@@ -55,9 +55,13 @@ module Chat
     end
 
     def destroy_notifications(message:, **)
-      ids =
-        Chat::Mention.where(chat_message: message).joins(:notifications).pluck("notifications.id")
-      Notification.where(id: ids).destroy_all
+      Notification.where(
+        id:
+          Chat::Mention
+            .where(chat_message: message)
+            .joins(:notifications)
+            .select("notifications.id"),
+      ).destroy_all
     end
 
     def update_tracking_state(message:, **)
