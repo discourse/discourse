@@ -9,7 +9,7 @@ export default class ChatDrawerRoutesChannels extends Component {
 
   <template>
     <Navbar as |navbar|>
-      <navbar.Title @title={{i18n "chat.heading"}} as |title| />
+      <navbar.Title @title={{i18n "chat.heading"}} />
       <navbar.Actions as |action|>
         <action.ToggleDrawerButton />
         <action.FullPageButton />
