@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import RouteTemplate from "ember-route-template";
+import WizardCanvas from "discourse/static/wizard/components/wizard-canvas";
+import WizardStep from "discourse/static/wizard/components/wizard-step";
 import getUrl from "discourse-common/lib/get-url";
-import WizardCanvas from "../components/wizard-canvas";
-import WizardStep from "../components/wizard-step";
 
 export default RouteTemplate(
   class extends Component {
