@@ -7,26 +7,4 @@
   display: flex;
   align-items: center;
   padding-inline: 0.5rem;
-
-  .touch & {
-    &__label {
-      font-size: var(--font-up-1-rem);
-    }
-  }
-
-  .chat-thread__back-to-previous-route {
-    padding: 0.5rem 0;
-    margin-right: 0.5rem;
-  }
-
-  &__buttons {
-    display: flex;
-    margin-left: auto;
-  }
-
-  &__left-buttons {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
 }
