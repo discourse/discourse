@@ -1499,6 +1499,11 @@ span.mention {
   }
 }
 
+html.anon #topic-footer-buttons {
+  display: flex;
+  justify-content: end;
+}
+
 #topic-footer-buttons {
   margin: var(--below-topic-margin) 0;
   padding: 0;
