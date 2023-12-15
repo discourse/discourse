@@ -203,42 +203,6 @@ body.has-full-page-chat {
     top: var(--header-offset);
   }
 
-  .chat-full-page-header {
-    border-bottom: 1px solid var(--primary-low);
-    background: var(--secondary);
-    z-index: 3;
-    display: flex;
-    align-items: center;
-
-    &__back-btn {
-      width: 40px;
-      min-width: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .chat-channel-title {
-      .category-chat-name,
-      .chat-name,
-      .dm-usernames {
-        color: var(--primary);
-        display: inline;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-
-    .-not-following {
-      .chat-channel-title {
-        max-width: calc(100% - 50px);
-      }
-      .join-channel-btn {
-        margin-left: auto;
-      }
-    }
-  }
-
   .chat-messages-scroll {
     box-sizing: border-box;
     height: 100%;

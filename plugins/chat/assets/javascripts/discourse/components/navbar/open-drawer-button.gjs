@@ -12,12 +12,9 @@ export default class ChatNavbarOpenDrawerButton extends Component {
   async openDrawer() {
     this.chatStateManager.prefersDrawer();
 
-    try {
-      await DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL);
-      await DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
-    } catch (error) {
-      await DiscourseURL.routeTo("/");
-    }
+    DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL).then(() => {
+      DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
+    });
   }
 
   <template>

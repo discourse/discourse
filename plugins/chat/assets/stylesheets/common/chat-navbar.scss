@@ -28,6 +28,12 @@
     @include ellipsis();
     font-weight: bold;
   }
+
+  .c-navbar__sub-title {
+    line-height: var(--line-height-small);
+    font-size: var(--font-down-1-rem);
+    font-weight: normal;
+  }
 }
 
 .c-navbar__actions {

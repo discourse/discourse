@@ -17,7 +17,7 @@ export default class ChatNavbarFullPageButton extends Component {
 
     await new Promise((resolve) => next(resolve));
 
-    return DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
+    DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
   }
 
   <template>

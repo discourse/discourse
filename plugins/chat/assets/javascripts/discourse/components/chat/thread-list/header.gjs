@@ -10,14 +10,10 @@ export default class ChatThreadListHeader extends Component {
 
   threadListTitle = I18n.t("chat.threads.list");
 
-  get showBackButton() {
-    return this.args.thread.channel && this.site.mobileView;
-  }
-
   get backLink() {
     return {
       route: "chat.channel.index",
-      models: this.args.thread.channel.routeModels,
+      models: this.args.channel.routeModels,
       title: I18n.t("chat.return_to_channel"),
     };
   }
@@ -32,12 +28,12 @@ export default class ChatThreadListHeader extends Component {
         as |title|
       >
         {{#if this.site.mobileView}}
-          <title.SubTitle @title={{replaceEmoji @thread.channel.title}} />
+          <title.SubTitle @title={{replaceEmoji @channel.title}} />
         {{/if}}
       </navbar.Title>
 
       <navbar.Actions as |action|>
-        <action.CloseThreadsButton @channel={{@thread.channel}} />
+        <action.CloseThreadsButton @channel={{@channel}} />
       </navbar.Actions>
     </Navbar>
   </template>

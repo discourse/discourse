@@ -67,7 +67,7 @@ RSpec.describe "Browse page", type: :system do
     context "when on mobile", mobile: true do
       it "has a back button" do
         chat_page.visit_browse
-        find(".chat-full-page-header__back-btn").click
+        find(".c-navbar__back-button").click
 
         expect(browse_page).to have_current_path("/chat")
       end
