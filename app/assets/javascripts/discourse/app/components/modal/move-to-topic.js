@@ -162,4 +162,19 @@ export default class MoveToTopic extends Component {
       this.saving = false;
     }
   }
+
+  @action
+  updateTopicName(newName) {
+    this.topicName = newName;
+  }
+
+  @action
+  updateCategoryId(newId) {
+    this.categoryId = newId;
+  }
+
+  @action
+  updateTags(newTags) {
+    this.tags = newTags;
+  }
 }
