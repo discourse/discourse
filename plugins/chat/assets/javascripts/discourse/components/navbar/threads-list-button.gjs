@@ -20,7 +20,7 @@ export default class ChatNavbarThreadsListButton extends Component {
   }
 
   <template>
-    {{#if @channel.threadingEnabled}}
+    {{#if this.showThreadsListButton}}
       <LinkTo
         @route="chat.channel.threads"
         @models={{@channel.routeModels}}

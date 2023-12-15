@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
@@ -73,14 +72,5 @@ export default class ChatThreadHeader extends Component {
         <action.CloseThreadButton @thread={{@thread}} />
       </navbar.Actions>
     </Navbar>
-
-    {{#if this.canChangeThreadSettings}}
-      <DButton
-        @action={{this.openThreadSettings}}
-        @icon="cog"
-        @title="chat.thread.settings"
-        class="btn-flat chat-thread-header__settings"
-      />
-    {{/if}}
   </template>
 }

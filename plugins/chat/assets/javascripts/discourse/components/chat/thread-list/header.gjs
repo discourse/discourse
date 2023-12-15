@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/navbar";
 
@@ -10,17 +11,13 @@ export default class ChatThreadListHeader extends Component {
 
   threadListTitle = I18n.t("chat.threads.list");
 
-  get backLink() {
-    return {
-      route: "chat.channel.index",
-      models: this.args.channel.routeModels,
-      title: I18n.t("chat.return_to_channel"),
-    };
-  }
-
   <template>
     <Navbar as |navbar|>
-      <navbar.BackButton />
+      <navbar.BackButton
+        @route="chat.channel"
+        @routeModels={{@channel.routeModels}}
+        @title={{i18n "chat.return_to_channel"}}
+      />
 
       <navbar.Title
         @title={{replaceEmoji this.threadListTitle}}

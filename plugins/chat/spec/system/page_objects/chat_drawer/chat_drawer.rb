@@ -79,7 +79,7 @@ module PageObjects
       end
 
       def thread_list_button_selector
-        ".chat-threads-list-button"
+        ".c-navbar__threads-list-button"
       end
 
       def has_unread_thread_indicator?(count:)

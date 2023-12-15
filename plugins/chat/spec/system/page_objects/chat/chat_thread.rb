@@ -17,7 +17,7 @@ module PageObjects
       end
 
       def header
-        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".chat-thread")
+        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".c-routes-channel-thread")
       end
 
       def notifications_button
@@ -55,7 +55,7 @@ module PageObjects
       end
 
       def close
-        header.find(".c-navbar__close-button").click
+        header.find(".c-navbar__close-thread-button").click
       end
 
       def has_back_link_to_thread_list?(channel)
