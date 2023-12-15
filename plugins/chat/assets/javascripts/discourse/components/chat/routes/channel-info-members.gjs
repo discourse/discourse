@@ -13,11 +13,11 @@ import icon from "discourse-common/helpers/d-icon";
 import discourseDebounce from "discourse-common/lib/debounce";
 import I18n from "discourse-i18n";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
+import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-creator/constants";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
 import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";
-import { MODES } from "./chat/message-creator/constants";
 
-export default class ChatChannelMembers extends Component {
+export default class ChatRouteChannelInfoMembers extends Component {
   @service appEvents;
   @service chatApi;
   @service modal;

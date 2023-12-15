@@ -198,6 +198,11 @@ body.has-full-page-chat {
   grid-template-columns: var(--full-page-sidebar-width) 1fr;
   background: var(--d-content-background);
 
+  .c-navbar-container {
+    position: sticky;
+    top: var(--header-offset);
+  }
+
   .chat-full-page-header {
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);

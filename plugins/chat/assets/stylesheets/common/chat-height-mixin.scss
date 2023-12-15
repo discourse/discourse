@@ -1,8 +1,9 @@
 @mixin chat-height($inset: 0px) {
   // desktop and mobile
+  // 46px is the height of the navbar
   height: calc(
     var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-      var(--composer-height, 0px)
+      var(--composer-height, 0px) - 46px
   );
 
   // mobile with keyboard opened

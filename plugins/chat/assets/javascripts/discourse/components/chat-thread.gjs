@@ -36,7 +36,6 @@ import ChatScrollableList from "../modifiers/chat/scrollable-list";
 import ChatComposerThread from "./chat/composer/thread";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
-import ChatThreadHeader from "./chat/thread/header";
 import Message from "./chat-message";
 import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
@@ -493,10 +492,6 @@ export default class ChatThread extends Component {
       {{didInsert this.setup}}
       {{willDestroy this.teardown}}
     >
-      {{#if @includeHeader}}
-        <ChatThreadHeader @channel={{@thread.channel}} @thread={{@thread}} />
-      {{/if}}
-
       <div
         class="chat-thread__body popper-viewport chat-messages-scroll"
         {{didInsert this.setScrollable}}

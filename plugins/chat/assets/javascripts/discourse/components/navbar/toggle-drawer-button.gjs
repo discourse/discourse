@@ -1,9 +1,20 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 
-export default class ChatDrawerHeaderToggleExpandButton extends Component {
+export default class ChatNavbarToggleDrawerButton extends Component {
+  @service appEvents;
   @service chatStateManager;
+
+  @action
+  toggleExpand() {
+    this.chatStateManager.didToggleDrawer();
+    this.appEvents.trigger(
+      "chat:toggle-expand",
+      this.chatStateManager.isDrawerExpanded
+    );
+  }
 
   <template>
     <DButton
@@ -12,13 +23,13 @@ export default class ChatDrawerHeaderToggleExpandButton extends Component {
         "angle-double-down"
         "angle-double-up"
       }}
-      @action={{@toggleExpand}}
+      @action={{this.toggleExpand}}
       @title={{if
         this.chatStateManager.isDrawerExpanded
         "chat.collapse"
         "chat.expand"
       }}
-      class="btn-flat btn-link chat-drawer-header__expand-btn"
+      class="btn-flat no-text c-navbar__toggle-drawer-button"
     />
   </template>
 }

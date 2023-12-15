@@ -1,49 +1,38 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import { headerOffset } from "discourse/lib/offset-calculator";
-import DiscourseURL from "discourse/lib/url";
+import { hash } from "@ember/helper";
+import Actions from "./actions";
+import BackButton from "./back-button";
+import ChannelTitle from "./channel-title";
+import Title from "./title";
 
 export default class ChatNavbar extends Component {
-  @service chatStateManager;
-
-  get topStyle() {
-    return htmlSafe(`top: ${headerOffset()}px`);
+  get buttonComponent() {
+    return BackButton;
   }
 
-  @action
-  async closeFullScreen() {
-    this.chatStateManager.prefersDrawer();
+  get titleComponent() {
+    return Title;
+  }
 
-    try {
-      await DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL);
-      await DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
-    } catch (error) {
-      await DiscourseURL.routeTo("/");
-    }
+  get actionsComponent() {
+    return Actions;
+  }
+
+  get channelTitleComponent() {
+    return ChannelTitle;
   }
 
   <template>
-    <div class="chat-navbar-container" style={{this.topStyle}}>
-      <nav class="chat-navbar">
-        {{#if (has-block "current")}}
-          <span class="chat-navbar__current">
-            {{yield to="current"}}
-          </span>
-        {{/if}}
-
-        <ul class="chat-navbar__right-actions">
-          <li class="chat-navbar__right-action">
-            <DButton
-              @icon="discourse-compress"
-              @title="chat.close_full_page"
-              class="open-drawer-btn btn-flat"
-              @action={{this.closeFullScreen}}
-            />
-          </li>
-        </ul>
+    <div class="c-navbar-container">
+      <nav class="c-navbar">
+        {{yield
+          (hash
+            BackButton=this.buttonComponent
+            ChannelTitle=this.channelTitleComponent
+            Title=this.titleComponent
+            Actions=this.actionsComponent
+          )
+        }}
       </nav>
     </div>
   </template>

@@ -25,7 +25,7 @@ html.has-full-page-chat {
         grid-template-columns: 1fr;
         grid-template-areas: "threads";
 
-        .chat-channel {
+        .chat__routes-channel {
           display: none;
         }
       }

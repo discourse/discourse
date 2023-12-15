@@ -4,24 +4,20 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
-import ChatDrawerHeader from "discourse/plugins/chat/discourse/components/chat-drawer/header";
-import ChatDrawerHeaderBackLink from "discourse/plugins/chat/discourse/components/chat-drawer/header/back-link";
-import ChatDrawerHeaderRightActions from "discourse/plugins/chat/discourse/components/chat-drawer/header/right-actions";
-import ChatDrawerHeaderTitle from "discourse/plugins/chat/discourse/components/chat-drawer/header/title";
 import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread";
+import Navbar from "discourse/plugins/chat/discourse/components/navbar";
 
-export default class ChatDrawerThread extends Component {
-  @service appEvents;
+export default class ChatDrawerRoutesChannelThread extends Component {
   @service chat;
   @service chatStateManager;
   @service chatChannelsManager;
   @service chatHistory;
 
-  get backLink() {
+  get backButton() {
     const link = {
-      models: this.chat.activeChannel.routeModels,
+      models: this.chat.activeChannel?.routeModels,
     };
 
     if (this.chatHistory.previousRoute?.name === "chat.channel.threads") {
@@ -47,44 +43,42 @@ export default class ChatDrawerThread extends Component {
   }
 
   @action
-  fetchChannelAndThread() {
+  async fetchChannelAndThread() {
     if (!this.args.params?.channelId || !this.args.params?.threadId) {
       return;
     }
 
-    return this.chatChannelsManager
-      .find(this.args.params.channelId)
-      .then((channel) => {
-        this.chat.activeChannel = channel;
+    try {
+      const channel = await this.chatChannelsManager.find(
+        this.args.params.channelId
+      );
 
-        channel.threadsManager
-          .find(channel.id, this.args.params.threadId)
-          .then((thread) => {
-            this.chat.activeChannel.activeThread = thread;
-          });
-      });
+      this.chat.activeChannel = channel;
+
+      channel.threadsManager
+        .find(channel.id, this.args.params.threadId)
+        .then((thread) => {
+          this.chat.activeChannel.activeThread = thread;
+        });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>
-    <ChatDrawerHeader @toggleExpand={{@drawerActions.toggleExpand}}>
-      {{#if
-        (and this.chatStateManager.isDrawerExpanded this.chat.activeChannel)
-      }}
-        <div class="chat-drawer-header__left-actions">
-          <div class="chat-drawer-header__top-line">
-            <ChatDrawerHeaderBackLink
-              @route={{this.backLink.route}}
-              @title={{this.backLink.title}}
-              @routeModels={{this.backLink.models}}
-            />
-          </div>
-        </div>
-      {{/if}}
-
-      <ChatDrawerHeaderTitle @translatedTitle={{this.threadTitle}} />
-
-      <ChatDrawerHeaderRightActions @drawerActions={{@drawerActions}} />
-    </ChatDrawerHeader>
+    <Navbar as |navbar|>
+      <navbar.BackButton
+        @title={{this.backButton.title}}
+        @route={{this.backButton.route}}
+        @routeModels={{this.backButton.models}}
+      />
+      <navbar.Title @title={{this.threadTitle}} @icon="discourse-threads" />
+      <navbar.Actions as |action|>
+        <action.ToggleDrawerButton />
+        <action.FullPageButton />
+        <action.CloseDrawerButton />
+      </navbar.Actions>
+    </Navbar>
 
     {{#if this.chatStateManager.isDrawerExpanded}}
       <div

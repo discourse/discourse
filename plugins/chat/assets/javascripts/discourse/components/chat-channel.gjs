@@ -21,6 +21,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
+import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
 import {
   FUTURE,
@@ -45,7 +46,6 @@ import ChatComposerChannel from "./chat/composer/channel";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
 import ChatChannelPreviewCard from "./chat-channel-preview-card";
-import ChatFullPageHeader from "./chat-full-page-header";
 import ChatMentionWarnings from "./chat-mention-warnings";
 import Message from "./chat-message";
 import ChatNotices from "./chat-notices";
@@ -719,14 +719,9 @@ export default class ChatChannel extends Component {
       {{didUpdate this.loadMessages @targetMessageId}}
       data-id={{@channel.id}}
     >
-      <ChatFullPageHeader
-        @channel={{@channel}}
-        @onCloseFullScreen={{this.onCloseFullScreen}}
-        @displayed={{this.includeHeader}}
-      />
 
+      <ChatChannelStatus @channel={{@channel}} />
       <ChatNotices @channel={{@channel}} />
-
       <ChatMentionWarnings />
 
       <div

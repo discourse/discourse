@@ -4,14 +4,10 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { inject as service } from "@ember/service";
-import ChatChannel from "../chat-channel";
-import Header from "./header";
-import ChannelTitle from "./header/channel-title";
-import LeftActions from "./header/left-actions";
-import RightActions from "./header/right-actions";
+import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel";
+import Navbar from "discourse/plugins/chat/discourse/components/navbar";
 
-export default class ChatDrawerChannel extends Component {
-  @service appEvents;
+export default class ChatDrawerRoutesChannel extends Component {
   @service chat;
   @service chatStateManager;
   @service chatChannelsManager;
@@ -30,16 +26,16 @@ export default class ChatDrawerChannel extends Component {
   }
 
   <template>
-    <Header @toggleExpand={{@drawerActions.toggleExpand}}>
-      <LeftActions />
-
-      <ChannelTitle
-        @channel={{this.chat.activeChannel}}
-        @drawerActions={{@drawerActions}}
-      />
-
-      <RightActions @drawerActions={{@drawerActions}} />
-    </Header>
+    <Navbar as |navbar|>
+      <navbar.BackButton />
+      <navbar.ChannelTitle @channel={{this.chat.activeChannel}} />
+      <navbar.Actions as |action|>
+        <action.ThreadsListButton @channel={{this.chat.activeChannel}} />
+        <action.ToggleDrawerButton />
+        <action.FullPageButton />
+        <action.CloseDrawerButton />
+      </navbar.Actions>
+    </Navbar>
 
     {{#if this.chatStateManager.isDrawerExpanded}}
       <div

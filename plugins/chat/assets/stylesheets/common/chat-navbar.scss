@@ -1,22 +1,38 @@
-.chat-navbar {
-  flex-shrink: 0;
+.c-navbar {
   display: flex;
   align-items: center;
   width: 100%;
+  gap: 0.25rem;
 
   &-container {
-    padding-inline: 1rem;
-    position: sticky;
+    padding-inline: 0.5rem;
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
-    height: 50px;
+    height: 46px;
+    min-height: 46px;
     box-sizing: border-box;
     display: flex;
     z-index: z("header") - 1;
   }
+
+  .single-select-header {
+    padding: 0.3675rem 0.584rem;
+  }
+
+  .c-navbar__channel-title {
+    @include ellipsis();
+    font-weight: bold;
+  }
+
+  .c-navbar__title {
+    @include ellipsis();
+    font-weight: bold;
+  }
 }
 
-.chat-navbar__right-actions {
+.c-navbar__actions {
   list-style: none;
   margin-left: auto;
+  display: flex;
+  align-items: center;
 }

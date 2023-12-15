@@ -50,7 +50,6 @@ export default class ChatThreadListItem extends Component {
           </div>
 
           <div class="chat-thread-list-item__metadata">
-
             <div class="chat-thread-list-item__members">
               <ChatUserAvatar
                 @user={{@thread.originalMessage.user}}
@@ -72,7 +71,6 @@ export default class ChatThreadListItem extends Component {
                 }}
               {{/if}}
             </div>
-
           </div>
         </div>
       </div>

@@ -28,7 +28,7 @@ const NOTIFICATION_LEVELS = [
   { name: I18n.t("chat.notification_levels.always"), value: "always" },
 ];
 
-export default class ChatAboutScreen extends Component {
+export default class ChatRouteChannelInfoSettings extends Component {
   @service chatApi;
   @service chatGuardian;
   @service chatChannelsManager;
