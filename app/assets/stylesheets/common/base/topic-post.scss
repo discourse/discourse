@@ -1720,6 +1720,9 @@ iframe {
 }
 
 .fullscreen-table-modal {
+  .d-modal__container {
+    width: auto;
+  }
   .d-modal__body {
     padding-top: 0;
     thead {
