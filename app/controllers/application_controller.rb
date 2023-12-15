@@ -123,6 +123,7 @@ class ApplicationController < ActionController::Base
 
   class RenderEmpty < StandardError
   end
+
   class PluginDisabled < StandardError
   end
 

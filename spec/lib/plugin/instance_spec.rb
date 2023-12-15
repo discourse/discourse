@@ -68,6 +68,7 @@ RSpec.describe Plugin::Instance do
           "a trout"
         end
       end
+
       class TroutJuniorSerializer < TroutSerializer
         attribute :i_am_child
 

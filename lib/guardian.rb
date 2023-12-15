@@ -28,51 +28,67 @@ class Guardian
     def blank?
       true
     end
+
     def admin?
       false
     end
+
     def staff?
       false
     end
+
     def moderator?
       false
     end
+
     def anonymous?
       true
     end
+
     def approved?
       false
     end
+
     def staged?
       false
     end
+
     def silenced?
       false
     end
+
     def is_system_user?
       false
     end
+
     def bot?
       false
     end
+
     def secure_category_ids
       []
     end
+
     def groups
       []
     end
+
     def has_trust_level?(level)
       false
     end
+
     def has_trust_level_or_staff?(level)
       false
     end
+
     def email
       nil
     end
+
     def whisperer?
       false
     end
+
     def in_any_groups?(group_ids)
       false
     end
