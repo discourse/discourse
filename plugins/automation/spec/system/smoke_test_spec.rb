@@ -2,12 +2,39 @@
 
 describe "DiscourseAutomation | smoke test", type: :system, js: true do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:group) { Fabricate(:group, name: "test") }
+  fab!(:badge) { Fabricate(:badge, name: "badge") }
 
   before do
-    Fabricate(:group, name: "test")
-    Fabricate(:badge, name: "badge")
     SiteSetting.discourse_automation_enabled = true
     sign_in(admin)
+  end
+
+  context "when default_value fields are set" do
+    before do
+      DiscourseAutomation::Scriptable.add("test") do
+        triggerables %i[post_created_edited]
+        field :test, component: :text, default_value: "test-default-value"
+      end
+    end
+
+    after { DiscourseAutomation::Scriptable.remove("test") }
+
+    it "populate correctly" do
+      visit("/admin/plugins/discourse-automation")
+      find(".new-automation").click
+      fill_in("automation-name", with: "aaaaa")
+      select_kit = PageObjects::Components::SelectKit.new(".scriptables")
+      select_kit.expand
+      select_kit.select_row_by_value("test")
+      find(".create-automation").click
+
+      select_kit = PageObjects::Components::SelectKit.new(".triggerables")
+      select_kit.expand
+      select_kit.select_row_by_value("post_created_edited")
+
+      expect(find(".field input[name=test]").value).to eq("test-default-value")
+    end
   end
 
   it "works" do

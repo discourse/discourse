@@ -2,10 +2,20 @@
 
 module DiscourseAutomation
   class TemplateSerializer < ApplicationSerializer
-    attributes :name, :component, :extra, :accepts_placeholders, :default_value, :is_required
+    attributes :name,
+               :component,
+               :extra,
+               :accepts_placeholders,
+               :read_only,
+               :default_value,
+               :is_required
 
     def default_value
-      scope[:automation].scriptable&.forced_triggerable&.dig(:state, name)
+      scope[:automation].scriptable&.forced_triggerable&.dig(:state, name) || object[:default_value]
+    end
+
+    def read_only
+      scope[:automation].scriptable&.forced_triggerable&.dig(:state, name).present?
     end
 
     def name

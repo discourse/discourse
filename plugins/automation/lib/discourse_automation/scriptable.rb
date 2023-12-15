@@ -233,6 +233,11 @@ module DiscourseAutomation
       define_method("__scriptable_#{identifier}", &block)
     end
 
+    def self.remove(identifier)
+      @all_scriptables = nil
+      undef_method("__scriptable_#{identifier}")
+    end
+
     def self.all
       @all_scriptables ||=
         DiscourseAutomation::Scriptable.instance_methods(false).grep(/^__scriptable_/)

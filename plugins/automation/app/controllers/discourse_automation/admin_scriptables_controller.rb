@@ -16,6 +16,7 @@ module DiscourseAutomation
           }
         end
 
+      scriptables.sort_by! { |s| s[:name] }
       render_json_dump(scriptables: scriptables)
     end
   end
