@@ -157,9 +157,13 @@ class CategoryList
     default_notification_level = CategoryUser.default_notification_level
 
     if SiteSetting.lazy_load_categories
-      @categories.each do |c|
-        c.subcategory_ids = Category.where(parent_category_id: c.id).pluck(:id)
-      end
+      subcategory_ids = {}
+      Category
+        .secured(@guardian)
+        .where(parent_category_id: @categories.map(&:id))
+        .pluck(:id, :parent_category_id)
+        .each { |id, parent_id| (subcategory_ids[parent_id] ||= []) << id }
+      @categories.each { |c| c.subcategory_ids = subcategory_ids[c.id] || [] }
     elsif @options[:parent_category_id].blank?
       subcategory_ids = {}
       subcategory_list = {}

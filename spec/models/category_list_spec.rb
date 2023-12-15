@@ -374,4 +374,18 @@ RSpec.describe CategoryList do
       expect(category_list.categories[-1].custom_field_preloaded?("bob")).to be_falsey
     end
   end
+
+  describe "lazy_load_categories" do
+    fab!(:category) { Fabricate(:category, user: admin) }
+    fab!(:subcategory) { Fabricate(:category, user: admin, parent_category: category) }
+
+    before { SiteSetting.lazy_load_categories = true }
+
+    it "returns categories with subcategory_ids" do
+      expect(category_list.categories.size).to eq(3)
+      expect(
+        category_list.categories.find { |c| c.id == category.id }.subcategory_ids,
+      ).to contain_exactly(subcategory.id)
+    end
+  end
 end
