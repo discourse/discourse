@@ -585,6 +585,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
   class Options
     class Error < StandardError
     end
+
     class SettingsError < Error
     end
 

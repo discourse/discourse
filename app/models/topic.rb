@@ -3,6 +3,7 @@
 class Topic < ActiveRecord::Base
   class UserExists < StandardError
   end
+
   class NotAllowed < StandardError
   end
   include RateLimiter::OnCreateRecord

@@ -7,6 +7,7 @@ class RemoveCanonicalEmailFromUserEmails < ActiveRecord::Migration[6.0]
       DROP COLUMN IF EXISTS canonical_email
     SQL
   end
+
   def down
     # nothing to do, we already nuke the migrations
   end

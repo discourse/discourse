@@ -3,6 +3,7 @@
 class DiscourseConnect < DiscourseConnectBase
   class BlankExternalId < StandardError
   end
+
   class BannedExternalId < StandardError
   end
 

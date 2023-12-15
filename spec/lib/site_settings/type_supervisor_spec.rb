@@ -136,9 +136,11 @@ RSpec.describe SiteSettings::TypeSupervisor do
       def self.valid_value?(v)
         self.values.include?(v)
       end
+
       def self.values
         ["en"]
       end
+
       def self.translate_names?
         false
       end
@@ -147,9 +149,11 @@ RSpec.describe SiteSettings::TypeSupervisor do
     class TestSmallThanTenValidator
       def initialize(opts)
       end
+
       def valid_value?(v)
         v < 10
       end
+
       def error_message
         ""
       end
@@ -408,9 +412,11 @@ RSpec.describe SiteSettings::TypeSupervisor do
       def self.valid_value?(v)
         self.values.include?(v)
       end
+
       def self.values
         %w[a b]
       end
+
       def self.translate_names?
         false
       end

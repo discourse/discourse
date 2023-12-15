@@ -206,6 +206,7 @@ module HasCustomFields
 
   class NotPreloadedError < StandardError
   end
+
   class PreloadedProxy
     def initialize(preloaded, klass_with_custom_fields)
       @preloaded = preloaded

@@ -8,6 +8,7 @@ module PageObjects
       def modal
         find(".change-ownership-modal")
       end
+
       def select_new_owner(user)
         within(modal) do
           users_dropdown.expand
