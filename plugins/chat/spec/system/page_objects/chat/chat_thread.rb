@@ -37,9 +37,7 @@ module PageObjects
 
       def has_notification_level?(level)
         select_kit =
-          PageObjects::Components::SelectKit.new(
-            ".chat-thread-header__buttons.-persisted .thread-notifications-button",
-          )
+          PageObjects::Components::SelectKit.new(".c-navbar__thread-tracking-dropdown.-persisted")
         select_kit.has_selected_value?(
           ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
         )

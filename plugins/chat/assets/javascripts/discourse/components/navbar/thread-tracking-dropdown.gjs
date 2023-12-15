@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import ThreadTrackingDropdown from "discourse/plugins/chat/discourse/components/chat-thread-tracking-dropdown";
@@ -8,6 +10,8 @@ import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/us
 
 export default class ChatNavbarThreadTrackingDropdown extends Component {
   @service chatApi;
+
+  @tracked persistedNotificationLevel = true;
 
   get threadNotificationLevel() {
     return this.membership?.notificationLevel || NotificationLevels.REGULAR;
@@ -42,6 +46,7 @@ export default class ChatNavbarThreadTrackingDropdown extends Component {
         );
       this.membership.last_read_message_id =
         response.membership.last_read_message_id;
+      this.persistedNotificationLevel = true;
     } catch (error) {
       this.membership.notificationLevel = currentNotificationLevel;
       popupAjaxError(error);
@@ -52,7 +57,10 @@ export default class ChatNavbarThreadTrackingDropdown extends Component {
     <ThreadTrackingDropdown
       @value={{this.threadNotificationLevel}}
       @onChange={{this.updateThreadNotificationLevel}}
-      @class="c-navbar__thread-tracking-dropdown"
+      @class={{concatClass
+        "c-navbar__thread-tracking-dropdown"
+        (if this.persistedNotificationLevel "-persisted")
+      }}
     />
   </template>
 }
