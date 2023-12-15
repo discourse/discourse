@@ -13,9 +13,10 @@ export default class ChatNavbarThreadsListButton extends Component {
 
   get showThreadsListButton() {
     return (
-      this.args.channel.threadingEnabled &&
+      this.args.channel?.threadingEnabled &&
       this.router.currentRoute.name !== "chat.channel.threads" &&
-      this.router.currentRoute.name !== "chat.channel.thread"
+      this.router.currentRoute.name !== "chat.channel.thread" &&
+      this.router.currentRoute.name !== "chat.channel.thread.index"
     );
   }
 
