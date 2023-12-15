@@ -135,6 +135,12 @@ module DiscourseAutomation
           "type" => "string",
         },
       },
+      "users" => {
+        "value" => {
+          "type" => "array",
+          "items" => [{ type: "string" }],
+        },
+      },
       "text" => {
         "value" => {
           "type" => %w[string integer null],

@@ -19,6 +19,7 @@ import DaTextField from "./fields/da-text-field";
 import DaTextListField from "./fields/da-text-list-field";
 import DaTrustLevelsField from "./fields/da-trust-levels-field";
 import DaUserField from "./fields/da-user-field";
+import DaUsersField from "./fields/da-users-field";
 
 const FIELD_COMPONENTS = {
   period: DaPeriodField,
@@ -29,6 +30,7 @@ const FIELD_COMPONENTS = {
   message: DaMessageField,
   categories: DaCategoriesField,
   user: DaUserField,
+  users: DaUsersField,
   post: DaPostField,
   tags: DaTagsField,
   "key-value": DaKeyValueField,

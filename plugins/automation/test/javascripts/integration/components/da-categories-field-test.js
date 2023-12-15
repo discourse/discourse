@@ -12,7 +12,7 @@ module("Integration | Component | da-categories-field", function (hooks) {
     this.automation = fabricators.automation();
   });
 
-  test("set value", async function (assert) {
+  test("sets values", async function (assert) {
     this.field = fabricators.field({ component: "categories" });
 
     await render(
@@ -21,7 +21,8 @@ module("Integration | Component | da-categories-field", function (hooks) {
 
     await selectKit().expand();
     await selectKit().selectRowByValue(6);
+    await selectKit().selectRowByValue(8);
 
-    assert.deepEqual(this.field.metadata.value, [6]);
+    assert.deepEqual(this.field.metadata.value, [6, 8]);
   });
 });
