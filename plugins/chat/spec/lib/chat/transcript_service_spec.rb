@@ -154,6 +154,37 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
+  xit "generates the correct markdown for messages that are in reply to other messages" do
+    channel.update!(threading_enabled: false)
+    thread = Fabricate(:chat_thread, channel: channel)
+
+    message1 =
+      Fabricate(
+        :chat_message,
+        user: user1,
+        chat_channel: channel,
+        thread: thread,
+        message: "an extremely insightful response :)",
+      )
+    message2 = Fabricate(:chat_message, user: user2, chat_channel: channel, message: "says you!")
+    message3 =
+      Fabricate(:chat_message, user: user1, chat_channel: channel, thread: thread, message: "aw :(")
+
+    expect(service([message1.id, message2.id, message3.id]).generate_markdown).to eq(<<~MARKDOWN)
+    [chat quote="martinchat;#{message1.id};#{message1.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true"]
+    an extremely insightful response :)
+    [/chat]
+
+    [chat quote="brucechat;#{message2.id};#{message2.created_at.iso8601}" chained="true"]
+    says you!
+    [/chat]
+
+    [chat quote="martinchat;#{message3.id};#{message3.created_at.iso8601}" chained="true"]
+    aw :(
+    [/chat]
+    MARKDOWN
+  end
+
   it "generates the correct markdown if a message has text and an upload" do
     SiteSetting.authorized_extensions = "mp4|mp3|pdf|jpg"
     message =

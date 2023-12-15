@@ -152,6 +152,8 @@ describe Chat::ChannelArchiveService do
       end
 
       xit "creates the correct posts for a channel with messages and threads" do
+        channel.update!(threading_enabled: true)
+
         create_messages(2)
         create_threaded_messages(6, title: "a new thread")
         create_messages(7)

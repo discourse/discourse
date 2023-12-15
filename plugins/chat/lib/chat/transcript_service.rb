@@ -167,6 +167,8 @@ module Chat
       rendered_markdown = []
       rendered_thread_markdown = []
       all_messages_same_user = messages.count(:user_id) == 1
+      threading_enabled = @channel.threading_enabled?
+      thread_id = threading_enabled ? messages.first.thread_id : nil
 
       open_bbcode_tag =
         TranscriptBBCode.new(
@@ -175,27 +177,27 @@ module Chat
           multiquote: messages.length > 1,
           chained: !all_messages_same_user,
           no_link: @opts[:no_link],
-          thread_id: messages.first.thread_id,
+          thread_id: thread_id,
           thread_ranges: @thread_ranges,
           include_reactions: @opts[:include_reactions],
         )
 
-      group_messages(messages).each do |id, message_group|
-        message = message_group.first
+      (threading_enabled ? group_messages(messages) : messages).each do |message_data|
+        message = threading_enabled ? message_data.first : message_data
 
-        if previous_message.present? &&
-             (
-               previous_message.user_id != message.user_id ||
-                 previous_message.thread_id != message.thread_id
-             )
+        user_changed = previous_message&.user_id != message.user_id
+        thread_changed = threading_enabled && previous_message&.thread_id != message.thread_id
+
+        if previous_message.present? && (user_changed || thread_changed)
           rendered_markdown << open_bbcode_tag.render
+          thread_id = threading_enabled ? message.thread_id : nil
 
           open_bbcode_tag =
             TranscriptBBCode.new(
               acting_user: @acting_user,
               chained: !all_messages_same_user,
               no_link: @opts[:no_link],
-              thread_id: message.thread_id,
+              thread_id: thread_id,
               thread_ranges: @thread_ranges,
               include_reactions: @opts[:include_reactions],
             )
@@ -208,8 +210,9 @@ module Chat
         end
 
         previous_message = message
+        next if !threading_enabled
 
-        if message_group.length > 1
+        if message_data.length > 1
           previous_thread_message = nil
           rendered_thread_markdown.clear
 
@@ -221,7 +224,7 @@ module Chat
               include_reactions: @opts[:include_reactions],
             )
 
-          message_group[1..].each do |thread_message|
+          message_data[1..].each do |thread_message|
             if previous_thread_message.present? &&
                  previous_thread_message.user_id != thread_message.user_id
               rendered_thread_markdown << thread_bbcode_tag.render
@@ -247,7 +250,7 @@ module Chat
           end
           rendered_thread_markdown << thread_bbcode_tag.render
         end
-        thread_id = message_group.first.thread_id
+        thread_id = message_data.first.thread_id
         if thread_id.present?
           thread = Chat::Thread.find(thread_id)
           if thread&.replies_count&.> 0
@@ -267,7 +270,7 @@ module Chat
     private
 
     def group_messages(messages)
-      messages.group_by { |msg| msg.thread_id || msg.id }
+      messages.group_by { |msg| msg.thread_id || msg.id }.values
     end
 
     def messages
