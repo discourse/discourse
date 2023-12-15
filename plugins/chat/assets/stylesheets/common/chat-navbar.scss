@@ -12,7 +12,7 @@
     min-height: 46px;
     box-sizing: border-box;
     display: flex;
-    z-index: z("header") - 1;
+    z-index: z("composer", "content") - 1;
   }
 
   .single-select-header {
