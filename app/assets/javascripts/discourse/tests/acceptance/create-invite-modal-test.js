@@ -254,7 +254,7 @@ acceptance(
       await click(
         ".user-invite-list tbody tr:first-child .invite-actions .btn:first-child"
       ); // first invite edit button
-      assert.equal(query("#invite-max-redemptions").value, 10);
+      assert.dom("#invite-max-redemptions").hasValue(10);
     });
   }
 );
