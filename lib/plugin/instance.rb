@@ -74,6 +74,11 @@ class Plugin::Instance
     @seed_fu_filter = filter
   end
 
+  # This method returns Core stats + stats registered by plugins
+  def self.stats
+    Stat.all_stats
+  end
+
   def self.find_all(parent_path)
     [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
