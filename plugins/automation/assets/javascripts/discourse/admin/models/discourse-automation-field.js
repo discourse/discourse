@@ -19,6 +19,11 @@ export default class DiscourseAutomationField {
         template.value || json?.metadata?.value || template.default_value;
     }
 
+    // null is not a valid value for metadata.value
+    if (field.metadata.value === null) {
+      field.metadata.value = undefined;
+    }
+
     field.isRequired = template.is_required;
     field.extra = new TrackedObject(template.extra);
     return field;

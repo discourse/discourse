@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -10,34 +11,8 @@ import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";
 
 export default class PeriodField extends BaseField {
-  <template>
-    <div class="field period-field control-group">
-      <DAFieldLabel @label={{@label}} @field={{@field}} />
-
-      <div class="controls">
-        {{this.recurringLabel}}
-
-        <Input
-          @type="number"
-          defaultValue="1"
-          @value={{@field.metadata.value.interval}}
-          disabled={{@field.isDisabled}}
-          required={{@field.isRequired}}
-          {{on "input" this.mutInterval}}
-        />
-
-        <ComboBox
-          @value={{@field.metadata.value.frequency}}
-          @content={{this.replacedContent}}
-          @onChange={{this.mutFrequency}}
-          @options={{hash allowAny=false disabled=@field.isDisabled}}
-          @required={{@field.isRequired}}
-        />
-
-        <DAFieldDescription @description={{@description}} />
-      </div>
-    </div>
-  </template>
+  @tracked interval = 1;
+  @tracked frequency = null;
 
   constructor() {
     super(...arguments);
@@ -48,6 +23,9 @@ export default class PeriodField extends BaseField {
         frequency: null,
       });
     }
+
+    this.interval = this.args.field.metadata.value.interval;
+    this.frequency = this.args.field.metadata.value.frequency;
   }
 
   get recurringLabel() {
@@ -71,5 +49,35 @@ export default class PeriodField extends BaseField {
   @action
   mutFrequency(value) {
     this.args.field.metadata.value.frequency = value;
+    this.frequency = value;
   }
+
+  <template>
+    <div class="field period-field control-group">
+      <DAFieldLabel @label={{@label}} @field={{@field}} />
+
+      <div class="controls">
+        {{this.recurringLabel}}
+
+        <Input
+          @type="number"
+          defaultValue="1"
+          @value={{this.interval}}
+          disabled={{@field.isDisabled}}
+          required={{@field.isRequired}}
+          {{on "input" this.mutInterval}}
+        />
+
+        <ComboBox
+          @value={{this.frequency}}
+          @content={{this.replacedContent}}
+          @onChange={{this.mutFrequency}}
+          @options={{hash allowAny=false disabled=@field.isDisabled}}
+          @required={{@field.isRequired}}
+        />
+
+        <DAFieldDescription @description={{@description}} />
+      </div>
+    </div>
+  </template>
 }
