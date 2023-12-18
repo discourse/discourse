@@ -15,7 +15,7 @@ export default class ChatRoutesChannelInfo extends Component {
 
   membersLabel = I18n.t("chat.channel_info.tabs.members");
   settingsLabel = I18n.t("chat.channel_info.tabs.settings");
-  backToChannelLabel = I18n.t("chat.channel_info.back_to_all_channel");
+  backToChannelLabel = I18n.t("chat.channel_info.back_to_all_channels");
   backToAllChannelsLabel = I18n.t("chat.channel_info.back_to_channel");
 
   get showTabs() {
