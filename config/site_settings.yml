@@ -2280,6 +2280,9 @@ developer:
     refresh: true
     hidden: true
     client: true
+  enable_admin_sidebar_navigation:
+    default: false
+    client: true
   lazy_load_categories:
     default: false
     client: true

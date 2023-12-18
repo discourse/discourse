@@ -4722,6 +4722,7 @@ en:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      back_to_forum: "Back to Forum"
 
       tags:
         remove_muted_tags_from_latest:
@@ -4911,6 +4912,7 @@ en:
         user: "User"
         title: "API"
         key: "Key"
+        keys: "Keys"
         created: Created
         updated: Updated
         last_used: Last Used
@@ -5529,6 +5531,7 @@ en:
         title: "Emails"
         settings: "Settings"
         templates: "Templates"
+        templates_title: "Email Templates"
         preview_digest: "Preview Summary"
         advanced_test:
           title: "Advanced Test"

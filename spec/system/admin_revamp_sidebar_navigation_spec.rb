@@ -2,18 +2,29 @@
 
 describe "Admin Revamp | Sidebar Navigation", type: :system do
   fab!(:admin)
-  let(:sidebar_page) { PageObjects::Components::NavigationMenu::Sidebar.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before do
-    SiteSetting.enable_experimental_admin_ui_groups = Group::AUTO_GROUPS[:staff]
-    SidebarSection.find_by(section_type: "community").reset_community!
+    SiteSetting.enable_admin_sidebar_navigation = true
     sign_in(admin)
   end
 
-  it "navigates to the admin revamp from the sidebar" do
+  it "shows the sidebar when navigating to an admin route and hides it when leaving" do
     visit("/latest")
-    sidebar_page.click_section_link("Admin Revamp")
-    expect(page).to have_content("Lobby")
-    expect(page).to have_content("Legacy Admin")
+    sidebar.click_link_in_section("community", "admin")
+    expect(page).to have_current_path("/admin")
+    expect(sidebar).to be_visible
+    expect(page).to have_no_css(".admin-main-nav")
+    sidebar.click_link_in_section("admin-nav-section-root", "back_to_forum")
+    expect(page).to have_current_path("/latest")
+    expect(sidebar).to have_no_section("admin-nav-section-root")
+  end
+
+  it "does not show the admin sidebar if the setting is disabled" do
+    SiteSetting.enable_admin_sidebar_navigation = false
+    visit("/latest")
+    sidebar.click_link_in_section("community", "admin")
+    expect(page).to have_current_path("/admin")
+    expect(sidebar).to have_no_section("admin-nav-section-root")
   end
 end

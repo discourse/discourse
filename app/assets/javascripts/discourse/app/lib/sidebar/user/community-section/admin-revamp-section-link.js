@@ -31,10 +31,7 @@ export default class AdminRevampSectionLink extends BaseSectionLink {
 
     return (
       this.currentUser.staff &&
-      this.siteSettings.userInAnyGroups(
-        "enable_experimental_admin_ui_groups",
-        this.currentUser
-      )
+      this.siteSettings.enable_admin_sidebar_navigation
     );
   }
 

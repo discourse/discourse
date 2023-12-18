@@ -4,6 +4,7 @@ import {
   addSidebarSection,
 } from "discourse/lib/sidebar/custom-sections";
 import { ADMIN_PANEL } from "discourse/services/sidebar-state";
+import I18n from "discourse-i18n";
 
 function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
   const SidebarAdminSectionLink = class extends BaseCustomSidebarSectionLink {
@@ -33,7 +34,9 @@ function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
     }
 
     get text() {
-      return this.adminSidebarNavLink.text;
+      return this.adminSidebarNavLink.label
+        ? I18n.t(this.adminSidebarNavLink.label)
+        : this.adminSidebarNavLink.text;
     }
 
     get prefixType() {
@@ -77,7 +80,9 @@ function defineAdminSection(
     }
 
     get text() {
-      return this.adminNavSectionData.text;
+      return this.adminNavSectionData.label
+        ? I18n.t(this.adminNavSectionData.label)
+        : this.adminNavSectionData.text;
     }
 
     get links() {
@@ -103,22 +108,47 @@ export function useAdminNavConfig(navMap) {
       hideSectionHeader: true,
       links: [
         {
-          name: "Back to Forum",
+          name: "back_to_forum",
           route: "discovery.latest",
-          text: "Back to Forum",
+          label: "admin.back_to_forum",
           icon: "arrow-left",
         },
         {
-          name: "Lobby",
-          route: "admin-revamp.lobby",
-          text: "Lobby",
+          name: "admin_dashboard",
+          route: "admin.dashboard",
+          label: "admin.dashboard.title",
           icon: "home",
         },
         {
-          name: "legacy",
-          route: "admin",
-          text: "Legacy Admin",
-          icon: "wrench",
+          name: "admin_site_settings",
+          route: "adminSiteSettings",
+          label: "admin.site_settings.title",
+          icon: "cog",
+        },
+        {
+          name: "admin_users",
+          route: "adminUsers",
+          label: "admin.users.title",
+          icon: "users",
+        },
+        {
+          name: "admin_reports",
+          route: "adminReports",
+          label: "admin.dashboard.reports_tab",
+          icon: "chart-pie",
+        },
+        {
+          name: "admin_plugins",
+          route: "adminPlugins",
+          label: "admin.plugins.title",
+          icon: "puzzle-piece",
+        },
+
+        {
+          name: "admin_badges",
+          route: "adminBadges",
+          label: "admin.badges.title",
+          icon: "certificate",
         },
       ],
     },
@@ -157,12 +187,7 @@ export default {
       return;
     }
 
-    if (
-      !this.siteSettings.userInAnyGroups(
-        "enable_experimental_admin_ui_groups",
-        this.currentUser
-      )
-    ) {
+    if (!this.siteSettings.enable_admin_sidebar_navigation) {
       return;
     }
 
@@ -179,7 +204,19 @@ export default {
     );
 
     const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
-    const navConfig = useAdminNavConfig(savedConfig || ADMIN_NAV_MAP);
+    const navMap = savedConfig || ADMIN_NAV_MAP;
+
+    if (this.siteSettings.experimental_form_templates) {
+      navMap.findBy("name", "customize").links.push({
+        name: "admin_customize_form_templates",
+        route: "adminCustomizeFormTemplates",
+        label: "admin.form_templates.nav_title",
+        icon: "list",
+      });
+    }
+
+    const navConfig = useAdminNavConfig(navMap);
+
     buildAdminSidebar(navConfig, adminSectionLinkClass);
   },
 };

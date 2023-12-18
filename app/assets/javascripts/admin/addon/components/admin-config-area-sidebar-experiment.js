@@ -10,6 +10,7 @@ import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import { resetPanelSections } from "discourse/lib/sidebar/custom-sections";
 import { ADMIN_PANEL } from "discourse/services/sidebar-state";
 
+// TODO (martin) (2024-02-01) Remove this experimental UI.
 export default class AdminConfigAreaSidebarExperiment extends Component {
   @service adminSidebarExperimentStateManager;
   @service toasts;
