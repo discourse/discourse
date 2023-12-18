@@ -327,17 +327,17 @@ export default class ChatRouteChannelInfoSettings extends Component {
   }
 
   <template>
-    <div class="chat-channel-settings">
+    <div class="c-channel-settings">
       <ChatForm as |form|>
         <form.section @title={{this.titleSectionTitle}} as |section|>
           <section.row>
             <:default>
-              <div class="chat-channel-settings__name">
+              <div class="c-channel-settings__name">
                 {{replaceEmoji @channel.title}}
               </div>
 
               {{#if @channel.isCategoryChannel}}
-                <div class="chat-channel-settings__slug">
+                <div class="c-channel-settings__slug">
                   <LinkTo
                     @route="chat.channel"
                     @models={{@channel.routeModels}}
@@ -405,7 +405,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
               <:action>
                 <DToggleSwitch
                   @state={{@channel.currentUserMembership.muted}}
-                  class="chat-channel-settings__mute-switch"
+                  class="c-channel-settings__mute-switch"
                   {{on "click" this.onToggleMuted}}
                 />
               </:action>
@@ -423,7 +423,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                       "desktopNotificationLevel"
                       "desktop_notification_level"
                     }}
-                    class="chat-channel-settings__selector chat-channel-settings__desktop-notifications-selector"
+                    class="c-channel-settings__selector c-channel-settings__desktop-notifications-selector"
                   />
                 </:action>
               </section.row>
@@ -441,7 +441,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                       "mobileNotificationLevel"
                       "mobile_notification_level"
                     }}
-                    class="chat-channel-settings__selector chat-channel-settings__mobile-notifications-selector"
+                    class="c-channel-settings__selector c-channel-settings__mobile-notifications-selector"
                   />
                 </:action>
               </section.row>
@@ -476,7 +476,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                 <:action>
                   <DToggleSwitch
                     @state={{@channel.autoJoinUsers}}
-                    class="chat-channel-settings__auto-join-switch"
+                    class="c-channel-settings__auto-join-switch"
                     {{on
                       "click"
                       (fn this.onToggleAutoJoinUsers @channel.autoJoinUsers)
@@ -490,7 +490,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
               <section.row @label={{this.channelWideMentionsLabel}}>
                 <:action>
                   <DToggleSwitch
-                    class="chat-channel-settings__channel-wide-mentions"
+                    class="c-channel-settings__channel-wide-mentions"
                     @state={{@channel.allowChannelWideMentions}}
                     {{on
                       "click"
@@ -513,7 +513,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                 <:action>
                   <DToggleSwitch
                     @state={{@channel.threadingEnabled}}
-                    class="chat-channel-settings__threading-switch"
+                    class="c-channel-settings__threading-switch"
                     {{on
                       "click"
                       (fn
@@ -594,7 +594,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
             </:action>
           </section.row>
           {{#if @channel.chatable.group}}
-            <div class="chat-channel-settings__leave-info">
+            <div class="c-channel-settings__leave-info">
               {{icon "exclamation-triangle"}}
               {{i18n "chat.channel_settings.leave_groupchat_info"}}
             </div>

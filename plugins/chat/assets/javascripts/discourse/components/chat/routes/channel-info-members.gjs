@@ -130,19 +130,19 @@ export default class ChatRouteChannelInfoMembers extends Component {
         @onCancel={{this.hideAddMember}}
       />
     {{else}}
-      <div class="chat-channel-members">
+      <div class="c-channel-members">
         <DcFilterInput
           {{autoFocus}}
           @filterAction={{this.mutFilter}}
           @icons={{hash right="search"}}
-          @containerClass="chat-channel-members__filter"
+          @containerClass="c-channel-members__filter"
           placeholder={{this.filterPlaceholder}}
         />
 
-        <ul class="chat-channel-members__list" {{this.fill}}>
+        <ul class="c-channel-members__list" {{this.fill}}>
           {{#if @channel.chatable.group}}
             <li
-              class="chat-channel-members__list-item -add-member"
+              class="c-channel-members__list-item -add-member"
               role="button"
               {{on "click" this.addMember}}
               {{this.onEnter this.addMember}}
@@ -154,7 +154,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
           {{/if}}
           {{#each this.members as |membership|}}
             <li
-              class="chat-channel-members__list-item -member"
+              class="c-channel-members__list-item -member"
               {{on "click" (fn this.openMemberCard membership.user)}}
               {{this.onEnter (fn this.openMemberCard membership.user)}}
               tabindex="0"
@@ -168,7 +168,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
           {{else}}
             {{#if this.noResults}}
               <li
-                class="chat-channel-members__list-item -no-results alert alert-info"
+                class="c-channel-members__list-item -no-results alert alert-info"
               >
                 {{this.noMembershipsFoundLabel}}
               </li>

@@ -58,9 +58,9 @@ export default class ChatRoutesChannelInfo extends Component {
 
       <ChatChannelStatus @channel={{@channel}} />
 
-      <div class="chat-channel-info">
+      <div class="c-channel-info">
         {{#if this.showTabs}}
-          <nav class="chat-channel-info__nav">
+          <nav class="c-channel-info__nav">
             <ul class="nav nav-pills">
               <li>
                 <LinkTo
