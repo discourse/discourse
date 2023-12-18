@@ -60,10 +60,6 @@ module PageObjects
           find(".sidebar__panel-switch-button[data-key='main']").click
         end
 
-        def has_no_section?(name)
-          has_no_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
-        end
-
         def has_switch_button?(key = nil)
           if key
             page.has_css?(".sidebar__panel-switch-button[data-key='#{key.parameterize}']")
