@@ -94,12 +94,16 @@ export default class ChatApi extends Service {
    *
    *    this.chatApi.channels.then(channels => { ... })
    */
-  channels() {
-    return new Collection(`${this.#basePath}/channels`, (response) => {
-      return response.channels.map((channel) =>
-        this.chatChannelsManager.store(channel)
-      );
-    });
+  channels(params = {}) {
+    return new Collection(
+      `${this.#basePath}/channels`,
+      (response) => {
+        return response.channels.map((channel) =>
+          this.chatChannelsManager.store(channel)
+        );
+      },
+      params
+    );
   }
 
   /**

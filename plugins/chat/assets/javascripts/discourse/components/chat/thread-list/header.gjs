@@ -3,7 +3,7 @@ import { inject as service } from "@ember/service";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
-import Navbar from "discourse/plugins/chat/discourse/components/navbar";
+import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 
 export default class ChatThreadListHeader extends Component {
   @service router;

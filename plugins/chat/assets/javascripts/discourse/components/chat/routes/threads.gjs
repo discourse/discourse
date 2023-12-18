@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import i18n from "discourse-common/helpers/i18n";
-import Navbar from "discourse/plugins/chat/discourse/components/navbar";
+import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import UserThreads from "discourse/plugins/chat/discourse/components/user-threads";
 
 export default class ChatRoutesThreads extends Component {

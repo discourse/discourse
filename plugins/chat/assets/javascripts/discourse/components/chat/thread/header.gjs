@@ -3,8 +3,8 @@ import { inject as service } from "@ember/service";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
+import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThreadHeaderUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/thread/header-unread-indicator";
-import Navbar from "discourse/plugins/chat/discourse/components/navbar";
 
 export default class ChatThreadHeader extends Component {
   @service currentUser;

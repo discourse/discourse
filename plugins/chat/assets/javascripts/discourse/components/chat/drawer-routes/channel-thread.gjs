@@ -6,8 +6,8 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
+import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread";
-import Navbar from "discourse/plugins/chat/discourse/components/navbar";
 
 export default class ChatDrawerRoutesChannelThread extends Component {
   @service chat;
@@ -66,7 +66,7 @@ export default class ChatDrawerRoutesChannelThread extends Component {
   }
 
   <template>
-    <Navbar as |navbar|>
+    <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
       <navbar.BackButton
         @title={{this.backButton.title}}
         @route={{this.backButton.route}}

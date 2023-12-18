@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
-import Navbar from "discourse/plugins/chat/discourse/components/navbar";
+import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import UserThreads from "discourse/plugins/chat/discourse/components/user-threads";
 
 export default class ChatDrawerRoutesThreads extends Component {
@@ -12,7 +12,7 @@ export default class ChatDrawerRoutesThreads extends Component {
   backButtonTitle = I18n.t("chat.return_to_list");
 
   <template>
-    <Navbar as |navbar|>
+    <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
       <navbar.BackButton @title={{this.backButtonTitle}} />
       <navbar.Title
         @title={{i18n "chat.threads.list"}}
@@ -22,6 +22,7 @@ export default class ChatDrawerRoutesThreads extends Component {
         <title.SubTitle @title={{this.chat.activeChannel.title}} />
       </navbar.Title>
       <navbar.Actions as |action|>
+        <action.ThreadsListButton />
         <action.ToggleDrawerButton />
         <action.FullPageButton />
         <action.CloseDrawerButton />

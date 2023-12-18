@@ -6,7 +6,7 @@ export default class ChatNavbarChannelTitle extends Component {
   <template>
     {{#if @channel}}
       <LinkTo
-        @route="chat.channel.info"
+        @route="chat.channel.info.members"
         @models={{@channel.routeModels}}
         class="c-navbar__channel-title"
       >

@@ -6,8 +6,8 @@ import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
+import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThreadList from "discourse/plugins/chat/discourse/components/chat-thread-list";
-import Navbar from "discourse/plugins/chat/discourse/components/navbar";
 
 export default class ChatDrawerRoutesChannelThreads extends Component {
   @service chat;
@@ -33,7 +33,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
 
   <template>
     {{#if this.chat.activeChannel}}
-      <Navbar as |navbar|>
+      <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
         <navbar.BackButton
           @title={{this.backLinkTitle}}
           @route="chat.channel"

@@ -13,6 +13,10 @@
     box-sizing: border-box;
     display: flex;
     z-index: z("composer", "content") - 1;
+
+    &.-clickable {
+      cursor: pointer;
+    }
   }
 
   .single-select-header {

@@ -49,7 +49,7 @@ const ROUTES = {
   },
   chat: { name: ChatDrawerRoutesChannels },
   "chat.channel.near-message": {
-    name: ChatDrawerRoutesChannels,
+    name: ChatDrawerRoutesChannel,
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
@@ -58,7 +58,7 @@ const ROUTES = {
     },
   },
   "chat.channel-legacy": {
-    name: ChatDrawerRoutesChannels,
+    name: ChatDrawerRoutesChannel,
     extractParams: (route) => {
       return {
         channelId: route.params.channelId,

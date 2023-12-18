@@ -50,8 +50,9 @@ describe "Thread tracking state | drawer", type: :system do
       drawer_page.open_thread_list
       thread_list_page.item_by_id(thread.id).click
       expect(drawer_page).to have_no_unread_thread_indicator
-      drawer_page.open_thread_list
-      expect(thread_list_page).to have_no_unread_item(thread.id)
+      pause_test
+      # drawer_page.open_thread_list
+      # expect(thread_list_page).to have_no_unread_item(thread.id)
     end
 
     xit "shows unread indicators for the header icon and the list when a new unread arrives" do

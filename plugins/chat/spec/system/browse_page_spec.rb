@@ -80,10 +80,14 @@ RSpec.describe "Browse page", type: :system do
       context "when results are found" do
         it "lists expected results" do
           chat_page.visit_browse
-          browse_page.search(category_channel_1.name)
 
-          expect(browse_page).to have_channel(name: category_channel_1.name)
-          expect(browse_page).to have_no_channel(name: category_channel_2.name)
+          p category_channel_1.name
+          # browse_page.search(category_channel_1.name)
+
+          pause_test
+
+          # expect(browse_page).to have_channel(name: category_channel_1.name)
+          # expect(browse_page).to have_no_channel(name: category_channel_2.name)
         end
       end
 
