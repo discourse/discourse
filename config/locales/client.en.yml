@@ -2265,7 +2265,7 @@ en:
         title: "Log in with Discord"
         sr_title: "Log in with Discord"
       passkey:
-        name: "Login with a passkey"
+        name: "Log in with a passkey"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
