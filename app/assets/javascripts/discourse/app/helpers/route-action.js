@@ -27,7 +27,7 @@ function getRouteWithAction(router, actionName) {
   return { action, handler };
 }
 
-export function routeAction(actionName, router, ...params) {
+function routeAction(actionName, router, ...params) {
   assert("[ember-route-action-helper] Unable to lookup router", router);
 
   runInDebug(() => {
