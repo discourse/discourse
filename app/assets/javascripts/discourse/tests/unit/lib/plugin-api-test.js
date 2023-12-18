@@ -88,6 +88,37 @@ module("Unit | Utility | plugin-api", function (hooks) {
     assert.strictEqual(thingy.prop, "g'day");
   });
 
+  test("modifyClass works with two native classes", function (assert) {
+    class ClassTestThingy extends EmberObject {
+      get keep() {
+        return "hey!";
+      }
+
+      get prop() {
+        return "top of the morning";
+      }
+    }
+
+    getOwner(this).register("class-test-thingy:main", ClassTestThingy);
+
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClass(
+        "class-test-thingy:main",
+        "plugin-api-test",
+        (Base) =>
+          class extends Base {
+            get prop() {
+              return "g'day";
+            }
+          }
+      );
+    });
+
+    const thingy = getOwner(this).lookup("class-test-thingy:main");
+    assert.strictEqual(thingy.keep, "hey!");
+    assert.strictEqual(thingy.prop, "g'day");
+  });
+
   test("modifyClass works with getters", function (assert) {
     let Base = EmberObject.extend({
       get foo() {

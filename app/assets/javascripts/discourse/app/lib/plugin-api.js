@@ -146,8 +146,8 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 export const PLUGIN_API_VERSION = "1.19.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
-function canModify(klass, type, resolverName, changes) {
-  if (!changes.pluginId) {
+function canModify(klass, type, resolverName, pluginId) {
+  if (!pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
       consolePrefix(),
@@ -156,7 +156,7 @@ function canModify(klass, type, resolverName, changes) {
     return true;
   }
 
-  let key = "_" + type + "/" + changes.pluginId + "/" + resolverName;
+  const key = `_${type}/${pluginId}/${resolverName}`;
   if (klass.class[key]) {
     return false;
   } else {
@@ -257,16 +257,30 @@ class PluginApi {
    * });
    * ```
    **/
-  modifyClass(resolverName, changes, opts) {
+  modifyClass(resolverName, pluginId, changes, opts) {
+    let classGenerator;
+
+    if (typeof pluginId === "string") {
+      classGenerator = changes;
+    } else {
+      opts = changes;
+      changes = pluginId;
+      pluginId = changes.pluginId;
+      delete changes.pluginId;
+    }
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
     }
 
-    if (canModify(klass, "member", resolverName, changes)) {
-      delete changes.pluginId;
-
-      if (klass.class.reopen) {
+    if (canModify(klass, "member", resolverName, pluginId)) {
+      if (classGenerator) {
+        const NewClass = classGenerator(klass.class);
+        this.container.registry.unregister(resolverName); // private method
+        delete this.container.factoryManagerCache[resolverName]; // private state
+        this.container.registry.register(resolverName, NewClass);
+      } else if (klass.class.reopen) {
         klass.class.reopen(changes);
       } else {
         Object.defineProperties(
@@ -296,7 +310,7 @@ class PluginApi {
       return;
     }
 
-    if (canModify(klass, "static", resolverName, changes)) {
+    if (canModify(klass, "static", resolverName, changes.pluginId)) {
       delete changes.pluginId;
       klass.class.reopenClass(changes);
     }
