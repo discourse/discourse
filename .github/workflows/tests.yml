@@ -315,7 +315,7 @@ jobs:
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
           name: flaky-test-reports
-          path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}.json
+          path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.job }}.json
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
