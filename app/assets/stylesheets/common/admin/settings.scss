@@ -137,4 +137,10 @@
   .warning {
     color: var(--danger);
   }
+  .file-types-list__button {
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;
+    background: var(--primary-medium);
+    color: var(--secondary);
+  }
 }

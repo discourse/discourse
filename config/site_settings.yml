@@ -1435,19 +1435,19 @@ files:
   theme_authorized_extensions:
     default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js"
     type: list
-    list_type: compact
+    list_type: file_types
   authorized_extensions:
     client: true
     default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
     refresh: true
     type: list
-    list_type: compact
+    list_type: file_types
   authorized_extensions_for_staff:
     client: true
     default: ""
     refresh: true
     type: list
-    list_type: compact
+    list_type: file_types
   export_authorized_extensions:
     hidden: true
     default: "zip"

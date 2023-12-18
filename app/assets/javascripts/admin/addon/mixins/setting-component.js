@@ -34,6 +34,7 @@ const CUSTOM_TYPES = [
   "emoji_list",
   "named_list",
   "file_size_restriction",
+  "file_types_list",
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];

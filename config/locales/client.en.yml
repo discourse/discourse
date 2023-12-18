@@ -6373,6 +6373,11 @@ en:
         json_schema:
           edit: Launch Editor
           modal_title: "Edit %{name}"
+        file_types_list:
+          add_image_types: "Images"
+          add_video_types: "Videos"
+          add_audio_types: "Audio"
+          add_document_types: "Documents"
 
       badges:
         title: Badges
