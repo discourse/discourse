@@ -48,6 +48,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
           @icon="discourse-threads"
         />
         <navbar.Actions as |action|>
+          <action.ThreadsListButton />
           <action.ToggleDrawerButton />
           <action.FullPageButton />
           <action.CloseDrawerButton />
