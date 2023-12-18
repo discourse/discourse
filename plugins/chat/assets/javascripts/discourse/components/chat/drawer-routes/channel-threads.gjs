@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
+import htmlSafe from "discourse-common/helpers/html-safe";
 import I18n from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThreadList from "discourse/plugins/chat/discourse/components/chat-thread-list";
@@ -14,6 +14,14 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
   @service chatChannelsManager;
 
   backLinkTitle = I18n.t("chat.return_to_list");
+
+  get title() {
+    return htmlSafe(
+      I18n.t("chat.threads.list") +
+        " - " +
+        replaceEmoji(this.chat.activeChannel.title)
+    );
+  }
 
   @action
   async fetchChannel() {
@@ -39,14 +47,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
           @route="chat.channel"
           @routeModels={{this.chat.activeChannel?.routeModels}}
         />
-        <navbar.Title
-          @title={{concat
-            (i18n "chat.threads.list")
-            " - "
-            this.chat.activeChannel.title
-          }}
-          @icon="discourse-threads"
-        />
+        <navbar.Title @title={{this.title}} @icon="discourse-threads" />
         <navbar.Actions as |action|>
           <action.ToggleDrawerButton />
           <action.FullPageButton />

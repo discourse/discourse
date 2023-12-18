@@ -25,10 +25,12 @@
 
   .c-navbar__channel-title {
     @include ellipsis();
+    font-weight: 700;
   }
 
   .c-navbar__title {
     @include ellipsis();
+    font-weight: 700;
   }
 
   .c-navbar__sub-title {

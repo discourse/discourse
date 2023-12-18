@@ -116,7 +116,6 @@
 
 .chat-channel-title__name {
   @include ellipsis;
-  font-weight: 700;
   font-size: var(--font-0);
   color: var(--primary);
   margin-left: 0.5rem;
