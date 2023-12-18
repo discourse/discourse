@@ -26,6 +26,7 @@ export default class ChatNavbar extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-invalid-interactive }}
     <div
       class={{concatClass "c-navbar-container" (if @onClick "-clickable")}}
       {{on "click" (if @onClick @onClick (noop))}}
