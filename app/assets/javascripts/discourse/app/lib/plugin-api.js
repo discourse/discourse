@@ -137,6 +137,10 @@ import {
 } from "discourse-common/lib/icon-library";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import {
+  classModifications,
+  classModificationsKey,
+} from "./allow-class-modifications";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -258,25 +262,40 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
-    const klass = this._resolveClass(resolverName, opts);
-    if (!klass) {
-      return;
-    }
-
-    if (canModify(klass, "member", resolverName, changes)) {
-      delete changes.pluginId;
-
-      if (klass.class.reopen) {
-        klass.class.reopen(changes);
-      } else {
-        Object.defineProperties(
-          klass.class.prototype || klass.class,
-          Object.getOwnPropertyDescriptors(changes)
-        );
+    if (typeof resolverName === "string") {
+      // deprecated
+      const klass = this._resolveClass(resolverName, opts);
+      if (!klass) {
+        return;
       }
-    }
 
-    return klass;
+      if (canModify(klass, "member", resolverName, changes)) {
+        delete changes.pluginId;
+
+        if (klass.class.reopen) {
+          klass.class.reopen(changes);
+        } else {
+          Object.defineProperties(
+            klass.class.prototype || klass.class,
+            Object.getOwnPropertyDescriptors(changes)
+          );
+        }
+      }
+
+      return klass;
+    } else {
+      const klass = resolverName;
+      let modificationsSet = classModifications.get(
+        klass[classModificationsKey]
+      );
+
+      if (!modificationsSet) {
+        modificationsSet = new Set();
+        classModifications.set(klass[classModificationsKey], modificationsSet);
+      }
+
+      modificationsSet.add(changes);
+    }
   }
 
   /**

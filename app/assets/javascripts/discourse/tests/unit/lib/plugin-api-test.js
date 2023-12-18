@@ -2,6 +2,7 @@ import { getOwner } from "@ember/application";
 import EmberObject from "@ember/object";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -84,6 +85,35 @@ module("Unit | Utility | plugin-api", function (hooks) {
     });
 
     const thingy = getOwner(this).lookup("class-test-thingy:main");
+    assert.strictEqual(thingy.keep, "hey!");
+    assert.strictEqual(thingy.prop, "g'day");
+  });
+
+  test("modifyClass works with two native classes", function (assert) {
+    @allowClassModifications
+    class ClassTestThingy {
+      get keep() {
+        return "hey!";
+      }
+
+      get prop() {
+        return "top of the morning";
+      }
+    }
+
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClass(
+        ClassTestThingy,
+        (Base) =>
+          class extends Base {
+            get prop() {
+              return "g'day";
+            }
+          }
+      );
+    });
+
+    const thingy = new ClassTestThingy();
     assert.strictEqual(thingy.keep, "hey!");
     assert.strictEqual(thingy.prop, "g'day");
   });
