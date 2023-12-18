@@ -304,6 +304,8 @@ RSpec.configure do |config|
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
       Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
+    else
+      Capybara.default_max_wait_time = 4
     end
 
     Capybara.threadsafe = true
