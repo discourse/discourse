@@ -4,9 +4,6 @@
 class Site
   include ActiveModel::Serialization
 
-  # Number of categories preloaded when lazy_load_categories is enabled
-  LAZY_LOAD_CATEGORIES_LIMIT = 10
-
   cattr_accessor :preloaded_category_custom_fields
 
   def self.reset_preloaded_category_custom_fields
@@ -157,11 +154,7 @@ class Site
 
         self.class.categories_callbacks.each { |callback| callback.call(categories, @guardian) }
 
-        if SiteSetting.lazy_load_categories
-          categories[0...Site::LAZY_LOAD_CATEGORIES_LIMIT]
-        else
-          categories
-        end
+        categories
       end
   end
 
