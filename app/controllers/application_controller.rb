@@ -993,9 +993,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cross_origin_opener_policy_header
-    if SiteSetting.cross_origin_opener_policy_header != "unsafe-none"
-      response.headers["Cross-Origin-Opener-Policy"] = SiteSetting.cross_origin_opener_policy_header
-    end
+    response.headers["Cross-Origin-Opener-Policy"] = SiteSetting.cross_origin_opener_policy_header
   end
 
   protected

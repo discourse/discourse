@@ -544,7 +544,7 @@ RSpec.describe ApplicationController do
         get "/latest"
 
         expect(response.status).to eq(200)
-        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq(nil)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
       end
     end
   end
