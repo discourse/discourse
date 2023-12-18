@@ -5,8 +5,8 @@ class SiteSettingRenameMigrationGenerator < Rails::Generators::Base
   argument :new_name, type: :string, banner: "new setting name", required: true
 
   def create_migration_file
-    timestamp = Time.zone.now.to_s.tr("^0-9", "")[0..13]
-    file_path = "db/migrate/#{timestamp}_rename_#{old_name}_setting.rb"
+    migration_version = ActiveRecord::Migration.next_migration_number(0)
+    file_path = "db/migrate/#{migration_version}_rename_#{old_name}_setting.rb"
     class_name = "Rename#{old_name.classify}Setting"
 
     validate_setting_name!(old_name)
@@ -30,9 +30,7 @@ class SiteSettingRenameMigrationGenerator < Rails::Generators::Base
   private
 
   def validate_setting_name!(name)
-    begin
-      SiteSetting.send(name)
-    rescue NoMethodError
+    if !SiteSetting.respond_to?(name)
       say "Site setting with #{name} does not exist"
       raise ArgumentError
     end
