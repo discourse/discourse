@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
@@ -11,6 +12,16 @@ export default class ChatThreadListHeader extends Component {
 
   threadListTitle = I18n.t("chat.threads.list");
 
+  get title() {
+    let title = replaceEmoji(this.threadListTitle);
+
+    if (this.site.mobileView) {
+      title += " - " + replaceEmoji(this.args.channel.title);
+    }
+
+    return htmlSafe(title);
+  }
+
   <template>
     <Navbar as |navbar|>
       <navbar.BackButton
@@ -19,15 +30,7 @@ export default class ChatThreadListHeader extends Component {
         @title={{i18n "chat.return_to_channel"}}
       />
 
-      <navbar.Title
-        @title={{replaceEmoji this.threadListTitle}}
-        @icon="discourse-threads"
-        as |title|
-      >
-        {{#if this.site.mobileView}}
-          <title.SubTitle @title={{replaceEmoji @channel.title}} />
-        {{/if}}
-      </navbar.Title>
+      <navbar.Title @title={{this.title}} @icon="discourse-threads" />
 
       <navbar.Actions as |action|>
         <action.CloseThreadsButton @channel={{@channel}} />
