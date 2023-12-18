@@ -1749,6 +1749,13 @@ trust:
   min_trust_level_to_allow_invite:
     default: 2
     enum: "TrustLevelSetting"
+    hidden: true
+  invite_allowed_groups:
+    default: "12"
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_ignore:
     default: 2
     enum: "TrustLevelSetting"

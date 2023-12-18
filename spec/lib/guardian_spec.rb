@@ -607,13 +607,13 @@ RSpec.describe Guardian do
     fab!(:moderator)
 
     it "returns true if user has sufficient trust level" do
-      SiteSetting.min_trust_level_to_allow_invite = 2
+      SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(Guardian.new(trust_level_2).can_invite_to_forum?).to be_truthy
       expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
     end
 
     it "returns false if user trust level does not have sufficient trust level" do
-      SiteSetting.min_trust_level_to_allow_invite = 2
+      SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(Guardian.new(trust_level_1).can_invite_to_forum?).to be_falsey
     end
 
@@ -639,7 +639,7 @@ RSpec.describe Guardian do
       let(:groups) { [group, another_group] }
 
       before do
-        user.update!(trust_level: TrustLevel[2])
+        user.change_trust_level!(TrustLevel[2])
         group.add_owner(user)
       end
 
@@ -660,8 +660,8 @@ RSpec.describe Guardian do
   describe "can_invite_to?" do
     describe "regular topics" do
       before do
-        SiteSetting.min_trust_level_to_allow_invite = 2
-        user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+        SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        user.update!(trust_level: 2)
       end
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       fab!(:topic)
@@ -693,7 +693,7 @@ RSpec.describe Guardian do
       end
 
       it "returns true for a group owner" do
-        group_owner.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+        group_owner.update!(trust_level: 2)
         expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
       end
 
@@ -718,7 +718,7 @@ RSpec.describe Guardian do
         end
 
         it "should return true for a group owner" do
-          group_owner.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+          group_owner.update!(trust_level: 2)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(true)
         end
 
@@ -748,8 +748,8 @@ RSpec.describe Guardian do
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
 
       before do
-        user.change_trust_level!(SiteSetting.min_trust_level_to_allow_invite)
-        moderator.change_trust_level!(SiteSetting.min_trust_level_to_allow_invite)
+        user.change_trust_level!(TrustLevel[2])
+        moderator.change_trust_level!(TrustLevel[2])
       end
 
       context "when private messages are disabled" do

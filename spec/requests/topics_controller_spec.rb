@@ -4926,7 +4926,7 @@ RSpec.describe TopicsController do
         fab!(:user_topic) { Fabricate(:topic, user: user) }
 
         it "should return the right response" do
-          user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+          user.update!(trust_level: TrustLevel[2])
 
           post "/t/#{user_topic.id}/invite.json", params: { email: "someguy@email.com" }
 
