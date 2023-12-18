@@ -239,10 +239,10 @@ jobs:
         run: DISCOURSE_DEV_DB=discourse_test QUNIT_PARALLEL=3 bin/rake themes:qunit_all_official
         timeout-minutes: 15
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
         with:
-          name: ember-exam-execution-plugins-frontend
+          name: ember-exam-execution-plugins-frontend-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
 
       - name: Ember Build for System Tests
@@ -289,10 +289,10 @@ jobs:
         shell: bash
 
       - name: Upload failed system test screenshots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
         with:
-          name: failed-system-test-screenshots
+          name: failed-system-test-screenshots-${{ hashFiles('tmp/capybara/*.png') }}
           path: tmp/capybara/*.png
 
       - name: Check for flaky tests report
@@ -318,10 +318,10 @@ jobs:
         run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Upload flaky tests report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
-          name: flaky-test-reports
+          name: flaky-test-reports-${{ hashFiles('tmp/turbo_rspec_flaky_tests-*') }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Check Annotations
@@ -404,8 +404,8 @@ jobs:
         run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
-          name: ember-exam-execution-${{ matrix.browser }}
+          name: ember-exam-execution-${{ matrix.browser }}-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
