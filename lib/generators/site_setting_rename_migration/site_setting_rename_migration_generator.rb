@@ -30,9 +30,7 @@ class SiteSettingRenameMigrationGenerator < Rails::Generators::Base
   private
 
   def validate_setting_name!(name)
-    begin
-      SiteSetting.send(name)
-    rescue NoMethodError
+    if !SiteSetting.respond_to?(name)
       say "Site setting with #{name} does not exist"
       raise ArgumentError
     end
