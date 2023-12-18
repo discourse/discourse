@@ -306,16 +306,19 @@ jobs:
           fi
         shell: bash
 
+      - name: Echo
+        run: echo "${{github.run_id}}"
+
       - name: Create flaky tests report artifact
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
-        run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.job }}.json
+        run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}.json
 
       - name: Upload flaky tests report
         uses: actions/upload-artifact@v3
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
           name: flaky-test-reports
-          path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.job }}.json
+          path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}.json
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
