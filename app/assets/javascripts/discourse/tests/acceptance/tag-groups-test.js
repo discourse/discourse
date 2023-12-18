@@ -1,5 +1,4 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { setPrefix } from "discourse-common/lib/get-url";
 import { test } from "qunit";
 import {
   acceptance,
@@ -7,6 +6,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { setPrefix } from "discourse-common/lib/get-url";
 
 acceptance("Tag Groups", function (needs) {
   needs.user();
