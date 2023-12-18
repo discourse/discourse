@@ -3,7 +3,7 @@
   --full-page-border-radius: 12px;
   --full-page-sidebar-width: 275px;
   --channel-list-avatar-size: 30px;
-  --chat-header-offset: 50px;
+  --chat-header-offset: 46px;
 }
 
 // Very specific hack to ensure the contextual menu (copy/paste/...) is
@@ -198,106 +198,14 @@ body.has-full-page-chat {
   grid-template-columns: var(--full-page-sidebar-width) 1fr;
   background: var(--d-content-background);
 
-  .chat-full-page-header {
-    border-bottom: 1px solid var(--primary-low);
-    background: var(--secondary);
-    z-index: 3;
-    display: flex;
-    align-items: center;
-
-    &__back-btn {
-      width: 40px;
-      min-width: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .chat-channel-title {
-      .category-chat-name,
-      .chat-name,
-      .dm-usernames {
-        color: var(--primary);
-        display: inline;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-
-    .-not-following {
-      .chat-channel-title {
-        max-width: calc(100% - 50px);
-      }
-      .join-channel-btn {
-        margin-left: auto;
-      }
-    }
+  .c-navbar-container {
+    position: sticky;
+    top: var(--header-offset);
   }
 
   .chat-messages-scroll {
     box-sizing: border-box;
     height: 100%;
-  }
-}
-
-.chat-full-page-header__left-actions {
-  display: flex;
-  align-items: stretch;
-}
-
-.chat-full-page-header__title {
-  display: flex;
-  align-items: stretch;
-}
-
-.chat-full-page-header__right-actions {
-  align-items: stretch;
-  display: flex;
-  flex-grow: 1;
-  gap: 0.5rem;
-  font-size: var(--font-up-1);
-  justify-content: flex-end;
-}
-
-.chat-full-page-header {
-  box-sizing: border-box;
-
-  .chat-channel-header-details {
-    display: flex;
-    align-items: stretch;
-    flex: 1;
-    max-width: 100%;
-
-    .chat-channel-archive-status {
-      text-align: right;
-      padding-right: 1em;
-    }
-  }
-
-  .chat-channel-title {
-    margin: 0;
-    max-width: 100%;
-
-    .d-icon:not(.d-icon-lock) {
-      height: 1.25em;
-      width: 1.25em;
-    }
-
-    .category-chat-name,
-    .dm-username {
-      font-weight: 700;
-      font-size: var(--font-up-1);
-      line-height: var(--font-up-1);
-    }
-
-    .dm-usernames {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  .chat-channel-retry-archive {
-    display: flex;
-    margin-top: 1em;
   }
 }
 

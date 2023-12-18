@@ -1,23 +1,58 @@
-.chat-navbar {
-  flex-shrink: 0;
+.c-navbar {
   display: flex;
   align-items: center;
   width: 100%;
+  gap: 0.25rem;
 
   &-container {
-    padding-inline: 1rem;
-    position: sticky;
+    padding-inline: 0.5rem;
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
-    top: var(--header-offset);
-    height: 50px;
+    height: var(--chat-header-offset);
+    min-height: var(--chat-header-offset);
     box-sizing: border-box;
     display: flex;
-    z-index: z("header") - 1;
+    z-index: z("composer", "content") - 1;
+
+    &.-clickable {
+      cursor: pointer;
+    }
+  }
+
+  .single-select-header {
+    padding: 0.3675rem 0.584rem;
+  }
+
+  .c-navbar__channel-title {
+    @include ellipsis();
+    font-weight: 700;
+  }
+
+  .c-navbar__title {
+    @include ellipsis();
+    font-weight: 700;
+  }
+
+  .c-navbar__sub-title {
+    line-height: var(--line-height-small);
+    font-size: var(--font-down-1-rem);
+    font-weight: normal;
+  }
+
+  .c-navbar__threads-list-button {
+    gap: 0.25rem;
+
+    &.has-unreads {
+      .d-icon-discourse-threads {
+        color: var(--tertiary);
+      }
+    }
   }
 }
 
-.chat-navbar__right-actions {
+.c-navbar__actions {
   list-style: none;
   margin-left: auto;
+  display: flex;
+  align-items: center;
 }

@@ -22,7 +22,7 @@ RSpec.describe "Drawer", type: :system do
         visit("/")
         chat_page.open_from_header
         drawer_page.open_channel(channel)
-        page.find(".chat-channel-title").click
+        page.find(".c-navbar__channel-title").click
 
         expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}/info/members")
       end
@@ -94,7 +94,7 @@ RSpec.describe "Drawer", type: :system do
       chat_page.open_from_header
       expect(page).to have_selector(".chat-drawer.is-expanded")
 
-      page.find(".chat-drawer-header").click
+      page.find(".c-navbar").click
 
       expect(page).to have_selector(".chat-drawer:not(.is-expanded)")
     end

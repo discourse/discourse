@@ -16,12 +16,12 @@ module PageObjects
 
       def close
         mouseout
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__close-btn").click
+        find("#{VISIBLE_DRAWER} .c-navbar__close-drawer-button").click
       end
 
       def back
         mouseout
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__back-btn").click
+        find("#{VISIBLE_DRAWER} .c-navbar__back-button").click
       end
 
       def open_channel(channel)
@@ -55,7 +55,7 @@ module PageObjects
 
       def maximize
         mouseout
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__full-screen-btn").click
+        find("#{VISIBLE_DRAWER} .c-navbar__full-page-button").click
       end
 
       def has_open_thread?(thread = nil)
@@ -79,7 +79,7 @@ module PageObjects
       end
 
       def thread_list_button_selector
-        ".chat-threads-list-button"
+        ".c-navbar__threads-list-button"
       end
 
       def has_unread_thread_indicator?(count:)

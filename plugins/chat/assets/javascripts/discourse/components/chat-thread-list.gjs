@@ -7,7 +7,6 @@ import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
-import ChatThreadListHeader from "discourse/plugins/chat/discourse/components/chat/thread-list/header";
 import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
 
@@ -179,10 +178,6 @@ export default class ChatThreadList extends Component {
   <template>
     {{#if this.shouldRender}}
       <div class="chat-thread-list" {{this.subscribe @channel}}>
-        {{#if @includeHeader}}
-          <ChatThreadListHeader @channel={{@channel}} />
-        {{/if}}
-
         <div class="chat-thread-list__items" {{this.fill}}>
 
           {{#each this.sortedThreads key="id" as |thread|}}
