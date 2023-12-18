@@ -156,7 +156,15 @@ class CategoryList
     notification_levels = CategoryUser.notification_levels_for(@guardian.user)
     default_notification_level = CategoryUser.default_notification_level
 
-    if @options[:parent_category_id].blank?
+    if SiteSetting.lazy_load_categories
+      subcategory_ids = {}
+      Category
+        .secured(@guardian)
+        .where(parent_category_id: @categories.map(&:id))
+        .pluck(:id, :parent_category_id)
+        .each { |id, parent_id| (subcategory_ids[parent_id] ||= []) << id }
+      @categories.each { |c| c.subcategory_ids = subcategory_ids[c.id] || [] }
+    elsif @options[:parent_category_id].blank?
       subcategory_ids = {}
       subcategory_list = {}
       to_delete = Set.new

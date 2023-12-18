@@ -78,9 +78,9 @@ const Category = RestModel.extend({
     }
   },
 
-  @discourseComputed("subcategories")
-  isParent(subcategories) {
-    return subcategories && subcategories.length > 0;
+  @discourseComputed("has_children", "subcategories")
+  isParent(hasChildren, subcategories) {
+    return hasChildren || (subcategories && subcategories.length > 0);
   },
 
   @discourseComputed("subcategories")
