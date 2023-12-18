@@ -37,6 +37,10 @@ export default class List extends Component {
     return this.args.itemComponent ?? Item;
   }
 
+  get emptyStateComponent() {
+    return EmptyState;
+  }
+
   @action
   loadCollection() {
     discourseDebounce(this, this.debouncedLoadCollection, INPUT_DELAY);
@@ -52,7 +56,9 @@ export default class List extends Component {
         {{#each @collection.items as |item|}}
           {{yield (hash Item=(component this.itemComponent item=item))}}
         {{else}}
-          {{yield (hash EmptyState=(component EmptyState))}}
+          {{#if @collection.fetchedOnce}}
+            {{yield (hash EmptyState=this.emptyStateComponent)}}
+          {{/if}}
         {{/each}}
       </div>
 
