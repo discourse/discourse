@@ -105,7 +105,7 @@ def crawl_topics
         # abort if this in an incremental crawl and there were too many consecutive, skipped topics
         if @finished && @skipped_topic_count > ABORT_AFTER_SKIPPED_TOPIC_COUNT
           puts "Skipping all other topics, because this is an incremental crawl.".green
-          return
+          return # rubocop:disable Lint/NonLocalExitFromIterator
         end
       end
     end
