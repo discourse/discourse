@@ -39,7 +39,7 @@ export default class UserThreads extends Component {
       as |list|
     >
       <list.Item as |thread|>
-        <div class="c-user-thread">
+        <div class="c-user-thread" data-id={{thread.id}}>
           <ThreadTitle @thread={{thread}} />
           <ChannelTitle @channel={{thread.channel}} />
           <ThreadIndicator

@@ -50,12 +50,9 @@ export default class List extends Component {
     <div class="c-list">
       <div {{this.fill}} ...attributes>
         {{#each @collection.items as |item|}}
-          {{yield
-            (hash
-              Item=(component this.itemComponent item=item)
-              EmptyState=(component EmptyState)
-            )
-          }}
+          {{yield (hash Item=(component this.itemComponent item=item))}}
+        {{else}}
+          {{yield (hash EmptyState=(component EmptyState))}}
         {{/each}}
       </div>
 

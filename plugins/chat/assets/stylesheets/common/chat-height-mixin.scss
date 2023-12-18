@@ -3,7 +3,7 @@
   // 46px is the height of the navbar
   height: calc(
     var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-      var(--composer-height, 0px) - 46px
+      var(--composer-height, 0px) - var(--chat-header-offset)
   );
 
   // mobile with keyboard opened

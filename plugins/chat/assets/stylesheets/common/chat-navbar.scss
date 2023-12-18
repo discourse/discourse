@@ -8,8 +8,8 @@
     padding-inline: 0.5rem;
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
-    height: 46px;
-    min-height: 46px;
+    height: var(--chat-header-offset);
+    min-height: var(--chat-header-offset);
     box-sizing: border-box;
     display: flex;
     z-index: z("composer", "content") - 1;
