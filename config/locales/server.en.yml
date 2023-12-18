@@ -1983,6 +1983,7 @@ en:
     min_trust_level_to_allow_invite: "The minimum trust level required to invite users"
     invite_allowed_groups: "Groups that are allowed to invite users."
     min_trust_level_to_allow_ignore: "The minimum trust level required to ignore users"
+    ignore_allowed_groups: "Groups that are allowed to ignore other users."
     allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
@@ -2569,6 +2570,7 @@ en:
       delete_all_posts_and_topics_allowed_groups: "tl4_delete_posts_and_topics"
       user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
       invite_allowed_groups: "min_trust_level_to_allow_invite"
+      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
 
     placeholder:
       discourse_connect_provider_secrets:
