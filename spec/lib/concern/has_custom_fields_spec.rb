@@ -406,6 +406,7 @@ RSpec.describe HasCustomFields do
 
       test_item.custom_fields = { "foo" => "aa" }
       expect { test_item.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { test_item.save_custom_fields }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     describe "upsert_custom_fields" do
