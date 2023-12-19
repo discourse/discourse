@@ -102,4 +102,14 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       )
     end
   end
+
+  context "when on mobile", mobile: true do
+    it "has a link to the settings" do
+      chat_page.visit_channel_members(channel_1)
+
+      expect(page).to have_css(
+        ".c-back-button[href='/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings']",
+      )
+    end
+  end
 end

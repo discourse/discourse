@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
@@ -10,6 +11,7 @@ import DiscourseURL, { userPath } from "discourse/lib/url";
 import autoFocus from "discourse/modifiers/auto-focus";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import icon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import I18n from "discourse-i18n";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
@@ -22,6 +24,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
   @service chatApi;
   @service modal;
   @service loadingSlider;
+  @service site;
 
   @tracked filter = "";
   @tracked showAddMembers = false;
@@ -122,6 +125,16 @@ export default class ChatRouteChannelInfoMembers extends Component {
   }
 
   <template>
+    {{#if this.site.mobileView}}
+      <LinkTo
+        class="c-back-button"
+        @route="chat.channel.info.settings"
+        @model={{@channel}}
+      >
+        {{icon "chevron-left"}}
+        {{i18n "chat.members_view.back_to_settings"}}
+      </LinkTo>
+    {{/if}}
     {{#if this.showAddMembers}}
       <MessageCreator
         @mode={{this.addMembersMode}}

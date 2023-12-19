@@ -312,6 +312,7 @@ en:
       members_view:
         filter_placeholder: Find members
         add_member: Add Member
+        back_to_settings: "Back to settings"
 
       about_view:
         associated_topic: Linked topic
