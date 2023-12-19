@@ -92,10 +92,6 @@ module("Unit | Utility | plugin-api", function (hooks) {
   test("modifyClass works with two native classes", function (assert) {
     @allowClassModifications
     class ClassTestThingy {
-      static notCreate() {
-        return "base";
-      }
-
       get keep() {
         return "hey!";
       }
@@ -110,18 +106,12 @@ module("Unit | Utility | plugin-api", function (hooks) {
         ClassTestThingy,
         (Base) =>
           class extends Base {
-            static notCreate() {
-              return super.notCreate() + "ball";
-            }
-
             get prop() {
               return "g'day";
             }
           }
       );
     });
-
-    assert.strictEqual(ClassTestThingy.notCreate(), "baseball");
 
     const thingy = new ClassTestThingy();
     assert.strictEqual(thingy.keep, "hey!");
@@ -157,5 +147,52 @@ module("Unit | Utility | plugin-api", function (hooks) {
     assert.true(true, "no error thrown while merging mixin with getter");
 
     assert.strictEqual(obj.foo, "modified getter", "returns correct result");
+  });
+
+  test("modifyClassStatic works with classic Ember objects", function (assert) {
+    const TestThingy = EmberObject.extend({});
+    TestThingy.reopenClass({
+      notCreate() {
+        return "base";
+      },
+    });
+
+    getOwner(this).register("test-thingy:main", TestThingy);
+
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClassStatic("test-thingy:main", {
+        pluginId: "plugin-api-test",
+
+        notCreate() {
+          return this._super() + "ball";
+        },
+      });
+    });
+
+    assert.strictEqual(TestThingy.notCreate(), "baseball");
+  });
+
+  test("modifyClassStatic works with two native classes", function (assert) {
+    @allowClassModifications
+    class ClassTestThingy {
+      static notCreate() {
+        return "base";
+      }
+    }
+
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClassStatic(
+        ClassTestThingy,
+        (Base) =>
+          class extends Base {
+            static notCreate() {
+              // super.notCreate() +
+              return "ball";
+            }
+          }
+      );
+    });
+
+    assert.strictEqual(ClassTestThingy.notCreate(), "baseball");
   });
 });
