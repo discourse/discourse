@@ -440,6 +440,7 @@ RSpec.describe Admin::ApiController do
           "search",
           "invites",
           "wordpress",
+          "logs",
         )
 
         topic_routes = [
@@ -479,6 +480,10 @@ RSpec.describe Admin::ApiController do
           "/u/:username/feature-topic (PUT)",
           "/u/:username/clear-featured-topic (PUT)",
         )
+
+        expect(
+          scopes["logs"].any? { |h| h["urls"].include?("/logs/messages.json (POST)") },
+        ).to be_truthy
       end
     end
 
