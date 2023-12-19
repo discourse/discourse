@@ -155,6 +155,8 @@ pt:
       removed_user: "Removeu %{who} %{when}"
       removed_group: "Removeu %{who} %{when}"
       autobumped: "Automaticamente colidido %{when}"
+      tags_changed: "Etiquetas atualizadas %{when}"
+      category_changed: "Categoria atualizada %{when}"
       autoclosed:
         enabled: "Fechado %{when}"
         disabled: "Aberto %{when}"
@@ -185,6 +187,7 @@ pt:
     software_update_prompt:
       message: "Atualizámos este site, <span>por favor recarregue a página</span> ou poderá experienciar um comportamento inesperado."
       dismiss: "Marcar como visto"
+    bootstrap_mode: "Primeiros passos"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
@@ -226,6 +229,7 @@ pt:
     delete: "Eliminar"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
+    multiple_errors: "Ocorreram múltiplos erros: %{errors}"
     sign_up: "Inscrever-se"
     log_in: "Entrar"
     age: "Idade"
@@ -294,10 +298,13 @@ pt:
       edit_bookmark: "Editar Favorito"
       clear_bookmarks: "Remover Marcadores"
       help:
+        bookmark: "Clique para marcar este tópico como favorito"
+        edit_bookmark_for_topic: "Clique para editar os favoritos para este tópico"
         unbookmark: "Clique para remover todos os marcadores deste tópico"
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico"
     bookmarks:
       created: "Adicionou este post aos favoritos. %{name}"
+      created_generic: "Você marcou isso como favorito. %{name}"
       create: "Criar favorito"
       edit: "Editar favorito"
       not_bookmarked: "adicionar esta mensagem aos marcadores"
@@ -312,6 +319,8 @@ pt:
       list_permission_denied: "Você não tem permissão para ver os favoritos deste utilizador."
       no_user_bookmarks: "Você não tem posts marcados; os favoritos permitem-lhe consultar rapidamente posts específicos."
       auto_delete_preference:
+        label: "Após ser notificado"
+        never: "Manter marcador"
         when_reminder_sent: "Excluir favorito"
       search_placeholder: "Pesquise favoritos por nome, título do tópico ou conteúdo do post"
       search: "Pesquisar"
@@ -355,6 +364,7 @@ pt:
     saved: "Guardado!"
     upload: "Carregar"
     uploading: "A carregar…"
+    processing: "Processando..."
     uploading_filename: "A enviar: %{filename}..."
     processing_filename: "A processar: %{filename}..."
     clipboard: "área de transferência"
@@ -381,7 +391,10 @@ pt:
         search: "Pesquisar por uma Mensagem"
         placeholder: "digite aqui o título da mensagem, url ou id"
     review:
+      show_more: "Mostrar mais"
+      show_less: "Mostrar menos"
       order_by: "Ordenar por"
+      date_filter: "Postado entre"
       in_reply_to: "Em resposta a"
       explain:
         why: "explique por que este item acabou na fila"
@@ -502,6 +515,7 @@ pt:
         type: "Motivo"
         status: "Estado"
         submitted_by: "Reportado por"
+        reviewed_timestamp: "Data da revisão"
       statuses:
         pending:
           title: "Pendente"
@@ -509,12 +523,20 @@ pt:
           title: "Aprovado"
         rejected:
           title: "Rejeitado"
+        rejected_user:
+          title: "Utilizador rejeitado"
+        rejected_post:
+          title: "Publicação rejeitada"
+        ignored:
+          title: "Sinalização ignorada"
         reviewed:
           title: "Todos revistos"
         all:
           title: "Tudo"
       context_question:
+        is_this_post: "Esta publicação é %{reviewable_human_score_types}?"
         delimiter: "ou"
+        something_else_wrong: "Existe algo de errado com esta publicação?"
       types:
         reviewable_flagged_post:
           title: "Publicação Sinalizada"
@@ -527,6 +549,8 @@ pt:
           title: "Utilizador"
         reviewable_post:
           title: "Mensagem"
+        reviewable_chat_message:
+          title: "Mensagem sinalizada em conversa"
       approval:
         title: "A Publicação Necessita de Aprovação"
         description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
@@ -791,6 +815,7 @@ pt:
         group_type: "Tipo de grupo"
         is_group_user: "Membro"
         is_group_owner: "Dono"
+        search_results: "Os resultados da pesquisa aparecerão abaixo."
       title:
         one: "Grupo"
         other: "Grupos"
@@ -866,7 +891,9 @@ pt:
         icon: "Selecione um ícone"
         image: "Enviar uma imagem"
       default_notifications:
+        modal_title: "Notificações padrão pelo utilizador"
         modal_yes: "Sim"
+        modal_no: "Não, apenas aplicar a mudança daqui em diante"
     user_action_groups:
       "1": "Gostos Dados"
       "2": "Gostos Recebidos"
@@ -942,6 +969,10 @@ pt:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
+      download_archive:
+        title: "Exportar os seus dados"
+        button_text: "Solicitar arquivo"
+        confirm: "Quer realmente transferir o arquivo das atividades e preferências da sua conta?"
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -993,8 +1024,10 @@ pt:
           warning: "Tem a certeza que pretende limpar o tópico em destaque?"
       use_current_timezone: "Usar fuso horário atual"
       profile_hidden: "O perfil público deste utilizador está oculto."
+      inactive_user: "Este utilizador já não está ativo."
       expand_profile: "Expandir"
       collapse_profile: "Colapsar"
+      sr_collapse_profile: "Ocultar detalhes do perfil"
       bookmarks: "Marcadores"
       bio: "Sobre mim"
       timezone: "Zona Horária"
@@ -1027,6 +1060,7 @@ pt:
       dynamic_favicon: "Mostrar contagens no ícone do navegador"
       skip_new_user_tips:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
+      reset_seen_user_tips: "Mostrar dicas do utilizador novamente"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
       color_scheme_default_on_all_devices: "Definir esquema(s) de cor padrão em todos os meus dispositivos"
       color_scheme: "Esquema de Cores"
