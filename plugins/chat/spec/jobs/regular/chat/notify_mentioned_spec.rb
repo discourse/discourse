@@ -282,10 +282,6 @@ describe Jobs::Chat::NotifyMentioned do
       expect(data_hash[:is_direct_message_channel]).to eq(false)
       expect(data_hash[:chat_channel_title]).to eq(expected_channel_title)
       expect(data_hash[:chat_channel_slug]).to eq(public_channel.slug)
-
-      chat_mention =
-        Chat::Mention.where(notification: created_notification, user: user_2, chat_message: message)
-      expect(chat_mention).to be_present
     end
   end
 

@@ -85,7 +85,7 @@ RSpec.describe Chat::UpdateUserLastRead do
         before do
           Jobs.run_immediately!
           Chat::Mention.create!(
-            notification: notification,
+            notifications: [notification],
             user: current_user,
             chat_message: message_1,
           )
