@@ -1967,7 +1967,7 @@ security:
   display_personal_messages_tag_counts:
     default: false
   cross_origin_opener_policy_header:
-    default: "unsafe-none"
+    default: "same-origin-allow-popups"
     type: enum
     choices:
       - "unsafe-none"
