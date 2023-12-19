@@ -197,10 +197,7 @@ gem "rack-mini-profiler", require: ["enable_rails_patches"]
 gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
 
-# Pin to 0.4.14 for now because 0.5.0 is broken.
-# It has been fixed in https://github.com/tmm1/rbtrace/commit/1c674885694c6f2cb935eeccb0591feeb67679cf but we are waiting
-# for a new release to be published.
-gem "rbtrace", "0.4.14", require: false, platform: :mri
+gem "rbtrace", require: false, platform: :mri
 
 gem "gc_tracer", require: false, platform: :mri
 
