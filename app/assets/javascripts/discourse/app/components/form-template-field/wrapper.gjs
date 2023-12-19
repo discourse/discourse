@@ -18,6 +18,7 @@ const FormTemplateField = <template>
     @choices={{@content.choices}}
     @validations={{@content.validations}}
     @value={{@initialValue}}
+    @handlePaste={{@handlePaste}}
   />
 </template>;
 
@@ -25,6 +26,7 @@ export default class FormTemplateFieldWrapper extends Component {
   @tracked error = null;
   @tracked parsedTemplate = null;
 
+  uploadPasteHandlerAttached = false;
   initialValues = this.args.initialValues ?? {};
 
   fieldTypes = {
@@ -67,6 +69,16 @@ export default class FormTemplateFieldWrapper extends Component {
     return this._fetchTemplate(this.args.id);
   }
 
+  @action
+  shouldHandlePaste(template) {
+    if (template.type === "upload" && !this.uploadPasteHandlerAttached) {
+      this.uploadPasteHandlerAttached = true;
+      return true;
+    }
+
+    return false;
+  }
+
   async _fetchTemplate(id) {
     const response = await FormTemplate.findById(id);
     const templateContent = await response.form_template.template;
@@ -84,6 +96,7 @@ export default class FormTemplateFieldWrapper extends Component {
             @component={{get this.fieldTypes content.type}}
             @content={{content}}
             @initialValue={{get this.initialValues content.id}}
+            @handlePaste={{this.shouldHandlePaste content}}
           />
         {{/each}}
       </div>

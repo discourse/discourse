@@ -1,16 +1,20 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { computed } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import { clipboardHelpers } from "discourse/lib/utilities";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import icon from "discourse-common/helpers/d-icon";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class FormTemplateFieldUpload extends Component.extend(
   UppyUploadMixin
 ) {
+  @service siteSettings;
   @tracked uploadValue;
   @tracked uploadedFiles = [];
   @tracked disabled = this.uploadingOrProcessing;
@@ -24,6 +28,38 @@ export default class FormTemplateFieldUpload extends Component.extend(
     return this.uploadingOrProcessing
       ? "form_templates.upload_field.uploading"
       : "form_templates.upload_field.upload";
+  }
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (this.handlePaste) {
+      document.addEventListener("paste", this.pasteEventListener);
+    }
+  }
+
+  willDestroyElement() {
+    this._super(...arguments);
+
+    if (this.handlePaste) {
+      document.removeEventListener("paste", this.pasteEventListener);
+    }
+  }
+
+  @bind
+  pasteEventListener(event) {
+    const { canUpload, canPasteHtml, types } = clipboardHelpers(event, {
+      siteSettings: this.siteSettings,
+      canUpload: true,
+    });
+
+    if (!canUpload || canPasteHtml || types.includes("text/plain")) {
+      return;
+    }
+
+    if (event && event.clipboardData && event.clipboardData.files) {
+      this._addFiles([...event.clipboardData.files], { pasted: true });
+    }
   }
 
   /**
