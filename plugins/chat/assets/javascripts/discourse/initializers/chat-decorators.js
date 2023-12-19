@@ -159,6 +159,9 @@ export default {
         image: {
           verticalFit: true,
         },
+        gallery: {
+          enabled: true,
+        },
         callbacks: {
           elementParse: (item) => {
             item.src = item.el[0].dataset.largeSrc || item.el[0].src;
