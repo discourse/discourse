@@ -5,7 +5,6 @@
   gap: 0.25rem;
 
   &-container {
-    padding-inline: 0.5rem;
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
     height: var(--chat-header-offset);
@@ -13,6 +12,13 @@
     box-sizing: border-box;
     display: flex;
     z-index: z("composer", "content") - 1;
+
+    .full-page & {
+      padding-inline: 1rem;
+    }
+    .chat-drawer & {
+      padding-inline: 0.25rem;
+    }
 
     &.-clickable {
       cursor: pointer;
