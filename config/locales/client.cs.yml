@@ -2160,6 +2160,7 @@ cs:
         post_approved: "příspěvek schválen"
         reaction: "nová reakce"
         new_features: "byly vydány nové funkce Discourse!"
+        admin_problems: "na administrační nástěnce vašeho webu jsou nová doporučení"
     upload_selector:
       uploading: "Nahrávám"
       select_file: "Vyberte soubor"

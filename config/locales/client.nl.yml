@@ -2353,6 +2353,7 @@ nl:
         reaction: "nieuwe reactie"
         votes_released: "Stem is vrijgegeven"
         new_features: "Er zijn nieuwe Discourse-functies uitgebracht!"
+        admin_problems: "nieuw advies op je websitedashboard"
     upload_selector:
       uploading: "Uploaden"
       processing: "Upload verwerken"

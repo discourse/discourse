@@ -2228,6 +2228,7 @@ hu:
         reaction: "új reakció"
         votes_released: "A szavazat feloldásra került"
         new_features: "új Discourse funkciók jelentek meg!"
+        admin_problems: "új tanácsok a webhely irányítópultján"
     upload_selector:
       uploading: "Feltöltés"
       processing: "Feltöltés feldolgozása"

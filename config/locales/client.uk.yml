@@ -2237,8 +2237,6 @@ uk:
         name: "Discord"
         title: "Увійти через Discord"
         sr_title: "Увійти через Discord"
-      passkey:
-        name: "Увійти за допомогою ключа доступу"
       second_factor_toggle:
         totp: "Натомість використовуйте застосунок автентифікації"
         backup_code: "Замість цього використовуйте резервний код"
@@ -2320,6 +2318,9 @@ uk:
     date_time_picker:
       from: Від
       to: До
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} перевищує максимально допустимий %{max_file_size}"
     emoji_picker:
       filter_placeholder: Шукати emoji
       smileys_&_emotion: Смайли та емотикони
@@ -2673,6 +2674,7 @@ uk:
         reaction: "нова реакція"
         votes_released: "Голосування опубліковано"
         new_features: "з’явилися нові функції Discourse!"
+        admin_problems: "нова порада на інформаційній панелі вашого сайту"
     upload_selector:
       uploading: "Надсилання"
       processing: "Обробка надсилання"
@@ -4777,6 +4779,7 @@ uk:
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
+      back_to_forum: "Повернутися до форуму"
       tags:
         remove_muted_tags_from_latest:
           always: "завжди"
@@ -4967,6 +4970,7 @@ uk:
         user: "Користувач"
         title: "API"
         key: "Ключ"
+        keys: "Ключі"
         created: Створено
         updated: Оновлено
         last_used: Використано
@@ -5578,6 +5582,7 @@ uk:
         title: "Листи"
         settings: "Налаштування"
         templates: "Шаблони"
+        templates_title: "Шаблони електронної пошти"
         preview_digest: "Стислий виклад новин"
         advanced_test:
           title: "Розширений Тест"

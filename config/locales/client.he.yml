@@ -2322,6 +2322,9 @@ he:
     date_time_picker:
       from: מאת
       to: אל
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} גדול מהגודל המרבי המותר %{max_file_size}"
     emoji_picker:
       filter_placeholder: חיפוש אחר אמוג׳י
       smileys_&_emotion: חייכנים ורגש
@@ -2675,6 +2678,7 @@ he:
         reaction: "תגובת אמוג׳י חדשה"
         votes_released: "ההצבעה שוחררה"
         new_features: "יכולות חדשות של Discourse יצאו לאור!"
+        admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
     upload_selector:
       uploading: "מעלה"
       processing: "ההעלאה עוברת עיבוד"
@@ -4779,6 +4783,7 @@ he:
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
+      back_to_forum: "חזרה לפורום"
       tags:
         remove_muted_tags_from_latest:
           always: "תמיד"
@@ -4969,6 +4974,7 @@ he:
         user: "משתמש"
         title: "API"
         key: "מפתח"
+        keys: "מפתחות"
         created: נוצר
         updated: עודכן
         last_used: שימוש אחרון
@@ -5580,6 +5586,7 @@ he:
         title: "הודעות דוא״ל"
         settings: "הגדרות"
         templates: "תבניות"
+        templates_title: "תבניות דוא״ל"
         preview_digest: "תצוגה מקדימה של תמצית"
         advanced_test:
           title: "בדיקה מתקדמת"

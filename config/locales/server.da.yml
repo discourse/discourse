@@ -1494,8 +1494,6 @@ da:
     category_colors: "En liste med hexadecimal farveværdier som er tilladte for kategorier."
     default_dark_mode_color_scheme_id: "Farveskemaet der bruges ved mørk tilstand."
     dark_mode_none: "Ingen"
-    max_image_size_kb: "Den maksimale billedupload størrelse i kB. Dette skal konfigureres i nginx (client_ max_ body_ size) / apache eller proxy. Billeder større end dette og mindre end client_max_body_size vil blive mindsket så så de opfylder betingelserne for upload."
-    max_attachment_size_kb: "Den maksimale uploadstørrelse af vedhæftede filer i kB. Dette skal konfigureres i nginx (client_ max_ body_ size) / apache eller proxy."
     authorized_extensions: "En liste over filendelser tilladt for overførsel (brug '*' for at aktivere alle filtyper)"
     authorized_extensions_for_staff: "En liste over filendelser, der er tilladt for overførsel for personalebrugere ud over den liste, der er defineret i webstedsindstillingen `authorized_extensions` (brug '*' for at tillade alle filtyper)"
     max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."

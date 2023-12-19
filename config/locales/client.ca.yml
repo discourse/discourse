@@ -1723,6 +1723,7 @@ ca:
         topic_reminder: "recordatori de tema"
         liked_consolidated: "nous 'm'agrada'"
         post_approved: "publicació aprovada"
+        admin_problems: "nou consell al tauler de control del vostre lloc web"
     upload_selector:
       uploading: "Carregant"
       select_file: "Tria un fitxer"

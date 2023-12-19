@@ -2053,6 +2053,7 @@ ur:
         membership_request_consolidated: "نئی رکنیت کی درخواستیں"
         reaction: "نیا ردعمل"
         votes_released: "ووٹ جاری کر دیا گیا"
+        admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
     upload_selector:
       uploading: "اَپ لوڈ کیا جا رہا ہے"
       processing: "پروسیسنگ اپ لوڈ"

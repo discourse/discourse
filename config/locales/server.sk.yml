@@ -54,7 +54,24 @@ sk:
   themes:
     other_error: "počas aktualizácie tému sa niečo nepodarilo"
     import_error:
+      about_json_too_big: "Chyba importu: about.json je väčší ako limit %{limit} ."
+      asset_too_big: "Aktíva %{filename} sú väčšie ako limit %{limit}"
+      theme_too_big: "Téma je väčšia ako limit %{limit}"
       git: "Nastala chyba pri klonovaní git repozitára. Prístup bol odmietnuty, alebo repozitár nebol nájdený."
+      too_many_files: "Počet súborov (%{count}) v téme prekročil maximálny povolený počet súborov (%{limit})"
+      migrations:
+        invalid_filename: "Nesprávny názov súboru pre migračný súbor: %{filename}. Názvy súborov musia začínať 4 číslicami, po ktorých nasleduje pomlčka a potom názov, ktorý obsahuje len alfanumerické znaky s pomlčkami."
+        too_many_pending_migrations: "V tejto téme je príliš veľa čakajúcich migrácií. Témy nesmú v jednej aktualizácii zaviesť viac ako 100 migrácií"
+        out_of_sequence: "Migrácia '%{name}' je mimo poradia. Posledná migrácia pre túto tému mala číslo verzie %{current} , ktoré je vyššie ako nová migrácia."
+        syntax_error: "Nepodarilo sa spustiť migráciu '%{name}', pretože obsahuje chybu syntaxe: %{error}"
+        exceeded_memory_limit: "Migrácia '%{name}' zlyhala, pretože prekročila limit pamäte"
+        timed_out: "Časový limit migrácie „%{name}“ vypršal"
+        no_exported_function: "Migrácia '%{name}' neexportuje funkciu na vykonanie migrácie"
+        default_export_not_a_function: "Migrácia '%{name}' má predvolený export, ktorý nie je funkciou. Predvolený export musí byť funkcia, ktorá vykoná migráciu"
+        no_returned_value: "Migrácia '%{name}' nevrátila žiadnu hodnotu (alebo vrátila nulovú alebo nedefinovanú). Musí vrátiť objekt Mapy"
+        wrong_return_type: "Migrácia „%{name}“ vrátila neznámy typ údajov. Musí vrátiť objekt Mapy"
+        runtime_error: "Pri migrácii '%{name}' sa vyskytla nasledujúca chyba spustenia: %{error}"
+        unknown_setting_returned_by_migration: "Migrácie '%{name}' vrátili nastavenie '%{setting_name}', ktoré nie je deklarované v súbore settings.yml témy"
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
   emails:
@@ -133,6 +150,8 @@ sk:
     site_settings:
       default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
       s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
+      page_publishing_requirements: "Publikovanie stránky nie je možné povoliť, ak je povolené zabezpečené nahrávanie."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Používateľské agendy musia mať dĺžku aspoň 3 znaky, aby nedošlo k náhodnému obmedzeniu rýchlosti legitímnych používateľov."
   invite:
     disabled_errors:
       invalid_access: "Nemáte oprávnenie na zobrazenie požadovaných údajov!"
@@ -151,6 +170,7 @@ sk:
     join_group: "Pridať sa do skupiny"
   reading_time: "Doba čítania"
   likes: "Páči sa mi"
+  action_already_performed: "Ups! Túto akciu ste už vykonali. Môžete skúsiť obnoviť stránku?"
   too_many_replies:
     one: "Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na jeden v rámci jednej témy."
     few: "Ľutujeme, noví používatelia majú dočasne obmedzený počet príspevkov na %{count} v rámci jednej témy."
@@ -164,6 +184,7 @@ sk:
       few: "%{count} ďalšie odpovede"
       many: "%{count} ďalších odpovedí"
       other: "%{count} ďalších odpovedí"
+    loading: "Načítanie diskusie…"
     permalink: "Trvalý odkaz"
     imported_from: "Toto je sprievodná diskusia k pôvodnej téme na %{link}"
     in_reply_to: "▶ %{username}"
@@ -324,6 +345,21 @@ sk:
   meta_category_description: "Diskusia o stránke, organizácii, ako funguje a ako ju môžme vylepšit"
   staff_category_name: "Zamestnanci"
   staff_category_description: "Súkromna kategória pre zamestnaneckú diskusiu. Témy su viditeľné len pre správcov a moderátorov diskusie"
+  discourse_welcome_topic:
+    body: |
+      Sme veľmi radi, že ste sa k nám pridali.
+
+      %{site_info_quote}
+
+      Tu je niekoľko vecí, ktoré môžete urobiť, aby ste mohli začať:
+
+      :speaking_head: **Predstavte sa** pridaním svojej fotografie a informácií o sebe a svojich záujmoch do [svojho profilu](%{base_path}/my/preferences/account). Na akú vec by ste sa chceli opýtať?
+
+      :open_book: **Oboznámte sa s komunitou** tak, že si [prezriete diskusie](%{base_path}/top), ktoré tu už prebiehajú. Keď sa vám nejaký príspevok zdá zaujímavý, informatívny alebo zábavný, použite :heart: , aby ste vyjadrili svoje uznanie alebo podporu!
+
+      :handshake: **Pridávajte** komentovaním, zdieľaním vlastného pohľadu, kladením otázok alebo ponúkaním spätnej väzby v diskusii. Pred odpovedaním alebo zakladaním nových tém si prečítajte [Usmernenia komunity](%{base_path}/faq).
+
+      > Ak potrebujete pomoc alebo máte návrh, neváhajte sa opýtať na %{feedback_category} alebo [kontaktujte administrátorov](%{base_path}/o).
   category:
     topic_prefix: "O kategórii: %{category} "
     post_template: "%{replace_paragraph}\n\nDo tohoto odstavce dajte dlhší popis kategórie, alebo popíšte pokyny alebo pravidlá:\n\n- Prečo by ľudia mali použiť túto kategóriu? Na čo je určená?\n\n- V čom sa líši od ostatných existujúcich kategórií ktoré už máte?\n\n- Čo by vo všeobecnosti mala obsahovať téma v tejto kategórií?\n\n- Potrebujeme túto kategóriu? Môžeme ju spojiť s inóu kategóriou alebo pod-kategóriou?\n"
@@ -345,6 +381,7 @@ sk:
   post:
     image_placeholder:
       broken: "Tento obrázok je poškodený"
+    hidden_bidi_character: "Obojsmerné riadiace znaky môžu zmeniť poradie, v akom sa text vykresľuje. To by sa mohlo použiť na zakrytie škodlivého kódu."
   rate_limiter:
     hours:
       one: "%{count} hodina"
@@ -521,6 +558,16 @@ sk:
       title: "Páči sa mi"
       description: "Páči sa mi tento príspevok"
       short_description: "Páči sa mi tento príspevok"
+  draft:
+    too_many_drafts:
+      title: "Príliš veľa návrhov"
+      description: "Dosiahli ste maximálny počet povolených návrhov. Prosím, odstráňte niektoré z [vašich návrhov](%{base_url}/my/activity/drafts) a skúste to znova."
+  user_activity:
+    no_log_search_queries: "Protokoly vyhľadávacích dotazov sú momentálne zakázané (správca ich môže povoliť v nastaveniach lokality)."
+  webauthn:
+    validation:
+      user_presence_error: "Vyžaduje sa prítomnosť používateľa."
+      malformed_public_key_credential_error: "Poskytnutý verejný kľúč je neplatný."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -773,22 +820,28 @@ sk:
         user: Používateľ
         qtt_like: Obdržaných 'páči sa mi'
   dashboard:
+    group_email_credentials_warning: 'Vyskytol sa problém s e-mailovými poverenciami pre skupinu <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Z doručenej pošty skupiny nebudú odosielané žiadne e-maily, kým sa tento problém nevyrieši. %{error}'
     rails_env_warning: "Váš server beží v %{env} móde"
     host_names_warning: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."
     sidekiq_warning: 'Sidekiq neni spustený. Množstvo úloh, ako napríklad posielanie emailov, je vykonávaných asynchrónne prostrednictvom sidekiq. Prosim zabezpečte aby bol spustený aspoň jeden proces sidekiq <a href="https://github.com/mperham/sidekiq" target="_blank">Viac o Sidekiq</a>.'
     queue_size_warning: "Počet úloh v zásobníku je %{queue_size}, čo je dosť veľa. To môže byť príznakom problému s procesom (procesmi) Sidekiq, alebo by ste mali spustiť viac Sidekiq procesov."
     memory_warning: "Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. "
     subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
+    category_style_deprecated: "Váš diskurz v súčasnosti používa zastaraný štýl kategórie, ktorý bude odstránený pred konečným vydaním beta verzie Discusu 3.2. Pokyny, ako zachovať zvolený štýl kategórie, nájdete v časti <a href='https://meta.discourse.org/t/282441'>Presun na nastavenie lokality v štýle jednej kategórie</a> ."
   site_settings:
     disabled: "vypnuté"
     censored_words: "Slová, ktoré budu automatický nahradené znakmi &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatické zmazanie príspevkov, ktoré ostali skryté viac ako 30 dní"
     allow_user_locale: "Povoliť používateľom zvoliť si vlastný jazyk"
+    min_post_length: "Minimálna povolená dĺžka príspevku v znakoch (okrem osobných správ)"
+    min_first_post_length: "Minimálna povolená dĺžka prvého príspevku (tela témy) (okrem osobných správ)"
+    min_personal_message_post_length: "Minimálna povolená dĺžka príspevku v znakoch pre správy (prvý príspevok aj odpovede)"
     max_post_length: "Maximálny povolený počet znakov v príspevkoch"
     min_topic_title_length: "Minimálny povolený počet znakov v názve témy"
     max_topic_title_length: "Maximálny povolený počet znakov v názve témy"
     min_personal_message_title_length: "Minimálny povolený počet znakov v správe"
     min_search_term_length: "Minimálny povolený počet znakov vo vyhľadávaní"
+    search_default_sort_order: "Predvolené poradie triedenia pre celostránkové vyhľadávanie"
     allow_uncategorized_topics: "Pvoliť vytváranie tém bez kategórií. UPOZORNENIE: Pokiaľ existujú nekategorizované témy, musíte ich zaradiť do kategórii skôr než túto možnosť vypnete."
     allow_duplicate_topic_titles: "Povoliť témy s rovnakými, duplikovanými názvami"
     unique_posts_mins: "Koľko minút musí byť medzi dvomi rovnakými príspevkami od jedného používateľa."
@@ -804,8 +857,10 @@ sk:
     add_rel_nofollow_to_user_content: 'Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: "rake posts:rebake"'
     post_excerpt_maxlength: "Maximálna dĺžka príspevku okrem zhrnutia."
     post_onebox_maxlength: "Maximálna dĺžka vloženého Discourse príspevku v znakoch."
+    enable_inline_onebox_on_all_domains: "Ignorujte nastavenie webu enabled_inline_onebox_domains a povoľte inline onebox vo všetkých doménach."
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
+    enforce_second_factor: "Vyžadujte od používateľov, aby pred prístupom do používateľského rozhrania Discourse povolili dvojfaktorové overovanie. Výberom možnosti \"all\" (všetci) ju vynútite pre všetkých používateľov. Vyberte možnosť \"staff\", ak ju chcete uplatniť len na používateľov z radov zamestnancov. Toto nastavenie nemá vplyv na overovanie API alebo poskytovateľa DiscourseConnect."
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
     summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -910,7 +965,6 @@ sk:
     min_title_similar_length: "Minimálna dĺžka nadpisu na spustenie kontroly na podobné témy."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
     dark_mode_none: "Žiadny"
-    max_attachment_size_kb: "Mmaximálna veľkosť vloženej prílohy v kB. Rovnako musí byť nastavená v nginx (client_max_body_size) / apache alebo na proxy."
     authorized_extensions: "Zoznam povolených príloh súborov ktoré je umožnené vkladať (použite '*' na vkladanie súborov všetkých typov)"
     max_similar_results: "Koľko podobných tém sa má zobraziť nad editorom ak vytvára novú tému. Porovnanie je založené na nadpise a tele správy."
     title_prettify: "Predchádzať bežným malým preklepom a chybám, zapnutým kapitálkam, malému prvému znaku, duplikácií ! a ?, extra . na konci a podobne."
