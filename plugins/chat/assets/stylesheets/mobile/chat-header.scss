@@ -22,6 +22,10 @@
       color: var(--primary-medium);
       font-size: var(--font-up-1);
       font-weight: var(--font-bold);
+
+      &:focus {
+        color: var(--primary);
+      }
     }
 
     a.chat-heading {

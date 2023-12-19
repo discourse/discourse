@@ -11,10 +11,7 @@ export default class ChatHeaderForum extends Component {
     return siteSettings.chat_enabled && site.mobileView;
   }
 
-  @service currentUser;
-  @service site;
   @service router;
-
   @tracked previousURL;
 
   title = I18n.t("chat.back_to_forum");
@@ -49,7 +46,7 @@ export default class ChatHeaderForum extends Component {
       <div class="chat-header">
         <a
           href={{this.forumLink}}
-          class="icon btn-flat back-to-forum"
+          class="btn-flat back-to-forum"
           title={{this.title}}
         >
           {{icon "arrow-left"}}
