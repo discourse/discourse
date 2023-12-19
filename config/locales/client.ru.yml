@@ -2575,6 +2575,7 @@ ru:
         reaction: "Новая реакция"
         votes_released: "Голосование опубликовано"
         new_features: "появились новые функции Discourse!"
+        admin_problems: "новый совет в панели управления сайта"
     upload_selector:
       uploading: "Загрузка"
       processing: "Обработка загружаемого контента"

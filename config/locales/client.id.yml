@@ -1590,6 +1590,7 @@ id:
         watching_first_post: "topik baru"
         post_approved: "tulisan disetujui"
         membership_request_consolidated: "permintaan keanggotaan baru"
+        admin_problems: "saran baru di dasbor situs Anda"
     upload_selector:
       uploading: "Mengunggah"
       select_file: "Pilih Berkas"

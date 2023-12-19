@@ -2391,6 +2391,7 @@ es:
         reaction: "nueva reacción"
         votes_released: "Voto liberado"
         new_features: "¡Se han lanzado nuevas funciones de Discourse!"
+        admin_problems: "nuevos consejos en tu panel de control del sitio"
     upload_selector:
       uploading: "Subiendo"
       processing: "Procesando subida"

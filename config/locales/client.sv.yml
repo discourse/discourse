@@ -2360,6 +2360,7 @@ sv:
         reaction: "ny reaktion"
         votes_released: "Röstningen släpptes"
         new_features: "nya Discourse-funktioner har släppts!"
+        admin_problems: "nytt råd på din webbplats översiktspanel"
     upload_selector:
       uploading: "Laddar upp"
       processing: "Bearbetar uppladdning"

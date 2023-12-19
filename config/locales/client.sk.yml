@@ -525,6 +525,8 @@ sk:
         email:
           title: "Email"
           last_updated_by: "podľa"
+          prefill:
+            gmail: "Gmail"
           credentials:
             username: "Používateľské meno"
             password: "Heslo"
@@ -1299,8 +1301,9 @@ sk:
         name: "Twitter"
       discord:
         name: "Discord"
-      passkey:
-        name: "Prihlásenie pomocou prístupového kľúča"
+      no_login_methods:
+        title: "Žiadne spôsoby prihlásenia"
+        description: "Nie sú nakonfigurované žiadne spôsoby prihlásenia. Administrátori môžu navštíviť <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> a prekonfigurovať stránku."
     invites:
       accept_title: "Pozvánka"
       welcome_to: "Vitajte na %{site_name}!"
@@ -1347,6 +1350,7 @@ sk:
       whisper: "šepot"
       add_warning: "Toto je oficiálne varovanie."
       toggle_whisper: "Prepnúť šepot"
+      insert_table: "Vložiť tabuľku"
       posting_not_on_topic: "Na akú tému chcete odpovedať?"
       saved_local_draft_tip: "uložené lokálne"
       similar_topics: "Vaša téma je podobná s…"
@@ -1841,7 +1845,9 @@ sk:
           other: "Označili ste <b>%{count}</b> príspevkov"
     post:
       quote_reply: "Citácia"
+      quote_reply_shortcut: "Citovať (alebo stlačte q)"
       quote_edit: "Upraviť"
+      quote_edit_shortcut: "Upraviť (alebo stlačte e)"
       quote_share: "Zdieľaj"
       edit_reason: "Dôvod:"
       post_number: "príspevok %{number}"
@@ -1903,6 +1909,8 @@ sk:
         delete: "odstrániť tento príspevok"
         undelete: "vrátiť späť odstránenie príspevku"
         share: "zdieľať odkaz na tento príspevok"
+        copy_title: "skopírovať odkaz na tento príspevok do schránky"
+        link_copied: "Odkaz skopírovaný!"
         more: "Viac"
         delete_replies:
           just_the_post: "Nie, len tento príspevok"
@@ -2322,6 +2330,7 @@ sk:
       choose_for_topic: "voliteľné štítky"
       add_synonyms: "Pridať"
       delete_tag: "Zmazať štítok"
+      description: "Popis (max. 1000 znakov)"
       sort_by: "Zoradiť podľa:"
       sort_by_count: "počtu"
       sort_by_name: "mena"
@@ -2452,14 +2461,62 @@ sk:
           default: "Prosím zadajte platnú hodnotu."
           email: "Zadajte prosím platný email."
     table_builder:
+      title: "Zostavovač tabuľky"
+      modal:
+        title: "Zostavovač tabuľky"
+        create: "Vytvoriť tabuľku"
+        help:
+          title: "Používanie tabuľkového editora"
+          enter_key: "Zadajte"
+          tab_key: "Tab"
+          new_row: "na konci riadku vložte nový riadok."
+          new_col: "na konci stĺpca vložte nový stĺpec."
+          options: "Kliknutím pravým tlačidlom myši na bunky získate prístup k ďalším možnostiam."
+        confirm_close: "Naozaj chcete zatvoriť nástroj na tvorbu tabuliek? Všetky neuložené zmeny sa stratia."
       edit:
+        btn_edit: "Upraviť tabuľku"
         modal:
+          title: "Upraviť tabuľku"
           cancel: "zrušiť"
           create: "Uložiť"
           reason: "prečo upravujete?"
+          trigger_reason: "Pridať dôvod úpravy"
+        default_edit_reason: "Aktualizujte tabuľku pomocou editora tabuliek"
+      default_header:
+        col_1: "Stĺpec 1"
+        col_2: "Stĺpec 2"
+        col_3: "Stĺpec 3"
+        col_4: "Stĺpec 4"
       spreadsheet:
+        no_records_found: "Nenašli sa žiadne záznamy"
         show: "Zobraziť"
+        entries: "záznamy"
         about: "O stránke"
+        prompts:
+          delete_selected_rows: "Naozaj chcete odstrániť vybraté riadky?"
+          delete_selected_cols: "Naozaj chcete odstrániť vybraté stĺpce?"
+          will_destroy_merged_cells: "Táto akcia zničí všetky existujúce zlúčené bunky. Ste si istí?"
+          will_clear_search_results: "Táto akcia zničí všetky existujúce zlúčené bunky. Ste si istí?"
+          conflicts_with_merged_cells: "Došlo ku konfliktu s inou zlúčenou bunkou"
+        invalid_merge_props: "Neplatné zlúčené vlastnosti"
+        cells_already_merged: "Bunka už bola zlúčená"
+        no_cells_selected: "Nie sú vybraté žiadne bunky"
+        context_menu:
+          row:
+            before: "Vloženie nového riadku pred"
+            after: "Vloženie nového riadku za"
+            delete: "Odstrániť vybraté riadky"
+          col:
+            before: "Vloženie nového stĺpca pred"
+            after: "Vloženie nového stĺpca za"
+            delete: "Odstrániť vybraté stĺpce"
+            rename: "Premenovať tento stĺpec"
+          order:
+            ascending: "Poradie vzostupne"
+            descending: "Poradie zostupne"
+          copy: "Kopírovať..."
+          paste: "Prilepiť..."
+          save: "Uložiť ako..."
   admin_js:
     type_to_filter: "filtrovať..."
     admin:
@@ -2469,6 +2526,8 @@ sk:
         remove_muted_tags_from_latest:
           always: "vždy"
           never: "nikdy"
+      reports:
+        meta_doc: "Podrobný prehľad správ nájdete v našej dokumentácii <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'></a> ."
       dashboard:
         title: "Ovládací panel"
         version: "Verzia"

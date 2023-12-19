@@ -1043,6 +1043,8 @@ fa_IR:
     min_trust_to_edit_wiki_post: "حداقل سطح اعتماد برای ویرایش نوشته ای که به‌عنوان دانشنامه نشانه‌گزاری شده است. "
     min_trust_to_edit_post: "حداقل سطح اعتماد برای ویرایش نوشته مورد نیاز است."
     min_trust_to_allow_self_wiki: "حداقل سطح اعتماد برای تبدیل نوشته‌ی خود به دانش‌نامه نیاز است."
+    invite_allowed_groups: "گروه‌هایی که مجاز به دعوت از کاربران هستند."
+    ignore_allowed_groups: "گروه‌هایی که مجاز به نادیده گرفتن سایر کاربران هستند."
     newuser_max_links: "کاربر جدید می تواند چند پیوند به نوشته اضافه کند. "
     newuser_max_attachments: "کاربر جدید می تواند چند پیوست اضافه کند به پست. "
     newuser_max_mentions_per_post: "حداکثر تعداد @نام اطلاعیه ها که کاربر جدید در یک پست می تواند استفاده کند. "
@@ -1061,7 +1063,6 @@ fa_IR:
     desktop_category_page_style: "سبک بصری برای صفحه‌ی دسته‌بندی"
     category_colors: "لیست مقادیر رنگ هگزا دسیمال مجاز برای دسته‌بندی‌ها."
     dark_mode_none: "هیچ کدام"
-    max_attachment_size_kb: "حداکثر سایز فایل پیوست شده به واحد کیلوبایت. این باید در پیکربندی nginx باشد (client_max_body_size) / همچنین apache یا proxy."
     authorized_extensions: "لیست پسوند‌های مجاز فایل برای بارگذاری ( از '*' برای اجازه به تمام فایل‌ها استفاده کنید)"
     theme_authorized_extensions: "لیست پسوند‌های قابل بارگذاری برای قالب (از '*' برای اجازه به تمامی فایل‌ها استفاده کنید)"
     max_similar_results: "چند موضوع مشابه زیر ویرایشگر وقتی که موضوع جدید ایجاد می شود، نمایش داده شود. مقایسه بر اساس عنوان و متن است. "
@@ -1244,6 +1245,9 @@ fa_IR:
       min_username_length_range: "شما نمیتوانید مقدار حداقل را بیشتر از حداکثر قرار دهید."
       max_username_length_range: "شما نمی‌توانید حداکثر را کمتر از حداقل قرار دهید."
       markdown_linkify_tlds: "شما مقدار «*» را نمی‌توانید وارد کنید."
+    keywords:
+      invite_allowed_groups: "min_trust_level_to_allow_invite"
+      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

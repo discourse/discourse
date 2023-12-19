@@ -2091,6 +2091,7 @@ fa_IR:
         post_approved: "نوشته تایید شده"
         reaction: "واکنش جدید"
         new_features: "ویژگی‌های جدید دیسکورس منتشر شده است!"
+        admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
     upload_selector:
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"
@@ -3460,6 +3461,7 @@ fa_IR:
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "مدیر"
+      back_to_forum: "بازگشت به انجمن"
       tags:
         remove_muted_tags_from_latest:
           always: "همیشه"
@@ -3598,6 +3600,7 @@ fa_IR:
         none: "هم اکنون هیچ کلید API فعالی وجود ندارد"
         user: "کاربر"
         title: "API"
+        keys: "کلیدها"
         created: ساخته شده
         updated: به روز شده
         never_used: (هرگز)
@@ -3949,6 +3952,7 @@ fa_IR:
         title: "ایمیل‌ها"
         settings: "تنظیمات"
         templates: "قالب‌ها"
+        templates_title: "قالب‌های ایمیل"
         preview_digest: "پیشنمایش خلاصه"
         advanced_test:
           email: "پیام اصلی"

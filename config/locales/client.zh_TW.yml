@@ -1743,6 +1743,7 @@ zh_TW:
         watching_first_post: "新話題"
         liked_consolidated: "新的讚"
         post_approved: "貼文已通過審核"
+        admin_problems: "有新的建議出現在後台儀表板"
     upload_selector:
       uploading: "正在上傳"
       select_file: "選取檔案"

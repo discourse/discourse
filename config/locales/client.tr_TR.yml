@@ -2388,6 +2388,7 @@ tr_TR:
         reaction: "yeni tepki"
         votes_released: "Oy verildi"
         new_features: "yeni Discourse özellikleri yayınlandı!"
+        admin_problems: "sitenizin kontrol panelinde yeni öneriler mevcut"
     upload_selector:
       uploading: "Yükleniyor"
       processing: "Yükleme İşleniyor"
@@ -4270,6 +4271,7 @@ tr_TR:
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
+      back_to_forum: "Foruma Geri Dön"
       tags:
         remove_muted_tags_from_latest:
           always: "her zaman"
@@ -4450,6 +4452,7 @@ tr_TR:
         user: "Kullanıcı"
         title: "API"
         key: "Anahtar"
+        keys: "Anahtarlar"
         created: Oluşturuldu
         updated: Güncellendi
         last_used: Son Kullanılan
@@ -4554,6 +4557,8 @@ tr_TR:
               commenting: WP Discourse eklentisi yorumlama özellikleri için gerekli.
               discourse_connect: WP Discourse eklentisi DiscourseConnect özellikleri için gerekli.
               utilities: WP Discourse eklentisinde Utilities kullanıyorsanız gerekli.
+            logs:
+              messages: /logs dosyasındaki mesajları listeleyin veya belirli bir log mesajı alın.
       web_hooks:
         title: "Web Kancaları"
         none: "Şu anda bir web kancası yok."
@@ -5046,6 +5051,7 @@ tr_TR:
         title: "E-postalar"
         settings: "Ayarlar"
         templates: "Şablonlar"
+        templates_title: "E-posta Şablonları"
         preview_digest: "Ön İzleme Özeti"
         advanced_test:
           title: "Gelişmiş Test"

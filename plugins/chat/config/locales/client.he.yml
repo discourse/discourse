@@ -448,6 +448,11 @@ he:
           other: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
         single_user: "<span>התגובה של %{username} היא </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} וגם %{username} הגיבו עם </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
+          two: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
       composer:
         toggle_toolbar: "החלפת מצב סרגל כלים"
         italic_text: "טקסט נטוי"
