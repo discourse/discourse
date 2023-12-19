@@ -54,7 +54,11 @@ sk:
   themes:
     other_error: "počas aktualizácie tému sa niečo nepodarilo"
     import_error:
+      about_json_too_big: "Chyba importu: about.json je väčší ako limit %{limit} ."
+      asset_too_big: "Aktíva %{filename} sú väčšie ako limit %{limit}"
+      theme_too_big: "Téma je väčšia ako limit %{limit}"
       git: "Nastala chyba pri klonovaní git repozitára. Prístup bol odmietnuty, alebo repozitár nebol nájdený."
+      too_many_files: "Počet súborov (%{count}) v téme prekročil maximálny povolený počet súborov (%{limit})"
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
   emails:
@@ -521,6 +525,10 @@ sk:
       title: "Páči sa mi"
       description: "Páči sa mi tento príspevok"
       short_description: "Páči sa mi tento príspevok"
+  draft:
+    too_many_drafts:
+      title: "Príliš veľa návrhov"
+      description: "Dosiahli ste maximálny počet povolených návrhov. Prosím, odstráňte niektoré z [vašich návrhov](%{base_url}/my/activity/drafts) a skúste to znova."
   topic_flag_types:
     spam:
       title: "Spam"
