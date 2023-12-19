@@ -1,10 +1,10 @@
+{{avatar
+  @result
+  imageSize="small"
+  template=@result.avatar_template
+  username=@result.username
+}}
 <div class="user-titles">
-  {{avatar
-    @result
-    imageSize="small"
-    template=@result.avatar_template
-    username=@result.username
-  }}
   <span class="username">
     {{format-username @result.username}}
   </span>
