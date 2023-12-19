@@ -37,6 +37,7 @@
   .c-navbar__title {
     @include ellipsis();
     font-weight: 700;
+    padding-left: 0.75rem;
   }
 
   .c-navbar__sub-title {
