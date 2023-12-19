@@ -92,6 +92,10 @@ module("Unit | Utility | plugin-api", function (hooks) {
   test("modifyClass works with two native classes", function (assert) {
     @allowClassModifications
     class ClassTestThingy {
+      static notCreate() {
+        return "base";
+      }
+
       get keep() {
         return "hey!";
       }
@@ -106,12 +110,18 @@ module("Unit | Utility | plugin-api", function (hooks) {
         ClassTestThingy,
         (Base) =>
           class extends Base {
+            static notCreate() {
+              return super.notCreate() + "ball";
+            }
+
             get prop() {
               return "g'day";
             }
           }
       );
     });
+
+    assert.strictEqual(ClassTestThingy.notCreate(), "baseball");
 
     const thingy = new ClassTestThingy();
     assert.strictEqual(thingy.keep, "hey!");
