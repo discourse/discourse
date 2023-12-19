@@ -5017,6 +5017,8 @@ en:
               commenting: Necessary for the WP Discourse plugin commenting features.
               discourse_connect: Necessary for the WP Discourse plugin DiscourseConnect features.
               utilities: Necessary if you use WP Discourse plugin Utilities.
+            logs:
+              messages: List messages from /logs or get a specific log message.
 
       web_hooks:
         title: "Webhooks"
