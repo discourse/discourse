@@ -172,6 +172,8 @@ module("Unit | Utility | plugin-api", function (hooks) {
     assert.strictEqual(TestThingy.notCreate(), "baseball");
   });
 
+  // TODO: test modifying the same class twice
+
   test("modifyClassStatic works with two native classes", function (assert) {
     @allowClassModifications
     class ClassTestThingy {

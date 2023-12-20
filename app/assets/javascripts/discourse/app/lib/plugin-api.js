@@ -285,16 +285,15 @@ class PluginApi {
       return klass;
     } else {
       const klass = resolverName;
-      let modificationsSet = classModifications.get(
-        klass[classModificationsKey]
-      );
+      const id = klass[classModificationsKey];
+      const PreviousClass = classModifications.get(id) || klass;
 
-      if (!modificationsSet) {
-        modificationsSet = new Set();
-        classModifications.set(klass[classModificationsKey], modificationsSet);
-      }
+      const ModifiedClass = changes(PreviousClass);
+      Object.defineProperty(ModifiedClass, "name", {
+        value: PreviousClass.name,
+      });
 
-      modificationsSet.add(changes);
+      classModifications.set(id, ModifiedClass);
     }
   }
 
