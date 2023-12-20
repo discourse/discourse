@@ -1040,7 +1040,7 @@ acceptance("Search - Glimmer - assistant", function (needs) {
         users: [
           {
             username: "TeaMoe",
-            name: "TeaMoe",
+            name: "TeaMoe Full",
             avatar_template:
               "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
           },
@@ -1107,14 +1107,17 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "@");
-    const firstUser =
-      ".search-menu .results ul.search-menu-assistant .search-item-user";
-    const firstUsername = query(firstUser).innerText.trim();
+    const firstUser = query(
+      ".search-menu .results ul.search-menu-assistant .search-item-user"
+    );
+    const username = firstUser.querySelector(".username").innerText.trim();
+    assert.strictEqual(username, "TeaMoe");
 
-    assert.strictEqual(firstUsername, "TeaMoe");
+    const name = firstUser.querySelector(".name").innerText.trim();
+    assert.strictEqual(name, "TeaMoe Full");
 
-    await click(query(firstUser));
-    assert.strictEqual(query("#search-term").value, `@${firstUsername}`);
+    await click(firstUser);
+    assert.strictEqual(query("#search-term").value, `@${username}`);
   });
 
   test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {

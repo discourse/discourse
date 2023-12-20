@@ -2033,6 +2033,7 @@ ko:
         membership_request_consolidated: "새 멤버십 요청"
         reaction: "새 반응"
         votes_released: "투표가 시작되었습니다"
+        admin_problems: "사이트 대시 보드에 대한 새로운 조언"
     upload_selector:
       uploading: "업로드 중"
       processing: "업로드 처리 중"

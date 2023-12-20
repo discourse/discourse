@@ -2050,8 +2050,6 @@ it:
         name: "Discord"
         title: "Accedi con Discord"
         sr_title: "Accedi con Discord"
-      passkey:
-        name: "Accedi con una passkey"
       second_factor_toggle:
         totp: "Utilizzare un'app di autenticazione"
         backup_code: "Utilizza un codice di backup"
@@ -2432,6 +2430,7 @@ it:
         reaction: "nuova reazione"
         votes_released: "Il voto è stato sbloccato"
         new_features: "sono state rilasciate nuove funzionalità di Discourse!"
+        admin_problems: "nuovo avviso sul dashboard del tuo sito"
     upload_selector:
       uploading: "In caricamento"
       processing: "Caricamento in corso"

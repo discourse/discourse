@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: baabf89127d712855684b351073764026a6c1df1
+  revision: c17c0d71b2a3d33f59996f5fb615929487700598
   specs:
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
@@ -356,7 +356,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rbtrace (0.4.14)
+    rbtrace (0.5.1)
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
@@ -627,7 +627,7 @@ DEPENDENCIES
   railties
   rake
   rb-fsevent
-  rbtrace (= 0.4.14)
+  rbtrace
   rchardet
   redcarpet
   redis

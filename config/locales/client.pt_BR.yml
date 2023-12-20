@@ -2360,6 +2360,7 @@ pt_BR:
         reaction: "nova reação"
         votes_released: "Voto emitido"
         new_features: "novos recursos do Discourse foram lançados!"
+        admin_problems: "nova recomendação no painel de controle do seu site"
     upload_selector:
       uploading: "Enviando"
       processing: "Processando envio"

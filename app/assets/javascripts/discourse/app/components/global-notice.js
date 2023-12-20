@@ -121,6 +121,10 @@ export default class GlobalNotice extends Component {
         Notice.create({
           text: I18n.t("emails_are_disabled"),
           id: "alert-emails-disabled",
+          options: {
+            dismissable: true,
+            persistentDismiss: false,
+          },
         })
       );
     } else if (this.siteSettings.disable_emails === "non-staff") {
@@ -128,6 +132,10 @@ export default class GlobalNotice extends Component {
         Notice.create({
           text: I18n.t("emails_are_disabled_non_staff"),
           id: "alert-emails-disabled",
+          options: {
+            dismissable: true,
+            persistentDismiss: false,
+          },
         })
       );
     }

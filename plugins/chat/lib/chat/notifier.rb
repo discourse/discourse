@@ -85,7 +85,8 @@ module Chat
       already_notified_user_ids =
         Chat::Mention
           .where(chat_message: @chat_message)
-          .where.not(notification: nil)
+          .left_outer_joins(:notifications)
+          .where.not(notifications: { id: nil })
           .pluck(:user_id)
 
       to_notify, inaccessible, all_mentioned_user_ids = list_users_to_notify

@@ -122,8 +122,6 @@ module.exports = function (defaults) {
 
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
-  const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
-
   const testStylesheetTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
     discourseScss(
@@ -147,12 +145,6 @@ module.exports = function (defaults) {
         outputFile: `assets/admin.js`,
       })
     ),
-    applyTerser(
-      concat(wizardTree, {
-        inputFiles: ["**/*.js"],
-        outputFile: `assets/wizard.js`,
-      })
-    ),
     applyTerser(generateScriptsTree(app)),
     applyTerser(discoursePluginsTree),
     testStylesheetTree,
@@ -166,6 +158,7 @@ module.exports = function (defaults) {
     .slice(0, 8);
 
   const appTree = compatBuild(app, Webpack, {
+    splitAtRoutes: ["wizard"],
     staticAppPaths: ["static"],
     packagerOptions: {
       webpackConfig: {
@@ -195,7 +188,6 @@ module.exports = function (defaults) {
               // TODO: delete special case for jquery when removing app.import() above
               ((EMBER_MAJOR_VERSION < 4 && request === "jquery") ||
                 request.startsWith("admin/") ||
-                request.startsWith("wizard/") ||
                 request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))
             ) {

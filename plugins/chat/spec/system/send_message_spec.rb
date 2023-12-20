@@ -50,18 +50,14 @@ RSpec.describe "Send message", type: :system do
           expect(chat_page.sidebar).to have_no_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do |session|
+        using_session(:user_1) do
           channel_page.send_message
 
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-
-          session.quit
         end
 
-        using_session(:user_2) do |session|
+        using_session(:user_2) do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1, mention: true)
-
-          session.quit
         end
       end
     end
@@ -96,18 +92,14 @@ RSpec.describe "Send message", type: :system do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
         end
 
-        using_session(:user_1) do |session|
+        using_session(:user_1) do
           channel_page.send_message
 
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1)
-
-          session.quit
         end
 
-        using_session(:user_2) do |session|
+        using_session(:user_2) do
           expect(chat_page.sidebar).to have_direct_message_channel(channel_1, mention: true)
-
-          session.quit
         end
       end
     end

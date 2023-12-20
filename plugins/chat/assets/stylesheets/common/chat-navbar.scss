@@ -5,7 +5,6 @@
   gap: 0.25rem;
 
   &-container {
-    padding-inline: 0.5rem;
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
     height: var(--chat-header-offset);
@@ -13,6 +12,13 @@
     box-sizing: border-box;
     display: flex;
     z-index: z("composer", "content") - 1;
+    padding-inline: 1rem;
+
+    .chat-drawer &,
+    .c-routes-channel-thread &,
+    .c-routes-channel-info & {
+      padding-inline: 0;
+    }
 
     &.-clickable {
       cursor: pointer;
@@ -31,6 +37,18 @@
   .c-navbar__title {
     @include ellipsis();
     font-weight: 700;
+
+    .c-routes-channel-threads & {
+      padding-left: 0;
+    }
+
+    .chat-drawer & {
+      padding-left: 1rem;
+    }
+  }
+
+  .c-navbar__back-button ~ .c-navbar__title {
+    padding-left: 0;
   }
 
   .c-navbar__sub-title {
@@ -44,7 +62,7 @@
 
     &.has-unreads {
       .d-icon-discourse-threads {
-        color: var(--tertiary);
+        color: var(--tertiary-med-or-tertiary);
       }
     }
   }

@@ -1443,6 +1443,7 @@ zh_CN:
         ok: "您的姓名没有问题"
       username:
         title: "用户名"
+        instructions: "独特、无空格、简短。"
         short_instructions: "其他人可以使用 @%{username} 来提及您"
         available: "您的用户名可用"
         not_available: "不可用，试试 %{suggestion}？"
@@ -1636,6 +1637,7 @@ zh_CN:
       confirm_access:
         title: "确认访问"
         incorrect_password: "输入的密码不正确。"
+        incorrect_passkey: "该 passkey 不正确。"
         logged_in_as: "您的登录身份为： "
         instructions: "请确认你的身份以便完成此操作。"
         fine_print: "我们要求确认你的身份，因为这是一项潜在的敏感操作。一旦通过身份验证，只有在几个小时不活动后才会要求重新进行身份验证。"
@@ -1870,6 +1872,7 @@ zh_CN:
       action: "我忘记密码了"
       invite: "输入您的用户名或电子邮件地址，我们将向您发送密码重置电子邮件。"
       invite_no_username: "输入您的电子邮件地址，我们将向您发送密码重置电子邮件。"
+      email-username: "电子邮件或用户名"
       reset: "重置密码"
       complete_username: "如果存在与用户名 <b>%{username}</b> 相匹配的帐户，您应该会收到一封电子邮件，其中包含有关如何尽快重置密码的说明。"
       complete_email: "如果存在与 <b>%{email}</b> 相匹配的帐户，您应该会收到一封电子邮件，其中包含有关如何尽快重置密码的说明。"
@@ -1970,12 +1973,13 @@ zh_CN:
         name: "Discord"
         title: "使用 Discord 登录"
         sr_title: "使用 Discord 登录"
-      passkey:
-        name: "使用 Passkey 登录"
       second_factor_toggle:
         totp: "改用身份验证器应用"
         backup_code: "改用备份代码"
         security_key: "改用安全密钥"
+      no_login_methods:
+        title: "没有登录方法"
+        description: "未配置登录方法。管理员可访问 <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> 重新配置网站。"
     invites:
       accept_title: "邀请"
       welcome_to: "欢迎来到 %{site_name}！"
@@ -2038,6 +2042,9 @@ zh_CN:
     date_time_picker:
       from: 从
       to: 至
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} 大于允许的最大值 %{max_file_size}"
     emoji_picker:
       filter_placeholder: 搜索表情符号
       smileys_&_emotion: 笑脸与情感
@@ -2328,6 +2335,7 @@ zh_CN:
         reaction: "新回应"
         votes_released: "投票额度已释放"
         new_features: "已发布新的 Discourse 功能！"
+        admin_problems: "站点信息中心的新建议"
     upload_selector:
       uploading: "正在上传"
       processing: "正在处理上传"
@@ -3003,7 +3011,9 @@ zh_CN:
     post:
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
+      quote_reply_shortcut: "引用 (或按 q)"
       quote_edit: "编辑"
+      quote_edit_shortcut: "编辑 (或按 e)"
       quote_share: "分享"
       edit_reason: "原因："
       post_number: "帖子 %{number}"
@@ -3094,6 +3104,8 @@ zh_CN:
         delete: "删除此帖子"
         undelete: "取消删除此帖子"
         share: "分享此帖子的链接"
+        copy_title: "将此帖子的链接复制到剪贴板"
+        link_copied: "链接已复制！"
         more: "更多"
         delete_replies:
           confirm: "您是否还想删除对此帖子的回复？"
@@ -3772,6 +3784,7 @@ zh_CN:
       delete_confirm_synonyms:
         other: "其 %{count} 个同义词也将被删除。"
       edit_tag: "编辑标签名称和描述"
+      description: "描述 (最多 1000 个字符)"
       sort_by: "排序依据："
       sort_by_count: "计数"
       sort_by_name: "名称"
@@ -4087,7 +4100,9 @@ zh_CN:
           enter_key: "Enter"
           tab_key: "Tab"
           new_row: "在行末尾插入新行。"
+          new_col: "在一列的末尾插入新列。"
           options: "右键点击单元格可访问下拉菜单中的更多选项。"
+        confirm_close: "你确定要关闭表格生成器吗？任何未保存的更改都将丢失。"
       edit:
         btn_edit: "编辑表"
         modal:
@@ -4137,6 +4152,7 @@ zh_CN:
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
+      back_to_forum: "返回论坛"
       tags:
         remove_muted_tags_from_latest:
           always: "始终"
@@ -4315,6 +4331,7 @@ zh_CN:
         user: "用户"
         title: "API"
         key: "密钥"
+        keys: "密钥"
         created: 创建
         updated: 更新
         last_used: 最后使用
@@ -4917,6 +4934,7 @@ zh_CN:
         title: "电子邮件"
         settings: "设置"
         templates: "模板"
+        templates_title: "电子邮件模板"
         preview_digest: "预览总结"
         advanced_test:
           title: "高级测试"

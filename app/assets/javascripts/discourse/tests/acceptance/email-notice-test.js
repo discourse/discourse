@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   exists,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
@@ -27,11 +26,9 @@ acceptance("Email Disabled Banner", function (needs) {
       exists(".alert-emails-disabled"),
       "alert is displayed when email disabled"
     );
-    assert.strictEqual(
-      query(".alert-emails-disabled").innerText,
-      I18n.t("emails_are_disabled"),
-      "alert uses the correct text"
-    );
+    assert
+      .dom(".alert-emails-disabled .text")
+      .hasText(I18n.t("emails_are_disabled"), "alert uses the correct text");
   });
 
   test("when non-staff", async function (assert) {
@@ -41,11 +38,12 @@ acceptance("Email Disabled Banner", function (needs) {
       exists(".alert-emails-disabled"),
       "alert is displayed when email disabled for non-staff"
     );
-    assert.strictEqual(
-      query(".alert-emails-disabled").innerText,
-      I18n.t("emails_are_disabled_non_staff"),
-      "alert uses the correct text"
-    );
+    assert
+      .dom(".alert-emails-disabled .text")
+      .hasText(
+        I18n.t("emails_are_disabled_non_staff"),
+        "alert uses the correct text"
+      );
 
     updateCurrentUser({ moderator: true });
     await visit("/");
@@ -53,10 +51,11 @@ acceptance("Email Disabled Banner", function (needs) {
       exists(".alert-emails-disabled"),
       "alert is displayed to staff when email disabled for non-staff"
     );
-    assert.strictEqual(
-      query(".alert-emails-disabled").innerText,
-      I18n.t("emails_are_disabled_non_staff"),
-      "alert uses the correct text"
-    );
+    assert
+      .dom(".alert-emails-disabled .text")
+      .hasText(
+        I18n.t("emails_are_disabled_non_staff"),
+        "alert uses the correct text"
+      );
   });
 });
