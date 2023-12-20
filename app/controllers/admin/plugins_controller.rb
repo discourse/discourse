@@ -8,4 +8,13 @@ class Admin::PluginsController < Admin::StaffController
       root: "plugins",
     )
   end
+
+  private
+
+  def preload_additional_json
+    store_preloaded(
+      "enabledPluginAdminRoutes",
+      MultiJson.dump(Discourse.visible_plugins.filter(&:enabled?).map(&:admin_route).compact),
+    )
+  end
 end

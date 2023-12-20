@@ -1,5 +1,18 @@
 export const ADMIN_NAV_MAP = [
   {
+    name: "admin_plugins",
+    route: "adminPlugins.index",
+    label: "admin.plugins.title",
+    links: [
+      {
+        name: "admin_installed_plugins",
+        route: "adminPlugins",
+        label: "admin.plugins.installed",
+        icon: "puzzle-piece",
+      },
+    ],
+  },
+  {
     name: "email",
     text: "Email",
     links: [
