@@ -183,7 +183,7 @@ export default class PostTextSelectionToolbar extends Component {
     <div
       {{on "mousedown" this.trapEvents}}
       {{on "mouseup" this.trapEvents}}
-      class={{concatClass "quote-button" "visible"}}
+      class={{concatClass "quote-button" "visible" (if this.isFastEditing "fast-editing")}}
       {{this.appEventsListeners}}
     >
       <div class="buttons">
