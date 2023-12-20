@@ -14,9 +14,7 @@
     z-index: z("composer", "content") - 1;
     padding-inline: 1rem;
 
-    .chat-drawer & {
-      padding-inline: 0.25rem;
-    }
+    .chat-drawer &,
     .c-routes-channel-thread & {
       padding-inline: 0;
     }
@@ -44,7 +42,7 @@
     }
 
     .chat-drawer & {
-      padding-left: 0.75rem;
+      padding-left: 1rem;
     }
   }
 
