@@ -104,14 +104,10 @@ RSpec.describe "Chat channel", type: :system do
           chat_page.visit_channel(channel_1)
         end
 
-        using_session(:tab_1) do |session|
-          channel_page.send_message("test_message")
-          session.quit
-        end
+        using_session(:tab_1) { channel_page.send_message("test_message") }
 
-        using_session(:tab_2) do |session|
+        using_session(:tab_2) do
           expect(channel_page.messages).to have_message(text: "test_message")
-          session.quit
         end
       end
     end
