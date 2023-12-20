@@ -12,12 +12,12 @@
     box-sizing: border-box;
     display: flex;
     z-index: z("composer", "content") - 1;
+    padding-inline: 1rem;
 
-    .full-page & {
-      padding-inline: 1rem;
-    }
-    .chat-drawer & {
-      padding-inline: 0.25rem;
+    .chat-drawer &,
+    .c-routes-channel-thread &,
+    .c-routes-channel-info & {
+      padding-inline: 0;
     }
 
     &.-clickable {
@@ -37,7 +37,18 @@
   .c-navbar__title {
     @include ellipsis();
     font-weight: 700;
-    padding-left: 0.75rem;
+
+    .c-routes-channel-threads & {
+      padding-left: 0;
+    }
+
+    .chat-drawer & {
+      padding-left: 1rem;
+    }
+  }
+
+  .c-navbar__back-button ~ .c-navbar__title {
+    padding-left: 0;
   }
 
   .c-navbar__sub-title {
