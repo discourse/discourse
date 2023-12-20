@@ -1,4 +1,4 @@
-.chat-enabled.has-full-page-chat {
+.has-full-page-chat {
   .d-header-icons .search-dropdown,
   .d-header-icons .hamburger-dropdown {
     display: none;
@@ -10,29 +10,26 @@
 
   .chat-header {
     width: 100%;
-    height: 55px;
     display: flex;
     align-items: center;
 
-    a {
-      padding: 10px;
-    }
-
-    a.back-to-forum {
+    .back-to-forum {
       color: var(--primary-medium);
       font-size: var(--font-up-1);
       font-weight: var(--font-bold);
+      padding: 0.8rem;
 
       &:focus {
         color: var(--primary);
       }
     }
 
-    a.chat-heading {
+    .chat-heading {
       color: var(--primary);
       font-size: var(--font-up-2);
       font-weight: var(--font-bold);
       margin: 0 auto;
+      padding: 0.6rem;
     }
   }
 }
