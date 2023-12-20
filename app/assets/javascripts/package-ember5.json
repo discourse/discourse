@@ -21,8 +21,7 @@
     "pretty-text",
     "select-kit",
     "theme-transpiler",
-    "truth-helpers",
-    "wizard"
+    "truth-helpers"
   ],
   "resolutions": {
     "**/unset-value": "2.0.1",

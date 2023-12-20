@@ -1,6 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { Field } from "wizard/models/wizard";
+import { Field } from "discourse/static/wizard/models/wizard";
 
 module("Unit | Model | Wizard | wizard-field", function (hooks) {
   setupTest(hooks);
