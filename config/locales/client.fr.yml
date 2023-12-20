@@ -2356,6 +2356,7 @@ fr:
         reaction: "nouvelle réaction"
         votes_released: "Le vote a été publié"
         new_features: "De nouvelles fonctionnalités de Discourse ont été publiées !"
+        admin_problems: "de nouveaux conseils sur votre tableau de bord"
     upload_selector:
       uploading: "En cours d'envoi"
       processing: "Traitement du téléversement"

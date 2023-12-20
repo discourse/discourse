@@ -2222,8 +2222,6 @@ pl_PL:
         name: "Discord"
         title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
-      passkey:
-        name: "Zaloguj się za pomocą passkey"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
@@ -2644,6 +2642,7 @@ pl_PL:
         reaction: "nowa reakcja"
         votes_released: "Głos został zwolniony"
         new_features: "nowe funkcje Discourse zostały udostępnione!"
+        admin_problems: "nowe porady w panelu administratora"
     upload_selector:
       uploading: "Wgrywanie"
       processing: "Przetwarzanie przesłanego pliku"

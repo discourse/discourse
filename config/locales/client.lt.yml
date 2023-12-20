@@ -2070,6 +2070,7 @@ lt:
         membership_request_consolidated: "nauji narystės prašymai"
         reaction: "nauja reakcija"
         votes_released: "Balsavimas buvo išleistas"
+        admin_problems: "nauji patarimai jūsų svetainės informacijos suvestinėje"
     upload_selector:
       uploading: "Įkeliama"
       processing: "Apdorojamas įkėlimas"

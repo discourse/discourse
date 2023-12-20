@@ -2054,6 +2054,7 @@ vi:
         membership_request_consolidated: "yêu cầu thành viên mới"
         reaction: "phản ứng mới"
         votes_released: "Phiếu bầu đã được phát hành"
+        admin_problems: "lời khuyên mới trên bảng điều khiển trang web của bạn"
     upload_selector:
       uploading: "Đang tải lên"
       processing: "Đang xử lý tải lên"

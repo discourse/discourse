@@ -405,6 +405,12 @@ tr_TR:
           topic: "Konu"
       reviewable:
         type: "Sohbet mesajı"
+      reactions:
+        only_you: "<span>Şu şekilde tepki verdiniz: </span>:%{emoji}:"
+        you_and_single_user: "<span>Siz ve %{username} şunu tepki verdiniz: </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Siz, %{commaSeparatedUsernames} ve %{username} şöyle tepki gösterdiniz</span>:%{emoji}"
+        single_user: "<span>%{username} şöyle tepki verdi</span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} ve %{username} ile tepki verdi</span>:%{emoji}:"
       composer:
         toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
@@ -454,6 +460,8 @@ tr_TR:
           title: "Sohbet mesajlarını dışa aktar"
           create_export: "Dışa aktarma oluştur"
           export_has_started: "Dışa aktarma başladı. Hazır olduğunda bir kişisel mesaj alacaksınız."
+      my_threads:
+        title: Konularım
       direct_messages:
         title: "Kişisel sohbet"
         new: "Kişisel sohbet oluşturun"

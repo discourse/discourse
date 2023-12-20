@@ -2061,8 +2061,6 @@ de:
         name: "Discord"
         title: "Mit Discord anmelden"
         sr_title: "Mit Discord anmelden"
-      passkey:
-        name: "Anmeldung mit einem Hauptschlüssel"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"
@@ -2136,6 +2134,9 @@ de:
     date_time_picker:
       from: Von
       to: An
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} ist größer als das zulässige Maximum %{max_file_size}"
     emoji_picker:
       filter_placeholder: Emoji suchen
       smileys_&_emotion: Smileys und Emotion
@@ -2447,6 +2448,7 @@ de:
         reaction: "neue Reaktion"
         votes_released: "Abstimmung wurde freigegeben"
         new_features: "neue Discourse-Funktionen wurden veröffentlicht!"
+        admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
     upload_selector:
       uploading: "Wird hochgeladen"
       processing: "Upload wird verarbeitet"
@@ -4359,6 +4361,7 @@ de:
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
+      back_to_forum: "Zurück zum Forum"
       tags:
         remove_muted_tags_from_latest:
           always: "immer"
@@ -4541,6 +4544,7 @@ de:
         user: "Benutzer"
         title: "API"
         key: "Schlüssel"
+        keys: "Schlüssel"
         created: Erstellt
         updated: Aktualisiert
         last_used: Zuletzt verwendet
@@ -5146,6 +5150,7 @@ de:
         title: "E-Mails"
         settings: "Einstellungen"
         templates: "Vorlagen"
+        templates_title: "E-Mail-Vorlagen"
         preview_digest: "Vorschau der Zusammenfassung"
         advanced_test:
           title: "Erweiterter Test"

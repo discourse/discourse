@@ -2242,6 +2242,7 @@ ja:
         reaction: "新しいリアクション"
         votes_released: "投票がリリースされました"
         new_features: "新しい Discourse 機能がリリースされました！"
+        admin_problems: "サイトダッシュボードに関する新しいアドバイス"
     upload_selector:
       uploading: "アップロード中"
       processing: "アップロードを処理中"

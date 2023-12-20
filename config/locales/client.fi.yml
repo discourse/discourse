@@ -2018,8 +2018,6 @@ fi:
         name: "Discord"
         title: "Kirjaudu Discordilla"
         sr_title: "Kirjaudu Discordilla"
-      passkey:
-        name: "Kirjaudu suojausavaimella"
       second_factor_toggle:
         totp: "Käytä todentajasovellusta tämän sijaan"
         backup_code: "Käytä varakoodia tämän sijaan"
@@ -2382,6 +2380,7 @@ fi:
         reaction: "uusi reaktio"
         votes_released: "Ääni vapautui"
         new_features: "uusia Discoursen ominaisuuksia on julkaistu!"
+        admin_problems: "uusia suosituksia sivustosi hallintapaneelissa"
     upload_selector:
       uploading: "Ladataan"
       processing: "Latausta käsitellään"
