@@ -286,12 +286,33 @@ class PluginApi {
     } else {
       const klass = resolverName;
       const id = klass[classModificationsKey];
-      const PreviousClass = classModifications.get(id) || klass;
 
+      // get the current version of the class or create the copy of the original
+      // to start the extension chain
+      const PreviousClass =
+        classModifications.get(id) || Object.assign(class {}, klass);
+
+      debugger;
       const ModifiedClass = changes(PreviousClass);
       Object.defineProperty(ModifiedClass, "name", {
         value: PreviousClass.name,
       });
+
+      for (const [name, property] of Object.entries(
+        Object.getOwnPropertyDescriptors(ModifiedClass)
+      )) {
+        if (typeof property.value === "function") {
+          // debugger;
+          // property.value
+          klass[name] = function () {
+            debugger;
+            Object.getPrototypeOf(this);
+            property.value.apply(this, arguments);
+          };
+        }
+      }
+
+      // Object.setPrototypeOf(ModifiedClass.prototype, PreviousClass.prototype);
 
       classModifications.set(id, ModifiedClass);
     }
@@ -323,6 +344,7 @@ class PluginApi {
       return klass;
     } else {
       const klass = resolverName;
+      // debugger;
       for (const [name, property] of Object.entries(
         Object.getOwnPropertyDescriptors(changes(klass))
       )) {

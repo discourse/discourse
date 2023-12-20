@@ -174,22 +174,59 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
   // TODO: test modifying the same class twice
 
+  // TODO: test modifying a constructor?
+
+  // TODO: test combining modifyClass and modifyClassStatic
+
   test("modifyClassStatic works with two native classes", function (assert) {
+    // class Base {
+    //   static boop() {
+    //     return 1;
+    //   }
+    // }
+
+    // class X {
+    //   static boop() {
+    //     return super.boop() + 1;
+    //   }
+    // }
+
+    // // Object.setPrototypeOf(X, Base);
+
+    // // const protoParent = class {};
+    // const protoChain = class {};
+    // Object.setPrototypeOf(protoChain, Base);
+    // X.boop = X.boop.bind(protoChain);
+
+    // debugger;
+    // const z = X.boop();
+
     @allowClassModifications
     class ClassTestThingy {
       static notCreate() {
+        debugger;
         return "base";
       }
     }
 
+    // class X extends ClassTestThingy {
+    //   static notCreate() {
+    //     return super.notCreate() + "ment";
+    //   }
+    // }
+
+    // debugger;
+    // const z = X.notCreate();
+
     withPluginApi("1.1.0", (api) => {
-      api.modifyClassStatic(
+      api.modifyClass(
         ClassTestThingy,
         (Base) =>
           class extends Base {
             static notCreate() {
-              // super.notCreate() +
-              return "ball";
+              debugger;
+              return super.notCreate() + "ball";
+              // return "ball";
             }
           }
       );
