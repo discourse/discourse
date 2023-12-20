@@ -24,11 +24,13 @@ export default class ChatThreadListHeader extends Component {
 
   <template>
     <Navbar as |navbar|>
-      <navbar.BackButton
-        @route="chat.channel"
-        @routeModels={{@channel.routeModels}}
-        @title={{i18n "chat.return_to_channel"}}
-      />
+      {{#if this.site.mobileView}}
+        <navbar.BackButton
+          @route="chat.channel"
+          @routeModels={{@channel.routeModels}}
+          @title={{i18n "chat.return_to_channel"}}
+        />
+      {{/if}}
 
       <navbar.Title @title={{this.title}} @icon="discourse-threads" />
 
