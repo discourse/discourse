@@ -143,6 +143,8 @@ class SiteSettings::TypeSupervisor
       value.to_f
     when self.class.types[:integer]
       value.to_i
+    when self.class.types[:file_size_restriction]
+      value.to_i
     when self.class.types[:bool]
       value == true || value == "t" || value == "true"
     when self.class.types[:null]
