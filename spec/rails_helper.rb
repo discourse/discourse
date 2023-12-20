@@ -26,12 +26,16 @@ require "webmock/rspec"
 require "minio_runner"
 
 class RspecErrorTracker
-  def self.last_exception=(ex)
-    @ex = ex
+  def self.exceptions
+    @exceptions ||= {}
   end
 
-  def self.last_exception
-    @ex
+  def self.clear_exceptions
+    @exceptions&.clear
+  end
+
+  def self.report_exception(path, exception)
+    exceptions[path] = exception
   end
 
   def initialize(app, config = {})
@@ -46,7 +50,7 @@ class RspecErrorTracker
       # and also Mocha::ExpectationError inherit from Exception instead of StandardError
       # they do not get captured by the rescue => e shorthand :(
     rescue WebMock::NetConnectNotAllowedError, Mocha::ExpectationError, StandardError => e
-      RspecErrorTracker.last_exception = e
+      RspecErrorTracker.report_exception(env["PATH_INFO"], e)
       raise e
     end
   end
@@ -125,7 +129,7 @@ module TestSetup
 
     I18n.locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
 
-    RspecErrorTracker.last_exception = nil
+    RspecErrorTracker.clear_exceptions
 
     if $test_cleanup_callbacks
       $test_cleanup_callbacks.reverse_each(&:call)
@@ -449,21 +453,6 @@ RSpec.configure do |config|
     end
   end
 
-  config.after :each do |example|
-    if example.exception && ex = RspecErrorTracker.last_exception
-      # magic in a cause if we have none
-      unless example.exception.cause
-        class << example.exception
-          attr_accessor :cause
-        end
-        example.exception.cause = ex
-      end
-    end
-
-    unfreeze_time
-    ActionMailer::Base.deliveries.clear
-  end
-
   config.after(:suite) do
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
     Downloads.clear
@@ -539,36 +528,26 @@ RSpec.configure do |config|
     # failed system tests a lot trickier.
     if ENV["SELENIUM_DISABLE_VERBOSE_JS_LOGS"].blank?
       if example.exception
-        skip_js_errors = false
+        lines << "~~~~~~~ JS LOGS ~~~~~~~"
 
-        if example.exception.kind_of?(RSpec::Core::MultipleExceptionError)
-          lines << "~~~~~~~ SYSTEM TEST ERRORS ~~~~~~~"
-          example.exception.all_exceptions.each { |ex| lines << ex.message }
-          lines << "~~~~~ END SYSTEM TEST ERRORS ~~~~~"
-
-          skip_js_errors = true
-        end
-
-        if !skip_js_errors
-          lines << "~~~~~~~ JS LOGS ~~~~~~~"
-          if js_logs.empty?
-            lines << "(no logs)"
-          else
-            js_logs.each do |log|
-              # System specs are full of image load errors that are just noise, no need
-              # to log this.
-              if (
-                   log.message.include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
-                     (log.message.include?("uploads") || log.message.include?("images"))
-                 ) || log.message.include?("favicon.ico")
-                next
-              end
-
-              lines << log.message
+        if js_logs.empty?
+          lines << "(no logs)"
+        else
+          js_logs.each do |log|
+            # System specs are full of image load errors that are just noise, no need
+            # to log this.
+            if (
+                 log.message.include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
+                   (log.message.include?("uploads") || log.message.include?("images"))
+               ) || log.message.include?("favicon.ico")
+              next
             end
+
+            lines << log.message
           end
-          lines << "~~~~~ END JS LOGS ~~~~~"
         end
+
+        lines << "~~~~~ END JS LOGS ~~~~~"
       end
     end
 
@@ -586,6 +565,27 @@ RSpec.configure do |config|
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
     Scheduler::Defer.do_all_work # Process everything that was added to the defer queue when running the test
     Discourse.redis.flushdb
+  end
+
+  config.after :each do |example|
+    if example.exception && RspecErrorTracker.exceptions.present?
+      lines = RSpec.current_example.metadata[:extra_failure_lines]
+
+      lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
+
+      RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
+        lines << "\n" if index != 0
+        lines << "Error encountered while proccessing #{path}"
+        lines << "  #{ex.class}: #{ex.message}"
+        ex.backtrace.each { |line| lines << "    #{line}" }
+      end
+
+      lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
+      lines << "\n"
+    end
+
+    unfreeze_time
+    ActionMailer::Base.deliveries.clear
   end
 
   config.before(:each, type: :multisite) do
