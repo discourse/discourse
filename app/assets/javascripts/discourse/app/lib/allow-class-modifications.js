@@ -12,14 +12,14 @@ export default function allowClassModifications(OriginalClass) {
   return class extends OriginalClass {
     constructor() {
       if (arguments[arguments.length - 1] === stopSymbol) {
+        super(...arguments);
         return;
       }
 
       const id = OriginalClass[classModificationsKey];
       const FinalClass = classModifications.get(id) || OriginalClass;
 
-      // eslint-disable-next-line no-new
-      new FinalClass(...arguments, stopSymbol);
+      return new FinalClass(...arguments, stopSymbol);
     }
   };
 }
