@@ -34,8 +34,10 @@
     border-radius: 0 var(--pm-border-radius) var(--pm-border-radius)
       var(--pm-border-radius);
     border: 1px solid var(--primary-low);
-    margin-left: calc(var(--pm-padding) * -1);
     padding-left: var(--pm-padding);
+    .desktop-view & {
+      margin-left: calc(var(--pm-padding) * -1);
+    }
   }
 
   .topic-avatar,
