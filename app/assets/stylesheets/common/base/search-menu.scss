@@ -399,6 +399,7 @@ $search-pad-horizontal: 0.5em;
   .search-result-user {
     .search-link {
       display: flex;
+      align-items: center;
 
       img.avatar {
         margin-right: 10px;
