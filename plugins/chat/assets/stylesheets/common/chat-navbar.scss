@@ -13,7 +13,7 @@
     display: flex;
     z-index: z("composer", "content") - 1;
 
-    .full-page-chat & {
+    .full-page & {
       padding-inline: 1rem;
     }
     .chat-drawer & {
