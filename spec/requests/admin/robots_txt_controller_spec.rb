@@ -103,7 +103,7 @@ RSpec.describe Admin::RobotsTxtController do
         SiteSetting.overridden_robots_txt = "overridden_content"
         SiteSetting.allowed_crawler_user_agents = "test-user-agent-154"
 
-        delete "/admin/customize/robots.json", headers: { "X-Requested-With": "XMLHttpRequest" }
+        delete "/admin/customize/robots.json", xhr: true
         expect(response.status).to eq(200)
 
         json = response.parsed_body
