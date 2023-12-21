@@ -4,6 +4,7 @@ import guid from "pretty-text/guid";
  * @typedef {Object} ClassModification
  * @property {Class} latestClass
  * @property {Class} boundaryClass
+ * @property {Map<string,function>} baseStaticMethods
  */
 
 /** @type Map<class, ClassModification> */
