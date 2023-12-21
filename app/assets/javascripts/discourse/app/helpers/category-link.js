@@ -111,6 +111,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   let href = opts.link === false ? "" : url;
   let tagName = opts.link === false || opts.link === "false" ? "span" : "a";
   let extraClasses = opts.extraClasses ? " " + opts.extraClasses : "";
+  let style = `${categoryVariables(category)}`;
   let html = "";
   let parentCat = null;
   let categoryDir = "";
@@ -172,18 +173,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
     href = ` href="${href}" `;
   }
 
-  let afterBadgeWrapper = "";
-
-  if (opts.plusSubcategories && opts.lastSubcategory) {
-    afterBadgeWrapper += `<span class="plus-subcategories">
-      ${I18n.t("category_row.plus_subcategories", {
-        count: opts.plusSubcategories,
-      })}
-      </span>`;
-  }
-
-  const style = categoryVariables(category);
-  const extraAttrs = style.string ? `style="${style}"` : "";
-
-  return `<${tagName} class="badge-category__wrapper ${extraClasses}" ${extraAttrs} ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
+  return `<${tagName} class="badge-category__wrapper ${extraClasses}" ${
+    style.length > 0 ? `style="${style}"` : ""
+  } ${href}>${html}</${tagName}>`;
 }

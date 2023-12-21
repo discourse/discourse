@@ -18,6 +18,7 @@ import {
 } from "discourse/components/reviewable-item";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
 import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/components/search-menu/results/assistant";
+import { addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
 import {
   addQuickSearchRandomTip,
   removeDefaultQuickSearchRandomTips,
@@ -148,7 +149,7 @@ import {
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.19.0";
+export const PLUGIN_API_VERSION = "1.20.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1896,6 +1897,26 @@ class PluginApi {
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
     addGlimmerSearchSuggestion(value);
+  }
+
+  /**
+   * Add a callback that will be evaluated when search menu assistant-items are clicked. Function
+   * takes an object as it's only argument. This object includes the updated term, searchTermChanged function,
+   * and the usage. If any callbacks return false, the core logic will be halted
+   *
+   * ```
+   * api.addSearchMenuAssistantSelectCallback((args) => {
+   *   if (args.usage !== "recent-search") {
+   *     return true;
+   *   }
+   *   args.searchTermChanged(args.updatedTerm)
+   *   return false;
+   * })
+   * ```
+   *
+   */
+  addSearchMenuAssistantSelectCallback(fn) {
+    addSearchMenuAssistantSelectCallback(fn);
   }
 
   /**

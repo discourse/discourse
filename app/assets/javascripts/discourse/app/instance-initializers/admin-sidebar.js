@@ -1,3 +1,4 @@
+import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import {
   addSidebarPanel,
@@ -138,13 +139,6 @@ export function useAdminNavConfig(navMap) {
           icon: "chart-pie",
         },
         {
-          name: "admin_plugins",
-          route: "adminPlugins",
-          label: "admin.plugins.title",
-          icon: "puzzle-piece",
-        },
-
-        {
           name: "admin_badges",
           route: "adminBadges",
           label: "admin.badges.title",
@@ -206,6 +200,17 @@ export default {
     const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
+    const enabledPluginAdminRoutes =
+      PreloadStore.get("enabledPluginAdminRoutes") || [];
+    enabledPluginAdminRoutes.forEach((pluginAdminRoute) => {
+      navMap.findBy("name", "admin_plugins").links.push({
+        name: `admin_plugin_${pluginAdminRoute.location}`,
+        route: `adminPlugins.${pluginAdminRoute.location}`,
+        label: pluginAdminRoute.label,
+        icon: "cog",
+      });
+    });
+
     if (this.siteSettings.experimental_form_templates) {
       navMap.findBy("name", "customize").links.push({
         name: "admin_customize_form_templates",
@@ -215,8 +220,6 @@ export default {
       });
     }
 
-    const navConfig = useAdminNavConfig(navMap);
-
-    buildAdminSidebar(navConfig, adminSectionLinkClass);
+    buildAdminSidebar(useAdminNavConfig(navMap), adminSectionLinkClass);
   },
 };

@@ -20,11 +20,14 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_section("admin-nav-section-root")
   end
 
-  it "does not show the admin sidebar if the setting is disabled" do
-    SiteSetting.enable_admin_sidebar_navigation = false
-    visit("/latest")
-    sidebar.click_link_in_section("community", "admin")
-    expect(page).to have_current_path("/admin")
-    expect(sidebar).to have_no_section("admin-nav-section-root")
+  context "when the setting is disabled" do
+    before { SiteSetting.enable_admin_sidebar_navigation = false }
+
+    it "does not show the admin sidebar" do
+      visit("/latest")
+      sidebar.click_link_in_section("community", "admin")
+      expect(page).to have_current_path("/admin")
+      expect(sidebar).to have_no_section("admin-nav-section-root")
+    end
   end
 end

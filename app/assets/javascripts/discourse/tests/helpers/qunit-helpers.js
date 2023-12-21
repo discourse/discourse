@@ -21,6 +21,7 @@ import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
+import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
@@ -229,6 +230,7 @@ export function testCleanup(container, app) {
   clearExtraHeaderIcons();
   resetOnKeyDownCallbacks();
   resetOnKeyUpCallbacks();
+  resetItemSelectCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();
