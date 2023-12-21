@@ -306,9 +306,13 @@ class PluginApi {
       let { latestClass, boundaryClass, baseStaticMethods } =
         classModifications.get(id) || {};
 
+      // If it's the first modification of this class
       if (!latestClass) {
         boundaryClass = class Boundary extends klass {
           constructor() {
+            // The modified constructor chain has finished so
+            // call the original constructor with the stopSymbol
+            // to run the original implementation
             super(...arguments, stopSymbol);
           }
         };
@@ -316,14 +320,17 @@ class PluginApi {
         latestClass = boundaryClass;
       }
 
+      // Apply the provided modifications
       const modifiedClass = changes(latestClass);
 
+      // Iterate through new static methods
       for (const [name, property] of Object.entries(
         Object.getOwnPropertyDescriptors(modifiedClass)
       )) {
         if (typeof property.value === "function") {
           baseStaticMethods ??= new Map();
 
+          // Preserve the original version of the static method
           let originalMethod;
           if (baseStaticMethods.has(name)) {
             originalMethod = baseStaticMethods.get(name);
@@ -332,10 +339,13 @@ class PluginApi {
             baseStaticMethods.set(name, originalMethod);
           }
 
+          // Add the static method to the boundary class and
+          // make it call the original implementation
           boundaryClass[name] = function () {
             return originalMethod.apply(this, arguments);
           };
 
+          // Make the original class call this version of the method
           klass[name] = function () {
             return property.value.apply(this, arguments);
           };
