@@ -13,7 +13,7 @@ class Admin::AdminController < ApplicationController
   def preload_additional_json
     store_preloaded(
       "enabledPluginAdminRoutes",
-      MultiJson.dump(Discourse.plugins_sorted_by_name.map(&:admin_route).compact),
+      MultiJson.dump(Discourse.plugins_sorted_by_name.filter_map(&:admin_route)),
     )
   end
 end
