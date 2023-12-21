@@ -68,7 +68,7 @@ export default class SearchMenu extends Component {
   @bind
   onDocumentPress(event) {
     if (!event.target.closest(".search-menu-container.menu-panel-results")) {
-      this.menuPanelOpen = false;
+      this.close();
     }
   }
 
