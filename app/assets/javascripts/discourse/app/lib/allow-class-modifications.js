@@ -16,7 +16,6 @@ export const stopSymbol = Symbol("STOP_SYMBOL");
 export default function allowClassModifications(OriginalClass) {
   OriginalClass[classModificationsKey] = guid();
 
-  // TODO: the following class and the boundary class could be merged?
   return class extends OriginalClass {
     constructor() {
       // If the modified constructor chain finished,
