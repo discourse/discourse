@@ -232,6 +232,11 @@ export default Mixin.create({
   },
 
   @action
+  changeValueCallback(value) {
+    this.set("buffered.value", value);
+  },
+
+  @action
   cancel() {
     this.rollbackBuffer();
   },

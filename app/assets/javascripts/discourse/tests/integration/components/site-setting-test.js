@@ -74,7 +74,14 @@ module("Integration | Component | site-setting", function (hooks) {
       "jpg, jpeg, png"
     );
 
-    await click(query(".file-types-list__button"));
+    await click(query(".file-types-list__button.image"));
+
+    assert.strictEqual(
+      query(".formatted-selection").innerText,
+      "jpg, jpeg, png, gif, heic, heif, webp, avif, svg"
+    );
+
+    await click(query(".file-types-list__button.image"));
 
     assert.strictEqual(
       query(".formatted-selection").innerText,
