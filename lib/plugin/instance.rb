@@ -122,7 +122,7 @@ class Plugin::Instance
     @enabled_site_setting ? SiteSetting.get(@enabled_site_setting) : true
   end
 
-  delegate :name, to: :metadata
+  delegate :name, :name_without_prefix, to: :metadata
 
   def add_to_serializer(
     serializer,

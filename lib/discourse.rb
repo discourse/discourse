@@ -377,6 +377,11 @@ module Discourse
     plugins.filter(&:visible?)
   end
 
+  def self.plugins_sorted_by_name(enabled_only: true)
+    return visible_plugins.filter(&:enabled?).sort_by(&:name_without_prefix) if enabled_only
+    visible_plugins.sort_by(&:name_without_prefix)
+  end
+
   def self.plugin_themes
     @plugin_themes ||= plugins.map(&:themes).flatten
   end
