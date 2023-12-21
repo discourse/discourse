@@ -145,6 +145,10 @@ class Group < ActiveRecord::Base
     @visibility_levels = Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
   end
 
+  def self.auto_group_range(lower, upper)
+    (Group::AUTO_GROUPS[lower.to_sym]..Group::AUTO_GROUPS[upper.to_sym]).to_a
+  end
+
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 

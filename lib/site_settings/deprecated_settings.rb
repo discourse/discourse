@@ -56,46 +56,48 @@ module SiteSettings::DeprecatedSettings
   def group_to_tl(old_setting, new_setting)
     tl_and_staff =
       SiteSetting.type_supervisor.get_type(old_setting.to_sym) == :enum &&
-        SiteSetting
-          .type_supervisor
-          .get_enum_class(old_setting.to_sym)
-          .is_a?(TrustLevelAndStaffSetting)
+        SiteSetting.type_supervisor.get_enum_class(old_setting.to_sym).name ==
+          TrustLevelAndStaffSetting.name
 
-    min_trust_from_new_group_values =
-      self
-        .public_send("#{new_setting}_map")
-        .select do |group_id|
-          # We only want auto groups, no actual groups because they cannot be
-          # mapped to TLs.
-          group_id.between?(
-            tl_and_staff ? Group::AUTO_GROUPS[:admins] : Group::AUTO_GROUPS[:trust_level_0],
-            Group::AUTO_GROUPS[:trust_level_4],
-          )
-        end
-        .min
+    valid_auto_groups =
+      self.public_send("#{new_setting}_map") &
+        # We only want auto groups, no actual groups because they cannot be
+        # mapped to TLs.
+        Group.auto_group_range(tl_and_staff ? :admins : :trust_level_0, :trust_level_4)
 
-    if min_trust_from_new_group_values == Group::AUTO_GROUPS[:admin]
-      tl_and_staff ? "admin" : nil
-    elsif min_trust_from_new_group_values == Group::AUTO_GROUPS[:staff]
-      tl_and_staff ? "staff" : nil
+    return if valid_auto_groups.empty?
+
+    if tl_and_staff
+      valid_auto_groups_excluding_staff_and_admins =
+        valid_auto_groups - [Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:admins]]
+
+      if valid_auto_groups_excluding_staff_and_admins.any?
+        return valid_auto_groups_excluding_staff_and_admins.min - Group::AUTO_GROUPS[:trust_level_0]
+      end
+
+      if valid_auto_groups.include?(Group::AUTO_GROUPS[:staff])
+        "staff"
+      elsif valid_auto_groups.include?(Group::AUTO_GROUPS[:admins])
+        "admin"
+      end
     else
-      min_trust_from_new_group_values - Group::AUTO_GROUPS[:trust_level_0]
+      valid_auto_groups.min - Group::AUTO_GROUPS[:trust_level_0]
     end
   end
 
   def tl_to_group(old_setting, val)
     if val == "admin"
-      Group::AUTO_GROUPS[:admin]
+      Group::AUTO_GROUPS[:admins]
     elsif val == "staff"
       Group::AUTO_GROUPS[:staff]
     else
-      "#{val.to_i + Group::AUTO_GROUPS[:trust_level_0]}"
+      "#{Group::AUTO_GROUPS[:admins]}|#{Group::AUTO_GROUPS[:staff]}|#{val.to_i + Group::AUTO_GROUPS[:trust_level_0]}"
     end
   end
 
   def setup_deprecated_methods
     SETTINGS.each do |old_setting, new_setting, override, version|
-      unless override
+      if !override
         SiteSetting.singleton_class.public_send(
           :alias_method,
           :"_#{old_setting}",
@@ -105,10 +107,6 @@ module SiteSettings::DeprecatedSettings
 
       if OVERRIDE_TL_GROUP_SETTINGS.include?(old_setting)
         define_singleton_method "_group_to_tl_#{old_setting}" do |warn: true|
-          group_to_tl(old_setting, new_setting)
-        end
-
-        define_singleton_method "_group_to_tl_#{old_setting}?" do |warn: true|
           group_to_tl(old_setting, new_setting)
         end
       end
@@ -128,7 +126,7 @@ module SiteSettings::DeprecatedSettings
         end
       end
 
-      unless override
+      if !override
         SiteSetting.singleton_class.public_send(
           :alias_method,
           :"_#{old_setting}?",
@@ -147,7 +145,7 @@ module SiteSettings::DeprecatedSettings
         self.public_send("#{override ? new_setting : "_" + old_setting}?")
       end
 
-      unless override
+      if !override
         SiteSetting.singleton_class.public_send(
           :alias_method,
           :"_#{old_setting}=",
@@ -167,7 +165,7 @@ module SiteSettings::DeprecatedSettings
           # We want to set both the new group setting here to the equivalent of the
           # TL, as well as setting the TL value in the DB so they remain in sync.
           self.public_send("_#{old_setting}=", val)
-          self.public_send("#{new_setting}=", tl_to_group(old_setting, val))
+          self.public_send("#{new_setting}=", tl_to_group(old_setting, val).to_s)
         else
           self.public_send("#{override ? new_setting : "_" + old_setting}=", val)
         end
