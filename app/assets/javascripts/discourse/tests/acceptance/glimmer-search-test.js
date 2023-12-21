@@ -7,6 +7,7 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import {
   acceptance,
@@ -715,6 +716,28 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
       "blue",
       "shows second recent search"
     );
+  });
+
+  test("initial options - overriding behavior with addSearchMenuAssistantSelectCallback", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+
+    withPluginApi("1.20.0", (api) => {
+      api.addSearchMenuAssistantSelectCallback((args) => {
+        if (args.usage === "recent-search") {
+          args.searchTermChanged("hijacked!");
+          return false;
+        }
+
+        return true;
+      });
+    });
+
+    await click(
+      ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
+    );
+
+    assert.strictEqual(query("#search-term").value, "hijacked!");
   });
 });
 

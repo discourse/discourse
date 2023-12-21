@@ -276,4 +276,8 @@ export default function () {
   this.route("invites", { resetNamespace: true }, function () {
     this.route("show", { path: "/:token" });
   });
+
+  this.route("wizard", function () {
+    this.route("step", { path: "/steps/:step_id" });
+  });
 }

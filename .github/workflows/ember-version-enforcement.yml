@@ -53,3 +53,17 @@ jobs:
               process.exit(1);
             }
           '
+      - name: "Revert ember upgrade"
+        run: |
+          script/switch_ember_version 3
+      - name: "Ensure no diff"
+        run: |
+          if [ ! -z "$(git status --porcelain)" ]; then
+            echo "Working directory was not clean after upgrading/downgrading ember. Perhaps a lockfile is out-of-date. Run this command to re-sync:"
+            echo "  script/regen_ember_5_lockfile"
+            echo
+            echo "Current diff:"
+            echo "---------------------------------------------"
+            git -c color.ui=always diff
+            exit 1
+          fi

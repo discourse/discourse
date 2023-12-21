@@ -96,6 +96,9 @@ RSpec.describe SiteSettings::TypeSupervisor do
       it "'tag_group_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:tag_group_list]).to eq(26)
       end
+      it "'file_size_restriction' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:file_size_restriction]).to eq(27)
+      end
     end
   end
 
@@ -331,6 +334,16 @@ RSpec.describe SiteSettings::TypeSupervisor do
         expect(
           settings.type_supervisor.to_rb_value(:type_null, "1", SiteSetting.types[:integer]),
         ).to eq(1)
+      end
+
+      it "returns an integer for file_size_restriction type" do
+        expect(
+          settings.type_supervisor.to_rb_value(
+            :type_file_size_restriction,
+            "1024",
+            SiteSetting.types[:file_size_restriction],
+          ),
+        ).to eq 1024
       end
 
       it "returns nil value" do
