@@ -70,6 +70,12 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
     return this.notification.acting_user_avatar_template;
   }
 
+  get endOutletArgs() {
+    return {
+      notification: this.notification,
+    };
+  }
+
   get #notificationName() {
     return this.site.notificationLookup[this.notification.notification_type];
   }
