@@ -255,6 +255,20 @@ class PluginApi {
    * For example:
    *
    * ```
+   * import UserTip from "discourse/components/user-tip";
+   *
+   * api.modifyClass(
+   *   UserTip,
+   *   (Base) =>
+   *     class extends Base {
+   *       someProperty = "foo";
+   *     }
+   * );
+   * ```
+   *
+   * Or when changing older, EmberObject-based classes:
+   *
+   * ```
    * api.modifyClass('controller:composer', {
    *   pluginId: 'my-plugin',
    *   actions: {
