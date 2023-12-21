@@ -348,29 +348,17 @@ class PluginApi {
    * ```
    **/
   modifyClassStatic(resolverName, changes, opts) {
-    if (typeof resolverName === "string") {
-      const klass = this._resolveClass(resolverName, opts);
-      if (!klass) {
-        return;
-      }
-
-      if (canModify(klass, "static", resolverName, changes)) {
-        delete changes.pluginId;
-        klass.class.reopenClass(changes);
-      }
-
-      return klass;
-    } else {
-      const klass = resolverName;
-      // debugger;
-      for (const [name, property] of Object.entries(
-        Object.getOwnPropertyDescriptors(changes(klass))
-      )) {
-        if (typeof property.value === "function") {
-          klass[name] = property.value;
-        }
-      }
+    const klass = this._resolveClass(resolverName, opts);
+    if (!klass) {
+      return;
     }
+
+    if (canModify(klass, "static", resolverName, changes)) {
+      delete changes.pluginId;
+      klass.class.reopenClass(changes);
+    }
+
+    return klass;
   }
 
   /**
