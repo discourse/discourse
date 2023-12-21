@@ -67,17 +67,8 @@ export default class SearchMenu extends Component {
 
   @bind
   onDocumentPress(event) {
-    // If the search menu header button is clicked, we don't need to do anything and can
-    // let the header handle cleanup. Otherwise we mess with the toggling of the popup.
-    if (event.target.closest(".header-dropdown-toggle.search-dropdown")) {
-      return;
-    }
-
-    if (
-      this.menuPanelOpen &&
-      !event.target.closest(".search-menu .search-menu-container")
-    ) {
-      this.close();
+    if (!event.target.closest(".search-menu-container.menu-panel-results")) {
+      this.menuPanelOpen = false;
     }
   }
 
@@ -115,7 +106,7 @@ export default class SearchMenu extends Component {
 
     // We want to blur the active element (search input) when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up
-    document.getElementById(SEARCH_INPUT_ID)?.blur();
+    document.activeElement.blur();
     this.menuPanelOpen = false;
   }
 
