@@ -1,14 +1,21 @@
 import guid from "pretty-text/guid";
 
-/** @type Map<class, Set<class>> */
-export const classModifications = new Map();
-export const classModificationsKey = Symbol("CLASS_MODIFICATIONS_KEY");
+/**
+ * @typedef {Object} ClassModification
+ * @property {Class} latestClass
+ * @property {Class} boundaryClass
+ */
 
-const stopSymbol = Symbol("STOP_SYMBOL");
+/** @type Map<class, ClassModification> */
+export const classModifications = new Map();
+
+export const classModificationsKey = Symbol("CLASS_MODIFICATIONS_KEY");
+export const stopSymbol = Symbol("STOP_SYMBOL");
 
 export default function allowClassModifications(OriginalClass) {
   OriginalClass[classModificationsKey] = guid();
 
+  // TODO: (perf) modify the constructor only after the first modification is done?
   return class extends OriginalClass {
     constructor() {
       if (arguments[arguments.length - 1] === stopSymbol) {
@@ -17,9 +24,10 @@ export default function allowClassModifications(OriginalClass) {
       }
 
       const id = OriginalClass[classModificationsKey];
-      const FinalClass = classModifications.get(id) || OriginalClass;
+      const FinalClass =
+        classModifications.get(id)?.latestClass || OriginalClass;
 
-      return new FinalClass(...arguments, stopSymbol);
+      return new FinalClass(...arguments);
     }
   };
 }

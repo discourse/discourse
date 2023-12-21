@@ -149,6 +149,41 @@ module("Unit | Utility | plugin-api", function (hooks) {
     assert.strictEqual(obj.foo, "modified getter", "returns correct result");
   });
 
+  test("modifyClass works native class constructors", function (assert) {
+    @allowClassModifications
+    class ClassTestThingy {
+      constructor(value) {
+        this.result = value;
+      }
+    }
+
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClass(
+        ClassTestThingy,
+        (Base) =>
+          class extends Base {
+            constructor(value) {
+              super(value);
+              this.result = this.result * 2;
+            }
+          }
+      );
+
+      api.modifyClass(
+        ClassTestThingy,
+        (Base) =>
+          class extends Base {
+            constructor(value) {
+              super(value);
+              this.result += 1;
+            }
+          }
+      );
+    });
+
+    assert.strictEqual(new ClassTestThingy(5).result, 11);
+  });
+
   test("modifyClassStatic works with classic Ember objects", function (assert) {
     const TestThingy = EmberObject.extend({});
     TestThingy.reopenClass({
@@ -172,66 +207,151 @@ module("Unit | Utility | plugin-api", function (hooks) {
     assert.strictEqual(TestThingy.notCreate(), "baseball");
   });
 
-  // TODO: test modifying the same class twice
-
-  // TODO: test modifying a constructor?
-
-  // TODO: test combining modifyClass and modifyClassStatic
-
-  test("modifyClassStatic works with two native classes", function (assert) {
-    // class Base {
-    //   static boop() {
-    //     return 1;
-    //   }
-    // }
-
-    // class X {
-    //   static boop() {
-    //     return super.boop() + 1;
-    //   }
-    // }
-
-    // // Object.setPrototypeOf(X, Base);
-
-    // // const protoParent = class {};
-    // const protoChain = class {};
-    // Object.setPrototypeOf(protoChain, Base);
-    // X.boop = X.boop.bind(protoChain);
-
-    // debugger;
-    // const z = X.boop();
-
+  test("modifyClass works with static methods and two native classes", function (assert) {
     @allowClassModifications
     class ClassTestThingy {
-      static notCreate() {
-        debugger;
+      static bar() {
         return "base";
       }
     }
-
-    // class X extends ClassTestThingy {
-    //   static notCreate() {
-    //     return super.notCreate() + "ment";
-    //   }
-    // }
-
-    // debugger;
-    // const z = X.notCreate();
 
     withPluginApi("1.1.0", (api) => {
       api.modifyClass(
         ClassTestThingy,
         (Base) =>
           class extends Base {
-            static notCreate() {
-              debugger;
-              return super.notCreate() + "ball";
-              // return "ball";
+            static bar() {
+              return super.bar() + "ball";
             }
           }
       );
     });
 
-    assert.strictEqual(ClassTestThingy.notCreate(), "baseball");
+    assert.strictEqual(ClassTestThingy.bar(), "baseball");
+  });
+
+  test("modifyClass works when modifying the same class twice", function (assert) {
+    @allowClassModifications
+    class ClassTestThingy {
+      static bar() {
+        return "base";
+      }
+
+      foo() {
+        return 1;
+      }
+    }
+
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClass(
+        ClassTestThingy,
+        (Base) =>
+          class extends Base {
+            static bar() {
+              return super.bar() + "ball";
+            }
+
+            foo() {
+              return super.foo() + 2;
+            }
+          }
+      );
+
+      api.modifyClass(
+        ClassTestThingy,
+        (Base) =>
+          class extends Base {
+            static bar() {
+              return `${super.bar()} game`;
+            }
+
+            foo() {
+              return super.foo() + 3;
+            }
+          }
+      );
+    });
+
+    assert.strictEqual(ClassTestThingy.bar(), "baseball game");
+    assert.strictEqual(new ClassTestThingy().foo(), 6);
+  });
+
+  test("modifyClass works with classes that use inheritance", function (assert) {
+    class ActualBase {
+      static bar() {
+        return 2;
+      }
+
+      array = [];
+
+      constructor() {
+        this.array.push("base");
+      }
+
+      foo() {
+        return 1;
+      }
+    }
+
+    class SomeBase extends ActualBase {
+      static bar() {
+        return super.bar() * 2;
+      }
+
+      constructor() {
+        super(...arguments);
+        this.array.push("other");
+      }
+
+      foo() {
+        return super.foo() + 1;
+      }
+    }
+
+    @allowClassModifications
+    class ClassTestThingy extends SomeBase {
+      static bar() {
+        return super.bar() * 2;
+      }
+
+      constructor() {
+        super(...arguments);
+        this.array.push("thingy");
+      }
+
+      foo() {
+        return super.foo() + 1;
+      }
+    }
+
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClass(
+        ClassTestThingy,
+        (Base) =>
+          class extends Base {
+            static bar() {
+              return super.bar() * 2;
+            }
+
+            constructor() {
+              super(...arguments);
+              this.array.push("modification");
+            }
+
+            foo() {
+              return super.foo() + 1;
+            }
+          }
+      );
+    });
+
+    assert.strictEqual(ClassTestThingy.bar(), 16);
+    assert.deepEqual(new ClassTestThingy().array, [
+      "base",
+      "other",
+      "thingy",
+      "modification",
+    ]);
+    assert.strictEqual(new ClassTestThingy().foo(), 4);
   });
 });

@@ -140,6 +140,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import {
   classModifications,
   classModificationsKey,
+  stopSymbol,
 } from "./allow-class-modifications";
 
 // If you add any methods to the API ensure you bump up the version number
@@ -287,34 +288,50 @@ class PluginApi {
       const klass = resolverName;
       const id = klass[classModificationsKey];
 
-      // get the current version of the class or create the copy of the original
-      // to start the extension chain
-      const PreviousClass =
-        classModifications.get(id) || Object.assign(class {}, klass);
+      let { latestClass, boundaryClass, baseStaticMethods } =
+        classModifications.get(id) || {};
 
-      debugger;
-      const ModifiedClass = changes(PreviousClass);
-      Object.defineProperty(ModifiedClass, "name", {
-        value: PreviousClass.name,
-      });
+      if (!latestClass) {
+        boundaryClass = class Boundary extends klass {
+          constructor() {
+            super(...arguments, stopSymbol);
+          }
+        };
+
+        latestClass = boundaryClass;
+      }
+
+      const modifiedClass = changes(latestClass);
 
       for (const [name, property] of Object.entries(
-        Object.getOwnPropertyDescriptors(ModifiedClass)
+        Object.getOwnPropertyDescriptors(modifiedClass)
       )) {
         if (typeof property.value === "function") {
-          // debugger;
-          // property.value
+          baseStaticMethods ??= new Map();
+
+          let originalMethod;
+          if (baseStaticMethods.has(name)) {
+            originalMethod = baseStaticMethods.get(name);
+          } else {
+            originalMethod = klass[name];
+            baseStaticMethods.set(name, originalMethod);
+          }
+
+          boundaryClass[name] = function () {
+            return originalMethod.apply(this, arguments);
+          };
+
           klass[name] = function () {
-            debugger;
-            Object.getPrototypeOf(this);
-            property.value.apply(this, arguments);
+            return property.value.apply(this, arguments);
           };
         }
       }
 
-      // Object.setPrototypeOf(ModifiedClass.prototype, PreviousClass.prototype);
-
-      classModifications.set(id, ModifiedClass);
+      classModifications.set(id, {
+        latestClass: modifiedClass,
+        boundaryClass,
+        baseStaticMethods,
+      });
     }
   }
 
