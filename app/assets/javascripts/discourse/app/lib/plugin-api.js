@@ -331,10 +331,8 @@ class PluginApi {
           baseStaticMethods ??= new Map();
 
           // Preserve the original version of the static method
-          let originalMethod;
-          if (baseStaticMethods.has(name)) {
-            originalMethod = baseStaticMethods.get(name);
-          } else {
+          let originalMethod = baseStaticMethods.get(name);
+          if (!originalMethod) {
             originalMethod = klass[name];
             baseStaticMethods.set(name, originalMethod);
           }
