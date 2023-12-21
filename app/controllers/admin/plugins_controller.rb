@@ -3,7 +3,7 @@
 class Admin::PluginsController < Admin::StaffController
   def index
     render_serialized(
-      Discourse.visible_plugins.sort_by { |p| p.name.downcase.delete_prefix("discourse-") },
+      Discourse.plugins_sorted_by_name(enabled_only: false),
       AdminPluginSerializer,
       root: "plugins",
     )
@@ -14,7 +14,7 @@ class Admin::PluginsController < Admin::StaffController
   def preload_additional_json
     store_preloaded(
       "enabledPluginAdminRoutes",
-      MultiJson.dump(Discourse.visible_plugins.filter(&:enabled?).map(&:admin_route).compact),
+      MultiJson.dump(Discourse.plugins_sorted_by_name.map(&:admin_route).compact),
     )
   end
 end
