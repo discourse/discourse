@@ -51,24 +51,29 @@ export default class SearchMenu extends Component {
 
   @bind
   setupEventListeners() {
-    document.addEventListener("mousedown", this.onDocumentPress, true);
-    document.addEventListener("touchend", this.onDocumentPress, {
-      capture: true,
-      passive: true,
-    });
+    document.addEventListener("mousedown", this.onDocumentPress);
+    document.addEventListener("touchend", this.onDocumentPress);
   }
 
   willDestroy() {
     document.removeEventListener("mousedown", this.onDocumentPress);
     document.removeEventListener("touchend", this.onDocumentPress);
-
     super.willDestroy(...arguments);
   }
 
   @bind
   onDocumentPress(event) {
-    if (!event.target.closest(".search-menu-container.menu-panel-results")) {
+    // Let the header handle clicks to search button
+    if (event.target.closest(".header-dropdown-toggle.search-dropdown")) {
+      return;
+    }
+
+    if (
+      this.menuPanelOpen &&
+      !event.target.closest(".search-menu-container.menu-panel-results")
+    ) {
       this.menuPanelOpen = false;
+      document.getElementById(SEARCH_INPUT_ID)?.blur();
     }
   }
 
