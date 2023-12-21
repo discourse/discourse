@@ -2562,7 +2562,7 @@ en:
       approve_unless_allowed_groups: "approve_unless_trust_level"
       approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
       email_in_allowed_groups: "email_in_min_trust"
-      edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
+      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
       uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
       create_topic_allowed_groups: "min_trust_to_create_topic"
       edit_post_allowed_groups: "min_trust_to_edit_post"
