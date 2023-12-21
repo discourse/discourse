@@ -15,7 +15,6 @@ export const stopSymbol = Symbol("STOP_SYMBOL");
 export default function allowClassModifications(OriginalClass) {
   OriginalClass[classModificationsKey] = guid();
 
-  // TODO: (perf) modify the constructor only after the first modification is done?
   return class extends OriginalClass {
     constructor() {
       if (arguments[arguments.length - 1] === stopSymbol) {
