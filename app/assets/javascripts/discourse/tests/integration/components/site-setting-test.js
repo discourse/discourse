@@ -59,4 +59,33 @@ module("Integration | Component | site-setting", function (hooks) {
 
     assert.strictEqual(query(".validation-error h1"), null);
   });
+
+  test("displays file types list setting", async function (assert) {
+    this.set("setting", {
+      setting: "theme_authorized_extensions",
+      value: "jpg|jpeg|png",
+      type: "file_types_list",
+    });
+
+    await render(hbs`<SiteSetting @setting={{this.setting}} />`);
+
+    assert.strictEqual(
+      query(".formatted-selection").innerText,
+      "jpg, jpeg, png"
+    );
+
+    await click(query(".file-types-list__button.image"));
+
+    assert.strictEqual(
+      query(".formatted-selection").innerText,
+      "jpg, jpeg, png, gif, heic, heif, webp, avif, svg"
+    );
+
+    await click(query(".file-types-list__button.image"));
+
+    assert.strictEqual(
+      query(".formatted-selection").innerText,
+      "jpg, jpeg, png, gif, heic, heif, webp, avif, svg"
+    );
+  });
 });
