@@ -33,6 +33,7 @@ module SiteSettings::DeprecatedSettings
     ],
     ["min_trust_level_to_allow_invite", "invite_allowed_groups", false, "3.3"],
     ["min_trust_level_to_allow_ignore", "ignore_allowed_groups", false, "3.3"],
+    ["min_trust_to_allow_self_wiki", "self_wiki_allowed_groups", false, "3.3"],
   ]
 
   OVERRIDE_TL_GROUP_SETTINGS = %w[

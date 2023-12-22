@@ -332,7 +332,7 @@ module PostGuardian
     return false unless authenticated?
     return true if is_staff? || @user.has_trust_level?(TrustLevel[4])
 
-    if @user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) && is_my_own?(post)
+    if @user.in_any_groups?(SiteSetting.self_wiki_allowed_groups_map) && is_my_own?(post)
       return false if post.hidden?
       return !post.edit_time_limit_expired?(@user)
     end
