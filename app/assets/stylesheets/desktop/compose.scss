@@ -18,12 +18,19 @@
   &.private-message {
     .with-tags {
       .title-and-category {
-        flex-wrap: nowrap; // force title and tags on same line for PMs
+        flex-wrap: nowrap;
+        gap: 0.5em;
         .mini-tag-chooser {
+          max-width: 50%;
           margin-bottom: 8px; // match title input margin
-          flex: 0 0 auto;
-          margin-left: 8px; // matches margin between category and tag input
-          width: 39%;
+          flex: 1 1 auto;
+        }
+      }
+      .title-input {
+        max-width: 50%;
+        min-width: 0;
+        input {
+          min-width: 0;
         }
       }
     }
