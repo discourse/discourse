@@ -144,7 +144,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.20.0";
+export const PLUGIN_API_VERSION = "1.21.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2610,6 +2610,24 @@ class PluginApi {
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
+  }
+
+  /**
+   * Include the passed user field properties in the user field save request.
+   * This is useful for plugins that are adding additional columns to the user field model and want
+   * to save the new property values alongside the default user field properties (all under the same save call)
+   *
+   * The `userFieldProperties` param can be passed as a single string or an array of strings.
+   *
+   * ```
+   * api.includeUserFieldPropertiesOnSave(["property_one", "property_two"]);
+   * ```
+   *
+   */
+  includeUserFieldPropertiesOnSave(userFieldProperties) {
+    this.container
+      .lookup("service:admin-custom-user-fields")
+      .addProperties(userFieldProperties);
   }
 }
 

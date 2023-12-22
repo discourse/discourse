@@ -7,6 +7,13 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.21.0] - 2023-12-22
+
+### Added
+
+- Added `includeUserFieldPropertiesOnSave` function, which includes the passed user field properties in the user field save request. This is useful for plugins that are adding additional columns to the user field model and want to save the new property values alongside the default user field properties (all under the same save call).
+
+
 ## [1.20.0] - 2023-12-20
 
 ### Added
