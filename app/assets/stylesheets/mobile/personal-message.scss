@@ -1,27 +1,31 @@
 .archetype-private_message {
-  .topic-body .cooked {
-    margin-top: 0.5em;
-    margin-left: 0;
-    padding: 1.5em 1em;
-    border-radius: 0.75em var(--border-radius) var(--border-radius)
-      var(--border-radius);
-  }
-  .topic-avatar {
-    margin-bottom: -1em; // creates bubble overlap
-  }
-  .boxed .contents {
-    padding: 0;
-  }
-
-  .topic-post {
-    margin: 0 0 1em;
-    article {
-      border-top: none;
+  .topic-body {
+    flex: 1 1 auto;
+    .cooked {
+      padding: 0;
+      margin: 0;
+    }
+    .contents.regular {
+      margin-top: 0.5em;
+      margin-left: 0;
+      padding: 1.5em 1em 0;
+      border-radius: var(--pm-border-radius);
     }
   }
 
-  .topic-body {
-    flex: 1 1 auto;
+  .post-menu-area {
+    padding-right: 0;
+  }
+
+  .topic-avatar {
+    margin-bottom: -1em; // creates bubble overlap
+  }
+
+  .topic-post {
+    margin: 0;
+    article {
+      border-top: none;
+    }
   }
 
   .topic-map {
