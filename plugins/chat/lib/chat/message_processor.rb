@@ -22,7 +22,12 @@ module Chat
     end
 
     def process_thumbnails
+      return if !SiteSetting.create_thumbnails
+      filetypes = %w[jpg jpeg png heic]
+
       @model.uploads.each do |upload|
+        next if !upload.present? || !filetypes.include?(upload.extension.downcase)
+
         if upload.width <= SiteSetting.max_image_width &&
              upload.height <= SiteSetting.max_image_height
           return false
