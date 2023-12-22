@@ -57,9 +57,11 @@ RSpec.describe "Navigation", type: :system do
 
     it "has the back to forum link", mobile: true do
       visit("/")
+      find("a[href='#{topic.relative_url}']").click
+
       chat_page.open_from_header
 
-      expect(page).to have_css(".back-to-forum")
+      expect(page).to have_css(".back-to-forum[href='#{topic.relative_url}']")
     end
 
     it "hides the search icon and hamburger icon", mobile: true do
