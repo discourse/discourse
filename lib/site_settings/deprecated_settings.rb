@@ -54,10 +54,7 @@ module SiteSettings::DeprecatedSettings
   ]
 
   def group_to_tl(old_setting, new_setting)
-    tl_and_staff =
-      SiteSetting.type_supervisor.get_type(old_setting.to_sym) == :enum &&
-        SiteSetting.type_supervisor.get_enum_class(old_setting.to_sym).name ==
-          TrustLevelAndStaffSetting.name
+    tl_and_staff = is_tl_and_staff_setting?(old_setting)
 
     valid_auto_groups =
       self.public_send("#{new_setting}_map") &
@@ -86,13 +83,25 @@ module SiteSettings::DeprecatedSettings
   end
 
   def tl_to_group(old_setting, val)
+    tl_and_staff = is_tl_and_staff_setting?(old_setting)
+
     if val == "admin"
       Group::AUTO_GROUPS[:admins]
     elsif val == "staff"
       Group::AUTO_GROUPS[:staff]
     else
-      "#{Group::AUTO_GROUPS[:admins]}|#{Group::AUTO_GROUPS[:staff]}|#{val.to_i + Group::AUTO_GROUPS[:trust_level_0]}"
+      if tl_and_staff
+        "#{Group::AUTO_GROUPS[:admins]}|#{Group::AUTO_GROUPS[:staff]}|#{val.to_i + Group::AUTO_GROUPS[:trust_level_0]}"
+      else
+        "#{val.to_i + Group::AUTO_GROUPS[:trust_level_0]}"
+      end
     end
+  end
+
+  def is_tl_and_staff_setting?(old_setting)
+    SiteSetting.type_supervisor.get_type(old_setting.to_sym) == :enum &&
+      SiteSetting.type_supervisor.get_enum_class(old_setting.to_sym).name ==
+        TrustLevelAndStaffSetting.name
   end
 
   def setup_deprecated_methods
