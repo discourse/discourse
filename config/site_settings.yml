@@ -2300,7 +2300,6 @@ developer:
   lazy_load_categories:
     default: false
     client: true
-    hidden: true
 
 navigation:
   navigation_menu:

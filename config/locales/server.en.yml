@@ -2493,6 +2493,7 @@ en:
 
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     enable_admin_sidebar_navigation: "EXPERIMENTAL: Enable sidebar navigation for the admin UI, which replaces the top-level admin navigation buttons."
+    lazy_load_categories: "EXPERIMENTAL: Load category information only when it is necessary to be displayed. This improves performance on sites with many categories."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
