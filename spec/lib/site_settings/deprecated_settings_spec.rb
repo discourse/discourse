@@ -27,14 +27,14 @@ RSpec.describe SiteSettings::DeprecatedSettings do
         @original_override_tl_group,
       )
     end
-
-    # Necessary because Discourse.deprecate uses redis to see if the warning
-    # was already logged.
-    Discourse.redis.flushdb
   end
 
   describe "when not overriding deprecated settings" do
     let(:override) { false }
+
+    # Necessary because Discourse.deprecate uses redis to see if the warning
+    # was already logged.
+    use_redis_snapshotting
 
     # NOTE: This fixture has some completely made up settings (e.g. min_trust_level_to_allow_invite_tl_and_staff)
     let(:deprecated_test) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml" }
@@ -120,15 +120,20 @@ RSpec.describe SiteSettings::DeprecatedSettings do
         expect(SiteSetting.min_trust_level_to_allow_invite).to eq(TrustLevel[3])
       end
 
-      it "returns nil if there are no trust level auto groups in the new group setting" do
+      it "returns TL4 if there are no trust level auto groups in the new group setting" do
         SiteSetting.invite_allowed_groups = Fabricate(:group).id.to_s
-        expect(SiteSetting.min_trust_level_to_allow_invite).to eq(nil)
+        expect(SiteSetting.min_trust_level_to_allow_invite).to eq(TrustLevel[4])
       end
 
-      it "returns nil if there are only staff and admin auto groups in the new group setting" do
+      it "returns TL4 if there are only staff and admin auto groups in the new group setting" do
         SiteSetting.invite_allowed_groups =
           "#{Group::AUTO_GROUPS[:admins]}|#{Group::AUTO_GROUPS[:staff]}"
-        expect(SiteSetting.min_trust_level_to_allow_invite).to eq(nil)
+        expect(SiteSetting.min_trust_level_to_allow_invite).to eq(TrustLevel[4])
+      end
+
+      it "returns TL4 if there are no automated invite_allowed_groups" do
+        SiteSetting.invite_allowed_groups = Fabricate(:group).id.to_s
+        expect(SiteSetting.min_trust_level_to_allow_invite).to eq(TrustLevel[4])
       end
     end
 
@@ -160,6 +165,11 @@ RSpec.describe SiteSettings::DeprecatedSettings do
         SiteSetting.invite_allowed_groups =
           "#{Group::AUTO_GROUPS[:admins]}|#{Group::AUTO_GROUPS[:trust_level_3]}"
         expect(SiteSetting.min_trust_level_to_allow_invite_tl_and_staff).to eq(TrustLevel[3])
+      end
+
+      it "returns admin if there are no automated invite_allowed_groups" do
+        SiteSetting.invite_allowed_groups = Fabricate(:group).id.to_s
+        expect(SiteSetting.min_trust_level_to_allow_invite_tl_and_staff).to eq("admin")
       end
     end
 

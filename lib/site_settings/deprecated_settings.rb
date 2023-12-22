@@ -62,7 +62,9 @@ module SiteSettings::DeprecatedSettings
         # mapped to TLs.
         Group.auto_group_range(tl_and_staff ? :admins : :trust_level_0, :trust_level_4)
 
-    return if valid_auto_groups.empty?
+    # We don't want to return nil because this could lead to permission holes;
+    # so we return the max available permission in this case.
+    return tl_and_staff ? "admin" : TrustLevel[4] if valid_auto_groups.empty?
 
     if tl_and_staff
       valid_auto_groups_excluding_staff_and_admins =
