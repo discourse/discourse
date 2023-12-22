@@ -5,7 +5,7 @@ RSpec.describe "multiple invites" do
   let(:"Api-Key") { Fabricate(:api_key).key }
   let(:"Api-Username") { "system" }
 
-  path "/invites.json?" do
+  path "/invites/create-multiple.json?" do
     post "Create multiple invites" do
       tags "Invites"
       operationId "createMultipleInvites"

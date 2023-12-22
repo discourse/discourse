@@ -37,12 +37,7 @@ class InvitesController < ApplicationController
     render layout: "no_ember"
   end
 
-  def create
-    multiple_requests = (params[:email] and params[:email].kind_of?(Array))
-    multiple_requests ? create_many : create_one(params[:email])
-  end
-
-  def create_many
+  def create_multiple
     emails = params[:email]
     # validate that topics and groups can accept invites.
     if params[:topic_id].present?
@@ -99,7 +94,7 @@ class InvitesController < ApplicationController
            }
   end
 
-  def create_one(email)
+  def create
     begin
       if params[:topic_id].present?
         topic = Topic.find_by(id: params[:topic_id])
@@ -126,7 +121,7 @@ class InvitesController < ApplicationController
       invite =
         Invite.generate(
           current_user,
-          email: email,
+          email: params[:email],
           domain: params[:domain],
           skip_email: params[:skip_email],
           invited_by: current_user,
