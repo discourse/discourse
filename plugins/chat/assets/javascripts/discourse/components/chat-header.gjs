@@ -10,20 +10,21 @@ export default class ChatHeader extends Component {
   @service site;
   @service siteSettings;
   @service router;
+
   @tracked previousURL;
 
   title = I18n.t("chat.back_to_forum");
   heading = I18n.t("chat.heading");
 
+  constructor() {
+    super(...arguments);
+    this.router.on("routeDidChange", this, this.#updatePreviousURL);
+  }
+
   get shouldRender() {
     return (
       this.siteSettings.chat_enabled && this.site.mobileView && this.isChatOpen
     );
-  }
-
-  constructor() {
-    super(...arguments);
-    this.router.on("routeDidChange", this, this.#updatePreviousURL);
   }
 
   willDestroy() {
