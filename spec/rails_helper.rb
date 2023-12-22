@@ -239,21 +239,6 @@ RSpec.configure do |config|
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
 
-    # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is required for
-    # system tests to support running system tests in multiple processes. If we don't download the `chromedriver` binary
-    # before running system tests in multiple processes, each process will end up calling the `selenium-manager` binary
-    # to download the `chromedriver` binary at the same time but the problem is that the binary is being downloaded to
-    # the same location and this can interfere with the running tests in another process.
-    #
-    # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
-    # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
-    if !File.directory?("~/.cache/selenium")
-      File.open("#{Rails.root}/tmp/chrome_driver_flock", "w") do |file|
-        file.flock(File::LOCK_EX)
-        `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
-      end
-    end
-
     Sidekiq.error_handlers.clear
 
     # Ugly, but needed until we have a user creator
@@ -499,8 +484,37 @@ RSpec.configure do |config|
   # Match the request hostname to the value in `database.yml`
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
 
-  last_driven_by = nil
+  system_tests_initialized = false
+
   config.before(:each, type: :system) do |example|
+    if !system_tests_initialized
+      # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is required for
+      # system tests to support running system tests in multiple processes. If we don't download the `chromedriver` binary
+      # before running system tests in multiple processes, each process will end up calling the `selenium-manager` binary
+      # to download the `chromedriver` binary at the same time but the problem is that the binary is being downloaded to
+      # the same location and this can interfere with the running tests in another process.
+      #
+      # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
+      # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
+      if !File.directory?("~/.cache/selenium")
+        File.open("#{Rails.root}/tmp/chrome_driver_flock", "w") do |file|
+          file.flock(File::LOCK_EX)
+          `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
+        end
+      end
+
+      # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapaters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
+      # and the lock in [ActiveRecord::ModelSchema](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/model_schema.rb#L550).
+      # To work around this problem, we are going to preload all the model schemas before running any system tests so that
+      # the lock in ActiveRecord::ModelSchema is not acquired at runtime. This is a temporary workaround while we report
+      # the issue to the Rails.
+      ActiveRecord::Base.connection.data_sources.map do |table|
+        ActiveRecord::Base.connection.schema_cache.add(table)
+      end
+
+      system_tests_initialized = true
+    end
+
     driver = [:selenium]
     driver << :mobile if example.metadata[:mobile]
     driver << :chrome
