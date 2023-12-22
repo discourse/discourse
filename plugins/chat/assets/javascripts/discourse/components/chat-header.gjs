@@ -6,16 +6,18 @@ import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
-export default class ChatHeaderForum extends Component {
-  static shouldRender({}, { siteSettings, site }) {
-    return siteSettings.chat_enabled && site.mobileView;
-  }
-
+export default class ChatHeader extends Component {
+  @service site;
+  @service siteSettings;
   @service router;
   @tracked previousURL;
 
   title = I18n.t("chat.back_to_forum");
   heading = I18n.t("chat.heading");
+
+  get shouldRender() {
+    return this.siteSettings.chat_enabled && this.site.mobileView && this.isChatOpen;
+  }
 
   constructor() {
     super(...arguments);
@@ -42,7 +44,7 @@ export default class ChatHeaderForum extends Component {
   }
 
   <template>
-    {{#if this.isChatOpen}}
+    {{#if this.shouldRender}}
       <div class="chat-header">
         <a
           href={{this.forumLink}}
