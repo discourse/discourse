@@ -38,6 +38,7 @@ class InvitesController < ApplicationController
   end
 
   def create_multiple
+    guardian.ensure_can_bulk_invite_to_forum!(current_user)
     emails = params[:email]
     # validate that topics and groups can accept invites.
     if params[:topic_id].present?

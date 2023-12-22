@@ -263,19 +263,6 @@ RSpec.describe InvitesController do
       expect(response.status).to eq(403)
     end
 
-    it "creates multiple invites for multiple emails" do
-      sign_in(user)
-
-      post "/invites/create-multiple.json",
-           params: {
-             email: %w[test@example.com test1@example.com bademail],
-           }
-      expect(response.status).to eq(200)
-      json = JSON(response.body)
-      expect(json["failed_invitations"].length).to eq(1)
-      expect(json["successful_invitations"].length).to eq(2)
-    end
-
     context "while logged in" do
       before { sign_in(user) }
 
@@ -514,6 +501,119 @@ RSpec.describe InvitesController do
                max_redemptions_allowed: SiteSetting.invite_link_max_redemptions_limit_users + 1,
              }
         expect(response.status).to eq(422)
+      end
+    end
+  end
+
+  describe "#create-multiple" do
+    it "fails if you are not admin" do
+      sign_in(Fabricate(:user))
+      post "/invites/create-multiple.json",
+           params: {
+             email: %w[test@example.com test1@example.com bademail],
+           }
+      expect(response.status).to eq(403)
+    end
+
+    it "creates multiple invites for multiple emails" do
+      sign_in(admin)
+      post "/invites/create-multiple.json",
+           params: {
+             email: %w[test@example.com test1@example.com bademail],
+           }
+      expect(response.status).to eq(200)
+      json = JSON(response.body)
+      expect(json["failed_invitations"].length).to eq(1)
+      expect(json["successful_invitations"].length).to eq(2)
+    end
+
+    context "with invite to topic" do
+      fab!(:topic)
+
+      it "works" do
+        sign_in(admin)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: ["test@example.com"],
+               topic_id: topic.id,
+               invite_to_topic: true,
+             }
+        expect(response.status).to eq(200)
+        expect(Jobs::InviteEmail.jobs.first["args"].first["invite_to_topic"]).to be_truthy
+      end
+
+      it "fails when topic_id is invalid" do
+        sign_in(admin)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: ["test@example.com"],
+               topic_id: -9999,
+             }
+        expect(response.status).to eq(400)
+      end
+    end
+
+    context "with invite to group" do
+      fab!(:group)
+
+      it "works for admins" do
+        sign_in(admin)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: ["test@example.com"],
+               group_ids: [group.id],
+             }
+        expect(response.status).to eq(200)
+        expect(Invite.find_by(email: "test@example.com").invited_groups.count).to eq(1)
+      end
+
+      it "works with multiple groups" do
+        sign_in(admin)
+        group2 = Fabricate(:group)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: ["test@example.com"],
+               group_names: "#{group.name},#{group2.name}",
+             }
+        expect(response.status).to eq(200)
+        expect(Invite.find_by(email: "test@example.com").invited_groups.count).to eq(2)
+      end
+    end
+
+    context "with email invite" do
+      subject(:create_multiple_invites) { post "/invites/create-multiple.json", params: params }
+
+      let(:params) { { email: [email] } }
+      let(:email) { "test@example.com" }
+
+      before { sign_in(admin) }
+
+      context "when doing successive calls" do
+        let(:invite) { Invite.last }
+
+        it "creates invite once and updates it after" do
+          create_multiple_invites
+          expect(response).to have_http_status :ok
+          expect(Jobs::InviteEmail.jobs.size).to eq(1)
+
+          create_multiple_invites
+          expect(response).to have_http_status :ok
+          expect(response.parsed_body["successful_invitations"][0]["invite"]["id"]).to eq(invite.id)
+        end
+      end
+
+      context 'when "skip_email" parameter is provided' do
+        before { params[:skip_email] = true }
+
+        it "accepts the parameter" do
+          create_multiple_invites
+          expect(response).to have_http_status :ok
+          expect(Jobs::InviteEmail.jobs.size).to eq(0)
+        end
       end
     end
   end
