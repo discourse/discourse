@@ -71,7 +71,7 @@ module("Integration | Component | search-menu", function (hooks) {
     assert.strictEqual(
       document.activeElement,
       document.body,
-      "Clicking outside blurs focus and closes paen"
+      "Clicking outside blurs focus and closes panel"
     );
     assert.notOk(
       exists(".menu-panel .search-menu-initial-options"),
