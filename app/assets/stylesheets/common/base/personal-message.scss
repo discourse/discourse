@@ -151,71 +151,71 @@
     align-items: baseline;
     margin-right: 0.15em;
   }
-}
 
-// special post type colors
+  // special post type colors
 
-.current-user-post {
-  &:not(.moderator):not(.whisper.current-user-post) {
-    .regular.contents {
-      background: var(--tertiary-very-low);
-      border-color: var(--tertiary-very-low);
-    }
-    .topic-body.highlighted {
-      @media (prefers-reduced-motion: no-preference) {
-        .cooked {
-          animation: unset;
-        }
-        .regular.contents {
-          animation: current-user-background-fade-highlight 2.5s ease-out;
+  .current-user-post {
+    &:not(.moderator):not(.whisper.current-user-post) {
+      .regular.contents {
+        background: var(--tertiary-very-low);
+        border-color: var(--tertiary-very-low);
+      }
+      .topic-body.highlighted {
+        @media (prefers-reduced-motion: no-preference) {
+          .cooked {
+            animation: unset;
+          }
+          .regular.contents {
+            animation: current-user-background-fade-highlight 2.5s ease-out;
+          }
         }
       }
     }
-  }
-  .topic-body .cooked {
-    border: 1px solid transparent;
-  }
-  .embedded-posts {
     .topic-body .cooked {
-      background: transparent;
+      border: 1px solid transparent;
+    }
+    .embedded-posts {
+      .topic-body .cooked {
+        background: transparent;
+      }
     }
   }
-}
 
-.moderator {
-  .regular.contents {
-    background: var(--highlight-low);
-    border-color: var(--highlight-low);
-  }
-  .regular.contents .cooked {
-    background: transparent;
-    border: 1px solid transparent;
-  }
-}
-
-.deleted {
-  .regular.contents {
-    background: var(--danger-low);
-    border-color: var(--danger-low);
-  }
-  .topic-body .regular .cooked {
-    background: transparent;
-  }
-  .topic-body.highlighted .regular.contents {
-    animation: unset;
-  }
-}
-
-.whisper {
-  .topic-body .regular.contents {
-    background: transparent;
-    border: 2px dashed var(--primary-low);
+  .moderator {
+    .regular.contents {
+      background: var(--highlight-low);
+      border-color: var(--highlight-low);
+    }
+    .regular.contents .cooked {
+      background: transparent;
+      border: 1px solid transparent;
+    }
   }
 
-  &.current-user-post .topic-body .regular.contents {
-    border: 2px dashed var(--tertiary-low);
-    @media (prefers-reduced-motion: no-preference) {
-      animation: background-fade-highlight 2.5s ease-out;
+  .deleted {
+    .regular.contents {
+      background: var(--danger-low);
+      border-color: var(--danger-low);
+    }
+    .topic-body .regular .cooked {
+      background: transparent;
+    }
+    .topic-body.highlighted .regular.contents {
+      animation: unset;
+    }
+  }
+
+  .whisper {
+    .topic-body .regular.contents {
+      background: transparent;
+      border: 2px dashed var(--primary-low);
+    }
+
+    &.current-user-post .topic-body .regular.contents {
+      border: 2px dashed var(--tertiary-low);
+      @media (prefers-reduced-motion: no-preference) {
+        animation: background-fade-highlight 2.5s ease-out;
+      }
     }
   }
 }
