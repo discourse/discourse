@@ -45,7 +45,7 @@ export default class ChatHeader extends Component {
 
   <template>
     {{#if this.shouldRender}}
-      <div class="chat-header">
+      <div class="c-header">
         <a
           href={{this.forumLink}}
           class="btn-flat back-to-forum"
@@ -57,7 +57,7 @@ export default class ChatHeader extends Component {
 
         <LinkTo
           @route="chat.index"
-          class="chat-heading"
+          class="c-heading"
         >{{this.heading}}</LinkTo>
       </div>
     {{else}}

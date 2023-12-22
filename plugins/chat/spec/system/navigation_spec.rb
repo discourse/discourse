@@ -52,14 +52,14 @@ RSpec.describe "Navigation", type: :system do
       chat_page.open_from_header
 
       expect(page).to have_title(I18n.t("js.chat.heading"))
-      expect(page).to have_css("a.chat-heading[href='#{chat_path}']")
+      expect(page).to have_css("a.c-heading[href='#{chat_path}']")
     end
 
     it "has the back to forum link", mobile: true do
       visit("/")
       chat_page.open_from_header
 
-      expect(page).to have_css("a.back-to-forum")
+      expect(page).to have_css(".back-to-forum")
     end
 
     it "hides the search icon and hamburger icon", mobile: true do
