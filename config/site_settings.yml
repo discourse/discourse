@@ -2706,7 +2706,7 @@ uncategorized:
     hidden: true
 
   max_api_invites:
-      default: 50000
+      default: 5000
       hidden: true
 
   overridden_robots_txt:
