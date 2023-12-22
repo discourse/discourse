@@ -16,7 +16,9 @@ export default class ChatHeader extends Component {
   heading = I18n.t("chat.heading");
 
   get shouldRender() {
-    return this.siteSettings.chat_enabled && this.site.mobileView && this.isChatOpen;
+    return (
+      this.siteSettings.chat_enabled && this.site.mobileView && this.isChatOpen
+    );
   }
 
   constructor() {
@@ -55,10 +57,7 @@ export default class ChatHeader extends Component {
           {{this.title}}
         </a>
 
-        <LinkTo
-          @route="chat.index"
-          class="c-heading"
-        >{{this.heading}}</LinkTo>
+        <LinkTo @route="chat.index" class="c-heading">{{this.heading}}</LinkTo>
       </div>
     {{else}}
       {{yield}}
