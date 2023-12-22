@@ -55,4 +55,27 @@ module("Integration | Component | search-menu", function (hooks) {
       "Clicking the term brought back search results"
     );
   });
+
+  test("clicking outside results hides and blurs input", async function (assert) {
+    await render(<template><div id="click-me"><SearchMenu /></div></template>);
+    await click("#search-term");
+
+    assert.strictEqual(
+      document.activeElement,
+      query("#search-term"),
+      "Clicking the search term input focuses it"
+    );
+
+    await click("#click-me");
+
+    assert.strictEqual(
+      document.activeElement,
+      document.body,
+      "Clicking outside blurs focus and closes panel"
+    );
+    assert.notOk(
+      exists(".menu-panel .search-menu-initial-options"),
+      "Menu panel is hidden"
+    );
+  });
 });

@@ -51,24 +51,30 @@ export default class SearchMenu extends Component {
 
   @bind
   setupEventListeners() {
-    document.addEventListener("mousedown", this.onDocumentPress, true);
-    document.addEventListener("touchend", this.onDocumentPress, {
-      capture: true,
-      passive: true,
-    });
+    // We only need to register click events when the search menu is rendered outside of the header.
+    // The header handles clicking outside.
+    if (!this.args.inlineResults) {
+      document.addEventListener("mousedown", this.onDocumentPress);
+      document.addEventListener("touchend", this.onDocumentPress);
+    }
   }
 
   willDestroy() {
-    document.removeEventListener("mousedown", this.onDocumentPress);
-    document.removeEventListener("touchend", this.onDocumentPress);
-
+    if (!this.args.inlineResults) {
+      document.removeEventListener("mousedown", this.onDocumentPress);
+      document.removeEventListener("touchend", this.onDocumentPress);
+    }
     super.willDestroy(...arguments);
   }
 
   @bind
   onDocumentPress(event) {
+    if (!this.menuPanelOpen) {
+      return;
+    }
+
     if (!event.target.closest(".search-menu-container.menu-panel-results")) {
-      this.menuPanelOpen = false;
+      this.close();
     }
   }
 
@@ -100,13 +106,13 @@ export default class SearchMenu extends Component {
 
   @action
   close() {
-    if (this.args?.closeSearchMenu) {
-      return this.args.closeSearchMenu();
+    if (this.args?.onClose) {
+      return this.args.onClose();
     }
 
-    // We want to blur the active element (search input) when in stand-alone mode
+    // We want to blur the search input when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up
-    document.activeElement.blur();
+    document.getElementById(SEARCH_INPUT_ID)?.blur();
     this.menuPanelOpen = false;
   }
 
