@@ -527,17 +527,18 @@ RSpec.describe InvitesController do
       expect(json["successful_invitations"].length).to eq(2)
     end
 
-    it "creates 5000 invite codes with one request" do
+    it "creates many invite codes with one request" do #change to
       sign_in(admin)
+      num_emails = 5 # increase manually for load testing
       post "/invites/create-multiple.json",
            params: {
-             email: 1.upto(5000).map { |i| "test#{i}@example.com" },
+             email: 1.upto(num_emails).map { |i| "test#{i}@example.com" },
              #email: %w[test+1@example.com test1@example.com]
            }
       expect(response.status).to eq(200)
       json = JSON(response.body)
       expect(json["failed_invitations"].length).to eq(0)
-      expect(json["successful_invitations"].length).to eq(5000)
+      expect(json["successful_invitations"].length).to eq(num_emails)
     end
 
     context "with invite to topic" do
