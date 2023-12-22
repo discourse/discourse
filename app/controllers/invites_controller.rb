@@ -52,6 +52,7 @@ class InvitesController < ApplicationController
     end
 
     guardian.ensure_can_invite_to_forum!(groups)
+
     if !groups_can_see_topic?(groups, topic)
       editable_topic_groups = topic.category.groups.filter { |g| guardian.can_edit_group?(g) }
       return(
@@ -60,8 +61,19 @@ class InvitesController < ApplicationController
         )
       )
     end
+
+    if emails.size > SiteSetting.max_api_invites
+      return(
+        render_json_error(
+          I18n.t("invite.max_invite_emails_limit_exceeded", max: SiteSetting.max_api_invites),
+          422,
+        )
+      )
+    end
+
     success = []
     fail = []
+
     emails.map do |email|
       begin
         invite =

@@ -616,6 +616,25 @@ RSpec.describe InvitesController do
         end
       end
     end
+
+    it "fails if asked to generate too many invites at once" do
+      SiteSetting.max_api_invites = 3
+      sign_in(admin)
+      post "/invites/create-multiple.json",
+           params: {
+             email: %w[
+               mail1@mailinator.com
+               mail2@mailinator.com
+               mail3@mailinator.com
+               mail4@mailinator.com
+             ],
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"][0]).to eq(
+        I18n.t("invite.max_invite_emails_limit_exceeded", max: SiteSetting.max_api_invites),
+      )
+    end
   end
 
   describe "#retrieve" do
