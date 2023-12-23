@@ -1,11 +1,13 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { fmt } from "discourse/lib/computed";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
+@allowClassModifications
 export default class AdminThemeEditor extends Component {
   warning = null;
 

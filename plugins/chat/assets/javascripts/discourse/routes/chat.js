@@ -1,5 +1,6 @@
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { scrollTop } from "discourse/mixins/scroll-top";
@@ -11,6 +12,7 @@ import {
   initSidebarState,
 } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
+@allowClassModifications
 export default class ChatRoute extends DiscourseRoute {
   @service chat;
   @service router;

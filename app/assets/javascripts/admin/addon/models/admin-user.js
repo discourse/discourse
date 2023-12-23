@@ -1,5 +1,6 @@
 import { filter, gt, lt, not, or } from "@ember/object/computed";
 import { Promise } from "rsvp";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
@@ -10,6 +11,7 @@ import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
+@allowClassModifications
 export default class AdminUser extends User {
   static find(user_id) {
     return ajax(`/admin/users/${user_id}.json`).then((result) => {

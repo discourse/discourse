@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { inject as service } from "@ember/service";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel";
 import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
 import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
@@ -68,6 +69,7 @@ const ROUTES = {
   },
 };
 
+@allowClassModifications
 export default class ChatDrawerRouter extends Service {
   @service router;
   @service chatHistory;

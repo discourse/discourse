@@ -1,8 +1,10 @@
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import DiscourseURL, { rewritePath } from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
 
+@allowClassModifications
 export default class UnknownRoute extends DiscourseRoute {
   @service router;
 

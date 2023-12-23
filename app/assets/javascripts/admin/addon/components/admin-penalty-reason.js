@@ -2,12 +2,14 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const CUSTOM_REASON_KEY = "custom";
 
 @tagName("")
+@allowClassModifications
 export default class AdminPenaltyReason extends Component {
   selectedReason = CUSTOM_REASON_KEY;
   customReason = "";

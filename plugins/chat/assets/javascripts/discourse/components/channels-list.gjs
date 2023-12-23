@@ -11,6 +11,7 @@ import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import noop from "discourse/helpers/noop";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
@@ -20,6 +21,7 @@ import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/cha
 import onResize from "../modifiers/chat/on-resize";
 import ChatChannelRow from "./chat-channel-row";
 
+@allowClassModifications
 export default class ChannelsList extends Component {
   @service chat;
   @service router;

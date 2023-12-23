@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
@@ -11,6 +12,7 @@ export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
 
 const FLASH_TYPES = ["success", "error", "warning", "info"];
 
+@allowClassModifications
 export default class DModal extends Component {
   @service modal;
   @tracked wrapperElement;

@@ -5,6 +5,7 @@ import { not } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import LinkLookup from "discourse/lib/link-lookup";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { debounce } from "discourse-common/utils/decorators";
@@ -13,6 +14,7 @@ import I18n from "discourse-i18n";
 let _messagesCache = {};
 
 @classNameBindings(":composer-popup-container", "hidden")
+@allowClassModifications
 export default class ComposerMessages extends Component {
   @service modal;
   @tracked showShareModal;

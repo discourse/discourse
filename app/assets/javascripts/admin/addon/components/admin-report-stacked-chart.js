@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -9,6 +10,7 @@ import { bind } from "discourse-common/utils/decorators";
 import Report from "admin/models/report";
 
 @classNames("admin-report-chart", "admin-report-stacked-chart")
+@allowClassModifications
 export default class AdminReportStackedChart extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);

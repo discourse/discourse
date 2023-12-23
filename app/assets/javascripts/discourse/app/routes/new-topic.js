@@ -1,9 +1,11 @@
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import cookie from "discourse/lib/cookie";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 
+@allowClassModifications
 export default class extends DiscourseRoute {
   @service composer;
   @service router;

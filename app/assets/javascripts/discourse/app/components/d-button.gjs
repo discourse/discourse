@@ -5,6 +5,7 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import concatClass from "discourse/helpers/concat-class";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
@@ -16,6 +17,7 @@ const ACTION_AS_STRING_DEPRECATION_ARGS = [
   { id: "discourse.d-button-action-string" },
 ];
 
+@allowClassModifications
 export default class DButton extends GlimmerComponentWithDeprecatedParentView {
   @service router;
 

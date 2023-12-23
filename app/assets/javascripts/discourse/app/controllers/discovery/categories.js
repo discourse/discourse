@@ -2,8 +2,10 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import discourseComputed from "discourse-common/utils/decorators";
 
+@allowClassModifications
 export default class CategoriesController extends Controller {
   @service router;
   @service composer;

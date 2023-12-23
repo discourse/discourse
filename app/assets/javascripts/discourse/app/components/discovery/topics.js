@@ -2,11 +2,13 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DismissNew from "discourse/components/modal/dismiss-new";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { userPath } from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import I18n from "discourse-i18n";
 
+@allowClassModifications
 export default class DiscoveryTopics extends Component {
   @service router;
   @service composer;

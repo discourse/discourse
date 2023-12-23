@@ -2,9 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import optionalService from "discourse/lib/optional-service";
 import { bind } from "discourse-common/utils/decorators";
 
+@allowClassModifications
 export default class TopicTimeline extends Component {
   @service siteSettings;
   @service currentUser;

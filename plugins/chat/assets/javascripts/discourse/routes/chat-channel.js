@@ -1,7 +1,9 @@
 import { inject as service } from "@ember/service";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import DiscourseRoute from "discourse/routes/discourse";
 import withChatChannel from "./chat-channel-decorator";
 
+@allowClassModifications
 @withChatChannel
 export default class ChatChannelRoute extends DiscourseRoute {
   @service site;

@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import PreloadStore from "discourse/lib/preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
 import CategoryList from "discourse/models/category-list";
@@ -9,6 +10,7 @@ import TopicList from "discourse/models/topic-list";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
+@allowClassModifications
 export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service modal;
   @service router;

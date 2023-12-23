@@ -10,6 +10,7 @@ import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { SKIP } from "discourse/lib/autocomplete";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { emojiUrlFor } from "discourse/lib/text";
@@ -27,6 +28,7 @@ import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-c
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 
+@allowClassModifications
 export default class ChatComposer extends Component {
   @service capabilities;
   @service site;

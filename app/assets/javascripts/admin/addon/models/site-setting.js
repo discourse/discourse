@@ -1,9 +1,11 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import Setting from "admin/mixins/setting-object";
 
+@allowClassModifications
 export default class SiteSetting extends EmberObject.extend(Setting) {
   static findAll() {
     return ajax("/admin/site_settings").then(function (settings) {
