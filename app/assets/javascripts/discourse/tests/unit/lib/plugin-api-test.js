@@ -114,6 +114,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
     });
 
     const thingy = new ClassTestThingy();
+    assert.true(thingy instanceof ClassTestThingy);
     assert.strictEqual(thingy.keep, "hey!");
     assert.strictEqual(thingy.prop, "g'day");
   });
@@ -354,4 +355,68 @@ module("Unit | Utility | plugin-api", function (hooks) {
     ]);
     assert.strictEqual(new ClassTestThingy().foo(), 4);
   });
+
+  test("modifyClass works with classes then are inherited from", function (assert) {
+    @allowClassModifications
+    class BaseClass {
+      static bar() {
+        return ["base"];
+      }
+
+      array = [];
+
+      constructor() {
+        this.array.push("base");
+      }
+
+      foo() {
+        return ["base"];
+      }
+    }
+
+    class ClassTestThingy extends BaseClass {
+      static bar() {
+        return [...super.bar(), "child"];
+      }
+
+      constructor() {
+        super(...arguments);
+        this.array.push("child");
+      }
+
+      foo() {
+        return [...super.foo(), "child"];
+      }
+    }
+
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClass(
+        BaseClass,
+        (Base) =>
+          class extends Base {
+            static bar() {
+              return [...super.bar(), "base mod"];
+            }
+
+            constructor() {
+              super(...arguments);
+              this.array.push("base mod");
+            }
+
+            foo() {
+              return [...super.foo(), "base mod"];
+            }
+          }
+      );
+    });
+
+    assert.deepEqual(ClassTestThingy.bar(), ["base", "base mod", "child"]);
+
+    const thingy = new ClassTestThingy();
+    assert.true(thingy instanceof ClassTestThingy);
+    assert.deepEqual(thingy.array, ["base", "base mod", "child"]);
+    assert.deepEqual(thingy.foo(), ["base", "base mod", "child"]);
+  });
+
+  // TODO: test accessing static `this` when the class is extended
 });

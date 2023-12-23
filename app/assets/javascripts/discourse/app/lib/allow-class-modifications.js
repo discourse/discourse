@@ -30,7 +30,13 @@ export default function allowClassModifications(OriginalClass) {
       const FinalClass =
         classModifications.get(id)?.latestClass || OriginalClass;
 
-      return new FinalClass(...arguments);
+      const finalObject = new FinalClass(...arguments);
+
+      if (new.target !== OriginalClass) {
+        Object.setPrototypeOf(finalObject, new.target.prototype);
+      }
+
+      return finalObject;
     }
   };
 }
