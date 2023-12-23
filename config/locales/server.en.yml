@@ -2023,9 +2023,9 @@ en:
 
     max_image_size_kb: "The maximum image upload size. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."
     max_attachment_size_kb: "The maximum attachment files upload size. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
-    authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
-    authorized_extensions_for_staff: "A list of file extensions allowed for upload for staff users in addition to the list defined in the `authorized_extensions` site setting. (use '*' to enable all file types)"
-    theme_authorized_extensions: "A list of file extensions allowed for theme uploads (use '*' to enable all file types)"
+    authorized_extensions: "A list of file extensions allowed for upload"
+    authorized_extensions_for_staff: "A list of file extensions allowed for upload for staff users in addition to the list defined in the `authorized_extensions` site setting."
+    theme_authorized_extensions: "A list of file extensions allowed for theme uploads"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
 
     max_image_megapixels: "Maximum number of megapixels allowed for an image. Images with a higher number of megapixels will be rejected."
@@ -2562,7 +2562,7 @@ en:
       approve_unless_allowed_groups: "approve_unless_trust_level"
       approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
       email_in_allowed_groups: "email_in_min_trust"
-      edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
+      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
       uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
       create_topic_allowed_groups: "min_trust_to_create_topic"
       edit_post_allowed_groups: "min_trust_to_edit_post"

@@ -3639,6 +3639,8 @@ RSpec.describe Guardian do
   describe "can_wiki?" do
     let(:post) { Fabricate(:post, created_at: 1.minute.ago) }
 
+    before { SiteSetting.edit_wiki_post_allowed_groups = "14" }
+
     it "returns false for regular user" do
       expect(Guardian.new(coding_horror).can_wiki?(post)).to be_falsey
     end
