@@ -7,7 +7,6 @@ import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import { Promise } from "rsvp";
-import allowClassModifications from "discourse/lib/allow-class-modifications";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
@@ -16,6 +15,7 @@ import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import prepareFormTemplateData, {
   getFormTemplateObject,

@@ -1,8 +1,8 @@
 import { filter, gt, lt, not, or } from "@ember/object/computed";
 import { Promise } from "rsvp";
-import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import allowClassModifications from "discourse/lib/allow-class-modifications";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import Group from "discourse/models/group";
