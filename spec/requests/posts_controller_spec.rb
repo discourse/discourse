@@ -709,7 +709,6 @@ RSpec.describe PostsController do
       end
 
       it "raises an error if the user doesn't have permission to wiki the post" do
-        SiteSetting.edit_wiki_post_allowed_groups = "14"
         put "/posts/#{post.id}/wiki.json", params: { wiki: "true" }
         expect(response).to be_forbidden
       end
