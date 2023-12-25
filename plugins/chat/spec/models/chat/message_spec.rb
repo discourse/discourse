@@ -540,11 +540,10 @@ describe Chat::Message do
 
       it "creates newly added mentions" do
         existing_mention_ids = message.chat_mentions.pluck(:id)
-        update_message!(
-          message,
-          user: message.user,
-          text: message.message + " @#{user3.username} @#{user4.username} ",
-        )
+        message.message = message.message + " @#{user3.username} @#{user4.username} "
+        message.cook
+
+        message.upsert_mentions
 
         expect(message.user_mentions.pluck(:target_id)).to match_array(
           [user1.id, user2.id, user3.id, user4.id],
@@ -553,15 +552,19 @@ describe Chat::Message do
       end
 
       it "drops removed mentions" do
-        # user 2 is not mentioned anymore
-        update_message!(message, user: message.user, text: "Hey @#{user1.username}")
+        # user 2 is not mentioned anymore:
+        message.message = "Hey @#{user1.username}"
+        message.cook
+
+        message.upsert_mentions
 
         expect(message.user_mentions.pluck(:target_id)).to contain_exactly(user1.id)
       end
 
-      it "changes nothing if passed mentions are identical to existing mentions" do
+      it "changes nothing if message mentions has not been changed" do
         existing_mention_ids = message.chat_mentions.pluck(:id)
-        update_message!(message, user: message.user, text: message.message)
+
+        message.upsert_mentions
 
         expect(message.user_mentions.pluck(:target_id)).to match_array(already_mentioned)
         expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
