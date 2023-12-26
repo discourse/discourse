@@ -242,6 +242,31 @@ RSpec.describe Group do
     end
   end
 
+  describe ".auto_groups_between" do
+    it "returns the auto groups between lower and upper bounds" do
+      expect(
+        described_class.auto_groups_between(:trust_level_0, :trust_level_3),
+      ).to contain_exactly(10, 11, 12, 13)
+    end
+
+    it "excludes the undefined groups between staff and TL0" do
+      expect(described_class.auto_groups_between(:admins, :trust_level_0)).to contain_exactly(
+        1,
+        2,
+        3,
+        10,
+      )
+    end
+
+    it "returns an empty array when lower group is higher than upper group" do
+      expect(described_class.auto_groups_between(:trust_level_1, :trust_level_0)).to be_empty
+    end
+
+    it "returns an empty array when passing an unknown group" do
+      expect(described_class.auto_groups_between(:trust_level_0, :trust_level_1337)).to be_empty
+    end
+  end
+
   describe ".refresh_automatic_group!" do
     it "does not include staged users in any automatic groups" do
       staged = Fabricate(:staged, trust_level: 1)

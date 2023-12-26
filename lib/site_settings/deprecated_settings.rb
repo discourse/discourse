@@ -60,7 +60,7 @@ module SiteSettings::DeprecatedSettings
       self.public_send("#{new_setting}_map") &
         # We only want auto groups, no actual groups because they cannot be
         # mapped to TLs.
-        Group.auto_group_range_array(tl_and_staff ? :admins : :trust_level_0, :trust_level_4)
+        Group.auto_groups_between(tl_and_staff ? :admins : :trust_level_0, :trust_level_4)
 
     # We don't want to return nil because this could lead to permission holes;
     # so we return the max available permission in this case.

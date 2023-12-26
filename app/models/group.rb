@@ -145,13 +145,13 @@ class Group < ActiveRecord::Base
     @visibility_levels = Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
   end
 
-  def self.auto_group_range_array(lower, upper)
+  def self.auto_groups_between(lower, upper)
     lower_group = Group::AUTO_GROUPS[lower.to_sym]
     upper_group = Group::AUTO_GROUPS[upper.to_sym]
 
     return [] if lower_group.blank? || upper_group.blank?
-    return [] if lower_group > upper_group
-    (lower_group..upper_group).to_a
+
+    (lower_group..upper_group).to_a & AUTO_GROUPS.values
   end
 
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
