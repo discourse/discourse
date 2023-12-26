@@ -103,6 +103,7 @@ module TurboTests
           return rerun_failed_examples(@reporter.failed_examples)
         else
           STDOUT.puts "Retry and log flaky tests was enabled but ignored because there are more than #{retry_failed_examples_threshold} failures."
+          Flaky::Manager.remove_flaky_tests
         end
       end
 
