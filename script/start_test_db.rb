@@ -31,6 +31,12 @@ if should_setup
   run "echo fsync = off >> #{DATA}/postgresql.conf"
   run "echo full_page_writes = off >> #{DATA}/postgresql.conf"
   run "echo shared_buffers = 500MB >> #{DATA}/postgresql.conf"
+
+  if ENV["DISCOURSE_POSTGRES_LOG_DIRECTORY"].present?
+    run "echo logging_collector = true >> #{DATA}/postgresql.conf"
+    run "echo log_directory = '#{ENV["DISCOURSE_POSTGRES_LOG_DIRECTORY"]}' >> #{DATA}/postgresql.conf"
+    run "echo log_statement = 'mod' >> #{DATA}/postgresql.conf"
+  end
 end
 
 if should_exec
