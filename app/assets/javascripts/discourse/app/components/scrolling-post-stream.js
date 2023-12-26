@@ -194,16 +194,28 @@ export default MountWidget.extend({
               return;
             }
 
-            const position = domUtils.position(refreshedElem);
-            const top = position.top - distToElement;
-            document.documentElement.scroll({ top, left: 0 });
+            // The getOffsetTop function calculates the total offset distance of
+            // an element from the top of the document. Unlike element.offsetTop
+            // which only returns the offset relative to its nearest positioned
+            // ancestor, this function recursively accumulates the offsetTop
+            // of an element and all of its offset parents (ancestors).
+            // This ensures the total distance is measured from the very top of
+            // the document, accounting for any nested elements and their
+            // respective offsets.
+            const getOffsetTop = (element) => {
+              if (!element) return 0;
+              return element.offsetTop + getOffsetTop(element.offsetParent);
+            };
+
+            const top = getOffsetTop(refreshedElem) - offsetCalculator();
+            window.scrollTo({ top: top });
 
             // This seems weird, but somewhat infrequently a rerender
             // will cause the browser to scroll to the top of the document
             // in Chrome. This makes sure the scroll works correctly if that
             // happens.
             schedule("afterRender", () => {
-              document.documentElement.scroll({ top, left: 0 });
+              window.scrollTo({ top: top });
             });
           });
         };
