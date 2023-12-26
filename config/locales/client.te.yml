@@ -1973,6 +1973,8 @@ te:
           navigation: "నావిగేషను"
         default_categories:
           modal_yes: "అవును"
+        file_types_list:
+          add_image_types: "బొమ్మలు"
       badges:
         title: బ్యాడ్జీలు
         new_badge: కొత్త బ్యాడ్జీ

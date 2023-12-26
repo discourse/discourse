@@ -4056,8 +4056,7 @@ es:
     second_factor_auth:
       redirect_after_success: "La autenticación de segundo factor se ha realizado con éxito. Redirigiendo a la página anterior…"
     sidebar:
-      show_sidebar: "Mostrar barra lateral"
-      hide_sidebar: "Ocultar barra lateral"
+      title: "Barra lateral"
       unread_count:
         one: "%{count} sin leer"
         other: "%{count} sin leer"
@@ -5807,6 +5806,9 @@ es:
         json_schema:
           edit: Abrir editor
           modal_title: "Editar %{name}"
+        file_types_list:
+          add_image_types: "Imágenes"
+          add_audio_types: "Audio"
       badges:
         title: Insignias
         new_badge: Nueva insignia

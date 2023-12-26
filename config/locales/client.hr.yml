@@ -4020,8 +4020,7 @@ hr:
     second_factor_auth:
       redirect_after_success: "Provjera autentičnosti drugog faktora je uspješna. Preusmjeravanje na prethodnu stranicu…"
     sidebar:
-      show_sidebar: "Prikaži bočnu traku"
-      hide_sidebar: "Sakrij bočnu traku"
+      title: "Bočna traka"
       unread_count:
         one: "%{count} nepročitano"
         few: "%{count} nepročitano"
@@ -5564,6 +5563,8 @@ hr:
         json_schema:
           edit: Pokreni uređivač
           modal_title: "Uredi %{name}"
+        file_types_list:
+          add_image_types: "Slike"
       badges:
         title: Značke
         new_badge: Nova značka

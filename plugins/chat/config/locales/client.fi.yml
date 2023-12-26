@@ -25,6 +25,7 @@ fi:
             chat:
               create_message: "Luo chat-viesti tietyllä kanavalla."
     chat:
+      back_to_forum: "Keskustelualuea"
       deleted_chat_username: poistettu
       dates:
         time_tiny: "t:mm"

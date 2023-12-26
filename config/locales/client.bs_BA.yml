@@ -4168,6 +4168,8 @@ bs_BA:
           invalid_input: "Polja za unos ne mogu biti prazna ili sadrže znak vertikalne trake."
         default_categories:
           modal_yes: "Da"
+        file_types_list:
+          add_image_types: "Images"
       badges:
         title: Bedž
         new_badge: Novi Bedž

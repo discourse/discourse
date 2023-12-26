@@ -3100,6 +3100,8 @@ th:
           navigation: "การนำทาง"
         default_categories:
           modal_yes: "ใช่"
+        file_types_list:
+          add_image_types: "รูปภาพ"
       badges:
         title: เหรียญ
         new_badge: เหรียญใหม่

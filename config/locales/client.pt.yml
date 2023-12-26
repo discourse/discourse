@@ -3448,6 +3448,7 @@ pt:
         leader: "líder"
       detailed_name: "%{level}: %{name}"
     sidebar:
+      title: "Barra Lateral"
       unread_count:
         one: "%{count} não lido"
         other: "%{count} não lidos"
@@ -4592,6 +4593,8 @@ pt:
           navigation: "Navegação"
         default_categories:
           modal_yes: "Sim"
+        file_types_list:
+          add_image_types: "Imagens"
       badges:
         title: Crachás
         new_badge: Novo Crachá

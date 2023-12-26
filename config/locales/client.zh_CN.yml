@@ -3920,8 +3920,7 @@ zh_CN:
     second_factor_auth:
       redirect_after_success: "第二重身份验证成功。正在重定向到之前的页面…"
     sidebar:
-      show_sidebar: "显示边栏"
-      hide_sidebar: "隐藏边栏"
+      title: "边栏"
       unread_count:
         other: "%{count} 未读"
       new_count:
@@ -5729,6 +5728,9 @@ zh_CN:
         json_schema:
           edit: 启动编辑器
           modal_title: "编辑 %{name}"
+        file_types_list:
+          add_image_types: "图片"
+          add_audio_types: "音频"
       badges:
         title: 徽章
         new_badge: 新徽章

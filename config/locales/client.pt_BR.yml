@@ -3984,8 +3984,7 @@ pt_BR:
     second_factor_auth:
       redirect_after_success: "A autenticação de segundo fator foi bem-sucedida. Redirecionando para a página anterior…"
     sidebar:
-      show_sidebar: "Mostrar barra lateral"
-      hide_sidebar: "Ocultar barra lateral"
+      title: "Barra lateral"
       unread_count:
         one: "%{count} não lido"
         other: "%{count} não lidos"
@@ -5705,6 +5704,9 @@ pt_BR:
         json_schema:
           edit: Iniciar editor
           modal_title: "Editar %{name}"
+        file_types_list:
+          add_image_types: "Imagens"
+          add_audio_types: "Audio"
       badges:
         title: Emblemas
         new_badge: Novo emblema

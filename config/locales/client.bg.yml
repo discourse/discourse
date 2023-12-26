@@ -3303,6 +3303,7 @@ bg:
         regular: "редовен"
         leader: "лидер"
     sidebar:
+      title: "Странична лента"
       unread_count:
         one: "%{count} непрочетен"
         other: "%{count} непрочетени"
@@ -4180,6 +4181,8 @@ bg:
           modal_description: "Искате ли да приложите тази промяна исторически? Това ще промени предпочитанията за %{count} съществуващи потребители."
           modal_yes: "Да"
           modal_no: "Не, промяната се прилага само занапред"
+        file_types_list:
+          add_image_types: "Изображения"
       badges:
         title: Значки
         new_badge: Нова значка

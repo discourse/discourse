@@ -3415,6 +3415,8 @@ et:
           navigation: "Navigatsioon"
         default_categories:
           modal_yes: "Jah"
+        file_types_list:
+          add_image_types: "Pildid"
       badges:
         title: Märgised
         new_badge: Uus märgis

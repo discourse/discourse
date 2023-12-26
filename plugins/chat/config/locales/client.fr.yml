@@ -25,6 +25,7 @@ fr:
             chat:
               create_message: "Créez un message instantané dans un canal spécifié."
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: supprimé
       dates:
         time_tiny: "h:mm"

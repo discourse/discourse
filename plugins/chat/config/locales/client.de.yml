@@ -39,6 +39,7 @@ de:
     chat:
       text_copied: Text in die Zwischenablage kopiert
       link_copied: Link in die Zwischenablage kopiert
+      back_to_forum: "Forum"
       deleted_chat_username: gelöscht
       dates:
         time_tiny: "h:mm"
@@ -308,6 +309,7 @@ de:
       members_view:
         filter_placeholder: Mitglieder finden
         add_member: Mitglied hinzufügen
+        back_to_settings: "Zurück zu den Einstellungen"
       about_view:
         associated_topic: Verknüpftes Thema
         associated_category: Verknüpfte Kategorie

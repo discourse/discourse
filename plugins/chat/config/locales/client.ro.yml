@@ -82,6 +82,7 @@ ro:
         yesterday: Ieri
       members_view:
         add_member: Adaugă membru
+        back_to_settings: "Înapoi la setări"
       about_view:
         title: Titlu
         name: Nume

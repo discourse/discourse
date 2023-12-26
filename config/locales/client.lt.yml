@@ -4778,6 +4778,9 @@ lt:
         json_schema:
           edit: Paleiskite redaktorių
           modal_title: "Redaguoti %{name}"
+        file_types_list:
+          add_image_types: "Paveiksliukai"
+          add_audio_types: "Audio"
       badges:
         title: Trofėjai
         new_badge: Naujas ženklelis

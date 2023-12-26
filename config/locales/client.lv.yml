@@ -3565,6 +3565,8 @@ lv:
           modal_description: "Vai vēlaties šīs izmaiņas piemērot vēsturiski? Tas mainīs %{count} esošo lietotāju preferences."
           modal_yes: "Jā"
           modal_no: "Nē, piemērojiet izmaiņas tikai turpmāk"
+        file_types_list:
+          add_image_types: "Attēli"
       badges:
         title: Žetoni
         new_badge: Jauns Žetons

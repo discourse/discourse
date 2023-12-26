@@ -4863,8 +4863,7 @@ ar:
     second_factor_auth:
       redirect_after_success: "نجحت المصادقة الثنائية. جارٍ إعادة التوجيه إلى الصفحة السابقة…"
     sidebar:
-      show_sidebar: "إظهار الشريط الجانبي"
-      hide_sidebar: "إخفاء الشريط الجانبي"
+      title: "الشريط الجانبي"
       unread_count:
         zero: "%{count} غير مقروء"
         one: "%{count} غير مقروء"
@@ -6714,6 +6713,9 @@ ar:
         json_schema:
           edit: تشغيل المحرِّر
           modal_title: "تعديل %{name}"
+        file_types_list:
+          add_image_types: "الصور"
+          add_audio_types: "Audio"
       badges:
         title: الشارات
         new_badge: شارة جديدة

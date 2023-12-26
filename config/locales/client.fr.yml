@@ -3981,8 +3981,7 @@ fr:
     second_factor_auth:
       redirect_after_success: "L'authentification à deux facteurs est réussie. Redirection vers la page précédente…"
     sidebar:
-      show_sidebar: "Afficher la barre latérale"
-      hide_sidebar: "Masquer la barre latérale"
+      title: "Barre latérale"
       unread_count:
         one: "%{count} non lu"
         other: "%{count} non lus"
@@ -5705,6 +5704,9 @@ fr:
         json_schema:
           edit: Lancer l'éditeur
           modal_title: "Modifier %{name}"
+        file_types_list:
+          add_image_types: "Images"
+          add_audio_types: "Audio"
       badges:
         title: Badges
         new_badge: Nouveau badge

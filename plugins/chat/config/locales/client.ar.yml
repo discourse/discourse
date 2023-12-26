@@ -26,6 +26,7 @@ ar:
             chat:
               create_message: "أنشئ رسالة دردشة في قناة محدَّدة."
     chat:
+      back_to_forum: "المنتدى"
       deleted_chat_username: تم الحذف
       dates:
         time_tiny: "h:mm"

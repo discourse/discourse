@@ -4603,6 +4603,9 @@ gl:
         json_schema:
           edit: Abrir o editor
           modal_title: "Editar: %{name}"
+        file_types_list:
+          add_image_types: "Imaxes"
+          add_audio_types: "Audio"
       badges:
         title: Insignias
         new_badge: Nova insignia

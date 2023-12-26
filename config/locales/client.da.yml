@@ -3574,8 +3574,6 @@ da:
     fullscreen_table:
       expand_btn: "Udvid Tabel"
     sidebar:
-      show_sidebar: "Vis sidebjælke"
-      hide_sidebar: "Skjul sidebjælke"
       unread_count:
         one: "%{count} ulæst"
         other: "%{count} ulæste"
@@ -5055,6 +5053,9 @@ da:
         json_schema:
           edit: Start Editor
           modal_title: "Rediger %{name}"
+        file_types_list:
+          add_image_types: "Billeder"
+          add_audio_types: "Audio"
       badges:
         title: Emblemer
         new_badge: Nyt Emblem
