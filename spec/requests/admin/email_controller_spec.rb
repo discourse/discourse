@@ -57,7 +57,6 @@ RSpec.describe Admin::EmailController do
       before { sign_in(admin) }
 
       it "should return the right response" do
-        email_log
         get "/admin/email/sent.json"
 
         expect(response.status).to eq(200)
@@ -73,6 +72,8 @@ RSpec.describe Admin::EmailController do
         log = response.parsed_body.first
         expect(log["id"]).to eq(email_log.id)
         expect(log["reply_key"]).to eq(post_reply_key.reply_key)
+        expect(log["post_id"]).to eq(post.id)
+        expect(log["post_url"]).to eq(post.url)
       end
 
       it "should be able to filter by reply key" do
@@ -100,7 +101,7 @@ RSpec.describe Admin::EmailController do
 
       it "should be able to filter by smtp_transaction_response" do
         email_log_2 = Fabricate(:email_log, smtp_transaction_response: <<~RESPONSE)
-        250 Ok: queued as pYoKuQ1aUG5vdpgh-k2K11qcpF4C1ZQ5qmvmmNW25SM=@mailhog.example
+          250 Ok: queued as pYoKuQ1aUG5vdpgh-k2K11qcpF4C1ZQ5qmvmmNW25SM=@mailhog.example
         RESPONSE
 
         get "/admin/email/sent.json", params: { smtp_transaction_response: "pYoKu" }
@@ -111,6 +112,70 @@ RSpec.describe Admin::EmailController do
 
         expect(logs.size).to eq(1)
         expect(logs.first["smtp_transaction_response"]).to eq(email_log_2.smtp_transaction_response)
+      end
+
+      context "when type is group_smtp and filter param is address" do
+        let(:email_type) { "group_smtp" }
+        let(:target_email) { user.email }
+
+        it "should be able to filter across both to address and cc addresses" do
+          other_email = "foo@bar.com"
+          another_email = "forty@two.com"
+          email_log_matching_to_address =
+            Fabricate(:email_log, to_address: target_email, email_type: email_type)
+          email_log_matching_cc_address =
+            Fabricate(
+              :email_log,
+              to_address: admin.email,
+              cc_addresses: "#{other_email};#{target_email};#{another_email}",
+              email_type: email_type,
+            )
+
+          get "/admin/email/sent.json", params: { address: target_email, type: email_type }
+
+          expect(response.status).to eq(200)
+          logs = response.parsed_body
+          expect(logs.size).to eq(2)
+          email_log_found_with_to_address =
+            logs.find { |log| log["id"] == email_log_matching_to_address.id }
+          expect(email_log_found_with_to_address["cc_addresses"]).to be_nil
+          expect(email_log_found_with_to_address["to_address"]).to eq target_email
+          email_log_found_with_cc_address =
+            logs.find { |log| log["id"] == email_log_matching_cc_address.id }
+          expect(email_log_found_with_cc_address["to_address"]).not_to eq target_email
+          expect(email_log_found_with_cc_address["cc_addresses"]).to contain_exactly(
+            target_email,
+            other_email,
+            another_email,
+          )
+        end
+      end
+
+      context "when type is not group_smtp and filter param is address" do
+        let(:target_email) { user.email }
+
+        it "should only filter within to address" do
+          other_email = "foo@bar.com"
+          another_email = "forty@two.com"
+          email_log_matching_to_address = Fabricate(:email_log, to_address: target_email)
+          email_log_matching_cc_address =
+            Fabricate(
+              :email_log,
+              to_address: admin.email,
+              cc_addresses: "#{other_email};#{target_email};#{another_email}",
+            )
+
+          get "/admin/email/sent.json", params: { address: target_email }
+
+          expect(response.status).to eq(200)
+          logs = response.parsed_body
+          expect(logs.size).to eq(1)
+          email_log_found_with_to_address =
+            logs.find { |log| log["id"] == email_log_matching_to_address.id }
+          expect(email_log_found_with_to_address["cc_addresses"]).to be_nil
+          expect(email_log_found_with_to_address["to_address"]).to eq target_email
+          expect(logs.find { |log| log["id"] == email_log_matching_cc_address.id }).to be_nil
+        end
       end
     end
 
@@ -619,18 +684,18 @@ RSpec.describe Admin::EmailController do
 
   describe "#advanced_test" do
     let(:email) { <<~EMAIL }
-          From: "somebody" <somebody@example.com>
-          To: someone@example.com
-          Date: Mon, 3 Dec 2018 00:00:00 -0000
-          Subject: This is some subject
-          Content-Type: text/plain; charset="UTF-8"
+      From: "somebody" <somebody@example.com>
+      To: someone@example.com
+      Date: Mon, 3 Dec 2018 00:00:00 -0000
+      Subject: This is some subject
+      Content-Type: text/plain; charset="UTF-8"
 
-          Hello, this is a test!
+      Hello, this is a test!
 
-          ---
+      ---
 
-          This part should be elided.
-        EMAIL
+      This part should be elided.
+    EMAIL
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
