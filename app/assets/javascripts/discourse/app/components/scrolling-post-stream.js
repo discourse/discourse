@@ -1,13 +1,13 @@
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
+import domUtils from "discourse-common/utils/dom-utils";
 import MountWidget from "discourse/components/mount-widget";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import DiscourseURL from "discourse/lib/url";
 import { cloak, uncloak } from "discourse/widgets/post-stream";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
-import domUtils from "discourse-common/utils/dom-utils";
 
 const DEBOUNCE_DELAY = 50;
 
@@ -181,10 +181,7 @@ export default MountWidget.extend({
       const first = posts.objectAt(onscreen[0]);
       if (this._topVisible !== first) {
         this._topVisible = first;
-        const elem = postsNodes.item(onscreen[0]);
-        const elemId = elem.id;
-        const elemPos = domUtils.position(elem);
-        const distToElement = elemPos?.top || 0;
+        const elemId = postsNodes.item(onscreen[0]).id;
 
         const topRefresh = () => {
           refresh(() => {
