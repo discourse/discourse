@@ -1,0 +1,35 @@
+.has-full-page-chat {
+  .d-header-icons .search-dropdown,
+  .d-header-icons .hamburger-dropdown {
+    display: none;
+  }
+
+  .home-logo-wrapper-outlet {
+    width: 100%;
+  }
+
+  .c-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .back-to-forum {
+      color: var(--primary-medium);
+      font-size: var(--font-up-1);
+      font-weight: var(--font-bold);
+      padding: 0.8rem;
+
+      &:focus {
+        color: var(--primary);
+      }
+    }
+
+    .c-heading {
+      color: var(--primary);
+      font-size: var(--font-up-2);
+      font-weight: var(--font-bold);
+      margin: 0 auto;
+      padding: 0.6rem;
+    }
+  }
+}
