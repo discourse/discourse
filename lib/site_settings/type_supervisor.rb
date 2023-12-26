@@ -173,7 +173,7 @@ class SiteSettings::TypeSupervisor
     result = { type: type.to_s }
 
     if type == :enum
-      if (klass = enum_class(name))
+      if (klass = get_enum_class(name))
         result.merge!(valid_values: klass.values, translate_names: klass.translate_names?)
       else
         result.merge!(
@@ -204,6 +204,10 @@ class SiteSettings::TypeSupervisor
     end
 
     result
+  end
+
+  def get_enum_class(name)
+    @enums[name]
   end
 
   def get_type(name)
@@ -239,8 +243,8 @@ class SiteSettings::TypeSupervisor
 
   def validate_value(name, type, val)
     if type == self.class.types[:enum]
-      if enum_class(name)
-        unless enum_class(name).valid_value?(val)
+      if get_enum_class(name)
+        unless get_enum_class(name).valid_value?(val)
           raise Discourse::InvalidParameters.new("Invalid value `#{val}` for `#{name}`")
         end
       else
@@ -287,10 +291,6 @@ class SiteSettings::TypeSupervisor
     end
 
     self.class.parse_value_type(val)
-  end
-
-  def enum_class(name)
-    @enums[name]
   end
 
   def json_schema_class(name)
