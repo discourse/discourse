@@ -11,6 +11,10 @@ module TurboTests
           .map { |failed_example| failed_example["location_rerun_argument"] }
       end
 
+      def self.remove_flaky_tests
+        File.delete(PATH) if File.exist?(PATH)
+      end
+
       # This method should only be called by a formatter registered with `TurboTests::Runner` and logs the failed examples
       # to `PATH`. See `FailedExample#to_h` for the details of each example that is logged.
       #
