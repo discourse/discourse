@@ -255,7 +255,12 @@ module Jobs
           Thread.new do
             while parent_thread.alive? && !finished
               Discourse.redis.without_namespace.expire(cluster_concurrency_redis_key, 120)
-              sleep 60
+
+              # Sleep for 60 seconds, but wake up every second to check if the job has been completed
+              60.times do
+                break if finished
+                sleep 1
+              end
             end
           end
       end
