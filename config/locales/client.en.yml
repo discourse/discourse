@@ -1089,6 +1089,7 @@ en:
       said: "%{username}:"
       profile: "Profile"
       profile_possessive: "%{username}'s profile"
+      account_possessive: "'s account"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
