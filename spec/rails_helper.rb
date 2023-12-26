@@ -582,7 +582,7 @@ RSpec.configure do |config|
 
   config.after :each do |example|
     if example.exception && RspecErrorTracker.exceptions.present?
-      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= "")
+      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
 
       lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
 
