@@ -590,7 +590,7 @@ RSpec.configure do |config|
         lines << "\n" if index != 0
         lines << "Error encountered while proccessing #{path}"
         lines << "  #{ex.class}: #{ex.message}"
-        ex.backtrace.each { |line| lines << "    #{line}" }
+        ex.backtrace.each { |line| lines << "    #{line}\n" }
       end
 
       lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
