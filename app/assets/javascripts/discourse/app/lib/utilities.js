@@ -494,7 +494,11 @@ export function clipboardCopy(text) {
   }
 
   // ...Otherwise, use document.execCommand() fallback
-  return clipboardCopyFallback(text);
+  if (clipboardCopyFallback(text)) {
+    return Promise.resolve();
+  } else {
+    return Promise.reject();
+  }
 }
 
 // Use this version of clipboardCopy if you must use an AJAX call
