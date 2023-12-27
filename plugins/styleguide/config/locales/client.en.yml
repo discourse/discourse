@@ -9,6 +9,7 @@ en:
         atoms: Atoms
         molecules: Molecules
         organisms: Organisms
+        mocks: Mocks
 
       sections:
         bem:
