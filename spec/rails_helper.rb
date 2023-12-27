@@ -479,7 +479,9 @@ RSpec.configure do |config|
     config.around :each, capture_log: true do |example|
       original_logger = ActiveRecord::Base.logger
       io = StringIO.new
-      ActiveRecord::Base.logger = Logger.new(io)
+      io_logger = Logger.new(io)
+      io_logger.level = Logger::DEBUG
+      ActiveRecord::Base.logger = io_logger
 
       example.run
 
