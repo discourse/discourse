@@ -50,6 +50,14 @@ Discourse::Application.configure do
   config.assets.compile = true
   config.assets.digest = false
 
+  config.active_record.verbose_query_logs = true
+
+  config.after_initialize do
+    ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
+      line =~ %r{lib/freedom_patches}
+    end
+  end
+
   if ENV["RAILS_ENABLE_TEST_LOG"]
     config.logger = Logger.new(STDOUT)
     config.log_level =

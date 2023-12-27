@@ -475,6 +475,22 @@ RSpec.configure do |config|
     end
   end
 
+  if ENV["GITHUB_ACTIONS"]
+    config.around :each, capture_log: true do |example|
+      original_logger = ActiveRecord::Base.logger
+      io = StringIO.new
+      io_logger = Logger.new(io)
+      io_logger.level = Logger::DEBUG
+      ActiveRecord::Base.logger = io_logger
+
+      example.run
+
+      RSpec.current_example.metadata[:active_record_debug_logs] = io.string
+    ensure
+      ActiveRecord::Base.logger = original_logger
+    end
+  end
+
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
