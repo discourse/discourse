@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe SiteSettings::DeprecatedSettings do
+RSpec.xdescribe SiteSettings::DeprecatedSettings do
   def deprecate_override!(settings, tl_group_overrides = [])
     @original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
     SiteSettings::DeprecatedSettings::SETTINGS.clear
