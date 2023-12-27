@@ -228,7 +228,7 @@ describe Chat::MessageSerializer do
           message:
             "here should be a mention, but since we're fabricating objects it doesn't matter",
         )
-      Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
+      Fabricate(:user_chat_mention, chat_message: message, user: mentioned_user)
 
       mentioned_user.destroy!
       message.reload

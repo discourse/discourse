@@ -115,12 +115,25 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
   end
 end
 
-Fabricator(:chat_mention, class_name: "Chat::Mention") do
+Fabricator(:user_chat_mention, class_name: "Chat::UserMention") do
   transient read: false
   transient high_priority: true
   transient identifier: :direct_mentions
 
   user { Fabricate(:user) }
+  chat_message { Fabricate(:chat_message) }
+end
+
+Fabricator(:group_chat_mention, class_name: "Chat::GroupMention") do
+  chat_message { Fabricate(:chat_message) }
+  group { Fabricate(:group) }
+end
+
+Fabricator(:all_chat_mention, class_name: "Chat::AllMention") do
+  chat_message { Fabricate(:chat_message) }
+end
+
+Fabricator(:here_chat_mention, class_name: "Chat::HereMention") do
   chat_message { Fabricate(:chat_message) }
 end
 

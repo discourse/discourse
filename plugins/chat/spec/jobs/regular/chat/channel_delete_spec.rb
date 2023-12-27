@@ -23,7 +23,7 @@ describe Jobs::Chat::ChannelDelete do
       UploadReference.create(target: message, upload: upload)
     end
 
-    Chat::Mention.create(
+    Chat::UserMention.create(
       user: user2,
       chat_message: messages.sample,
       notifications: [Fabricate(:notification)],

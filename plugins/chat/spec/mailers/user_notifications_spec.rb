@@ -252,9 +252,9 @@ describe UserNotifications do
       describe "email subject" do
         context "with regular mentions" do
           before do
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: chat_message,
               notifications: [notification],
@@ -305,9 +305,9 @@ describe UserNotifications do
               user: user,
               last_read_message_id: another_chat_message.id - 2,
             )
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: another_chat_message,
               notifications: [notification],
@@ -345,9 +345,9 @@ describe UserNotifications do
                 user: user,
                 last_read_message_id: another_chat_message.id - 2,
               )
-              notification = Fabricate(:notification)
+              notification = Fabricate(:notification, user: user)
               Fabricate(
-                :chat_mention,
+                :user_chat_mention,
                 user: user,
                 chat_message: another_chat_message,
                 notifications: [notification],
@@ -374,9 +374,9 @@ describe UserNotifications do
             refresh_auto_groups
             channel = create_dm_channel(sender, [sender, user])
             Fabricate(:chat_message, user: sender, chat_channel: channel)
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: chat_message,
               notifications: [notification],
@@ -401,9 +401,9 @@ describe UserNotifications do
 
       describe "When there are mentions" do
         before do
-          notification = Fabricate(:notification)
+          notification = Fabricate(:notification, user: user)
           Fabricate(
-            :chat_mention,
+            :user_chat_mention,
             user: user,
             chat_message: chat_message,
             notifications: [notification],
@@ -508,9 +508,9 @@ describe UserNotifications do
             )
 
             new_message = Fabricate(:chat_message, user: sender, chat_channel: channel)
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: new_message,
               notifications: [notification],
@@ -652,9 +652,9 @@ describe UserNotifications do
             it "includes a view more link " do
               2.times do
                 msg = Fabricate(:chat_message, user: sender, chat_channel: channel)
-                notification = Fabricate(:notification)
+                notification = Fabricate(:notification, user: user)
                 Fabricate(
-                  :chat_mention,
+                  :user_chat_mention,
                   user: user,
                   chat_message: msg,
                   notifications: [notification],
@@ -679,9 +679,9 @@ describe UserNotifications do
               it "has only a link to view all messages" do
                 2.times do
                   msg = Fabricate(:chat_message, user: sender, chat_channel: channel)
-                  notification = Fabricate(:notification)
+                  notification = Fabricate(:notification, user: user)
                   Fabricate(
-                    :chat_mention,
+                    :user_chat_mention,
                     user: user,
                     chat_message: msg,
                     notifications: [notification],
@@ -706,9 +706,9 @@ describe UserNotifications do
 
             new_message =
               Fabricate(:chat_message, user: sender, chat_channel: channel, cooked: "New message")
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: new_message,
               notifications: [notification],
