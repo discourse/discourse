@@ -22,7 +22,7 @@ end
 #  user_id         :integer
 #  notification_id :integer          not null
 #  target_id       :integer
-#  type            :integer
+#  type            :integer          not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
