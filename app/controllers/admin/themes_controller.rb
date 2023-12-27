@@ -32,6 +32,7 @@ class Admin::ThemesController < Admin::AdminController
       end
     end
   end
+  hijacks :upload_asset
 
   def generate_key_pair
     require "sshkey"
@@ -163,6 +164,7 @@ class Admin::ThemesController < Admin::AdminController
   rescue Theme::SettingsMigrationError => err
     render_json_error err.message
   end
+  hijacks :import
 
   def index
     @themes = Theme.include_relations.order(:name)

@@ -6,6 +6,22 @@ require "method_profiler"
 # For cases where we are making remote calls like onebox or proxying files and so on this helps
 # free up a unicorn worker while the remote IO is happening
 module Hijack
+  module ClassMethods
+    def hijacks(method)
+      Hijack.hijacks << [self, method]
+    end
+  end
+
+  class << self
+    def included(base)
+      base.extend ClassMethods
+    end
+
+    def hijacks
+      @hijacks ||= []
+    end
+  end
+
   def hijack(info: nil, &blk)
     controller_class = self.class
 

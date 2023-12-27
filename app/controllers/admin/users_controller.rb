@@ -484,6 +484,7 @@ class Admin::UsersController < Admin::StaffController
       end
     end
   end
+  hijacks :destroy
 
   def badges
   end

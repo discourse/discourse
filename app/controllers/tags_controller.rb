@@ -241,6 +241,7 @@ class TagsController < ::ApplicationController
       end
     end
   end
+  hijacks :upload
 
   def list_unused
     guardian.ensure_can_admin_tags!

@@ -45,4 +45,5 @@ class OneboxController < ApplicationController
       end
     end
   end
+  hijacks :show
 end

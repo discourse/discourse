@@ -15,4 +15,5 @@ class InlineOneboxController < ApplicationController
       render json: { "inline-oneboxes" => oneboxes }
     end
   end
+  hijacks :show
 end

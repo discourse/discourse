@@ -168,6 +168,7 @@ class Admin::SiteTextsController < Admin::AdminController
       render json: success_json
     end
   end
+  hijacks :reseed
 
   protected
 

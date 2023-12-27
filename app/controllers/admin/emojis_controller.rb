@@ -44,6 +44,7 @@ class Admin::EmojisController < Admin::AdminController
       render json: data.as_json, status: good ? 200 : 422
     end
   end
+  hijacks :create
 
   def destroy
     name = params.require(:id)

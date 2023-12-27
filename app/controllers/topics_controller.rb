@@ -964,6 +964,7 @@ class TopicsController < ApplicationController
       render body: nil
     end
   end
+  hijacks :timings
 
   def feed
     raise Discourse::NotFound if !Post.exists?(topic_id: params[:topic_id])
@@ -1206,6 +1207,7 @@ class TopicsController < ApplicationController
       end
     end
   end
+  hijacks :summary
 
   private
 

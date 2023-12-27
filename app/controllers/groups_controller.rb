@@ -697,6 +697,7 @@ class GroupsController < ApplicationController
       end
     end
   end
+  hijacks :test_email_settings
 
   protected
 

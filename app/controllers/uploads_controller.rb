@@ -69,6 +69,7 @@ class UploadsController < ApplicationController
       end
     end
   end
+  hijacks :create
 
   def lookup_urls
     params.permit(short_urls: [])
