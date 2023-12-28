@@ -7,7 +7,7 @@ module Migrations
     class << self
       def create_connection(path)
         db = Extralite::Database.new(path)
-        db.pragma(busy_timeout: 60_000) # 60 seconds
+        db.pragma(busy_timeout: 60.seconds)
         db.pragma(auto_vacuum: "full")
         db.pragma(journal_mode: "wal")
         db.pragma(synchronous: "off")
