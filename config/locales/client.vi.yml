@@ -3511,6 +3511,7 @@ vi:
     second_factor_auth:
       redirect_after_success: "Xác thực yếu tố thứ hai thành công. Chuyển hướng về trang trước…"
     sidebar:
+      title: "Thanh bên"
       unread_count:
         other: "%{count} chưa đọc"
       new_count:
@@ -4946,6 +4947,8 @@ vi:
         json_schema:
           edit: Khởi chạy trình chỉnh sửa
           modal_title: "Chỉnh sửa %{name}"
+        file_types_list:
+          add_image_types: "Hình ảnh"
       badges:
         title: Huy hiệu
         new_badge: Thêm huy hiệu

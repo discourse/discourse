@@ -25,6 +25,7 @@ es:
             chat:
               create_message: "Crea un mensaje de chat en un canal especificado."
     chat:
+      back_to_forum: "Foro"
       deleted_chat_username: eliminado
       dates:
         time_tiny: "h:mm"

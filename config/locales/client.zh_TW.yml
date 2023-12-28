@@ -2854,6 +2854,7 @@ zh_TW:
     second_factor_auth:
       redirect_after_success: "兩步驟驗證成功。重新導向至之前的頁面..."
     sidebar:
+      title: "側選單"
       unread_count:
         other: "%{count} 個未讀"
       new_count:
@@ -4044,6 +4045,8 @@ zh_TW:
           invalid_input: "輸入欄位不能為空或包含垂直字元"
         default_categories:
           modal_yes: "是"
+        file_types_list:
+          add_image_types: "圖片"
       badges:
         title: 徽章
         new_badge: 新徽章

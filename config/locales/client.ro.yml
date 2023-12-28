@@ -4041,6 +4041,13 @@ ro:
           navigation: "Navigare"
         default_categories:
           modal_yes: "Da"
+        file_types_list:
+          add_image_types: "Imagini"
+          add_video_types: "Videoclipuri"
+          add_audio_types: "Audio"
+          add_document_types: "Documente"
+          add_types_title: "Permite extensiile %{types}"
+          add_types_toast: "Tipurile de fișier %{types} au fost adăugate"
       badges:
         title: Ecusoane
         new_badge: Ecuson nou

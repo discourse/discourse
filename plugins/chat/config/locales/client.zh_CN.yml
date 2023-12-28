@@ -39,6 +39,7 @@ zh_CN:
     chat:
       text_copied: 文本已复制到剪贴板
       link_copied: 链接已复制到剪贴板
+      back_to_forum: "论坛"
       deleted_chat_username: 已删除
       dates:
         time_tiny: "h:mm"

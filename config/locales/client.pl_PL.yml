@@ -2222,10 +2222,15 @@ pl_PL:
         name: "Discord"
         title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
+      passkey:
+        name: "Zaloguj się za pomocą klucza"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
         security_key: "Zamiast tego użyj klucza zabezpieczeń"
+      no_login_methods:
+        title: "Brak metod logowania"
+        description: "Nie skonfigurowano żadnych metod logowania. Administratorzy mogą odwiedzić <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a>, aby ponownie skonfigurować witrynę."
     invites:
       accept_title: "Zaproszenie"
       welcome_to: "Witaj na %{site_name}!"
@@ -3561,6 +3566,7 @@ pl_PL:
         delete: "usuń ten wpis"
         undelete: "przywróc ten wpis"
         share: "udostępnij odnośnik do tego wpisu"
+        link_copied: "Link skopiowany!"
         more: "Więcej"
         delete_replies:
           confirm: "Czy chcesz również usunąć odpowiedzi do tego wpisu?"
@@ -4332,6 +4338,7 @@ pl_PL:
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
       edit_tag: "Edytuj nazwę tagu i opis"
+      description: "Opis (maks. 1000 znaków)"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
       sort_by_name: "nazwa"
@@ -4473,8 +4480,7 @@ pl_PL:
     second_factor_auth:
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
     sidebar:
-      show_sidebar: "Pokaż pasek boczny"
-      hide_sidebar: "Ukryj pasek boczny"
+      title: "Pasek boczny"
       unread_count:
         one: "%{count} nieprzeczytany"
         few: "%{count} nieprzeczytane"
@@ -4674,7 +4680,9 @@ pl_PL:
           enter_key: "Enter"
           tab_key: "Tab"
           new_row: "na końcu wiersza, aby wstawić nowy wiersz."
+          new_col: "na końcu kolumny, aby wstawić nową kolumnę."
           options: "Kliknij komórki prawym przyciskiem myszy, aby uzyskać dostęp do większej liczby opcji w menu rozwijanym."
+        confirm_close: "Czy na pewno chcesz zamknąć narzędzie do tworzenia tabel? Wszelkie niezapisane zmiany zostaną utracone."
       edit:
         btn_edit: "Edytuj tabelę"
         modal:
@@ -4724,6 +4732,7 @@ pl_PL:
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
+      back_to_forum: "Powrót do forum"
       tags:
         remove_muted_tags_from_latest:
           always: "zawsze"
@@ -4910,6 +4919,7 @@ pl_PL:
         user: "Użytkownik"
         title: "API"
         key: "Klucz"
+        keys: "Klucze"
         created: Utworzono
         updated: Zaktualizowane
         last_used: Ostatnio używane
@@ -5086,11 +5096,17 @@ pl_PL:
           user_unsuspended: "Użytkownik przestał być zawieszony"
         user_badge_event:
           group_name: "Zdarzenia odznak"
+          user_badge_granted: "Odznaka użytkownika została przyznana"
+          user_badge_revoked: "Odznaka użytkownika została cofnięta"
         like_event:
           group_name: "Zdarzenia polubień"
           post_liked: "Gdy użytkownik polubi post."
         notification_event:
           group_name: "Zdarzenia powiadomień"
+          notification_created: "Użytkownik otrzymuje powiadomienie w swoim kanale"
+        group_user_event:
+          user_added_to_group: "Użytkownik zostaje dodany do grupy"
+          user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
         user_promoted_event:
           user_promoted: "Użytkownik został awansowany"
         delivery_status:
@@ -5503,6 +5519,7 @@ pl_PL:
         title: "Emaile"
         settings: "Ustawienia"
         templates: "Szablony"
+        templates_title: "Szablony e-mail"
         preview_digest: "Pokaż zestawienie aktywności"
         advanced_test:
           title: "Zaawansowany test"
@@ -6317,6 +6334,13 @@ pl_PL:
         json_schema:
           edit: Uruchom edytor
           modal_title: "Edytuj %{name}"
+        file_types_list:
+          add_image_types: "Obrazy"
+          add_video_types: "Filmy"
+          add_audio_types: "Dźwięk"
+          add_document_types: "Dokumenty"
+          add_types_title: "Zezwalaj na rozszerzenia %{types}"
+          add_types_toast: "%{types} dodane typy plików"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka

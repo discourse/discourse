@@ -3147,6 +3147,7 @@ it:
       confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"
       quote_edit: "Modifica"
+      quote_edit_shortcut: "Modifica (o premi e)"
       quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
@@ -4095,8 +4096,7 @@ it:
     second_factor_auth:
       redirect_after_success: "Autenticazione a due fattori riuscita. Reindirizzamento alla pagina precedente…"
     sidebar:
-      show_sidebar: "Mostra barra laterale"
-      hide_sidebar: "Nascondi barra laterale"
+      title: "Barra laterale"
       unread_count:
         one: "%{count} non letto"
         other: "%{count} non letti"
@@ -4331,6 +4331,7 @@ it:
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"
+      back_to_forum: "Torna al forum"
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -4510,6 +4511,7 @@ it:
         user: "Utente"
         title: "API"
         key: "Chiave"
+        keys: "Chiavi"
         created: Creazione
         updated: Aggiornato
         last_used: Ultimo uso
@@ -5071,6 +5073,7 @@ it:
         title: "Email"
         settings: "Impostazioni"
         templates: "Modelli"
+        templates_title: "Modelli di e-mail"
         preview_digest: "Anteprima Riepilogo"
         advanced_test:
           title: "Test avanzato"
@@ -5871,6 +5874,9 @@ it:
         json_schema:
           edit: Avvia Editor
           modal_title: "Modifica %{name}"
+        file_types_list:
+          add_image_types: "Immagini"
+          add_audio_types: "Audio"
       badges:
         title: Distintivi
         new_badge: Nuovo Distintivo

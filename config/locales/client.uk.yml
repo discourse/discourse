@@ -4526,8 +4526,7 @@ uk:
     second_factor_auth:
       redirect_after_success: "Аутентифікація другого фактора успішна. Перенаправлення на попередню сторінку…"
     sidebar:
-      show_sidebar: "Показати бічну панель"
-      hide_sidebar: "Приховати бічну панель"
+      title: "Бічна панель"
       unread_count:
         one: "%{count} непрочитана"
         few: "%{count} непрочитаних"
@@ -6398,6 +6397,9 @@ uk:
         json_schema:
           edit: Відкрити редактор
           modal_title: "Редагувати %{name}"
+        file_types_list:
+          add_image_types: "Зображення"
+          add_audio_types: "Audio"
       badges:
         title: Нагороди
         new_badge: Нова нагорода

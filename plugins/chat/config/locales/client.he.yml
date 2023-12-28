@@ -39,6 +39,7 @@ he:
     chat:
       text_copied: טקסט הועתק ללוח הגזירים
       link_copied: קישור הועתק ללוח הגזירים
+      back_to_forum: "פורום"
       deleted_chat_username: נמחק
       dates:
         time_tiny: "h:mm"
@@ -326,6 +327,7 @@ he:
       members_view:
         filter_placeholder: איתור חברים
         add_member: הוספת חברים
+        back_to_settings: "חזרה להגדרות"
       about_view:
         associated_topic: נושא מקושר
         associated_category: קטגוריה מקושרת

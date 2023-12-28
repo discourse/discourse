@@ -4420,6 +4420,8 @@ sl:
           modal_yes: "Da"
         simple_list:
           add_item: "Dodajte element…"
+        file_types_list:
+          add_image_types: "Slike"
       badges:
         title: Značke
         new_badge: Nova značka

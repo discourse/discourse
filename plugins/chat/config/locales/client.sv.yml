@@ -25,6 +25,7 @@ sv:
             chat:
               create_message: "Skapa ett chattmeddelande i en angiven kanal."
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: raderat
       dates:
         time_tiny: "h:mm"

@@ -39,6 +39,7 @@ uk:
     chat:
       text_copied: Текст скопійовано в буфер обміну
       link_copied: Посилання скопійовано до буфера обміну
+      back_to_forum: "Форум"
       deleted_chat_username: видалено
       dates:
         time_tiny: "h:mm"

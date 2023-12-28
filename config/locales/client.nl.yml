@@ -3974,8 +3974,7 @@ nl:
     second_factor_auth:
       redirect_after_success: "Tweeledige verificatie is geslaagd. Je wordt doorgestuurd naar de vorige pagina…"
     sidebar:
-      show_sidebar: "Zijbalk weergeven"
-      hide_sidebar: "Zijbalk verbergen"
+      title: "Zijbalk"
       unread_count:
         one: "%{count} ongelezen"
         other: "%{count} ongelezen"
@@ -5698,6 +5697,9 @@ nl:
         json_schema:
           edit: Editor starten
           modal_title: "%{name} bewerken"
+        file_types_list:
+          add_image_types: "Afbeeldingen"
+          add_audio_types: "Audio"
       badges:
         title: Badges
         new_badge: Nieuwe badge

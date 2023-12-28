@@ -1494,8 +1494,6 @@ da:
     category_colors: "En liste med hexadecimal farveværdier som er tilladte for kategorier."
     default_dark_mode_color_scheme_id: "Farveskemaet der bruges ved mørk tilstand."
     dark_mode_none: "Ingen"
-    authorized_extensions: "En liste over filendelser tilladt for overførsel (brug '*' for at aktivere alle filtyper)"
-    authorized_extensions_for_staff: "En liste over filendelser, der er tilladt for overførsel for personalebrugere ud over den liste, der er defineret i webstedsindstillingen `authorized_extensions` (brug '*' for at tillade alle filtyper)"
     max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."
     max_image_megapixels: "Maksimalt antal megapixel tilladt for et billede. Billeder med et højere antal megapixel vil blive afvist."
     title_prettify: "Undgå hyppige tastefejl i titlen, inklusive overforbrug af store bogstaver, første bogstav med småt, gentagne ! og ?, ekstra . i slutningen, etc."

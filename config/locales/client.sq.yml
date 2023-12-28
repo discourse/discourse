@@ -2666,6 +2666,8 @@ sq:
           navigation: "Shfletimi"
         default_categories:
           modal_yes: "Po"
+        file_types_list:
+          add_image_types: "Imazhet"
       badges:
         title: Stemat
         new_badge: Stemë e Re

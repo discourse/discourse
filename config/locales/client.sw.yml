@@ -3169,6 +3169,8 @@ sw:
           navigation: "Abiri"
         default_categories:
           modal_yes: "Ndiyo"
+        file_types_list:
+          add_image_types: "Picha"
       badges:
         title: Beji
         new_badge: Beji Mpya
