@@ -1531,7 +1531,7 @@ RSpec.describe TopicsController do
       end
 
       it "does not allow to destroy topic if not all posts were force destroyed" do
-        other_post = Fabricate(:post, topic: topic, post_number: 2)
+        _other_post = Fabricate(:post, topic: topic, post_number: 2)
         PostDestroyer.new(Discourse.system_user, post).destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
@@ -2031,7 +2031,6 @@ RSpec.describe TopicsController do
 
             put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: category.id }
 
-            result = response.parsed_body
             expect(response.status).to eq(200)
             expect(topic.reload.tags).to include(tag1)
           end
@@ -2049,7 +2048,6 @@ RSpec.describe TopicsController do
 
             put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: category.id }
 
-            result = response.parsed_body
             expect(response.status).to eq(200)
             expect(topic.reload.tags).to contain_exactly(tag3)
           end
@@ -2078,7 +2076,6 @@ RSpec.describe TopicsController do
                   category_id: restricted_category.id,
                 }
 
-            result = response.parsed_body
             expect(response.status).to eq(200)
           end
         end
@@ -2349,8 +2346,8 @@ RSpec.describe TopicsController do
       Group.user_trust_level_change!(post_author1.id, post_author1.trust_level)
       user2 = Fabricate(:user)
       user3 = Fabricate(:user)
-      post2 = Fabricate(:post, topic: topic, user: user2)
-      post3 = Fabricate(:post, topic: topic, user: user3)
+      _post2 = Fabricate(:post, topic: topic, user: user2)
+      _post3 = Fabricate(:post, topic: topic, user: user3)
       group = Fabricate(:group)
       user2.update!(primary_group: group)
       user3.update!(flair_group: group)
@@ -2373,8 +2370,8 @@ RSpec.describe TopicsController do
       group2 = Fabricate(:group)
       user4 = Fabricate(:user, flair_group: group2)
       user5 = Fabricate(:user, primary_group: group2)
-      post4 = Fabricate(:post, topic: topic, user: user4)
-      post5 = Fabricate(:post, topic: topic, user: user5)
+      _post4 = Fabricate(:post, topic: topic, user: user4)
+      _post5 = Fabricate(:post, topic: topic, user: user5)
 
       second_request_queries =
         track_sql_queries do
@@ -3220,7 +3217,7 @@ RSpec.describe TopicsController do
       it "uses image cdn url for schema markup" do
         set_cdn_url("http://cdn.localhost")
         post = Fabricate(:post_with_uploaded_image, user: post_author1)
-        cpp = CookedPostProcessor.new(post).update_post_image
+        CookedPostProcessor.new(post).update_post_image
 
         get post.topic.url
 
@@ -3335,6 +3332,16 @@ RSpec.describe TopicsController do
       body = response.parsed_body
 
       expect(body["suggested_topics"]).not_to eq(nil)
+    end
+
+    it "optionally can return raw" do
+      get "/t/#{topic.id}/posts.json?include_raw=true&post_id[]=#{post.id}"
+
+      expect(response.status).to eq(200)
+
+      body = response.parsed_body
+
+      expect(body["post_stream"]["posts"].first["raw"]).to eq(post.raw)
     end
 
     describe "filtering by post number with filters" do
@@ -3563,7 +3570,7 @@ RSpec.describe TopicsController do
         topic.update!(category_id: sub_subcategory.id)
 
         post_1 = create_post(user: user, topic_id: topic.id)
-        post_2 = create_post(topic_id: topic.id)
+        _post_2 = create_post(topic_id: topic.id)
 
         put "/topics/bulk.json",
             params: {
@@ -3852,7 +3859,7 @@ RSpec.describe TopicsController do
 
     it "should create a new bookmark for the topic" do
       post = create_post
-      post2 = create_post(topic_id: post.topic_id)
+      _post2 = create_post(topic_id: post.topic_id)
       put "/t/#{post.topic_id}/bookmark.json"
 
       expect(Bookmark.find_by(user_id: user.id).bookmarkable_id).to eq(post.topic_id)
@@ -3972,7 +3979,6 @@ RSpec.describe TopicsController do
 
             it "does not pass topic ids that are not new for the user to the bulk action, limit the scope to new topics" do
               dismiss_ids = @topic_ids[0..1]
-              other_ids = @topic_ids[2..-1].sort.reverse
 
               DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
               DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
