@@ -11,7 +11,7 @@ walkthrough will go through these in detail:
 
 3. [Create new cloud server](#3-create-new-cloud-server)
 4. [Access new cloud server](#4-access-your-cloud-server)
-5. [Install Prerequisites for Docker](#5-install-prerequisites-for-docker-debian-ubuntu-based-distro-example)
+5. [Install Prerequisites for Docker](#5-install-prerequisites-for-docker-debianubuntu-based-distro-example)
 6. [Install Discourse](#6-install-discourse)
 7. [Edit Discourse configuration](#7-edit-discourse-configuration)
 8. [Start Discourse](#8-start-discourse)
