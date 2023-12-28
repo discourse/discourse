@@ -7,7 +7,7 @@
   }
 }
 
-.post-link-copied-alert {
+.post-action-feedback-alert {
   position: absolute;
   top: -1.5rem;
   left: 50%;
@@ -38,8 +38,8 @@
   }
 }
 
-.post-action-menu {
-  &__copy-link {
+.post-menu-area {
+  .post-action-feedback-button {
     position: relative;
     height: 100%;
 
@@ -50,14 +50,14 @@
       }
     }
   }
-  &__copy-link-checkmark {
+  .post-action-feedback-svg {
     position: absolute;
     bottom: 0;
     right: 0;
     width: 20px;
     height: 20px;
     display: block;
-    stroke: #2ecc71;
+    stroke: var(--success);
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
 

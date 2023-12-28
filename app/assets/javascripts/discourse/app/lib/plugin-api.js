@@ -57,6 +57,7 @@ import {
   extraConnectorClass,
   extraConnectorComponent,
 } from "discourse/lib/plugin-connectors";
+import postActionFeedback from "discourse/lib/post-action-feedback";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
@@ -144,7 +145,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.21.0";
+export const PLUGIN_API_VERSION = "1.22.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2628,6 +2629,23 @@ class PluginApi {
     this.container
       .lookup("service:admin-custom-user-fields")
       .addProperty(userFieldProperty);
+  }
+
+  /* Generates a visual feedback indicator for a specific post action.
+   *
+   * For example: when you click the "chain" on a post you see a visual indicator it
+   * was copied, with a checkmark and text that hovers above it saying it was copied.
+   *
+   * @param {Object} opts - object with the following properties:
+   *
+   * @param {Integer} opts.postId - the post the action belongs on
+   * @param {String} opts.actionClass - css class of the post action menu button
+   * @param {String} opts.messageKey - I18n key for message to be displayed in the feedback indicator
+   * @param {function} opts.actionCallback - callback to be made if action is to be taken, can be a promise
+   * @param {function} opts.errorCallback - optional callback to be called if the post action actionCallback fails.
+   * */
+  postActionFeedback(opts) {
+    postActionFeedback(opts);
   }
 }
 
