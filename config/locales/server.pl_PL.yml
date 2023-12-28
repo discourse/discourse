@@ -2557,6 +2557,8 @@ pl_PL:
     invalid_security_key: "Nieprawidłowy klucz bezpieczeństwa."
     missing_second_factor_name: "Proszę podać nazwę."
     missing_second_factor_code: "Proszę podać kod."
+    too_many_authenticators: "Niestety, nie możesz mieć więcej niż 50 uwierzytelniaczy. Usuń istniejący i spróbuj ponownie."
+    too_many_security_keys: "Niestety, nie możesz mieć więcej niż 50 kluczy bezpieczeństwa. Usuń istniejący i spróbuj ponownie."
     second_factor_toggle:
       totp: "Zamiast tego użyj aplikacji uwierzytelniającej lub klucza bezpieczeństwa"
       backup_code: "Zamiast tego użyj kodu zapasowego"
