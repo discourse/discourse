@@ -11,12 +11,13 @@ walkthrough will go through these in detail:
 
 3. [Create new cloud server](#3-create-new-cloud-server)
 4. [Access new cloud server](#4-access-your-cloud-server)
-5. [Install Discourse](#5-install-discourse)
-6. [Edit Discourse configuration](#6-edit-discourse-configuration)
-7. [Start Discourse](#7-start-discourse)
-8. [Register new account and become admin](#8-register-new-account-and-become-admin)
-9. [Post-install maintenance](#9-post-install-maintenance)
-10. [(Optional) Add more Discourse features](#10-optional-add-more-discourse-features)
+5. [Install Prerequisites for Docker](#5-install-prerequisites-for-docker-debian-ubuntu-based-distro-example)
+6. [Install Discourse](#6-install-discourse)
+7. [Edit Discourse configuration](#7-edit-discourse-configuration)
+8. [Start Discourse](#8-start-discourse)
+9. [Register new account and become admin](#9-register-new-account-and-become-admin)
+10. [Post-install maintenance](#10-post-install-maintenance)
+11. [(Optional) Add more Discourse features](#11-optional-add-more-discourse-features)
 
 > 🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $150, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
 
@@ -75,7 +76,7 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
 Either use the root password from the email DigitalOcean sent you when the server was set up, or have a valid SSH key configured on your local machine.
 
-### 5. Install Prerequisites for Docker (Debian/ Ubunto basted Distro example)
+### 5. Install Prerequisites for Docker (Debian/Ubuntu based Distro example)
 
     sudo apt install docker.io
     sudo apt install git
