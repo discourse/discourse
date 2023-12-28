@@ -2613,21 +2613,21 @@ class PluginApi {
   }
 
   /**
-   * Include the passed user field properties in the user field save request.
+   * Include the passed user field property in the Admin User Field save request.
    * This is useful for plugins that are adding additional columns to the user field model and want
    * to save the new property values alongside the default user field properties (all under the same save call)
    *
-   * The `userFieldProperties` param can be passed as a single string or an array of strings.
    *
    * ```
-   * api.includeUserFieldPropertiesOnSave(["property_one", "property_two"]);
+   * api.includeUserFieldPropertyOnSave("property_one");
+   * api.includeUserFieldPropertyOnSave("property_two");
    * ```
    *
    */
-  includeUserFieldPropertiesOnSave(userFieldProperties) {
+  includeUserFieldPropertyOnSave(userFieldProperty) {
     this.container
       .lookup("service:admin-custom-user-fields")
-      .addProperties(userFieldProperties);
+      .addProperty(userFieldProperty);
   }
 }
 
