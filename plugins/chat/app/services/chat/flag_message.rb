@@ -40,7 +40,7 @@ module Chat
       validates :channel_id, presence: true
 
       attribute :flag_type_id, :integer
-      validates :flag_type_id, inclusion: { in: ::ReviewableScore.types.values }
+      validates :flag_type_id, inclusion: { in: ->(_reviewable) { ::ReviewableScore.types.values } }
 
       attribute :message, :string
       attribute :is_warning, :boolean
