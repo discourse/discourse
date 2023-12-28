@@ -52,7 +52,7 @@ export default function deprecated(msg, options = {}) {
   if (
     raiseError ||
     matchedWorkflow?.handler === "throw" ||
-    (!matchedWorkflow && deprecationWorkflow.throwOnUnhandled)
+    (!matchedWorkflow && deprecationWorkflow?.throwOnUnhandled)
   ) {
     throw msg;
   }
