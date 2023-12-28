@@ -20,6 +20,7 @@ const Site = RestModel.extend({
     this._super(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
+    this.categories = this.categories || [];
   },
 
   @discourseComputed("notification_types")

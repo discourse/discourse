@@ -131,6 +131,14 @@ RSpec.describe SiteSerializer do
     expect(serialized[:shared_drafts_category_id]).to eq(nil)
   end
 
+  it "does not include categories if lazy_load_categories" do
+    SiteSetting.lazy_load_categories = true
+
+    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+    expect(serialized[:categories]).to eq(nil)
+  end
+
   describe "#anonymous_default_navigation_menu_tags" do
     fab!(:user)
     fab!(:tag) { Fabricate(:tag, name: "dev", description: "some description") }
