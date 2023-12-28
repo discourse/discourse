@@ -59,9 +59,47 @@
                 title="TO"
               >{{l.to_address}}</a></p>
             {{#if l.cc_addresses}}
-              {{#each l.cc_addresses as |cc|}}
-                <p><a href="mailto:{{cc}}" title="CC">{{cc}}</a></p>
-              {{/each}}
+              {{#if (gt l.cc_addresses.length this.ccAddressDisplayThreshold)}}
+                {{#each
+                  (slice
+                    0
+                    this.ccAddressDisplayThreshold
+                    (fn this.sortWithAddressFilter l.cc_addresses)
+                  )
+                  as |cc|
+                }}
+                  <p><a href="mailto:{{cc}}" title="CC">{{cc}}</a></p>
+                {{/each}}
+                <DTooltip
+                  @placement="right-start"
+                  @arrow={{true}}
+                  @identifier="email-log-cc-addresses"
+                  @interactive={{true}}
+                >
+                  <:trigger>
+                    [See more...]
+                  </:trigger>
+                  <:content>
+                    <ul>
+                      {{#each
+                        (slice this.ccAddressDisplayThreshold l.cc_addresses)
+                        as |cc|
+                      }}
+                        <li>
+                          <span>
+                            <a href="mailto:{{cc}}" title="CC">{{cc}}</a>
+                          </span>
+                        </li>
+                      {{/each}}
+                    </ul>
+                  </:content>
+                </DTooltip>
+
+              {{else}}
+                {{#each l.cc_addresses as |cc|}}
+                  <p><a href="mailto:{{cc}}" title="CC">{{cc}}</a></p>
+                {{/each}}
+              {{/if}}
             {{/if}}
           </td>
           <td class="sent-email-type">{{l.email_type}}</td>
