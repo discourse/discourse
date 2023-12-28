@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# (c) 2023 Intevation GmbH
 
 require "pg"
 
@@ -33,7 +32,9 @@ class ImportScripts::FusionForge < ImportScripts::Base
   def import_users
     puts "", "creating users"
 
-    total_count = @client.exec("
+    total_count =
+      @client.exec(
+        "
         WITH relevant_posts AS (
           SELECT DISTINCT posted_by FROM forum
         )
@@ -41,7 +42,10 @@ class ImportScripts::FusionForge < ImportScripts::Base
           COUNT(DISTINCT user_id) AS count
         FROM users u
         JOIN relevant_posts f on u.user_id = f.posted_by
-        ").first["count"]
+        ",
+      ).first[
+        "count"
+      ]
 
     batches(BATCH_SIZE) do |offset|
       results =
@@ -56,7 +60,7 @@ class ImportScripts::FusionForge < ImportScripts::Base
           JOIN relevant_posts f on u.user_id = f.posted_by
           LIMIT #{BATCH_SIZE}
           OFFSET #{offset};",
-      )
+        )
 
       break if results.ntuples < 1
 
@@ -69,13 +73,13 @@ class ImportScripts::FusionForge < ImportScripts::Base
           email: user["email"],
           username: user["user_name"],
           name: user["name"],
-          active: user["status"] == 'A' && user["unix_pw"] != 'deleted',
+          active: user["status"] == "A" && user["unix_pw"] != "deleted",
           created_at: Time.zone.at(user["add_date"].to_i),
-          last_emailed_at: nil,  # default is "now", which is not true
+          last_emailed_at: nil, # default is "now", which is not true
           approved: true,
           # for https://github.com/communiteq/discourse-migratepassword/
           # this field results in custom_fields['import_pass']. This also activates the accounts, see base.rb on `u.activate`.
-          password: user["unix_pw"] != 'deleted' ? user["unix_pw"] : nil,
+          password: user["unix_pw"] != "deleted" ? user["unix_pw"] : nil,
         }
       end
     end
@@ -94,7 +98,9 @@ class ImportScripts::FusionForge < ImportScripts::Base
         ",
       ).to_a
 
-    create_categories(categories) { |category| { id: category["group_id"], name: category["group_name"] } }
+    create_categories(categories) do |category|
+      { id: category["group_id"], name: category["group_name"] }
+    end
 
     puts "", "importing forums..."
 
@@ -174,11 +180,14 @@ class ImportScripts::FusionForge < ImportScripts::Base
   def import_attachments
     puts "", "importing attachments..."
 
-    uploads = @client.exec("
+    uploads =
+      @client.exec(
+        "
       SELECT msg_id, filename, attachmentid
       FROM forum_attachment
       order by msg_id
-    ").to_a
+    ",
+      ).to_a
 
     current_count = 0
     total_count = uploads.count
@@ -198,13 +207,9 @@ class ImportScripts::FusionForge < ImportScripts::Base
 
       file_hex = sprintf("%x", upload["attachmentid"])
       prefix = file_hex[-2..-1]
-      if not prefix
-        prefix = file_hex
-      end
+      prefix = file_hex if not prefix
       postfix = file_hex[0..-3].to_s
-      if postfix == ''
-        postfix = '0'
-      end
+      postfix = "0" if postfix == ""
       filename = File.join("/tmp/var/lib/fusionforge/forum/", prefix, "/", postfix)
 
       upl_obj = create_upload(post.user.id, filename, real_filename)
@@ -231,7 +236,6 @@ class ImportScripts::FusionForge < ImportScripts::Base
       print_status(current_count, total_count)
     end
   end
-
 end
 
 ImportScripts::FusionForge.new.perform
