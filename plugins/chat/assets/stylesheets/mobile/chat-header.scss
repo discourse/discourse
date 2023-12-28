@@ -14,12 +14,11 @@
     align-items: center;
 
     .back-to-forum {
-      color: var(--primary-medium);
+      color: var(--primary);
       font-size: var(--font-up-1);
-      font-weight: var(--font-bold);
-      padding: 0.8rem;
+      padding: 0.5rem 0.8rem;
 
-      &:focus {
+      .d-icon {
         color: var(--primary);
       }
     }
@@ -27,9 +26,9 @@
     .c-heading {
       color: var(--primary);
       font-size: var(--font-up-2);
-      font-weight: var(--font-bold);
+      font-weight: bold;
       margin: 0 auto;
-      padding: 0.6rem;
+      padding: 0.4rem 0.8rem;
     }
   }
 }
