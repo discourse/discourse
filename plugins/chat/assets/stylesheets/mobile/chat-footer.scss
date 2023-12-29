@@ -1,0 +1,53 @@
+#main-outlet-wrapper {
+  padding: 0;
+}
+
+.full-page-chat {
+  #main-chat-outlet.chat-view {
+    grid-template-rows: auto min-content;
+    grid-template-areas:
+      "list"
+      "footer";
+  }
+
+  .channels-list {
+    grid-area: list;
+    padding-bottom: 0;
+  }
+
+  .c-footer {
+    grid-area: footer;
+    background: var(--secondary);
+    border-top: 1px solid var(--primary-low);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .c-footer__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-basis: 33%;
+    flex-shrink: 0;
+    padding-block: 0.75rem;
+
+    .d-icon {
+      margin-right: 0;
+      font-size: var(--font-up-2-rem);
+      color: var(--primary-medium);
+    }
+
+    .d-button-label {
+      font-size: var(--font-down-1-rem);
+      color: var(--primary-medium);
+    }
+  }
+
+  .c-footer__item.--active {
+    .d-icon,
+    .d-button-label {
+      color: var(--quaternary);
+    }
+  }
+}
