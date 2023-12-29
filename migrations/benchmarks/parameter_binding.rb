@@ -70,7 +70,6 @@ puts "",
      "SQLite version: #{SQLite3::SQLITE_VERSION}",
      ""
 
-puts "Initializing...", ""
 extralite_db = create_extralite_db
 extralite_stmt_regular = extralite_db.prepare(SQL_INSERT)
 extralite_stmt_named = extralite_db.prepare(SQL_INSERT_NAMED)
@@ -79,7 +78,6 @@ sqlite3_db = create_sqlite3_db
 sqlite3_stmt_regular = sqlite3_db.prepare(SQL_INSERT)
 sqlite3_stmt_named = sqlite3_db.prepare(SQL_INSERT_NAMED)
 
-puts "", ""
 users = create_users(1_000)
 users_indexed =
   users.map do |user|
