@@ -163,6 +163,7 @@ en:
 
     word_connector:
       comma: ", "
+      last_item: "and"
 
     action_codes:
       public_topic: "Made this topic public %{when}"

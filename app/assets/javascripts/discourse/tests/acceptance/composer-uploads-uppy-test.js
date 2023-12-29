@@ -530,6 +530,53 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
   });
 });
 
+acceptance(
+  "Uppy Composer Attachment - Multiple Upload Errors",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.post("/uploads.json", () => {
+        return helper.response(500, {
+          success: false,
+        });
+      });
+    });
+    needs.settings({
+      simultaneous_uploads: 2,
+      allow_uncategorized_topics: true,
+    });
+
+    test("should show a consolidated message for multiple failed uploads", async function (assert) {
+      await visit("/");
+      await click("#create-topic");
+      const appEvents = loggedInUser().appEvents;
+      const image = createFile("meme1.png");
+      const image1 = createFile("meme2.png");
+      const done = assert.async();
+
+      appEvents.on("composer:upload-error", async () => {
+        await settled();
+
+        if (!query(".dialog-body")) {
+          return;
+        }
+
+        assert.strictEqual(
+          query(".dialog-body").textContent.trim(),
+          "Sorry, there was an error uploading meme1.png and meme2.png. Please try again.",
+          "it should show a consolidated error dialog"
+        );
+
+        await click(".dialog-footer .btn-primary");
+
+        done();
+      });
+
+      appEvents.trigger("composer:add-files", [image, image1]);
+    });
+  }
+);
+
 acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
   needs.user();
   needs.pretender(pretender);
