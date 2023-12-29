@@ -255,6 +255,34 @@ describe DiscourseAutomation::Scriptable do
           }.to raise_error(ActiveRecord::RecordNotSaved)
         end
       end
+
+      context "when pm target_usernames contain an invalid user" do
+        it "skips sending if there is only one target" do
+          expect {
+            DiscourseAutomation::Scriptable::Utils.send_pm(
+              {
+                title: "Tell me and I forget.",
+                raw: "0123456789" * 25 + "a",
+                target_usernames: ["non-existent-user"],
+              },
+            )
+          }.not_to change { Topic.count }
+        end
+
+        it "sends the pm without the invalid user" do
+          expect {
+            DiscourseAutomation::Scriptable::Utils.send_pm(
+              {
+                title: "Tell me and I forget.",
+                raw: "0123456789" * 25 + "a",
+                target_usernames: ["non-existent-user", user.username],
+              },
+            )
+          }.to change { Topic.count }
+
+          expect(Topic.last.allowed_users).to contain_exactly(Discourse.system_user, user)
+        end
+      end
     end
   end
 end
