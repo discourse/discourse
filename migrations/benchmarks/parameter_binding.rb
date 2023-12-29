@@ -11,12 +11,9 @@ gemfile(true) do
 end
 
 require "extralite"
-require "benchmark"
 require "benchmark/ips"
 require "time"
 require "securerandom"
-
-# User = Data.define(:id, :name, :email, :created_at)
 
 SQL_TABLE = <<~SQL
   CREATE TABLE users (
@@ -45,15 +42,11 @@ def create_users(row_count)
   row_count.times.map do |id|
     name = SecureRandom.hex(10)
     { id: id, name: name, email: "#{name}@example.com", created_at: Time.now.utc.iso8601 }
-    # User.new(id: id, name: name, email: "#{name}@example", created_at: Time.now.utc.iso8601)
   end
 end
 
 def insert_extralite_regular(stmt, users)
-  users.each do |user|
-    stmt.execute(user[:id], user[:name], user[:email], user[:created_at])
-    # stmt.execute(user.id, user.name, user.email, user.created_at)
-  end
+  users.each { |user| stmt.execute(user[:id], user[:name], user[:email], user[:created_at]) }
 end
 
 def insert_extralite_index(stmt, users)
@@ -86,17 +79,8 @@ sqlite3_db = create_sqlite3_db
 sqlite3_stmt_regular = sqlite3_db.prepare(SQL_INSERT)
 sqlite3_stmt_named = sqlite3_db.prepare(SQL_INSERT_NAMED)
 
-users = create_users(2_000_000)
-
-Benchmark.bm(35) do |x|
-  x.report("Extralite regular") { insert_extralite_regular(extralite_stmt_regular, users) }
-  x.report("Extralite named") { insert_extralite_named(extralite_stmt_named, users) }
-  x.report("SQLite3 regular") { insert_sqlite3_regular(sqlite3_stmt_regular, users) }
-  x.report("SQLite3 named") { insert_sqlite3_named(sqlite3_stmt_named, users) }
-end
-
 puts "", ""
-users = users.first(1_000)
+users = create_users(1_000)
 users_indexed =
   users.map do |user|
     { 1 => user[:id], 2 => user[:name], 3 => user[:email], 4 => user[:created_at] }
