@@ -43,6 +43,8 @@ const Reviewable = RestModel.extend({
   },
 
   @discourseComputed("humanNoun")
+  // FIXME: This is a bit of a mess as it concatenates multiple translated strings into unreadable strings.
+  //        German example: "Ist das beitrag spam?"
   flaggedReviewableContextQuestion(humanNoun) {
     const uniqueReviewableScores =
       this.reviewable_scores.uniqBy("score_type.type");
