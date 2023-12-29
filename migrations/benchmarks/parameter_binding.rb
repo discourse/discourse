@@ -56,6 +56,10 @@ def insert_extralite_regular(stmt, users)
   end
 end
 
+def insert_extralite_index(stmt, users)
+  users.each { |user| stmt.execute(user) }
+end
+
 def insert_extralite_named(stmt, users)
   users.each { |user| stmt.execute(user) }
 end
@@ -93,11 +97,18 @@ end
 
 puts "", ""
 users = users.first(1_000)
+users_indexed =
+  users.map do |user|
+    { 1 => user[:id], 2 => user[:name], 3 => user[:email], 4 => user[:created_at] }
+  end
+users_array = users.map { |user| [user[:id], user[:name], user[:email], user[:created_at]] }
 
 Benchmark.ips do |x|
   x.config(time: 10, warmup: 2)
   x.report("Extralite regular") { insert_extralite_regular(extralite_stmt_regular, users) }
   x.report("Extralite named") { insert_extralite_named(extralite_stmt_named, users) }
+  x.report("Extralite index") { insert_extralite_index(extralite_stmt_regular, users_indexed) }
+  x.report("Extralite array") { insert_extralite_index(extralite_stmt_regular, users_array) }
   x.report("SQLite3 regular") { insert_sqlite3_regular(sqlite3_stmt_regular, users) }
   x.report("SQLite3 named") { insert_sqlite3_named(sqlite3_stmt_named, users) }
   x.compare!
