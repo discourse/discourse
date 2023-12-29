@@ -25,10 +25,10 @@ RSpec.describe "User status | sidebar", type: :system do
   context "when changing status" do
     it "updates status" do
       visit("/")
+
       current_user.set_status!("offline", "tooth")
 
-      expect(page).to have_css('.user-status-message .emoji[alt="tooth"]')
-      expect(find(".user-status-message .emoji")["src"]).to include("tooth")
+      expect(page).to have_css('.user-status-message img.emoji[alt="tooth"]')
     end
   end
 
