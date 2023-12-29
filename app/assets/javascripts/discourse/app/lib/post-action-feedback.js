@@ -29,7 +29,7 @@ export default function postActionFeedback({
   }
 }
 
-function recentlyCopied(postId, actionClass) {
+export function recentlyCopied(postId, actionClass) {
   return document.querySelector(
     `article[data-post-id='${postId}'] .${actionClass} .${actionClass}-checkmark`
   );
