@@ -450,6 +450,11 @@
     .setting {
       padding-bottom: 0;
     }
+
+    .color-palette-input-group {
+      display: flex;
+      gap: 0.5rem;
+    }
   }
 
   .editor-information {

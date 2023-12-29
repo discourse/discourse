@@ -282,12 +282,21 @@
           </div>
 
           <div class="setting-value">
-            <ColorPalettes
-              @content={{this.colorSchemes}}
-              @value={{this.colorSchemeId}}
-              @icon="paint-brush"
-              @options={{hash filterable=true}}
-            />
+            <div class="color-palette-input-group">
+              <ColorPalettes
+                @content={{this.colorSchemes}}
+                @value={{this.colorSchemeId}}
+                @icon="paint-brush"
+                @options={{hash filterable=true}}
+              />
+              {{#if this.colorSchemeId}}
+                <DButton
+                  @icon="pen"
+                  @action={{this.editColorScheme}}
+                  @title="admin.customize.theme.edit_color_scheme"
+                />
+              {{/if}}
+            </div>
 
             <div class="desc">{{i18n
                 "admin.customize.theme.color_scheme_select"
