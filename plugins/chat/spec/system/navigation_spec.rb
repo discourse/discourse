@@ -55,12 +55,15 @@ RSpec.describe "Navigation", type: :system do
       expect(page).to have_css("a.c-heading[href='#{chat_path}']")
     end
 
-    it "has the back to forum link", mobile: true do
+    it "has the back to forum link with last visited url", mobile: true do
       visit("/")
-      find("a[href='#{topic.relative_url}']").click
+      click_link(topic.title)
+
+      expect(page).to have_css(".fancy-title")
 
       chat_page.open_from_header
 
+      expect(page).to have_title(I18n.t("js.chat.heading"))
       expect(page).to have_css(".back-to-forum[href='#{topic.relative_url}']")
     end
 
