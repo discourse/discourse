@@ -330,11 +330,17 @@ export default class Widget {
 
     const view = this._findView();
     if (view) {
-      const method = view.get(name);
-      if (!method) {
-        // eslint-disable-next-line no-console
-        console.warn(`${name} not found`);
-        return;
+      let method;
+
+      if (typeof name === "function") {
+        method = name;
+      } else {
+        method = view.get(name);
+        if (!method) {
+          // eslint-disable-next-line no-console
+          console.warn(`${name} not found`);
+          return;
+        }
       }
 
       if (typeof method === "string") {

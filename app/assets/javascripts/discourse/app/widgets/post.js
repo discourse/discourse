@@ -4,11 +4,8 @@ import { h } from "virtual-dom";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
-import {
-  recentlyCopiedPostLink,
-  showCopyPostLinkAlert,
-} from "discourse/lib/copy-post-link";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import {
   prioritizeNameFallback,
@@ -654,29 +651,22 @@ createWidget("post-contents", {
     }
 
     const post = this.findAncestorModel();
-    const postUrl = post.shareUrl;
     const postId = post.id;
 
-    // Do nothing if the user just copied the link.
-    if (recentlyCopiedPostLink(postId)) {
-      return;
-    }
-
-    const shareUrl = new URL(postUrl, window.origin).toString();
+    let actionCallback = () => clipboardCopy(post.shareUrl);
 
     // Can't use clipboard in JS tests.
     if (isTesting()) {
-      return showCopyPostLinkAlert(postId);
+      actionCallback = () => {};
     }
 
-    clipboardCopy(shareUrl)
-      .then(() => {
-        showCopyPostLinkAlert(postId);
-      })
-      .catch(() => {
-        // If the clipboard copy fails for some reason, may as well show the old modal.
-        this.share();
-      });
+    postActionFeedback({
+      postId,
+      actionClass: "post-action-menu__copy-link",
+      messageKey: "post.controls.link_copied",
+      actionCallback: () => actionCallback,
+      errorCallback: () => this.share(),
+    });
   },
 
   init() {
