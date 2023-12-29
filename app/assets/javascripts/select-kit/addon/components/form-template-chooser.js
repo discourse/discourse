@@ -11,43 +11,57 @@ export default MultiSelectComponent.extend({
 
   init() {
     this._super(...arguments);
-
-    if (!this.templates) {
-      this._fetchTemplates();
-    }
+    this.triggerSearch();
   },
 
   didUpdateAttrs() {
     this._super(...arguments);
-    this._fetchTemplates();
+    this.set("templatesLoaded", false);
+    this.triggerSearch();
   },
 
   @computed("templates")
   get content() {
-    if (!this.templates) {
-      return this._fetchTemplates();
-    }
-
     return this.templates;
   },
 
-  _fetchTemplates() {
-    FormTemplate.findAll().then((result) => {
-      let sortedTemplates = this._sortTemplatesByName(result);
+  search(filter) {
+    if (this.get("templatesLoaded")) {
+      return this._super(filter);
+    } else {
+      return this._fetchTemplates();
+    }
+  },
 
-      if (this.filteredIds) {
-        sortedTemplates = sortedTemplates.filter((t) =>
-          this.filteredIds.includes(t.id)
-        );
-      }
+  async _fetchTemplates() {
+    if (this.get("loadingTemplates")) {
+      return;
+    }
 
-      if (sortedTemplates.length > 0) {
-        return this.set("templates", sortedTemplates);
-      } else {
-        this.set("templates", sortedTemplates);
-        this.set("selectKit.options.disabled", true);
-      }
+    this.set("templatesLoaded", false);
+    this.set("loadingTemplates", true);
+
+    const result = await FormTemplate.findAll();
+
+    let sortedTemplates = this._sortTemplatesByName(result);
+
+    if (this.filteredIds) {
+      sortedTemplates = sortedTemplates.filter((t) =>
+        this.filteredIds.includes(t.id)
+      );
+    }
+
+    if (sortedTemplates.length === 0) {
+      this.set("selectKit.options.disabled", true);
+    }
+
+    this.setProperties({
+      templates: sortedTemplates,
+      loadingTemplates: false,
+      templatesLoaded: true,
     });
+
+    return this.templates;
   },
 
   _sortTemplatesByName(templates) {
