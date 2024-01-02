@@ -481,7 +481,7 @@ pre.onebox code {
     width: 100%;
     overflow-x: hidden;
     > span {
-      // legacy, can be removed in the future
+      // TODO: remove in a few months
       // replaced by .github-info in new commit oneboxes
       grid-area: info;
     }
