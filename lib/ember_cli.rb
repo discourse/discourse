@@ -9,7 +9,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.assets
-    cache[:assets] ||= Dir.glob("**/*.{js,map,txt}", base: "#{dist_dir}/assets")
+    cache[:assets] ||= Dir.glob("**/*.{js,map,txt,css}", base: "#{dist_dir}/assets")
   end
 
   def self.script_chunks
