@@ -32,7 +32,7 @@ export default function allowClassModifications(OriginalClass) {
 
       const finalObject = new FinalClass(...arguments);
 
-      if (new.target !== OriginalClass) {
+      if (new.target[classModificationsKey] !== id) {
         Object.setPrototypeOf(finalObject, new.target.prototype);
       }
 
