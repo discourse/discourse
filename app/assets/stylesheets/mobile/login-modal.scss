@@ -56,7 +56,7 @@
           margin-bottom: 0.25em;
         }
         margin-bottom: 1em;
-        label.alt-placeholder {
+        .user-field:not(.dropdown) label.alt-placeholder {
           top: 8px;
         }
         input:focus + label,
