@@ -1136,9 +1136,6 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     const username = firstUser.querySelector(".username").innerText.trim();
     assert.strictEqual(username, "TeaMoe");
 
-    const name = firstUser.querySelector(".name").innerText.trim();
-    assert.strictEqual(name, "TeaMoe Full");
-
     await click(firstUser);
     assert.strictEqual(query("#search-term").value, `@${username}`);
   });

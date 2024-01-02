@@ -5,7 +5,7 @@
   username=@result.username
 }}
 <div class="user-titles">
-  {{#if @result.name}}
+  {{#if (and @displayNameWithUser @result.name)}}
     <span class="name">{{@result.name}}</span>
   {{/if}}
   <span class="username">
