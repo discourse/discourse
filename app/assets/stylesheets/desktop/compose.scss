@@ -224,6 +224,7 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        gap: 0.5em;
 
         .discourse-tags {
           font-size: var(--font-down-1);
