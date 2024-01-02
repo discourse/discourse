@@ -16,6 +16,7 @@ ro:
           actions:
             chat_auto_remove_membership: "Membrii sunt eliminați automat din canale"
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: șters
       create: "Creează"
       cancel: "Anulare"

@@ -279,6 +279,7 @@ de:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
       invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
     requires_groups: "Die Einladung wurde nicht gespeichert, weil auf das angegebene Thema nicht zugegriffen werden kann. Füge eine der folgenden Gruppen hinzu: %{groups}."
+    max_invite_emails_limit_exceeded: "Anfrage fehlgeschlagen, weil die Anzahl der E-Mails das Maximum überschritten hat (%{max})."
     domain_not_allowed: "Deine E-Mail-Adresse kann nicht verwendet werden, um diese Einladung anzunehmen."
     max_redemptions_allowed_one: "für E-Mail-Einladungen sollte es 1 sein."
     redemption_count_less_than_max: "sollte weniger als %{max_redemptions_allowed} sein."
@@ -1827,6 +1828,7 @@ de:
     min_trust_to_edit_post: "Minimale Vertrauensstufe, um Beiträge bearbeiten zu können."
     edit_post_allowed_groups: "Gruppen, die Beiträge bearbeiten dürfen."
     min_trust_to_allow_self_wiki: "Minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki-Eintrag zu erstellen."
+    self_wiki_allowed_groups: "Gruppen, in denen Benutzer ihr eigenes Posting-Wiki erstellen können."
     min_trust_to_send_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Die Mindestvertrauensstufe, die zum Erstellen neuer persönlicher Nachrichten erforderlich ist."
     min_trust_to_send_email_messages: "Minimale Vertrauensstufe, um persönliche Nachrichten per E-Mail zu versenden."
     min_trust_to_flag_posts: "Minimale Vertrauensstufe, um Beiträge melden zu können"
@@ -2311,6 +2313,7 @@ de:
       user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
