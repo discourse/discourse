@@ -389,7 +389,10 @@ $search-pad-horizontal: 0.5em;
   .search-item-user {
     display: flex;
     align-self: center;
-    gap: 0.33em;
+
+    .username {
+      margin-right: 0.33em;
+    }
   }
 
   .search-result-user {
