@@ -22,7 +22,10 @@ import RawHtml from "discourse/widgets/raw-html";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { isTesting } from "discourse-common/config/environment";
 import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import getURL, {
+  getAbsoluteURL,
+  getURLWithCDN,
+} from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
@@ -653,7 +656,7 @@ createWidget("post-contents", {
     const post = this.findAncestorModel();
     const postId = post.id;
 
-    let actionCallback = () => clipboardCopy(post.shareUrl);
+    let actionCallback = () => clipboardCopy(getAbsoluteURL(post.shareUrl));
 
     // Can't use clipboard in JS tests.
     if (isTesting()) {
@@ -664,7 +667,7 @@ createWidget("post-contents", {
       postId,
       actionClass: "post-action-menu__copy-link",
       messageKey: "post.controls.link_copied",
-      actionCallback: () => actionCallback,
+      actionCallback,
       errorCallback: () => this.share(),
     });
   },
