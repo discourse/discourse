@@ -2282,6 +2282,8 @@ developer:
     client: true
     default: false
   experimental_search_menu:
+    client: true
+    hidden: true
     default: true
   max_sidebar_section_links:
     default: 50
