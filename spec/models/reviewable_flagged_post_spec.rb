@@ -99,6 +99,21 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
           expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be true
         end
       end
+
+      context "for ignore_and_do_nothing" do
+        it "does not return `ignore_and_do_nothing` when post is hidden" do
+          post.update(hidden: true)
+
+          expect(reviewable.actions_for(guardian).has?(:ignore_and_do_nothing)).to eq(false)
+        end
+
+        it "returns `ignore_and_do_nothing` if the acting user is system" do
+          post.update(hidden: true)
+          system_guardian = Guardian.new(Discourse.system_user)
+
+          expect(reviewable.actions_for(system_guardian).has?(:ignore_and_do_nothing)).to eq(true)
+        end
+      end
     end
 
     it "agree_and_keep agrees with the flags and keeps the post" do
