@@ -15,15 +15,11 @@ import {
   exists,
   query,
   queryAll,
-  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
 acceptance("Search - Glimmer - Anonymous", function (needs) {
-  needs.hooks.beforeEach(() => {
-    updateCurrentUser({ is_anonymous: true });
-  });
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
