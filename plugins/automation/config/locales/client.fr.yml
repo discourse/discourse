@@ -147,8 +147,17 @@ fr:
               description: Se déclenchera uniquement si la publication est créée par l'utilisateur dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
             restricted_category:
               label: Catégorie
+              description: Facultatif, ne se déclenchera que si le sujet de la publication est dans cette catégorie
             restricted_group:
               label: Groupe
+            ignore_group_members:
+              label: Ignorer les membres du groupe
+            ignore_automated:
+              label: Ignorer l'automatisation
+            first_post_only:
+              label: Premier message uniquement
+            first_topic_only:
+              label: Premier sujet uniquement
           created: Créé
           edited: Édité
         category_created_edited:
@@ -158,11 +167,17 @@ fr:
               description: Facultatif, permet de limiter l'exécution du déclencheur à cette catégorie
         pm_created:
           fields:
+            restricted_user:
+              label: Utilisateurs
             restricted_group:
               label: Groupe
             ignore_staff:
               label: Ignorer le responsable
               description: Ignorer le déclencheur si l'expéditeur est un responsable
+            ignore_group_members:
+              label: Ignorer les membres du groupe
+            ignore_automated:
+              label: Ignorer l'automatisation
             valid_trust_levels:
               label: Niveaux de confiance valides
               description: Se déclenchera uniquement si la publication est créée par l'utilisateur dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
@@ -228,10 +243,17 @@ fr:
             error: Erreur
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: Nom du badge
             group:
               label: Groupe
+            update_user_title_and_flair:
+              label: Mettre à jour le titre et le style de l'utilisateur
+            remove_members_without_badge:
+              label: Supprimer les membres existants sans badge
             badge:
               label: Badge
+              description: Sélectionner un badge
         suspend_user_by_email:
           fields:
             suspend_until:
