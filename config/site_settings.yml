@@ -2308,6 +2308,14 @@ developer:
     default: false
     client: true
     hidden: true
+  warn_critical_js_deprecations:
+    default: true
+    client: true
+    hidden: true
+  warn_critical_js_deprecations_message:
+    default: ""
+    client: true
+    hidden: true
 
 navigation:
   navigation_menu:
