@@ -480,6 +480,11 @@ pre.onebox code {
   .github-info-container {
     width: 100%;
     overflow-x: hidden;
+    > span {
+      // legacy, can be removed in the future
+      // replaced by .github-info in new commit oneboxes
+      grid-area: info;
+    }
   }
 
   .github-info {
