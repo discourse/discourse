@@ -21,9 +21,6 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
 acceptance("Search - Glimmer - Anonymous", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
   needs.hooks.beforeEach(() => {
     updateCurrentUser({ is_anonymous: true });
   });
@@ -439,9 +436,6 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 });
 
 acceptance("Search - Glimmer - Authenticated", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
   needs.settings({
     log_search_queries: true,
     allow_uncategorized_topics: true,
@@ -742,9 +736,6 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
 });
 
 acceptance("Search - Glimmer - with tagging enabled", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
   needs.settings({ tagging_enabled: true });
   needs.pretender((server, helper) => {
     server.get("/tag/dev/notifications", () => {
@@ -912,10 +903,6 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
 });
 
 acceptance("Search - Glimmer - assistant", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
-
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
       if (request.queryParams["search_context[type]"] === "private_messages") {

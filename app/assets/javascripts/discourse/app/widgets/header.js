@@ -521,7 +521,7 @@ export default createWidget("header", {
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
       if (state.searchVisible || this.search.visible) {
-        if (this.currentUser?.experimental_search_menu_groups_enabled) {
+        if (this.siteSettings.experimental_search_menu) {
           this.search.inTopicContext =
             this.search.inTopicContext && inTopicRoute;
           panels.push(this.attach("glimmer-search-menu-wrapper"));
@@ -731,7 +731,7 @@ export default createWidget("header", {
   focusSearchInput() {
     if (
       this.state.searchVisible &&
-      !this.currentUser?.experimental_search_menu_groups_enabled
+      !this.siteSettings.experimental_search_menu
     ) {
       schedule("afterRender", () => {
         const searchInput = document.querySelector("#search-term");
