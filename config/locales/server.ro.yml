@@ -129,6 +129,7 @@ ro:
     confirm_email: "<p>Ești aproape gata! Am trimis un e-mail de activare la adresa ta de e-mail. Te rugăm să urmezi instrucţiunile din mail pentru a-ţi activa contul.</p><p>Dacă nu ajunge, verifică folderul spam.</p>"
     disabled_errors:
       invalid_access: "Nu ai permisiunea să vezi această resursă."
+    max_invite_emails_limit_exceeded: "Cererea a eșuat pentru că numărul de e-mailuri a depășit numărul maxim (%{max})."
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
@@ -957,6 +958,7 @@ ro:
     min_trust_to_edit_post: "Nivelul de încredere minim necesar pentru a edita postări."
     edit_post_allowed_groups: "Grupuri cărora li se permite să editeze articole."
     min_trust_to_allow_self_wiki: "Nivelul de încredere minim necesar pentru transformarea propriilor mesaje în wiki."
+    self_wiki_allowed_groups: "Grupuri în care utilizatorii își pot face propriile articole wiki."
     flag_post_allowed_groups: "Grupuri cărora li se permite să semnaleze articole."
     user_card_background_allowed_groups: "Grupuri care au permisiunea să încarce un fundal cu card de utilizator."
     invite_allowed_groups: "Grupuri care au voie să invite utilizatori."
@@ -1183,6 +1185,7 @@ ro:
       user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:

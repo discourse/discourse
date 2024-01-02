@@ -1016,6 +1016,7 @@ de:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}s Profil"
+      account_possessive: "Konto"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive:
@@ -4939,6 +4940,7 @@ de:
           color_scheme_user_selectable: "Farbschema kann von Benutzern ausgewählt werden"
           auto_update: "Automatisch aktualisieren, wenn Discourse aktualisiert wird"
           color_scheme: "Farbpalette"
+          edit_color_scheme: "Farbpalette bearbeiten"
           default_light_scheme: "Hell (Standard)"
           color_scheme_select: "Wähle Farben für dieses Theme"
           custom_sections: "Benutzerdefinierte Abschnitte:"

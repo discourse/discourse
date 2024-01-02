@@ -258,6 +258,7 @@ it:
       discourse_connect_enabled: "Gli inviti sono disabilitati perché è abilitato DiscourseConnect."
       invalid_access: "Non hai il permesso di visualizzare la risorsa richiesta."
     requires_groups: "L'invito non è stato salvato perché l'argomento specificato non è accessibile. Aggiungi uno dei seguenti gruppi: %{groups}."
+    max_invite_emails_limit_exceeded: "Richiesta non riuscita perché il numero di email ha superato il massimo (%{max})."
     domain_not_allowed: "La tua email non può essere usata per riscattare l’invito."
     max_redemptions_allowed_one: "per gli inviti via e-mail dovrebbe essere 1."
     redemption_count_less_than_max: "deve essere minore di %{max_redemptions_allowed}."

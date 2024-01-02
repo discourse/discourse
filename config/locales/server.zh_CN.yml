@@ -1760,6 +1760,7 @@ zh_CN:
     min_trust_to_edit_post: "编辑帖子所需的最低信任级别。"
     edit_post_allowed_groups: "允许编辑帖子的组。"
     min_trust_to_allow_self_wiki: "制作用户自己的帖子 Wiki 所需的最低信任级别。"
+    self_wiki_allowed_groups: "可在创建维基帖的用户群组。"
     min_trust_to_send_messages: "已弃用，请改用 'personal message enabled groups' 设置。创建新的个人消息所需的最低信任级别。"
     min_trust_to_send_email_messages: "通过电子邮件发送个人消息所需的最低信任级别。"
     min_trust_to_flag_posts: "举报帖子所需的最低信任级别"
@@ -2221,6 +2222,7 @@ zh_CN:
       here_mention_allowed_groups: "min_trust_level_for_here_mention"
       shared_drafts_allowed_groups: "Shared_drafts_min_trust_level"
       flag_post_allowed_groups: "min_trust_to_flag_posts"
+      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

@@ -258,6 +258,7 @@ tr_TR:
       discourse_connect_enabled: "DiscourseConnect etkin olduğu için davetler devre dışı bırakıldı."
       invalid_access: "İstenen kaynağı görüntüleme izniniz yok."
     requires_groups: "Belirtilen konuya erişilemediği için davet kaydedilmedi. Aşağıdaki gruplardan birini ekleyin: %{groups}."
+    max_invite_emails_limit_exceeded: "E-posta sayısı maksimum değeri (%{max}) aştığı için istek başarısız oldu."
     domain_not_allowed: "E-postanız bu daveti kullanmak için kullanılamaz."
     max_redemptions_allowed_one: "e-posta davetleri için 1 olmalıdır."
     redemption_count_less_than_max: "%{max_redemptions_allowed} değerinden küçük olmalı."
