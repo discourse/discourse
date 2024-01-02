@@ -8,7 +8,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 const MAX_COMPONENTS = 4;
 
-@classNames("themes-list-item")
+@classNames("themes-list-container__item")
 @classNameBindings("theme.selected:selected")
 export default class ThemesListItem extends Component {
   childrenExpanded = false;
