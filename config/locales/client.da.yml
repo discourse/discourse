@@ -501,18 +501,32 @@ da:
           title: "Afventende"
         approved:
           title: "Godkendt"
+        approved_flag:
+          title: "Rapportering godkendt"
         approved_user:
           title: "Bruger godkendt"
         approved_post:
           title: "Indlæg godkendt"
         rejected:
           title: "Afvist"
+        rejected_flag:
+          title: "Rapportering afvist"
+        rejected_user:
+          title: "Bruger afvist"
+        rejected_post:
+          title: "Indlæg afvist"
+        ignored:
+          title: "Rapportering ignoreret"
+        deleted:
+          title: "Emne eller indlæg slettet"
         reviewed:
           title: "Alle gennemgåede"
         all:
           title: "Alting"
       context_question:
+        is_this_post: "Er dette indlæg %{reviewable_human_score_types}?"
         delimiter: "eller"
+        something_else_wrong: "Er der noget galt med dette indlæg?"
       types:
         reviewable_flagged_post:
           title: "Markeret indlæg"
@@ -525,6 +539,8 @@ da:
           title: "Bruger"
         reviewable_post:
           title: "Indlæg"
+        reviewable_chat_message:
+          title: "Rapporteret chatbesked"
       approval:
         title: "Indlæg afventer godkendelse"
         description: "Vi har modtaget dit indlæg, men det skal først godkendes af en moderator. Hav venligst tålmodighed."
@@ -640,6 +656,7 @@ da:
         usernames_placeholder: "brugernavne"
         usernames_or_emails_placeholder: "brugernavne eller e-mail adresser"
         notify_users: "Giv brugerne besked"
+        set_owner: "Angiv bruger(e) som ejer(e) af denne gruppe"
       requests:
         title: "Anmodninger"
         reason: "Begrundelse"
@@ -941,6 +958,7 @@ da:
       edit: "Redigér indstillinger"
       download_archive:
         title: "Eksporter dine data"
+        button_text: "Anmod om arkiv"
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
@@ -992,6 +1010,7 @@ da:
           warning: "Er du sikker på, at du vil rydde dit fremhævede emne?"
       use_current_timezone: "Brug den aktuelle tidszone"
       profile_hidden: "Denne brugers offentlige profil er skjult."
+      inactive_user: "Denne bruger er ikke længere aktiv."
       expand_profile: "Udvid"
       sr_expand_profile: "Udvid profildetaljer"
       collapse_profile: "Fold sammen"

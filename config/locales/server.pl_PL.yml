@@ -1432,7 +1432,7 @@ pl_PL:
       yaxis: "Liczba wizyt"
       description: "Liczba unikalnych użytkowników, którzy odwiedzili przy użyciu urządzenia mobilnego."
     web_crawlers:
-      title: "Agenty użytkownika przeszukiwacza sieci"
+      title: "User-agent robotów internetowych"
       labels:
         user_agent: "Przeglądarka użytkownika"
         page_views: "Wyświetlenia strony"
