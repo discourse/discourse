@@ -14,12 +14,11 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .topic-body.topic-body.highlighted .cooked {
-      animation: unset;
-    }
-
-    .topic-body.highlighted .regular.contents {
-      animation: background-fade-highlight 2.5s ease-out;
+    .topic-body.highlighted {
+      animation: none;
+      .regular.contents {
+        animation: background-fade-highlight 2.5s ease-out;
+      }
     }
   }
 
@@ -155,24 +154,16 @@
   // special post type colors
 
   .current-user-post {
-    &:not(.moderator):not(.whisper.current-user-post) {
-      .regular.contents {
-        background: var(--tertiary-very-low);
-        border-color: var(--tertiary-very-low);
-      }
+    .regular.contents {
+      background: var(--tertiary-very-low);
+      border-color: var(--tertiary-very-low);
+    }
+    @media (prefers-reduced-motion: no-preference) {
       .topic-body.highlighted {
-        @media (prefers-reduced-motion: no-preference) {
-          .cooked {
-            animation: unset;
-          }
-          .regular.contents {
-            animation: current-user-background-fade-highlight 2.5s ease-out;
-          }
+        .regular.contents {
+          animation: current-user-background-fade-highlight 2.5s ease-out;
         }
       }
-    }
-    .topic-body .cooked {
-      border: 1px solid transparent;
     }
     .embedded-posts {
       .topic-body .cooked {
@@ -182,26 +173,18 @@
   }
 
   .moderator {
+    .topic-body.highlighted {
+      .regular.contents {
+        animation: none;
+      }
+    }
+
     .regular.contents {
       background: var(--highlight-low);
       border-color: var(--highlight-low);
-    }
-    .regular.contents .cooked {
-      background: transparent;
-      border: 1px solid transparent;
-    }
-  }
-
-  .deleted {
-    .regular.contents {
-      background: var(--danger-low);
-      border-color: var(--danger-low);
-    }
-    .topic-body .regular .cooked {
-      background: transparent;
-    }
-    .topic-body.highlighted .regular.contents {
-      animation: unset;
+      .cooked {
+        background: transparent;
+      }
     }
   }
 
@@ -215,6 +198,21 @@
       border: 2px dashed var(--tertiary-low);
       @media (prefers-reduced-motion: no-preference) {
         animation: background-fade-highlight 2.5s ease-out;
+      }
+    }
+  }
+
+  .deleted {
+    .topic-body .regular.contents {
+      background: var(--danger-low);
+      border-color: transparent;
+      .cooked {
+        background: transparent;
+      }
+    }
+    &.whisper {
+      .topic-body .regular.contents {
+        border-color: var(--danger-low-mid);
       }
     }
   }
