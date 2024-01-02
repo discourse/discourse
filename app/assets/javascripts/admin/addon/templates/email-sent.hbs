@@ -77,7 +77,7 @@
                   @interactive={{true}}
                 >
                   <:trigger>
-                    [See more...]
+                    {{i18n "admin.email.logs.email_addresses.see_more"}}
                   </:trigger>
                   <:content>
                     <ul>
@@ -111,8 +111,7 @@
               <a href={{l.post_url}}>
                 {{l.post_description}}
               </a>
-              (post_id:
-              {{l.post_id}})
+              {{i18n "admin.email.logs.post_id" post_id=l.post_id}}
               <br />
               /{{/if}}
             <code
