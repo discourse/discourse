@@ -36,7 +36,7 @@
   <%- if include_crawler_content? %>
     <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
       <meta itemprop='headline' content='<%= @topic_view.title %>'>
-      <meta itemprop='url' content='<%= @topic_view.absolute_url %>'>
+      <link itemprop='url' href='<%= @topic_view.absolute_url %>'>
       <% if @topic_view.topic.category.present? %>
         <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
       <% end %>
@@ -67,7 +67,9 @@
                 <% end %>
               </span>
 
-              <link <%= post.is_first_post? ? "itemprop='mainEntityOfPage'" : "" %> href="<%= post.topic.url %>">
+              <% if post.is_first_post? %>
+                <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+              <% end %>
 
               <% if post.image_url %>
                 <link itemprop="image" href="<%= post.image_url %>">
