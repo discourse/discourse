@@ -447,4 +447,9 @@ export default class AdminCustomizeThemesShowController extends Controller {
       .saveChanges("enabled")
       .catch(() => this.model.set("enabled", true));
   }
+
+  @action
+  editColorScheme() {
+    this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
+  }
 }
