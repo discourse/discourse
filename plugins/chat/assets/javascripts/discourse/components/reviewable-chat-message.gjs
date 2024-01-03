@@ -17,22 +17,27 @@ export default class ReviewableChatMessage extends Component {
 
   @cached
   get channel() {
+    if (!this.args.reviewable.chat_channel) {
+      return;
+    }
     return ChatChannel.create(this.args.reviewable.chat_channel);
   }
 
   <template>
-    <div class="flagged-post-header">
-      <LinkTo
-        @route="chat.channel.near-message"
-        @models={{array
-          this.channel.slugifiedTitle
-          this.channel.id
-          @reviewable.target_id
-        }}
-      >
-        <ChannelTitle @channel={{this.channel}} />
-      </LinkTo>
-    </div>
+    {{#if this.channel}}
+      <div class="flagged-post-header">
+        <LinkTo
+          @route="chat.channel.near-message"
+          @models={{array
+            this.channel.slugifiedTitle
+            this.channel.id
+            @reviewable.target_id
+          }}
+        >
+          <ChannelTitle @channel={{this.channel}} />
+        </LinkTo>
+      </div>
+    {{/if}}
 
     <div class="post-contents-wrapper">
       <ReviewableCreatedBy
