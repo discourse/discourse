@@ -2281,12 +2281,10 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  experimental_search_menu_groups:
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
+  experimental_search_menu:
+    client: true
+    hidden: true
+    default: true
   max_sidebar_section_links:
     default: 50
     hidden: true
@@ -2796,8 +2794,8 @@ uncategorized:
     hidden: true
 
   max_api_invites:
-      default: 200
-      hidden: true
+    default: 200
+    hidden: true
 
   overridden_robots_txt:
     default: ""
