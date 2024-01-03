@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "Production mode debug shims", type: :system do
-  it "can successfully print a deprecation message after applying prod shims" do
+describe "JS Deprecation Handling", type: :system do
+  it "can successfully print a deprecation message after applying production-mode shims" do
     visit("/latest")
     expect(find("#main-outlet-wrapper")).to be_visible
 
