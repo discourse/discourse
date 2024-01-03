@@ -145,7 +145,7 @@ module Jobs
         memberships = get_memberships(user_ids)
 
         memberships.each do |membership|
-          mention = find_mention(mention_type, membership.user.id)
+          mention = find_mention(@chat_message, mention_type, membership.user.id)
           if mention.present?
             create_notification!(membership, mention, mention_type)
             send_notifications(membership, mention_type)
@@ -153,7 +153,7 @@ module Jobs
         end
       end
 
-      def find_mention(mention_type, user_id)
+      def find_mention(chat_message, mention_type, user_id)
         mention_klass = resolve_mention_klass(mention_type)
 
         target_id = nil
@@ -163,7 +163,7 @@ module Jobs
           target_id = Group.where("LOWER(name) = ?", mention_type).first.id
         end
 
-        mention_klass.find_by(chat_message: @chat_message, target_id: target_id)
+        mention_klass.find_by(chat_message: chat_message, target_id: target_id)
       end
 
       def resolve_mention_klass(mention_type)
