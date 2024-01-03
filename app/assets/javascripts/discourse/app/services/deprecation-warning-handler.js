@@ -69,7 +69,7 @@ export default class DeprecationWarningHandler extends Service {
       return;
     }
 
-    if (!this.siteSettings?.warn_critical_js_deprecations) {
+    if (!this.siteSettings.warn_critical_js_deprecations) {
       return;
     }
 
@@ -83,7 +83,7 @@ export default class DeprecationWarningHandler extends Service {
 
     let notice = I18n.t("critical_deprecation.notice");
 
-    if (this.siteSettings?.warn_critical_js_deprecations_message) {
+    if (this.siteSettings.warn_critical_js_deprecations_message) {
       notice += " " + this.siteSettings.warn_critical_js_deprecations_message;
     }
 
