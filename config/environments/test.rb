@@ -51,6 +51,7 @@ Discourse::Application.configure do
   config.assets.digest = false
 
   config.active_record.verbose_query_logs = true
+  config.active_record.query_log_tags_enabled = true
 
   config.after_initialize do
     ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
