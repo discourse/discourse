@@ -231,7 +231,14 @@ class SiteSettings::TypeSupervisor
     elsif type == self.class.types[:null] && val != ""
       type = get_data_type(name, val)
     elsif type == self.class.types[:enum]
-      val = @defaults_provider[name].is_a?(Integer) ? val.to_i : val.to_s
+      val =
+        (
+          if @defaults_provider[name].is_a?(Integer) && Integer(val, exception: false)
+            val.to_i
+          else
+            val.to_s
+          end
+        )
     elsif type == self.class.types[:uploaded_image_list] && val.present?
       val = val.is_a?(String) ? val : val.map(&:id).join("|")
     elsif type == self.class.types[:upload] && val.present?
