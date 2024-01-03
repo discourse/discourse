@@ -274,7 +274,8 @@ module("Unit | Utility | plugin-api", function (hooks) {
     });
 
     assert.strictEqual(ClassTestThingy.bar(), "baseball game");
-    assert.strictEqual(new ClassTestThingy().foo(), 6);
+    const obj = new ClassTestThingy();
+    assert.strictEqual(obj.foo(), 6);
   });
 
   test("modifyClass works with classes that use inheritance", function (assert) {
@@ -356,7 +357,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
     assert.strictEqual(new ClassTestThingy().foo(), 4);
   });
 
-  test("modifyClass works with classes then are inherited from", function (assert) {
+  test("modifyClass works with classes that are then inherited from", function (assert) {
     @allowClassModifications
     class BaseClass {
       static bar() {
@@ -410,13 +411,29 @@ module("Unit | Utility | plugin-api", function (hooks) {
       );
     });
 
-    assert.deepEqual(ClassTestThingy.bar(), ["base", "base mod", "child"]);
+    assert.deepEqual(
+      ClassTestThingy.bar(),
+      ["base", "base mod", "child"],
+      "static method chain"
+    );
 
     const thingy = new ClassTestThingy();
-    assert.true(thingy instanceof ClassTestThingy);
-    assert.deepEqual(thingy.array, ["base", "base mod", "child"]);
-    assert.deepEqual(thingy.foo(), ["base", "base mod", "child"]);
+    assert.true(thingy instanceof ClassTestThingy, "identity");
+    assert.deepEqual(
+      thingy.array,
+      ["base", "base mod", "child"],
+      "getter chain"
+    );
+    assert.deepEqual(
+      thingy.foo(),
+      ["base", "base mod", "child"],
+      "method chain"
+    );
   });
 
   // TODO: test accessing static `this` when the class is extended
+
+  // TODO: test accessing private fields
+
+  // TODO: try modifying both a base and a child
 });

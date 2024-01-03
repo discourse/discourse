@@ -141,7 +141,6 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import {
   classModifications,
   classModificationsKey,
-  stopSymbol,
 } from "./allow-class-modifications";
 
 // If you add any methods to the API ensure you bump up the version number
@@ -303,57 +302,13 @@ class PluginApi {
       const klass = resolverName;
       const id = klass[classModificationsKey];
 
-      let { latestClass, boundaryClass, baseStaticMethods } =
-        classModifications.get(id) || {};
+      let { latestClass } = classModifications.get(id) || {};
 
-      // If it's the first modification of this class
-      if (!latestClass) {
-        boundaryClass = class Boundary extends klass {
-          constructor() {
-            // The modified constructor chain has finished so
-            // call the original constructor with the stopSymbol
-            // to run the original implementation
-            super(...arguments, stopSymbol);
-          }
-        };
-
-        latestClass = boundaryClass;
-      }
-
-      // Apply the provided modifications
-      const modifiedClass = changes(latestClass);
-
-      // Iterate through new static methods
-      for (const [name, property] of Object.entries(
-        Object.getOwnPropertyDescriptors(modifiedClass)
-      )) {
-        if (typeof property.value === "function") {
-          baseStaticMethods ??= new Map();
-
-          // Preserve the original version of the static method
-          let originalMethod = baseStaticMethods.get(name);
-          if (!originalMethod) {
-            originalMethod = klass[name];
-            baseStaticMethods.set(name, originalMethod);
-          }
-
-          // Add the static method to the boundary class and
-          // make it call the original implementation
-          boundaryClass[name] = function () {
-            return originalMethod.apply(this, arguments);
-          };
-
-          // Make the original class call this version of the method
-          klass[name] = function () {
-            return property.value.apply(this, arguments);
-          };
-        }
-      }
+      // create the new class by applying the provided modifications
+      latestClass = changes(latestClass);
 
       classModifications.set(id, {
-        latestClass: modifiedClass,
-        boundaryClass,
-        baseStaticMethods,
+        latestClass,
       });
     }
   }

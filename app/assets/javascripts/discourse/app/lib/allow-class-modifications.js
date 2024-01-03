@@ -3,40 +3,38 @@ import guid from "pretty-text/guid";
 /**
  * @typedef {Object} ClassModification
  * @property {Class} latestClass
- * @property {Class} boundaryClass
- * @property {Map<string,function>} baseStaticMethods
  */
 
 /** @type Map<class, ClassModification> */
 export const classModifications = new Map();
 
 export const classModificationsKey = Symbol("CLASS_MODIFICATIONS_KEY");
-export const stopSymbol = Symbol("STOP_SYMBOL");
 
 export default function allowClassModifications(OriginalClass) {
-  OriginalClass[classModificationsKey] = guid();
+  const id = guid();
+  OriginalClass[classModificationsKey] = id;
 
-  return class extends OriginalClass {
-    constructor() {
-      // If the modified constructor chain finished,
-      // run the original implementation
-      if (arguments[arguments.length - 1] === stopSymbol) {
-        super(...arguments);
-        return;
+  const proxyHandler = {
+    construct(target, args, newTarget) {
+      const latest = classModifications.get(id).latestClass;
+      return Reflect.construct(latest, args, newTarget);
+    },
+
+    get(target, prop, receiver) {
+      const latest = classModifications.get(id).latestClass;
+
+      if (prop === "prototype") {
+        // proto needs to match (it's a proxy invariant)
+        return Reflect.get(...arguments);
       }
 
-      // ...otherwise invoke the constructor of the last modification
-      const id = OriginalClass[classModificationsKey];
-      const FinalClass =
-        classModifications.get(id)?.latestClass || OriginalClass;
-
-      const finalObject = new FinalClass(...arguments);
-
-      if (new.target[classModificationsKey] !== id) {
-        Object.setPrototypeOf(finalObject, new.target.prototype);
-      }
-
-      return finalObject;
-    }
+      return Reflect.get(latest, prop, receiver);
+    },
   };
+
+  classModifications.set(id, {
+    latestClass: OriginalClass,
+  });
+
+  return new Proxy(OriginalClass, proxyHandler);
 }
