@@ -170,7 +170,7 @@ self.addEventListener('push', function(event) {
   var payload = event.data.json();
 
   event.waitUntil(
-    showNotification(payload.title, payload.body, payload.icon, payload.badge, payload.tag, payload.base_url, payload.url);
+    showNotification(payload.title, payload.body, payload.icon, payload.badge, payload.tag, payload.base_url, payload.url)
   );
 });
 
