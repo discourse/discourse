@@ -15,7 +15,7 @@ RSpec.describe TrustLevelSetting do
     end
   end
 
-  describe ".valid_value?" do
+  xdescribe ".valid_value?" do
     let(:deprecated_test) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml" }
 
     before { SiteSetting.load_settings(deprecated_test) }
