@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.xdescribe SiteSettings::DeprecatedSettings do
+RSpec.describe SiteSettings::DeprecatedSettings do
   def deprecate_override!(settings, tl_group_overrides = [])
     @original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
     SiteSettings::DeprecatedSettings::SETTINGS.clear
@@ -88,7 +88,7 @@ RSpec.xdescribe SiteSettings::DeprecatedSettings do
       expect(SiteSetting.force_https?).to eq(false)
     end
 
-    xit "should log warnings when deprecated settings are called" do
+    it "should log warnings when deprecated settings are called" do
       deprecate_override!(["use_https", "force_https", override, "0.0.1"])
 
       logger =

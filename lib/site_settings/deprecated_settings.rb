@@ -184,4 +184,8 @@ module SiteSettings::DeprecatedSettings
       end
     end
   end
+
+  def deprecated_settings
+    SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
+  end
 end

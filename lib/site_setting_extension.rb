@@ -127,15 +127,12 @@ module SiteSettingExtension
       end
   end
 
-  def deprecated_settings
-    @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
-  end
-
   def settings_hash
     result = {}
+    deprecated = deprecated_settings
 
     defaults.all.keys.each do |s|
-      result[s] = if deprecated_settings.include?(s.to_s)
+      result[s] = if deprecated.include?(s.to_s)
         public_send(s, warn: false).to_s
       else
         public_send(s).to_s
@@ -154,12 +151,14 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
+    deprecated = deprecated_settings
+
     MultiJson.dump(
       Hash[
         *@client_settings
           .map do |name|
             value =
-              if deprecated_settings.include?(name.to_s)
+              if deprecated.include?(name.to_s)
                 public_send(name, warn: false)
               else
                 public_send(name)
