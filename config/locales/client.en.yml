@@ -5605,6 +5605,9 @@ en:
             type_placeholder: "digest, signup…"
             reply_key_placeholder: "reply key"
             smtp_transaction_response_placeholder: "SMTP ID"
+          email_addresses:
+            see_more: "[See more...]"
+          post_id: "(Post ID: %{post_id})"
 
       moderation_history:
         performed_by: "Performed By"
