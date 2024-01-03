@@ -50,6 +50,15 @@
         <% end %>
       </div>
 
+      <% if @topic_view.prev_page %>
+        <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
+        <span itemprop='author' itemscope itemtype="http://schema.org/Person">
+          <link itemprop='url' href='<%= @topic_view.topic.user.username %>'>
+          <meta itemprop='name' content='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
+        </span>
+        <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
+      <% end %>
+
       <% @topic_view.posts.each do |post| %>
         <% if (u = post.user) %>
           <div id='post_<%= post.post_number %>' <%= post.is_first_post? ? "" : "itemprop='comment' itemscope itemtype='http://schema.org/Comment'".html_safe %> class='topic-body crawler-post'>
