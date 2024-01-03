@@ -47,7 +47,7 @@ export function isPushNotificationsEnabled(user) {
   );
 }
 
-export function register(user, router, appEvents) {
+export function register(user, router) {
   if (!isPushNotificationsSupported()) {
     return;
   }
