@@ -603,7 +603,7 @@ RSpec.configure do |config|
       lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
 
       RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
-        lines << "\n" if index != 0
+        lines << "\n"
         lines << "Error encountered while proccessing #{path}"
         lines << "  #{ex.class}: #{ex.message}"
         ex.backtrace.each { |line| lines << "    #{line}\n" }
