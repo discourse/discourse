@@ -28,6 +28,7 @@ import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTIO
 import { forceDropdownForMenuPanels } from "discourse/components/site-header";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
+import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
@@ -144,7 +145,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.22.0";
+export const PLUGIN_API_VERSION = "1.23.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1682,6 +1683,17 @@ class PluginApi {
       }
     );
     addTopicTitleDecorator(callback);
+  }
+
+  /**
+   * Allows a different limit to be set for fetching recent notifications for the user menu
+   *
+   * Example setting limit to 5:
+   * api.setUserMenuNotificationsLimit(5);
+   *
+   **/
+  setUserMenuNotificationsLimit(limit) {
+    setUserMenuNotificationsLimit(limit);
   }
 
   /**

@@ -13,6 +13,13 @@ import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import I18n from "discourse-i18n";
 
+const DEFAULT_LIMIT = 30;
+let limit = DEFAULT_LIMIT;
+
+export function setNotificationsLimit(newLimit) {
+  limit = newLimit;
+}
+
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service appEvents;
   @service currentUser;
@@ -82,7 +89,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   async fetchItems() {
     const params = {
-      limit: 30,
+      limit,
       recent: true,
       bump_last_seen_reviewable: true,
     };
