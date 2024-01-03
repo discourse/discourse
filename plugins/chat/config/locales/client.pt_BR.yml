@@ -25,6 +25,7 @@ pt_BR:
             chat:
               create_message: "Crie uma mensagem de chat em um canal especificado."
     chat:
+      back_to_forum: "Fórum"
       deleted_chat_username: excluído(a)
       dates:
         time_tiny: "h:mm"

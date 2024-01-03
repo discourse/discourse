@@ -1130,6 +1130,7 @@ uk:
       said: "%{username}:"
       profile: "Профіль"
       profile_possessive: "Профіль користувача %{username}"
+      account_possessive: "аккаунт"
       mute: "Приглушити"
       edit: "Редагувати налаштування"
       download_archive:
@@ -2237,6 +2238,8 @@ uk:
         name: "Discord"
         title: "Увійти через Discord"
         sr_title: "Увійти через Discord"
+      passkey:
+        name: "Увійдіть за допомогою пароля"
       second_factor_toggle:
         totp: "Натомість використовуйте застосунок автентифікації"
         backup_code: "Замість цього використовуйте резервний код"
@@ -4526,8 +4529,7 @@ uk:
     second_factor_auth:
       redirect_after_success: "Аутентифікація другого фактора успішна. Перенаправлення на попередню сторінку…"
     sidebar:
-      show_sidebar: "Показати бічну панель"
-      hide_sidebar: "Приховати бічну панель"
+      title: "Бічна панель"
       unread_count:
         one: "%{count} непрочитана"
         few: "%{count} непрочитаних"
@@ -5075,6 +5077,8 @@ uk:
               commenting: Необхіднj для функцій коментування плагіна WP Discourse.
               discourse_connect: Необхіднj для функцій DiscourseConnect плагіна WP Discourse.
               utilities: Необхідно, якщо ви використовуєте утиліти плагіна WP Discourse.
+            logs:
+              messages: Список повідомлень з /logs або отримання певного повідомлення журналу.
       web_hooks:
         title: "Вебгуки"
         none: "Зараз вебгуків немає."
@@ -6398,6 +6402,13 @@ uk:
         json_schema:
           edit: Відкрити редактор
           modal_title: "Редагувати %{name}"
+        file_types_list:
+          add_image_types: "Зображення"
+          add_video_types: "Відео"
+          add_audio_types: "Audio"
+          add_document_types: "Документи"
+          add_types_title: "Дозволити розширення %{types}"
+          add_types_toast: "%{types} типи файлів додані"
       badges:
         title: Нагороди
         new_badge: Нова нагорода

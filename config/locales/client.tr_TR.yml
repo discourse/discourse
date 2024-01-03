@@ -1003,6 +1003,7 @@ tr_TR:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} adlı kullanıcının profili"
+      account_possessive: " adlı kullanıcının hesabı"
       mute: "Sessiz"
       edit: "Tercihleri Düzenle"
       download_archive:
@@ -4033,8 +4034,7 @@ tr_TR:
     second_factor_auth:
       redirect_after_success: "İkinci kimlik doğrulaması adımı başarılı. Önceki sayfaya yönlendiriliyor…"
     sidebar:
-      show_sidebar: "Kenar çubuğunu göster"
-      hide_sidebar: "Kenar çubuğunu gizle"
+      title: "Kenar çubuğu"
       unread_count:
         one: "%{count} okunmamış"
         other: "%{count} okunmamış"
@@ -5840,6 +5840,13 @@ tr_TR:
         json_schema:
           edit: Düzenleyiciyi Başlat
           modal_title: "Düzenle: %{name}"
+        file_types_list:
+          add_image_types: "Resimler"
+          add_video_types: "Videolar"
+          add_audio_types: "Audio"
+          add_document_types: "Belgeler"
+          add_types_title: "Uzantılara izin ver %{types}"
+          add_types_toast: "%{types} dosya türleri eklendi"
       badges:
         title: Rozetler
         new_badge: Yeni Rozet

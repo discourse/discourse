@@ -55,6 +55,11 @@
       <span>{{i18n "admin.user_fields.searchable.title"}}</span>
     </AdminFormRow>
 
+    <PluginOutlet
+      @name="after-admin-user-fields"
+      @outletArgs={{hash buffered=this.buffered}}
+    />
+
     <AdminFormRow>
       <DButton
         @action={{this.save}}

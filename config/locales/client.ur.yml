@@ -4926,6 +4926,8 @@ ur:
         json_schema:
           edit: ایڈیٹر لانچ کریں
           modal_title: "%{name}میں ترمیم"
+        file_types_list:
+          add_image_types: "تصاویر"
       badges:
         title: بَیج
         new_badge: نیا بَیج

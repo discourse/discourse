@@ -129,6 +129,7 @@ ro:
     confirm_email: "<p>Ești aproape gata! Am trimis un e-mail de activare la adresa ta de e-mail. Te rugăm să urmezi instrucţiunile din mail pentru a-ţi activa contul.</p><p>Dacă nu ajunge, verifică folderul spam.</p>"
     disabled_errors:
       invalid_access: "Nu ai permisiunea să vezi această resursă."
+    max_invite_emails_limit_exceeded: "Cererea a eșuat pentru că numărul de e-mailuri a depășit numărul maxim (%{max})."
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
@@ -957,6 +958,7 @@ ro:
     min_trust_to_edit_post: "Nivelul de încredere minim necesar pentru a edita postări."
     edit_post_allowed_groups: "Grupuri cărora li se permite să editeze articole."
     min_trust_to_allow_self_wiki: "Nivelul de încredere minim necesar pentru transformarea propriilor mesaje în wiki."
+    self_wiki_allowed_groups: "Grupuri în care utilizatorii își pot face propriile articole wiki."
     flag_post_allowed_groups: "Grupuri cărora li se permite să semnaleze articole."
     user_card_background_allowed_groups: "Grupuri care au permisiunea să încarce un fundal cu card de utilizator."
     invite_allowed_groups: "Grupuri care au voie să invite utilizatori."
@@ -982,7 +984,9 @@ ro:
     dark_mode_none: "Nimeni"
     max_image_size_kb: "Dimensiunea maximă de încărcare imagini. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea. Imaginile mai mari decât aceasta și mai mici decât client_max_body_size vor fi redimensionate pentru a se potrivi la încărcare."
     max_attachment_size_kb: "Dimensiunea maximă de încărcare a fișierelor atașate. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea."
-    authorized_extensions: "O listă de extensii de fișiere permise la încărcare (folosiți '*' pentru activarea tuturor tipurilor de fișiere)"
+    authorized_extensions: "O listă de extensii de fișiere permise pentru încărcare"
+    authorized_extensions_for_staff: "O listă de extensii de fișiere permise pentru încărcare pentru utilizatori din echipă, în plus față de lista definită în setarea `authorized_extensions` a site-ului."
+    theme_authorized_extensions: "O listă de extensii de fișiere permise pentru încărcarea temelor"
     max_similar_results: "Câte subiecte similare vor fi afișate deasupra editorului atunci când se compune un subiect nou. Comparația se face după titlu și pe conținut."
     title_prettify: "Repară greșelile comune și erorile, incluzând toate majuscule, literă mică pentru primul caracter, multiple ! și ?, extra . la sfârșit, etc."
     topic_views_heat_low: "După acest număr de vizualizări, câmpul vizualizări este ușor evidențiat."
@@ -1172,7 +1176,7 @@ ro:
       approve_unless_allowed_groups: "approve_unless_trust_level"
       approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
       email_in_allowed_groups: "email_in_min_trust"
-      edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
+      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
       uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
       create_topic_allowed_groups: "min_trust_to_create_topic"
       edit_post_allowed_groups: "min_trust_to_edit_post"
@@ -1181,6 +1185,7 @@ ro:
       user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:

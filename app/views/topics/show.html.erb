@@ -36,6 +36,7 @@
   <%- if include_crawler_content? %>
     <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
       <meta itemprop='headline' content='<%= @topic_view.title %>'>
+      <link itemprop='url' href='<%= @topic_view.absolute_url %>'>
       <% if @topic_view.topic.category.present? %>
         <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
       <% end %>
@@ -48,6 +49,14 @@
           </div>
         <% end %>
       </div>
+
+      <% if @topic_view.prev_page %>
+        <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
+        <span itemprop='author' itemscope itemtype="http://schema.org/Person">
+          <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
+        </span>
+        <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
+      <% end %>
 
       <% @topic_view.posts.each do |post| %>
         <% if (u = post.user) %>
@@ -66,7 +75,9 @@
                 <% end %>
               </span>
 
-              <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+              <% if post.is_first_post? %>
+                <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+              <% end %>
 
               <% if post.image_url %>
                 <link itemprop="image" href="<%= post.image_url %>">
@@ -84,7 +95,7 @@
               <span itemprop='position'><%= post.post_number %></span>
               </span>
             </div>
-            <div class='post' itemprop='<%= post.is_first_post? ? 'articleBody' : 'text'  %>'>
+            <div class='post' itemprop='text'>
               <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
             </div>
 
@@ -127,6 +138,7 @@
     </div>
   <% end %>
 
+  <%= build_plugin_html 'server:topic-show-after-posts-crawler' %>
   <% end %>
 
   <% content_for :head do %>

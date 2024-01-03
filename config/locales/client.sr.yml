@@ -2447,6 +2447,8 @@ sr:
           navigation: "Navigacija"
         default_categories:
           modal_yes: "Da"
+        file_types_list:
+          add_image_types: "Slike"
       badges:
         title: Značke
         new_badge: Nova Značka

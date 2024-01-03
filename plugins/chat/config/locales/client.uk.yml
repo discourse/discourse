@@ -39,6 +39,7 @@ uk:
     chat:
       text_copied: Текст скопійовано в буфер обміну
       link_copied: Посилання скопійовано до буфера обміну
+      back_to_forum: "Форум"
       deleted_chat_username: видалено
       dates:
         time_tiny: "h:mm"
@@ -338,6 +339,7 @@ uk:
       members_view:
         filter_placeholder: Знайти учасників
         add_member: Додати учасника
+        back_to_settings: "Повернутися до налаштувань"
       about_view:
         associated_topic: Пов'язана тема
         associated_category: Пов'язана категорія

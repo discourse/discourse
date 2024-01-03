@@ -25,6 +25,7 @@ da:
             chat:
               create_message: "Opret en chatbesked i en angivet kanal."
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: slettet
       dates:
         time_tiny: "tt:mm"

@@ -37,6 +37,7 @@ tr_TR:
     chat:
       text_copied: Metin panoya kopyalandı
       link_copied: Bağlantı panoya kopyalandı
+      back_to_forum: "Forum"
       deleted_chat_username: silindi
       dates:
         time_tiny: "h:mm"
@@ -304,6 +305,7 @@ tr_TR:
       members_view:
         filter_placeholder: Üye bul
         add_member: Üye Ekle
+        back_to_settings: "Ayarlara geri dön"
       about_view:
         associated_topic: Bağlantılı konu
         associated_category: Bağlantılı kategori

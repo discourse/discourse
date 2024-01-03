@@ -19,6 +19,7 @@ fa_IR:
             chat_channel_status_change: "وضعیت کانال گفتگو تغییر کرد"
             chat_channel_delete: "کانال گفتگو حذف شد"
     chat:
+      back_to_forum: "انجمن"
       deleted_chat_username: حذف شد
       dates:
         time_tiny: "HH:mm"

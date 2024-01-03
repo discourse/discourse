@@ -959,6 +959,7 @@ zh_CN:
       said: "%{username}："
       profile: "个人资料"
       profile_possessive: "%{username} 的个人资料"
+      account_possessive: "的帐户"
       mute: "免打扰"
       edit: "编辑偏好设置"
       download_archive:
@@ -1973,6 +1974,8 @@ zh_CN:
         name: "Discord"
         title: "使用 Discord 登录"
         sr_title: "使用 Discord 登录"
+      passkey:
+        name: "使用 Passkey 登录"
       second_factor_toggle:
         totp: "改用身份验证器应用"
         backup_code: "改用备份代码"
@@ -3920,8 +3923,7 @@ zh_CN:
     second_factor_auth:
       redirect_after_success: "第二重身份验证成功。正在重定向到之前的页面…"
     sidebar:
-      show_sidebar: "显示边栏"
-      hide_sidebar: "隐藏边栏"
+      title: "边栏"
       unread_count:
         other: "%{count} 未读"
       new_count:
@@ -4436,6 +4438,8 @@ zh_CN:
               commenting: WP Discourse 插件评论功能所需。
               discourse_connect: WP Discourse 插件 DiscourseConnect 功能所需。
               utilities: 如果您使用 WP Discourse 插件实用程序，则需要。
+            logs:
+              messages: 列出 /logs 中的信息或获取特定日志信息。
       web_hooks:
         title: "网络钩子"
         none: "当前没有网络钩子。"
@@ -5729,6 +5733,13 @@ zh_CN:
         json_schema:
           edit: 启动编辑器
           modal_title: "编辑 %{name}"
+        file_types_list:
+          add_image_types: "图片"
+          add_video_types: "视频"
+          add_audio_types: "音频"
+          add_document_types: "文件"
+          add_types_title: "允许扩展 %{types}"
+          add_types_toast: "添加了 %{types} 文件类型"
       badges:
         title: 徽章
         new_badge: 新徽章

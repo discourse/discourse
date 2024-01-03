@@ -3388,6 +3388,8 @@ sk:
           modal_yes: "Áno"
         simple_list:
           add_item: "Pridať položku…"
+        file_types_list:
+          add_image_types: "Obrázky"
       badges:
         title: Odznaky
         new_badge: Nový odznak

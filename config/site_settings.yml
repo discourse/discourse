@@ -1714,6 +1714,13 @@ trust:
   min_trust_to_allow_self_wiki:
     default: 3
     enum: "TrustLevelSetting"
+    hidden: true
+  self_wiki_allowed_groups:
+    default: "13"
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_to_send_email_messages:
     default: "4"
     enum: "TrustLevelAndStaffSetting"
@@ -2301,6 +2308,14 @@ developer:
     default: false
     client: true
     hidden: true
+  warn_critical_js_deprecations:
+    default: true
+    client: true
+    hidden: true
+  warn_critical_js_deprecations_message:
+    default: ""
+    client: true
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -2779,6 +2794,10 @@ uncategorized:
   max_bulk_invites:
     default: 50000
     hidden: true
+
+  max_api_invites:
+      default: 200
+      hidden: true
 
   overridden_robots_txt:
     default: ""

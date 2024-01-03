@@ -1760,6 +1760,7 @@ zh_CN:
     min_trust_to_edit_post: "编辑帖子所需的最低信任级别。"
     edit_post_allowed_groups: "允许编辑帖子的组。"
     min_trust_to_allow_self_wiki: "制作用户自己的帖子 Wiki 所需的最低信任级别。"
+    self_wiki_allowed_groups: "可在创建维基帖的用户群组。"
     min_trust_to_send_messages: "已弃用，请改用 'personal message enabled groups' 设置。创建新的个人消息所需的最低信任级别。"
     min_trust_to_send_email_messages: "通过电子邮件发送个人消息所需的最低信任级别。"
     min_trust_to_flag_posts: "举报帖子所需的最低信任级别"
@@ -1803,9 +1804,6 @@ zh_CN:
     category_colors: "设置类别允许的十六进制颜色值列表。"
     default_dark_mode_color_scheme_id: "在深色模式下使用的配色方案。"
     dark_mode_none: "无"
-    authorized_extensions: "上传允许的文件扩展名列表（使用 '*' 将启用所有文件类型）"
-    authorized_extensions_for_staff: "除了在 `authorized_extensions` 站点设置中定义的列表之外，还允许管理人员用户上传的文件扩展名列表。（使用 '*' 将启用所有文件类型）"
-    theme_authorized_extensions: "主题上传允许的文件扩展名列表（使用 '*' 将启用所有文件类型）"
     max_similar_results: "撰写新话题时，在编辑器上方显示的类似话题数。比较基于标题和正文。"
     max_image_megapixels: "图片允许的最大百万像素数。具有更高百万像素数的图片将被拒绝。"
     title_prettify: "防止常见的标题拼写错误和错误，包括全部大写、第一个字符小写、多个 ! 和 ?、结尾出现额外的 . 等。"
@@ -2223,8 +2221,8 @@ zh_CN:
     keywords:
       here_mention_allowed_groups: "min_trust_level_for_here_mention"
       shared_drafts_allowed_groups: "Shared_drafts_min_trust_level"
-      edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
       flag_post_allowed_groups: "min_trust_to_flag_posts"
+      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

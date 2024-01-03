@@ -4006,8 +4006,7 @@ fi:
     second_factor_auth:
       redirect_after_success: "Kaksiosainen todennus onnistui. Sinut ohjataan edelliselle sivulle…"
     sidebar:
-      show_sidebar: "Näytä sivupalkki"
-      hide_sidebar: "Piilota sivupalkki"
+      title: "Sivupalkki"
       unread_count:
         one: "%{count} lukematta"
         other: "%{count} lukematta"
@@ -5732,6 +5731,9 @@ fi:
         json_schema:
           edit: Käynnistä editori
           modal_title: "Muokkaa kohdetta %{name}"
+        file_types_list:
+          add_image_types: "Kuvat"
+          add_audio_types: "Audio"
       badges:
         title: Kunniamerkit
         new_badge: Uusi kunniamerkki

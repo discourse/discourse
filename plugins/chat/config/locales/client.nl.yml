@@ -25,6 +25,7 @@ nl:
             chat:
               create_message: "Maak een chatbericht in een opgegeven kanaal."
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: verwijderd
       dates:
         time_tiny: "h:mm"

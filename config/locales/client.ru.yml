@@ -4364,8 +4364,7 @@ ru:
     second_factor_auth:
       redirect_after_success: "Двухфакторная аутентификация выполнена. Перенаправление на предыдущую страницу…"
     sidebar:
-      show_sidebar: "Показать боковую панель"
-      hide_sidebar: "Скрыть боковую панель"
+      title: "Боковая панель"
       unread_count:
         one: "%{count} непрочитанная"
         few: "%{count} непрочитанные"
@@ -6130,6 +6129,9 @@ ru:
         json_schema:
           edit: Открыть редактор
           modal_title: "Редактировать %{name}"
+        file_types_list:
+          add_image_types: "Изображения"
+          add_audio_types: "Аудио"
       badges:
         title: Награды
         new_badge: Новая награда

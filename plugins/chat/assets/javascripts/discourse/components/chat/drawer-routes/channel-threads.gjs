@@ -45,7 +45,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
         <navbar.BackButton
           @title={{this.backLinkTitle}}
           @route="chat.channel"
-          @routeModels={{this.chat.activeChannel?.routeModels}}
+          @routeModels={{this.chat.activeChannel.routeModels}}
         />
         <navbar.Title @title={{this.title}} @icon="discourse-threads" />
         <navbar.Actions as |action|>

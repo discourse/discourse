@@ -4530,8 +4530,7 @@ he:
     second_factor_auth:
       redirect_after_success: "האימות הדו־שלבי הצליח. מתבצעת הפניה לעמוד הקודם…"
     sidebar:
-      show_sidebar: "הצגת סרגל צד"
-      hide_sidebar: "הסתרת סרגל צד"
+      title: "סרגל צד"
       unread_count:
         one: "לא נקרא (%{count})"
         two: "לא-נקראו %{count} "
@@ -5079,6 +5078,8 @@ he:
               commenting: הכרחי לטובת יכולות התגובות של תוסף ה־Discourse של WordPress.
               discourse_connect: הכרחי לטובת יכולות ה־DiscourseConnect של תוסף ה־Discourse של WordPress.
               utilities: הכרחי לטובת הכלים של תוסף ה־Discourse של WordPress.
+            logs:
+              messages: הצגת הודעות מ־‎/logs או משיכת הודעת יומן מסוימת.
       web_hooks:
         title: "Webhooks"
         none: "אין כרגע webhooks."
@@ -6402,6 +6403,13 @@ he:
         json_schema:
           edit: הפעלת העורך
           modal_title: "עריכת %{name}"
+        file_types_list:
+          add_image_types: "תמונות"
+          add_video_types: "סרטונים"
+          add_audio_types: "שמע"
+          add_document_types: "מסמכים"
+          add_types_title: "לאפשר סיומות %{types}"
+          add_types_toast: "%{types} סוגי קבצים נוספו"
       badges:
         title: עיטורים
         new_badge: עיטור חדש

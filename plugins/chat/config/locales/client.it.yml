@@ -28,6 +28,7 @@ it:
     chat:
       text_copied: Testo copiato nella clipboard
       link_copied: Link copiato nella clipboard
+      back_to_forum: "Forum"
       deleted_chat_username: cancellati
       dates:
         time_tiny: "h:mm"
@@ -293,6 +294,7 @@ it:
       members_view:
         filter_placeholder: Trova membri
         add_member: Aggiungi membro
+        back_to_settings: "Torna alle impostazioni"
       about_view:
         associated_topic: Argomento collegato
         associated_category: Categoria collegata

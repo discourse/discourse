@@ -108,7 +108,7 @@ class ReviewableFlaggedPost < Reviewable
         label: "reviewables.actions.ignore.title",
       )
 
-    if !post.hidden?
+    if !post.hidden? || guardian.user.is_system_user?
       build_action(actions, :ignore_and_do_nothing, icon: "external-link-alt", bundle: ignore)
     end
     if guardian.can_delete_post_or_topic?(post)

@@ -3578,8 +3578,7 @@ cs:
     second_factor_auth:
       redirect_after_success: "Dvoufaktorové ověření bylo úspěšné. Přesměrování na předchozí stránku…"
     sidebar:
-      show_sidebar: "Zobrazit postranní panel"
-      hide_sidebar: "Skrýt postranní panel"
+      title: "Postranní panel"
       unread_count:
         one: "%{count} nepřečtené"
         few: "%{count} nepřečtených"
@@ -4815,6 +4814,8 @@ cs:
           modal_yes: "Ano"
         simple_list:
           add_item: "Přidat položku…"
+        file_types_list:
+          add_image_types: "Obrázky"
       badges:
         title: Odznaky
         new_badge: Nový odznak

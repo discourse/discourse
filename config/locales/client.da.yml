@@ -502,12 +502,24 @@ da:
           title: "Afventende"
         approved:
           title: "Godkendt"
+        approved_flag:
+          title: "Rapportering godkendt"
         approved_user:
           title: "Bruger godkendt"
         approved_post:
           title: "Indlæg godkendt"
         rejected:
           title: "Afvist"
+        rejected_flag:
+          title: "Rapportering afvist"
+        rejected_user:
+          title: "Bruger afvist"
+        rejected_post:
+          title: "Indlæg afvist"
+        ignored:
+          title: "Rapportering ignoreret"
+        deleted:
+          title: "Emne eller indlæg slettet"
         reviewed:
           title: "Alle gennemgåede"
         all:
@@ -646,6 +658,7 @@ da:
         usernames_placeholder: "brugernavne"
         usernames_or_emails_placeholder: "brugernavne eller e-mail adresser"
         notify_users: "Giv brugerne besked"
+        set_owner: "Angiv bruger(e) som ejer(e) af denne gruppe"
       requests:
         title: "Anmodninger"
         reason: "Begrundelse"
@@ -941,10 +954,12 @@ da:
     user:
       said: "%{username}:"
       profile: "Profil"
+      account_possessive: "'s konto"
       mute: "Ignorer"
       edit: "Redigér indstillinger"
       download_archive:
         title: "Eksporter dine data"
+        button_text: "Anmod om arkiv"
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
@@ -996,6 +1011,7 @@ da:
           warning: "Er du sikker på, at du vil rydde dit fremhævede emne?"
       use_current_timezone: "Brug den aktuelle tidszone"
       profile_hidden: "Denne brugers offentlige profil er skjult."
+      inactive_user: "Denne bruger er ikke længere aktiv."
       expand_profile: "Udvid"
       sr_expand_profile: "Udvid profildetaljer"
       collapse_profile: "Fold sammen"
@@ -3574,8 +3590,7 @@ da:
     fullscreen_table:
       expand_btn: "Udvid Tabel"
     sidebar:
-      show_sidebar: "Vis sidebjælke"
-      hide_sidebar: "Skjul sidebjælke"
+      title: "Sidebjælke"
       unread_count:
         one: "%{count} ulæst"
         other: "%{count} ulæste"
@@ -5055,6 +5070,9 @@ da:
         json_schema:
           edit: Start Editor
           modal_title: "Rediger %{name}"
+        file_types_list:
+          add_image_types: "Billeder"
+          add_audio_types: "Audio"
       badges:
         title: Emblemer
         new_badge: Nyt Emblem

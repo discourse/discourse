@@ -645,12 +645,12 @@ class Post < ActiveRecord::Base
     publish_change_to_clients!(:acted)
   end
 
-  def full_url
-    "#{Discourse.base_url}#{url}"
+  def full_url(opts = {})
+    "#{Discourse.base_url}#{url(opts)}"
   end
 
-  def relative_url
-    "#{Discourse.base_path}#{url}"
+  def relative_url(opts = {})
+    "#{Discourse.base_path}#{url(opts)}"
   end
 
   def url(opts = nil)
@@ -685,7 +685,11 @@ class Post < ActiveRecord::Base
     result = +"/t/"
     result << "#{slug}/" if !opts[:without_slug]
 
-    "#{result}#{topic_id}/#{post_number}"
+    if post_number == 1 && opts[:share_url]
+      "#{result}#{topic_id}"
+    else
+      "#{result}#{topic_id}/#{post_number}"
+    end
   end
 
   def self.urls(post_ids)

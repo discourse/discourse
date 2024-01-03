@@ -3639,8 +3639,6 @@ RSpec.describe Guardian do
   describe "can_wiki?" do
     let(:post) { Fabricate(:post, created_at: 1.minute.ago) }
 
-    before { SiteSetting.edit_wiki_post_allowed_groups = "14" }
-
     it "returns false for regular user" do
       expect(Guardian.new(coding_horror).can_wiki?(post)).to be_falsey
     end
@@ -3651,12 +3649,12 @@ RSpec.describe Guardian do
     end
 
     it "returns false when user satisfies trust level but tries to wiki someone else's post" do
-      SiteSetting.min_trust_to_allow_self_wiki = 2
+      SiteSetting.self_wiki_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(Guardian.new(trust_level_2).can_wiki?(post)).to be_falsey
     end
 
     it "returns true when user satisfies trust level and owns the post" do
-      SiteSetting.min_trust_to_allow_self_wiki = 2
+      SiteSetting.self_wiki_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       own_post = Fabricate(:post, user: trust_level_2)
       expect(Guardian.new(trust_level_2).can_wiki?(own_post)).to be_truthy
     end

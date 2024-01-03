@@ -475,6 +475,22 @@ RSpec.configure do |config|
     end
   end
 
+  if ENV["GITHUB_ACTIONS"]
+    config.around :each, capture_log: true do |example|
+      original_logger = ActiveRecord::Base.logger
+      io = StringIO.new
+      io_logger = Logger.new(io)
+      io_logger.level = Logger::DEBUG
+      ActiveRecord::Base.logger = io_logger
+
+      example.run
+
+      RSpec.current_example.metadata[:active_record_debug_logs] = io.string
+    ensure
+      ActiveRecord::Base.logger = original_logger
+    end
+  end
+
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
@@ -582,7 +598,7 @@ RSpec.configure do |config|
 
   config.after :each do |example|
     if example.exception && RspecErrorTracker.exceptions.present?
-      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= "")
+      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
 
       lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
 
@@ -590,7 +606,7 @@ RSpec.configure do |config|
         lines << "\n" if index != 0
         lines << "Error encountered while proccessing #{path}"
         lines << "  #{ex.class}: #{ex.message}"
-        ex.backtrace.each { |line| lines << "    #{line}" }
+        ex.backtrace.each { |line| lines << "    #{line}\n" }
       end
 
       lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"

@@ -3779,8 +3779,7 @@ ja:
     second_factor_auth:
       redirect_after_success: "二要素認証に成功しました。前のページにリダイレクトします..."
     sidebar:
-      show_sidebar: "サイドバーを表示"
-      hide_sidebar: "サイドバーを非表示"
+      title: "サイドバー"
       unread_count:
         other: "未読 %{count}"
       new_count:
@@ -5481,6 +5480,9 @@ ja:
         json_schema:
           edit: エディタを起動
           modal_title: "%{name} の編集"
+        file_types_list:
+          add_image_types: "画像"
+          add_audio_types: "Audio"
       badges:
         title: バッジ
         new_badge: 新しいバッジ

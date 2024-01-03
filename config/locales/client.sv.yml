@@ -3981,8 +3981,7 @@ sv:
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
     sidebar:
-      show_sidebar: "Visa sidofältet"
-      hide_sidebar: "Dölj sidofältet"
+      title: "Sidofält"
       unread_count:
         one: "%{count} oläst"
         other: "%{count} olästa"
@@ -5656,6 +5655,9 @@ sv:
         json_schema:
           edit: Öppna redigerare
           modal_title: "Redigera %{name}"
+        file_types_list:
+          add_image_types: "Bilder"
+          add_audio_types: "Audio"
       badges:
         title: Utmärkelser
         new_badge: Ny utmärkelse

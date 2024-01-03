@@ -387,12 +387,11 @@ $search-pad-horizontal: 0.5em;
   }
 
   .search-item-user {
-    .username {
-      margin-right: 0.33rem;
-    }
+    display: flex;
+    align-self: center;
 
-    img.avatar {
-      margin-right: 0 !important;
+    .username {
+      margin-right: 0.33em;
     }
   }
 

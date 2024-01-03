@@ -11,7 +11,7 @@ module PageObjects
       end
 
       def cancel
-        find("#{MODAL_SELECTOR} .d-modal-cancel").click
+        click_button(I18n.t("js.cancel"))
       end
 
       def click_edit_reason

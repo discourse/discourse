@@ -2030,6 +2030,8 @@ be:
           navigation: "рух"
         default_categories:
           modal_yes: "ды"
+        file_types_list:
+          add_image_types: "Выява"
       badges:
         title: значкі
         new_badge: новы значок

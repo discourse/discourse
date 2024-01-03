@@ -46,6 +46,36 @@ RSpec.describe "Navigation", type: :system do
     end
   end
 
+  context "when clicking chat icon on mobile" do
+    it "has the chat title with link to chat index", mobile: true do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_title(I18n.t("js.chat.heading"))
+      expect(page).to have_css("a.c-heading[href='#{chat_path}']")
+    end
+
+    it "has the back to forum link with last visited url", mobile: true do
+      visit("/")
+      click_link(topic.title)
+
+      expect(page).to have_css(".fancy-title")
+
+      chat_page.open_from_header
+
+      expect(page).to have_title(I18n.t("js.chat.heading"))
+      expect(page).to have_css(".back-to-forum[href='#{topic.relative_url}']")
+    end
+
+    it "hides the search icon and hamburger icon", mobile: true do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_no_css(".search-dropdown")
+      expect(page).to have_no_css(".hamburger-dropdown")
+    end
+  end
+
   context "when visiting /chat" do
     it "opens full page" do
       chat_page.open

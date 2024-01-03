@@ -1127,6 +1127,7 @@ pl_PL:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "profil %{username}"
+      account_possessive: "konto"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -1567,9 +1568,12 @@ pl_PL:
         name:
           default: "Główny passkey"
         save: "Zapisz"
+        short_description: "Klucze to zamienniki haseł, które potwierdzają Twoją tożsamość biometrycznie (np. dotyk, FaceID) lub za pomocą kodu PIN/hasła urządzenia."
         added_prefix: "Dodano"
         last_used_prefix: "Ostatnio używane"
         never_used: "Nigdy nie używany"
+        not_allowed_error: "Upłynął limit czasu procesu rejestracji klucza dostępu, został anulowany lub jest niedozwolony."
+        already_added_error: "Już zarejestrowałeś ten klucz dostępu. Nie musisz rejestrować go ponownie."
         confirm_button: "lub użyj passkey"
       change_about:
         title: "Zmień O mnie"
@@ -1683,6 +1687,7 @@ pl_PL:
         instructions: "Rejestracja konta wymaga kodu zaproszenia"
       auth_tokens:
         title: "Ostatnio używane urządzenia"
+        short_description: "To jest lista urządzeń, które ostatnio logowały się na Twoje konto."
         details: "Detale"
         log_out_all: "Wyloguj się wszędzie"
         not_you: "To nie ty?"
@@ -1858,6 +1863,8 @@ pl_PL:
         incorrect_password: "Wpisane hasło jest nieprawidłowe."
         incorrect_passkey: "Ten passkey jest nieprawidłowy."
         logged_in_as: "Jesteś zalogowany jako: "
+        instructions: "Aby dokończyć tę czynność, potwierdź swoją tożsamość."
+        fine_print: "Prosimy o potwierdzenie Twojej tożsamości, ponieważ jest to potencjalnie wrażliwe działanie. Po uwierzytelnieniu zostaniesz poproszony o ponowne uwierzytelnienie po kilku godzinach bezczynności."
       password:
         title: "Hasło"
         too_short: "Hasło jest za krótkie."
@@ -2222,10 +2229,15 @@ pl_PL:
         name: "Discord"
         title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
+      passkey:
+        name: "Zaloguj się za pomocą klucza"
       second_factor_toggle:
         totp: "Zamiast tego użyj aplikacji uwierzytelniającej"
         backup_code: "Zamiast tego użyj kodu zapasowego"
         security_key: "Zamiast tego użyj klucza zabezpieczeń"
+      no_login_methods:
+        title: "Brak metod logowania"
+        description: "Nie skonfigurowano żadnych metod logowania. Administratorzy mogą odwiedzić <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a>, aby ponownie skonfigurować witrynę."
     invites:
       accept_title: "Zaproszenie"
       welcome_to: "Witaj na %{site_name}!"
@@ -3440,7 +3452,9 @@ pl_PL:
     post:
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
+      quote_reply_shortcut: "Cytuj (lub naciśnij q)"
       quote_edit: "Edytuj"
+      quote_edit_shortcut: "Edytuj (lub naciśnij e)"
       quote_share: "Udostępnij"
       edit_reason: "Powód"
       post_number: "wpis %{number}"
@@ -3561,6 +3575,8 @@ pl_PL:
         delete: "usuń ten wpis"
         undelete: "przywróc ten wpis"
         share: "udostępnij odnośnik do tego wpisu"
+        copy_title: "skopiuj link do tego postu do schowka"
+        link_copied: "Link skopiowany!"
         more: "Więcej"
         delete_replies:
           confirm: "Czy chcesz również usunąć odpowiedzi do tego wpisu?"
@@ -3971,6 +3987,7 @@ pl_PL:
         med {z bardzo wysokim stosunkiem polubień na post}
         high {z ekstremalnie wysokim stosunkiem polubień na post}
         other {}}
+    latest_poster_link: "Profil %{username}, najnowszy postujący"
     original_post: "Oryginalny wpis"
     views: "Odsłony"
     sr_views: "Sortuj według wyświetleń"
@@ -4215,6 +4232,7 @@ pl_PL:
         print: "%{shortcut} Drukuj temat"
         defer: "%{shortcut} Odrocz wątek"
         topic_admin_actions: "%{shortcut} Otwórz działania administratora tematu"
+        archive_private_message: "%{shortcut} Przełącz archiwizację prywatnych wiadomości"
       search_menu:
         title: "Menu wyszukiwania"
         prev_next: "%{shortcut} Przesuń zaznaczenie w górę i w dół"
@@ -4332,6 +4350,7 @@ pl_PL:
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
       edit_tag: "Edytuj nazwę tagu i opis"
+      description: "Opis (maks. 1000 znaków)"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
       sort_by_name: "nazwa"
@@ -4473,8 +4492,7 @@ pl_PL:
     second_factor_auth:
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
     sidebar:
-      show_sidebar: "Pokaż pasek boczny"
-      hide_sidebar: "Ukryj pasek boczny"
+      title: "Pasek boczny"
       unread_count:
         one: "%{count} nieprzeczytany"
         few: "%{count} nieprzeczytane"
@@ -4674,7 +4692,9 @@ pl_PL:
           enter_key: "Enter"
           tab_key: "Tab"
           new_row: "na końcu wiersza, aby wstawić nowy wiersz."
+          new_col: "na końcu kolumny, aby wstawić nową kolumnę."
           options: "Kliknij komórki prawym przyciskiem myszy, aby uzyskać dostęp do większej liczby opcji w menu rozwijanym."
+        confirm_close: "Czy na pewno chcesz zamknąć narzędzie do tworzenia tabel? Wszelkie niezapisane zmiany zostaną utracone."
       edit:
         btn_edit: "Edytuj tabelę"
         modal:
@@ -4724,6 +4744,7 @@ pl_PL:
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
+      back_to_forum: "Powrót do forum"
       tags:
         remove_muted_tags_from_latest:
           always: "zawsze"
@@ -4731,6 +4752,7 @@ pl_PL:
           never: "nigdy"
       reports:
         title: "Lista dostępnych zgłoszeń"
+        meta_doc: "Zapoznaj się z naszą <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentacją</a>, aby uzyskać szczegółowy przegląd raportów."
       dashboard:
         title: "Panel"
         last_updated: "Panel zaktualizowany:"
@@ -4790,6 +4812,7 @@ pl_PL:
         too_many_requests: Wykonałeś/łaś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie.
         not_found_error: Przepraszamy, ten raport nie istnieje.
         filter_reports: Filtruj zgłoszenia
+        custom_date_range: Niestandardowy zakres dat
         reports:
           trend_title: "%{percent} zmian. Obecnie %{current}, w poprzednim okresie było %{prev}."
           today: "Dzisiaj"
@@ -4833,6 +4856,7 @@ pl_PL:
           name:
             too_short: "Nazwa grupy jest zbyt krótka"
             too_long: "Nazwa grupy jest zbyt długa"
+            checking: "Sprawdzanie dostępności nazwy grupy…"
             available: "Nazwa grupy jest dostępna"
             not_available: "Nazwa grupy jest niedostępna"
             blank: "Nazwa grupy nie może być pusta"
@@ -4910,6 +4934,7 @@ pl_PL:
         user: "Użytkownik"
         title: "API"
         key: "Klucz"
+        keys: "Klucze"
         created: Utworzono
         updated: Zaktualizowane
         last_used: Ostatnio używane
@@ -4968,6 +4993,8 @@ pl_PL:
             tags:
               list: Lista tagów.
             tag_groups:
+              list: Uzyskaj listę grup tagów.
+              show: Uzyskaj pojedynczą grupę tagów według id.
               create: Tworzy grupę tagów.
               update: Aktualizuje grupę tagów określoną przez id.
             categories:
@@ -5012,6 +5039,8 @@ pl_PL:
               commenting: Niezbędne do funkcji komentowania wtyczki WP Discourse.
               discourse_connect: Niezbędne dla funkcji DiscourseConnect wtyczki WP Discourse.
               utilities: Niezbędne, jeśli korzystasz z Utilities wtyczki WP Discourse.
+            logs:
+              messages: Wyświetl listę wiadomości z /logs lub uzyskaj określony komunikat dziennika.
       web_hooks:
         title: "Webhooki"
         none: "Brak webhooków"
@@ -5086,11 +5115,17 @@ pl_PL:
           user_unsuspended: "Użytkownik przestał być zawieszony"
         user_badge_event:
           group_name: "Zdarzenia odznak"
+          user_badge_granted: "Odznaka użytkownika została przyznana"
+          user_badge_revoked: "Odznaka użytkownika została cofnięta"
         like_event:
           group_name: "Zdarzenia polubień"
           post_liked: "Gdy użytkownik polubi post."
         notification_event:
           group_name: "Zdarzenia powiadomień"
+          notification_created: "Użytkownik otrzymuje powiadomienie w swoim kanale"
+        group_user_event:
+          user_added_to_group: "Użytkownik zostaje dodany do grupy"
+          user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
         user_promoted_event:
           user_promoted: "Użytkownik został awansowany"
         delivery_status:
@@ -5182,6 +5217,7 @@ pl_PL:
             title: "Wykonaj kopię zapasową"
             confirm: "Czy chcesz wykonać kopię zapasową?"
             include_uploads: "uwzględnij wszystkie przesłane pliki"
+            s3_upload_warning: 'Dotyczy to wyłącznie kopii zapasowych baz danych. Przesłane pliki nie zostaną uwzględnione, co oznacza, że w przypadku przywrócenia kopii zapasowej na inną konfigurację hostingu może brakować wszystkich przesłanych obrazów i innych plików. <b>Aby włączyć pełną kopię zapasową, w tym przesyłanie plików S3, zapoznaj się z <a href="https://meta.discourse.org/t/-/276535" target="_blank">tym przewodnikiem</a>.</b>'
           download:
             label: "Pobierz"
             title: "Wyślij email z linkiem do pobrania"
@@ -5233,6 +5269,8 @@ pl_PL:
         delete: "Usuń"
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
         bulk_delete: "Jesteś pewny/a?"
+        bulk_themes_delete_confirm: "Spowoduje to odinstalowanie następujących motywów. Nie będą już dostępne dla żadnego użytkownika w Twojej witrynie:"
+        bulk_components_delete_confirm: "Spowoduje to odinstalowanie następujących komponentów. Nie będą już dostępne dla żadnego użytkownika w Twojej witrynie:"
         color: "Kolor"
         opacity: "Widoczność"
         copy: "Powiel"
@@ -5313,6 +5351,7 @@ pl_PL:
           uploads: "Pliki"
           no_uploads: "Możesz załadować zasoby do swojego motywu np. fonty lub obrazy"
           add_upload: "Dodaj plik"
+          upload_file_tip: "Wybierz zasób do przesłania (png, woff2 itp.…)"
           variable_name: "Nazwa zmiennej SCSS:"
           variable_name_invalid: "Niewłaściwa nazwa zmiennej. Dozwolone tylko nazwy alfanumeryczne. Musi zaczynać się od litery. Musi być unikatowa."
           variable_name_error:
@@ -5503,6 +5542,7 @@ pl_PL:
         title: "Emaile"
         settings: "Ustawienia"
         templates: "Szablony"
+        templates_title: "Szablony e-mail"
         preview_digest: "Pokaż zestawienie aktywności"
         advanced_test:
           title: "Zaawansowany test"
@@ -6317,6 +6357,13 @@ pl_PL:
         json_schema:
           edit: Uruchom edytor
           modal_title: "Edytuj %{name}"
+        file_types_list:
+          add_image_types: "Obrazy"
+          add_video_types: "Filmy"
+          add_audio_types: "Dźwięk"
+          add_document_types: "Dokumenty"
+          add_types_title: "Zezwalaj na rozszerzenia %{types}"
+          add_types_toast: "%{types} dodane typy plików"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka

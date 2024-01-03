@@ -297,6 +297,7 @@ en:
       discourse_connect_enabled: "Invites are disabled because DiscourseConnect is enabled."
       invalid_access: "You are not permitted to view the requested resource."
     requires_groups: "Invite was not saved because the specified topic is inaccessible. Add one of the following groups: %{groups}."
+    max_invite_emails_limit_exceeded: "Request failed because number of emails exceeded the maximum (%{max})."
     domain_not_allowed: "Your email cannot be used to redeem this invite."
     max_redemptions_allowed_one: "for email invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
@@ -1970,6 +1971,7 @@ en:
     edit_post_allowed_groups: "Groups that are allowed to edit posts."
 
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
+    self_wiki_allowed_groups: "Groups where users can make their own post wiki."
 
     min_trust_to_send_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. The minimum trust level required to create new personal messages."
     min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
@@ -2571,6 +2573,7 @@ en:
       user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
 
     placeholder:
       discourse_connect_provider_secrets:

@@ -4469,6 +4469,8 @@ nb_NO:
           modal_description: "Ønsker du å bruke denne endringens historikk? Dette vil endre innstillinger for %{count} eksisterende brukere."
           modal_yes: "Ja"
           modal_no: "Nei, bare gjelder endring fremover"
+        file_types_list:
+          add_image_types: "Bilder"
       badges:
         title: Merker
         new_badge: Nytt merke

@@ -9,33 +9,33 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: 48862663f8d816fd9f09d8e8e4199c7e6d5ee015
+  revision: 2a2b06276feca012010e02ab92a2c0735705fc05
   specs:
-    shoulda-matchers (5.3.0)
+    shoulda-matchers (6.0.0)
       activesupport (>= 5.2.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (7.0.7)
-      actionpack (= 7.0.7)
-      actionview (= 7.0.7)
-      activejob (= 7.0.7)
-      activesupport (= 7.0.7)
+    actionmailer (7.0.8)
+      actionpack (= 7.0.8)
+      actionview (= 7.0.8)
+      activejob (= 7.0.8)
+      activesupport (= 7.0.8)
       mail (~> 2.5, >= 2.5.4)
       net-imap
       net-pop
       net-smtp
       rails-dom-testing (~> 2.0)
-    actionpack (7.0.7)
-      actionview (= 7.0.7)
-      activesupport (= 7.0.7)
+    actionpack (7.0.8)
+      actionview (= 7.0.8)
+      activesupport (= 7.0.8)
       rack (~> 2.0, >= 2.2.4)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actionview (7.0.7)
-      activesupport (= 7.0.7)
+    actionview (7.0.8)
+      activesupport (= 7.0.8)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
@@ -44,15 +44,15 @@ GEM
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
-    activejob (7.0.7)
-      activesupport (= 7.0.7)
+    activejob (7.0.8)
+      activesupport (= 7.0.8)
       globalid (>= 0.3.6)
-    activemodel (7.0.7)
-      activesupport (= 7.0.7)
-    activerecord (7.0.7)
-      activemodel (= 7.0.7)
-      activesupport (= 7.0.7)
-    activesupport (7.0.7)
+    activemodel (7.0.8)
+      activesupport (= 7.0.8)
+    activerecord (7.0.8)
+      activemodel (= 7.0.8)
+      activesupport (= 7.0.8)
+    activesupport (7.0.8)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -106,7 +106,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    cbor (0.5.9.6)
+    cbor (0.5.9.8)
     certified (1.0.0)
     cgi (0.4.1)
     chunky_png (1.4.0)
@@ -154,7 +154,7 @@ GEM
       faraday (~> 2.0)
     fast_blank (1.0.1)
     fast_xs (0.8.0)
-    fastimage (2.2.7)
+    fastimage (2.3.0)
     ffi (1.16.3)
     fspath (3.1.2)
     gc_tracer (1.5.1)
@@ -243,7 +243,7 @@ GEM
     mustache (1.1.1)
     net-http (0.4.0)
       uri
-    net-imap (0.4.8)
+    net-imap (0.4.9)
       date
       net-protocol
     net-pop (0.1.2)
@@ -253,13 +253,13 @@ GEM
     net-smtp (0.4.0)
       net-protocol
     nio4r (2.7.0)
-    nokogiri (1.15.5-aarch64-linux)
+    nokogiri (1.16.0-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.15.5-arm64-darwin)
+    nokogiri (1.16.0-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.5-x86_64-darwin)
+    nokogiri (1.16.0-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.5-x86_64-linux)
+    nokogiri (1.16.0-x86_64-linux)
       racc (~> 1.4)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
@@ -302,7 +302,7 @@ GEM
       openssl (> 2.0)
     optimist (3.1.0)
     parallel (1.24.0)
-    parallel_tests (4.3.0)
+    parallel_tests (4.4.0)
       parallel
     parser (3.2.2.4)
       ast (~> 2.4.1)
@@ -325,7 +325,8 @@ GEM
     rack (2.2.8)
     rack-mini-profiler (3.3.0)
       rack (>= 1.2.0)
-    rack-protection (3.1.0)
+    rack-protection (3.2.0)
+      base64 (>= 0.1.0)
       rack (~> 2.2, >= 2.2.4)
     rack-test (2.1.0)
       rack (>= 1.3)
@@ -343,9 +344,9 @@ GEM
     rails_multisite (5.0.0)
       activerecord (>= 6.0)
       railties (>= 6.0)
-    railties (7.0.7)
-      actionpack (= 7.0.7)
-      activesupport (= 7.0.7)
+    railties (7.0.8)
+      actionpack (= 7.0.8)
+      activesupport (= 7.0.8)
       method_source
       rake (>= 12.2)
       thor (~> 1.0)
@@ -443,16 +444,16 @@ GEM
     sanitize (6.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sass-embedded (1.69.5-aarch64-linux-gnu)
-      google-protobuf (~> 3.23)
-    sass-embedded (1.69.5-arm64-darwin)
-      google-protobuf (~> 3.23)
-    sass-embedded (1.69.5-x86_64-darwin)
-      google-protobuf (~> 3.23)
-    sass-embedded (1.69.5-x86_64-linux-gnu)
-      google-protobuf (~> 3.23)
-    sassc-embedded (1.68.6)
-      sass-embedded (~> 1.68)
+    sass-embedded (1.69.6-aarch64-linux-gnu)
+      google-protobuf (~> 3.25)
+    sass-embedded (1.69.6-arm64-darwin)
+      google-protobuf (~> 3.25)
+    sass-embedded (1.69.6-x86_64-darwin)
+      google-protobuf (~> 3.25)
+    sass-embedded (1.69.6-x86_64-linux-gnu)
+      google-protobuf (~> 3.25)
+    sassc-embedded (1.69.1)
+      sass-embedded (~> 1.69)
     selenium-devtools (0.120.0)
       selenium-webdriver (~> 4.2)
     selenium-webdriver (4.16.0)
@@ -478,10 +479,10 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.6.9-aarch64-linux)
-    sqlite3 (1.6.9-arm64-darwin)
-    sqlite3 (1.6.9-x86_64-darwin)
-    sqlite3 (1.6.9-x86_64-linux)
+    sqlite3 (1.7.0-aarch64-linux)
+    sqlite3 (1.7.0-arm64-darwin)
+    sqlite3 (1.7.0-x86_64-darwin)
+    sqlite3 (1.7.0-x86_64-linux)
     sshkey (3.0.0)
     stackprof (0.2.25)
     syntax_tree (6.2.0)
@@ -492,7 +493,7 @@ GEM
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2023.3)
+    tzinfo-data (1.2023.4)
       tzinfo (>= 1.0.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
@@ -531,14 +532,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer
-  actionpack
-  actionview
+  actionmailer (< 7.1)
+  actionpack (< 7.1)
+  actionview (< 7.1)
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel
-  activerecord
-  activesupport
+  activemodel (< 7.1)
+  activerecord (< 7.1)
+  activesupport (< 7.1)
   addressable
   annotate
   aws-sdk-s3
@@ -624,7 +625,7 @@ DEPENDENCIES
   rails-dom-testing
   rails_failover
   rails_multisite
-  railties
+  railties (< 7.1)
   rake
   rb-fsevent
   rbtrace

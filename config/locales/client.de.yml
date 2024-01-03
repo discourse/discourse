@@ -1016,6 +1016,7 @@ de:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}s Profil"
+      account_possessive: "Konto"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive:
@@ -2061,6 +2062,8 @@ de:
         name: "Discord"
         title: "Mit Discord anmelden"
         sr_title: "Mit Discord anmelden"
+      passkey:
+        name: "Mit einem Hauptschlüssel anmelden"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
         backup_code: "Benutze stattdessen einen Wiederherstellungscode"
@@ -4122,8 +4125,7 @@ de:
     second_factor_auth:
       redirect_after_success: "Die Zwei-Faktor-Authentifizierung war erfolgreich. Weiterleitung zur vorherigen Seite …"
     sidebar:
-      show_sidebar: "Seitenleiste anzeigen"
-      hide_sidebar: "Seitenleiste ausblenden"
+      title: "Seitenleiste"
       unread_count:
         one: "%{count} ungelesen"
         other: "%{count} ungelesen"
@@ -4649,6 +4651,8 @@ de:
               commenting: Erforderlich für die Kommentarfunktionen des WP-Discourse-Plug-ins.
               discourse_connect: Erforderlich für die DiscourseConnect-Funktionen des WP-Discourse-Plug-ins.
               utilities: Erforderlich, wenn du WP-Discourse-Plug-in-Dienstprogramme verwendest.
+            logs:
+              messages: Listet Nachrichten aus /logs auf oder holt eine bestimmte Protokollnachricht ab.
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."
@@ -4936,6 +4940,7 @@ de:
           color_scheme_user_selectable: "Farbschema kann von Benutzern ausgewählt werden"
           auto_update: "Automatisch aktualisieren, wenn Discourse aktualisiert wird"
           color_scheme: "Farbpalette"
+          edit_color_scheme: "Farbpalette bearbeiten"
           default_light_scheme: "Hell (Standard)"
           color_scheme_select: "Wähle Farben für dieses Theme"
           custom_sections: "Benutzerdefinierte Abschnitte:"
@@ -5952,6 +5957,13 @@ de:
         json_schema:
           edit: Editor starten
           modal_title: "%{name} bearbeiten"
+        file_types_list:
+          add_image_types: "Bilder"
+          add_video_types: "Videos"
+          add_audio_types: "Audio"
+          add_document_types: "Dokumente"
+          add_types_title: "Erweiterungen zulassen %{types}"
+          add_types_toast: "%{types} Dateitypen hinzugefügt"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

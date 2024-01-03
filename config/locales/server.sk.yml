@@ -965,7 +965,6 @@ sk:
     min_title_similar_length: "Minimálna dĺžka nadpisu na spustenie kontroly na podobné témy."
     category_colors: "Zoznam hexadecimálnych hodnôt farieb povolených pre kategórie."
     dark_mode_none: "Žiadny"
-    authorized_extensions: "Zoznam povolených príloh súborov ktoré je umožnené vkladať (použite '*' na vkladanie súborov všetkých typov)"
     max_similar_results: "Koľko podobných tém sa má zobraziť nad editorom ak vytvára novú tému. Porovnanie je založené na nadpise a tele správy."
     title_prettify: "Predchádzať bežným malým preklepom a chybám, zapnutým kapitálkam, malému prvému znaku, duplikácií ! a ?, extra . na konci a podobne."
     topic_views_heat_low: "Počet zobrazení aby bolo pole zobrazení jemne zvýraznené."

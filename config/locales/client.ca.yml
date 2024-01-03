@@ -4020,6 +4020,9 @@ ca:
           modal_description: "Voleu aplicar històricament aquest canvi? Això canviarà les preferències per a %{count} usuaris existents."
           modal_yes: "Sí"
           modal_no: "No, aplica el canvi només en el futur"
+        file_types_list:
+          add_image_types: "Imatges"
+          add_audio_types: "Àudio"
       badges:
         title: Insígnies
         new_badge: Insígnia nova
