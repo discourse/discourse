@@ -37,29 +37,31 @@ define("discourse/lib/deprecate-shim", ["exports"], function (exports) {
     const deprecate = require("@ember/debug").deprecate;
 
     // Patch ember-global deprecation
-    if (window.hasOwnProperty("Ember")) {
-      Object.defineProperty(window, "Ember", {
-        enumerable: true,
-        configurable: true,
-        get() {
-          deprecate(
-            "Usage of the Ember Global is deprecated. You should import the Ember module or the specific API instead.",
-            false,
-            {
-              id: "ember-global",
-              until: "4.0.0",
-              url: "https://deprecations.emberjs.com/v3.x/#toc_ember-global",
-              for: "ember-source",
-              since: {
-                enabled: "3.27.0",
-              },
-            }
-          );
+    ["Ember", "Em"].forEach((key) => {
+      if (window.hasOwnProperty(key)) {
+        Object.defineProperty(window, key, {
+          enumerable: true,
+          configurable: true,
+          get() {
+            deprecate(
+              `Usage of the ${key} Global is deprecated. You should import the Ember module or the specific API instead.`,
+              false,
+              {
+                id: "ember-global",
+                until: "4.0.0",
+                url: "https://deprecations.emberjs.com/v3.x/#toc_ember-global",
+                for: "ember-source",
+                since: {
+                  enabled: "3.27.0",
+                },
+              }
+            );
 
-          return require("ember").default;
-        },
-      });
-    }
+            return require("ember").default;
+          },
+        });
+      }
+    });
 
     // Patch run.blah deprecations
     // https://github.com/emberjs/ember.js/blob/007fc9eba1/packages/%40ember/runloop/index.js#L748-L808
