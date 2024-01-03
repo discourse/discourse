@@ -9,7 +9,9 @@ end
 class Stylesheet::Manager
   BASE_COMPILER_VERSION = 1
 
-  CACHE_PATH ||= "tmp/stylesheet-cache"
+  CACHE_PATH = "tmp/stylesheet-cache"
+  private_constant :CACHE_PATH
+
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
   THEME_REGEX ||= /_theme\z/
   COLOR_SCHEME_STYLESHEET ||= "color_definitions"
@@ -189,6 +191,12 @@ class Stylesheet::Manager
     path = "#{Rails.root}/#{CACHE_PATH}"
     return path if !Rails.env.test?
     File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
+  end
+
+  if Rails.env.test?
+    def self.rm_cache_folder
+      FileUtils.rm_rf(cache_fullpath)
+    end
   end
 
   attr_reader :theme_ids
