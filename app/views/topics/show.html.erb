@@ -54,6 +54,7 @@
         <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
         <span itemprop='author' itemscope itemtype="http://schema.org/Person">
           <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
+          <link itemprop='url' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
         </span>
         <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
       <% end %>
