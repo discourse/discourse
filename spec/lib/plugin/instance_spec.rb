@@ -1,9 +1,89 @@
 # frozen_string_literal: true
 
 RSpec.describe Plugin::Instance do
-  subject(:plugin_instance) { described_class.new }
+  subject(:plugin_instance) { described_class.new(metadata) }
+
+  let(:metadata) { Plugin::Metadata.parse <<TEXT }
+# name: discourse-sample-plugin
+# about: about: my plugin
+# version: 0.1
+# authors: Frank Zappa
+# contact emails: frankz@example.com
+# url: http://discourse.org
+# required version: 1.3.0beta6+48
+# meta_topic_id: 1234
+# label: experimental
+
+some_ruby
+TEXT
 
   after { DiscoursePluginRegistry.reset! }
+
+  # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
+
+  describe ".setting_category" do
+    it "returns nil if the plugin has no site settings" do
+      expect(plugin_instance.setting_category).to be_nil
+    end
+
+    it "returns the plugin category if the plugin has site settings" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      expect(plugin_instance.setting_category).to eq("discourse_sample_plugin")
+    end
+  end
+
+  describe ".setting_category_name" do
+    before do
+      TranslationOverride.upsert!(
+        "en",
+        "admin_js.admin.site_settings.categories.discourse_sample_plugin",
+        "Sample Plugin",
+      )
+    end
+
+    it "returns nil if the plugin has no site settings" do
+      expect(plugin_instance.setting_category_name).to be_nil
+    end
+
+    it "returns the plugin category translation if the plugin has site settings" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      expect(plugin_instance.setting_category_name).to eq("Sample Plugin")
+    end
+
+    it "returns nil if the plugin site settings are still under the generic plugins: category" do
+      plugin_instance.stubs(:setting_catgory).returns("plugins")
+      expect(plugin_instance.setting_category_name).to be_nil
+    end
+  end
+
+  describe ".humanized_name" do
+    before do
+      TranslationOverride.upsert!(
+        "en",
+        "admin_js.admin.site_settings.categories.discourse_sample_plugin",
+        "Sample Plugin Category Name",
+      )
+    end
+
+    it "defaults to using the plugin name with the discourse- prefix removed" do
+      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+    end
+
+    it "uses the setting category name if it exists" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      expect(plugin_instance.humanized_name).to eq("Sample Plugin Category Name")
+    end
+
+    it "removes any Discourse prefix from the setting category name" do
+      TranslationOverride.upsert!(
+        "en",
+        "admin_js.admin.site_settings.categories.discourse_sample_plugin",
+        "Discourse Sample Plugin Category Name",
+      )
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      expect(plugin_instance.humanized_name).to eq("Sample Plugin Category Name")
+    end
+  end
 
   describe "find_all" do
     it "can find plugins correctly" do
