@@ -106,7 +106,7 @@ export default class ThemesList extends Component {
       );
     }
     if (this.filter === UPDATES_AVAILABLE_FILTER) {
-      results = results.filter((theme) => theme.isPendingUpdates);
+      results = results.filterBy("isPendingUpdates");
     }
     return this._searchThemes(results, this.searchTerm);
   }
@@ -149,7 +149,7 @@ export default class ThemesList extends Component {
         });
     }
     if (this.filter === UPDATES_AVAILABLE_FILTER) {
-      results = results.filter((theme) => theme.isPendingUpdates);
+      results = results.filterBy("isPendingUpdates");
     }
     return this._searchThemes(results, this.searchTerm);
   }

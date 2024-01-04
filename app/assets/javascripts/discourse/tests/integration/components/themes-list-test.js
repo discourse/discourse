@@ -71,8 +71,8 @@ module("Integration | Component | themes-list", function (hooks) {
     this.set("themes", this.themes);
     const names = [4, 2, 3, 0, 1].map((num) => this.themes[num].get("name")); // default theme always on top, followed by user-selectable ones and then the rest
     assert.deepEqual(
-      Array.from(queryAll(".themes-list-container__item .info .name")).map(
-        (node) => node.innerText.trim()
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.innerText.trim()
       ),
       names,
       "sorts themes correctly"
@@ -187,8 +187,8 @@ module("Integration | Component | themes-list", function (hooks) {
     assert.ok(exists(".themes-list-container__search-input"));
     await fillIn(".themes-list-container__search-input", "  oSAma ");
     assert.deepEqual(
-      Array.from(queryAll(".themes-list-container__item .info .name")).map(
-        (node) => node.textContent.trim()
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
       ),
       ["Theme osama", "Theme OsAmaa", "Theme osAMA 1234"],
       "only themes whose names include the search term are shown"
@@ -222,8 +222,8 @@ module("Integration | Component | themes-list", function (hooks) {
 
     assert.ok(exists(".themes-list-container__filter-input"));
     assert.deepEqual(
-      Array.from(queryAll(".themes-list-container__item .info .name")).map(
-        (node) => node.textContent.trim()
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
       ),
       [
         "Theme enabled 1",
@@ -238,8 +238,8 @@ module("Integration | Component | themes-list", function (hooks) {
       "active"
     );
     assert.deepEqual(
-      Array.from(queryAll(".themes-list-container__item .info .name")).map(
-        (node) => node.textContent.trim()
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
       ),
       ["Theme enabled 1", "Theme enabled 2"]
     );
@@ -249,8 +249,8 @@ module("Integration | Component | themes-list", function (hooks) {
       "inactive"
     );
     assert.deepEqual(
-      Array.from(queryAll(".themes-list-container__item .info .name")).map(
-        (node) => node.textContent.trim()
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
       ),
       ["Theme disabled 1", "Theme disabled 2"]
     );
@@ -260,8 +260,8 @@ module("Integration | Component | themes-list", function (hooks) {
       "updates_available"
     );
     assert.deepEqual(
-      Array.from(queryAll(".themes-list-container__item .info .name")).map(
-        (node) => node.textContent.trim()
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
       ),
       ["Theme disabled 2"]
     );
@@ -302,8 +302,8 @@ module("Integration | Component | themes-list", function (hooks) {
         " tab because it has fewer than 10 items"
     );
     assert.deepEqual(
-      Array.from(queryAll(".themes-list-container__item .info .name")).map(
-        (node) => node.textContent.trim()
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
       ),
       [
         "Component 11",
