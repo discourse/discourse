@@ -428,7 +428,7 @@ GEM
     rubocop-discourse (3.6.0)
       rubocop (>= 1.59.0)
       rubocop-rspec (>= 2.25.0)
-    rubocop-factory_bot (2.24.0)
+    rubocop-factory_bot (2.25.0)
       rubocop (~> 1.33)
     rubocop-rspec (2.25.0)
       rubocop (~> 1.40)
