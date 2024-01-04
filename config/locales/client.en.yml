@@ -5278,12 +5278,17 @@ en:
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
-
+        component:
+          all_filter: "All"
+          enabled_filter: "Enabled"
+          disabled_filter: "Disabled"
+          updates_available_filter: "Updates Available"
         theme:
+          filter_by: "Filter by"
           theme: "Theme"
           component: "Component"
           components: "Components"
-          filter_placeholder: "type to filter…"
+          search_placeholder: "type to search…"
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
@@ -5457,6 +5462,10 @@ en:
             title: "Define theme settings in YAML format"
           scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
           scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
+          all_filter: "All"
+          active_filter: "Active"
+          inactive_filter: "Inactive"
+          updates_available_filter: "Updates Available"
         colors:
           select_base:
             title: "Select base color palette"
