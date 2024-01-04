@@ -160,7 +160,11 @@ module Jobs
         if mention_klass == ::Chat::UserMention
           target_id = user_id
         elsif mention_klass == ::Chat::GroupMention
-          target_id = Group.where("LOWER(name) = ?", mention_type).first.id
+          begin
+            target_id = Group.where("LOWER(name) = ?", "#{mention_type}z").first.id
+          rescue => e
+            Discourse.warn_exception(e, message: "Mentioned group doesn't exist")
+          end
         end
 
         mention_klass.find_by(chat_message: chat_message, target_id: target_id)
