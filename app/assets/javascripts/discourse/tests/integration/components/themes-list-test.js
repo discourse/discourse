@@ -79,7 +79,7 @@ module("Integration | Component | themes-list", function (hooks) {
     );
     assert.strictEqual(
       queryAll(".inactive-indicator").index(),
-      4,
+      3,
       "the separator is in the right location"
     );
 
@@ -184,8 +184,8 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.ok(exists(".themes-list-container__search-input"));
-    await fillIn(".themes-list-container__search-input", "  oSAma ");
+    assert.ok(exists(".themes-list-search__input"));
+    await fillIn(".themes-list-search__input", "  oSAma ");
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
         node.textContent.trim()
@@ -220,7 +220,7 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.ok(exists(".themes-list-container__filter-input"));
+    assert.ok(exists(".themes-list-filter__input"));
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
         node.textContent.trim()
@@ -233,10 +233,8 @@ module("Integration | Component | themes-list", function (hooks) {
       ]
     );
 
-    await selectKit(".themes-list-container__filter-input").expand();
-    await selectKit(".themes-list-container__filter-input").selectRowByValue(
-      "active"
-    );
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("active");
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
         node.textContent.trim()
@@ -244,10 +242,8 @@ module("Integration | Component | themes-list", function (hooks) {
       ["Theme enabled 1", "Theme enabled 2"]
     );
 
-    await selectKit(".themes-list-container__filter-input").expand();
-    await selectKit(".themes-list-container__filter-input").selectRowByValue(
-      "inactive"
-    );
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("inactive");
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
         node.textContent.trim()
@@ -255,8 +251,8 @@ module("Integration | Component | themes-list", function (hooks) {
       ["Theme disabled 1", "Theme disabled 2"]
     );
 
-    await selectKit(".themes-list-container__filter-input").expand();
-    await selectKit(".themes-list-container__filter-input").selectRowByValue(
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue(
       "updates_available"
     );
     assert.deepEqual(
@@ -289,7 +285,7 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{this.components}} @currentTab={{this.currentTab}} />`
     );
 
-    await fillIn(".themes-list-container__search-input", "11");
+    await fillIn(".themes-list-search__input", "11");
     assert.strictEqual(
       query(".themes-list-container__item .info").textContent.trim(),
       "Theme 11",
@@ -297,7 +293,7 @@ module("Integration | Component | themes-list", function (hooks) {
     );
     await click(".themes-list-header .components-tab");
     assert.ok(
-      !exists(".themes-list-container__search-input"),
+      !exists(".themes-list-search__input"),
       "search input/term do not persist when we switch to the other" +
         " tab because it has fewer than 10 items"
     );
@@ -330,11 +326,11 @@ module("Integration | Component | themes-list", function (hooks) {
       )
     );
     assert.ok(
-      exists(".themes-list-container__search-input"),
+      exists(".themes-list-search__input"),
       "search is now shown for the components tab"
     );
 
-    await fillIn(".themes-list-container__search-input", "66");
+    await fillIn(".themes-list-search__input", "66");
     assert.strictEqual(
       query(".themes-list-container__item .info").textContent.trim(),
       "Component 66",

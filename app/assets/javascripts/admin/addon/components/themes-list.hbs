@@ -16,29 +16,29 @@
   />
 </div>
 
-<div class="themes-list-container">
-  {{#if this.showSearch}}
-    <div class="themes-list-container__search themes-list-container__item">
-      <Input
-        class="themes-list-container__search-input"
-        placeholder={{i18n "admin.customize.theme.search_placeholder"}}
-        autocomplete="off"
-        @type="search"
-        @value={{mut this.searchTerm}}
-      />
-      {{d-icon "search"}}
-    </div>
-  {{/if}}
-  <div class="themes-list-container__filter themes-list-container__item">
-    <div class="themes-list-container__filter-label">
-      {{i18n "admin.customize.theme.filter_by"}}
-    </div>
-    <ComboBox
-      @content={{this.selectableFilters}}
-      @value={{this.filter}}
-      @class="themes-list-container__filter-input"
+{{#if this.showSearch}}
+  <div class="themes-list-search">
+    <Input
+      class="themes-list-search__input"
+      placeholder={{i18n "admin.customize.theme.search_placeholder"}}
+      autocomplete="off"
+      @type="search"
+      @value={{mut this.searchTerm}}
     />
+    {{d-icon "search"}}
   </div>
+{{/if}}
+<div class="themes-list-filter">
+  <div class="themes-list-filter__label">
+    {{i18n "admin.customize.theme.filter_by"}}
+  </div>
+  <ComboBox
+    @content={{this.selectableFilters}}
+    @value={{this.filter}}
+    @class="themes-list-filter__input"
+  />
+</div>
+<div class="themes-list-container">
   {{#if this.hasThemes}}
     {{#if (and this.hasActiveThemes (not this.inactiveFilter))}}
       {{#each this.activeThemes as |theme|}}
