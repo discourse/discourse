@@ -134,7 +134,16 @@ class CategoryList
         @options[:parent_category_id].to_i,
       ) if @options[:parent_category_id].present?
 
-    query = self.class.order_categories(query)
+    if SiteSetting.lazy_load_categories
+      query =
+        query.where(
+          "categories.depth = 0 OR (categories.depth != 0 AND categories.position_to_parent <= 5)",
+        ) if @options[:parent_category_id].blank?
+
+      query = query.order(:position, :id)
+    else
+      query = self.class.order_categories(query)
+    end
 
     if SiteSetting.lazy_load_categories
       page = [1, @options[:page].to_i].max

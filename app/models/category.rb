@@ -1118,6 +1118,54 @@ class Category < ActiveRecord::Base
     tags.count > 0 || tag_groups.count > 0
   end
 
+  def self.reorder_categories!
+    categories =
+      if SiteSetting.fixed_category_positions
+        Category.order(:position)
+      else
+        Category
+          .left_outer_joins(:featured_topics)
+          .group("categories.id")
+          .order("max(topics.bumped_at) DESC NULLS LAST")
+      end.order(:id).pluck(:id, :parent_category_id)
+
+    # Depth-first search to sort categories by depth
+    ordered_categories = []
+    categories_by_parent = categories.group_by(&:second)
+    to_traverse = (categories_by_parent.delete(nil) || []).reverse
+    until to_traverse.empty?
+      head = to_traverse.pop
+      ordered_categories << head
+
+      if children = categories_by_parent.delete(head.first)
+        to_traverse.concat(children.reverse)
+      end
+    end
+
+    # Update all categories
+    subcategories = Hash.new(0)
+    depths = Hash.new(-1)
+    values =
+      ordered_categories
+        .each_with_index
+        .map do |(id, parent_id), index|
+          position_to_parent = subcategories[parent_id] += 1
+          depth = depths[id] = depths[parent_id] + 1
+          "(#{id}, #{index + 1}, #{position_to_parent}, #{depth})"
+        end
+        .join(", ")
+
+    DB.exec(<<~SQL)
+      UPDATE categories
+      SET position = categories_updates.position,
+          position_to_parent = categories_updates.position_to_parent,
+          depth = categories_updates.depth,
+          updated_at = NOW()
+      FROM (VALUES #{values}) AS categories_updates(id, position, position_to_parent, depth)
+      WHERE categories.id = categories_updates.id;
+    SQL
+  end
+
   private
 
   def ensure_category_setting
@@ -1234,10 +1282,14 @@ end
 #  default_slow_mode_seconds                 :integer
 #  uploaded_logo_dark_id                     :integer
 #  uploaded_background_dark_id               :integer
+#  position_to_parent                        :integer          default(0)
+#  depth                                     :integer          default(0)
 #
 # Indexes
 #
 #  index_categories_on_email_in                (email_in) UNIQUE
+#  index_categories_on_position                (position)
+#  index_categories_on_position_to_parent      (position_to_parent)
 #  index_categories_on_reviewable_by_group_id  (reviewable_by_group_id)
 #  index_categories_on_search_priority         (search_priority)
 #  index_categories_on_topic_count             (topic_count)

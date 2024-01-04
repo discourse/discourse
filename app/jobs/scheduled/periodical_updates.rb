@@ -18,6 +18,10 @@ module Jobs
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics(batched: true)
 
+      # Categories are ordered by the bump date of featured topics (if not
+      # fixed)
+      Category.reorder_categories! if SiteSetting.lazy_load_categories
+
       # Update the scores of posts
       args = { min_topic_age: 1.day.ago }
       args[:max_topic_length] = 500 unless self.class.should_update_long_topics?
