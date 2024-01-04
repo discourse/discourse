@@ -1342,6 +1342,27 @@ RSpec.describe Category do
     end
   end
 
+  describe ".reorder_categories!" do
+    fab!(:category1) { Fabricate(:category) }
+    fab!(:category2) { Fabricate(:category) }
+    fab!(:category3) { Fabricate(:category, parent_category: category1) }
+    fab!(:category4) { Fabricate(:category, parent_category: category1) }
+    fab!(:category5) { Fabricate(:category, parent_category: category2) }
+
+    before { SiteSetting.fixed_category_positions = true }
+
+    it "reorders categories" do
+      Category.reorder_categories!
+
+      expect(Category.find(SiteSetting.uncategorized_category_id).position).to eq(1)
+      expect(category1.reload.position).to eq(2)
+      expect(category3.reload.position).to eq(3)
+      expect(category4.reload.position).to eq(4)
+      expect(category2.reload.position).to eq(5)
+      expect(category5.reload.position).to eq(6)
+    end
+  end
+
   describe "#deleting the general category" do
     fab!(:category)
 

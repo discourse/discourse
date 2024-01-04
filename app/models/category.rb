@@ -1118,6 +1118,46 @@ class Category < ActiveRecord::Base
     tags.count > 0 || tag_groups.count > 0
   end
 
+  def self.reorder_categories!
+    categories =
+      if SiteSetting.fixed_category_positions
+        Category.order(:position)
+      else
+        Category
+          .left_outer_joins(:featured_topics)
+          .group("categories.id")
+          .order("max(topics.bumped_at) DESC NULLS LAST")
+      end.order(:id).pluck(:id, :parent_category_id)
+
+    # Depth-first search of the categories treeto build an ordered list of
+    # categories and their children
+    ordered_categories = []
+    categories_by_parent = categories.group_by(&:second)
+    to_traverse = (categories_by_parent.delete(nil) || []).reverse
+    until to_traverse.empty?
+      head = to_traverse.pop
+      ordered_categories << head
+
+      if children = categories_by_parent.delete(head.first)
+        to_traverse.concat(children.reverse)
+      end
+    end
+
+    # Update category positions
+    values =
+      ordered_categories
+        .each_with_index
+        .map { |(id, parent_id), index| "(#{id}, #{index + 1})" }
+        .join(", ")
+
+    DB.exec(<<~SQL)
+      UPDATE categories
+      SET position = new_category_positions.position, updated_at = NOW()
+      FROM (VALUES #{values}) AS new_category_positions(id, position)
+      WHERE categories.id = new_category_positions.id;
+    SQL
+  end
+
   private
 
   def ensure_category_setting
@@ -1238,6 +1278,7 @@ end
 # Indexes
 #
 #  index_categories_on_email_in                (email_in) UNIQUE
+#  index_categories_on_position                (position)
 #  index_categories_on_reviewable_by_group_id  (reviewable_by_group_id)
 #  index_categories_on_search_priority         (search_priority)
 #  index_categories_on_topic_count             (topic_count)

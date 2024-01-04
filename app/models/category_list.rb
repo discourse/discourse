@@ -135,15 +135,16 @@ class CategoryList
         @options[:parent_category_id].to_i,
       ) if @options[:parent_category_id].present?
 
-    query = self.class.order_categories(query)
-
     if @guardian.can_lazy_load_categories?
       page = [1, @options[:page].to_i].max
       query =
         query
           .where(parent_category_id: nil)
+          .order(:position, :id)
           .limit(CATEGORIES_PER_PAGE)
           .offset((page - 1) * CATEGORIES_PER_PAGE)
+    else
+      query = self.class.order_categories(query)
     end
 
     query =
@@ -157,6 +158,7 @@ class CategoryList
           .secured(@guardian)
           .select(:id, "ROW_NUMBER() OVER (PARTITION BY parent_category_id) rownum")
           .where(parent_category_id: @categories.map { |c| c.id })
+          .order(:position, :id)
 
       @categories +=
         Category.where(
