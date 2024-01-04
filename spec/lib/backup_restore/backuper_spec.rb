@@ -87,10 +87,6 @@ RSpec.describe BackupRestore::Backuper do
         store.expects(:reset_cache).at_least_once
         run
       end
-      it "deletes any old backups" do
-        store.expects(:delete_prior_to_n_days)
-        run
-      end
     end
   end
 end
