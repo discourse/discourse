@@ -316,15 +316,16 @@ end
 #
 # Table name: topic_embeds
 #
-#  id            :integer          not null, primary key
-#  topic_id      :integer          not null
-#  post_id       :integer          not null
-#  embed_url     :string(1000)     not null
-#  content_sha1  :string(40)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  deleted_at    :datetime
-#  deleted_by_id :integer
+#  id                  :integer          not null, primary key
+#  topic_id            :integer          not null
+#  post_id             :integer          not null
+#  embed_url           :string(1000)     not null
+#  content_sha1        :string(40)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  deleted_at          :datetime
+#  deleted_by_id       :integer
+#  embed_content_cache :text
 #
 # Indexes
 #
