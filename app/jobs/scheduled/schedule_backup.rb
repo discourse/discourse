@@ -6,7 +6,6 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      puts "hi"
       delete_prior_to_n_days
       return unless SiteSetting.enable_backups? && SiteSetting.automatic_backups_enabled?
 
