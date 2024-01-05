@@ -263,6 +263,113 @@ module("Integration | Component | themes-list", function (hooks) {
     );
   });
 
+  test("components filter", async function (assert) {
+    const components = [
+      Theme.create({
+        name: "Component used 1",
+        component: true,
+        user_selectable: true,
+        parent_themes: [1],
+        enabled: true,
+      }),
+      Theme.create({
+        name: "Component used 2",
+        component: true,
+        user_selectable: true,
+        parent_themes: [1],
+        enabled: true,
+      }),
+      Theme.create({
+        name: "Component unused 1",
+        component: true,
+        user_selectable: false,
+        parent_themes: [],
+        enabled: true,
+      }),
+      Theme.create({
+        name: "Component unused and disabled 1",
+        component: true,
+        user_selectable: false,
+        parent_themes: [],
+        enabled: false,
+        remote_theme: {
+          id: 42,
+          remote_url:
+            "git@github.com:discourse-org/discourse-incomplete-theme.git",
+          commits_behind: 1,
+        },
+      }),
+    ];
+    this.setProperties({
+      components,
+      currentTab: COMPONENTS,
+    });
+
+    await render(
+      hbs`<ThemesList @themes={{(array)}} @components={{this.components}} @currentTab={{this.currentTab}} />`
+    );
+
+    assert.ok(exists(".themes-list-filter__input"));
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      [
+        "Component used 1",
+        "Component used 2",
+        "Component unused 1",
+        "Component unused and disabled 1",
+      ]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("active");
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component used 1", "Component used 2"]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("inactive");
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component unused 1", "Component unused and disabled 1"]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("enabled");
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component used 1", "Component used 2", "Component unused 1"]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("disabled");
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component unused and disabled 1"]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue(
+      "updates_available"
+    );
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component unused and disabled 1"]
+    );
+  });
+
   test("switching between themes and components tabs keeps the search visible only if both tabs have at least 10 items", async function (assert) {
     const themes = createThemes(10, (n) => {
       return { name: `Theme ${n}${n}` };

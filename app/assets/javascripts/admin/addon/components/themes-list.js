@@ -11,6 +11,8 @@ import { COMPONENTS, THEMES } from "admin/models/theme";
 const ALL_FILTER = "all";
 const ACTIVE_FILTER = "active";
 const INACTIVE_FILTER = "inactive";
+const ENABLED_FILTER = "enabled";
+const DISABLED_FILTER = "disabled";
 const UPDATES_AVAILABLE_FILTER = "updates_available";
 
 const THEMES_FILTERS = [
@@ -28,12 +30,20 @@ const THEMES_FILTERS = [
 const COMPONENTS_FILTERS = [
   { name: I18n.t("admin.customize.component.all_filter"), id: ALL_FILTER },
   {
-    name: I18n.t("admin.customize.component.enabled_filter"),
+    name: I18n.t("admin.customize.component.used_filter"),
     id: ACTIVE_FILTER,
   },
   {
-    name: I18n.t("admin.customize.component.disabled_filter"),
+    name: I18n.t("admin.customize.component.unused_filter"),
     id: INACTIVE_FILTER,
+  },
+  {
+    name: I18n.t("admin.customize.component.enabled_filter"),
+    id: ENABLED_FILTER,
+  },
+  {
+    name: I18n.t("admin.customize.component.disabled_filter"),
+    id: DISABLED_FILTER,
   },
   {
     name: I18n.t("admin.customize.component.updates_available_filter"),
@@ -105,9 +115,7 @@ export default class ThemesList extends Component {
         (theme) => !theme.get("user_selectable") && !theme.get("default")
       );
     }
-    if (this.filter === UPDATES_AVAILABLE_FILTER) {
-      results = results.filterBy("isPendingUpdates");
-    }
+    results = this._applyFilter(results);
     return this._searchThemes(results, this.searchTerm);
   }
 
@@ -148,9 +156,7 @@ export default class ThemesList extends Component {
             .localeCompare(b.get("name").toLowerCase());
         });
     }
-    if (this.filter === UPDATES_AVAILABLE_FILTER) {
-      results = results.filterBy("isPendingUpdates");
-    }
+    results = this._applyFilter(results);
     return this._searchThemes(results, this.searchTerm);
   }
   @discourseComputed("themesList.@each.markedToDelete")
@@ -172,6 +178,23 @@ export default class ThemesList extends Component {
       return themes;
     }
     return themes.filter(({ name }) => name.toLowerCase().includes(term));
+  }
+
+  _applyFilter(results) {
+    switch (this.filter) {
+      case UPDATES_AVAILABLE_FILTER: {
+        return results.filterBy("isPendingUpdates");
+      }
+      case ENABLED_FILTER: {
+        return results.filterBy("enabled");
+      }
+      case DISABLED_FILTER: {
+        return results.filterBy("enabled", false);
+      }
+      default: {
+        return results;
+      }
+    }
   }
 
   @bind
