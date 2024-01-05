@@ -17,7 +17,7 @@ RSpec.describe "category tag restrictions" do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.min_trust_to_create_tag = 0
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
@@ -769,7 +769,7 @@ RSpec.describe "tag topic counts per category" do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.min_trust_to_create_tag = 0
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
