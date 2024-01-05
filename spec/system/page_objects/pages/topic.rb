@@ -173,6 +173,14 @@ module PageObjects
         @fast_edit_component.fast_edit_input
       end
 
+      def copy_quote_button_selector
+        ".quote-button .copy-quote"
+      end
+
+      def copy_quote_button
+        find(copy_quote_button_selector)
+      end
+
       def click_mention(post, mention)
         within post_by_number(post) do
           find("a.mention-group", text: mention).click

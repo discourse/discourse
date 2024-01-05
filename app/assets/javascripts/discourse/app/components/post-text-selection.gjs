@@ -204,6 +204,7 @@ export default class PostTextSelection extends Component {
       trapTab: false,
       data: {
         canEditPost: this.canEditPost,
+        canCopyQuote: this.canCopyQuote,
         editPost: this.args.editPost,
         supportsFastEdit,
         topic: this.args.topic,
@@ -256,6 +257,10 @@ export default class PostTextSelection extends Component {
 
   get canEditPost() {
     return this.siteSettings.enable_fast_edit && this.post?.can_edit;
+  }
+
+  get canCopyQuote() {
+    return this.siteSettings.enable_quote_copy;
   }
 
   // on Desktop, shows the bar at the beginning of the selection
