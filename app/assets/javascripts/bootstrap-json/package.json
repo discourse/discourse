@@ -22,7 +22,6 @@
     "glob": "^10.3.10",
     "html-entities": "^2.4.0",
     "html-rewriter-wasm": "^0.4.1",
-    "jsdom": "^23.0.1",
     "node-fetch": "^3.3.2"
   },
   "engines": {
