@@ -301,7 +301,7 @@ class TopicEmbed < ActiveRecord::Base
         response = TopicEmbed.find_remote(url)
 
         body = response.body
-        if post.topic.topic_embed && body.present?
+        if post&.topic&.topic_embed && body.present?
           post.topic.topic_embed.update!(
             embed_content_cache: body.truncate(EMBED_CONTENT_CACHE_MAX_LENGTH),
           )
