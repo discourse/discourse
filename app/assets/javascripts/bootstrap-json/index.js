@@ -23,6 +23,8 @@ function updateScriptReferences({
   baseURL,
   distAssets,
 }) {
+  const handledEntrypoints = new Set();
+
   rewriter.on(selector, {
     element(element) {
       const entrypointName = element.getAttribute("data-discourse-entrypoint");
@@ -61,8 +63,6 @@ function updateScriptReferences({
       handledEntrypoints.add(entrypointName);
     },
   });
-
-  const handledEntrypoints = new Set();
 }
 
 async function handleRequest(proxy, baseURL, req, res) {
