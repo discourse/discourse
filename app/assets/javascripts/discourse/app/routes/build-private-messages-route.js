@@ -24,7 +24,7 @@ export default (inboxType, path, filter) => {
       ];
     },
 
-    model() {
+    model(params) {
       const topicListFilter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");
 
@@ -33,18 +33,30 @@ export default (inboxType, path, filter) => {
         topicListFilter
       );
 
-      return lastTopicList
-        ? lastTopicList
-        : this.store
-            .findFiltered("topicList", { filter: topicListFilter })
-            .then((model) => {
-              // andrei: we agreed that this is an anti pattern,
-              // it's better to avoid mutating a rest model like this
-              // this place we'll be refactored later
-              // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
-              model.set("emptyState", this.emptyState());
-              return model;
-            });
+      if (lastTopicList) {
+        return lastTopicList;
+      }
+
+      params ||= {};
+      for (const [key, val] of Object.entries(params)) {
+        if (val === "undefined" || val === "null") {
+          params[key] = null;
+        }
+      }
+
+      return this.store
+        .findFiltered("topicList", {
+          filter: topicListFilter,
+          params,
+        })
+        .then((model) => {
+          // andrei: we agreed that this is an anti pattern,
+          // it's better to avoid mutating a rest model like this
+          // this place we'll be refactored later
+          // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
+          model.set("emptyState", this.emptyState());
+          return model;
+        });
     },
 
     setupController() {
