@@ -21,41 +21,6 @@ TEXT
 
   # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
 
-  describe ".setting_category" do
-    it "returns nil if the plugin has no site settings" do
-      expect(plugin_instance.setting_category).to be_nil
-    end
-
-    it "returns the plugin category if the plugin has site settings" do
-      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
-      expect(plugin_instance.setting_category).to eq("discourse_sample_plugin")
-    end
-  end
-
-  describe ".setting_category_name" do
-    before do
-      TranslationOverride.upsert!(
-        "en",
-        "admin_js.admin.site_settings.categories.discourse_sample_plugin",
-        "Sample Plugin",
-      )
-    end
-
-    it "returns nil if the plugin has no site settings" do
-      expect(plugin_instance.setting_category_name).to be_nil
-    end
-
-    it "returns the plugin category translation if the plugin has site settings" do
-      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
-      expect(plugin_instance.setting_category_name).to eq("Sample Plugin")
-    end
-
-    it "returns nil if the plugin site settings are still under the generic plugins: category" do
-      plugin_instance.stubs(:setting_catgory).returns("plugins")
-      expect(plugin_instance.setting_category_name).to be_nil
-    end
-  end
-
   describe ".humanized_name" do
     before do
       TranslationOverride.upsert!(
@@ -69,9 +34,14 @@ TEXT
       expect(plugin_instance.humanized_name).to eq("sample-plugin")
     end
 
-    it "uses the setting category name if it exists" do
+    it "uses the plugin setting category name if it exists" do
       plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
       expect(plugin_instance.humanized_name).to eq("Sample Plugin Category Name")
+    end
+
+    it "the plugin name the plugin site settings are still under the generic plugins: category" do
+      plugin_instance.stubs(:setting_catgory).returns("plugins")
+      expect(plugin_instance.humanized_name).to eq("sample-plugin")
     end
 
     it "removes any Discourse prefix from the setting category name" do
