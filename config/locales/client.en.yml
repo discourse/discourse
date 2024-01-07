@@ -5280,6 +5280,8 @@ en:
           revert_confirm: "Are you sure you want to revert your changes?"
         component:
           all_filter: "All"
+          used_filter: "Used"
+          unused_filter: "Unused"
           enabled_filter: "Enabled"
           disabled_filter: "Disabled"
           updates_available_filter: "Updates Available"

@@ -17,7 +17,7 @@ RSpec.describe TopicsController do
   fab!(:post_author5) { Fabricate(:user) }
   fab!(:post_author6) { Fabricate(:user) }
   fab!(:moderator)
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:trust_level_0) { Fabricate(:trust_level_0, refresh_auto_groups: true) }
   fab!(:trust_level_1) { Fabricate(:trust_level_1, refresh_auto_groups: true) }
   fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
@@ -1854,7 +1854,7 @@ RSpec.describe TopicsController do
           end
 
           it "can create a tag" do
-            SiteSetting.min_trust_to_create_tag = 0
+            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             expect do
               put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: ["newtag"] }
             end.to change { topic.reload.first_post.revisions.count }.by(1)
@@ -1864,7 +1864,7 @@ RSpec.describe TopicsController do
           end
 
           it "can change the category and create a new tag" do
-            SiteSetting.min_trust_to_create_tag = 0
+            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             expect do
               put "/t/#{topic.slug}/#{topic.id}.json",
                   params: {

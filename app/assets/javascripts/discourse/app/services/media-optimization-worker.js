@@ -37,7 +37,7 @@ export default class MediaOptimizationWorkerService extends Service {
       : true;
 
     let file = data;
-    if (!/(\.|\/)(jpe?g|png|webp)$/i.test(file.type)) {
+    if (!/(\.|\/)(jpe?g|png)$/i.test(file.type)) {
       return Promise.resolve();
     }
     if (

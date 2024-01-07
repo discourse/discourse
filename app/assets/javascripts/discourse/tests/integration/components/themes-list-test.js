@@ -79,7 +79,7 @@ module("Integration | Component | themes-list", function (hooks) {
     );
     assert.strictEqual(
       queryAll(".inactive-indicator").index(),
-      4,
+      3,
       "the separator is in the right location"
     );
 
@@ -184,8 +184,8 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.ok(exists(".themes-list-container__search-input"));
-    await fillIn(".themes-list-container__search-input", "  oSAma ");
+    assert.ok(exists(".themes-list-search__input"));
+    await fillIn(".themes-list-search__input", "  oSAma ");
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
         node.textContent.trim()
@@ -220,7 +220,7 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.ok(exists(".themes-list-container__filter-input"));
+    assert.ok(exists(".themes-list-filter__input"));
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
         node.textContent.trim()
@@ -233,10 +233,8 @@ module("Integration | Component | themes-list", function (hooks) {
       ]
     );
 
-    await selectKit(".themes-list-container__filter-input").expand();
-    await selectKit(".themes-list-container__filter-input").selectRowByValue(
-      "active"
-    );
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("active");
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
         node.textContent.trim()
@@ -244,10 +242,8 @@ module("Integration | Component | themes-list", function (hooks) {
       ["Theme enabled 1", "Theme enabled 2"]
     );
 
-    await selectKit(".themes-list-container__filter-input").expand();
-    await selectKit(".themes-list-container__filter-input").selectRowByValue(
-      "inactive"
-    );
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("inactive");
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
         node.textContent.trim()
@@ -255,8 +251,8 @@ module("Integration | Component | themes-list", function (hooks) {
       ["Theme disabled 1", "Theme disabled 2"]
     );
 
-    await selectKit(".themes-list-container__filter-input").expand();
-    await selectKit(".themes-list-container__filter-input").selectRowByValue(
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue(
       "updates_available"
     );
     assert.deepEqual(
@@ -264,6 +260,113 @@ module("Integration | Component | themes-list", function (hooks) {
         node.textContent.trim()
       ),
       ["Theme disabled 2"]
+    );
+  });
+
+  test("components filter", async function (assert) {
+    const components = [
+      Theme.create({
+        name: "Component used 1",
+        component: true,
+        user_selectable: true,
+        parent_themes: [1],
+        enabled: true,
+      }),
+      Theme.create({
+        name: "Component used 2",
+        component: true,
+        user_selectable: true,
+        parent_themes: [1],
+        enabled: true,
+      }),
+      Theme.create({
+        name: "Component unused 1",
+        component: true,
+        user_selectable: false,
+        parent_themes: [],
+        enabled: true,
+      }),
+      Theme.create({
+        name: "Component unused and disabled 1",
+        component: true,
+        user_selectable: false,
+        parent_themes: [],
+        enabled: false,
+        remote_theme: {
+          id: 42,
+          remote_url:
+            "git@github.com:discourse-org/discourse-incomplete-theme.git",
+          commits_behind: 1,
+        },
+      }),
+    ];
+    this.setProperties({
+      components,
+      currentTab: COMPONENTS,
+    });
+
+    await render(
+      hbs`<ThemesList @themes={{(array)}} @components={{this.components}} @currentTab={{this.currentTab}} />`
+    );
+
+    assert.ok(exists(".themes-list-filter__input"));
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      [
+        "Component used 1",
+        "Component used 2",
+        "Component unused 1",
+        "Component unused and disabled 1",
+      ]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("active");
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component used 1", "Component used 2"]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("inactive");
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component unused 1", "Component unused and disabled 1"]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("enabled");
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component used 1", "Component used 2", "Component unused 1"]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue("disabled");
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component unused and disabled 1"]
+    );
+
+    await selectKit(".themes-list-filter__input").expand();
+    await selectKit(".themes-list-filter__input").selectRowByValue(
+      "updates_available"
+    );
+    assert.deepEqual(
+      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
+        node.textContent.trim()
+      ),
+      ["Component unused and disabled 1"]
     );
   });
 
@@ -289,7 +392,7 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{this.components}} @currentTab={{this.currentTab}} />`
     );
 
-    await fillIn(".themes-list-container__search-input", "11");
+    await fillIn(".themes-list-search__input", "11");
     assert.strictEqual(
       query(".themes-list-container__item .info").textContent.trim(),
       "Theme 11",
@@ -297,7 +400,7 @@ module("Integration | Component | themes-list", function (hooks) {
     );
     await click(".themes-list-header .components-tab");
     assert.ok(
-      !exists(".themes-list-container__search-input"),
+      !exists(".themes-list-search__input"),
       "search input/term do not persist when we switch to the other" +
         " tab because it has fewer than 10 items"
     );
@@ -330,11 +433,11 @@ module("Integration | Component | themes-list", function (hooks) {
       )
     );
     assert.ok(
-      exists(".themes-list-container__search-input"),
+      exists(".themes-list-search__input"),
       "search is now shown for the components tab"
     );
 
-    await fillIn(".themes-list-container__search-input", "66");
+    await fillIn(".themes-list-search__input", "66");
     assert.strictEqual(
       query(".themes-list-container__item .info").textContent.trim(),
       "Component 66",

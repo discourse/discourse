@@ -3711,8 +3711,10 @@ RSpec.describe Guardian do
         SiteSetting.min_trust_level_to_tag_topics = 1
       end
 
-      context "when min_trust_to_create_tag is 3" do
-        before { SiteSetting.min_trust_to_create_tag = 3 }
+      context "when minimum trust level to create tags is 3" do
+        before do
+          SiteSetting.create_tag_allowed_groups = "1|3|#{Group::AUTO_GROUPS[:trust_level_3]}"
+        end
 
         describe "#can_see_tag?" do
           it "is always true" do
@@ -3751,8 +3753,12 @@ RSpec.describe Guardian do
         end
       end
 
-      context 'when min_trust_to_create_tag is "staff"' do
-        before { SiteSetting.min_trust_to_create_tag = "staff" }
+      context "when staff and admin groups are allowed to create tags" do
+        before do
+          SiteSetting.min_trust_to_create_tag = "staff"
+          SiteSetting.create_tag_allowed_groups =
+            "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:admins]}"
+        end
 
         it "returns false if not staff" do
           expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)
@@ -3764,8 +3770,11 @@ RSpec.describe Guardian do
         end
       end
 
-      context 'when min_trust_to_create_tag is "admin"' do
-        before { SiteSetting.min_trust_to_create_tag = "admin" }
+      context "when only admin group is allowed to create tags" do
+        before do
+          SiteSetting.min_trust_to_create_tag = "admin"
+          SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:admins]
+        end
 
         it "returns false if not admin" do
           expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)

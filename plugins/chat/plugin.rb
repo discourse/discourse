@@ -489,10 +489,15 @@ after_initialize do
   register_stat("chat_messages", show_in_ui: true, expose_via_api: true) do
     Chat::Statistics.about_messages
   end
-
+  register_stat("chat_users", expose_via_api: true) { Chat::Statistics.about_users }
   register_stat("chat_channels", expose_via_api: true) { Chat::Statistics.about_channels }
 
-  register_stat("chat_users", expose_via_api: true) { Chat::Statistics.about_users }
+  register_stat("chat_channel_messages") { Chat::Statistics.channel_messages }
+  register_stat("chat_direct_messages") { Chat::Statistics.direct_messages }
+  register_stat("chat_open_channels_with_threads_enabled") do
+    Chat::Statistics.open_channels_with_threads_enabled
+  end
+  register_stat("chat_threaded_messages") { Chat::Statistics.threaded_messages }
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)

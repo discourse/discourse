@@ -5,7 +5,7 @@ require "post_revisor"
 RSpec.describe PostRevisor do
   fab!(:topic)
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:coding_horror)
   fab!(:admin)
   fab!(:moderator)
@@ -100,7 +100,7 @@ RSpec.describe PostRevisor do
     end
 
     it "does not revise category if incorrect amount of tags" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.min_trust_level_to_tag_topics = 0
 
       new_category = Fabricate(:category, minimum_required_tags: 1)
@@ -122,7 +122,7 @@ RSpec.describe PostRevisor do
     end
 
     it "returns an error if the topic does not have minimum amount of tags that the new category requires" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.min_trust_level_to_tag_topics = 0
 
       old_category = Fabricate(:category, minimum_required_tags: 0)
@@ -136,7 +136,7 @@ RSpec.describe PostRevisor do
     end
 
     it "returns an error if the topic has tags not allowed in the new category" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.min_trust_level_to_tag_topics = 0
 
       tag1 = Fabricate(:tag)
@@ -164,7 +164,7 @@ RSpec.describe PostRevisor do
     end
 
     it "returns an error if the topic is missing tags required from a tag group in the new category" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.min_trust_level_to_tag_topics = 0
 
       tag1 = Fabricate(:tag)
@@ -1232,7 +1232,7 @@ RSpec.describe PostRevisor do
 
         context "when can create tags" do
           before do
-            SiteSetting.min_trust_to_create_tag = 0
+            SiteSetting.create_tag_allowed_groups = "1|3|#{Group::AUTO_GROUPS[:trust_level_0]}"
             SiteSetting.min_trust_level_to_tag_topics = 0
           end
 
@@ -1490,7 +1490,7 @@ RSpec.describe PostRevisor do
 
         context "when cannot create tags" do
           before do
-            SiteSetting.min_trust_to_create_tag = 4
+            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
             SiteSetting.min_trust_level_to_tag_topics = 0
           end
 

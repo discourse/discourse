@@ -377,7 +377,7 @@ Category.reopenClass({
     const reduce = (values) =>
       values.flatMap((c) => [c, reduce(children.get(c.id) || [])]).flat();
 
-    return reduce(children.get(-1));
+    return reduce(children.get(-1) || []);
   },
 
   isUncategorized(categoryId) {
