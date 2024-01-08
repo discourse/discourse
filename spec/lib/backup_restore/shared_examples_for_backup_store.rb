@@ -169,6 +169,24 @@ RSpec.shared_examples "backup store" do
         store.delete_prior_to_n_days
         expect(store.files).to eq([backup1])
       end
+
+      it "runs if SiteSetting.automatic_backups_enabled? is true" do
+        stub_request(
+          :get,
+          "https://s3-backup-bucket.s3.amazonaws.com/?list-type=2&prefix=default/",
+        ).to_return(status: 200, body: "", headers: {})
+        stub_request(:head, "https://s3-backup-bucket.s3.amazonaws.com/").to_return(
+          status: 200,
+          body: "",
+          headers: {
+          },
+        )
+
+        SiteSetting.automatic_backups_enabled = true
+        scheduleBackup = Jobs::ScheduleBackup.new
+        scheduleBackup.expects(:delete_prior_to_n_days)
+        scheduleBackup.perform
+      end
     end
 
     describe "#file" do
