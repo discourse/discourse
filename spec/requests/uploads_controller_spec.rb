@@ -581,6 +581,20 @@ RSpec.describe UploadsController do
           end
         end
 
+        context "when login is required and user is not signed in" do
+          let(:post) { Fabricate(:post) }
+
+          before do
+            SiteSetting.login_required = true
+            upload.update(access_control_post_id: post.id)
+          end
+
+          it "returns a 403" do
+            get secure_url
+            expect(response.status).to eq(403)
+          end
+        end
+
         context "when the prevent_anons_from_downloading_files setting is enabled and the user is anon" do
           before { SiteSetting.prevent_anons_from_downloading_files = true }
 
