@@ -1,9 +1,12 @@
 en:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Always"
           fullscreen: "When chat is in fullscreen"
