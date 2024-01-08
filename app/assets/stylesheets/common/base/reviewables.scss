@@ -550,12 +550,12 @@
       font-size: var(--font-up-2);
       margin-right: 0.75em;
     }
-    &__category-tags {
-      display: flex;
-      align-items: center;
-      .badge-category__wrapper {
-        margin-right: 0.5em;
-      }
+    .badge-category__wrapper {
+      margin-left: 0.25em;
+    }
+    .discourse-tag {
+      vertical-align: bottom;
+      padding-left: 0.15em;
     }
   }
 
