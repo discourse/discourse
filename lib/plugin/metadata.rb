@@ -133,10 +133,6 @@ class Plugin::Metadata
       end
   end
 
-  def name_without_prefix
-    name.downcase.delete_prefix("discourse-")
-  end
-
   def self.parse(text)
     metadata = self.new
     text.each_line { |line| break unless metadata.parse_line(line) }

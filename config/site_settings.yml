@@ -1130,6 +1130,9 @@ posting:
   enable_fast_edit:
     default: true
     client: true
+  enable_quote_copy:
+    default: true
+    client: true
   old_post_notice_days:
     default: 14
     max: 36500
@@ -2281,12 +2284,10 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  experimental_search_menu_groups:
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
+  experimental_search_menu:
+    client: true
+    hidden: true
+    default: true
   max_sidebar_section_links:
     default: 50
     hidden: true
@@ -2796,8 +2797,8 @@ uncategorized:
     hidden: true
 
   max_api_invites:
-      default: 200
-      hidden: true
+    default: 200
+    hidden: true
 
   overridden_robots_txt:
     default: ""
@@ -2996,6 +2997,12 @@ tags:
   min_trust_to_create_tag:
     default: "3"
     enum: "TrustLevelAndStaffSetting"
+  create_tag_allowed_groups:
+    default: "1|3|13"
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_tag_topics:
     default: "0"
     enum: "TrustLevelAndStaffSetting"

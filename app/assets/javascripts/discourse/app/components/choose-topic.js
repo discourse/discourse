@@ -3,8 +3,10 @@ import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { searchForTerm } from "discourse/lib/search";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  debounce,
+  observes,
+} from "discourse-common/utils/decorators";
 
 export default Component.extend({
   loading: null,
@@ -69,7 +71,7 @@ export default Component.extend({
       oldTopicTitle: this.topicTitle,
     });
 
-    this.searchDebounced(this.topicTitle);
+    this.search(this.topicTitle);
   },
 
   @discourseComputed("label")
@@ -86,10 +88,7 @@ export default Component.extend({
     this.set("loading", false);
   },
 
-  searchDebounced(title) {
-    discourseDebounce(this, this.search, title, INPUT_DELAY);
-  },
-
+  @debounce(INPUT_DELAY)
   search(title) {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;

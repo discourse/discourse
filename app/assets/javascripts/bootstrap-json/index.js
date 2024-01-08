@@ -5,10 +5,10 @@ const cleanBaseURL = require("clean-base-url");
 const path = require("path");
 const fs = require("fs");
 const fsPromises = fs.promises;
-const { JSDOM } = require("jsdom");
 const { Buffer } = require("node:buffer");
 const { env } = require("node:process");
 const { glob } = require("glob");
+const { HTMLRewriter } = require("html-rewriter-wasm");
 
 async function listDistAssets() {
   const files = await glob("**/*.js", { nodir: true, cwd: "dist/assets" });
@@ -17,56 +17,52 @@ async function listDistAssets() {
 
 function updateScriptReferences({
   chunkInfos,
-  dom,
+  rewriter,
   selector,
   attribute,
   baseURL,
   distAssets,
 }) {
-  const elements = dom.window.document.querySelectorAll(selector);
   const handledEntrypoints = new Set();
 
-  for (const el of elements) {
-    const entrypointName = el.dataset.discourseEntrypoint;
+  rewriter.on(selector, {
+    element(element) {
+      const entrypointName = element.getAttribute("data-discourse-entrypoint");
 
-    if (handledEntrypoints.has(entrypointName)) {
-      el.remove();
-      continue;
-    }
-
-    let chunks = chunkInfos[`assets/${entrypointName}.js`]?.assets;
-
-    if (!chunks) {
-      if (distAssets.has(`${entrypointName}.js`)) {
-        chunks = [`assets/${entrypointName}.js`];
-      } else {
-        // Not an ember-cli asset, do not rewrite
-        continue;
+      if (handledEntrypoints.has(entrypointName)) {
+        element.remove();
+        return;
       }
-    }
 
-    const newElements = chunks.map((chunk) => {
-      const newElement = el.cloneNode(true);
-      newElement[attribute] = `${baseURL}${chunk}`;
-      newElement.dataset.emberCliRewritten = "true";
+      let chunks = chunkInfos[`assets/${entrypointName}.js`]?.assets;
+      if (!chunks) {
+        if (distAssets.has(`${entrypointName}.js`)) {
+          chunks = [`assets/${entrypointName}.js`];
+        } else {
+          // Not an ember-cli asset, do not rewrite
+          return;
+        }
+      }
 
-      return newElement;
-    });
+      const newElements = chunks.map(
+        (chunk) =>
+          `<script ${attribute}="${baseURL}${chunk}" data-ember-cli-rewritten="true"></script>`
+      );
 
-    if (
-      entrypointName === "discourse" &&
-      el.tagName.toLowerCase() === "script"
-    ) {
-      const liveReload = dom.window.document.createElement("script");
-      liveReload.setAttribute("async", "");
-      liveReload.src = `${baseURL}ember-cli-live-reload.js`;
-      newElements.unshift(liveReload);
-    }
+      if (
+        entrypointName === "discourse" &&
+        element.tagName.toLowerCase() === "script"
+      ) {
+        newElements.unshift(
+          `<script async src="${baseURL}ember-cli-live-reload.js"></script>`
+        );
+      }
 
-    el.replaceWith(...newElements);
+      element.replace(newElements.join("\n"), { html: true });
 
-    handledEntrypoints.add(entrypointName);
-  }
+      handledEntrypoints.add(entrypointName);
+    },
+  });
 }
 
 async function handleRequest(proxy, baseURL, req, res) {
@@ -164,11 +160,17 @@ async function handleRequest(proxy, baseURL, req, res) {
 
     const chunkInfos = JSON.parse(chunkInfoText);
 
-    const dom = new JSDOM(responseText);
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+
+    let output = "";
+    const rewriter = new HTMLRewriter((outputChunk) => {
+      output += decoder.decode(outputChunk);
+    });
 
     updateScriptReferences({
       chunkInfos,
-      dom,
+      rewriter,
       selector: "script[data-discourse-entrypoint]",
       attribute: "src",
       baseURL,
@@ -177,14 +179,21 @@ async function handleRequest(proxy, baseURL, req, res) {
 
     updateScriptReferences({
       chunkInfos,
-      dom,
+      rewriter,
       selector: "link[rel=preload][data-discourse-entrypoint]",
       attribute: "href",
       baseURL,
       distAssets,
     });
 
-    res.send(dom.serialize());
+    try {
+      await rewriter.write(encoder.encode(responseText));
+      await rewriter.end();
+    } finally {
+      rewriter.free();
+    }
+
+    res.send(output);
   } else {
     res.send(Buffer.from(await response.arrayBuffer()));
   }

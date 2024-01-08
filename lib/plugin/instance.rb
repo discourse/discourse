@@ -122,7 +122,11 @@ class Plugin::Instance
     @enabled_site_setting ? SiteSetting.get(@enabled_site_setting) : true
   end
 
-  delegate :name, :name_without_prefix, to: :metadata
+  delegate :name, to: :metadata
+
+  def humanized_name
+    (setting_category_name || name).delete_prefix("Discourse ").delete_prefix("discourse-")
+  end
 
   def add_to_serializer(
     serializer,
@@ -1368,6 +1372,16 @@ class Plugin::Instance
   end
 
   private
+
+  def setting_category
+    return if @enabled_site_setting.blank?
+    SiteSetting.categories[enabled_site_setting]
+  end
+
+  def setting_category_name
+    return if setting_category.blank? || setting_category == "plugins"
+    I18n.t("admin_js.admin.site_settings.categories.#{setting_category}")
+  end
 
   def validate_directory_column_name(column_name)
     match = /\A[_a-z]+\z/.match(column_name)

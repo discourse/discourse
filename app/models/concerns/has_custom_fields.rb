@@ -33,14 +33,28 @@ module HasCustomFields
     end
 
     def serialize(value)
-      if value.is_a?(Hash) || type == :json || (array_type? && type[0] == :json)
+      base_type = Array === type ? type.first : type
+
+      case base_type
+      when :json
         value.to_json
-      elsif TrueClass === value
-        "t"
-      elsif FalseClass === value
-        "f"
+      when :integer
+        value.to_i.to_s
+      when :boolean
+        value = !!Helpers::CUSTOM_FIELD_TRUE.include?(value) if String === value
+
+        value ? "t" : "f"
       else
-        value.to_s
+        case value
+        when Hash
+          value.to_json
+        when TrueClass
+          "t"
+        when FalseClass
+          "f"
+        else
+          value.to_s
+        end
       end
     end
 
@@ -172,7 +186,7 @@ module HasCustomFields
     validate :custom_fields_max_items, unless: :custom_fields_clean?
     validate :custom_fields_value_length, unless: :custom_fields_clean?
 
-    after_save :save_custom_fields
+    after_save { save_custom_fields(run_validations: false) }
   end
 
   attr_reader :preloaded_custom_fields
@@ -265,7 +279,13 @@ module HasCustomFields
     on_custom_fields_change
   end
 
-  def save_custom_fields(force = false)
+  def save_custom_fields(force = false, run_validations: true)
+    if run_validations
+      custom_fields_max_items
+      custom_fields_value_length
+      raise_validation_error unless errors.empty?
+    end
+
     if force || !custom_fields_clean?
       ActiveRecord::Base.transaction do
         dup = @custom_fields.dup.with_indifferent_access

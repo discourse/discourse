@@ -12,6 +12,15 @@ describe Chat::MessageSerializer do
 
   let(:guardian) { Guardian.new(guardian_user) }
 
+  describe "#mentioned_users" do
+    it "is limited by max_mentions_per_chat_message setting" do
+      Fabricate.times(2, :chat_mention, chat_message: message_1)
+      SiteSetting.max_mentions_per_chat_message = 1
+
+      expect(serializer.as_json[:mentioned_users].length).to eq(1)
+    end
+  end
+
   describe "#reactions" do
     fab!(:custom_emoji) { CustomEmoji.create!(name: "trout", upload: Fabricate(:upload)) }
     fab!(:reaction_1) do

@@ -222,6 +222,31 @@ RSpec.describe HasCustomFields do
       ).to eq(1)
     end
 
+    it "stores boolean values in boolean fields as t or f" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
+
+      test_item.custom_fields["bool"] = "true"
+      test_item.save_custom_fields
+
+      expect(CustomFieldsTestItemCustomField.last.value).to eq("t")
+
+      test_item.custom_fields["bool"] = "false"
+      test_item.save_custom_fields
+
+      expect(CustomFieldsTestItemCustomField.last.value).to eq("f")
+    end
+
+    it "coerces non-integer values in integer fields" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("int", :integer)
+
+      test_item.custom_fields["int"] = "true"
+      test_item.save_custom_fields
+
+      expect(CustomFieldsTestItemCustomField.last.value).to eq("0")
+    end
+
     it "supports type coercion" do
       test_item = CustomFieldsTestItem.new
       CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
@@ -406,6 +431,7 @@ RSpec.describe HasCustomFields do
 
       test_item.custom_fields = { "foo" => "aa" }
       expect { test_item.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { test_item.save_custom_fields }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     describe "upsert_custom_fields" do
