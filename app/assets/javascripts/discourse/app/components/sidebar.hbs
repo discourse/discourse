@@ -5,6 +5,8 @@
     <Sidebar::SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
   {{/if}}
 
+  <PluginOutlet @name="above-sidebar-panels" />
+
   {{#if this.sidebarState.showMainPanel}}
     <Sidebar::Sections
       @currentUser={{this.currentUser}}
