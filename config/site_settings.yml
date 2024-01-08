@@ -1130,6 +1130,9 @@ posting:
   enable_fast_edit:
     default: true
     client: true
+  enable_quote_copy:
+    default: true
+    client: true
   old_post_notice_days:
     default: 14
     max: 36500
