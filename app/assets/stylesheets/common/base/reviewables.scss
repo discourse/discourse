@@ -550,6 +550,13 @@
       font-size: var(--font-up-2);
       margin-right: 0.75em;
     }
+    &__category-tags {
+      display: flex;
+      align-items: center;
+      .badge-category__wrapper {
+        margin-right: 0.5em;
+      }
+    }
   }
 
   &__context-question {

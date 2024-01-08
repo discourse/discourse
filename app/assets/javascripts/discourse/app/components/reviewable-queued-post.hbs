@@ -3,8 +3,10 @@
     {{d-icon "plus-square" title="review.new_topic"}}
     {{@reviewable.payload.title}}
   </div>
-  {{category-badge @reviewable.category}}
-  <ReviewableTags @tags={{@reviewable.payload.tags}} @tagName="" />
+  <div class="post-topic__category-tags">
+    {{category-badge @reviewable.category}}
+    <ReviewableTags @tags={{@reviewable.payload.tags}} @tagName="" />
+  </div>
   {{#if @reviewable.payload.via_email}}
     <a href {{on "click" this.showRawEmail}} class="show-raw-email">
       {{d-icon "envelope" title="post.via_email"}}
