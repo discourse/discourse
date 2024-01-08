@@ -38,42 +38,46 @@ export default class ChatFooter extends Component {
     return this.directMessagesEnabled || this.threadsEnabled;
   }
 
-<template>
-  <nav class="c-footer">
-    {{#if this.shouldRenderFooter}}
-      {{#if this.directMessagesEnabled}}
-        <DButton
-          @route="chat.index"
-          @class={{concatClass "btn-flat c-footer__item" 
-            (if (eq this.router.currentRouteName "chat.index") "--active")
-          }}
-          @icon="users"
-          @translatedLabel={{i18n "chat.direct_messages.title"}}
-          aria-label={{i18n "chat.direct_messages.aria_label"}}
-        />
-      {{/if}}
+  <template>
+    <nav class="c-footer">
+      {{#if this.shouldRenderFooter}}
+        {{#if this.directMessagesEnabled}}
+          <DButton
+            @route="chat.index"
+            @class={{concatClass
+              "btn-flat c-footer__item"
+              (if (eq this.router.currentRouteName "chat.index") "--active")
+            }}
+            @icon="users"
+            @translatedLabel={{i18n "chat.direct_messages.title"}}
+            aria-label={{i18n "chat.direct_messages.aria_label"}}
+          />
+        {{/if}}
 
-      <DButton
-        @route="chat.channels"
-        @class={{concatClass "btn-flat c-footer__item" 
-          (if (eq this.router.currentRouteName "chat.channels") "--active")
-        }}
-        @icon="comments"
-        @translatedLabel={{i18n "chat.channel_list.title"}}
-        aria-label={{i18n "chat.channel_list.aria_label"}}
-      />
-
-      {{#if this.threadsEnabled}}
         <DButton
-          @route="chat.threads"
-          @class={{concatClass "btn-flat c-footer__item" 
-            (if (eq this.router.currentRouteName "chat.threads") "--active")
+          @route="chat.channels"
+          @class={{concatClass
+            "btn-flat c-footer__item"
+            (if (eq this.router.currentRouteName "chat.channels") "--active")
           }}
-          @icon="discourse-threads"
-          @translatedLabel={{i18n "chat.my_threads.title"}}
-          aria-label={{i18n "chat.my_threads.aria_label"}}
+          @icon="comments"
+          @translatedLabel={{i18n "chat.channel_list.title"}}
+          aria-label={{i18n "chat.channel_list.aria_label"}}
         />
+
+        {{#if this.threadsEnabled}}
+          <DButton
+            @route="chat.threads"
+            @class={{concatClass
+              "btn-flat c-footer__item"
+              (if (eq this.router.currentRouteName "chat.threads") "--active")
+            }}
+            @icon="discourse-threads"
+            @translatedLabel={{i18n "chat.my_threads.title"}}
+            aria-label={{i18n "chat.my_threads.aria_label"}}
+          />
+        {{/if}}
       {{/if}}
-    {{/if}}
-  </nav>
-</template>
+    </nav>
+  </template>
+}

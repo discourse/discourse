@@ -48,9 +48,9 @@ export default class ChatThreadListHeader extends Component {
     <Navbar as |navbar|>
       {{#if this.site.mobileView}}
         <navbar.BackButton
-          @route={{backButton.route}}
-          @routeModels={{backButton.models}}
-          @title={{i18n backButton.title}}
+          @route={{this.backButton.route}}
+          @routeModels={{this.backButton.models}}
+          @title={{i18n this.backButton.title}}
         />
       {{/if}}
 
