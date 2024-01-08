@@ -5,7 +5,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before do
-    SiteSetting.enable_admin_sidebar_navigation = true
+    SiteSetting.admin_sidebar_enabled_groups = Group::AUTO_GROUPS[:admins]
     sign_in(admin)
   end
 
@@ -21,7 +21,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   end
 
   context "when the setting is disabled" do
-    before { SiteSetting.enable_admin_sidebar_navigation = false }
+    before { SiteSetting.admin_sidebar_enabled_groups = "" }
 
     it "does not show the admin sidebar" do
       visit("/latest")

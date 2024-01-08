@@ -1,13 +1,19 @@
 import Controller from "@ember/controller";
-import { readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default class AdminController extends Controller {
   @service router;
+  @service currentUser;
 
-  @readOnly("siteSettings.enable_admin_sidebar_navigation") showAdminSidebar;
+  @discourseComputed("siteSettings.admin_sidebar_enabled_groups")
+  showAdminSidebar() {
+    return this.siteSettings.userInAnyGroups(
+      "admin_sidebar_enabled_groups",
+      this.currentUser
+    );
+  }
 
   @discourseComputed("siteSettings.enable_group_directory")
   showGroups(enableGroupDirectory) {

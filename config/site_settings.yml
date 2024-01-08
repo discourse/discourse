@@ -2302,9 +2302,13 @@ developer:
     refresh: true
     hidden: true
     client: true
-  enable_admin_sidebar_navigation:
-    default: false
+  admin_sidebar_enabled_groups:
     client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   lazy_load_categories:
     default: false
     client: true

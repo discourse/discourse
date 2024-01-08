@@ -2181,7 +2181,6 @@ it:
     experimental_search_menu_groups: "SPERIMENTALE: attiva il nuovo menu di ricerca che è stato aggiornato per utilizzare glimmer."
     enable_experimental_lightbox: "SPERIMENTALE: sostituisci la lightbox dell'immagine predefinita con il design rinnovato."
     experimental_form_templates: "SPERIMENTALE: abilita la funzionalità dei modelli di modulo. <b>Dopo l'abilitazione,</b> gestisci i modelli in <a href='%{base_path}/admin/customize/form-templates'>Personalizza / Modelli</a>."
-    enable_admin_sidebar_navigation: "SPERIMENTALE: abilita la navigazione della barra laterale per l'interfaccia di amministrazione, che sostituisce i pulsanti di navigazione dell'amministratore di livello superiore."
     page_loading_indicator: "Configura l'indicatore di caricamento che appare durante la navigazione delle pagine all'interno di Discourse. 'Spinner' come un indicatore a pagina intera. 'Slider' mostra una barra stretta nella parte superiore dello schermo."
     errors:
       invalid_css_color: "Colore non valido. Immettere un nome o un valore esadecimale per il colore."
