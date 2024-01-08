@@ -269,6 +269,11 @@
       </div>
     </div>
 
+    <PluginOutlet
+      @name="admin-above-badge-buttons"
+      @outletArgs={{hash badge=this.buffered}}
+    />
+
     <div class="buttons">
       <DButton
         @action={{this.save}}
