@@ -135,19 +135,19 @@ export default class ChannelsListPublic extends Component {
       {{onResize this.computeResizedEntries}}
     >
 
-    {{#if this.site.desktopView}}
-      <LinkTo @route="chat.threads" class="chat-channel-row --threads">
-        <span class="chat-channel-title">
-          {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
-          {{i18n "chat.my_threads.title"}}
-        </span>
-        {{#if this.hasUnreadThreads}}
-          <div class="c-unread-indicator">
-            <div class="c-unread-indicator__number">&nbsp;</div>
-          </div>
-        {{/if}}
-      </LinkTo>
-    {{/if}}
+      {{#if this.site.desktopView}}
+        <LinkTo @route="chat.threads" class="chat-channel-row --threads">
+          <span class="chat-channel-title">
+            {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
+            {{i18n "chat.my_threads.title"}}
+          </span>
+          {{#if this.hasUnreadThreads}}
+            <div class="c-unread-indicator">
+              <div class="c-unread-indicator__number">&nbsp;</div>
+            </div>
+          {{/if}}
+        </LinkTo>
+      {{/if}}
 
       {{#if this.displayPublicChannels}}
         <div class="chat-channel-divider public-channels-section">
