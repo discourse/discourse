@@ -9,7 +9,6 @@ import dateTimeInputs from "../components/sections/atoms/date-time-inputs";
 import dropdowns from "../components/sections/atoms/dropdowns";
 import topicLink from "../components/sections/atoms/topic-link";
 import topicStatuses from "../components/sections/atoms/topic-statuses";
-import chatIndex from "../components/sections/mocks/chat-index";
 import breadCrumbs from "../components/sections/molecules/bread-crumbs";
 import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
@@ -42,13 +41,7 @@ import bem from "../components/sections/syntax/00-bem";
 let _allCategories = null;
 let _sectionsById = {};
 
-export const CATEGORIES = [
-  "syntax",
-  "atoms",
-  "molecules",
-  "organisms",
-  "mocks",
-];
+export const CATEGORIES = ["syntax", "atoms", "molecules", "organisms"];
 
 const SECTIONS = [
   { component: bem, category: "syntax", id: "bem", priority: 0 },
@@ -113,7 +106,6 @@ const SECTIONS = [
   { component: siteHeader, category: "organisms", id: "site-header" },
   { component: suggestedTopics, category: "organisms", id: "suggested-topics" },
   { component: userAbout, category: "organisms", id: "user-about" },
-  { component: chatIndex, category: "mocks", id: "chat-index" },
 ];
 
 export function addSection(section) {
