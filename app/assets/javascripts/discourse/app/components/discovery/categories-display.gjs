@@ -7,6 +7,7 @@ import CategoriesBoxes from "discourse/components/categories-boxes";
 import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
 import CategoriesOnly from "discourse/components/categories-only";
 import CategoriesWithFeaturedTopics from "discourse/components/categories-with-featured-topics";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SubcategoriesWithFeaturedTopics from "discourse/components/subcategories-with-featured-topics";
@@ -94,6 +95,7 @@ export default class CategoriesDisplay extends Component {
           @categories={{@categories}}
           @topics={{@topics}}
         />
+        <ConditionalLoadingSpinner @condition={{@loadingMore}} />
       </LoadMore>
     {{else}}
       <this.categoriesComponent
