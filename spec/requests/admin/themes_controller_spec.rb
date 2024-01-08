@@ -243,6 +243,7 @@ RSpec.describe Admin::ThemesController do
             }
           JS
           )
+
         repo_url = MockGitImporter.register("https://example.com/initial_repo.git", repo_path)
 
         post "/admin/themes/import.json", params: { remote: repo_url }
@@ -369,6 +370,20 @@ RSpec.describe Admin::ThemesController do
         expect(json["theme"]["id"]).to eq(other_existing_theme.id)
         expect(json["theme"]["theme_fields"].length).to eq(5)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+      end
+
+      it "does not run migrations when importing a theme from an archive and `skip_settings_migrations` params is present" do
+        other_existing_theme = Fabricate(:theme, name: "Some other name")
+
+        post "/admin/themes/import.json",
+             params: {
+               bundle: theme_archive,
+               theme_id: other_existing_theme.id,
+               skip_settings_migrations: true
+             }
+
+        expect(response.status).to eq(201)
+        expect(other_existing_theme.theme_settings_migrations.exists?).to eq(false)
       end
 
       it "creates a new theme when id specified as nil" do
