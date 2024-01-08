@@ -10,9 +10,6 @@ export default class ChatRoutesThreads extends Component {
   <template>
     <div class="c-routes-threads">
       <Navbar as |navbar|>
-        {{#if this.site.mobileView}}
-          <navbar.BackButton />
-        {{/if}}
         <navbar.Title
           @title={{i18n "chat.my_threads.title"}}
           @icon="discourse-threads"

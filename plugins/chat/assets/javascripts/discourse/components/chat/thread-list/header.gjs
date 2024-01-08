@@ -9,6 +9,8 @@ import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 export default class ChatThreadListHeader extends Component {
   @service router;
   @service site;
+  @service chat;
+  @service chatHistory;
 
   threadListTitle = I18n.t("chat.threads.list");
 
@@ -22,13 +24,33 @@ export default class ChatThreadListHeader extends Component {
     return htmlSafe(title);
   }
 
+  get backButton() {
+    const link = {
+      models: this.chat.activeChannel?.routeModels,
+    };
+
+    if (this.chatHistory.previousRoute?.name === "chat.channel.threads") {
+      link.title = I18n.t("chat.return_to_threads_list");
+      link.route = "chat.channel.threads";
+    } else if (this.chatHistory.previousRoute?.name === "chat.threads") {
+      link.title = I18n.t("chat.my_threads.title");
+      link.route = "chat.threads";
+      link.models = [];
+    } else {
+      link.title = I18n.t("chat.return_to_channel");
+      link.route = "chat.channel";
+    }
+
+    return link;
+  }
+
   <template>
     <Navbar as |navbar|>
       {{#if this.site.mobileView}}
         <navbar.BackButton
-          @route="chat.channel"
-          @routeModels={{@channel.routeModels}}
-          @title={{i18n "chat.return_to_channel"}}
+          @route={{backButton.route}}
+          @routeModels={{backButton.models}}
+          @title={{i18n backButton.title}}
         />
       {{/if}}
 

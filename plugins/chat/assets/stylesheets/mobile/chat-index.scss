@@ -2,7 +2,7 @@
 
 .full-page-chat {
   .channels-list {
-    overflow-y: overlay;
+    // overflow-y: overlay;
     padding-bottom: 6rem;
     box-sizing: border-box;
 
@@ -19,7 +19,7 @@
       }
 
       .channel-title {
-        color: var(--quaternary);
+        color: var(--primary);
         font-size: var(--font-down-1);
       }
     }

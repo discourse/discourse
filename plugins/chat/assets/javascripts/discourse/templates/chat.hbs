@@ -22,7 +22,9 @@
       class={{concat-class "main-chat-outlet" this.mainOutletModifierClasses}}
     >
       {{outlet}}
-      <ChatFooter />
+      {{#if this.site.mobileView}}
+        <ChatFooter />
+      {{/if}}
     </div>
   </div>
 {{/if}}

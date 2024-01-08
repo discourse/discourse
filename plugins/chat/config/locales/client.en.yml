@@ -497,15 +497,21 @@ en:
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       my_threads:
-        title: My threads
+        title: My Threads
+        aria_label: "Switch to my threads list"
 
       direct_messages:
-        title: "Personal chat"
+        title: "DMs"
+        aria_label: "Switch to direct messages"
         new: "Create a personal chat"
         create: "Go"
         leave: "Leave this personal chat"
         close: "Close this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."
+
+      channel_list:
+        title: "Channels"
+        aria_label: "Switch to channels list"
 
       incoming_webhooks:
         back: "Back"
