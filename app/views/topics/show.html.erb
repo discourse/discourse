@@ -56,6 +56,7 @@
           <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
           <link itemprop='url' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
         </span>
+        <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
       <% end %>
 
       <% @topic_view.posts.each do |post| %>
