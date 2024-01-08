@@ -86,7 +86,7 @@ class Theme < ActiveRecord::Base
             :user,
             :color_scheme,
             :theme_translation_overrides,
-            theme_fields: :upload,
+            theme_fields: %i[upload theme_settings_migration],
           )
         end
 

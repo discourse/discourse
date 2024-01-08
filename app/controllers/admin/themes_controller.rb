@@ -142,15 +142,19 @@ class Admin::ThemesController < Admin::AdminController
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]
       update_components = params[:components]
+      run_migrations = !params[:skip_migrations]
+
       begin
         @theme =
           RemoteTheme.update_zipped_theme(
             bundle.path,
             bundle.original_filename,
             user: theme_user,
-            theme_id: theme_id,
-            update_components: update_components,
+            theme_id:,
+            update_components:,
+            run_migrations:,
           )
+
         log_theme_change(nil, @theme)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e

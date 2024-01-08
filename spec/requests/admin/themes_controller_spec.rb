@@ -243,6 +243,7 @@ RSpec.describe Admin::ThemesController do
             }
           JS
           )
+
         repo_url = MockGitImporter.register("https://example.com/initial_repo.git", repo_path)
 
         post "/admin/themes/import.json", params: { remote: repo_url }
@@ -371,6 +372,20 @@ RSpec.describe Admin::ThemesController do
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
 
+      it "does not run migrations when importing a theme from an archive and `skip_settings_migrations` params is present" do
+        other_existing_theme = Fabricate(:theme, name: "Some other name")
+
+        post "/admin/themes/import.json",
+             params: {
+               bundle: theme_archive,
+               theme_id: other_existing_theme.id,
+               skip_migrations: true,
+             }
+
+        expect(response.status).to eq(201)
+        expect(other_existing_theme.theme_settings_migrations.exists?).to eq(false)
+      end
+
       it "creates a new theme when id specified as nil" do
         # Used by theme CLI
         existing_theme = Fabricate(:theme, name: "Header Icons")
@@ -423,6 +438,12 @@ RSpec.describe Admin::ThemesController do
         theme.set_field(target: :common, name: :scss, value: ".body{color: black;}")
         theme.set_field(target: :desktop, name: :after_header, value: "<b>test</b>")
 
+        theme.set_field(
+          target: :migrations,
+          name: "0001-some-migration",
+          value: "export default function migrate(settings) { return settings; }",
+        )
+
         theme.remote_theme =
           RemoteTheme.new(
             remote_url: "awesome.git",
@@ -444,7 +465,14 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["extras"]["color_schemes"].length).to eq(1)
         theme_json = json["themes"].find { |t| t["id"] == theme.id }
-        expect(theme_json["theme_fields"].length).to eq(2)
+        expect(theme_json["theme_fields"].length).to eq(3)
+
+        expect(
+          theme_json["theme_fields"].find { |theme_field| theme_field["target"] == "migrations" }[
+            "migrated"
+          ],
+        ).to eq(false)
+
         expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
       end
     end
