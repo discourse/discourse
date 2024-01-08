@@ -181,7 +181,12 @@ export default {
       return;
     }
 
-    if (!this.siteSettings.enable_admin_sidebar_navigation) {
+    if (
+      !this.siteSettings.userInAnyGroups(
+        "admin_sidebar_enabled_groups",
+        this.currentUser
+      )
+    ) {
       return;
     }
 

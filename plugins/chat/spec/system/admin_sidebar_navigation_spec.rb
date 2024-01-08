@@ -6,7 +6,7 @@ describe "Admin Revamp | Sidebar Navigation | Plugin Links", type: :system do
 
   before do
     chat_system_bootstrap
-    SiteSetting.enable_admin_sidebar_navigation = true
+    SiteSetting.admin_sidebar_enabled_groups = Group::AUTO_GROUPS[:admins]
     sign_in(admin)
   end
 

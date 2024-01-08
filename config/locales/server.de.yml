@@ -2237,7 +2237,6 @@ de:
     experimental_search_menu_groups: "EXPERIMENTELL: Das neue Suchmenü aktivieren, das für die Verwendung von Glimmer aktualisiert wurde"
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion der Formularvorlagen. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
-    enable_admin_sidebar_navigation: "EXPERIMENTELL: Aktiviere die Seitenleisten-Navigation für die Admin-Benutzeroberfläche, die die Admin-Navigationsschaltflächen auf oberster Ebene ersetzt."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     errors:

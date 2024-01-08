@@ -1144,7 +1144,6 @@ ro:
     min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
-    enable_admin_sidebar_navigation: "EXPERIMENTAL: Activează navigarea în bara laterală pentru interfața de administrare care înlocuiește butoanele de navigare de la nivelul superior al administratorului."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."
