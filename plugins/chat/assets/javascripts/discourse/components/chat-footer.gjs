@@ -27,10 +27,7 @@ export default class ChatFooter extends Component {
   }
 
   get directMessagesEnabled() {
-    return (
-      this.chat.userCanDirectMessage ||
-      this.chatChannelsManager.directMessageChannels?.length > 0
-    );
+    return this.chat.userCanAccessDirectMessages;
   }
 
   get shouldRenderFooter() {
@@ -38,8 +35,8 @@ export default class ChatFooter extends Component {
   }
 
   <template>
-    <nav class="c-footer">
-      {{#if this.shouldRenderFooter}}
+    {{#if this.shouldRenderFooter}}
+      <nav class="c-footer">
         {{#if this.directMessagesEnabled}}
           <DButton
             @route="chat.index"
@@ -76,7 +73,7 @@ export default class ChatFooter extends Component {
             aria-label={{i18n "chat.my_threads.aria_label"}}
           />
         {{/if}}
-      {{/if}}
-    </nav>
+      </nav>
+    {{/if}}
   </template>
 }
