@@ -1,3 +1,5 @@
+import getURL from "discourse-common/lib/get-url";
+
 export const ADMIN_NAV_MAP = [
   {
     name: "admin_plugins",
@@ -14,7 +16,7 @@ export const ADMIN_NAV_MAP = [
   },
   {
     name: "email",
-    text: "Email",
+    text: "Emails",
     links: [
       {
         name: "admin_email",
@@ -52,6 +54,18 @@ export const ADMIN_NAV_MAP = [
         label: "admin.email.rejected",
         icon: "ban",
       },
+      {
+        name: "admin_email_preview_summary",
+        route: "adminEmail.previewDigest",
+        label: "admin.email.preview_digest",
+        icon: "notification.private_message",
+      },
+      {
+        name: "admin_email_advanced_test",
+        route: "adminEmail.advancedTest",
+        label: "admin.email.advanced_test.title",
+        icon: "wrench",
+      },
     ],
   },
   {
@@ -87,6 +101,12 @@ export const ADMIN_NAV_MAP = [
         route: "adminSearchLogs",
         label: "admin.logs.search_logs.title",
         icon: "search",
+      },
+      {
+        name: "admin_logs_error_logs",
+        href: getURL("/logs"),
+        label: "admin.logs.logster.title",
+        icon: "external-link-alt",
       },
     ],
   },

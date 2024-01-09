@@ -41,6 +41,7 @@ import {
 } from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { addAdminSidebarSectionLink } from "discourse/instance-initializers/admin-sidebar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
@@ -145,7 +146,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.23.0";
+export const PLUGIN_API_VERSION = "1.24.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2296,6 +2297,27 @@ class PluginApi {
    */
   addSidebarPanel(func) {
     addSidebarPanel(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for adding links to specific admin sidebar sections.
+   *
+   * This is intended to replace the admin-menu plugin outlet from
+   * the old admin horizontal nav.
+   *
+   * ```
+   * api.addAdminSidebarSectionLink("root", {
+   *   name: "unique_link_name",
+   *   route: "emberRouteId",
+   *   label: "admin.some.i18n.label.key",
+   *   icon: "icon-name",
+   *   href: "(optional) can be used instead of the route",
+   * }
+   * ```
+   */
+  addAdminSidebarSectionLink(sectionName, link) {
+    addAdminSidebarSectionLink(sectionName, link);
   }
 
   /**

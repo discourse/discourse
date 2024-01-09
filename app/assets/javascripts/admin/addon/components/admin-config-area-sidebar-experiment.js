@@ -84,12 +84,16 @@ export default class AdminConfigAreaSidebarExperiment extends Component {
           return;
         }
 
+        // Using the private `_routerMicrolib` is not ideal, but Ember doesn't provide
+        // any other way for us to easily check for route validity.
         try {
           this.router._router._routerMicrolib.recognizer.handlersFor(
             link.route
           );
           this.validRouteNames.add(link.route);
-        } catch {
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.debug("[AdminSidebarExperiment]", err);
           invalidRoutes.push(link.route);
         }
       });
