@@ -13,6 +13,22 @@ import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import I18n from "discourse-i18n";
 
+const MAX_LIMIT = 60;
+const DEFAULT_LIMIT = 30;
+let limit = DEFAULT_LIMIT;
+
+export function setNotificationsLimit(newLimit) {
+  if (newLimit <= 0 || newLimit > MAX_LIMIT) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Error: Invalid limit of ${newLimit} passed to setNotificationsLimit. Must be greater than 0 and less than ${MAX_LIMIT}`
+    );
+    return;
+  }
+
+  limit = newLimit;
+}
+
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service appEvents;
   @service currentUser;
@@ -82,7 +98,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   async fetchItems() {
     const params = {
-      limit: 30,
+      limit,
       recent: true,
       bump_last_seen_reviewable: true,
     };
