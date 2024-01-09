@@ -22,6 +22,14 @@ export default class ChatController extends Controller {
     return this.siteSettings.navigation_menu === "sidebar";
   }
 
+  get shouldUseChatFooter() {
+    // we only show chat footer on index pages (ie. when no input field)
+    return (
+      this.site.mobileView &&
+      !this.router.currentRouteName.startsWith("chat.channel.")
+    );
+  }
+
   get mainOutletModifierClasses() {
     let modifierClasses = [];
 

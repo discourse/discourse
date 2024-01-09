@@ -29,7 +29,7 @@ export default class ChatIndexRoute extends DiscourseRoute {
 
   model() {
     if (this.site.mobileView) {
-      return this.chatChannelsManager.channels;
+      return this.chatChannelsManager.directMessageChannels;
     }
   }
 }

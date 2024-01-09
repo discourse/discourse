@@ -11,7 +11,7 @@ export default class ChatRoutesChannel extends Component {
     <div class="c-routes-channel">
       <Navbar as |navbar|>
         {{#if this.site.mobileView}}
-          <navbar.BackButton />
+          <navbar.BackButton @route="chat.channels" />
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
         <navbar.Actions as |action|>

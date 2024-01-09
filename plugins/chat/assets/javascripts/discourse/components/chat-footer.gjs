@@ -7,11 +7,9 @@ import i18n from "discourse-common/helpers/i18n";
 import eq from "truth-helpers/helpers/eq";
 
 export default class ChatFooter extends Component {
-  @service site;
   @service router;
   @service chat;
   @service chatApi;
-  @service chatChannelsManager;
 
   @tracked threadsEnabled = false;
 
@@ -34,6 +32,10 @@ export default class ChatFooter extends Component {
     return this.directMessagesEnabled || this.threadsEnabled;
   }
 
+  get channelsRouteName() {
+    return this.chat.userCanAccessDirectMessages ? "chat.channels" : "chat.index";
+  }
+
   <template>
     {{#if this.shouldRenderFooter}}
       <nav class="c-footer">
@@ -51,10 +53,10 @@ export default class ChatFooter extends Component {
         {{/if}}
 
         <DButton
-          @route="chat.channels"
+          @route={{this.channelsRouteName}}
           @class={{concatClass
             "btn-flat c-footer__item"
-            (if (eq this.router.currentRouteName "chat.channels") "--active")
+            (if (eq this.router.currentRouteName this.channelsRouteName) "--active")
           }}
           @icon="comments"
           @translatedLabel={{i18n "chat.channel_list.title"}}
