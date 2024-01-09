@@ -3902,6 +3902,10 @@ pt:
           body: "Corpo"
           revert: "Reverter Alterações"
           revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
+        component:
+          all_filter: "Tudo"
+          enabled_filter: "Ativado"
+          disabled_filter: "Desativado"
         theme:
           theme: "Tema"
           component: "Componente"
@@ -4013,6 +4017,9 @@ pt:
           yaml:
             text: "YAML"
             title: "Defina as configurações do tema no formato YAML"
+          all_filter: "Tudo"
+          active_filter: "Ativo"
+          inactive_filter: "Inativo"
         colors:
           select_base:
             description: "Paleta de base:"

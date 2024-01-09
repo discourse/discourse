@@ -202,6 +202,7 @@ pl_PL:
       url: "Skopiuj i udostępnij adres URL"
     word_connector:
       comma: ", "
+      last_item: "i"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
       open_topic: "Przekonwertowano to na temat %{when}"
@@ -252,7 +253,12 @@ pl_PL:
       error_caused_by: "Spowodowane przez '%{name}'. <a target='blank' href='%{path}'>Kliknij tutaj</a>, aby zaktualizować, zmienić konfigurację lub wyłączyć."
       only_admins: "(ta wiadomość jest wyświetlana tylko administratorom witryny)"
     broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd."
+    broken_page_change_alert: "Procedura obsługi onPageChange zgłosiła błąd. Aby uzyskać więcej informacji, sprawdź narzędzia programistyczne przeglądarki."
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
+    critical_deprecation:
+      notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>więcej informacji</a>)."
+      theme_source: "Zidentyfikowany motyw: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Zidentyfikowana wtyczka: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -510,6 +516,7 @@ pl_PL:
           name: "bonus typu"
           title: "Niektóre rodzaje przeglądalne mogą otrzymać premię od pracowników, aby nadać im wyższy priorytet."
       revise_and_reject_post:
+        title: "Sprawdź"
         reason: "Powód"
         send_pm: "Wyślij PW"
         feedback: "Informacje zwrotne"
@@ -858,6 +865,7 @@ pl_PL:
           imap_mailbox_not_selected: "Musisz wybrać skrzynkę pocztową dla tej konfiguracji IMAP, w przeciwnym razie żadna skrzynka pocztowa nie zostanie zsynchronizowana!"
           prefill:
             title: "Wstępne wypełnienie ustawieniami dla:"
+            gmail: "Gmail"
           credentials:
             title: "Poświadczenia"
             smtp_server: "Serwer SMTP"
@@ -1522,6 +1530,8 @@ pl_PL:
           Zeskanuj ten kod QR w obsługiwanej aplikacji ( <a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> ) i wprowadź kod uwierzytelniający
         disable_description: "Podaj kod uwierzytelniający ze swojej aplikacji"
         show_key_description: "Wpisz ręcznie"
+        short_description: |
+          Chroń swoje konto za pomocą jednorazowych kodów bezpieczeństwa lub fizycznych kluczy bezpieczeństwa.
         extended_description: |
           Uwierzytelnianie dwuskładnikowe zapewnia dodatkowe bezpieczeństwo konta, wymagając jednorazowego tokena oprócz hasła. Tokeny można generować na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>urządzeniach z systemem Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">systemem iOS</a>.
         oauth_enabled_warning: "Pamiętaj, że logowanie kontem społecznościowym zostanie wyłączone po włączeniu uwierzytelniania dwuskładnikowego na Twoim koncie."
@@ -1565,9 +1575,11 @@ pl_PL:
         add_passkey: "Dodaj Passkey"
         confirm_delete_passkey: "Czy na pewno chcesz usunąć ten passkey?"
         passkey_successfully_created: "Sukces! Twój nowy passkey został utworzony."
+        rename_passkey_instructions: "Wybierz nazwę klucza dostępu, która pozwoli Ci go łatwo zidentyfikować, na przykład użyj nazwy swojego menedżera haseł."
         name:
           default: "Główny passkey"
         save: "Zapisz"
+        title: "Passkeys"
         short_description: "Klucze to zamienniki haseł, które potwierdzają Twoją tożsamość biometrycznie (np. dotyk, FaceID) lub za pomocą kodu PIN/hasła urządzenia."
         added_prefix: "Dodano"
         last_used_prefix: "Ostatnio używane"
@@ -2175,6 +2187,7 @@ pl_PL:
       security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
       security_key_no_matching_credential_error: "W podanym kluczu zabezpieczeń nie znaleziono zgodnych poświadczeń."
       security_key_support_missing_error: "Twoje obecne urządzenie lub przeglądarka nie obsługuje używania kluczy bezpieczeństwa. Proszę użyć innej metody."
+      security_key_invalid_response_error: "Proces uwierzytelniania klucza zabezpieczeń nie powiódł się z powodu nieprawidłowej odpowiedzi."
       passkey_security_error: "Wystąpił błąd bezpieczeństwa: %{message}"
       email_placeholder: "E-mail / Nazwa użytkownika"
       caps_lock_warning: "Caps Lock jest włączony"
@@ -2312,6 +2325,9 @@ pl_PL:
     date_time_picker:
       from: Od
       to: Do
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} jest większe niż maksymalna dozwolona wartość %{max_file_size}"
     emoji_picker:
       filter_placeholder: Szukaj emoji
       smileys_&_emotion: Buźki i emocje
@@ -2361,6 +2377,12 @@ pl_PL:
         few: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         many: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         other: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
+      group_mentioned:
+        one: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osobę</a>."
+        few: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>."
+        many: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>."
+        other: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>."
+      larger_group_mentioned: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>. Jesteś pewny/a?"
       cannot_see_mention:
         category: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie ma dostępu do tej kategorii. Będziesz musiał dodać go do grupy, która ma dostęp do tej kategorii."
         private: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
@@ -2557,6 +2579,11 @@ pl_PL:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username} i %{count} inny</span> %{description}"
+        few: "<span class='multi-user'>%{username} i %{count} inni</span> %{description}"
+        many: "<span class='multi-user'>%{username} i %{count} inni</span> %{description}"
+        other: "<span class='multi-user'>%{username} i %{count} inni</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
         one: "%{username} i %{count} inny"
@@ -3164,13 +3191,13 @@ pl_PL:
         replies_short: "%{current} / %{total}"
       progress:
         title: postęp tematu
-        jump_prompt: "skocz do…"
+        jump_prompt: "przejdź do…"
         jump_prompt_of:
           one: "z %{count} postu"
           few: "z %{count} postów"
           many: "z %{count} postów"
           other: "z %{count} postów"
-        jump_prompt_long: "Skocz do…"
+        jump_prompt_long: "Przejdź do…"
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
       notifications:
@@ -3227,6 +3254,7 @@ pl_PL:
         close: "Zamknij temat"
         multi_select: "Wybierz wpisy…"
         slow_mode: "Ustaw tryb powolny…"
+        timed_update: "Ustaw timer tematu…"
         pin: "Przypnij temat…"
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
@@ -3775,6 +3803,7 @@ pl_PL:
       logo: "Grafika z logo kategorii"
       logo_dark: "Obraz logo kategorii w trybie ciemnym"
       background_image: "Grafika z tłem kategorii"
+      background_image_dark: "Obraz tła ciemnej kategorii"
       badge_colors: "Kolor Etykiety"
       background_color: "Kolor tła"
       foreground_color: "Kolor pierwszego planu"
@@ -3894,6 +3923,7 @@ pl_PL:
       take_action_options:
         default:
           title: "Ukryj post"
+          details: "Natychmiast osiągnij poziom flagowania, ukryj post i zaakceptuj wszystkie oczekujące flagi"
         suspend:
           title: "Zawieś użytkownika"
           details: "Symuluj progową liczbę flag i zawieś użytkownika."
@@ -3910,6 +3940,7 @@ pl_PL:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(ukryto)"
       submit_tooltip: "Zapisz prywatną flagę."
+      take_action_tooltip: "Natychmiast osiągnij poziom flagowania, ukryj post i zaakceptuj wszystkie oczekujące flagi"
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
       notify_staff: "Powiadom zespół wiadomością prywatną"
       formatted_name:
@@ -4309,6 +4340,11 @@ pl_PL:
         few: "wybierz co najmniej %{count} tagi…"
         many: "wybierz co najmniej %{count} tagów…"
         other: "wybierz co najmniej %{count} tagów…"
+      choose_for_topic_required_group:
+        one: "wybierz %{count} tag z '%{name}'…"
+        few: "wybierz %{count} tagi z '%{name}'…"
+        many: "wybierz %{count} tagi z '%{name}'…"
+        other: "wybierz %{count} tagi z '%{name}'…"
       info: "Informacje"
       default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów."
       staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
@@ -4770,6 +4806,7 @@ pl_PL:
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         new_features:
           title: "Co nowego"
+          previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Dowiedz się więcej..."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
@@ -5113,6 +5150,10 @@ pl_PL:
           user_destroyed: "Użytkownik został usunięty"
           user_suspended: "Użytkownik został zawieszony"
           user_unsuspended: "Użytkownik przestał być zawieszony"
+        reviewable_event:
+          group_name: "Zdarzenia do sprawdzenia"
+          reviewable_created: "Element do sprawdzenia jest gotowy"
+          reviewable_updated: "Element do sprawdzenia został zaktualizowany"
         user_badge_event:
           group_name: "Zdarzenia odznak"
           user_badge_granted: "Odznaka użytkownika została przyznana"
@@ -5124,9 +5165,11 @@ pl_PL:
           group_name: "Zdarzenia powiadomień"
           notification_created: "Użytkownik otrzymuje powiadomienie w swoim kanale"
         group_user_event:
+          group_name: "Zdarzenia grupy użytkownika"
           user_added_to_group: "Użytkownik zostaje dodany do grupy"
           user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
         user_promoted_event:
+          group_name: "Zdarzenia promowania użytkownika"
           user_promoted: "Użytkownik został awansowany"
         delivery_status:
           title: "Status dostarczenia"
@@ -5285,11 +5328,19 @@ pl_PL:
           body: "Treść"
           revert: "Cofnij zmiany"
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
+        component:
+          all_filter: "Wszystkie"
+          used_filter: "Używany"
+          unused_filter: "Nieużywany"
+          enabled_filter: "Włączona"
+          disabled_filter: "Wyłączone"
+          updates_available_filter: "Dostępne aktualizacje"
         theme:
+          filter_by: "Filtruj według"
           theme: "Motyw"
           component: "Komponent"
           components: "Komponenty"
-          filter_placeholder: "pisz, aby filtrować…"
+          search_placeholder: "wpisz, aby wyszukać…"
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
           themes_intro: "Wybierz istniejący motyw lub zainstaluj nowy, by rozpocząć"
@@ -5326,6 +5377,7 @@ pl_PL:
           color_scheme_user_selectable: "Schemat kolorów może zostać wybrany przez użytkowników"
           auto_update: "Automatycznie aktualizuj po aktualizacji Discourse"
           color_scheme: "Paleta Kolorów"
+          edit_color_scheme: "Edytuj paletę kolorów"
           default_light_scheme: "Jasny (domyślnie)"
           color_scheme_select: "Wybierz kolory, jakie mają być użyte w motywie"
           custom_sections: "Spersonalizowane sekcje:"
@@ -5464,6 +5516,10 @@ pl_PL:
             title: "Zdefiniuj ustawienia motywu w formacie YAML"
           scss_color_variables_warning: 'Używanie podstawowych zmiennych kolorów SCSS w szablonach jest przestarzałe. Zamiast tego użyj niestandardowych właściwości CSS. Zobacz <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ten przewodnik</a>, aby uzyskać więcej informacji.'
           scss_warning_inline: "Używanie podstawowych zmiennych kolorów SCSS w motywach jest przestarzałe."
+          all_filter: "Wszystkie"
+          active_filter: "Aktywni"
+          inactive_filter: "Nieaktywny"
+          updates_available_filter: "Dostępne aktualizacje"
         colors:
           select_base:
             title: "Wybierz podstawową paletę kolorów"
@@ -5609,8 +5665,12 @@ pl_PL:
             title: "Filtr"
             user_placeholder: "nazwa użytkownika"
             address_placeholder: "nazwa@example.com"
+            type_placeholder: "streszczenie, rejestracja..."
             reply_key_placeholder: "klucz odpowiedzi"
             smtp_transaction_response_placeholder: "SMTP ID"
+          email_addresses:
+            see_more: "[Zobacz więcej...]"
+          post_id: "(ID postu: %{post_id})"
       moderation_history:
         performed_by: "Wykonane przez"
         no_results: "Brak dostępnej historii moderacji."

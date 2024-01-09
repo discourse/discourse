@@ -55,6 +55,9 @@ lt:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} nuo %{username}"
+  components:
+    enabled_filter: "Galimas"
+    disabled_filter: "Uždrausta"
   themes:
     bad_color_scheme: "Negalima atnaujinti temos, netinkama spalvų paletė"
     other_error: "Įvyko klaida atnaujinant temą"

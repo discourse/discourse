@@ -50,6 +50,9 @@ sl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} uporabnika %{username}"
+  components:
+    enabled_filter: "Vključeno"
+    disabled_filter: "Onemogočeno"
   emails:
     incoming:
       default_subject: "Tema potrebuje naslov"
@@ -282,6 +285,7 @@ sl:
       <<: *errors
   uncategorized_category_name: "Nerazvrščeno"
   general_category_name: "Splošno"
+  meta_category_name: "Povratne informacije spletnega mesta"
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
   category:

@@ -4128,6 +4128,10 @@ cs:
           body: "Tělo"
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"
+        component:
+          all_filter: "Celkem"
+          enabled_filter: "Zapnutý"
+          disabled_filter: "Vypnuto"
         theme:
           theme: "Téma"
           component: "Komponent"
@@ -4216,6 +4220,9 @@ cs:
           yaml:
             text: "YAML"
             title: "Definovat nastavení motivu ve formátu YAML"
+          all_filter: "Celkem"
+          active_filter: "Aktivní"
+          inactive_filter: "Neaktivní"
         colors:
           title: "Barvy"
           copy_name_prefix: "Kopie"

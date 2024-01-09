@@ -2540,6 +2540,10 @@ sw:
           body: "Mwili"
           revert: "Ondoa Mabadiliko"
           revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"
+        component:
+          all_filter: "Vyote"
+          enabled_filter: "Imeruhusiwa"
+          disabled_filter: "Imezuiwa"
         theme:
           theme: "Mandhari"
           customize_desc: "Geuza Kukufaa:"
@@ -2608,6 +2612,9 @@ sw:
           yaml:
             text: "YAML"
             title: "Tambulisha mipangilio ya mpango kwenye umbiza wa YAML"
+          all_filter: "Vyote"
+          active_filter: "Mara kwa Mara"
+          inactive_filter: "Isiyo Amilifu"
         colors:
           title: "Rangi"
           copy_name_prefix: "Nakala ya"

@@ -146,6 +146,7 @@ tr_TR:
       url: "URL'yi kopyala ve paylaş"
     word_connector:
       comma: ", "
+      last_item: "ve"
     action_codes:
       public_topic: "Bu konuyu herkese açık yaptı, %{when}"
       open_topic: "Bunu bir konuya dönüştürdü, %{when}"
@@ -3099,6 +3100,8 @@ tr_TR:
       quote_reply_shortcut: "Alıntı yapın (veya q tuşuna basın)"
       quote_edit: "Düzenle"
       quote_edit_shortcut: "Düzenle (veya e tuşuna bas)"
+      quote_copy: "Alıntıyı Kopyala"
+      quote_copied_to_clibboard: "Alıntı panoya kopyalandı"
       quote_share: "Paylaş"
       edit_reason: "Sebep: "
       post_number: "%{number}. gönderi"
@@ -4800,11 +4803,19 @@ tr_TR:
           body: "Gövde"
           revert: "Değişiklikleri Geri Al"
           revert_confirm: "Değişikliklerinizi geri almak istediğinizden emin misiniz?"
+        component:
+          all_filter: "Hepsi"
+          used_filter: "Kullanılmış"
+          unused_filter: "Kullanılmamış"
+          enabled_filter: "Etkin mi"
+          disabled_filter: "Devre Dışı"
+          updates_available_filter: "Güncellemeler Mevcut"
         theme:
+          filter_by: "Filtrele"
           theme: "Tema"
           component: "Bileşen"
           components: "Bileşenler"
-          filter_placeholder: "filtrelemek için yazın…"
+          search_placeholder: "aramak için yazın…"
           theme_name: "Tema adı"
           component_name: "Bileşen adı"
           themes_intro: "Başlamak için mevcut bir tema seçin veya yeni bir tema\nyükleyin"
@@ -4841,6 +4852,7 @@ tr_TR:
           color_scheme_user_selectable: "Renk düzeni kullanıcılar tarafından seçilebilir"
           auto_update: "Discourse güncellendiğinde otomatik olarak güncelle"
           color_scheme: "Renk Paleti"
+          edit_color_scheme: "Renk Paletini Düzenle"
           default_light_scheme: "Açık (varsayılan)"
           color_scheme_select: "Tema tarafından kullanılacak renkleri seçin"
           custom_sections: "Özel bölümler:"
@@ -4973,6 +4985,10 @@ tr_TR:
             title: "Tema ayarlarını YAML biçiminde tanımlayın"
           scss_color_variables_warning: 'Temalarda çekirdek SCSS renk değişkenlerinin kullanılması önerilmemektedir. Lütfen bunun yerine CSS özel özelliklerini kullanın. Daha fazla ayrıntı için <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">bu kılavuza</a> bakın.'
           scss_warning_inline: "Temalarda çekirdek SCSS renk değişkenlerinin kullanılması önerilmemektedir."
+          all_filter: "Hepsi"
+          active_filter: "Aktif"
+          inactive_filter: "Aktif Değil"
+          updates_available_filter: "Güncellemeler Mevcut"
         colors:
           select_base:
             title: "Temel renk paletini seçin"
@@ -5117,6 +5133,9 @@ tr_TR:
             address_placeholder: "ad@ornek.com"
             reply_key_placeholder: "yanıtla tuşu"
             smtp_transaction_response_placeholder: "SMTP Kimliği"
+          email_addresses:
+            see_more: "[Daha fazlasını gör...]"
+          post_id: "(Post ID: %{post_id})"
       moderation_history:
         performed_by: "Gerçekleştiren"
         no_results: "Moderasyon geçmişi yok."

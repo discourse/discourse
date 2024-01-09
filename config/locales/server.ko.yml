@@ -55,6 +55,9 @@ ko:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} 님의 게시물 #%{post_number}"
+  components:
+    enabled_filter: "활성화"
+    disabled_filter: "비활성"
   themes:
     bad_color_scheme: "테마, 유효하지 않은 색상 팔레트를 업데이트할 수 없습니다"
     other_error: "테마를 업데이트하는 중에 문제가 발생했습니다"

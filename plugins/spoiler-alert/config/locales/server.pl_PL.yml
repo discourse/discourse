@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  site_settings:
+    spoiler_enabled: 'Aktywuj wtyczkę spoiler. Jeśli zmienisz tę opcję, będziesz musiał ponownie przebudować wszystkie posty za pomocą: "rake posts:rebake".'
+  spoiler_alert:
+    excerpt_spoiler: "spoiler"

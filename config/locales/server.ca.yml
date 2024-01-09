@@ -53,6 +53,9 @@ ca:
   on_another_topic: "Sobre un altre tema"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} per %{username}"
+  components:
+    enabled_filter: "Activat"
+    disabled_filter: "Desactivat"
   themes:
     bad_color_scheme: "No es pot actualitzar l'aparença, paleta de colors incorrecta"
     other_error: "S'ha produït un error mentre s'actualitzava l'aparença"

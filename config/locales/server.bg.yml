@@ -51,6 +51,9 @@ bg:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} от %{username} "
+  components:
+    enabled_filter: "Да е включен"
+    disabled_filter: "Деактивирани"
   themes:
     other_error: "Нещо се обърка при актуализирането на стила"
     import_error:

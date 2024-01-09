@@ -3710,11 +3710,14 @@ nb_NO:
           body: "Meldingstekst"
           revert: "Tilbakestill endringer"
           revert_confirm: "Er du sikker på at du vil tilbakestille dine endringer?"
+        component:
+          all_filter: "Alle"
+          enabled_filter: "Aktivert"
+          disabled_filter: "Deaktivert"
         theme:
           theme: "Drakt"
           component: "Komponent"
           components: "Komponenter"
-          filter_placeholder: "skriv for å filtrere…"
           theme_name: "Navn på tema"
           component_name: "Komponent navn"
           themes_intro: "Velg et eksisterende tema eller installer et nytt for å komme i gang"
@@ -3826,6 +3829,9 @@ nb_NO:
           yaml:
             text: "YAML"
             title: "Definer draktinnstillinger i YAML-format"
+          all_filter: "Alle"
+          active_filter: "Aktiv"
+          inactive_filter: "Inaktiv"
         colors:
           title: "Farger"
           copy_name_prefix: "Kopi av"

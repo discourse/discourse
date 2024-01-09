@@ -53,6 +53,9 @@ bs_BA:
   on_another_topic: "Na drugu temu"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  components:
+    enabled_filter: "Omogućen"
+    disabled_filter: "Neomogućen"
   themes:
     bad_color_scheme: "Ne može se ažurirati tema, nevažeća paleta boja"
     other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."

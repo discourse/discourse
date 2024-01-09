@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 ko:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: 채팅
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "항상"
           never: "알림 받지 않기"

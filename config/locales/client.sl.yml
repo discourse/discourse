@@ -3862,6 +3862,10 @@ sl:
           multiple_subjects: "Ta e-sporočilo predloga ima več naslovov."
           revert: "Prekliči spremembe"
           revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
+        component:
+          all_filter: "Vse"
+          enabled_filter: "Vključeno"
+          disabled_filter: "Onemogočeno"
         theme:
           theme: "Videz"
           theme_name: "Ime videza"
@@ -3907,6 +3911,9 @@ sl:
             text: "CSS"
           header:
             text: "Glava"
+          all_filter: "Vse"
+          active_filter: "Aktivni"
+          inactive_filter: "Nedejaven"
         colors:
           title: "Barve"
           copy_name_prefix: "Kopija od"

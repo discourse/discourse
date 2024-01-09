@@ -58,6 +58,9 @@ zh_TW:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} %{username}"
+  components:
+    enabled_filter: "啟用"
+    disabled_filter: "停用"
   themes:
     bad_color_scheme: "無法更新佈景主題，無效的調色盤"
     other_error: "更新佈景主題時發生了錯誤"

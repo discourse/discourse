@@ -4054,6 +4054,10 @@ hu:
           body: "Test"
           revert: "Változtatások visszavonása"
           revert_confirm: "Biztosan vissza akarod vonni a változtatásaidat?"
+        component:
+          all_filter: "Összes"
+          enabled_filter: "Engedélyezed"
+          disabled_filter: "Kikapcsolt"
         theme:
           theme: "Téma"
           component: "Összetevő"
@@ -4178,6 +4182,9 @@ hu:
           yaml:
             text: "YAML"
             title: "Téma beállításainak megadása YAML formátumban"
+          all_filter: "Összes"
+          active_filter: "Aktív"
+          inactive_filter: "Inaktív"
         colors:
           select_base:
             title: "Válassza ki az alapszín palettát"

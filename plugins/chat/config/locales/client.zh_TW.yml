@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 zh_TW:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: 聊天
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "總是"
           never: "永不"
