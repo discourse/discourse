@@ -1,4 +1,4 @@
-import { hash } from "@ember/helper";
+import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import concatClass from "discourse/helpers/concat-class";
 import noop from "discourse/helpers/noop";
@@ -7,23 +7,32 @@ import BackButton from "./back-button";
 import ChannelTitle from "./channel-title";
 import Title from "./title";
 
-const ChatNavbar = <template>
-  {{! template-lint-disable no-invalid-interactive }}
-  <div
-    class={{concatClass "c-navbar-container" (if @onClick "-clickable")}}
-    {{on "click" (if @onClick @onClick (noop))}}
-  >
-    <nav class="c-navbar">
-      {{yield
-        (hash
-          BackButton=BackButton
-          ChannelTitle=ChannelTitle
-          Title=Title
-          Actions=Actions
-        )
-      }}
-    </nav>
-  </div>
-</template>;
+export default class ChatNavbar extends Component {
+  get buttonComponent() {
+    return BackButton;
+  }
 
-export default ChatNavbar;
+  get titleComponent() {
+    return Title;
+  }
+
+  get actionsComponent() {
+    return Actions;
+  }
+
+  get channelTitleComponent() {
+    return ChannelTitle;
+  }
+
+  <template>
+    {{! template-lint-disable no-invalid-interactive }}
+    <div
+      class={{concatClass "c-navbar-container" (if @onClick "-clickable")}}
+      {{on "click" (if @onClick @onClick (noop))}}
+    >
+      <nav class="c-navbar">
+        {{yield}}
+      </nav>
+    </div>
+  </template>
+}
