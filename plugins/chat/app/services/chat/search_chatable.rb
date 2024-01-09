@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  # Returns a list of chatables (users, category channels, direct message channels) that can be chatted with.
+  # Returns a list of chatables (users, groups ,category channels, direct message channels) that can be chatted with.
   #
   # @example
   #  Chat::SearchChatable.call(term: "@bob", guardian: guardian)
@@ -18,6 +18,7 @@ module Chat
     step :clean_term
     model :memberships, optional: true
     model :users, optional: true
+    model :groups, optional: true
     model :category_channels, optional: true
     model :direct_message_channels, optional: true
 
@@ -25,6 +26,7 @@ module Chat
     class Contract
       attribute :term, :string, default: ""
       attribute :include_users, :boolean, default: true
+      attribute :include_groups, :boolean, default: true
       attribute :include_category_channels, :boolean, default: true
       attribute :include_direct_message_channels, :boolean, default: true
       attribute :excluded_memberships_channel_id, :integer
@@ -44,6 +46,12 @@ module Chat
       return unless contract.include_users
       return unless guardian.can_create_direct_message?
       search_users(context, guardian, contract)
+    end
+
+    def fetch_groups(guardian:, contract:, **)
+      return unless contract.include_groups
+      return unless guardian.can_create_direct_message?
+      search_groups(context, guardian, contract)
     end
 
     def fetch_category_channels(guardian:, contract:, **)
@@ -108,6 +116,13 @@ module Chat
       end
 
       user_search
+    end
+
+    def search_groups(context, guardian, contract)
+      Group.visible_groups(guardian.user).where(
+        "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",
+        term_like: "%#{context.term}%",
+      )
     end
   end
 end

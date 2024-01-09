@@ -38,14 +38,26 @@
       color: var(--primary);
       border-color: var(--tertiary);
 
-      .d-icon {
+      .d-icon-times {
         color: var(--primary);
       }
     }
   }
 
-  .d-icon {
+  .d-icon-times {
     margin-left: 0.25rem;
+  }
+
+  .chat-message-creator__group-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 24px;
+    width: 24px;
+
+    .d-icon.d-icon-user-friends {
+      color: var(--primary-high);
+    }
   }
 }
 
@@ -144,6 +156,7 @@
 .chat-message-creator__members-count {
   white-space: nowrap;
   color: var(--primary-medium);
+
   &.-reached-limit {
     color: var(--danger);
   }
@@ -207,6 +220,24 @@
 
   .chat-message-creator__chatable.-disabled-chat {
     padding-left: 0.25rem;
+  }
+}
+
+.chat-message-creator__chatable.-group {
+  display: flex;
+
+  .chat-message-creator__group-name {
+    padding-left: 0.5rem;
+  }
+
+  .chat-message-creator__group-icon .d-icon-user-friends {
+    padding: 5px 5px;
+    box-sizing: border-box;
+    color: var(--primary-high);
+    background: var(--primary-low);
+    border-radius: 100%;
+    width: 24px;
+    height: 22px;
   }
 }
 
@@ -275,6 +306,7 @@
     transform: scale(0.1);
     opacity: 0;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;

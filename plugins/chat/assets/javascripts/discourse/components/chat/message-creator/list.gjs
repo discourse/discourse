@@ -7,6 +7,7 @@ import I18n from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
 import not from "truth-helpers/helpers/not";
 import Channel from "./channel";
+import Group from "./group";
 import ListAction from "./list-action";
 import User from "./user";
 
@@ -21,6 +22,8 @@ export default class List extends Component {
         return ListAction;
       case "user":
         return User;
+      case "group":
+        return Group;
       case "channel":
         return Channel;
     }

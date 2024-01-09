@@ -19,6 +19,7 @@ module Chat
     #   @param [Guardian] guardian
     #   @param [Hash] params_to_create
     #   @option params_to_create [Array<String>] target_usernames
+    #   @option params_to_create [Array<String>] target_groups
     #   @return [Service::Base::Context]
 
     policy :can_create_direct_message
@@ -40,7 +41,9 @@ module Chat
     class Contract
       attribute :name, :string
       attribute :target_usernames, :array
-      validates :target_usernames, presence: true
+      attribute :target_groups, :array
+      validates :target_usernames, presence: true, unless: :target_groups
+      validates :target_groups, presence: true, unless: :target_usernames
     end
 
     private
@@ -50,7 +53,21 @@ module Chat
     end
 
     def fetch_target_users(guardian:, contract:, **)
-      User.where(username: [guardian.user.username, *contract.target_usernames]).to_a
+      User
+        .joins(:user_option)
+        .left_outer_joins(:groups)
+        .where(user_options: { chat_enabled: true })
+        .where(username: [guardian.user.username, *contract.target_usernames])
+        .or(
+          User
+            .joins(:user_option)
+            .left_outer_joins(:groups)
+            .where(user_options: { chat_enabled: true })
+            .where(groups: { name: contract.target_groups })
+            .where.not(group_users: { user_id: nil }),
+        )
+        .distinct
+        .to_a
     end
 
     def fetch_user_comm_screener(target_users:, guardian:, **)
