@@ -526,7 +526,8 @@ RSpec.describe TopicCreator do
           SiteSetting.manual_polling_enabled = true
           SiteSetting.reply_by_email_address = "sam+%{reply_key}@sam.com"
           SiteSetting.reply_by_email_enabled = true
-          SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
+          SiteSetting.send_email_messages_allowed_groups =
+            "1|3|#{Group::AUTO_GROUPS[:trust_level_1]}"
           attrs = pm_to_email_valid_attrs.dup
           attrs[:target_emails] = "t" * 256
 
@@ -548,28 +549,30 @@ RSpec.describe TopicCreator do
         before { Group.refresh_automatic_groups! }
 
         it "works for staff" do
-          SiteSetting.min_trust_to_send_email_messages = "staff"
+          SiteSetting.send_email_messages_allowed_groups = "1|3"
           expect(
             TopicCreator.create(admin, Guardian.new(admin), pm_to_email_valid_attrs),
           ).to be_valid
         end
 
         it "work for trusted users" do
-          SiteSetting.min_trust_to_send_email_messages = 3
-          user.update!(trust_level: 3)
+          SiteSetting.send_email_messages_allowed_groups =
+            "1|3|#{Group::AUTO_GROUPS[:trust_level_3]}"
+          user.change_trust_level!(TrustLevel[3])
           expect(TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)).to be_valid
         end
 
         it "does not work for non-staff" do
-          SiteSetting.min_trust_to_send_email_messages = "staff"
+          SiteSetting.send_email_messages_allowed_groups = "1|3"
           expect {
             TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)
           }.to raise_error(ActiveRecord::Rollback)
         end
 
         it "does not work for untrusted users" do
-          SiteSetting.min_trust_to_send_email_messages = 3
-          user.update!(trust_level: 2)
+          SiteSetting.send_email_messages_allowed_groups =
+            "1|3|#{Group::AUTO_GROUPS[:trust_level_3]}"
+          user.change_trust_level!(TrustLevel[2])
           expect {
             TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)
           }.to raise_error(ActiveRecord::Rollback)
