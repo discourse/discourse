@@ -17,7 +17,7 @@ export default class ChatDrawerRoutesChannelThread extends Component {
 
   get backButton() {
     const link = {
-      models: this.chat.activeChannel?.routeModels,
+      models: this.chat.activeChannel?.routeModels ?? [],
     };
 
     if (this.chatHistory.previousRoute?.name === "chat.channel.threads") {
@@ -26,7 +26,6 @@ export default class ChatDrawerRoutesChannelThread extends Component {
     } else if (this.chatHistory.previousRoute?.name === "chat.threads") {
       link.title = I18n.t("chat.my_threads.title");
       link.route = "chat.threads";
-      link.models = [];
     } else {
       link.title = I18n.t("chat.return_to_channel");
       link.route = "chat.channel";
