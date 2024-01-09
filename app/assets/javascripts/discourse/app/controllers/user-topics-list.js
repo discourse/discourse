@@ -82,7 +82,11 @@ export default class UserTopicsListController extends Controller {
   }
 
   get resolvedAscending() {
-    return (this.ascending ?? this.model.get("params.ascending")) === "true";
+    if (this.ascending === undefined || this.ascending === null) {
+      return this.model.get("params.ascending") === "true";
+    } else {
+      return [true, "true"].includes(this.ascending);
+    }
   }
 
   get resolvedOrder() {

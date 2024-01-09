@@ -77,6 +77,17 @@ export default (inboxType, path, filter) => {
         group: null,
         inbox: inboxType,
       });
+
+      let ascending = userTopicsListController.ascending;
+      if (ascending === "true") {
+        ascending = true;
+      } else if (ascending === "false") {
+        ascending = false;
+      }
+      userTopicsListController.setProperties({
+        ascending,
+      });
+
       userTopicsListController.bulkSelectHelper.clear();
 
       userTopicsListController.subscribe();
