@@ -642,7 +642,9 @@ describe UserNotifications do
 
             it "includes correct view summary link in template" do
               email = described_class.chat_summary(user, {})
-              expect(email.html_part.body.to_s).to include("#{Discourse.base_url}/chat")
+              expect(email.html_part.body.to_s).to include(
+                "<a class=\"more-messages-link\" href=\"#{Discourse.base_url}/chat",
+              )
             end
           end
 
