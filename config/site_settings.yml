@@ -1737,6 +1737,7 @@ trust:
   min_trust_to_flag_posts:
     default: 1
     enum: "TrustLevelSetting"
+    hidden: true
   flag_post_allowed_groups:
     default: "11"
     type: group_list
@@ -1757,6 +1758,7 @@ trust:
     default: 0
     client: true
     enum: "TrustLevelSetting"
+    hidden: true
   user_card_background_allowed_groups:
     default: "10"
     type: group_list
@@ -1777,6 +1779,7 @@ trust:
     default: 2
     enum: "TrustLevelSetting"
     client: true
+    hidden: true
   ignore_allowed_groups:
     default: "12"
     type: group_list
