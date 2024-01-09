@@ -73,12 +73,7 @@
       @include darken-background($hover-bg-color, 0.1);
     }
   }
-  &[href] {
-    color: $text-color;
-    &:focus {
-      color: $hover-text-color;
-    }
-  }
+
   .discourse-no-touch &:active:not(:hover):not(:focus),
   .discourse-no-touch &.btn-active:not(:hover):not(:focus),
   &:active:not(:hover):not(:focus),
