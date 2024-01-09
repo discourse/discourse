@@ -58,10 +58,9 @@ class CategoryList
     if SiteSetting.fixed_category_positions
       categories.order(:position, :id)
     else
-      allowed_category_ids = categories.pluck(:id) << nil # `nil` is necessary to include categories without any associated topics
       categories
         .left_outer_joins(:featured_topics)
-        .where(topics: { category_id: allowed_category_ids })
+        .where("topics.category_id IS NULL OR topics.category_id IN (?)", categories.select(:id))
         .group("categories.id")
         .order("max(topics.bumped_at) DESC NULLS LAST")
         .order("categories.id ASC")
