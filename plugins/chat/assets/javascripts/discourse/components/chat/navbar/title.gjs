@@ -9,7 +9,7 @@ export default class ChatNavbarTitle extends Component {
   }
 
   <template>
-    <div class="c-navbar__title">
+    <div title={{@title}} class="c-navbar__title">
       {{#if (has-block)}}
         {{#if @icon}}
           {{icon @icon}}
