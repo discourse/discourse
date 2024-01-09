@@ -74,11 +74,13 @@ export default class Chat extends Service {
     );
   }
 
+  @computed("chatChannelsManager.directMessageChannels")
+  get userHasDirectMessages() {
+    return this.chatChannelsManager.directMessageChannels?.length > 0;
+  }
+
   get userCanAccessDirectMessages() {
-    return (
-      this.userCanDirectMessage ||
-      this.chatChannelsManager.directMessageChannels?.length > 0
-    );
+    return this.userCanDirectMessage || this.userHasDirectMessages;
   }
 
   @computed("activeChannel.userSilenced")

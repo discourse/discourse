@@ -9,7 +9,7 @@ export default class ChannelsList extends Component {
   <template>
     <ChannelsListPublic />
 
-    {{#if this.chat.userCanDirectMessage}}
+    {{#if this.chat.userCanAccessDirectMessages}}
       <ChannelsListDirect />
     {{/if}}
   </template>
