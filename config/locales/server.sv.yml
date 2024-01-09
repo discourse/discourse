@@ -2149,6 +2149,7 @@ sv:
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
     force_lowercase_tags: "Tvinga alla nya taggar att vara helt i små bokstäver."
     create_post_for_category_and_tag_changes: "Skapa ett litet åtgärdsinlägg när ett ämnes kategori eller taggar ändras"
+    watched_precedence_over_muted: "Avisera mig om ämnen i kategorier eller taggar som jag bevakar och också tillhör ett som jag har tystat"
     company_name: "Företagsnamn"
     governing_law: "Gällande lag"
     city_for_disputes: "Domstol vid tvist"

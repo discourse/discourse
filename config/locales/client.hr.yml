@@ -327,6 +327,7 @@ hr:
       edit_bookmark: "Uredi oznaku"
       clear_bookmarks: "Očisti oznake"
       help:
+        bookmark: "Kliknite za spremanje ove teme u oznake"
         edit_bookmark_for_topic: "Kliknite za uređivanje oznake na ovu temu"
         unbookmark: "Klikni za uklananje svih oznaka u ovoj temi"
         unbookmark_with_reminder: "Kliknite da biste uklonili sve oznake i podsjetnike u ovoj temi"
@@ -430,6 +431,8 @@ hr:
         search: "Traži poruku"
         placeholder: "ovdje upišite naslov poruke, URL ili id"
     review:
+      show_more: "Prikaži više"
+      show_less: "Prikaži manje"
       order_by: "Poredaj prema"
       date_filter: "Objavljeno između"
       in_reply_to: "odgovor na"
@@ -557,16 +560,31 @@ hr:
       scores:
         about: "Ocjena se računa na bazi razine povjerenja izvjestitelja, točnosti njihovih prethodnih zastavica i prioriteta stavke o kojoj se izvješćuje."
         score: "Ocjena"
+        date: "Datum izvješća"
         type: "Razlog"
         status: "Statust"
         submitted_by: "Prijavio"
+        reviewed_by: "Pregledao"
+        reviewed_timestamp: "Datum pregleda"
       statuses:
         pending:
           title: "Na čekanju"
         approved:
           title: "Odobrio"
+        approved_flag:
+          title: "Zastava odobrena"
+        approved_user:
+          title: "Korisnik odobren"
+        approved_post:
+          title: "Objava odobrena"
         rejected:
           title: "Odbio"
+        rejected_flag:
+          title: "Zastava odbijena"
+        rejected_user:
+          title: "Korisnik je odbijen"
+        rejected_post:
+          title: "Objava je odbijena"
         reviewed:
           title: "Svi pregledani"
         all:
@@ -1314,6 +1332,7 @@ hr:
         tags: "Oznake"
         interface: "Sučelje"
         apps: "Aplikacije"
+        navigation_menu: "Navigacijski izbornik"
       change_password:
         success: "(email je poslan)"
         in_progress: "(email se šalje)"
@@ -1327,6 +1346,8 @@ hr:
         title: "Dva faktorski rezervni kodovi"
         regenerate: "Regeneriraj"
         disable: "Onemogući"
+        enable: "Stvori pričuvne kodove"
+        enable_long: "Dodaj pričuvne kodove"
         manage:
           one: "Preostalo vam je <strong>%{count}</strong> rezervni kodova."
           few: "Preostalo vam je <strong>%{count}</strong> rezervni kodova."

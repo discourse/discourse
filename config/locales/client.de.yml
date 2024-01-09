@@ -1789,7 +1789,7 @@ de:
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
       admin_guide:
         title: "Willkommen auf deiner neuen Website!"
-        content: "<a href='%{admin_guide_url}'>Lies den Admin-Leitfaden</a> , um mit dem Aufbau deiner Website und Community fortzufahren."
+        content: "<a href=„%{admin_guide_url}'>Lies den Admin-Leitfaden</a> , um mit dem Aufbau deiner Website und Community fortzufahren."
         content_no_url: "Lies den Administrator-Leitfaden, um deine Website und deine Community weiter auszubauen."
     loading: "Wird geladen …"
     errors:

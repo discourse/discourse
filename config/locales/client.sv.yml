@@ -1169,6 +1169,7 @@ sv:
       watched_first_post_categories_instructions: "Du kommer att bli aviserad om första inlägget i varje nytt ämne i den här kategorin."
       watched_first_post_tags: "Bevakar första inlägget"
       watched_first_post_tags_instructions: "Du kommer att bli aviserad om första inlägget i varje nytt ämne med dessa taggar."
+      watched_precedence_over_muted: "Avisera mig om ämnen i kategorier eller taggar som jag bevakar och också tillhör ett som jag har tystat"
       muted_categories: "Tystad"
       muted_categories_instructions: "Du kommer inte att aviseras om någonting gällande nya ämnen i dessa kategorier, och de kommer inte dyka upp på kategorier eller senaste sidorna."
       muted_categories_instructions_dont_hide: "Du kommer inte att aviseras om någonting gällande nya ämnen i dessa kategorier."

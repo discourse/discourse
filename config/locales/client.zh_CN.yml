@@ -128,7 +128,7 @@ zh_CN:
       user_left: "%{who} 在 %{when}将自己从此消息中移除"
       removed_user: "%{when}移除了 %{who}"
       removed_group: "%{when}移除了 %{who}"
-      autobumped: "%{when}自动提升"
+      autobumped: "%{when}自动顶帖"
       tags_changed: "标签 %{when}更新"
       category_changed: "类别 %{when}更新"
       autoclosed:
@@ -661,7 +661,7 @@ zh_CN:
         invite_members: "邀请"
         delete_member_confirm: "要从群组 '%{group}' 中移除用户 '%{username}' 吗？"
         profile:
-          title: 个人资料
+          title: 资料
         interaction:
           title: 互动
           posting: 发帖
@@ -1104,7 +1104,7 @@ zh_CN:
       watched_tags_instructions: "您将自动关注带有这些标签的所有话题。您会收到所有新帖子和话题的通知，话题旁还会显示新帖子的数量。"
       tracked_tags: "已跟踪"
       tracked_tags_instructions: "您将自动跟踪带有这些标签的所有话题。新帖子的数量将显示在话题旁边。"
-      muted_tags: "已设为免打扰"
+      muted_tags: "免打扰"
       muted_tags_instructions: "您不会收到有关带有这些标签的新话题的任何通知，它们也不会出现在最新话题页面上。"
       watched_categories: "已关注"
       watched_categories_instructions: "您将自动关注这些类别中的所有话题。您会收到所有新帖子和话题的通知，话题旁还会显示新帖子的数量。"
@@ -1129,12 +1129,12 @@ zh_CN:
       admin_delete: "删除"
       users: "用户"
       muted_users: "已设为免打扰"
-      muted_users_instructions: "屏蔽来自这些用户的所有通知和 PM。"
+      muted_users_instructions: "屏蔽来自这些用户的所有通知和私信。"
       allowed_pm_users: "已允许"
-      allowed_pm_users_instructions: "仅允许来自这些用户的 PM。"
+      allowed_pm_users_instructions: "仅允许来自这些用户的私信。"
       allow_private_messages_from_specific_users: "仅允许特定用户向我发送个人消息"
       ignored_users: "已忽略"
-      ignored_users_instructions: "屏蔽来自这些用户的所有帖子、通知和 PM。"
+      ignored_users_instructions: "屏蔽来自这些用户的所有帖子、通知和私信。"
       tracked_topics_link: "显示"
       automatically_unpin_topics: "当我到达底部时自动取消置顶话题。"
       apps: "应用"
@@ -1380,8 +1380,8 @@ zh_CN:
         add_email: "添加备用电子邮件"
         auth_override_instructions: "可以通过身份验证服务提供商更新电子邮件。"
         no_secondary: "没有辅助电子邮件"
-        instructions: "绝不会向公众显示。"
-        admin_note: "注意：管理员用户更改非管理员用户的电子邮件，则说明后者无法访问其原始电子邮件帐户，因此将向后者的新地址发送一封重置密码的电子邮件。在用户完成密码重置流程之前，他们的电子邮件不会更改。"
+        instructions: "不会公开显示。"
+        admin_note: "注意：管理员用户更改非管理员用户的电子邮件，则说明后者无法访问其原始电子邮件帐户，因此将向后者的新地址发送一封重置密码的电子邮件。在用户完成密码重置流程之前，其电子邮件不会更改。"
         ok: "我们将向您发送电子邮件以确认"
         required: "请输入一个电子邮件地址"
         invalid: "请输入有效的电子邮件地址"
@@ -1406,7 +1406,7 @@ zh_CN:
         instructions: "您的全名（可选）"
         instructions_required: "您的全名"
         required: "请输入姓名"
-        too_short: "您的姓名过短"
+        too_short: "您的用户名过短"
         ok: "您的姓名没有问题"
       username:
         title: "用户名"
@@ -1705,8 +1705,8 @@ zh_CN:
         content: "下面是我们认为您接下来可能想要阅读的一些话题。"
       admin_guide:
         title: "欢迎来到您的新站点！"
-        content: "<a href='%{admin_guide_url}'>阅读管理指南</a> 以继续构建你的网站和社区。"
-        content_no_url: "阅读管理指南以继续建设您的站点和社区。"
+        content: "<a href='%{admin_guide_url}'>阅读管理指南</a> 以继续构建您的站点和社区。"
+        content_no_url: "阅读管理指南以继续构建您的站点和社区。"
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -2170,7 +2170,7 @@ zh_CN:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
         toggle_topic_bump:
-          label: "切换话题提升"
+          label: "切换话题顶帖"
           desc: "回复但不更改最新回复日期"
       reload: "重新加载"
       ignore: "忽略"
@@ -2470,7 +2470,7 @@ zh_CN:
         clear_all: "全部清除"
         unlist_topics: "取消公开话题"
         relist_topics: "重新公开话题"
-        reset_bump_dates: "重置提升日期"
+        reset_bump_dates: "重置顶帖日期"
         defer: "推迟"
         delete: "删除话题"
         dismiss: "忽略"
@@ -2680,7 +2680,7 @@ zh_CN:
       auto_delete:
         title: "自动删除话题"
       auto_bump:
-        title: "自动提升话题"
+        title: "自动顶帖话题"
       reminder:
         title: "提醒我"
       auto_delete_replies:
@@ -2691,7 +2691,7 @@ zh_CN:
         auto_publish_to_category: "此话题将在 %{timeLeft}后发布到<a href=%{categoryUrl}>#%{categoryName}</a>。"
         auto_close_after_last_post: "此话题将在最后一个回复的%{duration}后关闭。"
         auto_delete: "此话题将在 %{timeLeft}后自动删除。"
-        auto_bump: "此话题将在 %{timeLeft}后自动提升。"
+        auto_bump: "此话题将在 %{timeLeft}后被自动顶帖。"
         auto_reminder: "您将在 %{timeLeft}后收到此话题的提醒。"
         auto_delete_replies: "此话题的回复会在%{duration}后自动删除。"
       auto_close_title: "自动关闭设置"
@@ -2775,7 +2775,7 @@ zh_CN:
         reset_read: "重置阅读数据"
         make_public: "设为公开话题…"
         make_private: "设为个人消息"
-        reset_bump_date: "重置提升日期"
+        reset_bump_date: "重置顶帖日期"
       feature:
         pin: "置顶话题"
         unpin: "取消置顶话题"
@@ -2855,7 +2855,7 @@ zh_CN:
         email_placeholder: "name@example.com"
         success_email: "我们已向 <b>%{invitee}</b> 发送邀请。在邀请被确认后，我们将通知您。查看您的用户页面上的邀请标签页以跟踪邀请进度。"
         success_username: "我们已邀请该用户加入此话题。"
-        error: "抱歉，我们无法邀请此人。也许他们已经被邀请了？（邀请次数受限）"
+        error: "抱歉，我们无法邀请此人。也许 Ta 已经被邀请了？（邀请次数受限）"
         success_existing_email: "电子邮件为 <b>%{emailOrUsername}</b> 的用户已存在。我们已邀请该用户加入此话题。"
       login_reply: "登录以回复"
       filters:
@@ -3276,7 +3276,7 @@ zh_CN:
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
       parent: "父类别"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
-      auto_bump_cooldown_days: "再次提升同一话题之前的最短天数。"
+      auto_bump_cooldown_days: "再次顶帖同一话题之前的最短天数。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
       notifications:
         title: "更改此类别的通知级别"
@@ -3649,7 +3649,7 @@ zh_CN:
       more_badges:
         other: "其他 (+%{count})"
       awarded:
-        other: "已授予 %{number} 人"
+        other: "已授予 %{number} 个"
       select_badge_for_title: 选择一个徽章作为您的头衔使用
       none: "（无）"
       successfully_granted: "已成功将“%{badge}”授予 %{username}"
@@ -3798,7 +3798,7 @@ zh_CN:
       approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "嘿，您应该加入此论坛！"
       custom_message_template_topic: "嘿，我想您可能会喜欢此话题！"
-    forced_anonymous: "由于负载过大，暂时对所有用户都显示登出用户所见的内容。"
+    forced_anonymous: "由于负载过大，这会暂时向所有人显示，因此退出登录的用户会看到它。"
     forced_anonymous_login_required: "该站点正处于极端负载状态，当前无法加载，请在几分钟后再试。"
     footer_nav:
       back: "返回"
@@ -5195,7 +5195,7 @@ zh_CN:
         suspend_failed: "封禁此用户时出错 %{error}"
         unsuspend_failed: "取消封禁此用户时出错 %{error}"
         suspend_duration: "将用户封禁至："
-        suspend_reason_label: "您为什么封禁该用户？此文本将在用户的个人资料页面上<b>对所有人可见</b>，并且当用户尝试登录时，他们将看到此文本。尽量简洁。"
+        suspend_reason_label: "您为什么封禁该用户？此文本将在用户的个人资料页面上<b>对所有人可见</b>，并且用户尝试登录时将看到此文本。尽量简洁。"
         suspend_reason_hidden_label: "您为什么封禁该用户？当用户尝试登录时将看到此文本。尽量简洁。"
         suspend_reason: "原因"
         suspend_reason_title: "封禁原因"
@@ -5204,7 +5204,7 @@ zh_CN:
           consuming_staff_time: "消耗了过多的管理人员时间"
           combative: "好斗"
           in_wrong_place: "在错误的地方"
-          no_constructive_purpose: "除了在社区内引起异议外，他们的行动没有任何建设性的目的"
+          no_constructive_purpose: "除了在社区内引起异议外，该用户的行动没有任何建设性的目的"
           custom: "自定义…"
         suspend_message: "电子邮件消息"
         suspend_message_placeholder: "或者，提供有关封禁的更多信息，它将通过电子邮件发送给用户。"
@@ -5355,7 +5355,7 @@ zh_CN:
         deactivate_failed: "停用用户时出现问题。"
         unsilence_failed: "取消禁言用户时出现问题。"
         silence_failed: "禁言用户时出现问题。"
-        silence_confirm: "确定要禁言此用户吗？他们将无法创建任何新话题或帖子。"
+        silence_confirm: "确定要禁言该用户吗？该用户将无法创建任何新话题或帖子。"
         silence_accept: "是，禁言此用户"
         bounce_score: "退回分数"
         reset_bounce_score:
@@ -5372,7 +5372,7 @@ zh_CN:
           threshold_reached: "最近收到太多来自该电子邮件的退回。"
         trust_level_change_failed: "更改用户的信任级别时出现问题。"
         suspend_modal_title: "封禁用户"
-        confirm_cancel_penalty: "确定要放弃惩罚吗？"
+        confirm_cancel_penalty: "确定要舍弃惩罚吗？"
         trust_level_2_users: "信任级别 2 用户"
         trust_level_3_requirements: "信任级别 3 要求"
         trust_level_locked_tip: "信任级别已被锁定，系统将不会升降用户的信任级别"

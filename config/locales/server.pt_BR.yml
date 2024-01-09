@@ -68,8 +68,11 @@ pt_BR:
       generic: Ocorreu um erro ao importar esse tema
       upload: "Erro ao enviar um arquivo: %{name}. %{errors}"
       about_json: "Erro ao importar: about.json não existe ou é inválido. Tem certeza de que é um tema do Discourse?"
+      about_json_too_big: "Erro ao importar: o arquivo about.json é maior do que o limite de %{limit}."
       about_json_values: "about.json contém valores inválidos: %{errors}"
       modifier_values: "about.json contém valores inválidos: %{errors}"
+      asset_too_big: "O ativo %{filename} é maior do que o limite de %{limit}"
+      theme_too_big: "O tema é maior do que o limite de %{limit}"
       git: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
       git_ref_not_found: "Não é possível conseguir a referência GIT: %{ref}"
       git_unsupported_scheme: "Não foi possíve clonar repositório git: esquema incompatível"
@@ -78,6 +81,7 @@ pt_BR:
       unknown_file_type: "O arquivo que você enviou não parece ser um tema válido do Discourse."
       not_allowed_theme: "\"%{repo}\" não está na lista de temas permitidos (confira a configuração global \"allowed_theme_repos\")."
       ssh_key_gone: "Você esperou muito tempo para instalar o tema e a chave SSH expirou. Tente novamente."
+      too_many_files: "A quantidade de arquivos (%{count}) no tema ultrapassou a quantidade máxima de arquivos permitida (%{limit})"
     errors:
       component_no_user_selectable: "Componentes do tema não podem ser selecionados pelo(a) usuário(a)"
       component_no_default: "Componentes do tema não podem ser o tema padrão"
