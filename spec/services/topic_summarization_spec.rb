@@ -100,6 +100,24 @@ describe TopicSummarization do
         section = summarization.summarize(topic, user)
         expect(section.summarized_text).to eq(cached_summary_text)
       end
+
+      context "when the topic has embed content cached" do
+        it "embed content is used instead of the raw text" do
+          topic_embed =
+            Fabricate(
+              :topic_embed,
+              topic: topic,
+              embed_content_cache: "<p>hello world new post :D</p>",
+            )
+
+          summarization.summarize(topic, user)
+
+          first_post_data =
+            strategy.content[:contents].detect { |c| c[:id] == topic.first_post.post_number }
+
+          expect(first_post_data[:text]).to eq(topic_embed.embed_content_cache)
+        end
+      end
     end
 
     context "when the content was summarized in multiple chunks" do
