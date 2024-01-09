@@ -149,7 +149,7 @@ fi:
     action_codes:
       public_topic: "Muutettu ketju julkiseksi %{when}"
       open_topic: "Muunsi tämän ketjuksi %{when}"
-      private_topic: "Muutettu yksityseksi keskusteluksi %{when}"
+      private_topic: "Muutettu yksityiseksi keskusteluksi %{when}"
       split_topic: "Ketju jaettu %{when}"
       invited_user: "Kutsui käyttäjän %{who} %{when}"
       invited_group: "Kutsui käyttäjän %{who} %{when}"

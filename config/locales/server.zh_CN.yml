@@ -68,11 +68,11 @@ zh_CN:
       generic: 导入该主题时发生错误
       upload: "创建上传资源时出错：%{name}。%{errors}"
       about_json: "导入错误：about.json 不存在或无效。确定这是一个 Discourse 主题码？"
-      about_json_too_big: "导入错误：about.json 超过 %{limit} 限制。"
+      about_json_too_big: "导入错误：about.json 超过上限 %{limit}。"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 修饰符包含无效值：%{errors}"
-      asset_too_big: "资产 %{filename} 大于 %{limit} 限制"
-      theme_too_big: "主题大于 %{limit} 限制"
+      asset_too_big: "资产 %{filename} 大于上限 %{limit}"
+      theme_too_big: "主题大于上限 %{limit}"
       git: "克隆 git 仓库时出错，访问被拒绝或找不到仓库"
       git_ref_not_found: "无法签出 git 参考：%{ref}"
       git_unsupported_scheme: "无法克隆 git 仓库：方案不受支持"
@@ -356,7 +356,7 @@ zh_CN:
   removed_direct_reply_full_quotes: "已自动移除对整个上一个帖子的引用。"
   watched_words_auto_tag: "已自动为话题添加标签"
   secure_upload_not_allowed_in_public_topic: "抱歉，无法在公开话题中使用以下安全上传：%{upload_filenames}。"
-  create_pm_on_existing_topic: "抱歉，您无法在现有话题上创建 PM。"
+  create_pm_on_existing_topic: "抱歉，您无法在现有话题上创建私信。"
   slow_mode_enabled: "此话题处于慢速模式。"
   just_posted_that: "与您最近发布的内容过于相似"
   invalid_characters: "包含无效字符"
@@ -1002,7 +1002,7 @@ zh_CN:
         time_read: 阅读时间
         topic_count: 创建的话题
         post_count: 创建的帖子
-        pm_count: 创建的 PM
+        pm_count: 创建的私信
         revision_count: 修订
       description: 版主活动列表，包括审核的举报、阅读时间、创建的话题、创建的帖子、创建的个人消息和修订。
     flags_status:
@@ -1250,7 +1250,7 @@ zh_CN:
       title: "第一个响应的时间"
       xaxis: "天"
       yaxis: "平均时间（小时）"
-      description: "新话题首次得到响应的平均时间（小时）"
+      description: "新话题首次得到响应的平均时间（以小时为单位）"
     topics_with_no_response:
       title: "没有回应的话题"
       xaxis: "天"
@@ -1459,7 +1459,7 @@ zh_CN:
     summarization_strategy: "总结插件注册的内容的其他方法"
     custom_summarization_allowed_groups: "允许使用 `summarization_strategy` 总结内容的群组。"
     enable_personal_messages: "已弃用，请改用 'personal message enabled groups' 设置。允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。请注意，管理人员不受限制。"
-    personal_message_enabled_groups: "允许这些组中的用户创建消息和回复消息。信任级别组包括高于该数字的所有信任级别，例如选择 trust_level_1 还允许 trust_level_2、3、4 用户发送 PM。请注意，管理人员不受限制。"
+    personal_message_enabled_groups: "允许这些组中的用户创建消息和回复消息。信任级别组包括高于该数字的所有信任级别，例如选择 trust_level_1 还允许 trust_level_2、3、4 用户发送私信。请注意，管理人员不受限制。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
     enable_chunked_encoding: "启用服务器的分块编码响应。此功能适用于大多数设置，但某些代理可能会缓冲，导致响应延迟"
     long_polling_base_url: "用于长轮询的基础 URL（当 CDN 提供动态内容时，请务必将其设置为来源拉取）例如：http://origin.site.com"
@@ -1693,7 +1693,7 @@ zh_CN:
     png_to_jpg_quality: "转换后的 JPG 文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     recompress_original_jpg_quality: "上传的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
     image_preview_jpg_quality: "调整大小的图片文件的质量（1 为最低质量，99 为最佳质量，100 为禁用）。"
-    allow_staff_to_upload_any_file_in_pm: "允许管理人员在 PM 中上传任何文件。"
+    allow_staff_to_upload_any_file_in_pm: "允许管理人员在私信中上传任何文件。"
     strip_image_metadata: "去除图片元数据。"
     composer_media_optimization_image_enabled: "启用上传图片文件的客户端媒体优化。"
     composer_media_optimization_image_bytes_optimization_threshold: "触发客户端优化的最小图片文件大小"
@@ -1922,7 +1922,7 @@ zh_CN:
     enable_user_directory: "提供用户目录以供浏览"
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
-    group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为 PM 中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
+    group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
     allow_anonymous_posting: "允许用户切换至匿名模式"
     allow_anonymous_likes: "允许匿名用户点赞帖子"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
@@ -1947,14 +1947,14 @@ zh_CN:
     enable_mobile_theme: "移动设备使用适合移动设备的主题，并且可以切换到完整站点。如果您想使用完全自适应的自定义样式表，请禁用此选项。"
     dominating_topic_minimum_percent: "在被提醒过度主导某个话题之前，用户必须在某个话题中发布的帖子所占的百分比。"
     disable_avatar_education_message: "禁用更改头像的教育消息。"
-    pm_warn_user_last_seen_months_ago: "在创建新的 PM 时，如果目标接收者已经超过 n 个月前无活动，则警告用户。"
+    pm_warn_user_last_seen_months_ago: "在创建新的私信时，如果目标接收者已经超过 n 个月前无活动，则警告用户。"
     suppress_uncategorized_badge: "不在话题列表中显示未分类话题的徽章。"
     header_dropdown_category_count: "标题下拉菜单中可以显示的类别数量。"
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
     global_notice: "向所有访客显示紧急、突发、不可忽略的全局横幅通知，更改为空将隐藏（允许使用 HTML）。"
     disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统用户的编辑通知。"
-    disable_category_edit_notifications: "禁用主题类别编辑通知。包括 “已发布” 的主题(例如共享草稿)。"
-    disable_tags_edit_notifications: "禁用主题标签编辑的通知。包括“已发布”的主题(例如共享草稿)。"
+    disable_category_edit_notifications: "禁用话题编辑的通知。包括“已发布”的话题（例如，共享草稿）。"
+    disable_tags_edit_notifications: "禁用话题标签编辑的通知。包括“已发布”的话题（例如，共享草稿）。"
     notification_consolidation_threshold: "合并通知前，收到的赞或成员资格请求通知的数量。设置为 0 将禁用。"
     likes_notification_consolidation_window_mins: "以分钟计的持续时间，被赞的通知在达到此阈值后会被合并到单个通知中。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
@@ -2158,7 +2158,7 @@ zh_CN:
       reply_by_email_address_is_empty: "在启用通过电子邮件回复之前，您必须先设置 'reply by email address'。"
       email_polling_disabled: "您必须先启用手动、POP3 轮询或启用自定义邮件轮询器，然后才能通过电子邮件进行回复。"
       user_locale_not_enabled: "在启用此设置之前，您必须先启用 'allow user locale'。"
-      personal_message_enabled_groups_invalid: "您必须为此设置指定至少一个群组。如果您不希望管理人员以外的任何人发送 PM，请选择管理人员群组。"
+      personal_message_enabled_groups_invalid: "您必须为此设置指定至少一个群组。如果您不希望管理人员以外的任何人发送私信，请选择管理人员群组。"
       invalid_regex: "正则表达式无效或不被允许。"
       invalid_regex_with_message: "正则表达式 '%{regex}' 有一个错误：%{message}"
       email_editable_enabled: "在启用此设置之前，您必须先禁用 'email editable'。"
@@ -2327,8 +2327,8 @@ zh_CN:
     invalid_security_key: "无效的安全密钥。"
     missing_second_factor_name: "请提供一个名称。"
     missing_second_factor_code: "请提供一个代码。"
-    too_many_authenticators: "抱歉，身份验证器不能超过 50 个。请删除一个现有的并重试。"
-    too_many_security_keys: "抱歉，您不能拥有超过 50 个安全密钥。请删除一个现有密钥并重试。"
+    too_many_authenticators: "抱歉，身份验证器不能超过 50 个。请移除一个现有的身份验证器并重试。"
+    too_many_security_keys: "抱歉，安全密钥不能超过 50 个。请移除一个现有密钥并重试。"
     second_factor_toggle:
       totp: "改用身份验证器应用或安全密钥"
       backup_code: "改用备份代码"
@@ -2694,7 +2694,7 @@ zh_CN:
 
         我们始终相信[文明社区行为](%{base_url}/guidelines)。
 
-        好好享受您在社区的时光吧！
+        请享受您在社区的时光吧！
     welcome_tl1_user:
       title: "欢迎 TL1 用户"
       subject_template: "感谢与我们共度时光"
@@ -2725,7 +2725,7 @@ zh_CN:
 
         我们始终相信[文明社区行为](%{base_url}/guidelines)。
 
-        好好享受您在社区的时光吧！
+        请享受您在社区的时光吧！
 
         [prefs]：%{user_preferences_url}
     tl2_promotion_message:
@@ -3224,7 +3224,7 @@ zh_CN:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
-      title: "用户邀请群组加入 PM"
+      title: "用户邀请群组加入私信"
       subject_template: "[%{email_prefix}] %{username} 邀请 @%{group_name} 加入消息 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -3233,7 +3233,7 @@ zh_CN:
 
         %{respond_instructions}
     user_invited_to_private_message_pm:
-      title: "用户邀请加入 PM"
+      title: "用户邀请加入私信"
       subject_template: "[%{email_prefix}] %{username} 邀请您加入消息 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -3242,7 +3242,7 @@ zh_CN:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      title: "用户邀请加入 PM 暂存"
+      title: "暂存用户邀请加入私信"
       subject_template: "[%{email_prefix}] %{username} 邀请您加入消息 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -3271,8 +3271,8 @@ zh_CN:
 
         %{respond_instructions}
     user_replied_pm:
-      title: "用户回复 PM"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      title: "用户回复私信"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3315,8 +3315,8 @@ zh_CN:
 
         %{respond_instructions}
     user_mentioned_pm:
-      title: "用户提及 PM"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      title: "用户提及私信"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3338,7 +3338,7 @@ zh_CN:
         %{respond_instructions}
     user_group_mentioned_pm:
       title: "提及用户群组的私信"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3349,7 +3349,7 @@ zh_CN:
         %{respond_instructions}
     user_group_mentioned_pm_group:
       title: "提及用户群组的私信"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3392,8 +3392,8 @@ zh_CN:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "用户发布 PM"
-      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      title: "用户发布私信"
+      subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -3403,7 +3403,7 @@ zh_CN:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "用户发布 PM 暂存"
+      title: "暂存用户发布私信"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -3593,7 +3593,7 @@ zh_CN:
 
         我们始终相信[文明社区行为](%{base_url}/guidelines)。
 
-        好好享受您在社区的时光吧！
+        请享受您在社区的时光吧！
     signup_after_reject:
       title: "拒绝后注册"
       subject_template: "您加入 %{site_name} 的请求被拒绝"
@@ -4351,7 +4351,7 @@ zh_CN:
         当您第一次通过电子邮件 :e-mail: 回复帖子时，将授予此徽章。
     new_user_of_the_month:
       name: "当月最佳新用户"
-      description: 在第一个月做出杰出贡献
+      description: 在注册的第一个月做出杰出贡献
       long_description: |
         此徽章每个月被授予做出杰出贡献的两个新用户。整体贡献根据他们的帖子被赞的频率和被谁赞进行衡量。
     enthusiast:

@@ -68,8 +68,11 @@ fi:
       generic: Teeman tuomisessa tapahtui virhe
       upload: "Virhe luotaessa latausresurssia: %{name}. %{errors}"
       about_json: "Virhe tuotaessa: about.json ei ole olemassa tai ei kelpaa. Oletko varma, että tämä on Discourse-teema?"
+      about_json_too_big: "Tuontivirhe: about.json on suurempi kuin raja %{limit}."
       about_json_values: "about.json sisältää virheellisiä arvoja: %{errors}"
       modifier_values: "about.json-tiedoston määreet sisältävät virheellisiä arvoja: %{errors}"
+      asset_too_big: "Resurssi %{filename} on suurempi kuin raja %{limit}"
+      theme_too_big: "Teema on suurempi kuin raja %{limit}"
       git: "Virhe git-tietovarastoa kloonattaessa: ei käyttöoikeutta tai tietovarastoa ei löytynyt"
       git_ref_not_found: "git checkout epäonnistui kohteelle: %{ref}"
       git_unsupported_scheme: "Git-tietolähteen kloonaaminen ei onnistu: skeemaa ei tueta"
@@ -78,6 +81,7 @@ fi:
       unknown_file_type: "Lataamasi tiedosto ei näytä olevan kelvollinen Discourse-teema."
       not_allowed_theme: "`%{repo}` ei ole sallittujen teemojen luettelossa (tarkista `allowed_theme_repos` -asetus)."
       ssh_key_gone: "Odotit liian kauan teeman asentamista, ja SSH-avain vanheni. Yritä uudelleen."
+      too_many_files: "Tiedostojen määrä (%{count}) teemassa ylittää tiedostojen enimmäismäärän (%{limit})"
     errors:
       component_no_user_selectable: "Teemakomponentti ei voi olla käyttäjän valittavissa"
       component_no_default: "Teemakomponentti ei voi olla oletusteema"
@@ -905,6 +909,9 @@ fi:
     sequence_conflict_error:
       title: "luonnosvirhe"
       description: "Luonnosta muokataan toisessa ikkunassa. Lataa tämä sivu uudelleen."
+    too_many_drafts:
+      title: "Liian monta luonnosta"
+      description: "Olet saavuttanut sallittujen luonnosten enimmäismäärän. Poista joitain [luonnoksistasi](%{base_url}/my/activity/drafts) ja yritä uudelleen."
   draft_backup:
     pm_title: "Varmuuskopiot käynnissä olevien ketjujen luonnoksista"
     pm_body: "Ketju, joka sisältää varmuuskopioluonnoksia"

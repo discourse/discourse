@@ -68,8 +68,11 @@ it:
       generic: Errore durante l'importazione del tema
       upload: "Errore nella creazione della risorsa di caricamento: %{name}. %{errors}"
       about_json: "Errore di importazione: about.json non esiste o non è valido. Sei sicuro che questo sia un tema di Discourse?"
+      about_json_too_big: "Errore di importazione: about.json supera il limite di %{limit}."
       about_json_values: "about.json contiene valori non validi: %{errors}"
       modifier_values: "I modificatori about.json contengono valori non validi: %{errors}"
+      asset_too_big: "La risorsa %{filename} supera il limite di %{limit}"
+      theme_too_big: "Il tema supera il limite di %{limit}"
       git: "Errore nella clonazione dell'archivio git, accesso negato o archivio non trovato"
       git_ref_not_found: "Impossibile eseguire il checkout del riferimento git: %{ref}"
       git_unsupported_scheme: "Impossibile clonare il repository git: schema non supportato"
@@ -78,6 +81,7 @@ it:
       unknown_file_type: "Il file che hai caricato non sembra essere un tema valido di Discourse."
       not_allowed_theme: "`%{repo}` non è nella lista dei temi consentiti (controlla l'impostazione globale `allowed_theme_repos`)."
       ssh_key_gone: "Hai aspettato troppo tempo per installare il tema e la chiave SSH è scaduta. Riprova."
+      too_many_files: "Il numero di file (%{count}) nel tema ha superato il numero massimo consentito di file (%{limit})"
     errors:
       component_no_user_selectable: "I componenti del tema non sono selezionabili dall'utente"
       component_no_default: "I componenti del tema non possono essere il tema predefinito"
@@ -905,6 +909,9 @@ it:
     sequence_conflict_error:
       title: "errore bozza"
       description: "La bozza viene modificata in un'altra finestra. Ricarica questa pagina."
+    too_many_drafts:
+      title: "Troppe bozze"
+      description: "Hai raggiunto il numero massimo di bozze consentite. Elimina alcune delle [tue bozze](%{base_url}/my/activity/drafts) e riprova."
   draft_backup:
     pm_title: "Copie di backup da argomenti in corso"
     pm_body: "Argomento contenente copie di backup"
@@ -2405,6 +2412,8 @@ it:
     invalid_security_key: "Chiave di sicurezza non valida."
     missing_second_factor_name: "Si prega di fornire un nome."
     missing_second_factor_code: "Si prega di fornire un codice."
+    too_many_authenticators: "Spiacenti, non puoi avere più di 50 autenticatori. Rimuovine uno esistente e riprova."
+    too_many_security_keys: "Spiacenti, non puoi avere più di 50 token di sicurezza. Rimuovine uno esistente e riprova."
     second_factor_toggle:
       totp: "Utilizza un'app di autenticazione o una chiave di sicurezza"
       backup_code: "Utilizza un codice di backup"

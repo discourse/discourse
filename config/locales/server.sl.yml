@@ -280,6 +280,7 @@ sl:
       <<: *errors
   uncategorized_category_name: "Nerazvrščeno"
   general_category_name: "Splošno"
+  meta_category_name: "Povratne informacije spletnega mesta"
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
   category:
