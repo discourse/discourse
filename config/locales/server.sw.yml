@@ -52,6 +52,9 @@ sw:
   redirect_warning: "Tumeshindwa kuthibitisha kua kiungo ulichokichagua kipo kwenye hii jamii. Kama ungependa kuendelea, chagua kiungo hapo chini."
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} za %{username}"
+  components:
+    enabled_filter: "Imeruhusiwa"
+    disabled_filter: "Imezuiwa"
   themes:
     other_error: "Tatizo limetokea kwenye kusasisha mandhari"
     import_error:

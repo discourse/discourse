@@ -55,6 +55,9 @@ hr:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  components:
+    enabled_filter: "Omogućeno"
+    disabled_filter: "Onemogućeno"
   themes:
     bad_color_scheme: "Tema se ne može ažurirati, nevažeća paleta boja"
     other_error: "Dogodila se greška pri ažuriranju teme"
@@ -1394,7 +1397,6 @@ hr:
     max_allowed_message_recipients: "Maksimalan broj dopuštenih primatelja u poruci."
     watched_words_regular_expressions: "Promatrane riječi su regularni izrazi."
     enable_diffhtml_preview: "Eksperimentalna značajka koja koristi diffHTML za sinkronizaciju pregleda umjesto potpunog ponovnog renderiranja"
-    enable_fast_edit: "Omogućuje mali odabir teksta objave koji se može uređivati na liniji."
     old_post_notice_days: "Dana prije nego što obavijest o pošti postane stara"
     new_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o novim objavama korisnika."
     returning_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o objavama korisnika koji se vraćaju."

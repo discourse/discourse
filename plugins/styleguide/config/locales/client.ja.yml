@@ -90,7 +90,7 @@ ja:
         tooltips:
           description: "説明"
           header: "ヘッダー"
-          hover_to_see: "マウスを合わせるとツールヒントを表示"
+          hover_to_see: "マウスを合わせてツールヒントを表示"
         char_counter:
           title: "文字カウンター"
           placeholder: "ここにテキストを入力してください..."

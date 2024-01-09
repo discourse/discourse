@@ -54,6 +54,9 @@ pt:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
+  components:
+    enabled_filter: "Ativado"
+    disabled_filter: "Desativado"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"

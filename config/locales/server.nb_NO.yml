@@ -52,6 +52,9 @@ nb_NO:
   redirect_warning: "Vi kunne ikke verifisere at lenken du valgte faktisk var publisert på forumet. Hvis du likevel ønsker å fortsette, velg lenken under."
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} av %{username}"
+  components:
+    enabled_filter: "Aktivert"
+    disabled_filter: "Deaktivert"
   themes:
     other_error: "Noe gikk galt under oppdateringen av drakten"
     import_error:

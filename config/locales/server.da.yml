@@ -54,6 +54,9 @@ da:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} af %{username}"
+  components:
+    enabled_filter: "Aktiveret"
+    disabled_filter: "Deaktiveret"
   themes:
     bad_color_scheme: "Kan ikke opdatere tema, ugyldigt farvepalette"
     other_error: "Der opstod en fejl under opdatering af temaet"

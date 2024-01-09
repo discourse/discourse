@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 sl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Klepet
   js:
     admin:
       site_settings:

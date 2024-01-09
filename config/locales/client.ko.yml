@@ -3936,11 +3936,14 @@ ko:
           body: "본문"
           revert: "변경사항 되돌리기"
           revert_confirm: "변경사항을 되돌릴까요?"
+        component:
+          all_filter: "전체"
+          enabled_filter: "활성화"
+          disabled_filter: "비활성"
         theme:
           theme: "테마"
           component: "구성 요소"
           components: "구성 요소"
-          filter_placeholder: "필터링하려면 입력…"
           theme_name: "테마명"
           component_name: "구성 요소 이름"
           themes_intro: "기존 테마를 선택하거나 새 테마를 설치하여 시작하세요."
@@ -4099,6 +4102,9 @@ ko:
             title: "YAML 포맷으로 테마 설정 정의"
           scss_color_variables_warning: '테마에서 핵심 SCSS 색상 변수를 사용하는 기능은 지원 중단되었습니다. 대신 CSS 사용자 지정 프로퍼티를 사용하세요. 자세한 내용은 <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">이 가이드</a>를 참조하세요.'
           scss_warning_inline: "테마에서 코어 SCSS 색상 변수를 사용하는 기능은 지원 중단되었습니다."
+          all_filter: "전체"
+          active_filter: "활성화 사용자"
+          inactive_filter: "비활성화"
         colors:
           select_base:
             title: "베이스 색상 팔레트 선택"

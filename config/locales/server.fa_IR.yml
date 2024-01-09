@@ -55,6 +55,8 @@ fa_IR:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} توسط %{username}"
+  components:
+    disabled_filter: "غیرفعال"
   themes:
     bad_color_scheme: "نمی‌توان پوسته را بروزرسانی کرد، جعبه رنگ نامعتبر"
     other_error: "در بروزرسانی قالب مشکلی پیش آمده"

@@ -55,6 +55,8 @@ ur:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} کی طرف سے #%{post_number}"
+  components:
+    disabled_filter: "غیر فعال"
   themes:
     bad_color_scheme: "تِھیم اَپ ڈَیٹ نہیں ہو سکتی، غلط رنگ پیلیٹ"
     other_error: "تِھیم اَپ ڈَیٹ کرتے ہوے کچھ غلط ہو گیا"

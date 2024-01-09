@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 fa_IR:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: گفتگو
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "همیشه"
           never: "هرگز"

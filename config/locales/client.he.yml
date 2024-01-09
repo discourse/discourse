@@ -202,6 +202,7 @@ he:
       url: "העתקה ושיתוף של כתובת"
     word_connector:
       comma: ", "
+      last_item: "וגם"
     action_codes:
       public_topic: "נושא זה הפך לציבורי ב־%{when}"
       open_topic: "המרה לנושא ב־%{when}"
@@ -254,6 +255,9 @@ he:
     broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
     broken_page_change_alert: "מטפל ב־onPageChange הרים שגיאה. כלי המפתחים יציגו לך פרטים נוספים על כך."
     broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
+    critical_deprecation:
+      theme_source: "זוהתה ערכת עיצוב: <a target='_blank' href='%{path}'>‚%{name}’</a>."
+      plugin_source: "זוהה תוסף: ‚%{name}’"
     s3:
       regions:
         ap_northeast_1: "אסיה ומדינות האוקיינוס השקט (טוקיו)"
@@ -3480,6 +3484,8 @@ he:
       quote_reply_shortcut: "ציטוט (או בלחיצה על q)"
       quote_edit: "עריכה"
       quote_edit_shortcut: "עריכה (או בלחיצה על e)"
+      quote_copy: "העתקת ציטוט"
+      quote_copied_to_clibboard: "הציטוט הועתק ללוח הגזירים"
       quote_share: "שיתוף"
       edit_reason: "סיבה: "
       post_number: "פוסט %{number}"
@@ -5330,11 +5336,19 @@ he:
           body: "גוף"
           revert: "ביטול שינויים"
           revert_confirm: "לבטל את השינויים שלך?"
+        component:
+          all_filter: "הכול"
+          used_filter: "בשימוש"
+          unused_filter: "לא בשימוש"
+          enabled_filter: "פעיל"
+          disabled_filter: "כבוי"
+          updates_available_filter: "עדכונים זמינים"
         theme:
+          filter_by: "סינון לפי"
           theme: "ערכת עיצוב"
           component: "רכיב"
           components: "רכיבים"
-          filter_placeholder: "יש להקליד לסינון…"
+          search_placeholder: "נא להקליד כדי לחפש…"
           theme_name: "שם ערכת העיצוב"
           component_name: "שם רכיב"
           themes_intro: "נא לבחור בערכת עיצוב קיימת או להתקין חדשה כדי להתחיל"
@@ -5371,6 +5385,7 @@ he:
           color_scheme_user_selectable: "המשתמשים יכולים לבחור את ערכת הצבעים"
           auto_update: "לעדכן אוטומטית כש־Discourse מעודכן"
           color_scheme: "לוח צבעים"
+          edit_color_scheme: "עריכת לוח צבעים"
           default_light_scheme: "בהירה (ברירת מחדל)"
           color_scheme_select: "בחירת צבעים לשימושה של ערכת העיצוב"
           custom_sections: "אזורים מותאמים אישית:"
@@ -5509,6 +5524,10 @@ he:
             title: "עריכת הגדרות ערכת העיצוב בתצורת YAML"
           scss_color_variables_warning: 'השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט. נא להשתמש במאפייני CSS מותאמים אישית במקום. <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">במדריך הזה</a> יש פרטים נוספים.'
           scss_warning_inline: "השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט."
+          all_filter: "הכול"
+          active_filter: "פעיל"
+          inactive_filter: "לא פעיל"
+          updates_available_filter: "עדכונים זמינים"
         colors:
           select_base:
             title: "בחירת לוח צבעים בסיסי"
@@ -5657,6 +5676,9 @@ he:
             type_placeholder: "סיכום, הרשמה…"
             reply_key_placeholder: "מפתח תגובה"
             smtp_transaction_response_placeholder: "מזהה SMTP"
+          email_addresses:
+            see_more: "[להציג עוד…]"
+          post_id: "(מזהה פוסט: %{post_id})"
       moderation_history:
         performed_by: "בוצע על ידי"
         no_results: "אין היסטוריית פעילות פיקוח זמינה."

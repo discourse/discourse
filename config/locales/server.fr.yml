@@ -60,6 +60,9 @@ fr:
   inline_oneboxer:
     topic_page_title_post_number: "numéro %{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} par %{username}"
+  components:
+    enabled_filter: "Activé"
+    disabled_filter: "Désactivé"
   themes:
     bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleurs est invalide"
     other_error: "Une erreur s'est produite lors de la mise à jour du thème"
@@ -567,7 +570,7 @@ fr:
             name:
               same_as_password: "est identique à votre mot de passe."
             ip_address:
-              blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
+              blocked: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP."
               max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
         user_profile:
           attributes:
@@ -1892,7 +1895,7 @@ fr:
     always_show_trimmed_content: "Toujours montrer la partie réduite des e-mails entrants. ATTENTION : cela peut révéler les adresses e-mail."
     trim_incoming_emails: "Débarrasser les e-mails entrants des passages qui ne sont pas pertinents."
     private_email: "Ne pas inclure le contenu de messages ou de sujets dans le titre ou le corps de l'e-mail. REMARQUE : désactive également les e-mails de résumé."
-    email_total_attachment_size_limit_kb: "Taille totale maximale des fichiers joints aux courriels sortants. Définissez la valeur sur 0 pour désactiver l'envoi de pièces jointes."
+    email_total_attachment_size_limit_kb: "Taille totale maximale des fichiers joints aux e-mails sortants. Définissez la valeur sur 0 pour désactiver l'envoi de pièces jointes."
     post_excerpts_in_emails: "Dans les e-mails de notification, toujours envoyer des extraits au lieu de messages complets."
     raw_email_max_length: "Combien de caractères doivent être stockés pour l'e-mail entrant."
     raw_rejected_email_max_length: "Combien de caractères doivent être stockés pour l'e-mail entrant rejeté."
@@ -2044,7 +2047,6 @@ fr:
     max_allowed_message_recipients: "Nombre maximal de destinataires autorisés dans un message."
     watched_words_regular_expressions: "Les mots surveillés sont des expressions régulières."
     enable_diffhtml_preview: "Fonctionnalité expérimentale utilisant diffHTML pour synchroniser la prévisualisation plutôt que de redéclencher un traitement d'affichage entier."
-    enable_fast_edit: "Permet de sélectionner une courte portion d'un message pour la modifier directement."
     old_post_notice_days: "Jours avant que la remarque de publication devienne obsolète"
     new_user_notice_tl: "Niveau de confiance minimal requis pour voir les nouveaux avis de publication d'utilisateur."
     returning_user_notice_tl: "Niveau de confiance minimum requis pour voir les avis postés par les utilisateurs de retour."
@@ -2151,7 +2153,6 @@ fr:
     experimental_new_new_view_groups: 'EXPÉRIMENTAL : activer une nouvelle liste de sujets qui combine les sujets non lus et les nouveaux sujets, et faire en sorte que le lien « Tout » de la barre latérale y renvoie l''utilisateur.'
     enable_custom_sidebar_sections: "EXPÉRIMENTAL : activer les sections personnalisées de la barre latérale"
     experimental_topics_filter: "EXPÉRIMENTAL : activer l'itinéraire de filtrage des sujets expérimentaux dans /filter"
-    experimental_search_menu_groups: "EXPÉRIMENTAL : activer le nouveau menu de recherche qui a été amélioré pour utiliser Glimmer"
     enable_experimental_lightbox: "EXPÉRIMENTAL : remplacer la visionneuse d'image par défaut par le design remanié."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     errors:

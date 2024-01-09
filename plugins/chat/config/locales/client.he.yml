@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 he:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: צ׳אט
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "תמיד"
           fullscreen: "כאשר הצ׳אט במסך מלא"

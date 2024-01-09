@@ -49,6 +49,8 @@ sq:
   remove_posts_deleted_by_author: "Fshirë nga autori"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
+  components:
+    enabled_filter: "Aktivizuar"
   emails:
     incoming:
       default_subject: "Duhet të shkruani titullin"

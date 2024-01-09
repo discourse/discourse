@@ -50,6 +50,9 @@ ro:
   remove_posts_deleted_by_author: "Șters de către autor"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
+  components:
+    enabled_filter: "Activat"
+    disabled_filter: "Dezactivat"
   emails:
     incoming:
       default_subject: "Acest subiect are nevoie de un titlu"

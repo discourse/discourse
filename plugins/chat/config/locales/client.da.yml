@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 da:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Altid"
           fullscreen: "Når chat er i fuld skærm"

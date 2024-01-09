@@ -54,6 +54,9 @@ gl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
+  components:
+    enabled_filter: "Activado"
+    disabled_filter: "Desactivado"
   themes:
     bad_color_scheme: "Non se pode actualizar o tema; paleta de cores non válida"
     other_error: "Xurdiu un problema ao actualizar o tema"

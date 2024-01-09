@@ -53,6 +53,8 @@ el:
   on_another_topic: "Σε άλλο θέμα"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} από %{username}"
+  components:
+    disabled_filter: "Απενεργοποιημένο"
   themes:
     bad_color_scheme: "Δεν είναι δυνατή η ενημέρωση του θέματος, μη έγκυρη παλέτα χρωμάτων"
     other_error: "Κάτι πήγε στραβά κατά την ενημέρωση του θέματος"

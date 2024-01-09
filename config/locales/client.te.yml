@@ -1552,6 +1552,8 @@ te:
           title: "ఈమెయిల్"
           subject: "సబ్జెక్టు"
           body: "శరీరం"
+        component:
+          all_filter: "అన్ని"
         theme:
           theme: "అలంకారం"
           title: "అలంకారాలు"
@@ -1577,6 +1579,8 @@ te:
             text: "ఫుటరు"
           body_tag:
             text: "శరీరం"
+          all_filter: "అన్ని"
+          active_filter: "క్రియాశీల"
         colors:
           title: "రంగులు"
           copy_name_prefix: "దీనికి నకలు"

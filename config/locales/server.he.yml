@@ -60,6 +60,10 @@ he:
   inline_oneboxer:
     topic_page_title_post_number: "מס׳ %{post_number}"
     topic_page_title_post_number_by_user: "מס׳ %{post_number} מאת %{username}"
+  components:
+    enabled_filter: "פעיל"
+    disabled_filter: "כבוי"
+    updates_available_filter: "עדכונים זמינים"
   themes:
     bad_color_scheme: "לא ניתן לעדכן ערכת עיצוב, מבחר הצבעים שגוי"
     other_error: "משהו השתבש בעת עדכון ערכת העיצוב"
@@ -2228,7 +2232,8 @@ he:
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
     watched_words_regular_expressions: "מילים במעקב הן ביטויים רגולריים."
     enable_diffhtml_preview: "יכולת ניסיונית שמשתמשת ב־diffHTML כדי לסנכרן תצוגה מקדימה במקום עיבוד מלא מחדש"
-    enable_fast_edit: "מאפשר עריכה בתוך השורה של חלק קטן מהטקסט של הפוסט."
+    enable_fast_edit: "מוסיף כפתור לתפריט בחירת הפוסט כדי לערוך בחירה קטנה כחלק מהשורה."
+    enable_quote_copy: "מוסיף כפתור לתפריט בחירת הפוסט כדי להעתיק את הבחירה ללוח הגזירים כציטוט Markdown."
     old_post_notice_days: "ימים לפני שהתראת נושא מתיישנת"
     new_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות על פוסט של משתמש חדש."
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
@@ -2288,6 +2293,7 @@ he:
     revoke_user_api_keys_maxlife_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API של משתמש (0 - לעולם לא)."
     tagging_enabled: "לאפשר תגיות על נושאים?"
     min_trust_to_create_tag: "דרגת האמון המזערית שנדרשת כדי ליצור תגית."
+    create_tag_allowed_groups: "קבוצות שמורשות ליצור תגיות."
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
     enable_max_tags_per_email_subject: "להשתמש ב־max_tags_per_email_subject (כמות תגיות מרבית לנושא הודעת דוא״ל) בעת יצירת נושא להודעת דוא״ל"
     max_tags_per_email_subject: "מס׳ התגיות המרבי שיכול להיות בנושא של הודעת דוא״ל"
@@ -2342,9 +2348,9 @@ he:
     experimental_new_new_view_groups: 'ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
     enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
-    experimental_search_menu_groups: "ניסיוני: מאפשר את תפריט החיפוש החדש ששודרג כך שישתמש ב־glimmer"
     enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
     experimental_form_templates: "ניסיוני: יש להפעיל את יכולת תבניות הטפסים. <b>לאחר ההפעלה,</b> אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
+    admin_sidebar_enabled_groups: "ניסיוני: הפעלת ניווט בסרגל הצד למנשק המשתמש של הניהול לקבוצות שצוינו, מחליף את כפתורי הניווט באפשרויות הניהול ברמה העליונה."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     show_user_menu_avatars: "הצגת תמונות ייצוגיות של משתמשים בתפריט המשתמש"
     errors:

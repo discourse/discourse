@@ -4661,11 +4661,14 @@ nl:
           body: "Inhoud"
           revert: "Wijzigingen ongedaan maken"
           revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
+        component:
+          all_filter: "Alles"
+          enabled_filter: "Ingeschakeld"
+          disabled_filter: "Uitgeschakeld"
         theme:
           theme: "Thema"
           component: "Onderdeel"
           components: "Onderdelen"
-          filter_placeholder: "typ om te filteren…"
           theme_name: "Themanaam"
           component_name: "Onderdeelnaam"
           themes_intro: "Selecteer een bestaand of installeer een nieuw thema om te beginnen"
@@ -4833,6 +4836,9 @@ nl:
             title: "Thema-instellingen definiëren in YAML-indeling"
           scss_color_variables_warning: 'Het gebruik van kern-SCSS-kleurvariabelen in thema''s is verouderd. Gebruik in plaats daarvan aangepaste CSS-eigenschappen. Zie <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">deze gids</a> voor meer informatie.'
           scss_warning_inline: "Het gebruik van kern-SCSS-kleurvariabelen in thema's is verouderd."
+          all_filter: "Alles"
+          active_filter: "Actief"
+          inactive_filter: "Inactief"
         colors:
           select_base:
             title: "Basiskleurenpalet selecteren"

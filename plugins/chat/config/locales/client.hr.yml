@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 hr:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
-          chat: Čet
+          chat: Čavrljanje
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Uvijek"
           never: "Nikad"

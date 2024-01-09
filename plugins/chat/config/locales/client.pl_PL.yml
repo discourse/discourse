@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 pl_PL:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Czat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Zawsze"
           fullscreen: "Gdy czat jest w trybie pełnoekranowym"
@@ -589,6 +592,11 @@ pl_PL:
           few: "%{count} dni"
           many: "%{count} dni"
           other: "%{count} dni"
+        long:
+          one: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dzień."
+          few: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dni."
+          many: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dni."
+          other: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dni."
       flags:
         off_topic: "Ta wiadomość nie jest związana z bieżącą dyskusją określoną w tytule kanału i prawdopodobnie powinna zostać przeniesiona w inne miejsce."
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."

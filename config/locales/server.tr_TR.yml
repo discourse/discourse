@@ -60,6 +60,10 @@ tr_TR:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} tarafından #%{post_number}"
+  components:
+    enabled_filter: "Etkin mi"
+    disabled_filter: "Devre Dışı"
+    updates_available_filter: "Güncellemeler Mevcut"
   themes:
     bad_color_scheme: "Tema güncellenemiyor, geçersiz renk paleti"
     other_error: "Temanın güncellenmesi sırasında bir sorun oluştu"
@@ -2072,7 +2076,8 @@ tr_TR:
     max_allowed_message_recipients: "Bir mesajda izin verilen maksimum alıcı sayısı."
     watched_words_regular_expressions: "İzlenen kelimeler normal ifadelerdir."
     enable_diffhtml_preview: "Tam yeniden oluşturma yerine ön izlemeyi senkronize etmek için diffHTML kullanan deneysel özellik"
-    enable_fast_edit: "Bir gönderi metninin küçük bir kısmının satır içi olarak düzenlenmesini sağlar."
+    enable_fast_edit: "Satır içi küçük bir seçimi düzenlemek için yazı seçimi menüsüne bir düğme ekler."
+    enable_quote_copy: "Seçimi bir markdown alıntısı olarak panoya kopyalamak için yazı seçimi menüsüne bir düğme ekler."
     old_post_notice_days: "Gönderi bildirimini eskimeden önce geçmesi gereken gün sayısı"
     new_user_notice_tl: "Yeni kullanıcı gönderi bildirimlerini görmek için gereken minimum güven seviyesi."
     returning_user_notice_tl: "Geri dönen kullanıcı gönderisi bildirimlerini görmek için gereken minimum güven seviyesi."
@@ -2182,7 +2187,6 @@ tr_TR:
     experimental_new_new_view_groups: 'DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     enable_custom_sidebar_sections: "DENEYSEL: Özel kenar çubuğu bölümlerini etkinleştirin"
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştiririn"
-    experimental_search_menu_groups: "DENEYSEL: Glimmer kullanmak üzere yükseltilen yeni arama menüsünü etkinleştirir"
     enable_experimental_lightbox: "DENEYSEL: Varsayılan görüntü lightbox'ını yenilenen tasarımla değiştirin."
     experimental_form_templates: "DENEYSEL: Form şablonları özelliğini etkinleştirin. <b>Etkinleştirildikten sonra,</b> bu şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> altında yönetin."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."

@@ -3275,6 +3275,10 @@ zh_TW:
           body: "內容"
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
+        component:
+          all_filter: "全部"
+          enabled_filter: "啟用"
+          disabled_filter: "停用"
         theme:
           theme: "佈景主題"
           component: "元件"
@@ -3395,6 +3399,9 @@ zh_TW:
           yaml:
             text: "YAML"
             title: "用 YAML 格式定義佈景主題的設定"
+          all_filter: "全部"
+          active_filter: "啟用的"
+          inactive_filter: "不活躍"
         colors:
           select_base:
             title: "選擇調色盤"

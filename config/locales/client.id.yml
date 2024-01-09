@@ -2178,6 +2178,10 @@ id:
           title: "Email"
           subject: "Judul"
           body: "Konten"
+        component:
+          all_filter: "Semua"
+          enabled_filter: "Diaktifkan"
+          disabled_filter: "Dinonaktifkan"
         theme:
           theme: "Tema"
           create_type: "Tipe"
@@ -2196,6 +2200,8 @@ id:
           add: "Menambahkan"
           body_tag:
             text: "Konten"
+          all_filter: "Semua"
+          active_filter: "Aktif"
         colors:
           title: "Warna"
           undo: "Batalkan perintah"

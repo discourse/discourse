@@ -3997,11 +3997,13 @@ ur:
           body: "متن"
           revert: "تبدیلیاں لوٹائیں"
           revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
+        component:
+          all_filter: "تمام"
+          disabled_filter: "غیر فعال"
         theme:
           theme: "تھیم"
           component: "جزو"
           components: "اجزاء"
-          filter_placeholder: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
           theme_name: "تھیم نام"
           component_name: "جزو نام"
           themes_intro: " شروعات کیلئے، ایک موجودہ تھیم منتخب کریں یا ایک نئی انسٹال کریں"
@@ -4160,6 +4162,9 @@ ur:
             title: "تھیم ترتیبات کی وضاحت YAML فارمَیٹ میں کریں"
           scss_color_variables_warning: 'تھیمز میں بنیادی SCSS کلر متغیرات کا استعمال فرسودہ ہے۔ براہ کرم اس کے بجائے CSS حسب ضرورت خصوصیات استعمال کریں۔ مزید تفصیلات کے لیے <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">یہ گائیڈ</a> دیکھیں۔'
           scss_warning_inline: "تھیمز میں بنیادی SCSS کلر متغیرات کا استعمال فرسودہ ہے۔"
+          all_filter: "تمام"
+          active_filter: "فعال"
+          inactive_filter: "غیر فعال"
         colors:
           select_base:
             title: "بَیس رنگ پیلیٹ منتخب کریں"

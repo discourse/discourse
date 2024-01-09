@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Sohbet
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Her zaman"
           fullscreen: "Sohbet tam ekran modundayken"

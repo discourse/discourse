@@ -60,6 +60,9 @@ nl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{post_number} van %{username}"
+  components:
+    enabled_filter: "Ingeschakeld"
+    disabled_filter: "Uitgeschakeld"
   themes:
     bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenpalet"
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
@@ -2044,7 +2047,6 @@ nl:
     max_allowed_message_recipients: "Maximale aantal ontvangers in een bericht."
     watched_words_regular_expressions: "Geobserveerde woorden zijn reguliere expressies."
     enable_diffhtml_preview: "Experimentele functie die diffHTML gebruikt om het voorbeeld te synchroniseren in plaats van volledig opnieuw te renderen"
-    enable_fast_edit: "Hiermee kan een kleine selectie van een berichttekst inline worden bewerkt."
     old_post_notice_days: "Dagen voordat berichtmelding veroudert"
     new_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van nieuwe gebruikers te zien."
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."
@@ -2151,7 +2153,6 @@ nl:
     experimental_new_new_view_groups: 'EXPERIMENTEEL: schakelt een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en maak de link "Alles" ernaartoe in de zijbalk.'
     enable_custom_sidebar_sections: "EXPERIMENTEEL: schakelt aangepaste zijbalksecties in"
     experimental_topics_filter: "EXPERIMENTEEL: schakelt de filterroute voor experimentele topics in op /filter"
-    experimental_search_menu_groups: "EXPERIMENTEEL: schakelt het nieuwe zoekmenu in dat is geüpgraded om glimmer te gebruiken"
     enable_experimental_lightbox: "EXPERIMENTEEL: vervangt de standaard afbeeldingslightbox door het vernieuwde ontwerp."
     page_loading_indicator: "Configureer de laadindicator die wordt weergegeven tijdens paginanavigatie binnen Discourse. 'Spinner' is een indicator voor een volledige pagina. 'Slider' geeft een smalle balk weer bovenaan het scherm."
     errors:

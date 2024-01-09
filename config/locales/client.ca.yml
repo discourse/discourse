@@ -3240,6 +3240,10 @@ ca:
           body: "Cos"
           revert: "Reverteix canvis"
           revert_confirm: "Esteu segur que voleu revertir els canvis?"
+        component:
+          all_filter: "Tot"
+          enabled_filter: "Activat"
+          disabled_filter: "Desactivat"
         theme:
           theme: "Aparença"
           component: "Component"
@@ -3366,6 +3370,9 @@ ca:
           yaml:
             text: "YAML"
             title: "Definiu la configuració de l'aparença en format YAML"
+          all_filter: "Tot"
+          active_filter: "Actiu"
+          inactive_filter: "Inactiu"
         colors:
           select_base:
             title: "Seleccioneu la paleta de colors base"

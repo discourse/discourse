@@ -4098,11 +4098,14 @@ da:
           body: "Indhold"
           revert: "Rul ændringer tilbage"
           revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
+        component:
+          all_filter: "Alle"
+          enabled_filter: "Aktiveret"
+          disabled_filter: "Deaktiveret"
         theme:
           theme: "Tema"
           component: "Komponent"
           components: "komponenter"
-          filter_placeholder: "skriv for at filtrere…"
           theme_name: "Tema navn"
           component_name: "Komponent navn"
           themes_intro: "Vælg et eksisterende tema, eller installer et nyt for at komme i gang"
@@ -4265,6 +4268,9 @@ da:
             title: "Definér tema indstillinger i YAML-format"
           scss_color_variables_warning: 'Brug af core SCSS-farvevariabler i temaer er forældet. Brug CSS brugerdefinerede egenskaber i stedet. Se <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">denne vejledning</a> for at få flere oplysninger.'
           scss_warning_inline: "Brug af core SCSS-farvevariabler i temaer er forældet."
+          all_filter: "Alle"
+          active_filter: "Aktiv"
+          inactive_filter: "Inaktiv"
         colors:
           select_base:
             title: "Vælg basisfarvepalet"

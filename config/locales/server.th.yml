@@ -51,6 +51,8 @@ th:
   on_another_topic: "ในหัวข้ออื่น"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} โดย %{username}"
+  components:
+    disabled_filter: "ปิดใช้งานแล้ว"
   themes:
     import_error:
       unpack_failed: "แตกไฟล์ไม่สำเร็จ"

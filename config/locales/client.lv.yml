@@ -3029,6 +3029,10 @@ lv:
           body: "Saturs"
           revert: "Atcelt izmaiņas"
           revert_confirm: "Vai jūs esat drošs, ka vēlaties atcelt jūsu veiktās izmaiņas"
+        component:
+          all_filter: "Viss"
+          enabled_filter: "Ieslēgts"
+          disabled_filter: "Atslēgt"
         theme:
           theme: "Tēma"
           customize_desc: "Pielāgot:"
@@ -3076,6 +3080,9 @@ lv:
             text: "CSS"
           body_tag:
             text: "Ķermenis"
+          all_filter: "Viss"
+          active_filter: "Aktīvi"
+          inactive_filter: "Neaktīvs"
         colors:
           title: "Krāsas"
           undo: "Atsaukt"
