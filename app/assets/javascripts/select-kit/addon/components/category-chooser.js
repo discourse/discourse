@@ -7,6 +7,9 @@ import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import I18n from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import { MAIN_COLLECTION } from "select-kit/components/select-kit";
+
+const MAX_VISIBLE_CATEGORIES = 100;
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-chooser"],
@@ -88,6 +91,13 @@ export default ComboBoxComponent.extend({
     }
 
     return content;
+  },
+
+  modifyContentForCollection(identifier) {
+    // <CategoryChooser> components with many rows are slow to render
+    if (identifier === MAIN_COLLECTION) {
+      return this.mainCollection.slice(0, MAX_VISIBLE_CATEGORIES);
+    }
   },
 
   search(filter) {
