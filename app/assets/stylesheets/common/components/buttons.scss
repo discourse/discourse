@@ -20,6 +20,10 @@
   margin: 0;
   font-weight: normal;
   color: $text-color;
+  &:visited {
+    // covers cases where we add button classes to links
+    color: $text-color;
+  }
   background-color: $bg-color;
   background-image: linear-gradient(
     to bottom,
