@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { cleanNullQueryParams } from "discourse/lib/utilities";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import getURL from "discourse-common/lib/get-url";
@@ -24,7 +25,7 @@ export default (inboxType, path, filter) => {
       ];
     },
 
-    model(params) {
+    model(params = {}) {
       const topicListFilter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");
 
@@ -37,12 +38,7 @@ export default (inboxType, path, filter) => {
         return lastTopicList;
       }
 
-      params ||= {};
-      for (const [key, val] of Object.entries(params)) {
-        if (val === "undefined" || val === "null") {
-          params[key] = null;
-        }
-      }
+      params = cleanNullQueryParams(params);
 
       return this.store
         .findFiltered("topicList", {

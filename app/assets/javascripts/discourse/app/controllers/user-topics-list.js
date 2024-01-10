@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { or, reads } from "@ember/object/computed";
+import { isNone } from "@ember/utils";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
@@ -82,10 +83,10 @@ export default class UserTopicsListController extends Controller {
   }
 
   get resolvedAscending() {
-    if (this.ascending === undefined || this.ascending === null) {
+    if (isNone(this.ascending)) {
       return this.model.get("params.ascending") === "true";
     } else {
-      return [true, "true"].includes(this.ascending);
+      return this.ascending.toString() === "true";
     }
   }
 

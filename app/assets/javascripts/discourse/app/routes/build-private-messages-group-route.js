@@ -1,5 +1,6 @@
 import { capitalize } from "@ember/string";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { cleanNullQueryParams } from "discourse/lib/utilities";
 import createPMRoute from "discourse/routes/build-private-messages-route";
 import I18n from "discourse-i18n";
 
@@ -21,7 +22,7 @@ export default (inboxType, filter) => {
       }
     },
 
-    model(params) {
+    model(params = {}) {
       const username = this.modelFor("user").get("username_lower");
       const groupName = this.modelFor("userPrivateMessages.group").name;
 
@@ -40,12 +41,7 @@ export default (inboxType, filter) => {
         return lastTopicList;
       }
 
-      params ||= {};
-      for (const [key, val] of Object.entries(params)) {
-        if (val === "undefined" || val === "null") {
-          params[key] = null;
-        }
-      }
+      params = cleanNullQueryParams(params);
 
       return this.store
         .findFiltered("topicList", {

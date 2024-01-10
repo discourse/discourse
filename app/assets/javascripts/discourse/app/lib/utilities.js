@@ -728,3 +728,11 @@ export function allowOnlyNumericInput(event, allowNegative = false) {
     }
   }
 }
+
+export function cleanNullQueryParams(params) {
+  for (const [key, val] of Object.entries(params)) {
+    if (val === "undefined" || val === "null") {
+      params[key] = null;
+    }
+  }
+}
