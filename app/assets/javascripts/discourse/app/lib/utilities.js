@@ -735,4 +735,5 @@ export function cleanNullQueryParams(params) {
       params[key] = null;
     }
   }
+  return params;
 }
