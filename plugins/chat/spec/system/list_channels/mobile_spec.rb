@@ -79,7 +79,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
 
   context "when no category channels" do
     it "doesn’t show the section" do
-      visit("/chat")
+      visit("/chat/channels")
       expect(page).to have_no_css(".public-channels-section")
     end
 
@@ -124,7 +124,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
   end
 
   it "has a new dm channel button" do
-    visit("/chat")
+    visit("/chat/direct-messages")
     find(".open-new-message-btn").click
 
     expect(chat.message_creator).to be_opened
