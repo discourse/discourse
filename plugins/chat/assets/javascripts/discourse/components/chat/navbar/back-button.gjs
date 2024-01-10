@@ -13,7 +13,11 @@ export default class ChatNavbarBackButton extends Component {
   }
 
   get targetRoute() {
-    if(["chat.direct-messages","chat.channels","chat.threads"].includes(this.args.route)){
+    if (
+      ["chat.direct-messages", "chat.channels", "chat.threads"].includes(
+        this.args.route
+      )
+    ) {
       return this.args.route;
     } else {
       return "chat";

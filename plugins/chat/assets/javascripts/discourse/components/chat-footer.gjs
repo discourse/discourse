@@ -40,7 +40,10 @@ export default class ChatFooter extends Component {
             @route="chat.direct-messages"
             @class={{concatClass
               "btn-flat c-footer__item"
-              (if (eq this.router.currentRouteName "chat.direct-messages") "--active")
+              (if
+                (eq this.router.currentRouteName "chat.direct-messages")
+                "--active"
+              )
             }}
             @icon="users"
             @translatedLabel={{i18n "chat.direct_messages.title"}}

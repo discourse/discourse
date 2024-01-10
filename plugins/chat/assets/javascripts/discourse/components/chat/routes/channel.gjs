@@ -8,7 +8,9 @@ export default class ChatRoutesChannel extends Component {
   @service site;
 
   get getChannelsRoute() {
-    return this.args.channel.isDirectMessageChannel ? "chat.direct-messages" : "chat.channels";
+    return this.args.channel.isDirectMessageChannel
+      ? "chat.direct-messages"
+      : "chat.channels";
   }
 
   <template>
