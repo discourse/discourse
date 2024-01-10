@@ -46,6 +46,7 @@ export default class ChatFooter extends Component {
               )
             }}
             @icon="users"
+            @id="chat-footer-direct-messages"
             @translatedLabel={{i18n "chat.direct_messages.title"}}
             aria-label={{i18n "chat.direct_messages.aria_label"}}
           />
@@ -58,6 +59,7 @@ export default class ChatFooter extends Component {
             (if (eq this.router.currentRouteName "chat.channels") "--active")
           }}
           @icon="comments"
+          @id="chat-footer-channels"
           @translatedLabel={{i18n "chat.channel_list.title"}}
           aria-label={{i18n "chat.channel_list.aria_label"}}
         />
@@ -70,6 +72,7 @@ export default class ChatFooter extends Component {
               (if (eq this.router.currentRouteName "chat.threads") "--active")
             }}
             @icon="discourse-threads"
+            @id="chat-footer-threads"
             @translatedLabel={{i18n "chat.my_threads.title"}}
             aria-label={{i18n "chat.my_threads.aria_label"}}
           />
