@@ -74,6 +74,7 @@ Chat::Engine.routes.draw do
 
   # chat_controller routes
   get "/" => "chat#respond"
+  get "/direct-messages" => "chat#respond"
   get "/channels" => "chat#respond"
   get "/threads" => "chat#respond"
   get "/browse" => "chat#respond"

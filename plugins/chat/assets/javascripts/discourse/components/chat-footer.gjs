@@ -32,19 +32,15 @@ export default class ChatFooter extends Component {
     return this.directMessagesEnabled || this.threadsEnabled;
   }
 
-  get channelsRouteName() {
-    return this.chat.userCanAccessDirectMessages ? "chat.channels" : "chat.index";
-  }
-
   <template>
     {{#if this.shouldRenderFooter}}
       <nav class="c-footer">
         {{#if this.directMessagesEnabled}}
           <DButton
-            @route="chat.index"
+            @route="chat.direct-messages"
             @class={{concatClass
               "btn-flat c-footer__item"
-              (if (eq this.router.currentRouteName "chat.index") "--active")
+              (if (eq this.router.currentRouteName "chat.direct-messages") "--active")
             }}
             @icon="users"
             @translatedLabel={{i18n "chat.direct_messages.title"}}
@@ -53,10 +49,10 @@ export default class ChatFooter extends Component {
         {{/if}}
 
         <DButton
-          @route={{this.channelsRouteName}}
+          @route="chat.channels"
           @class={{concatClass
             "btn-flat c-footer__item"
-            (if (eq this.router.currentRouteName this.channelsRouteName) "--active")
+            (if (eq this.router.currentRouteName "chat.channels") "--active")
           }}
           @icon="comments"
           @translatedLabel={{i18n "chat.channel_list.title"}}

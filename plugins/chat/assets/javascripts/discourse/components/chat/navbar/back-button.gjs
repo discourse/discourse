@@ -12,6 +12,14 @@ export default class ChatNavbarBackButton extends Component {
     return this.args.title ?? I18n.t("chat.browse.back");
   }
 
+  get targetRoute() {
+    if(["chat.direct-messages","chat.channels","chat.threads"].includes(this.args.route)){
+      return this.args.route;
+    } else {
+      return "chat";
+    }
+  }
+
   <template>
     {{#if @routeModels}}
       <LinkTo
@@ -28,7 +36,7 @@ export default class ChatNavbarBackButton extends Component {
       </LinkTo>
     {{else}}
       <LinkTo
-        @route="chat"
+        @route={{this.targetRoute}}
         class="c-navbar__back-button no-text btn-flat btn"
         title={{this.title}}
       >

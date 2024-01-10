@@ -8,6 +8,7 @@ export default function () {
       });
     });
 
+    this.route("direct-messages", { path: "/direct-messages" });
     this.route("channels", { path: "/channels" });
     this.route("threads", { path: "/threads" });
 
