@@ -1,7 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { or, reads } from "@ember/object/computed";
+import { isNone } from "@ember/utils";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
 import {
   NEW_FILTER,
@@ -9,12 +12,20 @@ import {
 } from "discourse/routes/build-private-messages-route";
 import discourseComputed from "discourse-common/utils/decorators";
 
+export const queryParams = {
+  ascending: { replace: true, refreshModel: true, default: false },
+  order: { replace: true, refreshModel: true },
+};
+
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {
+  @tracked model;
+
   hideCategory = false;
   showPosters = false;
   channel = null;
   tagsForUser = null;
+  queryParams = Object.keys(queryParams);
 
   bulkSelectHelper = new BulkSelectHelper(this);
 
@@ -22,6 +33,13 @@ export default class UserTopicsListController extends Controller {
 
   @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
   canBulkSelect;
+
+  constructor() {
+    super(...arguments);
+    for (const [name, info] of Object.entries(queryParams)) {
+      defineTrackedProperty(this, name, info.default);
+    }
+  }
 
   get bulkSelectEnabled() {
     return this.bulkSelectHelper.bulkSelectEnabled;
@@ -52,6 +70,28 @@ export default class UserTopicsListController extends Controller {
 
   unsubscribe() {
     this.pmTopicTrackingState.stopIncomingTracking();
+  }
+
+  @action
+  changeSort(sortBy) {
+    if (sortBy === this.resolvedOrder) {
+      this.ascending = !this.resolvedAscending;
+    } else {
+      this.ascending = false;
+    }
+    this.order = sortBy;
+  }
+
+  get resolvedAscending() {
+    if (isNone(this.ascending)) {
+      return this.model.get("params.ascending") === "true";
+    } else {
+      return this.ascending.toString() === "true";
+    }
+  }
+
+  get resolvedOrder() {
+    return this.order ?? this.model.get("params.order") ?? "activity";
   }
 
   @action
