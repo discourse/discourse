@@ -1145,13 +1145,15 @@ class Category < ActiveRecord::Base
     # Update all categories
     subcategories = Hash.new(0)
     depths = Hash.new(-1)
+    paths = Hash.new { |h, k| h[k] = [] }
     values =
       ordered_categories
         .each_with_index
         .map do |(id, parent_id), index|
           position_to_parent = subcategories[parent_id] += 1
           depth = depths[id] = depths[parent_id] + 1
-          "(#{id}, #{index + 1}, #{position_to_parent}, #{depth})"
+          paths[id] = (parent_id != nil ? paths[parent_id] : []) + [id]
+          "(#{id}, #{index + 1}, #{position_to_parent}, #{depth}, '{#{paths[id].join(",")}}')"
         end
         .join(", ")
 
@@ -1160,8 +1162,9 @@ class Category < ActiveRecord::Base
       SET position = categories_updates.position,
           position_to_parent = categories_updates.position_to_parent,
           depth = categories_updates.depth,
+          path = categories_updates.path::integer[],
           updated_at = NOW()
-      FROM (VALUES #{values}) AS categories_updates(id, position, position_to_parent, depth)
+      FROM (VALUES #{values}) AS categories_updates(id, position, position_to_parent, depth, path)
       WHERE categories.id = categories_updates.id;
     SQL
   end
