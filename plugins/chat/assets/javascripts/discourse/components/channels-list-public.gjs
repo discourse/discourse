@@ -13,20 +13,16 @@ import noop from "discourse/helpers/noop";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
-import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import onResize from "../modifiers/chat/on-resize";
 import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListPublic extends Component {
-  @service chat;
-  @service router;
   @service chatStateManager;
   @service chatChannelsManager;
   @service site;
   @service siteSettings;
   @service session;
   @service currentUser;
-  @service modal;
 
   @tracked hasScrollbar = false;
 
@@ -38,11 +34,6 @@ export default class ChannelsListPublic extends Component {
   @action
   computeResizedEntries(entries) {
     this.computeHasScrollbar(entries[0].target);
-  }
-
-  @action
-  openNewMessageModal() {
-    this.modal.show(ChatModalNewMessage);
   }
 
   get inSidebar() {
@@ -66,12 +57,6 @@ export default class ChannelsListPublic extends Component {
     }
 
     return true;
-  }
-
-  get directMessageChannelClasses() {
-    return `channels-list-container direct-message-channels ${
-      this.inSidebar ? "collapsible-sidebar-section" : ""
-    }`;
   }
 
   get hasUnreadThreads() {

@@ -21,13 +21,10 @@ import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListDirect extends Component {
   @service chat;
-  @service router;
   @service chatStateManager;
   @service chatChannelsManager;
   @service site;
-  @service siteSettings;
   @service session;
-  @service currentUser;
   @service modal;
 
   @tracked hasScrollbar = false;
@@ -53,10 +50,6 @@ export default class ChannelsListDirect extends Component {
 
   get inSidebar() {
     return this.args.inSidebar ?? false;
-  }
-
-  get publicMessageChannelsEmpty() {
-    return this.chatChannelsManager.publicMessageChannels?.length === 0;
   }
 
   get createDirectMessageChannelLabel() {

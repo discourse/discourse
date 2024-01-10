@@ -9,8 +9,6 @@ import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 export default class ChatThreadListHeader extends Component {
   @service router;
   @service site;
-  @service chat;
-  @service chatHistory;
 
   threadListTitle = I18n.t("chat.threads.list");
 
