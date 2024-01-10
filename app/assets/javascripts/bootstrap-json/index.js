@@ -44,10 +44,28 @@ function updateScriptReferences({
         }
       }
 
-      const newElements = chunks.map(
-        (chunk) =>
-          `<script ${attribute}="${baseURL}${chunk}" data-ember-cli-rewritten="true"></script>`
-      );
+      const newElements = chunks.map((chunk) => {
+        let newElement = `<${element.tagName}`;
+
+        for (const [attr, value] of element.attributes) {
+          if (attr === attribute) {
+            newElement += ` ${attribute}="${baseURL}${chunk}"`;
+          } else if (value === "") {
+            newElement += ` ${attr}`;
+          } else {
+            newElement += ` ${attr}="${value}"`;
+          }
+        }
+
+        newElement += ` data-ember-cli-rewritten="true"`;
+        newElement += `>`;
+
+        if (element.tagName === "script") {
+          newElement += `</script>`;
+        }
+
+        return newElement;
+      });
 
       if (
         entrypointName === "discourse" &&
