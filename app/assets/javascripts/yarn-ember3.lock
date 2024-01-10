@@ -1456,6 +1456,13 @@
   dependencies:
     "@simple-dom/interface" "^1.4.0"
 
+"@glimmer/interfaces@^0.87.1":
+  version "0.87.1"
+  resolved "https://registry.yarnpkg.com/@glimmer/interfaces/-/interfaces-0.87.1.tgz#2b8092db4df791d297473e9ffae97725d08d6efe"
+  integrity sha512-2lbwLY4Bt9i2SvwT4hhY0TgEYKhOMQBgYvRiraq2BYHwO8iLKh3lC8iO3d+rQ3VgDtQ9i/sP6HG848VNRyVHxA==
+  dependencies:
+    "@simple-dom/interface" "^1.4.0"
+
 "@glimmer/syntax@^0.84.3":
   version "0.84.3"
   resolved "https://registry.yarnpkg.com/@glimmer/syntax/-/syntax-0.84.3.tgz#4045a1708cef7fd810cff42fe6deeba40c7286d0"
@@ -1463,6 +1470,17 @@
   dependencies:
     "@glimmer/interfaces" "0.84.3"
     "@glimmer/util" "0.84.3"
+    "@handlebars/parser" "~2.0.0"
+    simple-html-tokenizer "^0.5.11"
+
+"@glimmer/syntax@^0.87.1":
+  version "0.87.1"
+  resolved "https://registry.yarnpkg.com/@glimmer/syntax/-/syntax-0.87.1.tgz#4f8372d7b5e57f109e897cd149097fcd51fe51a1"
+  integrity sha512-zYzZT6LgpSF0iv5iuxmMV5Pf52aE8dukNC2KfrHC6gXJfM4eLZMZcyk76NW5m+SEetZSOXX6AWv/KwLnoxiMfQ==
+  dependencies:
+    "@glimmer/interfaces" "^0.87.1"
+    "@glimmer/util" "^0.87.1"
+    "@glimmer/wire-format" "^0.87.1"
     "@handlebars/parser" "~2.0.0"
     simple-html-tokenizer "^0.5.11"
 
@@ -1488,6 +1506,14 @@
   resolved "https://registry.yarnpkg.com/@glimmer/util/-/util-0.44.0.tgz#45df98d73812440206ae7bda87cfe04aaae21ed9"
   integrity sha512-duAsm30uVK9jSysElCbLyU6QQYO2X9iLDLBIBUcCqck9qN1o3tK2qWiHbGK5d6g8E2AJ4H88UrfElkyaJlGrwg==
 
+"@glimmer/util@^0.87.1":
+  version "0.87.1"
+  resolved "https://registry.yarnpkg.com/@glimmer/util/-/util-0.87.1.tgz#f0e3f9cc7e57eb100e4a6b1d81a97850539d4f00"
+  integrity sha512-Duxi2JutaIewfIWp8PJl7U5n12yasKWtZFHNLSrg+C8TKeMXdRyJtI7uqtqg0Z/6F9JwdJe/IPhTvdsTTfzAuA==
+  dependencies:
+    "@glimmer/env" "0.1.7"
+    "@glimmer/interfaces" "^0.87.1"
+
 "@glimmer/validator@^0.44.0":
   version "0.44.0"
   resolved "https://registry.yarnpkg.com/@glimmer/validator/-/validator-0.44.0.tgz#03d127097dc9cb23052cdb7fcae59d0a9dca53e1"
@@ -1499,6 +1525,14 @@
   integrity sha512-9ej6xlm5MzHBJ5am2l0dbbn8Z0wJoYoMpM8FcrGMlUP6SPMLWxvxpMsApgQo8u6dvZRCjR3/bw3fdf7GOy0AFw==
   dependencies:
     babel-plugin-debug-macros "^0.3.4"
+
+"@glimmer/wire-format@^0.87.1":
+  version "0.87.1"
+  resolved "https://registry.yarnpkg.com/@glimmer/wire-format/-/wire-format-0.87.1.tgz#f0e31590dff9de7286d816911bf9c81f755949f5"
+  integrity sha512-O3W1HDfRGX7wHZqvP8UzI/nWyZ2GIMFolU7l6WcLGU9HIdzqfxsc7ae2Icob/fq2kV9meHti4yDEdTMlBVK9AQ==
+  dependencies:
+    "@glimmer/interfaces" "^0.87.1"
+    "@glimmer/util" "^0.87.1"
 
 "@handlebars/parser@~2.0.0":
   version "2.0.0"
