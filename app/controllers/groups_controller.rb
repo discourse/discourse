@@ -194,7 +194,8 @@ class GroupsController < ApplicationController
     group = find_group(:group_id)
     guardian.ensure_can_see_group_members!(group)
 
-    posts = group.posts_for(guardian, params.permit(:before_post_id, :category_id)).limit(20)
+    posts =
+      group.posts_for(guardian, params.permit(:before_post_id, :before, :category_id)).limit(20)
     render_serialized posts.to_a, GroupPostSerializer
   end
 
@@ -202,7 +203,8 @@ class GroupsController < ApplicationController
     group = find_group(:group_id)
     guardian.ensure_can_see_group_members!(group)
 
-    @posts = group.posts_for(guardian, params.permit(:before_post_id, :category_id)).limit(50)
+    @posts =
+      group.posts_for(guardian, params.permit(:before_post_id, :before, :category_id)).limit(50)
     @title =
       "#{SiteSetting.title} - #{I18n.t("rss_description.group_posts", group_name: group.name)}"
     @link = Discourse.base_url
