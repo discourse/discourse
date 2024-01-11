@@ -213,14 +213,13 @@ export default class CategoryRow extends Component {
           this.args.selectKit.focusFilter();
           event.preventDefault();
           event.stopPropagation();
-          return false;
         }
       } else if (event.key === "ArrowUp") {
         this.args.selectKit.highlightPrevious();
-        return false;
+        event.preventDefault();
       } else if (event.key === "ArrowDown") {
         this.args.selectKit.highlightNext();
-        return false;
+        event.preventDefault();
       } else if (event.key === "Enter") {
         event.stopImmediatePropagation();
 
@@ -228,7 +227,7 @@ export default class CategoryRow extends Component {
           this.args.selectKit.highlighted.id,
           this.args.selectKit.highlighted
         );
-        return false;
+        event.preventDefault();
       } else if (event.key === "Escape") {
         this.args.selectKit.close(event);
         this.args.selectKit.headerElement().focus();
@@ -281,7 +280,7 @@ export default class CategoryRow extends Component {
       {{on "mousedown" this.handleMouseDown}}
       {{on "mouseenter" this.handleMouseEnter passive=true}}
       {{on "click" this.handleClick}}
-      {{on "keydown" this.handleKeyDown captures=true}}
+      {{on "keydown" this.handleKeyDown}}
       aria-checked={{this.isSelected}}
       tabindex="0"
     >
