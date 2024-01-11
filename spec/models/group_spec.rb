@@ -82,6 +82,7 @@ RSpec.describe Group do
 
       posts = group.posts_for(Guardian.new, before: p1.created_at + 1.minute)
       expect(posts).to include(p1)
+      expect(posts).not_to include(p2)
     end
   end
 
