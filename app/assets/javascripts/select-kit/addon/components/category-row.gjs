@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -46,6 +47,10 @@ export default class CategoryRow extends Component {
     return this.siteSettings.hideParentCategory;
   }
 
+  get allowUncategorized() {
+    return this.args.selectKit.options.allowUncategorized;
+  }
+
   get rowName() {
     return this.args.item?.name;
   }
@@ -85,6 +90,7 @@ export default class CategoryRow extends Component {
     return this.category.description_text;
   }
 
+  @cached
   get category() {
     if (isEmpty(this.rowValue)) {
       const uncategorized = Category.findUncategorized();
@@ -96,6 +102,7 @@ export default class CategoryRow extends Component {
     }
   }
 
+  @cached
   get badgeForCategory() {
     return htmlSafe(
       categoryBadgeHTML(this.category, {
@@ -108,6 +115,7 @@ export default class CategoryRow extends Component {
     );
   }
 
+  @cached
   get badgeForParentCategory() {
     return htmlSafe(
       categoryBadgeHTML(this.parentCategory, {
@@ -153,6 +161,7 @@ export default class CategoryRow extends Component {
     );
   }
 
+  @cached
   get descriptionText() {
     if (this.categoryDescriptionText) {
       return this._formatDescription(this.categoryDescriptionText);
@@ -276,6 +285,7 @@ export default class CategoryRow extends Component {
       aria-checked={{this.isSelected}}
       tabindex="0"
     >
+
       {{#if this.category}}
         <div class="category-status" aria-hidden="true">
           {{#if this.hasParentCategory}}
