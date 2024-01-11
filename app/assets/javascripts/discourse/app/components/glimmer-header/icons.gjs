@@ -1,3 +1,13 @@
+let _extraHeaderIcons = [];
+
+export function addToHeaderIcons(icon) {
+  _extraHeaderIcons.push(icon);
+}
+
+export function clearExtraHeaderIcons() {
+  _extraHeaderIcons = [];
+}
+
 createWidget("header-icons", {
   services: ["search"],
   tagName: "ul.icons.d-header-icons",
