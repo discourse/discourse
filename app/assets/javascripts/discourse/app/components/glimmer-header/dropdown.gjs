@@ -32,3 +32,24 @@ createWidget(
     dropdown
   )
 );
+
+const dropdown = {
+  buildClasses(attrs) {
+    let classes = attrs.classNames || [];
+    if (attrs.active) {
+      classes.push("active");
+    }
+
+    return classes;
+  },
+
+  click(e) {
+    if (wantsNewWindow(e)) {
+      return;
+    }
+    e.preventDefault();
+    if (!this.attrs.active) {
+      this.sendWidgetAction(this.attrs.action);
+    }
+  },
+};

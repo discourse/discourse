@@ -11,6 +11,7 @@ import SwipeEvents from "discourse/lib/swipe-events";
 import { classNameBindings } from "@ember-decorators/component";
 import { schedule } from "@ember/runloop";
 import { bind } from "discourse-common/utils/decorators";
+import GlimmerHeader from "./glimmer-header";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
@@ -333,6 +334,7 @@ export default class GlimmerSiteHeader extends Component {
         @showSidebar={{@showSidebar}}
         @sidebarEnabled={{@sidebarEnabled}}
         @navigationMenuQueryParamOverride={{@navigationMenuQueryParamOverride}}
+        @toggleSidebar={{@toggleSidebar}}
       />
     </div>
   </template>
