@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import i18n from "discourse-common/helpers/i18n";
-import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChannelsListPublic from "discourse/plugins/chat/discourse/components/channels-list-public";
+import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 
 export default class ChatRoutesChannels extends Component {
   @service site;

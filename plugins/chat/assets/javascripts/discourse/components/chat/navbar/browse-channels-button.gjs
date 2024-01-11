@@ -10,7 +10,7 @@ export default class ChatNavbarBrowseChannelsButton extends Component {
   browseChannelsLabel = I18n.t("chat.channels_list_popup.browse");
 
   get showBrowseChannelsButton() {
-    return this.router.currentRoute.name == "chat.channels";
+    return this.router.currentRoute.name === "chat.channels";
   }
 
   <template>

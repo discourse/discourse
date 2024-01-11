@@ -14,7 +14,7 @@ export default class ChatNavbarNewDirectMessageButton extends Component {
 
   get showButtonComponent() {
     return (
-      this.router.currentRoute.name == "chat.direct-messages" &&
+      this.router.currentRoute.name === "chat.direct-messages" &&
       this.canCreateDirectMessageChannel
     );
   }
