@@ -14,7 +14,6 @@ import ThreadsListButton from "./threads-list-button";
 import ToggleDrawerButton from "./toggle-drawer-button";
 
 export default class ChatNavbarActions extends Component {
-
   <template>
     <nav class="c-navbar__actions">
       {{yield
