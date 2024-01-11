@@ -3018,6 +3018,7 @@ tags:
   min_trust_to_create_tag:
     default: "3"
     enum: "TrustLevelAndStaffSetting"
+    hidden: true
   create_tag_allowed_groups:
     default: "1|3|13"
     type: group_list
