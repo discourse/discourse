@@ -284,10 +284,20 @@ class GroupsController < ApplicationController
       )
     end
 
+    include_custom_fields = params[:include_custom_fields] == "true"
+
+    allowed_fields =
+      User.allowed_user_custom_fields(guardian) +
+        UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+
     if params[:order] && %w[last_posted_at last_seen_at].include?(params[:order])
       order = "#{params[:order]} #{dir} NULLS LAST"
     elsif params[:order] == "added_at"
       order = "group_users.created_at #{dir}"
+    elsif include_custom_fields && params[:order] == "custom_field" &&
+          allowed_fields.include?(params[:order_field])
+      order =
+        "(SELECT value FROM user_custom_fields ucf WHERE ucf.user_id = users.id AND ucf.name = '#{params[:order_field]}') #{dir} NULLS LAST"
     end
 
     users = group.users.human_users
@@ -315,7 +325,7 @@ class GroupsController < ApplicationController
     owners = users.where("group_users.owner")
 
     group_members_serializer =
-      params[:include_custom_fields] ? GroupUserWithCustomFieldsSerializer : GroupUserSerializer
+      include_custom_fields ? GroupUserWithCustomFieldsSerializer : GroupUserSerializer
 
     render json: {
              members: serialize_data(members, group_members_serializer),
