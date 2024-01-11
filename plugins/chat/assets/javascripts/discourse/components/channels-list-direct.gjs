@@ -145,40 +145,43 @@ export default class ChannelsListDirect extends Component {
       />
 
       {{#if this.showDirectMessageChannels}}
-        <div class="chat-channel-divider direct-message-channels-section">
-          {{#if this.inSidebar}}
-            <span
-              class="title-caret"
-              id="direct-message-channels-caret"
-              role="button"
-              title="toggle nav list"
-              {{on
-                "click"
-                (fn this.toggleChannelSection "direct-message-channels")
-              }}
-              data-toggleable="direct-message-channels"
-            >
-              {{dIcon "angle-up"}}
-            </span>
-          {{/if}}
-          <span class="channel-title">{{i18n
-              "chat.direct_messages.title"
-            }}</span>
+        {{#if this.site.desktopView}}
+          <div class="chat-channel-divider direct-message-channels-section">
+            {{#if this.inSidebar}}
+              <span
+                class="title-caret"
+                id="direct-message-channels-caret"
+                role="button"
+                title="toggle nav list"
+                {{on
+                  "click"
+                  (fn this.toggleChannelSection "direct-message-channels")
+                }}
+                data-toggleable="direct-message-channels"
+              >
+                {{dIcon "angle-up"}}
+              </span>
+            {{/if}}
 
-          {{#if
-            (and
-              this.canCreateDirectMessageChannel
-              (not this.showMobileDirectMessageButton)
-            )
-          }}
-            <DButton
-              @icon="plus"
-              class="no-text btn-flat open-new-message-btn"
-              @action={{this.openNewMessageModal}}
-              title={{i18n this.createDirectMessageChannelLabel}}
-            />
-          {{/if}}
-        </div>
+            <span class="channel-title">{{i18n
+                "chat.direct_messages.title"
+              }}</span>
+
+            {{#if
+              (and
+                this.canCreateDirectMessageChannel
+                (not this.showMobileDirectMessageButton)
+              )
+            }}
+              <DButton
+                @icon="plus"
+                class="no-text btn-flat open-new-message-btn"
+                @action={{this.openNewMessageModal}}
+                title={{i18n this.createDirectMessageChannelLabel}}
+              />
+            {{/if}}
+          </div>
+        {{/if}}
       {{/if}}
 
       <div

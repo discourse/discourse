@@ -4,6 +4,8 @@ import CloseDrawerButton from "./close-drawer-button";
 import CloseThreadButton from "./close-thread-button";
 import CloseThreadsButton from "./close-threads-button";
 import FullPageButton from "./full-page-button";
+import BrowseChannelsButton from "./browse-channels-button";
+import NewDirectMessageButton from "./new-direct-message-button";
 import NewChannelButton from "./new-channel-button";
 import OpenDrawerButton from "./open-drawer-button";
 import ThreadSettingsButton from "./thread-settings-button";
@@ -14,6 +16,14 @@ import ToggleDrawerButton from "./toggle-drawer-button";
 export default class ChatNavbarActions extends Component {
   get openDrawerButtonComponent() {
     return OpenDrawerButton;
+  }
+
+  get browseChannelsButtonComponent() {
+    return BrowseChannelsButton;
+  }
+
+  get newDirectMessageButtonComponent() {
+    return NewDirectMessageButton;
   }
 
   get newChannelButtonComponent() {
@@ -57,6 +67,8 @@ export default class ChatNavbarActions extends Component {
       {{yield
         (hash
           OpenDrawerButton=this.openDrawerButtonComponent
+          BrowseChannelsButton=this.browseChannelsButtonComponent
+          NewDirectMessageButton=this.newDirectMessageButtonComponent
           NewChannelButton=this.newChannelButtonComponent
           ThreadTrackingDropdown=this.threadTrackingDropdownComponent
           CloseThreadButton=this.closeThreadButtonComponent
