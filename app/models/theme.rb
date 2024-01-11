@@ -909,21 +909,27 @@ class Theme < ActiveRecord::Base
 
   def baked_js_tests_with_digest
     tests_tree =
-      theme_fields
-        .where(target_id: Theme.targets[:tests_js])
-        .order(name: :asc)
-        .pluck(:name, :value)
-        .to_h
+      theme_fields_to_tree(
+        theme_fields.where(target_id: Theme.targets[:tests_js]).order(name: :asc),
+      )
 
     return nil, nil if tests_tree.blank?
 
+    migrations_tree =
+      theme_fields_to_tree(
+        theme_fields.where(target_id: Theme.targets[:migrations]).order(name: :asc),
+      )
+
     compiler = ThemeJavascriptCompiler.new(id, name)
-    compiler.append_tree(tests_tree, for_tests: true)
+    compiler.append_tree(migrations_tree, include_variables: false)
+    compiler.append_tree(tests_tree)
+
     compiler.append_raw_script "test_setup.js", <<~JS
       (function() {
         require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
       })();
     JS
+
     content = compiler.content
 
     if compiler.source_map
@@ -937,6 +943,13 @@ class Theme < ActiveRecord::Base
   private
 
   attr_accessor :theme_setting_requests_refresh
+
+  def theme_fields_to_tree(theme_fields_scope)
+    theme_fields_scope.reduce({}) do |tree, theme_field|
+      tree[theme_field.file_path] = theme_field.value
+      tree
+    end
+  end
 
   def to_scss_variable(name, value)
     escaped = SassC::Script::Value::String.quote(value.to_s, sass: true)

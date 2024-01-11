@@ -92,7 +92,7 @@ class ThemeJavascriptCompiler
     JS
   end
 
-  def append_tree(tree, for_tests: false)
+  def append_tree(tree, include_variables: true)
     # Replace legacy extensions
     tree.transform_keys! do |filename|
       if filename.ends_with? ".js.es6"
@@ -168,9 +168,9 @@ class ThemeJavascriptCompiler
     # Transpile and write to output
     tree.each_pair do |filename, content|
       module_name, extension = filename.split(".", 2)
-      module_name = "test/#{module_name}" if for_tests
+
       if extension == "js" || extension == "gjs"
-        append_module(content, module_name, extension)
+        append_module(content, module_name, extension, include_variables:)
       elsif extension == "hbs"
         append_ember_template(module_name, content)
       elsif extension == "hbr"
