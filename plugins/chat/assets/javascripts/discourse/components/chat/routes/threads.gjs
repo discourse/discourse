@@ -10,10 +10,7 @@ export default class ChatRoutesThreads extends Component {
   <template>
     <div class="c-routes-threads">
       <Navbar as |navbar|>
-        <navbar.Title
-          @title={{i18n "chat.my_threads.title"}}
-          @icon="discourse-threads"
-        />
+        <navbar.Title @title={{i18n "chat.my_threads.title"}} />
 
         <navbar.Actions as |action|>
           <action.OpenDrawerButton />
