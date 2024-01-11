@@ -89,17 +89,17 @@ class TopicUploadSecurityManager
   private
 
   def posts_owning_uploads
-    Post.where(topic_id: @topic.id).joins("INNER JOIN uploads ON access_control_post_id = posts.id")
+    Post.where(topic_id: @topic.id, id: Upload.select(:access_control_post_id))
   end
 
   def posts_with_unowned_uploads
-    Post
-      .where(topic_id: @topic.id)
-      .joins(
-        "INNER JOIN upload_references ON upload_references.target_type = 'Post' AND upload_references.target_id = posts.id",
-      )
-      .joins("INNER JOIN uploads ON upload_references.upload_id = uploads.id")
-      .where("uploads.access_control_post_id IS NULL")
-      .includes(:uploads)
+    Post.where(
+      topic_id: @topic.id,
+      id:
+        UploadReference.where(
+          target_type: "Post",
+          upload: Upload.where(access_control_post_id: nil),
+        ).select(:target_id),
+    ).includes(:uploads)
   end
 end
