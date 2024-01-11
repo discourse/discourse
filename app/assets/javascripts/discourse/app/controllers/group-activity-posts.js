@@ -20,11 +20,11 @@ export default Controller.extend({
       this.set("loading", true);
       const posts = this.model;
       if (posts && posts.length) {
-        const beforePostId = posts[posts.length - 1].get("id");
+        const before = posts[posts.length - 1].get("created_at");
         const group = this.get("group.model");
 
         let categoryId = this.get("groupActivity.category_id");
-        const opts = { beforePostId, type: this.type, categoryId };
+        const opts = { before, type: this.type, categoryId };
 
         group
           .findPosts(opts)

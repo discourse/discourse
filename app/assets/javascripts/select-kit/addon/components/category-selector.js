@@ -2,6 +2,7 @@ import { computed } from "@ember/object";
 import { mapBy } from "@ember/object/computed";
 import Category from "discourse/models/category";
 import { makeArray } from "discourse-common/lib/helpers";
+import CategoryRow from "select-kit/components/category-row";
 import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
@@ -46,7 +47,7 @@ export default MultiSelectComponent.extend({
   value: mapBy("categories", "id"),
 
   modifyComponentForRow() {
-    return "category-row";
+    return CategoryRow;
   },
 
   async search(filter) {

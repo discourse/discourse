@@ -3225,6 +3225,20 @@ RSpec.describe TopicsController do
         expect(body).to have_tag(:link, with: { itemprop: "image", href: post.image_url })
       end
     end
+
+    it "returns a list of categories" do
+      SiteSetting.lazy_load_categories = true
+      topic.update!(category: Fabricate(:category))
+      dest_topic.update!(category: Fabricate(:category))
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
+        SiteSetting.uncategorized_category_id,
+        topic.category_id,
+        dest_topic.category_id,
+      )
+    end
   end
 
   describe "#post_ids" do

@@ -95,7 +95,8 @@ html {
     }
   }
 
-  .d-header-icons .d-icon {
+  .d-header-icons .d-icon,
+  .header-sidebar-toggle button .d-icon {
     color: var(--primary-low-mid);
   }
 

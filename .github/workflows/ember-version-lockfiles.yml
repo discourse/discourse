@@ -20,11 +20,11 @@ jobs:
         run: |
           # Dependabot gets confused by the symlinks and dumps the updated lockfile in the root of the repo.
           # Let's move it back to the correct location.
-          if [[ -f yarn-ember3.lock ]]; then
-            mv yarn-ember3.lock app/assets/javascripts/yarn-ember3.lock
+          if [[ -f yarn-ember5.lock ]]; then
+            mv yarn-ember5.lock app/assets/javascripts/yarn-ember5.lock
           fi
-      - name: Update ember5 lockfile
-        run: script/regen_ember_5_lockfile
+      - name: Update ember3 lockfile
+        run: script/regen_ember_3_lockfile
       - name: Push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
