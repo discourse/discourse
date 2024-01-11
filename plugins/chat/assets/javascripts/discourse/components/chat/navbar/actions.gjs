@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import BrowseChannelsButton from "./browse-channels-button";
 import CloseDrawerButton from "./close-drawer-button";
@@ -13,25 +12,25 @@ import ThreadTrackingDropdown from "./thread-tracking-dropdown";
 import ThreadsListButton from "./threads-list-button";
 import ToggleDrawerButton from "./toggle-drawer-button";
 
-export default class ChatNavbarActions extends Component {
-  <template>
-    <nav class="c-navbar__actions">
-      {{yield
-        (hash
-          OpenDrawerButton=OpenDrawerButton
-          BrowseChannelsButton=BrowseChannelsButton
-          NewDirectMessageButton=NewDirectMessageButton
-          NewChannelButton=NewChannelButton
-          ThreadTrackingDropdown=ThreadTrackingDropdown
-          CloseThreadButton=CloseThreadButton
-          CloseThreadsButton=CloseThreadsButton
-          ThreadSettingsButton=ThreadSettingsButton
-          ThreadsListButton=ThreadsListButton
-          CloseDrawerButton=CloseDrawerButton
-          ToggleDrawerButton=ToggleDrawerButton
-          FullPageButton=FullPageButton
-        )
-      }}
-    </nav>
-  </template>
-}
+const ChatNavbarActions = <template>
+  <nav class="c-navbar__actions">
+    {{yield
+      (hash
+        OpenDrawerButton=OpenDrawerButton
+        BrowseChannelsButton=BrowseChannelsButton
+        NewDirectMessageButton=NewDirectMessageButton
+        NewChannelButton=NewChannelButton
+        ThreadTrackingDropdown=ThreadTrackingDropdown
+        CloseThreadButton=CloseThreadButton
+        CloseThreadsButton=CloseThreadsButton
+        ThreadSettingsButton=ThreadSettingsButton
+        ThreadsListButton=ThreadsListButton
+        CloseDrawerButton=CloseDrawerButton
+        ToggleDrawerButton=ToggleDrawerButton
+        FullPageButton=FullPageButton
+      )
+    }}
+  </nav>
+</template>;
+
+export default ChatNavbarActions;
