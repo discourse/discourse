@@ -79,7 +79,7 @@ export default class List extends Component {
               >
                 {{component
                   (this.componentForItem item.type)
-                  membersCount=this.args.membersCount
+                  membersCount=@membersCount
                   item=item
                 }}
               </li>
