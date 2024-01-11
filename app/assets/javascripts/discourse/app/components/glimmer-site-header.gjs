@@ -1,4 +1,5 @@
-import Component, { tracked } from "@glimmer/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 
 export default class GlimmerSiteHeader extends Component {
   @tracked dockedHeader = false;
@@ -34,41 +35,41 @@ export default class GlimmerSiteHeader extends Component {
     return navigationMenuQueryParamOverride;
   }
 
-  constructor(options) {
-    super(options);
+  constructor() {
+    super(...arguments);
     this._resizeDiscourseMenuPanel = () => this.afterRender();
     window.addEventListener("resize", this._resizeDiscourseMenuPanel);
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.appEvents.on("header:show-topic", this, "setTopic");
-    this.appEvents.on("header:hide-topic", this, "setTopic");
-    this.appEvents.on("user-menu:rendered", this, "_animateMenu");
+  // didInsertElement() {
+  //   super.didInsertElement(...arguments);
+  //   this.appEvents.on("header:show-topic", this, "setTopic");
+  //   this.appEvents.on("header:hide-topic", this, "setTopic");
+  //   this.appEvents.on("user-menu:rendered", this, "_animateMenu");
 
-    if (this._dropDownHeaderEnabled()) {
-      this.appEvents.on(
-        "sidebar-hamburger-dropdown:rendered",
-        this,
-        "_animateMenu"
-      );
-    }
+  //   if (this._dropDownHeaderEnabled()) {
+  //     this.appEvents.on(
+  //       "sidebar-hamburger-dropdown:rendered",
+  //       this,
+  //       "_animateMenu"
+  //     );
+  //   }
 
-    this.dispatch("notifications:changed", "user-notifications");
-    this.dispatch("header:keyboard-trigger", "header");
-    this.dispatch("user-menu:navigation", "user-menu");
+  //   this.dispatch("notifications:changed", "user-notifications");
+  //   this.dispatch("header:keyboard-trigger", "header");
+  //   this.dispatch("user-menu:navigation", "user-menu");
 
-    this.appEvents.on("dom:clean", this, "_cleanDom");
+  //   this.appEvents.on("dom:clean", this, "_cleanDom");
 
-    if (this.currentUser) {
-      this.currentUser.on("status-changed", this, "queueRerender");
-    }
+  //   if (this.currentUser) {
+  //     this.currentUser.on("status-changed", this, "queueRerender");
+  //   }
 
-    const header = document.querySelector("header.d-header");
-    this._itsatrap = new ItsATrap(header);
-    const dirs = ["up", "down"];
-    this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
-  }
+  //   const header = document.querySelector("header.d-header");
+  //   this._itsatrap = new ItsATrap(header);
+  //   const dirs = ["up", "down"];
+  //   this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
+  // }
 
   willDestroy() {
     super.willDestroy(...arguments);

@@ -28,6 +28,7 @@ import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { forceDropdownForMenuPanels } from "discourse/components/site-header";
 import { addTopicParticipantClassesCallback } from "discourse/components/topic-map/topic-participant";
+import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
@@ -1965,6 +1966,7 @@ class PluginApi {
    */
   forceDropdownForMenuPanels(classNames) {
     forceDropdownForMenuPanels(classNames);
+    glimmerForceDropdownForMenuPanels(classNames);
   }
 
   /**
