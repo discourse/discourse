@@ -2,7 +2,7 @@ import getURL from "discourse-common/lib/get-url";
 
 export const ADMIN_NAV_MAP = [
   {
-    name: "admin_plugins",
+    name: "plugins",
     route: "adminPlugins.index",
     label: "admin.plugins.title",
     links: [

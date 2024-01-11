@@ -2309,12 +2309,20 @@ class PluginApi {
    * ```
    * api.addAdminSidebarSectionLink("root", {
    *   name: "unique_link_name",
-   *   route: "emberRouteId",
    *   label: "admin.some.i18n.label.key",
-   *   icon: "icon-name",
+   *   route: "(optional) emberRouteId",
    *   href: "(optional) can be used instead of the route",
    * }
    * ```
+
+   * @param {String} sectionName - The name of the admin sidebar section to add the link to.
+   * @param {Object} link - A link object representing a section link for the sidebar.
+   * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
+   * @param {string} link.title - The title attribute for the link.
+   * @param {string} link.text - The text to display for the link.
+   * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
+   * @param {string} [link.href] - The href attribute for the link.
+   * @param {string} [link.icon] - The FontAwesome icon to display for the link.
    */
   addAdminSidebarSectionLink(sectionName, link) {
     addAdminSidebarSectionLink(sectionName, link);

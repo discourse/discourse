@@ -179,6 +179,7 @@ export function buildAdminSidebar(navConfig) {
   });
 }
 
+// This is used for a plugin API.
 export function addAdminSidebarSectionLink(sectionName, link) {
   if (!additionalAdminSidebarSectionLinks.hasOwnProperty(sectionName)) {
     additionalAdminSidebarSectionLinks[sectionName] = [];
@@ -187,13 +188,31 @@ export function addAdminSidebarSectionLink(sectionName, link) {
   // make the name extra-unique
   link.name = `admin_additional_${sectionName}_${link.name}`;
 
-  // href or route needs to be provided
   if (!link.href && !link.route) {
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[AdminSidebar]",
+      `Custom link ${sectionName}_${link.name} must have either href or route`
+    );
+    return;
+  }
+
+  if (!link.label && !link.text) {
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[AdminSidebar]",
+      `Custom link ${sectionName}_${link.name} must have either label (which is an I18n key) or text`
+    );
     return;
   }
 
   // label must be valid, don't want broken [XYZ translation missing]
-  if (!I18n.lookup(link.label)) {
+  if (link.label && typeof I18n.lookup(link.label) !== "string") {
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[AdminSidebar]",
+      `Custom link ${sectionName}_${link.name} must have a valid I18n label, got ${link.label}`
+    );
     return;
   }
 
@@ -245,9 +264,7 @@ export default {
     const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
-    navMap
-      .findBy("name", "admin_plugins")
-      .links.push(...pluginAdminRouteLinks());
+    navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
 
     if (this.siteSettings.experimental_form_templates) {
       navMap.findBy("name", "customize").links.push({
