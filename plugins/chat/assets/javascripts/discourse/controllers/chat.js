@@ -24,9 +24,15 @@ export default class ChatController extends Controller {
 
   get shouldUseChatFooter() {
     // we only show chat footer on index pages (ie. when no input field)
+    const allowedRoutes = [
+      "chat.direct-messages",
+      "chat.channels",
+      "chat.threads",
+    ];
+
     return (
       this.site.mobileView &&
-      !this.router.currentRouteName.startsWith("chat.channel.")
+      allowedRoutes.includes(this.router.currentRouteName)
     );
   }
 
