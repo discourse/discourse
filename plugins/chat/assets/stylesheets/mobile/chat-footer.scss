@@ -1,10 +1,5 @@
-#main-outlet-wrapper {
-  padding: 0;
-}
-
 .full-page-chat {
   #main-chat-outlet.chat-view {
-    grid-template-rows: auto min-content;
     grid-template-areas:
       "list"
       "footer";
