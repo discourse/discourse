@@ -20,7 +20,13 @@ export default class NewGroup extends Component {
   placeholder = I18n.t("chat.direct_message_creator.group_name");
 
   get membersCount() {
-    return this.args.members?.length;
+    return this.args.members?.reduce((acc, member) => {
+      if (member.type === "group") {
+        return acc + member.model.chat_enabled_user_count;
+      } else {
+        return acc + 1;
+      }
+    }, 0);
   }
 
   @action
@@ -75,6 +81,7 @@ export default class NewGroup extends Component {
           @onChange={{@onChangeMembers}}
           @close={{@close}}
           @cancel={{@cancel}}
+          @membersCount={{this.membersCount}}
           @maxReached={{gte
             this.membersCount
             this.siteSettings.chat_max_direct_message_users

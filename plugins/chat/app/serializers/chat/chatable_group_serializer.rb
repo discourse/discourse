@@ -2,10 +2,18 @@
 
 module Chat
   class ChatableGroupSerializer < BasicGroupSerializer
-    attributes :can_chat
+    attributes :chat_enabled, :chat_enabled_user_count, :can_chat
+
+    def chat_enabled
+      SiteSetting.chat_enabled
+    end
+
+    def chat_enabled_user_count
+      object.users.count { |user| user.user_option&.chat_enabled }
+    end
 
     def can_chat
-      SiteSetting.chat_enabled
+      chat_enabled && chat_enabled_user_count <= SiteSetting.chat_max_direct_message_users
     end
   end
 end

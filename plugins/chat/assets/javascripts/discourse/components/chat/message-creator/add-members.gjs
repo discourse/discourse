@@ -17,9 +17,14 @@ export default class AddMembers extends Component {
   @service loadingSlider;
 
   get membersCount() {
-    return (
-      this.args.members?.length + (this.args.channel?.membershipsCount ?? 0)
-    );
+    const userCount = this.args.members?.reduce((acc, member) => {
+      if (member.type === "group") {
+        return acc + member.model.chat_enabled_user_count;
+      } else {
+        return acc + 1;
+      }
+    }, 0);
+    return userCount + (this.args.channel?.membershipsCount ?? 0);
   }
 
   @action
@@ -58,6 +63,7 @@ export default class AddMembers extends Component {
           @onChange={{@onChangeMembers}}
           @close={{@close}}
           @cancel={{@cancel}}
+          @membersCount={{this.membersCount}}
           @maxReached={{gte
             this.membersCount
             this.siteSettings.chat_max_direct_message_users

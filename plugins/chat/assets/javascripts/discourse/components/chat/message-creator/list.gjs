@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
-import not from "truth-helpers/helpers/not";
 import Channel from "./channel";
 import Group from "./group";
 import ListAction from "./list-action";
@@ -77,9 +76,12 @@ export default class List extends Component {
                 tabindex="0"
                 data-identifier={{item.identifier}}
                 id={{item.id}}
-                data-disabled={{not item.enabled}}
               >
-                {{component (this.componentForItem item.type) item=item}}
+                {{component
+                  (this.componentForItem item.type)
+                  membersCount=this.args.membersCount
+                  item=item
+                }}
               </li>
             {{/each}}
           </ul>

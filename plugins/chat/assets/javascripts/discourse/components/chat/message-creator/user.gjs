@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import userStatus from "discourse/helpers/user-status";
 import I18n from "discourse-i18n";
 import gt from "truth-helpers/helpers/gt";
+import not from "truth-helpers/helpers/not";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 
@@ -12,7 +13,10 @@ export default class ChatableUser extends Component {
   disabledUserLabel = I18n.t("chat.new_message_modal.disabled_user");
 
   <template>
-    <div class="chat-message-creator__chatable -user">
+    <div
+      class="chat-message-creator__chatable -user"
+      data-disabled={{not @item.enabled}}
+    >
       <ChatUserAvatar @user={{@item.model}} @interactive={{false}} />
       <ChatUserDisplayName @user={{@item.model}} />
 

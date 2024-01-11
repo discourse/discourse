@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import concatClass from "discourse/helpers/concat-class";
 import I18n from "discourse-i18n";
-import eq from "truth-helpers/helpers/eq";
+import gte from "truth-helpers/helpers/gte";
 
 export default class MembersCount extends Component {
   get countLabel() {
@@ -15,7 +15,7 @@ export default class MembersCount extends Component {
     <div
       class={{concatClass
         "chat-message-creator__members-count"
-        (if (eq @count @max) "-reached-limit")
+        (if (gte @count @max) "-reached-limit")
       }}
     >
       {{this.countLabel}}

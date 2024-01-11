@@ -349,6 +349,7 @@ en:
         filter: "Filter"
         cant_add_more_members: "Maximum number of members reached"
         create_new_group_chat: "Create group chat"
+        group_with_too_many_members: "has too many members (%{membersCount})"
 
       channel_edit_name_slug_modal:
         title: Edit channel

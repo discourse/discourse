@@ -119,10 +119,13 @@ module Chat
     end
 
     def search_groups(context, guardian, contract)
-      Group.visible_groups(guardian.user).where(
-        "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",
-        term_like: "%#{context.term}%",
-      )
+      Group
+        .visible_groups(guardian.user)
+        .includes(users: :user_option)
+        .where(
+          "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",
+          term_like: "%#{context.term}%",
+        )
     end
   end
 end
