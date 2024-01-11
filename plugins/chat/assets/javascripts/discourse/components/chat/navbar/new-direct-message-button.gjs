@@ -8,11 +8,19 @@ import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/cha
 export default class ChatNavbarNewDirectMessageButton extends Component {
   @service router;
   @service modal;
+  @service chat;
 
   buttonLabel = I18n.t("chat.channels_list_popup.browse");
 
   get showButtonComponent() {
-    return this.router.currentRoute.name == "chat.direct-messages";
+    return (
+      this.router.currentRoute.name == "chat.direct-messages" &&
+      this.canCreateDirectMessageChannel
+    );
+  }
+
+  get canCreateDirectMessageChannel() {
+    return this.chat.userCanDirectMessage;
   }
 
   @action

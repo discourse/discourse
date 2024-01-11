@@ -10,7 +10,7 @@ export default class ChatRoutesChannels extends Component {
   <template>
     <div class="c-routes-channels">
       <Navbar as |navbar|>
-        <navbar.Title @title={{i18n "chat.chat_channels"}}/>
+        <navbar.Title @title={{i18n "chat.chat_channels"}} />
         <navbar.Actions as |action|>
           <action.BrowseChannelsButton />
         </navbar.Actions>
