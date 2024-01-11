@@ -9,22 +9,6 @@ import ChannelTitle from "./channel-title";
 import Title from "./title";
 
 export default class ChatNavbar extends Component {
-  get buttonComponent() {
-    return BackButton;
-  }
-
-  get titleComponent() {
-    return Title;
-  }
-
-  get actionsComponent() {
-    return Actions;
-  }
-
-  get channelTitleComponent() {
-    return ChannelTitle;
-  }
-
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     <div
@@ -34,10 +18,10 @@ export default class ChatNavbar extends Component {
       <nav class="c-navbar">
         {{yield
           (hash
-            BackButton=this.buttonComponent
-            ChannelTitle=this.channelTitleComponent
-            Title=this.titleComponent
-            Actions=this.actionsComponent
+            BackButton=BackButton
+            ChannelTitle=ChannelTitle
+            Title=Title
+            Actions=Actions
           )
         }}
       </nav>
