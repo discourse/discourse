@@ -17,7 +17,7 @@ export default class ChatNavbarBrowseChannelsButton extends Component {
     {{#if this.showBrowseChannelsButton}}
       <LinkTo
         @route="chat.browse"
-        class="btn no-text btn-flat c-navbar__threads-list-button"
+        class="btn no-text btn-flat c-navbar__browse-button"
         title={{this.browseChannelsLabel}}
       >
         {{icon "pencil-alt"}}

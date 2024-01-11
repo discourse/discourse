@@ -78,9 +78,9 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
   end
 
   context "when no category channels" do
-    it "doesn’t show the section" do
+    it "hides the section" do
       visit("/chat/channels")
-      expect(page).to have_no_css(".public-channels-section")
+      expect(page).to have_no_css(".channels-list-container")
     end
 
     context "when user can create channels" do
@@ -88,15 +88,15 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
 
       it "shows the section" do
         visit("/chat/channels")
-        expect(page).to have_css(".public-channels-section")
+        expect(page).to have_css(".channels-list-container")
       end
     end
   end
 
   context "when no direct message channels" do
     it "shows the section" do
-      visit("/chat")
-      expect(page).to have_css(".direct-message-channels-section")
+      visit("/chat/direct-messages")
+      expect(page).to have_selector(".channels-list-container")
     end
   end
 

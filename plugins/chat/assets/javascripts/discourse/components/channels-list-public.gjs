@@ -167,8 +167,8 @@ export default class ChannelsListPublic extends Component {
             (if this.inSidebar "collapsible-sidebar-section")
           }}
         >
-          {{#if this.publicChannelsEmpty}}
-            <div class="public-channel-empty-message">
+          {{#if this.publicMessageChannelsEmpty}}
+            <div class="channel-list-empty-message">
               <span class="channel-title">{{i18n
                   "chat.no_public_channels"
                 }}</span>

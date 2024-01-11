@@ -77,6 +77,10 @@ export default class ChannelsListDirect extends Component {
     }`;
   }
 
+  get directMessageChannelsEmpty() {
+    return this.chatChannelsManager.directMessageChannels?.length === 0;
+  }
+
   @action
   toggleChannelSection(section) {
     this.args.toggleSection(section);
@@ -188,15 +192,23 @@ export default class ChannelsListDirect extends Component {
         id="direct-message-channels"
         class={{this.directMessageChannelClasses}}
       >
-        {{#each
-          this.chatChannelsManager.truncatedDirectMessageChannels
-          as |channel|
-        }}
-          <ChatChannelRow
-            @channel={{channel}}
-            @options={{hash leaveButton=true}}
-          />
-        {{/each}}
+        {{#if this.directMessageChannelsEmpty}}
+          <div class="channel-list-empty-message">
+            <span class="channel-title">{{i18n
+                "chat.no_direct_message_channels"
+              }}</span>
+          </div>
+        {{else}}
+          {{#each
+            this.chatChannelsManager.truncatedDirectMessageChannels
+            as |channel|
+          }}
+            <ChatChannelRow
+              @channel={{channel}}
+              @options={{hash leaveButton=true}}
+            />
+          {{/each}}
+        {{/if}}
       </div>
     </div>
   </template>
