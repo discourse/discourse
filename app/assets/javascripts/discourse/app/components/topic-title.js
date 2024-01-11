@@ -31,3 +31,21 @@ export default Component.extend(KeyEnterEscape, {
     });
   },
 });
+
+// id like to move this to `components/topic-title`
+// _resizeDiscourseMenuPanel = () => this.afterRender();
+// window.addEventListener("resize", this._resizeDiscourseMenuPanel);
+// window.removeEventListener("resize", this._resizeDiscourseMenuPanel);
+
+// afterRender() {
+//   super.afterRender(...arguments);
+// const headerTitle = document.querySelector(".header-title .topic-link");
+// if (headerTitle && this._topic) {
+//   topicTitleDecorators.forEach((cb) =>
+//     cb(this._topic, headerTitle, "header-title")
+//   );
+// }
+// this._animateMenu();
+// }
+
+// we will need to import `animate` from the header
