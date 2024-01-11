@@ -6,6 +6,8 @@
   <:body>
     <div id="keyboard-shortcuts-help">
       <div class="keyboard-shortcuts-help__container">
+        <span tabindex="0"></span>
+        {{! A11Y, allows keyboard users to scroll modal body }}
         {{#each-in this.shortcuts as |category shortcutCategory|}}
           <section
             class="shortcut-category span-{{shortcutCategory.count}}
