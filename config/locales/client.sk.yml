@@ -28,7 +28,10 @@ sk:
         millions: "%{number}mil"
     dates:
       time: "h:mm a"
+      time_with_zone: "hh:mm a (z)"
+      time_short_day: "ddd, h:mm a"
       timeline_date: "MMM YYYY"
+      long_no_year: "MMM D, h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "MMM D, YYYY h:mm a"
@@ -40,6 +43,7 @@ sk:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       wrap_ago: "pred %{date}"
+      wrap_on: "na %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -151,11 +155,21 @@ sk:
       previous_month: "Predchádzajúci mesiac"
       next_month: "Nasledujúci mesiac"
       placeholder: Dátum
+      from_placeholder: "od dátumu"
+      to_placeholder: "k dnešnému dňu"
     share:
+      topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
+      post: "príspevok č.%{postNumber} od @%{username}"
       close: "zatvoriť"
       twitter: "Zdieľať na Twitteri"
+      facebook: "Zdieľať na Facebooku"
+      email: "Odoslať e-mailom"
+      url: "Skopírujte a zdieľajte URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Téma je verejná%{when}"
+      open_topic: "Prevedené na tému %{when}"
       private_topic: "Urobil(a) z témy osobnú správu%{when}"
       split_topic: "Rozdeľ tému %{when}"
       invited_user: "Pozvaný %{who} %{when}"
@@ -164,6 +178,8 @@ sk:
       removed_user: "Odstránený %{who} %{when}"
       removed_group: "Odstránený %{who} %{when}"
       autobumped: "Automaticky obnovené %{when}"
+      tags_changed: "Tagy aktualizované %{when}"
+      category_changed: "Kategória bola aktualizovaná %{when}"
       autoclosed:
         enabled: "Uzavreté %{when}"
         disabled: "Otvorené %{when}"
@@ -185,29 +201,48 @@ sk:
       banner:
         enabled: "Téma je odteraz baner %{when} Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie."
         disabled: "Odstránil(a) tento oznam %{when}. Už sa viac nebude zobrazovať navrchu každej stránky."
+      forwarded: "Preposlanie vyššie uvedeného e-mailu"
+    topic_admin_menu: "tematické akcie"
+    skip_to_main_content: "Preskočiť na hlavný obsah"
+    skip_user_nav: "Preskočiť na obsah profilu"
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
+    emails_are_disabled_non_staff: "Odchádzajúci e-mail bol zakázaný pre používateľov, ktorí nie sú zamestnancami."
     software_update_prompt:
+      message: "Aktualizovali sme túto stránku, <span>obnovte</span>, inak sa môže vyskytnúť neočakávané správanie."
       dismiss: "Zahodiť"
+    bootstrap_mode: "Začíname"
     themes:
       default_description: "Predvolené"
+      broken_theme_alert: "Vaša stránka nemusí fungovať, pretože téma/komponent obsahuje chyby."
+      error_caused_by: "Spôsobené '%{name}'. <a target='blank' href='%{path}'>Kliknutím sem</a> aktualizujte, prekonfigurujte alebo deaktivujte."
+      only_admins: "(táto správa sa zobrazuje iba správcom stránok)"
+    broken_decorator_alert: "Príspevky sa nemusia zobrazovať správne, pretože jeden z dekoratérov obsahu príspevku na vašom webe vyvolal chybu."
     broken_plugin_alert: "Spôsobené rozšírením „%{name}“"
     s3:
       regions:
         ap_northeast_1: "Ázia Tichomorie (Tokio)"
         ap_northeast_2: "Asia Pacific (Soul)"
+        ap_east_1: "Ázia a Tichomorie (Hongkong)"
         ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Ázia Tichomorie (Singapur)"
         ap_southeast_2: "Ázia Tichomorie (Sydney)"
+        ca_central_1: "Kanada (stredná)"
         cn_north_1: "Čína (Peking)"
         cn_northwest_1: "Čína (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
+        eu_north_1: "EÚ (Štokholm)"
+        eu_south_1: "EÚ (Miláno)"
         eu_west_1: "EU (Írsko)"
         eu_west_2: "EU (Londýn)"
         eu_west_3: "EU (Paríž)"
+        sa_east_1: "Južná Amerika (São Paulo)"
         us_east_1: "USA Východ (S. Virginia)"
         us_east_2: "USA Východ (Ohio)"
+        us_gov_east_1: "AWS GovCloud (USA - východ)"
+        us_gov_west_1: "AWS GovCloud (USA - západ)"
         us_west_1: "USA Západ (S. Kalifornia)"
         us_west_2: "USA Západ (Oregon)"
+    clear_input: "Vymazať vstup"
     edit: "upraviť názov a kategóriu témy"
     expand: "Rozbaľ"
     not_implemented: "Ľutujeme, táto funkcia ešte nie je implementovaná."
@@ -219,6 +254,7 @@ sk:
     delete: "Odstrániť"
     generic_error: "Ľutujeme, nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
+    multiple_errors: "Vyskytlo sa viacero chýb: %{errors}"
     sign_up: "Registrácia"
     log_in: "Prihlásenie"
     age: "Vek"
@@ -238,6 +274,7 @@ sk:
     privacy: "Súkromie"
     tos: "Podmienky používania"
     rules: "Pravidlá"
+    conduct: "Kódex správania"
     mobile_view: "Mobilná verzia"
     desktop_view: "Zobrazenie pre počítač"
     now: "práve teraz"
@@ -254,12 +291,15 @@ sk:
     daily: "denne"
     weekly: "týždenne"
     every_month: "každý mesiac"
+    every_six_months: "každých šesť mesiacov"
     max_of_count: "najviac %{count}"
     character_count:
       one: "%{count} znak"
       few: "%{count} znakov"
       many: "%{count} znakov"
       other: "%{count} znakov"
+    period_chooser:
+      aria_label: "Filtrovať podľa obdobia"
     related_messages:
       title: "Príbuzné správy"
       pill: "Príbuzné správy"
@@ -2828,6 +2868,10 @@ sk:
           body: "Telo"
           revert: "Vrátiť zmeny"
           revert_confirm: "Ste si istý, že chcete vrátiť vykonané zmeny späť?"
+        component:
+          all_filter: "Všetky"
+          enabled_filter: "Povolené"
+          disabled_filter: "Vypnuté"
         theme:
           theme: "Téma"
           component: "Komponent"
@@ -2878,6 +2922,8 @@ sk:
             text: "Vnorené CSS"
           body_tag:
             text: "Telo"
+          all_filter: "Všetky"
+          active_filter: "Aktívny"
         colors:
           title: "Farby"
           copy_name_prefix: "Kópia"

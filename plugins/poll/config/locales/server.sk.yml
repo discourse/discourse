@@ -12,9 +12,11 @@ sk:
     poll_minimum_trust_level_to_create: "Definuj minimálny stupeň dôvery na vytvorenie hlasonia."
     poll_groupable_user_fields: "Súbor názvov užívateľských polí, ktoré možno použiť na zoskupovanie a filtrovanie výsledkov prieskumu."
     poll_export_data_explorer_query_id: "ID dotazu Prieskumníka údajov, ktorý sa má použiť na export výsledkov prieskumu (0 pre vypnutie)."
+    poll_default_public: "Pri vytváraní novej ankety predvolene povoľte možnosť „Zobraziť, kto hlasoval“."
   poll:
     poll: "anketa"
     invalid_argument: "Neplatná hodnota '%{value}' pre argument '%{argument}'."
+    multiple_polls_without_name: "Pri vytváraní viacerých ankiet zahrňte jedinečné názvy pridaním <code>name=príklad</code> k vašim <code>[anketám]</code> tagom."
     multiple_polls_with_same_name: "Existujú viaceré hlasovania s rovnakým menom: <strong>%{name}</strong>. Použite atribút '<code>meno</code>', aby ste hlasovanie jednoznačne rozlíšili."
     default_poll_must_have_at_least_1_option: "Anketa musí obsahovať aspoň 1 možnosť."
     named_poll_must_have_at_least_1_option: "Anketa <strong>%{name}</strong> musí mať aspoň 1 možnosť."

@@ -2822,6 +2822,10 @@ et:
           body: "Sisu"
           revert: "Loobu muudatustest"
           revert_confirm: "Oled kindel, et soovid oma muudatustest loobuda?"
+        component:
+          all_filter: "Kõik"
+          enabled_filter: "Sisse lülitatud"
+          disabled_filter: "Välja lülitatud"
         theme:
           theme: "Teema"
           component: "Komponent"
@@ -2874,6 +2878,9 @@ et:
             text: "Sisu"
           yaml:
             text: "YAML"
+          all_filter: "Kõik"
+          active_filter: "Aktiivne"
+          inactive_filter: "Mitteaktiivne"
         colors:
           title: "Värvid"
           edit: "Muuda värvipalette"

@@ -53,6 +53,8 @@ hy:
   on_another_topic: "Մեկ այլ թեմայում"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} %{username}-ի կողմից"
+  components:
+    disabled_filter: "Անջատված"
   themes:
     bad_color_scheme: "Անհնար է թարմացնել թեման, անվավեր գունապնակ"
     other_error: "Թեման թարմացնելիս ինչ-որ բան այնպես չէ ընթացել"

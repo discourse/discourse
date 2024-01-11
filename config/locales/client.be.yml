@@ -1614,6 +1614,9 @@ be:
           body: "цела"
           revert: "вярнуць змены"
           revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
+        component:
+          all_filter: "Усё"
+          disabled_filter: "Адключана"
         theme:
           theme: "тэма"
           customize_desc: "Кастамізаваць:"
@@ -1639,6 +1642,8 @@ be:
             text: "Header"
           body_tag:
             text: "цела"
+          all_filter: "Усё"
+          active_filter: "актыўныя"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"

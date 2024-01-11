@@ -3219,6 +3219,9 @@ hy:
           body: "Մարմին"
           revert: "Վերադարձնել Փոփոխությունները"
           revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել Ձեր փոփոխությունները:"
+        component:
+          all_filter: "Բոլորը"
+          disabled_filter: "Անջատված"
         theme:
           theme: "Թեմա"
           component: "Բաղադրիչ"
@@ -3354,6 +3357,9 @@ hy:
           yaml:
             text: "YAML"
             title: "Սահմանել թեմայի կարգավորումները YAML ֆորմատով"
+          all_filter: "Բոլորը"
+          active_filter: "Ակտիվ"
+          inactive_filter: "Ոչ ակտիվ"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"

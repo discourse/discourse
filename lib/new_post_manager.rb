@@ -117,7 +117,7 @@ class NewPostManager
 
     if (
          manager.args[:image_sizes].present? &&
-           user.trust_level < SiteSetting.review_media_unless_trust_level.to_i
+           !user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
        )
       return :contains_media
     end

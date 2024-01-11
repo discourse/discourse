@@ -526,7 +526,7 @@ class Guardian
     return false if !authenticated?
     # User is trusted enough
     @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) &&
-      @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
+      @user.in_any_groups?(SiteSetting.send_email_messages_allowed_groups_map)
   end
 
   def can_export_entity?(entity)

@@ -494,7 +494,7 @@ RSpec.describe RemoteTheme do
       theme = RemoteTheme.import_theme_from_directory(theme_dir)
 
       expect(theme.name).to eq("Header Icons")
-      expect(theme.theme_fields.count).to eq(5)
+      expect(theme.theme_fields.count).to eq(6)
     end
   end
 end

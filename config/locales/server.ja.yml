@@ -60,6 +60,9 @@ ja:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} の #%{post_number}"
+  components:
+    enabled_filter: "有効"
+    disabled_filter: "無効"
   themes:
     bad_color_scheme: "テーマを更新できません。無効なカラーパレットです"
     other_error: "テーマの更新中に問題が発生しました"
@@ -1976,7 +1979,6 @@ ja:
     max_allowed_message_recipients: "メッセージに許可される最大受信者数。"
     watched_words_regular_expressions: "ウォッチ語は正規表現です。"
     enable_diffhtml_preview: "完全な再レンダリングの代わりに diffHTML を使ってプレビューを同期する実験的機能"
-    enable_fast_edit: "投稿文の一部の選択範囲をインラインで編集できるようにします。"
     old_post_notice_days: "投稿の通知が古くなるまでの日数"
     new_user_notice_tl: "新しいユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_user_notice_tl: "リピートユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
@@ -2083,7 +2085,6 @@ ja:
     experimental_new_new_view_groups: '実験的: 未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクします。'
     enable_custom_sidebar_sections: "実験的: カスタムサイドバーセクションを有効にする"
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
-    experimental_search_menu_groups: "実験的: glimmer を使用するようにアップグレードされた新しい検索メニューを有効にします"
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     errors:

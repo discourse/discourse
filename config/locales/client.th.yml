@@ -2656,6 +2656,9 @@ th:
           subject: "หัวข้อ"
           revert: "ย้อนกลับการแก้ไข"
           revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
+        component:
+          all_filter: "ทั้งหมด"
+          disabled_filter: "ปิดใช้งานแล้ว"
         theme:
           theme: "ธีม"
           theme_name: "ชื่อธีม"
@@ -2699,6 +2702,9 @@ th:
             text: "Footer"
           embedded_scss:
             text: "Embedded CSS"
+          all_filter: "ทั้งหมด"
+          active_filter: "ใช้งานอยู่"
+          inactive_filter: "ไม่ใช้งาน"
         colors:
           title: "สี"
           undo: "เลิกทำ"

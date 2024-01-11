@@ -60,6 +60,10 @@ uk:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} від %{username}"
+  components:
+    enabled_filter: "Включено"
+    disabled_filter: "Вимкнено"
+    updates_available_filter: "Доступні оновлення"
   themes:
     bad_color_scheme: "Неможливо оновити тему, пошкоджена палітра кольорів"
     other_error: "Щось пішло не так з оновленням теми"
@@ -299,6 +303,7 @@ uk:
       discourse_connect_enabled: "Функціонал надсилання запрошень вимкнено, оскільки увімкнено функцію DiscourseConnect."
       invalid_access: "Вам не дозволено переглядати запитаний ресурс."
     requires_groups: "Запрошення не було збережено, оскільки зазначена тема недоступна. Додайте одну з таких груп: %{groups}."
+    max_invite_emails_limit_exceeded: "Запит не вдалося виконати, оскільки кількість листів перевищила максимальну (%{max})."
     domain_not_allowed: "Вашу електронну адресу не можна використати, щоб активувати це запрошення."
     max_redemptions_allowed_one: "для запрошень електронною поштою має бути 1."
     redemption_count_less_than_max: "має бути менше %{max_redemptions_allowed}."
@@ -1938,6 +1943,7 @@ uk:
     self_wiki_allowed_groups: "Групи, де користувачі можуть створювати власні вікі-дописи."
     min_trust_to_send_messages: "ЗАСТАРІЛО, замість цього використовуйте «групи з увімкненими особистими повідомленнями». Мінімальний рівень довіри, необхідний для створення нових особистих повідомлень."
     min_trust_to_send_email_messages: "Мінімальний рівень довіри, необхідний для надсилання особистих повідомлень електронною поштою."
+    send_email_messages_allowed_groups: "Групи, яким дозволено надсилати особисті повідомлення електронною поштою."
     min_trust_to_flag_posts: "Мінімальний рівень довіри, необхідний для позначення дописів прапорцем"
     flag_post_allowed_groups: "Групи, яким дозволено позначати повідомлення."
     min_trust_to_post_links: "Мінімальний рівень довіри, необхідний для додавання посилань у допис"
@@ -2227,7 +2233,8 @@ uk:
     max_allowed_message_recipients: "Максимальна кількість одержувачів, дозволених у повідомленні."
     watched_words_regular_expressions: "Слова спостереження – це регулярні вирази."
     enable_diffhtml_preview: "Експериментальна функція, яка використовує DiffHTML для синхронізації попереднього перегляду замість повного повторного рендеринга"
-    enable_fast_edit: "Дозволяє редагувати невеликий фрагмент тексту допису."
+    enable_fast_edit: "Додає кнопку до меню публікації для швидкого редагування невеликого виділення в рядку."
+    enable_quote_copy: "Додає кнопку до меню публікації, щоб скопіювати виділення до буфера обміну для позначення цитати."
     old_post_notice_days: "За скільки днів допис ставатиме старим"
     new_user_notice_tl: "Мінімальний рівень довіри, який дозволяє бачити сповіщення про нові дописи користувачів."
     returning_user_notice_tl: "Мінімальний рівень довіри, необхідний для перегляду повідомлень про дописи користувачів, які повернулись."
@@ -2287,6 +2294,7 @@ uk:
     revoke_user_api_keys_maxlife_days: "Кількість днів до автоматичного відкликання ключа API користувача (0 - ніколи)"
     tagging_enabled: "Увімкнути теґи за темами?"
     min_trust_to_create_tag: "Мінімальний рівень довіри, необхідний для створення теґу."
+    create_tag_allowed_groups: "Групи, яким дозволено створювати теги."
     max_tags_per_topic: "Максимум теґів, які можна застосувати до теми."
     enable_max_tags_per_email_subject: "Використовувати max_tags_per_email_subject при створенні теми листа"
     max_tags_per_email_subject: "Максимальна кількість тегів, які можуть бути в темі електронного листа"
@@ -2341,9 +2349,9 @@ uk:
     experimental_new_new_view_groups: 'ЕКСПЕРИМЕНТАЛЬНО: Увімкніть список нових тем, який об''єднує непрочитані та нові теми, і зробіть так, щоб посилання "Все" на бічній панелі посилалося на нього.'
     enable_custom_sidebar_sections: "ЕКСПЕРИМЕНТАЛЬНО: Увімкнути користувацькі розділи бічної панелі"
     experimental_topics_filter: "ЕКСПЕРИМЕНТАЛЬНО: Вмикає експериментальний маршрут фільтрування тем за адресою /filter"
-    experimental_search_menu_groups: "ЕКСПЕРИМЕНТАЛЬНЕ: Вмикає нове меню пошуку, в якому використовується мерехтіння"
     enable_experimental_lightbox: "ЕКСПЕРИМЕНТАЛЬНЕ: оновлений дизайн стандартного лайтбоксу зображень."
     experimental_form_templates: "ЕКСПЕРИМЕНТАЛЬНО: Увімкніть функцію шаблонів форм. <b>Після увімкнення</b> керуйте шаблонами за адресою <a href='%{base_path}/admin/customize/form-templates'>Налаштування/Шаблони</a>."
+    admin_sidebar_enabled_groups: "ЕКСПЕРИМЕНТАЛЬНО: Увімкніть бічну панель навігації в інтерфейсі адміністратора для вказаних груп, яка замінить кнопки навігації адміністратора верхнього рівня."
     page_loading_indicator: "Вибір індикатора завантаження, який з’являється під час навігації сторінкою в Discourse. «Спіннер» – це індикатор на всю сторінку. «Слайдер» — вузька смужка у верхній частині екрана."
     show_user_menu_avatars: "Показувати аватари користувачів у меню користувача"
     errors:
@@ -2420,6 +2428,8 @@ uk:
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
+      create_tag_allowed_groups: "min_trust_to_create_tag"
+      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

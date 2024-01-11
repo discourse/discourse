@@ -50,6 +50,9 @@ et:
   remove_posts_deleted_by_author: "Autori poolt kustutatud"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "postituse nr%{post_number} tegi %{username}"
+  components:
+    enabled_filter: "Sisse lülitatud"
+    disabled_filter: "Välja lülitatud"
   emails:
     incoming:
       default_subject: "See teema vajab pealkirja"

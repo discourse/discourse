@@ -55,6 +55,8 @@ vi:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} bởi %{username}"
+  components:
+    disabled_filter: "Vô hiệu hóa"
   themes:
     bad_color_scheme: "Không thể cập nhật chủ đề, bảng màu không hợp lệ"
     other_error: "Đã xảy ra lỗi khi cập nhật chủ đề"

@@ -53,6 +53,9 @@ lv:
   on_another_topic: "Par citu tēmu"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} - %{username}"
+  components:
+    enabled_filter: "Ieslēgts"
+    disabled_filter: "Atslēgt"
   emails:
     incoming:
       default_subject: "Šim ierakstam ir nepieciešams nosaukums"

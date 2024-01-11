@@ -3933,11 +3933,14 @@ lt:
           body: "Tekstas"
           revert: "Atstatyti Pakeitimus"
           revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
+        component:
+          all_filter: "Visos"
+          enabled_filter: "Galimas"
+          disabled_filter: "Uždrausta"
         theme:
           theme: "Tema"
           component: "Komponentas"
           components: "Komponentai"
-          filter_placeholder: "Įveskite filtrą…"
           theme_name: "Temos pavadinimas"
           component_name: "Komponento pavadinimas"
           themes_intro: "Norėdami pradėti, pasirinkite esamą temą arba įdiekite naują"
@@ -4069,6 +4072,9 @@ lt:
           yaml:
             text: "YAML"
             title: "Apibrėžkite temos nustatymus YAML formatu"
+          all_filter: "Visos"
+          active_filter: "Aktyvūs"
+          inactive_filter: "Neaktyvus"
         colors:
           select_base:
             title: "Pasirinkite pagrindinę spalvų paletę"

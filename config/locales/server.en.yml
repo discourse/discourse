@@ -1979,6 +1979,7 @@ en:
 
     min_trust_to_send_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. The minimum trust level required to create new personal messages."
     min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
+    send_email_messages_allowed_groups: "Groups that are allowed to send personal messages via email."
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     flag_post_allowed_groups: "Groups that are allowed to flag posts."
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
@@ -2361,6 +2362,7 @@ en:
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
     review_media_unless_trust_level: "Staff will review posts of users with lower trust levels if they contain embedded media."
+    skip_review_media_groups: "Users who are not in any of these groups will have their posts sent to staff for review if the post contains embedded media."
     blur_tl0_flagged_posts_media: "Blur flagged posts images to hide potentially NSFW content."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
     show_published_pages_login_required: "Anonymous users can see published pages, even when login is required."
@@ -2580,6 +2582,8 @@ en:
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
+      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
 
     placeholder:
       discourse_connect_provider_secrets:

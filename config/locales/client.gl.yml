@@ -3708,6 +3708,10 @@ gl:
           body: "Corpo"
           revert: "Reverter os cambios"
           revert_confirm: "Confirma a reversión dos cambios?"
+        component:
+          all_filter: "Todas"
+          enabled_filter: "Activado"
+          disabled_filter: "Desactivado"
         theme:
           theme: "Tema"
           component: "Compoñente"
@@ -3866,6 +3870,9 @@ gl:
           yaml:
             text: "YAML"
             title: "Definir os axustes do tema en formato YAML"
+          all_filter: "Todas"
+          active_filter: "Activo"
+          inactive_filter: "Inactivo"
         colors:
           select_base:
             title: "Seleccionar a paleta de cores básicas"

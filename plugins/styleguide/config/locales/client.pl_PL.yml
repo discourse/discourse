@@ -10,6 +10,7 @@ pl_PL:
       title: "Przewodnik po stylach"
       welcome: "Aby rozpocząć, wybierz sekcję z menu po lewej stronie."
       categories:
+        syntax: Składnia
         atoms: Atomy
         molecules: Cząsteczki
         organisms: Organizmy

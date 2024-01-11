@@ -375,6 +375,8 @@ fa_IR:
         search: "جستجو برای یک پیام"
         placeholder: "عنوان پیام، لینک و یا آیدی آن را اینجا وارد کنید"
     review:
+      show_more: "نمایش بیشتر"
+      show_less: "نمایش کمتر"
       order_by: "به ترتیب"
       date_filter: "ارسال شده بین"
       in_reply_to: "در پاسخ به"
@@ -503,6 +505,7 @@ fa_IR:
       scores:
         about: "این امتیاز بر اساس سطح اعتماد گزارش دهنده، دقت پرچم‌های قبلی ایشان، و اولویت مورد گزارش شده حساب میشود، "
         score: "امتیاز"
+        date: "تاریخ گزارش"
         type: "دلیل"
         status: "وضعیت"
         submitted_by: "گزارش شده توسط"
@@ -2642,6 +2645,7 @@ fa_IR:
     post:
       quote_reply: "نقل‌قول"
       quote_edit: "ویرایش"
+      quote_copy: "رونوشت نقل قول"
       quote_share: "اشتراک‌گذاری"
       edit_reason: "دلیل:"
       post_number: "نوشته %{number}"
@@ -3796,6 +3800,9 @@ fa_IR:
           body: "متن"
           revert: "بازگرداندن تغییرات"
           revert_confirm: "آیا مطمئن هستید که میخواهید تنظیمات را بازگردانی کنید؟"
+        component:
+          all_filter: "همه"
+          disabled_filter: "غیرفعال"
         theme:
           theme: "قالب"
           component: "کامپوننت "
@@ -3904,6 +3911,9 @@ fa_IR:
             title: "کد HTML که قبل از برچسب body درج خواهد شد"
           yaml:
             text: "YAML"
+          all_filter: "همه"
+          active_filter: "فعال"
+          inactive_filter: "غیر‌فعال"
         colors:
           title: "رنگ‌ها"
           copy_name_prefix: "کپی از"

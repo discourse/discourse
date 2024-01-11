@@ -54,6 +54,9 @@ cs:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  components:
+    enabled_filter: "Zapnutý"
+    disabled_filter: "Vypnuto"
   themes:
     bad_color_scheme: "Motiv nelze aktualizovat, neplatná paleta barev"
     other_error: "Něco se pokazilo při aktualizaci skinu (theme)"

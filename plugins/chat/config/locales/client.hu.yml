@@ -8,8 +8,6 @@ hu:
   js:
     admin:
       site_settings:
-        categories:
-          chat: Csevegés
         chat_separate_sidebar_mode:
           always: "Mindig"
           fullscreen: "Amikor a csevegés teljes képernyőn van"
