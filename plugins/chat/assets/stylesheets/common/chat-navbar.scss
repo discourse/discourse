@@ -38,8 +38,10 @@
     @include ellipsis();
     font-weight: 700;
 
-    .c-routes-channel-threads & {
-      padding-left: 0;
+    .c-routes-direct-messages &,
+    .c-routes-channels &,
+    .c-routes-threads & {
+      padding-left: 1.25rem;
     }
 
     .chat-drawer & {
