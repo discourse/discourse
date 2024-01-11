@@ -4,10 +4,6 @@ import icon from "discourse-common/helpers/d-icon";
 import SubTitle from "./sub-title";
 
 export default class ChatNavbarTitle extends Component {
-  get subTitleComponent() {
-    return SubTitle;
-  }
-
   <template>
     <div title={{@title}} class="c-navbar__title">
       {{#if (has-block)}}
@@ -15,7 +11,7 @@ export default class ChatNavbarTitle extends Component {
           {{icon @icon}}
         {{/if}}
         {{@title}}
-        {{yield (hash SubTitle=this.subTitleComponent)}}
+        {{yield (hash SubTitle=SubTitle)}}
       {{else}}
         {{#if @icon}}
           {{icon @icon}}
