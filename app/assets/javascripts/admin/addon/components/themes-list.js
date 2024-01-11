@@ -68,7 +68,7 @@ export default class ThemesList extends Component {
 
   @gt("inactiveThemes.length", 0) hasInactiveThemes;
 
-  @gte("themesList.length", 10) showSearch;
+  @gte("themesList.length", 10) showSearchAndFilter;
 
   @equal("currentTab", THEMES) themesTabActive;
 
@@ -210,7 +210,7 @@ export default class ThemesList extends Component {
       this.set("selectInactiveMode", false);
       this.set("currentTab", newTab);
       this.set("filter", ALL_FILTER);
-      if (!this.showSearch) {
+      if (!this.showSearchAndFilter) {
         this.set("searchTerm", null);
       }
     }

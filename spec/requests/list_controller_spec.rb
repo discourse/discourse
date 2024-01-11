@@ -398,6 +398,25 @@ RSpec.describe ListController do
 
         expect(response.status).to eq(404)
       end
+
+      it "should sort group private messages by posts_count" do
+        topic2 = Fabricate(:private_message_topic, allowed_groups: [group])
+        topic3 = Fabricate(:private_message_topic, allowed_groups: [group])
+        2.times { Fabricate(:post, topic: topic2) }
+        Fabricate(:post, topic: topic3)
+
+        sign_in(Fabricate(:admin))
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json",
+            params: {
+              order: "posts",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to eq(
+          [topic2.id, topic3.id, topic.id],
+        )
+      end
     end
 
     describe "with unicode_usernames" do
@@ -858,6 +877,32 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
+    end
+
+    it "sorts private messages by activity" do
+      topic_ids = []
+
+      [1.year.ago, 1.week.ago, 1.month.ago].each do |date|
+        pm =
+          Fabricate(
+            :private_message_topic,
+            user: Fabricate(:user),
+            created_at: date,
+            bumped_at: date,
+          )
+        pm.topic_allowed_users.create!(user: user)
+        topic_ids << pm.id
+      end
+
+      sign_in(user)
+
+      get "/topics/private-messages/#{user.username}.json", params: { order: "activity" }
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["topic_list"]["topics"].pluck("id")).to eq(
+        [topic_ids[1], topic_ids[2], topic_ids[0]],
+      )
     end
   end
 

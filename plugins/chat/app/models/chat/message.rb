@@ -236,7 +236,7 @@ module Chat
     end
 
     def full_url
-      "#{Discourse.base_url}#{url}"
+      "#{Discourse.base_url_no_prefix}#{url}"
     end
 
     def url
