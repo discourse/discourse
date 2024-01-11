@@ -261,6 +261,7 @@ export default class CategoryRow extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-pointer-down-event-binding }}
     <div
       class={{concatClass
         "category-row"
