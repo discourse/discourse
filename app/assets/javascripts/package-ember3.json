@@ -24,7 +24,8 @@
     "truth-helpers"
   ],
   "resolutions": {
-    "**/unset-value": "2.0.1"
+    "**/unset-value": "2.0.1",
+    "**/ember-source": "3.28.12"
   },
   "devDependencies": {
     "patch-package": "^8.0.0",

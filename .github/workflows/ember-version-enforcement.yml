@@ -32,14 +32,14 @@ jobs:
           node -e '
             const version = require("ember-source/package.json").version;
             console.log("Ember version is", version);
-            if(version.split(".")[0] !== "3"){
-              console.log(`Ember has unexpectedly been upgraded to version ${version}. If this is intentional, remove this github workflow.`);
+            if(version.split(".")[0] !== "5"){
+              console.log(`Ember has unexpectedly been downgraded to version ${version}. If this is intentional, remove this github workflow.`);
               process.exit(1);
             }
           '
-      - name: Upgrade ember
+      - name: Downgrade ember
         run: |
-          script/switch_ember_version 5
+          script/switch_ember_version 3
           cd app/assets/javascripts/discourse
           yarn install
       - name: "Check upgraded version"
@@ -48,19 +48,19 @@ jobs:
           node -e '
             const version = require("ember-source/package.json").version;
             console.log("Ember version is", version);
-            if(version.split(".")[0] !== "5"){
-              console.log(`Expected Ember 5, but found ${version}`);
+            if(version.split(".")[0] !== "3"){
+              console.log(`Expected Ember 3, but found ${version}`);
               process.exit(1);
             }
           '
-      - name: "Revert ember upgrade"
+      - name: "Revert ember downgrade"
         run: |
-          script/switch_ember_version 3
+          script/switch_ember_version 5
       - name: "Ensure no diff"
         run: |
           if [ ! -z "$(git status --porcelain)" ]; then
             echo "Working directory was not clean after upgrading/downgrading ember. Perhaps a lockfile is out-of-date. Run this command to re-sync:"
-            echo "  script/regen_ember_5_lockfile"
+            echo "  script/regen_ember_3_lockfile"
             echo
             echo "Current diff:"
             echo "---------------------------------------------"

@@ -302,10 +302,13 @@ RSpec.describe NewPostManager do
         }
       end
 
-      before { user.update!(trust_level: 0) }
+      before do
+        user.update!(trust_level: 0)
+        Group.refresh_automatic_groups!
+      end
 
-      it "queues the post for review because if it contains embedded media." do
-        SiteSetting.review_media_unless_trust_level = 1
+      it "queues the post for review because it contains embedded media" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
         manager = NewPostManager.new(user, manager_opts)
 
         result = NewPostManager.default_handler(manager)
@@ -315,7 +318,7 @@ RSpec.describe NewPostManager do
       end
 
       it "does not enqueue the post if the poster is a trusted user" do
-        SiteSetting.review_media_unless_trust_level = 0
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_0]
         manager = NewPostManager.new(user, manager_opts)
 
         result = NewPostManager.default_handler(manager)

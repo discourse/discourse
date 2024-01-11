@@ -298,6 +298,20 @@ const publishGroupNewToMessageBus = function (opts) {
   );
 };
 
+acceptance("User Private Messages - sorting", function (needs) {
+  withGroupMessagesSetup(needs);
+
+  test("order by posts_count", async function (assert) {
+    await visit("/u/eviltrout/messages");
+
+    assert.ok(exists(".topic-list-header th.posts.sortable"), "is sortable");
+
+    await click(".topic-list-header th.posts.sortable");
+
+    assert.ok(exists(".topic-list-header th.posts.sortable.sorting"), "sorted");
+  });
+});
+
 acceptance(
   "User Private Messages - user with group messages",
   function (needs) {
