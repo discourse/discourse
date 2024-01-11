@@ -387,5 +387,27 @@ RSpec.describe CategoryList do
         category_list.categories.find { |c| c.id == category.id }.subcategory_ids,
       ).to contain_exactly(subcategory.id)
     end
+
+    it "returns at most SUBCATEGORIES_PER_CATEGORY subcategories" do
+      Fabricate(:category, user: admin, parent_category: category)
+      Fabricate(:category, user: admin, parent_category: category)
+
+      category_list =
+        stub_const(CategoryList, "SUBCATEGORIES_PER_CATEGORY", 2) do
+          CategoryList.new(Guardian.new(user), include_topics: true)
+        end
+
+      expect(category_list.categories.size).to eq(4)
+      expect(category_list.categories).to include(
+        Category.find(SiteSetting.uncategorized_category_id),
+        category,
+      )
+      expect(category_list.categories.map(&:parent_category_id)).to contain_exactly(
+        nil,
+        nil,
+        category.id,
+        category.id,
+      )
+    end
   end
 end

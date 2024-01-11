@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class CategoryList
-  CATEGORIES_PER_PAGE = 25
+  CATEGORIES_PER_PAGE = 20
+  SUBCATEGORIES_PER_CATEGORY = 5
 
   include ActiveModel::Serialization
 
@@ -138,13 +139,31 @@ class CategoryList
 
     if SiteSetting.lazy_load_categories
       page = [1, @options[:page].to_i].max
-      query = query.limit(CATEGORIES_PER_PAGE).offset((page - 1) * CATEGORIES_PER_PAGE)
+      query =
+        query
+          .where(parent_category_id: nil)
+          .limit(CATEGORIES_PER_PAGE)
+          .offset((page - 1) * CATEGORIES_PER_PAGE)
     end
 
     query =
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
     @categories = query.to_a
+
+    if SiteSetting.lazy_load_categories
+      categories_with_rownum =
+        Category
+          .secured(@guardian)
+          .select(:id, "ROW_NUMBER() OVER (PARTITION BY parent_category_id) rownum")
+          .where(parent_category_id: @categories.map { |c| c.id })
+
+      @categories +=
+        Category.where(
+          "id IN (WITH cte AS (#{categories_with_rownum.to_sql}) SELECT id FROM cte WHERE rownum <= ?)",
+          SUBCATEGORIES_PER_CATEGORY,
+        )
+    end
 
     if Site.preloaded_category_custom_fields.any?
       Category.preload_custom_fields(@categories, Site.preloaded_category_custom_fields)
