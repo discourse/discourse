@@ -768,6 +768,8 @@ export default Component.extend(
       } else {
         if (this.selectKit.isFilterExpanded) {
           this._focusFilter();
+          this.set("selectKit.highlighted", null);
+          return;
         } else {
           highlightedIndex = 0;
         }
@@ -791,6 +793,8 @@ export default Component.extend(
       } else {
         if (this.selectKit.isFilterExpanded) {
           this._focusFilter();
+          this.set("selectKit.highlighted", null);
+          return;
         } else {
           highlightedIndex = count - 1;
         }
