@@ -38,6 +38,12 @@ function updateScriptReferences({
       if (!chunks) {
         if (distAssets.has(`${entrypointName}.js`)) {
           chunks = [`assets/${entrypointName}.js`];
+        } else if (entrypointName === "vendor") {
+          // support embroider-fingerprinted vendor when running with `-prod` flag
+          const vendorFilename = [...distAssets].find((key) =>
+            key.startsWith("vendor.")
+          );
+          chunks = [`assets/${vendorFilename}`];
         } else {
           // Not an ember-cli asset, do not rewrite
           return;
