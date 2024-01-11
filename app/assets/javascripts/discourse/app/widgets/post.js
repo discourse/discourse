@@ -885,6 +885,7 @@ createWidget("post-article", {
             delete result.shareUrl;
             delete result.firstPost;
             delete result.usernameUrl;
+            delete result.topicNotificationLevel;
 
             result.customShare = `${topicUrl}/${p.post_number}`;
             result.asPost = this.store.createRecord("post", result);
