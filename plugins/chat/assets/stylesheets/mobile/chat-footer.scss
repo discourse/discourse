@@ -21,7 +21,7 @@
     border-top: 1px solid var(--primary-low);
     display: flex;
     align-items: flex-end;
-    justify-content: space-between;
+    justify-content: space-around;
     position: sticky;
     bottom: 0;
     left: 0;
@@ -37,8 +37,12 @@
 
     .d-icon {
       margin-right: 0;
-      font-size: var(--font-up-2-rem);
+      font-size: var(--font-up-4);
       color: var(--primary-medium);
+
+      &.d-icon-discourse-threads {
+        font-size: var(--font-up-3); //visual correction
+      }
     }
 
     .d-button-label {
