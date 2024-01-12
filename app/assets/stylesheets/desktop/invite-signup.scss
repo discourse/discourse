@@ -1,10 +1,14 @@
+.invite-page {
+  background: var(--primary-50);
+}
+
 .invites-show {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
   max-width: 500px;
   padding: 2rem 3rem;
   background: var(--secondary);
   box-shadow: var(--shadow-menu-panel);
+  margin: 10vh auto 1em auto;
+  @media screen and (max-height: 700px) {
+    margin: 1em auto 1em auto;
+  }
 }
