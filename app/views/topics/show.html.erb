@@ -37,6 +37,7 @@
     <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
       <meta itemprop='headline' content='<%= @topic_view.title %>'>
       <link itemprop='url' href='<%= @topic_view.absolute_url %>'>
+      <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
       <% if @topic_view.topic.category.present? %>
         <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
       <% end %>
@@ -51,7 +52,6 @@
       </div>
 
       <% if @topic_view.prev_page %>
-        <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
         <span itemprop='author' itemscope itemtype="http://schema.org/Person">
           <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
           <link itemprop='url' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
@@ -85,7 +85,7 @@
               <% end %>
 
               <span class="crawler-post-infos">
-                  <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
+                  <time <%= post.is_first_post? ? "" : "itemprop='datePublished'".html_safe %> datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
                     <%= l post.created_at, format: :long %>
                   </time>
                 <% if post.version > 1 %>
