@@ -6,6 +6,7 @@ import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import I18n from "discourse-i18n";
+import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
@@ -40,7 +41,7 @@ export default ComboBoxComponent.extend({
   },
 
   modifyComponentForRow() {
-    return "category-row";
+    return CategoryRow;
   },
 
   modifyNoSelection() {
