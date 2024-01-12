@@ -1,8 +1,6 @@
-.has-full-page-chat {
-  .fk-d-menu {
-    width: calc(100% - 2rem);
-    max-width: unset;
-  }
+[data-content][data-identifier="chat-composer-dropdown__menu"] {
+  width: calc(100% - 2rem);
+  max-width: unset;
 
   .fk-d-menu__inner-content {
     width: 100%;
