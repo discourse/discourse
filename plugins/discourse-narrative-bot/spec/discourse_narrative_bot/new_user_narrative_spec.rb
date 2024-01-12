@@ -828,8 +828,11 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
           end
         end
 
-        describe "when min_trust_to_post_embedded_media is too high" do
-          before { SiteSetting.min_trust_to_post_embedded_media = 4 }
+        describe "when embedded_media_post_allowed_groups does not include the user" do
+          before do
+            SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+            Group.refresh_automatic_groups!
+          end
 
           it "should skip the images tutorial step" do
             post.update!(

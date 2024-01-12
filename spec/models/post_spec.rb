@@ -336,36 +336,6 @@ RSpec.describe Post do
       expect(post_one_image).to be_valid
     end
 
-    it "doesn't allow more than `min_trust_to_post_embedded_media`" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 3
-      expect(post_one_image).not_to be_valid
-    end
-
-    it "doesn't allow more than `min_trust_to_post_embedded_media` in a quote" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 3
-      expect(post_image_within_quote).not_to be_valid
-    end
-
-    it "doesn't allow more than `min_trust_to_post_embedded_media` in code" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 3
-      expect(post_image_within_code).not_to be_valid
-    end
-
-    it "doesn't allow more than `min_trust_to_post_embedded_media` in pre" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 3
-      expect(post_image_within_pre).not_to be_valid
-    end
-
-    it "doesn't allow more than `min_trust_to_post_embedded_media`" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 4
-      expect(post_one_image).to be_valid
-    end
-
     it "doesn't count favicons as images" do
       PrettyText.stubs(:cook).returns(post_with_favicon.raw)
       expect(post_with_favicon.embedded_media_count).to eq(0)
@@ -385,6 +355,40 @@ RSpec.describe Post do
 
     it "counts video and audio as embedded media" do
       expect(post_with_two_embedded_media.embedded_media_count).to eq(2)
+    end
+
+    describe "embedded_media_allowed_groups" do
+      before { Group.refresh_automatic_groups! }
+
+      it "doesn't allow users outside of `embedded_media_post_allowed_groups`" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(3)
+        expect(post_one_image).not_to be_valid
+      end
+
+      it "doesn't allow users outside of `embedded_media_post_allowed_groups` in a quote" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(3)
+        expect(post_image_within_quote).not_to be_valid
+      end
+
+      it "doesn't allow users outside of `embedded_media_post_allowed_groups` in code" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(3)
+        expect(post_image_within_code).not_to be_valid
+      end
+
+      it "doesn't allow users outside of `embedded_media_post_allowed_groups` in pre" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(3)
+        expect(post_image_within_pre).not_to be_valid
+      end
+
+      it "allows users who are in a group in `embedded_media_post_allowed_groups`" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(4)
+        expect(post_one_image).to be_valid
+      end
     end
 
     context "with validation" do

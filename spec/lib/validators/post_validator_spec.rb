@@ -185,7 +185,7 @@ RSpec.describe PostValidator do
 
   describe "too_many_embedded_media" do
     before do
-      SiteSetting.min_trust_to_post_embedded_media = 0
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.newuser_max_embedded_media = 2
     end
 
@@ -204,8 +204,8 @@ RSpec.describe PostValidator do
     end
 
     it "should be invalid when user trust level is not sufficient" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post.acting_user = build(:leader)
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      post.acting_user = build(:leader, groups: [])
       post.expects(:embedded_media_count).returns(2)
       validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be > 0

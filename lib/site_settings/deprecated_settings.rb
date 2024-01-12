@@ -37,6 +37,7 @@ module SiteSettings::DeprecatedSettings
     ["min_trust_to_create_tag", "create_tag_allowed_groups", false, "3.3"],
     ["min_trust_to_send_email_messages", "send_email_messages_allowed_groups", false, "3.3"],
     ["review_media_unless_trust_level", "skip_review_media_groups", false, "3.3"],
+    ["min_trust_to_post_embedded_media", "embedded_media_post_allowed_groups", false, "3.3"],
   ]
 
   OVERRIDE_TL_GROUP_SETTINGS = %w[
@@ -58,6 +59,7 @@ module SiteSettings::DeprecatedSettings
     min_trust_to_create_tag
     min_trust_to_send_email_messages
     review_media_unless_trust_level
+    min_trust_to_post_embedded_media
   ]
 
   def group_to_tl(old_setting, new_setting)
