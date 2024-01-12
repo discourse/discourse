@@ -60,7 +60,7 @@
       <% end %>
 
       <% @topic_view.posts.each do |post| %>
-        <% if (u = post.user) %>
+        <% if (u = post.user) && !post.hidden && post.cooked && !post.cooked.strip.empty? %>
           <div id='post_<%= post.post_number %>' <%= post.is_first_post? ? "" : "itemprop='comment' itemscope itemtype='http://schema.org/Comment'".html_safe %> class='topic-body crawler-post'>
             <div class='crawler-post-meta'>
               <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
