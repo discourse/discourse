@@ -43,14 +43,15 @@ export default class ChatFooter extends Component {
           <DButton
             @route="chat.direct-messages"
             @class={{concatClass
-              "btn-flat c-footer__item"
+              "btn-flat"
+              "c-footer__item"
               (if
                 (eq this.router.currentRouteName "chat.direct-messages")
                 "--active"
               )
             }}
             @icon="users"
-            @id="chat-footer-direct-messages"
+            @id="c-footer-direct-messages"
             @translatedLabel={{i18n "chat.direct_messages.title"}}
             aria-label={{i18n "chat.direct_messages.aria_label"}}
           />
@@ -59,11 +60,12 @@ export default class ChatFooter extends Component {
         <DButton
           @route="chat.channels"
           @class={{concatClass
-            "btn-flat c-footer__item"
+            "btn-flat"
+            "c-footer__item"
             (if (eq this.router.currentRouteName "chat.channels") "--active")
           }}
           @icon="comments"
-          @id="chat-footer-channels"
+          @id="c-footer-channels"
           @translatedLabel={{i18n "chat.channel_list.title"}}
           aria-label={{i18n "chat.channel_list.aria_label"}}
         />
@@ -72,11 +74,12 @@ export default class ChatFooter extends Component {
           <DButton
             @route="chat.threads"
             @class={{concatClass
-              "btn-flat c-footer__item"
+              "btn-flat"
+              "c-footer__item"
               (if (eq this.router.currentRouteName "chat.threads") "--active")
             }}
             @icon="discourse-threads"
-            @id="chat-footer-threads"
+            @id="c-footer-threads"
             @translatedLabel={{i18n "chat.my_threads.title"}}
             aria-label={{i18n "chat.my_threads.aria_label"}}
           />

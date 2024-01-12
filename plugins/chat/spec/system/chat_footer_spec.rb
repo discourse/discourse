@@ -19,8 +19,8 @@ RSpec.describe "Chat footer on mobile", type: :system, mobile: true do
 
       expect(page).to have_css(".c-footer")
       expect(page).to have_css(".c-footer__item", count: 2)
-      expect(page).to have_css("#chat-footer-direct-messages")
-      expect(page).to have_css("#chat-footer-channels")
+      expect(page).to have_css("#c-footer-direct-messages")
+      expect(page).to have_css("#c-footer-channels")
     end
 
     it "hides footer when channel is open" do
@@ -45,7 +45,7 @@ RSpec.describe "Chat footer on mobile", type: :system, mobile: true do
       chat_page.open_from_header
 
       expect(page).to have_css(".c-footer")
-      expect(page).to have_css("#chat-footer-threads")
+      expect(page).to have_css("#c-footer-threads")
     end
   end
 
