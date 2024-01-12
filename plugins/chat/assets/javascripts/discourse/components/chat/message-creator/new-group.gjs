@@ -26,7 +26,7 @@ export default class NewGroup extends Component {
       } else {
         return acc + 1;
       }
-    }, 0);
+    }, 1);
   }
 
   @action
