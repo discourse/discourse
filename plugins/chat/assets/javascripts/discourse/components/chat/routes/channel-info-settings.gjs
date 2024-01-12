@@ -578,7 +578,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
           </form.section>
         {{/if}}
 
-        <form.section as |section|>
+        <form.section @extraClass="--leave-channel" as |section|>
           <section.row>
             <:action>
               <ToggleChannelMembershipButton
