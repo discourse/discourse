@@ -7,7 +7,12 @@ import {
 import { ADMIN_PANEL } from "discourse/services/sidebar-state";
 import I18n from "discourse-i18n";
 
-const additionalAdminSidebarSectionLinks = {};
+let additionalAdminSidebarSectionLinks = {};
+
+// For testing.
+export function clearAdditionalAdminSidebarSectionLinks() {
+  additionalAdminSidebarSectionLinks = {};
+}
 
 function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
   const SidebarAdminSectionLink = class extends BaseCustomSidebarSectionLink {
