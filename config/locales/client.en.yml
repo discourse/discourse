@@ -2350,6 +2350,8 @@ en:
           filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
+        bulk_select_topics_dropdown:
+          title: "Bulk Actions"
 
     date_time_picker:
       from: From
@@ -2887,6 +2889,7 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
+        confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"

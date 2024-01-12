@@ -49,6 +49,11 @@ export default Component.extend(LoadMore, {
   },
 
   @discourseComputed
+  experimentalTopicBulkActionsEnabled() {
+    return this.siteSettings.experimental_topic_bulk_actions;
+  },
+
+  @discourseComputed
   sortable() {
     return !!this.changeSort;
   },

@@ -2338,6 +2338,10 @@ developer:
     default: ""
     client: true
     hidden: true
+  experimental_topic_bulk_actions:
+    default: false
+    hidden: true
+    client: true
 
 navigation:
   navigation_menu:
