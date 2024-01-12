@@ -38,16 +38,40 @@ function updateScriptReferences({
       if (!chunks) {
         if (distAssets.has(`${entrypointName}.js`)) {
           chunks = [`assets/${entrypointName}.js`];
+        } else if (entrypointName === "vendor") {
+          // support embroider-fingerprinted vendor when running with `-prod` flag
+          const vendorFilename = [...distAssets].find((key) =>
+            key.startsWith("vendor.")
+          );
+          chunks = [`assets/${vendorFilename}`];
         } else {
           // Not an ember-cli asset, do not rewrite
           return;
         }
       }
 
-      const newElements = chunks.map(
-        (chunk) =>
-          `<script ${attribute}="${baseURL}${chunk}" data-ember-cli-rewritten="true"></script>`
-      );
+      const newElements = chunks.map((chunk) => {
+        let newElement = `<${element.tagName}`;
+
+        for (const [attr, value] of element.attributes) {
+          if (attr === attribute) {
+            newElement += ` ${attribute}="${baseURL}${chunk}"`;
+          } else if (value === "") {
+            newElement += ` ${attr}`;
+          } else {
+            newElement += ` ${attr}="${value}"`;
+          }
+        }
+
+        newElement += ` data-ember-cli-rewritten="true"`;
+        newElement += `>`;
+
+        if (element.tagName === "script") {
+          newElement += `</script>`;
+        }
+
+        return newElement;
+      });
 
       if (
         entrypointName === "discourse" &&

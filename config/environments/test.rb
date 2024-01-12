@@ -53,6 +53,16 @@ Discourse::Application.configure do
   config.active_record.verbose_query_logs = true
   config.active_record.query_log_tags_enabled = true
 
+  config.active_record.query_log_tags = [
+    :application,
+    :controller,
+    :action,
+    {
+      request_path: ->(context) { context[:controller]&.request&.path },
+      thread_id: ->(context) { Thread.current.object_id },
+    },
+  ]
+
   config.after_initialize do
     ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
       line =~ %r{lib/freedom_patches}

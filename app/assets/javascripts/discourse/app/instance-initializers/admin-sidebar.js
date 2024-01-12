@@ -7,6 +7,13 @@ import {
 import { ADMIN_PANEL } from "discourse/services/sidebar-state";
 import I18n from "discourse-i18n";
 
+let additionalAdminSidebarSectionLinks = {};
+
+// For testing.
+export function clearAdditionalAdminSidebarSectionLinks() {
+  additionalAdminSidebarSectionLinks = {};
+}
+
 function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
   const SidebarAdminSectionLink = class extends BaseCustomSidebarSectionLink {
     constructor({ adminSidebarNavLink }) {
@@ -133,12 +140,6 @@ export function useAdminNavConfig(navMap) {
           icon: "users",
         },
         {
-          name: "admin_reports",
-          route: "adminReports",
-          label: "admin.dashboard.reports_tab",
-          icon: "chart-pie",
-        },
-        {
           name: "admin_badges",
           route: "adminBadges",
           label: "admin.badges.title",
@@ -148,7 +149,18 @@ export function useAdminNavConfig(navMap) {
     },
   ];
 
-  return adminNavSections.concat(navMap);
+  navMap = adminNavSections.concat(navMap);
+
+  for (const [sectionName, additionalLinks] of Object.entries(
+    additionalAdminSidebarSectionLinks
+  )) {
+    const section = navMap.findBy("name", sectionName);
+    if (section && additionalLinks.length) {
+      section.links.push(...additionalLinks);
+    }
+  }
+
+  return navMap;
 }
 
 let adminSectionLinkClass = null;
@@ -172,16 +184,68 @@ export function buildAdminSidebar(navConfig) {
   });
 }
 
+// This is used for a plugin API.
+export function addAdminSidebarSectionLink(sectionName, link) {
+  if (!additionalAdminSidebarSectionLinks.hasOwnProperty(sectionName)) {
+    additionalAdminSidebarSectionLinks[sectionName] = [];
+  }
+
+  // make the name extra-unique
+  link.name = `admin_additional_${sectionName}_${link.name}`;
+
+  if (!link.href && !link.route) {
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[AdminSidebar]",
+      `Custom link ${sectionName}_${link.name} must have either href or route`
+    );
+    return;
+  }
+
+  if (!link.label && !link.text) {
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[AdminSidebar]",
+      `Custom link ${sectionName}_${link.name} must have either label (which is an I18n key) or text`
+    );
+    return;
+  }
+
+  // label must be valid, don't want broken [XYZ translation missing]
+  if (link.label && typeof I18n.lookup(link.label) !== "string") {
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[AdminSidebar]",
+      `Custom link ${sectionName}_${link.name} must have a valid I18n label, got ${link.label}`
+    );
+    return;
+  }
+
+  additionalAdminSidebarSectionLinks[sectionName].push(link);
+}
+
+function pluginAdminRouteLinks() {
+  return (PreloadStore.get("enabledPluginAdminRoutes") || []).map(
+    (pluginAdminRoute) => {
+      return {
+        name: `admin_plugin_${pluginAdminRoute.location}`,
+        route: `adminPlugins.${pluginAdminRoute.location}`,
+        label: pluginAdminRoute.label,
+        icon: "cog",
+      };
+    }
+  );
+}
+
 export default {
+  name: "admin-sidebar-initializer",
+
   initialize(owner) {
     this.currentUser = owner.lookup("service:current-user");
     this.siteSettings = owner.lookup("service:site-settings");
 
-    if (!this.currentUser?.staff) {
-      return;
-    }
-
     if (
+      !this.currentUser?.staff ||
       !this.siteSettings.userInAnyGroups(
         "admin_sidebar_enabled_groups",
         this.currentUser
@@ -205,16 +269,7 @@ export default {
     const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
-    const enabledPluginAdminRoutes =
-      PreloadStore.get("enabledPluginAdminRoutes") || [];
-    enabledPluginAdminRoutes.forEach((pluginAdminRoute) => {
-      navMap.findBy("name", "admin_plugins").links.push({
-        name: `admin_plugin_${pluginAdminRoute.location}`,
-        route: `adminPlugins.${pluginAdminRoute.location}`,
-        label: pluginAdminRoute.label,
-        icon: "cog",
-      });
-    });
+    navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
 
     if (this.siteSettings.experimental_form_templates) {
       navMap.findBy("name", "customize").links.push({

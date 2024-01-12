@@ -211,56 +211,57 @@ module("Integration | Component | themes-list", function (hooks) {
         },
       }),
     ];
+
+    // This is to make the filter show, it only shows if there are 10+ themes or components.
+    const otherThemes = createThemes(8, (n) => {
+      return {
+        name: `OtherTheme ${n}${n}`,
+        component: true,
+        parent_themes: [1],
+        enabled: true,
+      };
+    });
+
     this.setProperties({
-      themes,
+      themes: themes.concat(otherThemes),
       currentTab: THEMES,
     });
+
+    function themeNames() {
+      return [...queryAll(".themes-list-container__item .info .name")]
+        .map((node) => node.textContent.trim())
+        .filter((name) => !name.includes("OtherTheme"));
+    }
 
     await render(
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
     assert.ok(exists(".themes-list-filter__input"));
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      [
-        "Theme enabled 1",
-        "Theme enabled 2",
-        "Theme disabled 1",
-        "Theme disabled 2",
-      ]
-    );
+    assert.deepEqual(themeNames(), [
+      "Theme enabled 1",
+      "Theme enabled 2",
+      "Theme disabled 1",
+      "Theme disabled 2",
+    ]);
 
     await selectKit(".themes-list-filter__input").expand();
     await selectKit(".themes-list-filter__input").selectRowByValue("active");
     assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
+      themeNames(),
+
       ["Theme enabled 1", "Theme enabled 2"]
     );
 
     await selectKit(".themes-list-filter__input").expand();
     await selectKit(".themes-list-filter__input").selectRowByValue("inactive");
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      ["Theme disabled 1", "Theme disabled 2"]
-    );
+    assert.deepEqual(themeNames(), ["Theme disabled 1", "Theme disabled 2"]);
 
     await selectKit(".themes-list-filter__input").expand();
     await selectKit(".themes-list-filter__input").selectRowByValue(
       "updates_available"
     );
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      ["Theme disabled 2"]
-    );
+    assert.deepEqual(themeNames(), ["Theme disabled 2"]);
   });
 
   test("components filter", async function (assert) {
@@ -300,8 +301,19 @@ module("Integration | Component | themes-list", function (hooks) {
         },
       }),
     ];
+
+    // This is to make the filter show, it only shows if there are 10+ themes or components.
+    const otherComponents = createThemes(8, (n) => {
+      return {
+        name: `OtherComponent ${n}${n}`,
+        component: true,
+        parent_themes: [1],
+        enabled: true,
+      };
+    });
+
     this.setProperties({
-      components,
+      components: components.concat(otherComponents),
       currentTab: COMPONENTS,
     });
 
@@ -309,65 +321,51 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{(array)}} @components={{this.components}} @currentTab={{this.currentTab}} />`
     );
 
+    function componentNames() {
+      return [...queryAll(".themes-list-container__item .info .name")]
+        .map((node) => node.textContent.trim())
+        .filter((name) => !name.includes("OtherComponent"));
+    }
+
     assert.ok(exists(".themes-list-filter__input"));
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      [
-        "Component used 1",
-        "Component used 2",
-        "Component unused 1",
-        "Component unused and disabled 1",
-      ]
-    );
+    assert.deepEqual(componentNames(), [
+      "Component used 1",
+      "Component used 2",
+      "Component unused 1",
+      "Component unused and disabled 1",
+    ]);
 
     await selectKit(".themes-list-filter__input").expand();
     await selectKit(".themes-list-filter__input").selectRowByValue("active");
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      ["Component used 1", "Component used 2"]
-    );
+    assert.deepEqual(componentNames(), [
+      "Component used 1",
+      "Component used 2",
+    ]);
 
     await selectKit(".themes-list-filter__input").expand();
     await selectKit(".themes-list-filter__input").selectRowByValue("inactive");
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      ["Component unused 1", "Component unused and disabled 1"]
-    );
+    assert.deepEqual(componentNames(), [
+      "Component unused 1",
+      "Component unused and disabled 1",
+    ]);
 
     await selectKit(".themes-list-filter__input").expand();
     await selectKit(".themes-list-filter__input").selectRowByValue("enabled");
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      ["Component used 1", "Component used 2", "Component unused 1"]
-    );
+    assert.deepEqual(componentNames(), [
+      "Component used 1",
+      "Component used 2",
+      "Component unused 1",
+    ]);
 
     await selectKit(".themes-list-filter__input").expand();
     await selectKit(".themes-list-filter__input").selectRowByValue("disabled");
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      ["Component unused and disabled 1"]
-    );
+    assert.deepEqual(componentNames(), ["Component unused and disabled 1"]);
 
     await selectKit(".themes-list-filter__input").expand();
     await selectKit(".themes-list-filter__input").selectRowByValue(
       "updates_available"
     );
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      ["Component unused and disabled 1"]
-    );
+    assert.deepEqual(componentNames(), ["Component unused and disabled 1"]);
   });
 
   test("switching between themes and components tabs keeps the search visible only if both tabs have at least 10 items", async function (assert) {

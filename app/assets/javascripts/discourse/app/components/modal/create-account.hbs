@@ -44,7 +44,7 @@
               @value={{this.model.accountEmail}}
               disabled={{this.emailDisabled}}
               autofocus="autofocus"
-              aria-describedby="account-email-validation"
+              aria-describedby="account-email-validation account-email-validation-more-info"
               aria-invalid={{this.emailValidation.failed}}
               name="email"
               id="new-account-email"
@@ -60,7 +60,9 @@
               @validation={{this.emailValidation}}
               id="account-email-validation"
             />
-            <span class="more-info">{{i18n "user.email.instructions"}}</span>
+            <span class="more-info" id="account-email-validation-more-info">
+              {{i18n "user.email.instructions"}}
+            </span>
           </div>
 
           <div class="input-group create-account__username">
@@ -68,7 +70,7 @@
               @value={{this.model.accountUsername}}
               disabled={{this.usernameDisabled}}
               maxlength={{this.maxUsernameLength}}
-              aria-describedby="username-validation"
+              aria-describedby="username-validation username-validation-more-info"
               aria-invalid={{this.usernameValidation.failed}}
               autocomplete="off"
               name="username"
@@ -86,7 +88,7 @@
               @validation={{this.usernameValidation}}
               id="username-validation"
             />
-            <span class="more-info">
+            <span class="more-info" id="username-validation-more-info">
               {{i18n "user.username.instructions"}}
             </span>
           </div>
@@ -97,7 +99,7 @@
                 @disabled={{this.nameDisabled}}
                 @value={{this.model.accountName}}
                 @id="new-account-name"
-                aria-describedby="fullname-validation"
+                aria-describedby="fullname-validation fullname-validation-more-info"
                 aria-invalid={{this.nameValidation.failed}}
                 class={{value-entered this.model.accountName}}
               />
@@ -114,7 +116,9 @@
                 @validation={{this.nameValidation}}
                 id="fullname-validation"
               />
-              <span class="more-info">{{this.nameInstructions}}</span>
+              <span class="more-info" id="fullname-validation-more-info">
+                {{this.nameInstructions}}
+              </span>
             {{/if}}
           </div>
 
@@ -136,7 +140,7 @@
                 @type={{if this.maskPassword "password" "text"}}
                 @autocomplete="current-password"
                 @capsLockOn={{this.capsLockOn}}
-                aria-describedby="password-validation"
+                aria-describedby="password-validation password-validation-more-info"
                 aria-invalid={{this.passwordValidation.failed}}
                 id="new-account-password"
                 class={{value-entered this.accountPassword}}
@@ -154,7 +158,9 @@
                     @validation={{this.passwordValidation}}
                     id="password-validation"
                   />
-                  <span class="more-info">{{this.passwordInstructions}}</span>
+                  <span class="more-info" id="password-validation-more-info">
+                    {{this.passwordInstructions}}
+                  </span>
                   <div
                     class={{concat-class
                       "caps-lock-warning"

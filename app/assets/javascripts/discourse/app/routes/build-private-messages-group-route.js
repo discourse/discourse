@@ -1,5 +1,6 @@
 import { capitalize } from "@ember/string";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { cleanNullQueryParams } from "discourse/lib/utilities";
 import createPMRoute from "discourse/routes/build-private-messages-route";
 import I18n from "discourse-i18n";
 
@@ -21,7 +22,7 @@ export default (inboxType, filter) => {
       }
     },
 
-    model() {
+    model(params = {}) {
       const username = this.modelFor("user").get("username_lower");
       const groupName = this.modelFor("userPrivateMessages.group").name;
 
@@ -36,18 +37,25 @@ export default (inboxType, filter) => {
         topicListFilter
       );
 
-      return lastTopicList
-        ? lastTopicList
-        : this.store
-            .findFiltered("topicList", { filter: topicListFilter })
-            .then((topicList) => {
-              // andrei: we agreed that this is an anti pattern,
-              // it's better to avoid mutating a rest model like this
-              // this place we'll be refactored later
-              // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
-              topicList.set("emptyState", this.emptyState());
-              return topicList;
-            });
+      if (lastTopicList) {
+        return lastTopicList;
+      }
+
+      params = cleanNullQueryParams(params);
+
+      return this.store
+        .findFiltered("topicList", {
+          filter: topicListFilter,
+          params,
+        })
+        .then((topicList) => {
+          // andrei: we agreed that this is an anti pattern,
+          // it's better to avoid mutating a rest model like this
+          // this place we'll be refactored later
+          // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
+          topicList.set("emptyState", this.emptyState());
+          return topicList;
+        });
     },
 
     afterModel(model) {

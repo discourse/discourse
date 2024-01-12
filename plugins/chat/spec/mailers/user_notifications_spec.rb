@@ -637,6 +637,17 @@ describe UserNotifications do
             expect(user_avatar.attribute("alt").value).to eq(sender.username)
           end
 
+          context "with subfolder" do
+            before { set_subfolder "/community" }
+
+            it "includes correct view summary link in template" do
+              email = described_class.chat_summary(user, {})
+              expect(email.html_part.body.to_s).to include(
+                "<a class=\"more-messages-link\" href=\"#{Discourse.base_url}/chat",
+              )
+            end
+          end
+
           context "when there are more than two mentions" do
             it "includes a view more link " do
               2.times do

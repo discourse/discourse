@@ -657,12 +657,48 @@ RSpec.describe GroupsController do
         SiteSetting.public_user_custom_fields = user_field_name
       end
 
-      it "shows custom the fields" do
+      it "shows the custom fields" do
         get "/groups/#{group.name}/members.json", params: { include_custom_fields: true }
 
         expect(response.status).to eq(200)
         response_custom_fields = response.parsed_body["members"].first["custom_fields"]
         expect(response_custom_fields[user_field_name]).to eq("A custom field")
+      end
+
+      it "allows sorting by custom fields" do
+        group.add(user2)
+        UserCustomField.create!(user_id: user2.id, name: user_field_name, value: "C custom field")
+        group.add(other_user)
+        UserCustomField.create!(
+          user_id: other_user.id,
+          name: user_field_name,
+          value: "B custom field",
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: user_field_name,
+              asc: true,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["members"].pluck("id")).to eq(
+          [user.id, other_user.id, user2.id],
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: user_field_name,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["members"].pluck("id")).to eq(
+          [user2.id, other_user.id, user.id],
+        )
       end
     end
   end

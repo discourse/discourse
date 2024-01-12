@@ -41,6 +41,7 @@ import {
 } from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { addAdminSidebarSectionLink } from "discourse/instance-initializers/admin-sidebar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
@@ -145,7 +146,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.23.0";
+export const PLUGIN_API_VERSION = "1.24.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2296,6 +2297,35 @@ class PluginApi {
    */
   addSidebarPanel(func) {
     addSidebarPanel(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for adding links to specific admin sidebar sections.
+   *
+   * This is intended to replace the admin-menu plugin outlet from
+   * the old admin horizontal nav.
+   *
+   * ```
+   * api.addAdminSidebarSectionLink("root", {
+   *   name: "unique_link_name",
+   *   label: "admin.some.i18n.label.key",
+   *   route: "(optional) emberRouteId",
+   *   href: "(optional) can be used instead of the route",
+   * }
+   * ```
+
+   * @param {String} sectionName - The name of the admin sidebar section to add the link to.
+   * @param {Object} link - A link object representing a section link for the sidebar.
+   * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
+   * @param {string} link.title - The title attribute for the link.
+   * @param {string} link.text - The text to display for the link.
+   * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
+   * @param {string} [link.href] - The href attribute for the link.
+   * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+   */
+  addAdminSidebarSectionLink(sectionName, link) {
+    addAdminSidebarSectionLink(sectionName, link);
   }
 
   /**
