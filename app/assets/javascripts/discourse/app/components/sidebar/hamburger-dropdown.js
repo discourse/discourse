@@ -7,6 +7,7 @@ export default class SidebarHamburgerDropdown extends Component {
   @service currentUser;
   @service site;
   @service siteSettings;
+  @service sidebarState;
 
   @action
   triggerRenderedAppEvent() {
