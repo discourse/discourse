@@ -31,9 +31,18 @@ $max_image_height: 150px;
 
     @container (width < 400px) {
       .onebox-body {
-        &:not(:has(.thumbnail.onebox-avatar)) {
-          display: flex;
-          flex-direction: column;
+        display: flex;
+        flex-direction: column;
+
+        .thumbnail.onebox-avatar {
+          display: none;
+        }
+        .aspect-image {
+          margin-right: 0;
+          max-width: 100%;
+          + h3 {
+            margin-top: 0.25rem;
+          }
         }
 
         h3 {
