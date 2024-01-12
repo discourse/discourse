@@ -1,7 +1,9 @@
 body.invite-page {
-  background-color: var(--primary-50);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
+  #main-outlet-wrapper {
+    padding: 0;
+  }
 }
 
 .invites-show,
