@@ -12,10 +12,8 @@ import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListDirect extends Component {
   @service chat;
-  @service chatStateManager;
   @service chatChannelsManager;
   @service site;
-  @service session;
   @service modal;
 
   @action
@@ -37,8 +35,7 @@ export default class ChannelsListDirect extends Component {
 
   get showDirectMessageChannels() {
     return (
-      this.canCreateDirectMessageChannel ||
-      this.chatChannelsManager.directMessageChannels?.length > 0
+      this.canCreateDirectMessageChannel || !this.directMessageChannelsEmpty
     );
   }
 

@@ -11,11 +11,9 @@ import i18n from "discourse-common/helpers/i18n";
 import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListPublic extends Component {
-  @service chatStateManager;
   @service chatChannelsManager;
   @service site;
   @service siteSettings;
-  @service session;
   @service currentUser;
 
   get inSidebar() {
