@@ -10,12 +10,8 @@ import {
   NEW_FILTER,
   UNREAD_FILTER,
 } from "discourse/routes/build-private-messages-route";
+import { QUERY_PARAMS } from "discourse/routes/user-topic-list";
 import discourseComputed from "discourse-common/utils/decorators";
-
-export const queryParams = {
-  ascending: { replace: true, refreshModel: true, default: false },
-  order: { replace: true, refreshModel: true },
-};
 
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {
@@ -25,7 +21,7 @@ export default class UserTopicsListController extends Controller {
   showPosters = false;
   channel = null;
   tagsForUser = null;
-  queryParams = Object.keys(queryParams);
+  queryParams = Object.keys(QUERY_PARAMS);
 
   bulkSelectHelper = new BulkSelectHelper(this);
 
@@ -36,7 +32,8 @@ export default class UserTopicsListController extends Controller {
 
   constructor() {
     super(...arguments);
-    for (const [name, info] of Object.entries(queryParams)) {
+
+    for (const [name, info] of Object.entries(QUERY_PARAMS)) {
       defineTrackedProperty(this, name, info.default);
     }
   }
