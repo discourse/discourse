@@ -24,7 +24,7 @@ export default class GlimmerSiteHeader extends Component {
   @service docking;
 
   @tracked _dockedHeader = false;
-  // @tracked topic = null;
+  @tracked _topic = null;
   @tracked _swipeMenuOrigin = null;
   @tracked headerWrap = null;
   @tracked _swipeEvents = null;
@@ -98,8 +98,8 @@ export default class GlimmerSiteHeader extends Component {
 
   @action
   setupHeader() {
-    // this.appEvents.on("header:show-topic", this, this._setTopic);
-    // this.appEvents.on("header:hide-topic", this, this._setTopic);
+    this.appEvents.on("header:show-topic", this, this._setTopic);
+    this.appEvents.on("header:hide-topic", this, this._setTopic);
     this.appEvents.on("user-menu:rendered", this, this._animateMenu);
     this.appEvents.on("dom:clean", this, this._cleanDom);
     if (this.dropDownHeaderEnabled) {
@@ -117,7 +117,6 @@ export default class GlimmerSiteHeader extends Component {
     // if (this.currentUser) {
     //   this.currentUser.on("status-changed", this, "queueRerender");
     // }
-
     // this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
     this._headerWrap = document.querySelector(".d-header-wrap");
@@ -167,11 +166,11 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
-  // I think we can drop this completely
-  // _setTopic(topic) {
-  // this.eventDispatched("dom:clean", "header");
-  // this.topic = topic;
-  // }
+  @action
+  _setTopic(topic) {
+    // this.eventDispatched("dom:clean", "header");
+    this._topic = topic;
+  }
 
   _handleArrowKeysNav(event) {
     const activeTab = document.querySelector(
@@ -297,8 +296,8 @@ export default class GlimmerSiteHeader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    // this.appEvents.off("header:show-topic", this, this._setTopic);
-    // this.appEvents.off("header:hide-topic", this, this._setTopic);
+    this.appEvents.off("header:show-topic", this, this._setTopic);
+    this.appEvents.off("header:hide-topic", this, this._setTopic);
     this.appEvents.off("dom:clean", this, this._cleanDom);
     this.appEvents.off("user-menu:rendered", this, this._animateMenu);
 
@@ -335,6 +334,7 @@ export default class GlimmerSiteHeader extends Component {
         @sidebarEnabled={{@sidebarEnabled}}
         @navigationMenuQueryParamOverride={{@navigationMenuQueryParamOverride}}
         @toggleSidebar={{@toggleSidebar}}
+        @topic={{this._topic}}
       />
     </div>
   </template>

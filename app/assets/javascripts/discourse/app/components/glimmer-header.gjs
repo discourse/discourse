@@ -20,6 +20,14 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
 
+import HeaderContents from "./glimmer-header/contents";
+import AuthButtons from "./glimmer-header/auth-buttons";
+// import HeaderIcons from "./glimmer-header/icons";
+// import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
+// import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
+// import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
+// import HeaderCloak from "./glimmer-header/cloak";
+
 const SEARCH_BUTTON_ID = "search-button";
 
 export default class GlimmerHeader extends Component {
@@ -34,32 +42,6 @@ export default class GlimmerHeader extends Component {
 
   get inTopicRoute() {
     return this.inTopicContext || this.search.inTopicContext;
-  }
-
-  get headerIcons() {
-    return this.attach("header-icons", {
-      hamburgerVisible: this.hamburgerVisible,
-      userVisible: this.userVisible,
-      searchVisible: this.searchVisible || this.search.visible,
-      flagCount: this.args.flagCount,
-      user: this.currentUser,
-      sidebarEnabled: this.args.sidebarEnabled,
-    });
-  }
-
-  get contentsAttrs() {
-    return {
-      contents: this.panels,
-      minimized: !!this.args.topic,
-    };
-  }
-
-  get wrapperAttrs() {
-    return { ...this.args, ...this.contentsAttrs };
-  }
-
-  constructor() {
-    super(...arguments);
   }
 
   @action
@@ -82,12 +64,8 @@ export default class GlimmerHeader extends Component {
 
     this.searchVisible = !this.searchVisible;
     this.search.visible = !this.search.visible;
-    this.updateHighlight();
-
-    if (this.searchVisible) {
-      // only used by the widget search-menu
-      this.focusSearchInput();
-    } else {
+    if (!this.searchVisible) {
+      this.search.highlightTerm = "";
       this.inTopicContext = false;
       this.search.inTopicContext = false;
     }
@@ -129,8 +107,28 @@ export default class GlimmerHeader extends Component {
 
   <template>
     <header class={{"d-header"}}>
-      <HeaderButtons />
-      <HeaderIcons />
+      <div class="wrap">
+        <HeaderContents>
+          {{#unless this.currentUser}}
+            <AuthButtons
+              @showCreateAccount={{@showCreateAccount}}
+              @showLogin={{@showLogin}}
+              @canSignUp={{@canSignUp}}
+              @topic={{@topic}}
+            />
+          {{/unless}}
+          {{#unless
+            (and this.siteSettings.login_required (not this.currentUser))
+          }}
+            <HeaderIcons
+              @hamburgerVisible={{this.hamburgerVisible}}
+              @userVisible={{this.userVisible}}
+              @searchVisible={{or this.searchVisible this.search.visible}}
+              @user={{this.currentUser}}
+              @sidebarEnabled={{@sidebarEnabled}}
+            />
+          {{/unless}}
+          {{!--
       {{#each this.additionalPanels as |panel|}}
         <Panel />
       {{/each}}
@@ -147,7 +145,9 @@ export default class GlimmerHeader extends Component {
 
       {{#if (or this.site.mobileView this.site.narrowDesktopView)}}
         <HeaderCloak />
-      {{/if}}
+      {{/if}} --}}
+        </HeaderContents>
+      </div>
     </header>
   </template>
 }
