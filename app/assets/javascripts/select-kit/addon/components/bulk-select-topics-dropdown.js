@@ -56,6 +56,7 @@ export default DropdownSelectBoxComponent.extend({
       case "close-topics":
         this.modal.show(BulkTopicActions, {
           model: {
+            action: "close",
             title: "Bulk Close Topics",
             topics: this.bulkSelectHelper.selected,
             silent: true,
