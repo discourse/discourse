@@ -99,8 +99,8 @@ class PostValidator < ActiveModel::Validator
     if !post.acting_user.in_any_groups?(SiteSetting.embedded_media_post_allowed_groups_map)
       add_error_if_count_exceeded(
         post,
-        :no_embedded_media_allowed_trust,
-        :no_embedded_media_allowed_trust,
+        :no_embedded_media_allowed_group,
+        :no_embedded_media_allowed_group,
         post.embedded_media_count,
         0,
       )

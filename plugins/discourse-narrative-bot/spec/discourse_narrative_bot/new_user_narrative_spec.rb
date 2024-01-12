@@ -31,6 +31,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
     stub_image_size
     Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
+    Group.refresh_automatic_groups!
   end
 
   describe "#notify_timeout" do
