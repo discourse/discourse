@@ -18,8 +18,4 @@
       color: var(--danger);
     }
   }
-
-  .chat-form__section-content:has(.c-channel-settings__leave-info) {
-    gap: 0.25rem;
-  }
 }
