@@ -1,19 +1,13 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
-import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
-import noop from "discourse/helpers/noop";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import { bind } from "discourse-common/utils/decorators";
-import onResize from "../modifiers/chat/on-resize";
 import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListPublic extends Component {
@@ -23,18 +17,6 @@ export default class ChannelsListPublic extends Component {
   @service siteSettings;
   @service session;
   @service currentUser;
-
-  @tracked hasScrollbar = false;
-
-  @action
-  computeHasScrollbar(element) {
-    this.hasScrollbar = element.scrollHeight > element.clientHeight;
-  }
-
-  @action
-  computeResizedEntries(entries) {
-    this.computeHasScrollbar(entries[0].target);
-  }
 
   get inSidebar() {
     return this.args.inSidebar ?? false;
@@ -70,51 +52,11 @@ export default class ChannelsListPublic extends Component {
     this.args.toggleSection(section);
   }
 
-  didRender() {
-    super.didRender(...arguments);
-
-    schedule("afterRender", this._applyScrollPosition);
-  }
-
-  @action
-  storeScrollPosition() {
-    if (this.chatStateManager.isDrawerActive) {
-      return;
-    }
-
-    const scrollTop = document.querySelector(".channels-list")?.scrollTop || 0;
-    this.session.channelsListPosition = scrollTop;
-  }
-
-  @bind
-  _applyScrollPosition() {
-    if (this.chatStateManager.isDrawerActive) {
-      return;
-    }
-
-    const position = this.chatStateManager.isFullPageActive
-      ? this.session.channelsListPosition || 0
-      : 0;
-    const scroller = document.querySelector(".channels-list");
-    scroller.scrollTo(0, position);
-  }
-
   <template>
     <div
       role="region"
       aria-label={{i18n "chat.aria_roles.channels_list"}}
-      class={{concatClass
-        "channels-list"
-        (if this.hasScrollbar "has-scrollbar")
-      }}
-      {{on
-        "scroll"
-        (if
-          this.chatStateManager.isFullPageActive this.storeScrollPosition (noop)
-        )
-      }}
-      {{didInsert this.computeHasScrollbar}}
-      {{onResize this.computeResizedEntries}}
+      class="channels-list"
     >
 
       {{#if this.site.desktopView}}
