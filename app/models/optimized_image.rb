@@ -14,13 +14,22 @@ class OptimizedImage < ActiveRecord::Base
     # this can very easily lead to runaway CPU so slowing it down is beneficial and it is hijacked
     #
     # we can not afford this blocking in Sidekiq cause it can lead to starvation
-    if Sidekiq.server?
-      DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") { yield }
-    else
+    if lock_per_machine?
       DistributedMutex.synchronize("optimized_image_host_#{@hostname}") do
         DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") { yield }
       end
+    else
+      DistributedMutex.synchronize("optimized_image_#{upload_id}_#{width}_#{height}") { yield }
     end
+  end
+
+  def self.lock_per_machine?
+    return @lock_per_machine if defined?(@lock_per_machine)
+    @lock_per_machine = !Sidekiq.server?
+  end
+
+  def self.lock_per_machine=(value)
+    @lock_per_machine = value
   end
 
   def self.create_for(upload, width, height, opts = {})

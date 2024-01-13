@@ -13,6 +13,9 @@ task "posts:rebake_uncooked_posts" => :environment do
   # this rake task without worrying about your sidekiq imploding
   Jobs.run_immediately!
 
+  # don't lock per machine, we want to be able to run this from multiple consoles
+  OptimizedImage.lock_per_machine = false
+
   ENV["RAILS_DB"] ? rebake_uncooked_posts : rebake_uncooked_posts_all_sites
 end
 
