@@ -50,12 +50,14 @@ class OptimizedImage < ActiveRecord::Base
 
     return thumbnail if thumbnail
 
+    store = Discourse.store
+
     # create the thumbnail otherwise
-    original_path = Discourse.store.path_for(upload)
+    original_path = store.path_for(upload)
 
     if original_path.blank?
       # download is protected with a DistributedMutex
-      external_copy = Discourse.store.download_safe(upload)
+      external_copy = store.download_safe(upload)
       original_path = external_copy&.path
     end
 
@@ -106,8 +108,7 @@ class OptimizedImage < ActiveRecord::Base
 
           # store the optimized image and update its url
           File.open(temp_path) do |file|
-            url =
-              Discourse.store.store_optimized_image(file, thumbnail, nil, secure: upload.secure?)
+            url = store.store_optimized_image(file, thumbnail, nil, secure: upload.secure?)
             if url.present?
               thumbnail.url = url
               thumbnail.save
@@ -124,7 +125,7 @@ class OptimizedImage < ActiveRecord::Base
       end
 
       # make sure we remove the cached copy from external stores
-      external_copy&.close if Discourse.store.external?
+      external_copy&.close if store.external?
 
       thumbnail
     end
