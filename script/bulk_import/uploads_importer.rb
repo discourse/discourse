@@ -6,13 +6,6 @@ require "etc"
 require "sqlite3"
 require "colored2"
 
-# hack so that OptimizedImage.lock beliefs that it's running in a Sidekiq job
-module Sidekiq
-  def self.server?
-    true
-  end
-end
-
 module BulkImport
   class UploadsImporter
     TRANSACTION_SIZE = 1000
@@ -355,6 +348,9 @@ module BulkImport
       post_upload_ids = Set.new
       avatar_upload_ids = Set.new
       max_count = 0
+
+      # allow more than 1 thread to optimized images at the same time
+      OptimizedImage.lock_per_machine = false
 
       init_threads << Thread.new do
         query("SELECT id FROM optimized_images", @output_db).tap do |result_set|
