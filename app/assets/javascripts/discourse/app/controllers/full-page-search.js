@@ -541,6 +541,10 @@ export default Controller.extend({
     },
 
     search(options = {}) {
+      if (this.searching) {
+        return;
+      }
+
       if (options.collapseFilters) {
         document
           .querySelector("details.advanced-filters")
