@@ -706,12 +706,20 @@ class BulkImport::Generic < BulkImport::Base
       mentions.each do |mention|
         name =
           if mention["type"] == "user"
-            user_names[user_id_from_imported_id(mention["id"])]
+            if mention["id"]
+              user_names[user_id_from_imported_id(mention["id"])]
+            elsif mention["name"]
+              @mapped_usernames[mention["name"]] || mention["name"]
+            end
           elsif mention["type"] == "group"
-            group_names[group_id_from_imported_id(mention["id"])]
+            if mention["id"]
+              group_names[group_id_from_imported_id(mention["id"])]
+            else
+              mention["name"]
+            end
           end
 
-        puts "#{mention["type"]} not found -- #{mention["id"]}" unless name
+        puts "#{mention["type"]} not found -- #{mention["placeholder"]}" unless name
         raw.gsub!(mention["placeholder"], "@#{name}")
       end
     end
@@ -724,6 +732,19 @@ class BulkImport::Generic < BulkImport::Base
       SQL
 
       raw.gsub!(event["placeholder"], event_bbcode(event_details)) if event_details
+    end
+
+    if (quotes = placeholders&.fetch("quotes", nil))
+      quotes.each do |quote|
+        username =
+          if quote["user_id"]
+            user_names[user_id_from_imported_id(quote["id"])]
+          else
+            @mapped_usernames[quote["username"]] || quote["username"]
+          end
+
+        raw.gsub!(quote["placeholder"], %Q|[quote="#{username}"]|)
+      end
     end
 
     if row["upload_ids"].present? && @uploads_db
