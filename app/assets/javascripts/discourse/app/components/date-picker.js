@@ -83,9 +83,16 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed()
-  placeholder() {
-    return I18n.t("dates.placeholder");
+  @discourseComputed("_placeholder")
+  placeholder: {
+    get(_placeholder) {
+      return _placeholder || I18n.t("dates.placeholder");
+    },
+
+    set(value) {
+      this.set("_placeholder", value);
+      return value;
+    },
   },
 
   _opts() {

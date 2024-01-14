@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "User preferences for Account", type: :system do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:user_account_preferences_page) { PageObjects::Pages::UserPreferencesAccount.new }
   let(:avatar_selector_modal) { PageObjects::Modals::AvatarSelector.new }
   before { sign_in(user) }

@@ -78,7 +78,7 @@ module PostGuardian
         (
           is_flag && not(already_did_flagging) &&
             (
-              @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_flag_posts]) ||
+              @user.in_any_groups?(SiteSetting.flag_post_allowed_groups_map) ||
                 post.topic.private_message?
             )
         ) ||
@@ -163,7 +163,7 @@ module PostGuardian
       return can_create_post?(post.topic)
     end
 
-    return false if @user.trust_level < SiteSetting.min_trust_to_edit_post
+    return false if !trusted_with_edits?
 
     if is_my_own?(post)
       return false if @user.silenced?
@@ -207,7 +207,7 @@ module PostGuardian
 
     return true if is_staff? || is_category_group_moderator?(post.topic&.category)
 
-    return true if SiteSetting.tl4_delete_posts_and_topics && user.has_trust_level?(TrustLevel[4])
+    return true if user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
 
     # Can't delete posts in archived topics unless you are staff
     return false if post.topic&.archived?
@@ -332,7 +332,7 @@ module PostGuardian
     return false unless authenticated?
     return true if is_staff? || @user.has_trust_level?(TrustLevel[4])
 
-    if @user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) && is_my_own?(post)
+    if @user.in_any_groups?(SiteSetting.self_wiki_allowed_groups_map) && is_my_own?(post)
       return false if post.hidden?
       return !post.edit_time_limit_expired?(@user)
     end
@@ -354,7 +354,7 @@ module PostGuardian
 
   def can_see_deleted_posts?(category = nil)
     is_staff? || is_category_group_moderator?(category) ||
-      (SiteSetting.tl4_delete_posts_and_topics && @user.has_trust_level?(TrustLevel[4]))
+      @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
   end
 
   def can_view_raw_email?(post)
@@ -370,6 +370,11 @@ module PostGuardian
   end
 
   private
+
+  def trusted_with_edits?
+    @user.trust_level >= SiteSetting.min_trust_to_edit_post ||
+      @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
+  end
 
   def can_create_post_in_topic?(topic)
     if !SiteSetting.enable_system_message_replies? && topic.try(:subtype) == "system_message"

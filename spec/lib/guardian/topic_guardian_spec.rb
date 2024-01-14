@@ -4,7 +4,7 @@ RSpec.describe TopicGuardian do
   fab!(:user)
   fab!(:admin)
   fab!(:tl3_user) { Fabricate(:trust_level_3) }
-  fab!(:tl4_user) { Fabricate(:trust_level_4) }
+  fab!(:tl4_user) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
   fab!(:moderator)
   fab!(:category)
   fab!(:group)
@@ -95,12 +95,12 @@ RSpec.describe TopicGuardian do
 
     it "returns true when tl4 can delete posts and topics" do
       expect(Guardian.new(tl4_user).can_see_deleted_topics?(topic.category)).to eq(false)
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(tl4_user).can_see_deleted_topics?(topic.category)).to eq(true)
     end
 
     it "returns false for anonymous user" do
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new.can_see_deleted_topics?(topic.category)).to be_falsey
     end
   end
@@ -122,12 +122,12 @@ RSpec.describe TopicGuardian do
 
     it "returns true when tl4 can delete posts and topics" do
       expect(Guardian.new(tl4_user).can_recover_topic?(Topic.with_deleted.last)).to eq(false)
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(tl4_user).can_recover_topic?(Topic.with_deleted.last)).to eq(true)
     end
 
     it "returns false for anonymous user" do
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new.can_recover_topic?(Topic.with_deleted.last)).to eq(false)
     end
   end

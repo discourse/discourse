@@ -24,6 +24,8 @@ RSpec.describe TopicCreator do
     }
   end
 
+  before { Group.refresh_automatic_groups! }
+
   describe "#create" do
     context "with topic success cases" do
       before do
@@ -49,7 +51,7 @@ RSpec.describe TopicCreator do
       end
 
       context "with regular user" do
-        before { SiteSetting.min_trust_to_create_topic = TrustLevel[0] }
+        before { SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
 
         it "should be possible for a regular user to create a topic" do
           expect(TopicCreator.create(user, Guardian.new(user), valid_attrs)).to be_valid
@@ -105,7 +107,7 @@ RSpec.describe TopicCreator do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_to_create_tag = 0
+        SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
         SiteSetting.min_trust_level_to_tag_topics = 0
       end
 
@@ -215,7 +217,7 @@ RSpec.describe TopicCreator do
 
         it "lets new user create a topic if they don't have sufficient trust level to tag topics" do
           SiteSetting.min_trust_level_to_tag_topics = 1
-          new_user = Fabricate(:newuser)
+          new_user = Fabricate(:newuser, refresh_auto_groups: true)
           topic =
             TopicCreator.create(
               new_user,
@@ -502,8 +504,8 @@ RSpec.describe TopicCreator do
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
-        it "min_trust_to_create_topic setting should not be checked when sending private message" do
-          SiteSetting.min_trust_to_create_topic = TrustLevel[4]
+        it "create_topic_allowed_groups setting should not be checked when sending private message" do
+          SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
           expect(TopicCreator.create(user, Guardian.new(user), pm_valid_attrs)).to be_valid
         end
 
@@ -524,7 +526,8 @@ RSpec.describe TopicCreator do
           SiteSetting.manual_polling_enabled = true
           SiteSetting.reply_by_email_address = "sam+%{reply_key}@sam.com"
           SiteSetting.reply_by_email_enabled = true
-          SiteSetting.min_trust_to_send_email_messages = TrustLevel[1]
+          SiteSetting.send_email_messages_allowed_groups =
+            "1|3|#{Group::AUTO_GROUPS[:trust_level_1]}"
           attrs = pm_to_email_valid_attrs.dup
           attrs[:target_emails] = "t" * 256
 
@@ -546,28 +549,30 @@ RSpec.describe TopicCreator do
         before { Group.refresh_automatic_groups! }
 
         it "works for staff" do
-          SiteSetting.min_trust_to_send_email_messages = "staff"
+          SiteSetting.send_email_messages_allowed_groups = "1|3"
           expect(
             TopicCreator.create(admin, Guardian.new(admin), pm_to_email_valid_attrs),
           ).to be_valid
         end
 
         it "work for trusted users" do
-          SiteSetting.min_trust_to_send_email_messages = 3
-          user.update!(trust_level: 3)
+          SiteSetting.send_email_messages_allowed_groups =
+            "1|3|#{Group::AUTO_GROUPS[:trust_level_3]}"
+          user.change_trust_level!(TrustLevel[3])
           expect(TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)).to be_valid
         end
 
         it "does not work for non-staff" do
-          SiteSetting.min_trust_to_send_email_messages = "staff"
+          SiteSetting.send_email_messages_allowed_groups = "1|3"
           expect {
             TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)
           }.to raise_error(ActiveRecord::Rollback)
         end
 
         it "does not work for untrusted users" do
-          SiteSetting.min_trust_to_send_email_messages = 3
-          user.update!(trust_level: 2)
+          SiteSetting.send_email_messages_allowed_groups =
+            "1|3|#{Group::AUTO_GROUPS[:trust_level_3]}"
+          user.change_trust_level!(TrustLevel[2])
           expect {
             TopicCreator.create(user, Guardian.new(user), pm_to_email_valid_attrs)
           }.to raise_error(ActiveRecord::Rollback)
@@ -640,6 +645,18 @@ RSpec.describe TopicCreator do
 
       it "is valid for an admin" do
         expect(TopicCreator.new(admin, Guardian.new(admin), unlisted_attrs).valid?).to eq(true)
+      end
+
+      context "when embedded" do
+        let(:embedded_unlisted_attrs) do
+          unlisted_attrs.merge(embed_url: "http://eviltrout.com/stupid-url")
+        end
+
+        it "is valid for a non-staff user" do
+          expect(TopicCreator.new(user, Guardian.new(user), embedded_unlisted_attrs).valid?).to eq(
+            true,
+          )
+        end
       end
     end
   end

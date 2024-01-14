@@ -1645,6 +1645,7 @@ hy:
         liked_consolidated: "նոր հավանումներ"
         post_approved: "գրառումը հաստատված է"
         membership_request_consolidated: "Մշակել անդամակցության նոր հարցումները"
+        admin_problems: "նոր խորհուրդ Ձեր կայքի կառավարման հարթակում"
     upload_selector:
       uploading: "Վերբեռնվում է"
       select_file: "Ընտրել Ֆայլ"
@@ -3218,6 +3219,9 @@ hy:
           body: "Մարմին"
           revert: "Վերադարձնել Փոփոխությունները"
           revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել Ձեր փոփոխությունները:"
+        component:
+          all_filter: "Բոլորը"
+          disabled_filter: "Անջատված"
         theme:
           theme: "Թեմա"
           component: "Բաղադրիչ"
@@ -3353,6 +3357,9 @@ hy:
           yaml:
             text: "YAML"
             title: "Սահմանել թեմայի կարգավորումները YAML ֆորմատով"
+          all_filter: "Բոլորը"
+          active_filter: "Ակտիվ"
+          inactive_filter: "Ոչ ակտիվ"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"
@@ -4029,6 +4036,8 @@ hy:
           modal_description: "Ցանկանաու՞մ եք այս փոփոխությունը կիրառել պատմականորեն: Սա կփոխի կարգավորումը %{count} համար՝ առկա օգտատերերի:"
           modal_yes: "Այո"
           modal_no: "Ոչ, կիրառել փոփոխություններ միայն՝ ապագայում "
+        file_types_list:
+          add_image_types: "Նկարներ"
       badges:
         title: Կրծքանշաններ
         new_badge: Նոր Կրծքանշան

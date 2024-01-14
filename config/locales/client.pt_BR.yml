@@ -146,6 +146,7 @@ pt_BR:
       url: "Copiar e compartilhar a URL"
     word_connector:
       comma: ", "
+      last_item: "e"
     action_codes:
       public_topic: "Tornou este tópico público %{when}"
       open_topic: "Converteu isto em um tópico %{when}"
@@ -196,6 +197,12 @@ pt_BR:
       error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Clique aqui</a> para atualizar, reconfigurar ou desabilitar."
       only_admins: "(esta mensagem é mostrada somente aos administradores do site)"
     broken_decorator_alert: "As postagens podem não ser exibidas corretamente porque um dos decoradores de conteúdo de postagem em seu site gerou um erro."
+    broken_page_change_alert: "Houve um erro no identificador onPageChangedleler. Confira as ferramentas de desenvolvedor do navegador para obter mais informações."
+    broken_plugin_alert: "Causado pelo plugin \"%{name}\""
+    critical_deprecation:
+      notice: "<b>[Aviso da administração]</b> Um dos seus temas ou plugins precisa ser atualizado para ser compatível com as próximas mudanças do Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>more info</a>)."
+      theme_source: "Tema identificado: <a target='_blank' href='%{path}'>\"%{name}\"</a>."
+      plugin_source: "Plugin identificado: \"%{name}\""
     s3:
       regions:
         ap_northeast_1: "Ásia Pacífico (Tóquio)"
@@ -275,6 +282,7 @@ pt_BR:
     related_messages:
       title: "Mensagens relacionadas"
       pill: "Mensagens relacionadas"
+      see_all: 'Ver <a href="%{path}">todas as mensagens</a> de @ %{username}…'
     suggested_topics:
       title: "Tópicos novos e não lidos"
       pill: "Sugestões"
@@ -287,7 +295,10 @@ pt_BR:
       our_moderators: "Nossos moderadores"
       moderators: "Moderadores"
       stat:
+        all_time: "Desde o início"
         last_day: "24 horas"
+        last_7_days: "Sete dias"
+        last_30_days: "30 dias"
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
@@ -339,6 +350,7 @@ pt_BR:
       copied: "copiado!"
       copy: "copiar código para a área de transferência"
       fullscreen: "exibir código em tela cheia"
+      view_code: "Ver código"
     drafts:
       label: "Rascunhos"
       label_with_count: "Rascunhos (%{count})"
@@ -371,11 +383,18 @@ pt_BR:
       other: "Veja %{count} novos tópicos"
     preview: "pré-visualizar"
     cancel: "cancelar"
+    deleting: "Excluindo…"
     save: "Salvar alterações"
+    saving: "Salvando…"
     saved: "Salvo!"
     upload: "Enviar"
+    uploading: "Enviando…"
+    processing: "Processando…"
+    uploading_filename: "Enviando: %{filename}…"
+    processing_filename: "Processando: %{filename}…"
     clipboard: "área de transferência"
     uploaded: "Enviado!"
+    pasting: "Colando…"
     enable: "Ativar"
     disable: "Desativar"
     continue: "Continuar"
@@ -423,7 +442,12 @@ pt_BR:
           name: "bônus de tipo"
           title: "Certos tipos revisáveis podem receber um bônus da equipe para aumentar sua prioridade."
       revise_and_reject_post:
+        title: "Revisar"
         reason: "Motivo"
+        send_pm: "Enviar MP"
+        feedback: "Comentário"
+        custom_reason: "Forneça uma descrição clara do motivo"
+        other_reason: "Outro..."
         optional: "opcional"
       stale_help: "Este revisável foi encerrado por <b>%{username}</b>."
       claim_help:
@@ -556,7 +580,9 @@ pt_BR:
         all:
           title: "Tudo"
       context_question:
+        is_this_post: "Este(a) %{reviewable_type} é %{reviewable_human_score_types}?"
         delimiter: "ou"
+        something_else_wrong: "Há algo errado em %{reviewable_type}?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
@@ -737,6 +763,7 @@ pt_BR:
           imap_mailbox_not_selected: "Se você selecionar uma caixa de entrada para esta configuração IMAP ou nenhuma caixa postal será sincronizada!"
           prefill:
             title: "Preencher com configurações para:"
+            gmail: "Gmail"
           credentials:
             title: "Credenciais"
             smtp_server: "Servidor SMTP"
@@ -968,6 +995,7 @@ pt_BR:
       topic_stat_sentence_month:
         one: "%{count} novo tópico no último mês."
         other: "%{count} novos tópicos no último mês."
+      n_more: "Categorias (mais %{count}…"
     ip_lookup:
       title: Pesquisa de endereço IP
       hostname: Nome do host
@@ -992,6 +1020,8 @@ pt_BR:
     user:
       said: "%{username}:"
       profile: "Perfil"
+      profile_possessive: "Perfil de %{username}"
+      account_possessive: "conta de"
       mute: "Silenciar"
       edit: "Editar preferências"
       download_archive:
@@ -1020,6 +1050,7 @@ pt_BR:
         ignore_no_users: "Você não tem usuários(as) ignorados(as)."
         ignore_option: "Ignorados(as)"
         ignore_option_title: "Você não receberá notificações relacionadas a este(a) usuário(a), e todos os tópicos e respostas serão ocultos."
+        add_ignored_user: "Adicionar…"
         mute_option: "Silenciados(as)"
         mute_option_title: "Você não receberá notificações relacionadas a este(a) usuário(a)."
         normal_option: "Normal"
@@ -1350,6 +1381,8 @@ pt_BR:
           Digitalize este código QR em um aplicativo compatível (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e digite seu código de autenticação.
         disable_description: "Insira o código de autenticação do seu aplicativo"
         show_key_description: "Inserir manualmente"
+        short_description: |
+          Proteja sua conta com códigos de segurança avulsos ou chaves de segurança físicas
         extended_description: |
           A autenticação de dois fatores adiciona segurança extra à sua conta, exigindo um token único além da sua senha. Tokens podem ser gerados em dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Observe que as entradas com rede social serão desativadas após a ativação da autenticação de dois fatores na sua conta."
@@ -1389,9 +1422,22 @@ pt_BR:
           edit_description: "Nome de chaves de segurança física"
           name_required_error: "Você deve informar um nome para sua chave de segurança."
       passkeys:
+        rename_passkey: "Renomear Passkey"
+        add_passkey: "Adicionar Passkey"
+        confirm_delete_passkey: "Tem certeza de que deseja excluir este Passkey?"
+        passkey_successfully_created: "Sucesso! Seu nosso Passkey foi criado."
+        rename_passkey_instructions: "Escolha um nome para o Passkey que seja ideal para você, por exemplo: o nome do seu gerenciador de senhas."
+        name:
+          default: "Passkey principal"
         save: "Salvar"
+        title: "Passkeys"
+        short_description: "Passkeys são substitutos de senhas que validam sua identidade através de biometria (ex.: toque, ID facial) ou senha/PIN."
         added_prefix: "Adicionado"
         last_used_prefix: "Usados(as) por último"
+        never_used: "Nunca usou"
+        not_allowed_error: "O processo de registro do Passkey teve o tempo expirado ou foi cancelado, ou não obteve permissão."
+        already_added_error: "Você já registrou este Passkey. Não precisa registrar novamente."
+        confirm_button: "ou usar um Passkey"
       change_about:
         title: "Alterar Sobre mim"
         error: "Houve um erro ao alterar este valor."
@@ -1440,6 +1486,7 @@ pt_BR:
         primary_label: "primário"
         unconfirmed_label: "não confirmado"
         resend_label: "Enviar novamente e-mail de confirmação"
+        resending_label: "enviando…"
         resent_label: "e-mail enviado"
         update_email: "Alterar e-mail"
         set_primary: "Definir e-mail primário"
@@ -1478,12 +1525,14 @@ pt_BR:
         ok: "Seu nome parece bom"
       username:
         title: "Nome do(a) usuário(a)"
+        instructions: "Único, curto, sem espaços."
         short_instructions: "Você pode ser mencioado(a) usando @%{username}."
         available: "Seu nome do(a) usuário(a) está disponível"
         not_available: "Não está disponível. Tentar %{suggestion}?"
         not_available_no_suggestion: "Não disponível"
         too_short: "Seu nome do(a) usuário(a) é muito curto"
         too_long: "Seu nome do(a) usuário(a) é muito longo"
+        checking: "Verificando disponibilidade do nome do(a) usuário(a)…"
         prefilled: "O e-mail corresponde a este nome do(a) usuário(a) cadastrado"
         required: "Digite um nome do(a) usuário(a)"
         edit: "Editar nome do(a) usuário(a)"
@@ -1499,6 +1548,7 @@ pt_BR:
         instructions: "O cadastro da conta requer um código de convite"
       auth_tokens:
         title: "Dispositivos usados recentemente"
+        short_description: "Lista de dispositivos que entraram com sua conta recentemente."
         details: "Detalhes"
         log_out_all: "Sair de tudo"
         not_you: "Não é você?"
@@ -1604,6 +1654,7 @@ pt_BR:
         reinvite: "Enviar e-mail novamente"
         reinvited: "Convite enviado novamente"
         removed: "Removido(a)"
+        search: "digite para pesquisar convites…"
         user: "Usuário(a) convidado(a)"
         none: "Não há convites para exibir."
         truncated:
@@ -1663,8 +1714,11 @@ pt_BR:
             <p>Convide uma lista de usuários(as) para promover a sua comunidade rapidamente. Prepare um <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">arquivo CSV</a> contendo pelo menos uma linha por endereço de e-mail dos usuários(as) que você quer convidar. As informações separadas por vírgula a seguir podem ser fornecidas se você quiser adicionar pessoas a grupos ou enviá-las para um tópico específico quando entrarem com a conta pela primeira vez.</p>
             <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
             <p>Todos os endereços de e-mail no arquivo CSV enviado serão mandados como convite, e você poderá gerenciá-lo mais tarde.</p>
+          progress: "%{progress}% enviado(s)…"
           success: "Arquivo enviado com sucesso, você será notificado(a) por mensagem quando o processo for concluído."
           error: "Desculpe, o arquivo deve estar no formato CSV."
+      confirm_access:
+        title: "Confirmar acesso"
       password:
         title: "Senha"
         too_short: "A sua senha é muito curta."
@@ -2360,6 +2414,7 @@ pt_BR:
         reaction: "nova reação"
         votes_released: "Voto emitido"
         new_features: "novos recursos do Discourse foram lançados!"
+        admin_problems: "nova recomendação no painel de controle do seu site"
     upload_selector:
       uploading: "Enviando"
       processing: "Processando envio"
@@ -3058,6 +3113,9 @@ pt_BR:
       confirm_delete: "Tem certeza de que deseja excluir esta postagem?"
       quote_reply: "Citação"
       quote_edit: "Editar"
+      quote_edit_shortcut: "Editar (ou apertar e)"
+      quote_copy: "Copiar citação"
+      quote_copied_to_clibboard: "Citação copiada para área de transferência"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
       post_number: "postagem %{number}"
@@ -3119,6 +3177,8 @@ pt_BR:
       errors:
         create: "Desculpe, houve um erro ao criar sua postagem. Tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua postagem. Tente outra vez."
+        upload: "Desculpe, houve um erro ao enviar %{file_name}. Tente novamente."
+        backup_too_large: "Desculpe, o arquivo de backup é grande demais."
         file_too_large: "Desculpe, este arquivo é muito grande (o tamanho máximo é de %{max_size_kb} KB). Que tal enviar o arquivo grande para um serviço de nuvem e compartilhar o link?"
         file_size_zero: "Desculpe, parece que algo deu errado, o arquivo que você está tentando enviar tem 0 bytes. Tente novamente."
         file_too_large_humanized: "Desculpe, este arquivo é muito grande (o tamanho máximo é de %{max_size}). Que tal enviar o arquivo grande para um serviço de nuvem e compartilhar o link?"
@@ -3178,6 +3238,8 @@ pt_BR:
         rebake: "Reconstruir HTML"
         publish_page: "Publicação de página"
         unhide: "Revelar"
+        change_owner: "Trocar propriedade…"
+        grant_badge: "Conceder emblema…"
         lock_post: "Bloquear postagem"
         lock_post_description: "impedir que o(a) autor(a) edite esta postagem"
         unlock_post: "Desbloquear postagem"
@@ -3191,6 +3253,8 @@ pt_BR:
         delete_topic_confirm_modal_no: "Não, manter este tópico"
         delete_topic_error: "Ocorreu um erro ao excluir este tópico"
         delete_topic: "excluir tópico"
+        add_post_notice: "Adicionar aviso da equipe…"
+        change_post_notice: "Alterar aviso da equipe…"
         delete_post_notice: "Excluir aviso da equipe"
         remove_timer: "remover timer"
         edit_timer: "editar timer"
@@ -3319,6 +3383,7 @@ pt_BR:
         description: "Exigir que novos tópicos tenham etiquetas de grupos de etiquetas:"
         delete: "Excluir"
         add: "Adicionar grupo de tags necessário"
+        placeholder: "selecionar grupo de etiquetas…"
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: "Excluir categoria"
       create: "Nova categoria"
@@ -3333,6 +3398,7 @@ pt_BR:
       logo: "Imagem do logotipo da categoria"
       logo_dark: "Imagem do logotipo da categoria Modo Escuro"
       background_image: "Imagem de fundo da categoria"
+      background_image_dark: "Imagem escura de fundo da categoria"
       badge_colors: "Cores do emblema"
       background_color: "Cor de fundo"
       foreground_color: "Cor de primeiro plano"
@@ -3448,9 +3514,11 @@ pt_BR:
     flagging:
       title: "Obrigado por ajudar a tornar a nossa comunidade um ambiente saudável!"
       action: "Sinalizar resposta"
+      take_action: "Tomar medida…"
       take_action_options:
         default:
           title: "Ocultar publicação"
+          details: "Atinja o limite de sinalizadores imediatamente, oculte a postagem e aceite todos os sinalizadores pendentes"
         suspend:
           title: "Suspender usuário(a)"
           details: "Alcance o limite de sinalizadores e suspenda o(a) usuário(a)"
@@ -3467,6 +3535,7 @@ pt_BR:
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
       submit_tooltip: "Enviar um sinalizador privado"
+      take_action_tooltip: "Atinja o limite de sinalizadores imediatamente, oculte a postagem e aceite todos os sinalizadores pendentes"
       cant: "Desculpe, não é possível colocar um sinalizador neste momento."
       notify_staff: "Avisar a equipe de forma privada"
       formatted_name:
@@ -3481,6 +3550,9 @@ pt_BR:
         at_least:
           one: "insira pelo menos %{count} carácter"
           other: "insira pelo menos %{count} caracteres"
+        more:
+          one: "Falta apenas %{count}…"
+          other: "Faltam %{count}…"
         left:
           one: "%{count} restante"
           other: "%{count} restantes"
@@ -3492,6 +3564,7 @@ pt_BR:
       title: "Resumo do tópico"
       participants_title: "Autores frequentes"
       links_title: "Links mais acessados"
+      links_shown: "exibir mais links…"
       clicks:
         one: "%{count} clique"
         other: "%{count} cliques"
@@ -3535,6 +3608,7 @@ pt_BR:
         med {com uma alta muito alta de postagens para curtidas}
         high {com uma taxa extremamente alta de taxa de postagens para curtidas}
         other {}}
+    latest_poster_link: "perfil de %{username}, autor(a) da postagem mais recente"
     original_post: "Postagem original"
     views: "Visualizações"
     sr_views: "Classificar por visualizações"
@@ -3609,8 +3683,11 @@ pt_BR:
           other: "Novos (%{count})"
         help: "tópicos criados nos últimos dias"
         all: "Tudo"
+        all_with_count: "Tudo (%{count})"
         topics: "Tópicos"
+        topics_with_count: "Tópicos (%{count})"
         replies: "Respostas"
+        replies_with_count: "Respostas (%{count})"
       posted:
         title: "Minhas postagens"
         help: "tópicos nos quais você postou"
@@ -3756,6 +3833,7 @@ pt_BR:
         print: "%{shortcut} Imprimir tópico"
         defer: "%{shortcut} Adiar tópico"
         topic_admin_actions: "%{shortcut} Abrir ações de administração de tópico"
+        archive_private_message: "%{shortcut} Alternar mensagem privada de arquivo"
       search_menu:
         title: "Menu de pesquisa"
         prev_next: "%{shortcut} Mover seleção para cima e para baixo"
@@ -3817,6 +3895,12 @@ pt_BR:
       selector_no_tags: "sem etiquetas"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
+      choose_for_topic_required:
+        one: "selecione pelo menos %{count} etiqueta…"
+        other: "selecione pelo menos %{count} etiquetas…"
+      choose_for_topic_required_group:
+        one: "selecione %{count} etiqueta de \"%{name}\"…"
+        other: "selecione %{count} etiquetas de \"%{name}\"…"
       info: "Informações"
       default_info: "Esta etiqueta não está restrita a nenhuma categorias e não possui sinônimos."
       staff_info: "Para adicionar restrições, coloque esta etiqueta em um <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
@@ -3913,6 +3997,7 @@ pt_BR:
         cannot_save: "Não é possível salvar grupo de etiquetas. Verifique se há pelo menos uma etiqueta presente, o nome do grupo de etiquetas não está vazio e um grupo foi selecionado para permissão de etiquetas."
         tags_placeholder: "Pesquisar ou criar etiquetas"
         parent_tag_placeholder: "Opcional"
+        select_groups_placeholder: "Selecionar grupos…"
         disabled: "A marcação com etiqueta está desativada. "
       topics:
         none:
@@ -3941,6 +4026,7 @@ pt_BR:
       enabled: "O modo seguro está ativado. Para sair do modo seguro, feche a janela do navegador"
     image_removed: "(imagem removida)"
     pause_notifications:
+      title: "Pausar notificações para…"
       label: "Pausar notificações"
       options:
         half_hour: "30 minutos"
@@ -3980,11 +4066,11 @@ pt_BR:
       sr_jump_bottom_button: "Pular para a última postagem"
     fullscreen_table:
       expand_btn: "Expandir tabela"
+      view_table: "Exibir tabela"
     second_factor_auth:
       redirect_after_success: "A autenticação de segundo fator foi bem-sucedida. Redirecionando para a página anterior…"
     sidebar:
-      show_sidebar: "Mostrar barra lateral"
-      hide_sidebar: "Ocultar barra lateral"
+      title: "Barra lateral"
       unread_count:
         one: "%{count} não lido"
         other: "%{count} não lidos"
@@ -4022,6 +4108,7 @@ pt_BR:
           delete: "Excluir"
           delete_confirm: "Tem certeza de que deseja excluir essa seção?"
           reset_confirm: "Tem certeza de que deseja redefinir esta seção para o padrão?"
+          public: "Visível para todos(as)"
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
           links:
@@ -4215,6 +4302,7 @@ pt_BR:
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
+      back_to_forum: "Voltar para o Fórum"
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -4239,6 +4327,8 @@ pt_BR:
         latest_version: "Última versão"
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"
         new_features:
+          title: "Novidades"
+          previous_announcements: "Confira os anúncios de recursos novos no <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saiba mais..."
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
@@ -4279,6 +4369,7 @@ pt_BR:
         too_many_requests: Você realizou esta ação muitas vezes. Aguarde antes de tentar novamente.
         not_found_error: Desculpe, este relatório não existe
         filter_reports: Filtrar relatórios
+        custom_date_range: Intervalo de datas personalizado
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           today: "Hoje"
@@ -4322,6 +4413,7 @@ pt_BR:
           name:
             too_short: "O nome do grupo é muito curto"
             too_long: "O nome do grupo é muito longo"
+            checking: "Verificando a disponibilidade do nome do grupo…"
             available: "O nome do grupo está disponível"
             not_available: "O nome do grupo não está disponível"
             blank: "O nome do grupo não pode ficar em branco"
@@ -4393,6 +4485,7 @@ pt_BR:
         user: "Usuário(a)"
         title: "API"
         key: "Chave"
+        keys: "Chaves"
         created: Criado(a)
         updated: Atualizado(a)
         last_used: Usados(as) por último
@@ -4450,6 +4543,11 @@ pt_BR:
               list: Liste as postagens mais recentes e postagens privadas. RSS também é compatível.
             tags:
               list: Liste etiquetas.
+            tag_groups:
+              list: Obtenha uma lista de grupos de etiquetas.
+              show: Obtenha um único grupo de etiquetas por id.
+              create: Cria um grupo de etiquetas.
+              update: Atualiza um grupo de etiquetas especificado por ID.
             categories:
               list: Obtenha uma lista de categorias.
               show: Obtenha uma categoria simples por id.
@@ -4492,6 +4590,8 @@ pt_BR:
               commenting: Necessário para os recursos de publicação do plugin WP Discourse.
               discourse_connect: Necessário para os recursos DiscourseConnect do plugin WP Discourse.
               utilities: Necessário se você usar Utilitários do plugin WP Discourse.
+            logs:
+              messages: Liste mensagens de /logs ou obtenha uma mensagem de um log específico.
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks no momento."
@@ -4525,6 +4625,21 @@ pt_BR:
         groups_filter_instructions: "Os webhooks aplicáveis serão acionados apenas se o evento estiver relacionado com os grupos especificados. Deixe em branco para acionar webhooks para todos os grupos."
         groups_filter: "Grupos acionados"
         delete_confirm: "Excluir este webhook?"
+        topic_event:
+          group_name: "Eventos do tópico"
+          topic_created: "Tópico criado"
+          topic_revised: "Tópico revisado"
+          topic_edited: "Tópico atualizado"
+          topic_destroyed: "Tópico excluído"
+          topic_recovered: "Tópico recuperado"
+        post_event:
+          group_name: "Postar eventos"
+          post_created: "Postagem criada"
+          post_edited: "Postagem atualizada"
+          post_destroyed: "Postagem excluída"
+          post_recovered: "Postagem recuperada"
+        group_event:
+          group_name: "Eventos de grupo"
         like_event:
           post_liked: "Quando um usuário curte uma postagem."
         delivery_status:
@@ -4668,11 +4783,15 @@ pt_BR:
           body: "Corpo"
           revert: "Reverter alterações"
           revert_confirm: "Tem certeza de que deseja reverter as alterações?"
+        component:
+          all_filter: "Tudo"
+          enabled_filter: "Ativado"
+          disabled_filter: "Desativado(a)"
         theme:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
-          filter_placeholder: "Digite para filtrar..."
+          search_placeholder: "digite para pesquisar…"
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"
@@ -4709,6 +4828,7 @@ pt_BR:
           color_scheme_user_selectable: "O esquema de cores pode ser selecionado pelos(as) usuários(as)"
           auto_update: "Atualizar automaticamente quando o Discourse for atualizado"
           color_scheme: "Paleta de cores"
+          edit_color_scheme: "Editar paleta de cores"
           default_light_scheme: "Claro (padrão)"
           color_scheme_select: "Selecione as cores que serão usadas pelo tema"
           custom_sections: "Seções personalizadas:"
@@ -4723,6 +4843,7 @@ pt_BR:
           convert_theme_tooltip: "Converter este tema em componente"
           inactive_themes: "Temas inativos:"
           inactive_components: "Componentes não usados"
+          selected: "Selecionou %{count}"
           cancel: "Cancelar"
           broken_theme_tooltip: "Este tema possui erros em seu CSS, HTML ou YAML"
           disabled_component_tooltip: "Este componente foi desativado"
@@ -4733,6 +4854,7 @@ pt_BR:
           uploads: "Envios"
           no_uploads: "Você pode enviar recursos associados ao seu tema, como fontes e imagens"
           add_upload: "Adicionar envio"
+          upload_file_tip: "Escolha um recurso para enviar (png, woff2 etc…)"
           variable_name: "Nome da var SCSS:"
           variable_name_invalid: "O nome da variável é inválido. Somente alfanumérico é permitido. Deve começar com uma letra. Deve ser único."
           variable_name_error:
@@ -4740,6 +4862,7 @@ pt_BR:
             no_overwrite: "O nome da variável é inválido. Não deve sobrescrever uma variável existente."
             must_be_unique: "O nome da variável é inválido. Deve ser único."
           upload: "Enviar"
+          select_component: "Selecione um componente…"
           unsaved_changes_alert: "Você ainda não salvou as suas modificações, você deseja descartá-las e prosseguir?"
           unsaved_parent_themes: "Você não atribuiu o componente a temas. Deseja prosseguir?"
           discard: "Descartar"
@@ -4753,6 +4876,7 @@ pt_BR:
           add_all: "Adicionar tudo"
           import_web_tip: "Repositório contendo tema"
           direct_install_tip: "Tem certeza de que quer instalar <strong>%{name}</strong> do repositório listado abaixo?"
+          import_web_advanced: "Avançado…"
           import_file_tip: "Arquivo .tar.gz, .zip ou .dcstyle.json com o tema"
           is_private: "O tema está em um repositório git privado"
           finish_install: "Concluir a instalação do tema"
@@ -4784,6 +4908,7 @@ pt_BR:
             maximum: "Requer versão do Discourse %{version} ou menos recente."
           update_to_latest: "Atualize para o mais recente"
           check_for_updates: "Verificar atualizações"
+          updating: "Atualizando…"
           up_to_date: "O tema está atualizado, última verificação:"
           has_overwritten_history: "A versão atual do tema não existe mais porque o histórico de Git foi sobrescrito por um envio de push forçado."
           add: "Adicionar"
@@ -4840,6 +4965,10 @@ pt_BR:
             title: "Definir configurações de tema no formato YAML"
           scss_color_variables_warning: 'Usar variáveis de cor SCSS nos temas foi preterido. Use as propriedades personalizadas do CSS. Consulte <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">este guia</a> para obter mais detalhes.'
           scss_warning_inline: "Usar variáveis de cor SCSS nos temas foi preterido."
+          all_filter: "Tudo"
+          active_filter: "Ativo(a)"
+          inactive_filter: "Inativo(a)"
+          updates_available_filter: "Atualizações disponíveis"
         colors:
           select_base:
             title: "Selecionar paleta de cores básicas"
@@ -4918,6 +5047,7 @@ pt_BR:
         title: "E-mails"
         settings: "Configurações"
         templates: "Modelos"
+        templates_title: "Modelos de e-mail"
         preview_digest: "Visualizar resumo"
         advanced_test:
           title: "Teste avançado"
@@ -4926,6 +5056,7 @@ pt_BR:
           run: "Executar Teste"
           text: "Corpo do texto selecionado"
           elided: "Texto omitido"
+        sending_test: "Enviando e-mail de teste…"
         error: "<b>ERRO</b> - %{server_error}"
         test_error: "Houve um problema ao enviar o e-mail de teste. Verifique novamente as configurações do e-mail, ou se o seu provedor não está bloqueando conexões de e-mail, e tente novamente."
         sent: "Enviado(a)"
@@ -4947,6 +5078,7 @@ pt_BR:
         refresh: "Atualizar"
         send_digest_label: "Enviar este resultado para:"
         send_digest: "Enviar"
+        sending_email: "Enviando e-mail…"
         format: "Formato"
         html: "html"
         text: "texto"
@@ -4974,6 +5106,7 @@ pt_BR:
             from_placeholder: "de@exemplo.com"
             to_placeholder: "para@exemplo.com"
             cc_placeholder: "cc@exemplo.com"
+            subject_placeholder: "Assunto…"
             error_placeholder: "Erro"
         logs:
           none: "Nenhum registro encontrado."
@@ -4981,8 +5114,12 @@ pt_BR:
             title: "Filtro"
             user_placeholder: "nome do(a) usuário(a)"
             address_placeholder: "nome@exemplo.com"
+            type_placeholder: "compilação, cadastro…"
             reply_key_placeholder: "tecla de resposta"
             smtp_transaction_response_placeholder: "ID do SMTP"
+          email_addresses:
+            see_more: "[Ver mais...]"
+          post_id: "(ID da postagem: %{post_id})"
       moderation_history:
         performed_by: "Executado por"
         no_results: "Não há histórico de moderação disponível."
@@ -5220,6 +5357,7 @@ pt_BR:
       form_templates:
         nav_title: "Modelos"
         title: "Modelos de formulário"
+        help: "Crie uma estrutura de modelo de formulário que pode ser usada para criar novos tópicos."
         new_template: "Novo modelo"
         list_table:
           headings:
@@ -5240,8 +5378,10 @@ pt_BR:
           cancel: "Cancelar"
           name:
             label: "Nome do modelo"
+            placeholder: "Digite um nome para este modelo…"
           template:
             label: "Modelo"
+            placeholder: "Criar um modelo YAML aqui…"
           preview: "Pré-visualizar"
         delete_confirm: "Tem certeza que deseja excluir este modelo?"
         quick_insert_fields:
@@ -5284,6 +5424,7 @@ pt_BR:
           title: "Pré-visualizar o Modelo"
         field_placeholders:
           validations: "insira validações aqui"
+          id: "inserir o id aqui"
           label: "Insira o rótulo aqui"
           placeholder: "Insira o espaço reservado aqui"
           none_label: "Selecione um item"
@@ -5355,6 +5496,7 @@ pt_BR:
           combative: "Muito agressivo(a)"
           in_wrong_place: "No lugar errado"
           no_constructive_purpose: "Nenhum propósito construtivo em suas ações, exceto criar discórdia na comunidade"
+          custom: "Personalizado(a)..."
         suspend_message: "Mensagem de e-mail"
         suspend_message_placeholder: "Opcionalmente, forneça mais informações sobre a suspensão e elas serão enviadas para o(a) usuário(a) por e-mail."
         suspended_by: "Suspenso(a) por"
@@ -5442,6 +5584,7 @@ pt_BR:
           button: "Excluir todas postagens"
           progress:
             title: "Progresso da exclusão de postagens"
+            description: "Excluindo postagens…"
           confirmation:
             title: "Excluir todas as postagens de @%{username}"
             description: |
@@ -5477,6 +5620,7 @@ pt_BR:
             text: "transferir @%{username} para @%{targetUsername}"
             transfer_and_delete: "Transferir e excluir @%{username}"
             cancel: "Cancelar"
+        merging_user: "Mesclando usuário(a)…"
         merge_failed: "Ocorreu um erro ao mesclar os(as) usuários(as)."
         delete_forbidden_because_staff: "Administradores(as) e moderadores(as) não podem ser excluídos(as)."
         delete_posts_forbidden_because_staff: "Não é possível excluir todas as postagens de administradores(as) e moderadores(as)."
@@ -5493,6 +5637,7 @@ pt_BR:
         delete_confirm: "Geralmente, é preferível anonimizar os usuários em vez de excluí-los, evitando assim a remoção de conteúdo das discussões existentes."
         delete_and_block: "Excluir e <b>bloquear</b> este e-mail e endereço IP"
         delete_dont_block: "Excluir apenas"
+        deleting_user: "Excluindo usuário(a)…"
         deleted: "O(a) usuário(a) foi excluído(a)."
         delete_failed: "Houve um erro ao excluir o(a) usuário(a). Verifique se todas as suas postagens foram excluídas antes de tentar excluí-lo(a)."
         send_activation_email: "Enviar e-mail de ativação"
@@ -5631,6 +5776,7 @@ pt_BR:
         show_outdated: "Mostrar somente desatualizado/inválido"
         locale: "Idioma:"
         more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
+        no_results: "Nennhum texto de site correspondente encontrado"
         interpolation_keys: "Chaves de interpolação disponíveis:"
         outdated:
           title: "Esta tradução está desatualizada"
@@ -5701,9 +5847,18 @@ pt_BR:
           modal_description: "Você gostaria de aplicar esta alteração historicamente? Isto mudará as preferências de %{count} usuários(as) existentes."
           modal_yes: "Sim"
           modal_no: "Não, apenas aplique alterações daqui para frente"
+        simple_list:
+          add_item: "Adicionar item…"
         json_schema:
           edit: Iniciar editor
           modal_title: "Editar %{name}"
+        file_types_list:
+          add_image_types: "Imagens"
+          add_video_types: "Vídeos"
+          add_audio_types: "Audio"
+          add_document_types: "Documentos"
+          add_types_title: "Permitir extensões %{types}"
+          add_types_toast: "%{types} tipos de arquivo adicionados"
       badges:
         title: Emblemas
         new_badge: Novo emblema
@@ -5798,6 +5953,7 @@ pt_BR:
         help: "Adicione novos emojis que estarão disponíveis para todas as pessoas. Arraste e solte vários arquivos de uma vez sem inserir nome, para criar emojis usando seus nomes de arquivo. O grupo selecionado será usado para todos os arquivos que forem adicionados ao mesmo tempo. Clique também em \"Adicionar novo emoji\" para abrir o seletor de arquivos."
         add: "Adicionar novo emoji"
         choose_files: "Escolher arquivos"
+        uploading: "Enviando…"
         name: "Nome"
         group: "Grupo"
         image: "Imagem"
@@ -5866,9 +6022,11 @@ pt_BR:
       finish: "Sair da configuração"
       back: "Voltar"
       next: "Próximo"
+      configure_more: "Configurar mais…"
       step-text: "Intervalo"
       step: "%{current} de %{total}"
       upload: "Carregar arquivo"
+      uploading: "Enviando…"
       upload_error: "Desculpe, houve um erro ao enviar o arquivo. Tente novamente."
       staff_count:
         one: "Sua comunidade tem %{count} pessoa (você). "

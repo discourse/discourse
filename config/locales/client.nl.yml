@@ -2353,6 +2353,7 @@ nl:
         reaction: "nieuwe reactie"
         votes_released: "Stem is vrijgegeven"
         new_features: "Er zijn nieuwe Discourse-functies uitgebracht!"
+        admin_problems: "nieuw advies op je websitedashboard"
     upload_selector:
       uploading: "Uploaden"
       processing: "Upload verwerken"
@@ -3973,8 +3974,7 @@ nl:
     second_factor_auth:
       redirect_after_success: "Tweeledige verificatie is geslaagd. Je wordt doorgestuurd naar de vorige pagina…"
     sidebar:
-      show_sidebar: "Zijbalk weergeven"
-      hide_sidebar: "Zijbalk verbergen"
+      title: "Zijbalk"
       unread_count:
         one: "%{count} ongelezen"
         other: "%{count} ongelezen"
@@ -4661,11 +4661,14 @@ nl:
           body: "Inhoud"
           revert: "Wijzigingen ongedaan maken"
           revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
+        component:
+          all_filter: "Alles"
+          enabled_filter: "Ingeschakeld"
+          disabled_filter: "Uitgeschakeld"
         theme:
           theme: "Thema"
           component: "Onderdeel"
           components: "Onderdelen"
-          filter_placeholder: "typ om te filteren…"
           theme_name: "Themanaam"
           component_name: "Onderdeelnaam"
           themes_intro: "Selecteer een bestaand of installeer een nieuw thema om te beginnen"
@@ -4833,6 +4836,9 @@ nl:
             title: "Thema-instellingen definiëren in YAML-indeling"
           scss_color_variables_warning: 'Het gebruik van kern-SCSS-kleurvariabelen in thema''s is verouderd. Gebruik in plaats daarvan aangepaste CSS-eigenschappen. Zie <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">deze gids</a> voor meer informatie.'
           scss_warning_inline: "Het gebruik van kern-SCSS-kleurvariabelen in thema's is verouderd."
+          all_filter: "Alles"
+          active_filter: "Actief"
+          inactive_filter: "Inactief"
         colors:
           select_base:
             title: "Basiskleurenpalet selecteren"
@@ -5697,6 +5703,9 @@ nl:
         json_schema:
           edit: Editor starten
           modal_title: "%{name} bewerken"
+        file_types_list:
+          add_image_types: "Afbeeldingen"
+          add_audio_types: "Audio"
       badges:
         title: Badges
         new_badge: Nieuwe badge

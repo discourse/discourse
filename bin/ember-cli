@@ -62,7 +62,7 @@ end
 
 system(
   "script/switch_ember_version",
-  ENV["EMBER_VERSION"] || "3",
+  ENV["EMBER_VERSION"] || "5",
   exception: true,
   chdir: RAILS_ROOT,
 )

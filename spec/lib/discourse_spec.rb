@@ -67,6 +67,30 @@ RSpec.describe Discourse do
     end
   end
 
+  describe ".plugins_sorted_by_name" do
+    before do
+      Discourse.stubs(:visible_plugins).returns(
+        [
+          stub(enabled?: false, name: "discourse-doctor-sleep", humanized_name: "Doctor Sleep"),
+          stub(enabled?: true, name: "discourse-shining", humanized_name: "The Shining"),
+          stub(enabled?: true, name: "discourse-misery", humanized_name: "misery"),
+        ],
+      )
+    end
+
+    it "sorts enabled plugins by humanized name" do
+      expect(Discourse.plugins_sorted_by_name.map(&:name)).to eq(
+        %w[discourse-misery discourse-shining],
+      )
+    end
+
+    it "sorts both enabled and disabled plugins when that option is provided" do
+      expect(Discourse.plugins_sorted_by_name(enabled_only: false).map(&:name)).to eq(
+        %w[discourse-doctor-sleep discourse-misery discourse-shining],
+      )
+    end
+  end
+
   describe "plugins" do
     let(:plugin_class) do
       Class.new(Plugin::Instance) do

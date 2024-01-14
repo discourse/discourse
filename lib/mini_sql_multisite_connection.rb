@@ -39,8 +39,10 @@ class MiniSqlMultisiteConnection < MiniSql::ActiveRecordPostgres::Connection
 
     def before_committed!(*)
     end
+
     def rolledback!(*)
     end
+
     def trigger_transactional_callbacks?
       true
     end

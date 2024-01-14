@@ -4,7 +4,7 @@ RSpec.describe TopicsBulkAction do
   fab!(:topic)
 
   describe "#dismiss_topics" do
-    fab!(:user) { Fabricate(:user, created_at: 1.days.ago) }
+    fab!(:user) { Fabricate(:user, created_at: 1.days.ago, refresh_auto_groups: true) }
     fab!(:category)
     fab!(:topic2) { Fabricate(:topic, category: category, created_at: 60.minutes.ago) }
     fab!(:topic3) { Fabricate(:topic, category: category, created_at: 120.minutes.ago) }
@@ -156,7 +156,10 @@ RSpec.describe TopicsBulkAction do
 
     context "when the user can edit the topic" do
       context "with 'create_revision_on_bulk_topic_moves' setting enabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
+        before do
+          SiteSetting.create_revision_on_bulk_topic_moves = true
+          Group.refresh_automatic_groups!
+        end
 
         it "changes the category, creates a post revision and returns the topic_id" do
           old_category_id = topic.category_id
@@ -195,7 +198,10 @@ RSpec.describe TopicsBulkAction do
       end
 
       context "with 'create_revision_on_bulk_topic_moves' setting disabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
+        before do
+          SiteSetting.create_revision_on_bulk_topic_moves = false
+          Group.refresh_automatic_groups!
+        end
 
         it "changes the category, doesn't create a post revision and returns the topic_id" do
           tba =
@@ -415,10 +421,11 @@ RSpec.describe TopicsBulkAction do
       SiteSetting.tagging_enabled = true
       SiteSetting.min_trust_level_to_tag_topics = 0
       topic.tags = [tag1, tag2]
+      Group.refresh_automatic_groups!
     end
 
     it "can change the tags, and can create new tags" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       tba =
         TopicsBulkAction.new(
           topic.user,
@@ -433,7 +440,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     it "can change the tags but not create new ones" do
-      SiteSetting.min_trust_to_create_tag = 4
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       tba =
         TopicsBulkAction.new(
           topic.user,
@@ -483,10 +490,11 @@ RSpec.describe TopicsBulkAction do
       SiteSetting.tagging_enabled = true
       SiteSetting.min_trust_level_to_tag_topics = 0
       topic.tags = [tag1, tag2]
+      Group.refresh_automatic_groups!
     end
 
     it "can append new or existing tags" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       tba =
         TopicsBulkAction.new(
           topic.user,
@@ -509,7 +517,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user can't create new topics" do
-      before { SiteSetting.min_trust_to_create_tag = 4 }
+      before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
       it "can append existing tags but doesn't append new tags" do
         tba =
@@ -553,6 +561,7 @@ RSpec.describe TopicsBulkAction do
       SiteSetting.tagging_enabled = true
       SiteSetting.min_trust_level_to_tag_topics = 0
       topic.tags = [tag1, tag2]
+      Group.refresh_automatic_groups!
     end
 
     it "can remove all tags" do

@@ -1,6 +1,5 @@
 @import "chat-unread-indicator";
 @import "chat-height-mixin";
-@import "chat-thread-header-buttons";
 @import "base-common";
 @import "sidebar-extensions";
 @import "chat-browse";
@@ -41,7 +40,6 @@
 @import "chat-transcript";
 @import "core-extensions";
 @import "dc-filter-input";
-@import "full-page-chat-header";
 @import "incoming-chat-webhooks";
 @import "reviewable-chat-message";
 @import "chat-thread-list-item";
@@ -67,5 +65,5 @@
 @import "chat-channel-settings";
 @import "chat-user-threads";
 @import "chat-navbar";
-@import "chat-user-threads-row";
 @import "chat-thread-title";
+@import "chat-audio-upload";

@@ -166,23 +166,18 @@ export default class ChannelsList extends Component {
       {{didInsert this.computeHasScrollbar}}
       {{onResize this.computeResizedEntries}}
     >
-      <div class="channels-list-container user-threads-section">
-        <LinkTo @route="chat.threads" class="chat__user-threads-row-container">
-          <div class="chat__user-threads-row">
 
-            <span class="chat__user-threads-row__title">
-              {{dIcon "discourse-threads" class="chat__user-threads-row__icon"}}
-              {{i18n "chat.my_threads.title"}}
-            </span>
-
-            {{#if this.hasUnreadThreads}}
-              <div class="chat__unread-indicator">
-                <div class="chat__unread-indicator__number">&nbsp;</div>
-              </div>
-            {{/if}}
+      <LinkTo @route="chat.threads" class="chat-channel-row --threads">
+        <span class="chat-channel-title">
+          {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
+          {{i18n "chat.my_threads.title"}}
+        </span>
+        {{#if this.hasUnreadThreads}}
+          <div class="c-unread-indicator">
+            <div class="c-unread-indicator__number">&nbsp;</div>
           </div>
-        </LinkTo>
-      </div>
+        {{/if}}
+      </LinkTo>
 
       {{#if this.displayPublicChannels}}
         <div class="chat-channel-divider public-channels-section">

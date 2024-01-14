@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 fi:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Aina"
           never: "Ei koskaan"
@@ -25,6 +28,7 @@ fi:
             chat:
               create_message: "Luo chat-viesti tietyllä kanavalla."
     chat:
+      back_to_forum: "Keskustelualuea"
       deleted_chat_username: poistettu
       dates:
         time_tiny: "t:mm"

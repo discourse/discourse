@@ -16,6 +16,7 @@ profile_print_slowest_examples_count = 10
 use_runtime_info = nil
 enable_system_tests = nil
 disable_system_tests = nil
+retry_and_log_flaky_tests = !!ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"]
 
 OptionParser
   .new do |opts|
@@ -51,6 +52,11 @@ OptionParser
       fail_fast = (n.nil? || n < 1) ? 1 : n
     end
 
+    opts.on(
+      "--retry-and-log-flaky-tests",
+      "Retry failed tests and log if test is deemed to be flaky",
+    ) { retry_and_log_flaky_tests = true }
+
     opts.on("--seed SEED", "The seed for the random order") { |s| seed = s.to_i }
 
     opts.on("--use-runtime-info", "Use runtime info for tests group splitting") do
@@ -66,7 +72,6 @@ OptionParser
     end
   end
   .parse!(ARGV)
-
 
 if enable_system_tests && disable_system_tests
   STDERR.puts "Error: I'm not sure how to enable and disable system tests simultaneously"
@@ -118,6 +123,7 @@ success =
     seed: seed.to_s,
     profile:,
     profile_print_slowest_examples_count:,
+    retry_and_log_flaky_tests:,
   )
 
 if success

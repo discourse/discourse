@@ -21,12 +21,14 @@ import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
+import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
+import { clearAdditionalAdminSidebarSectionLinks } from "discourse/instance-initializers/admin-sidebar";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
@@ -229,6 +231,7 @@ export function testCleanup(container, app) {
   clearExtraHeaderIcons();
   resetOnKeyDownCallbacks();
   resetOnKeyUpCallbacks();
+  resetItemSelectCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();
@@ -238,6 +241,7 @@ export function testCleanup(container, app) {
   clearBulkButtons();
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
+  clearAdditionalAdminSidebarSectionLinks();
 }
 
 function cleanupCssGeneratorTags() {

@@ -37,7 +37,7 @@ module Chat
     def mentioned_users
       object
         .chat_mentions
-        .includes(user: :user_status)
+        .limit(SiteSetting.max_mentions_per_chat_message)
         .map(&:user)
         .compact
         .sort_by(&:id)

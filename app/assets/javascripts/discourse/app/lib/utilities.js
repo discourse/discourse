@@ -494,7 +494,11 @@ export function clipboardCopy(text) {
   }
 
   // ...Otherwise, use document.execCommand() fallback
-  return clipboardCopyFallback(text);
+  if (clipboardCopyFallback(text)) {
+    return Promise.resolve();
+  } else {
+    return Promise.reject();
+  }
 }
 
 // Use this version of clipboardCopy if you must use an AJAX call
@@ -692,4 +696,44 @@ export function tokenRange(tokens, start, end) {
   });
 
   return contents;
+}
+
+export function allowOnlyNumericInput(event, allowNegative = false) {
+  const ALLOWED_KEYS = [
+    "Enter",
+    "Backspace",
+    "Tab",
+    "Delete",
+    "ArrowLeft",
+    "ArrowUp",
+    "ArrowRight",
+    "ArrowDown",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+  ];
+
+  if (!ALLOWED_KEYS.includes(event.key)) {
+    if (allowNegative && event.key === "-") {
+      return;
+    } else {
+      event.preventDefault();
+    }
+  }
+}
+
+export function cleanNullQueryParams(params) {
+  for (const [key, val] of Object.entries(params)) {
+    if (val === "undefined" || val === "null") {
+      params[key] = null;
+    }
+  }
+  return params;
 }

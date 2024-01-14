@@ -1,9 +1,18 @@
+import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import {
   addSidebarPanel,
   addSidebarSection,
 } from "discourse/lib/sidebar/custom-sections";
 import { ADMIN_PANEL } from "discourse/services/sidebar-state";
+import I18n from "discourse-i18n";
+
+let additionalAdminSidebarSectionLinks = {};
+
+// For testing.
+export function clearAdditionalAdminSidebarSectionLinks() {
+  additionalAdminSidebarSectionLinks = {};
+}
 
 function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
   const SidebarAdminSectionLink = class extends BaseCustomSidebarSectionLink {
@@ -33,7 +42,9 @@ function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
     }
 
     get text() {
-      return this.adminSidebarNavLink.text;
+      return this.adminSidebarNavLink.label
+        ? I18n.t(this.adminSidebarNavLink.label)
+        : this.adminSidebarNavLink.text;
     }
 
     get prefixType() {
@@ -77,7 +88,9 @@ function defineAdminSection(
     }
 
     get text() {
-      return this.adminNavSectionData.text;
+      return this.adminNavSectionData.label
+        ? I18n.t(this.adminNavSectionData.label)
+        : this.adminNavSectionData.text;
     }
 
     get links() {
@@ -103,28 +116,51 @@ export function useAdminNavConfig(navMap) {
       hideSectionHeader: true,
       links: [
         {
-          name: "Back to Forum",
+          name: "back_to_forum",
           route: "discovery.latest",
-          text: "Back to Forum",
+          label: "admin.back_to_forum",
           icon: "arrow-left",
         },
         {
-          name: "Lobby",
-          route: "admin-revamp.lobby",
-          text: "Lobby",
+          name: "admin_dashboard",
+          route: "admin.dashboard",
+          label: "admin.dashboard.title",
           icon: "home",
         },
         {
-          name: "legacy",
-          route: "admin",
-          text: "Legacy Admin",
-          icon: "wrench",
+          name: "admin_site_settings",
+          route: "adminSiteSettings",
+          label: "admin.site_settings.title",
+          icon: "cog",
+        },
+        {
+          name: "admin_users",
+          route: "adminUsers",
+          label: "admin.users.title",
+          icon: "users",
+        },
+        {
+          name: "admin_badges",
+          route: "adminBadges",
+          label: "admin.badges.title",
+          icon: "certificate",
         },
       ],
     },
   ];
 
-  return adminNavSections.concat(navMap);
+  navMap = adminNavSections.concat(navMap);
+
+  for (const [sectionName, additionalLinks] of Object.entries(
+    additionalAdminSidebarSectionLinks
+  )) {
+    const section = navMap.findBy("name", sectionName);
+    if (section && additionalLinks.length) {
+      section.links.push(...additionalLinks);
+    }
+  }
+
+  return navMap;
 }
 
 let adminSectionLinkClass = null;
@@ -148,18 +184,70 @@ export function buildAdminSidebar(navConfig) {
   });
 }
 
+// This is used for a plugin API.
+export function addAdminSidebarSectionLink(sectionName, link) {
+  if (!additionalAdminSidebarSectionLinks.hasOwnProperty(sectionName)) {
+    additionalAdminSidebarSectionLinks[sectionName] = [];
+  }
+
+  // make the name extra-unique
+  link.name = `admin_additional_${sectionName}_${link.name}`;
+
+  if (!link.href && !link.route) {
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[AdminSidebar]",
+      `Custom link ${sectionName}_${link.name} must have either href or route`
+    );
+    return;
+  }
+
+  if (!link.label && !link.text) {
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[AdminSidebar]",
+      `Custom link ${sectionName}_${link.name} must have either label (which is an I18n key) or text`
+    );
+    return;
+  }
+
+  // label must be valid, don't want broken [XYZ translation missing]
+  if (link.label && typeof I18n.lookup(link.label) !== "string") {
+    // eslint-disable-next-line no-console
+    console.debug(
+      "[AdminSidebar]",
+      `Custom link ${sectionName}_${link.name} must have a valid I18n label, got ${link.label}`
+    );
+    return;
+  }
+
+  additionalAdminSidebarSectionLinks[sectionName].push(link);
+}
+
+function pluginAdminRouteLinks() {
+  return (PreloadStore.get("enabledPluginAdminRoutes") || []).map(
+    (pluginAdminRoute) => {
+      return {
+        name: `admin_plugin_${pluginAdminRoute.location}`,
+        route: `adminPlugins.${pluginAdminRoute.location}`,
+        label: pluginAdminRoute.label,
+        icon: "cog",
+      };
+    }
+  );
+}
+
 export default {
+  name: "admin-sidebar-initializer",
+
   initialize(owner) {
     this.currentUser = owner.lookup("service:current-user");
     this.siteSettings = owner.lookup("service:site-settings");
 
-    if (!this.currentUser?.staff) {
-      return;
-    }
-
     if (
+      !this.currentUser?.staff ||
       !this.siteSettings.userInAnyGroups(
-        "enable_experimental_admin_ui_groups",
+        "admin_sidebar_enabled_groups",
         this.currentUser
       )
     ) {
@@ -179,7 +267,19 @@ export default {
     );
 
     const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
-    const navConfig = useAdminNavConfig(savedConfig || ADMIN_NAV_MAP);
-    buildAdminSidebar(navConfig, adminSectionLinkClass);
+    const navMap = savedConfig || ADMIN_NAV_MAP;
+
+    navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
+
+    if (this.siteSettings.experimental_form_templates) {
+      navMap.findBy("name", "customize").links.push({
+        name: "admin_customize_form_templates",
+        route: "adminCustomizeFormTemplates",
+        label: "admin.form_templates.nav_title",
+        icon: "list",
+      });
+    }
+
+    buildAdminSidebar(useAdminNavConfig(navMap), adminSectionLinkClass);
   },
 };

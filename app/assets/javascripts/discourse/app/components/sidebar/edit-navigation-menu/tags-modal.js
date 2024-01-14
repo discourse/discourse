@@ -16,6 +16,7 @@ export default class extends Component {
   @tracked onlyUnSelected = false;
   @tracked tags = [];
   @tracked tagsLoading;
+  @tracked disableFiltering;
   @tracked selectedTags = [...this.currentUser.sidebarTagNames];
 
   constructor() {
@@ -50,6 +51,7 @@ export default class extends Component {
       })
       .finally(() => {
         this.tagsLoading = false;
+        this.disableFiltering = false;
       });
   }
 
@@ -110,6 +112,7 @@ export default class extends Component {
 
   @action
   onFilterInput(filter) {
+    this.disableFiltering = true;
     discourseDebounce(this, this.#performFiltering, filter, INPUT_DELAY);
   }
 

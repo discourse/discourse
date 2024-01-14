@@ -66,8 +66,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_tags,
              :sidebar_category_ids,
              :sidebar_sections,
-             :new_new_view_enabled?,
-             :experimental_search_menu_groups_enabled?
+             :new_new_view_enabled?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat

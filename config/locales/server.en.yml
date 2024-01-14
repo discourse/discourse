@@ -70,6 +70,10 @@ en:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
+  components:
+    enabled_filter: "Enabled"
+    disabled_filter: "Disabled"
+    updates_available_filter: "Updates Available"
   themes:
     bad_color_scheme: "Can not update theme, invalid color palette"
     other_error: "Something went wrong updating theme"
@@ -297,6 +301,7 @@ en:
       discourse_connect_enabled: "Invites are disabled because DiscourseConnect is enabled."
       invalid_access: "You are not permitted to view the requested resource."
     requires_groups: "Invite was not saved because the specified topic is inaccessible. Add one of the following groups: %{groups}."
+    max_invite_emails_limit_exceeded: "Request failed because number of emails exceeded the maximum (%{max})."
     domain_not_allowed: "Your email cannot be used to redeem this invite."
     max_redemptions_allowed_one: "for email invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
@@ -1824,6 +1829,7 @@ en:
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
+    remove_older_backups: "Remove backups older than the specified number of days. Leave blank to disable."
     automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
     backup_frequency: "The number of days between backups."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
@@ -1954,28 +1960,37 @@ en:
     tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
     tl4_delete_posts_and_topics: "Allow TL4 users to delete posts and topics created by other users. TL4 users will also be able to see deleted topics and posts."
+    delete_all_posts_and_topics_allowed_groups: "Groups allowed to delete posts and topics created by other users. These groups will also be able to see deleted topics and posts."
     edit_all_topic_groups: "Allow users in this group to edit other users' topic titles, tags, and categories"
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    create_topic_allowed_groups: "Groups that are allowed to create new topics."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
     edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki."
 
     min_trust_to_edit_post: "The minimum trust level required to edit posts."
+    edit_post_allowed_groups: "Groups that are allowed to edit posts."
 
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
+    self_wiki_allowed_groups: "Groups where users can make their own post wiki."
 
     min_trust_to_send_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. The minimum trust level required to create new personal messages."
     min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
+    send_email_messages_allowed_groups: "Groups that are allowed to send personal messages via email."
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
+    flag_post_allowed_groups: "Groups that are allowed to flag posts."
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
     min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
+    user_card_background_allowed_groups: "Groups that are allowed to upload a user card background."
     min_trust_level_to_allow_invite: "The minimum trust level required to invite users"
+    invite_allowed_groups: "Groups that are allowed to invite users."
     min_trust_level_to_allow_ignore: "The minimum trust level required to ignore users"
+    ignore_allowed_groups: "Groups that are allowed to ignore other users."
     allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
@@ -2013,11 +2028,11 @@ en:
     default_dark_mode_color_scheme_id: "The color scheme used when in dark mode."
     dark_mode_none: "None"
 
-    max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."
-    max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
-    authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
-    authorized_extensions_for_staff: "A list of file extensions allowed for upload for staff users in addition to the list defined in the `authorized_extensions` site setting. (use '*' to enable all file types)"
-    theme_authorized_extensions: "A list of file extensions allowed for theme uploads (use '*' to enable all file types)"
+    max_image_size_kb: "The maximum image upload size. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."
+    max_attachment_size_kb: "The maximum attachment files upload size. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
+    authorized_extensions: "A list of file extensions allowed for upload"
+    authorized_extensions_for_staff: "A list of file extensions allowed for upload for staff users in addition to the list defined in the `authorized_extensions` site setting."
+    theme_authorized_extensions: "A list of file extensions allowed for theme uploads"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
 
     max_image_megapixels: "Maximum number of megapixels allowed for an image. Images with a higher number of megapixels will be rejected."
@@ -2121,7 +2136,7 @@ en:
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
     trim_incoming_emails: "Trim part of the incoming emails that isn't relevant."
     private_email: "Don't include content from posts or topics in email title or email body. NOTE: also disables digest emails."
-    email_total_attachment_size_limit_kb: "Max total size of files attached to outgoing emails in kB. Set to 0 to disable sending of attachments."
+    email_total_attachment_size_limit_kb: "Max total size of files attached to outgoing emails. Set to 0 to disable sending of attachments."
     post_excerpts_in_emails: "In notification emails, always send excerpts instead of full posts"
     raw_email_max_length: "How many characters should be stored for incoming email."
     raw_rejected_email_max_length: "How many characters should be stored for rejected incoming email."
@@ -2172,6 +2187,7 @@ en:
     logout_redirect: "Location to redirect browser to after logout (eg: https://example.com/logout)"
 
     allow_uploaded_avatars: "Allow users to upload custom profile pictures."
+    uploaded_avatars_allowed_groups: "Specify groups allowed to upload custom profile pictures."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of popular topics to display in the email summary."
@@ -2294,7 +2310,7 @@ en:
     embed_topics_list: "Support HTML embedding of topics lists"
     embed_set_canonical_url: "Set the canonical URL for embedded topics to the embedded content's URL."
     embed_truncate: "Truncate the embedded posts."
-    embed_unlisted: "Imported topics will be unlisted until a user replies."
+    embed_unlisted: "Embedded topics will be unlisted until a user replies."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
     allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
@@ -2338,13 +2354,15 @@ en:
     watched_words_regular_expressions: "Watched words are regular expressions."
 
     enable_diffhtml_preview: "Experimental feature which uses diffHTML to sync preview instead of full re-render"
-    enable_fast_edit: "Enables small selection of a post text to be edited inline."
+    enable_fast_edit: "Adds a button to the post selection menu to edit a small selection inline."
+    enable_quote_copy: "Adds a button to post selection menu to copy the selection to clipboard as a markdown quote."
 
     old_post_notice_days: "Days before post notice becomes old"
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
     review_media_unless_trust_level: "Staff will review posts of users with lower trust levels if they contain embedded media."
+    skip_review_media_groups: "Users who are not in any of these groups will have their posts sent to staff for review if the post contains embedded media."
     blur_tl0_flagged_posts_media: "Blur flagged posts images to hide potentially NSFW content."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
     show_published_pages_login_required: "Anonymous users can see published pages, even when login is required."
@@ -2412,6 +2430,7 @@ en:
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
+    create_tag_allowed_groups: "Groups that are allowed to create tags."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
     enable_max_tags_per_email_subject: "Use max_tags_per_email_subject when generating the subject of an email"
     max_tags_per_email_subject: "The maximum tags that can be in the subject of an email"
@@ -2479,10 +2498,10 @@ en:
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
-    experimental_search_menu_groups: "EXPERIMENTAL: Enables the new search menu that has been upgraded to use glimmer"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
 
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
+    admin_sidebar_enabled_groups: "EXPERIMENTAL: Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -2552,7 +2571,19 @@ en:
       approve_unless_allowed_groups: "approve_unless_trust_level"
       approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
       email_in_allowed_groups: "email_in_min_trust"
-      edit_wiki_post_allowed_groups: "minmin_trust_to_edit_wiki_post"
+      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
+      uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
+      create_topic_allowed_groups: "min_trust_to_create_topic"
+      edit_post_allowed_groups: "min_trust_to_edit_post"
+      flag_post_allowed_groups: "min_trust_to_flag_posts"
+      delete_all_posts_and_topics_allowed_groups: "tl4_delete_posts_and_topics"
+      user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
+      invite_allowed_groups: "min_trust_level_to_allow_invite"
+      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
+      create_tag_allowed_groups: "min_trust_to_create_tag"
+      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -5065,6 +5096,8 @@ en:
     no_themes: "Disable themes and theme components"
     no_unofficial_plugins: "Disable unofficial client-side plugin customizations"
     no_plugins: "Disable all client-side plugin customizations"
+    deprecation_error_description: "To check for compatibility with upcoming Discourse updates, you can make Javascript deprecations raise an error:"
+    deprecation_error_label: Make Javascript deprecations raise an error
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."
   wizard:

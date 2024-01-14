@@ -59,11 +59,11 @@ RSpec.describe "Deleted message", type: :system do
 
         other_user = Fabricate(:admin)
         chat_system_user_bootstrap(user: other_user, channel: channel_1)
-        using_session(:tab_2) do |session|
+
+        using_session(:tab_2) do
           sign_in(other_user)
           chat_page.visit_channel(channel_1)
           channel_page.messages.delete(message)
-          session.quit
         end
 
         sidebar_component.click_link(channel_1.name)

@@ -61,7 +61,7 @@ export default class ReviewableBundledAction extends Component {
         @translatedLabel={{this.first.label}}
         @disabled={{@reviewableUpdating}}
         class={{concatClass
-          "reviewable-action"
+          "btn-default reviewable-action"
           (dasherize this.first.id)
           this.first.button_class
         }}

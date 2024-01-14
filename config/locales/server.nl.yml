@@ -60,6 +60,9 @@ nl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{post_number} van %{username}"
+  components:
+    enabled_filter: "Ingeschakeld"
+    disabled_filter: "Uitgeschakeld"
   themes:
     bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenpalet"
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
@@ -1811,11 +1814,6 @@ nl:
     category_colors: "Een lijst van hexadecimale kleurwaarden die voor categorieën zijn toegestaan."
     default_dark_mode_color_scheme_id: "Het kleurenschema dat wordt gebruikt in donkere modus."
     dark_mode_none: "Geen"
-    max_image_size_kb: "De maximale grootte van te uploaden afbeeldingen in kB. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy. Afbeeldingen die groter zijn dan deze waarde en kleiner dan client_max_body_size worden bij het uploaden verkleind."
-    max_attachment_size_kb: "De maximale grootte van te uploaden bijlagen in kB. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy."
-    authorized_extensions: "Een lijst van toegestane bestandsextensies voor uploaden (gebruik '*' voor alle bestandstypen)"
-    authorized_extensions_for_staff: "Een lijst van toegestane bestandsextensies voor uploaden voor medewerkers, naast de lijst gedefinieerd in de website-instelling 'authorized_extensions' (gebruik '*' voor alle bestandstypen)"
-    theme_authorized_extensions: "Een lijst van toegestane bestandsextensies voor thema-uploads (gebruik '*' voor alle bestandstypen)"
     max_similar_results: "Hoeveel vergelijkbare topics om boven de editor te weergeven bij het opstellen van een nieuw topic. Vergelijking is gebaseerd op titel en inhoud."
     max_image_megapixels: "Maximale aantal toegestane megapixels voor een afbeelding. Afbeeldingen met een groter aantal megapixels worden geweigerd."
     title_prettify: "Veelvoorkomende fouten in titels voorkomen, waaronder alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
@@ -1897,7 +1895,7 @@ nl:
     always_show_trimmed_content: "Altijd afgekapt deel van inkomende e-mails weergeven. WAARSCHUWING: kan e-mailadressen onthullen."
     trim_incoming_emails: "Knip het deel van inkomende e-mails dat niet relevant is."
     private_email: "Geen inhoud van berichten of topics opnemen in titel of tekst van e-mail. OPMERKING: schakelt ook digest-e-mails uit."
-    email_total_attachment_size_limit_kb: "Maximale totale grootte van bij uitgaande e-mails gevoegde bestanden. Stel dit in op 0 om het verzenden van bijlagen uit te schakelen."
+    email_total_attachment_size_limit_kb: "Maximale totale grootte van aan uitgaande e-mails gekoppelde bestanden. Stel dit in op 0 om het verzenden van bijlagen uit te schakelen."
     post_excerpts_in_emails: "In meldingen per e-mail altijd fragmenten sturen in plaats van volledige berichten"
     raw_email_max_length: "Hoeveel tekens moeten worden opgeslagen voor inkomende e-mail."
     raw_rejected_email_max_length: "Hoeveel tekens moeten worden opgeslagen voor geweigerde inkomende e-mail."
@@ -2017,7 +2015,6 @@ nl:
     embed_topics_list: "HTML-inbedding van topiclijsten ondersteunen"
     embed_set_canonical_url: "Stel de canonieke URL voor ingesloten onderwerpen in op de URL van de ingesloten inhoud."
     embed_truncate: "De ingebedde berichten inkorten."
-    embed_unlisted: "Geïmporteerde topics zijn onzichtbaar totdat een gebruiker antwoordt."
     embed_support_markdown: "Markdown-opmaak voor ingebedde berichten ondersteunen."
     allowed_embed_selectors: "Een door komma's gescheiden lijst van CSS-elementen die bij inbedding zijn toegestaan."
     allowed_href_schemes: "Toegestane schema's in links, naast http en https."
@@ -2050,7 +2047,6 @@ nl:
     max_allowed_message_recipients: "Maximale aantal ontvangers in een bericht."
     watched_words_regular_expressions: "Geobserveerde woorden zijn reguliere expressies."
     enable_diffhtml_preview: "Experimentele functie die diffHTML gebruikt om het voorbeeld te synchroniseren in plaats van volledig opnieuw te renderen"
-    enable_fast_edit: "Hiermee kan een kleine selectie van een berichttekst inline worden bewerkt."
     old_post_notice_days: "Dagen voordat berichtmelding veroudert"
     new_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van nieuwe gebruikers te zien."
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."
@@ -2157,7 +2153,6 @@ nl:
     experimental_new_new_view_groups: 'EXPERIMENTEEL: schakelt een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en maak de link "Alles" ernaartoe in de zijbalk.'
     enable_custom_sidebar_sections: "EXPERIMENTEEL: schakelt aangepaste zijbalksecties in"
     experimental_topics_filter: "EXPERIMENTEEL: schakelt de filterroute voor experimentele topics in op /filter"
-    experimental_search_menu_groups: "EXPERIMENTEEL: schakelt het nieuwe zoekmenu in dat is geüpgraded om glimmer te gebruiken"
     enable_experimental_lightbox: "EXPERIMENTEEL: vervangt de standaard afbeeldingslightbox door het vernieuwde ontwerp."
     page_loading_indicator: "Configureer de laadindicator die wordt weergegeven tijdens paginanavigatie binnen Discourse. 'Spinner' is een indicator voor een volledige pagina. 'Slider' geeft een smalle balk weer bovenaan het scherm."
     errors:

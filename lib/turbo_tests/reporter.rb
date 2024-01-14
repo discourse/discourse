@@ -44,7 +44,7 @@ module TurboTests
             Kernel.const_get(name)
           end
 
-        @formatters << formatter_class.new(output)
+        add_formatter(formatter_class.new(output))
       end
     end
 
@@ -109,6 +109,10 @@ module TurboTests
       )
 
       delegate_to_formatters(:close, RSpec::Core::Notifications::NullNotification)
+    end
+
+    def add_formatter(formatter)
+      @formatters << formatter
     end
 
     protected

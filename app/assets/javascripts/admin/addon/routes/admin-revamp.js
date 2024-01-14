@@ -16,7 +16,7 @@ export default class AdminRoute extends DiscourseRoute {
   activate() {
     if (
       !this.siteSettings.userInAnyGroups(
-        "enable_experimental_admin_ui_groups",
+        "admin_sidebar_enabled_groups",
         this.currentUser
       )
     ) {

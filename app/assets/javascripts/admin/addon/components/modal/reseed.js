@@ -12,6 +12,7 @@ export default class Reseed extends Component {
   @tracked reseeding = false;
   @tracked categories = null;
   @tracked topics = null;
+  @tracked flash;
 
   constructor() {
     super(...arguments);

@@ -14,32 +14,46 @@ module DiscourseWebauthn
 
   class InvalidOriginError < SecurityKeyError
   end
+
   class InvalidRelyingPartyIdError < SecurityKeyError
   end
+
   class UserVerificationError < SecurityKeyError
   end
+
   class UserPresenceError < SecurityKeyError
   end
+
   class ChallengeMismatchError < SecurityKeyError
   end
+
   class InvalidTypeError < SecurityKeyError
   end
+
   class UnsupportedPublicKeyAlgorithmError < SecurityKeyError
   end
+
   class UnsupportedAttestationFormatError < SecurityKeyError
   end
+
   class CredentialIdInUseError < SecurityKeyError
   end
+
   class MalformedAttestationError < SecurityKeyError
   end
+
   class KeyNotFoundError < SecurityKeyError
   end
+
   class MalformedPublicKeyCredentialError < SecurityKeyError
   end
+
   class OwnershipError < SecurityKeyError
   end
+
   class PublicKeyError < SecurityKeyError
   end
+
   class UnknownCOSEAlgorithmError < SecurityKeyError
   end
 

@@ -302,10 +302,13 @@ RSpec.describe NewPostManager do
         }
       end
 
-      before { user.update!(trust_level: 0) }
+      before do
+        user.update!(trust_level: 0)
+        Group.refresh_automatic_groups!
+      end
 
-      it "queues the post for review because if it contains embedded media." do
-        SiteSetting.review_media_unless_trust_level = 1
+      it "queues the post for review because it contains embedded media" do
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_1]
         manager = NewPostManager.new(user, manager_opts)
 
         result = NewPostManager.default_handler(manager)
@@ -315,7 +318,7 @@ RSpec.describe NewPostManager do
       end
 
       it "does not enqueue the post if the poster is a trusted user" do
-        SiteSetting.review_media_unless_trust_level = 0
+        SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_0]
         manager = NewPostManager.new(user, manager_opts)
 
         result = NewPostManager.default_handler(manager)
@@ -388,6 +391,7 @@ RSpec.describe NewPostManager do
 
       NewPostManager.add_handler(&@counter_handler)
       NewPostManager.add_handler(&@queue_handler)
+      Group.refresh_automatic_groups!
     end
 
     after { NewPostManager.clear_handlers! }
@@ -410,7 +414,7 @@ RSpec.describe NewPostManager do
 
     it "calls custom enqueuing handlers" do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.min_trust_level_to_tag_topics = 0
 
       manager =
@@ -691,7 +695,7 @@ RSpec.describe NewPostManager do
   end
 
   describe "via email with a spam failure" do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:admin) { Fabricate(:admin) }
 
     it "silences users if its their first post" do
@@ -728,7 +732,7 @@ RSpec.describe NewPostManager do
   end
 
   describe "via email with an authentication results failure" do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:admin) { Fabricate(:admin) }
 
     it "doesn't silence users" do

@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Sohbet
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Her zaman"
           fullscreen: "Sohbet tam ekran modundayken"
@@ -37,6 +40,7 @@ tr_TR:
     chat:
       text_copied: Metin panoya kopyalandı
       link_copied: Bağlantı panoya kopyalandı
+      back_to_forum: "Forum"
       deleted_chat_username: silindi
       dates:
         time_tiny: "h:mm"
@@ -304,6 +308,7 @@ tr_TR:
       members_view:
         filter_placeholder: Üye bul
         add_member: Üye Ekle
+        back_to_settings: "Ayarlara geri dön"
       about_view:
         associated_topic: Bağlantılı konu
         associated_category: Bağlantılı kategori
@@ -405,6 +410,12 @@ tr_TR:
           topic: "Konu"
       reviewable:
         type: "Sohbet mesajı"
+      reactions:
+        only_you: "<span>Şu şekilde tepki verdiniz: </span>:%{emoji}:"
+        you_and_single_user: "<span>Siz ve %{username} şunu tepki verdiniz: </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Siz, %{commaSeparatedUsernames} ve %{username} şöyle tepki gösterdiniz</span>:%{emoji}"
+        single_user: "<span>%{username} şöyle tepki verdi</span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} ve %{username} ile tepki verdi</span>:%{emoji}:"
       composer:
         toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
@@ -454,6 +465,8 @@ tr_TR:
           title: "Sohbet mesajlarını dışa aktar"
           create_export: "Dışa aktarma oluştur"
           export_has_started: "Dışa aktarma başladı. Hazır olduğunda bir kişisel mesaj alacaksınız."
+      my_threads:
+        title: Konularım
       direct_messages:
         title: "Kişisel sohbet"
         new: "Kişisel sohbet oluşturun"

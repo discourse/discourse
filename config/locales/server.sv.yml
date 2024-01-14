@@ -60,6 +60,9 @@ sv:
   inline_oneboxer:
     topic_page_title_post_number: "Nr %{post_number}"
     topic_page_title_post_number_by_user: "Nr %{post_number} av %{username}"
+  components:
+    enabled_filter: "Aktiverad"
+    disabled_filter: "Inaktiverad"
   themes:
     bad_color_scheme: "Kan inte uppdatera tema, ogiltig färgpalett"
     other_error: "Något blev fel när temat uppdaterades"
@@ -1811,11 +1814,6 @@ sv:
     category_colors: "En lista över tillåtna hexadecimala färgvärden för kategorier."
     default_dark_mode_color_scheme_id: "Färgschemat som används i mörkt läge."
     dark_mode_none: "Inga"
-    max_image_size_kb: "Högsta bilduppladdningsstorlek i kB. Konfiguration krävs också i nginx (client_max_body_size) / apache eller proxy. Bilder större än detta eller mindre än client_max_body_size kommer vid uppladdning att ändras i storlek för att passa."
-    max_attachment_size_kb: "Högsta storlek på uppladdad bilaga i kB. Konfiguration krävs i nginx (client_max_body_size) / apace eller proxy också."
-    authorized_extensions: "En lista av alla filändelser som är tillåtna för uppladdning (använd '*' för att aktivera alla filtyper)"
-    authorized_extensions_for_staff: "En lista av alla filändelser som är tillåtna vid uppladning från personal utöver listan som definierats i webbplatsens inställningar för `authorized_extensions`. (använd '*' för att aktivera alla filtyper)"
-    theme_authorized_extensions: "En lista av alla filändelser som är tillåtna för temauppladdningar (använd '*' för att aktivera alla filtyper)"
     max_similar_results: "Hur många liknande ämnen som visas ovanför redigeraren vid författandet av ett nytt ämne. Jämförelsen är baserad på ämnesrubrik och innehåll."
     max_image_megapixels: "Maximalt antal megapixlar tillåtet för en bild. Bilder med ett högre värde av megapixlar kommer att avvisas."
     title_prettify: "Förhindra vanliga felskrivningar och misstag, inklusive endast versaler, inledande gemen, flera ! och ?, extra . i slutet osv."
@@ -1897,7 +1895,7 @@ sv:
     always_show_trimmed_content: "Visa alltid trimmade delar av inkommande e-post. VARNING: kan avslöja e-postadresser."
     trim_incoming_emails: "Trimma en del av de inkommande e-postmeddelandena som inte är relevant."
     private_email: "Inkludera inte innehåll från inlägg eller ämnen i e-posttitel eller e-postinnehåll. NOTERA: inaktiverar även sammanfogade e-postmeddelanden."
-    email_total_attachment_size_limit_kb: "Maximal storlek på filer som bifogas till utgående e-post, i kB. Ställ in till 0 för att inaktivera sändningar av bilagor."
+    email_total_attachment_size_limit_kb: "Maximal storlek på filer som är bifogade till utgående e-post. Ställ in till 0 för att inaktivera sändningar av bilagor."
     post_excerpts_in_emails: "Skicka alltid utdrag istället för fullständiga inlägg i e-postmeddelanden"
     raw_email_max_length: "Hur många tecken ska lagras för inkommande e-post."
     raw_rejected_email_max_length: "Hur många tecken ska lagras för avvisad inkommande e-post."
@@ -2017,7 +2015,6 @@ sv:
     embed_topics_list: "Stöd HTML-inbäddning av ämneslistor"
     embed_set_canonical_url: "Ställ in den kanoniska URL:n för inbäddade ämnen till det inbäddade innehållets URL."
     embed_truncate: "Trunkera de inbäddade inläggen."
-    embed_unlisted: "Importerade ämnen kommer att vara olistade tills en användare svarar."
     embed_support_markdown: "Stöd Markdown-formatering för inbäddade inlägg."
     allowed_embed_selectors: "En kommaavgränsad lista över CSS-element som tillåts i inbäddningar."
     allowed_href_schemes: "Scheman tillåtna i länkar förutom http och https."
@@ -2050,7 +2047,6 @@ sv:
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     watched_words_regular_expressions: "Bevakade ord är reguljära uttryck."
     enable_diffhtml_preview: "Experimentell funktion som använder diffHTML för att synkronisera förhandsgranskning istället för fullständig omrendering"
-    enable_fast_edit: "Gör det möjligt att redigera ett litet urval av en inläggstext på plats."
     old_post_notice_days: "Dagar innan inläggsmeddelandet blir gammalt"
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
@@ -2121,6 +2117,7 @@ sv:
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med tystade taggar i listan med senaste ämnen."
     force_lowercase_tags: "Tvinga alla nya taggar att vara helt i små bokstäver."
     create_post_for_category_and_tag_changes: "Skapa ett litet åtgärdsinlägg när ett ämnes kategori eller taggar ändras"
+    watched_precedence_over_muted: "Avisera mig om ämnen i kategorier eller taggar som jag bevakar och också tillhör ett som jag har tystat"
     governing_law: "Gällande lag"
     city_for_disputes: "Domstol vid tvist"
     shared_drafts_category: "Aktivera funktionen Delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin undantas från ämneslistor för personalanvändare."
@@ -2156,7 +2153,6 @@ sv:
     experimental_new_new_view_groups: 'EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken "Allt" i sidofältet länkar till den.'
     enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
     experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
-    experimental_search_menu_groups: "EXPERIMENTELLT: Aktiverar den nya sökmenyn som har uppgraderats för att använda glimmer"
     enable_experimental_lightbox: "EXPERIMENTELLT: Byt ut standardbild-lightboxen mot den nya designen."
     page_loading_indicator: "Konfigurera laddningsindikatorn som visas under sidnavigeringar i Discourse. 'Spinnare' är en indikator som tar upp hela sidan. 'Skjutreglage' visar ett smalt fält högst upp på skärmen."
     errors:

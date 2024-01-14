@@ -86,7 +86,7 @@ class Theme < ActiveRecord::Base
             :user,
             :color_scheme,
             :theme_translation_overrides,
-            theme_fields: :upload,
+            theme_fields: %i[upload theme_settings_migration],
           )
         end
 
@@ -130,6 +130,7 @@ class Theme < ActiveRecord::Base
 
     remove_from_cache!
     ColorScheme.hex_cache.clear
+
     notify_theme_change(with_scheme: notify_with_scheme)
 
     if theme_setting_requests_refresh
@@ -647,13 +648,14 @@ class Theme < ActiveRecord::Base
   def settings
     field = settings_field
     return [] unless field && field.error.nil?
-
     settings = []
+
     ThemeSettingsParser
       .new(field)
       .load do |name, default, type, opts|
         settings << ThemeSettingsManager.create(name, default, type, self, opts)
       end
+
     settings
   end
 
@@ -847,6 +849,7 @@ class Theme < ActiveRecord::Base
       self.theme_settings.destroy_all
 
       final_result = results.last
+
       final_result[:settings_after].each do |key, val|
         self.update_setting(key.to_sym, val)
       rescue Discourse::NotFound
@@ -874,7 +877,8 @@ class Theme < ActiveRecord::Base
         record.calculate_diff(res[:settings_before], res[:settings_after])
         record.save!
       end
-      self.save!
+
+      self.reload
     end
 
     if start_transaction

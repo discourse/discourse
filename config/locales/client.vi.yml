@@ -2054,6 +2054,7 @@ vi:
         membership_request_consolidated: "yêu cầu thành viên mới"
         reaction: "phản ứng mới"
         votes_released: "Phiếu bầu đã được phát hành"
+        admin_problems: "lời khuyên mới trên bảng điều khiển trang web của bạn"
     upload_selector:
       uploading: "Đang tải lên"
       processing: "Đang xử lý tải lên"
@@ -3510,6 +3511,7 @@ vi:
     second_factor_auth:
       redirect_after_success: "Xác thực yếu tố thứ hai thành công. Chuyển hướng về trang trước…"
     sidebar:
+      title: "Thanh bên"
       unread_count:
         other: "%{count} chưa đọc"
       new_count:
@@ -4052,11 +4054,13 @@ vi:
           body: "Nội dung"
           revert: "Hoàn nguyên thay đổi"
           revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
+        component:
+          all_filter: "All"
+          disabled_filter: "Vô hiệu hóa"
         theme:
           theme: "Giao diện"
           component: "Thành phần"
           components: "Các thành phần"
-          filter_placeholder: "gõ vào bộ lọc…"
           theme_name: "Tên chủ đề"
           component_name: "Tên thành phần"
           themes_intro: "Chọn một chủ đề hiện có hoặc cài đặt một chủ đề mới để bắt đầu"
@@ -4215,6 +4219,9 @@ vi:
             text: "YAML"
             title: "Xác định cài đặt chủ đề ở định dạng YAML"
           scss_warning_inline: "Việc sử dụng các biến màu SCSS cốt lõi trong các chủ đề không được dùng nữa."
+          all_filter: "All"
+          active_filter: "Kích hoạt"
+          inactive_filter: "Không hoạt động"
         colors:
           select_base:
             title: "Chọn bảng màu cơ bản"
@@ -4945,6 +4952,8 @@ vi:
         json_schema:
           edit: Khởi chạy trình chỉnh sửa
           modal_title: "Chỉnh sửa %{name}"
+        file_types_list:
+          add_image_types: "Hình ảnh"
       badges:
         title: Huy hiệu
         new_badge: Thêm huy hiệu

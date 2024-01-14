@@ -2164,6 +2164,9 @@ sq:
           body: "Përmbajtja"
           revert: "Rikthe ndryshimet"
           revert_confirm: "A jeni i sigurtë që doni të riktheni ndryshimet?"
+        component:
+          all_filter: "Të Gjithë"
+          enabled_filter: "Aktivizuar"
         theme:
           theme: "Tema"
           customize_desc: "Personalizo:"
@@ -2193,6 +2196,8 @@ sq:
             text: "CSS e ngjitur"
           body_tag:
             text: "Trupi"
+          all_filter: "Të Gjithë"
+          active_filter: "Aktiv"
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"
@@ -2666,6 +2671,8 @@ sq:
           navigation: "Shfletimi"
         default_categories:
           modal_yes: "Po"
+        file_types_list:
+          add_image_types: "Imazhet"
       badges:
         title: Stemat
         new_badge: Stemë e Re

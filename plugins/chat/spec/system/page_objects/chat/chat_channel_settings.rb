@@ -12,11 +12,11 @@ module PageObjects
       end
 
       def has_slug?(slug)
-        page.has_css?(".chat-channel-settings__slug", text: slug)
+        page.has_css?(".c-channel-settings__slug", text: slug)
       end
 
       def has_name?(name)
-        page.has_css?(".chat-channel-settings__name", text: name)
+        page.has_css?(".c-channel-settings__name", text: name)
       end
     end
   end

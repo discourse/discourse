@@ -429,8 +429,8 @@ const Group = RestModel.extend({
     const type = opts.type || "posts";
     const data = {};
 
-    if (opts.beforePostId) {
-      data.before_post_id = opts.beforePostId;
+    if (opts.before) {
+      data.before = opts.before;
     }
 
     if (opts.categoryId) {

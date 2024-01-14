@@ -8,7 +8,7 @@ function appendToCache(cache, key, value) {
   cache.set(key, cachedValue);
 }
 
-const NAMESPACES = ["discourse/", "wizard/", "admin/"];
+const NAMESPACES = ["discourse/", "admin/"];
 
 function isInRecognisedNamespace(moduleName) {
   for (const ns of NAMESPACES) {

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Post do
-  fab!(:coding_horror)
+  fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
 
   let(:upload_path) { Discourse.store.upload_path }
 

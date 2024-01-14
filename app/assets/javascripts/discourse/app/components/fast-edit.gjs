@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import { fixQuotes } from "discourse/components/post-text-selection";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -11,8 +13,8 @@ import autoFocus from "discourse/modifiers/auto-focus";
 import I18n from "discourse-i18n";
 
 export default class FastEdit extends Component {
-  @tracked value = this.args.initialValue;
   @tracked isSaving = false;
+  @tracked value = this.args.newValue || this.args.initialValue;
 
   buttonTitle = I18n.t("composer.title", {
     modifier: translateModKey("Meta+"),
@@ -37,6 +39,11 @@ export default class FastEdit extends Component {
   updateValue(event) {
     event.preventDefault();
     this.value = event.target.value;
+  }
+
+  @action
+  updateValueProperty(value) {
+    this.value = value;
   }
 
   @action
@@ -67,17 +74,29 @@ export default class FastEdit extends Component {
         {{on "input" this.updateValue}}
         id="fast-edit-input"
         {{autoFocus}}
-      >{{@initialValue}}</textarea>
+      >{{this.value}}</textarea>
 
-      <DButton
-        class="btn-small btn-primary save-fast-edit"
-        @action={{this.save}}
-        @icon="pencil-alt"
-        @label="composer.save_edit"
-        @translatedTitle={{this.buttonTitle}}
-        @isLoading={{this.isSaving}}
-        @disabled={{this.disabled}}
-      />
+      <div class="fast-edit-container__footer">
+        <DButton
+          class="btn-small btn-primary save-fast-edit"
+          @action={{this.save}}
+          @icon="pencil-alt"
+          @label="composer.save_edit"
+          @translatedTitle={{this.buttonTitle}}
+          @isLoading={{this.isSaving}}
+          @disabled={{this.disabled}}
+        />
+
+        <PluginOutlet
+          @name="fast-edit-footer-after"
+          @defaultGlimmer={{true}}
+          @outletArgs={{hash
+            initialValue=@initialValue
+            newValue=@newValue
+            updateValue=this.updateValueProperty
+          }}
+        />
+      </div>
     </div>
   </template>
 }

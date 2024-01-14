@@ -387,12 +387,45 @@ $search-pad-horizontal: 0.5em;
   }
 
   .search-item-user {
+    display: flex;
+    align-self: center;
+
     .username {
-      margin-right: 0.33rem;
+      margin-right: 0.33em;
+    }
+  }
+
+  .search-result-user {
+    .search-link {
+      display: flex;
+      align-items: center;
+
+      img.avatar {
+        margin-right: 10px;
+      }
     }
 
-    img.avatar {
-      margin-right: 0 !important;
+    .user-titles {
+      @include user-item-flex;
+
+      .username,
+      .name {
+        @include ellipsis;
+      }
+
+      .name {
+        font-weight: 700;
+      }
+
+      .username,
+      .name,
+      .custom-field {
+        color: var(--primary-high-or-secondary-low);
+      }
+
+      .custom-field {
+        font-size: var(--font-down-2);
+      }
     }
   }
 }

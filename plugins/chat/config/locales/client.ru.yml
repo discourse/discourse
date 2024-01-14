@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 ru:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Чат
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Всегда"
           never: "Никогда"
@@ -25,6 +28,7 @@ ru:
             chat:
               create_message: "Создать сообщение чата в указанном канале."
     chat:
+      back_to_forum: "Форум"
       deleted_chat_username: удалён
       dates:
         time_tiny: "h:mm"

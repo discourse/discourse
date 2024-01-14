@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 ja:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: チャット
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "常時"
           never: "なし"
@@ -25,6 +28,7 @@ ja:
             chat:
               create_message: "特定のチャンネルでチャットメッセージを作成します。"
     chat:
+      back_to_forum: "フォーラム"
       deleted_chat_username: 削除
       dates:
         time_tiny: "h:mm"

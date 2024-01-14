@@ -146,6 +146,7 @@ sv:
       url: "Kopiera och dela URL"
     word_connector:
       comma: ", "
+      last_item: "och"
     action_codes:
       public_topic: "Gjorde det här ämnet offentligt %{when}"
       open_topic: "Konverterade detta till ett ämne %{when}"
@@ -196,6 +197,12 @@ sv:
       error_caused_by: "Orsakas av '%{name}'. <a target='blank' href='%{path}'>Klicka här</a> för att uppdatera, konfigurera eller inaktivera."
       only_admins: "(detta meddelande visas endast för webbplatsadministratörer)"
     broken_decorator_alert: "Inlägg kanske inte visas korrekt eftersom en av inläggsinnehållsdekoratörerna på din webbplats upptäckte ett fel."
+    broken_page_change_alert: "En onPageChange-hanterare meddelar ett fel. Se mer information i webbläsarens utvecklarverktyg."
+    broken_plugin_alert: "Orsakas av plugin '%{name}'"
+    critical_deprecation:
+      notice: "<b>[Administratörsmeddelande]</b> Ett av dina teman eller plugins måste uppdateras för kompatibilitet med kommande förändringar av Discourse-kärnan (<a target='_blank' href='https://meta.discourse.org/t/287211'>mer info</a>)."
+      theme_source: "Identifierat tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Identifierad plugin: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asien Stillahavsområdet (Tokyo)"
@@ -275,6 +282,7 @@ sv:
     related_messages:
       title: "Relaterade meddelanden"
       pill: "Relaterade meddelanden"
+      see_all: 'Visa <a href="%{path}">alla meddelanden</a> från @%{username}'
     suggested_topics:
       title: "Nya och olästa ämnen"
       pill: "Föreslagna"
@@ -287,10 +295,16 @@ sv:
       our_moderators: "Våra moderatorer"
       moderators: "Moderatorer"
       stat:
+        all_time: "Alltid"
         last_day: "24 timmar"
+        last_7_days: "7 dagar"
+        last_30_days: "30 dagar"
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
+      user_count: "Registreringar"
+      active_user_count: "Aktiva användare"
+      contact: "Kontakta oss"
       contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
     bookmarked:
       title: "Bokmärke"
@@ -336,6 +350,7 @@ sv:
       copied: "kopierad!"
       copy: "kopiera kod till urklipp"
       fullscreen: "visa kod i helskärmsläge"
+      view_code: "Visa kod"
     drafts:
       label: "Utkast"
       label_with_count: "Utkast (%{count})"
@@ -368,9 +383,12 @@ sv:
       other: "Visa %{count} nya ämnen"
     preview: "förhandsgranska"
     cancel: "avbryt"
+    deleting: "Raderar…"
     save: "Spara ändringar"
+    saving: "Sparar…"
     saved: "Sparat!"
     upload: "Ladda upp"
+    uploading: "Laddar upp…"
     clipboard: "urklipp"
     uploaded: "Uppladdad!"
     enable: "Aktivera"
@@ -1161,6 +1179,7 @@ sv:
       watched_first_post_categories_instructions: "Du kommer att bli aviserad om första inlägget i varje nytt ämne i den här kategorin."
       watched_first_post_tags: "Bevakar första inlägget"
       watched_first_post_tags_instructions: "Du kommer att bli aviserad om första inlägget i varje nytt ämne med dessa taggar."
+      watched_precedence_over_muted: "Avisera mig om ämnen i kategorier eller taggar som jag bevakar och också tillhör ett som jag har tystat"
       muted_categories: "Tystad"
       muted_categories_instructions: "Du kommer inte att aviseras om någonting gällande nya ämnen i dessa kategorier, och de kommer inte dyka upp på kategorier eller senaste sidorna."
       muted_categories_instructions_dont_hide: "Du kommer inte att aviseras om någonting gällande nya ämnen i dessa kategorier."
@@ -2360,6 +2379,7 @@ sv:
         reaction: "ny reaktion"
         votes_released: "Röstningen släpptes"
         new_features: "nya Discourse-funktioner har släppts!"
+        admin_problems: "nytt råd på din webbplats översiktspanel"
     upload_selector:
       uploading: "Laddar upp"
       processing: "Bearbetar uppladdning"
@@ -3980,8 +4000,7 @@ sv:
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
     sidebar:
-      show_sidebar: "Visa sidofältet"
-      hide_sidebar: "Dölj sidofältet"
+      title: "Sidofält"
       unread_count:
         one: "%{count} oläst"
         other: "%{count} olästa"
@@ -4619,11 +4638,14 @@ sv:
           body: "Huvuddel"
           revert: "Ångra ändringar"
           revert_confirm: "Är du säker på att du vill ångra dina ändringar?"
+        component:
+          all_filter: "Alla"
+          enabled_filter: "Aktiverad"
+          disabled_filter: "Inaktiverad"
         theme:
           theme: "Tema"
           component: "Komponent"
           components: "Komponenter"
-          filter_placeholder: "skriv för att filtrera…"
           theme_name: "Temanamn"
           component_name: "Komponentnamn"
           themes_intro: "Välj ett befintligt tema eller installera ett nytt för att komma igång"
@@ -4791,6 +4813,9 @@ sv:
             title: "Definiera temainställningar i YAML-format"
           scss_color_variables_warning: 'Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats. Använd anpassade CSS-egenskaper i stället. Se <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">denna guide</a> för mer information.'
           scss_warning_inline: "Användning av grundläggande programvaras SCSS-färgvariabler i teman har utfasats."
+          all_filter: "Alla"
+          active_filter: "Aktiv"
+          inactive_filter: "Inaktiv"
         colors:
           select_base:
             title: "Välj grundfärgspalett"
@@ -5655,6 +5680,9 @@ sv:
         json_schema:
           edit: Öppna redigerare
           modal_title: "Redigera %{name}"
+        file_types_list:
+          add_image_types: "Bilder"
+          add_audio_types: "Audio"
       badges:
         title: Utmärkelser
         new_badge: Ny utmärkelse

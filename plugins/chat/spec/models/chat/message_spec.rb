@@ -449,8 +449,8 @@ describe Chat::Message do
 
     it "destroys chat_mention" do
       message_1 = Fabricate(:chat_message)
-      notification = Fabricate(:notification)
-      mention_1 = Fabricate(:chat_mention, chat_message: message_1, notification: notification)
+      notification = Fabricate(:notification, notification_type: Notification.types[:chat_mention])
+      mention_1 = Fabricate(:chat_mention, chat_message: message_1, notifications: [notification])
 
       message_1.reload.destroy!
 

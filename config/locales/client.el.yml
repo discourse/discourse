@@ -3686,6 +3686,9 @@ el:
           body: "Σώμα"
           revert: "Επαναφορά Αλλαγών"
           revert_confirm: "Είσαι βέβαιος πως θέλεις να επαναφέρεις τις αλλαγές;"
+        component:
+          all_filter: "Όλα"
+          disabled_filter: "Απενεργοποιημένο"
         theme:
           theme: "Θέμα"
           component: "Συστατικό"
@@ -3827,6 +3830,9 @@ el:
           yaml:
             text: "YAML"
             title: "Ορισμός ρυθμίσεων θέματος σε μορφή YAML"
+          all_filter: "Όλα"
+          active_filter: "Ενεργοί"
+          inactive_filter: "Ανενεργό"
         colors:
           select_base:
             title: "Επιλογή βασικής παλέτας χρωμάτων"
@@ -4517,6 +4523,8 @@ el:
           modal_description: "Θα θέλατε να εφαρμόσετε αυτήν την αλλαγή αναδρομικά; Αυτό θα αλλάξει τις προτιμήσεις για %{count} υπάρχοντες χρήστες."
           modal_yes: "Ναι "
           modal_no: "Όχι, εφαρμόστε την αλλαγή μόνο προς τα εμπρός"
+        file_types_list:
+          add_image_types: "Εικόνες"
       badges:
         title: Παράσημα
         new_badge: Νέο Παράσημο

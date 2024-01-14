@@ -679,7 +679,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "deleting the second post in a topic" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let!(:post) { create_post(user: user) }
     let(:topic) { post.topic }
     fab!(:second_user) { coding_horror }

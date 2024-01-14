@@ -4,6 +4,7 @@ class FinalDestination
   module SSRFDetector
     class DisallowedIpError < SSRFError
     end
+
     class LookupFailedError < SSRFError
     end
 

@@ -145,6 +145,15 @@ class Group < ActiveRecord::Base
     @visibility_levels = Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
   end
 
+  def self.auto_groups_between(lower, upper)
+    lower_group = Group::AUTO_GROUPS[lower.to_sym]
+    upper_group = Group::AUTO_GROUPS[upper.to_sym]
+
+    return [] if lower_group.blank? || upper_group.blank?
+
+    (lower_group..upper_group).to_a & AUTO_GROUPS.values
+  end
+
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
@@ -420,6 +429,7 @@ class Group < ActiveRecord::Base
 
     result = guardian.filter_allowed_categories(result)
     result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]
+    result = result.where("posts.created_at < ?", opts[:before].to_datetime) if opts[:before]
     result.order("posts.created_at desc")
   end
 

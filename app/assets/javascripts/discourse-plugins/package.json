@@ -16,7 +16,7 @@
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.6",
+    "@babel/core": "^7.23.7",
     "ember-cli": "~5.0.0",
     "webpack": "^5.89.0"
   },

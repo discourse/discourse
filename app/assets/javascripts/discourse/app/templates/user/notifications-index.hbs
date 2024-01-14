@@ -27,6 +27,10 @@
         <UserMenu::MenuItem @item={{item}} />
       {{/each}}
       <ConditionalLoadingSpinner @condition={{this.loading}} />
+      <PluginOutlet
+        @name="user-notifications-list-bottom"
+        @outletArgs={{hash controller=this}}
+      />
     </div>
   {{/if}}
 {{/if}}

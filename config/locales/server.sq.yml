@@ -49,6 +49,8 @@ sq:
   remove_posts_deleted_by_author: "Fshirë nga autori"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
+  components:
+    enabled_filter: "Aktivizuar"
   emails:
     incoming:
       default_subject: "Duhet të shkruani titullin"
@@ -717,8 +719,6 @@ sq:
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
     dark_mode_none: "Asnjë"
-    max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
-    authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."

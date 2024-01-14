@@ -33,5 +33,7 @@ module Positionable
     WHERE id = :id",
             id: id,
             position: position
+
+    self.position = position
   end
 end

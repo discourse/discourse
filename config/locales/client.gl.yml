@@ -1938,6 +1938,7 @@ gl:
         membership_request_consolidated: "novas solicitudes de incorporación"
         reaction: "nova reacción"
         votes_released: "O voto foi liberado"
+        admin_problems: "novo consello no seu panel de sitio"
     upload_selector:
       uploading: "Cargando"
       select_file: "Seleccionar ficheiro"
@@ -3707,6 +3708,10 @@ gl:
           body: "Corpo"
           revert: "Reverter os cambios"
           revert_confirm: "Confirma a reversión dos cambios?"
+        component:
+          all_filter: "Todas"
+          enabled_filter: "Activado"
+          disabled_filter: "Desactivado"
         theme:
           theme: "Tema"
           component: "Compoñente"
@@ -3865,6 +3870,9 @@ gl:
           yaml:
             text: "YAML"
             title: "Definir os axustes do tema en formato YAML"
+          all_filter: "Todas"
+          active_filter: "Activo"
+          inactive_filter: "Inactivo"
         colors:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
@@ -4602,6 +4610,9 @@ gl:
         json_schema:
           edit: Abrir o editor
           modal_title: "Editar: %{name}"
+        file_types_list:
+          add_image_types: "Imaxes"
+          add_audio_types: "Audio"
       badges:
         title: Insignias
         new_badge: Nova insignia

@@ -53,6 +53,9 @@ bs_BA:
   on_another_topic: "Na drugu temu"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  components:
+    enabled_filter: "Omogućen"
+    disabled_filter: "Neomogućen"
   themes:
     bad_color_scheme: "Ne može se ažurirati tema, nevažeća paleta boja"
     other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
@@ -701,8 +704,6 @@ bs_BA:
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
     dark_mode_none: "Ništa"
-    max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
-    authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."

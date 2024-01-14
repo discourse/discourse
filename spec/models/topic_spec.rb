@@ -12,9 +12,7 @@ RSpec.describe Topic do
   fab!(:evil_trout)
   fab!(:admin)
   fab!(:group)
-  fab!(:trust_level_2) do
-    Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite)
-  end
+  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2, refresh_auto_groups: true) }
 
   it_behaves_like "it has custom fields"
 
@@ -1001,7 +999,7 @@ RSpec.describe Topic do
           end
 
           describe "when user does not have sufficient trust level" do
-            before { user.update!(trust_level: TrustLevel[1]) }
+            before { user.change_trust_level!(TrustLevel[1]) }
 
             it "should not create an invite" do
               expect do expect(topic.invite(user, "test@email.com")).to eq(nil) end.to_not change {
@@ -1105,7 +1103,7 @@ RSpec.describe Topic do
         end
 
         describe "when user can invite via email" do
-          before { user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite) }
+          before { user.change_trust_level!(TrustLevel[2]) }
 
           it "should create an invite" do
             Jobs.run_immediately!
@@ -2683,7 +2681,7 @@ RSpec.describe Topic do
 
       freeze_time(start)
 
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
       topic_id = create_post(user: user).topic_id
 
       freeze_time(start + 10.minutes)
@@ -2703,7 +2701,7 @@ RSpec.describe Topic do
 
       freeze_time(start)
 
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
 
       freeze_time(start + 25.hours)
       topic_id = create_post(user: user).topic_id

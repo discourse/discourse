@@ -2160,6 +2160,7 @@ cs:
         post_approved: "příspěvek schválen"
         reaction: "nová reakce"
         new_features: "byly vydány nové funkce Discourse!"
+        admin_problems: "na administrační nástěnce vašeho webu jsou nová doporučení"
     upload_selector:
       uploading: "Nahrávám"
       select_file: "Vyberte soubor"
@@ -3577,8 +3578,7 @@ cs:
     second_factor_auth:
       redirect_after_success: "Dvoufaktorové ověření bylo úspěšné. Přesměrování na předchozí stránku…"
     sidebar:
-      show_sidebar: "Zobrazit postranní panel"
-      hide_sidebar: "Skrýt postranní panel"
+      title: "Postranní panel"
       unread_count:
         one: "%{count} nepřečtené"
         few: "%{count} nepřečtených"
@@ -4128,6 +4128,10 @@ cs:
           body: "Tělo"
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"
+        component:
+          all_filter: "Celkem"
+          enabled_filter: "Zapnutý"
+          disabled_filter: "Vypnuto"
         theme:
           theme: "Téma"
           component: "Komponent"
@@ -4216,6 +4220,9 @@ cs:
           yaml:
             text: "YAML"
             title: "Definovat nastavení motivu ve formátu YAML"
+          all_filter: "Celkem"
+          active_filter: "Aktivní"
+          inactive_filter: "Neaktivní"
         colors:
           title: "Barvy"
           copy_name_prefix: "Kopie"
@@ -4814,6 +4821,8 @@ cs:
           modal_yes: "Ano"
         simple_list:
           add_item: "Přidat položku…"
+        file_types_list:
+          add_image_types: "Obrázky"
       badges:
         title: Odznaky
         new_badge: Nový odznak

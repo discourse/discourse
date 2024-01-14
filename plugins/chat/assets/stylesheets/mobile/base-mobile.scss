@@ -1,5 +1,6 @@
 :root {
   --channel-list-avatar-size: 38px;
+  --chat-header-offset: 56px;
 }
 
 .chat-message-container:not(.-user-info-hidden) {
@@ -25,7 +26,7 @@ html.has-full-page-chat {
         grid-template-columns: 1fr;
         grid-template-areas: "threads";
 
-        .chat-channel {
+        .c-routes-channel {
           display: none;
         }
       }
@@ -54,13 +55,6 @@ html.has-full-page-chat {
   .chat-drawer {
     width: 100%;
   }
-
-  .chat-full-page-header {
-    background-color: var(--secondary);
-    padding: 0 10px;
-    height: 50px;
-    min-height: 50px;
-  }
 }
 
 .sidebar-container .channels-list .chat-channel-divider {
@@ -77,31 +71,14 @@ html.has-full-page-chat {
   }
 }
 
-.chat-full-page-header {
-  .chat-channel-header-details {
-    .chat-channel-retry-archive {
-      flex-direction: column;
-
-      .chat-channel-archive-failed-retry {
-        margin-top: 0.5em;
-      }
-    }
-  }
-}
-
 .chat-message-separator {
   margin-left: 0;
 }
 
 .header-dropdown-toggle.chat-header-icon {
   .icon {
-    &.active {
-      border: 1px solid var(--primary-low);
-      background: var(--primary-very-low);
-
-      .d-icon {
-        color: var(--primary-medium);
-      }
+    &.active .d-icon {
+      color: var(--primary-medium);
     }
     .chat-channel-unread-indicator {
       border-color: var(--primary-very-low);

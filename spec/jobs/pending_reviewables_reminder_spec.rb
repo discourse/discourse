@@ -5,7 +5,7 @@ RSpec.describe Jobs::PendingReviewablesReminder do
 
   def create_flag(created_at)
     PostActionCreator.create(
-      Fabricate(:user),
+      Fabricate(:user, refresh_auto_groups: true),
       Fabricate(:post),
       :spam,
       created_at: created_at,

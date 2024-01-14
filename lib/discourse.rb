@@ -377,6 +377,13 @@ module Discourse
     plugins.filter(&:visible?)
   end
 
+  def self.plugins_sorted_by_name(enabled_only: true)
+    if enabled_only
+      return visible_plugins.filter(&:enabled?).sort_by { |plugin| plugin.humanized_name.downcase }
+    end
+    visible_plugins.sort_by { |plugin| plugin.humanized_name.downcase }
+  end
+
   def self.plugin_themes
     @plugin_themes ||= plugins.map(&:themes).flatten
   end

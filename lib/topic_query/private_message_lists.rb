@@ -263,8 +263,8 @@ class TopicQuery
           .joins(
             "LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})",
           )
-          .order("topics.bumped_at DESC")
 
+      result = apply_ordering(result, options) if !options[:skip_ordering]
       result = result.includes(:tags) if SiteSetting.tagging_enabled
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?

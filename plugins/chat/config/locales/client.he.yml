@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 he:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: צ׳אט
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "תמיד"
           fullscreen: "כאשר הצ׳אט במסך מלא"
@@ -39,6 +42,7 @@ he:
     chat:
       text_copied: טקסט הועתק ללוח הגזירים
       link_copied: קישור הועתק ללוח הגזירים
+      back_to_forum: "פורום"
       deleted_chat_username: נמחק
       dates:
         time_tiny: "h:mm"
@@ -326,6 +330,7 @@ he:
       members_view:
         filter_placeholder: איתור חברים
         add_member: הוספת חברים
+        back_to_settings: "חזרה להגדרות"
       about_view:
         associated_topic: נושא מקושר
         associated_category: קטגוריה מקושרת
@@ -448,6 +453,11 @@ he:
           other: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
         single_user: "<span>התגובה של %{username} היא </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} וגם %{username} הגיבו עם </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
+          two: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
       composer:
         toggle_toolbar: "החלפת מצב סרגל כלים"
         italic_text: "טקסט נטוי"

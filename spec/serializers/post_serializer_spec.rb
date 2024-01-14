@@ -56,7 +56,9 @@ RSpec.describe PostSerializer do
   end
 
   context "with a post with reviewable content" do
-    let!(:reviewable) { PostActionCreator.spam(Fabricate(:user), post).reviewable }
+    let!(:reviewable) do
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post).reviewable
+    end
 
     it "includes the reviewable data" do
       json =

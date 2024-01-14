@@ -320,6 +320,7 @@ hr:
       edit_bookmark: "Uredi oznaku"
       clear_bookmarks: "Očisti oznake"
       help:
+        bookmark: "Kliknite za spremanje ove teme u oznake"
         edit_bookmark_for_topic: "Kliknite za uređivanje oznake na ovu temu"
         unbookmark: "Klikni za uklananje svih oznaka u ovoj temi"
         unbookmark_with_reminder: "Kliknite da biste uklonili sve oznake i podsjetnike u ovoj temi"
@@ -420,6 +421,8 @@ hr:
         search: "Traži poruku"
         placeholder: "ovdje upišite naslov poruke, URL ili id"
     review:
+      show_more: "Prikaži više"
+      show_less: "Prikaži manje"
       order_by: "Poredaj prema"
       date_filter: "Objavljeno između"
       in_reply_to: "odgovor na"
@@ -550,16 +553,31 @@ hr:
       scores:
         about: "Ocjena se računa na bazi razine povjerenja izvjestitelja, točnosti njihovih prethodnih zastavica i prioriteta stavke o kojoj se izvješćuje."
         score: "Ocjena"
+        date: "Datum izvješća"
         type: "Razlog"
         status: "Statust"
         submitted_by: "Prijavio"
+        reviewed_by: "Pregledao"
+        reviewed_timestamp: "Datum pregleda"
       statuses:
         pending:
           title: "Na čekanju"
         approved:
           title: "Odobrio"
+        approved_flag:
+          title: "Zastava odobrena"
+        approved_user:
+          title: "Korisnik odobren"
+        approved_post:
+          title: "Objava odobrena"
         rejected:
           title: "Odbio"
+        rejected_flag:
+          title: "Zastava odbijena"
+        rejected_user:
+          title: "Korisnik je odbijen"
+        rejected_post:
+          title: "Objava je odbijena"
         reviewed:
           title: "Svi pregledani"
         all:
@@ -1309,6 +1327,7 @@ hr:
         tags: "Oznake"
         interface: "Sučelje"
         apps: "Aplikacije"
+        navigation_menu: "Navigacijski izbornik"
       change_password:
         success: "(email je poslan)"
         in_progress: "(email se šalje)"
@@ -1321,6 +1340,8 @@ hr:
         title: "Dva faktorski rezervni kodovi"
         regenerate: "Regeneriraj"
         disable: "Onemogući"
+        enable: "Stvori pričuvne kodove"
+        enable_long: "Dodaj pričuvne kodove"
         manage:
           one: "Preostalo vam je <strong>%{count}</strong> rezervni kodova."
           few: "Preostalo vam je <strong>%{count}</strong> rezervni kodova."
@@ -2361,6 +2382,7 @@ hr:
         reaction: "nova reakcija"
         votes_released: "Glasanje je objavljeno"
         new_features: "Objavljene su nove značajke za platformu Discourse!"
+        admin_problems: "novi savjeti na vašoj nadzornoj ploči"
     upload_selector:
       uploading: "Učitavanje"
       processing: "Obrada prijenosa"
@@ -4019,8 +4041,7 @@ hr:
     second_factor_auth:
       redirect_after_success: "Provjera autentičnosti drugog faktora je uspješna. Preusmjeravanje na prethodnu stranicu…"
     sidebar:
-      show_sidebar: "Prikaži bočnu traku"
-      hide_sidebar: "Sakrij bočnu traku"
+      title: "Bočna traka"
       unread_count:
         one: "%{count} nepročitano"
         few: "%{count} nepročitano"
@@ -4597,11 +4618,14 @@ hr:
           body: "Tijelo"
           revert: "Vrati promjene"
           revert_confirm: "Jeste li sigurni da želite poništiti svoje promjene?"
+        component:
+          all_filter: "Sve"
+          enabled_filter: "Omogućeno"
+          disabled_filter: "Onemogućeno"
         theme:
           theme: "Tema"
           component: "Komponenta"
           components: "Komponente"
-          filter_placeholder: "upišite za filtriranje…"
           theme_name: "Naziv teme"
           component_name: "Naziv komponente"
           themes_intro: "Odaberite postojeću temu ili instalirajte novu da biste započeli"
@@ -4766,6 +4790,9 @@ hr:
             title: "Definirajte postavke teme u YAML formatu"
           scss_color_variables_warning: 'Korištenje jezgrenih SCSS varijabli boja u temama je zastarjelo. Umjesto toga koristite prilagođena svojstva CSS -a. Za više pojedinosti <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">ovaj vodič</a>'
           scss_warning_inline: "Korištenje jezgrenih SCSS varijabli boja u temama je zastarjelo."
+          all_filter: "Sve"
+          active_filter: "Aktivno"
+          inactive_filter: "Neaktivan"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"
@@ -4905,6 +4932,8 @@ hr:
             address_placeholder: "ime@primjer.com"
             reply_key_placeholder: "ključ odgovora"
             smtp_transaction_response_placeholder: "SMTP ID"
+          email_addresses:
+            see_more: "[Vidi više...]"
       moderation_history:
         performed_by: "Izvođeno od"
         no_results: "Povijest moderiranja nije dostupna."
@@ -5563,6 +5592,8 @@ hr:
         json_schema:
           edit: Pokreni uređivač
           modal_title: "Uredi %{name}"
+        file_types_list:
+          add_image_types: "Slike"
       badges:
         title: Značke
         new_badge: Nova značka

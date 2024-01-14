@@ -60,6 +60,9 @@ fr:
   inline_oneboxer:
     topic_page_title_post_number: "numéro %{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} par %{username}"
+  components:
+    enabled_filter: "Activé"
+    disabled_filter: "Désactivé"
   themes:
     bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleurs est invalide"
     other_error: "Une erreur s'est produite lors de la mise à jour du thème"
@@ -567,7 +570,7 @@ fr:
             name:
               same_as_password: "est identique à votre mot de passe."
             ip_address:
-              blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
+              blocked: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP."
               max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
         user_profile:
           attributes:
@@ -1811,11 +1814,6 @@ fr:
     category_colors: "Une liste de couleurs en valeur hexadécimale autorisées pour les catégories."
     default_dark_mode_color_scheme_id: "Le jeu de couleurs utilisé en mode sombre."
     dark_mode_none: "Aucune"
-    max_image_size_kb: "La taille maximale des images envoyées en Ko. La valeur doit aussi être configurée dans Nginx (client_max_body_size), Apache ou le proxy. Les images dont la taille est supérieure à celle indiquée et inférieure à client_max_body_size seront redimensionnées à l'envoi."
-    max_attachment_size_kb: "La taille maximale des fichiers envoyés en Ko. La valeur doit aussi être configurée dans Nginx (client_max_body_size), Apache ou le proxy."
-    authorized_extensions: "Une liste des extensions de fichier autorisées pour les envois sur le serveur (mettre « * » pour autoriser tous les types)"
-    authorized_extensions_for_staff: "Une liste des extensions de fichiers autorisées pour les envois effectués par les responsables en plus de la liste définie dans le paramètre « authorized_extensions ». (utilisez « * » pour activer tous les types de fichiers)"
-    theme_authorized_extensions: "Une liste des extensions de fichiers autorisées pour les envois de thème (mettre « * » pour autoriser tous les types de fichier)"
     max_similar_results: "Combien de sujets similaires sont affichés lors de la création d'un nouveau sujet. La comparaison se base sur le titre et le contenu."
     max_image_megapixels: "Nombre maximal autorisé de mégapixels pour une image. Les images avec un nombre plus élevé seront rejetées."
     title_prettify: "Corriger les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples « ! » et « ? », un « . » inutile à la fin, etc.)"
@@ -1897,7 +1895,7 @@ fr:
     always_show_trimmed_content: "Toujours montrer la partie réduite des e-mails entrants. ATTENTION : cela peut révéler les adresses e-mail."
     trim_incoming_emails: "Débarrasser les e-mails entrants des passages qui ne sont pas pertinents."
     private_email: "Ne pas inclure le contenu de messages ou de sujets dans le titre ou le corps de l'e-mail. REMARQUE : désactive également les e-mails de résumé."
-    email_total_attachment_size_limit_kb: "Taille totale maximale des fichiers joints aux e-mails expédiés, en Ko. Si ce paramètre est défini à la valeur 0, l'envoi de pièces jointes sera désactivé."
+    email_total_attachment_size_limit_kb: "Taille totale maximale des fichiers joints aux e-mails sortants. Définissez la valeur sur 0 pour désactiver l'envoi de pièces jointes."
     post_excerpts_in_emails: "Dans les e-mails de notification, toujours envoyer des extraits au lieu de messages complets."
     raw_email_max_length: "Combien de caractères doivent être stockés pour l'e-mail entrant."
     raw_rejected_email_max_length: "Combien de caractères doivent être stockés pour l'e-mail entrant rejeté."
@@ -2017,7 +2015,6 @@ fr:
     embed_topics_list: "Permettre l'intégration HTML des listes de sujets"
     embed_set_canonical_url: "Configurer l'URL canonique des sujets intégrés à l'URL du contenu intégré."
     embed_truncate: "Tronquer les messages embarqués."
-    embed_unlisted: "Les sujets importés seront invisibles jusqu'à ce qu'un utilisateur réponde."
     embed_support_markdown: "Permettre la mise en forme Markdown pour les messages intégrés."
     allowed_embed_selectors: "Une liste séparée par des virgules des éléments CSS autorisés à être intégrés."
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
@@ -2050,7 +2047,6 @@ fr:
     max_allowed_message_recipients: "Nombre maximal de destinataires autorisés dans un message."
     watched_words_regular_expressions: "Les mots surveillés sont des expressions régulières."
     enable_diffhtml_preview: "Fonctionnalité expérimentale utilisant diffHTML pour synchroniser la prévisualisation plutôt que de redéclencher un traitement d'affichage entier."
-    enable_fast_edit: "Permet de sélectionner une courte portion d'un message pour la modifier directement."
     old_post_notice_days: "Jours avant que la remarque de publication devienne obsolète"
     new_user_notice_tl: "Niveau de confiance minimal requis pour voir les nouveaux avis de publication d'utilisateur."
     returning_user_notice_tl: "Niveau de confiance minimum requis pour voir les avis postés par les utilisateurs de retour."
@@ -2157,7 +2153,6 @@ fr:
     experimental_new_new_view_groups: 'EXPÉRIMENTAL : activer une nouvelle liste de sujets qui combine les sujets non lus et les nouveaux sujets, et faire en sorte que le lien « Tout » de la barre latérale y renvoie l''utilisateur.'
     enable_custom_sidebar_sections: "EXPÉRIMENTAL : activer les sections personnalisées de la barre latérale"
     experimental_topics_filter: "EXPÉRIMENTAL : activer l'itinéraire de filtrage des sujets expérimentaux dans /filter"
-    experimental_search_menu_groups: "EXPÉRIMENTAL : activer le nouveau menu de recherche qui a été amélioré pour utiliser Glimmer"
     enable_experimental_lightbox: "EXPÉRIMENTAL : remplacer la visionneuse d'image par défaut par le design remanié."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     errors:

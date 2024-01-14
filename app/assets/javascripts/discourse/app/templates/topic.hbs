@@ -227,9 +227,12 @@
         <PluginOutlet
           @name="topic-navigation"
           @connectorTagName="div"
-          @outletArgs={{hash topic=this.model}}
+          @outletArgs={{hash
+            topic=this.model
+            renderTimeline=info.renderTimeline
+            topicProgressExpanded=info.topicProgressExpanded
+          }}
         />
-
         {{#if info.renderTimeline}}
           <TopicTimeline
             @info={{info}}
@@ -543,7 +546,7 @@
               @icon="reply"
               @action={{route-action "showLogin"}}
               @label="topic.reply.title"
-              class="btn-primary pull-right"
+              class="btn-primary"
             />
           </div>
         {{/if}}

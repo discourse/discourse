@@ -18,25 +18,6 @@ function sendSubscriptionToServer(subscription, sendConfirmation) {
   });
 }
 
-function resetIdle() {
-  if (
-    "controller" in navigator.serviceWorker &&
-    navigator.serviceWorker.controller != null
-  ) {
-    navigator.serviceWorker.controller.postMessage({ lastAction: Date.now() });
-  }
-}
-
-function setupActivityListeners(appEvents) {
-  window.addEventListener("focus", resetIdle);
-
-  if (document) {
-    document.addEventListener("scroll", resetIdle);
-  }
-
-  appEvents.on("page:changed", resetIdle);
-}
-
 export function isPushNotificationsSupported() {
   let caps = helperContext().capabilities;
   if (
@@ -66,7 +47,7 @@ export function isPushNotificationsEnabled(user) {
   );
 }
 
-export function register(user, router, appEvents) {
+export function register(user, router) {
   if (!isPushNotificationsSupported()) {
     return;
   }
@@ -83,7 +64,6 @@ export function register(user, router, appEvents) {
           // Resync localStorage
           keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
         }
-        setupActivityListeners(appEvents);
       })
       .catch((e) => {
         // eslint-disable-next-line no-console

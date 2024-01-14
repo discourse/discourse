@@ -3303,6 +3303,7 @@ bg:
         regular: "редовен"
         leader: "лидер"
     sidebar:
+      title: "Странична лента"
       unread_count:
         one: "%{count} непрочетен"
         other: "%{count} непрочетени"
@@ -3606,6 +3607,10 @@ bg:
           body: "Тяло"
           revert: "Върни промените"
           revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"
+        component:
+          all_filter: "Всички"
+          enabled_filter: "Да е включен"
+          disabled_filter: "Деактивирани"
         theme:
           theme: "Тема"
           customize_desc: "Персонализация:"
@@ -3636,6 +3641,8 @@ bg:
             text: "ембеднато CSS"
           body_tag:
             text: "Тяло"
+          all_filter: "Всички"
+          active_filter: "Активни"
         colors:
           title: "Цветове"
           copy_name_prefix: "Копие на"
@@ -4180,6 +4187,8 @@ bg:
           modal_description: "Искате ли да приложите тази промяна исторически? Това ще промени предпочитанията за %{count} съществуващи потребители."
           modal_yes: "Да"
           modal_no: "Не, промяната се прилага само занапред"
+        file_types_list:
+          add_image_types: "Изображения"
       badges:
         title: Значки
         new_badge: Нова значка

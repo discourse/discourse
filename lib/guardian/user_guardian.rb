@@ -188,10 +188,8 @@ module UserGuardian
   end
 
   def can_upload_user_card_background?(user)
-    (
-      is_me?(user) &&
-        user.has_trust_level?(SiteSetting.min_trust_level_to_allow_user_card_background.to_i)
-    ) || is_staff?
+    (is_me?(user) && user.in_any_groups?(SiteSetting.user_card_background_allowed_groups_map)) ||
+      is_staff?
   end
 
   def can_upload_external?

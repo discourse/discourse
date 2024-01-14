@@ -234,6 +234,11 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[users#create groups#index],
           },
         },
+        logs: {
+          messages: {
+            actions: [Logster::Web],
+          },
+        },
       }
 
       parse_resources!(mappings)
@@ -290,6 +295,11 @@ class ApiKeyScope < ActiveRecord::Base
 
             if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
               urls << "#{engine_mount_path}#{path} (#{route.verb})"
+            end
+
+            if actions.include?(Logster::Web)
+              urls << "/logs/messages.json (POST)"
+              urls << "/logs/show/:id.json (GET)"
             end
           end
         end

@@ -174,6 +174,7 @@ ro:
       url: "Copiază și distribuie URL"
     word_connector:
       comma: ", "
+      last_item: "și"
     action_codes:
       public_topic: "A făcut acest subiect public %{when}"
       open_topic: "A convertit aceasta într-un subiect %{when}"
@@ -225,6 +226,10 @@ ro:
       only_admins: "(acest mesaj este afișat doar pentru administratorii site-ului)"
     broken_decorator_alert: "Este posibil ca articolele să nu fie afișate corect deoarece unul dintre decoratorii de conținut al articolelor de pe site-ul tău a generat o eroare."
     broken_page_change_alert: "Un gestionar onPageChange a ridicat o eroare. Verifică instrumentele de dezvoltare ale navigatorului pentru mai multe informații."
+    critical_deprecation:
+      notice: "<b>[Notificare de administrare]</b> Una dintre temele sau modulele tale necesită actualizare pentru compatibilitate cu modificările viitoare de nucleu ale Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>mai multe informații</a>)."
+      theme_source: "Temă identificată: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Modul identificat: „%{name}”"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -1701,6 +1706,8 @@ ro:
         name: "GitHub"
       discord:
         name: "Discord"
+      passkey:
+        name: "Conectează-te cu o cheie de acces"
       no_login_methods:
         title: "Nicio metodă de conectare"
         description: "Nicio metodă de conectare nu este configurată. Administratorii pot vizita <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> pentru a reconfigura site-ul."
@@ -1741,6 +1748,9 @@ ro:
     date_time_picker:
       from: De la
       to: Către
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} este mai mare decât valoarea maximă permisă %{max_file_size}"
     emoji_picker:
       filter_placeholder: Caută emoji
       objects: Obiecte
@@ -1894,6 +1904,7 @@ ro:
         bookmark_reminder: "memento semn de carte"
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
+        admin_problems: "sfaturi noi în panoul de control al site-ului tău"
     upload_selector:
       uploading: "Se încarcă"
       select_file: "Alege fișier"
@@ -3017,6 +3028,7 @@ ro:
     fullscreen_table:
       view_table: "Vezi tabel"
     sidebar:
+      title: "Bară laterală"
       unread_count:
         one: "%{count} necitit"
         few: "%{count} necitite"
@@ -3148,6 +3160,7 @@ ro:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
+      back_to_forum: "Înapoi la forum"
       tags:
         remove_muted_tags_from_latest:
           always: "întotdeauna"
@@ -3251,6 +3264,7 @@ ro:
         none: "Nu sunt chei API principale active deocamdată."
         user: "Utilizator"
         title: "API"
+        keys: "Chei"
         created: Creat
         updated: Actualizat
         never_used: (niciodată)
@@ -3263,6 +3277,9 @@ ro:
         continue: Continuă
         scopes:
           action: țiune
+          descriptions:
+            logs:
+              messages: Listează mesajele din /logs sau obține un anumit mesaj din jurnal.
       web_hooks:
         title: "Webhooks"
         none: "Momentan nu există nici un webhook"
@@ -3418,6 +3435,10 @@ ro:
           body: "Body"
           revert: "Revocă schimbările"
           revert_confirm: "Ești sigur că vrei să revoci schimbările?"
+        component:
+          all_filter: "Toate"
+          enabled_filter: "Activat"
+          disabled_filter: "Dezactivat"
         theme:
           theme: "Temă"
           customize_desc: "Personalizează:"
@@ -3435,6 +3456,7 @@ ro:
           preview: "Previzualizează"
           is_default: "Tema este activată implicit"
           user_selectable: "Tema poate fi aleasă de către utilizatori"
+          edit_color_scheme: "Editează paleta de culori"
           color_scheme_select: "Alege culorile folosite de către temă"
           custom_sections: "Secțiuni personalizate:"
           theme_components: "Componentele temei"
@@ -3470,6 +3492,9 @@ ro:
             text: "CSS încorporat"
           body_tag:
             text: "Corp"
+          all_filter: "Toate"
+          active_filter: "Activi"
+          inactive_filter: "Inactivă"
         colors:
           title: "Culori"
           copy_name_prefix: "Copie a"
@@ -3525,6 +3550,7 @@ ro:
         title: "Email"
         settings: "Opțiuni"
         templates: "Șabloane"
+        templates_title: "Șabloane de email"
         preview_digest: "Rezumat previzualizare"
         error: "<b>EROARE</b> - %{server_error}"
         test_error: "A apărut o problemă la trimiterea email-ului. Te rugăm verifică setările mailului, Verifică dacă gazda nu blochează conexiunile de email și încearcă din nou."
@@ -3579,6 +3605,9 @@ ro:
             user_placeholder: "nume utilizator"
             address_placeholder: "nume@exemplu.com"
             reply_key_placeholder: "cheie de răspuns"
+          email_addresses:
+            see_more: "[Vezi mai multe...]"
+          post_id: "(ID articol: %{post_id})"
       moderation_history:
         no_results: "Niciun istoric de moderare nu e disponibil."
         actions:
@@ -4029,6 +4058,13 @@ ro:
           navigation: "Navigare"
         default_categories:
           modal_yes: "Da"
+        file_types_list:
+          add_image_types: "Imagini"
+          add_video_types: "Videoclipuri"
+          add_audio_types: "Audio"
+          add_document_types: "Documente"
+          add_types_title: "Permite extensiile %{types}"
+          add_types_toast: "Tipurile de fișier %{types} au fost adăugate"
       badges:
         title: Ecusoane
         new_badge: Ecuson nou

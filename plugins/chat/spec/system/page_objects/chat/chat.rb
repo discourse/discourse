@@ -93,10 +93,10 @@ module PageObjects
       end
 
       def minimize_full_page
-        find(".open-drawer-btn").click
+        find(".c-navbar__open-drawer-button").click
       end
 
-      NEW_CHANNEL_BUTTON_SELECTOR = ".new-channel-btn"
+      NEW_CHANNEL_BUTTON_SELECTOR = ".c-navbar__new-channel-button"
 
       def new_channel_button
         find(NEW_CHANNEL_BUTTON_SELECTOR)

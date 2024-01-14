@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 sv:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chatt
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Alltid"
           never: "Aldrig"
@@ -25,6 +28,7 @@ sv:
             chat:
               create_message: "Skapa ett chattmeddelande i en angiven kanal."
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: raderat
       dates:
         time_tiny: "h:mm"

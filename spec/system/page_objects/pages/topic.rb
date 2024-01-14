@@ -86,6 +86,8 @@ module PageObjects
           post_by_number(post).find(".post-controls .reply").click
         when :flag
           post_by_number(post).find(".post-controls .create-flag").click
+        when :copy_link
+          post_by_number(post).find(".post-controls .post-action-menu__copy-link").click
         end
       end
 
@@ -169,6 +171,14 @@ module PageObjects
 
       def fast_edit_input
         @fast_edit_component.fast_edit_input
+      end
+
+      def copy_quote_button_selector
+        ".quote-button .copy-quote"
+      end
+
+      def copy_quote_button
+        find(copy_quote_button_selector)
       end
 
       def click_mention(post, mention)

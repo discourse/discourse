@@ -148,6 +148,47 @@ RSpec.shared_examples "backup store" do
       end
     end
 
+    include ActiveSupport::Testing::TimeHelpers
+    describe "#delete_prior_to_n_days" do
+      it "does nothing if the number of days blank or <1" do
+        SiteSetting.remove_older_backups = ""
+
+        store.delete_prior_to_n_days
+        expect(store.files).to eq([backup1, backup2, backup3])
+      end
+
+      it "removes the two backups that are older than 7 days" do
+        travel_to Time.new(2018, 9, 19, 0, 0, 00)
+        SiteSetting.remove_older_backups = "7"
+
+        # 7 days before 9/19 is 9/12. that's earlier than date
+        # of backup1 (9/13, last_modified= "2018-09-13T15:10:00Z").
+        # Hence backup1 should be retained because it's within the last 7 days.
+        # and backup2 & backup3, which are older, should be deleted
+
+        store.delete_prior_to_n_days
+        expect(store.files).to eq([backup1])
+      end
+
+      it "runs if SiteSetting.automatic_backups_enabled? is true" do
+        stub_request(
+          :get,
+          "https://s3-backup-bucket.s3.amazonaws.com/?list-type=2&prefix=default/",
+        ).to_return(status: 200, body: "", headers: {})
+        stub_request(:head, "https://s3-backup-bucket.s3.amazonaws.com/").to_return(
+          status: 200,
+          body: "",
+          headers: {
+          },
+        )
+
+        SiteSetting.automatic_backups_enabled = true
+        scheduleBackup = Jobs::ScheduleBackup.new
+        scheduleBackup.expects(:delete_prior_to_n_days)
+        scheduleBackup.perform
+      end
+    end
+
     describe "#file" do
       it "returns information about the file when the file exists" do
         expect(store.file(backup1.filename)).to eq(backup1)

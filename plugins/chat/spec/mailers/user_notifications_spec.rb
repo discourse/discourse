@@ -257,7 +257,7 @@ describe UserNotifications do
               :chat_mention,
               user: user,
               chat_message: chat_message,
-              notification: notification,
+              notifications: [notification],
             )
           end
 
@@ -310,7 +310,7 @@ describe UserNotifications do
               :chat_mention,
               user: user,
               chat_message: another_chat_message,
-              notification: notification,
+              notifications: [notification],
             )
             another_chat_channel.update!(last_message: another_chat_message)
 
@@ -350,7 +350,7 @@ describe UserNotifications do
                 :chat_mention,
                 user: user,
                 chat_message: another_chat_message,
-                notification: notification,
+                notifications: [notification],
               )
               another_chat_channel.update!(last_message: another_chat_message)
             end
@@ -379,7 +379,7 @@ describe UserNotifications do
               :chat_mention,
               user: user,
               chat_message: chat_message,
-              notification: notification,
+              notifications: [notification],
             )
           end
 
@@ -406,7 +406,7 @@ describe UserNotifications do
             :chat_mention,
             user: user,
             chat_message: chat_message,
-            notification: notification,
+            notifications: [notification],
           )
         end
 
@@ -513,7 +513,7 @@ describe UserNotifications do
               :chat_mention,
               user: user,
               chat_message: new_message,
-              notification: notification,
+              notifications: [notification],
             )
 
             email = described_class.chat_summary(user, {})
@@ -637,12 +637,28 @@ describe UserNotifications do
             expect(user_avatar.attribute("alt").value).to eq(sender.username)
           end
 
+          context "with subfolder" do
+            before { set_subfolder "/community" }
+
+            it "includes correct view summary link in template" do
+              email = described_class.chat_summary(user, {})
+              expect(email.html_part.body.to_s).to include(
+                "<a class=\"more-messages-link\" href=\"#{Discourse.base_url}/chat",
+              )
+            end
+          end
+
           context "when there are more than two mentions" do
             it "includes a view more link " do
               2.times do
                 msg = Fabricate(:chat_message, user: sender, chat_channel: channel)
                 notification = Fabricate(:notification)
-                Fabricate(:chat_mention, user: user, chat_message: msg, notification: notification)
+                Fabricate(
+                  :chat_mention,
+                  user: user,
+                  chat_message: msg,
+                  notifications: [notification],
+                )
               end
 
               email = described_class.chat_summary(user, {})
@@ -668,7 +684,7 @@ describe UserNotifications do
                     :chat_mention,
                     user: user,
                     chat_message: msg,
-                    notification: notification,
+                    notifications: [notification],
                   )
                 end
 
@@ -695,7 +711,7 @@ describe UserNotifications do
               :chat_mention,
               user: user,
               chat_message: new_message,
-              notification: notification,
+              notifications: [notification],
             )
 
             email = described_class.chat_summary(user, {})

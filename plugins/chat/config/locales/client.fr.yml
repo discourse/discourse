@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 fr:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Discussion
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Toujours"
           never: "Jamais"
@@ -25,6 +28,7 @@ fr:
             chat:
               create_message: "Créez un message instantané dans un canal spécifié."
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: supprimé
       dates:
         time_tiny: "h:mm"
@@ -108,7 +112,7 @@ fr:
         dm_and_mentions: "Messages directs et mentions"
         never: "Jamais"
       separate_sidebar_mode:
-        title: "Afficher des modes de barre latérale distincts pour le forum et le clavardag"
+        title: "Afficher des modes de barre latérale distincts pour le forum et la discussion"
       enable: "Activer la discussion"
       flag: "Drapeau"
       emoji: "Insérer un émoji"

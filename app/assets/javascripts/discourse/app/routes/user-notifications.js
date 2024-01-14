@@ -2,6 +2,13 @@ import ViewingActionType from "discourse/mixins/viewing-action-type";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
+const DEFAULT_LIMIT = 60;
+let limit = DEFAULT_LIMIT;
+
+export function setNotificationsLimit(newLimit) {
+  limit = newLimit;
+}
+
 export default DiscourseRoute.extend(ViewingActionType, {
   controllerName: "user-notifications",
   queryParams: { filter: { refreshModel: true } },
@@ -16,6 +23,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
       return this.store.find("notification", {
         username,
         filter: params.filter,
+        limit,
       });
     }
   },

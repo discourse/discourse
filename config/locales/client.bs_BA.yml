@@ -3402,6 +3402,10 @@ bs_BA:
           body: "Tijelo"
           revert: "Vrati promjene"
           revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
+        component:
+          all_filter: "All"
+          enabled_filter: "Omogućen"
+          disabled_filter: "Neomogućen"
         theme:
           theme: "Izgled"
           component: "Komponenta"
@@ -3525,6 +3529,9 @@ bs_BA:
           yaml:
             text: "YAML"
             title: "Definirajte postavke teme u YAML formatu"
+          all_filter: "All"
+          active_filter: "Active"
+          inactive_filter: "Neaktivan"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"
@@ -4168,6 +4175,8 @@ bs_BA:
           invalid_input: "Polja za unos ne mogu biti prazna ili sadrže znak vertikalne trake."
         default_categories:
           modal_yes: "Da"
+        file_types_list:
+          add_image_types: "Images"
       badges:
         title: Bedž
         new_badge: Novi Bedž

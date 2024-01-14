@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { cancel, next } from "@ember/runloop";
 import Service, { inject as service } from "@ember/service";
@@ -412,6 +412,15 @@ export default class Chat extends Service {
   addToolbarButton() {
     deprecated(
       "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`"
+    );
+  }
+
+  @action
+  toggleDrawer() {
+    this.chatStateManager.didToggleDrawer();
+    this.appEvents.trigger(
+      "chat:toggle-expand",
+      this.chatStateManager.isDrawerExpanded
     );
   }
 }

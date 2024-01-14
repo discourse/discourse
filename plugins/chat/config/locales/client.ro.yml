@@ -16,6 +16,7 @@ ro:
           actions:
             chat_auto_remove_membership: "Membrii sunt eliminați automat din canale"
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: șters
       create: "Creează"
       cancel: "Anulare"
@@ -82,6 +83,7 @@ ro:
         yesterday: Ieri
       members_view:
         add_member: Adaugă membru
+        back_to_settings: "Înapoi la setări"
       about_view:
         title: Titlu
         name: Nume

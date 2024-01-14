@@ -146,7 +146,7 @@ RSpec.describe WebHook do
   end
 
   describe "enqueues hooks" do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:admin) { Fabricate(:admin) }
     let(:topic) { Fabricate(:topic, user: user) }
     let(:post) { Fabricate(:post, topic: topic, user: user) }
@@ -689,7 +689,15 @@ RSpec.describe WebHook do
 
         DiscourseEvent.trigger(:like_created, like)
 
-        assert_hook_was_queued_with(post, user, group_ids: [group.id])
+        assert_hook_was_queued_with(
+          post,
+          user,
+          group_ids: [
+            Group::AUTO_GROUPS[:trust_level_0],
+            Group::AUTO_GROUPS[:trust_level_1],
+            group.id,
+          ],
+        )
       end
 
       it "should pass the category id to the emit webhook job" do

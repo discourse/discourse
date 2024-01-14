@@ -18,6 +18,7 @@ import {
 } from "discourse/components/reviewable-item";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
 import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/components/search-menu/results/assistant";
+import { addItemSelectCallback as addSearchMenuAssistantSelectCallback } from "discourse/components/search-menu/results/assistant-item";
 import {
   addQuickSearchRandomTip,
   removeDefaultQuickSearchRandomTips,
@@ -27,10 +28,12 @@ import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTIO
 import { forceDropdownForMenuPanels } from "discourse/components/site-header";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
+import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
+import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import {
   addExtraIconRenderer,
@@ -38,6 +41,7 @@ import {
 } from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { addAdminSidebarSectionLink } from "discourse/instance-initializers/admin-sidebar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
@@ -88,6 +92,7 @@ import {
   addSaveableUserOptionField,
 } from "discourse/models/user";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
+import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import {
   addToHeaderIcons,
@@ -141,7 +146,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.18.0";
+export const PLUGIN_API_VERSION = "1.24.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -591,7 +596,33 @@ class PluginApi {
    *     position: 'first'  // can be `first`, `last` or `second-last-hidden`
    *   };
    * });
+   *
    * ```
+   *
+   * action: may be a string or a function. If it is a string, a wiget action
+   * will be triggered. If it is function, the function will be called.
+   *
+   * function will recieve a single argument:
+   *  {
+   *    post:
+   *    showFeedback:
+   *  }
+   *
+   *  showFeedback can be called to issue a visual feedback on button press.
+   *  It gets a single argument with a localization key.
+   *
+   *  Example:
+   *
+   *  api.addPostMenuButton('coffee', () => {
+   *    return {
+   *      action: ({ post, showFeedback }) => {
+   *        drinkCoffee(post);
+   *        showFeedback('discourse_plugin.coffee.drink');
+   *      },
+   *      icon: 'coffee',
+   *      className: 'hot-coffee',
+   *    }
+   *  }
    **/
   addPostMenuButton(name, callback) {
     apiExtraButtons[name] = callback;
@@ -817,6 +848,21 @@ class PluginApi {
    */
   registerCustomPostMessageCallback(type, callback) {
     registerCustomPostMessageCallback1(type, callback);
+  }
+
+  /**
+   * Registers a callback that will be evaluated when infinite scrolling would cause
+   * more notifications to be loaded. This can be used to prevent loading more unless
+   * a specific condition is met.
+   *
+   * Example:
+   *
+   * api.addBeforeLoadMoreNotificationsCallback((controller) => {
+   *   return controller.allowLoadMore;
+   * });
+   */
+  addBeforeLoadMoreNotificationsCallback(fn) {
+    addBeforeLoadMoreNotificationsCallback(fn);
   }
 
   /**
@@ -1641,6 +1687,17 @@ class PluginApi {
   }
 
   /**
+   * Allows a different limit to be set for fetching recent notifications for the user menu
+   *
+   * Example setting limit to 5:
+   * api.setUserMenuNotificationsLimit(5);
+   *
+   **/
+  setUserMenuNotificationsLimit(limit) {
+    setUserMenuNotificationsLimit(limit);
+  }
+
+  /**
    * Allows adding icons to the category-link html
    *
    * ```
@@ -1774,6 +1831,18 @@ class PluginApi {
   }
 
   /**
+   * Change the number of notifications that are loaded at /my/notifications
+   *
+   * ```
+   * api.setNotificationsLimit(20)
+   * ```
+   *
+   **/
+  setNotificationsLimit(limit) {
+    setNotificationsLimit(limit);
+  }
+
+  /**
    * Add a callback to modify search results before displaying them.
    *
    * ```
@@ -1799,6 +1868,26 @@ class PluginApi {
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
     addGlimmerSearchSuggestion(value);
+  }
+
+  /**
+   * Add a callback that will be evaluated when search menu assistant-items are clicked. Function
+   * takes an object as it's only argument. This object includes the updated term, searchTermChanged function,
+   * and the usage. If any callbacks return false, the core logic will be halted
+   *
+   * ```
+   * api.addSearchMenuAssistantSelectCallback((args) => {
+   *   if (args.usage !== "recent-search") {
+   *     return true;
+   *   }
+   *   args.searchTermChanged(args.updatedTerm)
+   *   return false;
+   * })
+   * ```
+   *
+   */
+  addSearchMenuAssistantSelectCallback(fn) {
+    addSearchMenuAssistantSelectCallback(fn);
   }
 
   /**
@@ -2212,6 +2301,35 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
+   * Support for adding links to specific admin sidebar sections.
+   *
+   * This is intended to replace the admin-menu plugin outlet from
+   * the old admin horizontal nav.
+   *
+   * ```
+   * api.addAdminSidebarSectionLink("root", {
+   *   name: "unique_link_name",
+   *   label: "admin.some.i18n.label.key",
+   *   route: "(optional) emberRouteId",
+   *   href: "(optional) can be used instead of the route",
+   * }
+   * ```
+
+   * @param {String} sectionName - The name of the admin sidebar section to add the link to.
+   * @param {Object} link - A link object representing a section link for the sidebar.
+   * @param {string} link.name - The name of the link. Needs to be dasherized and lowercase.
+   * @param {string} link.title - The title attribute for the link.
+   * @param {string} link.text - The text to display for the link.
+   * @param {string} [link.route] - The Ember route name to generate the href attribute for the link.
+   * @param {string} [link.href] - The href attribute for the link.
+   * @param {string} [link.icon] - The FontAwesome icon to display for the link.
+   */
+  addAdminSidebarSectionLink(sectionName, link) {
+    addAdminSidebarSectionLink(sectionName, link);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
    * Support for setting a Sidebar panel.
    */
   setSidebarPanel(name) {
@@ -2560,6 +2678,24 @@ class PluginApi {
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
+  }
+
+  /**
+   * Include the passed user field property in the Admin User Field save request.
+   * This is useful for plugins that are adding additional columns to the user field model and want
+   * to save the new property values alongside the default user field properties (all under the same save call)
+   *
+   *
+   * ```
+   * api.includeUserFieldPropertyOnSave("property_one");
+   * api.includeUserFieldPropertyOnSave("property_two");
+   * ```
+   *
+   */
+  includeUserFieldPropertyOnSave(userFieldProperty) {
+    this.container
+      .lookup("service:admin-custom-user-fields")
+      .addProperty(userFieldProperty);
   }
 }
 

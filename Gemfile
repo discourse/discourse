@@ -6,13 +6,13 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer"
-gem "actionpack"
-gem "actionview"
-gem "activemodel"
-gem "activerecord"
-gem "activesupport"
-gem "railties"
+gem "actionmailer", "< 7.1"
+gem "actionpack", "< 7.1"
+gem "actionview", "< 7.1"
+gem "activemodel", "< 7.1"
+gem "activerecord", "< 7.1"
+gem "activesupport", "< 7.1"
+gem "railties", "< 7.1"
 gem "sprockets-rails"
 
 gem "json"
@@ -196,7 +196,9 @@ gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
 gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
+
 gem "rbtrace", require: false, platform: :mri
+
 gem "gc_tracer", require: false, platform: :mri
 
 # required for feed importing and embedding

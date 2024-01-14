@@ -1,9 +1,12 @@
 en:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Always"
           fullscreen: "When chat is in fullscreen"
@@ -34,6 +37,7 @@ en:
     chat:
       text_copied: Text copied to clipboard
       link_copied: Link copied to clipboard
+      back_to_forum: "Forum"
       deleted_chat_username: deleted
       dates:
         time_tiny: "h:mm"
@@ -312,6 +316,7 @@ en:
       members_view:
         filter_placeholder: Find members
         add_member: Add Member
+        back_to_settings: "Back to settings"
 
       about_view:
         associated_topic: Linked topic

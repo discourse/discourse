@@ -875,6 +875,7 @@ be:
         custom: "Апавяшчэнне ад% {імя карыстальніка} на {%} SITE_TITLE"
       titles:
         watching_first_post: "новая тэма"
+        admin_problems: "новыя рэкамендацыі на вашым сайце прыборнай панэлі"
     upload_selector:
       uploading: "загрузка"
       select_file: "выбраць файл"
@@ -1613,6 +1614,9 @@ be:
           body: "цела"
           revert: "вярнуць змены"
           revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
+        component:
+          all_filter: "Усё"
+          disabled_filter: "Адключана"
         theme:
           theme: "тэма"
           customize_desc: "Кастамізаваць:"
@@ -1638,6 +1642,8 @@ be:
             text: "Header"
           body_tag:
             text: "цела"
+          all_filter: "Усё"
+          active_filter: "актыўныя"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"
@@ -2029,6 +2035,8 @@ be:
           navigation: "рух"
         default_categories:
           modal_yes: "ды"
+        file_types_list:
+          add_image_types: "Выява"
       badges:
         title: значкі
         new_badge: новы значок

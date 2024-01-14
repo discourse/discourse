@@ -215,7 +215,7 @@ acceptance("Theme", function (needs) {
   test("can continue installation", async function (assert) {
     await visit("/admin/customize/themes");
 
-    await click(".themes-list-container .themes-list-item");
+    await click(".themes-list-container__item .info");
     assert.ok(
       query(".control-unit .status-message").innerText.includes(
         I18n.t("admin.customize.theme.last_attempt")

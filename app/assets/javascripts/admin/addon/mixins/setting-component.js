@@ -33,6 +33,8 @@ const CUSTOM_TYPES = [
   "simple_list",
   "emoji_list",
   "named_list",
+  "file_size_restriction",
+  "file_types_list",
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
@@ -227,6 +229,11 @@ export default Mixin.create({
         this.set("validationMessage", I18n.t("generic_error"));
       }
     }
+  },
+
+  @action
+  changeValueCallback(value) {
+    this.set("buffered.value", value);
   },
 
   @action

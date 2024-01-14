@@ -202,6 +202,7 @@ uk:
       url: "Скопіювати та поширити посилання"
     word_connector:
       comma: ", "
+      last_item: "та"
     action_codes:
       public_topic: "Робить цю тему публічною %{when}"
       open_topic: "Перетворив це на тему %{when}"
@@ -254,6 +255,10 @@ uk:
     broken_decorator_alert: "Повідомлення можуть показуватись неправильно, оскільки один з декораторів вмісту дописів на вашому сайті викликав помилку."
     broken_page_change_alert: "Обробник onPageChange викликав помилку. Зверніться до інструментів розробника браузера для отримання додаткової інформації."
     broken_plugin_alert: "Викликано плагіном '%{name}'"
+    critical_deprecation:
+      notice: "<b>[Повідомлення адміністратора]</b> Одна з ваших тем або плагінів потребує оновлення для сумісності з майбутніми змінами ядра Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>більше інформації</a>)."
+      theme_source: "Ідентифікована тема: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Ідентифікований плагін: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Азія (Токіо)"
@@ -1130,6 +1135,7 @@ uk:
       said: "%{username}:"
       profile: "Профіль"
       profile_possessive: "Профіль користувача %{username}"
+      account_possessive: "аккаунт"
       mute: "Приглушити"
       edit: "Редагувати налаштування"
       download_archive:
@@ -2238,7 +2244,7 @@ uk:
         title: "Увійти через Discord"
         sr_title: "Увійти через Discord"
       passkey:
-        name: "Увійти за допомогою ключа доступу"
+        name: "Увійдіть за допомогою пароля"
       second_factor_toggle:
         totp: "Натомість використовуйте застосунок автентифікації"
         backup_code: "Замість цього використовуйте резервний код"
@@ -2320,6 +2326,9 @@ uk:
     date_time_picker:
       from: Від
       to: До
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} перевищує максимально допустимий %{max_file_size}"
     emoji_picker:
       filter_placeholder: Шукати emoji
       smileys_&_emotion: Смайли та емотикони
@@ -2673,6 +2682,7 @@ uk:
         reaction: "нова реакція"
         votes_released: "Голосування опубліковано"
         new_features: "з’явилися нові функції Discourse!"
+        admin_problems: "нова порада на інформаційній панелі вашого сайту"
     upload_selector:
       uploading: "Надсилання"
       processing: "Обробка надсилання"
@@ -3474,6 +3484,8 @@ uk:
       quote_reply_shortcut: "Цитата (або натисніть q)"
       quote_edit: "Редагувати"
       quote_edit_shortcut: "Редагувати (або натиснути e)"
+      quote_copy: "Копіювати цитату"
+      quote_copied_to_clibboard: "Цитата скопійована в буфер обміну"
       quote_share: "Поширити"
       edit_reason: "Причина: "
       post_number: "допис %{number}"
@@ -4524,8 +4536,7 @@ uk:
     second_factor_auth:
       redirect_after_success: "Аутентифікація другого фактора успішна. Перенаправлення на попередню сторінку…"
     sidebar:
-      show_sidebar: "Показати бічну панель"
-      hide_sidebar: "Приховати бічну панель"
+      title: "Бічна панель"
       unread_count:
         one: "%{count} непрочитана"
         few: "%{count} непрочитаних"
@@ -4777,6 +4788,7 @@ uk:
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
+      back_to_forum: "Повернутися до форуму"
       tags:
         remove_muted_tags_from_latest:
           always: "завжди"
@@ -4967,6 +4979,7 @@ uk:
         user: "Користувач"
         title: "API"
         key: "Ключ"
+        keys: "Ключі"
         created: Створено
         updated: Оновлено
         last_used: Використано
@@ -5071,6 +5084,8 @@ uk:
               commenting: Необхіднj для функцій коментування плагіна WP Discourse.
               discourse_connect: Необхіднj для функцій DiscourseConnect плагіна WP Discourse.
               utilities: Необхідно, якщо ви використовуєте утиліти плагіна WP Discourse.
+            logs:
+              messages: Список повідомлень з /logs або отримання певного повідомлення журналу.
       web_hooks:
         title: "Вебгуки"
         none: "Зараз вебгуків немає."
@@ -5321,11 +5336,19 @@ uk:
           body: "Тіло"
           revert: "Повернути зміни"
           revert_confirm: "Чи впевнені ви, що хочете повернути ваші зміни?"
+        component:
+          all_filter: "Все"
+          used_filter: "Використано"
+          unused_filter: "Невикористаний"
+          enabled_filter: "Включено"
+          disabled_filter: "Вимкнено"
+          updates_available_filter: "Доступні оновлення"
         theme:
+          filter_by: "Фільтрувати за"
           theme: "Тема"
           component: "Компонент"
           components: "Компоненти"
-          filter_placeholder: "текст для пошуку…"
+          search_placeholder: "введіть для пошуку…"
           theme_name: "Назва теми"
           component_name: "Назва компонента"
           themes_intro: "Виберіть існуючу тему, або встановіть нову, щоб почати роботу"
@@ -5362,6 +5385,7 @@ uk:
           color_scheme_user_selectable: "Схема кольорів може бути вибрана користувачами"
           auto_update: "Автоматичне оновлення при оновленні Discourse"
           color_scheme: "Колірна палітра"
+          edit_color_scheme: "Редагувати палітру кольорів"
           default_light_scheme: "Світла (за замовчуванням)"
           color_scheme_select: "Виберіть кольори для стилю"
           custom_sections: "Налаштування секцій:"
@@ -5500,6 +5524,10 @@ uk:
             title: "Визначити налаштування теми в форматі YAML"
           scss_color_variables_warning: 'Використання основних змінних кольорів SCSS в темах є застарілим. Замість цього використовуйте індивідуальні правила CSS. Див. <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">цей посібник</a> для отримання додаткової інформації.'
           scss_warning_inline: "Використання змінних основних кольорів SCSS у темах є застарілою."
+          all_filter: "Все"
+          active_filter: "Активні"
+          inactive_filter: "Неактивно"
+          updates_available_filter: "Доступні оновлення"
         colors:
           select_base:
             title: "Виберіть базову колірну палітру"
@@ -5578,6 +5606,7 @@ uk:
         title: "Листи"
         settings: "Налаштування"
         templates: "Шаблони"
+        templates_title: "Шаблони електронної пошти"
         preview_digest: "Стислий виклад новин"
         advanced_test:
           title: "Розширений Тест"
@@ -5647,6 +5676,9 @@ uk:
             type_placeholder: "дайджест, підписка"
             reply_key_placeholder: "Ключ відповіді"
             smtp_transaction_response_placeholder: "SMTP ID"
+          email_addresses:
+            see_more: "[Детальніше...]"
+          post_id: "(ID допису: %{post_id})"
       moderation_history:
         performed_by: "Виконано користувачем "
         no_results: "Історія модерації недоступна."
@@ -6393,6 +6425,13 @@ uk:
         json_schema:
           edit: Відкрити редактор
           modal_title: "Редагувати %{name}"
+        file_types_list:
+          add_image_types: "Зображення"
+          add_video_types: "Відео"
+          add_audio_types: "Audio"
+          add_document_types: "Документи"
+          add_types_title: "Дозволити розширення %{types}"
+          add_types_toast: "%{types} типи файлів додані"
       badges:
         title: Нагороди
         new_badge: Нова нагорода

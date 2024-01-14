@@ -36,6 +36,8 @@
   <%- if include_crawler_content? %>
     <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
       <meta itemprop='headline' content='<%= @topic_view.title %>'>
+      <link itemprop='url' href='<%= @topic_view.absolute_url %>'>
+      <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
       <% if @topic_view.topic.category.present? %>
         <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
       <% end %>
@@ -49,8 +51,16 @@
         <% end %>
       </div>
 
+      <% if @topic_view.posts&.first && !@topic_view.posts.first.is_first_post? %>
+        <span itemprop='author' itemscope itemtype="http://schema.org/Person">
+          <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
+          <link itemprop='url' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
+        </span>
+        <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
+      <% end %>
+
       <% @topic_view.posts.each do |post| %>
-        <% if (u = post.user) %>
+        <% if (u = post.user) && !post.hidden && post.cooked && !post.cooked.strip.empty? %>
           <div id='post_<%= post.post_number %>' <%= post.is_first_post? ? "" : "itemprop='comment' itemscope itemtype='http://schema.org/Comment'".html_safe %> class='topic-body crawler-post'>
             <div class='crawler-post-meta'>
               <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -66,14 +76,16 @@
                 <% end %>
               </span>
 
-              <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+              <% if post.is_first_post? %>
+                <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+              <% end %>
 
               <% if post.image_url %>
                 <link itemprop="image" href="<%= post.image_url %>">
               <% end %>
 
               <span class="crawler-post-infos">
-                  <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
+                  <time <%= post.is_first_post? ? "" : "itemprop='datePublished'".html_safe %> datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
                     <%= l post.created_at, format: :long %>
                   </time>
                 <% if post.version > 1 %>
@@ -84,7 +96,7 @@
               <span itemprop='position'><%= post.post_number %></span>
               </span>
             </div>
-            <div class='post' itemprop='<%= post.is_first_post? ? 'articleBody' : 'text'  %>'>
+            <div class='post' itemprop='text'>
               <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
             </div>
 
@@ -127,6 +139,7 @@
     </div>
   <% end %>
 
+  <%= build_plugin_html 'server:topic-show-after-posts-crawler' %>
   <% end %>
 
   <% content_for :head do %>

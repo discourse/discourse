@@ -43,23 +43,23 @@ RSpec.describe "Channel - Info - Members page", type: :system do
       xit "shows all members" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_selector(".chat-channel-members__list-item", count: 60)
+        expect(page).to have_selector(".c-channel-members__list-item", count: 60)
 
-        scroll_to(find(".chat-channel-members__list-item:nth-child(60)"))
+        scroll_to(find(".c-channel-members__list-item:nth-child(60)"))
 
-        expect(page).to have_selector(".chat-channel-members__list-item", count: 100)
+        expect(page).to have_selector(".c-channel-members__list-item", count: 100)
 
-        scroll_to(find(".chat-channel-members__list-item:nth-child(100)"))
+        scroll_to(find(".c-channel-members__list-item:nth-child(100)"))
 
-        expect(page).to have_selector(".chat-channel-members__list-item", count: 100)
+        expect(page).to have_selector(".c-channel-members__list-item", count: 100)
       end
 
       context "with filter" do
         it "filters members" do
           chat_page.visit_channel_members(channel_1)
-          find(".chat-channel-members__filter").fill_in(with: "cat")
+          find(".c-channel-members__filter").fill_in(with: "cat")
 
-          expect(page).to have_selector(".chat-channel-members__list-item", count: 1, text: "cat")
+          expect(page).to have_selector(".c-channel-members__list-item", count: 1, text: "cat")
         end
       end
     end
@@ -69,7 +69,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
     it "doesn’t allow to add members" do
       chat_page.visit_channel_members(channel_1)
 
-      expect(chat_page).to have_no_css(".chat-channel-members__list-item.-add-member")
+      expect(chat_page).to have_no_css(".c-channel-members__list-item.-add-member")
     end
   end
 
@@ -86,7 +86,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
     it "allows to add members" do
       new_user = Fabricate(:user)
       chat_page.visit_channel_members(channel_1)
-      chat_page.find(".chat-channel-members__list-item.-add-member").click
+      chat_page.find(".c-channel-members__list-item.-add-member").click
       chat_page.find(".chat-message-creator__members-input").fill_in(with: new_user.username)
       chat_page.find(".chat-message-creator__list-item").click
       chat_page.find(".add-to-channel").click
@@ -99,6 +99,16 @@ RSpec.describe "Channel - Info - Members page", type: :system do
           inviting_user: "@#{current_user.username}",
           count: 1,
         ),
+      )
+    end
+  end
+
+  context "when on mobile", mobile: true do
+    it "has a link to the settings" do
+      chat_page.visit_channel_members(channel_1)
+
+      expect(page).to have_css(
+        ".c-back-button[href='/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings']",
       )
     end
   end

@@ -10,6 +10,7 @@ require "url_helper"
 class FinalDestination
   class SSRFError < SocketError
   end
+
   class UrlEncodingError < ArgumentError
   end
 

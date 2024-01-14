@@ -318,7 +318,7 @@ RSpec.describe PostValidator do
   end
 
   describe "force_edit_last_validator" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:other_user) { Fabricate(:user) }
     fab!(:topic)
 

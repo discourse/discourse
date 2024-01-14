@@ -91,3 +91,5 @@ hr:
           description: "Opis"
           header: "Uzglavlje"
           hover_to_see: "Zadržite pokazivač miša da biste vidjeli savjet alata"
+        char_counter:
+          placeholder: "Unesite svoj tekst ovdje..."

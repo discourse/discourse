@@ -7,6 +7,7 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import {
   acceptance,
@@ -14,18 +15,11 @@ import {
   exists,
   query,
   queryAll,
-  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
 acceptance("Search - Glimmer - Anonymous", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
-  needs.hooks.beforeEach(() => {
-    updateCurrentUser({ is_anonymous: true });
-  });
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
@@ -438,9 +432,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 });
 
 acceptance("Search - Glimmer - Authenticated", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
+  needs.user();
   needs.settings({
     log_search_queries: true,
     allow_uncategorized_topics: true,
@@ -716,12 +708,32 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
       "shows second recent search"
     );
   });
+
+  test("initial options - overriding behavior with addSearchMenuAssistantSelectCallback", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+
+    withPluginApi("1.20.0", (api) => {
+      api.addSearchMenuAssistantSelectCallback((args) => {
+        if (args.usage === "recent-search") {
+          args.searchTermChanged("hijacked!");
+          return false;
+        }
+
+        return true;
+      });
+    });
+
+    await click(
+      ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
+    );
+
+    assert.strictEqual(query("#search-term").value, "hijacked!");
+  });
 });
 
 acceptance("Search - Glimmer - with tagging enabled", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
+  needs.user();
   needs.settings({ tagging_enabled: true });
   needs.pretender((server, helper) => {
     server.get("/tag/dev/notifications", () => {
@@ -889,10 +901,7 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
 });
 
 acceptance("Search - Glimmer - assistant", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
-
+  needs.user();
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
       if (request.queryParams["search_context[type]"] === "private_messages") {
@@ -1040,7 +1049,7 @@ acceptance("Search - Glimmer - assistant", function (needs) {
         users: [
           {
             username: "TeaMoe",
-            name: "TeaMoe",
+            name: "TeaMoe Full",
             avatar_template:
               "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
           },
@@ -1107,14 +1116,14 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "@");
-    const firstUser =
-      ".search-menu .results ul.search-menu-assistant .search-item-user";
-    const firstUsername = query(firstUser).innerText.trim();
+    const firstUser = query(
+      ".search-menu .results ul.search-menu-assistant .search-item-user"
+    );
+    const username = firstUser.querySelector(".username").innerText.trim();
+    assert.strictEqual(username, "TeaMoe");
 
-    assert.strictEqual(firstUsername, "TeaMoe");
-
-    await click(query(firstUser));
-    assert.strictEqual(query("#search-term").value, `@${firstUsername}`);
+    await click(firstUser);
+    assert.strictEqual(query("#search-term").value, `@${username}`);
   });
 
   test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {

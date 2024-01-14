@@ -123,6 +123,7 @@ class ApplicationController < ActionController::Base
 
   class RenderEmpty < StandardError
   end
+
   class PluginDisabled < StandardError
   end
 
@@ -445,6 +446,8 @@ class ApplicationController < ActionController::Base
       current_user.sync_notification_channel_position
       preload_current_user_data
     end
+
+    preload_additional_json
   end
 
   def set_mobile_view
@@ -668,6 +671,10 @@ class ApplicationController < ActionController::Base
 
     # This is used in the wizard so we can preload fonts using the FontMap JS API.
     store_preloaded("fontMap", MultiJson.dump(load_font_map)) if current_user.admin?
+  end
+
+  def preload_additional_json
+    # noop, should be defined by subcontrollers
   end
 
   def custom_html_json
@@ -992,9 +999,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cross_origin_opener_policy_header
-    if SiteSetting.cross_origin_opener_policy_header != "unsafe-none"
-      response.headers["Cross-Origin-Opener-Policy"] = SiteSetting.cross_origin_opener_policy_header
-    end
+    response.headers["Cross-Origin-Opener-Policy"] = SiteSetting.cross_origin_opener_policy_header
   end
 
   protected

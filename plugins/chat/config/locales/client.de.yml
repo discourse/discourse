@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 de:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Immer"
           fullscreen: "Wenn der Chat im Vollbildmodus ist"
@@ -39,6 +42,7 @@ de:
     chat:
       text_copied: Text in die Zwischenablage kopiert
       link_copied: Link in die Zwischenablage kopiert
+      back_to_forum: "Forum"
       deleted_chat_username: gelöscht
       dates:
         time_tiny: "h:mm"
@@ -308,6 +312,7 @@ de:
       members_view:
         filter_placeholder: Mitglieder finden
         add_member: Mitglied hinzufügen
+        back_to_settings: "Zurück zu den Einstellungen"
       about_view:
         associated_topic: Verknüpftes Thema
         associated_category: Verknüpfte Kategorie

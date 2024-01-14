@@ -5,10 +5,13 @@
 class PresenceChannel
   class NotFound < StandardError
   end
+
   class InvalidAccess < StandardError
   end
+
   class ConfigNotLoaded < StandardError
   end
+
   class InvalidConfig < StandardError
   end
 

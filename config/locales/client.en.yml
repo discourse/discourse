@@ -163,6 +163,7 @@ en:
 
     word_connector:
       comma: ", "
+      last_item: "and"
 
     action_codes:
       public_topic: "Made this topic public %{when}"
@@ -223,6 +224,11 @@ en:
     broken_page_change_alert: "An onPageChange handler raised an error. Check the browser developer tools for more information."
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
+
+    critical_deprecation:
+      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes (<a target='_blank' href='https://meta.discourse.org/t/287211'>more info</a>)."
+      theme_source: "Identified theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
+      plugin_source: "Identified plugin: '%{name}'"
 
     s3:
       regions:
@@ -1089,6 +1095,7 @@ en:
       said: "%{username}:"
       profile: "Profile"
       profile_possessive: "%{username}'s profile"
+      account_possessive: "'s account"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
@@ -2265,7 +2272,7 @@ en:
         title: "Log in with Discord"
         sr_title: "Log in with Discord"
       passkey:
-        name: "Login with a passkey"
+        name: "Log in with a passkey"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
@@ -2347,6 +2354,10 @@ en:
     date_time_picker:
       from: From
       to: To
+
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} is greater than the max allowed %{max_file_size}"
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -2676,6 +2687,7 @@ en:
         reaction: "new reaction"
         votes_released: "Vote was released"
         new_features: "new Discourse features have been released!"
+        admin_problems: "new advice on your site dashboard"
 
     upload_selector:
       uploading: "Uploading"
@@ -3444,6 +3456,8 @@ en:
       quote_reply_shortcut: "Quote (or press q)"
       quote_edit: "Edit"
       quote_edit_shortcut: "Edit (or press e)"
+      quote_copy: "Copy Quote"
+      quote_copied_to_clibboard: "Quote copied to clipboard"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
@@ -4469,8 +4483,7 @@ en:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
 
     sidebar:
-      show_sidebar: "Show sidebar"
-      hide_sidebar: "Hide sidebar"
+      title: "Sidebar"
       unread_count:
         one: "%{count} unread"
         other: "%{count} unread"
@@ -4718,6 +4731,7 @@ en:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
+      back_to_forum: "Back to Forum"
 
       tags:
         remove_muted_tags_from_latest:
@@ -4907,6 +4921,7 @@ en:
         user: "User"
         title: "API"
         key: "Key"
+        keys: "Keys"
         created: Created
         updated: Updated
         last_used: Last Used
@@ -5011,6 +5026,8 @@ en:
               commenting: Necessary for the WP Discourse plugin commenting features.
               discourse_connect: Necessary for the WP Discourse plugin DiscourseConnect features.
               utilities: Necessary if you use WP Discourse plugin Utilities.
+            logs:
+              messages: List messages from /logs or get a specific log message.
 
       web_hooks:
         title: "Webhooks"
@@ -5263,12 +5280,19 @@ en:
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
-
+        component:
+          all_filter: "All"
+          used_filter: "Used"
+          unused_filter: "Unused"
+          enabled_filter: "Enabled"
+          disabled_filter: "Disabled"
+          updates_available_filter: "Updates Available"
         theme:
+          filter_by: "Filter by"
           theme: "Theme"
           component: "Component"
           components: "Components"
-          filter_placeholder: "type to filter…"
+          search_placeholder: "type to search…"
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
@@ -5305,6 +5329,7 @@ en:
           color_scheme_user_selectable: "Color scheme can be selected by users"
           auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
+          edit_color_scheme: "Edit Color Palette"
           default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
@@ -5441,6 +5466,10 @@ en:
             title: "Define theme settings in YAML format"
           scss_color_variables_warning: 'Using core SCSS color variables in themes is deprecated. Please use CSS custom properties instead. See <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">this guide</a> for more details.'
           scss_warning_inline: "Using core SCSS color variables in themes is deprecated."
+          all_filter: "All"
+          active_filter: "Active"
+          inactive_filter: "Inactive"
+          updates_available_filter: "Updates Available"
         colors:
           select_base:
             title: "Select base color palette"
@@ -5525,6 +5554,7 @@ en:
         title: "Emails"
         settings: "Settings"
         templates: "Templates"
+        templates_title: "Email Templates"
         preview_digest: "Preview Summary"
         advanced_test:
           title: "Advanced Test"
@@ -5594,6 +5624,9 @@ en:
             type_placeholder: "digest, signup…"
             reply_key_placeholder: "reply key"
             smtp_transaction_response_placeholder: "SMTP ID"
+          email_addresses:
+            see_more: "[See more...]"
+          post_id: "(Post ID: %{post_id})"
 
       moderation_history:
         performed_by: "Performed By"
@@ -6363,6 +6396,13 @@ en:
         json_schema:
           edit: Launch Editor
           modal_title: "Edit %{name}"
+        file_types_list:
+          add_image_types: "Images"
+          add_video_types: "Videos"
+          add_audio_types: "Audio"
+          add_document_types: "Documents"
+          add_types_title: "Allow extensions %{types}"
+          add_types_toast: "%{types} file types added"
 
       badges:
         title: Badges

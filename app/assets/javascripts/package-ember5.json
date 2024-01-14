@@ -21,12 +21,10 @@
     "pretty-text",
     "select-kit",
     "theme-transpiler",
-    "truth-helpers",
-    "wizard"
+    "truth-helpers"
   ],
   "resolutions": {
-    "**/unset-value": "2.0.1",
-    "**/ember-source": "5.4.0"
+    "**/unset-value": "2.0.1"
   },
   "devDependencies": {
     "patch-package": "^8.0.0",

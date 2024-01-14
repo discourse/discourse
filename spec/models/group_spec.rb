@@ -74,6 +74,16 @@ RSpec.describe Group do
       posts = group.posts_for(Guardian.new)
       expect(posts).not_to include(p)
     end
+
+    it "filters results by datetime using the before parameter" do
+      p1 = Fabricate(:post)
+      p2 = Fabricate(:post, created_at: p1.created_at + 2.minute)
+      group.add(p1.user)
+
+      posts = group.posts_for(Guardian.new, before: p1.created_at + 1.minute)
+      expect(posts).to include(p1)
+      expect(posts).not_to include(p2)
+    end
   end
 
   describe "#builtin" do
@@ -239,6 +249,31 @@ RSpec.describe Group do
     it "doesn't update non-member's title" do
       user.update(title: group.title)
       expect { group.update(title: "Super") }.to_not change { user.reload.title }
+    end
+  end
+
+  describe ".auto_groups_between" do
+    it "returns the auto groups between lower and upper bounds" do
+      expect(
+        described_class.auto_groups_between(:trust_level_0, :trust_level_3),
+      ).to contain_exactly(10, 11, 12, 13)
+    end
+
+    it "excludes the undefined groups between staff and TL0" do
+      expect(described_class.auto_groups_between(:admins, :trust_level_0)).to contain_exactly(
+        1,
+        2,
+        3,
+        10,
+      )
+    end
+
+    it "returns an empty array when lower group is higher than upper group" do
+      expect(described_class.auto_groups_between(:trust_level_1, :trust_level_0)).to be_empty
+    end
+
+    it "returns an empty array when passing an unknown group" do
+      expect(described_class.auto_groups_between(:trust_level_0, :trust_level_1337)).to be_empty
     end
   end
 

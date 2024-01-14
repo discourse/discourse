@@ -88,7 +88,7 @@ RSpec.describe Category do
     fab!(:category) { Fabricate(:category_with_definition, reviewable_by_group: group) }
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "will add the group to the reviewable" do
       SiteSetting.enable_category_group_moderation = true
@@ -636,6 +636,7 @@ RSpec.describe Category do
 
     context "with regular topics" do
       before do
+        Group.refresh_automatic_groups!
         create_post(user: @category.user, category: @category.id)
         Category.update_stats
         @category.reload
@@ -674,6 +675,7 @@ RSpec.describe Category do
 
     context "with revised post" do
       before do
+        Group.refresh_automatic_groups!
         post = create_post(user: @category.user, category: @category.id)
 
         SiteSetting.editing_grace_period = 1.minute
@@ -694,7 +696,7 @@ RSpec.describe Category do
     context "for uncategorized category" do
       before do
         @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
-        create_post(user: Fabricate(:user), category: @uncategorized.id)
+        create_post(user: Fabricate(:user, refresh_auto_groups: true), category: @uncategorized.id)
         Category.update_stats
         @uncategorized.reload
       end
@@ -712,6 +714,7 @@ RSpec.describe Category do
     end
 
     context "when there are no topics left" do
+      before { Group.refresh_automatic_groups! }
       let!(:topic) { create_post(user: @category.user, category: @category.id).reload.topic }
 
       it "can update the topic count to zero" do

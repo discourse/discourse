@@ -60,6 +60,9 @@ ja:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} の #%{post_number}"
+  components:
+    enabled_filter: "有効"
+    disabled_filter: "無効"
   themes:
     bad_color_scheme: "テーマを更新できません。無効なカラーパレットです"
     other_error: "テーマの更新中に問題が発生しました"
@@ -1744,11 +1747,6 @@ ja:
     category_colors: "カテゴリに利用可能な 16 進数の色値のリスト"
     default_dark_mode_color_scheme_id: "ダークモードで使用される色スキーム。"
     dark_mode_none: "なし"
-    max_image_size_kb: "最大画像アップロードサイズ (kB)。これは、nginx (client_max_body_size) / apache またはプロキシでも構成されている必要があります。これより大きいか、client_max_body_size より小さい画像は、アップロード時にフィットするようにサイズ変更されます。"
-    max_attachment_size_kb: "添付可能なファイルの最大サイズ (kB)。nginx (client_max_body_size) / apache または proxy でも設定する必要があります。"
-    authorized_extensions: "アップロードできるファイルの拡張子のリスト (すべての拡張子を有効にするには '*' を使用してください)"
-    authorized_extensions_for_staff: "`authorized_extensions` サイト設定で定義されたリストに加えて、スタッフユーザーがアップロードできるファイル拡張子のリスト。(すべてのファイルタイプを有効にするには '*' を使用します)"
-    theme_authorized_extensions: "テーマのアップロードに使用できるファイルの拡張子のリスト (すべての拡張子を有効にするには '*' を使用します)"
     max_similar_results: "新規トピックを作成中に、エディターの上に表示する類似トピックの数。タイトルと本文に基づいて比較されます。"
     max_image_megapixels: "画像に許可されるメガピクセルの最大数。これより大きいメガピクセルの画像は拒否されます。"
     title_prettify: "一般的なタイトルのスペルミスやエラー (すべて大文字、先頭の小文字、複数の！や？の使用、文末の重複するピリオドなど) を防止します。"
@@ -1830,7 +1828,6 @@ ja:
     always_show_trimmed_content: "受信メールのトリミングされた部分を常に表示する。警告: メールアドレスが表示される可能性があります。"
     trim_incoming_emails: "受信メールの関連性のない部分をトリミングする。"
     private_email: "投稿またはトピックのコンテンツをメールの件名または本文に含めない。注意: ダイジェストメールも無効にします。"
-    email_total_attachment_size_limit_kb: "送信メールに添付されたファイルの最大合計サイズ (kB)。0 に設定すると、添付ファイルの送信が無効になります。"
     post_excerpts_in_emails: "通知メールで、常に投稿全文の代わりに抜粋を送信する"
     raw_email_max_length: "受信メールに格納される必要のある文字数。"
     raw_rejected_email_max_length: "拒否された受信メールに格納される必要のある文字数。"
@@ -1950,7 +1947,6 @@ ja:
     embed_topics_list: "トピックリストの HTML 埋め込みをサポートする"
     embed_set_canonical_url: "埋め込みトピックの正規 URL を埋め込みコンテンツの URL に設定する。"
     embed_truncate: "埋め込まれた投稿切り捨てます。"
-    embed_unlisted: "インポートされたトピックはユーザーが返信するまでリストされません。"
     embed_support_markdown: "埋め込まれた投稿の Markdown フォーマット設定をサポートする。"
     allowed_embed_selectors: "埋め込みに使用できる CSS 要素のカンマ区切りリスト。"
     allowed_href_schemes: "http と https のほかにリンクに使用できるスキーム。"
@@ -1983,7 +1979,6 @@ ja:
     max_allowed_message_recipients: "メッセージに許可される最大受信者数。"
     watched_words_regular_expressions: "ウォッチ語は正規表現です。"
     enable_diffhtml_preview: "完全な再レンダリングの代わりに diffHTML を使ってプレビューを同期する実験的機能"
-    enable_fast_edit: "投稿文の一部の選択範囲をインラインで編集できるようにします。"
     old_post_notice_days: "投稿の通知が古くなるまでの日数"
     new_user_notice_tl: "新しいユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_user_notice_tl: "リピートユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
@@ -2090,7 +2085,6 @@ ja:
     experimental_new_new_view_groups: '実験的: 未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクします。'
     enable_custom_sidebar_sections: "実験的: カスタムサイドバーセクションを有効にする"
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
-    experimental_search_menu_groups: "実験的: glimmer を使用するようにアップグレードされた新しい検索メニューを有効にします"
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     errors:

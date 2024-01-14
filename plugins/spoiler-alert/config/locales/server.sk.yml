@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 sk:
+  site_settings:
+    spoiler_enabled: 'Povoliť doplnok spojlera. Ak to zmeníte, musíte všetky príspevky zopakovať pomocou: „rake posts:rebake“.'
+  spoiler_alert:
+    excerpt_spoiler: "spojler"

@@ -238,6 +238,10 @@ class SiteSerializer < ApplicationSerializer
     object.categories.map { |c| c.to_h }
   end
 
+  def include_categories?
+    !SiteSetting.lazy_load_categories
+  end
+
   def markdown_additional_options
     Site.markdown_additional_options
   end

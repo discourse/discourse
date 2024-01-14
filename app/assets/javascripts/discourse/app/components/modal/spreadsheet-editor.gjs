@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -11,7 +10,6 @@ import DModalCancel from "discourse/components/d-modal-cancel";
 import TextField from "discourse/components/text-field";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import loadScript from "discourse/lib/load-script";
 import {
   arrayToTable,
   findTableRegex,
@@ -24,10 +22,15 @@ import DTooltip from "float-kit/components/d-tooltip";
 export default class SpreadsheetEditor extends Component {
   @service dialog;
   @tracked showEditReason = false;
-  @tracked loading = null;
+  @tracked loading = true;
   spreadsheet = null;
   defaultColWidth = 150;
   isEditingTable = !!this.args.model.tableTokens;
+
+  constructor() {
+    super(...arguments);
+    this.loadJspreadsheet();
+  }
 
   get modalAttributes() {
     if (this.isEditingTable) {
@@ -53,15 +56,11 @@ export default class SpreadsheetEditor extends Component {
   createSpreadsheet(spreadsheet) {
     this.spreadsheet = spreadsheet;
 
-    schedule("afterRender", () => {
-      this.loadLibraries().then(() => {
-        if (this.isEditingTable) {
-          this.buildPopulatedTable(this.args.model.tableTokens);
-        } else {
-          this.buildNewTable();
-        }
-      });
-    });
+    if (this.isEditingTable) {
+      this.buildPopulatedTable(this.args.model.tableTokens);
+    } else {
+      this.buildNewTable();
+    }
   }
 
   @action
@@ -116,13 +115,15 @@ export default class SpreadsheetEditor extends Component {
     }
   }
 
-  loadLibraries() {
-    this.loading = true;
-    return loadScript("/javascripts/jsuites/jsuites.js")
-      .then(() => {
-        return loadScript("/javascripts/jspreadsheet/jspreadsheet.js");
-      })
-      .finally(() => (this.loading = false));
+  async loadJspreadsheet() {
+    const [jspreadsheetModule] = await Promise.all([
+      import("jspreadsheet-ce"),
+      import("jspreadsheet-ce/dist/jspreadsheet.css"),
+      import("jsuites/dist/jsuites.css"),
+    ]);
+
+    this.jspreadsheet = jspreadsheetModule.default;
+    this.loading = false;
   }
 
   buildNewTable() {
@@ -201,7 +202,7 @@ export default class SpreadsheetEditor extends Component {
       : `post-table-export`;
 
     // eslint-disable-next-line no-undef
-    this.spreadsheet = jspreadsheet(this.spreadsheet, {
+    this.spreadsheet = this.jspreadsheet(this.spreadsheet, {
       data,
       columns,
       defaultColAlign: "left",

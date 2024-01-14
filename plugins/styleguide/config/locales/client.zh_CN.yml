@@ -10,10 +10,13 @@ zh_CN:
       title: "样式指南"
       welcome: "首先，从左侧菜单中选择一个部分。"
       categories:
+        syntax: 语法
         atoms: 原子
         molecules: 分子
         organisms: 生物
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "排版"
           example: "欢迎来到 Discourse"
@@ -22,6 +25,8 @@ zh_CN:
           title: "日期/时间输入"
         menus:
           title: "菜单"
+        toasts:
+          title: "消息框"
         font_scale:
           title: "字体系统"
         colors:

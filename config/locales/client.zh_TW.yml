@@ -1743,6 +1743,7 @@ zh_TW:
         watching_first_post: "新話題"
         liked_consolidated: "新的讚"
         post_approved: "貼文已通過審核"
+        admin_problems: "有新的建議出現在後台儀表板"
     upload_selector:
       uploading: "正在上傳"
       select_file: "選取檔案"
@@ -2853,6 +2854,7 @@ zh_TW:
     second_factor_auth:
       redirect_after_success: "兩步驟驗證成功。重新導向至之前的頁面..."
     sidebar:
+      title: "側選單"
       unread_count:
         other: "%{count} 個未讀"
       new_count:
@@ -3273,6 +3275,10 @@ zh_TW:
           body: "內容"
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
+        component:
+          all_filter: "全部"
+          enabled_filter: "啟用"
+          disabled_filter: "停用"
         theme:
           theme: "佈景主題"
           component: "元件"
@@ -3393,6 +3399,9 @@ zh_TW:
           yaml:
             text: "YAML"
             title: "用 YAML 格式定義佈景主題的設定"
+          all_filter: "全部"
+          active_filter: "啟用的"
+          inactive_filter: "不活躍"
         colors:
           select_base:
             title: "選擇調色盤"
@@ -4043,6 +4052,8 @@ zh_TW:
           invalid_input: "輸入欄位不能為空或包含垂直字元"
         default_categories:
           modal_yes: "是"
+        file_types_list:
+          add_image_types: "圖片"
       badges:
         title: 徽章
         new_badge: 新徽章

@@ -1590,6 +1590,7 @@ id:
         watching_first_post: "topik baru"
         post_approved: "tulisan disetujui"
         membership_request_consolidated: "permintaan keanggotaan baru"
+        admin_problems: "saran baru di dasbor situs Anda"
     upload_selector:
       uploading: "Mengunggah"
       select_file: "Pilih Berkas"
@@ -2177,6 +2178,10 @@ id:
           title: "Email"
           subject: "Judul"
           body: "Konten"
+        component:
+          all_filter: "Semua"
+          enabled_filter: "Diaktifkan"
+          disabled_filter: "Dinonaktifkan"
         theme:
           theme: "Tema"
           create_type: "Tipe"
@@ -2195,6 +2200,8 @@ id:
           add: "Menambahkan"
           body_tag:
             text: "Konten"
+          all_filter: "Semua"
+          active_filter: "Aktif"
         colors:
           title: "Warna"
           undo: "Batalkan perintah"

@@ -17,7 +17,7 @@ RSpec.describe "category tag restrictions" do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.min_trust_to_create_tag = 0
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
@@ -769,7 +769,7 @@ RSpec.describe "tag topic counts per category" do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.min_trust_to_create_tag = 0
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
     SiteSetting.min_trust_level_to_tag_topics = 0
   end
 
@@ -795,6 +795,8 @@ RSpec.describe "tag topic counts per category" do
   context "with topic with 2 tags" do
     fab!(:topic) { Fabricate(:topic, category: category, tags: [tag1, tag2]) }
     fab!(:post) { Fabricate(:post, user: topic.user, topic: topic) }
+
+    before { Group.refresh_automatic_groups! }
 
     it "has correct counts after tag is removed from a topic" do
       post
@@ -837,6 +839,8 @@ RSpec.describe "tag topic counts per category" do
   context "with topic with one tag" do
     fab!(:topic) { Fabricate(:topic, tags: [tag1], category: category) }
     fab!(:post) { Fabricate(:post, user: topic.user, topic: topic) }
+
+    before { Group.refresh_automatic_groups! }
 
     it "counts after topic becomes uncategorized" do
       PostRevisor.new(post).revise!(

@@ -3,8 +3,10 @@
 class DiscourseConnectProvider < DiscourseConnectBase
   class BlankSecret < RuntimeError
   end
+
   class BlankReturnUrl < RuntimeError
   end
+
   class InvalidParameterValueError < RuntimeError
     attr_reader :param
     def initialize(param)

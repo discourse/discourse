@@ -54,6 +54,9 @@ pt:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
+  components:
+    enabled_filter: "Ativado"
+    disabled_filter: "Desativado"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
@@ -1117,8 +1120,6 @@ pt:
     desktop_category_page_style: "Estilo visual para a página de categorias."
     category_colors: "Lista de valores hexadecimais das cores permitidas nas categorias."
     dark_mode_none: "Nenhum"
-    max_attachment_size_kb: "Tamanho máximo dos anexos carregados em kB. Este deverá ser configurado em nginx (client_max_body_size) / apache ou também proxy."
-    authorized_extensions: "Lista de extensões permitidas para carregamento (utilizar '*' para ativar todos os tipos de ficheiros)"
     max_similar_results: "Quantos tópicos semelhantes a serem exibidos acima do editor ao compor um novo tópico. A comparação é baseada no título e no corpo."
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     topic_views_heat_low: "Após todas estas visualizações, o campo de visitas fica ligeiramente destacado."

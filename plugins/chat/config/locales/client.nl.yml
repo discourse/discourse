@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 nl:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Altijd"
           never: "Nooit"
@@ -25,6 +28,7 @@ nl:
             chat:
               create_message: "Maak een chatbericht in een opgegeven kanaal."
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: verwijderd
       dates:
         time_tiny: "h:mm"

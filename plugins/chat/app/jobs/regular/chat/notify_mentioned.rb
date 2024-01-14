@@ -122,7 +122,7 @@ module Jobs
             read: is_read,
           )
 
-        mention.update!(notification: notification)
+        mention.notifications << notification
       end
 
       def send_notifications(membership, mention_type)

@@ -2228,6 +2228,7 @@ hu:
         reaction: "új reakció"
         votes_released: "A szavazat feloldásra került"
         new_features: "új Discourse funkciók jelentek meg!"
+        admin_problems: "új tanácsok a webhely irányítópultján"
     upload_selector:
       uploading: "Feltöltés"
       processing: "Feltöltés feldolgozása"
@@ -3550,8 +3551,7 @@ hu:
     second_factor_auth:
       redirect_after_success: "A kéttényezős hitelesítés sikeres. Átirányítás az előző oldalra…"
     sidebar:
-      show_sidebar: "Oldalsáv megjelenítése"
-      hide_sidebar: "Oldalsáv elrejtése"
+      title: "Oldalsáv"
       unread_count:
         one: "%{count} olvasatlan"
         other: "%{count} olvasatlan"
@@ -4054,6 +4054,10 @@ hu:
           body: "Test"
           revert: "Változtatások visszavonása"
           revert_confirm: "Biztosan vissza akarod vonni a változtatásaidat?"
+        component:
+          all_filter: "Összes"
+          enabled_filter: "Engedélyezed"
+          disabled_filter: "Kikapcsolt"
         theme:
           theme: "Téma"
           component: "Összetevő"
@@ -4178,6 +4182,9 @@ hu:
           yaml:
             text: "YAML"
             title: "Téma beállításainak megadása YAML formátumban"
+          all_filter: "Összes"
+          active_filter: "Aktív"
+          inactive_filter: "Inaktív"
         colors:
           select_base:
             title: "Válassza ki az alapszín palettát"
@@ -4767,6 +4774,9 @@ hu:
           modal_description: "Szeretné visszamenőleg alkalmazni ezt a változtatást? Ez %{count} felhasználó beállítását fogja módosítani."
           modal_yes: "Igen"
           modal_no: "Nem, csak mostantól alkalmazza a változtatást"
+        file_types_list:
+          add_image_types: "Képek"
+          add_audio_types: "Audio"
       badges:
         title: Jelvények
         new_badge: Új jelvény

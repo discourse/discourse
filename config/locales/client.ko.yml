@@ -2033,6 +2033,7 @@ ko:
         membership_request_consolidated: "새 멤버십 요청"
         reaction: "새 반응"
         votes_released: "투표가 시작되었습니다"
+        admin_problems: "사이트 대시 보드에 대한 새로운 조언"
     upload_selector:
       uploading: "업로드 중"
       processing: "업로드 처리 중"
@@ -3437,6 +3438,7 @@ ko:
     fullscreen_table:
       expand_btn: "표 펼치기"
     sidebar:
+      title: "사이드바"
       unread_count:
         other: "%{count} unread"
       new_count:
@@ -3934,11 +3936,14 @@ ko:
           body: "본문"
           revert: "변경사항 되돌리기"
           revert_confirm: "변경사항을 되돌릴까요?"
+        component:
+          all_filter: "전체"
+          enabled_filter: "활성화"
+          disabled_filter: "비활성"
         theme:
           theme: "테마"
           component: "구성 요소"
           components: "구성 요소"
-          filter_placeholder: "필터링하려면 입력…"
           theme_name: "테마명"
           component_name: "구성 요소 이름"
           themes_intro: "기존 테마를 선택하거나 새 테마를 설치하여 시작하세요."
@@ -4097,6 +4102,9 @@ ko:
             title: "YAML 포맷으로 테마 설정 정의"
           scss_color_variables_warning: '테마에서 핵심 SCSS 색상 변수를 사용하는 기능은 지원 중단되었습니다. 대신 CSS 사용자 지정 프로퍼티를 사용하세요. 자세한 내용은 <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">이 가이드</a>를 참조하세요.'
           scss_warning_inline: "테마에서 코어 SCSS 색상 변수를 사용하는 기능은 지원 중단되었습니다."
+          all_filter: "전체"
+          active_filter: "활성화 사용자"
+          inactive_filter: "비활성화"
         colors:
           select_base:
             title: "베이스 색상 팔레트 선택"
@@ -4873,6 +4881,9 @@ ko:
         json_schema:
           edit: 에디터 실행
           modal_title: "%{name} 편집"
+        file_types_list:
+          add_image_types: "이미지"
+          add_audio_types: "오디오"
       badges:
         title: 배지
         new_badge: 새 배지

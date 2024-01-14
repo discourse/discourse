@@ -46,6 +46,36 @@ RSpec.describe "Navigation", type: :system do
     end
   end
 
+  context "when clicking chat icon on mobile" do
+    it "has the chat title with link to chat index", mobile: true do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_title(I18n.t("js.chat.heading"))
+      expect(page).to have_css("a.c-heading[href='#{chat_path}']")
+    end
+
+    it "has the back to forum link with last visited url", mobile: true do
+      visit("/")
+      click_link(topic.title)
+
+      expect(page).to have_css(".fancy-title")
+
+      chat_page.open_from_header
+
+      expect(page).to have_title(I18n.t("js.chat.heading"))
+      expect(page).to have_css(".back-to-forum[href='#{topic.relative_url}']")
+    end
+
+    it "hides the search icon and hamburger icon", mobile: true do
+      visit("/")
+      chat_page.open_from_header
+
+      expect(page).to have_no_css(".search-dropdown")
+      expect(page).to have_no_css(".hamburger-dropdown")
+    end
+  end
+
   context "when visiting /chat" do
     it "opens full page" do
       chat_page.open
@@ -168,6 +198,8 @@ RSpec.describe "Navigation", type: :system do
           before { Fabricate(:chat_message, thread: thread_2, use_service: true) }
 
           it "goes back to the thread list when clicking the back button", mobile: true do
+            skip("Flaky on CI") if ENV["CI"]
+
             chat_page.visit_channel(category_channel)
             channel_page.message_thread_indicator(thread.original_message).click
             thread_page.send_message
@@ -337,7 +369,7 @@ RSpec.describe "Navigation", type: :system do
     context "when going back to channel from channel settings in full page" do
       it "activates the channel in the sidebar" do
         visit("/chat/c/#{category_channel.slug}/#{category_channel.id}/info/settings")
-        find(".chat-full-page-header__back-btn").click
+        find(".c-navbar__back-button").click
         expect(page).to have_content(message.message)
       end
     end

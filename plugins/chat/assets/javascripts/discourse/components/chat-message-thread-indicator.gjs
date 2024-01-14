@@ -98,12 +98,15 @@ export default class ChatMessageThreadIndicator extends Component {
 
   @bind
   openThread(event) {
-    if (event.type === "keydown" && event.key !== "Enter") {
+    if (event?.type === "keydown" && event?.key !== "Enter") {
       return;
     }
 
     // handle middle mouse
-    if (event.type === "mousedown" && (event.which === 2 || event.shiftKey)) {
+    if (
+      event?.type === "mousedown" &&
+      (event?.which === 2 || event?.shiftKey)
+    ) {
       window.open(
         getURL(
           this.router.urlFor(

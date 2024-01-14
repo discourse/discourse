@@ -278,9 +278,12 @@
                 {{/if}}
               </a>
             {{else}}
-              <a href {{on "click" this.composer.cancel}} class="cancel">{{i18n
-                  "close"
-                }}</a>
+              <a
+                href
+                {{on "click" this.composer.cancel}}
+                class="cancel"
+                role="button"
+              >{{i18n "close"}}</a>
             {{/if}}
 
             {{#if this.composer.site.mobileView}}

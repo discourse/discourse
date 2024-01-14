@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 fa_IR:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: گفتگو
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "همیشه"
           never: "هرگز"
@@ -19,6 +22,7 @@ fa_IR:
             chat_channel_status_change: "وضعیت کانال گفتگو تغییر کرد"
             chat_channel_delete: "کانال گفتگو حذف شد"
     chat:
+      back_to_forum: "انجمن"
       deleted_chat_username: حذف شد
       dates:
         time_tiny: "HH:mm"

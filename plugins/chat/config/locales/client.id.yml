@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 id:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Obrolan
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Selalu"
           never: "Tidak pernah"

@@ -74,6 +74,11 @@ class Plugin::Instance
     @seed_fu_filter = filter
   end
 
+  # This method returns Core stats + stats registered by plugins
+  def self.stats
+    Stat.all_stats
+  end
+
   def self.find_all(parent_path)
     [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
@@ -118,6 +123,10 @@ class Plugin::Instance
   end
 
   delegate :name, to: :metadata
+
+  def humanized_name
+    (setting_category_name || name).delete_prefix("Discourse ").delete_prefix("discourse-")
+  end
 
   def add_to_serializer(
     serializer,
@@ -1363,6 +1372,16 @@ class Plugin::Instance
   end
 
   private
+
+  def setting_category
+    return if @enabled_site_setting.blank?
+    SiteSetting.categories[enabled_site_setting]
+  end
+
+  def setting_category_name
+    return if setting_category.blank? || setting_category == "plugins"
+    I18n.t("admin_js.admin.site_settings.categories.#{setting_category}")
+  end
 
   def validate_directory_column_name(column_name)
     match = /\A[_a-z]+\z/.match(column_name)
