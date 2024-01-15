@@ -70,7 +70,8 @@ RSpec.describe Post do
 
   it { is_expected.to rate_limit }
 
-  let(:topic) { Fabricate(:topic) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  let(:topic) { Fabricate(:topic, user: user) }
   let(:post_args) { { user: topic.user, topic: topic } }
 
   describe "scopes" do
@@ -275,7 +276,7 @@ RSpec.describe Post do
   end
 
   describe "maximum media embeds" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
     let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
     let(:post_two_images) do
@@ -1758,7 +1759,7 @@ RSpec.describe Post do
     end
 
     describe "#update_uploads_secure_status" do
-      fab!(:user) { Fabricate(:user, trust_level: 0) }
+      fab!(:user) { Fabricate(:user, trust_level: 0, refresh_auto_groups: true) }
 
       let(:raw) { <<~RAW }
         <a href="#{attachment_upload.url}">Link</a>

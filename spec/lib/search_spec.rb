@@ -290,10 +290,17 @@ RSpec.describe Search do
   describe "post indexing" do
     fab!(:category) { Fabricate(:category_with_definition, name: "america") }
     fab!(:topic) { Fabricate(:topic, title: "sam saffron test topic", category: category) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+
     let!(:post) do
-      Fabricate(:post, topic: topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
+      Fabricate(
+        :post,
+        topic: topic,
+        raw: 'this <b>fun test</b> <img src="bla" title="my image">',
+        user: user,
+      )
     end
-    let!(:post2) { Fabricate(:post, topic: topic) }
+    let!(:post2) { Fabricate(:post, topic: topic, user: user) }
 
     it "should index correctly" do
       search_data = post.post_search_data.search_data
@@ -1995,8 +2002,9 @@ RSpec.describe Search do
     end
 
     it "can find posts with images" do
-      post_uploaded = Fabricate(:post_with_uploaded_image)
-      Fabricate(:post)
+      user = Fabricate(:user, refresh_auto_groups: true)
+      post_uploaded = Fabricate(:post_with_uploaded_image, user: user)
+      Fabricate(:post, user: user)
 
       CookedPostProcessor.new(post_uploaded).update_post_image
 

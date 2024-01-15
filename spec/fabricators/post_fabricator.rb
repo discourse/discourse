@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:post) do
-  user
+  user { |attrs| attrs[:user] || Fabricate(:user, refresh_auto_groups: true) }
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   raw "Hello world"
   post_type Post.types[:regular]
