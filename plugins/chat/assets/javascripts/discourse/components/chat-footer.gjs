@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -14,19 +15,21 @@ export default class ChatFooter extends Component {
 
   @tracked threadsEnabled = false;
 
-  constructor() {
-    super(...arguments);
-    this.userThreadCount();
-  }
+  updateThreadCount = modifier(() => {
+    const ajax = this.chatApi.userThreadCount();
 
-  async userThreadCount() {
-    try {
-      const result = await this.chatApi.userThreadCount();
-      this.threadsEnabled = result.thread_count > 0;
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
+    ajax
+      .then((result) => {
+        this.threadsEnabled = result.thread_count > 0;
+      })
+      .catch((error) => {
+        popupAjaxError(error);
+      });
+
+    return () => {
+      ajax?.abort();
+    };
+  });
 
   get directMessagesEnabled() {
     return this.chat.userCanAccessDirectMessages;
@@ -38,7 +41,7 @@ export default class ChatFooter extends Component {
 
   <template>
     {{#if this.shouldRenderFooter}}
-      <nav class="c-footer">
+      <nav class="c-footer" {{this.updateThreadCount}}>
         {{#if this.directMessagesEnabled}}
           <DButton
             @route="chat.direct-messages"
