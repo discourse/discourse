@@ -221,6 +221,9 @@ class Middleware::RequestTracker
         "Retry-After" => available_in.to_s,
         "Discourse-Rate-Limit-Error-Code" => error_code,
       }
+      if username = cookie&.[](:username)
+        headers["X-Discourse-Username"] = username
+      end
       return 429, headers, [message]
     end
     env["discourse.request_tracker"] = self
