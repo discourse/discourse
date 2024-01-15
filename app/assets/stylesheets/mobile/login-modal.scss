@@ -26,8 +26,26 @@
     }
 
     .login-right-side {
-      padding: 0;
+      padding: 1rem 0 0;
       background: unset;
+    }
+
+    .login-or-separator {
+      border-top: 1px solid var(--primary-low);
+      position: relative;
+      margin-block: 1rem;
+
+      span {
+        transform: translate(-50%, -50%);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        background: var(--secondary);
+        padding-inline: 0.5rem;
+        color: var(--primary-medium);
+        font-size: var(--font-down-1-rem);
+        text-transform: uppercase;
+      }
     }
 
     #login-buttons {
