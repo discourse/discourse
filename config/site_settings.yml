@@ -3031,14 +3031,6 @@ tags:
     default: "0"
     enum: "TrustLevelAndStaffSetting"
     client: true
-    hidden: true
-  tag_topic_allowed_groups:
-    default: "10"
-    type: group_list
-    allow_any: false
-    refresh: true
-    client: true
-    validator: "AtLeastOneGroupValidator"
   max_tag_search_results:
     client: true
     default: 5

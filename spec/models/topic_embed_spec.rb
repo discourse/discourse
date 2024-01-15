@@ -8,7 +8,7 @@ RSpec.describe TopicEmbed do
   it { is_expected.to validate_presence_of :embed_url }
 
   describe ".import" do
-    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:user)
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { "http://eviltrout.com/123" }
     let(:contents) do

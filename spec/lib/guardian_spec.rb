@@ -3708,7 +3708,7 @@ RSpec.describe Guardian do
     context "when tagging is enabled" do
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        SiteSetting.min_trust_level_to_tag_topics = 1
       end
 
       context "when minimum trust level to create tags is 3" do
@@ -3739,19 +3739,11 @@ RSpec.describe Guardian do
 
         describe "can_tag_topics" do
           it "returns false if trust level is too low" do
-            expect(
-              Guardian.new(
-                Fabricate(:user, trust_level: 0, refresh_auto_groups: true),
-              ).can_tag_topics?,
-            ).to be_falsey
+            expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_tag_topics?).to be_falsey
           end
 
           it "returns true if trust level is high enough" do
-            expect(
-              Guardian.new(
-                Fabricate(:user, trust_level: 1, refresh_auto_groups: true),
-              ).can_tag_topics?,
-            ).to be_truthy
+            expect(Guardian.new(Fabricate(:user, trust_level: 1)).can_tag_topics?).to be_truthy
           end
 
           it "returns true for staff" do
