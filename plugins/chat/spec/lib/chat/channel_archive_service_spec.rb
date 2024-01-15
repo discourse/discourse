@@ -7,7 +7,7 @@ describe Chat::ChannelArchiveService do
   end
 
   fab!(:channel) { Fabricate(:category_channel) }
-  fab!(:user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, admin: true) }
   fab!(:category)
 
   let(:topic_params) { { topic_title: "This will be a new topic", category_id: category.id } }

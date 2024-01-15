@@ -4,7 +4,7 @@ require "new_post_manager"
 
 RSpec.describe NewPostManager do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:topic) { Fabricate(:topic, user: user) }
+  fab!(:topic)
 
   describe "default action" do
     it "creates the post by default" do
@@ -415,7 +415,7 @@ RSpec.describe NewPostManager do
     it "calls custom enqueuing handlers" do
       SiteSetting.tagging_enabled = true
       SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.min_trust_level_to_tag_topics = 0
 
       manager =
         NewPostManager.new(

@@ -108,7 +108,7 @@ RSpec.describe TopicCreator do
       before do
         SiteSetting.tagging_enabled = true
         SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        SiteSetting.min_trust_level_to_tag_topics = 0
       end
 
       context "with regular tags" do
@@ -135,8 +135,6 @@ RSpec.describe TopicCreator do
             case_sensitive: true,
           )
         end
-
-        before { Discourse.system_user.change_trust_level!(TrustLevel[4]) }
 
         it "adds watched words as tags" do
           topic =
@@ -218,7 +216,7 @@ RSpec.describe TopicCreator do
         end
 
         it "lets new user create a topic if they don't have sufficient trust level to tag topics" do
-          SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+          SiteSetting.min_trust_level_to_tag_topics = 1
           new_user = Fabricate(:newuser, refresh_auto_groups: true)
           topic =
             TopicCreator.create(
