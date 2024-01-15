@@ -308,7 +308,7 @@ RSpec.describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
 
         expect(
-          @fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") },
+          @fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") },
         ).to eq(warn_count)
         expect(status).to eq(429)
         warn_count += 1
@@ -399,7 +399,7 @@ RSpec.describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
 
         expect(
-          @fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") },
+          @fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") },
         ).to eq(0)
         expect(status).to eq(200)
       end
@@ -412,7 +412,7 @@ RSpec.describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, headers = middleware.call(env)
 
-      expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(
+      expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(
         1,
       )
       expect(status).to eq(429)
@@ -426,7 +426,7 @@ RSpec.describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
 
-      expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(
+      expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(
         1,
       )
       expect(status).to eq(200)
