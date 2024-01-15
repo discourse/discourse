@@ -281,7 +281,11 @@
         {{loading-spinner size="large"}}
       {{/if}}
     </div>
-    {{#if (and this.hasAtLeastOneLoginButton this.site.desktopView)}}
+
+    {{#if this.hasAtLeastOneLoginButton}}
+      {{#if this.site.mobileView}}
+        <div class="login-or-separator"><span>
+            {{i18n "login.or"}}</span></div>{{/if}}
       <div class="login-right-side">
         <LoginButtons
           @externalLogin={{this.externalLogin}}
