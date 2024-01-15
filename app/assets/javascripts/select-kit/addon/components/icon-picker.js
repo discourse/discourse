@@ -12,7 +12,8 @@ import MultiSelectComponent from "select-kit/components/multi-select";
 import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 
 const MORE_ICONS_COLLECTION = "MORE_ICONS_COLLECTION";
-const MAX_RESULTS_RETURNED = 200; // Matches backend max returned results
+const MAX_RESULTS_RETURNED = 200;
+// Matches  max returned results from icon_picker_search in svg_sprite_controller.rb
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["icon-picker"],
