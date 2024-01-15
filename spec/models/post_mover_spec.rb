@@ -2225,6 +2225,7 @@ RSpec.describe PostMover do
 
         it "can add tags to new message when staff group is included in pm_tags_allowed_for_groups" do
           SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
+          SiteSetting.tag_topic_allowed_groups = "1|2|3"
           personal_message.move_posts(
             admin,
             [p2.id, p5.id],
