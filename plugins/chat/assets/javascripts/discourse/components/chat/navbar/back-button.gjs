@@ -17,7 +17,7 @@ export default class ChatNavbarBackButton extends Component {
       <LinkTo
         @route={{@route}}
         @models={{@routeModels}}
-        class="c-navbar__back-button no-text btn-flat btn"
+        class="c-navbar__back-button no-text btn-transparent btn"
         title={{this.title}}
       >
         {{#if (has-block)}}
@@ -29,7 +29,7 @@ export default class ChatNavbarBackButton extends Component {
     {{else}}
       <LinkTo
         @route="chat"
-        class="c-navbar__back-button no-text btn-flat btn"
+        class="c-navbar__back-button no-text btn-transparent btn"
         title={{this.title}}
       >
         {{#if (has-block)}}

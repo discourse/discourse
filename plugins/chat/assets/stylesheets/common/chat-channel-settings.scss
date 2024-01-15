@@ -19,7 +19,9 @@
     }
   }
 
-  .chat-form__section-content:has(.c-channel-settings__leave-info) {
-    gap: 0.25rem;
+  .chat-form__section.--leave-channel {
+    .chat-form__section-content {
+      gap: 0.25rem 0.5rem;
+    }
   }
 }
