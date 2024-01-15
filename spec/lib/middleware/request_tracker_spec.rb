@@ -491,6 +491,7 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_10_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_10_secs_limit.")
       end
 
@@ -514,6 +515,7 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_60_secs_limit.")
       end
 
@@ -538,6 +540,7 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_assets_10_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_assets_10_secs_limit.")
       end
     end
@@ -578,6 +581,7 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("id_60_secs_limit")
+        expect(response.first).to include("too many requests from this user")
         expect(response.first).to include("Error code: id_60_secs_limit.")
       end
       expect(called).to eq(3)
@@ -613,6 +617,7 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_60_secs_limit.")
       end
     end
@@ -648,6 +653,7 @@ RSpec.describe Middleware::RequestTracker do
       status, headers, response = middleware.call(env)
       expect(status).to eq(429)
       expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+      expect(response.first).to include("too many requests from this IP address")
       expect(response.first).to include("Error code: ip_60_secs_limit.")
     end
   end

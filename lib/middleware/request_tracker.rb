@@ -211,9 +211,9 @@ class Middleware::RequestTracker
 
     cookie = find_auth_cookie(env)
     if error_details = rate_limit(request, cookie)
-      available_in, error_code = error_details
+      available_in, error_code, limit_on_id = error_details
       message = <<~TEXT
-        Slow down, too many requests from this user or IP address.
+        Slow down, too many requests from this #{limit_on_id ? "user" : "IP address"}.
         Please retry again in #{available_in} seconds.
         Error code: #{error_code}.
       TEXT
@@ -367,7 +367,13 @@ class Middleware::RequestTracker
         )
       end
 
-      return limiter_assets10.seconds_to_wait(Time.now.to_i), limiter_assets10.error_code if block
+      if block
+        return [
+          limiter_assets10.seconds_to_wait(Time.now.to_i),
+          limiter_assets10.error_code,
+          limit_on_id
+        ]
+      end
     end
 
     begin
@@ -387,7 +393,7 @@ class Middleware::RequestTracker
         )
       end
       if block
-        [e.available_in, e.error_code]
+        [e.available_in, e.error_code, limit_on_id]
       else
         nil
       end
