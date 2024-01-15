@@ -14,7 +14,7 @@ export default class ChatNavbarBackButton extends Component {
   }
 
   get targetRoute() {
-    if (FOOTER_NAV_ROUTES.indexOf(this.args.route) !== -1) {
+    if (FOOTER_NAV_ROUTES.includes(this.args.route)) {
       return this.args.route;
     } else {
       return "chat";

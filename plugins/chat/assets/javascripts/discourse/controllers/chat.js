@@ -26,7 +26,7 @@ export default class ChatController extends Controller {
   get shouldUseChatFooter() {
     return (
       this.site.mobileView &&
-      FOOTER_NAV_ROUTES.indexOf(this.router.currentRouteName) !== -1
+      FOOTER_NAV_ROUTES.includes(this.router.currentRouteName)
     );
   }
 
