@@ -18,7 +18,7 @@ RSpec.describe "category tag restrictions" do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-    SiteSetting.min_trust_level_to_tag_topics = 0
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
   end
 
   context "with tags restricted to one category" do
@@ -770,7 +770,7 @@ RSpec.describe "tag topic counts per category" do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-    SiteSetting.min_trust_level_to_tag_topics = 0
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
   end
 
   it "counts when a topic is created with tags" do
@@ -782,8 +782,10 @@ RSpec.describe "tag topic counts per category" do
   end
 
   it "counts when tag is added to an existing topic" do
-    topic = Fabricate(:topic, category: category)
-    post = Fabricate(:post, user: topic.user, topic: topic)
+    user = Fabricate(:user, refresh_auto_groups: true)
+    topic = Fabricate(:topic, user: user, category: category)
+    post = Fabricate(:post, user: user, topic: topic)
+
     expect(CategoryTagStat.where(category: category).count).to eq(0)
     expect {
       PostRevisor.new(post).revise!(topic.user, raw: post.raw, tags: [tag1.name, tag2.name])

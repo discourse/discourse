@@ -239,7 +239,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     before do
       SiteSetting.tagging_enabled = true
       SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
     end
 
     context "when editing" do

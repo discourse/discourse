@@ -1372,7 +1372,7 @@ RSpec.describe PostsController do
 
       it "cannot create a post with a tag without tagging permission" do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_level_to_tag_topics = 4
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
         tag = Fabricate(:tag)
 
         post "/posts.json",
