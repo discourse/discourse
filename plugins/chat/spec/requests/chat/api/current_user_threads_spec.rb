@@ -36,6 +36,7 @@ describe Chat::Api::CurrentUserThreadsController do
         get "/chat/api/me/threads/count"
 
         expect(response.status).to eq(200)
+        expect(response.parsed_body["thread_count"]).to eq(0)
       end
     end
 
