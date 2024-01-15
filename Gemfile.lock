@@ -485,7 +485,7 @@ GEM
     sqlite3 (1.7.0-x86_64-darwin)
     sqlite3 (1.7.0-x86_64-linux)
     sshkey (3.0.0)
-    stackprof (0.2.25)
+    stackprof (0.2.26)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
