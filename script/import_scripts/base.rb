@@ -84,7 +84,7 @@ class ImportScripts::Base
       clean_up_inactive_users_after_days: 0,
       clean_up_unused_staged_users_after_days: 0,
       clean_up_uploads: false,
-      clean_orphan_uploads_grace_period_hours: 1800,
+      clean_orphan_uploads_grace_period_hours: 168,
     }
   end
 
