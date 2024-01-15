@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "I18n";
+import { FOOTER_NAV_ROUTES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 export default class ChatNavbarBackButton extends Component {
   get icon() {
@@ -13,11 +14,7 @@ export default class ChatNavbarBackButton extends Component {
   }
 
   get targetRoute() {
-    if (
-      ["chat.direct-messages", "chat.channels", "chat.threads"].includes(
-        this.args.route
-      )
-    ) {
+    if (FOOTER_NAV_ROUTES.indexOf(this.args.route) !== -1) {
       return this.args.route;
     } else {
       return "chat";

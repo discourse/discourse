@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import { inject as service } from "@ember/service";
+import { FOOTER_NAV_ROUTES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 export default class ChatController extends Controller {
   @service chat;
@@ -23,16 +24,9 @@ export default class ChatController extends Controller {
   }
 
   get shouldUseChatFooter() {
-    // we only show chat footer on index pages (ie. when no input field)
-    const allowedRoutes = [
-      "chat.direct-messages",
-      "chat.channels",
-      "chat.threads",
-    ];
-
     return (
       this.site.mobileView &&
-      allowedRoutes.includes(this.router.currentRouteName)
+      FOOTER_NAV_ROUTES.indexOf(this.router.currentRouteName) !== -1
     );
   }
 
