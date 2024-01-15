@@ -409,7 +409,9 @@ RSpec.describe NewPostManager do
     it "calls custom enqueuing handlers" do
       SiteSetting.tagging_enabled = true
       SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+      Group.user_trust_level_change!(Discourse.system_user.id, Discourse.system_user.trust_level)
 
       manager =
         NewPostManager.new(

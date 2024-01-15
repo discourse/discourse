@@ -2258,7 +2258,12 @@ RSpec.describe UsersController do
         fab!(:upload)
         fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-        before { sign_in(user) }
+        before do
+          User.set_callback(:create, :after, :ensure_in_trust_level_group)
+          sign_in(user)
+        end
+
+        after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
 
         it "allows the update" do
           SiteSetting.tagging_enabled = true

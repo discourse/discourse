@@ -663,14 +663,11 @@ RSpec.describe TopicTrackingState do
   describe "tag support" do
     before do
       SiteSetting.tagging_enabled = true
+      SiteSetting.create_tag_allowed_groups = "10"
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
 
-      DiscourseTagging.tag_topic_by_names(
-        post.topic,
-        Guardian.new(Discourse.system_user),
-        %w[bananas apples],
-      )
+      DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(user), %w[bananas apples])
     end
 
     it "includes tags based on the `tagging_enabled` site setting" do
