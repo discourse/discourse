@@ -213,7 +213,7 @@ class Middleware::RequestTracker
     if error_details = rate_limit(request, cookie)
       available_in, error_code = error_details
       message = <<~TEXT
-        Slow down, too many requests from this IP address.
+        Slow down, too many requests from this user or IP address.
         Please retry again in #{available_in} seconds.
         Error code: #{error_code}.
       TEXT
@@ -326,7 +326,7 @@ class Middleware::RequestTracker
     limiter10 =
       RateLimiter.new(
         nil,
-        "global_ip_limit_10_#{ip_or_id}",
+        "global_limit_10_#{ip_or_id}",
         GlobalSetting.max_reqs_per_ip_per_10_seconds,
         10,
         global: !limit_on_id,
@@ -337,7 +337,7 @@ class Middleware::RequestTracker
     limiter60 =
       RateLimiter.new(
         nil,
-        "global_ip_limit_60_#{ip_or_id}",
+        "global_limit_60_#{ip_or_id}",
         GlobalSetting.max_reqs_per_ip_per_minute,
         60,
         global: !limit_on_id,
@@ -348,7 +348,7 @@ class Middleware::RequestTracker
     limiter_assets10 =
       RateLimiter.new(
         nil,
-        "global_ip_limit_10_assets_#{ip_or_id}",
+        "global_limit_10_assets_#{ip_or_id}",
         GlobalSetting.max_asset_reqs_per_ip_per_10_seconds,
         10,
         error_code: limit_on_id ? "id_assets_10_secs_limit" : "ip_assets_10_secs_limit",
@@ -360,8 +360,9 @@ class Middleware::RequestTracker
 
     if !limiter_assets10.can_perform?
       if warn
+        limited_on = limit_on_id ? "user_id" : "ip"
         Discourse.warn(
-          "Global asset IP rate limit exceeded for #{ip}: 10 second rate limit",
+          "Global asset rate limit exceeded for #{limited_on}: #{ip}: 10 second rate limit",
           uri: request.env["REQUEST_URI"],
         )
       end
@@ -379,8 +380,9 @@ class Middleware::RequestTracker
       nil
     rescue RateLimiter::LimitExceeded => e
       if warn
+        limited_on = limit_on_id ? "user_id" : "ip"
         Discourse.warn(
-          "Global IP rate limit exceeded for #{ip}: #{type} second rate limit",
+          "Global rate limit exceeded for #{limited_on}: #{ip}: #{type} second rate limit",
           uri: request.env["REQUEST_URI"],
         )
       end
