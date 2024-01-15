@@ -25,6 +25,11 @@
       padding: 1rem;
     }
 
+    .login-right-side {
+      padding: 0;
+      background: unset;
+    }
+
     #login-buttons {
       flex-direction: row;
       flex-wrap: wrap;
