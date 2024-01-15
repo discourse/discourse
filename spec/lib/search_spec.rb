@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Search do
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:topic)
 
   before do
@@ -1378,7 +1378,7 @@ RSpec.describe Search do
         SiteSetting.tagging_enabled = true
         DiscourseTagging.tag_topic_by_names(
           post.topic,
-          Guardian.new(Fabricate.build(:admin)),
+          Guardian.new(Fabricate(:admin, refresh_auto_groups: true)),
           [tag.name, uppercase_tag.name],
         )
         post.topic.save
