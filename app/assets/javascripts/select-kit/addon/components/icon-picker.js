@@ -9,6 +9,10 @@ import {
   enableMissingIconWarning,
 } from "discourse-common/lib/icon-library";
 import MultiSelectComponent from "select-kit/components/multi-select";
+import { MAIN_COLLECTION } from "select-kit/components/select-kit";
+
+const MORE_ICONS_COLLECTION = "MORE_ICONS_COLLECTION";
+const MAX_RESULTS_RETURNED = 200; // Matches backend max returned results
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["icon-picker"],
@@ -18,9 +22,26 @@ export default MultiSelectComponent.extend({
     this._super(...arguments);
 
     this._cachedIconsList = null;
+    this._resultCount = 0;
 
     if (isDevelopment()) {
       disableMissingIconWarning();
+    }
+
+    this.insertAfterCollection(MAIN_COLLECTION, MORE_ICONS_COLLECTION);
+  },
+
+  modifyComponentForCollection(collection) {
+    if (collection === MORE_ICONS_COLLECTION) {
+      return "filter-for-more";
+    }
+  },
+
+  modifyContentForCollection(collection) {
+    if (collection === MORE_ICONS_COLLECTION) {
+      return {
+        shouldShowMoreTip: this._resultCount === MAX_RESULTS_RETURNED,
+      };
     }
   },
 
@@ -29,11 +50,8 @@ export default MultiSelectComponent.extend({
   }),
 
   search(filter = "") {
-    if (
-      filter === "" &&
-      this._cachedIconsList &&
-      this._cachedIconsList.length
-    ) {
+    if (filter === "" && this._cachedIconsList?.length) {
+      this._resultCount = this._cachedIconsList.length;
       return this._cachedIconsList;
     } else {
       return ajax("/svg-sprite/picker-search", {
@@ -46,6 +64,7 @@ export default MultiSelectComponent.extend({
         if (filter === "") {
           this._cachedIconsList = icons;
         }
+        this._resultCount = icons.length;
         return icons;
       });
     }
@@ -84,6 +103,7 @@ export default MultiSelectComponent.extend({
     this._super(...arguments);
 
     this._cachedIconsList = null;
+    this._resultCount = 0;
 
     if (isDevelopment()) {
       enableMissingIconWarning();

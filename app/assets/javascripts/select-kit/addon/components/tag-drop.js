@@ -56,7 +56,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
   modifyContentForCollection(collection) {
     if (collection === MORE_TAGS_COLLECTION) {
       return {
-        shouldShowMoreTags: this.shouldShowMoreTags,
+        shouldShowMoreTip: this.shouldShowMoreTags,
       };
     }
   },
