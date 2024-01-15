@@ -2534,6 +2534,8 @@ uncategorized:
   version_checks:
     client: true
     default: true
+  include_in_discourse_discover:
+    default: false
   new_version_emails: true
   send_welcome_message: true
 
