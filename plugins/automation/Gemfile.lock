@@ -2,47 +2,52 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
-    json (2.6.2)
-    parallel (1.22.1)
-    parser (3.1.2.1)
+    json (2.7.1)
+    language_server-protocol (3.17.0.3)
+    parallel (1.24.0)
+    parser (3.3.0.3)
       ast (~> 2.4.1)
-    prettier_print (1.2.0)
+      racc
+    prettier_print (1.2.1)
+    racc (1.7.3)
     rainbow (3.1.1)
-    regexp_parser (2.6.0)
+    regexp_parser (2.9.0)
     rexml (3.2.6)
-    rubocop (1.36.0)
+    rubocop (1.59.0)
       json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.1.2.1)
+      parser (>= 3.2.2.4)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.20.1, < 2.0)
+      rubocop-ast (>= 1.30.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.21.0)
-      parser (>= 3.1.1.0)
-    rubocop-discourse (3.0)
-      rubocop (>= 1.1.0)
-      rubocop-rspec (>= 2.0.0)
-    rubocop-rspec (2.13.2)
-      rubocop (~> 1.33)
-    ruby-progressbar (1.11.0)
-    syntax_tree (5.1.0)
+      unicode-display_width (>= 2.4.0, < 3.0)
+    rubocop-ast (1.30.0)
+      parser (>= 3.2.1.0)
+    rubocop-capybara (2.20.0)
+      rubocop (~> 1.41)
+    rubocop-discourse (3.6.0)
+      rubocop (>= 1.59.0)
+      rubocop-rspec (>= 2.25.0)
+    rubocop-factory_bot (2.25.1)
+      rubocop (~> 1.41)
+    rubocop-rspec (2.26.1)
+      rubocop (~> 1.40)
+      rubocop-capybara (~> 2.17)
+      rubocop-factory_bot (~> 2.22)
+    ruby-progressbar (1.13.0)
+    syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
-    unicode-display_width (2.3.0)
+    unicode-display_width (2.5.0)
 
 PLATFORMS
-  arm64-darwin-20
   ruby
-  x86_64-darwin-18
-  x86_64-darwin-19
-  x86_64-darwin-20
-  x86_64-linux
 
 DEPENDENCIES
   rubocop-discourse
   syntax_tree
 
 BUNDLED WITH
-   2.3.4
+   2.5.4

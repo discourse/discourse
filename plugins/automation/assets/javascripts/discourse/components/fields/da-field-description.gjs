@@ -1,11 +1,9 @@
-import Component from "@glimmer/component";
+const FieldDescription = <template>
+  {{#if @description}}
+    <p class="control-description">
+      {{@description}}
+    </p>
+  {{/if}}
+</template>;
 
-export default class FieldDescription extends Component {
-  <template>
-    {{#if @description}}
-      <p class="control-description">
-        {{@description}}
-      </p>
-    {{/if}}
-  </template>
-}
+export default FieldDescription;

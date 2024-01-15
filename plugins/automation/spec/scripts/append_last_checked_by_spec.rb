@@ -48,7 +48,7 @@ describe "AppendLastCheckedBy" do
               "discourse_automation.scriptables.append_last_checked_by.text",
               username: moderator.username,
               date_time:
-                "[date=#{checked_at.to_date.to_s} time=#{checked_at.strftime("%H:%M:%S")} timezone=UTC]",
+                "[date=#{checked_at.to_date} time=#{checked_at.strftime("%H:%M:%S")} timezone=UTC]",
             ),
           ),
         ),

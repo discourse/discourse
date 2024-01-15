@@ -16,7 +16,7 @@ module DiscourseAutomation
         automation = DiscourseAutomation::Automation.find_by(id: automation_id)
         next if automation&.script != DiscourseAutomation::Scriptable::TOPIC_REQUIRED_WORDS
 
-        words = automation.fields.find_by(name: "words")&.metadata["value"]
+        words = automation.fields.find_by(name: "words")&.metadata&.[]("value")
         next if words.blank?
 
         if words.none? { |word| raw.include?(word) }

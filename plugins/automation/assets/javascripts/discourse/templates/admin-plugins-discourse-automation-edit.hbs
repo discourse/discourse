@@ -14,9 +14,9 @@
           <TextField
             @value={{automationForm.name}}
             @type="text"
-            @classNames="input-large"
             @autofocus="autofocus"
             @name="automation-name"
+            class="input-large"
           />
         </div>
       </div>
@@ -28,11 +28,11 @@
 
         <div class="controls">
           <ComboBox
-            @class="scriptables"
             @value={{automationForm.script}}
             @content={{model.scriptables}}
             @onChange={{action "onChangeScript"}}
             @options={{hash filterable=true}}
+            class="scriptables"
           />
         </div>
       </div>
@@ -58,7 +58,6 @@
 
         <div class="controls">
           <ComboBox
-            @class="triggerables"
             @value={{automationForm.trigger}}
             @content={{model.triggerables}}
             @onChange={{action "onChangeTrigger"}}
@@ -67,6 +66,7 @@
               none="discourse_automation.select_trigger"
               disabled=model.automation.script.forced_triggerable
             }}
+            class="triggerables"
           />
         </div>
       </div>
@@ -87,17 +87,19 @@
           <div class="alert alert-info next-trigger">
 
             {{#if nextPendingAutomationAtFormatted}}
-              <p>{{i18n
+              <p>
+                {{i18n
                   "discourse_automation.edit_automation.trigger_section.next_pending_automation"
                   date=nextPendingAutomationAtFormatted
-                }}</p>
+                }}
+              </p>
             {{/if}}
 
             <DButton
               @label="discourse_automation.edit_automation.trigger_section.trigger_now"
-              class="btn-primary trigger-now-btn"
               @isLoading={{isTriggeringAutomation}}
               @action={{action "onManualAutomationTrigger" model.automation.id}}
+              class="btn-primary trigger-now-btn"
             />
           </div>
         {{/if}}
@@ -156,10 +158,10 @@
       <div class="control-group">
         <DButton
           @isLoading={{isUpdatingAutomation}}
-          class="btn-primary update-automation"
           @label="discourse_automation.update"
           @type="submit"
           @action={{action "saveAutomation" automation}}
+          class="btn-primary update-automation"
         />
       </div>
     {{/if}}

@@ -11,9 +11,9 @@
         <TextField
           @value={{form.name}}
           @type="text"
-          @class="input-large"
           @autofocus="autofocus"
           @name="automation-name"
+          class="input-large"
         />
       </div>
     </div>
@@ -25,7 +25,6 @@
 
       <div class="controls">
         <DropdownSelectBox
-          @class="scriptables"
           @value={{form.script}}
           @content={{model.scriptables.content}}
           @onChange={{action (mut form.script)}}
@@ -34,6 +33,7 @@
             filterable=true
             none="discourse_automation.select_script"
           }}
+          class="scriptables"
         />
       </div>
     </div>
@@ -43,9 +43,9 @@
       <div class="controls">
         <DButton
           @icon="plus"
-          class="btn-primary create-automation"
           @label="discourse_automation.create"
           @action={{action "saveAutomation" model.automation}}
+          class="btn-primary create-automation"
         />
       </div>
     </div>

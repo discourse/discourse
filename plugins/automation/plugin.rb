@@ -6,7 +6,6 @@
 # version: 0.1
 # authors: jjaffeux
 # url: https://github.com/discourse/discourse-automation
-# transpile_js: true
 
 gem "iso8601", "0.13.0"
 gem "rrule", "0.4.4"

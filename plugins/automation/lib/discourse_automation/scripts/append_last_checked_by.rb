@@ -28,7 +28,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::APPEND_LAST
       checked_at = DateTime.parse(checked_at)
 
       date_time =
-        "[date=#{checked_at.to_date.to_s} time=#{checked_at.strftime("%H:%M:%S")} timezone=UTC]"
+        "[date=#{checked_at.to_date} time=#{checked_at.strftime("%H:%M:%S")} timezone=UTC]"
       node.inner_html +=
         PrettyText.cook(
           I18n.t(

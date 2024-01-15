@@ -29,7 +29,7 @@ describe "AppendLastEditedBy" do
               "discourse_automation.scriptables.append_last_edited_by.text",
               username: post.user.username,
               date_time:
-                "[date=#{updated_at.to_date.to_s} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]",
+                "[date=#{updated_at.to_date} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]",
             ),
           ),
         ),
@@ -47,7 +47,7 @@ describe "AppendLastEditedBy" do
               "discourse_automation.scriptables.append_last_edited_by.text",
               username: post.user.username,
               date_time:
-                "[date=#{updated_at.to_date.to_s} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]",
+                "[date=#{updated_at.to_date} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]",
             ),
           ),
         ),
@@ -63,7 +63,7 @@ describe "AppendLastEditedBy" do
               "discourse_automation.scriptables.append_last_edited_by.text",
               username: moderator.username,
               date_time:
-                "[date=#{updated_at.to_date.to_s} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]",
+                "[date=#{updated_at.to_date} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]",
             ),
           ),
         ),

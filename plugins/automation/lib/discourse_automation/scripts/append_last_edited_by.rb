@@ -23,8 +23,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::APPEND_LAST
       doc.add_child(node)
     end
 
-    date_time =
-      "[date=#{updated_at.to_date.to_s} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]"
+    date_time = "[date=#{updated_at.to_date} time=#{updated_at.strftime("%H:%M:%S")} timezone=UTC]"
     node.inner_html +=
       PrettyText.cook(
         I18n.t(
