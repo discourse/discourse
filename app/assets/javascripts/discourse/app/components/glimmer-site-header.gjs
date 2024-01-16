@@ -335,6 +335,8 @@ export default class GlimmerSiteHeader extends Component {
         @navigationMenuQueryParamOverride={{@navigationMenuQueryParamOverride}}
         @toggleSidebar={{@toggleSidebar}}
         @topic={{this._topic}}
+        @showCreateAccount={{@showCreateAccount}}
+        @showLogin={{@showLogin}}
       />
     </div>
   </template>

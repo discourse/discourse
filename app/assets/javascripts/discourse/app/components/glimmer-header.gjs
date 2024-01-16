@@ -3,12 +3,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { schedule } from "@ember/runloop";
-import $ from "jquery";
-import { h } from "virtual-dom";
-import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
 import scrollLock from "discourse/lib/scroll-lock";
-import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { avatarImg } from "discourse/widgets/post";
@@ -19,11 +14,14 @@ import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
+import or from "truth-helpers/helpers/or";
 
-import HeaderContents from "./glimmer-header/contents";
+import Contents from "./glimmer-header/contents";
 import AuthButtons from "./glimmer-header/auth-buttons";
-// import HeaderIcons from "./glimmer-header/icons";
-// import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
+import Icons from "./glimmer-header/icons";
+import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
 // import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
 // import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
 // import HeaderCloak from "./glimmer-header/cloak";
@@ -33,8 +31,8 @@ const SEARCH_BUTTON_ID = "search-button";
 export default class GlimmerHeader extends Component {
   @service router;
   @service search;
+  @service site;
 
-  @tracked searchVisible = false;
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
   @tracked inTopicContext = false;
@@ -42,6 +40,10 @@ export default class GlimmerHeader extends Component {
 
   get inTopicRoute() {
     return this.inTopicContext || this.search.inTopicContext;
+  }
+
+  get searchVisible() {
+    return this.search.visible;
   }
 
   @action
@@ -62,12 +64,12 @@ export default class GlimmerHeader extends Component {
       }
     }
 
-    this.searchVisible = !this.searchVisible;
     this.search.visible = !this.search.visible;
-    if (!this.searchVisible) {
+    if (!this.search.visible) {
       this.search.highlightTerm = "";
       this.inTopicContext = false;
       this.search.inTopicContext = false;
+      document.getElementById(SEARCH_BUTTON_ID)?.focus();
     }
   }
 
@@ -106,9 +108,13 @@ export default class GlimmerHeader extends Component {
   }
 
   <template>
-    <header class={{"d-header"}}>
+    <header class="d-header">
       <div class="wrap">
-        <HeaderContents>
+        <Contents
+          @sidebarEnabled={{@sidebarEnabled}}
+          @toggleHamburger={{this.toggleHamburger}}
+          @showSidebar={{@showSidebar}}
+        >
           {{#unless this.currentUser}}
             <AuthButtons
               @showCreateAccount={{@showCreateAccount}}
@@ -120,33 +126,32 @@ export default class GlimmerHeader extends Component {
           {{#unless
             (and this.siteSettings.login_required (not this.currentUser))
           }}
-            <HeaderIcons
+            <Icons
               @hamburgerVisible={{this.hamburgerVisible}}
               @userVisible={{this.userVisible}}
-              @searchVisible={{or this.searchVisible this.search.visible}}
+              @searchVisible={{this.search.visible}}
               @user={{this.currentUser}}
               @sidebarEnabled={{@sidebarEnabled}}
+              @toggleSearchMenu={{this.toggleSearchMenu}}
+              @searchButtonId={{SEARCH_BUTTON_ID}}
             />
           {{/unless}}
-          {{!--
-      {{#each this.additionalPanels as |panel|}}
-        <Panel />
-      {{/each}}
+          {{!-- {{#each this.additionalPanels as |panel|}}
+            <Panel />
+          {{/each}} --}}
 
-      {{#if (or this.searchVisible this.search.visible)}}
-        <SearchMenuWrapper
-          @inTopicContext={{and this.search.inTopicContext this.inTopicRoute}}
-        />
-      {{else if this.hamburgerVisible}}
-        <HamburgerDropdownWrapper />
-      {{else if this.userVisible}}
-        <UserMenuWrapper />
-      {{/if}}
+          {{#if this.search.visible}}
+            <SearchMenuWrapper @toggleSearchMenu={{this.toggleSearchMenu}} />
+          {{else if this.hamburgerVisible}}
+            {{! <HamburgerDropdownWrapper /> }}
+          {{else if this.userVisible}}
+            {{! <UserMenuWrapper /> }}
+          {{/if}}
 
-      {{#if (or this.site.mobileView this.site.narrowDesktopView)}}
-        <HeaderCloak />
-      {{/if}} --}}
-        </HeaderContents>
+          {{!-- {{#if (or this.site.mobileView this.site.narrowDesktopView)}}
+            <HeaderCloak />
+          {{/if}} --}}
+        </Contents>
       </div>
     </header>
   </template>

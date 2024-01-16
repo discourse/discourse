@@ -1,32 +1,13 @@
-createWidget("glimmer-search-menu-wrapper", {
-  services: ["search"],
-  buildAttributes() {
-    return { "data-click-outside": true, "aria-live": "polite" };
-  },
+import SearchMenuPanel from "../search-menu-panel";
 
-  buildClasses() {
-    return ["search-menu glimmer-search-menu"];
-  },
+const SearchMenuWrapper = <template>
+  <div
+    class="search-menu glimmer-search-menu"
+    data-click-outside="true"
+    aria-live="polite"
+  >
+    <SearchMenuPanel @closeSearchMenu={{@closeSearchMenu}} />
+  </div>
+</template>;
 
-  html() {
-    return [
-      new RenderGlimmer(
-        this,
-        "div.widget-component-connector",
-        hbs`<SearchMenuPanel @closeSearchMenu={{@data.closeSearchMenu}} />`,
-        {
-          closeSearchMenu: this.closeSearchMenu.bind(this),
-        }
-      ),
-    ];
-  },
-
-  closeSearchMenu() {
-    this.sendWidgetAction("toggleSearchMenu");
-    document.getElementById(SEARCH_BUTTON_ID)?.focus();
-  },
-
-  clickOutside() {
-    this.closeSearchMenu();
-  },
-});
+export default SearchMenuWrapper;
