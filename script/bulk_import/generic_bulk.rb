@@ -502,6 +502,8 @@ class BulkImport::Generic < BulkImport::Base
     user_fields.each do |row|
       next if existing_user_field_names.include?(row["name"])
 
+      # TODO: Use `id` and store it in mapping table, but for now just ignore it.
+      row.delete("id")
       options = row.delete("options")
       field = UserField.create!(row)
 
