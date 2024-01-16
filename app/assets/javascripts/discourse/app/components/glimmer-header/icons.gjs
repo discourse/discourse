@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import { getURL } from "discourse-common/lib/get-url";
+import getURL from "discourse-common/lib/get-url";
 import Dropdown from "./dropdown";
 import or from "truth-helpers/helpers/or";
 import not from "truth-helpers/helpers/not";
 import { array } from "@ember/helper";
+// import UserDropdown from "./user-dropdown";
 
 let _extraHeaderIcons = [];
 
@@ -20,22 +21,31 @@ export default class Icons extends Component {
   @service site;
 
   <template>
-    <ul class="icons.d-header-icons">
+    <ul class="icons d-header-icons">
       {{#each _extraHeaderIcons as |icon|}}
-        {{icon}}
+        <Dropdown
+          @title={{icon.title}}
+          @icon={{icon.icon}}
+          @iconId={{icon.iconId}}
+          @onClick={{icon.onClick}}
+          @active={{icon.active}}
+          @href={{getURL icon.href}}
+          @className={{icon.className}}
+        />
       {{/each}}
 
       <Dropdown
         @title="search.title"
         @icon="search"
-        @iconId="SEARCH_BUTTON_ID"
-        @action={{@toggleSearchMenu}}
+        @iconId={{@searchButtonId}}
+        @onClick={{@toggleSearchMenu}}
         @active={{@searchVisible}}
         @href={{getURL "/search"}}
-        @classNames={{array "search-dropdown"}}
+        @className="search-dropdown"
+        @targetSelector=".search-menu-panel"
       />
 
-      {{#if (or (not @sidebarEnabled) this.site.mobileView)}}
+      {{!-- {{#if (or (not @sidebarEnabled) this.site.mobileView)}}
         <Dropdown
           @title="hamburger_menu"
           @icon="bars"
@@ -45,68 +55,11 @@ export default class Icons extends Component {
           @href=""
           @classNames={{array "hamburger-dropdown"}}
         />
-      {{/if}}
+      {{/if}} --}}
 
-      {{#if this.currentUser}}
+      {{!-- {{#if this.currentUser}}
         <UserDropdown @active={{@userVisible}} @action={{@toggleUserMenu}} />
-      {{/if}}
+      {{/if}} --}}
     </ul>
   </template>
 }
-
-createWidget("header-icons", {
-  services: ["search"],
-  tagName: "ul.icons.d-header-icons",
-
-  html(attrs) {
-    if (this.siteSettings.login_required && !this.currentUser) {
-      return [];
-    }
-
-    const icons = [];
-
-    if (_extraHeaderIcons) {
-      _extraHeaderIcons.forEach((icon) => {
-        icons.push(this.attach(icon));
-      });
-    }
-
-    const search = this.attach("header-dropdown", {
-      title: "search.title",
-      icon: "search",
-      iconId: SEARCH_BUTTON_ID,
-      action: "toggleSearchMenu",
-      active: attrs.searchVisible || this.search.visible,
-      href: getURL("/search"),
-      classNames: ["search-dropdown"],
-    });
-
-    icons.push(search);
-
-    const hamburger = this.attach("header-dropdown", {
-      title: "hamburger_menu",
-      icon: "bars",
-      iconId: "toggle-hamburger-menu",
-      active: attrs.hamburgerVisible,
-      action: "toggleHamburger",
-      href: "",
-      classNames: ["hamburger-dropdown"],
-    });
-
-    if (!attrs.sidebarEnabled || this.site.mobileView) {
-      icons.push(hamburger);
-    }
-
-    if (attrs.user) {
-      icons.push(
-        this.attach("user-dropdown", {
-          active: attrs.userVisible,
-          action: "toggleUserMenu",
-          user: attrs.user,
-        })
-      );
-    }
-
-    return icons;
-  },
-});
