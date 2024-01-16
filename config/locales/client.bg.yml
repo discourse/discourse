@@ -2195,6 +2195,20 @@ bg:
       empty: "Няма намерени нотификации."
       reviewable_items: "точки, изискващи преглед"
       watching_first_post_label: "Нова тема"
+      mentioned: "<span>%{username}</span> %{description}"
+      group_mentioned: "<span>%{username}</span> %{description}"
+      quoted: "<span>%{username}</span> %{description}"
+      bookmark_reminder: "<span>%{username}</span> %{description}"
+      replied: "<span>%{username}</span> %{description}"
+      posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
+      edited: "<span>%{username}</span> %{description}"
+      liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_consolidated: "<span>%{username}</span> %{description}"
+      private_message: "<span>%{username}</span> %{description}"
+      invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> прие поканата ви"
       invitee_accepted_your_invitation: "прие поканата ви"
       moved_post: "<span>%{username}</span> преместен %{description}"
@@ -2348,12 +2362,20 @@ bg:
         post:
           count:
             label: Публикации
+          min:
+            placeholder: минимум
+          max:
+            placeholder: максимум
           time:
             label: Публикувано
             before: преди
             after: след
         views:
           label: Преглеждания
+        min_views:
+          placeholder: минимум
+        max_views:
+          placeholder: максимум
     new_item: "нови"
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
@@ -2880,6 +2902,7 @@ bg:
           html_part:
             button: "HTML"
       bookmarks:
+        create: "Създайте отметка"
         edit: "Редактиране на отметката"
         name: "Име"
         name_placeholder: "За какво е тази отметка?"
@@ -2933,6 +2956,7 @@ bg:
         group: "Група"
         see: "Виж"
         reply: "Отговорете"
+        create: "Създай"
       special_warning: "Внимание: Тази категория е предварително семена категория и настройките й за сигурност не могат да се променят. Ако не искате да използвате тази категория, изтрийте темата си, вместо да я местите в категорията по предназначение."
       uncategorized_security_warning: "Тази категория е специална. Тя е предназначен като обща зона за теми, които нямат категория. Като такава, тя не може да има настройки за сигурност."
       images: "Изображения"
@@ -3291,6 +3315,7 @@ bg:
       share: "Споделяне"
       dismiss: "Отмени"
     pause_notifications:
+      label: "Пауза на известията"
       options:
         half_hour: "30 минути"
         one_hour: "1 час"
@@ -3456,6 +3481,8 @@ bg:
             category:
               label: Категория
       groups:
+        new:
+          create: "Създай"
         manage:
           interaction:
             email: Имейл
@@ -3491,6 +3518,7 @@ bg:
         none: "Няма активни API ключове в момента."
         user: "Потребител"
         title: "API"
+        key: "Ключ"
         created: Създадени
         never_used: (никога)
         generate: "Генраирай"
@@ -3503,6 +3531,7 @@ bg:
         scopes:
           action: Действие
       web_hooks:
+        create: "Създай"
         edit: "Редактирай"
         save: "Запази"
         active: "Активни"
@@ -3528,6 +3557,8 @@ bg:
         howto: "Как да инсталирам софтуерни приставки?"
         author: "От %{author}"
         learn_more: "Научете повече"
+      navigation_menu:
+        sidebar: "Странична лента"
       backups:
         title: "Бекъп"
         menu:
@@ -3614,12 +3645,14 @@ bg:
         theme:
           theme: "Тема"
           customize_desc: "Персонализация:"
+          create: "Създай"
           create_type: "Тип"
           create_name: "Име"
           save: "Запази "
           edit: "Редактирай"
           mobile: "Мобилен"
           settings: "Настройки"
+          preview: "Преглед"
           cancel: "Прекрати"
           collapse: Намали
           upload: "Качване"
@@ -3814,6 +3847,7 @@ bg:
             check_personal_message: "провери лично съобщение"
             topic_published: "темата е пубикувана"
             post_approved: "публикацията е одобрена"
+            post_rejected: "публикацията е отхвърлена"
             create_badge: "създай значка"
             change_badge: "промени значката"
             delete_badge: "изтрий значката"
@@ -3979,6 +4013,7 @@ bg:
         suspend_reason: "Причина"
         suspended_by: "Отстранен от"
         silence_reason: "Причина"
+        penalty_post_none: "Не прави нищо"
         moderator: "Модератор? "
         admin: "Админ? "
         suspended: "Отстранен? "

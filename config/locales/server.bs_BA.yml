@@ -1055,6 +1055,8 @@ bs_BA:
       confirm_title: "Obavijesti uključene - %{site_title}"
       confirm_body: "Uspješno! Obavijesti su sada uključene."
       custom: "Obavijest od %{username} na %{site_title}"
+  staff_action_logs:
+    unknown: "unknown"
   reviewables:
     priorities:
       low: "Nisko"

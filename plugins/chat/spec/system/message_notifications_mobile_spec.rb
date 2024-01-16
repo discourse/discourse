@@ -80,7 +80,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
           context "when a message is created" do
             it "correctly renders notifications" do
-              visit("/chat")
+              visit("/chat/channels")
 
               create_message(channel_1, user: user_1)
 
@@ -93,7 +93,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
             it "correctly renders notifications" do
               Jobs.run_immediately!
 
-              visit("/chat")
+              visit("/chat/channels")
 
               create_message(
                 channel_1,
@@ -173,12 +173,14 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
         context "when messages are created" do
           it "correctly renders notifications" do
-            visit("/chat")
+            visit("/chat/channels")
 
             create_message(channel_1, user: user_1)
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
             expect(channel_index_page).to have_unread_channel(channel_1)
+
+            visit("/chat/direct-messages")
 
             create_message(dm_channel_1, user: user_1)
 

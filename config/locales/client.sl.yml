@@ -1057,6 +1057,7 @@ sl:
       no_bookmarks_body: >
         Dodajte objave z zaznamkom z gumbom %{icon} in tukaj bodo navedeni za lažjo uporabo. Lahko si nastavite tudi opomnik!
       no_notifications_title: "Nimate še nobenega obvestila"
+      no_notifications_page_title: "Nimate še nobenega obvestila"
       dynamic_favicon: "Prikaži števec na ikoni brskalnika"
       skip_new_user_tips:
         description: "Preskoči namige in značke za nove uporabnike"
@@ -1859,6 +1860,8 @@ sl:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
+    conditional_loading_section:
+      loading: Nalagam...
     select_kit:
       delete_item: "Izbriši %{name}"
       filter_by: "Filtriraj po: %{name}"
@@ -1964,6 +1967,7 @@ sl:
       saving: "Shranjujem"
       saved: "Shranjeno!"
       saved_draft: "Osnutek objave je v teku. Tapnite za nadaljevanje."
+      uploading: "Nalagam..."
       quote_post_title: "Citiraj cel prispevek"
       bold_label: "B"
       bold_title: "Krepko"
@@ -2864,8 +2868,15 @@ sl:
             title: "Prikaži HTML obliko e-sporočila"
             button: "HTML"
       bookmarks:
+        create: "Ustvari zaznamek"
+        edit: "Uredi zaznamek"
         name: "Polno ime"
         options: "Možnosti"
+        actions:
+          delete_bookmark:
+            name: "Izbriši zaznamek"
+          edit_bookmark:
+            name: "Uredi zaznamek"
       filtered_replies:
         viewing_posts_by: "Ogled %{post_count} objav avtorja"
         viewing_subset: "Nekateri odgovori so strnjeni"
@@ -3505,6 +3516,7 @@ sl:
           delete: "Izbriši"
           public: "Vidno vsem"
           links:
+            reset: "Ponastavi na privzeto"
             icon:
               label: "Ikona"
             name:
@@ -3581,6 +3593,9 @@ sl:
         default_edit_reason: "Posodobitev tabele z oblikovalcem tabel"
       default_header:
         col_1: "1. stolpec"
+        col_2: "2. stolpec"
+        col_3: "3. stolpec"
+        col_4: "4. stolpec"
       spreadsheet:
         show: "Prikaži"
         about: "O nas"
@@ -3738,6 +3753,7 @@ sl:
         user: "Uporabnik"
         title: "API"
         created: Ustvarjeno
+        last_used: Nazadnje uporabljeno
         never_used: (nikoli)
         generate: "Ustvari"
         revoke: "Prekliči"
@@ -3931,6 +3947,7 @@ sl:
             name: "izbran"
         email_style:
           css: "CSS"
+          reset: "Ponastavi na privzeto"
       email:
         title: "E-pošta"
         settings: "Nastavitve"
@@ -4041,6 +4058,7 @@ sl:
             check_personal_message: "preveri zasebno sporočilo"
             topic_published: "tema objavljena"
             post_approved: "prispevek odobren"
+            post_rejected: "objava zavrnjena"
             create_badge: "ustvari značko"
             change_badge: "spremeni značko"
             delete_badge: "izbriši značko"

@@ -16,7 +16,7 @@ de:
         chat_separate_sidebar_mode:
           always: "Immer"
           fullscreen: "Wenn der Chat im Vollbildmodus ist"
-          never: "niemals"
+          never: "Nie"
       logs:
         staff_actions:
           actions:
@@ -31,10 +31,10 @@ de:
       web_hooks:
         chat_event:
           group_name: "Chat-Ereignisse"
-          chat_message_created: "Nachricht wird erstellt"
-          chat_message_edited: "Nachricht wird bearbeitet"
-          chat_message_trashed: "Nachricht wird gelöscht"
-          chat_message_restored: "Nachricht wird wiederhergestellt"
+          chat_message_created: "Nachricht erstellt"
+          chat_message_edited: "Nachricht bearbeitet"
+          chat_message_trashed: "Nachricht gelöscht"
+          chat_message_restored: "Nachricht wiederhergestellt"
     about:
       chat_messages_count: "Chat-Nachrichten"
       chat_channels_count: "Chat-Kanäle"
@@ -225,6 +225,7 @@ de:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
+      no_direct_message_channels: "Du bist keinem Direktnachrichtenkanal beigetreten."
       no_public_channels: "Du bist keinem Kanal beigetreten."
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       only_chat_push_notifications:
@@ -333,7 +334,7 @@ de:
         default_search_placeholder: "#ein-kanal, @jemand oder sonstiges"
         default_channel_search_placeholder: "#ein-kanal"
         default_user_search_placeholder: "@jemand"
-        user_search_placeholder: "... weitere Mitglieder hinzufügen"
+        user_search_placeholder: "… weitere Mitglieder hinzufügen"
         disabled_user: "hat den Chat deaktiviert"
         no_items: "Keine Elemente"
         create_group_placeholder: "Name des Gruppenchats (optional)"
@@ -417,10 +418,10 @@ de:
       reactions:
         only_you: "<span>Du hast mit reagiert mit </span>:%{emoji}:"
         you_and_single_user: "<span>Du und %{username} habt reagiert mit </span>:%{emoji}:"
-        you_and_multiple_users: "<span>Du, %{commaSeparatedUsernames} und %{username} haben reagiert mit </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Du, %{commaSeparatedUsernames} und %{username} habt reagiert mit </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "<span>Du, %{commaSeparatedUsernames} und %{count} weitere Person haben reagiert mit </span>:%{emoji}:"
-          other: "<span>Du, %{commaSeparatedUsernames} und %{count} andere Personen haben reagiert mit </span>::%{emoji}:"
+          one: "<span>Du, %{commaSeparatedUsernames} und %{count} weitere Person habt reagiert mit </span>:%{emoji}:"
+          other: "<span>Du, %{commaSeparatedUsernames} und %{count} andere Personen habt reagiert mit </span>:%{emoji}:"
         single_user: "<span>%{username} reagierte mit </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} und %{username} reagierten mit </span>:%{emoji}:"
         multiple_users_and_more:
@@ -478,13 +479,18 @@ de:
           export_has_started: "Der Export hat begonnen. Du erhältst eine PN, wenn er abgeschlossen ist."
       my_threads:
         title: Meine Threads
+        aria_label: "Zu meiner Thread-Liste wechseln"
       direct_messages:
-        title: "Persönlicher Chat"
+        title: "DMs"
+        aria_label: "Zu Direktnachrichten wechseln"
         new: "Persönlichen Chat erstellen"
         create: "Los"
         leave: "Diesen persönlichen Chat verlassen"
         close: "Schließe diesen persönlichen Chat"
         cannot_create: "Du kannst leider keine Direktnachrichten senden."
+      channel_list:
+        title: "Kanäle"
+        aria_label: "Zur Kanalliste wechseln"
       incoming_webhooks:
         back: "Zurück"
         channel_placeholder: "Kanal auswählen"
@@ -542,14 +548,14 @@ de:
           one: "%{commaSeparatedUsernames} und %{count} andere Person schreiben"
           other: "%{commaSeparatedUsernames} und %{count} andere Personen schreiben"
       retention_reminders:
-        indefinitely_short: "unbegrenzt"
+        indefinitely_short: "unbestimmt"
         indefinitely_long: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten auf unbestimmte Zeit gespeichert werden."
         short:
           one: "%{count} Tag"
           other: "%{count} Tage"
         long:
           one: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tag aufbewahrt werden."
-          other: "Die Chat-Einstellungen wurden so eingestellt, dass Channel-Nachrichten für %{count} Tage aufbewahrt werden."
+          other: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tage aufbewahrt werden."
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."
@@ -595,7 +601,7 @@ de:
           other: "+%{count}"
       threads:
         open: "Thread öffnen"
-        list: "Themen"
+        list: "Threads"
         none: "Du nimmst an keinem Thread in diesem Kanal teil."
       draft_channel_screen:
         header: "Neue Nachricht"
@@ -645,7 +651,7 @@ de:
           title: "Markierte Chat-Nachricht"
         reviewable_chat_message:
           title: "Markierte Chat-Nachricht"
-          noun: "chat-Nachricht"
+          noun: "Chat-Nachricht"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

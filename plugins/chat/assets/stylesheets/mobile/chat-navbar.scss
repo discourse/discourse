@@ -4,8 +4,18 @@
     max-width: 100vw;
     padding-inline: 0.25rem;
   }
-
+  &__actions {
+    margin-right: 0.5rem;
+  }
   &__back-button {
     align-self: stretch;
+  }
+
+  .c-navbar__title {
+    .c-routes-direct-messages &,
+    .c-routes-channels &,
+    .c-routes-threads & {
+      padding-left: 1.25rem;
+    }
   }
 }

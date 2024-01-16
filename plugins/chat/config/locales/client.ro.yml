@@ -141,6 +141,7 @@ ro:
         follow: "Alătură-te"
         followed: "Înscris"
         threading_enabled: "Activat"
+        threading_disabled: "Dezactivat"
         notifications: "Notificări"
         preview: "Previzualizează"
         save: "Salvare"
@@ -151,8 +152,6 @@ ro:
         category_label: "Categorie"
         history_label: "Istoric"
         members_label: "Membri"
-      my_threads:
-        title: Firele mele
       direct_messages:
         close: "Închide această conversație personală"
       incoming_webhooks:
@@ -187,6 +186,7 @@ ro:
           one: "%{count} răspuns"
           few: "%{count} răspunsuri"
           other: "%{count} răspunsuri"
+        label: Fir
         settings: "Opțiuni"
         last_reply: "Ultimul răspuns"
         notifications:
@@ -207,3 +207,7 @@ ro:
           fields:
             message:
               label: Mesaj
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Mesaj discuție semnalat"

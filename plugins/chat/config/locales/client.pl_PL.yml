@@ -512,10 +512,7 @@ pl_PL:
           description: "Spowoduje to wyeksportowanie wszystkich wiadomości ze wszystkich kanałów."
           create_export: "Utwórz eksport"
           export_has_started: "Eksport rozpoczął się. Otrzymasz wiadomość prywatną, gdy będzie gotowy."
-      my_threads:
-        title: Moje wątki
       direct_messages:
-        title: "Czat osobisty"
         new: "Utwórz osobisty czat"
         create: "Utwórz"
         leave: "Opuść ten osobisty czat"

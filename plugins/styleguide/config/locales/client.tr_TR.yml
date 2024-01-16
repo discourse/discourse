@@ -10,10 +10,13 @@ tr_TR:
       title: "Stil rehberi"
       welcome: "Başlamak için soldaki menüden bir bölüm seçin."
       categories:
+        syntax: Sözdizimi
         atoms: Atomlar
         molecules: Moleküller
         organisms: Organizmalar
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Tipografi"
           example: "Discourse'a Hoş Geldiniz"
@@ -94,7 +97,7 @@ tr_TR:
         tooltips:
           title: "İpucu metinleri"
           description: "Açıklama"
-          header: "Üstbilgi"
+          header: "Üst bilgi"
           hover_to_see: "Araç ipucunu görmek için üzerine gidin"
         char_counter:
           title: "Karakter Sayacı"

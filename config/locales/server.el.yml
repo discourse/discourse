@@ -525,6 +525,11 @@ el:
     title: "Επαναφορά κωδικού πρόσβασης"
     success: "Αλλάξατε επιτυχώς τον κωδικό πρόσβασής σας και έχετε συνδεθεί."
     success_unapproved: "Αλλάξατε επιτυχώς τον κωδικό πρόσβασής σας"
+  user_auth_tokens:
+    device:
+      iphone: "iPhone"
+    os:
+      android: "Android"
   change_email:
     confirmed: "Η διεύθυνσή email σας έχει ενημερωθεί."
     please_continue: "Συνεχίστε στην %{site_name}"
@@ -2375,6 +2380,8 @@ el:
         fields:
           login_required:
             placeholder: "Ιδιωτική"
+          enable_sidebar:
+            placeholder: "Ενεργοποίηση πλαϊνής γραμμής"
       styling:
         fields:
           styling_preview:
@@ -2391,6 +2398,8 @@ el:
                 label: "Κατηγορίες και Τελευταία Νήματα"
               categories_and_top_topics:
                 label: "Κατηγορίες και κορυφαία θέματα"
+              subcategories_with_featured_topics:
+                label: "Υποκατηγορίες με Προτεινόμενα Θέματα"
       corporate:
         fields:
           contact_url:
@@ -2415,6 +2424,7 @@ el:
       confirm_body: "Επιτυχία! Οι ειδοποιήσεις έχουν ενεργοποιηθεί."
       custom: "Ειδοποίηση από %{username} στο %{site_title}"
   staff_action_logs:
+    unknown: "άγνωστο"
     api_key:
       revoked: Ανακλήθηκε
   reviewables:

@@ -169,7 +169,7 @@ it:
       group_mentions_disabled_multiple:
         one: "%{first_identifier} e %{count} altro gruppo non consentono menzioni."
         other: "%{first_identifier} e altri %{count} gruppi non consentono menzioni."
-      global_mentions_disallowed: "Le menzioni di @qui e @tutti sono disabilitate in questo canale."
+      global_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
       too_many_members: "%{first_identifier} ha troppi membri. Nessuno è stato avvisato."
       too_many_members_multiple:
         one: "%{first_identifier} e %{count} altro gruppo hanno troppi membri. Nessuno è stato avvisato."

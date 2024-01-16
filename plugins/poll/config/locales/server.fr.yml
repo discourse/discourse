@@ -12,9 +12,11 @@ fr:
     poll_minimum_trust_level_to_create: "Définir le niveau de confiance minimal requis pour créer des sondages."
     poll_groupable_user_fields: "Un ensemble de noms de champs utilisateur qui peuvent être utilisés pour grouper et filtrer les résultats d'un sondage."
     poll_export_data_explorer_query_id: "ID de la requête de l'explorateur de données à utiliser pour exporter les résultats d'un sondage (0 pour désactiver)."
+    poll_default_public: "Lors de la création d'un nouveau sondage, activez l'option « Afficher qui a voté » par défaut."
   poll:
     poll: "sondage"
     invalid_argument: "Valeur « %{value} » invalide pour le paramètre « %{argument} »."
+    multiple_polls_without_name: "Lorsque vous créez plusieurs sondages, incluez des noms uniques en ajoutant <code>name=example</code> à vos balises <code>[poll]</code>."
     multiple_polls_with_same_name: "Plusieurs sondages ont le même nom : <strong>%{name}</strong>. Utilisez l'attribut « <code>name</code> » pour donner un identifiant unique aux sondages."
     default_poll_must_have_at_least_1_option: "Un sondage doit avoir au moins 1 option."
     named_poll_must_have_at_least_1_option: "Le sondage <strong>%{name}</strong> doit avoir au moins 1 option."

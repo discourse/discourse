@@ -1741,6 +1741,7 @@ ro:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Introdu"
     select_kit:
       delete_item: "Șterge %{name}"
       no_content: Nu s-au găsit potriviri
@@ -1904,6 +1905,7 @@ ro:
         bookmark_reminder: "memento semn de carte"
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
+        post_approved: "articol aprobat"
         admin_problems: "sfaturi noi în panoul de control al site-ului tău"
     upload_selector:
       uploading: "Se încarcă"
@@ -3091,6 +3093,9 @@ ro:
             review:
               content: "Revizuire"
               title: "Articole semnalate și alte elemente la coadă"
+      panels:
+        forum:
+          label: Forum
     until: "Pana cand:"
     form_templates:
       upload_field:
@@ -3202,6 +3207,7 @@ ro:
         general_tab: "General"
         security_tab: "Securitate"
         report_filter_any: "oricare"
+        disabled: Dezactivat
         reports:
           today: "Astăzi"
           yesterday: "Ieri"
@@ -3314,6 +3320,7 @@ ro:
           inactive: "Inactivă"
           failed: "Eșuată"
           successful: "Cu succes"
+          disabled: "Dezactivat"
         events:
           none: "Nu există evenimente înrudite."
           redeliver: "Livrează din nou"
@@ -3352,6 +3359,8 @@ ro:
         author: "De %{author}"
         experimental_badge: "experimental"
         learn_more: "Află mai multe"
+      navigation_menu:
+        sidebar: "Bară laterală"
       backups:
         title: "Backup-uri"
         menu:
@@ -3690,6 +3699,8 @@ ro:
             check_personal_message: "verifică mesaj personal"
             disabled_second_factor: "Dezactivează autentificarea în doi pași (2FA)"
             topic_published: "discuția a fost publicată"
+            post_approved: "articol aprobat"
+            post_rejected: "articol respins"
         screened_emails:
           title: "Email-uri filtrate"
           description: "Când cineva încearcă să creeze un cont nou, următorul email va fi verificat iar înregistrarea va fi blocată, sau o altă acțiune va fi inițiată."

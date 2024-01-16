@@ -144,6 +144,8 @@ pt:
       facebook: "Partilhar no Facebook"
       email: "Enviar por e-mail"
       url: "Copiar e partilhar URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Tornei este tópico publico %{when}"
       open_topic: "Converteu isto em um tópico %{when}"
@@ -1633,6 +1635,7 @@ pt:
         title: "Agora você está acompanhando este tópico"
       suggested_topics:
         title: "Coninue lendo!"
+    loading: "A carregar..."
     errors:
       prev_page: "enquanto tenta carregar"
       reasons:
@@ -1690,6 +1693,7 @@ pt:
       disable: "Mostrar Publicações Eliminadas"
     private_message_info:
       title: "Mensagem"
+      add: "Adicionar…"
       leave_message: "Quer mesmo deixar esta mensagem?"
       remove_allowed_user: "Deseja mesmo remover %{name} desta mensagem?"
       remove_allowed_group: "Deseja mesmo remover %{name} desta mensagem?"
@@ -3832,6 +3836,7 @@ pt:
         upload:
           label: "Carregar"
           title: "Carregar uma cópia de segurança para esta instância"
+          uploading: "A enviar…"
           success: "'%{filename}' foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
           error: "Verificou-se um erro no carregamento de '%{filename}': %{message}"
         operations:
@@ -4207,6 +4212,7 @@ pt:
             reviewed_post: "mensagem revista"
             post_edit: "editar mensagem"
             post_approved: "mensagem aprovada"
+            post_rejected: "publicação rejeitada"
             create_badge: "criar crachá"
             change_badge: "editar crachá"
             delete_badge: "eliminar crachá"
@@ -4600,6 +4606,7 @@ pt:
           navigation: "Navegação"
         default_categories:
           modal_yes: "Sim"
+          modal_no: "Não, apenas aplicar a mudança daqui em diante"
         file_types_list:
           add_image_types: "Imagens"
       badges:
@@ -4679,6 +4686,7 @@ pt:
       emoji:
         title: "Emoji"
         add: "Adicionar Novo Emoji"
+        uploading: "A enviar…"
         name: "Nome"
         group: "Grupo"
         image: "Imagem"
@@ -4726,6 +4734,7 @@ pt:
       next: "Próximo"
       step-text: "Passo"
       step: "%{current} de %{total}"
+      uploading: "A enviar…"
       upload_error: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
       invites:
         add_user: "adicionar"

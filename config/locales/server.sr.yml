@@ -490,6 +490,8 @@ sr:
             placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
       finished:
         title: "Vaš Discource je spreman!"
+  staff_action_logs:
+    unknown: "nepoznato"
   reviewables:
     priorities:
       medium: "Srednje"

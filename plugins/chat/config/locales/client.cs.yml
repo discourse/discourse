@@ -27,12 +27,18 @@ cs:
           descriptions:
             chat:
               create_message: "Vytvořit chatovací zprávu v určeném kanálu."
+    about:
+      chat_channels_count: "Kanály chatu"
     chat:
+      back_to_forum: "Fórum"
       deleted_chat_username: smazáno
       dates:
         time_tiny: "h:mm"
+      all_loaded: "Zobrazení všech zpráv"
       create: "Vytvoř"
       cancel: "Zrušit"
+      chat_channels: "Kanály"
+      browse_all_channels: "Procházet všechny kanály"
       channel_settings:
         edit: "Upravit"
         add: "přidat"
@@ -41,44 +47,63 @@ cs:
       channel_close:
         title: "Zavřít kanál"
       channels_list_popup:
+        browse: "Procházet kanály"
         create: "Nový kanál"
+      click_to_join: "Kliknutím sem zobrazíte dostupné kanály."
       close: "Zavřít"
       remove: "Smazat"
       expand: "Rozbalit menu chatu"
       delete: "Smazat"
+      edited: "upraveno"
       muted: "ztišení"
       joined: "účet vytvořen"
+      empty_state:
+        title: "Nebyly nalezeny žádné kanály"
       email_frequency:
         never: "Nikdy"
       header_indicator_preference:
         never: "Nikdy"
       flag: "Nahlášení"
+      heading: "Chat"
       join: "Přidat se ke skupině"
       last_visit: "poslední návštěva"
+      aria_roles:
+        channels_list: "Seznam kanálů chatu"
+      no_public_channels: "Nepřipojili jste se k žádným kanálům."
       reply: "Odpověď"
       edit: "Upravit"
       rebake_message: "Obnovit HTML"
+      unreliable_network: "Síť je nespolehlivá, odesílání zpráv a ukládání konceptů nemusí fungovat."
       bookmark_message: "Založit"
       bookmark_message_edit: "Upravit záložku"
       save: "Uložit"
+      select: "Vybrat"
+      return_to_list: "Zpět na seznam kanálů"
       sounds:
         none: "Žádná"
+      title: "chat"
+      title_capitalized: "Chat"
+      upload: "Připojte soubor"
       exit: "zpět"
       channel_status:
         closed: "Uzavřeno"
         open: "Otevřít"
       browse:
         back: "Zpět"
+        title: Kanály
         filter_all: Celkem
         filter_closed: Uzavřeno
       chat_message_separator:
         today: Dnes
         yesterday: Včera
+      members_view:
+        back_to_settings: "Zpět na nastavení"
       about_view:
         title: Nadpis
         name: Jméno
         description: Popis
       channel_info:
+        back_to_all_channels: "Všechny kanály"
         back_to_channel: "Zpět"
         tabs:
           members: Členové
@@ -89,20 +114,41 @@ cs:
         title: Nová zpráva
         prefix: "Komu:"
       create_channel:
+        title: "Nový kanál"
         type: "Typ"
         types:
           category: "Kategorie"
           topic: "Témata"
+      reactions:
+        only_you: "<span>Reagovali jste pomocí </span>:%{emoji}:"
+        you_and_single_user: "<span>Vy a %{username} jste reagovali pomocí </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Vy, %{commaSeparatedUsernames} a %{username} jste reagovali pomocí </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Vy, %{commaSeparatedUsernames} a %{count} další jste reagovali pomocí </span>:%{emoji}:"
+          few: "<span>Vy, %{commaSeparatedUsernames} a %{count} další jste reagovali pomocí </span>:%{emoji}:"
+          many: "<span>Vy, %{commaSeparatedUsernames} a %{count} dalších jste reagovali pomocí </span>:%{emoji}:"
+          other: "<span>Vy, %{commaSeparatedUsernames} a %{count} dalších jste reagovali pomocí </span>:%{emoji}:"
+        single_user: "<span>%{username} reagoval pomocí </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} a %{username} reagovali pomocí </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} a %{count} další reagovali na </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} a %{count} další reagovali na </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} a %{count} dalších reagovalo na </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} a %{count} dalších reagovalo na </span>:%{emoji}:"
       composer:
         italic_text: "text kurzívou"
         bold_text: "tučný text"
         send: "Poslat"
+      quote:
+        default_thread_title: "Vlákno"
       notification_levels:
         never: "Nikdy"
       settings:
+        auto_join_users_info: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup do kategorie %{category}."
+        auto_join_users_info_no_category: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup ke zvolené kategorii."
         follow: "Přidat se ke skupině"
         followed: "Účet vytvořen"
-        threading_enabled: "Zapnutý"
+        threading_enabled: "Zapnuto"
         threading_disabled: "Vypnuto"
         notifications: "Upozornění"
         preview: "Náhled"
@@ -114,6 +160,14 @@ cs:
         category_label: "Kategorie"
         history_label: "Historie"
         members_label: "Členové"
+      admin:
+        title: "Chat"
+        export_messages:
+          description: "Tímto se exportují všechny zprávy ze všech kanálů."
+      direct_messages:
+        new: "Vytvořit osobní chat"
+      channel_list:
+        title: "Kanály"
       incoming_webhooks:
         back: "Zpět"
         description: "Popis"
@@ -132,15 +186,26 @@ cs:
           title: "Rozdělit téma"
         existing_topic:
           title: "Sloučit téma"
+        new_message:
+          title: "Přesunout do nové zprávy"
       retention_reminders:
+        indefinitely_long: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly po neomezenou dobu."
         short:
           one: "%{count} den"
           few: "%{count} dny"
           many: "%{count} dní"
           other: "%{count} dní"
+        long:
+          one: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} den."
+          few: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dny."
+          many: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
+          other: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
       emoji_picker:
         objects: "Objekty"
+        activities: "Aktivity"
         flags: "Nahlášení"
+        symbols: "Symboly"
+        search_placeholder: "Vyhledávání podle názvu a přezdívky emoji..."
       thread:
         title: "Nadpis"
         replies:
@@ -148,6 +213,7 @@ cs:
           few: "%{count} odpovědí"
           many: "%{count} odpovědí"
           other: "%{count} odpovědí"
+        label: Vlákno
         settings: "Nastavení"
         last_reply: "poslední odpověď"
         notifications:
@@ -166,3 +232,20 @@ cs:
           fields:
             message:
               label: Zpráva
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Označená zpráva chatu"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Chat"
+        keyboard_shortcuts:
+          mark_all_channels_read: "%{shortcut} Označit všechny kanály jako přečtené"
+    styleguide:
+      sections:
+        chat:
+          title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

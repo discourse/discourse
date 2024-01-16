@@ -92,7 +92,7 @@ fi:
           one: "Siirron nimi on liian pitkä. Sen pituus ei saa ylittää %{count} merkkiä."
           other: "Siirron nimi on liian pitkä. Sen pituus ei saa ylittää %{count} merkkiä."
         too_many_pending_migrations: "Tässä teemassa on liian monta odottavaa siirtoa. Teemoilla ei saa olla yli 100 siirtoa yhdessä päivityksessä"
-        out_of_sequence: "Siirto \"%{name}\" on ei noudata järjestystä. Tämän teeman viimeisellä siirrolla oli versionumero %{current} , joka on suurempi kuin uuden siirron numero"
+        out_of_sequence: "Siirto \"%{name}\" on ei noudata järjestystä. Tämän teeman viimeisellä siirrolla oli versionumero %{current}, joka on suurempi kuin uuden siirron numero"
         syntax_error: "Siirron \"%{name}\" suorittaminen epäonnistui, koska siinä on syntaksivirhe: %{error}"
         exceeded_memory_limit: "Siirto \"%{name}\" epäonnistui, koska se ylitti muistirajan"
         timed_out: "Siirto \"%{name}\" aikakatkaistiin"
@@ -226,7 +226,7 @@ fi:
       default_tags_already_selected: "Et voi valita tunnistetta, joka on käytössä toisella listalla."
       s3_upload_bucket_is_required: "Et voi ottaa latauksia S3:een käyttöön, ellet ole määrittänyt 's3_upload_bucket'-määritettä."
       enable_s3_uploads_is_required: "Et voi ottaa inventaariota S3:een käyttöön, ellet ole ottanut käyttöön latauksia S3:een."
-      page_publishing_requirements: "Sivun julkaisua ei voida ottaa käyttöön, jos suojatut lataukset verkkoon ovat käytössä."
+      page_publishing_requirements: "Sivun julkaisua ei voi ottaa käyttöön, jos suojatut lataukset verkkoon ovat käytössä."
       s3_backup_requires_s3_settings: "Et voi käyttää S3:a varmuuskopiosijaintina, ellei %{setting_name} ei ole määritetty."
       s3_bucket_reused: "Sama säiliö ei voi olla sekä 's3_upload_bucket' että 's3_backup_bucket'. Valitse eri säiliö tai määritä eri polku jokaiselle säiliölle."
       secure_uploads_requirements: "S3-lataukset ja S3 ACL:t täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
@@ -597,7 +597,7 @@ fi:
               same_as_password: "on sama kuin salasanasi."
             ip_address:
               blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
-              max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
+              max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökunnan jäseneen."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1027,7 +1027,7 @@ fi:
       every_30_minutes: "30 minuutin välein"
       every_hour: "tunneittain"
       daily: "päivittäin"
-      weekly: "viikottain"
+      weekly: "viikoittain"
       every_month: "kuukausittain"
       every_six_months: "kuuden kuukauden välein"
   user_api_key:
@@ -1517,7 +1517,7 @@ fi:
     blocked_onebox_domains: "Luettelo verkkotunnuksista, joista ei koskaan näytetä onebox-esikatselua, esim. wikipedia.org\n(jokerimerkkejä * ja ? ei tueta)"
     block_onebox_on_redirect: "Estä onebox uudelleenohjaaville URL-osoitteille"
     allowed_inline_onebox_domains: "Verkko-osoitteet, joista luodaan minimoitu Onebox-esikatselu, jos niihin linkitetään määrittämättä otsikkoa."
-    enable_inline_onebox_on_all_domains: "Ohita allowed_inline_onebox_domains -sivustoasetus ja salli tekstiin sidotut onebox-esikatselut kaikista verkkotunnuksista."
+    enable_inline_onebox_on_all_domains: "Ohita allowed_inline_onebox_domains-sivustoasetus ja salli tekstiin sidotut onebox-esikatselut kaikista verkkotunnuksista."
     force_custom_user_agent_hosts: "Isännät, joille käytetään mukautettua onebox-käyttäjäagenttia kaikissa pyynnöissä. (Erityisen hyödyllinen isännille, jotka rajoittavat käyttäjäagentin pääsyä)."
     max_oneboxes_per_post: "Oneboxien enimmäismäärä yhdessä viestissä"
     facebook_app_access_token: "Tunnus, joka on luotu Facebook-sovellustunnuksestasi ja salausavaimesta. Käytetään Instagram-oneboxien luomiseen."
@@ -1587,7 +1587,7 @@ fi:
     must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki tilit ennen uusien käyttäjien päästämistä sivustolle."
     invite_code: "Käyttäjän on kirjoitettava tämä koodi, jotta tilin rekisteröinti sallitaan, ohitetaan, kun se on tyhjä (ei huomioi kirjainkokoa)"
     approve_suspect_users: "Lisää epäilyttävät käyttäjät tarkastusjonoon. Epäilyttävät käyttäjät ovat täydentäneet kuvauksen tai sivuston käyttäjäprofiiliin, mutta heillä ei ole lukuaktiivisuutta."
-    review_every_post: "Lisää jokainen uusi julkaisu ylläpidon tarkistusjonoon. Viestit julkaistaan silti välittömästi ja ne näkyvät kaikille käyttäjille. VAROITUS! Ei suositella suuren käyttäjämärän sivustoilla, koska tarkistettavien viestien määrä voi olla todella suuri."
+    review_every_post: "Lisää jokainen uusi julkaisu ylläpidon tarkastusjonoon. Viestit julkaistaan silti välittömästi ja ne näkyvät kaikille käyttäjille. VAROITUS! Ei suositella suuren käyttäjämäärän sivustoilla, koska tarkastettavien viestien määrä voi olla todella suuri."
     pending_users_reminder_delay_minutes: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta minuuttia. Aseta -1, jos haluat poistaa ilmoitukset käytöstä."
     persistent_sessions: "Käyttäjät pysyvät sisäänkirjautuneena, vaikka selain on suljettuna"
     maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
@@ -1595,7 +1595,7 @@ fi:
     ga_universal_tracking_code: "Google Universal Analytics -seurantakoodin tunnus, esim.: UA-12345678-9; katso <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics -verkkotunnus, esimerkiksi: mysite.com; katso <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Ota käyttöön Google Universal Analyticsin verkkotunnusten välinen seuranta. Asiakastunniste liitetään näihin verkkotunnuksiin ulospäin suuntautuvissa linkeissä. Tutustu <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googlen Verkkotunnusten välisen seurannan määrittäminen ohjeeseen.</a>"
-    gtm_container_id: "Google Tag Manager -säilön tunnus. Esim.: GTM-ABCD12E. <br/>Huomautus: Jos haluat käyttää GTM:ää, kun sisällön suojauskäytäntö (CSP) on käytössä, katso ohjeet metassa: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
+    gtm_container_id: "Google Tag Manager -säilön tunnus. Esim.: GTM-ABCD12E. <br/>Huomautus: Jos haluat käyttää GTM:ää, kun epäilyttävän sisällön seulonta (CSP) on käytössä, katso ohjeet metassa: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua APIa, jos webcrawleria ei tunnisteta. Katso <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Salli valvojien luoda ja hallita alueita ja ryhmiä"
     moderators_change_post_ownership: "Salli valvojien muuttaa viestin omistajuutta"
@@ -2089,6 +2089,7 @@ fi:
     embed_topics_list: "Tue ketjuluetteloiden HTML-upottamista"
     embed_set_canonical_url: "Aseta upotetun sisällön URL-osoitteeksi upotettujen ketjujen kanoninen URL."
     embed_truncate: "Typistä upotetut viestit."
+    embed_unlisted: "Upotetut ketjut ovat piilotettuna, kunnes käyttäjä vastaa."
     embed_support_markdown: "Tue Markdown-muotoilua upotetuissa viesteissä."
     allowed_embed_selectors: "Pilkuin eroteltu luettelo CSS-elementeistä, jotka on sallittu upotuksissa."
     allowed_href_schemes: "Linkeissä sallitut skeemat http:n ja https:n lisäksi."
@@ -2111,10 +2112,12 @@ fi:
     emoji_deny_list: "Nämä emojit eivät ole käytettävissä valikoista tai lyhytkoodeilla."
     approve_post_count: "Viestien lukumäärä, joka uusilta käyttäjiltä ja haastajilta täytyy hyväksyä"
     approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien viestit täytyy hyväksyä"
+    approve_unless_allowed_groups: "Viestit käyttäjiltä, jotka eivät ole näissä ryhmissä, täytyy hyväksyä"
     approve_new_topics_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien aloittamat ketjut täytyy hyväksyä"
+    approve_new_topics_unless_allowed_groups: "Uudet ketjut käyttäjiltä, jotka eivät ole näissä ryhmissä, täytyy hyväksyä"
     approve_unless_staged: "Esikäyttäjien uudet ketjut ja viestit täytyy hyväksyä"
     notify_about_queued_posts_after: "Jos viestejä on ollut hyväksymättä näin monen tunnin ajan, lähetä ilmoitus valvojille. Poista ilmoitukset käytöstä asettamalla 0."
-    reviewable_revision_reasons: "Listaus käytettävissä olevista hylättäessä tarkistusjonon viestejä korjauksella. Myös \"Muu\" on aina käytettävissä, jolloin syy voidaan syöttää itse."
+    reviewable_revision_reasons: "Listaus käytettävissä olevista syistä hylättäessä tarkistusjonon viestejä korjauksella. Myös \"Muu\" on aina käytettävissä, jolloin syy voidaan syöttää itse."
     auto_close_messages_post_count: "Maksimimäärä viestejä viestissä, kunnes se suljetaan automaattisesti (aseta 0 poistaaksesi käytöstä)"
     auto_close_topics_post_count: "Maksimimäärä viestejä ketjussa, kunnes se suljetaan automaattisesti (aseta 0 poistaaksesi käytöstä)"
     auto_close_topics_create_linked_topic: "Luo uusi liittyvä ketju, kun ketju suljetaan automaattisesti \"auto close topics post count\" -asetuksen perusteella"
@@ -2122,6 +2125,8 @@ fi:
     max_allowed_message_recipients: "Kuinka monta vastaanottajaa yksityisviestillä voi olla."
     watched_words_regular_expressions: "Tarkkaillut sanat ovat säännöllisiä lausekkeita."
     enable_diffhtml_preview: "Kokeellinen ominaisuus, joka käyttää diffHTML-tiedostoa esikatselun synkronointiin täydellisen uudelleenhahmontamisen sijaan"
+    enable_fast_edit: "Lisää painikkeen viestin valintavalikkoon, jolla voi muokata pientä valintaa tekstiin sidottuna."
+    enable_quote_copy: "Lisää painikkeen viestin valintavalikkoon, jolla voi kopioida valinnan markdown-lainauksena."
     old_post_notice_days: "Kuinka monen päivän kuluttua viesti-ilmoitus vanhenee"
     new_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee uusiin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee palaaviin käyttäjiin liittyvät viesti-ilmoitukset."
@@ -2169,14 +2174,19 @@ fi:
     default_sidebar_switch_panel_position: "Sivupalkin kytkinpaneelin painikkeiden sijainti"
     retain_web_hook_events_period_days: "Kuinka monta päivää tietoa webhook-tapahtumista säilötään."
     retry_web_hook_events: "Yritä uudelleen epäonnistuneita webhook-tapahtumia neljästi. Aikavälit yritysten välillä ovat 1, 5, 25 ja 125 minuuttia."
+    revoke_api_keys_unused_days: "Päivien määrä API-avaimen viimeisimmästä käytöstä ennen kuin se peruutetaan automaattisesti (0 on ei koskaan)"
+    revoke_api_keys_maxlife_days: "Kuinka monen päivän kuluttua API-avain mitätöidään automaattisesti (0 on ei koskaan)"
     allow_user_api_key_scopes: "Luettelo käyttäjä-API-avaimiin liittyvistä oikeuksista"
     min_trust_level_for_user_api_key: |
       Käyttäjän API-avaimien luomiseen vaadittu luottamustaso.<br>
       <b>VAROITUS:</b> Luottamustason muuttaminen estää matalamman luottamustason käyttäjiä kirjautumasta sisään Discourse Hubin kautta.
     allowed_user_api_auth_redirects: "Sallittu URL-osoite käyttäjän API-avainten todennuksen uudelleenohjaukselle. Jokerimerkkiä * voidaan käyttää vastaamaan mitä tahansa sen osaa (esim. www.esimerkki.fi/*)."
     allowed_user_api_push_urls: "Sallitut URL-osoitteet palvelimen työnnöille käyttäjä-APIin"
+    revoke_user_api_keys_unused_days: "Päivien määrä käyttäjän API-avaimen viimeisimmästä käytöstä ennen kuin se peruutetaan automaattisesti (0 on ei koskaan)"
+    revoke_user_api_keys_maxlife_days: "Kuinka monen päivän kuluttua käyttäjän API-avain mitätöidään automaattisesti (0 on ei koskaan)"
     tagging_enabled: "Otetaanko ketjujen tunnisteet käyttöön?"
     min_trust_to_create_tag: "Vähimmäisluottamustaso, jolla voi luoda tunnisteita."
+    create_tag_allowed_groups: "Ryhmät, jotka saavat luoda tunnisteita."
     max_tags_per_topic: "Suurin tunnisteiden määrä, joka voi liittyä ketjuun."
     enable_max_tags_per_email_subject: "Käytä max_tags_per_email_subject-asetusta luodessasi sähköpostin aihetta"
     max_tags_per_email_subject: "Enimmäismäärä tunnisteita, joka sähköpostin aiheessa voi olla"
@@ -2199,6 +2209,7 @@ fi:
     city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
     shared_drafts_category: "Ota käyttöön jaetut luonnokset -toiminto määrittämällä alue, joka on ketjuluonnoksille varattu. Alueen ketjut eivät näy ketjuluetteloissa henkilökunnan jäsenille."
     shared_drafts_min_trust_level: "Salli käyttäjien nähdä ja muokata jaettuja luonnoksia."
+    shared_drafts_allowed_groups: "Salli näiden ryhmien käyttäjien nähdä ja muokata jaettuja luonnoksia."
     push_notifications_prompt: "Näytä käyttäjäsuostumuspyyntö."
     push_notifications_icon: "Ilmoituskulmassa näkyvä kunniamerkkikuvake. Suosittelemme yksiväristä läpinäkyvää PNG:tä, jonka koko on 96×96."
     enable_desktop_push_notifications: "Ota työpöydän ponnahdusilmoitukset käyttöön"
@@ -2231,7 +2242,10 @@ fi:
     enable_custom_sidebar_sections: "KOKEELLINEN: ota mukautetut sivupalkin osiot käyttöön"
     experimental_topics_filter: "KOKEELLINEN: ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
     enable_experimental_lightbox: "KOKEELLINEN: Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
+    experimental_form_templates: "KOKEELLINEN: Ota lomakemalliominaisuus käyttöön. <b>Kun ominaisuus on otettu käyttöön,</b> voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
+    admin_sidebar_enabled_groups: "KOKEELLINEN: Ota käyttöön sivupalkkinavigointi ylläpitäjän käyttöliittymässä määritetyille ryhmille, mikä korvaa ylätason ylläpitäjän navigointipainikkeet."
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."
+    show_user_menu_avatars: "Näytä käyttäjien avatarit käyttäjävalikossa"
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -2259,6 +2273,7 @@ fi:
       reply_by_email_address_is_empty: "'Reply by email address' täytyy olla asetettuna ennen sähköpostivastausten ottamista käyttöön."
       email_polling_disabled: "Sinun täytyy ottaa joko manuaalinen tarkistus, POP3-tarkistus tai mukautettu postin tarkistus käyttöön ennen kuin otat vastaamisen sähköpostilla käyttöön."
       user_locale_not_enabled: "'Allow user locale' täytyy olla asetettuna ennen tämän asetuksen ottamista käyttöön."
+      at_least_one_group_required: "Sinun täytyy määrittäää vähintään yksi ryhmä tälle asetukselle."
       invalid_regex: "Säännöllinen lauseke ei kelpaa tai ei ole sallittu."
       invalid_regex_with_message: "Säännöllisessä lausekkeessa \"%{regex}\" on virhe: %{message}"
       email_editable_enabled: "Sähköpostin muokkausmahdollisuus on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
@@ -2288,6 +2303,25 @@ fi:
       delete_rejected_email_after_days: "Tämä asetus ei voi olla pienempi kuin delete_email_logs_after_days-asetus tai suurempi kuin %{max}"
       invalid_uncategorized_category_setting: 'Luokittelemattomat-aluetta ei voi valita, jos "allow uncategorized topics" ei ole käytössä.'
       invalid_search_ranking_weights: "Arvo on virheellinen search_ranking_weights-sivustoasetukselle. Esimerkki: '{0.1,0.2,0.3,1.0}'. Huomaa, että kunkin painon enimmäisarvo on 1.0."
+    keywords:
+      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
+      here_mention_allowed_groups: "min_trust_level_for_here_mention"
+      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
+      approve_unless_allowed_groups: "approve_unless_trust_level"
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
+      email_in_allowed_groups: "email_in_min_trust"
+      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
+      uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
+      create_topic_allowed_groups: "min_trust_to_create_topic"
+      edit_post_allowed_groups: "min_trust_to_edit_post"
+      flag_post_allowed_groups: "min_trust_to_flag_posts"
+      delete_all_posts_and_topics_allowed_groups: "tl4_delete_posts_and_topics"
+      user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
+      invite_allowed_groups: "min_trust_level_to_allow_invite"
+      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
+      create_tag_allowed_groups: "min_trust_to_create_tag"
+      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2313,6 +2347,7 @@ fi:
     email_error: "Tiliä ei voitu luoda sähköpostiosoitteella <b>%{email}</b>. Ota yhteyttä sivuston ylläpitäjään."
     missing_secret: "Todennus epäonnistui puuttuvan salausavaimen (secret) vuoksi. Ota yhteyttä sivuston ylläpitoon ongelman korjaamiseksi."
     invite_redeem_failed: "Kutsun lunastus epäonnistui. Ota yhteyttä sivuston ylläpitäjään."
+    invalid_parameter_value: "Todennus epäonnistui parametrin \"%{param}\" virheellisen arvon vuoksi. Ota yhteyttä sivuston ylläpitoon ongelman korjaamiseksi."
   original_poster: "Alkuperäinen kirjoittaja"
   most_recent_poster: "Uusin kirjoittaja"
   frequent_poster: "Usein kirjoittava"
@@ -2401,12 +2436,13 @@ fi:
     security_key_alternative: "Kokeile muuta tapaa"
     security_key_authenticate: "Tee todennus tunnistautumislaitteella"
     security_key_not_allowed_error: "Tunnistautumislaitteen todennusprosessi joko vanheni tai peruutettiin."
-    security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt kelpaavia tunnistetietoja."
+    security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt vastaavia tunnistetietoja."
     security_key_support_missing_error: "Laitteesi tai selaimesi ei tue tunnistaumislaitteita. Käytä muuta tapaa."
     security_key_invalid: "Tunnistautumislaitteen vahvistaminen epäonnistui."
     not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
     incorrect_username_email_or_password: "Väärä käyttäjätunnus, sähköpostiosoite tai salasana"
     incorrect_password: "Väärä salasana"
+    incorrect_password_or_passkey: "Väärä salasana tai suojausavain"
     wait_approval: "Kiitos kirjautumisesta. Ilmoitamme, kun tilisi on hyväksytty."
     active: "Tilisi on aktivoitu ja valmiina käytettäväksi."
     activate_email: "<p>Melkein valmista! Lähetimme sähköpostin osoitteeseen <b>%{email}</b>. Aktivoi tilisi seuraamalla viestin ohjeita.</p><p>Jos viesti ei tullut perille, tarkista roskapostikansiosi.</p>"
@@ -2446,6 +2482,8 @@ fi:
     invalid_security_key: "Tunnistautumislaite ei kelpaa."
     missing_second_factor_name: "Anna nimi."
     missing_second_factor_code: "Anna koodi."
+    too_many_authenticators: "Sinulla voi olla enintään 50 todentajaa. Poista jokin nykyisistä ja yritä uudelleen."
+    too_many_security_keys: "Sinulla voi olla enintään 50 tunnistautumislaitetta. Poista jokin nykyisistä ja yritä uudelleen."
     second_factor_toggle:
       totp: "Käytä todennussovellusta tai tunnistautumislaitetta tämän sijaan"
       backup_code: "Käytä varakoodia tämän sijaan"
@@ -2461,6 +2499,18 @@ fi:
   admin:
     email:
       sent_test: "lähetetty!"
+    user:
+      merge_user:
+        updating_username: "Päivitetään käyttäjätunnusta…"
+        changing_post_ownership: "Muutetaan viestin omistajuutta…"
+        merging_given_daily_likes: "Yhdistetään annettuja päivittäisiä tykkäyksiä…"
+        merging_post_timings: "Yhdistetään viestien ajoituksia…"
+        merging_user_visits: "Yhdistetään käyttäjien käyntejä…"
+        updating_site_settings: "Päivitetään sivuston asetuksia…"
+        updating_user_stats: "Päivitetään käyttäjätilastoja…"
+        merging_user_attributes: "Yhdistetään käyttäjien määritteitä…"
+        updating_user_ids: "Päivitetään käyttäjätunnuksia…"
+        deleting_source_user: "Poistetaan lähdekäyttäjää…"
   user:
     deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
     deactivated_by_staff: "Henkilökunta poisti käytöstä"
@@ -2705,18 +2755,40 @@ fi:
 
         Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
-      title: "Palaute julkaisustasi"
-      subject_template: "Palaute julkaisuusi ketjussa %{topic_title}"
+      title: "Palaute viestistäsi"
+      subject_template: "Palaute viestiisi ketjussa %{topic_title}"
       text_body_template: |
         Hei %{username},
 
-        Olemme tarkistaneet julkaisusi ketjussa [%{topic_title}](%{topic_url}) ja meillä on siihen liittyvää palautetta.
+        Olemme tarkastaneet viestisi ketjussa [%{topic_title}](%{topic_url}) ja meillä on siihen liittyvää palautetta.
 
         Syy: %{reason}
 
         Palaute: %{feedback}
 
-        Voit muokata alkuperäistä viestiäsi alla ja lähettää sen uudelleen ehdotetuilla muutoksilla, tai vastata tähän viestiin, jos sinulla on kysyttävää.
+        Voit muokata alkuperäistä viestiäsi alla ja lähettää sen uudelleen ehdotetuilla muutoksilla tai vastata tähän viestiin, jos sinulla on kysyttävää.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Terveisin,
+        %{site_name} Ylläpito
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "Palaute ketjustasi"
+      subject_template: 'Palaute uudesta ketjusta "%{topic_title}"'
+      text_body_template: |
+        Hei %{username},
+
+        Olemme tarkastaneet uuden ketjusi "%{topic_title}" ja meillä on siihen liittyvää palautetta.
+
+        Syy: %{reason}
+
+        Palaute: %{feedback}
+
+        Voit muokata ketjusi alkuperäistä viestiäsi alla ja lähettää sen uudelleen ehdotetuilla muutoksilla tai vastata tähän viestiin, jos sinulla on kysyttävää.
 
         --------
 
@@ -2975,7 +3047,7 @@ fi:
       text_body_template: |
         Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Vastauksesi on peräisin estetystä sähköpostiosoitteesta. Kokeile lähettää toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Vastauksesi lähetettiin estetystä sähköpostiosoitteesta. Kokeile lähettää viesti toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_inactive_user:
       title: "Sähköposti hylätty – aktivoimaton käyttäjä"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- aktivoimaton käyttäjä"
@@ -3892,104 +3964,6 @@ fi:
     Muokkaa ketjun aloitusviestiä muokataksesi sivun %{page_name} sisältöä.
   guidelines_topic:
     title: "UKK/Ohjeet"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Tämä on sivistynyt paikka julkiselle keskustelulle](#civilized)
-
-      Kohtele tätä keskustelufoorumia samalla kunnioituksella kuin kohtelisit julkista puistoa. Mekin olemme yhteinen yhteisön resurssi ja paikka jakaa taitoja, tietoa ja kiinnostuksen kohteita jatkuvan keskustelun kautta.
-
-      Nämä eivät ole ehdottomia sääntöjä. Tämä ovat ohjeita, jotka auttavat yhteisömme inhimillistä harkintakykyä ja pitävät tämän ystävällisenä paikkana sivistyneelle julkiselle keskustelulle.
-
-      <a name="improve"></a>
-
-      ## [Paranna keskustelua](#improve)
-
-      Auta meitä tekemään tästä mahtava paikka keskustelulle lisäämällä aina edes jotakin positiivista keskusteluun. Jos et ole varma siitä, mitä viestisi tuo keskusteluun, mieti mitä haluat sanoa ja kokeile myöhemmin uudelleen.
-
-      Yksi tapa parantaa keskustelua on tutustua jo käynnissä oleviin. Käytä aikaa ketjujen selaamiseen ennen kuin vastaat niihin tai aloitat omasi, ja sinulla on paremmat mahdollisuudet tavata muita, jotka jakavat mielenkiinnon kohteesi.
-
-      Täällä keskustelluilla aiheilla on meille merkitystä, ja haluamme sinun käyttäytyvän niin kuin niillä olisi merkitystä myös sinullekin. Kunnioita aiheita ja niistä keskustelevia ihmisiä, vaikka olisitkin eri mieltä joistakin kommenteista.
-
-      <a name="agreeable"></a>
-
-      ## [Ole miellyttävä myös silloin, kun olet eri mieltä(#agreeable)
-
-      Saatat haluta vastata olemalla eri mieltä. Se on ok. Mutta muista _kritisoida ideoita, älä ihmisiä_. Vältä:
-
-      * nimittelyä
-      * ad hominen -hyökkäyksiä
-      * vastaamista viestin sävyyn sen sisällön sijaan
-      * vaistomaista reagoimista
-
-      Tarjoa sen sijaan harkittuja ajatuksia, jotka parantavat keskustelua.
-
-      <a name="participate"></a>
-
-      ## [Osallistumisellasi on väliä](#participate)
-
-      Täällä käymämme keskustelut asettavat sävyn jokaiselle uudelle saapujalle. Auta meitä vaikuttamaan tämän yhteisön tulevaisuuteen ottamalla osaa keskusteluihin, jotka tekevät tästä foorumista mielenkiintoisen paikan, ja välttämällä niitä, jotka eivät tee.
-
-      Discourse tarjoaa työkaluja, joilla yhteisö voi kollektiivisesti tunnistaa parhaat (ja huonoimmat) kontribuutiot: kirjanmerkit, tykkäykset, merkinnät, vastaukset, muokkaukset, tarkkailu, vaimennus jne. Käytä näitä työkaluja omasi ja kaikkien muidenkin kokemuksen parantamiseen.
-
-      Jätetään yhteisömme parempaan tilaan kuin missä löysimme sen.
-
-      <a name="flag-problems"></a>
-
-      ## [Jos havaitset ongelman, liputa se](#flag-problems)
-
-      Valvojilla on erityinen valta, he vastaavat tästä foorumista. Mutta niin vastaat myös sinäkin. Avullasi valvojat voivat olla yhteisön fasilitaattoreita, eivät vain siivoojia tai poliiseja.
-
-      Kun näet huonoa käyttäytymistä, älä vastaa. Vastaaminen kannustaa huonoon käytökseen tiedostamalla sen, se kuluttaa energiaasi ja tuhlaa kaikkien aikaa. _Merkitse se sen sijaan_. Jos liputuksia kertyy tarpeeksi, toimenpiteitä tehdään joko automaattisesti tai valvojan toimesta.
-
-      Yhteisömme ylläpitämiseksi valvojat pidättävät oikeuden poistaa mitä tahansa sisältöä ja minkä tahansa käyttäjätilin mistä tahansa syystä milloin tahansa. Valvojat eivät esikatsele uusia viestejä; valvojat ja sivuston ylläpitäjät eivät vastaa yhteisössä julkaistusta sisällöstä.
-
-      <a name="be-civil"></a>
-
-      ## [Ole aina kohtelias](#be-civil)
-
-      Mikään ei pilaa tervettä keskustelua niin kuin töykeys:
-
-      * Ole kohtelias. Älä julkaise mitään, mitä kohtuullinen henkilö voisi pitää loukkaavana, herjaavana tai vihapuheena.
-      * Pidä sisältö siistinä. Älä julkaise mitään hävytöntä tai seksuaalista.
-      * Kunnioittakaa toisianne. Älä häiritse ketään, matki ihmisiä tai paljasta heidän yksityisiä tietojaan.
-      * Kunnioita foorumia. Älä lähetä roskapostia tai muutoin vandalisoi foorumia.
-
-      Nämä eivät ole tarkasti määriteltyjä tiukkoja ehtoja, ja niiden ei ole missään nimessä tarkoitus olla sellaisia. Jos olet epävarma, kysy itseltäsi miltä sinusta tuntuisi, jos viestisi julkaistaisiin suuren uutissivuston etusivulla.
-
-      Tämä on julkinen foorumi, ja hakukoneet indeksoivat näitä keskusteluita. Pidä kielenkäyttö, linkit ja kuvat turvallisina perheenjäsenille ja ystäville.
-
-      <a name="keep-tidy"></a>
-
-      ## [Pidä paikat siistinä](#keep-tidy)
-
-      Pyri laittamaan asiat oikeaan paikkaan, jotta voimme käyttää enemmän aikaa keskusteluun ja vähemmän aikaa siivoamiseen:
-
-      * Älä aloita ketjua väärällä alueella; lue alueiden kuvaukset.
-      * Älä lähetä samaa viestiä useaan ketjuun.
-      * Älä lähetä vastauksia ilman sisältöä.
-      * Älä eksy ketjun aiheesta muuttamalla sitä kesken kaiken.
-      * Älä lisää allekirjoituksia viesteihisi; jokaiseen viestiin on liitetty profiilitietosi.
-
-      Käytä tykkäyspainiketta sen sijaan, että vastaisit ”+1” tai ”Samaa mieltä”. Käytä Vastaa liittyvässä ketjussa -toimintoa sen sijaan, että ohjaisit olemassa olevan ketjun aivan eri suuntaan.
-
-      <a name="stealing"></a>
-
-      ## [Julkaise vain omaa sisältöäsi](#stealing)
-
-      Et saa julkaista luvatta mitään digitaalista, joka kuuluu jollekulle muulle. Et saa julkaista kuvauksia, linkkejä tai menetelmiä jonkun immateriaalioikeuksien (ohjelmisto, video, ääni, kuvat) rikkomiseen tai minkään muun lain rikkomiseen.
-
-      <a name="power"></a>
-
-      ## [Sinun ylläpitämäsi](#power)
-
-      Tätä sivustoa ylläpitää [ystävällinen paikallinen henkilökunta](%{base_path}/about) ja *te*, yhteisö. Jos sinulla on lisäkysymyksiä siitä, miten asioiden tulisi toimia täällä, aloita uusi ketju [sivuston palautealueella](%{base_path}/c/site-feedback), ja keskustellaan siitä! Jos on kriittinen tai kiireellinen ongelma, jota ei voi käsitellä metaketjun tai merkinnän kautta, ota meihin yhteyttä [henkilökunnan sivun kautta](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Käyttöehdot](#tos)
-
-      Kyllä, lakiteksti on tylsää, mutta meidän täytyy suojata itseämme ja sitä kautta sinua sekä tietojasi pahantahtoisilta ihmisiltä. Meillä on [käyttöehdot](%{base_path}/tos), joissa kuvataan sinun (ja meidän) toimintaamme ja oikeuksiamme sisällön, tietosuojan ja lakien osalta. Tämän palvelun käyttämiseksi sinun täytyy hyväksyä [käyttöehtomme](%{base_path}/tos).
   tos_topic:
     title: "Käyttöehdot"
     body: |
@@ -4562,6 +4536,8 @@ fi:
     no_themes: "Poista teemat ja teeman komponentit käytöstä"
     no_unofficial_plugins: "Poista epäviralliset asiakaspuolen lisäosamukautukset käytöstä"
     no_plugins: "Poista kaikki asiakaspuolen lisäosamukautukset käytöstä"
+    deprecation_error_description: "Voit tarkistaa yhteensopivuuden tulevien Discourse-päivitysten kanssa asettamalla Javascriptin vanhentumiset aiheuttamaan virheen:"
+    deprecation_error_label: Aseta Javascriptin vanhentumiset aiheuttamaan virhe
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
   wizard:
@@ -4702,6 +4678,9 @@ fi:
       automatic_revoked:
         one: "Peruutettiin automaattisesti, toimintaa viimeksi yli %{count} päivä sitten"
         other: "Peruutettiin automaattisesti, toimintaa viimeksi yli %{count} päivää sitten"
+      automatic_revoked_max_life:
+        one: "Peruutettiin automaattisesti, luotu yli %{count} päivä sitten"
+        other: "Peruutettiin automaattisesti, luotu yli %{count} päivää sitten"
       revoked: Peruttu
       restored: Palautettu
   reviewables:
@@ -4723,6 +4702,7 @@ fi:
     reasons:
       post_count: "Muutama ensimmäinen viesti jokaiselta uudelta käyttäjältä tulee henkilökunnan hyväksyttäväksi. Katso %{link}."
       trust_level: "Matalan luottamustason käyttäjien vastaukset tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
+      group: "Vastaukset käyttäjiltä, jotka eivät ole määritetyissä ryhmissä, tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
       new_topics_unless_trust_level: "Matalan luottamustason käyttäjien ketjut tulevat henkilökunnan hyväksyttäviksi. Katso %{link}."
       fast_typer: "Uusi käyttäjä kirjoitti ensimmäisen viestinsä epäilyttävän nopeasti. Käyttäytyminen viittaa bottiin tai roskapostittajaan. Katso %{link}."
       auto_silence_regex: "Uusi käyttäjä, jonka ensimmäinen viesti vastaa %{link}-asetusta."
@@ -4762,6 +4742,8 @@ fi:
         description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
       delete_single:
         title: "Poista"
+      delete:
+        title: "Poista…"
       delete_and_ignore:
         title: "Ohita liputus ja poista viesti"
         description: "Ohita liputus poistamalla se jonosta ja poista viesti; jos viesti on ensimmäinen viesti, poista myös ketju. "
@@ -4781,6 +4763,8 @@ fi:
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       disagree:
         title: "Ei"
+      discard_post:
+        title: "Hylkää viesti"
       revise_and_reject_post:
         title: "Korjaa julkaisua..."
       ignore:
@@ -4798,6 +4782,7 @@ fi:
       approve_user:
         title: "Hyväksy käyttäjä"
       reject_user:
+        title: "Poista käyttäjä…"
         delete:
           title: "Poista käyttäjä"
           description: "Käyttäjä poistetaan foorumista."
@@ -4806,6 +4791,7 @@ fi:
           description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
       reject:
         title: "Hylkää"
+        bundle_title: "Hylkää…"
       reject_and_suspend:
         title: "Hylkää ja hyllytä käyttäjä"
       reject_and_silence:
@@ -4856,6 +4842,10 @@ fi:
       invalid_yaml: "ei ole kelvollinen YAML-merkkijono"
       invalid_type: "sisältää virheellisen mallityypin: %{type} (kelvolliset tyypit ovat: %{valid_types})"
       missing_type: "kenttätyyppi puuttuu"
+      missing_id: "kentän tunnus puuttuu"
+      duplicate_ids: "päällekkäiset tunnukset"
+      reserved_id: "sisältää varatun avainsanan tunnuksena: %{id}"
+      unsafe_description: "sisältää vaarallisen HTML-kuvauksen"
   activemodel:
     errors:
       <<: *errors

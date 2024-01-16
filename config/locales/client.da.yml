@@ -4001,6 +4001,8 @@ da:
         howto: "Hvordan installerer jeg plugins?"
         author: "Af %{author}"
         learn_more: "Lær mere"
+      navigation_menu:
+        sidebar: "Sidebjælke"
       backups:
         title: "Backups"
         menu:
