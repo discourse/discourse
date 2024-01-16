@@ -1,19 +1,16 @@
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import i18n from "discourse-common/helpers/i18n";
-import htmlSafe from "discourse-common/helpers/html-safe";
-
-import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import Topic from "discourse/models/topic";
-import AppendTags from "../bulk-actions/append-tags";
-import ChangeCategory from "../bulk-actions/change-category";
-import ChangeTags from "../bulk-actions/change-tags";
-import NotificationLevel from "../bulk-actions/notification-level";
+import htmlSafe from "discourse-common/helpers/html-safe";
+import i18n from "discourse-common/helpers/i18n";
+//import AppendTags from "../bulk-actions/append-tags";
+//import ChangeCategory from "../bulk-actions/change-category";
+//import ChangeTags from "../bulk-actions/change-tags";
+//import NotificationLevel from "../bulk-actions/notification-level";
 
 export default class BulkTopicActions extends Component {
   @service router;
@@ -28,7 +25,7 @@ export default class BulkTopicActions extends Component {
     try {
       return this._processChunks(operation);
     } catch {
-      this.dialog.alert(I18n.t("generic_error"));
+      this.dialog.alert(i18n.t("generic_error"));
     } finally {
       this.loading = false;
       this.processedTopicCount = 0;
@@ -94,7 +91,6 @@ export default class BulkTopicActions extends Component {
   performAction() {
     // TODO: return only visible topics
     //visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
-    const t = this.args.model.topics;
 
     switch (this.args.model.action) {
       case "close":

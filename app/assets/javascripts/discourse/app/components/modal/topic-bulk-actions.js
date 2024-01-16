@@ -38,19 +38,6 @@ export default class TopicBulkActions extends Component {
   @tracked processedTopicCount = 0;
   @tracked activeComponent = null;
 
-  constructor() {
-    super(...arguments);
-
-    if (this.args.model.initialAction) {
-      if (this.args.model.initialAction === "set-component") {
-        this.setComponent(this.args.model.initialComponent);
-      }
-      // if (this.args.model.initialAction === "for-each-performed") {
-      //   this.forEachPerformed(this.args.model.initialForEachPerformed);
-      // }
-    }
-  }
-
   defaultButtons = [
     {
       label: "topics.bulk.change_category",
@@ -208,6 +195,16 @@ export default class TopicBulkActions extends Component {
       },
     },
   ];
+
+  constructor() {
+    super(...arguments);
+
+    if (this.args.model.initialAction) {
+      if (this.args.model.initialAction === "set-component") {
+        this.setComponent(this.args.model.initialComponent);
+      }
+    }
+  }
 
   get buttons() {
     return [...this.defaultButtons, ..._customButtons].filter(({ visible }) => {

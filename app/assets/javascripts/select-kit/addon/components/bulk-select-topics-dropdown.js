@@ -1,10 +1,9 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import ChangeCategory from "discourse/components/bulk-actions/change-category";
-import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
-import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import ChangeCategory from "discourse/components/bulk-actions/change-category";
+import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
+import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
+import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bulk-select-topics-dropdown"],
