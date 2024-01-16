@@ -3194,6 +3194,8 @@ RSpec.describe TopicsController do
     end
 
     describe "image only topic" do
+      before { Group.refresh_automatic_groups! }
+
       it "uses image alt tag for meta description" do
         post =
           Fabricate(

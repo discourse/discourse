@@ -133,7 +133,10 @@ RSpec.describe Jobs::UserEmail do
         data: { original_post_id: post.id }.to_json,
       )
     end
-    before { user.update_column(:last_seen_at, 9.minutes.ago) }
+    before do
+      user.update_column(:last_seen_at, 9.minutes.ago)
+      Group.refresh_automatic_groups!
+    end
 
     it "doesn't send an email to a user that's been recently seen" do
       Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
