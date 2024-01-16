@@ -12,7 +12,7 @@ class SetTypeAndTargetIdOnChatMentionsPostMigrate < ActiveRecord::Migration[7.0]
       updated_count = DB.exec(<<~SQL, batch_size: BATCH_SIZE)
         WITH cte AS (SELECT id, user_id
                      FROM chat_mentions
-                     WHERE target_id IS NULL
+                     WHERE type IS NULL AND target_id IS NULL
                      LIMIT :batch_size)
         UPDATE chat_mentions
         SET type = 'Chat::UserMention', target_id = cte.user_id
