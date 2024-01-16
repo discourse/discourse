@@ -467,6 +467,8 @@ lv:
       name: Biedrs
     regular:
       name: Regulārs
+    welcome:
+      name: Sveicināti
   tags:
     title: "Birkas"
   finish_installation:
@@ -503,6 +505,8 @@ lv:
       posted: '%{username} ierakstīja "%{topic}" - %{site_title}'
       linked: '%{username} ievietoja saiti uz jūsu ierakstu no "%{topic}" - %{site_title}'
       confirm_body: "Veiksmi! Paziņojumi ir iespējoti."
+  staff_action_logs:
+    unknown: "nezināms"
   reviewables:
     priorities:
       low: "Zems"

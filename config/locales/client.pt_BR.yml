@@ -284,7 +284,7 @@ pt_BR:
       stats: "Estatísticas do site"
       our_admins: "Nossos administradores"
       our_moderators: "Nossos moderadores"
-      moderators: "Moderadores"
+      moderators: "Moderadores(as)"
       stat:
         all_time: "Desde o início"
         last_day: "Últimas 24 horas"
@@ -292,7 +292,7 @@ pt_BR:
         last_30_days: "Últimos 30 dias"
       like_count: "Curtidas"
       topic_count: "Tópicos"
-      post_count: "Mensagens"
+      post_count: "Postagens"
       user_count: "Cadastros"
       active_user_count: "Usuários(as) ativos(as)"
       contact: "Fale conosco"
@@ -539,7 +539,7 @@ pt_BR:
         approved_flag:
           title: "Etiqueta aprovada"
         approved_user:
-          title: "Usuário aprovado"
+          title: "Usuário(a) aprovado(a)"
         approved_post:
           title: "Postagem aprovada"
         rejected:
@@ -571,7 +571,7 @@ pt_BR:
         reviewable_queued_post:
           title: "Postagem na fila"
         reviewable_user:
-          title: "Usuário"
+          title: "Usuário(a)"
         reviewable_post:
           title: "Postagem"
         reviewable_chat_message:
@@ -649,7 +649,7 @@ pt_BR:
     directory:
       username: "Nome do(a) usuário(a)"
       filter_name: "Filtrar por nome do usuário(a)"
-      title: "Usuários"
+      title: "Usuários(as)"
       likes_given: "Dados"
       likes_received: "Recebidos"
       topics_entered: "Visualizados"
@@ -681,7 +681,7 @@ pt_BR:
         change_group_setting: "Alterar configurações do grupo"
         add_user_to_group: "Adicionar usuário"
         remove_user_from_group: "Remover usuário"
-        make_user_group_owner: "Tornar proprietário"
+        make_user_group_owner: "Tornar proprietário(a)"
         remove_user_as_group_owner: "Revogar proprietário"
     groups:
       member_added: "Adicionado"
@@ -889,16 +889,16 @@ pt_BR:
         mods_and_admins: "Somente moderadores e administradores"
         members_mods_and_admins: "Somente membros do grupo, moderadores e administradores"
         owners_mods_and_admins: "Somente proprietários do grupo, moderadores e administradores"
-        everyone: "Todos"
+        everyone: "Todos(as)"
       notifications:
         watching:
-          title: "Observando"
+          title: "Acompanhando"
           description: "Você será notificado sobre novas postagens em cada mensagem, e uma contagem de novas respostas será exibida."
         watching_first_post:
           title: "Acompanhando primeira postagem"
           description: "Você será notificado(a) sobre novas mensagens neste grupo, mas não sobre respostas."
         tracking:
-          title: "Acompanhando"
+          title: "Monitorando"
           description: "Você será notificado(a) se alguém mencionar seu @nome ou responder, e uma contagem de novas respostas será exibida."
         regular:
           title: "Normal"
@@ -916,7 +916,7 @@ pt_BR:
       flair_preview_image: "Pré-visualizar imagem"
       flair_type:
         icon: "Selecione um ícone"
-        image: "Enviar arquivo"
+        image: "Enviar uma imagem"
       default_notifications:
         modal_title: "Notificações padrão do(a) usuário(a)"
         modal_description: "Você gostaria de aplicar esta alteração historicamente? Isto mudará as preferências de %{count} usuários(as) existentes."
@@ -1022,10 +1022,10 @@ pt_BR:
         ignore_duration_note: "Observe que todas as ações ignorar serão removidas automaticamente após essa ação expirar."
         ignore_duration_time_frame_required: "Selecione um intervalo de tempo"
         ignore_no_users: "Você não tem usuários(as) ignorados(as)."
-        ignore_option: "Ignorados(as)"
+        ignore_option: "Ignorado(a)"
         ignore_option_title: "Você não receberá notificações relacionadas a este(a) usuário(a), e todos os tópicos e respostas serão ocultos."
         add_ignored_user: "Adicionar..."
-        mute_option: "Silenciados(as)"
+        mute_option: "Silenciado(a)"
         mute_option_title: "Você não receberá notificações relacionadas a este(a) usuário(a)."
         normal_option: "Normal"
         normal_option_title: "Você receberá uma notificação se este(a) usuário(a) responder, citar ou mencionar."
@@ -1156,15 +1156,15 @@ pt_BR:
         few_per_day: "Me envie um e-mail a cada postagem nova (aproximadamente dois por dia)"
         warning: "Modo lista de endereçamento ativado. As configurações de notificação por e-mail serão substituídas."
       tag_settings: "Etiquetas"
-      watched_tags: "Acompanhados(as)"
+      watched_tags: "Acompanhado(a)"
       watched_tags_instructions: "Você acompanhará automaticamente todos os tópicos com estas etiquetas. Você receberá notificação de todas as novas postagens e tópicos, e uma contagem de postagens novas também será exibida ao lado do tópico."
-      tracked_tags: "Monitorados(as)"
+      tracked_tags: "Monitorado(a)"
       tracked_tags_instructions: "Você irá monitorar automaticamente todos os tópicos com estas etiquetas. Uma contagem de postagens novas será exibida ao lado do tópico."
       muted_tags: "Silenciados(as)"
       muted_tags_instructions: "Você não receberá notificação sobre novos tópicos com estas etiquetas, e eles não serão exibidas nos mais recentes."
-      watched_categories: "Acompanhados(as)"
+      watched_categories: "Acompanhado(a)"
       watched_categories_instructions: "Você acompanhará automaticamente todos os tópicos nestas categorias. Você receberá notificação de todas as novas postagens e tópicos, e uma contagem de postagens novas também será exibida ao lado do tópico."
-      tracked_categories: "Monitorados(as)"
+      tracked_categories: "Monitorado(a)"
       tracked_categories_instructions: "Você irá monitorar automaticamente todos os tópicos nestas categorias. Uma contagem de postagens novas será exibida ao lado do tópico."
       watched_first_post_categories: "Acompanhando primeira postagem"
       watched_first_post_categories_instructions: "Você receberá uma notificação sobre a primeira postagem em cada tópico novo nestas categorias."
@@ -1183,7 +1183,7 @@ pt_BR:
       delete_yourself_not_allowed: "Entre em contato com um membro da equipe se você deseja que a sua conta seja excluída."
       unread_message_count: "Mensagens"
       admin_delete: "Excluir"
-      users: "Usuários"
+      users: "Usuários(as)"
       muted_users: "Silenciados(as)"
       muted_users_instructions: "Bloquear todas as notificações e mensagens privadas destes(as) usuários(as)."
       allowed_pm_users: "Permitido(a)"
@@ -1309,7 +1309,7 @@ pt_BR:
         notifications: "Notificações"
         tracking: "Monitorando"
         categories: "Categorias"
-        users: "Usuários"
+        users: "Usuários(as)"
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicativos"
@@ -1386,7 +1386,7 @@ pt_BR:
           default_name: "Meu autenticador"
           name_and_code_required_error: "Você deve informar um nome e o código do seu aplicativo autenticador."
         security_key:
-          register: "Registrar"
+          register: "Cadastrar"
           title: "Chaves de Segurança Físicas"
           add: "Adicionar Chave de Segurança Física"
           default_name: "Chave de segurança principal"
@@ -1522,7 +1522,7 @@ pt_BR:
         browser_active: '%{browser} | <span class="active">ativar agora</span>'
         browser_last_seen: "%{browser}|%{date}"
       last_posted: "Última postagem"
-      last_seen: "Vistos"
+      last_seen: "Visto(a)"
       created: "Ingressou"
       log_out: "Sair"
       location: "Localização"
@@ -2253,7 +2253,7 @@ pt_BR:
           label: Responder a uma postagem de %{postUsername}
           desc: Responder a uma postagem específica
         reply_as_new_topic:
-          label: Responder como tópico relacionado
+          label: Responder como um tópico vinculado
           desc: Criar um novo tópico relacionado a este tópico
           confirm: Você tem um novo rascunho de tópico salvo, que será substituído ao criar um tópico vinculado.
         reply_as_new_group_message:
@@ -2374,7 +2374,7 @@ pt_BR:
       titles:
         mentioned: "mencionado(a)"
         replied: "nova resposta"
-        quoted: "citado(a)"
+        quoted: "citados(as)"
         edited: "editado(a)"
         liked: "nova curtida"
         private_message: "nova mensagem privada"
@@ -2424,7 +2424,7 @@ pt_BR:
       results: "resultados"
       no_results: "Nenhum resultado encontrado."
       no_more_results: "Nenhum outro resultado encontrado."
-      post_format: "#%{post_number} por %{username}"
+      post_format: "#%{post_number} de %{username}"
       results_page: "Pesquisar resultados para \"%{term}\""
       more_results: "Existem mais resultados. Restrinja os seus critérios de pesquisa."
       cant_find: "Não consegue encontrar o que está procurando?"
@@ -2508,7 +2508,7 @@ pt_BR:
           single_user: contêm um único usuário
         post:
           count:
-            label: Mensagens
+            label: Postagens
           min:
             placeholder: mínimo
             aria_label: filtrar por número mínimo de postagens
@@ -2896,7 +2896,7 @@ pt_BR:
           title: "Silenciado(a)"
           description: "Você nunca receberá nenhuma notificação sobre esta mensagem."
         muted:
-          title: "Silenciado(a)"
+          title: "Silenciados(as)"
           description: "Você nunca receberá nenhuma notificação sobre este tópico, e ele não aparecerá nos mais recentes."
       actions:
         title: "Ações"
@@ -3005,8 +3005,8 @@ pt_BR:
       login_reply: "Entrar para responder"
       filters:
         n_posts:
-          one: "%{count} mensagem"
-          other: "%{count} mensagens"
+          one: "%{count} postagem"
+          other: "%{count} postagens"
         cancel: "Remover filtro"
       move_to:
         title: "Mover para"
@@ -3045,8 +3045,8 @@ pt_BR:
         radio_label: "Mensagem existente"
         participants: "Participantes"
         instructions:
-          one: "Escolha a mensagem para a qual você gostaria de mover aquela postagem."
-          other: "Escolha a mensagem para a qual você gostaria de mover aquelas <b>%{count}</b> postagens."
+          one: "Escolha a mensagem para a qual você gostaria de mover a postagem."
+          other: "Escolha a mensagem para a qual você gostaria de mover as <b>%{count}</b> postagens."
       merge_posts:
         title: "Mesclar as postagens selecionadas"
         action: "mesclar as postagens selecionadas"
@@ -3140,7 +3140,7 @@ pt_BR:
         other: "ver %{count} respostas ocultas"
       sr_reply_to: "Resposta à postagem %{post_number} por %{username}"
       notice:
-        new_user: "Esta é a primeira vez que o %{user} postou. Vamos dar boas-vindas à nossa comunidade"
+        new_user: "Esta é a primeira vez que %{user} postou. Vamos dar boas-vindas à nossa comunidade"
         returning_user: "Faz tempo que não vemos %{user}. Sua última postagem foi em %{time}."
       unread: "A postagem não foi lida"
       has_replies:
@@ -3465,7 +3465,7 @@ pt_BR:
           title: "Normal"
           description: "Você será notificado(a) se alguém mencionar o seu @nome ou responder às suas mensagens."
         muted:
-          title: "Silenciado(a)"
+          title: "Silenciados(as)"
           description: "Você nunca será notificado(a) sobre novos tópicos nesta categoria e eles não aparecerão nos mais recentes."
       search_priority:
         label: "Prioridade de pesquisa"
@@ -3855,7 +3855,7 @@ pt_BR:
         other:
           name: Outros(as)
         posting:
-          name: Publicando
+          name: Postando
       favorite_max_reached: "Não é possível adicionar mais emblemas aos favoritos."
       favorite_max_not_reached: "Marcar este emblema com o favorito"
       favorite_count: "%{count}/%{max} emblemas marcados como favoritos"
@@ -3918,7 +3918,7 @@ pt_BR:
       edit_tag: "Edite o nome e descrição da etiqueta"
       description: "Descrição"
       sort_by: "Ordenar por"
-      sort_by_count: "quantidade"
+      sort_by_count: "contagem"
       sort_by_name: "nome"
       manage_groups: "Gerenciar grupos de etiquetas"
       manage_groups_description: "Definir grupos para organizar etiquetas"
@@ -3955,7 +3955,7 @@ pt_BR:
           title: "Normal"
           description: "Você será notificado(a) se alguém mencionar o seu @nome ou responder à sua postagem."
         muted:
-          title: "Silenciado(a)"
+          title: "Silenciados(as)"
           description: "Você não receberá nenhuma notificação sobre novos tópicos com esta etiqueta, e eles não serão exibidos na aba de não lidos."
       groups:
         back_btn: "Voltar para todas as etiquetas"
@@ -4377,7 +4377,7 @@ pt_BR:
         refresh: "Atualizar"
         about: "Edite a associação no seu grupo e os nomes aqui"
         group_members: "Membros do grupo"
-        delete: "Apagar"
+        delete: "Excluir"
         delete_confirm: "Tem certeza de que deseja excluir %{group}?"
         delete_details:
           one: "%{count} pessoa perderá o acesso a este grupo"
@@ -4390,7 +4390,7 @@ pt_BR:
         delete_automatic_group: Este é um grupo automático e não pode ser excluído.
         delete_owner_confirm: "Remover privilégio de proprietário(a) de \"%{username}\"?"
         add: "Adicionar"
-        custom: "Personalizado(a)"
+        custom: "Personalizados(as)"
         automatic: "Automático"
         default_title: "Título padrão"
         default_title_description: "será aplicado a todos os(as) usuários(as) do grupo"
@@ -4948,7 +4948,7 @@ pt_BR:
             name: "sucesso"
             description: "Usadas para indicar que a ação foi bem-sucedida."
           love:
-            name: "curtir"
+            name: "adorar"
             description: "A cor do botão curtir."
           selected:
             name: "selecionado(a)"
@@ -5009,7 +5009,7 @@ pt_BR:
         text: "texto"
         html_preview: "Prévia do conteúdo do e-mail"
         last_seen_user: "Último(a) usuário(a) visto(a):"
-        no_result: "Nenhum resultado encontrado."
+        no_result: "Nenhum resultado encontrado para o resumo."
         reply_key: "Tecla de resposta"
         post_link_with_smtp: "Detalhes de postagem e SMTP"
         skipped_reason: "Pular motivo"
@@ -5907,7 +5907,7 @@ pt_BR:
         topic_id: "ID do tópico"
         topic_title: "Tópico"
         post_id: "ID da postagem"
-        post_title: "Mensagem"
+        post_title: "Postagem"
         category_id: "ID da categoria"
         category_title: "Categoria"
         tag_name: "Nome da etiqueta"

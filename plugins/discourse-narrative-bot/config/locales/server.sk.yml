@@ -310,6 +310,17 @@ sk:
           Všimli ste si, že ste teraz späť na začiatku? Nakŕmte túto úbohú hladnú kapybaru **odpovedaním pomocou emoji `%{search_answer}`** a automaticky sa dostanete až na koniec.
     advanced_user_narrative:
       title: ":arrow_up: Pokročilé funkcie používateľa"
+      category_hashtag:
+        instructions_experimental: |-
+          Vedeli ste, že vo svojom príspevku môžete odkazovať na kategórie a značky? Videli ste napríklad kategóriu %{category} ?
+
+          Napíšte „#“ kdekoľvek vo vete a vyberte ľubovoľnú kategóriu alebo značku.
+        not_found_experimental: |-
+          Hmm, nikde tam nevidím kategóriu. Môžete to skopírovať do ďalšej odpovede?
+
+          ```text
+          Môžem vytvoriť odkaz na kategóriu prostredníctvom #
+          ```
       details:
         reply: |-
           Super práca — vaše zameranie na _detail_ je obdivuhodné!

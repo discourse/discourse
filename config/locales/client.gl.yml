@@ -123,6 +123,8 @@ gl:
       facebook: "Compartir no Facebook"
       email: "Enviar por correo"
       url: "Copiar e compartir o URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Faga este tema público o %{when}"
       private_topic: "Faga deste tema unha mensaxe privada o %{when}"

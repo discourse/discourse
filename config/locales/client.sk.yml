@@ -408,6 +408,7 @@ sk:
         reject_reason: "Dôvod"
       topics:
         topic: "Témy"
+        reviewable_count: "Počet"
         details: "detaily"
         unique_users:
           one: "%{count} používateľ"
@@ -427,9 +428,11 @@ sk:
         type:
           title: "Typ"
         refresh: "Obnoviť"
+        status: "Stav"
         category: "Kategória"
       scores:
         type: "Dôvod"
+        status: "Stav"
       statuses:
         pending:
           title: "Čakajúce správy"
@@ -446,6 +449,8 @@ sk:
           title: "Používateľ"
         reviewable_post:
           title: "Príspevok"
+        reviewable_chat_message:
+          title: "Označená správa v chate"
       approval:
         title: "Príspevok vyžaduje schválenie"
         description: "Váš príspevok sme obdžali, ale skôr než bude zverejnený musí byť schválený moderátorom. Prosíme o trpezlivosť."
@@ -997,6 +1002,7 @@ sk:
         daily: "denne"
         weekly: "týždenne"
         every_month: "každý mesiac"
+        every_six_months: "každých šesť mesiacov"
       email_level:
         always: "vždy"
         never: "nikdy"
@@ -1059,6 +1065,9 @@ sk:
         valid_for: "Pozývací link je platný len pre túto emailovú adresu: %{email}"
         invite_link:
           success: "Pozývací link bol úspešne vygenerovaný!"
+        invite:
+          show_advanced: "Zobraziť rozšírené možnosti"
+          hide_advanced: "Skryť rozšírené možnosti"
         bulk_invite:
           error: "Prepáčte, súbor musí byť v CSV formáte."
       password:
@@ -1289,6 +1298,7 @@ sk:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Zadajte"
     conditional_loading_section:
       loading: Prebieha načítavanie...
     select_kit:
@@ -1383,6 +1393,7 @@ sk:
         posted: '%{username} prispel v "%{topic}" - %{site_title}'
         linked: '%{username} odkázal na váš príspevok z "%{topic}" - %{site_title}'
       titles:
+        edited: "upravené"
         watching_first_post: "nová téma"
     upload_selector:
       uploading: "Nahrávanie"
@@ -1410,6 +1421,7 @@ sk:
       search_button: "Hľadať"
       categories: "Kategórie"
       tags: "Štítky"
+      in: "v"
       type:
         default: "Témy/príspevky"
         users: "Používatelia"
@@ -1581,6 +1593,13 @@ sk:
       slow_mode_update:
         enable: "Zapnúť"
         remove: "Vypnúť"
+        hours: "Hodín:"
+        durations:
+          2_hours: "2 Hodín"
+          4_hours: "4 Hodín"
+          8_hours: "8 Hodín"
+          12_hours: "12 Hodín"
+          24_hours: "24 Hodín"
       topic_status_update:
         num_of_hours: "Počet hodín:"
         when: "Kedy:"
@@ -1606,6 +1625,7 @@ sk:
         title: pozícia v téme
         jump_prompt: "choď na..."
         jump_prompt_long: "Choď na..."
+        jump_prompt_to_date: "k dnešnému dňu"
         jump_prompt_or: "alebo"
       notifications:
         title: zmeň ako často dostávaš upozornenia o tejto téme
@@ -1814,6 +1834,7 @@ sk:
         few: "%{count} Odpovede"
         many: "%{count} Odpovedí"
         other: "%{count} Odpovedí"
+      has_replies_count: "%{count}"
       has_likes_title:
         one: "Tento príspevok sa páčil jedej osobe"
         few: "Tento príspevok sa páčil %{count} ľuďom"
@@ -1946,6 +1967,7 @@ sk:
       special_warning: "Upozornenie: Toto je preddefinovaná kategória a jej bezpečnostné nastavenia sa nedajú upraviť. Pokiaľ si neželáte použiť túto kategóriu, neupravujte ju, ale zmažte."
       images: "Obrázky"
       email_in: "Vlastná e-mailová adresa pre príchodziu poštu:"
+      email_in_tooltip: "Viacero e-mailových adries môžete oddeliť pomocou znaku |."
       email_in_allow_strangers: "Prijímať emaily od anonymných používateľov bez účtu"
       allow_badges_label: "Povoliť získavanie odznakov v tejto kategórii"
       edit_permissions: "Upraviť práva"
@@ -2379,6 +2401,9 @@ sk:
               content: "Používatelia"
             my_posts:
               content: "Moje príspevky"
+      panels:
+        forum:
+          label: fórum
     form_template_chooser:
       select_template: "Výber šablón formulárov"
     form_templates:
@@ -2420,6 +2445,7 @@ sk:
         private_messages_title: "Správy"
         mobile_title: "Mobil"
         backups: "Zálohy"
+        lastest_backup: "Najnovšie: %{date}"
         traffic_short: "Vyťaženie"
         traffic: "Požiadavky webových aplikácií"
         show_traffic_report: "Zobraziť detaily vyťaženia"
@@ -2498,6 +2524,7 @@ sk:
         user: "Používateľ"
         title: "API"
         created: Vytvorené
+        last_used: Naposledy použité
         never_used: (nikdy)
         generate: "Generovať"
         revoke: "Zrušiť"
@@ -2515,6 +2542,8 @@ sk:
         go_back: "Späť na zoznam"
         payload_url_placeholder: "https://example.com/postreceive"
         active: "Aktívny"
+        like_event:
+          details: "Keď sa používateľovi páči príspevok."
         delivery_status:
           failed: "Nepodarilo sa"
           disabled: "Vypnuté"
@@ -2620,6 +2649,7 @@ sk:
           theme: "Téma"
           component: "Komponent"
           components: "Komponenty"
+          filter_placeholder: "filtrovať..."
           theme_name: "Názov témy"
           component_name: "Názov komponentu"
           customize_desc: "Upraviť:"
@@ -2724,6 +2754,7 @@ sk:
         delivery_method: "Spôsob doručenia"
         preview_digest_desc: "Náhľad obsahu súhrnných emailov zaslaných neaktívnym používateľom."
         refresh: "Obnoviť"
+        send_digest: "Odoslať"
         sending_email: "Email sa odosiela..."
         format: "Formát"
         html: "html"

@@ -188,7 +188,7 @@ fr:
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
       message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>actualiser cette page</span> pour éviter d'éventuels dysfonctionnements."
-      dismiss: "Ignorer"
+      dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
     themes:
       default_description: "Par défaut"
@@ -3950,7 +3950,7 @@ fr:
           description: "Vous recevrez une notification concernant les nouveaux sujets avec cette étiquette, mais pas pour les réponses aux sujets."
         tracking:
           title: "Suivre"
-          description: "Vous suivrez automatiquement tous les sujets avec cette étiquette. Le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
+          description: "Vous suivrez automatiquement tous les sujets ayant cette étiquette. Les nombres de messages non lus et nouveaux apparaîtront à côté du sujet."
         regular:
           title: "Normal"
           description: "Vous recevrez une notification lorsque quelqu'un vous mentionnera ou vous répondra."
@@ -4250,7 +4250,7 @@ fr:
         new_features:
           title: "\U0001F381 Nouveautés"
           dismiss: "Ignorer"
-          learn_more: "En savoir plus…"
+          learn_more: "En savoir plus"
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."
@@ -5362,13 +5362,13 @@ fr:
         title: "Incarner"
         help: "Utilisez cet outil pour incarner un compte utilisateur à des fins de tests. Vous devrez vous déconnecter une fois que vous aurez terminé."
         not_found: "Cet utilisateur n'a pas été trouvé."
-        invalid: "Désolé, vous ne pouvez pas vous faire passer pour cet utilisateur."
+        invalid: "Nous sommes désolés, vous ne pouvez pas vous faire passer pour cet utilisateur."
       users:
         title: "Utilisateurs"
         create: "Ajouter un administrateur"
         last_emailed: "Dernier e-mail reçu"
         not_found: "Nous sommes désolés, ce nom d'utilisateur n'existe pas dans notre système."
-        id_not_found: "Désolé cet identifiant d'utilisateur n'existe pas dans notre système."
+        id_not_found: "Nous sommes désolés, cet identifiant d'utilisateur n'existe pas dans notre système."
         active: "Activé"
         status: "Statut"
         show_emails: "Afficher les adresses e-mail"
@@ -5419,7 +5419,7 @@ fr:
           no_constructive_purpose: "Aucun but constructif à ses actions autre que de créer une dissidence au sein de la communauté"
           custom: "Personnalisé…"
         suspend_message: "E-mail"
-        suspend_message_placeholder: "Si besoin, donnez plus d'informations au sujet de cette suspension qui seront envoyées à l'utilisateur par e-mail."
+        suspend_message_placeholder: "Si besoin, donnez plus d'informations au sujet de cette suspension. Elles seront envoyées à l'utilisateur par e-mail."
         suspended_by: "Suspendu par"
         silence_reason: "Raison"
         silenced_by: "Mis en sourdine par"
@@ -5547,7 +5547,7 @@ fr:
         delete_posts_forbidden_because_staff: "Vous ne pouvez pas supprimer tous les messages des administrateurs et des modérateurs."
         delete_forbidden:
           one: "Les utilisateurs ne peuvent pas être supprimés s'ils ont publié des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages datant d'il y a plus de %{count} jour ne peuvent pas être supprimés.)"
-          other: "Les utilisateurs ne peuvent pas être supprimés s'ils ont créé des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jours ne peuvent pas être supprimés.)"
+          other: "Les utilisateurs ne peuvent pas être supprimés s'ils ont publié des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages datant d'il y a plus de %{count} jours ne peuvent pas être supprimés.)"
         cant_delete_all_posts:
           one: "Impossible de supprimer tous les messages. Certains messages datent d'il y a plus de %{count} jour. (Voir l'option delete_user_max_post_age.)"
           other: "Impossible de supprimer tous les messages. Certains messages datent d'il y a plus de %{count} jours. (Voir l'option delete_user_max_post_age.)"

@@ -1968,7 +1968,7 @@ tr_TR:
       rate_limit: "Yeniden giriş yapmayı denemeden önce lütfen bekleyin."
       blank_username: "Lütfen e-postanızı veya kullanıcı adınızı girin."
       blank_username_or_password: "Lütfen e-postanızı veya kullanıcı adınızı ve şifrenizi girin."
-      reset_password: "Şifre Sıfırlama"
+      reset_password: "Şifre Sıfırla"
       logging_in: "Oturum açılıyor..."
       previous_sign_up: "Zaten hesabınız var mı?"
       or: "Veya"
@@ -3463,7 +3463,7 @@ tr_TR:
           description: "Bu kategorideki tüm konuları otomatik olarak takip edeceksiniz. Birisi @adınızdan bahsederse veya size yanıt verirse bildirim alacaksınız ve yeni yanıtların sayısı gösterilecek."
         regular:
           title: "Normal"
-          description: "Biri @adınızdan bahsederse veya size yanıt verirse bildirim alacaksınız."
+          description: "Biri @adınızdan bahseder veya size yanıt verirse bildirim alırsınız."
         muted:
           title: "Sessize alındı"
           description: "Bu kategorideki yeni konular hakkında hiçbir zaman bildirim almayacaksınız ve en son bölümünde görünmeyecekler."

@@ -91,8 +91,8 @@ pt_BR:
         one: "Você não poderá criar uma mensagem direta com mais de %{count} outro(a) usuário(a)."
         other: "Você não poderá criar uma mensagem direta com mais de %{count} outros(as) usuários(as)."
       original_message_not_found: "O ancestral da mensagem à qual você está respondendo não pode ser encontrado ou foi excluído."
-      thread_invalid_for_channel: "O tópico não faz parte do canal informado."
-      thread_does_not_match_parent: "O tópico não corresponde à mensagem pai."
+      thread_invalid_for_channel: "A linha de discussão não faz parte do canal informado."
+      thread_does_not_match_parent: "A linha de discussão não corresponde à mensagem pai."
     reviewables:
       message_already_handled: "Obrigado, mas já analisamos esta mensagem e determinamos que ela não precisa ser sinalizada novamente."
       actions:

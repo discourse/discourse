@@ -2118,6 +2118,7 @@ pt:
       confirm_body: "Sucesso! As notificações foram ativadas."
       custom: "Notificação de %{username} em %{site_title}"
   staff_action_logs:
+    unknown: "desconhecido"
     api_key:
       revoked: Revogado
   reviewables:

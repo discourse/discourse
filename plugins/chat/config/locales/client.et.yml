@@ -6,12 +6,32 @@
 
 et:
   js:
+    admin:
+      site_settings:
+        categories:
+          chat: Vestlus
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Vestluskanali staatus muutus"
+            chat_channel_delete: "Vestlus on kustutatud"
+    about:
+      chat_messages_count: "Vestlussõnumid"
+      chat_channels_count: "Vestluskanalid"
+      chat_users_count: "Vestluskasutajad"
     chat:
+      bot: "bot"
       create: "Loo"
       cancel: "Tühista"
+      cancel_reply: "Tühista vastus"
+      chat_channels: "Kanalid"
+      browse_all_channels: "Sirvi kõiki kanaleid"
       channel_settings:
         edit: "Muuda"
-        add: "isa"
+        add: "Lisa"
+        close_channel: "Sulge kanal"
+        open_channel: "Ava kanal"
+        archive_channel: "Arhiveeri kanal"
         join: "Liitu"
         leave: "Lahku"
       close: "Sulge"
@@ -23,6 +43,7 @@ et:
       header_indicator_preference:
         never: "Mitte kunagi"
       flag: "Tähis"
+      heading: "Vestlus"
       join: "Liitu"
       last_visit: "viimane visiit"
       mention_warning:
@@ -34,12 +55,15 @@ et:
       save: "Salvesta"
       sounds:
         none: "Pole"
+      title: "vestlus"
+      title_capitalized: "Vestlus"
       exit: "tagasi"
       channel_status:
         closed: "Suletud"
         open: "Ava"
       browse:
         back: "Tagasi"
+        title: Kanalid
         filter_all: Kõik
         filter_closed: Suletud
       chat_message_separator:
@@ -80,6 +104,8 @@ et:
         saved: "Salvestatud"
         unfollow: "Lahku"
         admin_title: "Admin"
+      admin:
+        title: "Vestlus"
       incoming_webhooks:
         back: "Tagasi"
         description: "Kirjeldus"
@@ -129,3 +155,10 @@ et:
           fields:
             message:
               label: Sõnum
+    keyboard_shortcuts_help:
+      chat:
+        title: "Vestlus"
+    styleguide:
+      sections:
+        chat:
+          title: Vestlus

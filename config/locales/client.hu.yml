@@ -144,6 +144,8 @@ hu:
       facebook: "Megosztás Facebookon"
       email: "Küldés e-mailben"
       url: "URL másolása és megosztása"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Téma nyilvánossá téve: %{when}"
       open_topic: "Témává alakította %{when}"

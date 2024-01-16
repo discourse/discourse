@@ -1356,7 +1356,7 @@ uk:
         num_topics: Теми
       description: "Зовнішні джерела, які пов’язані з цим сайтом найбільше."
     top_referred_topics:
-      title: "Топ тем, на які найбільше посилаються"
+      title: "Найпопулярніші теми"
       labels:
         num_clicks: "Переходи"
         topic: "Тема"

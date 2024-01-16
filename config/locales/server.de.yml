@@ -71,8 +71,8 @@ de:
       about_json_too_big: "Importfehler: about.json ist größer als das Limit von %{limit} ."
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
       modifier_values: "about.json-Modifikatoren enthalten ungültige Werte: %{errors}"
-      asset_too_big: "Asset %{filename} ist größer als der Grenzwert %{limit}"
-      theme_too_big: "Das Thema ist größer als die %{limit} Grenze"
+      asset_too_big: "Asset %{filename} ist größer als das Limit von %{limit}"
+      theme_too_big: "Das Theme ist größer als das Limit von %{limit}"
       git: "Fehler beim Klonen des Git-Repository, Zugriff verweigert oder Repository nicht gefunden."
       git_ref_not_found: "Git-Referenz kann nicht ausgecheckt werden: %{ref}"
       git_unsupported_scheme: "Git-Repo kann nicht geklont werden: Schema wird nicht unterstützt"
@@ -81,7 +81,7 @@ de:
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
       not_allowed_theme: "`%{repo}` ist nicht in der Liste der zulässigen Themes (überprüfe die globale Einstellung `allowed_theme_repos`)."
       ssh_key_gone: "Du hast zu lange mit der Installation des Themes gewartet und der SSH-Schlüssel ist abgelaufen. Bitte versuche es noch einmal."
-      too_many_files: "Die Anzahl der Dateien (%{count}) im Thema hat die maximal zulässige Anzahl von Dateien (%{limit}) überschritten."
+      too_many_files: "Die Anzahl der Dateien (%{count}) im Theme hat die maximal zulässige Anzahl von Dateien (%{limit}) überschritten"
     errors:
       component_no_user_selectable: "Theme-Komponenten können nicht vom Benutzer auswählbar sein"
       component_no_default: "Theme-Komponenten können nicht Standard-Theme sein"
@@ -2413,7 +2413,7 @@ de:
     missing_second_factor_name: "Bitte gib einen Namen an."
     missing_second_factor_code: "Bitte gib einen Code an."
     too_many_authenticators: "Du kannst leider nicht mehr als 50 Authentifikatoren haben. Bitte entferne einen bestehenden und versuche es erneut."
-    too_many_security_keys: "Du kannst leider nicht mehr als 50 Sicherheitsschlüel haben. Bitte entferne einen bestehenden und versuche es erneut."
+    too_many_security_keys: "Du kannst leider nicht mehr als 50 Sicherheitsschlüssel haben. Bitte entferne einen bestehenden und versuche es erneut."
     second_factor_toggle:
       totp: "Verwende stattdessen eine Authentifizierungs-App oder einen Sicherheitsschlüssel"
       backup_code: "Benutze stattdessen einen Wiederherstellungscode"

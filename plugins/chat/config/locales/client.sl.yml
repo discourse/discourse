@@ -6,6 +6,10 @@
 
 sl:
   js:
+    admin:
+      site_settings:
+        categories:
+          chat: Klepet
     chat:
       create: "Ustvari"
       cancel: "Prekliči"
@@ -24,6 +28,7 @@ sl:
       header_indicator_preference:
         never: "Nikoli"
       flag: "Prijavi"
+      heading: "Klepet"
       join: "Pridruži se"
       last_visit: "zadnji obisk"
       mention_warning:
@@ -32,9 +37,12 @@ sl:
       edit: "Uredi"
       rebake_message: "Obnovi HTML"
       bookmark_message: "Zaznamek"
+      bookmark_message_edit: "Uredi zaznamek"
       save: "Shrani"
       sounds:
         none: "Brez"
+      title: "klepet"
+      title_capitalized: "Klepet"
       exit: "nazaj"
       channel_status:
         closed: "Zaprto"
@@ -80,6 +88,8 @@ sl:
         saved: "Shranjeno"
         unfollow: "Zapusti"
         admin_title: "Admin"
+      admin:
+        title: "Klepet"
       incoming_webhooks:
         back: "Nazaj"
         description: "Opis"
@@ -135,3 +145,10 @@ sl:
           fields:
             message:
               label: Opozorilo
+    keyboard_shortcuts_help:
+      chat:
+        title: "Klepet"
+    styleguide:
+      sections:
+        chat:
+          title: Klepet

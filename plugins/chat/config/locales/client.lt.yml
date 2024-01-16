@@ -37,6 +37,7 @@ lt:
       header_indicator_preference:
         never: "Niekada"
       flag: "Pranešti"
+      heading: "Pokalbis"
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
       summarization:
@@ -51,6 +52,8 @@ lt:
       save: "Išsaugoti"
       sounds:
         none: "Nieko"
+      title: "pokalbis"
+      title_capitalized: "Pokalbis"
       exit: "atgal"
       channel_status:
         closed: "Uždaryta"
@@ -99,6 +102,8 @@ lt:
         saved: "Išsaugota"
         unfollow: "Palikti"
         admin_title: "Administratorius"
+      admin:
+        title: "Pokalbis"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"
@@ -154,3 +159,10 @@ lt:
           fields:
             message:
               label: Žinutės
+    keyboard_shortcuts_help:
+      chat:
+        title: "Pokalbis"
+    styleguide:
+      sections:
+        chat:
+          title: Pokalbis

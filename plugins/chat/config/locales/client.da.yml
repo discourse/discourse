@@ -83,6 +83,10 @@ da:
       last_visit: "sidste besøg"
       mention_warning:
         dismiss: "afvis"
+        invitations_sent:
+          one: "Invitation sendt"
+          other: "Invitationer sendt"
+        invite: "Inviter til kanal"
       reply: "Svar"
       edit: "Rediger"
       rebake_message: "Gendan HTML"
@@ -256,3 +260,7 @@ da:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Skift kanal"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

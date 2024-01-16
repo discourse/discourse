@@ -4404,7 +4404,7 @@ ar:
       name: محرِّر Wiki
       description: أول تعديل wiki
       long_description: |
-        تُمنح هذه الشارة متى ما عدّلت مشاركة ويكي واحدة أوّل مرة.
+        يتم منحك هذه الشارة عند تعديل أحد منشورات wiki لأول مرة.
     basic_user:
       name: أولي
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">تم منحك</a> جميع الوظائف الأساسية في المجتمع

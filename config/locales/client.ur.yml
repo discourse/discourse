@@ -125,6 +125,8 @@ ur:
       facebook: "فیس بک پر شیئر کریں"
       email: "ای میل کے ذریعے بھیجیں"
       url: "یو آر ایل کو کاپی اور شیئر کریں"
+    word_connector:
+      comma: "، "
     action_codes:
       public_topic: "اس ٹاپک کو پبلک بنایا گیا %{when}"
       open_topic: "اسے %{when}پر عنوان میں تبدیل کر دیا"

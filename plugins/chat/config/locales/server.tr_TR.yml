@@ -166,7 +166,7 @@ tr_TR:
         other_type: '%{username} "%{channel}" adlı kanalda şundan bahsetti: %{identifier}'
       direct_message_chat_mention:
         direct: "%{username} kişisel sohbette sizden bahsetti"
-        other_type: "%{username} kişisel sohbette %{identifier} adlı kullanıcıdan bahsetti"
+        other_type: "%{username} kişisel sohbette şundan bahsetti: %{identifier}"
       new_chat_message: '%{username} "%{channel}" adlı kanalda bir mesaj gönderdi'
       new_direct_chat_message: "%{username} kişisel sohbette bir mesaj gönderdi"
   discourse_automation:

@@ -68,8 +68,11 @@ fr:
       generic: Une erreur s'est produite lors de l'importation de ce thème
       upload: "Erreur lors de la création de l'élément de téléversement : %{name}. %{errors}"
       about_json: "Erreur d'importation : about.json n'existe pas ou est invalide. Êtes-vous sûr(e) qu'il s'agit d'un thème Discourse ?"
+      about_json_too_big: "Erreur d'importation : about.json est supérieur à la limite de %{limit}."
       about_json_values: "about.json contient des valeurs invalides : %{errors}"
       modifier_values: "les modificateurs du fichier about.json contiennent des valeurs invalides : %{errors}"
+      asset_too_big: "La ressource %{filename} est supérieure à la limite de %{limit}"
+      theme_too_big: "Le thème est supérieur à la limite de %{limit}"
       git: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
       git_ref_not_found: "Impossible de récupérer la référence git : %{ref}"
       git_unsupported_scheme: "Impossible de cloner le dépôt Git : schéma non pris en charge"
@@ -78,6 +81,7 @@ fr:
       unknown_file_type: "Le fichier que vous avez essayé d'envoyer ne semble pas être un thème Discourse valide."
       not_allowed_theme: "« %{repo} » n'est pas repris dans la liste des thèmes autorisés (vérifier le paramètre général « allowed_theme_repos »)."
       ssh_key_gone: "Vous avez attendu trop longtemps pour installer le thème et la clé SSH a expiré. Veuillez réessayer."
+      too_many_files: "Le nombre de fichiers (%{count}) dans le thème a dépassé le nombre maximal autorisé de fichiers (%{limit})"
     errors:
       component_no_user_selectable: "Les composants du thème ne peuvent pas être sélectionnés par les utilisateurs"
       component_no_default: "Les composants du thème ne peuvent pas être un thème par défaut"
@@ -834,7 +838,7 @@ fr:
     confirm: "Confirmer"
     max_secondary_emails_error: "Vous avez atteint la limite autorisée du nombre d'adresses e-mail secondaires."
     authorizing_new:
-      title: "Confirmer votre nouvelle adresse e-mail"
+      title: "Confirmez votre nouvelle adresse e-mail"
       description: "Veuillez confirmer que vous souhaitez remplacer votre adresse e-mail par :"
       description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse e-mail alternative :"
     authorizing_old:
@@ -905,6 +909,9 @@ fr:
     sequence_conflict_error:
       title: "erreur de brouillon"
       description: "Le brouillon est en train d'être modifié dans une autre fenêtre. Veuillez recharger cette page."
+    too_many_drafts:
+      title: "Trop de brouillons"
+      description: "Vous avez atteint le nombre maximal de brouillons autorisés. Veuillez supprimer certains de [vos brouillons](%{base_url}/my/activity/drafts) et réessayer."
   draft_backup:
     pm_title: "Brouillons relatifs à des sujets en cours de discussion."
     pm_body: "Sujet contenant des brouillons enregistrés"
@@ -1442,7 +1449,7 @@ fr:
     category_search_priority_high_weight: "Pondération appliquée au classement des résultats de recherche pour les catégories à priorité élevée."
     default_composer_category: "Catégorie utilisée pour préremplir la liste déroulante des catégories lors de la création d'un nouveau sujet."
     allow_uncategorized_topics: "Autoriser la création de sujets sans catégorie. ATTENTION : s'il existe des sujets sans catégorie, vous devez les classer avant de désactiver ce paramètre."
-    allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
+    allow_duplicate_topic_titles: "Autoriser la création de sujets ayant des titres identiques."
     allow_duplicate_topic_titles_category: "Permettre l'existence de plusieurs sujets au titre identique s'ils appartiennent à des catégories différentes. Le paramètre « allow_duplicate_topic_titles » doit être désactivé."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse publier le même contenu à nouveau"
     educate_until_posts: "Lors de la rédaction des (n) premiers nouveaux sujets de l'utilisateur, afficher le panneau d'aide à la saisie."
@@ -1584,7 +1591,7 @@ fr:
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
-    top_menu: "Choisissez les éléments qui apparaissent dans la navigation de la page d'accueil, ainsi que leur ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
+    top_menu: "Choisissez les éléments qui apparaissent sur la page d'accueil et leur ordre d'affichage. Exemple : latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Choisissez les éléments qui apparaissent dans le menu du message, ainsi que leur ordre. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront masqués par défaut jusqu'à extension du menu."
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
@@ -1743,7 +1750,7 @@ fr:
     external_system_avatars_enabled: "Utilisez un service d'avatars externe."
     external_system_avatars_url: "URL du service d'avatars externe. Les remplacements autorisés sont {username} {first_letter} {color} {size}"
     external_emoji_url: "URL du service externe de fourniture d'images d'émojis. Laisser ce champ vierge pour désactiver cette fonctionnalité."
-    use_site_small_logo_as_system_avatar: "Utiliser le logo de petit format du site à la place de l'avatar de l'utilisateur 'system'. Nécessite que ce logo soit défini."
+    use_site_small_logo_as_system_avatar: "Utiliser le logo de petit format du site à la place de l'avatar de l'utilisateur « system ». Nécessite que ce logo soit défini."
     restrict_letter_avatar_colors: "Une liste de couleurs au format hexadécimal à 6 chiffres utilisées pour l'arrière-plan des avatars en forme de lettres."
     enable_listing_suspended_users_on_search: "Permettre aux utilisateurs habitués de trouver des utilisateurs suspendus lors d'une recherche."
     selectable_avatars_mode: "Restreindre l'utilisation d'avatars personnalisés aux niveaux de confiance spécifiés, et n'autoriser les autres utilisateurs qu'à choisir un avatar dans la liste « selectable_avatars »."
@@ -1953,7 +1960,7 @@ fr:
     email_site_title: "Le titre du site utilisé comme expéditeur pour les e-mails du site. Par défaut il prend la valeur de « title ». Si votre « title » utilise des caractères interdits dans les e-mails, utilisez ce paramètre."
     find_related_post_with_key: "N'utiliser que la « reply key » pour trouver le message auquel on a répondu. ATTENTION : la désactivation de cette option permet l'usurpation d'identité de l'utilisateur sur la base de l'adresse e-mail."
     minimum_topics_similar: "Combien de sujets ont besoin d'exister dans la base de données avant que des sujets similaires soient présentés lors de la rédaction de nouveaux sujets."
-    relative_date_duration: "Nombre de jours après la création d'un message à partir desquels les dates seront affichées en absolu (20 Fév.) plutôt qu'en relatif (7j)"
+    relative_date_duration: "Nombre de jours après la création d'un message après lequel les dates seront affichées en valeur relative (7 j) plutôt qu'en valeur absolue (20 fév)."
     delete_user_max_post_age: "Interdire la suppression des utilisateurs dont le premier message est daté de plus de (n) jours."
     delete_all_posts_max: "Le nombre maximal de messages qui peuvent être supprimés en une seule fois avec le bouton « Supprimer tous les messages ». Si un utilisateur détient un nombre de messages supérieur à cette limite, ses messages ne pourront pas être supprimés en une seule fois et l'utilisateur ne pourra pas être supprimé."
     delete_user_self_max_post_count: "Le nombre maximal de messages qu'un utilisateur peut avoir pour l'autoriser à supprimer son propre compte. La valeur -1 empêche les utilisateurs de supprimer leur propre compte."
@@ -2137,7 +2144,7 @@ fr:
     max_tags_per_topic: "Le nombre maximal d'étiquettes pouvant être ajoutées à un sujet."
     enable_max_tags_per_email_subject: "Utiliser max_tags_per_email_subject lors de la génération de l'objet d'un e-mail"
     max_tags_per_email_subject: "Le nombre maximal d'étiquettes pouvant figurer dans l'objet d'un e-mail"
-    max_tag_length: "Le nombre maximum de caractères pouvant être utilisés pour une étiquette."
+    max_tag_length: "Le nombre maximal de caractères pouvant être utilisés pour une étiquette."
     max_tag_search_results: "Lors d'une recherche d'étiquettes, le nombre maximal de résultats à afficher."
     max_tags_in_filter_list: "Nombre maximal d'étiquettes à afficher dans la liste déroulante des filtres. Les étiquettes les plus utilisées seront affichées."
     tags_sort_alphabetically: "Afficher les étiquettes par ordre alphabétique. Par défaut, elles sont affichées par ordre de popularité."
@@ -2405,6 +2412,8 @@ fr:
     invalid_security_key: "Clé de sécurité invalide."
     missing_second_factor_name: "Veuillez renseigner un nom."
     missing_second_factor_code: "Veuillez renseigner un code."
+    too_many_authenticators: "Vous ne pouvez pas avoir plus de 50 authentificateurs. Supprimez-en un existant et réessayez."
+    too_many_security_keys: "Vous ne pouvez pas avoir plus de 50 clés de sécurité. Supprimez-en une existante et réessayez."
     second_factor_toggle:
       totp: "Utiliser une application d'authentification ou une clé de sécurité"
       backup_code: "Utiliser un code de secours à la place"
@@ -2512,7 +2521,7 @@ fr:
     title: "Invitation personnalisée"
     subject_template: "%{inviter_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} vous a invité(e) à une discussion
+      %{inviter_name} vous a invité(e) à rejoindre une discussion
 
       > **%{topic_title}**
 
@@ -2791,9 +2800,9 @@ fr:
       title: "Bienvenue utilisateur de niveau 1"
       subject_template: "Merci de passer du temps avec nous"
       text_body_template: |
-        Salut ! Nous avons vu que vous lisez beaucoup, ce qui est super, alors nous vous avons monté d'un [niveau de confiance](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) !
+        Bonjour ! Nous avons constaté que vous lisez beaucoup, ce qui est fantastique. Nous avons donc élevé votre [niveau de confiance](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) d'un niveau !
 
-        Nous sommes ravis que vous passiez du temps avec nous, et nous adorerions en savoir plus sur vous. Prenez un moment pour [remplir votre profil](%{base_url}/my/preferences/profile) ou sentez-vous libre de [démarrer un nouveau sujet](%{base_url}/categories).
+        Nous sommes ravis que vous passiez du temps avec nous et nous aimerions en savoir plus sur vous. Prenez un moment pour [remplir votre profil](%{base_url}/my/preferences/profile) et n'hésitez pas à [démarrer un nouveau sujet](%{base_url}/categories).
     welcome_staff:
       title: "Bienvenue dans l'équipe"
       subject_template: "Félicitations, le statut de %{role} vous a été accordé !"

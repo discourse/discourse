@@ -387,6 +387,11 @@ bg:
     title: "Смяна на паролата"
     success: "Вие успешно променихте вашата парола и в момента сте логнати."
     success_unapproved: "Вие успешно променихте вашата парола."
+  user_auth_tokens:
+    device:
+      iphone: "iPhone"
+    os:
+      android: "Android"
   change_email:
     confirmed: "Вашият имейл беше актуализиран."
     please_continue: "Продължете към %{site_name}"
@@ -916,6 +921,7 @@ bg:
     default_categories_tracking: "Списък с категории, които са следени, по подразбиране."
     default_categories_muted: "Списък с категории, които са заглушени, по подразбиране."
     create_post_for_category_and_tag_changes: "Създайте малка публикация за действие, когато категорията или етикетите на тема се променят"
+    watched_precedence_over_muted: "Уведомявай ме за теми в категории или етикети, които гледам, които също принадлежат към такива, които съм заглушил"
     experimental_new_new_view_groups: 'ЕКСПЕРИМЕНТАЛНО: Активирайте нов списък с теми, който комбинира непрочетени и нови теми и направете връзката „Всичко“ в страничната лента връзка към него.'
     enable_custom_sidebar_sections: "ЕКСПЕРИМЕНТАЛНО: Активирайте персонализирани раздели в страничната лента"
     errors:
@@ -1613,8 +1619,12 @@ bg:
         fields:
           login_required:
             placeholder: "Затворени"
+          enable_sidebar:
+            placeholder: "Активиране на страничната лента"
       styling:
         fields:
+          styling_preview:
+            label: "Преглед"
           homepage_style:
             choices:
               latest:
@@ -1625,8 +1635,12 @@ bg:
                 label: "Категории с избрани теми"
               categories_and_latest_topics:
                 label: "Категории и най-новите теми"
+              categories_and_latest_topics_created_date:
+                label: "Категории и най-нови теми (сортиране по дата на създаване на тема)"
               categories_and_top_topics:
                 label: "Категории и топ теми"
+              subcategories_with_featured_topics:
+                label: "Подкатегории с избрани теми"
       invites:
         title: "Поканете персонал"
       finished:
@@ -1647,6 +1661,8 @@ bg:
       linked: '%{username} е сложил връзка към вашата публикация в "%{topic}" - %{site_title}'
       confirm_title: "Включени известявания - %{site_title}"
       confirm_body: "Успех! Известяването е включено."
+  staff_action_logs:
+    unknown: "неизвестно"
   reviewables:
     priorities:
       low: "Ниска"
