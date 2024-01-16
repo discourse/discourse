@@ -116,6 +116,8 @@ vi:
       facebook: "Chia sẻ trên Facebook"
       email: "Gửi qua email"
       url: "Sao chép và chia sẻ URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Hiển thị chủ đề công khai lúc %{when}"
       open_topic: "Đã chuyển đổi chủ đề này thành một chủ đề %{when}"

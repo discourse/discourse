@@ -523,6 +523,7 @@ sk:
     please_continue: "Pokračujte na %{site_name}"
     error: "Nastala chyba pri aktualizácii emailu. Nieje už náhodou použitý?"
     already_done: "Ľutujeme, tento podvrdzovací odkaz je už neplatný. Nie je Váš email už zmenený?"
+    confirm: "Potvrďte"
   activation:
     action: "Pre aktiváciu účtu kliknite sem"
     already_done: "Ľutujeme, tento podvrdzovací odkaz je už neplatný. Nie je Váš účet už aktivny?"
@@ -610,6 +611,7 @@ sk:
       daily: "denne"
       weekly: "týždenne"
       every_month: "každý mesiac"
+      every_six_months: "každých šesť mesiacov"
   user_api_key:
     title: "Autorizovať prístup aplikácie"
     authorize: "Autorizovať"
@@ -622,6 +624,7 @@ sk:
   reports:
     default:
       labels:
+        count: Počet
         day: Deň
     post_edits:
       labels:
@@ -1319,6 +1322,11 @@ sk:
   user_notifications:
     previous_discussion: "Prechádzajúce odpovede"
     posted_by: "Príspevok od %{username} dňa %{post_date}"
+    more_pm_participants:
+      one: "%{participants} a %{count} iné"
+      few: "%{participants} a %{count} ďalších"
+      many: "%{participants} a %{count} ďalších"
+      other: "%{participants} a %{count} ďalších"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
@@ -1473,6 +1481,8 @@ sk:
         fields:
           login_required:
             placeholder: "Súkromné"
+          chat_enabled:
+            placeholder: "Povoliť chat"
       styling:
         fields:
           styling_preview:
@@ -1497,6 +1507,8 @@ sk:
       replied: '%{username} vám odpovedal v "%{topic}" - %{site_title}'
       posted: '%{username} prispel v "%{topic}" - %{site_title}'
       linked: '%{username} odkázal na váš príspevok z "%{topic}" - %{site_title}'
+  staff_action_logs:
+    unknown: "neznáma"
   reviewables:
     sensitivity:
       disabled: "Vypnuté"

@@ -51,6 +51,7 @@ sl:
         only_mentions: "Samo omembe"
         never: "Nikoli"
       flag: "Prijavi"
+      heading: "Klepet"
       join: "Pridruži se"
       last_visit: "zadnji obisk"
       reply: "Odgovori"
@@ -58,10 +59,13 @@ sl:
       copy_text: "Kopiraj besedilo"
       rebake_message: "Obnovi HTML"
       bookmark_message: "Zaznamek"
+      bookmark_message_edit: "Uredi zaznamek"
       save: "Shrani"
       return_to_channel: "Vrni se na kanal"
       sounds:
         none: "Brez"
+      title: "klepet"
+      title_capitalized: "Klepet"
       exit: "nazaj"
       channel_status:
         closed: "Zaprto"
@@ -144,6 +148,7 @@ sl:
         history_label: "Zgodovina"
         members_label: "Člani"
       admin:
+        title: "Klepet"
         export_messages:
           description: "To izvozi vsa sporočila iz vseh kanalov."
       direct_messages:
@@ -213,6 +218,13 @@ sl:
       types:
         reviewable_chat_message:
           noun: "sporočilo klepeta"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Klepet"
+    styleguide:
+      sections:
+        chat:
+          title: Klepet
     sidebar:
       panels:
         chat:

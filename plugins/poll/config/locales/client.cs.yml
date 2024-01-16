@@ -35,6 +35,8 @@ cs:
         title: "Zavřít hlasování"
         label: "Zavřít"
         confirm: "Opravdu chcete uzavřít toto hlasování?"
+      breakdown:
+        count: "Počet"
       options:
         label: "Možnosti"
       error_while_toggling_status: "Došlo k chybě při změně statusu hlasování"

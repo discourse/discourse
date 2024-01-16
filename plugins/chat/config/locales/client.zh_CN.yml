@@ -453,15 +453,14 @@ zh_CN:
           description: "这将导出所有频道的所有消息。"
           create_export: "创建导出"
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
-      my_threads:
-        title: 我的对话
       direct_messages:
-        title: "个人聊天"
         new: "创建个人聊天"
         create: "开始"
         leave: "离开此个人聊天"
         close: "关闭此个人聊天"
         cannot_create: "抱歉，您无法发送直接消息。"
+      channel_list:
+        title: "频道"
       incoming_webhooks:
         back: "返回"
         channel_placeholder: "选择一个频道"

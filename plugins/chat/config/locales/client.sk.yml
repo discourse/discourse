@@ -125,7 +125,9 @@ sk:
         never: "Nikdy"
       separate_sidebar_mode:
         title: "Zobraziť samostatné režimy bočného panela pre fórum a chat"
+      enable: "Povoliť chat"
       flag: "Označenie"
+      heading: "Chat"
       join: "Pridať sa"
       last_visit: "posledná návševa"
       summarization:
@@ -138,6 +140,7 @@ sk:
           many: "Posledných %{count} hodín"
           other: "Posledných %{count} hodín"
       mention_warning:
+        invite: "Pozvať na kanál"
         channel_wide_mentions_disallowed: "Zmienky @here a @all sú v tomto kanáli zakázané."
         groups:
           unreachable_1: "@%{group} nepovoľuje označovanie."
@@ -156,6 +159,7 @@ sk:
       rebake_message: "Pregenerovať HTML"
       bookmark_message: "Záložka"
       save: "Uložiť"
+      select: "Vyberte"
       return_to_channel: "Späť na kanál"
       return_to_threads_list: "Späť na zoznam vlákien"
       unread_threads_count:
@@ -306,15 +310,16 @@ sk:
         history_label: "História"
         members_label: "Členovia"
       admin:
+        title: "Chat"
         export_messages:
           title: "Exportovať správy z chatu"
           description: "Týmto sa exportujú všetky správy zo všetkých kanálov."
           create_export: "Vytvoriť export"
           export_has_started: "Export sa začal. Keď bude hotový, budeme Vás informovať cez súkromnú správu."
-      my_threads:
-        title: Moje vlákna
       direct_messages:
         close: "Zatvorte tento osobný chat"
+      channel_list:
+        title: "Kanály"
       incoming_webhooks:
         back: "Späť"
         description: "Popis"
@@ -344,6 +349,7 @@ sk:
       emoji_picker:
         objects: "Objekty"
         flags: "Označenia"
+        no_results: "Žiadne výsledky"
       thread:
         title: "Názov"
         view_thread: Zobraziť vlákno
@@ -392,6 +398,7 @@ sk:
           noun: "správa v chate"
     keyboard_shortcuts_help:
       chat:
+        title: "Chat"
         keyboard_shortcuts:
           mark_all_channels_read: "%{shortcut} Označiť všetky kanály ako prečítané"
     styleguide:
