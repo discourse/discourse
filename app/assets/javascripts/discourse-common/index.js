@@ -8,6 +8,21 @@ module.exports = {
         handlebars: "handlebars/dist/cjs/handlebars.js",
       },
     },
+
+    babel: {
+      plugins: [
+        [
+          require.resolve("decorator-transforms"),
+          {
+            runEarly: true,
+          },
+        ],
+      ],
+    },
+
+    "ember-cli-babel": {
+      disableDecoratorTransforms: true,
+    },
   },
 
   isDevelopingAddon() {
