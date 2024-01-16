@@ -32,10 +32,18 @@ export default class AddMembers extends Component {
     try {
       this.loadingSlider.transitionStarted();
 
-      await this.chatApi.addMembersToChannel(
-        this.args.channel.id,
-        this.args.members.mapBy("model.username")
-      );
+      const usernames = this.args.members
+        .filter((member) => member.type === "user")
+        .mapBy("model.username");
+
+      const groups = this.args.members
+        .filter((member) => member.type === "group")
+        .mapBy("model.name");
+
+      await this.chatApi.addMembersToChannel(this.args.channel.id, {
+        usernames,
+        groups,
+      });
 
       this.toasts.success({ data: { message: I18n.t("saved") } });
       this.router.transitionTo(

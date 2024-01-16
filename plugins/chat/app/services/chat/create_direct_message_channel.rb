@@ -42,8 +42,12 @@ module Chat
       attribute :name, :string
       attribute :target_usernames, :array
       attribute :target_groups, :array
-      validates :target_usernames, presence: true, unless: :target_groups
-      validates :target_groups, presence: true, unless: :target_usernames
+
+      validate :target_presence
+
+      def target_presence
+        target_usernames.present? || target_groups.present?
+      end
     end
 
     private
