@@ -112,9 +112,6 @@ export default class BulkTopicActions extends Component {
       this.args.model.refreshClosure?.();
       this.args.closeModal();
 
-      //this.router.refresh();
-      // refresh wasn't updating the topic list, so just using
-      // reload for now.
       window.location.reload();
     }
   }
