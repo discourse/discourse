@@ -3109,3 +3109,9 @@ dashboard:
   verbose_user_stat_count_logging:
     hidden: true
     default: false
+  experimental_hot_topics:
+    hidden: true
+    default: false
+  hot_topics_gravity:
+    hidden: true
+    default: 1.8

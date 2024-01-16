@@ -4059,6 +4059,10 @@ en:
         title: "Unseen"
         lower_title: "unseen"
         help: "new topics and topics you are currently watching or tracking with unread posts"
+      hot:
+        title: "Hot"
+        lower_title: "hot"
+        help: "top recent topics"
       new:
         lower_title_with_count:
           one: "%{count} new"
