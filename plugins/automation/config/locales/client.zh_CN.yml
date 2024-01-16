@@ -26,6 +26,9 @@ zh_CN:
       destroy_automation:
         confirm: "确定要删除 `%{name}` 吗？"
       fields:
+        key_value:
+          label:
+            other: 编辑配置 (%{count})
         user:
           label: 用户
         pm:
@@ -147,8 +150,22 @@ zh_CN:
               description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
             restricted_category:
               label: 类别
+              description: 可选，仅当帖子所属话题属于此类别时才会触发
             restricted_group:
               label: 群组
+              description: 可选，仅当帖子所属话题是该群组收件箱中的私人消息时才会触发
+            ignore_group_members:
+              label: 忽略指定群组的成员
+              description: 如果帖子的发出者是上面指定的群组的成员，则跳过触发器
+            ignore_automated:
+              label: 忽略机器人发出的帖子
+              description: 如果帖子发出者的电子邮件地址包含noreply或来自机器人来源，则跳过触发器。仅适用于通过电子邮件创建的帖子
+            first_post_only:
+              label: 仅第一个帖子
+              description: 仅当该帖子是用户创建的第一个帖子时才会触发
+            first_topic_only:
+              label: 仅第一个话题
+              description: 仅当该话题是用户创建的第一个话题时才会触发
           created: 创建
           edited: 编辑
         category_created_edited:
@@ -158,11 +175,21 @@ zh_CN:
               description: 可选，允许将触发器执行限制为此类别
         pm_created:
           fields:
+            restricted_user:
+              label: 用户
+              description: 仅对发送给该用户的PM触发
             restricted_group:
               label: 群组
+              description: 仅对发送给该群组的PM触发
             ignore_staff:
               label: 忽略管理人员
               description: 如果发送者是管理人员用户，则跳过触发器
+            ignore_group_members:
+              label: 忽略指定群组的成员
+              description: 如果发出者是上面指定的群组的成员，则跳过触发器
+            ignore_automated:
+              label: 忽略机器人发出的帖子
+              description: 如果帖子发出者的电子邮件地址包含noreply或来自机器人来源，则跳过触发器。仅适用于通过电子邮件创建的PM
             valid_trust_levels:
               label: 有效信任级别
               description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
@@ -173,8 +200,10 @@ zh_CN:
               description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
             restricted_category:
               label: 类别
+              description: 可选，仅当帖子所属话题属于此类别时才会触发
             restricted_tags:
               label: 标签
+              description: 可选，仅当帖子所属话题拥有以下任意标签时才会触发
       scriptables:
         not_found: 找不到用于自动化 `%{automation}` 的脚本 `%{script}`，请确保相关插件已安装
         zapier_webhook:
@@ -189,6 +218,7 @@ zh_CN:
               description: 仅按话题回复一次
             word_answer_list:
               label: 字词/答案对列表
+              description: "定义键/值组列表，其中 `key` 是搜索词，`value` 是回复的文本。 `key`可以留空以对所有的触发器生效而无视具体内容。请注意，`value` 接受 `%%KEY%%` 作为占位符，在回复中会替换为 `key` 的值。请注意，`key` 将被评估为正则表达式，如果您实际上指的是点，则应转义 `.` 等特殊字符，例如：`\\.`"
             answering_user:
               label: 回答用户
               description: 默认为系统用户
@@ -228,10 +258,20 @@ zh_CN:
             error: 错误
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: 徽章名称
             group:
               label: 群组
+              description: 目标群组。具有指定徽章的用户将被添加到此组
+            update_user_title_and_flair:
+              label: 更新用户头衔和资质
+              description: 可选，更新用户头衔和资质
+            remove_members_without_badge:
+              label: 移除群组中没有徽章的成员
+              description: 可选，移除群组中没有指定徽章的成员
             badge:
               label: 徽章
+              description: 选择徽章
         suspend_user_by_email:
           fields:
             suspend_until:
