@@ -217,12 +217,14 @@ be:
         type:
           title: "тып"
         refresh: "абнавіць"
+        status: "Статус"
         category: "катэгорыя"
         orders:
           score: "кошт"
       scores:
         score: "кошт"
         type: "прычына"
+        status: "Статус"
       statuses:
         pending:
           title: "чакаецца"
@@ -1769,6 +1771,7 @@ be:
             revoke_moderation: "адклікаць правы мадэратара"
             deleted_tag: "выдаліць тэг"
             lock_trust_level: "заблакаваць ўзровень даверу"
+            post_rejected: "публікацыя адхілена"
         screened_emails:
           title: "Схаваныя емейлы"
           description: "Калі хто-то спрабуе стварыць новы ўліковы запіс, наступныя электронныя скрыні будуць правераны і рэгістрацыю заблакаваны, ці прынятыя нейкія іншых дзеянняў."
@@ -1804,7 +1807,9 @@ be:
         actions:
           block: "заблакаваць"
           flag: "Пазначыць"
+          link: "Спасылка"
         form:
+          link_label: "Спасылка"
           add: "дадаць"
           success: "поспех"
       form_templates:
@@ -1985,6 +1990,7 @@ be:
         field_types:
           text: "тэкставае поле"
           confirm: "пацвярджэнне"
+          dropdown: "Выпадаючы спіс"
       site_text:
         edit: "рэдагаваць"
         revert: "вярнуць змены"

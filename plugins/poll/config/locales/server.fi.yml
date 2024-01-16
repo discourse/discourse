@@ -12,9 +12,11 @@ fi:
     poll_minimum_trust_level_to_create: "Vähimmäisluottamustaso, jolla voi luoda kyselyitä."
     poll_groupable_user_fields: "Käyttäjäkenttäluokat, joiden mukaan kyselyiden tuloksia voi ryhmitellä ja suodattaa."
     poll_export_data_explorer_query_id: "ID, jonka määräät kyselyn tulosten viemiseen liittyville tietoselauskyselyille (0 poistaa käytöstä)."
+    poll_default_public: "Ota \"Näytä äänestäneet\" -valinta käyttöön oletuksena luotaessa uutta kyselyä."
   poll:
     poll: "kysely"
     invalid_argument: "Arvo \"%{value}\" ei kelpaa argumentiksi \"%{argument}\"."
+    multiple_polls_without_name: "Luotaessa useita kyselyitä lisää yksilölliset nimet lisäämällä <code>name=example</code> <code>[poll]</code>-tunnisteisiisi."
     multiple_polls_with_same_name: "Useamman kyselyn nimi on <strong>%{name}</strong>. Anna kaikille eri nimet '<code>name</code>'-määritteellä kyselyidesi yksilöimiseksi."
     default_poll_must_have_at_least_1_option: "Kyselyssä täytyy olla ainakin 1 vaihtoehto."
     named_poll_must_have_at_least_1_option: "Kyselyssä <strong>%{name}</strong> täytyy olla ainakin 1 vaihtoehto."

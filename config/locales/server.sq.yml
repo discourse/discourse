@@ -1391,6 +1391,8 @@ sq:
       replied: '%{username} ju u përgjigj në "%{topic}" - %{site_title}'
       posted: '%{username} postoi në "%{topic}" - %{site_title}'
       linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
+  staff_action_logs:
+    unknown: "i panjohur"
   reviewables:
     actions:
       agree:

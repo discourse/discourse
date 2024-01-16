@@ -75,8 +75,8 @@ de:
       about_json_too_big: "Importfehler: about.json ist größer als das Limit von %{limit} ."
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
       modifier_values: "about.json-Modifikatoren enthalten ungültige Werte: %{errors}"
-      asset_too_big: "Asset %{filename} ist größer als der Grenzwert %{limit}"
-      theme_too_big: "Das Thema ist größer als die %{limit} Grenze"
+      asset_too_big: "Asset %{filename} ist größer als das Limit von %{limit}"
+      theme_too_big: "Das Theme ist größer als das Limit von %{limit}"
       git: "Fehler beim Klonen des Git-Repository, Zugriff verweigert oder Repository nicht gefunden."
       git_ref_not_found: "Git-Referenz kann nicht ausgecheckt werden: %{ref}"
       git_unsupported_scheme: "Git-Repo kann nicht geklont werden: Schema wird nicht unterstützt"
@@ -85,17 +85,17 @@ de:
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
       not_allowed_theme: "`%{repo}` ist nicht in der Liste der zulässigen Themes (überprüfe die globale Einstellung `allowed_theme_repos`)."
       ssh_key_gone: "Du hast zu lange mit der Installation des Themes gewartet und der SSH-Schlüssel ist abgelaufen. Bitte versuche es noch einmal."
-      too_many_files: "Die Anzahl der Dateien (%{count}) im Thema hat die maximal zulässige Anzahl von Dateien (%{limit}) überschritten."
+      too_many_files: "Die Anzahl der Dateien (%{count}) im Theme hat die maximal zulässige Anzahl von Dateien (%{limit}) überschritten"
       migrations:
         invalid_filename: "Ungültiger Dateiname für Migrationsdatei: %{filename}. Dateinamen müssen mit 4 Ziffern beginnen, gefolgt von einem Bindestrich und dann einem Namen, der nur alphanumerische Zeichen mit Bindestrichen enthält."
         name_too_long:
           one: "Der Migrationsname ist zu lang. Er sollte nicht länger als %{count} Zeichen sein."
           other: "Der Migrationsname ist zu lang. Er sollte nicht länger als %{count} Zeichen sein."
-        too_many_pending_migrations: "Es gibt zu viele ausstehende Migrationen in diesem Thema. Themes dürfen nicht mehr als 100 Migrationen in einem einzigen Update einführen"
-        out_of_sequence: "Die Migration „%{name}“ ist nicht in der richtigen Reihenfolge. Die letzte Migration für dieses Thema hatte die Versionsnummer %{current} , die höher ist als die neue Migration"
+        too_many_pending_migrations: "Es gibt zu viele ausstehende Migrationen in diesem Theme. Themes dürfen nicht mehr als 100 Migrationen in einem einzigen Update einführen"
+        out_of_sequence: "Die Migration „%{name}“ ist nicht in der richtigen Reihenfolge. Die letzte Migration für dieses Theme hatte die Versionsnummer %{current}, welche höher ist als die neue Migration"
         syntax_error: "Die Migration „%{name}“ konnte nicht ausgeführt werden, da sie einen Syntaxfehler aufweist: %{error}"
         exceeded_memory_limit: "Die Migration „%{name}“ ist fehlgeschlagen, da das Speicherlimit überschritten wurde"
-        timed_out: "Zeitüberschreitung bei Migration „%{name}“."
+        timed_out: "Zeitüberschreitung bei Migration „%{name}“"
         no_exported_function: "Migration „%{name}“ exportiert keine Funktion, um die Migration durchzuführen"
         default_export_not_a_function: "Die Migration „%{name}“ hat einen Standardexport, der keine Funktion ist. Der Standardexport muss die Funktion sein, die die Migration durchführt"
         no_returned_value: "Die Migration „%{name}“ hat keinen Wert zurückgegeben (oder null oder undefiniert). Sie muss ein Map-Objekt zurückgeben"
@@ -351,7 +351,7 @@ de:
     more_replies:
       one: "%{count} weitere Antwort"
       other: "%{count} weitere Antworten"
-    loading: "Lade Diskussion …"
+    loading: "Diskussion wird geladen …"
     permalink: "Permalink"
     imported_from: "Dies ist ein Begleitthema zum ursprünglichen Beitrag unter %{link}"
     in_reply_to: "▶ %{username}"
@@ -1439,7 +1439,7 @@ de:
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
     v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
-    category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil Website-Einstellung</a> ."
+    category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil (Website-Einstellung)</a> ."
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1517,7 +1517,7 @@ de:
     blocked_onebox_domains: "Eine Liste von Domains, die niemals in einer Onebox untergebracht werden, z. B. wikipedia.org\n(Wildcard-Symbole * ? werden nicht unterstützt)"
     block_onebox_on_redirect: "Onebox für weiterleitende URLs blockieren."
     allowed_inline_onebox_domains: "Eine Liste von Domains, die in verkleinerter Form in eine Onebox umgewandelt werden, wenn sie ohne Titel verlinkt werden"
-    enable_inline_onebox_on_all_domains: "Ignoriere die Site-Einstellung allowed_inline_onebox_domains und erlaube Inline-Onebox auf allen Domains."
+    enable_inline_onebox_on_all_domains: "Ignoriere die Website-Einstellung allowed_inline_onebox_domains und erlaube Inline-Onebox auf allen Domains."
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox-Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren.)"
     max_oneboxes_per_post: "Maximale Anzahl von Oneboxes in einem Beitrag."
     facebook_app_access_token: "Ein Token, das aus deiner Facebook-App-ID und deinem Geheimnis generiert wird. Wird verwendet, um Instagram-Oneboxes zu generieren."
@@ -1539,7 +1539,7 @@ de:
     email_custom_headers: "Eine durch senkrechte Striche („|“) getrennte Liste von eigenen E-Mail-Headern"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
-    enforce_second_factor: "Verlangt von den Nutzern, dass sie die Zwei-Faktor-Authentifizierung aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Wähle \"alle\", um dies für alle Benutzer zu erzwingen. Wähle \"Mitarbeiter\", um sie nur für Mitarbeiter zu erzwingen. Diese Einstellung wirkt sich nicht auf die API- oder DiscourseConnect-Anbieter-Authentifizierung aus."
+    enforce_second_factor: "Verlangt von den Benutzern, dass sie die Zwei-Faktor-Authentifizierung aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Wähle „alle“, um dies für alle Benutzer zu erzwingen. Wähle „Team“, um dies nur für Team-Mitglieder zu erzwingen. Diese Einstellung wirkt sich nicht auf die API- oder DiscourseConnect-Anbieter-Authentifizierung aus."
     force_https: "Erzwinge HTTPS für deine Website. ACHTUNG: Aktiviere dies NICHT, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du dein CDN, alle Anmeldungen über soziale Netzwerke, alle externe Logos/Abhängigkeiten geprüft, um sicherzustellen, dass sie auch HTTPS-kompatibel sind?"
     same_site_cookies: "Same-Site-Cookies verwenden, die alle Angriffsszenarien für Cross-Site-Request-Forgery in unterstützten Browsern verhindern („Lax“ oder „Strict“). Warnung: „Strict“ wird nur auf Websites funktionieren, die eine Anmeldung erzwingen und eine externe Authentifizierungsmethode verwenden."
     summary_score_threshold: "Mindestscore, den ein Beitrag benötigt, um in der „Dieses Thema zusammenfassen“-Ansicht zu erscheinen."
@@ -1573,7 +1573,7 @@ de:
     tl2_additional_flags_per_day_multiplier: "Das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 2 (Mitglied) durch Multiplikation mit dieser Zahl erhöhen"
     tl3_additional_flags_per_day_multiplier: "Das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 3 (Stammgast) durch Multiplikation mit dieser Zahl erhöhen"
     tl4_additional_flags_per_day_multiplier: "Das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 4 (Anführer) durch Multiplikation mit dieser Zahl erhöhen"
-    num_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers die hide_post_sensitivity Einstellung überschreiten und Spam-Flags von so vielen verschiedenen Benutzern haben, werden alle seine Beiträge ausgeblendet und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
+    num_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers die hide_post_sensitivity-Einstellung überschreiten und Spam-Meldungen von so vielen verschiedenen Benutzern haben, werden alle seine Beiträge ausgeblendet und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_flags_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers so viele Meldungen von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers num_tl3_flags_to_silence_new_user Meldungen von so vielen verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     notify_mods_when_user_silenced: "Wenn ein Benutzer automatisch stummgeschaltet wird, sende eine Nachricht an alle Moderatoren."
@@ -1595,7 +1595,7 @@ de:
     ga_universal_tracking_code: "Google Universal Analytics Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Aktiviere Cross-Domain-Tracking von Google Universal Analytics. Bei ausgehenden Links zu diesen Domains wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=de' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
-    gtm_container_id: "Google Tag Manager Container-ID, z.B.: GTM-ABCD12E. <br/>Hinweis: Um GTM zu verwenden, wenn die Content Security Policy (CSP) aktiviert ist, siehe die Dokumentation auf meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces in Google Tag Manager-Skripten verwenden</a>."
+    gtm_container_id: "Google-Tag-Manager-Container-ID, z. B.: GTM-ABCD12E. <br/>Hinweis: Um GTM zu verwenden, wenn die Content Security Policy (CSP) aktiviert ist, siehe die Dokumentation bei Meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces in Google-Tag-Manager-Skripten verwenden</a>."
     enable_escaped_fragments: "Auf die Ajax-Crawling-API von Google zurückgreifen, wenn kein Webcrawler gefunden wird. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu erstellen und zu verwalten"
     moderators_change_post_ownership: "Moderatoren erlauben, die Eigentümerschaft des Beitrags zu ändern"
@@ -1609,11 +1609,11 @@ de:
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
     slow_down_crawler_user_agents: 'Browserkennungen von Webcrawlern, die wie in der Einstellung „slow down crawler rate“ konfiguriert, einer Durchsatzratenbegrenzung unterworfen werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein.'
     slow_down_crawler_rate: "Wenn slow_down_crawler_user_agents ausgewählt ist, wird diese Anfragenbegrenzung auf alle Crawler angewendet (Anzahl der Sekunden zwischen zwei Anfragen)"
-    content_security_policy: "Aktiviere Content-Security-Policy(CSP)"
-    content_security_policy_report_only: "Aktiviere Content-Security-Policy-Report-Only(CSP)"
+    content_security_policy: "Content-Security-Policy (CSP) aktivieren"
+    content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) aktivieren"
     content_security_policy_collect_reports: "Aktiviere die Sammlung von Berichten zu CSP-Verstößen unter /csp_reports"
     content_security_policy_frame_ancestors: "Schränke ein, wer diese Website in iframes über CSP einbetten kann. Kontrolliere erlaubte Hosts unter <a href='%{base_path}/admin/customize/embedding'>Einbettung</a>"
-    content_security_policy_script_src: "Zusätzlich erlaubte Skriptquellen (Positivliste). Der aktuelle Host und CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-Attacken mit Content Security Policy entschärfen.</a> (CSP)"
+    content_security_policy_script_src: "Zusätzlich erlaubte Skriptquellen (Positivliste). Der aktuelle Host und CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-Attacken mit Content Security Policy entschärfen</a> (CSP)."
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
     include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Benutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Benutzern nur die Anzahl der Themen für ein Schlagwort angezeigt, die sich in öffentlichen Kategorien befinden."
     display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Schlagwort angezeigt."
@@ -1635,7 +1635,7 @@ de:
     topics_per_period_in_top_summary: "Anzahl der Themen, die in der Standard-Zusammenfassung der angesagten Themen angezeigt werden."
     topics_per_period_in_top_page: "Anzahl der Themen, die unter „Mehr anzeigen“ für angesagte Themen angezeigt werden."
     redirect_users_to_top_page: "Verweise neue und länger abwesende Benutzer automatisch zur Seite „Angesagt“."
-    top_page_default_timeframe: "Standardzeitraum für die Startseite für anonyme Nutzer (passt sich automatisch für eingeloggte Nutzer an, basierend auf ihrem letzten Besuch)."
+    top_page_default_timeframe: "Standardzeitraum für die Startseite für anonyme Benutzer (passt sich automatisch für angemeldete Benutzer an, basierend auf ihrem letzten Besuch)."
     moderators_view_emails: "Erlaube Moderatoren, Benutzer-E-Mails einzusehen."
     prioritize_username_in_ux: "Zeige den Benutzernamen auf der Benutzerseite, der Benutzerkarte und in Beiträgen an erster Stelle (wenn deaktiviert, wird der Name an erster Stelle angezeigt)"
     enable_rich_text_paste: "Aktiviere automatische Umwandlung von HTML in Markdown beim Einfügen von Text in den Editor. (Experimentell)"
@@ -1714,7 +1714,7 @@ de:
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
     allow_restore: "Wiederherstellung zulassen, die ALLE Website-Daten ersetzen kann! Lasse dies deaktiviert, es sei denn, du möchtest ein Backup wiederherstellen"
     maximum_backups: "Die maximale Anzahl an Backups, die gespeichert werden. Ältere Backups werden automatisch gelöscht."
-    remove_older_backups: "Löscht Backups, die älter als die angegebene Anzahl von Tagen sind. Feld leer lassen, um es zu deaktivieren."
+    remove_older_backups: "Löscht Backups, die älter als die angegebene Anzahl von Tagen sind. Feld leer lassen, um dies zu deaktivieren."
     automatic_backups_enabled: "Automatische Backups aktivieren. Die Backups werden im eingestellten Zeitintervall erstellt."
     backup_frequency: "Die Anzahl von Tagen zwischen Backups."
     s3_backup_bucket: "Der entfernte Bucket, in dem Backups gespeichert werden. WARNUNG: Achte darauf, dass es ein privater Bucket ist."
@@ -1821,7 +1821,7 @@ de:
     tl3_requires_likes_received: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen eingehen muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
     tl4_delete_posts_and_topics: "TL4-Benutzern erlauben, Beiträge und Themen zu löschen, die von anderen Benutzern erstellt wurden. TL4-Benutzer können auch gelöschte Themen und Beiträge sehen."
-    delete_all_posts_and_topics_allowed_groups: "Gruppen können Beiträge und Themen löschen, die von anderen Nutzern erstellt wurden. Diese Gruppen können auch gelöschte Themen und Beiträge sehen."
+    delete_all_posts_and_topics_allowed_groups: "Gruppen, die Beiträge und Themen löschen dürfen, die von anderen Benutzern erstellt wurden. Diese Gruppen können auch gelöschte Themen und Beiträge sehen."
     edit_all_topic_groups: "Benutzern in dieser Gruppe erlauben, die Thementitel, -schlagwörter und -kategorien anderer Benutzer zu bearbeiten"
     edit_all_post_groups: "Benutzern in dieser Gruppe erlauben, die Beiträge anderer Nutzer zu bearbeiten"
     min_trust_to_create_topic: "Minimale Vertrauensstufe, um ein neues Thema zu erstellen."
@@ -1835,8 +1835,9 @@ de:
     self_wiki_allowed_groups: "Gruppen, in denen Benutzer ihr eigenes Posting-Wiki erstellen können."
     min_trust_to_send_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Die Mindestvertrauensstufe, die zum Erstellen neuer persönlicher Nachrichten erforderlich ist."
     min_trust_to_send_email_messages: "Minimale Vertrauensstufe, um persönliche Nachrichten per E-Mail zu versenden."
+    send_email_messages_allowed_groups: "Gruppen, denen es erlaubt ist, persönliche Nachrichten per E-Mail zu versenden."
     min_trust_to_flag_posts: "Minimale Vertrauensstufe, um Beiträge melden zu können"
-    flag_post_allowed_groups: "Gruppen, die Beiträge kennzeichnen dürfen."
+    flag_post_allowed_groups: "Gruppen, die Beiträge melden dürfen."
     min_trust_to_post_links: "Minimale Vertrauensstufe, um Links in Beiträge einzufügen"
     min_trust_to_post_embedded_media: "Minimale Vertrauensstufe, die zum Einbetten von Medienelementen in einen Beitrag erforderlich ist"
     min_trust_level_to_allow_profile_background: "Minimale Vertrauensstufe, die zum Hochladen eines Profilhintergrunds erforderlich ist"
@@ -1878,8 +1879,8 @@ de:
     dark_mode_none: "Keine"
     max_image_size_kb: "Die maximale Bild-Upload-Größe. Diese muss in nginx (client_max_body_size) / apache oder proxy ebenfalls konfiguriert werden. Bilder, die größer als dieser Wert und kleiner als client_max_body_size sind, werden beim Hochladen in der Größe angepasst."
     max_attachment_size_kb: "Die maximale Größe der hochgeladenen Anhänge. Dies muss in nginx (client_max_body_size) / apache oder proxy ebenfalls konfiguriert werden."
-    authorized_extensions: "Eine Liste der zum Hochladen zulässigen Dateierweiterungen"
-    authorized_extensions_for_staff: "Eine Liste der Dateierweiterungen, die für Mitarbeiterbenutzer zusätzlich zu der in der Site-Einstellung „authorized_extensions“ definierten Liste hochgeladen werden dürfen."
+    authorized_extensions: "Eine Liste der zulässigen Dateierweiterungen für Uploads"
+    authorized_extensions_for_staff: "Eine Liste der Dateierweiterungen, die für Uploads von Team-Mitgliedern zulässig sind (gilt zusätzlich zu der in der Website-Einstellung `authorized_extensions` definierten Liste)."
     theme_authorized_extensions: "Eine Liste der erlaubten Dateierweiterungen für Themen-Uploads"
     max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird anhand des Titels und Inhalts bestimmt."
     max_image_megapixels: "Maximal zulässige Anzahl von Megapixeln für ein Bild. Bilder mit einer höheren Anzahl von Megapixeln werden abgelehnt."
@@ -1962,7 +1963,7 @@ de:
     always_show_trimmed_content: "Immer den gekürzten Teil von eingehenden E-Mails anzeigen. WARNUNG: Könnte E-Mail-Adressen preisgeben."
     trim_incoming_emails: "Schneide einen Teil der eingehenden E-Mails ab, der nicht relevant ist."
     private_email: "Füge keine Inhalte von Beiträgen oder Themen in den E-Mail-Titel oder den E-Mail-Text ein. HINWEIS: Deaktiviert auch die E-Mail-Zusammenfassungen."
-    email_total_attachment_size_limit_kb: "Maximale Gesamtzahl von Dateien an ausgehenden E-Mails. Auf 0 setzen, um das Versenden von Dateianhängen zu deaktivieren."
+    email_total_attachment_size_limit_kb: "Maximale Gesamtgröße von Dateien, die an ausgehende E-Mails angehängt werden. Auf 0 setzen, um das Versenden von Dateianhängen zu deaktivieren."
     post_excerpts_in_emails: "Sende in Benachrichtigungs-E-Mails immer Auszüge anstelle von ganzen Beiträgen"
     raw_email_max_length: "Wie viele Zeichen für eingehende E-Mails gespeichert werden sollen."
     raw_rejected_email_max_length: "Wie viele Zeichen für abgelehnte E-Mails gespeichert werden sollen."
@@ -2013,7 +2014,7 @@ de:
     digest_min_excerpt_length: "Minimale Zeichenlänge für Auszüge von Beiträgen in der E-Mail-Zusammenfassung."
     suppress_digest_email_after_days: "Unterdrücke E-Mail-Zusammenfassungen für Benutzer, die länger als (n) Tage nicht auf der Website gesehen wurden."
     digest_suppress_categories: "Unterdrücke diese Kategorien in E-Mail-Zusammenfassungen."
-    digest_suppress_tags: "Unterdrücke diese Schlagwörter in den zusammenfassenden E-Mails."
+    digest_suppress_tags: "Unterdrücke diese Schlagwörter in den E-Mail-Zusammenfassungen."
     disable_digest_emails: "Deaktiviere E-Mail-Zusammenfassungen für alle Benutzer."
     apply_custom_styles_to_digest: "Benutzerdefinierte E-Mail-Vorlage und CSS werden auf E-Mail-Zusammenfassungen angewendet."
     email_accent_bg_color: "Die Akzentfarbe, die als Hintergrund für einige Elemente in HTML-E-Mails verwendet werden soll. Gib einen Farbnamen („red“) oder einen Hex-Wert („#FF0000“) ein."
@@ -2079,9 +2080,9 @@ de:
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die Breite des Fortschrittsbalkens verändert wird."
-    default_code_lang: "Standardmäßige Syntaxhervorhebung der Programmiersprache, die auf Markdown-Codeblöcke angewendet wird (auto, text, ruby, python usw.). Dieser Wert muss auch in der Site-Einstellung \"Hervorgehobene Sprachen\" enthalten sein."
+    default_code_lang: "Standardmäßige Syntaxhervorhebung für Programmiersprachen, die auf Markdown-Codeblöcke angewendet wird (auto, text, ruby, python usw.). Dieser Wert muss auch in der Website-Einstellung `highlighted languages` enthalten sein."
     warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
-    autohighlight_all_code: "Wende die Syntaxhervorhebung auf HTML-verfasste &lt;code&gt; Blöcke an, auch wenn sie keine Sprache angegeben haben. Um Markdown-Codeblöcke zu konfigurieren, verwende die Einstellung \"default code lang\"."
+    autohighlight_all_code: "Wende die Syntaxhervorhebung auf HTML-&lt;code&gt;-Blöcke an, auch wenn keine Sprache angegeben ist. Um Markdown-Codeblöcke zu konfigurieren, verwende die Einstellung „default code lang“."
     highlighted_languages: "Aktivierte Regeln für die Syntaxhervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
     show_copy_button_on_codeblocks: "Eine Schaltfläche zu Codeblöcken hinzufügen, um den Inhalt des Blocks in die Zwischenablage des Benutzers zu kopieren."
     embed_any_origin: "Einbettbare Inhalte unabhängig vom Ursprung erlauben. Dies ist für mobile Apps mit statischem HTML erforderlich."
@@ -2116,7 +2117,7 @@ de:
     approve_new_topics_unless_allowed_groups: "Neue Themen für Benutzer, die nicht in diesen Gruppen sind, müssen genehmigt werden"
     approve_unless_staged: "Neue Themen und Beiträge für vorbereitete Benutzer müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl an Stunden auf ihre Überprüfung warten, sende eine Benachrichtigung an alle Moderatoren. Setze die Einstellung auf 0, um diese Benachrichtigungen zu deaktivieren."
-    reviewable_revision_reasons: "Liste der Gründe, die ausgewählt werden können, wenn ein überprüfbarer Beitrag in der Warteschlange mit einer Revision abgelehnt wird. Andere ist auch immer verfügbar, damit ein benutzerdefinierter Grund eingegeben werden kann."
+    reviewable_revision_reasons: "Liste der Gründe, die ausgewählt werden können, wenn ein überprüfbarer Beitrag in der Warteschlange mit einer Überarbeitung abgelehnt wird. „Sonstiges“ ist auch immer verfügbar, damit ein benutzerdefinierter Grund eingegeben werden kann."
     auto_close_messages_post_count: "Maximale Anzahl von Beiträgen, die in einer Nachricht erlaubt sind, bevor sie automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_post_count: "Maximale Anzahl von Beiträgen, die in einem Thema erlaubt sind, bevor es automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_create_linked_topic: "Erstelle ein neues verknüpftes Thema, wenn ein Thema basierend auf der Einstellung „auto close topics post count“ automatisch geschlossen wird"
@@ -2131,6 +2132,7 @@ de:
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
     review_media_unless_trust_level: "Das Team wird Beiträge von Benutzern mit niedrigeren Vertrauensstufen überprüfen, wenn sie eingebettete Medien enthalten."
+    skip_review_media_groups: "Benutzer, die keiner dieser Gruppen angehören, werden ihre Beiträge zur Überprüfung an die Mitarbeiter gesendet, wenn der Beitrag eingebettete Medien enthält."
     blur_tl0_flagged_posts_media: "Bilder von gemeldeten Beiträgen mit Unschärfe versehen, um potenzielle NSFW-Inhalte auszublenden."
     enable_page_publishing: "Erlaube Team-Mitgliedern, Themen unter neuen URLs mit eigenem Styling zu veröffentlichen."
     show_published_pages_login_required: "Anonyme Benutzer können veröffentlichte Seiten sehen, auch wenn eine Anmeldung erforderlich ist."
@@ -2203,7 +2205,7 @@ de:
     create_post_for_category_and_tag_changes: "Einen kleinen Aktionsbeitrag erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern"
     automatically_clean_unused_tags: "Lösche täglich automatisch Schlagwörter, die nicht in Themen oder privaten Nachrichten verwendet werden."
     watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
-    company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
+    company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Entwürfe“, indem du eine Kategorie für Themenentwürfe bestimmst. Themen in dieser Kategorie werden in den Themenlisten für Team-Mitglieder unterdrückt."
@@ -2241,7 +2243,8 @@ de:
     enable_custom_sidebar_sections: "EXPERIMENTELL: Benutzerdefinierte Seitenleistenabschnitte aktivieren"
     experimental_topics_filter: "EXPERIMENTELL: Experimentelle Filterroute für Themen unter /filter aktivieren"
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
-    experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion der Formularvorlagen. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href=„%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
+    experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
+    admin_sidebar_enabled_groups: "EXPERIMENTELL: Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     errors:
@@ -2319,6 +2322,8 @@ de:
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
+      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2344,7 +2349,7 @@ de:
     email_error: "Ein Konto konnte nicht mit der E-Mail-Adresse <b>%{email}</b> registriert werden. Bitte wende dich an den Administrator der Website."
     missing_secret: "Die Authentifizierung ist aufgrund des fehlenden Geheimnisses fehlgeschlagen. Kontaktiere die Website-Administratoren, um dieses Problem zu beheben."
     invite_redeem_failed: "Einlösung der Einladung fehlgeschlagen. Bitte kontaktiere den Administrator der Website."
-    invalid_parameter_value: "Die Authentifizierung ist aufgrund eines ungültigen Wertes für den Parameter \"%{param}\" fehlgeschlagen. Wende dich an die Website-Administratoren, um dieses Problem zu beheben."
+    invalid_parameter_value: "Die Authentifizierung ist aufgrund eines ungültigen Wertes für den Parameter `%{param}` fehlgeschlagen. Wende dich an die Website-Administratoren, um dieses Problem zu beheben."
   original_poster: "Autor des ersten Beitrags"
   most_recent_poster: "Autor des jüngsten Beitrags"
   frequent_poster: "Autor vieler Beiträge"
@@ -2439,7 +2444,7 @@ de:
     not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald du dich anmelden kannst."
     incorrect_username_email_or_password: "Benutzername, E-Mail-Adresse oder Passwort falsch"
     incorrect_password: "Falsches Passwort"
-    incorrect_password_or_passkey: "Falsches Passwort oder Passkey"
+    incorrect_password_or_passkey: "Falsches Passwort oder falscher Passkey"
     wait_approval: "Danke fürs Registrieren. Wir werden dich benachrichtigen, sobald dein Benutzerkonto genehmigt wurde."
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
     activate_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungs-E-Mail an <b>%{email}</b> geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
@@ -2480,7 +2485,7 @@ de:
     missing_second_factor_name: "Bitte gib einen Namen an."
     missing_second_factor_code: "Bitte gib einen Code an."
     too_many_authenticators: "Du kannst leider nicht mehr als 50 Authentifikatoren haben. Bitte entferne einen bestehenden und versuche es erneut."
-    too_many_security_keys: "Du kannst leider nicht mehr als 50 Sicherheitsschlüel haben. Bitte entferne einen bestehenden und versuche es erneut."
+    too_many_security_keys: "Du kannst leider nicht mehr als 50 Sicherheitsschlüssel haben. Bitte entferne einen bestehenden und versuche es erneut."
     second_factor_toggle:
       totp: "Verwende stattdessen eine Authentifizierungs-App oder einen Sicherheitsschlüssel"
       backup_code: "Benutze stattdessen einen Wiederherstellungscode"
@@ -2756,9 +2761,9 @@ de:
       title: "Feedback zu deinem Beitrag"
       subject_template: "Feedback zu deinem Beitrag in %{topic_title}"
       text_body_template: |
-        Hallo %{username},
+        Hallo, %{username}!
 
-        Wir haben uns deinen Beitrag in [%{topic_title}](%{topic_url}) angesehen und haben einige Rückmeldungen für dich.
+        Wir haben uns deinen Beitrag in [%{topic_title}](%{topic_url}) angesehen und haben Feedback für dich.
 
         Grund: %{reason}
 
@@ -2772,15 +2777,15 @@ de:
 
         --------
 
-        Danke,
-        %{site_name} Moderatoren
+        Danke!
+        Die Moderatoren von %{site_name}
     reviewable_queued_post_revise_and_reject_new_topic:
       title: "Feedback zu deinem Thema"
-      subject_template: 'Feedback zum neuen Thema "%{topic_title}"'
+      subject_template: 'Feedback zum neuen Thema „%{topic_title}“'
       text_body_template: |
-        Hallo %{username},
+        Hallo, %{username}!
 
-        Wir haben dein neues Thema mit dem Titel "%{topic_title}" überprüft und haben ein Feedback für dich.
+        Wir haben dein neues Thema mit dem Titel „%{topic_title}“ überprüft und haben Feedback für dich.
 
         Grund: %{reason}
 
@@ -2794,8 +2799,8 @@ de:
 
         --------
 
-        Danke,
-        %{site_name} Moderatoren
+        Danke!
+        Die Moderatoren von %{site_name}
     post_hidden_again:
       title: "Beitrag wieder ausgeblendet"
       subject_template: "Beitrag ausgeblendet wegen Community-Meldungen, Team wurde informiert"
@@ -3965,104 +3970,6 @@ de:
     Bearbeite den ersten Beitrag in diesem Thema, um den Inhalt von %{page_name} zu ändern.
   guidelines_topic:
     title: "FAQ/Richtlinien"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Dies ist ein zivilisierter Ort für öffentliche Diskussionen](#civilized)
-
-      Bitte behandle dieses Diskussionsforum mit demselben Respekt, den du auch einem öffentlichen Park entgegenbringen würdest. Auch wir sind eine gemeinschaftliche Ressource &mdash; ein Ort, um Fähigkeiten, Wissen und Interessen durch fortlaufende Konversation zu teilen.
-
-      Dies sind keine verbindlichen Regeln. Sie sind Richtlinien, die das menschliche Urteilsvermögen unserer Gemeinschaft unterstützen und dafür sorgen, dass dies ein freundlicher Ort für einen zivilisierten öffentlichen Diskurs bleibt.
-
-      <a name="improve"></a>
-
-      ## [Verbessere die Diskussion](#improve)
-
-      Hilf uns, dies zu einem großartigen Ort der Diskussion zu machen, indem du immer etwas Positives zur Diskussion beiträgst, wie klein auch immer der Beitrag sein mag. Wenn du dir nicht sicher bist, ob dein Beitrag zur Diskussion beiträgt, überlege dir, was du sagen willst, und versuche es später noch einmal.
-
-      Eine Möglichkeit, die Diskussion zu verbessern, besteht darin, die Themen zu entdecken, die bereits im Gange sind. Verbringe Zeit damit, die Themen hier zu durchstöbern, bevor du antwortest oder einen eigenen Beitrag beginnst. Du hast dann eine bessere Chance, andere zu treffen, die deine Interessen teilen.
-
-      Die Themen, die hier diskutiert werden, sind uns wichtig und wir möchten, dass du so handelst, als ob sie dir auch wichtig wären. Sei respektvoll gegenüber den Themen und den Personen, die sie diskutieren, auch wenn du mit einigen der Aussagen nicht einverstanden bist.
-
-      <a name="agreeable"></a>
-
-      ## [Verhalte dich umgänglich, auch wenn du nicht einverstanden bist](#agreeable)
-
-      Vielleicht möchtest du deinen Dissens ausdrücken. Das ist in Ordnung. Aber denke daran, _Ideen zu kritisieren, nicht Personen_. Bitte vermeide Folgendes:
-
-      * Beschimpfungen
-      * Ad-hominem-Angriffe
-      * Reagieren auf den Tonfall eines Beitrags anstatt auf den eigentlichen Inhalt
-      * Widerspruch unter der Gürtellinie
-
-      Stelle stattdessen durchdachte Erkenntnisse zur Verfügung, die die Unterhaltung verbessern.
-
-      <a name="participate"></a>
-
-      ## [Deine Teilnahme zählt](#participate)
-
-      Die Unterhaltungen, die wir hier führen, geben den Ton für jeden Neuankömmling an. Hilf uns, die Zukunft dieser Gemeinschaft zu beeinflussen, indem du dich an Diskussionen beteiligst, die dieses Forum zu einem interessanten Ort machen &mdash; und diejenigen meidest, die das nicht tun.
-
-      Discourse bietet Werkzeuge, die es der Gemeinschaft ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifizieren: Lesezeichen, „Gefällt mir“, Meldungen, Antworten, Bearbeitungen, das Beobachten, das Stummschalten und so weiter. Nutze diese Werkzeuge, um deine eigene Erfahrung zu verbessern und die aller anderen auch.
-
-      Verbessern wir gemeinsam unsere Community.
-
-      <a name="flag-problems"></a>
-
-      ## [Falls du ein Problem siehst, melde es](#flag-problems)
-
-      Moderatoren haben besondere Befugnisse; sie sind für dieses Forum verantwortlich. Aber das bist du auch. Mit deiner Hilfe können die Moderatoren die Gemeinschaft fördern und sind nicht nur Hausmeister oder Polizisten.
-
-      Wenn du schlechtes Verhalten siehst, antworte nicht. Antworten ermutigt schlechtes Verhalten, indem es bestätigt wird, verbraucht deine Energie und verschwendet die Zeit von allen. _Melde es einfach_. Wenn sich genug Meldungen ansammeln, werden Maßnahmen ergriffen, entweder automatisch oder durch das Eingreifen eines Moderators.
-
-      Um unsere Gemeinschaft aufrechtzuerhalten, behalten sich die Moderatoren das Recht vor, jeden Inhalt und jedes Benutzerkonto aus irgendeinem Grund zu jeder Zeit zu entfernen. Die Moderatoren führen keine Vorabansicht neuer Beiträge durch; die Moderatoren und Websitebetreiber übernehmen keine Verantwortung für die von der Community eingestellten Inhalte.
-
-      <a name="be-civil"></a>
-
-      ## [Sei stets respektvoll](#be-civil)
-
-      Nichts sabotiert eine gesunde Unterhaltung so sehr wie Unhöflichkeit:
-
-      * Sei höflich. Veröffentliche nichts, was eine vernünftige Person als beleidigend, ausfallend oder als Hassrede ansehen würde.
-      * Beherrsche dich. Poste nichts Obszönes oder sexuell Anzügliches.
-      * Respektiert euch gegenseitig. Belästige niemanden, gib dich nicht als jemand anderes aus und gib keine privaten Informationen preis.
-      * Respektiere unser Forum. Veröffentliche keinen Spam und verunstalte nicht das Forum.
-
-      Dies sind keine konkreten Begriffe mit genauen Definitionen &mdash; vermeide auch nur den _Anschein_ eines dieser Dinge. Wenn du unsicher bist, frage dich, wie du dich fühlen würdest, wenn dein Beitrag auf der Titelseite einer großen Nachrichtenseite erscheinen würde.
-
-      Dies ist ein öffentliches Forum und Suchmaschinen indizieren diese Diskussionen. Halte die Sprache, Links und Bilder angemessen für Familie und Freunde.
-
-      <a name="keep-tidy"></a>
-
-      ## [Sei ordentlich](#keep-tidy)
-
-      Mach dir die Mühe, alles an den richtigen Platz zu packen, sodass wir mehr Zeit mit dem Diskutieren und weniger mit dem Aufräumen verbringen können:
-
-      * Fange kein Thema in der falschen Kategorie an; lies bitte die Kategorie-Definitionen.
-      * Poste nicht dieselben Inhalte in mehreren Themen.
-      * Poste keine inhaltslosen Antworten.
-      * Lenke nicht von einem Thema ab, indem du es mittendrin änderst.
-      * Unterschreibe deine Beiträge nicht &mdash; jeder Beitrag ist mit deinen Profilinformationen versehen.
-
-      Anstatt „+1“ oder „Einverstanden“ zu posten, verwende den Like-Button. Anstatt ein bestehendes Thema in eine radikal andere Richtung zu lenken, verwende „Antworten als verknüpftes Thema“.
-
-      <a name="stealing"></a>
-
-      ## [Poste nur eigene Inhalte](#stealing)
-
-      Du darfst ohne Erlaubnis nichts Digitales posten, das jemand anderem gehört. Du darfst keine Beschreibungen, Links oder Methoden posten, die dem Diebstahl des geistigen Eigentums (Software, Video, Audio, Bilder) von jemandem dienen oder anderweitig illegales Verhalten beschreiben.
-
-      <a name="power"></a>
-
-      ## [Angetrieben von dir](#power)
-
-      Diese Website wird von deinem [freundlichen Moderations-Team](%{base_path}/about) und von *euch*, der Community, betrieben. Wenn du weitere Fragen dazu hast, wie alles hier funktionieren soll, öffne ein neues Thema in der [Kategorie Website-Feedback](%{base_path}/c/site-feedback) und lass uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht durch ein Meta-Thema oder eine Meldung behandelt werden kann, kontaktiere uns über die [Seite des Moderations-Teams](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Nutzungsbedingungen](#tos)
-
-      Ja, Juristensprache ist langweilig, aber wir müssen uns &ndash; und damit auch dich und deine Daten &ndash; vor unfreundlichen Leuten schützen. Wir haben [Nutzungsbedingungen](%{base_path}/tos), die dein (und unser) Verhalten und deine Rechte in Bezug auf Inhalte, Datenschutz und Gesetze beschreiben. Um diesen Dienst zu nutzen, musst du zustimmen, unsere [Nutzungsbedingungen](%{base_path}/tos) einzuhalten.
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |
@@ -4778,8 +4685,8 @@ de:
         one: "Automatisch widerrufen, letzte Aktivität vor mehr als %{count} Tag"
         other: "Automatisch widerrufen, letzte Aktivität vor mehr als %{count} Tagen"
       automatic_revoked_max_life:
-        one: "Automatisch widerrufen, erstellt am vor mehr als %{count} Tag"
-        other: "Automatisch widerrufen, erstellt am vor mehr als %{count} Tagen"
+        one: "Automatisch widerrufen, erstellt vor mehr als %{count} Tag"
+        other: "Automatisch widerrufen, erstellt vor mehr als %{count} Tagen"
       revoked: Widerrufen
       restored: Wiederhergestellt
   reviewables:
@@ -4801,7 +4708,7 @@ de:
     reasons:
       post_count: "Die ersten paar Beiträge jedes Benutzers müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
       trust_level: "Antworten von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
-      group: "Benutzer, die nicht zu den angegebenen Gruppen gehören, müssen ihre Antworten von den Mitarbeitern genehmigen lassen. Siehe %{link}."
+      group: "Benutzer, die nicht zu den angegebenen Gruppen gehören, müssen ihre Antworten von Team-Mitgliedern genehmigen lassen. Siehe %{link}."
       new_topics_unless_trust_level: "Themen von Benutzern auf niedrigen Vertrauensstufen müssen von Team-Mitgliedern genehmigt werden. Siehe %{link}."
       fast_typer: "Ein neuer Benutzer hat seinen ersten Beitrag verdächtig schnell getippt, Verdacht auf Bot oder Spammer-Verhalten. Siehe %{link}."
       auto_silence_regex: "Neuer Benutzer, dessen erster Beitrag mit der %{link}-Einstellung übereinstimmt."
@@ -4865,7 +4772,7 @@ de:
       discard_post:
         title: "Beitrag verwerfen"
       revise_and_reject_post:
-        title: "Beitrag überarbeiten..."
+        title: "Beitrag überarbeiten …"
       ignore:
         title: "Ignorieren"
       ignore_and_do_nothing:
@@ -4943,7 +4850,7 @@ de:
       missing_type: "fehlt ein Feldtyp"
       missing_id: "fehlt eine Feld-ID"
       duplicate_ids: "hat doppelte IDs"
-      reserved_id: "hat ein reserviertes Schlüsselwort als id: %{id}"
+      reserved_id: "hat ein reserviertes Schlüsselwort als ID: %{id}"
       unsafe_description: "hat eine unsichere HTML-Beschreibung"
   activemodel:
     errors:

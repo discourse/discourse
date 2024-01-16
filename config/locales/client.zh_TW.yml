@@ -1847,6 +1847,8 @@ zh_TW:
         likes: "新的讚"
         bookmarks: "書籤"
         profile: "基本資料"
+      reviewable:
+        deleted_user: "(已被刪除的使用者)"
     topics:
       new_messages_marker: "上次到訪"
       bulk:
@@ -2408,6 +2410,7 @@ zh_TW:
       uncategorized_general_warning: '此為特殊分類，作為尚未選定分類的新話題的預設分類。若您要停用此行為並強制使用者選擇分類，請在<a href="%{settingLink}">停用此設定，若您要更改名稱或說明，請到<a href="%{customizeLink}">自訂 / 文字內容</a>。'
       images: "圖片"
       email_in: "自訂外來電郵地址:"
+      email_in_tooltip: "您可以使用 | 字元分隔多個電子郵件地址。"
       email_in_allow_strangers: "接受非使用者的電郵"
       mailinglist_mirror: "以類別來區分郵件列表"
       show_subcategory_list: "在此分類中，將子分類顯示在話題上方。"
@@ -3097,6 +3100,7 @@ zh_TW:
         title: "API"
         key: "金鑰"
         created: 已建立
+        updated: 更新時間
         never_used: (永不)
         generate: "產生"
         revoke: "撤銷"
@@ -3996,6 +4000,7 @@ zh_TW:
         go_back: "回到搜尋"
         recommended: "我們建議自定義以下文本以符合你的需求："
         show_overriden: "只顯示修改過的項目"
+        locale: "語言:"
         more_than_50_results: "有超過50個搜尋結果。請嘗試重新定義搜尋關鍵字。"
         outdated:
           dismiss: "忽略"

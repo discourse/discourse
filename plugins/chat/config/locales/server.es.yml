@@ -30,7 +30,7 @@ es:
     chat_allow_archiving_channels: "Permitir al personal archivar mensajes en un tema al cerrar un canal."
     chat_editing_grace_period: "Durante (n) segundos después de enviar un chat, la edición no mostrará la etiqueta (editado) junto al mensaje de chat."
     chat_editing_grace_period_max_diff_low_trust: "Número máximo de cambios de caracteres permitidos en el periodo de gracia de edición del chat, si se cambian más se muestra la etiqueta (editado) mediante el mensaje de chat (nivel de confianza 0 y 1)."
-    chat_editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el periodo de gracia de edición del chat, si se cambian más se muestra la etiqueta (editado) mediante el mensaje de chat (nivel de confianza 0 y 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Número máximo de cambios de caracteres permitidos en el periodo de gracia de edición del chat, si se cambian más se muestra la etiqueta (editado) mediante el mensaje de chat (nivel de confianza 2 y superior)."
     errors:
       chat_default_channel: "El canal de chat por defecto debe ser un canal público."
       direct_message_enabled_groups_invalid: "Debes especificar al menos un grupo para esta configuración. Si no quieres que nadie, excepto el personal, envíe mensajes directos, elige el grupo del personal."

@@ -89,6 +89,11 @@ da:
       heading: "Chat"
       join: "Tilslut"
       last_visit: "sidste besøg"
+      mention_warning:
+        invitations_sent:
+          one: "Invitation sendt"
+          other: "Invitationer sendt"
+        invite: "Inviter til kanal"
       reply: "Svar"
       edit: "Rediger"
       rebake_message: "Gendan HTML"
@@ -268,12 +273,17 @@ da:
     review:
       types:
         reviewable_chat_message:
+          title: "Rapporteret chatbesked"
           noun: "chatbesked"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Skift kanal"
+    styleguide:
+      sections:
+        chat:
+          title: Chat
     sidebar:
       panels:
         chat:
