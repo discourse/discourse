@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import { ajax } from "discourse/lib/ajax";
+import { MAX_NOTIFICATIONS_LIMIT_PARAMS } from "discourse/lib/constants";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import {
@@ -13,7 +14,7 @@ import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import I18n from "discourse-i18n";
 
-const MAX_LIMIT = 60;
+const MAX_LIMIT = MAX_NOTIFICATIONS_LIMIT_PARAMS;
 const DEFAULT_LIMIT = 30;
 let limit = DEFAULT_LIMIT;
 
