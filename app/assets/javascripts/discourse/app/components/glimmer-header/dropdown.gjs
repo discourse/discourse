@@ -16,9 +16,7 @@ export default class Dropdown extends Component {
       return;
     }
     e.preventDefault();
-    if (!this.args.active) {
-      this.args.onClick();
-    }
+    this.args.onClick();
   }
 
   <template>

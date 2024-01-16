@@ -31,6 +31,7 @@ const SEARCH_BUTTON_ID = "search-button";
 export default class GlimmerHeader extends Component {
   @service router;
   @service search;
+  @service currentUser;
   @service site;
 
   @tracked hamburgerVisible = false;
