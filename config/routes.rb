@@ -232,7 +232,10 @@ Discourse::Application.routes.draw do
         member do
           get "preview" => "themes#preview"
           put "setting" => "themes#update_single_setting"
+          put "store" => "themes#update_store"
+          get "store" => "themes#fetch_store"
         end
+
         collection do
           post "import" => "themes#import"
           post "upload_asset" => "themes#upload_asset"

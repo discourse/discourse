@@ -329,6 +329,31 @@ class Admin::ThemesController < Admin::AdminController
     render json: updated_setting, status: :ok
   end
 
+  def update_store
+    params.require(:table_name)
+    params.require(:json)
+
+    theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless theme
+
+    theme_table = ThemeTable.find_or_create_by!(theme_id: theme.id, name: params[:table_name])
+    theme_table.theme_table_rows.create!(data: params[:json])
+
+    render json: success_json
+  end
+
+  def fetch_store
+    params.require(:table_name)
+
+    theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless theme
+
+    theme_table = ThemeTable.find_by(theme_id: theme.id, name: params[:table_name])
+    raise Discourse::InvalidParameters.new(:table_name) unless theme_table
+
+    render json: theme_table.theme_table_rows.map(&:data).to_json
+  end
+
   private
 
   def ban_in_allowlist_mode!
