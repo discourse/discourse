@@ -32,10 +32,6 @@
     @include ellipsis();
     font-weight: 700;
 
-    .c-routes-channel-threads & {
-      padding-left: 0;
-    }
-
     .chat-drawer & {
       padding-left: 1rem;
     }

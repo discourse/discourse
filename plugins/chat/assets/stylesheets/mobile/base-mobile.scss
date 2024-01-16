@@ -24,7 +24,6 @@ html.has-full-page-chat {
 
       &.has-side-panel-expanded {
         grid-template-columns: 1fr;
-        grid-template-areas: "threads";
 
         .c-routes-channel {
           display: none;
@@ -40,8 +39,6 @@ html.has-full-page-chat {
 
   .btn:active,
   .btn:hover {
-    background: var(--secondary-very-high);
-
     .d-icon {
       color: var(--primary-medium);
     }

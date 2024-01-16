@@ -2,7 +2,6 @@
 
 .full-page-chat {
   .channels-list {
-    overflow-y: overlay;
     padding-bottom: 6rem;
     box-sizing: border-box;
 
@@ -19,7 +18,7 @@
       }
 
       .channel-title {
-        color: var(--quaternary);
+        color: var(--primary);
         font-size: var(--font-down-1);
       }
     }
@@ -72,4 +71,11 @@
       }
     }
   }
+}
+
+.c-routes-direct-messages,
+.c-routes-channels,
+.c-routes-threads {
+  background: var(--primary-very-low);
+  max-width: 100vw;
 }
