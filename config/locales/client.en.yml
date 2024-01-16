@@ -2971,6 +2971,7 @@ en:
         category: "There are no more %{category} topics."
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
+        hot: "There are no more hot topics."
         bookmarks: "There are no more bookmarked topics."
         filter: "There are no more topics."
 
