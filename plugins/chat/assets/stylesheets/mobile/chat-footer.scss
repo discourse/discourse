@@ -20,6 +20,7 @@
     position: sticky;
     bottom: 0;
     left: 0;
+    padding-bottom: env(safe-area-inset-bottom);
 
     &__item {
       display: flex;
