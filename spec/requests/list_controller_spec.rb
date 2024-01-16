@@ -224,14 +224,14 @@ RSpec.describe ListController do
       end
     end
 
-    context "with lazy_load_categories" do
+    context "with lazy load categories enabled" do
       fab!(:category)
       fab!(:subcategory) { Fabricate(:category, parent_category: category) }
 
       before { topic.update!(category: subcategory) }
 
       it "returns categories and parent categories if true" do
-        SiteSetting.lazy_load_categories = true
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
 
         get "/latest.json"
 
@@ -245,7 +245,7 @@ RSpec.describe ListController do
       end
 
       it "does not return categories if not true" do
-        SiteSetting.lazy_load_categories = false
+        SiteSetting.lazy_load_categories_groups = ""
 
         get "/latest.json"
 

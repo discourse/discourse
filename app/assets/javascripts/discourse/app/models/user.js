@@ -857,7 +857,7 @@ const User = RestModel.extend({
   @dependentKeyCompat
   get mutedCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.muted_category_ids)
     ) {
       Category.asyncFindByIds(this.muted_category_ids).then(() =>
@@ -877,7 +877,7 @@ const User = RestModel.extend({
   @dependentKeyCompat
   get regularCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.regular_category_ids)
     ) {
       Category.asyncFindByIds(this.regular_category_ids).then(() =>
@@ -897,7 +897,7 @@ const User = RestModel.extend({
   @dependentKeyCompat
   get trackedCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.tracked_category_ids)
     ) {
       Category.asyncFindByIds(this.tracked_category_ids).then(() =>
@@ -917,7 +917,7 @@ const User = RestModel.extend({
   @dependentKeyCompat
   get watchedCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.watched_category_ids)
     ) {
       Category.asyncFindByIds(this.watched_category_ids).then(() =>
@@ -937,7 +937,7 @@ const User = RestModel.extend({
   @dependentKeyCompat
   get watchedFirstPostCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.watched_first_post_category_ids)
     ) {
       Category.asyncFindByIds(this.watched_first_post_category_ids).then(() =>
