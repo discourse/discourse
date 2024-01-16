@@ -916,18 +916,35 @@ HTML
         name: "yaml",
         value: "some_number: 1",
       )
+
       theme.set_field(
         target: :tests_js,
         type: :js,
         name: "acceptance/some-test.js",
         value: "assert.ok(true);",
       )
+
       theme.save!
     end
 
     it "returns nil for content and digest if theme does not have tests" do
       ThemeField.destroy_all
       expect(theme.baked_js_tests_with_digest).to eq([nil, nil])
+    end
+
+    it "includes theme's migrations theme fields" do
+      theme.set_field(
+        target: :migrations,
+        type: :js,
+        name: "0001-some-migration",
+        value: "export default function migrate(settings) { return settings; }",
+      )
+
+      theme.save!
+
+      content, _digest = theme.baked_js_tests_with_digest
+
+      expect(content).to include("function migrate(settings)")
     end
 
     it "digest does not change when settings are changed" do
