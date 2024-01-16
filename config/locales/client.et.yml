@@ -75,15 +75,27 @@ et:
         date_month: "D. MMMM"
         date_year: "MMMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "vähem kui %{count} minut tagasi"
+          other: "vähem kui %{count} minutit tagasi"
         x_minutes:
           one: "%{count} min"
-          other: "%{count} min"
+          other: "%{count} minutit"
         x_hours:
           one: "%{count} tund"
           other: "%{count} tundi"
+        about_x_hours:
+          one: "umbes %{count} tund"
+          other: "umbes %{count} tundi"
         x_days:
           one: "%{count} päev"
           other: "%{count} päeva"
+        x_months:
+          one: "%{count} kuu"
+          other: "%{count} kuud"
+        about_x_years:
+          one: "umbes %{count} aastat"
+          other: "umbes %{count} aastat"
         date_year: "D. MMMM, 'YY"
       medium_with_ago:
         x_minutes:
@@ -2556,6 +2568,9 @@ et:
               content: "Minu"
             review:
               content: "Vaata üle"
+      panels:
+        forum:
+          label: Foorum
     form_templates:
       errors:
         typeMismatch:
@@ -2682,6 +2697,7 @@ et:
         user: "Kasutaja"
         title: "API"
         created: Loodud
+        last_used: Viimati kasutatud
         never_used: (mitte kunagi)
         generate: "Genereeri"
         revoke: "Tühista "

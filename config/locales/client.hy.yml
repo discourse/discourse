@@ -119,6 +119,8 @@ hy:
     share:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       close: "փակել"
+    word_connector:
+      comma: ","
     action_codes:
       public_topic: "Այս թեման դարձրել է հրապարակային %{when}"
       private_topic: "Այս թեման դարձրել է անձնական նամակ %{when}"

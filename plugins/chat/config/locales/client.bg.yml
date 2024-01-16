@@ -66,6 +66,7 @@ bg:
         dm_and_mentions: "Директни съобщения и споменавания"
         never: "Никога"
       flag: "Сигнализиране"
+      heading: "Чат"
       join: "Влизане"
       last_visit: "последно посещение"
       summarization:
@@ -84,12 +85,15 @@ bg:
       save: "Запази "
       sounds:
         none: "Без"
+      title: "чат"
+      title_capitalized: "Чат"
       exit: "назад"
       channel_status:
         closed: "Затворена"
         open: "Отвори"
       browse:
         back: "Назад"
+        title: Канали
         filter_all: Всички
         filter_closed: Затворена
       chat_message_separator:
@@ -124,10 +128,13 @@ bg:
         threading_enabled: "Да е включен"
         threading_disabled: "Деактивирани"
         notifications: "Известия"
+        preview: "Преглед"
         save: "Запази "
         saved: "Запазено"
         unfollow: "Напусни"
         admin_title: "Администратор"
+      admin:
+        title: "Чат"
       incoming_webhooks:
         back: "Назад"
         description: "Описание"
@@ -169,12 +176,17 @@ bg:
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
     discourse_automation:
       scriptables:
         send_chat_message:
           fields:
             message:
               label: Съобщение
+    keyboard_shortcuts_help:
+      chat:
+        title: "Чат"
     styleguide:
       sections:
         chat:

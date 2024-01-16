@@ -102,7 +102,9 @@ sk:
         all_new: "Všetky nové správy"
         dm_and_mentions: "Súkromné správy a zmienky"
         never: "Nikdy"
+      enable: "Povoliť chat"
       flag: "Označenie"
+      heading: "Chat"
       join: "Pridať sa"
       last_visit: "posledná návševa"
       summarization:
@@ -117,7 +119,10 @@ sk:
       mention_warning:
         dismiss: "zahodiť"
         cannot_see: "%{username} nemá prístup k tomuto kanálu a nebol upozornený."
+        invite: "Pozvať na kanál"
+        without_membership: "%{username} sa nepripojil k tomuto kanálu."
         group_mentions_disabled: "%{group_name} nepovoľuje označovanie."
+        too_many_members: "%{group_name} má príliš veľa členov. Nikto nebol informovaný."
         groups:
           unreachable_1: "@%{group} nepovoľuje označovanie."
           unreachable_2: "@%{group1} a @%{group2} nepovoľujú oznčovanie."
@@ -136,6 +141,7 @@ sk:
       rebake_message: "Pregenerovať HTML"
       bookmark_message: "Záložka"
       save: "Uložiť"
+      select: "Vyberte"
       return_to_threads_list: "Návrat k prebiehajúcim diskusiám"
       unread_threads_count:
         one: "Máte %{count} neprečítanú diskusiu"
@@ -268,6 +274,7 @@ sk:
         unfollow: "Opustiť"
         admin_title: "Admin"
       admin:
+        title: "Chat"
         export_messages:
           title: "Exportovať správy z chatu"
           description: "Export je v súčasnosti obmedzený na 10000 najnovších správ za posledných 6 mesiacov."
@@ -302,6 +309,7 @@ sk:
       emoji_picker:
         objects: "Objekty"
         flags: "Označenia"
+        no_results: "Žiadne výsledky"
       thread:
         title: "Názov"
         view_thread: Zobraziť vlákno
@@ -348,6 +356,7 @@ sk:
           title: "Označená správa"
     keyboard_shortcuts_help:
       chat:
+        title: "Chat"
         keyboard_shortcuts:
           mark_all_channels_read: "%{shortcut} Označiť všetky kanály ako prečítané"
     styleguide:

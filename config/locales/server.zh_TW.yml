@@ -450,6 +450,7 @@ zh_TW:
       description_incomplete: "分類的說明貼文必須至少長於一個段落。"
       permission_conflict: "任何能夠存取一個子分類的群組必須同時也能夠存取其主要分類。以下列出有權限可以訪問子分類，但無法存取主要分類清單：%{group_names}。"
       disallowed_topic_tags: "這個話題含有此分類下被禁用的標籤：'%{tags}'"
+      is_already_in_use: "已被使用"
     cannot_delete:
       uncategorized: "此為特殊分類，僅作為沒有分類的話題暫存區，無法被刪除。"
       has_subcategories: "不能刪除該分類，因為它有子分類"
@@ -2447,6 +2448,7 @@ zh_TW:
       unsubscribe: "因為你有一段時間沒有來 %{site_link}，因此為你送上論壇近期摘要郵件。如需取消訂閱，請至 %{email_preferences_link} 或點擊 %{unsubscribe_link}。"
       your_email_settings: "你的電子郵件設定"
       click_here: "點擊此處"
+      from: "%{site_name}"
       preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
     forgot_password:
       title: "忘記密碼"

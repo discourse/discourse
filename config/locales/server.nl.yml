@@ -68,8 +68,11 @@ nl:
       generic: Er is een fout opgetreden bij het importeren van dat thema
       upload: "Fout bij maken van uploaditem: %{name}. %{errors}"
       about_json: "Belangrijke fout: about.json bestaat niet of is ongeldig. Weet je zeker dat dit een Discourse-thema is?"
+      about_json_too_big: "Importfout: about.json is groter dan de limiet van %{limit}."
       about_json_values: "about.json bevat ongeldige waarden: %{errors}"
       modifier_values: "about.json-modificatoren bevatten ongeldige waarden: %{errors}"
+      asset_too_big: "Asset %{filename} is groter dan de limiet van %{limit}"
+      theme_too_big: "Thema is groter dan de limiet van %{limit}"
       git: "Fout bij klonen van git-repository; toegang is geweigerd of repository is niet gevonden"
       git_ref_not_found: "Kan git-referentie niet uitchecken: %{ref}"
       git_unsupported_scheme: "Kan git-repository niet klonen: schema niet ondersteund"
@@ -78,6 +81,7 @@ nl:
       unknown_file_type: "Het bestand dat je hebt geüpload lijkt geen geldig Discourse-thema te zijn."
       not_allowed_theme: "`%{repo}` komt niet voor in de lijst van toegestane thema's (controleer de globale instelling `allowed_theme_repos`)."
       ssh_key_gone: "Je hebt te lang gewacht met het installeren van het thema, de SSH-sleutel is verlopen. Probeer het opnieuw."
+      too_many_files: "Het aantal bestanden (%{count}) in het thema overschrijdt het maximaal toegestane aantal bestanden (%{limit})"
     errors:
       component_no_user_selectable: "Themaonderdelen kunnen niet door de gebruiker selecteerbaar zijn"
       component_no_default: "Themaonderdelen kunnen geen standaardthema zijn"
@@ -905,6 +909,9 @@ nl:
     sequence_conflict_error:
       title: "conceptfout"
       description: "Concept wordt in een ander venster bewerkt. Vernieuw deze pagina."
+    too_many_drafts:
+      title: "Te veel concepten"
+      description: "Je hebt het maximale aantal toegestane concepten bereikt. Verwijder een aantal van [je concepten] (%{base_url}/my/activity/drafts) en probeer het opnieuw."
   draft_backup:
     pm_title: "Back-upconcepten van actieve topics"
     pm_body: "Topic dat back-upconcepten bevat"
@@ -2405,6 +2412,8 @@ nl:
     invalid_security_key: "Ongeldige beveiligingssleutel."
     missing_second_factor_name: "Geef een naam op."
     missing_second_factor_code: "Geef een code op."
+    too_many_authenticators: "Je kunt niet meer dan 50 authenticators hebben. Verwijder een bestaande en probeer het opnieuw."
+    too_many_security_keys: "Je kunt niet meer dan 50 beveiligingssleutels hebben. Verwijder een bestaande en probeer het opnieuw."
     second_factor_toggle:
       totp: "Een authenticator-app of beveiligingssleutel gebruiken"
       backup_code: "Back-upcode gebruiken"

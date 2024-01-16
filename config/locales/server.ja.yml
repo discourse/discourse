@@ -68,8 +68,11 @@ ja:
       generic: テーマをインポート中にエラーが発生しました
       upload: "アップロードアセットの作成中にエラーが発生しました: %{name}。%{errors}"
       about_json: "インポートエラー: about.json が存在しないか無効です。これは Discourseテーマですか？"
+      about_json_too_big: "インポートエラー: about.json は %{limit} の制限を超えています。"
       about_json_values: "about.json に無効な値が含まれます: %{errors}"
       modifier_values: "about.json 修飾子に無効な値が含まれます: %{errors}"
+      asset_too_big: "アセット %{filename} は %{limit} の制限を超えています"
+      theme_too_big: "テーマは %{limit} の制限を超えています"
       git: "git リポジトリのクローニング中にエラーが発生しました。アクセスが拒否されたか、リポジトリが見つかりません"
       git_ref_not_found: "git の参照をチェックアウトできません: %{ref}"
       git_unsupported_scheme: "git リポジトリをクローンできません。サポートされていないスキームです"
@@ -78,6 +81,7 @@ ja:
       unknown_file_type: "アップロードしたファイルは、有効な Discourse テーマではないようです。"
       not_allowed_theme: "`%{repo}` は許可されたテーマのリストにありません (`allowed_theme_repos` グローバル設定を確認してください)。"
       ssh_key_gone: "テーマのインストールに時間がかかり過ぎたため、SSH キーが期限切れになりました。もう一度お試しください。"
+      too_many_files: "テーマ内のファイル数 (%{count}) が許可されている最大ファイル数 (%{limit}) を超えました"
     errors:
       component_no_user_selectable: "テーマコンポーネントをユーザー選択可能にできません"
       component_no_default: "テーマコンポーネントをデフォルトテーマにできません"
@@ -853,6 +857,9 @@ ja:
     sequence_conflict_error:
       title: "下書きエラー"
       description: "下書きは別のウィンドウで編集されています。このページを再読み込みしてください。"
+    too_many_drafts:
+      title: "下書きが多すぎます"
+      description: "許可される下書きの最大数に達しました。一部の[下書き](%{base_url}/my/activity/drafts)を削除してからもう一度お試しください。"
   draft_backup:
     pm_title: "進行中のトピックのバックアップ下書き"
     pm_body: "バックアップの下書きを含むトピック"
@@ -1996,7 +2003,7 @@ ja:
     embed_post_limit: "埋め込める投稿の最大数。"
     embed_username_required: "トピック作成用のユーザー名が必要です。"
     notify_about_reviewable_item_after: "この時間の経過後に未処理のレビュー待ち項目がある場合、モデレーターに個人メッセージを送信します。無効にするには 0 に設定します。"
-    delete_drafts_older_than_n_days: "(n) 日間経過した下書きを削除します。"
+    delete_drafts_older_than_n_days: "(n) 日間経過した下書きを削除する。"
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまで待機する日数。0 に設定すると、スタブトピックは削除されません。"
     bootstrap_mode_min_users: "ブートストラップモードを無効にするために必要な最低ユーザー数 (0 に設定すると無効になります。最長 24 時間かかる場合があります)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
@@ -2333,6 +2340,8 @@ ja:
     invalid_security_key: "無効なセキュリティキーです。"
     missing_second_factor_name: "名前を入力してください。"
     missing_second_factor_code: "コードを入力してください。"
+    too_many_authenticators: "50 個を超える認証アプリを登録できません。既存の認証アプリを削除してからもう一度お試しください。"
+    too_many_security_keys: "50 個を超えるセキュリティキーを登録できません。既存のセキュリティキーを削除してからもう一度お試しください。"
     second_factor_toggle:
       totp: "代わりに認証アプリまたはセキュリティキーを使用してください"
       backup_code: "代わりにバックアップコードを使用する"

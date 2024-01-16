@@ -322,9 +322,9 @@ fr:
         add_user_long: <kbd>majuscule + clic</kbd> ou <kbd>majuscule + entrée</kbd><span>Ajouter @%{username}</span>
         add_user_short: <span>Ajouter un utilisateur</span>
         open_channel: <span>Ouvrir le canal</span>
-        default_search_placeholder: "#a-channel, @somebody ou quoi que ce soit"
-        default_channel_search_placeholder: "#a-channel"
-        default_user_search_placeholder: "@somebody"
+        default_search_placeholder: "#un-canal, @personne ou un nom"
+        default_channel_search_placeholder: "#un-canal"
+        default_user_search_placeholder: "@personne"
         user_search_placeholder: "... ajouter d'autres utilisateurs"
         disabled_user: "a désactivé la discussion"
         no_items: "Aucun élément"

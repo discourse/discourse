@@ -53,9 +53,11 @@ id:
       joined: "joined"
       email_frequency:
         never: "Tidak pernah"
+        when_away: "Hanya saat pergi"
       header_indicator_preference:
         all_new: "Semua Pesan Baru"
         never: "Tidak pernah"
+      heading: "Obrolan"
       join: "Gabung"
       summarization:
         title: "Meringkas pesan"
@@ -65,6 +67,26 @@ id:
           other: "%{count} jam terakhir"
       mention_warning:
         dismiss: "bubar"
+        cannot_see: "%{username} tidak dapat mengakses kanal ini dan tidak diberi tahu."
+        cannot_see_multiple:
+          other: "%{username} dan %{count} pengguna lainnya tidak dapat mengakses kanal ini dan tidak diberi tahu."
+        invitations_sent:
+          other: "Undangan terkirim"
+        invite: "Undang ke kanal"
+        without_membership: "%{username} belum bergabung dengan kanal ini."
+        without_membership_multiple:
+          other: "%{username} dan %{count} pengguna lainnya belum bergabung dengan kanal ini."
+        group_mentions_disabled: "%{group_name} tidak mengizinkan penyebutan."
+        group_mentions_disabled_multiple:
+          other: "%{group_name} dan %{count} grup lainnya tidak mengizinkan penyebutan."
+        too_many_members: "%{group_name} memiliki terlalu banyak anggota. Tidak ada yang diberitahu."
+        too_many_members_multiple:
+          other: "%{group_name} dan %{count} grup lainnya memiliki terlalu banyak anggota. Tidak ada yang diberitahu."
+        groups:
+          unreachable_1: "@%{group} tidak mengizinkan penyebutan."
+          unreachable_multiple:
+            other: "@%{group} dan %{count} grup lainnya tidak mengizinkan penyebutan."
+      placeholder_silenced: "Anda tidak dapat mengirim pesan saat ini."
       reply: "Balas"
       edit: "Ubah"
       bookmark_message: "Penandaan"
@@ -73,16 +95,23 @@ id:
       return_to_threads_list: "Kembali ke diskusi yang sedang berlangsung"
       sounds:
         none: "Tidak ada"
+      title: "obrolan"
+      title_capitalized: "Obrolan"
       channel_status:
+        read_only: "Hanya Baca"
+        archived: "Diarsipkan"
         archive_failed: "Arsip kanal gagal. %{completed}/%{total} pesan telah diarsipkan. <a target=\"_blank\" href=\"%{topic_url}\">Topik tujuan</a> telah dibuat. Tekan coba lagi untuk mencoba menyelesaikan arsip."
         closed: "Tertutup"
         open: "Buka"
       browse:
+        title: Kanal
         filter_all: Semua
         filter_closed: Tertutup
+        filter_archived: Diarsipkan
       about_view:
         title: Judul
         name: Nama
+        description: Deskripsi
       channel_info:
         tabs:
           about: Tentang
@@ -102,6 +131,9 @@ id:
       direct_message_creator:
         title: Pesan Baru
         prefix: "Kepada:"
+      channel:
+        memberships_count:
+          other: "%{count} anggota"
       create_channel:
         threading:
           label: "Aktifkan threading"
@@ -124,12 +156,16 @@ id:
         unfollow: "Keluar"
         admin_title: "Admin"
       admin:
+        title: "Obrolan"
         export_messages:
           title: "Ekspor pesan obrolan"
           description: "Ekspor saat ini dibatasi hingga 10.000 pesan terbaru dalam 6 bulan terakhir."
           create_export: "Buat ekspor"
           export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
+      direct_messages:
+        cannot_create: "Maaf, Anda tidak dapat mengirim pesan langsung."
       incoming_webhooks:
+        description: "Deskripsi"
         delete: "Hapus"
         name: "Name"
         save: "Simpan"
@@ -171,9 +207,13 @@ id:
     discourse_automation:
       scriptables:
         send_chat_message:
+          title: Kirim pesan obrolan
           fields:
             message:
               label: pesan
+    keyboard_shortcuts_help:
+      chat:
+        title: "Obrolan"
     styleguide:
       sections:
         chat:

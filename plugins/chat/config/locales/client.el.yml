@@ -32,6 +32,7 @@ el:
       edit: "Επεξεργασία"
       rebake_message: "Ανανέωση HTML"
       bookmark_message: "Σελιδοδείκτης"
+      bookmark_message_edit: "Επεξεργασία Σελιδοδείκτη"
       save: "Αποθήκευση"
       sounds:
         none: "Κανένα"

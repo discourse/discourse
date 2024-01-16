@@ -1002,7 +1002,7 @@ fi:
       every_30_minutes: "30 minuutin välein"
       every_hour: "tunneittain"
       daily: "päivittäin"
-      weekly: "viikottain"
+      weekly: "viikoittain"
       every_month: "kuukausittain"
       every_six_months: "kuuden kuukauden välein"
   user_api_key:
@@ -2367,7 +2367,7 @@ fi:
     security_key_alternative: "Kokeile muuta tapaa"
     security_key_authenticate: "Tee todennus tunnistautumislaitteella"
     security_key_not_allowed_error: "Tunnistautumislaitteen todennusprosessi joko vanheni tai peruutettiin."
-    security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt kelpaavia tunnistetietoja."
+    security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt vastaavia tunnistetietoja."
     security_key_support_missing_error: "Laitteesi tai selaimesi ei tue tunnistaumislaitteita. Käytä muuta tapaa."
     security_key_invalid: "Tunnistautumislaitteen vahvistaminen epäonnistui."
     not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
@@ -2412,6 +2412,8 @@ fi:
     invalid_security_key: "Tunnistautumislaite ei kelpaa."
     missing_second_factor_name: "Anna nimi."
     missing_second_factor_code: "Anna koodi."
+    too_many_authenticators: "Sinulla voi olla enintään 50 todentajaa. Poista jokin nykyisistä ja yritä uudelleen."
+    too_many_security_keys: "Sinulla voi olla enintään 50 tunnistautumislaitetta. Poista jokin nykyisistä ja yritä uudelleen."
     second_factor_toggle:
       totp: "Käytä todennussovellusta tai tunnistautumislaitetta tämän sijaan"
       backup_code: "Käytä varakoodia tämän sijaan"
@@ -2934,7 +2936,7 @@ fi:
       text_body_template: |
         Sähköpostin lähettäminen kohteeseen %{destination} (otsikolla %{former_title}) ei onnistunut.
 
-        Vastauksesi on peräisin estetystä sähköpostiosoitteesta. Kokeile lähettää toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
+        Vastauksesi lähetettiin estetystä sähköpostiosoitteesta. Kokeile lähettää viesti toisesta sähköpostiosoitteesta tai [ota yhteyttä henkilökuntaan](%{base_url}/about).
     email_reject_inactive_user:
       title: "Sähköposti hylätty – aktivoimaton käyttäjä"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- aktivoimaton käyttäjä"

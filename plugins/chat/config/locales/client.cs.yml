@@ -28,8 +28,11 @@ cs:
     chat:
       dates:
         time_tiny: "h:mm"
+      all_loaded: "Zobrazení všech zpráv"
       create: "Vytvoř"
       cancel: "Zrušit"
+      chat_channels: "Kanály"
+      browse_all_channels: "Procházet všechny kanály"
       channel_settings:
         edit: "Upravit"
         add: "přidat"
@@ -38,35 +41,51 @@ cs:
       channel_close:
         title: "Zavřít kanál"
       channels_list_popup:
+        browse: "Procházet kanály"
         create: "Nový kanál"
+      click_to_join: "Kliknutím sem zobrazíte dostupné kanály."
       close: "Zavřít"
       expand: "Rozbalit menu chatu"
       delete: "Smazat"
+      edited: "upraveno"
       muted: "ztišení"
       joined: "účet vytvořen"
+      empty_state:
+        title: "Nebyly nalezeny žádné kanály"
       email_frequency:
         never: "Nikdy"
       header_indicator_preference:
         never: "Nikdy"
       flag: "Nahlášení"
+      heading: "Chat"
       join: "Přidat se ke skupině"
       last_visit: "poslední návštěva"
       mention_warning:
         dismiss: "označit jako přečtené"
+      aria_roles:
+        channels_list: "Seznam kanálů chatu"
+      no_public_channels: "Nepřipojili jste se k žádným kanálům."
       reply: "Odpověď"
       edit: "Upravit"
       rebake_message: "Obnovit HTML"
+      unreliable_network: "Síť je nespolehlivá, odesílání zpráv a ukládání konceptů nemusí fungovat."
       bookmark_message: "Založit"
       bookmark_message_edit: "Upravit záložku"
       save: "Uložit"
+      select: "Vybrat"
+      return_to_list: "Zpět na seznam kanálů"
       sounds:
         none: "Žádná"
+      title: "chat"
+      title_capitalized: "Chat"
+      upload: "Připojte soubor"
       exit: "zpět"
       channel_status:
         closed: "Uzavřeno"
         open: "Otevřít"
       browse:
         back: "Zpět"
+        title: Kanály
         filter_all: Celkem
         filter_closed: Uzavřeno
       chat_message_separator:
@@ -77,6 +96,7 @@ cs:
         name: Jméno
         description: Popis
       channel_info:
+        back_to_all_channels: "Všechny kanály"
         back_to_channel: "Zpět"
         tabs:
           about: O fóru
@@ -86,6 +106,7 @@ cs:
         title: Nová zpráva
         prefix: "Komu:"
       create_channel:
+        title: "Nový kanál"
         type: "Typ"
         types:
           category: "Kategorie"
@@ -97,9 +118,11 @@ cs:
       notification_levels:
         never: "Nikdy"
       settings:
+        auto_join_users_info: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup do kategorie %{category}."
+        auto_join_users_info_no_category: "Každou hodinu kontrolujte, kteří uživatelé byli aktivní za poslední 3 měsíce. Přidejte je do tohoto kanálu, pokud mají přístup ke zvolené kategorii."
         follow: "Přidat se ke skupině"
         followed: "Účet vytvořen"
-        threading_enabled: "Zapnutý"
+        threading_enabled: "Zapnuto"
         threading_disabled: "Vypnuto"
         notifications: "Upozornění"
         preview: "Náhled"
@@ -107,6 +130,10 @@ cs:
         saved: "Uloženo"
         unfollow: "Opustit skupinu"
         admin_title: "Administrace"
+      admin:
+        title: "Chat"
+      direct_messages:
+        new: "Vytvořit osobní chat"
       incoming_webhooks:
         back: "Zpět"
         description: "Popis"
@@ -125,16 +152,23 @@ cs:
           title: "Rozdělit téma"
         existing_topic:
           title: "Sloučit téma"
+        new_message:
+          title: "Přesunout do nové zprávy"
       emoji_picker:
         objects: "Objekty"
+        activities: "Aktivity"
         flags: "Nahlášení"
+        symbols: "Symboly"
+        search_placeholder: "Vyhledávání podle názvu a přezdívky emoji..."
       thread:
         title: "Nadpis"
+        default_title: "Vlákno"
         replies:
           one: "%{count} odpověď"
           few: "%{count} odpovědí"
           many: "%{count} odpovědí"
           other: "%{count} odpovědí"
+        label: Vlákno
         settings: "Nastavení"
         last_reply: "poslední odpověď"
         notifications:
@@ -153,3 +187,12 @@ cs:
           fields:
             message:
               label: Zpráva
+    keyboard_shortcuts_help:
+      chat:
+        title: "Chat"
+        keyboard_shortcuts:
+          mark_all_channels_read: "%{shortcut} Označit všechny kanály jako přečtené"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

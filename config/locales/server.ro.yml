@@ -48,6 +48,8 @@ ro:
   disable_remote_images_download_reason: "Descărcarea de imagini la distanță a fost dezactivată deoarece nu mai era spațiu suficient pe disc."
   anonymous: "Anonime"
   remove_posts_deleted_by_author: "Șters de către autor"
+  topic_tag_changed:
+    removed: "A eliminat pe %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
   emails:
@@ -1157,6 +1159,7 @@ ro:
       topic: "Rezultate"
       user: "Utilizatori"
     results_page: "Caută rezultate pentru '%{term}'"
+    audio: "[audio]"
   discourse_connect:
     not_found: "Contul tău nu a putut fi găsit. Te rugăm contactează administratorul site-ului."
     account_not_approved: "Contul tău este în așteptarea aprobării. Vei primi un email de notificare imediat ce va fi aprobat."
@@ -2062,12 +2065,15 @@ ro:
       posted: '%{username} a postat în discuția "%{topic}" - %{site_title}'
       private_message: '%{username} ți-a trimis un mesaj privat în discuția "%{topic}" - %{site_title}'
       linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'
+  staff_action_logs:
+    unknown: "necunoscută"
   reviewables:
     priorities:
       low: "Scăzut"
       medium: "Medie"
       high: "Ridicată"
     sensitivity:
+      disabled: "Dezactivat"
       low: "Scăzut"
       medium: "Medie"
       high: "Ridicată"

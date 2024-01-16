@@ -232,7 +232,7 @@ pt_BR:
       open_message: "Abrir mensagem no chat"
       placeholder_self: "Anotar algo"
       placeholder_channel: "Converse em %{channelName}"
-      placeholder_thread: "Converse no tópico"
+      placeholder_thread: "Conversar na linha de discussão"
       placeholder_users: "Conversar com %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Canal arquivado, não é possível enviar novas mensagens no momento."
@@ -257,10 +257,10 @@ pt_BR:
       save: "Salvar"
       select: "Selecionar"
       return_to_list: "Retornar para lista de canais"
-      return_to_threads_list: "Retornar às discussões em andamento"
+      return_to_threads_list: "Retornar às linhas de discussão em andamento"
       unread_threads_count:
-        one: "Você tem %{count} discussão não lida"
-        other: "Você tem %{count} discussões não lidas"
+        one: "Você tem %{count} linha de discussão não lida"
+        other: "Você tem %{count} linhas de discussão não lidas"
       scroll_to_bottom: "Rolar para a parte inferior"
       scroll_to_new_messages: "Ver novas mensagens"
       sound:
@@ -273,7 +273,7 @@ pt_BR:
       title_capitalized: "Chat"
       upload: "Anexar arquivo"
       upload_to_channel: "Enviar para %{title}"
-      upload_to_thread: "Enviar para tópico"
+      upload_to_thread: "Enviar para linha de discussão"
       uploaded_files:
         one: "%{count} arquivo"
         other: "%{count} arquivos"
@@ -351,7 +351,7 @@ pt_BR:
           other: "%{count} membros"
       create_channel:
         threading:
-          label: "Ativar discussões"
+          label: "Ativar linha de discussão"
         auto_join_users:
           public_category_warning: "%{category} é uma categoria pública. Deseja adicionar automaticamente todos os(as) usuários(as) recentemente ativos(as) a este canal?"
           warning_1_group:
@@ -423,8 +423,8 @@ pt_BR:
       settings:
         channel_wide_mentions_label: "Permitir menções @all e @here"
         channel_wide_mentions_description: "Permitir que os usuários notifiquem todos os membros de #%{channel} com @all ou apenas aqueles que estão ativos no momento com @here"
-        channel_threading_label: "Discussões"
-        channel_threading_description: "Quando o tópico está ativado, as respostas a uma mensagem de chat criarão uma conversa separada, que existirá junto com o canal principal."
+        channel_threading_label: "Criar linha de discussão"
+        channel_threading_description: "Ao ativar a criação da linha de discussão, as respostas a uma mensagem de chat criarão uma conversa separada, que existirá junto com o canal principal."
         auto_join_users_label: "Adicionar usuários(as) automaticamente"
         auto_join_users_info: "Verifique a cada hora quais usuários(as) estiveram ativos(as) nos últimos três meses. Adicione-os(as) a este canal se tiverem acesso à categoria %{category}."
         auto_join_users_info_no_category: "Verifique a cada hora quais usuários(as) estiveram ativos(as) nos últimos três meses. Adicione-os(as) a este canal se tiverem acesso à categoria selecionada."
@@ -434,8 +434,8 @@ pt_BR:
         followed: "Entrou"
         mobile_notification_level: "Notificações por push em dispositivos móveis"
         mute: "Silenciar canal"
-        threading_enabled: "Ativado"
-        threading_disabled: "Desativado(a)"
+        threading_enabled: "Ativada"
+        threading_disabled: "Desativada"
         muted_on: "Ligado"
         muted_off: "Desligado"
         notifications: "Notificações"
@@ -545,13 +545,13 @@ pt_BR:
         no_results: "Nenhum resultado"
       thread:
         title: "Título"
-        view_thread: Visualizar tópico
-        default_title: "Tópico"
+        view_thread: Visualizar linha de discussão
+        default_title: "Linha de discussão"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostas"
-        label: Tópico
-        close: "Fechar tópico"
+        label: Linha de discussão
+        close: "Fechar linha de discussão"
         original_message:
           started_by: "Iniciado por"
         settings: "Definições"
@@ -559,17 +559,17 @@ pt_BR:
         notifications:
           regular:
             title: "Normal"
-            description: "Você receberá notificação se alguém mencionar seu @nome neste tópico."
+            description: "Você receberá notificação se alguém mencionar seu @nome nesta linha de discussão."
           tracking:
             title: "Monitorando"
-            description: "Uma contagem de novas respostas para este tópico será mostrada na lista de tópicos e no canal. Você receberá uma notificação se algúem mencionar seu @nome neste tópico."
+            description: "Uma contagem de novas respostas para esta linha de discussão será mostrada na lista de linhas de discussão e no canal. Você receberá uma notificação se algúem mencionar seu @nome aqui."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
       threads:
-        open: "Tópico Aberto"
+        open: "Linha de discussão aberta"
         list: "Discussões em andamento"
-        none: "Você não está participando de nenhum tópico neste canal."
+        none: "Você não está participando de nenhuma linha de discussão neste canal."
       draft_channel_screen:
         header: "Novas mensagens"
         cancel: "Cancelar"

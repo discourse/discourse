@@ -1899,6 +1899,7 @@ hr:
       confirm_body: "Uspjeh! Obavijesti su omogućene."
       custom: "Obavijest od %{username} %{site_title}"
   staff_action_logs:
+    unknown: "nepoznato"
     api_key:
       revoked: Opoziv
   reviewables:

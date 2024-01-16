@@ -112,6 +112,7 @@ ro:
         follow: "Alătură-te"
         followed: "Înscris"
         threading_enabled: "Activat"
+        threading_disabled: "Dezactivat"
         notifications: "Notificări"
         preview: "Previzualizează"
         save: "Salvare"
@@ -141,10 +142,12 @@ ro:
         flags: "Marcaje de avertizare"
       thread:
         title: "Titlu"
+        default_title: "Fir"
         replies:
           one: "%{count} răspuns"
           few: "%{count} răspunsuri"
           other: "%{count} răspunsuri"
+        label: Fir
         settings: "Opțiuni"
         last_reply: "Ultimul răspuns"
         notifications:

@@ -59,7 +59,7 @@ pt_BR:
     removed: "Removeu %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
-    topic_page_title_post_number_by_user: "#%{post_number} por %{username}"
+    topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, paleta de cores inválida"
     other_error: "Ocorreu um erro ao atualizar o tema"
@@ -70,7 +70,7 @@ pt_BR:
       about_json: "Erro ao importar: about.json não existe ou é inválido. Tem certeza de que é um tema do Discourse?"
       about_json_too_big: "Erro ao importar: o arquivo about.json é maior do que o limite de %{limit}."
       about_json_values: "about.json contém valores inválidos: %{errors}"
-      modifier_values: "about.json contém valores inválidos: %{errors}"
+      modifier_values: "os modificadores de about.json contêm valores inválidos: %{errors}"
       asset_too_big: "O ativo %{filename} é maior do que o limite de %{limit}"
       theme_too_big: "O tema é maior do que o limite de %{limit}"
       git: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
@@ -388,8 +388,8 @@ pt_BR:
   rss_posts_in_topic: "RSS feed de \"%{topic}\""
   rss_topics_in_category: "RSS feed dos tópicos da categoria \"%{category}\""
   rss_num_posts:
-    one: "%{count} mensagem"
-    other: "%{count} mensagens"
+    one: "%{count} postagem"
+    other: "%{count} postagens"
   rss_num_participants:
     one: "%{count} participante"
     other: "%{count} participantes"
@@ -656,7 +656,7 @@ pt_BR:
       uncategorized_parent: "Não categorizados não podem ter uma categoria pai"
       self_parent: "A subcategoria pai não pode ser ela mesma"
       depth: "Você não pode aninhar uma subcategoria sob uma outra"
-      invalid_email_in: "'%{email}' não é um endereço de e-mail válido."
+      invalid_email_in: "\"%{email}\" não é um endereço de e-mail válido."
       email_already_used_in_group: "\"%{email}\" já é utilizado pelo grupo \"%{group_name}\"."
       email_already_used_in_category: "\"%{email}\" já é utilizado pela categoria \"%{category_name}\"."
       description_incomplete: "A postagem da descrição da categoria deve ter pelo menos um parágrafo."
@@ -830,7 +830,7 @@ pt_BR:
   change_email:
     wrong_account_error: "Você entrou com a conta errada, saia e tente novamente."
     confirmed: "O seu email foi atualizado."
-    please_continue: "Continuar no %{site_name}"
+    please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja em uso?"
     doesnt_exist: "Esse endereço de e-mail não está associado à sua conta."
     error_staged: "Ocorreu um erro ao alterar o seu endereço de e-mail. O endereço já está usado por outro(a) usuário(a) encenado(a)."
@@ -856,7 +856,7 @@ pt_BR:
     action: "Clique aqui para ativar sua conta"
     already_done: "Desculpe, este link de confirmação não é mais válido. Talvez a sua conta já esteja ativa?"
     please_continue: "Sua conta já foi confirmada. Você vai ser redirecionado(a) para a página inicial."
-    continue_button: "Continuar no %{site_name}"
+    continue_button: "Continuar para %{site_name}"
     welcome_to: "Boas-vindas ao %{site_name}!"
     approval_required: "Um(a) moderador(a) precisa aprovar a sua conta para que você possa acessar este fórum. Você receberá um e-mail quando for aprovada!"
     missing_session: "Não foi possível detectar se sua conta foi criada. Verifique se os cookies do navegador estão ativados."
@@ -909,6 +909,9 @@ pt_BR:
     sequence_conflict_error:
       title: "erro no rascunho"
       description: "O rascunho está sendo editado em outra janela. Recarregue esta página."
+    too_many_drafts:
+      title: "Excesso de rascunhos."
+      description: "Você atingiu a quantidade máxima de rascunhos permitida. Exclua alguns [rascunhos](%{base_url}/my/activity/drafts) e tente novamente."
   draft_backup:
     pm_title: "Rascunhos de backup de tópicos em andamento"
     pm_body: "Tópico contendo rascunhos salvos"
@@ -1011,7 +1014,7 @@ pt_BR:
     instructions: 'Acabamos de gerar uma nova chave de API de usuário(a) para você usar com "%{application_name}", cole a seguinte chave em seu aplicativo:'
     otp_description: 'Você gostaria de permitir que "%{application_name}" acesse este site?'
     otp_confirmation:
-      confirm_title: Continuar no %{site_name}
+      confirm_title: Continuar para %{site_name}
       logging_in_as: Entrando como %{username}
       confirm_button: Terminar de entrar
     no_trust_level: "Desculpe, você não tem o nível de confiança necessário para acessar a API de usuário(a)."
@@ -1210,7 +1213,7 @@ pt_BR:
     system_private_messages:
       title: "Sistema"
       xaxis: "Dia"
-      yaxis: "Número de mensagens particulares"
+      yaxis: "Quantidade de mensagens"
       description: "Quantidade de mensagens pessoais enviadas automaticamente pelo sistema."
     moderator_warning_private_messages:
       title: "Alerta ao(à) moderador(a)"
@@ -2409,6 +2412,8 @@ pt_BR:
     invalid_security_key: "Chave de segurança inválida."
     missing_second_factor_name: "Informe um nome."
     missing_second_factor_code: "Informe um código."
+    too_many_authenticators: "Desculpe, você não pode ter mais de 50 autenticadores. Remova algum e tente novamente."
+    too_many_security_keys: "Desculpe, você não pode ter mais de 50 chaves de segurança. Remova alguma e tente novamente."
     second_factor_toggle:
       totp: "Usar um aplicativo autenticador ou chave de segurança"
       backup_code: "Usar um código de backup"

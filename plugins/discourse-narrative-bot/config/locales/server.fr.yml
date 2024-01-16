@@ -457,12 +457,12 @@ fr:
           Beau travail ! Votre attention pour les _détails_ est admirable !
       end:
         message: |-
-          Vous avez suivi ce tutoriel comme un _utiliser avancé_ :bow:
+          Vous avez suivi ce tutoriel comme un _utilisateur avancé_ :bow:
 
           %{certificate}
 
           C'est tout ce que j'ai pour vous.
 
-          Au revoir ! Si vous voulez me reparler, envoyez moi un message à tout moment :sunglasses:
+          Au revoir ! Si vous voulez me reparler, envoyez-moi un message à tout moment :sunglasses:
       certificate:
         alt: "Certificat de réussite de l'utilisateur avancé"

@@ -3583,6 +3583,7 @@ fa_IR:
         none: "هم اکنون هیچ کلید API فعالی وجود ندارد"
         user: "کاربر"
         title: "API"
+        key: "کلید"
         created: ساخته شده
         updated: به روز شده
         never_used: (هرگز)
@@ -4097,6 +4098,7 @@ fa_IR:
             backup_destroy: "حذف نسخه پشتیبان"
             post_edit: "ویرایش نوشته"
             post_approved: "نوشته تایید شده"
+            post_rejected: "نوشته رد شده"
             change_name: "تغییر دادن نام"
             approve_user: "کاربر پذیرفته‌شده"
             change_theme_setting: "تغییر دادن تنظیمات قالب"

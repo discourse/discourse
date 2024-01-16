@@ -68,9 +68,11 @@ tr_TR:
       generic: Bu tema içe aktarılırken bir hata oluştu
       upload: "Yükleme varlığı oluşturulurken hata oluştu: %{name}. %{errors}"
       about_json: "İçe Aktarma Hatası: about.json mevcut değil veya geçersiz. Bunun bir Discourse Teması olduğundan emin misiniz?"
+      about_json_too_big: "İçe Aktarma Hatası: about.json %{limit} limitinden büyük."
       about_json_values: "about.json geçersiz değerler içeriyor: %{errors}"
       modifier_values: "about.json değiştiricileri geçersiz değerler içeriyor: %{errors}"
-      theme_too_big: "Tema %{limit} sınırından büyük"
+      asset_too_big: "Varlık %{filename}, %{limit} limitinden büyük"
+      theme_too_big: "Tema %{limit} limitinden büyük"
       git: "Git deposu klonlanırken hata oluştu, erişim reddedildi veya depo bulunamadı"
       git_ref_not_found: "Git referansı kontrol edilemiyor: %{ref}"
       git_unsupported_scheme: "Git deposu klonlanamıyor: Şema desteklenmiyor"
@@ -79,6 +81,7 @@ tr_TR:
       unknown_file_type: "Yüklediğiniz dosya geçerli bir Discourse teması gibi görünmüyor."
       not_allowed_theme: "\"%{repo}\" izin verilen temalar listesinde değil (\"allowed_theme_repos\" global ayarını kontrol edin)."
       ssh_key_gone: "Temayı yüklemek için çok beklediniz ve SSH anahtarının süresi doldu. Lütfen tekrar deneyin."
+      too_many_files: "Temadaki dosya sayısı (%{count}) izin verilen maksimum dosya sayısını (%{limit}) aştı"
     errors:
       component_no_user_selectable: "Tema bileşenleri kullanıcı tarafından seçilemez"
       component_no_default: "Tema bileşenleri varsayılan tema olamaz"
@@ -901,6 +904,7 @@ tr_TR:
       description: "Taslak başka bir pencerede düzenleniyor. Lütfen bu sayfayı yeniden yükleyin."
     too_many_drafts:
       title: "Çok fazla taslak"
+      description: "İzin verilen maksimum taslak sayısına ulaştınız. Lütfen [taslaklarınızdan] (%{base_url}/my/activity/drafts) bazılarını silin ve tekrar deneyin."
   draft_backup:
     pm_title: "Açık konulardaki Taslakları yedekle"
     pm_body: "Yedek taslak içeren konu"
@@ -2401,6 +2405,8 @@ tr_TR:
     invalid_security_key: "Geçersiz güvenlik anahtarı."
     missing_second_factor_name: "Lütfen bir ad girin."
     missing_second_factor_code: "Lütfen bir kod girin."
+    too_many_authenticators: "Üzgünüz, 50'den fazla kimlik doğrulayıcıya sahip olamazsınız. Lütfen mevcut birini kaldırın ve tekrar deneyin."
+    too_many_security_keys: "Üzgünüz, 50'den fazla güvenlik anahtarına sahip olamazsınız. Lütfen mevcut birini kaldırın ve tekrar deneyin."
     second_factor_toggle:
       totp: "Bunun yerine bir kimlik doğrulama uygulaması veya güvenlik anahtarı kullanın"
       backup_code: "Bunun yerine bir yedekleme kodu kullanın"

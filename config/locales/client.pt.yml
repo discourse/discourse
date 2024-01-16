@@ -144,6 +144,8 @@ pt:
       facebook: "Partilhar no Facebook"
       email: "Enviar por e-mail"
       url: "Copiar e partilhar URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Tornei este tópico publico %{when}"
       open_topic: "Converteu isto em um tópico %{when}"
@@ -4238,6 +4240,7 @@ pt:
             reviewed_post: "mensagem revista"
             post_edit: "editar mensagem"
             post_approved: "mensagem aprovada"
+            post_rejected: "publicação rejeitada"
             create_badge: "criar crachá"
             change_badge: "editar crachá"
             delete_badge: "eliminar crachá"
@@ -4632,6 +4635,7 @@ pt:
           navigation: "Navegação"
         default_categories:
           modal_yes: "Sim"
+          modal_no: "Não, apenas aplicar a mudança daqui em diante"
       badges:
         title: Crachás
         new_badge: Novo Crachá

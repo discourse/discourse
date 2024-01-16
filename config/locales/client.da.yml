@@ -4038,6 +4038,8 @@ da:
         change_settings_short: "Indstillinger"
         howto: "Hvordan installerer jeg plugins?"
         official: "Officielt plugin"
+      navigation_menu:
+        sidebar: "Sidebjælke"
       backups:
         title: "Backups"
         menu:
