@@ -94,7 +94,7 @@ GEM
     bootsnap (1.17.1)
       msgpack (~> 1.2)
     builder (3.2.4)
-    bullet (7.1.5)
+    bullet (7.1.6)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
