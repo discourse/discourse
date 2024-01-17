@@ -202,8 +202,8 @@ RSpec.describe "Chat channel", type: :system do
       SiteSetting.enable_user_status = true
       current_user.set_status!("off to dentist", "tooth")
       other_user.set_status!("surfing", "surfing_man")
-      Fabricate(:chat_mention, user: current_user, chat_message: message)
-      Fabricate(:chat_mention, user: other_user, chat_message: message)
+      Fabricate(:user_chat_mention, user: current_user, chat_message: message)
+      Fabricate(:user_chat_mention, user: other_user, chat_message: message)
 
       chat_page.visit_channel(channel_1)
 

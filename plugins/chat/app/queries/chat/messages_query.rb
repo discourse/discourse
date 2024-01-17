@@ -87,9 +87,9 @@ module Chat
 
       if SiteSetting.enable_user_status
         query = query.includes(user: :user_status)
-        query = query.includes(chat_mentions: { user: :user_status })
+        query = query.includes(user_mentions: { user: :user_status })
       else
-        query = query.includes(chat_mentions: :user)
+        query = query.includes(user_mentions: :user)
       end
 
       query
