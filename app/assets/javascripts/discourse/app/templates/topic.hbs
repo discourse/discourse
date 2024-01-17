@@ -542,6 +542,10 @@
           />
         {{else}}
           <div id="topic-footer-buttons">
+            <PluginOutlet
+              @name="topic-before-anon-reply-footer-button"
+              @outletArgs={{hash model=this.model}}
+            />
             <DButton
               @icon="reply"
               @action={{route-action "showLogin"}}
