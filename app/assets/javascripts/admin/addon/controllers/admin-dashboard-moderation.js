@@ -1,11 +1,8 @@
 import { computed } from "@ember/object";
-import { inject as service } from "@ember/service";
 import discourseComputed from "discourse-common/utils/decorators";
 import AdminDashboardTabController from "./admin-dashboard-tab";
 
 export default class AdminDashboardModerationController extends AdminDashboardTabController {
-  @service modal;
-
   @discourseComputed
   flagsStatusOptions() {
     return {

@@ -17,7 +17,6 @@ function staticReport(reportType) {
 }
 
 export default class AdminDashboardGeneralController extends AdminDashboardTabController {
-  @service modal;
   @service router;
   @service siteSettings;
   @controller("exception") exceptionController;
