@@ -28,6 +28,7 @@ export default Component.extend({
       return this.inlineButtons
         .filterBy("dropdown", false)
         .concat(this.inlineDropdowns)
+        .filterBy("displayForUser", true)
         .sortBy("priority")
         .reverse();
     }
