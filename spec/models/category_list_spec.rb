@@ -375,11 +375,11 @@ RSpec.describe CategoryList do
     end
   end
 
-  describe "lazy_load_categories" do
+  describe "with lazy load categories enabled" do
     fab!(:category) { Fabricate(:category, user: admin) }
     fab!(:subcategory) { Fabricate(:category, user: admin, parent_category: category) }
 
-    before { SiteSetting.lazy_load_categories = true }
+    before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
 
     it "returns categories with subcategory_ids" do
       expect(category_list.categories.size).to eq(3)

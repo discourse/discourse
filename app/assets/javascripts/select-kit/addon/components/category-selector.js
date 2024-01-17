@@ -51,7 +51,7 @@ export default MultiSelectComponent.extend({
   },
 
   async search(filter) {
-    if (!this.siteSettings.lazy_load_categories) {
+    if (!this.site.lazy_load_categories) {
       return this._super(filter);
     }
 

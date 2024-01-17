@@ -77,7 +77,7 @@ export default class CategoriesDisplay extends Component {
   }
 
   get canLoadMore() {
-    return this.siteSettings.lazy_load_categories && this.args.loadMore;
+    return this.site.lazy_load_categories && this.args.loadMore;
   }
 
   <template>

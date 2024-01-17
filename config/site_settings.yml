@@ -2328,10 +2328,10 @@ developer:
     default: ""
     allow_any: false
     refresh: true
-  lazy_load_categories:
-    default: false
-    client: true
-    hidden: true
+  lazy_load_categories_groups:
+    default: ""
+    type: group_list
+    list_type: compact
   warn_critical_js_deprecations:
     default: true
     client: true

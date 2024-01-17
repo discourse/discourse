@@ -137,7 +137,7 @@ class CategoryList
 
     query = self.class.order_categories(query)
 
-    if SiteSetting.lazy_load_categories
+    if @guardian.can_lazy_load_categories?
       page = [1, @options[:page].to_i].max
       query =
         query
@@ -174,7 +174,7 @@ class CategoryList
     notification_levels = CategoryUser.notification_levels_for(@guardian.user)
     default_notification_level = CategoryUser.default_notification_level
 
-    if SiteSetting.lazy_load_categories
+    if @guardian.can_lazy_load_categories?
       subcategory_ids = {}
       Category
         .secured(@guardian)
