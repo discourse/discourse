@@ -75,6 +75,11 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
     return moment().locale("en").utc().endOf("day");
   }
 
+  @computed("startDate", "endDate")
+  get filters() {
+    return { startDate: this.startDate, endDate: this.endDate };
+  }
+
   @discourseComputed
   activityMetricsFilters() {
     const lastMonth = moment()
