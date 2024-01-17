@@ -169,9 +169,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     context "when target_usernames exceeds chat_max_direct_message_users" do
       before { SiteSetting.chat_max_direct_message_users = 2 }
 
-      it "fails when exceeding chat_max_direct_message_users" do
-        expect { result }.to raise_error(Discourse::InvalidParameters)
-      end
+      it { is_expected.to fail_a_step(:validate_user_count) }
     end
 
     context "when the current user cannot make direct messages" do

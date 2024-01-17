@@ -96,9 +96,7 @@ RSpec.describe Chat::AddUsersToChannel do
     context "when usernames exceeds chat_max_direct_message_users" do
       before { SiteSetting.chat_max_direct_message_users = 4 }
 
-      it "fails when exceeding chat_max_direct_message_users" do
-        expect { result }.to raise_error(Discourse::InvalidParameters)
-      end
+      it { is_expected.to fail_a_step(:validate_user_count) }
     end
 
     context "when channel is not found" do

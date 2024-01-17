@@ -81,9 +81,7 @@ module Chat
 
     def validate_user_count(channel:, users:, **)
       if channel.user_count + users.length > SiteSetting.chat_max_direct_message_users
-        raise Discourse::InvalidParameters.new(
-                "should have less than #{SiteSetting.chat_max_direct_message_users} elements",
-              )
+        fail!("should have less than #{SiteSetting.chat_max_direct_message_users} elements")
       end
     end
 
