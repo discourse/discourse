@@ -340,6 +340,9 @@ class TopicQuery
 
   def list_hot
     create_list(:hot, unordered: true) do |topics|
+      topics = remove_muted_topics(topics, user)
+      topics = remove_muted_categories(topics, user, exclude: options[:category])
+      TopicQuery.remove_muted_tags(topics, user, options)
       topics.joins("JOIN topic_hot_scores on topics.id = topic_hot_scores.topic_id").order(
         "topic_hot_scores.score DESC",
       )

@@ -100,11 +100,11 @@ class TopicHotScore < ActiveRecord::Base
     # we need an extra index for this
     DB.exec(<<~SQL, args)
       UPDATE topic_hot_scores ths
-      SET score = topics.like_count /
+      SET score = (topics.like_count - 1) /
         (EXTRACT(EPOCH FROM (:now - topics.created_at)) / 3600 + 2) ^ :gravity
  +
         CASE WHEN ths.recent_first_bumped_at IS NULL THEN 0 ELSE
-          (ths.recent_likes + ths.recent_posters) /
+          (ths.recent_likes + ths.recent_posters - 1) /
           (EXTRACT(EPOCH FROM (:now - recent_first_bumped_at)) / 3600 + 2) ^ :gravity
         END
         ,

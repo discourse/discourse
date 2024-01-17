@@ -31,7 +31,7 @@ RSpec.describe TopicHotScore do
       expect(hot_scoring.recent_likes).to eq(2)
       expect(hot_scoring.recent_posters).to eq(2)
       expect(hot_scoring.recent_first_bumped_at).to eq_time(new_reply.created_at)
-      expect(hot_scoring.score).to be_within(0.001).of(1.020)
+      expect(hot_scoring.score).to be_within(0.001).of(1.219)
 
       expect(TopicHotScore.find_by(topic_id: -1).recent_likes).to eq(0)
     end
@@ -44,15 +44,15 @@ RSpec.describe TopicHotScore do
 
       TopicHotScore.update_scores
 
-      expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.001).of(0.415)
-      expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(0.551)
+      expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.001).of(0.535)
+      expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(1.304)
 
       freeze_time(2.hours.from_now)
 
       TopicHotScore.update_scores
 
-      expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.001).of(0.165)
-      expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(0.301)
+      expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.001).of(0.289)
+      expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(0.871)
     end
   end
 end
