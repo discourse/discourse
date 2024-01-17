@@ -3,6 +3,9 @@ import { inject as service } from "@ember/service";
 import SidebarToggle from "./sidebar-toggle";
 import MountWidget from "../mount-widget";
 import PluginOutlet from "../plugin-outlet";
+import BootstrapModeNotice from "../bootstrap-mode-notice";
+import and from "truth-helpers/helpers/and";
+import TopicInfo from "./topic/info";
 
 export default class Contents extends Component {
   @service site;
@@ -26,17 +29,23 @@ export default class Contents extends Component {
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
           {{! I don't think data is working here }}
-          <MountWidget @widget="home-logo" @args={{@data}} />
+          {{!-- <MountWidget @widget="home-logo" @attrs={{@args}} /> --}}
         </PluginOutlet>
       </div>
 
-      {{!-- {{#if attrs.topic}}
-        {{header-topic-info attrs=@args}}
-      {{else if this.siteSettings.bootstrap_mode_enabled}}
-        {{#if transformed.showBootstrapMode}}
-          {{header-bootstrap-mode attrs=@args}}
-        {{/if}}
-      {{/if}} --}}
+      {{#if @topic}}
+        <TopicInfo @topic={{@topic}} />
+      {{else if
+        (and
+          this.siteSettings.bootstrap_mode_enabled
+          this.currentUser.staff
+          this.site.desktopView
+        )
+      }}
+        <div class="d-header-mode">
+          <BootstrapModeNotice />
+        </div>
+      {{/if}}
 
       {{!-- <PluginOutlet
         @name="before-header-panel"

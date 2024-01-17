@@ -11,7 +11,6 @@ import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
-import { iconNode } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
@@ -115,6 +114,7 @@ export default class GlimmerHeader extends Component {
           @sidebarEnabled={{@sidebarEnabled}}
           @toggleHamburger={{this.toggleHamburger}}
           @showSidebar={{@showSidebar}}
+          @topic={{@topic}}
         >
           {{#unless this.currentUser}}
             <AuthButtons

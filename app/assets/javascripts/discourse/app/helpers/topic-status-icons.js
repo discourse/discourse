@@ -9,7 +9,7 @@ export default ArrayProxy.extend({
       renderIcon(name, key);
     };
 
-    if (topic.get("closed") && topic.get("archived")) {
+    if (topic.closed && topic.archived) {
       renderIcon("lock", "locked_and_archived");
     } else {
       renderIconIf("closed", "lock", "locked");
