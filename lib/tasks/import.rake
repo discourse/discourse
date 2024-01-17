@@ -370,7 +370,7 @@ def update_posts
       AND posts.post_number = replies.reply_to_post_number
       AND replies.reply_to_post_number IS NOT NULL
       AND replies.reply_to_user_id IS NULL
-      AND replies.post_number <> replies.reply_to_post_number;
+      AND replies.post_number <> replies.reply_to_post_number
   SQL
 end
 
