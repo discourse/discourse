@@ -653,8 +653,6 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     group_names = Group.pluck(:id, :name).to_h
-    # TODO: Investigate feasibility of loading all users on large sites
-    user_names = User.pluck(:id, :username).to_h
 
     create_posts(posts) do |row|
       next if row["raw"].blank?
@@ -669,7 +667,7 @@ class BulkImport::Generic < BulkImport::Base
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
-        raw: post_raw(row, group_names, user_names),
+        raw: post_raw(row, group_names),
         like_count: row["like_count"],
         reply_to_post_number:
           row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
@@ -679,7 +677,7 @@ class BulkImport::Generic < BulkImport::Base
     posts.close
   end
 
-  def post_raw(row, group_names, user_names)
+  def post_raw(row, group_names)
     raw = row["raw"]
     placeholders = row["placeholders"]&.then { |json| JSON.parse(json) }
 
@@ -709,9 +707,10 @@ class BulkImport::Generic < BulkImport::Base
         name =
           if mention["type"] == "user"
             if mention["id"]
-              user_names[user_id_from_imported_id(mention["id"])]
+              username_from_id(user_id_from_imported_id(mention["id"]))
             elsif mention["name"]
-              @mapped_usernames[mention["name"]] || mention["name"]
+              user_id = user_id_from_original_username(mention["name"])
+              user_id ? username_from_id(user_id) : mention["name"]
             end
           elsif mention["type"] == "group"
             if mention["id"]
@@ -738,14 +737,31 @@ class BulkImport::Generic < BulkImport::Base
 
     if (quotes = placeholders&.fetch("quotes", nil))
       quotes.each do |quote|
-        username =
+        user_id =
           if quote["user_id"]
-            user_names[user_id_from_imported_id(quote["id"])]
-          else
-            @mapped_usernames[quote["username"]] || quote["username"]
+            user_id_from_imported_id(quote["id"])
+          elsif quote["username"]
+            user_id_from_original_username(quote["username"])
           end
 
-        raw.gsub!(quote["placeholder"], %Q|[quote="#{username}"]|)
+        username = quote["username"]
+        name = nil
+
+        if user_id
+          username = username_from_id(user_id)
+          name = user_full_name_from_id(user_id)
+        end
+
+        bbcode =
+          if username.present? && name.present?
+            %Q|[quote="#{name}, username:#{username}"]|
+          elsif username.present?
+            %Q|[quote="#{username}"]|
+          else
+            "[quote]"
+          end
+
+        raw.gsub!(quote["placeholder"], bbcode)
       end
     end
 

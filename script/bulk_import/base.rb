@@ -245,6 +245,9 @@ class BulkImport::Base
         .to_h
     @last_user_avatar_id = last_id(UserAvatar)
     @last_upload_id = last_id(Upload)
+    @user_ids_by_username_lower = User.unscoped.pluck(:id, :username_lower).to_h
+    @usernames_by_id = User.unscoped.pluck(:id, :username).to_h
+    @user_full_names_by_id = User.unscoped.where("name IS NOT NULL").pluck(:id, :name).to_h
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
@@ -352,6 +355,19 @@ class BulkImport::Base
 
   def user_id_from_imported_id(id)
     @users[id.to_i]
+  end
+
+  def user_id_from_original_username(username)
+    normalized_username = User.normalize_username(@mapped_usernames[username] || username)
+    @user_ids_by_username_lower[normalized_username]
+  end
+
+  def username_from_id(id)
+    @usernames_by_id[id]
+  end
+
+  def user_full_name_from_id(id)
+    @user_full_names_by_id[id]
   end
 
   def category_id_from_imported_id(id)
@@ -997,6 +1013,10 @@ class BulkImport::Base
     if (date_of_birth = user[:date_of_birth]).is_a?(Date) && date_of_birth.year != 1904
       user[:date_of_birth] = Date.new(1904, date_of_birth.month, date_of_birth.day)
     end
+
+    @user_ids_by_username_lower[user[:username_lower]] = user[:id]
+    @usernames_by_id[user[:id]] = user[:username]
+    @user_full_names_by_id[user[:id]] = user[:name] if user[:name].present?
 
     user
   end
@@ -1682,21 +1702,24 @@ class BulkImport::Base
 
     cooked = @markdown.render(cooked).scrub.strip
 
-    cooked.gsub!(%r{\[QUOTE="?([^,"]+)(?:, post:(\d+), topic:(\d+))?"?\](.+?)\[/QUOTE\]}im) do
-      username, post_id, topic_id, quote = $1, $2, $3, $4
+    cooked.gsub!(
+      %r{\[QUOTE="?([^,"]+)(?:, post:(\d+), topic:(\d+))?(?:, username:([^"]*))?"?\](.+?)\[/QUOTE\]}im,
+    ) do
+      name_or_username, post_id, topic_id, username, quote = $1, $2, $3, $4, $5
+      username ||= name_or_username
 
       quote = quote.scrub.strip
       quote.gsub!(/^(<br>\n?)+/, "")
       quote.gsub!(/(<br>\n?)+$/, "")
 
-      user = User.find_by(username: username)
+      user = User.find_by_username(username)
 
       if post_id.present? && topic_id.present?
         <<-HTML
           <aside class="quote" data-post="#{post_id}" data-topic="#{topic_id}">
             <div class="title">
               <div class="quote-controls"></div>
-              #{user ? user_avatar(user) : username}:
+              #{user ? user_avatar(user) : name_or_username}:
             </div>
             <blockquote>#{quote}</blockquote>
           </aside>
@@ -1706,7 +1729,7 @@ class BulkImport::Base
           <aside class="quote no-group" data-username="#{username}">
             <div class="title">
               <div class="quote-controls"></div>
-              #{user ? user_avatar(user) : username}:
+              #{user ? user_avatar(user) : name_or_username}:
             </div>
             <blockquote>#{quote}</blockquote>
           </aside>
@@ -1761,7 +1784,8 @@ class BulkImport::Base
 
   def user_avatar(user)
     url = user.avatar_template.gsub("{size}", "45")
-    "<img alt=\"\" width=\"20\" height=\"20\" src=\"#{url}\" class=\"avatar\"> #{user.username}"
+    # TODO name/username preference check
+    "<img alt=\"\" width=\"20\" height=\"20\" src=\"#{url}\" class=\"avatar\"> #{user.name.presence || user.username}"
   end
 
   def pre_fancy(title)
