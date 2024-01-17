@@ -7,14 +7,10 @@ module Chat
         .joins(:user_option)
         .left_outer_joins(:groups)
         .where(user_options: { chat_enabled: true })
-        .where(username: usernames)
-        .or(
-          User
-            .joins(:user_option)
-            .left_outer_joins(:groups)
-            .where(user_options: { chat_enabled: true })
-            .where(groups: { name: groups })
-            .where.not(group_users: { user_id: nil }),
+        .where(
+          "username IN (?) OR (groups.name IN (?) AND group_users.user_id IS NOT NULL)",
+          usernames,
+          groups,
         )
         .distinct
     end
