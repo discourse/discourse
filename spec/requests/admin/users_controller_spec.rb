@@ -1181,7 +1181,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#destroy" do
-    fab!(:delete_me) { Fabricate(:user) }
+    fab!(:delete_me) { Fabricate(:user, refresh_auto_groups: true) }
 
     shared_examples "user deletion possible" do
       it "returns a 403 if the user doesn't exist" do

@@ -50,15 +50,15 @@ RSpec.describe Guardian do
     end
 
     it "is none for a user of a low trust level" do
-      user.trust_level = 0
-      SiteSetting.min_trust_to_post_links = 1
+      user.change_trust_level!(TrustLevel[0])
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       expect(Guardian.new(user).link_posting_access).to eq("none")
     end
 
     it "is limited for a user of a low trust level with a allowlist" do
       SiteSetting.allowed_link_domains = "example.com"
-      user.trust_level = 0
-      SiteSetting.min_trust_to_post_links = 1
+      user.change_trust_level!(TrustLevel[0])
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       expect(Guardian.new(user).link_posting_access).to eq("limited")
     end
   end
@@ -75,10 +75,10 @@ RSpec.describe Guardian do
     end
 
     it "supports customization by site setting" do
-      user.trust_level = 0
-      SiteSetting.min_trust_to_post_links = 0
+      user.change_trust_level!(TrustLevel[0])
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
-      SiteSetting.min_trust_to_post_links = 1
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       expect(Guardian.new(user).can_post_link?(host: host)).to eq(false)
     end
 
@@ -86,8 +86,8 @@ RSpec.describe Guardian do
       before { SiteSetting.allowed_link_domains = host }
 
       it "allows a new user to post the link to the host" do
-        user.trust_level = 0
-        SiteSetting.min_trust_to_post_links = 1
+        user.change_trust_level!(TrustLevel[0])
+        SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
         expect(Guardian.new(user).can_post_link?(host: "another-host.com")).to eq(false)
       end
