@@ -335,7 +335,7 @@ def update_user_stats
 end
 
 def update_posts
-  log "Updating posts..."
+  log "Updating post reply counts..."
 
   DB.exec <<-SQL
     WITH Y AS (
@@ -359,6 +359,19 @@ def update_posts
   #   FROM X
   #  WHERE id = X.post_id
   #    AND COALESCE(reply_to_user_id, -9999) <> X.user_id
+
+  log "Updating post reply_to_user_id..."
+
+  DB.exec <<~SQL
+    UPDATE posts AS replies
+    SET reply_to_user_id = replies.user_id
+    FROM posts
+    WHERE posts.topic_id = replies.topic_id
+      AND posts.post_number = replies.reply_to_post_number
+      AND replies.reply_to_post_number IS NOT NULL
+      AND replies.reply_to_user_id IS NULL
+      AND replies.post_number <> replies.reply_to_post_number
+  SQL
 end
 
 def update_topics
