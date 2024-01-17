@@ -13,20 +13,31 @@ class TopicHotScore < ActiveRecord::Base
     # 2. update recently created (up to batch size)
     # 3. update all top scoring topics (up to batch size)
 
+    now = Time.zone.now
+
     args = {
-      now: Time.zone.now,
+      now: now,
       gravity: SiteSetting.hot_topics_gravity,
       max: max,
       private_message: Archetype.private_message,
+      recent_cutoff: now - SiteSetting.hot_topics_recent_days.days,
     }
 
-    # insert up to BATCH_SIZE records that are missing
+    # insert up to BATCH_SIZE records that are missing from table
     DB.exec(<<~SQL, args)
-      INSERT INTO topic_hot_scores (topic_id, score, created_at, updated_at)
+      INSERT INTO topic_hot_scores (
+        topic_id,
+        score,
+        recent_likes,
+        recent_posters,
+        created_at,
+        updated_at
+      )
       SELECT
         topics.id,
-        (topics.like_count - 1) /
-        (EXTRACT(EPOCH FROM (:now - topics.created_at)) / 3600 + 2) ^ :gravity,
+        0.0,
+        0,
+        0,
         :now,
         :now
 
@@ -36,37 +47,75 @@ class TopicHotScore < ActiveRecord::Base
         AND topics.deleted_at IS NULL
         AND topics.archetype <> :private_message
         AND topics.created_at <= :now
-      ORDER BY topics.created_at desc
+      ORDER BY topics.bumped_at desc
       LIMIT :max
+    SQL
+
+    # update recent counts for batch
+    DB.exec(<<~SQL, args)
+      UPDATE topic_hot_scores thsOrig
+      SET
+          recent_likes = COALESCE(new_values.likes_count, 0),
+          recent_posters = COALESCE(new_values.unique_participants, 0),
+          recent_first_bumped_at = COALESCE(new_values.first_bumped_at, ths.recent_first_bumped_at)
+      FROM
+        topic_hot_scores ths
+        LEFT OUTER JOIN
+        (
+          SELECT
+              t.id AS topic_id,
+              COUNT(DISTINCT p.user_id) AS unique_participants,
+              (
+                SELECT COUNT(*)
+                FROM post_actions pa
+                JOIN posts p2 ON p2.id = pa.post_id
+                WHERE p2.topic_id = t.id
+                  AND pa.post_action_type_id = 2 -- action_type for 'like'
+                  AND pa.created_at >= :recent_cutoff
+                  AND pa.deleted_at IS NULL
+              ) AS likes_count,
+              MIN(p.created_at) AS first_bumped_at
+          FROM
+              topics t
+          JOIN
+              posts p ON t.id = p.topic_id
+          WHERE
+              p.created_at >= :recent_cutoff
+              AND t.archetype <> 'private_message'
+              AND t.deleted_at IS NULL
+              AND p.deleted_at IS NULL
+              AND t.created_at <= :now
+              AND t.bumped_at >= :recent_cutoff
+              AND p.created_at < :now
+              AND p.created_at >= :recent_cutoff
+          GROUP BY
+              t.id
+        ) AS new_values
+      ON ths.topic_id = new_values.topic_id
+
+      WHERE thsOrig.topic_id = ths.topic_id
     SQL
 
     # update up to BATCH_SIZE records that are out of date based on age
     # we need an extra index for this
     DB.exec(<<~SQL, args)
-      UPDATE topic_hot_scores
-      SET score = (topics.like_count - 1) /
-        (EXTRACT(EPOCH FROM (:now - topics.created_at)) / 3600 + 2) ^ :gravity,
+      UPDATE topic_hot_scores ths
+      SET score = topics.like_count /
+        (EXTRACT(EPOCH FROM (:now - topics.created_at)) / 3600 + 2) ^ :gravity
+ +
+        CASE WHEN ths.recent_first_bumped_at IS NULL THEN 0 ELSE
+          (ths.recent_likes + ths.recent_posters) /
+          (EXTRACT(EPOCH FROM (:now - recent_first_bumped_at)) / 3600 + 2) ^ :gravity
+        END
+        ,
         updated_at = :now
+
       FROM topics
       WHERE topics.id IN (
-        SELECT * FROM (
-          SELECT topic_hot_scores.topic_id
-          FROM topic_hot_scores
-          JOIN topics t2 ON t2.id = topic_hot_scores.topic_id
-          WHERE topics.deleted_at IS NULL
-          AND topics.archetype <> :private_message
-          AND topics.created_at <= :now
-          ORDER BY topics.created_at desc
-          LIMIT :max
-        ) AS t
-        UNION ALL
-        SELECT * FROM (
-          SELECT topic_hot_scores.topic_id
-          FROM topic_hot_scores
-          ORDER BY topic_hot_scores.score desc
-          LIMIT :max
-        ) AS t1
-      ) AND topic_hot_scores.topic_id = topics.id
+        SELECT topic_id FROM topic_hot_scores
+        ORDER BY score DESC, recent_first_bumped_at DESC NULLS LAST
+        LIMIT :max
+      ) AND ths.topic_id = topics.id
     SQL
   end
 end

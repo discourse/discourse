@@ -4,7 +4,10 @@ class CreateTopicHotScores < ActiveRecord::Migration[7.0]
   def change
     create_table :topic_hot_scores do |t|
       t.integer :topic_id, null: false
-      t.float :score, null: false
+      t.float :score, null: false, default: 0.0
+      t.integer :recent_likes, null: false, default: 0
+      t.integer :recent_posters, null: false, default: 0
+      t.datetime :recent_first_bumped_at
       t.timestamps
     end
 

@@ -3115,3 +3115,6 @@ dashboard:
   hot_topics_gravity:
     hidden: true
     default: 1.8
+  hot_topics_recent_days:
+    hidden: true
+    default: 7
