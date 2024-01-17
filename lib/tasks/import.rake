@@ -364,7 +364,7 @@ def update_posts
 
   DB.exec <<~SQL
     UPDATE posts AS replies
-    SET reply_to_user_id = replies.user_id
+    SET reply_to_user_id = posts.user_id
     FROM posts
     WHERE posts.topic_id = replies.topic_id
       AND posts.post_number = replies.reply_to_post_number
