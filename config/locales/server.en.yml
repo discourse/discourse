@@ -2425,6 +2425,9 @@ en:
     min_trust_level_for_user_api_key: |
       Trust level required for generation of user API keys.<br>
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
+    user_api_key_allowed_groups: |
+      Group membership required for generation of user API keys.<br>
+      <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
     revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
@@ -2588,6 +2591,7 @@ en:
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
       post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
 
     placeholder:
       discourse_connect_provider_secrets:
