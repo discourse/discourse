@@ -1,38 +1,10 @@
-import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
+import { computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import discourseComputed from "discourse-common/utils/decorators";
+import AdminDashboardTabController from "./admin-dashboard-tab";
 
-export default class AdminDashboardModerationController extends Controller {
+export default class AdminDashboardModerationController extends AdminDashboardTabController {
   @service modal;
-
-  queryParams = ["period"];
-
-  period = "monthly";
-  endDate = moment().locale("en").utc().endOf("day");
-  _startDate;
-
-  @computed("_startDate", "period")
-  get startDate() {
-    if (this._startDate) {
-      return this._startDate;
-    }
-
-    const fullDay = moment().locale("en").utc().endOf("day");
-
-    switch (this.period) {
-      case "yearly":
-        return fullDay.subtract(1, "year").startOf("day");
-      case "quarterly":
-        return fullDay.subtract(3, "month").startOf("day");
-      case "weekly":
-        return fullDay.subtract(6, "days").startOf("day");
-      case "monthly":
-        return fullDay.subtract(1, "month").startOf("day");
-      default:
-        return fullDay.subtract(1, "month").startOf("day");
-    }
-  }
 
   @discourseComputed
   flagsStatusOptions() {
@@ -62,11 +34,6 @@ export default class AdminDashboardModerationController extends Controller {
     };
   }
 
-  @discourseComputed("startDate", "endDate")
-  filters(startDate, endDate) {
-    return { startDate, endDate };
-  }
-
   @discourseComputed("endDate")
   lastWeekFilters(endDate) {
     const lastWeek = moment()
@@ -76,15 +43,5 @@ export default class AdminDashboardModerationController extends Controller {
       .subtract(1, "week");
 
     return { lastWeek, endDate };
-  }
-
-  @action
-  setCustomDateRange(_startDate, endDate) {
-    this.setProperties({ _startDate, endDate });
-  }
-
-  @action
-  setPeriod(period) {
-    this.setProperties({ period, _startDate: null });
   }
 }

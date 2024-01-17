@@ -1,5 +1,5 @@
-import Controller, { inject as controller } from "@ember/controller";
-import { action, computed } from "@ember/object";
+import { inject as controller } from "@ember/controller";
+import { computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
 import getURL from "discourse-common/lib/get-url";
@@ -8,7 +8,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import AdminDashboard from "admin/models/admin-dashboard";
 import Report from "admin/models/report";
-import CustomDateRangeModal from "../components/modal/custom-date-range";
+import AdminDashboardTabController from "./admin-dashboard-tab";
 
 function staticReport(reportType) {
   return computed("reports.[]", function () {
@@ -16,48 +16,20 @@ function staticReport(reportType) {
   });
 }
 
-export default class AdminDashboardGeneralController extends Controller {
+export default class AdminDashboardGeneralController extends AdminDashboardTabController {
   @service modal;
   @service router;
   @service siteSettings;
   @controller("exception") exceptionController;
 
-  queryParams = ["period"];
-
-  period = "monthly";
   isLoading = false;
   dashboardFetchedAt = null;
-  endDate = moment().locale("en").utc().endOf("day");
 
   @setting("log_search_queries") logSearchQueriesEnabled;
 
   @staticReport("users_by_type") usersByTypeReport;
   @staticReport("users_by_trust_level") usersByTrustLevelReport;
   @staticReport("storage_report") storageReport;
-
-  _startDate;
-
-  @computed("_startDate", "period")
-  get startDate() {
-    if (this._startDate) {
-      return this._startDate;
-    }
-
-    const fullDay = moment().locale("en").utc().endOf("day");
-
-    switch (this.period) {
-      case "yearly":
-        return fullDay.subtract(1, "year").startOf("day");
-      case "quarterly":
-        return fullDay.subtract(3, "month").startOf("day");
-      case "weekly":
-        return fullDay.subtract(6, "days").startOf("day");
-      case "monthly":
-        return fullDay.subtract(1, "month").startOf("day");
-      default:
-        return fullDay.subtract(1, "month").startOf("day");
-    }
-  }
 
   @discourseComputed("siteSettings.dashboard_general_tab_activity_metrics")
   activityMetrics(metrics) {
@@ -182,31 +154,5 @@ export default class AdminDashboardGeneralController extends Controller {
         })
         .finally(() => this.set("isLoading", false));
     }
-  }
-
-  @discourseComputed("startDate", "endDate")
-  filters(startDate, endDate) {
-    return { startDate, endDate };
-  }
-
-  @action
-  setCustomDateRange(_startDate, endDate) {
-    this.setProperties({ _startDate, endDate });
-  }
-
-  @action
-  setPeriod(period) {
-    this.setProperties({ period, _startDate: null });
-  }
-
-  @action
-  openCustomDateRangeModal() {
-    this.modal.show(CustomDateRangeModal, {
-      model: {
-        startDate: this.startDate,
-        endDate: this.endDate,
-        setCustomDateRange: this.setCustomDateRange,
-      },
-    });
   }
 }
