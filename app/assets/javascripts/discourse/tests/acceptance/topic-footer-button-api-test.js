@@ -27,13 +27,13 @@ acceptance(
       assert.verifySteps(["action called"]);
     });
 
-    test("doesn't show footer button if displayForUser is false", async function (assert) {
+    test("doesn't show footer button if anonymousOnly is true", async function (assert) {
       withPluginApi("0.13.1", (api) => {
         api.registerTopicFooterButton({
           id: "my-button",
           icon: "cog",
           action() {},
-          displayForUser: false,
+          anonymousOnly: true,
         });
       });
 
@@ -56,7 +56,7 @@ acceptance(
             assert.step("action called");
             done();
           },
-          displayForAnonymous: true,
+          anonymousOnly: true,
         });
       });
 
@@ -66,7 +66,7 @@ acceptance(
       assert.verifySteps(["action called"]);
     });
 
-    test("doesn't show footer button if displayForAnonymous is false/unset", async function (assert) {
+    test("doesn't show footer button if anonymousOnly is false/unset", async function (assert) {
       withPluginApi("0.13.1", (api) => {
         api.registerTopicFooterButton({
           id: "my-button",

@@ -14,7 +14,7 @@ export default Component.extend({
   @computed("allButtons.[]")
   get buttons() {
     return this.allButtons
-      .filterBy("displayForAnonymous", true)
+      .filterBy("anonymousOnly", true)
       .sortBy("priority")
       .reverse();
   },
