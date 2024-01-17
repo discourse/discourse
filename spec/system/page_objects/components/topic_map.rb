@@ -6,11 +6,11 @@ module PageObjects
       TOPIC_MAP_KLASS = ".topic-map"
 
       def is_visible?
-        has_css?("#{TOPIC_MAP_KLASS}")
+        has_css?(TOPIC_MAP_KLASS)
       end
 
       def is_not_visible?
-        has_no_css?("#{TOPIC_MAP_KLASS}")
+        has_no_css?(TOPIC_MAP_KLASS)
       end
 
       def is_collapsed?
@@ -64,6 +64,7 @@ module PageObjects
       def last_reply_relative_date
         last_reply_details.find(".relative-date").text
       end
+
       def avatars_details
         find("#{TOPIC_MAP_KLASS} .map .avatars").all(".poster.trigger-user-card")
       end
