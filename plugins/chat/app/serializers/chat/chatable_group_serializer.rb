@@ -13,6 +13,7 @@ module Chat
     end
 
     def can_chat
+      # + 1 for current user
       chat_enabled && chat_enabled_user_count + 1 <= SiteSetting.chat_max_direct_message_users
     end
   end
