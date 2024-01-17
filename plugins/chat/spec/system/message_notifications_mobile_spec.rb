@@ -118,7 +118,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
         context "when a message is created" do
           it "correctly renders notifications" do
-            visit("/chat")
+            visit("/chat/direct-messages")
 
             create_message(dm_channel_1, user: user_1)
 
@@ -139,7 +139,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
           end
 
           it "reorders channels" do
-            visit("/chat")
+            visit("/chat/direct-messages")
 
             expect(page).to have_css(
               ".chat-channel-row:nth-child(1)[data-chat-channel-id=\"#{dm_channel_1.id}\"]",

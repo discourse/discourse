@@ -313,11 +313,11 @@ module Discourse
   end
 
   def self.filters
-    @filters ||= %i[latest unread new unseen top read posted bookmarks]
+    @filters ||= %i[latest unread new unseen top read posted bookmarks hot]
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= %i[latest top categories]
+    @anonymous_filters ||= %i[latest top categories hot]
   end
 
   def self.top_menu_items

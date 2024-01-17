@@ -14,7 +14,7 @@ describe Chat::MessageSerializer do
 
   describe "#mentioned_users" do
     it "is limited by max_mentions_per_chat_message setting" do
-      Fabricate.times(2, :chat_mention, chat_message: message_1)
+      Fabricate.times(2, :user_chat_mention, chat_message: message_1)
       SiteSetting.max_mentions_per_chat_message = 1
 
       expect(serializer.as_json[:mentioned_users].length).to eq(1)
@@ -228,7 +228,7 @@ describe Chat::MessageSerializer do
           message:
             "here should be a mention, but since we're fabricating objects it doesn't matter",
         )
-      Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
+      Fabricate(:user_chat_mention, chat_message: message, user: mentioned_user)
 
       mentioned_user.destroy!
       message.reload

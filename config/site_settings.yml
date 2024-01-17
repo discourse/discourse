@@ -2328,10 +2328,10 @@ developer:
     default: ""
     allow_any: false
     refresh: true
-  lazy_load_categories:
-    default: false
-    client: true
-    hidden: true
+  lazy_load_categories_groups:
+    default: ""
+    type: group_list
+    list_type: compact
   warn_critical_js_deprecations:
     default: true
     client: true
@@ -2534,6 +2534,8 @@ uncategorized:
   version_checks:
     client: true
     default: true
+  include_in_discourse_discover:
+    default: false
   new_version_emails: true
   send_welcome_message: true
 
@@ -3109,3 +3111,12 @@ dashboard:
   verbose_user_stat_count_logging:
     hidden: true
     default: false
+  experimental_hot_topics:
+    hidden: true
+    default: false
+  hot_topics_gravity:
+    hidden: true
+    default: 1.2
+  hot_topics_recent_days:
+    hidden: true
+    default: 7

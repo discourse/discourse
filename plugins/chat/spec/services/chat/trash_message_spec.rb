@@ -49,7 +49,8 @@ RSpec.describe Chat::TrashMessage do
 
         it "destroys notifications for mentions" do
           notification = Fabricate(:notification)
-          mention = Fabricate(:chat_mention, chat_message: message, notifications: [notification])
+          mention =
+            Fabricate(:user_chat_mention, chat_message: message, notifications: [notification])
 
           result
 

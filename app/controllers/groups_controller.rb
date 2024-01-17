@@ -740,9 +740,7 @@ class GroupsController < ApplicationController
       flair_upload_id
     ]
 
-    if automatic
-      attributes.push(:visibility_level)
-    else
+    if !automatic
       attributes.push(
         :title,
         :allow_membership_requests,
@@ -752,6 +750,8 @@ class GroupsController < ApplicationController
         :membership_request_template,
       )
     end
+
+    attributes.push(:visibility_level, :members_visibility_level) if current_user.staff?
 
     if !automatic && current_user.staff?
       attributes.push(
@@ -773,8 +773,6 @@ class GroupsController < ApplicationController
         :email_password,
         :email_from_alias,
         :primary_group,
-        :visibility_level,
-        :members_visibility_level,
         :name,
         :grant_trust_level,
         :automatic_membership_email_domains,

@@ -628,6 +628,11 @@ class Guardian
       @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
   end
 
+  def can_lazy_load_categories?
+    SiteSetting.lazy_load_categories_groups_map.include?(Group::AUTO_GROUPS[:everyone]) ||
+      @user.in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
+  end
+
   def is_me?(other)
     other && authenticated? && other.is_a?(User) && @user == other
   end

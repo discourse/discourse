@@ -13,11 +13,7 @@ export default class ChatIndexRoute extends DiscourseRoute {
   redirect() {
     // on mobile redirect user to the first footer tab route
     if (this.site.mobileView) {
-      if (this.chat.userCanAccessDirectMessages) {
-        return this.router.replaceWith("chat.direct-messages");
-      } else {
-        return this.router.replaceWith("chat.channels");
-      }
+      return this.router.replaceWith("chat.channels");
     }
 
     // We are on desktop. Check for a channel to enter and transition if so

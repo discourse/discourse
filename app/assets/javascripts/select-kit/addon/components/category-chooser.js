@@ -29,7 +29,7 @@ export default ComboBoxComponent.extend({
     this._super(...arguments);
 
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll([this.value])
     ) {
       // eslint-disable-next-line no-console
@@ -92,7 +92,7 @@ export default ComboBoxComponent.extend({
   },
 
   search(filter) {
-    if (this.siteSettings.lazy_load_categories) {
+    if (this.site.lazy_load_categories) {
       return Category.asyncSearch(this._normalize(filter), {
         scopedCategoryId: this.selectKit.options?.scopedCategoryId,
         prioritizedCategoryId: this.selectKit.options?.prioritizedCategoryId,
