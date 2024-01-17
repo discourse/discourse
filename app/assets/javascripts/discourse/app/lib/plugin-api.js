@@ -137,6 +137,7 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import { addHeaderFancyTitleClass } from "discourse/components/glimmer-header/topic/info";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1285,6 +1286,19 @@ class PluginApi {
    */
   modifySelectKit(pluginApiKey) {
     return modifySelectKit(pluginApiKey);
+  }
+
+  /**
+   * Add a custom CSS class to the topic title within the header.
+   *
+   * ```javascript
+   * api.addHeaderFancyTitleClass('foo');
+   * api.addHeaderFancyTitleClass('bar');
+   * ```
+   *
+   **/
+  addHeaderFancyTitleClass(titleClass) {
+    return addHeaderFancyTitleClass(titleClass);
   }
 
   /**
