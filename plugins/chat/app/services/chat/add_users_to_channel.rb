@@ -57,22 +57,12 @@ module Chat
     end
 
     def fetch_users(contract:, channel:, **)
-      ::User
-        .joins(:user_option)
-        .left_outer_joins(:groups)
-        .where(user_options: { chat_enabled: true })
-        .where(username: [*contract.usernames])
-        .or(
-          User
-            .joins(:user_option)
-            .left_outer_joins(:groups)
-            .where(user_options: { chat_enabled: true })
-            .where(groups: { name: contract.groups })
-            .where.not(group_users: { user_id: nil }),
+      users =
+        ::Chat::UsersFromUsernamesAndGroups.call(
+          usernames: contract.usernames,
+          groups: contract.groups,
         )
-        .where.not(id: channel.chatable.direct_message_users.select(:user_id))
-        .distinct
-        .to_a
+      users.reject { |user| channel.chatable.direct_message_users.exists?(user_id: user.id) }
     end
 
     def fetch_channel(contract:, **)

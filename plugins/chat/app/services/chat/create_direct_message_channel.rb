@@ -58,21 +58,10 @@ module Chat
     end
 
     def fetch_target_users(guardian:, contract:, **)
-      User
-        .joins(:user_option)
-        .left_outer_joins(:groups)
-        .where(user_options: { chat_enabled: true })
-        .where(username: [guardian.user.username, *contract.target_usernames])
-        .or(
-          User
-            .joins(:user_option)
-            .left_outer_joins(:groups)
-            .where(user_options: { chat_enabled: true })
-            .where(groups: { name: contract.target_groups })
-            .where.not(group_users: { user_id: nil }),
-        )
-        .distinct
-        .to_a
+      ::Chat::UsersFromUsernamesAndGroups.call(
+        usernames: [*contract.target_usernames, guardian.user.username],
+        groups: contract.target_groups,
+      )
     end
 
     def fetch_user_comm_screener(target_users:, guardian:, **)
