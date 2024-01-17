@@ -67,8 +67,12 @@ module ApplicationHelper
 
   def google_tag_manager_nonce_placeholder
     placeholder = "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
-    response.headers["Discourse-GTM-Nonce-Placeholder"] = placeholder
-    placeholder
+    if response.headers["Discourse-GTM-Nonce-Placeholder"]
+      response.headers["Discourse-GTM-Nonce-Placeholder"]
+    else
+      response.headers["Discourse-GTM-Nonce-Placeholder"] = placeholder
+      placeholder
+    end
   end
 
   def shared_session_key

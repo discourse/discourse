@@ -11,6 +11,10 @@ module CommonHelper
     render partial: "common/google_tag_manager_head" if SiteSetting.gtm_container_id.present?
   end
 
+  def render_universal_nonce_code
+    render partial: "common/universal_nonce"
+  end
+
   def render_google_tag_manager_body_code
     render partial: "common/google_tag_manager_body" if SiteSetting.gtm_container_id.present?
   end

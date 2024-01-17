@@ -29,7 +29,7 @@
     <%- else %>
       <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script">
       <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script">
-    <%- end %>  
+    <%- end %>
     <%= preload_script 'browser-detect' %>
 
     <%= preload_script "vendor" %>
@@ -59,6 +59,7 @@
     <%- end %>
 
     <%= render_google_tag_manager_head_code %>
+    <%= render_universal_nonce_code %>
     <%= render_google_universal_analytics_code %>
     <link id="manifest-link" rel="manifest" href=<%= manifest_url %> crossorigin="use-credentials">
 
