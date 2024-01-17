@@ -29,11 +29,11 @@ RSpec.describe "Chat footer on mobile", type: :system, mobile: true do
       expect(page).to have_no_css(".c-footer")
     end
 
-    it "redirects the user to the direct messages tab" do
+    it "redirects the user to the channels tab" do
       visit("/")
       chat_page.open_from_header
 
-      expect(page).to have_current_path("/chat/direct-messages")
+      expect(page).to have_current_path("/chat/channels")
     end
 
     it "shows threads tab when user has threads" do

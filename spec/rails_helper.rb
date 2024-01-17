@@ -61,8 +61,6 @@ require File.expand_path("../../config/environment", __FILE__)
 require "rspec/rails"
 require "shoulda-matchers"
 require "sidekiq/testing"
-require "test_prof/recipes/rspec/let_it_be"
-require "test_prof/before_all/adapters/active_record"
 require "selenium-webdriver"
 require "capybara/rails"
 
@@ -156,28 +154,31 @@ module TestSetup
   end
 end
 
-TestProf::BeforeAll.configure do |config|
-  config.after(:begin) do
-    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
-    TestSetup.test_setup
-  end
-end
-
-module Prefabrication
-  if ENV["PREFABRICATION"] == "0"
+if ENV["PREFABRICATION"] == "0"
+  module Prefabrication
     def fab!(name, **opts, &blk)
       blk ||= proc { Fabricate(name) }
       let!(name, &blk)
     end
-  else
+  end
+else
+  require "test_prof/recipes/rspec/let_it_be"
+  require "test_prof/before_all/adapters/active_record"
+
+  TestProf::BeforeAll.configure do |config|
+    config.after(:begin) do
+      DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+      TestSetup.test_setup
+    end
+  end
+
+  module Prefabrication
     def fab!(name, **opts, &blk)
       blk ||= proc { Fabricate(name) }
       let_it_be(name, refind: true, **opts, &blk)
     end
   end
 end
-
-RSpec.configure { |config| config.extend Prefabrication }
 
 PER_SPEC_TIMEOUT_SECONDS = 45
 BROWSER_READ_TIMEOUT = 30
@@ -186,6 +187,7 @@ RSpec.configure do |config|
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
   config.extend RedisSnapshotHelper
+  config.extend Prefabrication
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers

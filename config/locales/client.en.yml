@@ -2971,6 +2971,7 @@ en:
         category: "There are no more %{category} topics."
         tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
+        hot: "There are no more hot topics."
         bookmarks: "There are no more bookmarked topics."
         filter: "There are no more topics."
 
@@ -4059,6 +4060,10 @@ en:
         title: "Unseen"
         lower_title: "unseen"
         help: "new topics and topics you are currently watching or tracking with unread posts"
+      hot:
+        title: "Hot"
+        lower_title: "hot"
+        help: "top recent topics"
       new:
         lower_title_with_count:
           one: "%{count} new"

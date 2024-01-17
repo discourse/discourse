@@ -369,46 +369,126 @@ RSpec.describe Chat::UpdateMessage do
       end
 
       describe "with group mentions" do
-        it "creates group mentions on update" do
+        fab!(:group_1) do
+          Fabricate(
+            :public_group,
+            users: [user1, user2],
+            mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          )
+        end
+        fab!(:group_2) do
+          Fabricate(
+            :public_group,
+            users: [user3, user4],
+            mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          )
+        end
+
+        it "creates a mention record when a group was mentioned on message update" do
           chat_message = create_chat_message(user1, "ping nobody", public_chat_channel)
-          expect {
-            described_class.call(
-              guardian: guardian,
-              message_id: chat_message.id,
-              message: "ping @#{admin_group.name}",
-            )
-          }.to change { Chat::Mention.where(chat_message: chat_message).count }.by(2)
 
-          expect(admin1.chat_mentions.where(chat_message: chat_message)).to be_present
-          expect(admin2.chat_mentions.where(chat_message: chat_message)).to be_present
+          described_class.call(
+            guardian: guardian,
+            message_id: chat_message.id,
+            message: "ping @#{group_1.name}",
+          )
+
+          expect(group_1.chat_mentions.where(chat_message: chat_message).count).to be(1)
         end
 
-        it "doesn't duplicate mentions when the user is already direct mentioned and then group mentioned" do
-          chat_message = create_chat_message(user1, "ping @#{admin2.username}", public_chat_channel)
-          expect {
-            described_class.call(
-              guardian: guardian,
-              message_id: chat_message.id,
-              message: "ping @#{admin_group.name} @#{admin2.username}",
-            )
-          }.to change { admin1.chat_mentions.count }.by(1).and not_change {
-                  admin2.chat_mentions.count
-                }
+        it "updates mention records when another group was mentioned on message update" do
+          chat_message = create_chat_message(user1, "ping @#{group_1.name}", public_chat_channel)
+
+          expect(chat_message.group_mentions.map(&:target_id)).to contain_exactly(group_1.id)
+
+          described_class.call(
+            guardian: guardian,
+            message_id: chat_message.id,
+            message: "ping @#{group_2.name}",
+          )
+
+          expect(chat_message.reload.group_mentions.map(&:target_id)).to contain_exactly(group_2.id)
         end
 
-        it "deletes old mentions when group mention is removed" do
+        it "deletes a mention record when a group mention was removed on message update" do
+          chat_message = create_chat_message(user1, "ping @#{group_1.name}", public_chat_channel)
+
+          described_class.call(
+            guardian: guardian,
+            message_id: chat_message.id,
+            message: "ping nobody anymore!",
+          )
+
+          expect(group_1.chat_mentions.where(chat_message: chat_message).count).to be(0)
+        end
+
+        it "doesn't notify the second time users that has already been notified when creating the message" do
+          group_user = Fabricate(:user)
+          Fabricate(
+            :user_chat_channel_membership,
+            chat_channel: public_chat_channel,
+            user: group_user,
+          )
+          group =
+            Fabricate(
+              :public_group,
+              users: [group_user],
+              mentionable_level: Group::ALIAS_LEVELS[:everyone],
+            )
+
           chat_message =
-            create_chat_message(user1, "ping @#{admin_group.name}", public_chat_channel)
-          expect {
-            described_class.call(
-              guardian: guardian,
-              message_id: chat_message.id,
-              message: "ping nobody anymore!",
-            )
-          }.to change { Chat::Mention.where(chat_message: chat_message).count }.by(-2)
+            create_chat_message(user1, "Mentioning @#{group.name}", public_chat_channel)
+          expect(group_user.notifications.count).to be(1)
+          notification_id = group_user.notifications.first.id
 
-          expect(admin1.chat_mentions.where(chat_message: chat_message)).not_to be_present
-          expect(admin2.chat_mentions.where(chat_message: chat_message)).not_to be_present
+          described_class.call(
+            guardian: guardian,
+            message_id: chat_message.id,
+            message: "Update the message and still mention the same group @#{group.name}",
+          )
+
+          expect(group_user.notifications.count).to be(1) # no new notifications has been created
+          expect(group_user.notifications.first.id).to be(notification_id) # the existing notification hasn't been recreated
+        end
+      end
+
+      describe "with @here mentions" do
+        it "doesn't notify the second time users that has already been notified when creating the message" do
+          user = Fabricate(:user)
+          Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
+          user.update!(last_seen_at: 4.minutes.ago)
+
+          chat_message = create_chat_message(user1, "Mentioning @here", public_chat_channel)
+          expect(user.notifications.count).to be(1)
+          notification_id = user.notifications.first.id
+
+          described_class.call(
+            guardian: guardian,
+            message_id: chat_message.id,
+            message: "Update the message and still mention @here",
+          )
+
+          expect(user.notifications.count).to be(1) # no new notifications have been created
+          expect(user.notifications.first.id).to be(notification_id) # the existing notification haven't been recreated
+        end
+      end
+
+      describe "with @all mentions" do
+        it "doesn't notify the second time users that has already been notified when creating the message" do
+          user = Fabricate(:user)
+          Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
+
+          chat_message = create_chat_message(user1, "Mentioning @all", public_chat_channel)
+          notification_id = user.notifications.first.id
+
+          described_class.call(
+            guardian: guardian,
+            message_id: chat_message.id,
+            message: "Update the message and still mention @all",
+          )
+
+          expect(user.notifications.count).to be(1) # no new notifications have been created
+          expect(user.notifications.first.id).to be(notification_id) # the existing notification haven't been recreated
         end
       end
     end
