@@ -168,7 +168,7 @@ module Discourse
                            ContentSecurityPolicy::Middleware
 
     require "middleware/gtm_script_nonce_injector"
-    config.middleware.insert_after(ActionDispatch::Flash, Middleware::GtmScriptNonceInjector)
+    config.middleware.insert_after(ActionDispatch::Flash, Middleware::CspScriptNonceInjector)
 
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
@@ -180,7 +180,6 @@ module Discourse
                                  extensions: %w[.js .es6 .js.es6],
                                  charset: :unicode
     Sprockets.register_postprocessor "application/javascript", DiscourseJsProcessor
-
     class SprocketsSassUnsupported
       def self.call(*args)
         raise "Discourse does not support compiling scss/sass files via Sprockets"

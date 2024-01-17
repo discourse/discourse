@@ -1,7 +1,8 @@
 (function () {
   const gtmDataElement = document.getElementById("data-google-tag-manager");
   const dataLayerJson = JSON.parse(gtmDataElement.dataset.dataLayer);
-  const gtmNonce = gtmDataElement.dataset.nonce;
+  const cspNonceElement = document.getElementById("data-csp-nonce");
+  const cspNonce = cspNonceElement.dataset.nonce;
 
   // dataLayer declaration needs to precede the container snippet
   // https://developers.google.com/tag-manager/devguide#adding-data-layer-variables-to-a-page
@@ -14,8 +15,8 @@
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;
   j.id="gtmScript"
-  j.setAttribute("nonce", gtmNonce);
-  j.setAttribute("nonce-copy", gtmNonce);
+  j.setAttribute("nonce", cspNonce);
+  j.setAttribute("nonce-copy", cspNonce);
   f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer',gtmDataElement.dataset.containerId);
   /* eslint-enable */

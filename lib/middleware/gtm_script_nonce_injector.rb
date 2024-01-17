@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Middleware
-  class GtmScriptNonceInjector
+  class CspScriptNonceInjector
     def initialize(app, settings = {})
       @app = app
     end
@@ -9,7 +9,7 @@ module Middleware
     def call(env)
       status, headers, response = @app.call(env)
 
-      if nonce_placeholder = headers.delete("Discourse-GTM-Nonce-Placeholder")
+      if nonce_placeholder = headers.delete("Discourse-CSP-Nonce-Placeholder")
         nonce = SecureRandom.hex
         parts = []
         response.each { |part| parts << part.to_s.gsub(nonce_placeholder, nonce) }

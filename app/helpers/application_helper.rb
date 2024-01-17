@@ -65,12 +65,12 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
-  def google_tag_manager_nonce_placeholder
+  def csp_nonce_placeholder
     placeholder = "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
-    if response.headers["Discourse-GTM-Nonce-Placeholder"]
-      response.headers["Discourse-GTM-Nonce-Placeholder"]
+    if response.headers["Discourse-CSP-Nonce-Placeholder"]
+      response.headers["Discourse-CSP-Nonce-Placeholder"]
     else
-      response.headers["Discourse-GTM-Nonce-Placeholder"] = placeholder
+      response.headers["Discourse-CSP-Nonce-Placeholder"] = placeholder
       placeholder
     end
   end
