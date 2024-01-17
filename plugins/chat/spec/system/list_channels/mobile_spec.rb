@@ -63,7 +63,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
 
       context "when member of the channel" do
         it "shows the channel in the correct section" do
-          visit("/chat")
+          visit("/chat/direct-messages")
           expect(page.find(".direct-message-channels")).to have_content(current_user.username)
         end
       end
