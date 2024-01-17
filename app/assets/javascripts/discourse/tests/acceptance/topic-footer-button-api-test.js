@@ -4,7 +4,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance(
-  "Topic - Plugin API - registerTopicFooterButton - logged user",
+  "Topic - Plugin API - registerTopicFooterButton - logged in user",
   function (needs) {
     needs.user();
 
