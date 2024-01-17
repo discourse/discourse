@@ -11,7 +11,7 @@ export default Component.extend({
 
   allButtons: getTopicFooterButtons(),
 
-  @computed("inlineButtons.[]")
+  @computed("allButtons.[]")
   get buttons() {
     return this.allButtons
       .filterBy("displayForAnonymous", true)
