@@ -1,15 +1,38 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
-import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import PeriodComputationMixin from "admin/mixins/period-computation";
-import CustomDateRangeModal from "../components/modal/custom-date-range";
 
-export default class AdminDashboardModerationController extends Controller.extend(
-  PeriodComputationMixin
-) {
+export default class AdminDashboardModerationController extends Controller {
   @service modal;
+
+  queryParams = ["period"];
+
+  period = "monthly";
+  endDate = moment().locale("en").utc().endOf("day");
+  _startDate;
+
+  @computed("_startDate", "period")
+  get startDate() {
+    if (this._startDate) {
+      return this._startDate;
+    }
+
+    const fullDay = moment().locale("en").utc().endOf("day");
+
+    switch (this.period) {
+      case "yearly":
+        return fullDay.subtract(1, "year").startOf("day");
+      case "quarterly":
+        return fullDay.subtract(3, "month").startOf("day");
+      case "weekly":
+        return fullDay.subtract(6, "days").startOf("day");
+      case "monthly":
+        return fullDay.subtract(1, "month").startOf("day");
+      default:
+        return fullDay.subtract(1, "month").startOf("day");
+    }
+  }
 
   @discourseComputed
   flagsStatusOptions() {
@@ -44,28 +67,24 @@ export default class AdminDashboardModerationController extends Controller.exten
     return { startDate, endDate };
   }
 
-  @discourseComputed("lastWeek", "endDate")
-  lastWeekfilters(startDate, endDate) {
-    return { startDate, endDate };
-  }
+  @discourseComputed("endDate")
+  lastWeekFilters(endDate) {
+    const lastWeek = moment()
+      .locale("en")
+      .utc()
+      .endOf("day")
+      .subtract(1, "week");
 
-  _reportsForPeriodURL(period) {
-    return getURL(`/admin/dashboard/moderation?period=${period}`);
-  }
-
-  @action
-  setCustomDateRange(startDate, endDate) {
-    this.setProperties({ startDate, endDate });
+    return { lastWeek, endDate };
   }
 
   @action
-  openCustomDateRangeModal() {
-    this.modal.show(CustomDateRangeModal, {
-      model: {
-        startDate: this.startDate,
-        endDate: this.endDate,
-        setCustomDateRange: this.setCustomDateRange,
-      },
-    });
+  setCustomDateRange(_startDate, endDate) {
+    this.setProperties({ _startDate, endDate });
+  }
+
+  @action
+  setPeriod(period) {
+    this.setProperties({ period, _startDate: null });
   }
 }

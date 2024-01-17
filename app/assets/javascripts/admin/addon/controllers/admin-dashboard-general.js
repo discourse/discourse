@@ -6,7 +6,6 @@ import getURL from "discourse-common/lib/get-url";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-import PeriodComputationMixin from "admin/mixins/period-computation";
 import AdminDashboard from "admin/models/admin-dashboard";
 import Report from "admin/models/report";
 import CustomDateRangeModal from "../components/modal/custom-date-range";
@@ -17,22 +16,48 @@ function staticReport(reportType) {
   });
 }
 
-export default class AdminDashboardGeneralController extends Controller.extend(
-  PeriodComputationMixin
-) {
+export default class AdminDashboardGeneralController extends Controller {
   @service modal;
   @service router;
   @service siteSettings;
   @controller("exception") exceptionController;
 
+  queryParams = ["period"];
+
+  period = "monthly";
   isLoading = false;
   dashboardFetchedAt = null;
+  endDate = moment().locale("en").utc().endOf("day");
 
   @setting("log_search_queries") logSearchQueriesEnabled;
 
   @staticReport("users_by_type") usersByTypeReport;
   @staticReport("users_by_trust_level") usersByTrustLevelReport;
   @staticReport("storage_report") storageReport;
+
+  _startDate;
+
+  @computed("_startDate", "period")
+  get startDate() {
+    if (this._startDate) {
+      return this._startDate;
+    }
+
+    const fullDay = moment().locale("en").utc().endOf("day");
+
+    switch (this.period) {
+      case "yearly":
+        return fullDay.subtract(1, "year").startOf("day");
+      case "quarterly":
+        return fullDay.subtract(3, "month").startOf("day");
+      case "weekly":
+        return fullDay.subtract(6, "days").startOf("day");
+      case "monthly":
+        return fullDay.subtract(1, "month").startOf("day");
+      default:
+        return fullDay.subtract(1, "month").startOf("day");
+    }
+  }
 
   @discourseComputed("siteSettings.dashboard_general_tab_activity_metrics")
   activityMetrics(metrics) {
@@ -75,9 +100,20 @@ export default class AdminDashboardGeneralController extends Controller.extend(
   }
 
   @discourseComputed
+  today() {
+    return moment().locale("en").utc().endOf("day");
+  }
+
+  @discourseComputed
   activityMetricsFilters() {
+    const lastMonth = moment()
+      .locale("en")
+      .utc()
+      .startOf("day")
+      .subtract(1, "month");
+
     return {
-      startDate: this.lastMonth,
+      startDate: lastMonth,
       endDate: this.today,
     };
   }
@@ -153,13 +189,14 @@ export default class AdminDashboardGeneralController extends Controller.extend(
     return { startDate, endDate };
   }
 
-  _reportsForPeriodURL(period) {
-    return getURL(`/admin?period=${period}`);
+  @action
+  setCustomDateRange(_startDate, endDate) {
+    this.setProperties({ _startDate, endDate });
   }
 
   @action
-  setCustomDateRange(startDate, endDate) {
-    this.setProperties({ startDate, endDate });
+  setPeriod(period) {
+    this.setProperties({ period, _startDate: null });
   }
 
   @action
