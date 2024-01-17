@@ -124,11 +124,14 @@ end
 #
 # Table name: topic_hot_scores
 #
-#  id         :bigint           not null, primary key
-#  topic_id   :integer          not null
-#  score      :float            not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id                     :bigint           not null, primary key
+#  topic_id               :integer          not null
+#  score                  :float            default(0.0), not null
+#  recent_likes           :integer          default(0), not null
+#  recent_posters         :integer          default(0), not null
+#  recent_first_bumped_at :datetime
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
 #
 # Indexes
 #
