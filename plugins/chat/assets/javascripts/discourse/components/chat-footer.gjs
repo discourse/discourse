@@ -4,7 +4,6 @@ import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import i18n from "discourse-common/helpers/i18n";
 import eq from "truth-helpers/helpers/eq";
 
@@ -23,7 +22,8 @@ export default class ChatFooter extends Component {
         this.threadsEnabled = result.thread_count > 0;
       })
       .catch((error) => {
-        popupAjaxError(error);
+        // eslint-disable-next-line no-console
+        console.error(error);
       });
 
     return () => {
