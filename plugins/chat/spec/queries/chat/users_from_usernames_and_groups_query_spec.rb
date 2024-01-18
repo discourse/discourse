@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Chat::UsersFromUsernamesAndGroups do
+describe Chat::UsersFromUsernamesAndGroupsQuery do
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }
@@ -45,6 +45,19 @@ describe Chat::UsersFromUsernamesAndGroups do
       result = described_class.call(usernames: [], groups: [group1.name])
       expect(result).not_to include(user1)
       expect(result).to include(user2)
+    end
+  end
+
+  context "when excluding specific user IDs" do
+    it "does not return users with specified IDs" do
+      result =
+        described_class.call(
+          usernames: [user4.username],
+          groups: [group1.name, group2.name],
+          excluded_user_ids: [user1.id, user3.id],
+        )
+      expect(result).not_to include(user1, user3)
+      expect(result).to include(user2, user4)
     end
   end
 end

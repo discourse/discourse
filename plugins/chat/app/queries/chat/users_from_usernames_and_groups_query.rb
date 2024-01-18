@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Chat
-  class UsersFromUsernamesAndGroups
-    def self.call(usernames:, groups:)
+  class UsersFromUsernamesAndGroupsQuery
+    def self.call(usernames:, groups:, excluded_user_ids: [])
       User
         .joins(:user_option)
         .left_outer_joins(:groups)
@@ -12,6 +12,7 @@ module Chat
           usernames,
           groups,
         )
+        .where.not(id: excluded_user_ids)
         .distinct
     end
   end

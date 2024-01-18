@@ -57,12 +57,11 @@ module Chat
     end
 
     def fetch_users(contract:, channel:, **)
-      users =
-        ::Chat::UsersFromUsernamesAndGroups.call(
-          usernames: contract.usernames,
-          groups: contract.groups,
-        )
-      users.reject { |user| channel.chatable.direct_message_users.exists?(user_id: user.id) }
+      ::Chat::UsersFromUsernamesAndGroupsQuery.call(
+        usernames: contract.usernames,
+        groups: contract.groups,
+        excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
+      )
     end
 
     def fetch_channel(contract:, **)

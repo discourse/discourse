@@ -58,7 +58,7 @@ module Chat
     end
 
     def fetch_target_users(guardian:, contract:, **)
-      ::Chat::UsersFromUsernamesAndGroups.call(
+      ::Chat::UsersFromUsernamesAndGroupsQuery.call(
         usernames: [*contract.target_usernames, guardian.user.username],
         groups: contract.target_groups,
       )
