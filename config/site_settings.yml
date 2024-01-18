@@ -189,6 +189,7 @@ basic:
       - read
       - posted
       - bookmarks
+      - hot
   post_menu:
     client: true
     type: list
@@ -3121,6 +3122,7 @@ dashboard:
   experimental_hot_topics:
     hidden: true
     default: false
+    client: true
   hot_topics_gravity:
     hidden: true
     default: 1.2
