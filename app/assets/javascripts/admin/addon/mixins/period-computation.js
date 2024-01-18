@@ -11,7 +11,7 @@ export default Mixin.create({
     this._super(...arguments);
 
     deprecated(
-      "PeriodComputation mixin is deprecated. Use [something else] instead.",
+      "PeriodComputation mixin is deprecated. Use AdminDashboardTabController instead.",
       {
         id: "discourse.period-mixin",
         since: "3.2.0.beta5-dev",
