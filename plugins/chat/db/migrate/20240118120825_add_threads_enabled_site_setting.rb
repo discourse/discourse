@@ -6,7 +6,6 @@ class AddThreadsEnabledSiteSetting < ActiveRecord::Migration[7.0]
       DB.query_single(
         "SELECT threading_enabled FROM chat_channels WHERE threading_enabled = 't' LIMIT 1",
       )
-    return unless threading_enabled_channels.present?
 
     threads_enabled =
       DB.query_single("SELECT value FROM site_settings WHERE name = 'chat_threads_enabled'").first
