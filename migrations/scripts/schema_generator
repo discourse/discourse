@@ -65,6 +65,12 @@ module Migrations
 
       @output_stream.puts "\n\n/*"
 
+      @output_stream.puts <<~NOTE
+        Core table columns implicitly excluded from the generated schema above via the `include` configuration option
+        in `schema.yml`. This serves as an inventory of these columns, allowing new core additions to be tracked and,
+        if necessary, synchronized with the intermediate database schema.\n
+      NOTE
+
       @indirectly_ignored_columns.each_with_index do |(table_name, columns), index|
         next if virtual_table?(table_name) || columns.blank?
 

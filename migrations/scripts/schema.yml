@@ -1,7 +1,7 @@
 ## Configuration options for the base intermediate schema generator
 ##
 ## After modifying this file, regenerate the base intermediate schema
-## by running the `generate_schema` script
+## by running the `generate_schema` script.
 
 # Default relative path for generated base schema file.
 # An absolute path can also be provided to the script as the first CLI argument.
@@ -11,11 +11,21 @@ output_file_path: ../common/intermediate_db_schema/000_base_schema.sql
 ## Tables to include in the generated base intermediate schema.
 ##
 ## Available table options:
-## ignore:      List of columns to ignore
-## primary_key: Literal or list of columns to use as primary
-## extend:      A list of objects describing new columns to added. Add a new column
-##              or transform an existing one
-## indexes:     List of indexes to create
+## virtual:     Boolean. Enables the inclusion of a table in the schema solely based.
+##              on the provided configuration. A virtual table does not need to be available in the core schema.
+## ignore:      List of columns to ignore. Convenient if most of the table's column are needed.
+##              Usage is mutually exclusive with the `include` option. Only one should be used at a time.
+## include:     List of columns to include. Convenient if only a few columns are needed.
+##              Usage is mutually exclusive with the `include`` option. Only one should be used at a time.
+## primary_key: Literal or list of columns to use as primary key.
+## extend:      List of objects describing columns to be added/extended.
+##              The following options are available for an "extend" object:
+##                name:    Required. The name of the column being extended.
+##                is_null: Specifies if the column can be null.
+##                type:    Column type. Defaults to TEXT.
+## indexes:     List of indexes to create. The following options are available for an "index" object:
+##                name: Index name.
+##                columns: List of column(s) to index.
 tables:
   schema_migrations:
     virtual: true
@@ -263,7 +273,7 @@ tables:
         columns: [topic_id, post_number]
   uploads:
     ignore:
-      - original_filename  # NOTE: Maybe allow name transforms too??
+      - original_filename
       - filesize
       - width
       - height
@@ -357,12 +367,11 @@ tables:
       - name: user_field_values_multiselect
         columns: [user_id, field_id, value]
         unique: true
-        condition: is_multiselect_field = TRUE
+        condition: WHERE is_multiselect_field = TRUE
       - name: user_field_values_not_multiselect
         columns: [user_id, field_id]
         unique: true
-        condition: is_multiselect_field = FALSE
-  # TODO: allow primary key flag to be removed
+        condition: WHERE is_multiselect_field = FALSE
   tags:
     include:
       - id
@@ -466,7 +475,7 @@ tables:
 ## See table specific column configuration options above.
 ##
 ## Available Options:
-## ignore:  List of core/plugin?? table columns to ignore and exclude from intermediate schema.
+## ignore:  List of core/plugin table columns to ignore and exclude from intermediate schema.
 columns:
   ignore:
     - updated_at

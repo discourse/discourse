@@ -239,8 +239,8 @@ CREATE TABLE user_field_values (
   value TEXT
 );
 
-CREATE UNIQUE INDEX user_field_values_multiselect ON user_field_values (user_id, field_id, value) is_multiselect_field = TRUE;
-CREATE UNIQUE INDEX user_field_values_not_multiselect ON user_field_values (user_id, field_id) is_multiselect_field = FALSE;
+CREATE UNIQUE INDEX user_field_values_multiselect ON user_field_values (user_id, field_id, value) WHERE is_multiselect_field = TRUE;
+CREATE UNIQUE INDEX user_field_values_not_multiselect ON user_field_values (user_id, field_id) WHERE is_multiselect_field = FALSE;
 
 CREATE TABLE user_fields (
   id INTEGER NOT NULL PRIMARY KEY,
@@ -291,6 +291,10 @@ CREATE TABLE users (
 
 
 /*
+Core table columns implicitly excluded from the generated schema above via the `include` configuration option
+in `schema.yml`. This serves as an inventory of these columns, allowing new core additions to be tracked and,
+if necessary, synchronized with the intermediate database schema.
+
 Table: groups
 --------------
  created_at datetime false
