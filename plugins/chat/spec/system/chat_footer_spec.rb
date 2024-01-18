@@ -14,6 +14,8 @@ RSpec.describe "Chat footer on mobile", type: :system, mobile: true do
 
   context "with multiple tabs" do
     it "shows footer" do
+      SiteSetting.chat_threads_enabled = false
+
       visit("/")
       chat_page.open_from_header
 

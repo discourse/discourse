@@ -78,7 +78,7 @@ module Chat
       Jobs.enqueue(Jobs::Chat::MarkAllChannelThreadsRead, channel_id: channel.id)
     end
 
-    def update_site_settings_if_needed(channel:, **)
+    def update_site_settings_if_needed
       SiteSetting.chat_threads_enabled = Chat::Channel.exists?(threading_enabled: true)
     end
 
