@@ -994,6 +994,7 @@ RSpec.describe GroupsController do
           mentionable_level: 2,
           messageable_level: 2,
           default_notification_level: 2,
+          members_visibility_level: 2,
         )
 
         put "/groups/#{group.id}.json",
@@ -1007,6 +1008,7 @@ RSpec.describe GroupsController do
                 mentionable_level: 1,
                 messageable_level: 1,
                 default_notification_level: 1,
+                members_visibility_level: 1,
                 tracking_category_ids: [category.id],
                 tracking_tags: [tag.name],
               },
@@ -1025,6 +1027,7 @@ RSpec.describe GroupsController do
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)
         expect(group.default_notification_level).to eq(1)
+        expect(group.members_visibility_level).to eq(1)
         expect(group.group_category_notification_defaults.first&.category).to eq(category)
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
       end

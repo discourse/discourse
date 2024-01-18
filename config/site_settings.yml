@@ -1756,6 +1756,13 @@ trust:
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  post_links_allowed_groups:
+    default: "10"
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
@@ -2328,10 +2335,10 @@ developer:
     default: ""
     allow_any: false
     refresh: true
-  lazy_load_categories:
-    default: false
-    client: true
-    hidden: true
+  lazy_load_categories_groups:
+    default: ""
+    type: group_list
+    list_type: compact
   warn_critical_js_deprecations:
     default: true
     client: true
