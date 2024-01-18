@@ -79,8 +79,7 @@ module Chat
     end
 
     def update_site_settings_if_needed(channel:, **)
-      return if !(context.threading_enabled_changed && channel.threading_enabled)
-      SiteSetting.chat_threads_enabled = true if SiteSetting.chat_threads_enabled == false
+      Jobs.enqueue(Jobs::Chat::UpdateChatThreadsEnabled)
     end
 
     def publish_channel_update(channel:, guardian:, **)
