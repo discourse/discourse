@@ -14,7 +14,7 @@ chat:
     refresh: true
   chat_threads_enabled:
     client: true
-    default: true
+    default: false
     hidden: true
   needs_chat_seeded:
     default: true
