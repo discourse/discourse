@@ -364,10 +364,10 @@ def update_posts
 
   DB.exec <<~SQL
     UPDATE posts AS replies
-    SET reply_to_user_id = replies.user_id
-    FROM posts
-    WHERE posts.topic_id = replies.topic_id
-      AND posts.post_number = replies.reply_to_post_number
+    SET reply_to_user_id = original.user_id
+    FROM posts AS original
+    WHERE original.topic_id = replies.topic_id
+      AND original.post_number = replies.reply_to_post_number
       AND replies.reply_to_post_number IS NOT NULL
       AND replies.reply_to_user_id IS NULL
       AND replies.post_number <> replies.reply_to_post_number
