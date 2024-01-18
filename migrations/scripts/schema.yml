@@ -3,8 +3,10 @@
 ## After modifying this file, regenerate the base intermediate schema
 ## by running the `generate_schema` script
 
-output_directory: ../common/intermediate_db_schema
-output_filename: 000_base_schema.sql
+# Default relative path for generated base schema file.
+# An absolute path can also be provided to the script as the first CLI argument.
+# If the CLI argument is present, it takes precedence over the value specified here.
+output_file_path: ../common/intermediate_db_schema/000_base_schema.sql
 
 ## Tables to include in the generated base intermediate schema.
 ##

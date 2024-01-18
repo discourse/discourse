@@ -19,9 +19,8 @@ module Migrations
       @output_stream = StringIO.new
       @indirectly_ignored_columns = Hash.new { |h, k| h[k] = [] }
 
-      @output_directory = config[:output_directory]
-      @output_filename = config[:output_filename]
-      @output_file_path = opts[:output_file_path]
+      @output_file_path = opts[:output_file_path] || config[:output_file_path]
+
       @table_configs = config[:tables]
       @column_configs = config[:columns]
 
@@ -82,11 +81,11 @@ module Migrations
     end
 
     def generate_migration_file
-      output_filename = @output_file_path || File.join(__dir__, @output_directory, @output_filename)
+      file_path = File.expand_path(@output_file_path, __dir__)
 
-      puts "Generating base migration file '#{output_filename}'..."
+      puts "Generating base migration file '#{file_path}'..."
 
-      File.open(output_filename, "w") { |f| f << @output_stream.string.chomp }
+      File.open(file_path, "w") { |f| f << @output_stream.string.chomp }
     end
 
     def generate_column(column)
