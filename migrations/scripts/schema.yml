@@ -6,10 +6,10 @@
 output_directory: ../common/intermediate_db_schema
 output_filename: 000_base_schema.sql
 
-## Tables to include in the generated base intermidate schema.
+## Tables to include in the generated base intermediate schema.
 ##
 ## Available table options:
-## ignore:      List of columns to ingore
+## ignore:      List of columns to ignore
 ## primary_key: Literal or list of columns to use as primary
 ## extend:      A list of objects describing new columns to added. Add a new column
 ##              or transform an existing one
@@ -464,7 +464,7 @@ tables:
 ## See table specific column configuration options above.
 ##
 ## Available Options:
-## ignore:  List of core/plugin?? table columns to ignore and exclude from intermidate schema.
+## ignore:  List of core/plugin?? table columns to ignore and exclude from intermediate schema.
 columns:
   ignore:
     - updated_at

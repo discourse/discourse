@@ -11,7 +11,7 @@ puts "Loading application..."
 require_relative "../../config/environment"
 
 module Migrations
-  class GenerateSchema
+  class SchemaGenerator
     def initialize(opts = {})
       config = YAML.load_file(File.join(__dir__, "schema.yml"), symbolize_names: true)
 
@@ -252,4 +252,4 @@ module Migrations
   end
 end
 
-Migrations::GenerateSchema.new(output_file_path: ARGV.first).run
+Migrations::SchemaGenerator.new(output_file_path: ARGV.first).run

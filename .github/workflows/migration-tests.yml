@@ -125,7 +125,7 @@ jobs:
       - name: Check core database drift
         run: |
           mkdir /tmp/intermediate_db
-          ./migrations/scripts/generate_schema /tmp/intermediate_db/base_migration.sql
+          ./migrations/scripts/schema_generator /tmp/intermediate_db/base_migration.sql
           diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
 
       - name: RSpec
