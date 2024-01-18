@@ -15,7 +15,7 @@ class AddThreadsEnabledSiteSetting < ActiveRecord::Migration[7.0]
       DB.exec(
         "INSERT INTO site_settings(name, value, data_type, created_at, updated_at) VALUES('chat_threads_enabled', '#{enable_threads}', 1, NOW(), NOW())",
       )
-    elsif threads_enabled == "f"
+    elsif threads_enabled == "f" && threading_enabled_channels.present?
       DB.exec("UPDATE site_settings SET value = 't' WHERE name = 'chat_threads_enabled'")
     end
   end
