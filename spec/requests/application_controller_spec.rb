@@ -667,7 +667,35 @@ RSpec.describe ApplicationController do
       expect(response.headers).to_not include("Content-Security-Policy-Report-Only")
     end
 
-    it "when GTM is enabled it adds the same nonce to the policy and the GTM tag" do
+    it "when CSP is enabled and GTM is disabled it adds the same nonce to the policy and the CSP tag" do
+      SiteSetting.content_security_policy = true
+      SiteSetting.content_security_policy_report_only = true
+
+      get "/latest"
+
+      script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
+      report_only_script_src =
+        parse(response.headers["Content-Security-Policy-Report-Only"])["script-src"]
+
+      nonce = extract_nonce_from_script_src(script_src)
+      report_only_nonce = extract_nonce_from_script_src(report_only_script_src)
+
+      expect(nonce).to eq(report_only_nonce)
+
+      csp_nonce_tag = Nokogiri::HTML5.fragment(response.body).css("#data-csp-nonce").first
+      expect(csp_nonce_tag["data-nonce"]).to eq(nonce)
+    end
+
+    it "when CSP is disabled it does not render the CSP tag" do
+      SiteSetting.content_security_policy = false
+      SiteSetting.content_security_policy_report_only = false
+
+      get "/latest"
+
+      expect(response.body).not_to have_tag("#data-csp-nonce")
+    end
+
+    it "when GTM is enabled it adds the same nonce to the policy and the CSP tag" do
       SiteSetting.content_security_policy = true
       SiteSetting.content_security_policy_report_only = true
       SiteSetting.gtm_container_id = "GTM-ABCDEF"
@@ -683,8 +711,8 @@ RSpec.describe ApplicationController do
 
       expect(nonce).to eq(report_only_nonce)
 
-      gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
-      expect(gtm_meta_tag["data-nonce"]).to eq(nonce)
+      csp_nonce_tag = Nokogiri::HTML5.fragment(response.body).css("#data-csp-nonce").first
+      expect(csp_nonce_tag["data-nonce"]).to eq(nonce)
     end
 
     it "doesn't reuse nonces between requests" do
@@ -699,7 +727,7 @@ RSpec.describe ApplicationController do
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("store")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+      expect(response.headers).not_to include("Discourse-CSP-Nonce-Placeholder")
 
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
       report_only_script_src =
@@ -710,13 +738,13 @@ RSpec.describe ApplicationController do
 
       expect(first_nonce).to eq(first_report_only_nonce)
 
-      gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
-      expect(gtm_meta_tag["data-nonce"]).to eq(first_nonce)
+      csp_nonce_tag = Nokogiri::HTML5.fragment(response.body).css("#data-csp-nonce").first
+      expect(csp_nonce_tag["data-nonce"]).to eq(first_nonce)
 
       get "/latest"
 
       expect(response.headers["X-Discourse-Cached"]).to eq("true")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+      expect(response.headers).not_to include("Discourse-CSP-Nonce-Placeholder")
 
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
       report_only_script_src =
@@ -728,8 +756,8 @@ RSpec.describe ApplicationController do
       expect(second_nonce).to eq(second_report_only_nonce)
 
       expect(first_nonce).not_to eq(second_nonce)
-      gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
-      expect(gtm_meta_tag["data-nonce"]).to eq(second_nonce)
+      csp_nonce_tag = Nokogiri::HTML5.fragment(response.body).css("#data-csp-nonce").first
+      expect(csp_nonce_tag["data-nonce"]).to eq(second_nonce)
     end
 
     it "when splash screen is enabled it adds the fingerprint to the policy" do

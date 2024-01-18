@@ -167,7 +167,7 @@ module Discourse
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware
 
-    require "middleware/gtm_script_nonce_injector"
+    require "middleware/csp_script_nonce_injector"
     config.middleware.insert_after(ActionDispatch::Flash, Middleware::CspScriptNonceInjector)
 
     require "middleware/discourse_public_exceptions"

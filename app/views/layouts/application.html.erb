@@ -7,6 +7,8 @@
     <meta name="discourse_theme_id" content="<%= theme_id %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
 
+    <%= render_csp_nonce_code %>
+
     <%- if GlobalSetting.preload_link_header %>
       <%= render partial: "common/discourse_preload_stylesheet" %>
     <%- end %>
@@ -59,7 +61,6 @@
     <%- end %>
 
     <%= render_google_tag_manager_head_code %>
-    <%= render_csp_nonce_code %>
     <%= render_google_universal_analytics_code %>
     <link id="manifest-link" rel="manifest" href=<%= manifest_url %> crossorigin="use-credentials">
 

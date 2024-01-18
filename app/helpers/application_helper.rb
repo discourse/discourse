@@ -67,12 +67,8 @@ module ApplicationHelper
 
   def csp_nonce_placeholder
     placeholder = "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
-    if response.headers["Discourse-CSP-Nonce-Placeholder"]
-      response.headers["Discourse-CSP-Nonce-Placeholder"]
-    else
-      response.headers["Discourse-CSP-Nonce-Placeholder"] = placeholder
-      placeholder
-    end
+    response.headers["Discourse-CSP-Nonce-Placeholder"] = placeholder
+    placeholder
   end
 
   def shared_session_key

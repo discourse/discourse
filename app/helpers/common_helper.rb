@@ -12,7 +12,9 @@ module CommonHelper
   end
 
   def render_csp_nonce_code
-    render partial: "common/csp_nonce"
+    if SiteSetting.content_security_policy || SiteSetting.content_security_policy_report_only
+      render partial: "common/csp_nonce"
+    end
   end
 
   def render_google_tag_manager_body_code
