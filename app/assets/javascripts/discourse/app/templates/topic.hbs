@@ -542,12 +542,7 @@
           />
         {{else}}
           <div id="topic-footer-buttons">
-            <DButton
-              @icon="reply"
-              @action={{route-action "showLogin"}}
-              @label="topic.reply.title"
-              class="btn-primary"
-            />
+            <AnonymousTopicFooterButtons @topic={{this.model}} />
           </div>
         {{/if}}
       {{/if}}
