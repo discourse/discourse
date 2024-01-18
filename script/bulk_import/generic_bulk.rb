@@ -75,35 +75,35 @@ class BulkImport::Generic < BulkImport::Base
 
     import_topics
     import_posts
-    # import_post_custom_fields
-    #
-    # import_polls
-    # import_poll_options
-    # import_poll_votes
-    #
-    # import_topic_tags
-    # import_topic_allowed_users
-    #
-    # import_likes
-    # import_votes
-    # import_answers
-    # import_gamification_scores
-    # import_post_events
-    #
-    # import_badge_groupings
-    # import_badges
-    # import_user_badges
-    #
-    # import_upload_references
-    # import_optimized_images
-    #
-    # import_topic_users
-    # update_topic_users
-    #
-    # import_user_stats
-    #
-    # import_permalink_normalizations
-    # import_permalinks
+    import_post_custom_fields
+
+    import_polls
+    import_poll_options
+    import_poll_votes
+
+    import_topic_tags
+    import_topic_allowed_users
+
+    import_likes
+    import_votes
+    import_answers
+    import_gamification_scores
+    import_post_events
+
+    import_badge_groupings
+    import_badges
+    import_user_badges
+
+    import_upload_references
+    import_optimized_images
+
+    import_topic_users
+    update_topic_users
+
+    import_user_stats
+
+    import_permalink_normalizations
+    import_permalinks
   end
 
   def execute_after
