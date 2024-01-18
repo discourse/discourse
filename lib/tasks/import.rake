@@ -767,14 +767,14 @@ def import_rebake_posts(posts)
   Jobs.run_immediately!
   OptimizedImage.lock_per_machine = false
 
+  posts = posts.where("baked_version <> ? or baked_version IS NULL", Post::BAKED_VERSION)
+
   max_count = posts.count
   current_count = 0
 
-  posts
-    .where("baked_version <> ? or baked_version IS NULL", Post::BAKED_VERSION)
-    .find_each(order: :desc) do |post|
-      post.rebake!
-      current_count += 1
-      print "\r%7d / %7d" % [current_count, max_count]
-    end
+  posts.find_each(order: :desc) do |post|
+    post.rebake!
+    current_count += 1
+    print "\r%7d / %7d" % [current_count, max_count]
+  end
 end
