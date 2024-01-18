@@ -714,14 +714,15 @@ class BulkImport::Generic < BulkImport::Base
             end
           elsif mention["type"] == "group"
             if mention["id"]
-              group_names[group_id_from_imported_id(mention["id"])]
+              group_id = group_id_from_imported_id(mention["id"])
+              group_id ? group_names[group_id] : mention["name"]
             else
               mention["name"]
             end
           end
 
         puts "#{mention["type"]} not found -- #{mention["placeholder"]}" unless name
-        raw.gsub!(mention["placeholder"], "@#{name}")
+        raw.gsub!(mention["placeholder"], " @#{name} ")
       end
     end
 
