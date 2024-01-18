@@ -79,7 +79,7 @@ module Chat
     end
 
     def update_site_settings_if_needed(channel:, **)
-      Jobs.enqueue(Jobs::Chat::UpdateChatThreadsEnabled)
+      SiteSetting.chat_threads_enabled = Chat::Channel.exists?(threading_enabled: true)
     end
 
     def publish_channel_update(channel:, guardian:, **)

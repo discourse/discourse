@@ -49,6 +49,7 @@ RSpec.describe "Chat footer on mobile", type: :system, mobile: true do
 
   context "with only 1 tab" do
     before do
+      SiteSetting.chat_threads_enabled = false
       SiteSetting.direct_message_enabled_groups = "3" # staff only
     end
 
