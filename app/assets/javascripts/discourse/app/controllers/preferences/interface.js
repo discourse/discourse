@@ -44,6 +44,10 @@ export default Controller.extend({
     this._super(...arguments);
 
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
+
+    if (this.siteSettings.experimental_hot_topics) {
+      USER_HOMES[8] = "hot";
+    }
   },
 
   @discourseComputed("makeThemeDefault")
