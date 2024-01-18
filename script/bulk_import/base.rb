@@ -1703,7 +1703,7 @@ class BulkImport::Base
     cooked = @markdown.render(cooked).scrub.strip
 
     cooked.gsub!(
-      %r{\[QUOTE="?([^,"]+)(?:, post:(\d+), topic:(\d+))?(?:, username:([^"]*))?"?\](.+?)\[/QUOTE\]}im,
+      %r{\[QUOTE=(?:"|&quot;)?(.+?)(?:, post:(\d+), topic:(\d+))?(?:, username:(.+?))?(?:"|&quot;)?\](.+?)\[/QUOTE\]}im,
     ) do
       name_or_username, post_id, topic_id, username, quote = $1, $2, $3, $4, $5
       username ||= name_or_username
