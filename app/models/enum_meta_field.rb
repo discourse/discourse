@@ -1,3 +1,3 @@
 class EnumMetaField < ActiveRecord::Base
-  belongs_to :meta_field
+  has_one :meta_field, as: :fieldable, touch: true
 end
