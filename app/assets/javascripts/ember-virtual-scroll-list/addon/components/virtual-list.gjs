@@ -89,7 +89,7 @@ export default class VirtualList extends Component {
       this.virtual.handleScroll(offset, pxToTop);
     }
 
-    this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 250);
+    this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 200);
 
     next(() => {
       schedule("afterRender", () => {
@@ -268,26 +268,19 @@ export default class VirtualList extends Component {
   }
 
   computeSlots() {
-    const slots = [];
-
     if (!this.range) {
-      return slots;
+      return [];
     }
 
     const { start, end } = this.range;
-
     if (!start || !end) {
-      return slots;
+      return [];
     }
-    const nodes = this.args.sources.forRange(start, end);
 
-    nodes.forEach((node) => {
-      const source = node.value;
-      const uniqueKey = source.id;
-
-      slots.push({
-        uniqueKey,
-        source,
+    this.slots = this.args.sources.forRange(start, end).map((node) => {
+      return {
+        uniqueKey: node.value.id,
+        source: node.value,
         resizer: modifier((element, [key]) => {
           let observer = new ResizeObserver((item) => {
             this.onItemResized?.(key, item[0].contentRect.height);
@@ -298,10 +291,8 @@ export default class VirtualList extends Component {
             observer?.disconnect();
           };
         }),
-      });
+      };
     });
-
-    this.slots = slots;
 
     this.#checkFill();
     this.refreshScrollState();
