@@ -77,13 +77,16 @@ module SiteSettings::DeprecatedSettings
 
     if tl_and_staff
       valid_auto_groups_excluding_staff_and_admins =
-        valid_auto_groups - [Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:admins]]
+        valid_auto_groups -
+          [Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:admins], Group::AUTO_GROUPS[:moderators]]
 
       if valid_auto_groups_excluding_staff_and_admins.any?
         return valid_auto_groups_excluding_staff_and_admins.min - Group::AUTO_GROUPS[:trust_level_0]
       end
 
-      if valid_auto_groups.include?(Group::AUTO_GROUPS[:staff])
+      if valid_auto_groups.include?(Group::AUTO_GROUPS[:moderators])
+        "moderator"
+      elsif valid_auto_groups.include?(Group::AUTO_GROUPS[:staff])
         "staff"
       elsif valid_auto_groups.include?(Group::AUTO_GROUPS[:admins])
         "admin"
