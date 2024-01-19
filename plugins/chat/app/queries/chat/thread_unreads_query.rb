@@ -57,6 +57,7 @@ module Chat
           AND user_chat_thread_memberships.notification_level NOT IN (:quiet_notification_levels)
           AND original_message.deleted_at IS NULL
           AND user_chat_channel_memberships.muted = false
+          AND user_chat_channel_memberships.user_id = :user_id
         ) AS unread_count,
         0 AS mention_count,
         chat_threads.channel_id,
