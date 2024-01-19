@@ -497,7 +497,7 @@ export default class ChatChannel extends Component {
 
     if (state.atBottom) {
       this.fetchMoreMessages({ direction: FUTURE });
-      this.chatChannelScrollPositions.remove(this.args.channel.id);
+      this.chatChannelScrollPositions.delete(this.args.channel.id);
     } else {
       this.chatChannelScrollPositions.set(
         this.args.channel.id,
