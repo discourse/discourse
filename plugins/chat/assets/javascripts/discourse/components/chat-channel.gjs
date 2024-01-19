@@ -175,6 +175,7 @@ export default class ChatChannel extends Component {
   onPresenceChangeCallback(present) {
     if (present) {
       this.debouncedUpdateLastReadMessage();
+      bodyScrollFix({ delayed: true });
     }
   }
 
