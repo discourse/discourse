@@ -358,4 +358,24 @@ RSpec.describe "Chat channel", type: :system do
       )
     end
   end
+
+  context "when navigating from one channel to another" do
+    fab!(:channel_2) { Fabricate(:chat_channel) }
+
+    before do
+      channel_2.add(current_user)
+      Fabricate.times(50, :chat_message, chat_channel: channel_1)
+    end
+
+    it "remembers the scroll position" do
+      chat_page.visit_channel(channel_1, message_id: channel_1.chat_messages[2].id)
+
+      expect(channel_page).to have_css(".chat-channel--saved-scroll-position")
+
+      sidebar_page.open_channel(channel_2)
+      sidebar_page.open_channel(channel_1)
+
+      expect(channel_page.messages).to have_message(id: channel_1.chat_messages[2].id)
+    end
+  end
 end

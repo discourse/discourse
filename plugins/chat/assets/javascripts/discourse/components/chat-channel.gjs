@@ -62,6 +62,7 @@ export default class ChatChannel extends Component {
   @service chatDraftsManager;
   @service chatEmojiPickerManager;
   @service chatStateManager;
+  @service chatChannelScrollPositions;
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
   @service currentUser;
@@ -93,6 +94,10 @@ export default class ChatChannel extends Component {
 
   get currentUserMembership() {
     return this.args.channel.currentUserMembership;
+  }
+
+  get hasSavedScrollPosition() {
+    return !!this.chatChannelScrollPositions.get(this.args.channel.id);
   }
 
   @action
@@ -157,6 +162,10 @@ export default class ChatChannel extends Component {
 
     if (this.args.targetMessageId) {
       this.debounceHighlightOrFetchMessage(this.args.targetMessageId);
+    } else if (this.chatChannelScrollPositions.get(this.args.channel.id)) {
+      this.debounceHighlightOrFetchMessage(
+        this.chatChannelScrollPositions.get(this.args.channel.id)
+      );
     } else {
       this.fetchMessages({ fetch_from_last_read: true });
     }
@@ -191,7 +200,10 @@ export default class ChatChannel extends Component {
     );
 
     if (findArgs.target_message_id) {
-      this.scrollToMessageId(findArgs.target_message_id, { highlight: true });
+      this.scrollToMessageId(findArgs.target_message_id, {
+        highlight: true,
+        position: findArgs.position,
+      });
     } else if (findArgs.fetch_from_last_read) {
       const lastReadMessageId = this.currentUserMembership?.lastReadMessageId;
       this.scrollToMessageId(lastReadMessageId);
@@ -378,7 +390,7 @@ export default class ChatChannel extends Component {
         )
       );
     } else {
-      this.fetchMessages({ target_message_id: messageId });
+      this.fetchMessages({ target_message_id: messageId, position: "end" });
     }
   }
 
@@ -482,6 +494,12 @@ export default class ChatChannel extends Component {
 
     if (state.atBottom) {
       this.fetchMoreMessages({ direction: FUTURE });
+      this.chatChannelScrollPositions.remove(this.args.channel.id);
+    } else {
+      this.chatChannelScrollPositions.set(
+        this.args.channel.id,
+        state.lastVisibleId
+      );
     }
   }
 
@@ -712,6 +730,7 @@ export default class ChatChannel extends Component {
         "chat-channel"
         (if this.messagesLoader.loading "loading")
         (if this.pane.sending "chat-channel--sending")
+        (if this.hasSavedScrollPosition "chat-channel--saved-scroll-position")
         (unless this.messagesLoader.fetchedOnce "chat-channel--not-loaded-once")
       }}
       {{willDestroy this.teardown}}
