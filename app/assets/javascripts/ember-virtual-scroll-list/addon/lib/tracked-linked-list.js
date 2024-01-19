@@ -552,6 +552,17 @@ export default class TrackedLinkedList {
     return foundNode ?? this.last;
   }
 
+  getNodeAtIndex(index) {
+    if (index < 0 || index >= this.length) {
+      return undefined;
+    }
+    let current = this.head;
+    for (let i = 0; i < index; i++) {
+      current = current.child;
+    }
+    return current;
+  }
+
   get first() {
     return this.head ? this.head : null;
   }
