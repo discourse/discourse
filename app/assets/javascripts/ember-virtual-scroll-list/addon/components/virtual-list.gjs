@@ -204,6 +204,10 @@ export default class VirtualList extends Component {
       id = parseInt(id, 10);
       const targetNode = this.args.sources.get(id);
 
+      if (!targetNode) {
+        resolve(null);
+      }
+
       if (options.position === "top") {
         this.virtual.updateRangeForNode(targetNode);
       } else {
@@ -260,6 +264,10 @@ export default class VirtualList extends Component {
 
   refresh() {
     next(() => {
+      if (!this.args.sources.first || !this.args.sources.last) {
+        return;
+      }
+
       this.virtual.updateRange(
         this.args.sources.first,
         this.args.sources.last,
