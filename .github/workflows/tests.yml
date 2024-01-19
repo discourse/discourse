@@ -323,7 +323,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }})${{ !matrix.updated_ember && ' (Ember 3)' }})
+    name: core frontend (${{ matrix.browser }})${{ !matrix.updated_ember && ' (Ember 3)' }}
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
