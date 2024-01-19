@@ -8,6 +8,7 @@ import {
   disableMissingIconWarning,
   enableMissingIconWarning,
 } from "discourse-common/lib/icon-library";
+import FilterForMore from "select-kit/components/filter-for-more";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 
@@ -34,7 +35,7 @@ export default MultiSelectComponent.extend({
 
   modifyComponentForCollection(collection) {
     if (collection === MORE_ICONS_COLLECTION) {
-      return "filter-for-more";
+      return FilterForMore;
     }
   },
 

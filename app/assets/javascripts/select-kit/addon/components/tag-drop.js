@@ -4,6 +4,7 @@ import { i18n, setting } from "discourse/lib/computed";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import { makeArray } from "discourse-common/lib/helpers";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import FilterForMore from "select-kit/components/filter-for-more";
 import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 import TagsMixin from "select-kit/mixins/tags";
 
@@ -24,8 +25,13 @@ export default ComboBoxComponent.extend(TagsMixin, {
   shouldShowMoreTags: computed(
     "maxTagsInFilterList",
     "topTags.[]",
+    "mainCollection.[]",
     function () {
-      return this.topTags.length > this.maxTagsInFilterList;
+      if (this.selectKit.filter?.length > 0) {
+        return this.mainCollection.length > this.maxTagsInFilterList;
+      } else {
+        return this.topTags.length > this.maxTagsInFilterList;
+      }
     }
   ),
 
@@ -49,7 +55,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   modifyComponentForCollection(collection) {
     if (collection === MORE_TAGS_COLLECTION) {
-      return "tag-drop/more-tags-collection";
+      return FilterForMore;
     }
   },
 
