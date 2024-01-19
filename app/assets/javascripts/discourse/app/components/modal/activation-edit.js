@@ -35,7 +35,7 @@ export default class ActivationEdit extends Component {
   }
 
   @action
-  updateNewEmail(e) {
-    this.newEmail = e.target.value;
+  updateNewEmail(email) {
+    this.newEmail = email;
   }
 }

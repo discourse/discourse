@@ -5,8 +5,8 @@ import i18n from "discourse-common/helpers/i18n";
 
 export default class ActivationEmailForm extends Component {
   @action
-  newEmailChanged(value) {
-    this.args.updateNewEmail?.(value);
+  newEmailChanged(event) {
+    this.args.updateNewEmail(event.target.value);
   }
 
   <template>
