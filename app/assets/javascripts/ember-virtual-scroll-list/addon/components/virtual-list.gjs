@@ -6,6 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel, next, schedule, throttle } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 import { stackingContextFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import {
@@ -64,6 +65,8 @@ export default class VirtualList extends Component {
 
   @bind
   handleScroll(event, force = true) {
+    cancel(this.onScrollEndedHandler);
+
     if (this.#flushIgnoreNextScroll()) {
       return;
     }
@@ -86,6 +89,8 @@ export default class VirtualList extends Component {
       this.virtual.handleScroll(offset, pxToTop);
     }
 
+    this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 250);
+
     next(() => {
       schedule("afterRender", () => {
         this.args.onScroll?.({
@@ -107,6 +112,11 @@ export default class VirtualList extends Component {
         });
       });
     });
+  }
+
+  @action
+  onScrollEnded() {
+    this.args.onScrollEnded?.();
   }
 
   get keeps() {
@@ -269,7 +279,7 @@ export default class VirtualList extends Component {
     if (!start || !end) {
       return slots;
     }
-    const nodes = this.args.sources.forRange(start.value.id, end.value.id);
+    const nodes = this.args.sources.forRange(start, end);
 
     nodes.forEach((node) => {
       const source = node.value;

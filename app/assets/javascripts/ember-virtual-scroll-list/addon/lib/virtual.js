@@ -24,6 +24,7 @@ export default class Virtual {
   calcType = CALC_TYPE.INIT;
   offset = 0;
   direction = "";
+  scrolling = false;
   list = null;
   range = new Range();
 
@@ -132,23 +133,8 @@ export default class Virtual {
     return foundNode ?? this.list.first;
   }
 
-  idsForRange(up, down) {
-    const ids = [];
-
-    if (!up || !down) {
-      return ids;
-    }
-
-    this.list.traverseDownFromNode(up, (node) => {
-      ids.push(node.value.id);
-
-      if (node.value.id === down.value.id) {
-        return false;
-      }
-
-      return true;
-    });
-    return ids;
+  idsForRange(start, end) {
+    return this.list.forRange(start, end).map((node) => node.value.id);
   }
 
   getSizeForIds(ids) {

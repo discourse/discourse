@@ -110,25 +110,11 @@ export default class ChatMessagesLoader {
     let nextTargetMessage;
 
     if (direction === PAST) {
-      model.messagesManager.messages.traverseDown((node) => {
-        if (!node.value.staged) {
-          nextTargetMessage = node;
-          return false;
-        }
-
-        return true;
-      });
+      nextTargetMessage = model.messagesManager.findFirstNonStaged();
     } else {
-      model.messagesManager.messages.traverseUp((node) => {
-        if (!node.value.staged) {
-          nextTargetMessage = node;
-          return false;
-        }
-
-        return true;
-      });
+      nextTargetMessage = model.messagesManager.findLastNonStaged();
     }
 
-    return nextTargetMessage?.value;
+    return nextTargetMessage;
   }
 }

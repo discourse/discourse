@@ -63,6 +63,7 @@ export default class ChatChannel extends Component {
   @tracked needsArrow = false;
   @tracked atBottom = true;
   @tracked uploadDropZone;
+  @tracked scrolling = false;
 
   @cached
   get messagesLoader() {
@@ -139,7 +140,6 @@ export default class ChatChannel extends Component {
       this.fetchMessages({
         fetch_from_last_read: true,
         position: "top",
-        highlight: true,
       });
     }
   }
@@ -171,6 +171,7 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    this.messagesLoader.fetchedOnce = false;
     this.messagesManager.clear();
 
     const result = await this.messagesLoader.load(findArgs);
@@ -278,7 +279,6 @@ export default class ChatChannel extends Component {
       this.messagesManager.isFirstMessage(message) &&
       this.messagesLoader.canLoadMorePast
     ) {
-      this.messagesLoader.fetchedOnce = false;
       this.fetchMessages({ target_date: date, direction: FUTURE });
     } else {
       this.highlightOrFetchMessage(message.id, { position: "top" });
@@ -363,6 +363,7 @@ export default class ChatChannel extends Component {
 
   @action
   scrollToLatestMessage() {
+    this.needsArrow = false;
     if (this.messagesLoader.canLoadMoreFuture) {
       this.fetchMessages();
     } else if (this.messagesManager.messages.length > 0) {
@@ -374,6 +375,8 @@ export default class ChatChannel extends Component {
   @bind
   onScroll(state) {
     bodyScrollFix();
+
+    this.scrolling = true;
 
     DatesSeparatorsPositioner.apply(this.virtualInstance.root);
     this.needsArrow =
@@ -397,6 +400,11 @@ export default class ChatChannel extends Component {
       this.atBottom = true;
       this.fetchMoreMessages({ direction: FUTURE });
     }
+  }
+
+  @action
+  onScrollEnded() {
+    this.scrolling = false;
   }
 
   @action
@@ -602,6 +610,7 @@ export default class ChatChannel extends Component {
         <VirtualList
           @onScroll={{this.onScroll}}
           @onResize={{this.onResize}}
+          @onScrollEnded={{this.onScrollEnded}}
           @onRangeChange={{this.onRangeChange}}
           @onTopNotFilled={{this.onTopNotFilled}}
           @canLoadMoreBottom={{this.messagesLoader.canLoadMoreFuture}}
@@ -613,6 +622,7 @@ export default class ChatChannel extends Component {
         >
           <Message
             @context="channel"
+            @disableMouseEvents={{this.scrolling}}
             @message={{slot.source}}
             @firstRenderedMessage={{firstSlot.source}}
             @lastRenderedMessage={{lastSlot.source}}

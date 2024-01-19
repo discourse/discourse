@@ -11,16 +11,16 @@ export default class ChatMessagesManager {
 
   @cached
   get stagedMessages() {
-    return this.messages.filter((node) => node.value.staged);
+    return this.messages.filter((node) => node.value.staged).mapBy("value");
   }
 
   @cached
   get selectedMessages() {
-    return this.messages.filter((node) => node.value.selected);
+    return this.messages.filter((node) => node.value.selected).mapBy("value");
   }
 
   clearSelectedMessages() {
-    this.selectedMessages.forEach((node) => (node.value.selected = false));
+    this.selectedMessages.forEach((messages) => (messages.selected = false));
   }
 
   clear() {
@@ -41,6 +41,14 @@ export default class ChatMessagesManager {
     return this.messages.get(parseInt(messageId, 10))?.value;
   }
 
+  findFirstNonStaged() {
+    return this.messages.find((node) => !node.value.staged)?.value;
+  }
+
+  findLastNonStaged() {
+    return this.messages.findLast((node) => !node.value.staged)?.value;
+  }
+
   findFirstMessageOfDay(aDate) {
     return this.messages.find(
       (node) =>
@@ -55,8 +63,9 @@ export default class ChatMessagesManager {
   }
 
   findStagedMessage(stagedMessageId) {
-    return this.stagedMessages.find((node) => node.value.id === stagedMessageId)
-      ?.value;
+    return this.stagedMessages.find(
+      (message) => message.id === stagedMessageId
+    );
   }
 
   findIndexOfMessage(id) {
@@ -64,7 +73,7 @@ export default class ChatMessagesManager {
   }
 
   findLastMessage() {
-    return this.messages.findLast((message) => !message.deletedAt);
+    return this.messages.findLast((node) => !node.value.deletedAt)?.value;
   }
 
   findLastUserMessage(user) {

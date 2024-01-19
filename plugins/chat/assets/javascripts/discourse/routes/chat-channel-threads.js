@@ -6,6 +6,7 @@ export default class ChatChannelThreads extends DiscourseRoute {
   @service router;
   @service chatThreadListPane;
   @service chatStateManager;
+  @service chat;
 
   beforeModel(transition) {
     const channel = this.modelFor("chat.channel");
@@ -17,6 +18,11 @@ export default class ChatChannelThreads extends DiscourseRoute {
     }
 
     this.chatStateManager.openSidePanel();
+  }
+
+  @action
+  activate() {
+    this.chat.activeMessage = null;
   }
 
   @action

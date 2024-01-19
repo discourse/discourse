@@ -20,6 +20,7 @@ import {
   PAST,
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
+import { bodyScrollFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -44,6 +45,7 @@ export default class ChatThread extends Component {
   @tracked needsArrow = false;
   @tracked uploadDropZone;
   @tracked atBottom = true;
+  @tracked scrolling = false;
 
   @action
   resetIdle() {
@@ -124,7 +126,11 @@ export default class ChatThread extends Component {
 
   @action
   onScroll(state) {
+    bodyScrollFix();
+
     DatesSeparatorsPositioner.apply(this.virtualInstance.root);
+
+    this.scrolling = true;
 
     this.needsArrow =
       (this.messagesLoader.fetchedOnce &&
@@ -138,6 +144,11 @@ export default class ChatThread extends Component {
       this.fetchMoreMessages({ direction: FUTURE });
       this.atBottom = true;
     }
+  }
+
+  @action
+  onScrollEnded() {
+    this.scrolling = false;
   }
 
   @debounceDecorator(READ_INTERVAL_MS)
@@ -227,6 +238,7 @@ export default class ChatThread extends Component {
 
   @action
   scrollToLatestMessage() {
+    this.needsArrow = false;
     if (this.messagesLoader.canLoadMoreFuture) {
       this.fetchMessages();
     } else if (this.messagesManager.messages.length > 0) {
@@ -442,6 +454,7 @@ export default class ChatThread extends Component {
           @onScroll={{this.onScroll}}
           @onResize={{this.onResize}}
           @onRangeChange={{this.onRangeChange}}
+          @onScrollEnded={{this.onScrollEnded}}
           @sources={{this.messagesManager.messages}}
           @registerVirtualInstance={{this.registerVirtualInstance}}
           @onTopNotFilled={{this.onTopNotFilled}}
@@ -452,6 +465,7 @@ export default class ChatThread extends Component {
           <Message
             @context="thread"
             @message={{slot.source}}
+            @disableMouseEvents={{this.scrolling}}
             @firstRenderedMessage={{firstSlot.source}}
             @lastRenderedMessage={{lastSlot.source}}
             @resendStagedMessage={{this.resendStagedMessage}}
