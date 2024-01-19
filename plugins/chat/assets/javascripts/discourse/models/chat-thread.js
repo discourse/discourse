@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import guid from "pretty-text/guid";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -69,7 +68,7 @@ export default class ChatThread {
   }
 
   async stageMessage(message) {
-    message.id = guid();
+    message.id = new Date().getTime();
     message.staged = true;
     message.processed = false;
     message.draft = false;

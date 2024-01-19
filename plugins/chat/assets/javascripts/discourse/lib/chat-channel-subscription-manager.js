@@ -93,6 +93,7 @@ export default class ChatChannelSubscriptionManager {
         this.messagesManager,
         data
       );
+
       if (stagedMessage) {
         return;
       }
@@ -100,30 +101,37 @@ export default class ChatChannelSubscriptionManager {
 
     const message = ChatMessage.create(this.channel, data.chat_message);
     message.manager = this.channel.messagesManager;
+
     this.onNewMessage?.(message);
     this.channel.lastMessage = message;
   }
 
   handleStagedMessage(channel, messagesManager, data) {
-    const stagedMessage = messagesManager.findStagedMessage(data.staged_id);
+    const stagedMessage = messagesManager.findStagedMessage(
+      parseInt(data.staged_id, 10)
+    );
 
     if (!stagedMessage) {
       return;
     }
 
-    stagedMessage.error = null;
+    messagesManager.removeMessage(stagedMessage);
+
     stagedMessage.id = data.chat_message.id;
+    stagedMessage.error = null;
     stagedMessage.staged = false;
     stagedMessage.excerpt = data.chat_message.excerpt;
     stagedMessage.channel = channel;
     stagedMessage.createdAt = new Date(data.chat_message.created_at);
     stagedMessage.cooked = data.chat_message.cooked;
+    messagesManager.addMessages([stagedMessage]);
 
     return stagedMessage;
   }
 
   handleProcessedMessage(data) {
     const message = this.messagesManager.findMessage(data.chat_message.id);
+
     if (message) {
       message.cooked = data.chat_message.cooked;
       message.uploads = cloneJSON(data.chat_message.uploads || []);

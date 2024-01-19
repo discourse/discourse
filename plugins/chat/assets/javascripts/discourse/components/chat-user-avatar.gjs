@@ -10,7 +10,7 @@ export default class ChatUserAvatar extends Component {
 
   get avatar() {
     return htmlSafe(
-      renderAvatar(this.args.user, { imageSize: this.avatarSize })
+      renderAvatar(this.args.user, { imageSize: this.avatarSize, lazy: false })
     );
   }
 

@@ -1,27 +1,28 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { cancel, next, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import VirtualList from "ember-virtual-scroll-list/components/virtual-list";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 import DiscourseURL from "discourse/lib/url";
-import {
+import userPresent, {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import i18n from "discourse-common/helpers/i18n";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
+import {
+  bind,
+  debounce as debounceDecorator,
+} from "discourse-common/utils/decorators";
 import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
+import Message from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
 import {
   FUTURE,
@@ -30,57 +31,38 @@ import {
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import { bodyScrollFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
-import {
-  checkMessageBottomVisibility,
-  checkMessageTopVisibility,
-} from "discourse/plugins/chat/discourse/lib/check-message-visibility";
-import {
-  scrollListToBottom,
-  scrollListToMessage,
-} from "discourse/plugins/chat/discourse/lib/scroll-helpers";
+import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { stackingContextFix } from "../lib/chat-ios-hacks";
-import ChatOnResize from "../modifiers/chat/on-resize";
-import ChatScrollableList from "../modifiers/chat/scrollable-list";
 import ChatComposerChannel from "./chat/composer/channel";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
+import ChatAllLoaded from "./chat-all-loaded";
 import ChatChannelPreviewCard from "./chat-channel-preview-card";
 import ChatMentionWarnings from "./chat-mention-warnings";
-import Message from "./chat-message";
 import ChatNotices from "./chat-notices";
 import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatChannel extends Component {
-  @service appEvents;
   @service capabilities;
   @service chat;
   @service chatApi;
   @service chatChannelsManager;
   @service chatComposerPresenceManager;
   @service chatDraftsManager;
-  @service chatEmojiPickerManager;
   @service chatStateManager;
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
   @service currentUser;
-  @service messageBus;
-  @service router;
   @service site;
+  @service chatChannelScrollPositions;
 
   @tracked sending = false;
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
   @tracked needsArrow = false;
-  @tracked atBottom = false;
+  @tracked atBottom = true;
   @tracked uploadDropZone;
-  @tracked isScrolling = false;
-
-  scrollable = null;
-  _mentionWarningsSeen = {};
-  _unreachableGroupMentions = [];
-  _overMembersLimitGroupMentions = [];
 
   @cached
   get messagesLoader() {
@@ -96,22 +78,10 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  setScrollable(element) {
-    this.scrollable = element;
-  }
-
-  @action
   teardown() {
     document.removeEventListener("keydown", this._autoFocus);
-    this.#cancelHandlers();
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.subscriptionManager.teardown();
-  }
-
-  @action
-  didResizePane() {
-    this.debounceFillPaneAttempt();
-    this.computeDatesSeparators();
   }
 
   @action
@@ -156,24 +126,43 @@ export default class ChatChannel extends Component {
     );
 
     if (this.args.targetMessageId) {
-      this.debounceHighlightOrFetchMessage(this.args.targetMessageId);
+      this.highlightOrFetchMessage(this.args.targetMessageId);
+    } else if (this.chatChannelScrollPositions.get(this.args.channel.id)) {
+      this.fetchMessages({
+        target_message_id: this.chatChannelScrollPositions.get(
+          this.args.channel.id
+        ),
+        highlight: false,
+        position: "bottom",
+      });
     } else {
-      this.fetchMessages({ fetch_from_last_read: true });
+      this.fetchMessages({
+        fetch_from_last_read: true,
+        position: "top",
+        highlight: true,
+      });
     }
   }
 
   @bind
   onNewMessage(message) {
-    stackingContextFix(this.scrollable, () => {
-      this.messagesManager.addMessages([message]);
-    });
-    this.debouncedUpdateLastReadMessage();
+    this.messagesManager.addMessages([message]);
+
+    if (this.atBottom) {
+      if (userPresent()) {
+        this.scrollToLatestMessage();
+      } else {
+        this.needsArrow = true;
+      }
+    }
   }
 
   @bind
   onPresenceChangeCallback(present) {
     if (present) {
-      this.debouncedUpdateLastReadMessage();
+      this.updateLastReadMessage(this.virtualInstance.getLastVisibleId());
+
+      bodyScrollFix(true);
     }
   }
 
@@ -185,31 +174,51 @@ export default class ChatChannel extends Component {
     this.messagesManager.clear();
 
     const result = await this.messagesLoader.load(findArgs);
-    this.messagesManager.messages = this.processMessages(
-      this.args.channel,
-      result
+    this.messagesManager.addMessages(
+      this.processMessages(this.args.channel, result)
     );
+    this.virtualInstance.refresh();
 
     if (findArgs.target_message_id) {
-      this.scrollToMessageId(findArgs.target_message_id, { highlight: true });
+      this.scrollToMessageId(
+        findArgs.target_message_id,
+        Object.assign(
+          {
+            highlight: true,
+            position: "top",
+          },
+          findArgs
+        )
+      );
     } else if (findArgs.fetch_from_last_read) {
       const lastReadMessageId = this.currentUserMembership?.lastReadMessageId;
-      this.scrollToMessageId(lastReadMessageId);
+      this.scrollToMessageId(
+        lastReadMessageId,
+        Object.assign(
+          {
+            position: "bottom",
+          },
+          findArgs
+        )
+      );
     } else if (findArgs.target_date) {
-      this.scrollToMessageId(result.meta.target_message_id, {
-        highlight: true,
-        position: "center",
-      });
+      this.scrollToMessageId(
+        result.meta.target_message_id,
+        Object.assign(
+          {
+            highlight: true,
+          },
+          findArgs
+        )
+      );
     } else {
-      this._ignoreNextScroll = true;
       this.scrollToBottom();
     }
 
-    this.debounceFillPaneAttempt();
-    this.debouncedUpdateLastReadMessage();
+    this.virtualInstance.refreshScrollState();
   }
 
-  async fetchMoreMessages({ direction }, opts = {}) {
+  async fetchMoreMessages({ direction }) {
     if (this.messagesLoader.loading) {
       return;
     }
@@ -224,92 +233,67 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    const targetMessageId = this.messagesManager.messages.lastObject.id;
-    stackingContextFix(this.scrollable, () => {
+    if (direction === PAST) {
+      const targetMessageId = this.messagesManager.messages.first.value.id;
       this.messagesManager.addMessages(messages);
-    });
+      this.virtualInstance.refresh();
 
-    if (direction === FUTURE && !opts.noScroll) {
-      this.scrollToMessageId(targetMessageId, {
-        position: "end",
-        forceAuto: true,
-      });
+      if (this.capabilities.isIOS) {
+        this.scrollToMessageId(targetMessageId, { position: "top" });
+      }
+    } else {
+      const targetMessageId = this.virtualInstance.getLastVisibleId();
+      this.messagesManager.addMessages(messages);
+      this.virtualInstance.refresh();
+      this.scrollToMessageId(targetMessageId, { position: "bottom" });
     }
-
-    this.debounceFillPaneAttempt();
   }
 
   @action
   scrollToBottom() {
-    this._ignoreNextScroll = true;
-    scrollListToBottom(this.scrollable);
+    this.virtualInstance?.scrollToBottom();
+    this.needsArrow = false;
   }
 
-  scrollToMessageId(messageId, options = {}) {
-    this._ignoreNextScroll = true;
-    const message = this.messagesManager.findMessage(messageId);
-    scrollListToMessage(this.scrollable, message, options);
+  async scrollToMessageId(messageId, options = {}) {
+    const message = await this.virtualInstance?.scrollToId(messageId, options);
+
+    if (options.highlight && message) {
+      message.highlight();
+    }
+
+    this.updateLastReadMessage(this.virtualInstance.getLastVisibleId());
+    bodyScrollFix();
   }
 
-  debounceFillPaneAttempt() {
-    this._debouncedFillPaneAttemptHandler = discourseDebounce(
-      this,
-      this.fillPaneAttempt,
-      500
-    );
-  }
-
-  @bind
+  @action
   fetchMessagesByDate(date) {
     if (this.messagesLoader.loading) {
       return;
     }
 
     const message = this.messagesManager.findFirstMessageOfDay(new Date(date));
-    if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
+
+    if (
+      this.messagesManager.isFirstMessage(message) &&
+      this.messagesLoader.canLoadMorePast
+    ) {
+      this.messagesLoader.fetchedOnce = false;
       this.fetchMessages({ target_date: date, direction: FUTURE });
     } else {
-      this.highlightOrFetchMessage(message.id, { position: "center" });
+      this.highlightOrFetchMessage(message.id, { position: "top" });
     }
-  }
-
-  async fillPaneAttempt() {
-    if (!this.messagesLoader.fetchedOnce) {
-      return;
-    }
-
-    // safeguard
-    if (this.messagesManager.messages.length > 200) {
-      return;
-    }
-
-    if (!this.messagesLoader.canLoadMorePast) {
-      return;
-    }
-
-    schedule("afterRender", () => {
-      const firstMessageId = this.messagesManager.messages.firstObject?.id;
-      const messageContainer = this.scrollable.querySelector(
-        `.chat-message-container[data-id="${firstMessageId}"]`
-      );
-      if (
-        messageContainer &&
-        checkMessageTopVisibility(this.scrollable, messageContainer)
-      ) {
-        this.fetchMoreMessages({ direction: PAST });
-      }
-    });
   }
 
   @bind
   processMessages(channel, result) {
     const messages = [];
     let foundFirstNew = false;
-    const hasNewest = this.messagesManager.messages.some((m) => m.newest);
+    const hasNewest = this.messagesManager.messages.some(
+      (node) => node.value.newest
+    );
 
-    result?.messages?.forEach((messageData, index) => {
-      messageData.firstOfResults = index === 0;
-
+    result?.messages?.forEach((messageData) => {
       if (this.currentUser.ignored_users) {
         // If a message has been hidden it is because the current user is ignoring
         // the user who sent it, so we want to unconditionally hide it, even if
@@ -352,84 +336,29 @@ export default class ChatChannel extends Component {
     return messages;
   }
 
-  debounceHighlightOrFetchMessage(messageId, options = {}) {
-    this._debouncedHighlightOrFetchMessageHandler = discourseDebounce(
-      this,
-      this.highlightOrFetchMessage,
-      messageId,
-      options,
-      100
-    );
-  }
-
+  @debounceDecorator(100)
   highlightOrFetchMessage(messageId, options = {}) {
     const message = this.messagesManager.findMessage(messageId);
     if (message) {
-      this.scrollToMessageId(
-        message.id,
-        Object.assign(
-          {
-            highlight: true,
-            position: "start",
-            autoExpand: true,
-            behavior: this.capabilities.isIOS ? "smooth" : null,
-          },
-          options
-        )
-      );
+      this.scrollToMessageId(message.id, options);
     } else {
-      this.fetchMessages({ target_message_id: messageId });
+      this.fetchMessages(
+        Object.assign({}, { target_message_id: messageId }, options)
+      );
     }
   }
 
-  debouncedUpdateLastReadMessage() {
-    this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
-      this,
-      this.updateLastReadMessage,
-      READ_INTERVAL_MS
-    );
-  }
-
-  updateLastReadMessage() {
+  @debounceDecorator(READ_INTERVAL_MS)
+  updateLastReadMessage(id) {
     if (!this.args.channel.isFollowing) {
       return;
     }
 
-    schedule("afterRender", () => {
-      let lastFullyVisibleMessageNode = null;
+    if (!id || id < this.currentUserMembership?.lastReadMessageId) {
+      return;
+    }
 
-      this.scrollable
-        .querySelectorAll(".chat-message-container")
-        .forEach((item) => {
-          if (checkMessageBottomVisibility(this.scrollable, item)) {
-            lastFullyVisibleMessageNode = item;
-          }
-        });
-
-      if (!lastFullyVisibleMessageNode) {
-        return;
-      }
-
-      let lastUnreadVisibleMessage = this.messagesManager.findMessage(
-        lastFullyVisibleMessageNode.dataset.id
-      );
-
-      if (!lastUnreadVisibleMessage) {
-        return;
-      }
-
-      const lastReadId =
-        this.args.channel.currentUserMembership?.lastReadMessageId;
-      // we don't return early if === as we want to ensure different tabs will do the check
-      if (lastReadId > lastUnreadVisibleMessage.id) {
-        return;
-      }
-
-      return this.chatApi.markChannelAsRead(
-        this.args.channel.id,
-        lastUnreadVisibleMessage.id
-      );
-    });
+    return this.chatApi.markChannelAsRead(this.args.channel.id, id);
   }
 
   @action
@@ -437,50 +366,35 @@ export default class ChatChannel extends Component {
     if (this.messagesLoader.canLoadMoreFuture) {
       this.fetchMessages();
     } else if (this.messagesManager.messages.length > 0) {
-      this.scrollToBottom(this.scrollable);
+      this.virtualInstance.refresh();
+      this.scrollToBottom();
     }
   }
 
-  @action
+  @bind
   onScroll(state) {
     bodyScrollFix();
 
-    next(() => {
-      if (this.#flushIgnoreNextScroll()) {
-        return;
-      }
-
-      this.needsArrow =
-        (this.messagesLoader.fetchedOnce &&
-          this.messagesLoader.canLoadMoreFuture) ||
-        (state.distanceToBottom.pixels > 250 && !state.atBottom);
-      this.isScrolling = true;
-      this.debouncedUpdateLastReadMessage();
-
-      if (
-        state.atTop ||
-        (!this.capabilities.isIOS &&
-          state.up &&
-          state.distanceToTop.percentage < 40)
-      ) {
-        this.fetchMoreMessages({ direction: PAST });
-      } else if (state.atBottom) {
-        this.fetchMoreMessages({ direction: FUTURE });
-      }
-    });
-  }
-
-  @action
-  onScrollEnd(state) {
-    resetIdle();
+    DatesSeparatorsPositioner.apply(this.virtualInstance.root);
     this.needsArrow =
       (this.messagesLoader.fetchedOnce &&
         this.messagesLoader.canLoadMoreFuture) ||
-      (state.distanceToBottom.pixels > 250 && !state.atBottom);
-    this.isScrolling = false;
-    this.atBottom = state.atBottom;
+      (state.pxToBottom > 250 && !state.atBottom);
+    this.updateLastReadMessage(state.lastVisibleId);
 
     if (state.atBottom) {
+      this.chatChannelScrollPositions.set(this.args.channel.id, null);
+    } else {
+      this.chatChannelScrollPositions.set(
+        this.args.channel.id,
+        this.virtualInstance?.getLastVisibleId()
+      );
+    }
+
+    if (state.atTop) {
+      this.fetchMoreMessages({ direction: PAST });
+    } else if (state.atBottom) {
+      this.atBottom = true;
       this.fetchMoreMessages({ direction: FUTURE });
     }
   }
@@ -511,9 +425,7 @@ export default class ChatChannel extends Component {
     this.resetComposerMessage();
 
     try {
-      stackingContextFix(this.scrollable, async () => {
-        await this.chatApi.editMessage(this.args.channel.id, message.id, data);
-      });
+      await this.chatApi.editMessage(this.args.channel.id, message.id, data);
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -527,14 +439,11 @@ export default class ChatChannel extends Component {
 
     resetIdle();
 
-    stackingContextFix(this.scrollable, async () => {
-      await this.args.channel.stageMessage(message);
-    });
+    await this.args.channel.stageMessage(message);
 
-    message.manager = this.args.channel.messagesManager;
     this.resetComposerMessage();
 
-    if (!this.capabilities.isIOS && !this.messagesLoader.canLoadMoreFuture) {
+    if (!this.messagesLoader.canLoadMoreFuture) {
       this.scrollToLatestMessage();
     }
 
@@ -546,9 +455,7 @@ export default class ChatChannel extends Component {
         upload_ids: message.uploads.map((upload) => upload.id),
       });
 
-      if (!this.capabilities.isIOS) {
-        this.scrollToLatestMessage();
-      }
+      this.scrollToLatestMessage();
     } catch (error) {
       this._onSendError(message.id, error);
     } finally {
@@ -641,56 +548,6 @@ export default class ChatChannel extends Component {
     return;
   }
 
-  @bind
-  computeDatesSeparators() {
-    schedule("afterRender", () => {
-      const dates = [
-        ...this.scrollable.querySelectorAll(".chat-message-separator-date"),
-      ].reverse();
-      const height = this.scrollable.querySelector(
-        ".chat-messages-container"
-      ).clientHeight;
-
-      dates
-        .map((date, index) => {
-          const item = { bottom: 0, date };
-          const line = date.nextElementSibling;
-
-          if (index > 0) {
-            const prevDate = dates[index - 1];
-            const prevLine = prevDate.nextElementSibling;
-            item.bottom = height - prevLine.offsetTop;
-          }
-
-          if (dates.length === 1) {
-            item.height = height;
-          } else {
-            if (index === 0) {
-              item.height = height - line.offsetTop;
-            } else {
-              const prevDate = dates[index - 1];
-              const prevLine = prevDate.nextElementSibling;
-              item.height =
-                height - line.offsetTop - (height - prevLine.offsetTop);
-            }
-          }
-
-          return item;
-        })
-        // group all writes at the end
-        .forEach((item) => {
-          item.date.style.bottom = item.bottom + "px";
-          item.date.style.height = item.height + "px";
-        });
-    });
-  }
-
-  #cancelHandlers() {
-    cancel(this._debouncedHighlightOrFetchMessageHandler);
-    cancel(this._debouncedUpdateLastReadMessageHandler);
-    cancel(this._debouncedFillPaneAttemptHandler);
-  }
-
   #preloadThreadTrackingState(thread, threadTracking) {
     if (!threadTracking[thread.id]) {
       return;
@@ -700,10 +557,26 @@ export default class ChatChannel extends Component {
     thread.tracking.mentionCount = threadTracking[thread.id].mention_count;
   }
 
-  #flushIgnoreNextScroll() {
-    const prev = this._ignoreNextScroll;
-    this._ignoreNextScroll = false;
-    return prev;
+  @action
+  registerVirtualInstance(instance) {
+    this.virtualInstance = instance;
+  }
+
+  @action
+  onRangeChange() {
+    DatesSeparatorsPositioner.apply(this.virtualInstance.root);
+  }
+
+  @action
+  onResize() {
+    DatesSeparatorsPositioner.apply(this.virtualInstance.root);
+  }
+
+  @action
+  onTopNotFilled() {
+    if (this.messagesLoader.canLoadMorePast) {
+      this.fetchMoreMessages({ direction: PAST });
+    }
   }
 
   <template>
@@ -719,44 +592,38 @@ export default class ChatChannel extends Component {
       {{didUpdate this.loadMessages @targetMessageId}}
       data-id={{@channel.id}}
     >
-
       <ChatChannelStatus @channel={{@channel}} />
       <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
 
-      <div
-        class="chat-messages-scroll chat-messages-container popper-viewport"
-        {{didInsert this.setScrollable}}
-        {{ChatScrollableList
-          (hash
-            onScroll=this.onScroll onScrollEnd=this.onScrollEnd reverse=true
-          )
-        }}
-      >
-        <div
-          class="chat-messages-container"
-          {{ChatOnResize this.didResizePane (hash delay=100 immediate=true)}}
-        >
-          {{#each this.messagesManager.messages key="id" as |message|}}
-            <Message
-              @message={{message}}
-              @disableMouseEvents={{this.isScrolling}}
-              @resendStagedMessage={{this.resendStagedMessage}}
-              @fetchMessagesByDate={{this.fetchMessagesByDate}}
-              @context="channel"
-            />
-          {{else}}
-            {{#unless this.messagesLoader.fetchedOnce}}
-              <ChatSkeleton />
-            {{/unless}}
-          {{/each}}
-        </div>
+      <div class="chat-messages-scroll chat-messages-container popper-viewport">
+        <ChatSkeleton @loader={{this.messagesLoader}} />
 
-        {{! at bottom even if shown at top due to column-reverse  }}
+        <VirtualList
+          @onScroll={{this.onScroll}}
+          @onResize={{this.onResize}}
+          @onRangeChange={{this.onRangeChange}}
+          @onTopNotFilled={{this.onTopNotFilled}}
+          @canLoadMoreBottom={{this.messagesLoader.canLoadMoreFuture}}
+          @sources={{this.messagesManager.messages}}
+          @registerVirtualInstance={{this.registerVirtualInstance}}
+          @keeps={{300}}
+          @estimateSize={{28.5}}
+          as |slot firstSlot lastSlot|
+        >
+          <Message
+            @context="channel"
+            @message={{slot.source}}
+            @firstRenderedMessage={{firstSlot.source}}
+            @lastRenderedMessage={{lastSlot.source}}
+            @resendStagedMessage={{this.resendStagedMessage}}
+            @fetchMessagesByDate={{this.fetchMessagesByDate}}
+            {{slot.resizer slot.uniqueKey}}
+          />
+        </VirtualList>
+
         {{#if this.messagesLoader.loadedPast}}
-          <div class="all-loaded-message">
-            {{i18n "chat.all_loaded"}}
-          </div>
+          <ChatAllLoaded />
         {{/if}}
       </div>
 

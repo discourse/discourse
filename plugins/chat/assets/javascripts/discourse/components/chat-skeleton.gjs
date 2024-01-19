@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
 
 export default class ChatSkeleton extends Component {
   get placeholders() {
@@ -19,34 +21,36 @@ export default class ChatSkeleton extends Component {
   }
 
   <template>
-    <div class="chat-skeleton -animation">
-      {{#each this.placeholders as |placeholder|}}
-        <div class="chat-skeleton__body">
-          <div class="chat-skeleton__message">
-            <div class="chat-skeleton__message-avatar"></div>
-            <div class="chat-skeleton__message-poster"></div>
-            <div class="chat-skeleton__message-content">
-              {{#if placeholder.image}}
-                <div class="chat-skeleton__message-img"></div>
-              {{/if}}
+    {{#if (and @loader.loading (not @loader.fetchedOnce))}}
+      <div class="chat-skeleton -animation">
+        {{#each this.placeholders as |placeholder|}}
+          <div class="chat-skeleton__body">
+            <div class="chat-skeleton__message">
+              <div class="chat-skeleton__message-avatar"></div>
+              <div class="chat-skeleton__message-poster"></div>
+              <div class="chat-skeleton__message-content">
+                {{#if placeholder.image}}
+                  <div class="chat-skeleton__message-img"></div>
+                {{/if}}
 
-              <div class="chat-skeleton__message-text">
-                {{#each placeholder.rows as |row|}}
-                  <div class="chat-skeleton__message-msg" style={{row}}></div>
-                {{/each}}
-              </div>
-
-              {{#if placeholder.reactions}}
-                <div class="chat-skeleton__message-reactions">
-                  {{#each placeholder.reactions}}
-                    <div class="chat-skeleton__message-reaction"></div>
+                <div class="chat-skeleton__message-text">
+                  {{#each placeholder.rows as |row|}}
+                    <div class="chat-skeleton__message-msg" style={{row}}></div>
                   {{/each}}
                 </div>
-              {{/if}}
+
+                {{#if placeholder.reactions}}
+                  <div class="chat-skeleton__message-reactions">
+                    {{#each placeholder.reactions}}
+                      <div class="chat-skeleton__message-reaction"></div>
+                    {{/each}}
+                  </div>
+                {{/if}}
+              </div>
             </div>
           </div>
-        </div>
-      {{/each}}
-    </div>
+        {{/each}}
+      </div>
+    {{/if}}
   </template>
 }

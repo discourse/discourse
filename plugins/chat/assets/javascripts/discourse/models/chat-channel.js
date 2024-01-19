@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import guid from "pretty-text/guid";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -191,7 +190,7 @@ export default class ChatChannel {
   }
 
   async stageMessage(message) {
-    message.id = guid();
+    message.id = new Date().getTime();
     message.staged = true;
     message.processed = false;
     message.draft = false;
@@ -201,12 +200,12 @@ export default class ChatChannel {
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {
         this.messagesManager.addMessages([message]);
+        message.manager = this.messagesManager;
       }
     } else {
       this.messagesManager.addMessages([message]);
+      message.manager = this.messagesManager;
     }
-
-    message.manager = this.messagesManager;
   }
 
   resetDraft(user) {

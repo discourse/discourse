@@ -5,7 +5,6 @@ import Bookmark from "discourse/models/bookmark";
 import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
@@ -48,7 +47,6 @@ export default class ChatMessage {
   @tracked availableFlags;
   @tracked newest;
   @tracked highlighted;
-  @tracked firstOfResults;
   @tracked message;
   @tracked manager;
   @tracked deletedById;
@@ -63,7 +61,6 @@ export default class ChatMessage {
     this.manager = args.manager;
     this.newest = args.newest || false;
     this.draftSaved = args.draftSaved || args.draft_saved || false;
-    this.firstOfResults = args.firstOfResults || args.first_of_results || false;
     this.staged = args.staged || false;
     this.processed = args.processed || true;
     this.edited = args.edited || false;
@@ -162,47 +159,18 @@ export default class ChatMessage {
   }
 
   @cached
-  get firstMessageOfTheDayAt() {
-    if (!this.previousMessage) {
-      return this.#startOfDay(this.createdAt);
-    }
-
-    if (
-      !this.#areDatesOnSameDay(this.previousMessage.createdAt, this.createdAt)
-    ) {
-      return this.#startOfDay(this.createdAt);
-    }
-  }
-
-  @cached
-  get formattedFirstMessageDate() {
-    if (this.firstMessageOfTheDayAt) {
-      return this.#calendarDate(this.firstMessageOfTheDayAt);
-    }
-  }
-
-  #calendarDate(date) {
-    return moment(date).calendar(moment(), {
-      sameDay: `[${I18n.t("chat.chat_message_separator.today")}]`,
-      lastDay: `[${I18n.t("chat.chat_message_separator.yesterday")}]`,
-      lastWeek: "LL",
-      sameElse: "LL",
-    });
-  }
-
-  @cached
   get index() {
     return this.manager?.messages?.indexOf(this);
   }
 
   @cached
   get previousMessage() {
-    return this.manager?.messages?.objectAt?.(this.index - 1);
+    return this.manager?.messages?.get?.(this.id)?.parent?.value;
   }
 
   @cached
   get nextMessage() {
-    return this.manager?.messages?.objectAt?.(this.index + 1);
+    return this.manager?.messages?.get?.(this.id)?.child?.value;
   }
 
   highlight() {
@@ -369,17 +337,5 @@ export default class ChatMessage {
     }
 
     return User.create(user);
-  }
-
-  #areDatesOnSameDay(a, b) {
-    return (
-      a.getFullYear() === b.getFullYear() &&
-      a.getMonth() === b.getMonth() &&
-      a.getDate() === b.getDate()
-    );
-  }
-
-  #startOfDay(date) {
-    return moment(date).startOf("day").format();
   }
 }

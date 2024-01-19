@@ -18,6 +18,7 @@
     "ember-cli-progress-ci",
     "ember-production-deprecations",
     "float-kit",
+    "ember-virtual-scroll-list",
     "pretty-text",
     "select-kit",
     "theme-transpiler",

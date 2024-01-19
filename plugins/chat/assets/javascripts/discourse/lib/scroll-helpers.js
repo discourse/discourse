@@ -1,16 +1,11 @@
 import { schedule } from "@ember/runloop";
-import { stackingContextFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 
 export function scrollListToBottom(list) {
-  stackingContextFix(list, () => {
-    list.scrollTo({ top: 0, behavior: "auto" });
-  });
+  list.scrollTo({ top: 0, behavior: "auto" });
 }
 
 export function scrollListToTop(list) {
-  stackingContextFix(list, () => {
-    list.scrollTo({ top: -list.scrollHeight, behavior: "auto" });
-  });
+  list.scrollTo({ top: -list.scrollHeight, behavior: "auto" });
 }
 
 export function scrollListToMessage(
@@ -18,6 +13,7 @@ export function scrollListToMessage(
   message,
   opts = { highlight: false, position: "start", autoExpand: false }
 ) {
+  return;
   if (!message) {
     return;
   }
@@ -39,11 +35,17 @@ export function scrollListToMessage(
       message.highlight();
     }
 
-    stackingContextFix(list, () => {
-      messageEl.scrollIntoView({
-        behavior: "auto",
-        block: opts.position || "center",
-      });
+    console.log(messageEl);
+
+    messageEl.scrollIntoView({
+      behavior: "auto",
+      block: opts.position || "center",
     });
+
+    // Calculate the total height of the sticky elements
+    let stickyElementsHeight = 0;
+
+    // Adjust the scroll position
+    window.scrollBy(0, 100);
   });
 }

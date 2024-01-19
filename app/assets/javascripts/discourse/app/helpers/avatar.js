@@ -74,6 +74,7 @@ export function renderAvatar(user, options) {
       extraClasses: get(user, "extras") || options.extraClasses,
       title: title || displayName,
       avatarTemplate,
+      lazy: options.lazy,
     });
   } else {
     return "";

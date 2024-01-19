@@ -1,4 +1,4 @@
-import { next, schedule } from "@ember/runloop";
+import { later, next, schedule } from "@ember/runloop";
 import { capabilities } from "discourse/services/capabilities";
 import discourseLater from "discourse-common/lib/later";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
@@ -34,7 +34,7 @@ export function stackingContextFix(scrollable, callback) {
   }
 }
 
-export function bodyScrollFix() {
+export function bodyScrollFix(delayed = false) {
   // when keyboard is visible this will ensure body
   // doesn’t scroll out of viewport
   if (
@@ -42,6 +42,11 @@ export function bodyScrollFix() {
     document.documentElement.classList.contains("keyboard-visible") &&
     !isZoomed()
   ) {
-    document.documentElement.scrollTo(0, 0);
+    later(
+      () => {
+        window.scrollTo(0, 0);
+      },
+      delayed ? 250 : 0
+    );
   }
 }

@@ -34,11 +34,11 @@ export default class ChatMessageActionsDesktop extends Component {
   popper = null;
 
   get message() {
-    return this.chat.activeMessage.model;
+    return this.chat.activeMessage?.model;
   }
 
   get context() {
-    return this.chat.activeMessage.context;
+    return this.chat.activeMessage?.context;
   }
 
   get messageInteractor() {
@@ -64,6 +64,10 @@ export default class ChatMessageActionsDesktop extends Component {
     this.popper?.destroy();
 
     schedule("afterRender", () => {
+      if (!this.message) {
+        return;
+      }
+
       const messageContainer = chatMessageContainer(
         this.message.id,
         this.context
@@ -111,7 +115,13 @@ export default class ChatMessageActionsDesktop extends Component {
   }
 
   <template>
-    {{#if (and this.site.desktopView this.chat.activeMessage.model.persisted)}}
+    {{#if
+      (and
+        this.site.desktopView
+        this.chat.activeMessage
+        this.chat.activeMessage.model.persisted
+      )
+    }}
       <div
         {{didInsert this.setup}}
         {{didUpdate this.setup this.chat.activeMessage.model.id}}

@@ -20,6 +20,7 @@
     will-change: transform;
     @include chat-scrollbar();
     min-height: 1px;
+    position: relative;
 
     .join-channel-btn.in-float {
       position: absolute;

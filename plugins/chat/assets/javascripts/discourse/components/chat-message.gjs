@@ -26,8 +26,7 @@ import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/me
 import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
-import ChatMessageSeparatorDate from "discourse/plugins/chat/discourse/components/chat-message-separator-date";
-import ChatMessageSeparatorNew from "discourse/plugins/chat/discourse/components/chat-message-separator-new";
+import ChatMessageSeparator from "discourse/plugins/chat/discourse/components/chat-message-separator";
 import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
 import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
@@ -49,19 +48,11 @@ export const MESSAGE_CONTEXT_THREAD = "thread";
 
 export default class ChatMessage extends Component {
   @service site;
-  @service dialog;
   @service currentUser;
-  @service appEvents;
   @service capabilities;
   @service chat;
-  @service chatApi;
-  @service chatEmojiReactionStore;
-  @service chatEmojiPickerManager;
   @service chatChannelPane;
   @service chatThreadPane;
-  @service chatChannelsManager;
-  @service router;
-  @service toasts;
 
   @tracked isActive = false;
 
@@ -428,7 +419,11 @@ export default class ChatMessage extends Component {
     }
 
     // this is a micro optimization to avoid layout changes when we load more messages
-    if (message.firstOfResults) {
+    if (message.manager.isFirstMessage(message)) {
+      return false;
+    }
+
+    if (message.id === this.args.firstRenderedMessage?.id) {
       return false;
     }
 
@@ -494,12 +489,13 @@ export default class ChatMessage extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     {{#if this.shouldRender}}
-      {{#if (eq @context "channel")}}
-        <ChatMessageSeparatorDate
+
+      {{#if this.capabilities.isIOS}}
+        <ChatMessageSeparator
           @fetchMessagesByDate={{@fetchMessagesByDate}}
           @message={{@message}}
+          @firstRenderedMessage={{@firstRenderedMessage}}
         />
-        <ChatMessageSeparatorNew @message={{@message}} />
       {{/if}}
 
       <div
@@ -537,6 +533,15 @@ export default class ChatMessage extends Component {
         ...attributes
       >
         {{#if this.show}}
+
+          {{#unless this.capabilities.isIOS}}
+            <ChatMessageSeparator
+              @fetchMessagesByDate={{@fetchMessagesByDate}}
+              @message={{@message}}
+              @firstRenderedMessage={{@firstRenderedMessage}}
+            />
+          {{/unless}}
+
           {{#if this.pane.selectingMessages}}
             <Input
               @type="checkbox"

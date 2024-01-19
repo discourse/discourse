@@ -1,8 +1,9 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
+import TrackedLinkedList from "ember-virtual-scroll-list/lib/tracked-linked-list";
 
 export default class ChatMessagesManager {
-  @tracked messages = [];
+  @tracked messages = new TrackedLinkedList();
 
   constructor(owner) {
     setOwner(this, owner);
@@ -10,52 +11,52 @@ export default class ChatMessagesManager {
 
   @cached
   get stagedMessages() {
-    return this.messages.filterBy("staged");
+    return this.messages.filter((node) => node.value.staged);
   }
 
   @cached
   get selectedMessages() {
-    return this.messages.filterBy("selected");
+    return this.messages.filter((node) => node.value.selected);
   }
 
   clearSelectedMessages() {
-    this.selectedMessages.forEach((message) => (message.selected = false));
+    this.selectedMessages.forEach((node) => (node.value.selected = false));
   }
 
   clear() {
-    this.messages = [];
+    this.messages = new TrackedLinkedList();
+  }
+
+  isFirstMessage(message) {
+    return this.messages.first?.value?.id === message.id;
   }
 
   addMessages(messages = []) {
-    this.messages = this.messages
-      .concat(messages)
-      .uniqBy("id")
-      .sort((a, b) => a.createdAt - b.createdAt);
+    messages.forEach((message) => {
+      this.messages.insert(message);
+    });
   }
 
   findMessage(messageId) {
-    return this.messages.find(
-      (message) => message.id === parseInt(messageId, 10)
-    );
+    return this.messages.get(parseInt(messageId, 10))?.value;
   }
 
-  findFirstMessageOfDay(a) {
+  findFirstMessageOfDay(aDate) {
     return this.messages.find(
-      (b) =>
-        a.getFullYear() === b.createdAt.getFullYear() &&
-        a.getMonth() === b.createdAt.getMonth() &&
-        a.getDate() === b.createdAt.getDate()
-    );
+      (node) =>
+        aDate.getFullYear() === node.value.createdAt.getFullYear() &&
+        aDate.getMonth() === node.value.createdAt.getMonth() &&
+        aDate.getDate() === node.value.createdAt.getDate()
+    )?.value;
   }
 
   removeMessage(message) {
-    return this.messages.removeObject(message);
+    return this.messages.delete(message);
   }
 
   findStagedMessage(stagedMessageId) {
-    return this.stagedMessages.find(
-      (message) => message.id === stagedMessageId
-    );
+    return this.stagedMessages.find((node) => node.value.id === stagedMessageId)
+      ?.value;
   }
 
   findIndexOfMessage(id) {

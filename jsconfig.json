@@ -27,6 +27,9 @@
       "float-kit/*": [
         "./app/assets/javascripts/float-kit/addon/*"
       ],
+      "ember-virtual-scroll-list/*": [
+        "./app/assets/javascripts/ember-virtual-scroll-list/addon/*"
+      ],
       "truth-helpers/*": [
         "./app/assets/javascripts/truth-helpers/addon/*"
       ],

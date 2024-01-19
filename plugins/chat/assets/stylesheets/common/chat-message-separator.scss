@@ -14,7 +14,7 @@
       height: 40px;
       box-sizing: border-box;
       z-index: 1;
-      top: 0;
+      top: -1px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -61,7 +61,6 @@
       height: 40px;
       position: sticky;
       top: -1px;
-
       &.is-pinned,
       &.is-force-pinned {
         .chat-message-separator__text {

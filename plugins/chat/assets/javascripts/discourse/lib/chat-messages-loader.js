@@ -107,8 +107,28 @@ export default class ChatMessagesLoader {
   }
 
   #computeNextTargetMessage(direction, model) {
-    return direction === PAST
-      ? model.messagesManager.messages.find((message) => !message.staged)
-      : model.messagesManager.messages.findLast((message) => !message.staged);
+    let nextTargetMessage;
+
+    if (direction === PAST) {
+      model.messagesManager.messages.traverseDown((node) => {
+        if (!node.value.staged) {
+          nextTargetMessage = node;
+          return false;
+        }
+
+        return true;
+      });
+    } else {
+      model.messagesManager.messages.traverseUp((node) => {
+        if (!node.value.staged) {
+          nextTargetMessage = node;
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    return nextTargetMessage?.value;
   }
 }
