@@ -1961,6 +1961,7 @@ security:
     default: true
   content_security_policy_include_script_src_nonce:
     default: false
+    hidden: true
   content_security_policy_script_src:
     type: simple_list
     default: ""
