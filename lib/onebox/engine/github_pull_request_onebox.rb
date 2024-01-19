@@ -70,8 +70,6 @@ module Onebox
           commit_by: I18n.t("onebox.github.commit_by"),
           comment_by: I18n.t("onebox.github.comment_by"),
           review_by: I18n.t("onebox.github.review_by"),
-          in: I18n.t("onebox.github.in"),
-          to: I18n.t("onebox.github.to"),
         }
       end
 

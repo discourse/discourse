@@ -5246,8 +5246,6 @@ en:
       commit_by: "Commit by"
       comment_by: "Comment by"
       review_by: "Review by"
-      in: "in"
-      to: "to"
       pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
 
   discourse_push_notifications:
