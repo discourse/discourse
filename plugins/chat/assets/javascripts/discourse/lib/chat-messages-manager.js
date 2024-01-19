@@ -69,7 +69,7 @@ export default class ChatMessagesManager {
   }
 
   findIndexOfMessage(id) {
-    return this.messages.findIndex((m) => m.id === id);
+    return this.messages.findIndex(id);
   }
 
   findLastMessage() {

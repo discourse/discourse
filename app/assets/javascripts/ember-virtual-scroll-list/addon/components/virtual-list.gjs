@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { get } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -342,10 +343,14 @@ export default class VirtualList extends Component {
       {{didInsert this.didInsert}}
       {{didUpdate this.handleDataSourcesChange @sources}}
       {{this.onRegisterInstance}}
-      {{this.onResize this.args.onResize}}
+      {{this.onResize @onResize}}
     >
       {{#each this.slots key="uniqueKey" as |slot|}}
-        {{yield slot this.slots.firstObject this.slots.lastObject}}
+        {{yield
+          slot
+          (get this.slots "0" "source")
+          (get this.slots "-1" "source")
+        }}
       {{/each}}
     </div>
   </template>

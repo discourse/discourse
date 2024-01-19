@@ -160,7 +160,7 @@ export default class ChatMessage {
 
   @cached
   get index() {
-    return this.manager?.messages?.indexOf(this);
+    return this.manager?.findIndexOfMessage?.(this.id);
   }
 
   @cached

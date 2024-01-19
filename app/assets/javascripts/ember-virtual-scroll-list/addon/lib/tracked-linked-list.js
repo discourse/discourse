@@ -408,7 +408,7 @@ export default class TrackedLinkedList {
    * is found, its index is returned. Otherwise, -1 is returned to indicate
    * that the node is not in the list.
    *
-   * @param {ListNode} node - The node to search for in the list.
+   * @param {number} id - The id of the node to search for in the list.
    * @returns {number} The index of the given node in the list, or -1 if not found.
    *
    * Example usage:
@@ -416,13 +416,13 @@ export default class TrackedLinkedList {
    * list.insert({ id: 1 });
    * list.insert({ id: 2 });
    * const node = new ListNode({ id: 2 });
-   * console.log(list.getIndex(node)); // Outputs the index of the node with id 2
+   * console.log(list.findIndex(id)); // Outputs the index of the node with id 2
    */
-  getIndex(node) {
+  findIndex(id) {
     let current = this.head;
     let index = 0;
     while (current) {
-      if (current.value.id === node.value.id) {
+      if (current.value.id === id) {
         return index;
       }
       current = current.child;
@@ -461,7 +461,7 @@ export default class TrackedLinkedList {
       return [];
     }
 
-    let result = [start];
+    let result = [];
     while (start) {
       if (start.value.id > end.value.id) {
         break; // Stop iterating if start id is greater than end.value.id
