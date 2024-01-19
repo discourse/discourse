@@ -67,7 +67,13 @@ latest_stable_post_migration = stable_post_migrate_filenames.last
 puts "The latest core post_migrate file in #{previous_stable_version} is #{latest_stable_post_migration}"
 puts 'Promoting this, and all earlier post_migrates, to regular migrations'
 
-promote_threshold = latest_stable_post_migration[VERSION_REGEX, 1].to_i
+promote_threshold = if PLUGINS
+  # Gotta be more conservative here because of SafeMigrate.earliest_post_deploy_version
+  Dir.glob("#{PLUGINS_BASE}/**/db/post_migrate/*.rb").sort.first[VERSION_REGEX, 1].to_i
+else
+  latest_stable_post_migration[VERSION_REGEX, 1].to_i
+end
+
 current_post_migrations =
   if PLUGINS
     puts 'Looking in plugins...'
