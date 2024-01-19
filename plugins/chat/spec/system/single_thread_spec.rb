@@ -195,5 +195,17 @@ describe "Single thread in side panel", type: :system do
         expect(side_panel).to have_open_thread(thread)
       end
     end
+
+    context "when messages are separated by a day" do
+      before do
+        Fabricate(:chat_message, chat_channel: channel, thread: thread, created_at: 2.days.ago)
+      end
+
+      it "shows a date separator" do
+        chat_page.visit_thread(thread)
+
+        expect(page).to have_selector(".chat-thread .chat-message-separator__text", text: "Today")
+      end
+    end
   end
 end

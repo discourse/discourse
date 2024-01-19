@@ -34,6 +34,7 @@ import {
   checkMessageBottomVisibility,
   checkMessageTopVisibility,
 } from "discourse/plugins/chat/discourse/lib/check-message-visibility";
+import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -111,7 +112,7 @@ export default class ChatChannel extends Component {
   @action
   didResizePane() {
     this.debounceFillPaneAttempt();
-    this.computeDatesSeparators();
+    DatesSeparatorsPositioner.apply(this.scrollable);
   }
 
   @action
@@ -443,12 +444,13 @@ export default class ChatChannel extends Component {
 
   @action
   onScroll(state) {
-    bodyScrollFix();
-
     next(() => {
       if (this.#flushIgnoreNextScroll()) {
         return;
       }
+
+      bodyScrollFix();
+      DatesSeparatorsPositioner.apply(this.scrollable);
 
       this.needsArrow =
         (this.messagesLoader.fetchedOnce &&
@@ -639,50 +641,6 @@ export default class ChatChannel extends Component {
     event.preventDefault();
     this.composer.focus({ addText: event.key });
     return;
-  }
-
-  @bind
-  computeDatesSeparators() {
-    schedule("afterRender", () => {
-      const dates = [
-        ...this.scrollable.querySelectorAll(".chat-message-separator-date"),
-      ].reverse();
-      const height = this.scrollable.querySelector(
-        ".chat-messages-container"
-      ).clientHeight;
-
-      dates
-        .map((date, index) => {
-          const item = { bottom: 0, date };
-          const line = date.nextElementSibling;
-
-          if (index > 0) {
-            const prevDate = dates[index - 1];
-            const prevLine = prevDate.nextElementSibling;
-            item.bottom = height - prevLine.offsetTop;
-          }
-
-          if (dates.length === 1) {
-            item.height = height;
-          } else {
-            if (index === 0) {
-              item.height = height - line.offsetTop;
-            } else {
-              const prevDate = dates[index - 1];
-              const prevLine = prevDate.nextElementSibling;
-              item.height =
-                height - line.offsetTop - (height - prevLine.offsetTop);
-            }
-          }
-
-          return item;
-        })
-        // group all writes at the end
-        .forEach((item) => {
-          item.date.style.bottom = item.bottom + "px";
-          item.date.style.height = item.height + "px";
-        });
-    });
   }
 
   #cancelHandlers() {
