@@ -4,7 +4,7 @@
   {{^has_lines}}
     {{#model_file}}
       <iframe class="render-viewer" width="{{width}}" height="{{height}}" src="{{content}}" sandbox="allow-scripts allow-same-origin allow-top-navigation ">
-        Viewer requires iframe.
+        {{i18n.requires_iframe}}
       </iframe>
     {{/model_file}}
 
@@ -51,9 +51,9 @@
 {{/binary}}
 
 {{#binary}}
-  This file is binary. <a href="{{link}}" target="_blank" rel="noopener">show original</a>
+  {{i18n.binary_file}} <a href="{{link}}" target="_blank" rel="noopener">{{i18n.show_original}}</a>
 {{/binary}}
 
 {{#truncated}}
-  This file has been truncated. <a href="{{link}}" target="_blank" rel="noopener">show original</a>
+  {{i18n.truncated_file}} <a href="{{link}}" target="_blank" rel="noopener">{{i18n.show_original}}</a>
 {{/truncated}}
