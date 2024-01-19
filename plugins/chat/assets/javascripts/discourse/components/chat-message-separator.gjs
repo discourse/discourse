@@ -42,10 +42,7 @@ export default class ChatMessageSeparator extends Component {
   get firstMessageOfTheDayAt() {
     const message = this.args.message;
 
-    if (
-      !message.previousMessage ||
-      this.args.firstRenderedMessage?.id === message.id
-    ) {
+    if (!message.previousMessage) {
       return this.#startOfDay(message.createdAt);
     }
 
