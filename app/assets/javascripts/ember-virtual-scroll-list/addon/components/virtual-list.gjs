@@ -286,22 +286,23 @@ export default class VirtualList extends Component {
       return [];
     }
 
-    this.slots = this.args.sources.forRange(start, end).map((node) => {
-      return {
-        uniqueKey: node.value.id,
-        source: node.value,
-        resizer: modifier((element, [key]) => {
-          let observer = new ResizeObserver((item) => {
-            this.onItemResized?.(key, item[0].contentRect.height);
-          });
-          observer.observe(element);
+    this.slots =
+      this.args.sources?.forRange?.(start, end).map((node) => {
+        return {
+          uniqueKey: node.value.id,
+          source: node.value,
+          resizer: modifier((element, [key]) => {
+            let observer = new ResizeObserver((item) => {
+              this.onItemResized?.(key, item[0].contentRect.height);
+            });
+            observer.observe(element);
 
-          return () => {
-            observer?.disconnect();
-          };
-        }),
-      };
-    });
+            return () => {
+              observer?.disconnect();
+            };
+          }),
+        };
+      }) ?? [];
 
     this.#checkFill();
     this.refreshScrollState();
@@ -325,7 +326,7 @@ export default class VirtualList extends Component {
   #checkFill() {
     next(() => {
       schedule("afterRender", () => {
-        if (this.getFirstVisibleId() === this.args.sources.first?.value?.id) {
+        if (this.getFirstVisibleId() === this.args.sources?.first?.value?.id) {
           this.args.onTopNotFilled?.();
           return;
         }

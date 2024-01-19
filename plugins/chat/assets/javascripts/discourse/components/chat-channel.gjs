@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { next, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import VirtualList from "ember-virtual-scroll-list/components/virtual-list";
 import concatClass from "discourse/helpers/concat-class";
@@ -253,17 +254,33 @@ export default class ChatChannel extends Component {
   @action
   scrollToBottom() {
     this.virtualInstance?.scrollToBottom();
-    this.needsArrow = false;
+
+    next(() => {
+      schedule("afterRender", () => {
+        this.updateLastReadMessage(this.virtualInstance.getLastVisibleId());
+        this.needsArrow = false;
+      });
+    });
   }
 
   async scrollToMessageId(messageId, options = {}) {
+    if (!messageId) {
+      this.scrollToBottom();
+      return;
+    }
+
     const message = await this.virtualInstance?.scrollToId(messageId, options);
 
     if (options.highlight && message) {
       message.highlight();
     }
 
-    this.updateLastReadMessage(this.virtualInstance.getLastVisibleId());
+    next(() => {
+      schedule("afterRender", () => {
+        this.updateLastReadMessage(this.virtualInstance.getLastVisibleId());
+        this.needsArrow = messageId !== this.virtualInstance.getLastVisibleId();
+      });
+    });
     bodyScrollFix();
   }
 
@@ -340,7 +357,10 @@ export default class ChatChannel extends Component {
   highlightOrFetchMessage(messageId, options = {}) {
     const message = this.messagesManager.findMessage(messageId);
     if (message) {
-      this.scrollToMessageId(message.id, options);
+      this.scrollToMessageId(
+        message.id,
+        Object.assign({ highlight: true }, options)
+      );
     } else {
       this.fetchMessages(
         Object.assign({}, { target_message_id: messageId }, options)

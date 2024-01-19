@@ -188,6 +188,9 @@ export default class ChatChannelSubscriptionManager {
       targetMsg.expanded = false;
     } else {
       this.messagesManager.removeMessage(targetMsg);
+      // TODO (joffrey): shouldn't be necessary if we were properly tracked
+      this.messagesManager.messages = null;
+      this.messagesManager.messages = this.messagesManager.messages;
     }
 
     if (this.channel.currentUserMembership.lastReadMessageId === targetMsg.id) {
@@ -204,6 +207,9 @@ export default class ChatChannelSubscriptionManager {
       const newMessage = ChatMessage.create(this.model, data.chat_message);
       newMessage.manager = this.messagesManager;
       this.messagesManager.addMessages([newMessage]);
+      // TODO (joffrey): shouldn't be necessary if we were properly tracked
+      this.messagesManager.messages = null;
+      this.messagesManager.messages = this.messagesManager.messages;
     }
   }
 

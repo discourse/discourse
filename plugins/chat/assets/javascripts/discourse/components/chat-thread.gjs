@@ -4,6 +4,7 @@ import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { next, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import VirtualList from "ember-virtual-scroll-list/components/virtual-list";
 import concatClass from "discourse/helpers/concat-class";
@@ -260,6 +261,13 @@ export default class ChatThread extends Component {
     if (options.highlight && message) {
       message.highlight();
     }
+
+    next(() => {
+      schedule("afterRender", () => {
+        this.updateLastReadMessage(this.virtualInstance.getLastVisibleId());
+        bodyScrollFix();
+      });
+    });
   }
 
   @bind

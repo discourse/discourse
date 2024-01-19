@@ -241,7 +241,8 @@ export default class ChatMessageInteractor {
     );
 
     for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
-      manager.messages[i].selected = checked;
+      const m = manager.messages.getNodeAtIndex(i);
+      m.value.selected = checked;
     }
   }
 

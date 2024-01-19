@@ -35,10 +35,11 @@ RSpec.describe "Restore message", type: :system do
         chat_page.visit_channel(channel_1)
       end
 
-      using_session(:regular_user) do
+      using_session(:regular_user) do |session|
         sign_in(regular_user)
         chat_page.visit_channel(channel_1)
         channel_page.messages.delete(message_1)
+        session.quit
       end
 
       using_session(:another_user) do
