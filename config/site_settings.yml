@@ -3029,6 +3029,7 @@ tags:
     client: true
   min_trust_to_create_tag:
     default: "3"
+    type: enum
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   create_tag_allowed_groups:
