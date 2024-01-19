@@ -46,7 +46,6 @@ export default class ChatThread extends Component {
   @tracked needsArrow = false;
   @tracked uploadDropZone;
   @tracked atBottom = true;
-  @tracked scrolling = false;
 
   @action
   resetIdle() {
@@ -131,8 +130,6 @@ export default class ChatThread extends Component {
 
     DatesSeparatorsPositioner.apply(this.virtualInstance.root);
 
-    this.scrolling = true;
-
     this.needsArrow =
       (this.messagesLoader.fetchedOnce &&
         this.messagesLoader.canLoadMoreFuture) ||
@@ -145,11 +142,6 @@ export default class ChatThread extends Component {
       this.fetchMoreMessages({ direction: FUTURE });
       this.atBottom = true;
     }
-  }
-
-  @action
-  onScrollEnded() {
-    this.scrolling = false;
   }
 
   @debounceDecorator(READ_INTERVAL_MS)
@@ -462,7 +454,6 @@ export default class ChatThread extends Component {
           @onScroll={{this.onScroll}}
           @onResize={{this.onResize}}
           @onRangeChange={{this.onRangeChange}}
-          @onScrollEnded={{this.onScrollEnded}}
           @sources={{this.messagesManager.messages}}
           @registerVirtualInstance={{this.registerVirtualInstance}}
           @onTopNotFilled={{this.onTopNotFilled}}
@@ -473,7 +464,6 @@ export default class ChatThread extends Component {
           <Message
             @context="thread"
             @message={{slot.source}}
-            @disableMouseEvents={{this.scrolling}}
             @firstRenderedMessage={{firstSlot.source}}
             @lastRenderedMessage={{lastSlot.source}}
             @resendStagedMessage={{this.resendStagedMessage}}

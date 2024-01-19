@@ -76,6 +76,10 @@ export default class ChatMessagesManager {
     return this.messages.findLast((node) => !node.value.deletedAt)?.value;
   }
 
+  get lastMessage() {
+    return this.messages.last?.value;
+  }
+
   findLastUserMessage(user) {
     return this.messages.findLast(
       (node) => node.value.user.id === user.id && !node.value.deletedAt

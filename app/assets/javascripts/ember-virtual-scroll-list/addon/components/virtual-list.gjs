@@ -278,12 +278,19 @@ export default class VirtualList extends Component {
 
   computeSlots() {
     if (!this.range) {
-      return [];
+      this.slots = [];
+      return;
+    }
+
+    if (!this.args.sources?.length) {
+      this.slots = [];
+      return;
     }
 
     const { start, end } = this.range;
     if (!start || !end) {
-      return [];
+      this.slots = [];
+      return;
     }
 
     this.slots =
