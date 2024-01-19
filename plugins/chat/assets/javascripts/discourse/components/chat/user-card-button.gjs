@@ -15,7 +15,7 @@ export default class ChatUserCardButton extends Component {
   @action
   startChatting() {
     return this.chat
-      .upsertDmChannelForUsernames([this.args.user.username])
+      .upsertDmChannel({ usernames: [this.args.user.username] })
       .then((channel) => {
         this.router.transitionTo("chat.channel", ...channel.routeModels);
         this.appEvents.trigger("card:close");

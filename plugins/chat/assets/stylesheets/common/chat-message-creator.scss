@@ -38,14 +38,26 @@
       color: var(--primary);
       border-color: var(--tertiary);
 
-      .d-icon {
+      .d-icon-times {
         color: var(--primary);
       }
     }
   }
 
-  .d-icon {
+  .d-icon-times {
     margin-left: 0.25rem;
+  }
+
+  .chat-message-creator__group-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 24px;
+    width: 24px;
+
+    .d-icon.d-icon-user-friends {
+      color: var(--primary-high);
+    }
   }
 }
 
@@ -144,6 +156,7 @@
 .chat-message-creator__members-count {
   white-space: nowrap;
   color: var(--primary-medium);
+
   &.-reached-limit {
     color: var(--danger);
   }
@@ -168,17 +181,17 @@
   display: flex;
   flex-direction: column;
 
+  [data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   &-item {
     box-sizing: border-box;
     cursor: pointer;
     padding: 0.5rem 1rem;
     display: flex;
     align-items: center;
-
-    &[data-disabled] {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
 
     .d-icon-users {
       padding: 4px 4px;
@@ -200,28 +213,40 @@
   }
 }
 
-.chat-message-creator__chatable.-user {
-  .chat-user-display-name {
+.chat-message-creator__chatable {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  &.-user .chat-user-display-name {
     padding-left: 0.5rem;
   }
 
-  .chat-message-creator__chatable.-disabled-chat {
-    padding-left: 0.25rem;
-  }
-}
+  &.-group {
+    .chat-message-creator__group-name {
+      padding-left: 0.5rem;
+    }
 
-.chat-message-creator__chatable.-category-channel {
-  .chat-channel-title__category-badge {
+    .chat-message-creator__group-icon .d-icon-user-friends {
+      padding: 5px 5px;
+      box-sizing: border-box;
+      color: var(--primary-high);
+      background: var(--primary-low);
+      border-radius: 100%;
+      width: 24px;
+      height: 22px;
+    }
+  }
+
+  &.-category-channel .chat-channel-title__category-badge {
     display: flex;
     justify-content: center;
     width: 24px;
   }
-}
 
-.chat-message-creator__chatable.-user,
-.chat-message-creator__chatable.-category-channel {
-  display: flex;
-  align-items: center;
+  &.-disabled-chat {
+    padding-left: 0.25rem;
+  }
 
   .unread-indicator {
     margin-left: 0.5rem;
@@ -275,6 +300,7 @@
     transform: scale(0.1);
     opacity: 0;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;

@@ -20,6 +20,7 @@ module Chat
     #   @param [Integer] id of the channel
     #   @param [Hash] params_to_create
     #   @option params_to_create [Array<String>] usernames
+    #   @option params_to_create [Array<String>] groups
     #   @return [Service::Base::Context]
     contract
     model :channel
@@ -27,6 +28,7 @@ module Chat
     model :users, optional: true
 
     transaction do
+      step :validate_user_count
       step :upsert_memberships
       step :recompute_users_count
       step :notice_channel
@@ -35,20 +37,15 @@ module Chat
     # @!visibility private
     class Contract
       attribute :usernames, :array
-      validates :usernames, presence: true
+      attribute :groups, :array
 
       attribute :channel_id, :integer
       validates :channel_id, presence: true
 
-      validate :usernames_length
+      validate :target_presence
 
-      def usernames_length
-        if usernames && usernames.length > SiteSetting.chat_max_direct_message_users + 1 # 1 for current user
-          errors.add(
-            :usernames,
-            "should have less than #{SiteSetting.chat_max_direct_message_users} elements",
-          )
-        end
+      def target_presence
+        usernames.present? || groups.present?
       end
     end
 
@@ -60,15 +57,21 @@ module Chat
     end
 
     def fetch_users(contract:, channel:, **)
-      ::User.where(
-        "username IN (?) AND id NOT IN (?)",
-        [*contract.usernames],
-        channel.chatable.direct_message_users.select(:user_id),
-      ).to_a
+      ::Chat::UsersFromUsernamesAndGroupsQuery.call(
+        usernames: contract.usernames,
+        groups: contract.groups,
+        excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
+      )
     end
 
     def fetch_channel(contract:, **)
       ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
+    end
+
+    def validate_user_count(channel:, users:, **)
+      if channel.user_count + users.length > SiteSetting.chat_max_direct_message_users
+        fail!("should have less than #{SiteSetting.chat_max_direct_message_users} elements")
+      end
     end
 
     def upsert_memberships(channel:, users:, **)
