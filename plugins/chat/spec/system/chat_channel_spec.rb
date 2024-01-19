@@ -376,6 +376,12 @@ RSpec.describe "Chat channel", type: :system do
       sidebar_page.open_channel(channel_1)
 
       expect(channel_page.messages).to have_no_message(id: channel_1.chat_messages[49].id)
+
+      find(".chat-scroll-to-bottom__button.visible").click
+      sidebar_page.open_channel(channel_2)
+      sidebar_page.open_channel(channel_1)
+
+      expect(channel_page.messages).to have_message(id: channel_1.chat_messages[49].id)
     end
   end
 end
