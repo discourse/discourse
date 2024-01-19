@@ -375,7 +375,12 @@ RSpec.describe "Chat channel", type: :system do
       sidebar_page.open_channel(channel_2)
       sidebar_page.open_channel(channel_1)
 
-      expect(channel_page.messages).to have_message(id: channel_1.chat_messages[2].id)
+      # we navigated to message at index 2, but the message at the bottom of the page was at index 10
+      # so we expect to load from this message
+      expect(channel_page.messages).to have_message(
+        id: channel_1.chat_messages[10].id,
+        highlighted: true,
+      )
     end
   end
 end

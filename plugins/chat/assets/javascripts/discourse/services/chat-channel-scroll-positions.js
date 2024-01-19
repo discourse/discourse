@@ -5,13 +5,17 @@ import { TrackedMap } from "@ember-compat/tracked-built-ins";
 export default class ChatChannelScrollPositions extends Service {
   @tracked positions = new TrackedMap();
 
-  add(channelId, position) {
-    this.positions.set(channelId, position);
+  get(id) {
+    return this.positions.get(id);
   }
 
-  remove(channelId) {
-    if (this.positions.has(channelId)) {
-      this.positions.delete(channelId);
+  set(id, position) {
+    this.positions.set(id, position);
+  }
+
+  delete(id) {
+    if (this.positions.has(id)) {
+      this.positions.delete(id);
     }
   }
 }
