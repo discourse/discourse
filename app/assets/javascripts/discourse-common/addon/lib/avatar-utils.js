@@ -81,10 +81,10 @@ export function avatarImg(options, customGetURL) {
   let lazy = "";
   options.lazy ??= true;
   if (options.lazy) {
-    lazy = " loading='lazy'";
+    lazy = " loading='lazy' ";
   }
 
-  return `<img alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}${lazy}>`;
+  return `<img${lazy}alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`;
 }
 
 export function tinyAvatar(avatarTemplate, options) {
