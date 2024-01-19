@@ -735,7 +735,7 @@ task "import:rebake_uncooked_posts_with_polls" => :environment do
 
   posts = Post.where("EXISTS (SELECT 1 FROM polls WHERE polls.post_id = posts.id)")
 
-  rebake_posts(posts)
+  import_rebake_posts(posts)
 end
 
 desc "Rebake posts that contain events"
@@ -747,7 +747,7 @@ task "import:rebake_uncooked_posts_with_events" => :environment do
       "EXISTS (SELECT 1 FROM discourse_post_event_events WHERE discourse_post_event_events.id = posts.id)",
     )
 
-  rebake_posts(posts)
+  import_rebake_posts(posts)
 end
 
 desc "Rebake posts that have tag"
@@ -760,21 +760,21 @@ task "import:rebake_uncooked_posts_with_tag", [:tag_name] => :environment do |_t
       args[:tag_name],
     )
 
-  rebake_posts(posts)
+  import_rebake_posts(posts)
 end
 
-def rebake_posts(posts)
+def import_rebake_posts(posts)
   Jobs.run_immediately!
   OptimizedImage.lock_per_machine = false
+
+  posts = posts.where("baked_version <> ? or baked_version IS NULL", Post::BAKED_VERSION)
 
   max_count = posts.count
   current_count = 0
 
-  posts
-    .where("baked_version <> ? or baked_version IS NULL", Post::BAKED_VERSION)
-    .find_each(order: :desc) do |post|
-      post.rebake!
-      current_count += 1
-      print "\r%7d / %7d" % [current_count, max_count]
-    end
+  posts.find_each(order: :desc) do |post|
+    post.rebake!
+    current_count += 1
+    print "\r%7d / %7d" % [current_count, max_count]
+  end
 end
