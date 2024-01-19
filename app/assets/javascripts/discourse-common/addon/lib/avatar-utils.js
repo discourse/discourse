@@ -78,7 +78,7 @@ export function avatarImg(options, customGetURL) {
     title = ` title='${escaped}'`;
   }
 
-  let lazy = "";
+  let lazy = " ";
   options.lazy ??= true;
   if (options.lazy) {
     lazy = " loading='lazy' ";
