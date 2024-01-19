@@ -7,4 +7,6 @@ class MetaObject < ActiveRecord::Base
   has_many :integer_meta_fields, through: :meta_fields
 
   accepts_nested_attributes_for :string_meta_fields, :enum_meta_fields, :integer_meta_fields
+
+  validates :meta_schema_id, presence: true
 end

@@ -1,19 +1,15 @@
-class MetaFieldType < ActiveRecord::Base
+class MetaColumn < ActiveRecord::Base
   belongs_to :meta_schema
+  belongs_to :detailable, polymorphic: true
 
-  has_one :string_meta_field_type, dependent: :destroy
-  has_one :integer_meta_field_type, dependent: :destroy
-  has_one :enum_meta_field_type, dependent: :destroy
-
-  accepts_nested_attributes_for :integer_meta_field_type
+  delegated_type :detailable, types: %w[StringMetaColumn IntegerMetaColumn EnumMetaColumn]
 
   def self.add_integer_field_to_schema(schema_id, field_name, required:, min_value:, max_value:)
     self.create!(
       meta_schema_id: schema_id,
       name: field_name,
-      type: "IntegerMetaFieldType",
       required:,
-      integer_meta_field_type: IntegerMetaFieldType.new(min_value:, max_value:),
+      detailable: IntegerMetaColumn.new(min_value:, max_value:),
     )
   end
 
@@ -21,9 +17,8 @@ class MetaFieldType < ActiveRecord::Base
     self.create!(
       meta_schema_id: schema_id,
       name: field_name,
-      type: "StringMetaFieldType",
       required:,
-      string_meta_field_type: StringMetaFieldType.new(min_length:, max_length:),
+      detailable: StringMetaColumn.new(min_length:, max_length:),
     )
   end
 
@@ -31,9 +26,8 @@ class MetaFieldType < ActiveRecord::Base
     self.create!(
       meta_schema_id: schema_id,
       name: field_name,
-      type: "EnumMetaFieldType",
       required:,
-      enum_meta_field_type: EnumMetaFieldType.new(values: values),
+      detailable: EnumMetaColumn.new(values: values),
     )
   end
 end

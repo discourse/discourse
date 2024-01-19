@@ -8,12 +8,12 @@ class CreateMetaObjects < ActiveRecord::Migration[7.0]
 
     create_table :meta_fields do |t|
       t.bigint :meta_object_id, null: false
-      t.bigint :meta_field_type_id, null: false
+      t.bigint :meta_column_id, null: false
 
       t.timestamps
     end
 
-    add_index :meta_fields, %i[meta_object_id meta_field_type_id], unique: true
+    add_index :meta_fields, %i[meta_object_id meta_column_id], unique: true
 
     create_table :string_meta_fields do |t|
       t.bigint :meta_field_id, null: false
