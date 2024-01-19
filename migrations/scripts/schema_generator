@@ -94,10 +94,11 @@ module Migrations
       File.open(file_path, "w") { |f| f << @output_stream.string.chomp }
     end
 
-    def generate_column(column)
-      @output_stream.print "  #{column.name} #{type(column)}"
-      @output_stream.print " NOT NULL" unless column.null
-      @output_stream.puts ","
+    def generate_column_definition(column)
+      definition = "  #{column.name} #{type(column)}"
+      definition << " NOT NULL" unless column.null
+
+      definition
     end
 
     def generate_index(table_name, index)
@@ -118,6 +119,7 @@ module Migrations
     def generate_table(name)
       puts "Generating #{name}..."
 
+      column_definitions = []
       column_records = columns(name)
       mode, column_list = column_list_for(name)
       indexes = indexes(name)
@@ -147,7 +149,7 @@ module Migrations
 
         if (mode == :include && column_list.include?(primary_key_column.name)) ||
              (mode == :ignore && column_list.exclude?(primary_key_column.name))
-          @output_stream.puts "  #{primary_key_column.name} #{type(primary_key_column)} NOT NULL PRIMARY KEY,"
+          column_definitions << "  #{primary_key_column.name} #{type(primary_key_column)} NOT NULL PRIMARY KEY"
         end
       end
 
@@ -161,12 +163,13 @@ module Migrations
         end
         next if !composite_key && (column.name == primary_key)
 
-        generate_column(column)
+        column_definitions << generate_column_definition(column)
       end
 
-      @output_stream.puts "  PRIMARY KEY (#{primary_key.join(", ")})," if composite_key
-      @output_stream.seek(@output_stream.pos - 2) # Go back two chars, helps remove last new line & trailing comma
-      @output_stream.puts "\n);"
+      column_definitions << "  PRIMARY KEY (#{primary_key.join(", ")})" if composite_key
+
+      @output_stream.puts column_definitions.join(",\n")
+      @output_stream.puts ");"
       @output_stream.puts "" if indexes.present?
 
       indexes.each { |index| generate_index(name, index) }
