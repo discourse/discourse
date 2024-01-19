@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
@@ -23,46 +24,46 @@ export default class AboutPageUsers extends Component {
   }
 
   <template>
-    {{#each this.usersTemplates as |userTemplate|}}
-      <div data-username={{userTemplate.username}} class="user-info small">
+    {{#each this.usersTemplates as |template|}}
+      <div data-username={{template.username}} class="user-info small">
         <div class="user-image">
           <div class="user-image-inner">
             <a
-              href={{userTemplate.userPath}}
-              data-user-card={{userTemplate.username}}
+              href={{template.userPath}}
+              data-user-card={{template.username}}
               aria-hidden="true"
             >
-              {{html-safe userTemplate.avatar}}
+              {{htmlSafe template.avatar}}
             </a>
           </div>
         </div>
         <div class="user-detail">
           <div class="name-line">
             <a
-              href={{userTemplate.userPath}}
-              data-user-card={{userTemplate.username}}
+              href={{template.userPath}}
+              data-user-card={{template.username}}
               aria-label={{i18n
                 "user.profile_possessive"
-                username=userTemplate.username
+                username=template.username
               }}
             >
               <span class="username">
-                {{#if userTemplate.prioritizeName}}
-                  {{userTemplate.name}}
+                {{#if template.prioritizeName}}
+                  {{template.name}}
                 {{else}}
-                  {{userTemplate.username}}
+                  {{template.username}}
                 {{/if}}
               </span>
               <span class="name">
-                {{#if userTemplate.prioritizeName}}
-                  {{userTemplate.username}}
+                {{#if template.prioritizeName}}
+                  {{template.username}}
                 {{else}}
-                  {{userTemplate.name}}
+                  {{template.name}}
                 {{/if}}
               </span>
             </a>
           </div>
-          <div class="title">{{userTemplate.title}}</div>
+          <div class="title">{{template.title}}</div>
         </div>
       </div>
     {{/each}}
