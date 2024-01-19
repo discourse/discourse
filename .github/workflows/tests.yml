@@ -22,7 +22,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ matrix.updated_ember && '' || ' (Ember 3)' }} # Update fetch-job-id step if changing this
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ !matrix.updated_ember && ' (Ember 3)' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -290,7 +290,7 @@ jobs:
         id: fetch-job-id
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
         run: |
-          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}${{ matrix.updated_ember && '' || ' (Ember 3)' }}')
+          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}${{ !matrix.updated_ember && ' (Ember 3)' }}')
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
 
       - name: Create flaky tests report artifact
@@ -323,7 +323,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }}) (Ember ${{ matrix.updated_ember && '5' || '3' }})
+    name: core frontend (${{ matrix.browser }})${{ !matrix.updated_ember && ' (Ember 3)' }})
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
