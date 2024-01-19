@@ -22,14 +22,15 @@ export default Controller.extend({
   },
 
   @action
-  changeEmail() {
-    const email = this.newEmail;
-    changeEmail({ email })
-      .then(() => {
-        this.set("accountCreated.email", email);
-        this.router.transitionTo("account-created.resent");
-      })
-      .catch(popupAjaxError);
+  async changeEmail() {
+    try {
+      await changeEmail({ email: this.newEmail });
+
+      this.set("accountCreated.email", this.newEmail);
+      this.router.transitionTo("account-created.resent");
+    } catch (e) {
+      popupAjaxError(e);
+    }
   },
 
   @action
