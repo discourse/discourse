@@ -26,8 +26,7 @@ import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/me
 import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
-import ChatMessageSeparatorDate from "discourse/plugins/chat/discourse/components/chat-message-separator-date";
-import ChatMessageSeparatorNew from "discourse/plugins/chat/discourse/components/chat-message-separator-new";
+import ChatMessageSeparator from "discourse/plugins/chat/discourse/components/chat-message-separator";
 import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
 import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
@@ -494,13 +493,10 @@ export default class ChatMessage extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     {{#if this.shouldRender}}
-      {{#if (eq @context "channel")}}
-        <ChatMessageSeparatorDate
-          @fetchMessagesByDate={{@fetchMessagesByDate}}
-          @message={{@message}}
-        />
-        <ChatMessageSeparatorNew @message={{@message}} />
-      {{/if}}
+      <ChatMessageSeparator
+        @fetchMessagesByDate={{@fetchMessagesByDate}}
+        @message={{@message}}
+      />
 
       <div
         class={{concatClass

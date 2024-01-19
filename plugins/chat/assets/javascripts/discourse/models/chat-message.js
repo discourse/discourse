@@ -162,35 +162,6 @@ export default class ChatMessage {
   }
 
   @cached
-  get firstMessageOfTheDayAt() {
-    if (!this.previousMessage) {
-      return this.#startOfDay(this.createdAt);
-    }
-
-    if (
-      !this.#areDatesOnSameDay(this.previousMessage.createdAt, this.createdAt)
-    ) {
-      return this.#startOfDay(this.createdAt);
-    }
-  }
-
-  @cached
-  get formattedFirstMessageDate() {
-    if (this.firstMessageOfTheDayAt) {
-      return this.#calendarDate(this.firstMessageOfTheDayAt);
-    }
-  }
-
-  #calendarDate(date) {
-    return moment(date).calendar(moment(), {
-      sameDay: `[${I18n.t("chat.chat_message_separator.today")}]`,
-      lastDay: `[${I18n.t("chat.chat_message_separator.yesterday")}]`,
-      lastWeek: "LL",
-      sameElse: "LL",
-    });
-  }
-
-  @cached
   get index() {
     return this.manager?.messages?.indexOf(this);
   }
@@ -369,17 +340,5 @@ export default class ChatMessage {
     }
 
     return User.create(user);
-  }
-
-  #areDatesOnSameDay(a, b) {
-    return (
-      a.getFullYear() === b.getFullYear() &&
-      a.getMonth() === b.getMonth() &&
-      a.getDate() === b.getDate()
-    );
-  }
-
-  #startOfDay(date) {
-    return moment(date).startOf("day").format();
   }
 }
