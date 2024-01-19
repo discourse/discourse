@@ -12,9 +12,11 @@ module CommonHelper
   end
 
   def render_csp_nonce_code
-    if SiteSetting.content_security_policy || SiteSetting.content_security_policy_report_only
-      render partial: "common/csp_nonce"
-    end
+    has_csp = SiteSetting.content_security_policy || SiteSetting.content_security_policy_report_only
+    return if !has_csp
+    has_gtm = SiteSetting.gtm_container_id.present?
+    include_nonce = SiteSetting.content_security_policy_include_script_src_nonce
+    render partial: "common/csp_nonce" if include_nonce || has_gtm
   end
 
   def render_google_tag_manager_body_code

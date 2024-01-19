@@ -667,7 +667,8 @@ RSpec.describe ApplicationController do
       expect(response.headers).to_not include("Content-Security-Policy-Report-Only")
     end
 
-    it "when CSP is enabled and GTM is disabled it adds the same nonce to the policy and the CSP tag" do
+    it "when CSP is enabled and GTM is disabled it adds the same nonce to the policy and the CSP nonce tag" do
+      SiteSetting.content_security_policy_include_script_src_nonce = true
       SiteSetting.content_security_policy = true
       SiteSetting.content_security_policy_report_only = true
 
@@ -686,7 +687,8 @@ RSpec.describe ApplicationController do
       expect(csp_nonce_tag["data-nonce"]).to eq(nonce)
     end
 
-    it "when CSP is disabled it does not render the CSP tag" do
+    it "when CSP is disabled it does not render the CSP Nonce tag" do
+      SiteSetting.content_security_policy_include_script_src_nonce = true
       SiteSetting.content_security_policy = false
       SiteSetting.content_security_policy_report_only = false
 
@@ -695,7 +697,16 @@ RSpec.describe ApplicationController do
       expect(response.body).not_to have_tag("#data-csp-nonce")
     end
 
-    it "when GTM is enabled it adds the same nonce to the policy and the CSP tag" do
+    it "by default, with a CSP tag it does not render the CSP Nonce tag" do
+      SiteSetting.content_security_policy = true
+      SiteSetting.content_security_policy_report_only = true
+
+      get "/latest"
+
+      expect(response.body).not_to have_tag("#data-csp-nonce")
+    end
+
+    it "when GTM is enabled it adds the same nonce to the policy and the CSP Nonce tag" do
       SiteSetting.content_security_policy = true
       SiteSetting.content_security_policy_report_only = true
       SiteSetting.gtm_container_id = "GTM-ABCDEF"
