@@ -27,7 +27,7 @@ export function getOwner(obj) {
     {
       since: "3.2",
       id: "discourse.get-owner-with-fallback",
-      url: "https://meta.discourse.org/t/ember-object-ownership-getowner-service-injections-etc/292080",
+      url: "https://meta.discourse.org/t/292080",
     }
   );
   return getOwnerWithFallback(obj);
