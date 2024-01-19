@@ -152,6 +152,11 @@ RSpec.xdescribe SiteSettings::DeprecatedSettings do
         )
       end
 
+      it "returns moderator if there is only the moderators auto group in the new group setting" do
+        SiteSetting.invite_allowed_groups = "#{Group::AUTO_GROUPS[:moderators]}"
+        expect(SiteSetting.min_trust_level_to_allow_invite_tl_and_staff).to eq("moderator")
+      end
+
       it "returns staff if there are staff and admin auto groups in the new group setting" do
         SiteSetting.invite_allowed_groups =
           "#{Group::AUTO_GROUPS[:admins]}|#{Group::AUTO_GROUPS[:staff]}"

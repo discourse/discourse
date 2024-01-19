@@ -364,10 +364,10 @@ def update_posts
 
   DB.exec <<~SQL
     UPDATE posts AS replies
-    SET reply_to_user_id = replies.user_id
-    FROM posts
-    WHERE posts.topic_id = replies.topic_id
-      AND posts.post_number = replies.reply_to_post_number
+    SET reply_to_user_id = original.user_id
+    FROM posts AS original
+    WHERE original.topic_id = replies.topic_id
+      AND original.post_number = replies.reply_to_post_number
       AND replies.reply_to_post_number IS NOT NULL
       AND replies.reply_to_user_id IS NULL
       AND replies.post_number <> replies.reply_to_post_number
@@ -735,7 +735,7 @@ task "import:rebake_uncooked_posts_with_polls" => :environment do
 
   posts = Post.where("EXISTS (SELECT 1 FROM polls WHERE polls.post_id = posts.id)")
 
-  rebake_posts(posts)
+  import_rebake_posts(posts)
 end
 
 desc "Rebake posts that contain events"
@@ -747,7 +747,7 @@ task "import:rebake_uncooked_posts_with_events" => :environment do
       "EXISTS (SELECT 1 FROM discourse_post_event_events WHERE discourse_post_event_events.id = posts.id)",
     )
 
-  rebake_posts(posts)
+  import_rebake_posts(posts)
 end
 
 desc "Rebake posts that have tag"
@@ -760,21 +760,21 @@ task "import:rebake_uncooked_posts_with_tag", [:tag_name] => :environment do |_t
       args[:tag_name],
     )
 
-  rebake_posts(posts)
+  import_rebake_posts(posts)
 end
 
-def rebake_posts(posts)
+def import_rebake_posts(posts)
   Jobs.run_immediately!
   OptimizedImage.lock_per_machine = false
+
+  posts = posts.where("baked_version <> ? or baked_version IS NULL", Post::BAKED_VERSION)
 
   max_count = posts.count
   current_count = 0
 
-  posts
-    .where("baked_version <> ? or baked_version IS NULL", Post::BAKED_VERSION)
-    .find_each(order: :desc) do |post|
-      post.rebake!
-      current_count += 1
-      print "\r%7d / %7d" % [current_count, max_count]
-    end
+  posts.find_each(order: :desc) do |post|
+    post.rebake!
+    current_count += 1
+    print "\r%7d / %7d" % [current_count, max_count]
+  end
 end
