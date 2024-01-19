@@ -415,7 +415,10 @@ export default class ChatChannel extends Component {
       );
     }
 
-    if (state.atTop) {
+    if (
+      state.atTop ||
+      (!this.capabilities.isIOS && state.up && state.percentToTop < 40)
+    ) {
       this.fetchMoreMessages({ direction: PAST });
     } else if (state.atBottom) {
       this.atBottom = true;
