@@ -23,11 +23,11 @@ export default class ActivationEdit extends Component {
       await changeEmail({
         username: this.login?.loginName,
         password: this.login?.loginPassword,
-        email: this.args.model.newEmail,
+        email: this.newEmail,
       });
 
       this.modal.show(ActivationResent, {
-        model: { currentEmail: this.args.model.newEmail },
+        model: { currentEmail: this.newEmail },
       });
     } catch (e) {
       this.flash = extractError(e);
