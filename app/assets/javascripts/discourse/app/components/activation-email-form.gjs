@@ -13,7 +13,7 @@ export default class ActivationEmailForm extends Component {
     <p>{{i18n "login.provide_new_email"}}</p>
     <input
       {{on "input" this.newEmailChanged}}
-      @value={{@email}}
+      value={{@email}}
       type="text"
       class="activate-new-email"
     />
