@@ -139,6 +139,28 @@ RSpec.describe EmailController do
     end
   end
 
+  describe "unsubscribe from a tagged topic" do
+    fab!(:tag)
+    fab!(:topic) { Fabricate(:topic, tags: [tag]) }
+    fab!(:a_post) { Fabricate(:post, topic: topic) }
+
+    let(:key) { UnsubscribeKey.create_key_for(user, UnsubscribeKey::TOPIC_TYPE, post: a_post) }
+
+    it "can unwatch a tag" do
+      tu =
+        TagUser.create!(
+          user_id: user.id,
+          tag_id: tag.id,
+          notification_level: TagUser.notification_levels[:watching_first_post],
+        )
+
+      post "/email/unsubscribe/#{key}.json", params: { unwatch_tag: [tag.id] }
+
+      expect(response.status).to eq(302)
+      expect(TagUser.find_by(tag_id: tag.id)).to eq(nil)
+    end
+  end
+
   describe "#unsubscribed" do
     describe "when email is invalid" do
       it "should return the right response" do
@@ -331,6 +353,34 @@ RSpec.describe EmailController do
           user_id: user.id,
           category_id: post.topic.category_id,
           notification_level: CategoryUser.notification_levels[notification_level],
+        )
+      end
+    end
+
+    context "when unsubscribing from a tagged topic" do
+      fab!(:tag)
+      fab!(:topic) { Fabricate(:topic, tags: [tag]) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
+      let(:user) { post.user }
+      let(:key_type) { UnsubscribeKey::TOPIC_TYPE }
+
+      it "correctly handles watched tags" do
+        tu = create_tag_user(:watching_first_post, tag)
+
+        navigate_to_unsubscribe
+        expect(response.body).to include("unwatch_tag")
+
+        tu.destroy!
+
+        navigate_to_unsubscribe
+        expect(response.body).not_to include("unwatch_tag")
+      end
+
+      def create_tag_user(notification_level, tag)
+        TagUser.create!(
+          user_id: user.id,
+          tag_id: tag[:id],
+          notification_level: TagUser.notification_levels[notification_level],
         )
       end
     end

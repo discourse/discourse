@@ -1012,6 +1012,7 @@ de:
     stop_watching_topic: "Thema nicht mehr beobachten, %{link}"
     mute_topic: "Alle Benachrichtigungen für dieses Thema stummschalten, %{link}"
     unwatch_category: "Themen in %{category} nicht mehr beobachten"
+    unwatch_tag: "Themen mit dem Schlagwort %{tag} nicht mehr beobachten"
     mailing_list_mode: "Mailinglisten-Modus ausschalten"
     all: "Sende mir keine E-Mail mehr von %{sitename}"
     different_user_description: "Du bist derzeit als ein anderer Benutzer angemeldet als der, dem wir die E-Mail geschickt haben. Bitte melde dich ab oder gehe in den anonymen Modus und versuche es erneut."

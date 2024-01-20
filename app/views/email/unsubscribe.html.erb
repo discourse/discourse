@@ -43,6 +43,16 @@
           </label>
           </p>
         <% end %>
+        <% if @tags %>
+          <% @tags.each do |tag| %>
+          <p>
+          <label>
+            <%= check_box_tag "unwatch_tag[]", tag[:id], true %>
+            <%= t('unsubscribe.unwatch_tag', tag: render('tag',tag: tag)).html_safe %>
+          </label>
+          </p>
+          <% end %>
+        <% end%>
       <% end %>
 
       <% if @user.user_option.mailing_list_mode && !SiteSetting.disable_mailing_list_mode %>

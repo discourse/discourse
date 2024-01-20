@@ -1,0 +1,7 @@
+<span class="tag-box">
+  &nbsp;
+  <a href="<%= Discourse.base_url %>/tag/<%= tag[:id] %>" class="discourse-tag simple"><%= tag[:name] %></a>
+  <% if tag[:count] && tag[:count] > 0 %>
+    <span class="tag-count">x <%= tag[:count] %></span>
+  <% end %>
+</span>

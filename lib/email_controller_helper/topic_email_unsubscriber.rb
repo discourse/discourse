@@ -16,6 +16,9 @@ module EmailControllerHelper
         TopicUser.exists?(user: key_owner, notification_level: watching, topic_id: topic.id),
       )
 
+      tags = TagUser.where(user_id: key_owner[:id], tag_id: topic.tags.pluck(:id)).pluck(:tag_id)
+      controller.instance_variable_set(:@tags, Tag.where(id: tags))
+
       return if topic.category_id.blank?
       if !CategoryUser.exists?(
            user: key_owner,
@@ -69,6 +72,14 @@ module EmailControllerHelper
         TopicUser.where(topic_id: topic.id, user_id: key_owner.id).update_all(
           notification_level: TopicUser.notification_levels[:muted],
         )
+
+        updated = true
+      end
+
+      if params[:unwatch_tag] && topic.tags.present? && params[:unwatch_tag].kind_of?(Array)
+        tags = topic.tags.pluck(:id) & params[:unwatch_tag].map(&:to_i)
+
+        TagUser.where(user: key_owner, tag_id: tags).destroy_all
 
         updated = true
       end
