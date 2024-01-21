@@ -83,7 +83,7 @@ class TopicQuery
   end
 
   # Maps `order` to a columns in `topics`
-  SORTABLE_MAPPING = {
+  DEFAULT_SORTABLE_MAPPING = {
     "likes" => "like_count",
     "op_likes" => "op_likes",
     "views" => "views",
@@ -668,14 +668,15 @@ class TopicQuery
       begin
         DiscoursePluginRegistry.apply_modifier(
           :topic_query_sortable_mapping,
-          SORTABLE_MAPPING.dup,
+          DEFAULT_SORTABLE_MAPPING.dup,
           self,
         )
       end
   end
 
   def apply_ordering(result, options = {})
-    sort_column = sortable_mapping[options[:order]] || "default"
+    order_option = options[:order]
+    sort_column = sortable_mapping[order_option] || "default"
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
 
     # If we are sorting in the default order desc, we should consider including pinned
@@ -714,7 +715,8 @@ class TopicQuery
       )
     end
 
-    if options[:order].present? && SORTABLE_MAPPING[options[:order]].blank?
+    if order_option.present? && DEFAULT_SORTABLE_MAPPING[order_option].blank? &&
+         sortable_mapping[order_option].present?
       return(
         DiscoursePluginRegistry.apply_modifier(
           :topic_query_apply_ordering_result,
