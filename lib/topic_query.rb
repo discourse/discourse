@@ -663,8 +663,19 @@ class TopicQuery
     result.where("topics.category_id != ?", drafts_category_id)
   end
 
+  def sortable_mapping
+    @sortable_mapping ||=
+      begin
+        DiscoursePluginRegistry.apply_modifier(
+          :topic_query_sortable_mapping,
+          SORTABLE_MAPPING.dup,
+          self,
+        )
+      end
+  end
+
   def apply_ordering(result, options = {})
-    sort_column = SORTABLE_MAPPING[options[:order]] || "default"
+    sort_column = sortable_mapping[options[:order]] || "default"
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
 
     # If we are sorting in the default order desc, we should consider including pinned
@@ -699,6 +710,19 @@ class TopicQuery
       return(
         result.order(
           "(SELECT CASE WHEN EXISTS (SELECT true FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') THEN (SELECT value::integer FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') ELSE 0 END) #{sort_dir}",
+        )
+      )
+    end
+
+    if options[:order].present? && SORTABLE_MAPPING[options[:order]].blank?
+      return(
+        DiscoursePluginRegistry.apply_modifier(
+          :topic_query_apply_ordering_result,
+          result,
+          sort_column,
+          sort_dir,
+          options,
+          self,
         )
       )
     end
