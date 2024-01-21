@@ -964,7 +964,7 @@ RSpec.describe TopicQuery do
 
           # adds the custom field as a viable sort option
           class ::TopicQuery
-            SORTABLE_MAPPING["sheep"] = "custom_fields.sheep"
+            DEFAULT_SORTABLE_MAPPING["sheep"] = "custom_fields.sheep"
           end
           # returns the topics in the sheep order if requested" do
           expect(ids_in_order("sheep")).to eq(
