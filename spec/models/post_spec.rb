@@ -275,7 +275,7 @@ RSpec.describe Post do
   end
 
   describe "maximum media embeds" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
     let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
     let(:post_two_images) do
@@ -421,7 +421,7 @@ RSpec.describe Post do
   end
 
   describe "maximum attachments" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
     let(:post_no_attachments) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_attachment) do
       post_with_body(
@@ -474,7 +474,7 @@ RSpec.describe Post do
   end
 
   describe "links" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
     let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
     let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
     let(:two_links) do
@@ -557,7 +557,7 @@ RSpec.describe Post do
   end
 
   describe "maximums" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
     let(:post_one_link) do
       post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser)
     end
@@ -607,29 +607,29 @@ RSpec.describe Post do
         expect(post_two_links).to be_valid
       end
 
-      context "with min_trust_to_post_links" do
+      context "when posting links is limited to certain TL groups" do
         it "considers oneboxes links" do
-          SiteSetting.min_trust_to_post_links = 3
-          post_onebox.user.trust_level = TrustLevel[2]
+          SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
+          post_onebox.user.change_trust_level!(TrustLevel[2])
           expect(post_onebox).not_to be_valid
         end
 
         it "considers links within code" do
-          SiteSetting.min_trust_to_post_links = 3
-          post_onebox.user.trust_level = TrustLevel[2]
+          SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
+          post_onebox.user.change_trust_level!(TrustLevel[2])
           expect(post_code_link).not_to be_valid
         end
 
-        it "doesn't allow allow links if `min_trust_to_post_links` is not met" do
-          SiteSetting.min_trust_to_post_links = 2
-          post_two_links.user.trust_level = TrustLevel[1]
+        it "doesn't allow allow links if user is not in allowed groups" do
+          SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+          post_two_links.user.change_trust_level!(TrustLevel[1])
           expect(post_one_link).not_to be_valid
         end
 
         it "will skip the check for allowlisted domains" do
           SiteSetting.allowed_link_domains = "www.bbc.co.uk"
-          SiteSetting.min_trust_to_post_links = 2
-          post_two_links.user.trust_level = TrustLevel[1]
+          SiteSetting.post_links_allowed_groups = "12"
+          post_two_links.user.change_trust_level!(TrustLevel[1])
           expect(post_one_link).to be_valid
         end
       end
@@ -686,7 +686,7 @@ RSpec.describe Post do
     end
 
     context "with max mentions" do
-      fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+      fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
       let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
       let(:post_with_two_mentions) do
         post_with_body("@Jake @Finn are the people I'm mentioning", newuser)
@@ -1127,7 +1127,13 @@ RSpec.describe Post do
 
   describe "cooking" do
     let(:post) do
-      Fabricate.build(:post, post_args.merge(raw: "please read my blog http://blog.example.com"))
+      Fabricate.build(
+        :post,
+        post_args.merge(
+          raw: "please read my blog http://blog.example.com",
+          user: Fabricate(:user, refresh_auto_groups: true),
+        ),
+      )
     end
 
     it "should unconditionally follow links for staff" do

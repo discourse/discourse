@@ -1754,7 +1754,7 @@ en:
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the <a href='%{base_path}/admin' target='_blank'>/admin</a> dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
-    include_in_discourse_discover: "Let CDCK, Inc. (“Discourse”) feature this community on the Discover page and in Discourse marketing materials. By doing so, you will share community metadata and anonymized usage statistics with Discourse. Please note that the promotion of communities is at Discourse’s discretion."
+    include_in_discourse_discover: "Let CDCK, Inc. (“Discourse”) feature this community on the <a href='https://www.discourse.org/discover'>Discover page</a> and in Discourse marketing materials. By doing so, you will share community metadata and anonymized usage statistics with Discourse. Please note that the promotion of communities is at Discourse’s discretion."
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
@@ -1984,6 +1984,7 @@ en:
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     flag_post_allowed_groups: "Groups that are allowed to flag posts."
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
+    post_links_allowed_groups: "Groups that are allowed to include links in posts."
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
     min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
@@ -2424,6 +2425,9 @@ en:
     min_trust_level_for_user_api_key: |
       Trust level required for generation of user API keys.<br>
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
+    user_api_key_allowed_groups: |
+      Group membership required for generation of user API keys.<br>
+      <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
     revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
@@ -2586,6 +2590,8 @@ en:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -5229,6 +5235,22 @@ en:
   onebox:
     discourse:
       user_joined_community: "Joined %{date}"
+    gitlab:
+      truncated_file: "This file has been truncated."
+      show_original: "show original"
+    github:
+      binary_file: "This file is binary."
+      truncated_file: "This file has been truncated."
+      show_original: "show original"
+      requires_iframe: "Viewer requires iframe."
+      committed: "committed"
+      more_than_three_files: "There are more than three files."
+      opened: "opened"
+      closed: "closed"
+      commit_by: "Commit by"
+      comment_by: "Comment by"
+      review_by: "Review by"
+      pr_summary: "%{commits} commits changed %{changed_files} files with %{additions} additions and %{deletions} deletions"
 
   discourse_push_notifications:
     popup:

@@ -34,6 +34,7 @@ import {
   checkMessageBottomVisibility,
   checkMessageTopVisibility,
 } from "discourse/plugins/chat/discourse/lib/check-message-visibility";
+import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -62,6 +63,7 @@ export default class ChatChannel extends Component {
   @service chatDraftsManager;
   @service chatEmojiPickerManager;
   @service chatStateManager;
+  @service chatChannelScrollPositions;
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
   @service currentUser;
@@ -95,6 +97,10 @@ export default class ChatChannel extends Component {
     return this.args.channel.currentUserMembership;
   }
 
+  get hasSavedScrollPosition() {
+    return !!this.chatChannelScrollPositions.get(this.args.channel.id);
+  }
+
   @action
   setScrollable(element) {
     this.scrollable = element;
@@ -111,7 +117,7 @@ export default class ChatChannel extends Component {
   @action
   didResizePane() {
     this.debounceFillPaneAttempt();
-    this.computeDatesSeparators();
+    DatesSeparatorsPositioner.apply(this.scrollable);
   }
 
   @action
@@ -157,6 +163,10 @@ export default class ChatChannel extends Component {
 
     if (this.args.targetMessageId) {
       this.debounceHighlightOrFetchMessage(this.args.targetMessageId);
+    } else if (this.chatChannelScrollPositions.get(this.args.channel.id)) {
+      this.debounceHighlightOrFetchMessage(
+        this.chatChannelScrollPositions.get(this.args.channel.id)
+      );
     } else {
       this.fetchMessages({ fetch_from_last_read: true });
     }
@@ -174,6 +184,7 @@ export default class ChatChannel extends Component {
   onPresenceChangeCallback(present) {
     if (present) {
       this.debouncedUpdateLastReadMessage();
+      bodyScrollFix({ delayed: true });
     }
   }
 
@@ -191,7 +202,10 @@ export default class ChatChannel extends Component {
     );
 
     if (findArgs.target_message_id) {
-      this.scrollToMessageId(findArgs.target_message_id, { highlight: true });
+      this.scrollToMessageId(findArgs.target_message_id, {
+        highlight: true,
+        position: findArgs.position,
+      });
     } else if (findArgs.fetch_from_last_read) {
       const lastReadMessageId = this.currentUserMembership?.lastReadMessageId;
       this.scrollToMessageId(lastReadMessageId);
@@ -378,7 +392,7 @@ export default class ChatChannel extends Component {
         )
       );
     } else {
-      this.fetchMessages({ target_message_id: messageId });
+      this.fetchMessages({ target_message_id: messageId, position: "end" });
     }
   }
 
@@ -443,12 +457,13 @@ export default class ChatChannel extends Component {
 
   @action
   onScroll(state) {
-    bodyScrollFix();
-
     next(() => {
       if (this.#flushIgnoreNextScroll()) {
         return;
       }
+
+      bodyScrollFix();
+      DatesSeparatorsPositioner.apply(this.scrollable);
 
       this.needsArrow =
         (this.messagesLoader.fetchedOnce &&
@@ -482,6 +497,12 @@ export default class ChatChannel extends Component {
 
     if (state.atBottom) {
       this.fetchMoreMessages({ direction: FUTURE });
+      this.chatChannelScrollPositions.delete(this.args.channel.id);
+    } else {
+      this.chatChannelScrollPositions.set(
+        this.args.channel.id,
+        state.lastVisibleId
+      );
     }
   }
 
@@ -641,50 +662,6 @@ export default class ChatChannel extends Component {
     return;
   }
 
-  @bind
-  computeDatesSeparators() {
-    schedule("afterRender", () => {
-      const dates = [
-        ...this.scrollable.querySelectorAll(".chat-message-separator-date"),
-      ].reverse();
-      const height = this.scrollable.querySelector(
-        ".chat-messages-container"
-      ).clientHeight;
-
-      dates
-        .map((date, index) => {
-          const item = { bottom: 0, date };
-          const line = date.nextElementSibling;
-
-          if (index > 0) {
-            const prevDate = dates[index - 1];
-            const prevLine = prevDate.nextElementSibling;
-            item.bottom = height - prevLine.offsetTop;
-          }
-
-          if (dates.length === 1) {
-            item.height = height;
-          } else {
-            if (index === 0) {
-              item.height = height - line.offsetTop;
-            } else {
-              const prevDate = dates[index - 1];
-              const prevLine = prevDate.nextElementSibling;
-              item.height =
-                height - line.offsetTop - (height - prevLine.offsetTop);
-            }
-          }
-
-          return item;
-        })
-        // group all writes at the end
-        .forEach((item) => {
-          item.date.style.bottom = item.bottom + "px";
-          item.date.style.height = item.height + "px";
-        });
-    });
-  }
-
   #cancelHandlers() {
     cancel(this._debouncedHighlightOrFetchMessageHandler);
     cancel(this._debouncedUpdateLastReadMessageHandler);
@@ -712,6 +689,7 @@ export default class ChatChannel extends Component {
         "chat-channel"
         (if this.messagesLoader.loading "loading")
         (if this.pane.sending "chat-channel--sending")
+        (if this.hasSavedScrollPosition "chat-channel--saved-scroll-position")
         (unless this.messagesLoader.fetchedOnce "chat-channel--not-loaded-once")
       }}
       {{willDestroy this.teardown}}

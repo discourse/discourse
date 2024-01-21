@@ -3,6 +3,7 @@ import { cancel, throttle } from "@ember/runloop";
 import Modifier from "ember-modifier";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
+import { checkMessageBottomVisibility } from "discourse/plugins/chat/discourse/lib/check-message-visibility";
 
 const UP = "up";
 const DOWN = "down";
@@ -49,7 +50,11 @@ export default class ChatScrollableList extends Modifier {
     cancel(this.scrollTimer);
     this.throttleTimer = throttle(this, this.computeScroll, 50, true);
     this.scrollTimer = discourseLater(() => {
-      this.options.onScrollEnd?.(this.computeState());
+      this.options.onScrollEnd?.(
+        Object.assign(this.computeState(), {
+          lastVisibleId: this.computeFirstVisibleMessageId(),
+        })
+      );
     }, this.options.delay || 250);
   }
 
@@ -126,5 +131,24 @@ export default class ChatScrollableList extends Modifier {
     }
 
     return this.element.scrollTop < this.lastScrollTop ? UP : DOWN;
+  }
+
+  computeFirstVisibleMessageId() {
+    let firstVisibleMessage;
+    const messages = this.element.querySelectorAll(
+      ":scope .chat-messages-container > [data-id]"
+    );
+
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const message = messages[i];
+
+      if (checkMessageBottomVisibility(this.element, message)) {
+        firstVisibleMessage = message;
+        break;
+      }
+    }
+
+    const id = firstVisibleMessage?.dataset?.id;
+    return id ? parseInt(id, 10) : null;
   }
 }

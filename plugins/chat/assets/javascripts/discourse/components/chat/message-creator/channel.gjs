@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import gt from "truth-helpers/helpers/gt";
+import not from "truth-helpers/helpers/not";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class Channel extends Component {
@@ -16,7 +17,10 @@ export default class Channel extends Component {
   }
 
   <template>
-    <div class="chat-message-creator__chatable -category-channel">
+    <div
+      class="chat-message-creator__chatable -category-channel"
+      data-disabled={{not @item.enabled}}
+    >
       <ChannelTitle @channel={{@item.model}} />
 
       {{#if (gt @item.tracking.unreadCount 0)}}

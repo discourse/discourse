@@ -24,6 +24,7 @@ import {
   stackingContextFix,
 } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
+import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import {
   scrollListToBottom,
   scrollListToMessage,
@@ -118,6 +119,7 @@ export default class ChatThread extends Component {
       }
 
       bodyScrollFix();
+      DatesSeparatorsPositioner.apply(this.scrollable);
 
       this.needsArrow =
         (this.messagesLoader.fetchedOnce &&
@@ -191,6 +193,7 @@ export default class ChatThread extends Component {
     this._ignoreNextScroll = true;
     this.debounceFillPaneAttempt();
     this.debounceUpdateLastReadMessage();
+    DatesSeparatorsPositioner.apply(this.scrollable);
   }
 
   async fetchMessages(findArgs = {}) {
@@ -362,6 +365,41 @@ export default class ChatThread extends Component {
     }
   }
 
+  @bind
+  fetchMessagesByDate(date) {
+    if (this.messagesLoader.loading) {
+      return;
+    }
+
+    const message = this.messagesManager.findFirstMessageOfDay(new Date(date));
+    if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
+      this.fetchMessages({ target_date: date, direction: FUTURE });
+    } else {
+      this.highlightOrFetchMessage(message.id, { position: "center" });
+    }
+  }
+
+  @action
+  highlightOrFetchMessage(messageId, options = {}) {
+    const message = this.messagesManager.findMessage(messageId);
+    if (message) {
+      this.scrollToMessageId(
+        message.id,
+        Object.assign(
+          {
+            highlight: true,
+            position: "start",
+            autoExpand: true,
+            behavior: this.capabilities.isIOS ? "smooth" : null,
+          },
+          options
+        )
+      );
+    } else {
+      this.fetchMessages({ target_message_id: messageId });
+    }
+  }
+
   @action
   resetComposerMessage() {
     this.args.thread.draft = ChatMessage.createDraftMessage(
@@ -510,6 +548,7 @@ export default class ChatThread extends Component {
               @message={{message}}
               @disableMouseEvents={{this.isScrolling}}
               @resendStagedMessage={{this.resendStagedMessage}}
+              @fetchMessagesByDate={{this.fetchMessagesByDate}}
               @context="thread"
             />
           {{/each}}

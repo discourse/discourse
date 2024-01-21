@@ -82,7 +82,10 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
 
   onClick() {
     this.renderDirector.onClick?.();
-    this.appEvents.trigger("user-menu:notification-click", this.notification);
+    this.appEvents.trigger("user-menu:notification-click", {
+      notification: this.notification,
+      href: this.linkHref,
+    });
 
     if (!this.notification.read) {
       this.notification.set("read", true);

@@ -1000,7 +1000,7 @@ RSpec.describe PostDestroyer do
     let!(:second_post) { Fabricate(:post, topic: topic) }
     fab!(:other_topic) { Fabricate(:topic) }
     let!(:other_post) { Fabricate(:post, topic: other_topic) }
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let!(:base_url) { URI.parse(Discourse.base_url) }
     let!(:guardian) { Guardian.new }
     let!(:url) do

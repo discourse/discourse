@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserDestroyer do
-  fab!(:user) { Fabricate(:user_with_secondary_email) }
+  fab!(:user) { Fabricate(:user_with_secondary_email, refresh_auto_groups: true) }
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   describe ".new" do

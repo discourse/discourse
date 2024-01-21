@@ -151,7 +151,7 @@ class CategoryList
 
     @categories = query.to_a
 
-    if SiteSetting.lazy_load_categories
+    if @guardian.can_lazy_load_categories?
       categories_with_rownum =
         Category
           .secured(@guardian)

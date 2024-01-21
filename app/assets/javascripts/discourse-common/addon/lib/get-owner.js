@@ -23,8 +23,12 @@ export function getOwnerWithFallback(obj) {
  */
 export function getOwner(obj) {
   deprecated(
-    "Importing getOwner from `discourse-common/lib/get-owner` is deprecated. Use `import { getOwner } from '@ember/application'`, or if you still need the fallback shim, use `import { getOwnerWithFallback } from 'discourse-common/lib/get-owner';`.",
-    { since: "3.2", id: "discourse.get-owner-with-fallback" }
+    "Importing getOwner from `discourse-common/lib/get-owner` is deprecated. See the alternatives on meta.",
+    {
+      since: "3.2",
+      id: "discourse.get-owner-with-fallback",
+      url: "https://meta.discourse.org/t/292080",
+    }
   );
   return getOwnerWithFallback(obj);
 }

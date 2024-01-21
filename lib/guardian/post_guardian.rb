@@ -3,7 +3,7 @@
 # mixin for all guardian methods dealing with post permissions
 module PostGuardian
   def unrestricted_link_posting?
-    authenticated? && @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+    authenticated? && @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map)
   end
 
   def link_posting_access
