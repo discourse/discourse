@@ -72,6 +72,7 @@ class BulkImport::Generic < BulkImport::Base
     import_category_custom_fields
     import_category_tag_groups
     import_category_permissions
+    import_category_users
 
     import_topics
     import_posts
@@ -313,6 +314,33 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     permissions.close
+  end
+
+  def import_category_users
+    puts "", "Importing category users..."
+
+    category_users = query(<<~SQL)
+      SELECT *
+        FROM category_users
+       ORDER BY category_id, user_id
+    SQL
+
+    existing_category_user_ids = CategoryUser.pluck(:category_id, :user_id).to_set
+
+    create_category_users(category_users) do |row|
+      category_id = category_id_from_imported_id(row["category_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if existing_category_user_ids.include?([category_id, user_id])
+
+      {
+        category_id: category_id,
+        user_id: user_id,
+        notification_level: row["notification_level"],
+        last_seen_at: to_datetime(row["last_seen_at"]),
+      }
+    end
+
+    category_users.close
   end
 
   def import_groups

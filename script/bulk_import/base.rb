@@ -69,9 +69,16 @@ class BulkImport::Base
 
   def initialize
     charset = ENV["DB_CHARSET"] || "utf8"
-    db = ActiveRecord::Base.connection_db_config.configuration_hash
+    db_config = BackupRestore.database_configuration
     @encoder = PG::TextEncoder::CopyRow.new
-    @raw_connection = PG.connect(dbname: db[:database], port: db[:port])
+    @raw_connection =
+      PG.connect(
+        dbname: db_config["database"],
+        host: db_config["host"],
+        port: db_config["port"],
+        user: db_config["username"],
+        password: db_config["password"],
+      )
     @uploader = ImportScripts::Uploader.new
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
@@ -563,6 +570,8 @@ class BulkImport::Base
 
   CATEGORY_TAG_GROUP_COLUMNS ||= %i[category_id tag_group_id created_at updated_at]
 
+  CATEGORY_USER_COLUMNS ||= %i[category_id user_id notification_level last_seen_at]
+
   TOPIC_COLUMNS ||= %i[
     id
     archetype
@@ -838,6 +847,10 @@ class BulkImport::Base
 
   def create_category_tag_groups(rows, &block)
     create_records(rows, "category_tag_group", CATEGORY_TAG_GROUP_COLUMNS, &block)
+  end
+
+  def create_category_users(rows, &block)
+    create_records(rows, "category_user", CATEGORY_USER_COLUMNS, &block)
   end
 
   def create_topics(rows, &block)
@@ -1181,6 +1194,10 @@ class BulkImport::Base
     category_tag_group[:created_at] = NOW
     category_tag_group[:updated_at] = NOW
     category_tag_group
+  end
+
+  def process_category_user(category_user)
+    category_user
   end
 
   def process_topic(topic)
