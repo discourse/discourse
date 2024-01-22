@@ -4,7 +4,7 @@ import { htmlSafe } from "@ember/template";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import { userPath } from "discourse/lib/url";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
-import gte from "truth-helpers/helpers/gte";
+import gt from "truth-helpers/helpers/gt";
 
 let addTopicParticipantClassesCallbacks = [];
 
@@ -29,7 +29,7 @@ class TopicParticipant extends Component {
     const { primary_group_name } = this.args.participant;
     return [
       primary_group_name ? `group-${primary_group_name}` : null,
-      addTopicParticipantClassesCallbacks.map((callback) =>
+      addTopicParticipantClassesCallbacks?.map((callback) =>
         callback(this.args.participant)
       ),
     ]
@@ -56,11 +56,11 @@ class TopicParticipant extends Component {
         title={{@participant.username}}
         href={{this.userUrl}}
       >
-        {{#if (gte @participant.post_count 1)}}
-          {{this.avatarImage}}
+        {{this.avatarImage}}
+        {{#if (gt @participant.post_count 1)}}
           <span class="post-count">{{@participant.post_count}}</span>
-          <UserAvatarFlair @user={{@participant}} />
         {{/if}}
+        <UserAvatarFlair @user={{@participant}} />
       </a>
     </div>
   </template>
