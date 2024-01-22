@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import ChangeCategory from "discourse/components/bulk-actions/change-category";
 import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
 import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
+import i18n from "discourse-common/helpers/i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 export default DropdownSelectBoxComponent.extend({
@@ -16,6 +17,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   modal: service(),
+  router: service(),
 
   computeContent() {
     let options = [];
@@ -30,8 +32,6 @@ export default DropdownSelectBoxComponent.extend({
         id: "close-topics",
         icon: "lock",
         name: "Close Topics",
-        description:
-          "Selected topics will be either Closed, Archived, or Unlisted",
       },
     ]);
     return options;
@@ -56,9 +56,11 @@ export default DropdownSelectBoxComponent.extend({
         this.modal.show(BulkTopicActions, {
           model: {
             action: "close",
-            title: "Bulk Close Topics",
+            title: i18n("topics.bulk.close_topics"),
             topics: this.bulkSelectHelper.selected,
-            silent: true,
+            bulkSelectHelper: this.bulkSelectHelper,
+            refreshClosure: () => this.router.refresh(),
+            allowSilent: true,
           },
         });
         break;

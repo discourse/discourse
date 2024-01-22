@@ -35,10 +35,6 @@ export default class BulkSelectHelper {
     this.clear();
   }
 
-  experimentalTopicBulkActionsEnabled() {
-    this.siteSettings.experimental_topic_bulk_actions;
-  }
-
   dismissRead(operationType, options) {
     const operation =
       operationType === "posts"

@@ -2338,10 +2338,14 @@ developer:
     default: ""
     client: true
     hidden: true
-  experimental_topic_bulk_actions:
-    default: false
+  experimental_topic_bulk_actions_enabled_groups:
+    default: ""
     hidden: true
-    client: true
+    client: false
+    type: group_list
+    list_type: compact
+    allow_any: false
+    refresh: true
 
 navigation:
   navigation_menu:

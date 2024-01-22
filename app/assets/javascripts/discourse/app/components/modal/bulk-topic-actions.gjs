@@ -7,6 +7,7 @@ import DModal from "discourse/components/d-modal";
 import Topic from "discourse/models/topic";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 //import AppendTags from "../bulk-actions/append-tags";
 //import ChangeCategory from "../bulk-actions/change-category";
 //import ChangeTags from "../bulk-actions/change-tags";
@@ -18,7 +19,7 @@ export default class BulkTopicActions extends Component {
   async perform(operation) {
     this.loading = true;
 
-    if (this.args.model.topics.length > 20) {
+    if (this.args.model.bulkSelectHelper.selected.length > 20) {
       this.showProgress = true;
     }
 
@@ -39,8 +40,7 @@ export default class BulkTopicActions extends Component {
     const chunks = [];
 
     while (startIndex < allTopics.length) {
-      const topics = allTopics.slice(startIndex, startIndex + chunkSize);
-      chunks.push(topics);
+      chunks.push(allTopics.slice(startIndex, startIndex + chunkSize));
       startIndex += chunkSize;
     }
 
@@ -48,13 +48,13 @@ export default class BulkTopicActions extends Component {
   }
 
   _processChunks(operation) {
-    const allTopics = this.args.model.topics;
+    const allTopics = this.args.model.bulkSelectHelper.selected;
     const topicChunks = this._generateTopicChunks(allTopics);
     const topicIds = [];
 
     const tasks = topicChunks.map((topics) => async () => {
       const result = await Topic.bulkOperation(topics, operation);
-      this.processedTopicCount = this.processedTopicCount + topics.length;
+      this.processedTopicCount += topics.length;
       return result;
     });
 
@@ -89,9 +89,6 @@ export default class BulkTopicActions extends Component {
 
   @action
   performAction() {
-    // TODO: return only visible topics
-    //visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
-
     switch (this.args.model.action) {
       case "close":
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
@@ -107,8 +104,7 @@ export default class BulkTopicActions extends Component {
       topics.forEach(cb);
       this.args.model.refreshClosure?.();
       this.args.closeModal();
-
-      window.location.reload();
+      this.args.model.bulkSelectHelper.toggleBulkSelect();
     }
   }
 
@@ -134,9 +130,9 @@ export default class BulkTopicActions extends Component {
       </:body>
 
       <:footer>
-        {{#if @model.silent}}
+        {{#if @model.allowSilent}}
           <div><input class="" id="silent" type="checkbox" />
-            <label for="silent">Perform this action silently.</label>
+            <label for="silent">{{i18n "topics.bulk.silent"}}</label>
           </div>
         {{/if}}
         <DButton

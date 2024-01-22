@@ -50,7 +50,7 @@ export default Component.extend(LoadMore, {
 
   @discourseComputed
   experimentalTopicBulkActionsEnabled() {
-    return this.siteSettings.experimental_topic_bulk_actions;
+    return this.currentUser?.use_experimental_topic_bulk_actions;
   },
 
   @discourseComputed
