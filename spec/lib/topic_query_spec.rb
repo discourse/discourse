@@ -2091,6 +2091,32 @@ RSpec.describe TopicQuery do
     end
   end
 
+  describe "#apply_ordering" do
+    fab!(:topic1) { Fabricate(:topic, spam_count: 3, bumped_at: 3.hours.ago) }
+    fab!(:topic2) { Fabricate(:topic, spam_count: 2, bumped_at: 3.minutes.ago) }
+    fab!(:topic3) { Fabricate(:topic, spam_count: 3, bumped_at: 1.hour.ago) }
+
+    it "applies both topic_query_sortable_mapping and topic_query_apply_ordering_result modifiers" do
+      plugin_instance = Plugin::Instance.new
+
+      plugin_instance.register_modifier(
+        :topic_query_sortable_mapping,
+      ) do |sortable_mapping, topic_qeury|
+        sortable_mapping["spam"] = "spam_count"
+        sortable_mapping
+      end
+
+      plugin_instance.register_modifier(
+        :topic_query_apply_ordering_result,
+      ) do |result, sort_column, sort_dir, options, topic_query|
+        result.order("topics.#{sort_column} #{sort_dir}, bumped_at DESC")
+      end
+
+      topics = TopicQuery.new(nil, order: "spam", ascending: "false").list_latest.topics
+      expect(topics.map(&:id)).to eq([topic3.id, topic1.id, topic2.id])
+    end
+  end
+
   describe "show_category_definitions_in_topic_lists setting" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
