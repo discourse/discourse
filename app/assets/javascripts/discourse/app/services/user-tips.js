@@ -1,6 +1,7 @@
 import Service, { inject as service } from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Site from "discourse/models/site";
 import { isTesting } from "discourse-common/config/environment";
 
 @disableImplicitInjections
@@ -10,14 +11,15 @@ export default class UserTips extends Service {
 
   #availableTips = new Set();
   #renderedId;
-  #shouldRenderSet = new TrackedSet();
+  #shouldRenderMap = new TrackedMap();
 
   #updateRenderedId() {
-    if (this.#availableTips.has(this.#renderedId)) {
+    const tipsArray = [...this.#availableTips];
+    if (tipsArray.find((tip) => tip.id === this.#renderedId)) {
       return;
     }
 
-    const newId = [...this.#availableTips]
+    const newId = tipsArray
       .sortBy("priority")
       .reverse()
       .find((tip) => {
@@ -27,14 +29,14 @@ export default class UserTips extends Service {
       })?.id;
 
     if (this.#renderedId !== newId) {
-      this.#shouldRenderSet.delete(this.#renderedId);
-      this.#shouldRenderSet.add(newId);
+      this.#shouldRenderMap.delete(this.#renderedId);
+      this.#shouldRenderMap.set(newId, true);
       this.#renderedId = newId;
     }
   }
 
   shouldRender(id) {
-    return this.#shouldRenderSet.has(id);
+    return this.#shouldRenderMap.get(id);
   }
 
   addAvailableTip(tip) {
@@ -52,7 +54,8 @@ export default class UserTips extends Service {
       return false;
     }
 
-    const userTips = this.site.user_tips;
+    const userTips = Site.currentProp("user_tips");
+
     if (!userTips || this.currentUser.user_option?.skip_new_user_tips) {
       return false;
     }
@@ -78,7 +81,7 @@ export default class UserTips extends Service {
       return;
     }
 
-    const userTips = this.site.user_tips;
+    const userTips = Site.currentProp("user_tips");
     if (!userTips || this.currentUser.user_option?.skip_new_user_tips) {
       return;
     }
