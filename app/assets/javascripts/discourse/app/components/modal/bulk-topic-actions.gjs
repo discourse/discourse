@@ -51,9 +51,14 @@ export default class BulkTopicActions extends Component {
     const allTopics = this.args.model.bulkSelectHelper.selected;
     const topicChunks = this._generateTopicChunks(allTopics);
     const topicIds = [];
+    const options = {};
+
+    if (this.args.model.allowSilent === true) {
+      options.silent = true;
+    }
 
     const tasks = topicChunks.map((topics) => async () => {
-      const result = await Topic.bulkOperation(topics, operation);
+      const result = await Topic.bulkOperation(topics, operation, options);
       this.processedTopicCount += topics.length;
       return result;
     });
@@ -131,8 +136,16 @@ export default class BulkTopicActions extends Component {
 
       <:footer>
         {{#if @model.allowSilent}}
-          <div><input class="" id="silent" type="checkbox" />
-            <label for="silent">{{i18n "topics.bulk.silent"}}</label>
+          <div class="topic-bulk-actions-options">
+            <label
+              for="topic-bulk-action-options__silent"
+              class="checkbox-label"
+            >
+              <input
+                class=""
+                id="topic-bulk-action-options__silent"
+                type="checkbox"
+              />{{i18n "topics.bulk.silent"}}</label>
           </div>
         {{/if}}
         <DButton
