@@ -458,14 +458,55 @@ RSpec.configure do |config|
     class SpecTimeoutError < StandardError
     end
 
+    mutex = Mutex.new
+    condition_variable = ConditionVariable.new
+    test_running = false
+    is_waiting = false
+
+    backtrace_logger =
+      Thread.new do
+        loop do
+          mutex.synchronize do
+            is_waiting = true
+            condition_variable.wait(mutex)
+            is_waiting = false
+          end
+
+          sleep PER_SPEC_TIMEOUT_SECONDS - 1
+
+          if mutex.synchronize { test_running }
+            puts "::group::[#{Process.pid}] Threads backtraces 1 second before timeout"
+
+            Thread.list.each do |thread|
+              puts "\n"
+              thread.backtrace.each { |line| puts line }
+              puts "\n"
+            end
+
+            puts "::endgroup::"
+          end
+        rescue StandardError => e
+          puts "Error in backtrace logger: #{e}"
+        end
+      end
+
     config.around do |example|
       Timeout.timeout(
         PER_SPEC_TIMEOUT_SECONDS,
         SpecTimeoutError,
         "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
       ) do
+        mutex.synchronize do
+          test_running = true
+          condition_variable.signal
+        end
+
         example.run
       rescue SpecTimeoutError
+      ensure
+        mutex.synchronize { test_running = false }
+        backtrace_logger.wakeup
+        sleep 0.01 while !mutex.synchronize { is_waiting }
       end
     end
   end
