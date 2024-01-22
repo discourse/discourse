@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
+import { tracked } from "@glimmer/tracking";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import { userPath } from "discourse/lib/url";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
@@ -39,7 +39,13 @@ class TopicParticipant extends Component {
   }
 
   get linkClasses() {
-    return ["poster", "trigger-user-card", this.args.toggled ? "toggled" : null]
+    return [
+      "poster",
+      "trigger-user-card",
+      this.args.toggledUsers.has(this.args.participant.username)
+        ? "toggled"
+        : null,
+    ]
       .filter(Boolean)
       .join(" ");
   }
@@ -67,23 +73,15 @@ class TopicParticipant extends Component {
 }
 
 export default class TopicParticipants extends Component {
-  filteredUsers;
-
-  constructor() {
-    super(...arguments);
-    this.filteredUsers = new Set(this.args.userFilters);
-  }
-
-  shouldToggle(participant) {
-    return this.filteredUsers.has(participant.username);
-  }
+  // prettier-ignore
+  @tracked toggledUsers = new Set(this.args.userFilters);
 
   <template>
     {{@title}}
     {{#each @participants as |participant|}}
       <TopicParticipant
         @participant={{participant}}
-        @toggled={{(fn this.shouldToggle participant)}}
+        @toggledUsers={{this.toggledUsers}}
       />
     {{/each}}
   </template>
