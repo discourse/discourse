@@ -115,7 +115,7 @@ class SiteSettingMoveToGroupsMigrationGenerator < Rails::Generators::Base
 
   def setting_type(name)
     if type_supervisor.get_type(name.to_sym) == :enum
-      return type_supervisor.get_enum_class(name.to_sym)&.to_s
+      return type_supervisor.get_enum_class(name.to_sym).to_s
     end
 
     nil
