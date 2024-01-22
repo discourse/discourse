@@ -1,6 +1,7 @@
 import { computed } from "@ember/object";
 import { none } from "@ember/object/computed";
 import { capitalize } from "@ember/string";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { formattedReminderTime } from "discourse/lib/bookmark";
@@ -100,6 +101,20 @@ const Bookmark = RestModel.extend({
           })}\n${I18n.t("topic.bumped_at", { date: longDate(bumpedAt) })}`
         : I18n.t("topic.created_at", { date: longDate(createdAt) });
     }
+  },
+
+  @discourseComputed("name", "reminder_at")
+  reminderTitle(name, reminderAt) {
+    if (!isEmpty(reminderAt)) {
+      return I18n.t("bookmarks.created_with_reminder_generic", {
+        date: this.formattedReminder,
+        name: name || "",
+      });
+    }
+
+    return I18n.t("bookmarks.created_generic", {
+      name: name || "",
+    });
   },
 
   @discourseComputed("created_at")
