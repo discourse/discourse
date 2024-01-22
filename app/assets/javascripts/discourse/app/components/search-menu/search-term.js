@@ -58,6 +58,7 @@ export default class SearchTerm extends Component {
     }
   }
 
+  @action
   onKeyup(e) {
     if (
       onKeyUpCallbacks.length &&
