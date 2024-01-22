@@ -7,7 +7,6 @@ import DModal from "discourse/components/d-modal";
 import Topic from "discourse/models/topic";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
-import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 //import AppendTags from "../bulk-actions/append-tags";
 //import ChangeCategory from "../bulk-actions/change-category";
 //import ChangeTags from "../bulk-actions/change-tags";
