@@ -17,7 +17,12 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
   });
 
   test("regular user - sufficient trust level", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      trust_level: 1,
+      can_create_poll: true,
+    });
 
     await displayPollBuilderButton();
 
@@ -50,7 +55,12 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
   });
 
   test("regular user - insufficient trust level", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: false, trust_level: 0 });
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      trust_level: 0,
+      can_create_poll: false,
+    });
 
     await displayPollBuilderButton();
 
