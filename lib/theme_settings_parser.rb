@@ -43,6 +43,7 @@ class ThemeSettingsParser
     opts[:json_schema] = raw_opts[:json_schema]
 
     opts[:refresh] = !!raw_opts[:refresh]
+    opts[:schema] = raw_opts[:schema]
 
     opts
   end

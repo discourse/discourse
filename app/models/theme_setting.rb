@@ -24,7 +24,12 @@ class ThemeSetting < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5, upload: 6)
+    @types ||=
+      Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5, upload: 6, objects: 7)
+  end
+
+  def self.create_objects_schema(schema_opts, theme_id)
+    MetaSchemaCreator.create!(schema_opts[:name], schema_opts[:fields], theme_id:)
   end
 
   def self.acceptable_value_for_type?(value, type)
@@ -37,6 +42,8 @@ class ThemeSetting < ActiveRecord::Base
       value.is_a?(TrueClass) || value.is_a?(FalseClass)
     when self.types[:list]
       value.is_a?(String)
+    when self.types[:objects]
+      value.is_a?(Array)
     else
       true
     end

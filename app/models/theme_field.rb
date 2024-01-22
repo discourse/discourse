@@ -330,6 +330,10 @@ class ThemeField < ActiveRecord::Base
           unless ThemeSetting.acceptable_value_for_type?(default, type)
             errors << I18n.t("#{translation_key}.default_not_match_type", name: name)
           end
+
+          if type == ThemeSetting.types[:objects]
+            ThemeSetting.create_objects_schema(opts[:schema], self.theme_id)
+          end
         end
     rescue ThemeSettingsParser::InvalidYaml => e
       errors << e.message

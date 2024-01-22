@@ -113,6 +113,31 @@ class ThemeSettingsManager
     (max.is_a?(::Integer) || max.is_a?(::Float)) && max != ::Float::INFINITY
   end
 
+  class Objects < self
+    def has_record?
+      !db_record.empty?
+    end
+
+    def db_record
+      MetaObject
+        .where(meta_schema: self.schema)
+        .includes(meta_fields: %i[meta_column fieldable])
+        .map do |meta_object|
+          meta_object
+            .meta_fields
+            .reduce({}) do |fields, meta_field|
+              fields[meta_field.meta_column.name] = meta_field.meta_column.value
+            end
+        end
+    end
+
+    private
+
+    def schema
+      @schema ||= MetaSchema.find_by(name: @opts[:schema][:name])
+    end
+  end
+
   class List < self
     def list_type
       @opts[:list_type]
