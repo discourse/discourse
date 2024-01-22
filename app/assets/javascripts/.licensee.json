@@ -10,6 +10,18 @@
     ]
   },
   "packages": {
+    "@glimmer/compiler": "*",
+    "@glimmer/debug": "*",
+    "@glimmer/encoder": "*",
+    "@glimmer/global-context": "*",
+    "@glimmer/interfaces": "*",
+    "@glimmer/manager": "*",
+    "@glimmer/node": "*",
+    "@glimmer/opcode-compiler": "*",
+    "@glimmer/program": "*",
+    "@glimmer/syntax": "*",
+    "@glimmer/vm": "*",
+    "@jspreadsheet/formula": "2.0.2",
     "cli-table": "0.3.11",
     "component-bind": "1.0.0",
     "component-inherit": "0.0.3",
@@ -18,13 +30,12 @@
     "indexof": "0.0.1",
     "inherits": "1.0.2",
     "jsonify": "0.0.1",
+    "jspreadsheet-ce": "4.13.4",
     "line-stream": "0.0.0",
     "messageformat": "0.1.5",
     "regenerator-transform": "0.10.1",
     "source-map": "0.1.43",
-    "sourcemap-validator": "1.1.1",
-    "jspreadsheet-ce": "4.13.4",
-    "@jspreadsheet/formula": "2.0.2"
+    "sourcemap-validator": "1.1.1"
   },
   "corrections": true,
   "ignore": [
