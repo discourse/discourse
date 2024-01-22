@@ -66,7 +66,7 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
 
     await click(".hot-coffee");
 
-    assert.strictEqual(123, testPost.id, "callback was called with post");
+    assert.strictEqual(testPost.id, 123, "callback was called with post");
     assert.strictEqual(
       count(".post-action-feedback-button"),
       1,

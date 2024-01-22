@@ -28,7 +28,7 @@ export default class ChatRoutesBrowse extends Component {
   get channelsCollection() {
     return this.chatApi.channels({
       filter: this.filter,
-      status: this.attrs.status,
+      status: this.status,
     });
   }
 
@@ -68,8 +68,8 @@ export default class ChatRoutesBrowse extends Component {
         <navbar.BackButton />
         <navbar.Title @title={{i18n "chat.browse.title"}} />
 
-        <navbar.Actions as |action|>
-          <action.NewChannelButton />
+        <navbar.Actions as |a|>
+          <a.NewChannelButton />
         </navbar.Actions>
       </Navbar>
 

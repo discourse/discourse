@@ -110,7 +110,7 @@ export default class FileTypesList extends Component {
     />
 
     <DButton
-      @action={{(fn this.insertDefaultTypes "image")}}
+      @action={{fn this.insertDefaultTypes "image"}}
       @label="admin.site_settings.file_types_list.add_image_types"
       @translatedTitle={{i18n
         "admin.site_settings.file_types_list.add_types_title"
@@ -119,7 +119,7 @@ export default class FileTypesList extends Component {
       class="btn file-types-list__button image"
     />
     <DButton
-      @action={{(fn this.insertDefaultTypes "video")}}
+      @action={{fn this.insertDefaultTypes "video"}}
       @label="admin.site_settings.file_types_list.add_video_types"
       @translatedTitle={{i18n
         "admin.site_settings.file_types_list.add_types_title"
@@ -128,7 +128,7 @@ export default class FileTypesList extends Component {
       class="btn file-types-list__button video"
     />
     <DButton
-      @action={{(fn this.insertDefaultTypes "audio")}}
+      @action={{fn this.insertDefaultTypes "audio"}}
       @label="admin.site_settings.file_types_list.add_audio_types"
       @translatedTitle={{i18n
         "admin.site_settings.file_types_list.add_types_title audio"
@@ -137,7 +137,7 @@ export default class FileTypesList extends Component {
       class="btn file-types-list__button"
     />
     <DButton
-      @action={{(fn this.insertDefaultTypes "document")}}
+      @action={{fn this.insertDefaultTypes "document"}}
       @label="admin.site_settings.file_types_list.add_document_types"
       @translatedTitle={{i18n
         "admin.site_settings.file_types_list.add_types_title"
