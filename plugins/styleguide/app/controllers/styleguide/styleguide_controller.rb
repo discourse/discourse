@@ -6,7 +6,9 @@ module Styleguide
     skip_before_action :check_xhr
 
     def index
-      ensure_admin if SiteSetting.styleguide_admin_only
+      if !current_user || !current_user.in_any_groups?(SiteSetting.styleguide_allowed_groups_map)
+        raise Discourse::InvalidAccess.new
+      end
 
       render "default/empty"
     end
