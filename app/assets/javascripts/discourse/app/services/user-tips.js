@@ -13,11 +13,12 @@ export default class UserTips extends Service {
   #shouldRenderSet = new TrackedSet();
 
   #updateRenderedId() {
-    if (this.#availableTips.has(this.#renderedId)) {
+    const tipsArray = [...this.#availableTips];
+    if (tipsArray.find((tip) => tip.id === this.#renderedId)) {
       return;
     }
 
-    const newId = [...this.#availableTips]
+    const newId = tipsArray
       .sortBy("priority")
       .reverse()
       .find((tip) => {
