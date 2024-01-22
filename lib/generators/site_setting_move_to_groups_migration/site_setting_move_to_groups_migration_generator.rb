@@ -97,9 +97,19 @@ class SiteSettingMoveToGroupsMigrationGenerator < Rails::Generators::Base
   end
 
   def setting_type(name)
-    @site_settings ||= load_settings(File.join(Rails.root, "config", "site_settings.yml"))
-    subgroup = @site_settings.values.find { |row| row.keys.include?(name) }
-    subgroup[name][:enum]
+    load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+
+    if GlobalSetting.load_plugins?
+      Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
+        load_settings(file, plugin: file.split("/")[-3])
+      end
+    end
+
+    if type_supervisor.get_type(name.to_sym) == :enum
+      return type_supervisor.get_enum_class(name.to_sym)&.to_s
+    end
+
+    nil
   end
 
   def validate_setting_type!(name)
