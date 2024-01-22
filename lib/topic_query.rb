@@ -665,13 +665,11 @@ class TopicQuery
 
   def sortable_mapping
     @sortable_mapping ||=
-      begin
-        DiscoursePluginRegistry.apply_modifier(
-          :topic_query_sortable_mapping,
-          DEFAULT_SORTABLE_MAPPING.dup,
-          self,
-        )
-      end
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_query_sortable_mapping,
+        DEFAULT_SORTABLE_MAPPING.dup,
+        self,
+      )
   end
 
   def apply_ordering(result, options = {})
