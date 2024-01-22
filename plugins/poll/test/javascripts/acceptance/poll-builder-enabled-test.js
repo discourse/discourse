@@ -1,5 +1,6 @@
 import { click } from "@ember/test-helpers";
 import { test } from "qunit";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import {
   acceptance,
   exists,
@@ -12,7 +13,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
   needs.user();
   needs.settings({
     poll_enabled: true,
-    poll_minimum_trust_level_to_create: 1,
+    poll_create_allowed_groups: AUTO_GROUPS.trust_level_1,
   });
 
   test("regular user - sufficient trust level", async function (assert) {
