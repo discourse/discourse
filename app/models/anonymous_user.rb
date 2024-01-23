@@ -3,6 +3,8 @@
 class AnonymousUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :master_user, class_name: "User"
+
+  has_many :groups, through: :group_users
 end
 
 # == Schema Information

@@ -2215,6 +2215,7 @@ en:
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     allow_anonymous_likes: "Allow anonymous users to like posts"
+    allow_anonymous_to_inherit_group: "Have anonymous users inherit their user's groups if enabled"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."

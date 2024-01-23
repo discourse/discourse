@@ -1448,6 +1448,8 @@ id:
         name: "GitHub"
       discord:
         name: "Discord"
+      passkey:
+        name: "Masuk dengan passkey"
     invites:
       accept_title: "Undangan"
       welcome_to: "Selamat datang di %{site_name}!"
@@ -1948,6 +1950,7 @@ id:
     tagging:
       tags: "Label"
       add_synonyms: "Menambahkan"
+      description: "Deskripsi (maks 1000 karakter)"
       sort_by_count: "menghitung"
       sort_by_name: "nama"
       filters:
@@ -2103,6 +2106,7 @@ id:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
+      back_to_forum: "Kembali ke Forum"
       tags:
         remove_muted_tags_from_latest:
           always: "selalu"
@@ -2156,6 +2160,7 @@ id:
       api:
         user: "Pengguna"
         title: "API"
+        keys: "Kunci"
         created: Dibuat
         never_used: (tidak pernah)
         revoke: "Cabut"
@@ -2175,6 +2180,8 @@ id:
               show: Dapatkan satu grup tag berdasarkan id.
               create: Membuat grup tag.
               update: Memperbarui grup tag yang ditentukan oleh id.
+            logs:
+              messages: Buat daftar pesan dari /logs atau dapatkan pesan log tertentu.
       web_hooks:
         create: "Buat"
         edit: "Ubah"
@@ -2264,6 +2271,7 @@ id:
       email:
         title: "Surel"
         settings: "Pengaturan"
+        templates_title: "Templat Email"
         sent: "Mengirim"
         received: "Menerima"
         rejected: "Ditolak"

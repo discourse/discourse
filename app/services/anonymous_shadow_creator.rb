@@ -64,6 +64,7 @@ class AnonymousShadowCreator
         email_digests: false,
       )
 
+      shadow.groups = user.groups if SiteSetting.allow_anonymous_to_inherit_group
       shadow.email_tokens.update_all(confirmed: true)
       shadow.activate
 

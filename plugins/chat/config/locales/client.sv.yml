@@ -15,6 +15,7 @@ sv:
       site_settings:
         chat_separate_sidebar_mode:
           always: "Alltid"
+          fullscreen: "När chatten är i helskärm"
           never: "Aldrig"
       logs:
         staff_actions:
@@ -27,7 +28,20 @@ sv:
           descriptions:
             chat:
               create_message: "Skapa ett chattmeddelande i en angiven kanal."
+      web_hooks:
+        chat_event:
+          group_name: "Chatthändelser"
+          chat_message_created: "Meddelandet skapas"
+          chat_message_edited: "Meddelandet redigeras"
+          chat_message_trashed: "Meddelandet kastas"
+          chat_message_restored: "Meddelandet återställs"
+    about:
+      chat_messages_count: "Chattmeddelanden"
+      chat_channels_count: "Chattkanaler"
+      chat_users_count: "Chattanvändare"
     chat:
+      text_copied: Texten har kopierats till urklipp
+      link_copied: Länken har kopierats till urklipp
       back_to_forum: "Forum"
       deleted_chat_username: raderat
       dates:
@@ -57,6 +71,7 @@ sv:
         delete_channel: "Radera kanal"
         join_channel: "Gå med i kanal"
         leave_channel: "Lämna kanal"
+        leave_groupchat_info: "Genom att lämna den här gruppchatten har du inte längre tillgång till den och kommer inte att få aviseringar relaterade till den. För att gå med igen måste du bjudas in igen av en medlem av gruppchatten."
         join: "Gå med"
         leave: "Lämna"
         save_label:
@@ -210,6 +225,7 @@ sv:
         header: "Chatthuvud"
         composer: "Chattkompositör"
         channels_list: "Lista över chattkanaler"
+      no_direct_message_channels: "Du har inte gått med i några direktmeddelandekanaler."
       no_public_channels: "Du har inte gått med i några kanaler."
       kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
       only_chat_push_notifications:
@@ -249,6 +265,7 @@ sv:
       select: "Välj"
       return_to_list: "Återgå till listan över kanaler"
       return_to_channel: "Återgå till kanal"
+      return_to_threads_list: "Återgå till trådlistan"
       unread_threads_count:
         one: "Du har %{count} oläst diskussion"
         other: "Du har %{count} olästa diskussioner"
@@ -295,6 +312,7 @@ sv:
         yesterday: Igår
       members_view:
         filter_placeholder: Hitta medlemmar
+        add_member: Lägg till medlem
         back_to_settings: "Tillbaka till inställningarna"
       about_view:
         associated_topic: Länkat ämne
@@ -325,6 +343,7 @@ sv:
         filter: "Filter"
         cant_add_more_members: "Maximalt antal medlemmar nått"
         create_new_group_chat: "Skapa gruppchatt"
+        group_with_too_many_members: "har för många medlemmar (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Redigera kanal
         input_placeholder: Lägg till ett namn

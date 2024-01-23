@@ -1249,7 +1249,6 @@ ar:
       said: "%{username}:"
       profile: "الملف الشخصي"
       profile_possessive: "الملف الشخصي لـ %{username}"
-      account_possessive: "حساب %@"
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive:

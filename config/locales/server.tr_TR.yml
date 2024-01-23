@@ -1852,7 +1852,7 @@ tr_TR:
     here_mention: "Ayrıcalıklı kullanıcıların konuya katılan en fazla \"max_here_mentioned\" kişiye bildirimde bulunmasına izin vermek için @bahsetme için kullanılan ad. Mevcut bir kullanıcı adı olmamalıdır."
     max_here_mentioned: "@Burada bahsedilen maksimum kişi sayısı."
     min_trust_level_for_here_mention: "@Burada bahsedilmesine izin verilen minimum güven seviyesi."
-    here_mention_allowed_groups: "@here atfı yapılmasına izin verilen gruplar."
+    here_mention_allowed_groups: "@here bahsetmesi yapılmasına izin verilen gruplar."
     create_thumbnails: "Bir gönderiye sığmayacak kadar büyük küçük resimler ve ışık kutusu görüntüleri oluşturun."
     email_time_window_mins: "Kullanıcılara gönderilerini düzenleme ve son haline getirme şansı tanımak için herhangi bir bildirim e-postası göndermeden önce (n) dakika bekleyin."
     personal_email_time_window_seconds: "Kullanıcılara mesajlarını düzenleme ve son haline getirme şansı tanımak için herhangi bir kişisel mesaj bildirim e-postası göndermeden önce (n) saniye bekleyin."
@@ -2228,7 +2228,6 @@ tr_TR:
     use_name_for_username_suggestions: "Kullanıcı adı önerirken kullanıcının tam adını kullanın."
     suggest_weekends_in_date_pickers: "Tarih seçici önerilerine hafta sonlarını (cumartesi ve pazar) dahil edin (Discourse'u yalnızca hafta içi, pazartesiden cumaya kadar kullanıyorsanız bunu devre dışı bırakın)."
     splash_screen: "Site varlıkları yüklenirken geçici bir yükleme ekranı gösterir"
-    navigation_menu: "Hangi gezinme menüsünün kullanılacağını belirleyin. Kenar çubuğu ve başlık gezinmesi, kullanıcılar tarafından özelleştirilebilir. Geriye dönük uyumluluk için eski seçenek mevcuttur."
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
     experimental_new_new_view_groups: 'DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
@@ -4614,6 +4613,9 @@ tr_TR:
   onebox:
     discourse:
       user_joined_community: "%{date} tarihinde katıldı"
+    github:
+      opened: "açıldı"
+      closed: "kapatıldı"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}, "%{topic}" konusunda sizden bahsetti - %{site_title}'

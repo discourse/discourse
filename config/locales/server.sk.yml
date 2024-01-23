@@ -1499,6 +1499,10 @@ sk:
             placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Pozvite členov"
+  onebox:
+    github:
+      opened: "otvorené"
+      closed: "zatvorené"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'

@@ -2023,6 +2023,9 @@ sw:
         title: "Discourse yako iko Tayari!"
   search_logs:
     graph_title: "Idadi ya Utafiti"
+  onebox:
+    github:
+      closed: "imefungwa"
   discourse_push_notifications:
     popup:
       mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'

@@ -1319,6 +1319,9 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
+  onebox:
+    github:
+      closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'

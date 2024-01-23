@@ -2448,7 +2448,6 @@ ar:
     use_name_for_username_suggestions: "استخدام الاسم الكامل للمستخدم عند اقتراح أسماء المستخدمين."
     suggest_weekends_in_date_pickers: "تضمين عطلات نهاية الأسبوع (السبت والأحد) في اقتراحات منتقي التاريخ (يمكنك إيقاف هذا الإعداد إذا كنت تستخدم Discouse في أيام الأسبوع فقط؛ أي من الاثنين إلى الجمعة)."
     splash_screen: "يعرض شاشة تحميل مؤقتة أثناء تحميل أصول الموقع"
-    navigation_menu: "تحديد قائمة التنقل التي سيتم استخدامها. يمكن للمستخدمين تخصيص الشريط الجانبي وقائمة التنقل في رأس الصفحة. يتوفَّر خيار \"القائمة القديمة\" للتوافق مع الإصدارات السابقة."
     default_navigation_menu_categories: "سيتم عرض الفئات المحدَّدة ضمن قسم فئات قائمة التنقل بشكلٍ افتراضي."
     default_navigation_menu_tags: "سيتم عرض الفئات المحدَّدة ضمن قسم وسوم قائمة التنقل بشكلٍ افتراضي."
     experimental_new_new_view_groups: 'تجريبي: تفعيل قائمة موضوعات جديدة تجمع بين الموضوعات الجديدة وغير المقروءة، ووضع رابط "الكل" في رابط الشريط الجانبي إليها'
@@ -2456,6 +2455,7 @@ ar:
     experimental_topics_filter: "تجريبي: تفعيل مسار تصفية الموضوعات التجريبية في /filter"
     enable_experimental_lightbox: "تجريبي: استبدال الصور المبسَّطة الافتراضية بالتصميم الذي تم تجديده"
     experimental_form_templates: "تجريبي: تفعيل ميزة قوالب النماذج. <b>بعد التفعيل،</b> يمكنك إدارة القوالب من <a href='%{base_path}/admin/customize/form-templates'>التخصيص/القوالب</a>."
+    lazy_load_categories_groups: "EXPERIMENTAL: Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     page_loading_indicator: "تكوين مؤشر التحميل الذي يظهر في أثناء التنقل في الصفحة داخل Discourse. يكون 'Spinner' مؤشرًا لصفحة كاملة، بينما يعرض 'Slider' شريطًا ضيقًا أعلى الشاشة."
     show_user_menu_avatars: "إظهار الصور الرمزية للمستخدم في قائمة المستخدم"
     errors:
@@ -4949,6 +4949,8 @@ ar:
   onebox:
     discourse:
       user_joined_community: "تاريخ الانضمام: %{date}"
+    github:
+      closed: "مغلقة"
   discourse_push_notifications:
     popup:
       mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'

@@ -964,7 +964,6 @@ ja:
       said: "%{username}:"
       profile: "プロファイル"
       profile_possessive: "%{username} のプロファイル"
-      account_possessive: "のアカウント"
       mute: "ミュート"
       edit: "プロファイルを編集"
       download_archive:

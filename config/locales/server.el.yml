@@ -2411,6 +2411,9 @@ el:
         description: "Έχεις σχεδόν τελειώσει! Ας προσκαλέσουμε μερικούς χρήστες να <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>συμμετάσχουν στις συζητήσεις</a> με ενδιαφέροντα νήματα και αναρτήσεις ώστε να ξεκινήσει να λειτουργεί η κοινότητα. "
       finished:
         title: "Το Discourse σου είναι έτοιμο!"
+  onebox:
+    github:
+      closed: "κλειστό"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} σε ανέφερε στο "%{topic}" - %{site_title}'

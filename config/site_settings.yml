@@ -677,6 +677,9 @@ users:
   allow_anonymous_likes:
     default: false
     client: true
+  allow_anonymous_to_inherit_group:
+    default: false
+    client: true
   anonymous_posting_min_trust_level:
     default: 1
     enum: "TrustLevelSetting"

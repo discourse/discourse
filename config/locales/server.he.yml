@@ -1762,6 +1762,7 @@ he:
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     version_checks: "לדגום את Discourse Hub כדי למצוא עדכוני גרסאות ולהציג הודעות של גרסאות חדשות בלוח הניהול <a href='%{base_path}/admin' target='_blank'>‎/admin</a>"
     new_version_emails: "לשלוח הודעת דוא״ל לכתובת contact_email כשגרסה חדשה של Discourse זמינה."
+    include_in_discourse_discover: "זו הסכמתי ל־CDCK בע״מ („Discourse”) לקדם את הקהילה הזאת ב<a href='https://www.discourse.org/discover'>עמוד החשיפה</a> ובחומרי השיווק של Discourse. הסכמה זו, תוביל לשיתוף נתוני העל ונתוני שימוש בעילום שם עם Discourse. נא לשים לב שקידום הקהילות נתון לשיקול הדעת של Discourse."
     invite_expiry_days: "מה התוקף מפתחות הזמנת משתמשים, בימים"
     invite_only: "כל המשתמשים החדשים חייבים לקבל הזמנה ממשתמשים מהימנים או חברי סגל. הרשמה ציבורית סגורה."
     login_required: "לדרוש אימות כדי לקרוא תוכן באתר הזה, לאסור על גישה אלמונית."
@@ -1947,6 +1948,7 @@ he:
     min_trust_to_flag_posts: "דרגת האמון המזערית הנדרשת לסימון פוסטים בדגל"
     flag_post_allowed_groups: "קבוצות שמורשות לסמן פוסטים."
     min_trust_to_post_links: "דרגת האמון המזערית להוספת קישורים לפוסטים"
+    post_links_allowed_groups: "קבוצות שמורשות לכלול קישורים בפוסטים."
     min_trust_to_post_embedded_media: "דרגת האמון המזערית הנדרשת להטמעת מדיה בפוסט"
     min_trust_level_to_allow_profile_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לפרופיל"
     min_trust_level_to_allow_user_card_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לכרטיס המשתמש"
@@ -2289,6 +2291,9 @@ he:
     min_trust_level_for_user_api_key: |
       נדרשת דרגת אמון ליצירת מפתחות API למשתמש.<br>
       <b>אזהרה</b>: שינוי דרגת האמון ימנע ממשתמשים עם דרגת אמון נמוכה יותר להיכנס דרך Discourse Hub
+    user_api_key_allowed_groups: |
+      נדרשת חברות בקבוצה ליצירת מפתחות API למשתמש.<br>
+      <b>אזהרה</b>: שינוי דרגת האמון ימנע ממשתמשים עם דרגת אמון נמוכה יותר להיכנס דרך Discourse Hub
     allowed_user_api_auth_redirects: "כתובת מורשית להפניית אימות למפתחות API של משתמש. בסימן התו־כל * ניתן להשתמש כדי ללכוד חלק ממנה (למשל: www.example.com/*‎)."
     allowed_user_api_push_urls: "URLים מורשים לדחיפת שרת ל API של משתמשים."
     revoke_user_api_keys_unused_days: "מספר הימים אחרי השימוש האחרון במפתח API של משתמש לפני שלילתו אוטומטית (0 כדי לא לשלול לעולם)"
@@ -2344,7 +2349,6 @@ he:
     use_name_for_username_suggestions: "להשתמש בשם המלא של המשתמש בעת הצעת שמות משתמשים."
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
     splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
-    navigation_menu: "קביעת תפריט הניווט לשימוש. המשתמשים יכולים להתאים את הניווט מסרגל הצד והכותרת. האפשרות הישנה זמינה לטובת תאימות לאחור."
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
     default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
     experimental_new_new_view_groups: 'ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
@@ -2353,6 +2357,7 @@ he:
     enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
     experimental_form_templates: "ניסיוני: יש להפעיל את יכולת תבניות הטפסים. <b>לאחר ההפעלה,</b> אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
     admin_sidebar_enabled_groups: "ניסיוני: הפעלת ניווט בסרגל הצד למנשק המשתמש של הניהול לקבוצות שצוינו, מחליף את כפתורי הניווט באפשרויות הניהול ברמה העליונה."
+    lazy_load_categories_groups: "ניסיוני: לטעון בעצלות את פרטי הקטגוריה רק למשתמשים בקבוצות האלה. הגדרה זו משפרת את הביצועים באתרים עם הרבה קטגוריות."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     show_user_menu_avatars: "הצגת תמונות ייצוגיות של משתמשים בתפריט המשתמש"
     errors:
@@ -2432,6 +2437,8 @@ he:
       create_tag_allowed_groups: "min_trust_to_create_tag (דרגת אמון מזערית ליצירת תגיות)"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages (דרגת אמון מזערית לשליחת דוא״ל)"
       skip_review_media_groups: "review_media_unless_trust_level (סקירת מדיה למעט בדרגת אמון)"
+      post_links_allowed_groups: "min_trust_to_post_links (דרגת אמון מזערית לפרסום קישורים)"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key (דרגת אמון מזערית למפתח API למשתמש)"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4910,6 +4917,22 @@ he:
   onebox:
     discourse:
       user_joined_community: "מועד הצטרפות: %{date}"
+    gitlab:
+      truncated_file: "הקובץ הזה נקטע."
+      show_original: "הצגת המקורי"
+    github:
+      binary_file: "זה קובץ בינרי."
+      truncated_file: "הקובץ הזה נקטע."
+      show_original: "הצגת המקורי"
+      requires_iframe: "המציג דורש iframe (מסגרת פנימית)."
+      committed: "הוגש"
+      more_than_three_files: "יש יותר משלושה קבצים."
+      opened: "נפתח"
+      closed: "סגורה"
+      commit_by: "הגשה מאת"
+      comment_by: "תגובה מאת"
+      review_by: "סקירה של"
+      pr_summary: "%{commits} הגשות שינו %{changed_files} קבצים עם %{additions} תוספים ו־%{deletions} מחיקות"
   discourse_push_notifications:
     popup:
       mentioned: ' אוזכרת על ידי %{username} בנושא „%{topic}” - %{site_title}'

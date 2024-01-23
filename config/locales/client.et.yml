@@ -748,7 +748,6 @@ et:
       said: "%{username}:"
       profile: "Profiil"
       profile_possessive: "%{username} profiil"
-      account_possessive: "konto"
       mute: "Vaigista"
       edit: "Muuda Eelistusi"
       new_private_message: "Uus sõnum"
