@@ -7,17 +7,9 @@ GIT
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
 
-GIT
-  remote: https://github.com/thoughtbot/shoulda-matchers.git
-  revision: 367500d9fc3c76aef7add29f48459236928af96e
-  specs:
-    shoulda-matchers (6.0.0)
-      activesupport (>= 5.2.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
-    abbrev (0.1.2)
     actionmailer (7.0.8)
       actionpack (= 7.0.8)
       actionview (= 7.0.8)
@@ -168,8 +160,7 @@ GEM
     hana (1.3.7)
     hashdiff (1.1.0)
     hashie (5.0.0)
-    highline (3.0.0)
-      abbrev
+    highline (3.0.1)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
     i18n (1.14.1)
@@ -209,7 +200,7 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.15.0)
+    logster (2.16.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -305,7 +296,7 @@ GEM
     parallel (1.24.0)
     parallel_tests (4.4.0)
       parallel
-    parser (3.3.0.4)
+    parser (3.3.0.5)
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
@@ -461,6 +452,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    shoulda-matchers (6.1.0)
+      activesupport (>= 5.2.0)
     sidekiq (6.5.12)
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
@@ -652,7 +645,7 @@ DEPENDENCIES
   sassc-embedded
   selenium-devtools
   selenium-webdriver (~> 4.14)
-  shoulda-matchers!
+  shoulda-matchers
   sidekiq
   simplecov
   sprockets!

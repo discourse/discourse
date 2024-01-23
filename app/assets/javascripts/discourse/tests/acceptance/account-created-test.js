@@ -76,19 +76,14 @@ acceptance("Account Created", function () {
     });
 
     await visit("/u/account-created");
-
     await click(".activation-controls .edit-email");
-
-    assert.ok(exists(".activation-controls .btn-primary:disabled"));
+    assert.dom(".activation-controls .btn-primary").isDisabled();
 
     await fillIn(".activate-new-email", "newemail@example.com");
-
-    assert.notOk(exists(".activation-controls .btn-primary:disabled"));
+    assert.dom(".activation-controls .btn-primary").isNotDisabled();
 
     await click(".activation-controls .btn-primary");
-
     assert.strictEqual(currentRouteName(), "account-created.resent");
-    const email = query(".account-created b").innerText;
-    assert.strictEqual(email, "newemail@example.com");
+    assert.dom(".account-created b").hasText("newemail@example.com");
   });
 });

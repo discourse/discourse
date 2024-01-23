@@ -301,7 +301,7 @@ module ApplicationHelper
     ) if opts[:twitter_summary_large_image].present?
 
     result = []
-    result << tag(:meta, property: "og:site_name", content: SiteSetting.title)
+    result << tag(:meta, property: "og:site_name", content: opts[:site_name] || SiteSetting.title)
     result << tag(:meta, property: "og:type", content: "website")
 
     generate_twitter_card_metadata(result, opts)

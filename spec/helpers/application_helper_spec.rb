@@ -687,6 +687,27 @@ RSpec.describe ApplicationHelper do
         expect(metadata).to include output_tags
       end
     end
+
+    context "with custom site name" do
+      before { SiteSetting.title = "Default Site Title" }
+
+      it "uses the provided site name in og:site_name" do
+        custom_site_name = "Custom Site Name"
+        result = helper.crawlable_meta_data(site_name: custom_site_name)
+
+        expect(result).to include(
+          "<meta property=\"og:site_name\" content=\"#{custom_site_name}\" />",
+        )
+      end
+
+      it "falls back to the default site title if no custom site name is provided" do
+        result = helper.crawlable_meta_data
+
+        expect(result).to include(
+          "<meta property=\"og:site_name\" content=\"#{SiteSetting.title}\" />",
+        )
+      end
+    end
   end
 
   describe "discourse_color_scheme_stylesheets" do

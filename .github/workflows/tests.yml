@@ -22,7 +22,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }} (Ember ${{ matrix.updated_ember && '5' || '3' }}) # Update fetch-job-id step if changing this
+    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ !matrix.updated_ember && ' (Ember 3)' || '' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -84,7 +84,7 @@ jobs:
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
       - name: Bundler cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
@@ -103,7 +103,7 @@ jobs:
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -121,7 +121,7 @@ jobs:
         run: bin/rake plugin:pull_compatible_all
 
       - name: Plugin gems cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: plugins/*/gems
           key: ${{ runner.os }}-plugin-gems-${{matrix.ruby}}-${{ hashFiles('plugins/*/plugin.rb') }}
@@ -137,7 +137,7 @@ jobs:
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
       - name: Fetch app state cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: app-cache
         with:
           path: tmp/app-cache
@@ -178,7 +178,7 @@ jobs:
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: test-runtime-cache
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
@@ -290,7 +290,7 @@ jobs:
         id: fetch-job-id
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
         run: |
-          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }} (Ember ${{ matrix.updated_ember && '5' || '3' }})')
+          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}${{ !matrix.updated_ember && ' (Ember 3)' || '' }}')
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
 
       - name: Create flaky tests report artifact
@@ -323,7 +323,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }}) (Ember ${{ matrix.updated_ember && '5' || '3' }})
+    name: core frontend (${{ matrix.browser }})${{ !matrix.updated_ember && ' (Ember 3)' || '' }}
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
@@ -359,7 +359,7 @@ jobs:
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
