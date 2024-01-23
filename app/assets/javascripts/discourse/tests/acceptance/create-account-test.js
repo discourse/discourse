@@ -87,7 +87,6 @@ acceptance("Create Account", function () {
       .dom(".d-modal.create-account .btn-primary")
       .exists("create account button exists");
 
-    assert.dom(".d-modal.create-account .btn-primary").exists();
     assert.dom(".passkey-login-button").doesNotExist();
   });
 });
