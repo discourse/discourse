@@ -1021,7 +1021,6 @@ it:
       said: "%{username}:"
       profile: "Profilo"
       profile_possessive: "Profilo di %{username}"
-      account_possessive: "(account di)"
       mute: "Silenzia"
       edit: "Modifica opzioni"
       download_archive:

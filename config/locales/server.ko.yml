@@ -3781,6 +3781,10 @@ ko:
           <p>즐거운 시간 보내세요! <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>새로운 커뮤니티 구축에 행운을 빕니다!</a></p>
   search_logs:
     graph_title: "검색 횟수"
+  onebox:
+    github:
+      opened: "열림"
+      closed: "닫힘"
   discourse_push_notifications:
     popup:
       mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 멘션했습니다'

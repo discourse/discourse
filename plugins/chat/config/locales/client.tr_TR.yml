@@ -151,7 +151,7 @@ tr_TR:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
-        channel_wide_mentions_disallowed: "Bu kanalda @here ve @all mentionları devre dışı."
+        channel_wide_mentions_disallowed: "Bu kanalda @here ve @all bahsetmeleri devre dışı."
         groups:
           header:
             some: "Bazı kullanıcılara bildirim gönderilmeyecek"

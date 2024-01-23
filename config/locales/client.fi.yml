@@ -1021,7 +1021,6 @@ fi:
       said: "%{username}:"
       profile: "Profiili"
       profile_possessive: "Käyttäjän %{username} profiili"
-      account_possessive: "– tili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
       download_archive:

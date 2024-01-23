@@ -102,6 +102,8 @@ id:
         filter_all: Semua
         filter_closed: Tertutup
         filter_archived: Diarsipkan
+      members_view:
+        back_to_settings: "Kembali ke pengaturan"
       about_view:
         title: Judul
         name: Nama

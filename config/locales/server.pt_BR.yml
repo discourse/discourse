@@ -2235,7 +2235,6 @@ pt_BR:
     use_name_for_username_suggestions: "Use o nome completo de um usuário ao sugerir nomes de usuário."
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
     splash_screen: "Exibe uma tela de carregamento temporária enquanto os ativos do site são carregados"
-    navigation_menu: "Determine qual menu de navegação usar. A barra lateral e a navegação no cabeçalho podem ser personalizadas pelos usuários. A opção legada está disponível para compatibilidade com versões anteriores."
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
     experimental_new_new_view_groups: 'EXPERIMENTAL: ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
@@ -4650,6 +4649,9 @@ pt_BR:
   onebox:
     discourse:
       user_joined_community: "Juntou-se em %{date}"
+    github:
+      opened: "abertos"
+      closed: "fechados"
   discourse_push_notifications:
     popup:
       mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'

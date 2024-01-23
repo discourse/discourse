@@ -668,73 +668,135 @@ cs:
     default:
       labels:
         count: Počet
+        percent: Procento
         day: Den
     post_edits:
+      title: "Úpravy příspěvků"
       labels:
         edited_at: Datum
         post: Příspěvek
         editor: Editor
+        author: Autor
         edit_reason: Reason
+      description: "Počet nových úprav příspěvku."
     user_flagging_ratio:
+      title: "Poměr nahlašování uživatelů"
       labels:
         user: Uživatel
+        agreed_flags: Potvrzená nahlášení
+        disagreed_flags: Nepotvrzená nahlášení
+        ignored_flags: Ignorovaná nahlášení
         score: Skóre
+      description: "Seznam uživatelů seřazený podle poměru odpovědí redaktorů k jejich nahlášením (potvrzených k nepotvrzeným)."
     moderators_activity:
+      title: "Aktivita moderátorů"
       labels:
         moderator: Moderátor
+        flag_count: Zkontrolovaná nahlášení
+        time_read: Doba čtení
+        topic_count: Vytvořená témata
+        post_count: Vytvořené příspěvky
+        pm_count: Vytvořeno soukromých zpráv
+        revision_count: Revizí
+      description: Seznam aktivit moderátora včetně zkontrolovaných nahlášení, doby čtení, vytvořených témat, vytvořených příspěvků, vytvořených osobních zpráv a revizí.
     flags_status:
+      title: "Stavy nahlášení"
+      values:
+        agreed: Potvrzené
+        disagreed: Nepotvrzené
+        deferred: Odložené
+        no_action: Bez akce
       labels:
         flag: Typ
         assigned: Zadáno
+        poster: Přispěvatel
+        flagger: Nahlašovatel
+        time_to_resolution: Doba odbavení
+      description: "Seznam stavů nahlášení včetně typu, přispěvatele, ohlašovatele a doby do odbavení."
     visits:
       title: "Návštěvy uživatelů podle dnů"
       xaxis: "Den"
       yaxis: "Počet návštěv"
+      description: "Počet všech návštěv uživatelů."
     signups:
+      title: "Registrace"
       xaxis: "Den"
+      yaxis: "Počet registrací"
+      description: "Registrace nových účtů pro toto období."
     new_contributors:
+      title: "Noví přispěvatelé"
       xaxis: "Den"
+      yaxis: "Počet nových přispěvatelů"
+      description: "Počet uživatelů, kteří během tohoto období vytvořili svůj první příspěvek."
     trust_level_growth:
+      title: "Růst úrovně důvěry"
+      xaxis:
+        tl1_reached: "Dosaženo TL1"
+        tl2_reached: "Dosaženo TL2"
+        tl3_reached: "Dosaženo TL3"
+        tl4_reached: "Dosaženo TL4"
       yaxis: "Den"
+      description: "Počet uživatelů, kteří během tohoto období zvýšili svou úroveň důvěry."
     consolidated_page_views:
+      title: "Konsolidovaná zobrazení stránek"
+      xaxis:
+        page_view_crawler: "Vyhledávače"
+        page_view_anon: "Anonymní uživatelé"
+        page_view_logged_in: "Přihlášení uživatelé"
       yaxis: "Den"
+      description: "Počty zobrazení stránek pro přihlášené uživatele, anonymní uživatele a vyhledávače."
       labels:
         post: Příspěvek
-        editor: Editor
+        editor: Uživatel
+        author: Autor
         edit_reason: Reason
     consolidated_api_requests:
+      title: "Konsolidované požadavky API"
       xaxis:
         api: "API"
         user_api: "Uživatelské API"
       yaxis: "Den"
+      description: "Požadavky API na běžné klíče API a uživatelské klíče API."
     dau_by_mau:
+      title: "DAU/MAU"
       xaxis: "Den"
+      yaxis: "DAU/MAU"
+      description: "Počet členů, kteří se přihlásili za poslední den, vydělený počtem členů, kteří se přihlásili za poslední měsíc – vrátí %, které označuje „přilnavost“ komunity. Zaměřte se na > 20 %."
     daily_engaged_users:
+      title: "Denně zapojení uživatelé"
       xaxis: "Den"
+      yaxis: "Zapojení uživatelé"
+      description: "Počet uživatelů, kteří za poslední den dali Líbí se nebo publikovali příspěvek."
     profile_views:
       title: "Zobrazení uživatelských profilů"
       xaxis: "Den"
       yaxis: "Počet zobrazení uživatelských profilů"
+      description: "Celkem nových zobrazení uživatelských profilů."
     topics:
       title: "Témata"
       xaxis: "Den"
       yaxis: "Počet nových témat"
+      description: "Nová témata vytvořená během tohoto období."
     posts:
       title: "Příspěvky"
       xaxis: "Den"
       yaxis: "Počet nových příspěvků"
+      description: "Nové příspěvky vytvořené během tohoto období"
     likes:
       title: "Nová 'líbí se'"
       xaxis: "Den"
       yaxis: "Počet nových 'líbí se'"
+      description: "Počet nových 'líbí se'"
     flags:
       title: "Nahlášení"
       xaxis: "Den"
       yaxis: "Počet nahlášení"
+      description: "Počet nových nahlášení."
     bookmarks:
       title: "Záložky"
       xaxis: "Den"
       yaxis: "Počet nových záložek"
+      description: "Počet nových témat a příspěvků přidaných do záložek."
     users_by_trust_level:
       title: "Uživatelé podle úrovně důvěry"
       xaxis: "Úroveň důvěry"
@@ -754,10 +816,13 @@ cs:
         moderator: Moderátor
         suspended: Zakázaní
         silenced: Ztišení
+      description: "Počet uživatelů seskupených podle administrátora, moderátora, pozastavených a umlčených."
     trending_search:
+      title: Populární hledané výrazy
       labels:
         term: Období
         searches: Vyhledávání
+        click_through: CTR
     emails:
       title: "Odesláno emailů"
       xaxis: "Den"
@@ -872,18 +937,32 @@ cs:
     top_uploads:
       labels:
         filename: Název souboru
+    top_ignored_users:
+      title: "Nejvíce ignorovaní/ztišení uživatelé"
+      labels:
+        ignored_user: Ignorovaný uživatel
+        ignores_count: Počet ignorací
+        mutes_count: Počet ztišení
+      description: "Uživatelé, kteří byli ztišeni a/nebo ignorováni mnoha dalšími uživateli."
     top_users_by_likes_received:
+      title: "Nejlepší uživatelé podle obdržených Líbí se"
       labels:
         user: Uživatel
         qtt_like: Obdržených 'líbí se'
+      description: "Top 10 uživatelů, kteří obdrželi Líbí se."
     top_users_by_likes_received_from_inferior_trust_level:
+      title: "Nejlepší uživatelé podle Líbí se získaných od uživatele s nižší úrovní důvěry"
       labels:
         user: Uživatel
+        trust_level: Úroveň důvěry
         qtt_like: Obdržených 'líbí se'
+      description: "Top 10 uživatelů s vyšší úrovní důvěry, které mají rádi lidé s nižší úrovní důvěry."
     top_users_by_likes_received_from_a_variety_of_people:
+      title: "Nejlepší uživatelé podle Líbí se získaných od různých lidí"
       labels:
         user: Uživatel
         qtt_like: Obdržených 'líbí se'
+      description: "Top 10 uživatelů, kteří měli Líbí se od širokého spektra lidí."
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
     host_names_warning: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
@@ -916,7 +995,7 @@ cs:
     remove_older_backups: "Odstranit zálohy starší než je zadaný počet dní. Nechte prázdné pro vypnutí."
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
-    max_likes_per_day: "Maximální počet 'to se mi líbí', která smí uživatel za den udělit."
+    max_likes_per_day: "Maximální počet Líbí se, která smí uživatel za den rozdat."
     max_flags_per_day: "Maximální počet nahlášení, která smí uživatel za den poslat."
     max_edits_per_day: "Maximální počet úprav, které smí uživatel za den udělat."
     max_topics_per_day: "Maximální počet témat, který smí uživatel za den vytvořit."
@@ -969,6 +1048,7 @@ cs:
     shared_drafts_allowed_groups: "Povolte uživatelům v těchto skupinách zobrazovat a upravovat sdílené návrhy."
     dashboard_hidden_reports: "Povolit skrytí zadaných přehledů z administrační nástěnky."
     dashboard_visible_tabs: "Vyberte, které záložky administrační nástěnky budou viditelné."
+    dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
     admin_sidebar_enabled_groups: "EXPERIMENTÁLNÍ: Povolí navigaci v postranním panelu administrátorské rozhraní pro zadané skupiny, což nahradí horní sadu navigačních tlačítek administrace."
     errors:
       invalid_email: "Neplatná emailová adresa."
@@ -1212,6 +1292,10 @@ cs:
         few: "%{count} users waiting for approval"
         many: "%{count} users waiting for approval"
         other: "%{count} users waiting for approval"
+      text_body_template: |
+        Na schválení (nebo zamítnutí) čekají registrace nových uživatelů, než budou moci vstoupit do tohoto fóra.
+
+        [Zkontrolujte je](%{base_url}/review).
   unsubscribe_link: |
     Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1363,10 +1447,13 @@ cs:
     sender_body_blank: "body is blank"
   color_schemes:
     default_theme_name: "Výchozí"
+  edit_this_page: "Upravit tuto stránku"
   csv_export:
     boolean_yes: "Ano"
     boolean_no: "Ne"
     rate_limit_error: "Příspěvky mohou být staženy jen jednou za den. Zkus to, prosím, zítra."
+  static_topic_first_reply: |
+    Upravte první příspěvek v tomto tématu a změňte obsah stránky %{page_name}.
   guidelines_topic:
     title: "FAQ/Pokyny"
   tos_topic:
@@ -1377,16 +1464,27 @@ cs:
     editor:
       name: Editor
       description: První úprava příspěvku.
+      long_description: |
+        Tento odznak je udělen, když poprvé upravíte jeden ze svých příspěvků. I když nebudete moci své příspěvky upravovat navždy, jsou úpravy doporučeny – můžete vylepšit formátování, opravit malé chyby nebo přidat cokoli, co jste při původním zveřejnění zmeškali. Upravujte, aby vaše příspěvky byly ještě lepší!
+    wiki_editor:
+      long_description: |
+        Tento odznak je udělen při první úpravě wiki příspěvku.
     basic_user:
       name: Základní
+      long_description: |
+        Tento odznak je udělen, když dosáhnete 1. úrovně důvěry. Děkujeme, že jste se tu zdrželi a přečetli pár témat, abyste se dozvěděli, o čem naše komunita je. Byla vám odstraněna omezení pro nové uživatele; byly vám poskytnuty všechny základní komunitní nástroje, jako jsou osobní zprávy, nahlašování, úpravy wiki a možnost publikovat více obrázků a odkazů.
     member:
       name: Člen
       long_description: |
-        Tento odznak získáte, když dosáhnete 2. úrovně důvěry. Děkujeme, že se po dobu několika týdnů účastníte a skutečně se připojujete k naší komunitě. Nyní můžete posílat pozvánky ze svého profilu nebo jednotlivých témat, vytvářet skupinové osobní zprávy a mít více lajků za den.
+        Tento odznak je udělen, když dosáhnete 2. úrovně důvěry. Děkujeme, že se účastníte po dobu několika týdnů a skutečně se připojujete k naší komunitě. Nyní můžete posílat pozvánky ze svého profilu nebo jednotlivých témat, vytvářet skupinové osobní zprávy a mít více lajků za den.
     regular:
       name: Běžný
+      long_description: |
+        Tento odznak je udělen, když dosáhnete 3. úrovně důvěry. Díky za to, že jste byli po dobu několika měsíců součástí naší komunity. Nyní jste jedním z nejaktivnějších čtenářů a spolehlivým přispěvatelem, který dělá naši komunitu skvělou. Nyní můžete kategorizovat a přejmenovávat témata, využít výkonnějších indikátorů nevyžádané pošty, přistupovat do soukromé sekce, a také dostanete denně mnohem více lajků.
     leader:
       name: Vůdce
+      long_description: |
+        Tento odznak je udělen, když dosáhnete 4. úrovně důvěry. Redakce vás označila jako leadera této komunity. Zbytku komunity jdete pozitivním příkladem ve svých činech a slovech. Máte možnost upravovat všechny příspěvky, provádět běžné akce moderátorů témat, jako je připínání, zavírání, skrývání, archivace, rozdělování a slučování.
     welcome:
       name: Vítejte
       description: Obdrženo líbí se mi
@@ -1413,7 +1511,7 @@ cs:
       name: Výborné sdílení
       description: Sdílení příspěvku s 1000 unikátními návštěvníky
     first_like:
-      name: První "to se mi líbí"
+      name: První Líbí se
       description: Líbil se příspěvek
     first_flag:
       name: První nahlášení
@@ -1447,8 +1545,10 @@ cs:
     first_emoji:
       name: První smajlík
     first_onebox:
+      name: První Onebox
+      description: Zveřejnil/a odkaz, který byl transformován do Oneboxu
       long_description: |
-        Tento odznak je udělen při prvním zveřejnění odkazu na samostatném řádku, který se automaticky rozbalí do rámečku se shrnutím, názvem a obrázkem (pokud je k disozici).
+        Tento odznak je udělen při prvním zveřejnění odkazu na samostatném řádku, který se automaticky rozbalí do rámečku se shrnutím, názvem a obrázkem (pokud je k dispozici).
     badge_title_metadata: "%{display_name} odznak na %{site_title}"
   admin_login:
     success: "E-mail odeslán"
@@ -1515,6 +1615,9 @@ cs:
           <p>Pokud budete mít někdy chuť tato nastavení změnit, <b>kdykoli znovu spusťte tohoto průvodce</b> nebo navštivte <a href='%{base_path}/admin' target='_blank'>sekci správce</a>; najdete ji vedle ikony klíče v nabídce webu.</p>
           <p>Pomocí našeho výkonného systému pro tvorbu vizuálů si můžete Discourse snadno ještě více přizpůsobit. Příklady najdete na <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">nejlepších motivech a komponentách</a> na <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
           <p>Bavte se a hodně štěstí <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>při budování vaší nové komunity!</a></p>
+  onebox:
+    github:
+      closed: "uzavřeno"
   discourse_push_notifications:
     popup:
       mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
