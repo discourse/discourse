@@ -68,6 +68,24 @@ RSpec.describe AnonymousShadowCreator do
       expect(shadow.anonymous?).to eq(true)
     end
 
+    context "when SiteSetting.allow_anonymous_to_inherit_group is true" do
+      it "returns a shadow which inherits the users groups" do
+        SiteSetting.allow_anonymous_to_inherit_group = true
+        shadow = AnonymousShadowCreator.get(user)
+
+        expect(user.groups).to eq(shadow.groups)
+      end
+    end
+
+    context "when SiteSetting.allow_anonymous_to_inherit_group is false" do
+      it "returns a shadow which inherits the users groups" do
+        SiteSetting.allow_anonymous_to_inherit_group = false
+        shadow = AnonymousShadowCreator.get(user)
+
+        expect(shadow.groups).to eq([])
+      end
+    end
+
     it "works even when names are required" do
       SiteSetting.full_name_required = true
 
