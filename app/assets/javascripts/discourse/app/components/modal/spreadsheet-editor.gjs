@@ -328,58 +328,61 @@ export default class SpreadsheetEditor extends Component {
       </:body>
 
       <:footer>
-        <div class="primary-actions">
-          <DButton
-            @label={{this.modalAttributes.insertTable.title}}
-            @icon={{this.modalAttributes.insertTable.icon}}
-            @action={{this.insertTable}}
-            class="btn-insert-table"
-          />
+        {{#unless this.loading}}
+          <div class="primary-actions">
+            <DButton
+              @label={{this.modalAttributes.insertTable.title}}
+              @icon={{this.modalAttributes.insertTable.icon}}
+              @action={{this.insertTable}}
+              class="btn-insert-table"
+            />
 
-          <DModalCancel @close={{this.interceptCloseModal}} />
-        </div>
+            <DModalCancel @close={{this.interceptCloseModal}} />
+          </div>
 
-        <div class="secondary-actions">
-          {{#if this.isEditingTable}}
-            <div class="edit-reason">
-              <DButton
-                @icon="info-circle"
-                @title="table_builder.edit.modal.trigger_reason"
-                @action={{this.showEditReasonField}}
-                class="btn-edit-reason"
-              />
-              {{#if this.showEditReason}}
-                <TextField
-                  @value={{this.editReason}}
-                  @placeholderKey="table_builder.edit.modal.reason"
+          <div class="secondary-actions">
+            {{#if this.isEditingTable}}
+              <div class="edit-reason">
+                <DButton
+                  @icon="info-circle"
+                  @title="table_builder.edit.modal.trigger_reason"
+                  @action={{this.showEditReasonField}}
+                  class="btn-edit-reason"
                 />
-              {{/if}}
-            </div>
-          {{/if}}
-          <DTooltip
-            @icon="question"
-            @triggers="click"
-            @arrow={{false}}
-            class="btn btn-icon no-text"
-          >
-            <ul>
-              <h4>{{i18n "table_builder.modal.help.title"}}</h4>
-              <li>
-                <kbd>
-                  {{i18n "table_builder.modal.help.enter_key"}}
-                </kbd>
-                {{i18n "table_builder.modal.help.new_row"}}
-              </li>
-              <li>
-                <kbd>
-                  {{i18n "table_builder.modal.help.tab_key"}}
-                </kbd>
-                {{i18n "table_builder.modal.help.new_col"}}
-              </li>
-              <li>{{i18n "table_builder.modal.help.options"}}</li>
-            </ul>
-          </DTooltip>
-        </div>
+                {{#if this.showEditReason}}
+                  <TextField
+                    @value={{this.editReason}}
+                    @placeholderKey="table_builder.edit.modal.reason"
+                  />
+                {{/if}}
+              </div>
+            {{/if}}
+            <DTooltip
+              @icon="question"
+              @triggers="click"
+              @arrow={{false}}
+              class="btn btn-icon no-text"
+            >
+              <ul>
+                <h4>{{i18n "table_builder.modal.help.title"}}</h4>
+                <li>
+                  <kbd>
+                    {{i18n "table_builder.modal.help.enter_key"}}
+                  </kbd>
+                  {{i18n "table_builder.modal.help.new_row"}}
+                </li>
+                <li>
+                  <kbd>
+                    {{i18n "table_builder.modal.help.tab_key"}}
+                  </kbd>
+                  {{i18n "table_builder.modal.help.new_col"}}
+                </li>
+                <li>{{i18n "table_builder.modal.help.options"}}</li>
+              </ul>
+            </DTooltip>
+          </div>
+        {{/unless}}
+
       </:footer>
     </DModal>
   </template>

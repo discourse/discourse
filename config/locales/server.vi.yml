@@ -595,6 +595,7 @@ vi:
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
     error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."
     already_done: "Xin lỗi, liên kết xác nhận này không còn giá trị. Có lẽ email của bạn đã được thay đổi?"
+    confirm: "Xác nhận"
   activation:
     action: "Nhấn vào đây để kích hoạt tài khoản của bạn"
     already_done: "Xin lỗi, liên kết để xác nhận tài khoản này không còn hợp lệ. Có thể tài khoản của bạn được kích hoạt?"
@@ -2165,6 +2166,7 @@ vi:
       confirm_body: "Sự thành công! Thông báo đã được kích hoạt."
       custom: "Thông báo từ %{username} trên %{site_title}"
   staff_action_logs:
+    unknown: "không biết"
     user_merged: "%{username} đã được hợp nhất vào tài khoản này"
     webhook_deactivation_reason: "Webhook của bạn đã tự động bị vô hiệu hóa. Chúng tôi đã nhận được nhiều phản hồi lỗi trạng thái HTTP '%{status}'."
     api_key:

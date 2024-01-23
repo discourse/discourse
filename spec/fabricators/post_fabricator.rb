@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:post) do
-  user { |attrs| attrs[:user] || Fabricate(:user, refresh_auto_groups: true) }
+  user { Fabricate(:user, refresh_auto_groups: true) }
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   raw "Hello world"
   post_type Post.types[:regular]
@@ -124,7 +124,7 @@ Fabricator(:post_with_uploads_and_links, from: :post) { raw <<~MD }
   MD
 
 Fabricator(:post_with_external_links, from: :post) do
-  user
+  user { Fabricate(:user, refresh_auto_groups: true) }
   topic
   raw <<~MD
     Here's a link to twitter: http://twitter.com

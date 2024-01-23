@@ -151,7 +151,7 @@ it:
           one: "Invito inviato"
           other: "Inviti inviati"
         invite: "Invita al canale"
-        channel_wide_mentions_disallowed: "Le menzioni di @qui e @tutti sono disabilitate in questo canale."
+        channel_wide_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
         groups:
           header:
             some: "Alcuni utenti non riceveranno notifiche"
@@ -476,15 +476,14 @@ it:
           description: "Questa operazione esporta tutti i messaggi da tutti i canali."
           create_export: "Crea esportazione"
           export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
-      my_threads:
-        title: I miei thread
       direct_messages:
-        title: "Chat personale"
         new: "Crea una chat personale"
         create: "Vai"
         leave: "Lascia questa chat personale"
         close: "Chiudi questa chat personale"
         cannot_create: "Spiacenti, non puoi inviare messaggi diretti."
+      channel_list:
+        title: "Canali"
       incoming_webhooks:
         back: "Indietro"
         channel_placeholder: "Seleziona un canale"

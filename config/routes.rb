@@ -1217,6 +1217,7 @@ Discourse::Application.routes.draw do
 
     get "latest.rss" => "list#latest_feed", :format => :rss
     get "top.rss" => "list#top_feed", :format => :rss
+    get "hot.rss" => "list#hot_feed", :format => :rss
 
     Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
 

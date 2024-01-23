@@ -66,6 +66,7 @@ after_initialize do
     Reviewable.prepend Chat::ReviewableExtension
     Bookmark.prepend Chat::BookmarkExtension
     User.prepend Chat::UserExtension
+    Group.prepend Chat::GroupExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
     Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }

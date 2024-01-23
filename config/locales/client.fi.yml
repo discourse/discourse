@@ -197,7 +197,7 @@ fi:
       error_caused_by: "Aiheuttaja: '%{name}'. Päivitä, määritä uudelleen tai poista se käytöstä <a target='blank' href='%{path}'>klikkaamalla tätä</a>."
       only_admins: "(tämä viesti näytetään vain sivuston ylläpitäjille)"
     broken_decorator_alert: "Viestit eivät välttämättä näy oikein, koska yksi sivustosi viestien sisällön somistajista ilmoitti virheestä."
-    broken_page_change_alert: "OnPageChange-käsittelijä ilmoitti virheen. Katso lisätietoja selaimen kehittäjätyökaluista."
+    broken_page_change_alert: "onPageChange-käsittelijä ilmoitti virheen. Katso lisätietoja selaimen kehittäjätyökaluista."
     broken_plugin_alert: "Lisäosan \"%{name}\" aiheuttama"
     critical_deprecation:
       notice: "<b>[Ylläpitäjän huomautus]</b> Jokin teemoistasi tai lisäosistasi täytyy päivittää, jotta se olisi yhteensopiva tulevien Discoursen ydinmuutosten kanssa (<a target='_blank' href='https://meta.discourse.org/t/287211'>lisätietoja</a>)."
@@ -270,7 +270,7 @@ fi:
     every_30_minutes: "30 minuutin välein"
     every_hour: "tunnin välein"
     daily: "päivittäin"
-    weekly: "viikottain"
+    weekly: "viikoittain"
     every_month: "kuukausittain"
     every_six_months: "kuuden kuukauden välein"
     max_of_count: "korkeintaan %{count}"
@@ -281,7 +281,7 @@ fi:
       aria_label: "Suodata ajanjakson mukaan"
     related_messages:
       title: "Aiheeseen liittyviä viestejä"
-      pill: "Aiheeseen liittyviä viestejä"
+      pill: "Aiheeseen liittyvät viestit"
       see_all: 'Katso <a href="%{path}">kaikki viestit</a> käyttäjältä @%{username}…'
     suggested_topics:
       title: "Uudet ja lukemattomat ketjut"
@@ -1415,7 +1415,7 @@ fi:
           default_name: "Päätunnistautumislaite"
           iphone_default_name: "iPhone"
           android_default_name: "Android"
-          not_allowed_error: "Tunnistautumislaitteen rekisteröintiprosessi joko vanheni tai peruutettiin."
+          not_allowed_error: "Tunnistautumislaitteen rekisteröintiprosessi aikakatkaistiin tai peruutettiin."
           already_added_error: "Olet jo rekisteröinyt tämän tunnistautumislaitteen. Sitä ei tarvitse rekisteröidä uudelleen."
           edit: "Muokkaa tunnistautumislaitetta"
           save: "Tallenna"
@@ -1600,7 +1600,7 @@ fi:
         every_30_minutes: "30 minuutin välein"
         every_hour: "tunneittain"
         daily: "päivittäin"
-        weekly: "viikottain"
+        weekly: "viikoittain"
         every_month: "kuukausittain"
         every_six_months: "kuuden kuukauden välein"
       email_level:
@@ -1810,7 +1810,7 @@ fi:
       filters:
         all: "Kaikki"
       stream:
-        posted_by: "Viestin kirjoittaja"
+        posted_by: "Kirjoittaja"
         sent_by: "Lähettänyt"
         private_message: "viesti"
         the_topic: "ketju"
@@ -2011,7 +2011,7 @@ fi:
       security_key_authenticate: "Tee todennus tunnistautumislaitteella"
       security_key_not_allowed_error: "Tunnistautumislaitteen todennusprosessi joko vanheni tai peruutettiin."
       security_key_no_matching_credential_error: "Tunnistautumislaitteelta ei löytynyt vastaavia tunnistetietoja."
-      security_key_support_missing_error: "Nykeinen laitteesi tai selaimesi ei tue tunnistaumislaitteita. Käytä muuta tapaa."
+      security_key_support_missing_error: "Nykyinen laitteesi tai selaimesi ei tue tunnistaumislaitteita. Käytä muuta tapaa."
       security_key_invalid_response_error: "Suojausavaimen todennusprosessi epäonnistui virheellisen vastauksen vuoksi."
       passkey_security_error: "Tapahtui suojausvirhe: %{message}"
       email_placeholder: "Sähköposti/käyttäjätunnus"
@@ -2045,12 +2045,12 @@ fi:
       not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
       google_oauth2:
         name: "Google"
-        title: "Kirjaudu sisään Google-tilillä"
-        sr_title: "Kirjaudu sisään Google-tilillä"
+        title: "Kirjaudu Googlella"
+        sr_title: "Kirjaudu Googlella"
       twitter:
         name: "Twitter"
-        title: "Kirjaudu sisään Twitter-tilillä"
-        sr_title: "Kirjaudu sisään Twitter-tilillä"
+        title: "Kirjaudu Twitterillä"
+        sr_title: "Kirjaudu Twitterillä"
       instagram:
         name: "Instagram"
         title: "Kirjaudu Instagramilla"
@@ -2183,7 +2183,7 @@ fi:
       insert_table: "Lisää taulukko"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saved_local_draft_tip: "tallennettu paikallisesti"
-      similar_topics: "Tämä ketju vaikuttaa samalta kuin…"
+      similar_topics: "Ketjusi on samankaltainen kuin…"
       drafts_offline: "offline-luonnokset"
       edit_conflict: "muokkauskonflikti"
       esc: "esc"
@@ -2713,7 +2713,7 @@ fi:
         read: "Et ole lukenut vielä yhtään ketjua."
         posted: "Et ole kirjoittanut vielä yhteenkään ketjuun."
         latest: "Olet ajan tasalla!"
-        bookmarks: "Sinulla ei ole vielä kirjanmerkkeihin lisättyjä ketjuja."
+        bookmarks: "Et ole vielä lisännyt ketjuja kirjanmerkkeihin."
         category: "Alueella %{category} ei ole ketjua."
         top: "Suosittuja ketjuja ei ole."
         filter: "Ketjuja ei ole."
@@ -4057,7 +4057,7 @@ fi:
         usable_only_by_groups: "Tunnisteet näkyvät kaikille, mutta vain nämä ryhmät voivat käyttää niitä"
         visible_only_to_groups: "Tunnisteet näkyvät vain näille ryhmille"
         cannot_save: "Tunnisteryhmää ei voida tallentaa. Varmista, että ryhmässä on vähintään yksi tunniste, ryhmän nimi ei ole tyhjä ja että ryhmä on valittuna tunnisteiden käyttöoikeuksiin."
-        tags_placeholder: "Etsi tai luo tunnisteita"
+        tags_placeholder: "Hae tai luo tunnisteita"
         parent_tag_placeholder: "Valinnainen"
         select_groups_placeholder: "Valitse ryhmät…"
         disabled: "Tunnisteiden lisääminen on poistettu käytöstä. "
@@ -4346,7 +4346,7 @@ fi:
           will_destroy_merged_cells: "Tämä toiminto tuhoaa olemassa olevat yhdistetyt solut. Oletko varma?"
           will_clear_search_results: "Tämä toiminto tuhoaa olemassa olevat yhdistetyt solut. Oletko varma?"
           conflicts_with_merged_cells: "Ristiriita toisen yhdistetyn solun kanssa"
-        invalid_merge_props: "Virheelliset yhdistetyt omaisuudet"
+        invalid_merge_props: "Virheelliset yhdistetyt ominaisuudet"
         cells_already_merged: "Solu on jo yhdistetty"
         no_cells_selected: "Ei valittuja soluja"
         context_menu:
@@ -4724,7 +4724,7 @@ fi:
           group_name: "Käyttäjätapahtumat"
           user_logged_in: "Käyttäjä kirjautuu sisään"
           user_logged_out: "Käyttäjä kirjautuu ulos"
-          user_confirmed_email: "Käyttäjän vahvisti sähköpostiosoitteen"
+          user_confirmed_email: "Käyttäjä vahvisti sähköpostiosoitteen"
           user_created: "Käyttäjä luodaan"
           user_approved: "Käyttäjä hyväksytään"
           user_updated: "Käyttäjä päivitetään"
@@ -5400,7 +5400,7 @@ fi:
           domain: "Verkkotunnus"
         screened_ips:
           title: "Seulottavat IP:t"
-          description: 'IP-osoitteet joita tarkkaillaan. Valitse "Salli" lisätäksesi osoitteen sallittujen listalle.'
+          description: 'IP-osoitteet, joita tarkkaillaan. Valitse "Salli" lisätäksesi osoitteen sallittujen listalle.'
           delete_confirm: "Oletko varma, että haluat poistaa tämän säännön IP-osoitteelle %{ip_address}?"
           actions:
             block: "Estä"
@@ -5483,7 +5483,7 @@ fi:
       form_templates:
         nav_title: "Mallit"
         title: "Lomakemallit"
-        help: "Luo mallirakenne, jonta voidaan käyttää luotaessa ketjuja."
+        help: "Luo mallirakenne, jota voidaan käyttää luotaessa ketjuja."
         new_template: "Uusi malli"
         list_table:
           headings:
@@ -5902,7 +5902,7 @@ fi:
         show_outdated: "Näytä vain vanhentuneet/virheelliset"
         locale: "Kieli:"
         more_than_50_results: "Hakutuloksia on yli 50. Rajaa hakuasi."
-        no_results: "Sivustolta ei ei löytynyt vastaavia tekstejä"
+        no_results: "Sivustolta ei löytynyt vastaavia tekstejä"
         interpolation_keys: "Käytettävissä olevat interpolaatioavaimet:"
         outdated:
           title: "Käännös on vanhentunut"
@@ -5984,7 +5984,7 @@ fi:
           add_audio_types: "Audio"
           add_document_types: "Asiakirjat"
           add_types_title: "Salli päätteet %{types}"
-          add_types_toast: "%{types} tiedostotyyppiä lisätty"
+          add_types_toast: "Tiedostotyypit %{types} lisätty"
       badges:
         title: Kunniamerkit
         new_badge: Uusi kunniamerkki
@@ -6131,7 +6131,7 @@ fi:
         form:
           label: "Uusi:"
           add: "Lisää"
-          filter: "Etsi (URL tai ulkoinen URL)"
+          filter: "Hae (URL tai ulkoinen URL)"
       reseed:
         action:
           label: "Korvaa teksti..."

@@ -12,9 +12,11 @@ sv:
     poll_minimum_trust_level_to_create: "Definiera lägsta förtroendenivå som krävs för att skapa omröstningar."
     poll_groupable_user_fields: "En uppsättning användarfältsnamn som kan användas för att gruppera och filtrera undersökningsresultat."
     poll_export_data_explorer_query_id: "ID för Dataundersökningsfrågan som ska användas för att exportera undersökningsresultat (0 för att inaktivera)."
+    poll_default_public: "När en ny omröstning skapas ska alternativet \"Visa vem som röstat\" aktiveras som standard."
   poll:
     poll: "omröstning"
     invalid_argument: "Ogiltigt värde '%{value}' för argumentet '%{argument}'."
+    multiple_polls_without_name: "När flera omröstningar skapas omfattas unika namn genom att lägga till <code>name=exempel</code> till dina <code>[omröstning]</code> -taggar."
     multiple_polls_with_same_name: "Det finns flera omröstningar med samma namn: <strong>%{name}</strong>. Använd attributet '<code>namn</code>' för att unikt identifiera din omröstningar."
     default_poll_must_have_at_least_1_option: "Omröstning måste ha minst 1 alternativ."
     named_poll_must_have_at_least_1_option: "Omröstningen med namnet <strong>%{name}</strong> måste ha minst 1 alternativ."

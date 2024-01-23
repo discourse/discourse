@@ -2,7 +2,7 @@
 
 RSpec.describe PostMover do
   fab!(:admin)
-  fab!(:evil_trout)
+  fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
 
   describe "#move_types" do
     context "when verifying enum sequence" do
@@ -532,8 +532,8 @@ RSpec.describe PostMover do
             end
 
             fab!(:user1) { Fabricate(:user) }
-            fab!(:user2) { Fabricate(:user) }
-            fab!(:user3) { Fabricate(:user) }
+            fab!(:user2) { Fabricate(:user, refresh_auto_groups: true) }
+            fab!(:user3) { Fabricate(:user, refresh_auto_groups: true) }
             fab!(:admin1) { Fabricate(:admin) }
             fab!(:admin2) { Fabricate(:admin) }
 

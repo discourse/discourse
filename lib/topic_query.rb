@@ -338,6 +338,17 @@ class TopicQuery
     create_list(:bookmarks) { |l| l.where("tu.bookmarked") }
   end
 
+  def list_hot
+    create_list(:hot, unordered: true) do |topics|
+      topics = remove_muted_topics(topics, user)
+      topics = remove_muted_categories(topics, user, exclude: options[:category])
+      TopicQuery.remove_muted_tags(topics, user, options)
+      topics.joins("JOIN topic_hot_scores on topics.id = topic_hot_scores.topic_id").order(
+        "topic_hot_scores.score DESC",
+      )
+    end
+  end
+
   def list_top_for(period)
     score_column = TopTopic.score_column_for_period(period)
     create_list(:top, unordered: true) do |topics|

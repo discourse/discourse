@@ -516,7 +516,9 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & belonging_to_group_ids).any?
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+      (is_system_user? && (Group.auto_groups_between(:admins, :trust_level_4) & group_ids).any?) ||
+      (group_ids & belonging_to_group_ids).any?
   end
 
   def belonging_to_group_ids

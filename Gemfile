@@ -145,7 +145,7 @@ group :test, :development do
 
   gem "rspec-rails"
 
-  gem "shoulda-matchers", require: false, github: "thoughtbot/shoulda-matchers"
+  gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
   gem "byebug", require: ENV["RM_INFO"].nil?, platform: :mri
   gem "rubocop-discourse", require: false

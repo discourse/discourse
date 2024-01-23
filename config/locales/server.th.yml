@@ -518,6 +518,8 @@ th:
       confirm_title: "เปิดการแจ้งเตือนแล้ว - %{site_title}"
       confirm_body: "สำเร็จแล้ว! การแจ้งเตือนถูกเปิดใช้งาน"
       custom: "การแจ้งเตือนจาก %{username} บน %{site_title}"
+  staff_action_logs:
+    unknown: "ไม่ทราบ"
   reviewables:
     priorities:
       low: "ต่ำ"

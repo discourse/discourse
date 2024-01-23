@@ -61,12 +61,12 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
         before do
           Jobs.run_immediately!
-          Chat::Mention.create!(
+          Chat::UserMention.create!(
             notifications: [notification_1],
             user: current_user,
             chat_message: Fabricate(:chat_message, chat_channel: channel, thread: thread),
           )
-          Chat::Mention.create!(
+          Chat::UserMention.create!(
             notifications: [notification_2],
             user: current_user,
             chat_message: Fabricate(:chat_message, chat_channel: channel, thread: thread),

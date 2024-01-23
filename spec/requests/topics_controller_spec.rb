@@ -3229,7 +3229,7 @@ RSpec.describe TopicsController do
     end
 
     it "returns a list of categories" do
-      SiteSetting.lazy_load_categories = true
+      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
       topic.update!(category: Fabricate(:category))
       dest_topic.update!(category: Fabricate(:category))
 

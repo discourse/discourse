@@ -176,9 +176,9 @@ createWidget(
               "aria-haspopup": true,
               "aria-expanded": attrs.active,
               href: attrs.user.path,
-              "aria-label":
-                (attrs.user.name || attrs.user.username) +
-                I18n.t("user.account_possessive"),
+              "aria-label": I18n.t("user.account_possessive", {
+                name: attrs.user.name || attrs.user.username,
+              }),
               "data-auto-route": true,
             },
           },

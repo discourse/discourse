@@ -44,7 +44,7 @@ describe Jobs::Chat::NotifyMentioned do
         created_at: 10.minutes.ago,
         thread: thread,
       )
-    Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
+    Fabricate(:user_chat_mention, chat_message: message, user: mentioned_user)
     message
   end
 
@@ -226,6 +226,9 @@ describe Jobs::Chat::NotifyMentioned do
 
     it "works for desktop notifications" do
       message = create_chat_message
+      Fabricate(:all_chat_mention, chat_message: message)
+      Fabricate(:here_chat_mention, chat_message: message)
+      Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
       desktop_notification =
         track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -244,6 +247,9 @@ describe Jobs::Chat::NotifyMentioned do
 
     it "works for push notifications" do
       message = create_chat_message
+      Fabricate(:all_chat_mention, chat_message: message)
+      Fabricate(:here_chat_mention, chat_message: message)
+      Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
       PostAlerter.expects(:push_notification).with(
         user_2,
@@ -266,6 +272,9 @@ describe Jobs::Chat::NotifyMentioned do
 
     it "works for core notifications" do
       message = create_chat_message
+      Fabricate(:all_chat_mention, chat_message: message)
+      Fabricate(:here_chat_mention, chat_message: message)
+      Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
       created_notification =
         track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -302,6 +311,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes global mention specific data to core notifications" do
         message = create_chat_message
+        Fabricate(:all_chat_mention, chat_message: message)
 
         created_notification =
           track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -313,6 +323,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes global mention specific data to desktop notifications" do
         message = create_chat_message
+        Fabricate(:all_chat_mention, chat_message: message)
 
         desktop_notification =
           track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -323,6 +334,7 @@ describe Jobs::Chat::NotifyMentioned do
       context "with private channels" do
         it "users a different translated title" do
           message = create_chat_message(channel: @personal_chat_channel)
+          Fabricate(:all_chat_mention, chat_message: message)
 
           desktop_notification =
             track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -355,6 +367,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes here mention specific data to core notifications" do
         message = create_chat_message
+        Fabricate(:here_chat_mention, chat_message: message)
 
         created_notification =
           track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -365,6 +378,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes here mention specific data to desktop notifications" do
         message = create_chat_message
+        Fabricate(:here_chat_mention, chat_message: message)
 
         desktop_notification =
           track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -373,8 +387,9 @@ describe Jobs::Chat::NotifyMentioned do
       end
 
       context "with private channels" do
-        it "users a different translated title" do
+        it "uses a different translated title" do
           message = create_chat_message(channel: @personal_chat_channel)
+          Fabricate(:here_chat_mention, chat_message: message)
 
           desktop_notification =
             track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -479,6 +494,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes here mention specific data to core notifications" do
         message = create_chat_message
+        Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
         created_notification =
           track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -490,6 +506,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       it "includes here mention specific data to desktop notifications" do
         message = create_chat_message
+        Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
         desktop_notification =
           track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
@@ -498,8 +515,9 @@ describe Jobs::Chat::NotifyMentioned do
       end
 
       context "with private channels" do
-        it "users a different translated title" do
+        it "uses a different translated title" do
           message = create_chat_message(channel: @personal_chat_channel)
+          Fabricate(:group_chat_mention, group: @chat_group, chat_message: message)
 
           desktop_notification =
             track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)

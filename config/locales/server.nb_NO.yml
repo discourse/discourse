@@ -1331,6 +1331,8 @@ nb_NO:
       confirm_title: "Varslinger aktivert - %{site_title}"
       confirm_body: "Suksess! Varslinger er nå aktivert."
       custom: "Varsling fra %{username} på %{site_title}"
+  staff_action_logs:
+    unknown: "ukjent"
   reviewables:
     priorities:
       low: "Lav"

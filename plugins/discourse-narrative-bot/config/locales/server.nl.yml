@@ -46,7 +46,7 @@ nl:
       invalid: |-
         Sorry, het is wiskundig onmogelijk om die combinatie te gooien. :confounded:
       not_enough_dice:
-        one: "Ik heb maar %{count} dobbelstenen. Beschamend, ik weet het!"
+        one: "Ik heb maar %{count} dobbelsteen. Beschamend, ik weet het!"
         other: "Ik heb maar %{count} dobbelstenen. Beschamend, ik weet het!"
       out_of_range: |-
         Wist je dat [het maximale aantal zijden](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-Sided-dice) voor een wiskundig eerlijke dobbelstenen 120 is?

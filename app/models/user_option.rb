@@ -185,6 +185,12 @@ class UserOption < ActiveRecord::Base
       "bookmarks"
     when 7
       "unseen"
+    when 8
+      if SiteSetting.experimental_hot_topics
+        "hot"
+      else
+        SiteSetting.homepage
+      end
     else
       SiteSetting.homepage
     end

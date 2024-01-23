@@ -939,7 +939,7 @@ es:
     pm_title: "Borradores de respaldo de temas en curso"
     pm_body: "Tema que contiene borradores de respaldo"
   user_activity:
-    no_log_search_queries: "Los registros de consultas de búsqueda están actualmente desactivados (un administrador puede activarlos en la configuración del sitio)."
+    no_log_search_queries: "Los registros de consultas de búsqueda están actualmente desactivados (un administrador puede activarlos en los ajustes del sitio)."
   email_settings:
     pop3_authentication_error: "Ha habido un problema con las credenciales POP3 proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
     imap_authentication_error: "Ha habido un problema con las credenciales IMAP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
@@ -1618,7 +1618,7 @@ es:
     include_secure_categories_in_tag_counts: "Si está activada, el recuento de temas de una etiqueta incluirá los temas que estén en categorías de lectura restringida para todos los usuarios. Si está desactivada, a los usuarios normales solo se les mostrará un recuento de temas para una etiqueta en la que todos los temas estén en categorías públicas."
     display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
     top_menu: "Determina qué elementos aparecen en la navegación de la página de inicio y en qué orden."
-    post_menu: "Determina qué elementos aparecen en el menú de la entrada y en qué orden."
+    post_menu: "Determina qué elementos aparecen en el menú de la publicación y en qué orden."
     post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."
     allow_username_in_share_links: "Permitir que los nombres de usuario se incluyan en los enlaces compartidos. Esto es útil para premiar medallas basadas en visitantes únicos."
@@ -1841,7 +1841,7 @@ es:
     min_trust_to_post_embedded_media: "Nivel confianza mínimo para incluir imágenes en una publicación"
     min_trust_level_to_allow_profile_background: "Nivel confianza mínimo para subir un fondo de perfil"
     min_trust_level_to_allow_user_card_background: "Nivel confianza mínimo para subir un fondo de tarjeta de usuario"
-    user_card_background_allowed_groups: "Grupos que pueden cargar un fondo de tarjeta de usuario."
+    user_card_background_allowed_groups: "Grupos que pueden subir un fondo de tarjeta de usuario."
     min_trust_level_to_allow_invite: "Nivel confianza mínimo para invitar usuarios"
     invite_allowed_groups: "Grupos que pueden invitar a usuarios."
     min_trust_level_to_allow_ignore: "Nivel confianza mínimo para ignorar usuarios"
@@ -2116,7 +2116,7 @@ es:
     approve_new_topics_unless_allowed_groups: "Los temas nuevos para usuarios que no pertenezcan a estos grupos deben ser aprobados"
     approve_unless_staged: "Los temas y las publicaciones nuevas de usuarios temporales deben ser aprobadas"
     notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, enviar una notificación a todos los moderadores. Establece el valor en 0 para desactivar estas notificaciones."
-    reviewable_revision_reasons: "Lista de razones que pueden seleccionarse al rechazar una entrada en cola revisable con una revisión. También está siempre disponible Other, que permite introducir un motivo personalizado."
+    reviewable_revision_reasons: "Lista de razones que pueden seleccionarse al rechazar una publicación en cola revisable con una revisión. También está siempre disponible Other, que permite introducir un motivo personalizado."
     auto_close_messages_post_count: "Número máximo de publicaciones permitidas en un mensaje antes de que se cierre automáticamente (0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicaciones permitidas en un tema antes de que se cierre automáticamente (0 para desactivar)"
     auto_close_topics_create_linked_topic: "Crear un nuevo tema enlazado de continuación cuando un tema es cerrado automáticamente basado en la configuración de 'auto close topics post count'"
@@ -2503,7 +2503,7 @@ es:
         merging_given_daily_likes: "Fusionando los me gusta diarios…"
         merging_post_timings: "Fusionando tiempos de publicación..."
         merging_user_visits: "Fusionando visitas de usuarios…"
-        updating_site_settings: "Actualizando la configuración del sitio…"
+        updating_site_settings: "Actualizando los ajustes del sitio…"
         updating_user_stats: "Actualizando las estadísticas de usuario…"
         merging_user_attributes: "Fusionando atributos de usuario…"
         updating_user_ids: "Actualizando identificadores de usuario…"
@@ -2755,19 +2755,19 @@ es:
       title: "Comentarios sobre tu publicación"
       subject_template: "Comentarios sobre tu publicación en %{topic_title}"
       text_body_template: |
-        Hola %{username},
+        Hola %{username}:
 
-        Hemos revisado tu mensaje en [%{topic_title}](%{topic_url}) y tenemos algunos comentarios para ti.
+        Hemos revisado tu publicación en [%{topic_title}](%{topic_url}) y tenemos algunos comentarios para ti.
 
         Motivo: %{reason}
 
         Opinión: %{feedback}
 
-        Puedes editar tu mensaje original a continuación y volver a enviarlo para realizar los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta.
+        Puedes editar tu publicación original a continuación y volver a enviarlo para realizar los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta.
 
         --------
 
-        %{post_original}
+        %{original_post}
 
         --------
 
@@ -2777,7 +2777,7 @@ es:
       title: "Comentarios sobre tu tema"
       subject_template: 'Comentarios sobre el nuevo tema titulado «%{topic_title}»'
       text_body_template: |
-        Hola %{username},
+        Hola %{username}:
 
         Hemos revisado tu nuevo tema titulado «%{topic_title}» y tenemos algunos comentarios para ti.
 
@@ -3965,104 +3965,6 @@ es:
     Edita la primera publicación de este tema para cambiar el contenido de la página %{page_name}.
   guidelines_topic:
     title: "Preguntas frecuentes/Directrices"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Este es un lugar civilizado para la discusión pública](#civilizado)
-
-      Trata este foro de discusión con el mismo respeto con el que tratarías un parque público. Nosotros también somos un recurso comunitario compartido &mdash; un lugar para compartir habilidades, conocimientos e intereses a través de una conversación continua.
-
-      Estas no son reglas estrictas. Son directrices para ayudar al juicio humano de nuestra comunidad y mantener este lugar amable y amistoso para el discurso público civilizado.
-
-      <a name="improve"></a>
-
-      ## [Mejorar el debate](#mejorar)
-
-      Ayúdanos a hacer de éste un gran lugar de debate añadiendo siempre algo positivo a la discusión, por pequeño que sea. Si no estás seguro de que tu mensaje aporte algo a la conversación, piensa en lo que quieres decir y vuelve a intentarlo más tarde.
-
-      Una forma de mejorar el debate es descubrir los que ya se están produciendo. Dedica un tiempo a navegar por los temas de aquí antes de responder o iniciar el tuyo propio, y tendrás más posibilidades de conocer a otras personas que compartan tus intereses.
-
-      Los temas que se discuten aquí nos importan, y queremos que actúes como si también te importaran. Sé respetuoso con los temas y las personas que los discuten, incluso si no estás de acuerdo con algo de lo que se dice.
-
-      <a name="agreeable"></a>
-
-      ## [Sé agradable, incluso cuando no estés de acuerdo](#agreeable)
-
-      Es posible que quieras responder discrepando. Eso está bien. Pero recuerda _criticar las ideas, no las personas_. Por favor, evita:
-
-      * Los insultos
-      * Ataques ad hominem
-      * Responder al tono de un mensaje en lugar de a su contenido real
-      * Contradecir de forma precipitada
-
-      En lugar de ello, aporta ideas reflexivas que mejoren la conversación.
-
-      <a name="participate"></a>
-
-      ## [Tu participación cuenta](#participa)
-
-      Las conversaciones que mantenemos aquí marcan el tono de cada nueva llegada. Ayúdanos a influir en el futuro de esta comunidad eligiendo participar en las discusiones que hacen de este foro un lugar interesante &mdash; y evitando las que no lo hacen.
-
-      Discourse proporciona herramientas que permiten a la comunidad identificar colectivamente las mejores (y peores) contribuciones: marcadores, me gusta, denuncias, respuestas, ediciones, vigilancia, silenciamiento, etc. Utiliza estas herramientas para mejorar tu propia experiencia, y también la de los demás.
-
-      Dejemos nuestra comunidad mejor de lo que la encontramos.
-
-      <a name="flag-problems"></a>
-
-      ## [Si ves un problema, denúncialo](#denunciar-problemas)
-
-      Los moderadores tienen una autoridad especial; son los responsables de este foro. Pero tú también lo eres. Con tu ayuda, los moderadores pueden ser facilitadores de la comunidad, no solo conserjes o policías.
-
-      Cuando veas un mal comportamiento, no respondas. Responder fomenta el mal comportamiento al reconocerlo, consume tu energía y hace perder el tiempo a todos. Sólo márcalo. Si se acumulan suficientes banderas, se tomarán medidas, ya sea automáticamente o mediante la intervención de un moderador.
-
-      Para mantener nuestra comunidad, los moderadores se reservan el derecho de eliminar cualquier contenido y cualquier cuenta de usuario por cualquier motivo y en cualquier momento. Los moderadores no revisan los nuevos mensajes; los moderadores y los operadores del sitio no se hacen responsables de ningún contenido publicado por la comunidad.
-
-      <a name="be-civil"></a>
-
-      ## [Sé siempre civilizado](#sé-civilizado)
-
-      Nada sabotea una conversación sana como la grosería:
-
-      ## Sé civilizado. No publiques nada que una persona razonable pueda considerar ofensivo, abusivo o que incite al odio.
-      * No ensucies el foro. No publiques nada obsceno o sexualmente explícito.
-      * Respeta a los demás. No acoses ni agobies a nadie, ni te hagas pasar por otra persona, ni expongas su información privada.
-      * Respeta nuestro foro. No publiques spam ni vandalices el foro de otro modo.
-
-      No se trata de términos concretos con definiciones precisas &mdash; evita incluso la _apariencia_ de cualquiera de estas cosas. Si no estás seguro, pregúntate cómo te sentirías si tu mensaje apareciera en la portada de un sitio de noticias importante.
-
-      Este es un foro público, y los motores de búsqueda indexan estas discusiones. Mantén el lenguaje, los enlaces y las imágenes seguros para la familia y los amigos.
-
-      <a name="keep-tidy"></a>
-
-      ## [Mantén el orden](#mantén-el-orden)
-
-      Haz el esfuerzo de poner las cosas en el lugar correcto, para que podamos pasar más tiempo discutiendo y menos limpiando. Por eso:
-
-      * No empieces un tema en la categoría equivocada; lee las definiciones de las categorías.
-      * No publiques lo mismo en varios temas.
-      * No publiques respuestas sin contenido.
-      * No desvíes un tema cambiándolo a mitad de camino.
-      * No firmes tus publicaciones; cada publicación tiene tu información de perfil.
-
-      En lugar de publicar «+1» o «De acuerdo», utiliza el botón «Me gusta». En lugar de llevar un tema existente en una dirección radicalmente diferente, utiliza la Respuesta como Tema vinculado.
-
-      <a name="stealing"></a>
-
-      ## [Publica solo tus cosas](#robo)
-
-      No puedes publicar nada digital que pertenezca a otra persona sin permiso. No puedes publicar descripciones, enlaces o métodos para robar la propiedad intelectual de alguien (software, vídeo, audio, imágenes), o para infringir cualquier otra ley.
-
-      <a name="power"></a>
-
-      ## [Dirigido por ti](#poder)
-
-      Este sitio está gestionado por tu [amable personal local](%{base_path}/about) y *tú*, la comunidad. Si tienes más preguntas sobre cómo deberían funcionar las cosas aquí, abre un nuevo tema en la [categoría de comentarios sobre el sitio](%{base_path}/c/site-feedback) y discutamos. Si hay una cuestión crítica o urgente que no puede ser tratada por un meta tema o una denuncia, ponte en contacto con nosotros a través de la [página del personal](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Condiciones de servicio](#condiciones-de-servicio)
-
-      Sí, la jerga legal es aburrida, pero debemos protegernos a nosotros mismos &ndash; y por extensión, a ti y a tus datos &ndash; contra gente poco amistosa. Tenemos unas [Condiciones de servicio](%{base_path}/tos) que describen tu (y nuestro) comportamiento y derechos relacionados con el contenido, la privacidad y las leyes. Para utilizar este servicio, debes aceptar respetar nuestras [TOS](%{base_path}/tos).
   tos_topic:
     title: "Términos del servicio"
     body: |

@@ -276,7 +276,6 @@ hu:
       admin:
         title: "Csevegés"
       direct_messages:
-        title: "Személyes csevegés"
         new: "Személyes csevegés létrehozása"
         create: "Ugrás"
         leave: "E személyes csevegés elhagyása"

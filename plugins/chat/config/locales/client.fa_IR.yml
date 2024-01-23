@@ -240,7 +240,6 @@ fa_IR:
       admin:
         title: "گفتگو"
       direct_messages:
-        title: "گفتگوی شخصی"
         new: "ایجاد گفتگوی شخصی"
         create: "برو"
         cannot_create: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."

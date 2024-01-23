@@ -201,7 +201,7 @@ const Group = RestModel.extend({
   @dependentKeyCompat
   get watchingCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.watching_category_ids)
     ) {
       Category.asyncFindByIds(this.watching_category_ids).then(() =>
@@ -222,7 +222,7 @@ const Group = RestModel.extend({
   @dependentKeyCompat
   get trackingCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.tracking_category_ids)
     ) {
       Category.asyncFindByIds(this.tracking_category_ids).then(() =>
@@ -243,7 +243,7 @@ const Group = RestModel.extend({
   @dependentKeyCompat
   get watchingFirstPostCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.watching_first_post_category_ids)
     ) {
       Category.asyncFindByIds(this.watching_first_post_category_ids).then(() =>
@@ -264,7 +264,7 @@ const Group = RestModel.extend({
   @dependentKeyCompat
   get regularCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.regular_category_ids)
     ) {
       Category.asyncFindByIds(this.regular_category_ids).then(() =>
@@ -285,7 +285,7 @@ const Group = RestModel.extend({
   @dependentKeyCompat
   get mutedCategories() {
     if (
-      this.siteSettings.lazy_load_categories &&
+      this.site.lazy_load_categories &&
       !Category.hasAsyncFoundAll(this.muted_category_ids)
     ) {
       Category.asyncFindByIds(this.muted_category_ids).then(() =>

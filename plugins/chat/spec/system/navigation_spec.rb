@@ -38,11 +38,11 @@ RSpec.describe "Navigation", type: :system do
   end
 
   context "when clicking chat icon on mobile and is viewing channel" do
-    it "navigates to index", mobile: true do
+    it "navigates to channels tab", mobile: true do
       chat_page.visit_channel(category_channel_2)
       chat_page.open_from_header
 
-      expect(page).to have_current_path(chat_path)
+      expect(page).to have_current_path("/chat/channels")
     end
   end
 

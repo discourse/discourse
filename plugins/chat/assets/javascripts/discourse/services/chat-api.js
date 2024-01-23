@@ -322,6 +322,13 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Get the total number of threads for the current user.
+   */
+  userThreadCount() {
+    return this.#getRequest("/me/threads/count");
+  }
+
+  /**
    * Update notifications settings of current user for a channel.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The settings to modify.
@@ -545,11 +552,14 @@ export default class ChatApi extends Service {
    * Add members to a channel.
    *
    * @param {number} channelId - The ID of the channel.
-   * @param {Array<string>} usernames - The usernames of the users to add.
+   * @param {object} targets
+   * @param {Array<string>} targets.usernames - The usernames of the users to add.
+   * @param {Array<string>} targets.groups - The groups names of the groups to add.
    */
-  addMembersToChannel(channelId, usernames) {
+  addMembersToChannel(channelId, targets) {
     return this.#postRequest(`/channels/${channelId}/memberships`, {
-      usernames,
+      usernames: targets.usernames,
+      groups: targets.groups,
     });
   }
 

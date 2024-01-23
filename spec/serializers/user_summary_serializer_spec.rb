@@ -29,7 +29,7 @@ RSpec.describe UserSummarySerializer do
   end
 
   it "returns correct links data ranking" do
-    topic = Fabricate(:topic)
+    topic = Fabricate(:topic, user: Fabricate(:user, refresh_auto_groups: true))
     post = Fabricate(:post_with_external_links, user: topic.user, topic: topic)
     TopicLink.extract_from(post)
     TopicLink

@@ -251,6 +251,7 @@ uk:
         header: "Заголовок чату"
         composer: "Редактор чату"
         channels_list: "Список каналів чату"
+      no_direct_message_channels: "Ви не приєдналися до жодного каналу прямих повідомлень."
       no_public_channels: "Ви не приєдналися до жодного каналу."
       kicked_from_channel: "Ви більше не можете отримати доступ до цього каналу."
       only_chat_push_notifications:
@@ -542,13 +543,18 @@ uk:
           export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
       my_threads:
         title: Мої теми
+        aria_label: "Перейти до списку моїх тем"
       direct_messages:
-        title: "Особистий чат"
+        title: "DMs"
+        aria_label: "Перейти на прямі повідомлення"
         new: "Створити особистий чат"
         create: "Створити"
         leave: "Залишити цей особистий чат"
         close: "Закрити цей особистий чат"
         cannot_create: "На жаль, ви не можете надсилати прямі повідомлення."
+      channel_list:
+        title: "Канали"
+        aria_label: "Перемикнутися на список каналів"
       incoming_webhooks:
         back: "Назад"
         channel_placeholder: "Виберіть канал"

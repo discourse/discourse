@@ -38,6 +38,8 @@ module SiteSettings::DeprecatedSettings
     ["min_trust_to_send_email_messages", "send_email_messages_allowed_groups", false, "3.3"],
     ["review_media_unless_trust_level", "skip_review_media_groups", false, "3.3"],
     ["min_trust_to_post_embedded_media", "embedded_media_post_allowed_groups", false, "3.3"],
+    ["min_trust_to_post_links", "post_links_allowed_groups", false, "3.3"],
+    ["min_trust_level_for_user_api_key", "user_api_key_allowed_groups", false, "3.3"],
   ]
 
   OVERRIDE_TL_GROUP_SETTINGS = %w[
@@ -60,6 +62,8 @@ module SiteSettings::DeprecatedSettings
     min_trust_to_send_email_messages
     review_media_unless_trust_level
     min_trust_to_post_embedded_media
+    min_trust_to_post_links
+    min_trust_level_for_user_api_key
   ]
 
   def group_to_tl(old_setting, new_setting)
@@ -77,13 +81,16 @@ module SiteSettings::DeprecatedSettings
 
     if tl_and_staff
       valid_auto_groups_excluding_staff_and_admins =
-        valid_auto_groups - [Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:admins]]
+        valid_auto_groups -
+          [Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:admins], Group::AUTO_GROUPS[:moderators]]
 
       if valid_auto_groups_excluding_staff_and_admins.any?
         return valid_auto_groups_excluding_staff_and_admins.min - Group::AUTO_GROUPS[:trust_level_0]
       end
 
-      if valid_auto_groups.include?(Group::AUTO_GROUPS[:staff])
+      if valid_auto_groups.include?(Group::AUTO_GROUPS[:moderators])
+        "moderator"
+      elsif valid_auto_groups.include?(Group::AUTO_GROUPS[:staff])
         "staff"
       elsif valid_auto_groups.include?(Group::AUTO_GROUPS[:admins])
         "admin"

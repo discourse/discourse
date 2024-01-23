@@ -69,7 +69,7 @@ RSpec.describe "Browse page", type: :system do
         chat_page.visit_browse
         find(".c-navbar__back-button").click
 
-        expect(browse_page).to have_current_path("/chat")
+        expect(browse_page).to have_current_path("/chat/channels")
       end
     end
 

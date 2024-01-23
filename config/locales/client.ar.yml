@@ -493,7 +493,7 @@ ar:
       two: "عرض موضوعين (%{count}) جديدين"
       few: "عرض %{count} موضوعات جديدة"
       many: "عرض %{count} موضوعًا جديدًا"
-      other: "طالِع %{count} موضوع جديد"
+      other: "عرض %{count} موضوع جديد"
     topic_count_categories:
       zero: "عرض %{count} موضوع جديد أو محدَّث"
       one: "عرض موضوع واحد (%{count}) جديد أو محدَّث"
@@ -2791,11 +2791,11 @@ ar:
         other: "<span class='multi-user'>%{username} و%{count} آخرين</span> %{description}"
       liked_by_2_users: "%{username}، %{username2}"
       liked_by_multiple_users:
-        zero: "%{username} و%{count}) آخر"
+        zero: "%{username} و%{count} آخر"
         one: "%{username} وواحد (%{count}) آخر"
         two: "%{username} واثنان (%{count}) آخران"
         few: "%{username} و%{count} آخرين"
-        many: "%{username} %{count} آخرين"
+        many: "%{username} و%{count} آخرين"
         other: "%{username} و%{count} آخرين"
       liked_consolidated_description:
         zero: "سجَّل إعجابه على %{count} من منشوراتك"

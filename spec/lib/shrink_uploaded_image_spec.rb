@@ -115,6 +115,21 @@ RSpec.describe ShrinkUploadedImage do
 
       expect(result).to be(false)
     end
+
+    it "returns false if the image is invalid" do
+      post = Fabricate(:post, raw: "<img src='#{upload.url}'>")
+      post.link_post_uploads
+      FastImage.stubs(:size).raises(FastImage::SizeNotFound.new)
+
+      result =
+        ShrinkUploadedImage.new(
+          upload: upload,
+          path: Discourse.store.path_for(upload),
+          max_pixels: 10_000,
+        ).perform
+
+      expect(result).to be(false)
+    end
   end
 
   context "when S3 uploads are enabled" do

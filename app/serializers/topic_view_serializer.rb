@@ -319,6 +319,6 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_categories?
-    SiteSetting.lazy_load_categories
+    scope.can_lazy_load_categories?
   end
 end

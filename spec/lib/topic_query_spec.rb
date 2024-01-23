@@ -75,6 +75,36 @@ RSpec.describe TopicQuery do
     end
   end
 
+  describe "#list_hot" do
+    it "excludes muted categories and topics" do
+      muted_category = Fabricate(:category)
+      muted_topic = Fabricate(:topic, category: muted_category)
+
+      TopicHotScore.create!(topic_id: muted_topic.id, score: 1.0)
+
+      expect(TopicQuery.new(user).list_hot.topics.map(&:id)).to include(muted_topic.id)
+
+      tu =
+        TopicUser.create!(
+          user_id: user.id,
+          topic_id: muted_topic.id,
+          notification_level: TopicUser.notification_levels[:muted],
+        )
+
+      expect(TopicQuery.new(user).list_hot.topics.map(&:id)).not_to include(muted_topic.id)
+
+      tu.destroy!
+
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: muted_category.id,
+        notification_level: CategoryUser.notification_levels[:muted],
+      )
+
+      expect(TopicQuery.new(user).list_hot.topics.map(&:id)).not_to include(muted_topic.id)
+    end
+  end
+
   describe "#prioritize_pinned_topics" do
     it "does the pagination correctly" do
       num_topics = 15
@@ -245,7 +275,7 @@ RSpec.describe TopicQuery do
       group = Fabricate(:group)
       group.add(group_moderator)
       category = Fabricate(:category, reviewable_by_group: group)
-      topic = Fabricate(:topic, category: category, deleted_at: 1.year.ago)
+      _topic = Fabricate(:topic, category: category, deleted_at: 1.year.ago)
 
       expect(TopicQuery.new(admin, status: "deleted").list_latest.topics.size).to eq(1)
       expect(TopicQuery.new(moderator, status: "deleted").list_latest.topics.size).to eq(1)
@@ -265,7 +295,7 @@ RSpec.describe TopicQuery do
     it "includes users own pms in regular topic lists" do
       topic = Fabricate(:topic)
       own_pm = Fabricate(:private_message_topic, user: user)
-      other_pm = Fabricate(:private_message_topic, user: Fabricate(:user))
+      _other_pm = Fabricate(:private_message_topic, user: Fabricate(:user))
 
       expect(TopicQuery.new(user).list_latest.topics).to contain_exactly(topic)
       expect(TopicQuery.new(admin).list_latest.topics).to contain_exactly(topic)
@@ -1466,8 +1496,8 @@ RSpec.describe TopicQuery do
         it "should return random topics excluding topics that are muted by user and not older than `suggested_topics_max_days_old` site setting" do
           topic2 = Fabricate(:topic, user: user)
           topic3 = Fabricate(:topic, user: user)
-          topic4 = Fabricate(:topic, user: user, created_at: 8.days.ago)
-          topic5 = Fabricate(:topic).tap { |t| TopicNotifier.new(t).mute!(user) }
+          _topic4 = Fabricate(:topic, user: user, created_at: 8.days.ago)
+          _topic5 = Fabricate(:topic).tap { |t| TopicNotifier.new(t).mute!(user) }
 
           SiteSetting.suggested_topics_max_days_old = 7
 
@@ -1483,7 +1513,7 @@ RSpec.describe TopicQuery do
 
         fab!(:topic_in_category_that_user_created_and_has_partially_read) do
           Fabricate(:topic, user: user, category:).tap do |t|
-            first_post = Fabricate(:post, topic: t)
+            _first_post = Fabricate(:post, topic: t)
             second_post = Fabricate(:post, topic: t)
 
             TopicUser.change(
@@ -1498,7 +1528,7 @@ RSpec.describe TopicQuery do
 
         fab!(:topic_in_category2_that_user_created_and_has_partially_read) do
           Fabricate(:topic, user: user, category: category2).tap do |t|
-            first_post = Fabricate(:post, topic: t)
+            _first_post = Fabricate(:post, topic: t)
             second_post = Fabricate(:post, topic: t)
 
             TopicUser.change(
@@ -1513,7 +1543,7 @@ RSpec.describe TopicQuery do
 
         fab!(:topic_in_category_that_user_has_partially_read) do
           Fabricate(:topic, category:).tap do |t|
-            first_post = Fabricate(:post, topic: t)
+            _first_post = Fabricate(:post, topic: t)
             second_post = Fabricate(:post, topic: t)
 
             TopicUser.change(
@@ -1528,7 +1558,7 @@ RSpec.describe TopicQuery do
 
         fab!(:topic_in_category2_that_user_has_partially_read) do
           Fabricate(:topic, category: category2).tap do |t|
-            first_post = Fabricate(:post, topic: t)
+            _first_post = Fabricate(:post, topic: t)
             second_post = Fabricate(:post, topic: t)
 
             TopicUser.change(

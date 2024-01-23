@@ -95,9 +95,9 @@ de:
         empty_state:
           title: "Empty State"
         tooltips:
-          title: "Tooltips"
+          title: "Tooltipps"
           description: "Beschreibung"
-          header: "Überschrift"
+          header: "Kopfzeile"
           hover_to_see: "Bewege den Mauszeiger darüber, um einen Tooltipp zu sehen"
         char_counter:
           title: "Zeichenzähler"

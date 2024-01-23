@@ -132,7 +132,7 @@ RSpec.describe SiteSerializer do
   end
 
   it "does not include categories if lazy_load_categories" do
-    SiteSetting.lazy_load_categories = true
+    SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
 
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 

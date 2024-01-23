@@ -27,6 +27,7 @@ export default Component.extend({
     function () {
       return this.inlineButtons
         .filterBy("dropdown", false)
+        .filterBy("anonymousOnly", false)
         .concat(this.inlineDropdowns)
         .sortBy("priority")
         .reverse();

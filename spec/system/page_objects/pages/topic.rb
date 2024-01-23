@@ -6,12 +6,13 @@ module PageObjects
       def initialize
         @composer_component = PageObjects::Components::Composer.new
         @fast_edit_component = PageObjects::Components::FastEditor.new
+        @topic_map_component = PageObjects::Components::TopicMap.new
       end
 
       def visit_topic(topic, post_number: nil)
         url = "/t/#{topic.id}"
         url += "/#{post_number}" if post_number
-        page.visit url
+        page.visit(url)
         self
       end
 
@@ -190,6 +191,18 @@ module PageObjects
       def click_footer_reply
         find("#topic-footer-buttons .btn-primary", text: "Reply").click
         self
+      end
+
+      def click_like_reaction_for(post)
+        post_by_number(post).find(".post-controls .actions .like").click
+      end
+
+      def has_topic_map?
+        @topic_map_component.is_visible?
+      end
+
+      def has_no_topic_map?
+        @topic_map_component.is_not_visible?
       end
 
       private

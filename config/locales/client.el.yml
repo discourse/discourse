@@ -125,6 +125,8 @@ el:
       facebook: "Μοιραστείτε στο Facebook"
       email: "Αποστολή μέσω email"
       url: "Αντιγραφή και κοινοποίηση διεύθυνσης URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Έκανε αυτό το θέμα δημόσιο στις %{when}"
       private_topic: "Έκανε αυτό το θέμα ένα προσωπικό μήνυμα στις %{when}"
@@ -961,6 +963,7 @@ el:
       dismiss_notifications_tooltip: "Όλες οι αδιάβαστες ειδοποιήσεις να χαρακτηριστούν διαβασμένες"
       no_likes_title: "Δεν έχετε λάβει ακόμα likes"
       no_messages_title: "Δεν έχετε κανένα μήνυμα"
+      no_notifications_title: "Δεν έχετε ειδοποιήσεις ακόμα"
       no_notifications_page_title: "Δεν έχετε ειδοποιήσεις ακόμα"
       dynamic_favicon: "Εμφάνιση μετρήσεων στο εικονίδιο του περιηγητή"
       skip_new_user_tips:
@@ -1461,6 +1464,7 @@ el:
         the_topic: "το νήμα"
     user_status:
       save: "Αποθήκευση"
+      pause_notifications: "Παύση ειδοποιήσεων"
     user_tips:
       first_notification:
         title: "Η πρώτη σας ειδοποίηση!"
@@ -2037,6 +2041,8 @@ el:
           label: Προβολές
         min_views:
           placeholder: ελάχιστο
+        max_views:
+          placeholder: μέγιστο
     new_item: "καινούριο"
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
@@ -3502,6 +3508,7 @@ el:
         save: Αποθήκευση
         new_key: Νέο κλειδί API
         revoked: Ανακλήθηκε
+        delete: Μόνιμη Διαγραφή
         not_shown_again: Αυτό το κλειδί δε θα εμφανιστεί ξανά. Βεβαιωθείτε ότι έχετε λάβει ένα αντίγραφο πριν συνεχίσετε.
         continue: Συνεχίστε
         scopes:

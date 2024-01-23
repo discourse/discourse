@@ -2033,6 +2033,8 @@ sw:
       linked: '%{jina la mtumiaji} ametengeneza kiungo kutoka kwenye "%{mada}" - %{jina la_tovuti}'
       confirm_title: "Taarifa mubashara zimewezeshwa - %{site_title}"
       confirm_body: "Taarifa mubashara zimewezeshwa kikamilifu"
+  staff_action_logs:
+    unknown: "haijulikani"
   reviewables:
     sensitivity:
       disabled: "Imezuiwa"

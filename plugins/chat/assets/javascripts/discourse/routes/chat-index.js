@@ -11,9 +11,9 @@ export default class ChatIndexRoute extends DiscourseRoute {
   }
 
   redirect() {
-    // Always want the channel index on mobile.
+    // on mobile redirect user to the first footer tab route
     if (this.site.mobileView) {
-      return;
+      return this.router.replaceWith("chat.channels");
     }
 
     // We are on desktop. Check for a channel to enter and transition if so
@@ -24,12 +24,6 @@ export default class ChatIndexRoute extends DiscourseRoute {
       });
     } else {
       return this.router.replaceWith("chat.browse");
-    }
-  }
-
-  model() {
-    if (this.site.mobileView) {
-      return this.chatChannelsManager.channels;
     }
   }
 }
