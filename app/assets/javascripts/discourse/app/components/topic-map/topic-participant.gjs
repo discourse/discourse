@@ -5,11 +5,9 @@ import { userPath } from "discourse/lib/url";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
 import gt from "truth-helpers/helpers/gt";
 
-let addTopicParticipantClassesCallbacks = [];
+const addTopicParticipantClassesCallbacks = [];
 
 export function addTopicParticipantClassesCallback(callback) {
-  addTopicParticipantClassesCallbacks =
-    addTopicParticipantClassesCallbacks || [];
   addTopicParticipantClassesCallbacks.push(callback);
 }
 
@@ -28,7 +26,7 @@ export default class TopicParticipant extends Component {
     const { primary_group_name } = this.args.participant;
     return [
       primary_group_name ? `group-${primary_group_name}` : null,
-      addTopicParticipantClassesCallbacks?.map((callback) =>
+      addTopicParticipantClassesCallbacks.map((callback) =>
         callback(this.args.participant)
       ),
     ]
