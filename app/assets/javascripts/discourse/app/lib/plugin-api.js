@@ -2432,7 +2432,7 @@ class PluginApi {
    *           get text() {
    *             return "dev channel";
    *           }
-   *           get prefixValue() {
+   *           get prefixType() {
    *             return "icon";
    *           }
    *           get prefixValue() {
