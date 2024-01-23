@@ -223,7 +223,7 @@
   .main-link {
     @extend .topic-list-main-link;
 
-    .raw-topic-link > * {
+    .raw-topic-link a {
       pointer-events: none;
     }
 
