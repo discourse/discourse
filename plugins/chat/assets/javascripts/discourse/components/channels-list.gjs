@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+import i18n from "discourse-common/helpers/i18n";
 import ChannelsListDirect from "discourse/plugins/chat/discourse/components/channels-list-direct";
 import ChannelsListPublic from "discourse/plugins/chat/discourse/components/channels-list-public";
 
@@ -7,10 +8,16 @@ export default class ChannelsList extends Component {
   @service chat;
 
   <template>
-    <ChannelsListPublic />
+    <div
+      role="region"
+      aria-label={{i18n "chat.aria_roles.channels_list"}}
+      class="channels-list"
+    >
+      <ChannelsListPublic />
 
-    {{#if this.chat.userCanAccessDirectMessages}}
-      <ChannelsListDirect />
-    {{/if}}
+      {{#if this.chat.userCanAccessDirectMessages}}
+        <ChannelsListDirect />
+      {{/if}}
+    </div>
   </template>
 }
