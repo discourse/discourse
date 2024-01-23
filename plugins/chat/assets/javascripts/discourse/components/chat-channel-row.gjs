@@ -16,6 +16,8 @@ import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import eq from "truth-helpers/helpers/eq";
+import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
+import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatChannelMetadata from "discourse/plugins/chat/discourse/components/chat-channel-metadata";
 import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
@@ -185,12 +187,15 @@ export default class ChatChannelRow extends Component {
         {{(if this.shouldReset (modifier this.onReset))}}
         style={{this.rowStyle}}
       >
-        <ChannelTitle @channel={{@channel}} />
+        <ChannelIcon @channel={{@channel}} />
+        <ChannelName @channel={{@channel}} />
         <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
-
         {{#if (and this.site.mobileView @channel.lastMessage)}}
-          {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
+          <div class="chat-channel-last-message">
+            {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
+          </div>
         {{/if}}
+
         {{#if
           (and @options.leaveButton @channel.isFollowing this.site.desktopView)
         }}
