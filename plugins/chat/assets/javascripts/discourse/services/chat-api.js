@@ -322,13 +322,6 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Get the total number of threads for the current user.
-   */
-  userThreadCount() {
-    return this.#getRequest("/me/threads/count");
-  }
-
-  /**
    * Update notifications settings of current user for a channel.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The settings to modify.
