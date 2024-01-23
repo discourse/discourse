@@ -107,7 +107,10 @@ const Bookmark = RestModel.extend({
   reminderTitle(name, reminderAt) {
     if (!isEmpty(reminderAt)) {
       return I18n.t("bookmarks.created_with_reminder_generic", {
-        date: this.formattedReminder,
+        date: formattedReminderTime(
+          reminderAt,
+          this.currentUser?.user_option?.timezone || moment.tz.guess()
+        ),
         name: name || "",
       });
     }
