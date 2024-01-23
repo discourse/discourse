@@ -5,10 +5,8 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Modal - Login", function (needs) {
-  needs.pretender((server, helper) => {
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({ challenge: "smth" })
-    );
+  needs.settings({
+    enable_passkeys: false,
   });
 
   test("You can tab to the login button", async function (assert) {
