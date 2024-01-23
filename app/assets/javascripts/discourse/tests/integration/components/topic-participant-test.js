@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | topic-participant", function (hooks) {
   setupRenderingTest(hooks);
@@ -16,9 +15,9 @@ module("Integration | Component | topic-participant", function (hooks) {
 
     await render(hbs`<TopicMap::TopicParticipant @participant={{this.args}}/>`);
 
-    assert.ok(exists("a.poster.trigger-user-card"));
-    assert.ok(!exists("span.post-count"), "don't show count for only 1 post");
-    assert.ok(!exists(".avatar-flair"), "no avatar flair");
+    assert.dom("a.poster.trigger-user-card").exists();
+    assert.dom("span.post-count").doesNotExist();
+    assert.dom(".avatar-flair").doesNotExist();
   });
 
   test("many posts, a primary group with flair", async function (assert) {
@@ -35,15 +34,9 @@ module("Integration | Component | topic-participant", function (hooks) {
 
     await render(hbs`<TopicMap::TopicParticipant @participant={{this.args}}/>`);
 
-    assert.ok(exists("a.poster.trigger-user-card"));
-    assert.ok(exists("span.post-count"), "show count for many posts");
-    assert.ok(
-      exists(".group-devs a.poster"),
-      "add class for the group outside the link"
-    );
-    assert.ok(
-      exists(".avatar-flair.avatar-flair-devs"),
-      "show flair with group class"
-    );
+    assert.dom("a.poster.trigger-user-card").exists();
+    assert.dom("span.post-count").exists();
+    assert.dom(".group-devs a.poster").exists();
+    assert.dom(".avatar-flair.avatar-flair-devs").exists();
   });
 });
