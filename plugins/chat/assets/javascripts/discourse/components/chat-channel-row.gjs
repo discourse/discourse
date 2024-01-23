@@ -9,6 +9,7 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
 import { bind } from "discourse-common/utils/decorators";
@@ -187,6 +188,9 @@ export default class ChatChannelRow extends Component {
         <ChannelTitle @channel={{@channel}} />
         <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
 
+        {{#if (and this.site.mobileView @channel.lastMessage)}}
+          {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
+        {{/if}}
         {{#if
           (and @options.leaveButton @channel.isFollowing this.site.desktopView)
         }}
