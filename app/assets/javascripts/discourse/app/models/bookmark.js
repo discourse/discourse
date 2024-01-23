@@ -150,7 +150,7 @@ const Bookmark = RestModel.extend({
     return capitalize(
       formattedReminderTime(
         bookmarkReminderAt,
-        currentUser.user_option.timezone
+        currentUser?.user_option?.timezone || moment.tz.guess()
       )
     );
   },
