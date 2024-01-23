@@ -95,12 +95,12 @@ export default {
     if (!href || href.startsWith("mailto:")) {
       return true;
     }
-    owner.lookup("service:app-events").trigger("click-tracked", href);
+    owner?.lookup("service:app-events").trigger("click-tracked", href);
 
     if (link.classList.contains("attachment")) {
       // Warn the user if they cannot download the file.
       if (
-        owner.lookup("service:site-settings")
+        owner?.lookup("service:site-settings")
           ?.prevent_anons_from_downloading_files &&
         !User.current()
       ) {
