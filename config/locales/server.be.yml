@@ -2357,6 +2357,9 @@ be:
         title: "Ваш Дыскурс гатова!"
   search_logs:
     graph_title: "пошук граф"
+  onebox:
+    github:
+      closed: "закрыта"
   discourse_push_notifications:
     popup:
       mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'

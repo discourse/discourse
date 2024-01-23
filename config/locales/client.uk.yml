@@ -1135,7 +1135,6 @@ uk:
       said: "%{username}:"
       profile: "Профіль"
       profile_possessive: "Профіль користувача %{username}"
-      account_possessive: "аккаунт"
       mute: "Приглушити"
       edit: "Редагувати налаштування"
       download_archive:

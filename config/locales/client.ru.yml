@@ -1135,7 +1135,6 @@ ru:
       said: "%{username}:"
       profile: "Профиль"
       profile_possessive: "Профиль пользователя %{username}"
-      account_possessive: "— аккаунт пользователя"
       mute: "Отключить"
       edit: "Изменить настройки"
       download_archive:

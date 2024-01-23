@@ -3240,6 +3240,9 @@ da:
         title: "Discourse er gjort klar til dig!"
   search_logs:
     graph_title: "Antal søgninger"
+  onebox:
+    github:
+      closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'

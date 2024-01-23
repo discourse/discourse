@@ -3379,6 +3379,9 @@ ur:
         title: "آپ کا ڈِسکورس تیار ہے!"
   search_logs:
     graph_title: "سرچ شمار"
+  onebox:
+    github:
+      closed: "بند"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} نے آپ کا تذکرہ "%{topic}" میں کیا - %{site_title}'
