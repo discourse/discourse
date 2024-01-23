@@ -78,7 +78,7 @@ module DiscourseNarrativeBot
         prerequisite:
           Proc.new do
             SiteSetting.poll_enabled &&
-              @user.has_trust_level?(SiteSetting.poll_minimum_trust_level_to_create)
+              @user.in_any_groups?(SiteSetting.poll_create_allowed_groups_map)
           end,
         next_state: :tutorial_details,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions", i18n_post_args) },
