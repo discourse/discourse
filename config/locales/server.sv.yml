@@ -68,8 +68,11 @@ sv:
       generic: Det uppstod ett fel vid import av det temat
       upload: "Det uppstod ett fel under skapandet av uppladdningstillgång: %{name}. %{errors}"
       about_json: "Importfel: about.json finns inte eller är ogiltig. Är du säker på att detta är ett Discourse-tema?"
+      about_json_too_big: "Importfel: about.json är större än gränsen %{limit}."
       about_json_values: "about.json innehåller ogiltiga värden: %{errors}"
       modifier_values: "about.json-modifierare innehåller ogiltiga värden: %{errors}"
+      asset_too_big: "Tillgången %{filename} är större än %{limit} -gränsen"
+      theme_too_big: "Temat är större än %{limit} -gränsen"
       git: "Fel vid kloning av git-lagringsplats, åtkomst nekas eller lagringsplatsen finns inte"
       git_ref_not_found: "Det gick inte att ta ut git-referens: %{ref}"
       git_unsupported_scheme: "Det går inte att klona git repo: schemat stöds inte"
@@ -78,6 +81,7 @@ sv:
       unknown_file_type: "Filen som du laddade upp verkar inte vara ett giltigt Discourse-tema."
       not_allowed_theme: "`%{repo}` finns inte i listan över tillåtna teman (bocka för den globala inställningen `allowed_theme_repos`)."
       ssh_key_gone: "Du väntade för länge med att installera temat så SSH-nyckeln har löpt ut. Vi ber dig försöka igen."
+      too_many_files: "Antalet filer (%{count}) i temat har överskridit det maximalt tillåtna antalet filer (%{limit})"
     errors:
       component_no_user_selectable: "Temakomponenter kan inte väljas av användaren"
       component_no_default: "Temakomponenter kan inte vara standardtema"
@@ -905,6 +909,9 @@ sv:
     sequence_conflict_error:
       title: "fel på utkast"
       description: "Utkast ändras i ett annat fönster. Ladda om denna sida."
+    too_many_drafts:
+      title: "För många utkast"
+      description: "Du har nått det maximala antalet tillåtna utkast. Ta bort några av [dina utkast](%{base_url}/my/activity/drafts) och försök igen."
   draft_backup:
     pm_title: "Säkerhetskopiera utkast från pågående ämnen"
     pm_body: "Ämne som innehåller säkerhetskopierade utkast"
@@ -1837,7 +1844,7 @@ sv:
     max_image_size_kb: "Högsta bilduppladdningsstorlek i kB. Konfiguration krävs också i nginx (client_max_body_size) / apache eller proxy. Bilder större än detta eller mindre än client_max_body_size kommer vid uppladdning att ändras i storlek för att passa."
     max_attachment_size_kb: "Högsta storlek på uppladdad bilaga i kB. Konfiguration krävs i nginx (client_max_body_size) / apace eller proxy också."
     authorized_extensions: "En lista av alla filändelser som är tillåtna för uppladdning (använd '*' för att aktivera alla filtyper)"
-    authorized_extensions_for_staff: "En lista av alla filändelser som är tillåtna vid uppladning från personal utöver listan som definierats i webbplatsens inställningar för `authorized_extensions`. (använd '*' för att aktivera alla filtyper)"
+    authorized_extensions_for_staff: "En lista över alla filändelser som är tillåtna vid uppladdning från personal utöver listan som definierats i webbplatsens inställningar för `authorized_extensions`. (använd '*' för att aktivera alla filtyper)"
     theme_authorized_extensions: "En lista av alla filändelser som är tillåtna för temauppladdningar (använd '*' för att aktivera alla filtyper)"
     max_similar_results: "Hur många liknande ämnen som visas ovanför redigeraren vid författandet av ett nytt ämne. Jämförelsen är baserad på ämnesrubrik och innehåll."
     max_image_megapixels: "Maximalt antal megapixlar tillåtet för en bild. Bilder med ett högre värde av megapixlar kommer att avvisas."
@@ -2405,6 +2412,8 @@ sv:
     invalid_security_key: "Ogiltig säkerhetsnyckel."
     missing_second_factor_name: "Ange ett namn."
     missing_second_factor_code: "Ange en kod."
+    too_many_authenticators: "Tyvärr kan du inte ha fler än 50 autentiseringar. Ta bort en befintlig och försök igen."
+    too_many_security_keys: "Tyvärr kan du inte ha fler än 50 säkerhetsnycklar. Ta bort en befintlig och försök igen."
     second_factor_toggle:
       totp: "Använd en autentiseringsapp eller säkerhetsnyckel istället"
       backup_code: "Använd en reservkod istället"
