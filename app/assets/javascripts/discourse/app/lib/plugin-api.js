@@ -91,6 +91,7 @@ import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
+import { forceAuthLoginMethod } from "discourse/routes/application";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -146,7 +147,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.24.0";
+export const PLUGIN_API_VERSION = "1.25.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2696,6 +2697,22 @@ class PluginApi {
     this.container
       .lookup("service:admin-custom-user-fields")
       .addProperty(userFieldProperty);
+  }
+
+  /**
+   * When there are multiple auth methods available, use this method to force
+   * logins using one specific method, e.g. OAuth2, from the login modal.
+   *
+   * This is useful when using concurrently with SSO, where staff can enter via
+   * SSO, but you want to force users to use OAuth2.
+   * @param methodName
+   *
+   * ```
+   * api.forceAuthLoginMethod("oauth2_basic");
+   * ```
+   */
+  forceAuthLoginMethod(methodName) {
+    forceAuthLoginMethod(methodName);
   }
 }
 

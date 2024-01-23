@@ -30,6 +30,12 @@ function unlessStrictlyReadOnly(method, message) {
   };
 }
 
+let _forceLoginMethodName = null;
+
+export function forceAuthLoginMethod(methodName) {
+  _forceLoginMethodName = methodName;
+}
+
 const ApplicationRoute = DiscourseRoute.extend({
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
@@ -246,6 +252,12 @@ const ApplicationRoute = DiscourseRoute.extend({
     } else {
       if (this.isOnlyOneExternalLoginMethod) {
         this.login.externalLogin(this.externalLoginMethods[0]);
+      } else if (_forceLoginMethodName) {
+        this.login.externalLogin(
+          this.externalLoginMethods.find(
+            (method) => method.name === _forceLoginMethodName
+          )
+        );
       } else {
         this.modal.show(LoginModal, {
           model: {
