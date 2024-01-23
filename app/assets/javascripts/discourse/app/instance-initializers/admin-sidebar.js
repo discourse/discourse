@@ -240,6 +240,10 @@ function pluginAdminRouteLinks() {
 export default {
   name: "admin-sidebar-initializer",
 
+  // Necessary for plugins (e.g. docker_manager) to be able to add links to the admin sidebar
+  // and still work with older Discourse versions.
+  after: "logs-notice",
+
   initialize(owner) {
     this.currentUser = owner.lookup("service:current-user");
     this.siteSettings = owner.lookup("service:site-settings");
