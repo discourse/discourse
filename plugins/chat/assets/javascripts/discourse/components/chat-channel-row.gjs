@@ -188,13 +188,18 @@ export default class ChatChannelRow extends Component {
         style={{this.rowStyle}}
       >
         <ChannelIcon @channel={{@channel}} />
-        <ChannelName @channel={{@channel}} />
-        <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
-        {{#if (and this.site.mobileView @channel.lastMessage)}}
-          <div class="chat-channel-last-message">
-            {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
-          </div>
-        {{/if}}
+        <div class="chat-channel-row__info">
+          <ChannelName @channel={{@channel}} />
+          <ChatChannelMetadata
+            @channel={{@channel}}
+            @unreadIndicator={{true}}
+          />
+          {{#if (and this.site.mobileView @channel.lastMessage)}}
+            <div class="chat-channel-last-message">
+              {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
+            </div>
+          {{/if}}
+        </div>
 
         {{#if
           (and @options.leaveButton @channel.isFollowing this.site.desktopView)

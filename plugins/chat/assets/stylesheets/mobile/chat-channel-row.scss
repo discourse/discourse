@@ -1,3 +1,6 @@
+:root {
+  --channel-list-avatar-size: 43px;
+}
 .chat-channel-row {
   margin: 0;
   border-radius: 0;
@@ -5,7 +8,6 @@
   transition: height 0.25s ease-in-out, opacity 0.25s ease-out;
   transform-origin: top center;
   will-change: height, opacity, left;
-  height: 4em;
   position: relative;
 
   &.-fade-out {
@@ -19,12 +21,15 @@
   }
 
   &__content {
+    justify-content: flex-start;
     padding-inline: 1.5rem;
+    padding-block: 0.5rem;
     z-index: 2;
     background: var(--primary-very-low);
     box-sizing: border-box;
     height: 100%;
     transition: border-radius 0.25s ease-in-out;
+    gap: 0.5rem;
 
     &.-animate-reset {
       transition: margin-right 0.15s ease-out;
@@ -34,6 +39,15 @@
       border-top-right-radius: 0.25rem;
       border-bottom-right-radius: 0.25rem;
     }
+  }
+
+  &__info {
+    display: grid;
+    grid-template-areas:
+      "name metadata"
+      "msg metadata";
+    width: 100%;
+    align-items: center;
   }
 
   &__action-btn {
@@ -70,6 +84,8 @@
   }
 
   .chat-channel-metadata {
+    grid-area: metadata;
+    align-self: flex-start;
     .chat-channel-unread-indicator {
       font-size: var(--font-down-2);
       margin-top: 0.25rem;
@@ -77,5 +93,33 @@
     &__date {
       font-size: var(--font-down-2);
     }
+  }
+
+  .chat-channel-title__users-count {
+    font-size: var(--font-up-2);
+    font-weight: normal;
+  }
+
+  .chat-channel-name {
+    grid-area: name;
+    white-space: nowrap;
+    overflow: hidden;
+
+    &__name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      display: block;
+      font-weight: bold;
+    }
+  }
+
+  .chat-channel-last-message {
+    grid-area: msg;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
