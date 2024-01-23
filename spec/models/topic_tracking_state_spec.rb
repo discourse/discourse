@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicTrackingState do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:whisperers_group) { Fabricate(:group) }
   fab!(:private_message_post)
   let(:private_message_topic) { private_message_post.topic }

@@ -134,8 +134,6 @@ RSpec.describe TopicCreator do
           )
         end
 
-        before { Discourse.system_user.change_trust_level!(TrustLevel[4]) }
-
         it "adds watched words as tags" do
           topic =
             TopicCreator.create(

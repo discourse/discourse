@@ -13,7 +13,7 @@ RSpec.describe "category tag restrictions" do
   let(:tag_with_colon) { Fabricate(:tag, name: "with:colon") }
 
   fab!(:user)
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   before do
     SiteSetting.tagging_enabled = true
