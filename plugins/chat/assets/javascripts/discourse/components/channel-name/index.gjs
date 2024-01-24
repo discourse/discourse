@@ -4,9 +4,8 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserStatusMessage from "discourse/components/user-status-message";
+import concatClass from "discourse/helpers/concat-class";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import icon from "discourse-common/helpers/d-icon";
-import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatChannelName extends Component {
   @service currentUser;
@@ -43,16 +42,19 @@ export default class ChatChannelName extends Component {
   }
 
   <template>
-    {{#if @channel.isDirectMessageChannel}}
-
-      <div class="chat-channel__user-info">
-
+    <div
+      class={{concatClass
+        "chat-channel-name"
+        (if @channel.isDirectMessageChannel "is-dm" "is-category")
+      }}
+    >
+      {{#if @channel.isDirectMessageChannel}}
         {{#if this.groupDirectMessage}}
-          <span class="chat-channel__name">
+          <span class="chat-channel-name__label">
             {{this.groupsDirectMessageTitle}}
           </span>
         {{else}}
-          <span class="chat-channel__name">
+          <span class="chat-channel-name__label">
             {{this.firstUser.username}}
           </span>
           {{#if this.showUserStatus}}
@@ -69,19 +71,15 @@ export default class ChatChannelName extends Component {
             @connectorTagName=""
           />
         {{/if}}
-
-      </div>
-
-    {{else if @channel.isCategoryChannel}}
-      <div class="chat-channel__channel-info">
-        <span class="chat-channel__name">
+      {{else if @channel.isCategoryChannel}}
+        <span class="chat-channel-name__label">
           {{replaceEmoji @channel.title}}
         </span>
 
         {{#if (has-block)}}
           {{yield}}
         {{/if}}
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </template>
 }

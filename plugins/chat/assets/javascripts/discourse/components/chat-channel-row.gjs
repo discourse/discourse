@@ -18,7 +18,6 @@ import and from "truth-helpers/helpers/and";
 import eq from "truth-helpers/helpers/eq";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
-import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatChannelMetadata from "discourse/plugins/chat/discourse/components/chat-channel-metadata";
 import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
 
@@ -145,6 +144,14 @@ export default class ChatChannelRow extends Component {
     return this.args.channel.tracking.unreadCount > 0;
   }
 
+  get shouldRenderLastMessage() {
+    return (
+      this.site.mobileView &&
+      this.args.channel.isDirectMessageChannel &&
+      this.args.channel.lastMessage
+    );
+  }
+
   get #firstDirectMessageUser() {
     return this.args.channel?.chatable?.users?.firstObject;
   }
@@ -195,7 +202,7 @@ export default class ChatChannelRow extends Component {
             @channel={{@channel}}
             @unreadIndicator={{true}}
           />
-          {{#if (and this.site.mobileView @channel.lastMessage)}}
+          {{#if this.shouldRenderLastMessage}}
             <div class="chat-channel__last-message">
               {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
             </div>
