@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UploadRecovery do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
   let(:upload) do
     UploadCreator.new(file_from_fixtures("smallest.png"), "logo.png").create_for(user.id)

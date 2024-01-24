@@ -454,14 +454,16 @@ RSpec.describe TrustLevel3Requirements do
   end
 
   describe "num_likes_received" do
-    before { UserActionManager.enable }
+    before do
+      UserActionManager.enable
+      Group.refresh_automatic_groups!
+    end
 
     let(:topic) { Fabricate(:topic, user: user, created_at: 102.days.ago) }
     let(:old_post) { create_post(topic: topic, user: user, created_at: 102.days.ago) }
     let(:recent_post1) { create_post(topic: topic, user: user, created_at: 1.hour.ago) }
     let(:recent_post2) { create_post(topic: topic, user: user, created_at: 10.days.ago) }
     let(:private_post) do
-      Group.refresh_automatic_groups!
       create_post(
         user: user,
         archetype: Archetype.private_message,
