@@ -53,7 +53,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
     assert
-      .dom(".chat-channel-metadata")
+      .dom(".chat-channel__metadata-date")
       .hasText(
         moment(this.categoryChatChannel.lastMessage.createdAt).format("h:mm A")
       );

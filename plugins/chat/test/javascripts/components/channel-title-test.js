@@ -15,11 +15,11 @@ module("Discourse Chat | Component | <ChannelTitle />", function (hooks) {
     await render(hbs`<ChannelTitle @channel={{this.channel}} />`);
 
     assert.strictEqual(
-      query(".chat-channel-title__category-badge").getAttribute("style"),
+      query(".chat-channel-icon.--category-badge").getAttribute("style"),
       `color: #${this.channel.chatable.color}`
     );
     assert.strictEqual(
-      query(".chat-channel-title__name").innerText,
+      query(".chat-channel-name__label").innerText,
       this.channel.title
     );
   });
@@ -68,7 +68,7 @@ module("Discourse Chat | Component | <ChannelTitle />", function (hooks) {
 
     assert.true(exists(`.chat-user-avatar .avatar[title="${user.username}"]`));
     assert.strictEqual(
-      query(".chat-channel-title__name").innerText.trim(),
+      query(".chat-channel-name__label").innerText.trim(),
       user.username
     );
   });
@@ -84,11 +84,11 @@ module("Discourse Chat | Component | <ChannelTitle />", function (hooks) {
     const users = this.channel.chatable.users;
 
     assert.strictEqual(
-      parseInt(query(".chat-channel-title__users-count").innerText.trim(), 10),
+      parseInt(query(".chat-channel-icon.--users-count").innerText.trim(), 10),
       users.length
     );
     assert.strictEqual(
-      query(".chat-channel-title__name").innerText.trim(),
+      query(".chat-channel-name__label").innerText.trim(),
       users.mapBy("username").join(", ")
     );
   });
