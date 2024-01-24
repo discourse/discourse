@@ -27,6 +27,9 @@
     z-index: 2;
     box-sizing: border-box;
     transition: border-radius 0.25s ease-in-out;
+    //for sliding delete animation
+    background: var(--primary-very-low);
+    height: 100%;
 
     &.-animate-reset {
       transition: margin-right 0.15s ease-out;
@@ -109,17 +112,15 @@
       font-size: var(--font-down-2);
     }
     &__last-message {
+      @include ellipsis;
       grid-area: msg;
       font-size: var(--font-down-1-rem);
       color: var(--primary-high);
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
   }
 
   .chat-channel-icon {
-    &__users-count {
+    &.--users-count {
       font-size: var(--font-up-2);
     }
   }

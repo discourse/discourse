@@ -1,7 +1,7 @@
 .chat-channel-title {
+  @include ellipsis;
   display: flex;
   align-items: center;
-  @include ellipsis;
   gap: 0.5rem;
 
   .chat-channel-preview-card & {
