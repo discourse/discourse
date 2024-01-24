@@ -1,7 +1,3 @@
-import Component from "@glimmer/component";
+const Item = <template>{{yield @item}}</template>;
 
-export default class Item extends Component {
-  <template>
-    {{yield @item}}
-  </template>
-}
+export default Item;

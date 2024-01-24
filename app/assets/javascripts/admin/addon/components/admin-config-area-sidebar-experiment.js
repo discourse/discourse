@@ -87,6 +87,7 @@ export default class AdminConfigAreaSidebarExperiment extends Component {
         // Using the private `_routerMicrolib` is not ideal, but Ember doesn't provide
         // any other way for us to easily check for route validity.
         try {
+          // eslint-disable-next-line ember/no-private-routing-service
           this.router._router._routerMicrolib.recognizer.handlersFor(
             link.route
           );

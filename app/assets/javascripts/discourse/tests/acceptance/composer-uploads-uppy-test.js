@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
@@ -8,7 +9,6 @@ import {
   acceptance,
   chromeTest,
   createFile,
-  loggedInUser,
   paste,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -92,7 +92,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     appEvents.on("composer:all-uploads-complete", async () => {
@@ -123,7 +123,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       await visit("/");
       await click("#create-topic");
       await fillIn(".d-editor-input", "The image:\n");
-      const appEvents = loggedInUser().appEvents;
+      const appEvents = getOwner(this).lookup("service:app-events");
       const done = assert.async();
 
       appEvents.on("composer:all-uploads-complete", async () => {
@@ -161,7 +161,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     appEvents.on("composer:all-uploads-complete", async () => {
@@ -187,7 +187,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   test("should error if too many files are added at once", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const image = createFile("avatar.png");
     const image1 = createFile("avatar1.png");
     const image2 = createFile("avatar2.png");
@@ -213,7 +213,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   test("should error if an unauthorized extension file is added", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const jsonFile = createFile("something.json", "application/json");
     const done = assert.async();
 
@@ -246,7 +246,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const image = createFile("avatar.png");
     const image2 = createFile("avatar2.png");
 
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     let uploadStarted = 0;
     appEvents.on("composer:upload-started", () => {
       uploadStarted++;
@@ -280,7 +280,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
@@ -311,7 +311,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     textArea.selectionStart = 10;
     textArea.selectionEnd = 10;
 
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
@@ -345,7 +345,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     textArea.selectionStart = 10;
     textArea.selectionEnd = 23;
 
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
@@ -371,7 +371,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   test("should insert a newline only after an image when pasting into an empty composer", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
@@ -398,7 +398,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     appEvents.on("composer:upload-started", () => {
@@ -422,7 +422,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   });
 
   skip("should place cursor properly after inserting a placeholder", async function (assert) {
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     await visit("/");
@@ -448,7 +448,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   test("should be able to paste a table with files and not upload the files", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     let uppyEventFired = false;
@@ -509,7 +509,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn(".d-editor-input", "The image:\n");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     appEvents.on("composer:upload-error", async () => {
@@ -549,7 +549,7 @@ acceptance(
     test("should show a consolidated message for multiple failed uploads", async function (assert) {
       await visit("/");
       await click("#create-topic");
-      const appEvents = loggedInUser().appEvents;
+      const appEvents = getOwner(this).lookup("service:app-events");
       const image = createFile("meme1.png");
       const image1 = createFile("meme2.png");
       const done = assert.async();
@@ -557,19 +557,18 @@ acceptance(
       appEvents.on("composer:upload-error", async () => {
         await settled();
 
-        if (!query(".dialog-body")) {
-          return;
+        if (query(".dialog-body")) {
+          assert
+            .dom(".dialog-body")
+            .hasText(
+              "Sorry, there was an error uploading meme1.png and meme2.png. Please try again.",
+              "it should show a consolidated error dialog"
+            );
+
+          await click(".dialog-footer .btn-primary");
+
+          done();
         }
-
-        assert.strictEqual(
-          query(".dialog-body").textContent.trim(),
-          "Sorry, there was an error uploading meme1.png and meme2.png. Please try again.",
-          "it should show a consolidated error dialog"
-        );
-
-        await click(".dialog-footer .btn-primary");
-
-        done();
       });
 
       appEvents.trigger("composer:add-files", [image, image1]);
@@ -600,7 +599,7 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
     await visit("/");
     await click("#create-topic");
     const image = createFile("handler-test.png");
-    const appEvents = loggedInUser().appEvents;
+    const appEvents = getOwner(this).lookup("service:app-events");
     const done = assert.async();
 
     appEvents.on("composer:uploads-aborted", async () => {
