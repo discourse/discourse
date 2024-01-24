@@ -43,7 +43,7 @@ module("Integration | Component | search-menu", function (hooks) {
       "search result is a list of topics"
     );
 
-    await triggerKeyEvent("#search-term", "keyup", "Escape");
+    await triggerKeyEvent("#search-term", "keydown", "Escape");
 
     assert.notOk(exists(".menu-panel"), "Menu panel is gone");
 

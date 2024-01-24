@@ -73,7 +73,7 @@ export function openLinkInNewTab(event, link) {
 }
 
 export default {
-  trackClick(e, siteSettings, { returnPromise = false } = {}) {
+  trackClick(e, owner, { returnPromise = false } = {}) {
     // right clicks are not tracked
     if (e.which === 3) {
       return true;
@@ -95,11 +95,13 @@ export default {
     if (!href || href.startsWith("mailto:")) {
       return true;
     }
+    owner?.lookup("service:app-events").trigger("click-tracked", href);
 
     if (link.classList.contains("attachment")) {
       // Warn the user if they cannot download the file.
       if (
-        siteSettings?.prevent_anons_from_downloading_files &&
+        owner?.lookup("service:site-settings")
+          ?.prevent_anons_from_downloading_files &&
         !User.current()
       ) {
         const dialog = getOwnerWithFallback(this).lookup("service:dialog");

@@ -361,6 +361,7 @@ he:
         filter: "סינון"
         cant_add_more_members: "הגעת למספר החברים המרבי"
         create_new_group_chat: "יצירת צ׳אט קבוצתי"
+        group_with_too_many_members: "יותר מדי חברים (%{membersCount})"
       channel_edit_name_slug_modal:
         title: עריכת ערוץ
         input_placeholder: הוספת שם

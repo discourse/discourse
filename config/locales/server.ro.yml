@@ -1996,6 +1996,9 @@ ro:
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
       finished:
         title: "Discourse-ul tău e gata!"
+  onebox:
+    github:
+      closed: "închis"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'

@@ -21,11 +21,4 @@ class Chat::Api::CurrentUserThreadsController < Chat::ApiController
       on_model_not_found(:threads) { render json: success_json.merge(threads: []) }
     end
   end
-
-  def thread_count
-    with_service(::Chat::LookupUserThreads) do
-      on_success { render json: success_json.merge(thread_count: result.threads.size) }
-      on_model_not_found(:threads) { render json: success_json.merge(thread_count: 0) }
-    end
-  end
 end

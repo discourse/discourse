@@ -1095,7 +1095,7 @@ en:
       said: "%{username}:"
       profile: "Profile"
       profile_possessive: "%{username}'s profile"
-      account_possessive: "'s account"
+      account_possessive: "%{name}'s account"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
@@ -2346,8 +2346,7 @@ en:
         one: "Select at least %{count} item."
         other: "Select at least %{count} items."
       components:
-        tag_drop:
-          filter_for_more: Filter for more…
+        filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
 

@@ -34,7 +34,7 @@ export function stackingContextFix(scrollable, callback) {
   }
 }
 
-export function bodyScrollFix() {
+export function bodyScrollFix(options = {}) {
   // when keyboard is visible this will ensure body
   // doesn’t scroll out of viewport
   if (
@@ -42,6 +42,12 @@ export function bodyScrollFix() {
     document.documentElement.classList.contains("keyboard-visible") &&
     !isZoomed()
   ) {
-    document.documentElement.scrollTo(0, 0);
+    if (options.delayed) {
+      setTimeout(() => {
+        document.documentElement.scrollTo(0, 0);
+      }, 200);
+    } else {
+      document.documentElement.scrollTo(0, 0);
+    }
   }
 }

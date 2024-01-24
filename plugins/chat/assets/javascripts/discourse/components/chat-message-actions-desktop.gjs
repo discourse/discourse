@@ -161,6 +161,7 @@ export default class ChatMessageActionsDesktop extends Component {
             <DButton
               @action={{this.messageInteractor.toggleBookmark}}
               class="btn-flat bookmark-btn"
+              @translatedTitle={{this.message.bookmark.reminderTitle}}
             >
               <BookmarkIcon @bookmark={{this.message.bookmark}} />
             </DButton>

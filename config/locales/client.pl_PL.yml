@@ -1135,7 +1135,6 @@ pl_PL:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "profil %{username}"
-      account_possessive: "konto"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -2975,6 +2974,7 @@ pl_PL:
         bookmarks: "Nie posiadasz tematów dodanych do zakładek."
         category: "Nie ma tematów w kategorii %{category}."
         top: "Brak najlepszych tematów."
+        hot: "Nie ma gorących tematów."
         filter: "Brak tematów."
         educate:
           new: '<p>Twoje nowe tematy pojawią się tutaj. Domyślnie tematy są uważane za nowe i będą pokazywać wskaźnik <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a>, aby to zmienić.</p>'
@@ -2990,6 +2990,7 @@ pl_PL:
         category: "Nie ma więcej tematów w kategorii %{category}."
         tag: "Nie ma więcej tematów z %{tag}."
         top: "Nie ma już więcej najlepszych tematów."
+        hot: "Nie ma już gorących tematów."
         bookmarks: "Nie ma więcej zakładek."
         filter: "Nie ma więcej tematów."
     topic:
@@ -3483,6 +3484,8 @@ pl_PL:
       quote_reply_shortcut: "Cytuj (lub naciśnij q)"
       quote_edit: "Edytuj"
       quote_edit_shortcut: "Edytuj (lub naciśnij e)"
+      quote_copy: "Skopiuj cytat"
+      quote_copied_to_clibboard: "Cytat skopiowany do schowka"
       quote_share: "Udostępnij"
       edit_reason: "Powód"
       post_number: "wpis %{number}"
@@ -3957,6 +3960,11 @@ pl_PL:
           few: "wprowadź co najmniej %{count} znaki"
           many: "wprowadź co najmniej %{count} znaków"
           other: "wprowadź co najmniej %{count} znaków"
+        more:
+          one: "Pozostał %{count}…"
+          few: "Pozostały %{count}…"
+          many: "Pozostało %{count}…"
+          other: "Pozostało %{count}…"
         left:
           one: "%{count} pozostał"
           few: "%{count} pozostało"
@@ -4096,6 +4104,10 @@ pl_PL:
         title: "Niewidziany"
         lower_title: "niewidziany"
         help: "nowe tematy i tematy, które aktualnie oglądasz lub śledzisz z nieprzeczytanymi postami"
+      hot:
+        title: "Gorące"
+        lower_title: "gorące"
+        help: "najpopularniejsze ostatnio tematy"
       new:
         lower_title_with_count:
           one: "%{count} nowy"

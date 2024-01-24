@@ -422,7 +422,7 @@ login:
     validator: "EnableLocalLoginsViaEmailValidator"
   enable_passkeys:
     client: true
-    default: false
+    default: true
     hidden: true
   allow_new_registrations:
     client: true

@@ -1021,7 +1021,7 @@ sv:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}:s profil"
-      account_possessive: ":s konto"
+      account_possessive: "%{name}:s konto"
       mute: "Tysta"
       edit: "Redigera inställningar"
       download_archive:
@@ -2716,6 +2716,7 @@ sv:
         bookmarks: "Du har inga bokmärkta ämnen ännu."
         category: "Det finns inga ämnen i %{category}."
         top: "Det finns inga toppämnen."
+        hot: "Det finns inga heta ämnen."
         filter: "Det finns inga ämnen."
         educate:
           new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
@@ -2731,6 +2732,7 @@ sv:
         category: "Det finns inga fler ämnen i %{category}."
         tag: "Det finns inga fler %{tag}-ämnen."
         top: "Det finns inga fler toppämnen."
+        hot: "Det finns inte fler heta ämnen."
         bookmarks: "Inga fler bokmärkta ämnen hittades."
         filter: "Det finns inga fler ämnen."
     topic:
@@ -3734,6 +3736,10 @@ sv:
         title: "Osedda"
         lower_title: "osedda"
         help: "nya ämnen och ämnen som du bevakar eller följer med olästa inlägg"
+      hot:
+        title: "Hett"
+        lower_title: "hett"
+        help: "de senaste ämnena"
       new:
         lower_title_with_count:
           one: "%{count} ny"
@@ -6149,6 +6155,7 @@ sv:
       finish: "Avsluta konfigureringen"
       back: "Tillbaka"
       next: "Nästa"
+      configure_more: "Konfigurera fler…"
       step-text: "Steg"
       step: "%{current} av %{total}"
       upload: "Ladda upp fil"

@@ -17,6 +17,29 @@ RSpec.describe User do
     )
   end
 
+  describe ".in_any_groups?" do
+    fab!(:group)
+
+    it "returns true if any of the group IDs are the 'everyone' auto group" do
+      expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
+    end
+
+    it "returns true if the user is in the group" do
+      expect(user.in_any_groups?([group.id])).to eq(false)
+      group.add(user)
+      user.reload
+      expect(user.in_any_groups?([group.id])).to eq(true)
+    end
+
+    it "always returns true for system user for automated groups" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(Discourse.system_user.in_any_groups?([group.id])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(true)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+    end
+  end
+
   describe "Associations" do
     it "should delete sidebar_section_links when a user is destroyed" do
       Fabricate(:category_sidebar_section_link, user: user)
