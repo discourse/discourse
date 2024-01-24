@@ -1,6 +1,7 @@
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
+import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import I18n from "discourse-i18n";
 import AdminSidebarPanel from "./admin-sidebar";
 
@@ -24,9 +25,9 @@ class MainSidebarPanel {
   }
 }
 
-export let customPanels = [new MainSidebarPanel(), new AdminSidebarPanel()];
-
-export let currentPanelKey = "main";
+export let customPanels;
+export let currentPanelKey;
+resetSidebarPanels();
 
 export function addSidebarPanel(func) {
   const panelClass = func.call(this, BaseCustomSidebarPanel);
@@ -61,6 +62,6 @@ export function resetPanelSections(
 }
 
 export function resetSidebarPanels() {
-  customPanels = [new MainSidebarPanel()];
-  currentPanelKey = "main";
+  customPanels = [new MainSidebarPanel(), new AdminSidebarPanel()];
+  currentPanelKey = MAIN_PANEL;
 }
