@@ -183,7 +183,7 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
-  before_save :apply_watched_words, unless: :custom_fields_clean?
+  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
