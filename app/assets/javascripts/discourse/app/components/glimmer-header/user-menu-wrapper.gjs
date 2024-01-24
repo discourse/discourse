@@ -1,25 +1,15 @@
-createWidget("revamped-user-menu-wrapper", {
-  buildAttributes() {
-    return { "data-click-outside": true };
-  },
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
+import { modifier } from "ember-modifier";
+import { hash } from "@ember/helper";
+import { isTesting } from "discourse-common/config/environment";
+import discourseLater from "discourse-common/lib/later";
+import UserMenu from "../user-menu/menu";
 
-  html() {
-    return [
-      new RenderGlimmer(
-        this,
-        "div.widget-component-connector",
-        hbs`<UserMenu::Menu @closeUserMenu={{@data.closeUserMenu}} />`,
-        {
-          closeUserMenu: this.closeUserMenu.bind(this),
-        }
-      ),
-    ];
-  },
-
-  closeUserMenu() {
-    this.sendWidgetAction("toggleUserMenu");
-  },
-
+export default class UserMenuWrapper extends Component {
+  @action
   clickOutside(e) {
     if (
       e.target.classList.contains("header-cloak") &&
@@ -38,10 +28,10 @@ createWidget("revamped-user-menu-wrapper", {
           easing: "ease-in",
         })
         .finished.then(() => {
-          if (isTesting) {
-            this.closeUserMenu();
+          if (isTesting()) {
+            this.args.toggleUserMenu();
           } else {
-            discourseLater(() => this.closeUserMenu());
+            discourseLater(() => this.args.toggleUserMenu());
           }
         });
       headerCloak.animate([{ opacity: 0 }], {
@@ -50,7 +40,23 @@ createWidget("revamped-user-menu-wrapper", {
         easing: "ease-in",
       });
     } else {
-      this.closeUserMenu();
+      this.args.toggleUserMenu();
     }
-  },
-});
+  }
+
+  <template>
+    <div
+      class="user-menu-dropdown-wrapper"
+      {{(modifier
+        CloseOnClickOutside
+        this.clickOutside
+        (hash
+          targetSelector=".user-menu-panel"
+          secondaryTargetSelector=".user-menu-panel"
+        )
+      )}}
+    >
+      <UserMenu @closeUserMenu={{@toggleUserMenu}} />
+    </div>
+  </template>
+}

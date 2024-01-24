@@ -4,7 +4,7 @@ import i18n from "discourse-common/helpers/i18n";
 import concatClass from "discourse/helpers/concat-class";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse-common/helpers/d-icon";
 import { modifier } from "ember-modifier";
 import { hash } from "@ember/helper";
 import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
@@ -45,7 +45,7 @@ export default class Dropdown extends Component {
         aria-label={{i18n @title}}
         id={{@iconId}}
       >
-        {{dIcon @icon}}
+        {{icon @icon}}
         {{@contents}}
       </button>
     </li>

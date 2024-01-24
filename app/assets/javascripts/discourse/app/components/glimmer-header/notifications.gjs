@@ -1,107 +1,110 @@
-createWidget("header-notifications", {
-  services: ["user-tips"],
+import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
+import { addExtraUserClasses } from "discourse/helpers/user-avatar";
+import { renderAvatar } from "discourse/helpers/user-avatar";
+import { htmlSafe } from "@ember/template";
+import icon from "discourse-common/helpers/d-icon";
 
-  settings: {
-    avatarSize: "medium",
-  },
+export default class Notifications extends Component {
+  @service userTips;
+  @service currentUser;
+  @service siteSettings;
 
-  html(attrs) {
-    const { user } = attrs;
+  avatarSize = "medium";
 
-    let avatarAttrs = {
-      template: user.get("avatar_template"),
-      username: user.get("username"),
-    };
-
-    if (this.siteSettings.enable_names) {
-      avatarAttrs.name = user.get("name");
-    }
-
-    const contents = [
-      avatarImg(
-        this.settings.avatarSize,
-        Object.assign(
-          { alt: "user.avatar.header_title" },
-          addExtraUserClasses(user, avatarAttrs)
-        )
-      ),
-    ];
-
-    if (this.currentUser && this._shouldHighlightAvatar()) {
-      contents.push(this.attach("header-user-tip-shim"));
-    }
-
-    if (this.currentUser.status) {
-      contents.push(this.attach("user-status-bubble", this.currentUser.status));
-    }
-
-    if (user.isInDoNotDisturb()) {
-      contents.push(h("div.do-not-disturb-background", iconNode("moon")));
-    } else {
-      if (user.new_personal_messages_notifications_count) {
-        contents.push(
-          this.attach("link", {
-            action: attrs.action,
-            className: "badge-notification with-icon new-pms",
-            icon: "envelope",
-            omitSpan: true,
-            title: "notifications.tooltip.new_message_notification",
-            titleOptions: {
-              count: user.new_personal_messages_notifications_count,
-            },
-            attributes: {
-              "aria-label": I18n.t(
-                "notifications.tooltip.new_message_notification",
-                {
-                  count: user.new_personal_messages_notifications_count,
-                }
-              ),
-            },
-          })
-        );
-      } else if (user.unseen_reviewable_count) {
-        contents.push(
-          this.attach("link", {
-            action: attrs.action,
-            className: "badge-notification with-icon new-reviewables",
-            icon: "flag",
-            omitSpan: true,
-            title: "notifications.tooltip.new_reviewable",
-            titleOptions: { count: user.unseen_reviewable_count },
-            attributes: {
-              "aria-label": I18n.t("notifications.tooltip.new_reviewable", {
-                count: user.unseen_reviewable_count,
-              }),
-            },
-          })
-        );
-      } else if (user.all_unread_notifications_count) {
-        contents.push(
-          this.attach("link", {
-            action: attrs.action,
-            className: "badge-notification unread-notifications",
-            rawLabel: user.all_unread_notifications_count,
-            omitSpan: true,
-            title: "notifications.tooltip.regular",
-            titleOptions: { count: user.all_unread_notifications_count },
-            attributes: {
-              "aria-label": I18n.t("user.notifications"),
-            },
-          })
-        );
-      }
-    }
-
-    return contents;
-  },
-
-  _shouldHighlightAvatar() {
-    const attrs = this.attrs;
-    const { user } = attrs;
-    return (
-      !user.read_first_notification &&
-      !user.enforcedSecondFactor &&
-      !attrs.active
+  get avatar() {
+    let avatarAttrs = {};
+    addExtraUserClasses(this.currentUser, avatarAttrs);
+    return htmlSafe(
+      renderAvatar(this.currentUser, {
+        imageSize: this.avatarSize,
+        alt: "user.avatar.header_title",
+        template: this.currentUser.avatar_template,
+        username: this.currentUser.username,
+        name: this.siteSettings.enable_names && this.currentUser.name,
+        ...avatarAttrs,
+      })
     );
-  },
-});
+  }
+
+  get _shouldHighlightAvatar() {
+    return (
+      !this.currentUser.read_first_notification &&
+      !this.currentUser.enforcedSecondFactor &&
+      !this.args.active
+    );
+  }
+
+  get isInDoNotDisturb() {
+    return this.currentUser.isInDoNotDisturb();
+  }
+
+  <template>
+    {{this.avatar}}
+
+    {{!-- {{#if this._shouldHighlightAvatar}}
+        {{this.attach "header-user-tip-shim"}}
+      {{/if}} --}}
+
+    {{!-- {{#if this.currentUser.status}}
+        {{this.attach "user-status-bubble" this.currentUser.status}}
+      {{/if}} --}}
+
+    {{#if this.isInDoNotDisturb}}
+      <div class="do-not-disturb-background">{{icon "moon"}}</div>
+    {{else}}
+      {{#if this.currentUser.new_personal_messages_notifications_count}}
+        {{!-- {{this.attach
+            "link"
+            action=this.attrs.action
+            className="badge-notification with-icon new-pms"
+            icon="envelope"
+            omitSpan=true
+            title="notifications.tooltip.new_message_notification"
+            titleOptions=(hash
+              count=this.currentUser.new_personal_messages_notifications_count
+            )
+            attributes=(hash
+              "aria-label"
+              (t
+                "notifications.tooltip.new_message_notification"
+                (hash
+                  count=this.currentUser.new_personal_messages_notifications_count
+                )
+              )
+            )
+          }} --}}
+      {{else if this.currentUser.unseen_reviewable_count}}
+        {{!-- {{this.attach
+            "link"
+            action=this.attrs.action
+            className="badge-notification with-icon new-reviewables"
+            icon="flag"
+            omitSpan=true
+            title="notifications.tooltip.new_reviewable"
+            titleOptions=(hash count=this.currentUser.unseen_reviewable_count)
+            attributes=(hash
+              "aria-label"
+              (t
+                "notifications.tooltip.new_reviewable"
+                (hash count=this.currentUser.unseen_reviewable_count)
+              )
+            )
+          }} --}}
+      {{else if this.currentUser.all_unread_notifications_count}}
+        {{!-- {{this.attach
+            "link"
+            action=this.attrs.action
+            className="badge-notification unread-notifications"
+            rawLabel=this.currentUser.all_unread_notifications_count
+            omitSpan=true
+            title="notifications.tooltip.regular"
+            titleOptions=(hash
+              count=this.currentUser.all_unread_notifications_count
+            )
+            attributes=(hash "aria-label" (t "user.notifications"))
+          }} --}}
+      {{/if}}
+    {{/if}}
+  </template>
+}
