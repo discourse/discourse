@@ -1,0 +1,9 @@
+.chat-channel-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--primary);
+
+  &__label {
+    white-space: nowrap;
+  }
+}
