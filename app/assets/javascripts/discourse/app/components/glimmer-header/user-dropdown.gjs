@@ -1,52 +1,49 @@
-createWidget(
-  "user-dropdown",
-  Object.assign(
-    {
-      tagName: "li.header-dropdown-toggle.current-user",
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import or from "truth-helpers/helpers/or";
+import { concat } from "@ember/helper";
+import i18n from "discourse-common/helpers/i18n";
+import Notifications from "./notifications";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { inject as service } from "@ember/service";
+import concatClass from "discourse/helpers/concat-class";
+import { on } from "@ember/modifier";
 
-      buildId() {
-        return "current-user";
-      },
+export default class UserDropdown extends Component {
+  @service currentUser;
 
-      html(attrs) {
-        return h(
-          "button.icon.btn-flat",
-          {
-            attributes: {
-              "aria-haspopup": true,
-              "aria-expanded": attrs.active,
-              href: attrs.user.path,
-              "aria-label":
-                (attrs.user.name || attrs.user.username) +
-                I18n.t("user.account_possessive"),
-              "data-auto-route": true,
-            },
-          },
-          this.attach("header-notifications", attrs)
-        );
-      },
-    },
-    dropdown
-  )
-);
-
-const dropdown = {
-  buildClasses(attrs) {
-    let classes = attrs.classNames || [];
-    if (attrs.active) {
-      classes.push("active");
-    }
-
-    return classes;
-  },
-
+  @action
   click(e) {
     if (wantsNewWindow(e)) {
       return;
     }
     e.preventDefault();
-    if (!this.attrs.active) {
-      this.sendWidgetAction(this.attrs.action);
-    }
-  },
-};
+    this.args.toggleUserMenu();
+  }
+
+  <template>
+    <li
+      id="current-user"
+      class={{concatClass
+        (if @active "active")
+        "header-dropdown-toggle current-user user-menu-panel"
+      }}
+      {{on "click" this.click}}
+    >
+      <button
+        class="icon btn-flat"
+        aria-haspopup="true"
+        aria-expanded={{@active}}
+        href={{this.currentUser.path}}
+        aria-label={{concat
+          (or this.currentUser.name this.currentUser.username)
+          (i18n "user.account_possessive")
+        }}
+        data-auto-route="true"
+      >
+        <Notifications @active={{@active}} />
+      </button>
+
+    </li>
+  </template>
+}

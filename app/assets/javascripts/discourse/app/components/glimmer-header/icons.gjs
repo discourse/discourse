@@ -5,7 +5,7 @@ import Dropdown from "./dropdown";
 import or from "truth-helpers/helpers/or";
 import not from "truth-helpers/helpers/not";
 import { array } from "@ember/helper";
-// import UserDropdown from "./user-dropdown";
+import UserDropdown from "./user-dropdown";
 
 let _extraHeaderIcons = [];
 
@@ -19,6 +19,7 @@ export function clearExtraHeaderIcons() {
 
 export default class Icons extends Component {
   @service site;
+  @service currentUser;
 
   <template>
     <ul class="icons d-header-icons">
@@ -57,9 +58,12 @@ export default class Icons extends Component {
         />
       {{/if}}
 
-      {{!-- {{#if this.currentUser}}
-        <UserDropdown @active={{@userVisible}} @action={{@toggleUserMenu}} />
-      {{/if}} --}}
+      {{#if this.currentUser}}
+        <UserDropdown
+          @active={{@userVisible}}
+          @toggleUserMenu={{@toggleUserMenu}}
+        />
+      {{/if}}
     </ul>
   </template>
 }

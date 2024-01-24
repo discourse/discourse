@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
 import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
 import { modifier } from "ember-modifier";
 import { on } from "@ember/modifier";
@@ -23,7 +22,6 @@ export default class HamburgerDropdownWrapper extends Component {
 
   @action
   clickOutside(e) {
-    console.log(e);
     if (
       e.target.classList.contains("header-cloak") &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -59,12 +57,16 @@ export default class HamburgerDropdownWrapper extends Component {
   <template>
     <div
       class="hamburger-dropdown-wrapper"
-      data-click-outside={{true}}
       {{on "click" this.click}}
+      {{! we don't want to close the hamburger dropdown when clicking on the hamburger dropdown itself
+        so we use the secondaryTargetSelector to prevent that }}
       {{(modifier
         CloseOnClickOutside
         this.clickOutside
-        (hash targetSelector=".hamburger-panel")
+        (hash
+          targetSelector=".hamburger-panel"
+          secondaryTargetSelector=".hamburger-dropdown"
+        )
       )}}
     >
       <HamburgerDropdown />

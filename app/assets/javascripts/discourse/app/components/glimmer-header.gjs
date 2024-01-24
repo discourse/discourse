@@ -6,7 +6,6 @@ import { schedule } from "@ember/runloop";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
-import { avatarImg } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import { isTesting } from "discourse-common/config/environment";
@@ -22,7 +21,7 @@ import AuthButtons from "./glimmer-header/auth-buttons";
 import Icons from "./glimmer-header/icons";
 import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
 import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
-// import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
+import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
 // import HeaderCloak from "./glimmer-header/cloak";
 
 const SEARCH_BUTTON_ID = "search-button";
@@ -145,11 +144,12 @@ export default class GlimmerHeader extends Component {
           {{#if this.search.visible}}
             <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
           {{else if this.hamburgerVisible}}
+            foo
             <HamburgerDropdownWrapper
               @toggleHamburger={{this.toggleHamburger}}
             />
           {{else if this.userVisible}}
-            {{! <UserMenuWrapper /> }}
+            <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />
           {{/if}}
 
           {{!-- {{#if (or this.site.mobileView this.site.narrowDesktopView)}}
