@@ -45,17 +45,17 @@ export default class Icons extends Component {
         @targetSelector=".search-menu-panel"
       />
 
-      {{!-- {{#if (or (not @sidebarEnabled) this.site.mobileView)}}
+      {{#if (or (not @sidebarEnabled) this.site.mobileView)}}
         <Dropdown
           @title="hamburger_menu"
           @icon="bars"
           @iconId="toggle-hamburger-menu"
           @active={{@hamburgerVisible}}
-          @action={{@toggleHamburger}}
+          @onClick={{@toggleHamburger}}
           @href=""
-          @classNames={{array "hamburger-dropdown"}}
+          @className="hamburger-dropdown"
         />
-      {{/if}} --}}
+      {{/if}}
 
       {{!-- {{#if this.currentUser}}
         <UserDropdown @active={{@userVisible}} @action={{@toggleUserMenu}} />

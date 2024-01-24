@@ -8,6 +8,7 @@ import dIcon from "discourse-common/helpers/d-icon";
 import { modifier } from "ember-modifier";
 import { hash } from "@ember/helper";
 import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
+import and from "truth-helpers/helpers/and";
 
 export default class Dropdown extends Component {
   @action
@@ -16,7 +17,7 @@ export default class Dropdown extends Component {
       return;
     }
     e.preventDefault();
-    this.args.onClick();
+    this.args.onClick(e);
   }
 
   <template>
@@ -28,7 +29,7 @@ export default class Dropdown extends Component {
       }}
       {{on "click" this.click}}
       {{(if
-        @active
+        (and @active @targetSelector)
         (modifier
           CloseOnClickOutside @onClick (hash targetSelector=@targetSelector)
         )
