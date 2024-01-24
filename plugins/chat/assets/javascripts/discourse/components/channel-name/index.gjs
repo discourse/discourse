@@ -42,12 +42,7 @@ export default class ChatChannelName extends Component {
   }
 
   <template>
-    <div
-      class={{concatClass
-        "chat-channel-name"
-        (if @channel.isDirectMessageChannel "is-dm" "is-category")
-      }}
-    >
+    <div class={{concatClass "chat-channel-name"}}>
       {{#if @channel.isDirectMessageChannel}}
         {{#if this.groupDirectMessage}}
           <span class="chat-channel-name__label">

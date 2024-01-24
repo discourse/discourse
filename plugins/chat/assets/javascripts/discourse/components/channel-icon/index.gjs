@@ -21,21 +21,21 @@ export default class ChatChannelIcon extends Component {
 
   <template>
     {{#if @channel.isDirectMessageChannel}}
-      <div class="chat-channel-icon is-dm">
+      <div class="chat-channel-icon">
         {{#if this.groupDirectMessage}}
-          <span class="chat-channel-icon__users-count">
+          <span class="chat-channel-icon --users-count">
             {{@channel.membershipsCount}}
           </span>
         {{else}}
-          <div class="chat-channel-icon__avatar">
+          <div class="chat-channel-icon --avatar">
             <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />
           </div>
         {{/if}}
       </div>
     {{else if @channel.isCategoryChannel}}
-      <div class="chat-channel-icon is-category">
+      <div class="chat-channel-icon">
         <span
-          class="chat-channel-icon__category-badge"
+          class="chat-channel-icon --category-badge"
           style={{this.channelColorStyle}}
         >
           {{icon "d-chat"}}

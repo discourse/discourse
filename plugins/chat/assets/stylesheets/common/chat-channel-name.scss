@@ -1,9 +1,18 @@
 .chat-channel-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  @include ellipsis;
   color: var(--primary);
+
+  .has-unread & {
+    font-weight: bold;
+  }
 
   &__label {
     white-space: nowrap;
+  }
+
+  .emoji {
+    height: 1.2em;
+    vertical-align: text-bottom;
+    width: 1.2em;
   }
 }
