@@ -1336,6 +1336,7 @@ end
 #  imap_updated_at                    :datetime
 #  imap_updated_by_id                 :integer
 #  email_from_alias                   :string
+#  anonymous_user_inheritance         :boolean          default(FALSE), not null
 #
 # Indexes
 #

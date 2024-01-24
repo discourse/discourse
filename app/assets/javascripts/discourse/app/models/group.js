@@ -334,6 +334,7 @@ const Group = RestModel.extend({
       bio_raw: this.bio_raw,
       public_admission: this.public_admission,
       public_exit: this.public_exit,
+      anonymous_user_inheritance: this.anonymous_user_inheritance,
       allow_membership_requests: this.allow_membership_requests,
       full_name: this.full_name,
       default_notification_level: this.default_notification_level,

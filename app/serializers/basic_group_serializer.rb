@@ -32,7 +32,8 @@ class BasicGroupSerializer < ApplicationSerializer
              :can_see_members,
              :can_admin_group,
              :can_edit_group,
-             :publish_read_state
+             :publish_read_state,
+             :anonymous_user_inheritance
 
   def include_display_name?
     object.automatic

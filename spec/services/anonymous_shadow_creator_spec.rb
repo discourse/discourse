@@ -69,17 +69,43 @@ RSpec.describe AnonymousShadowCreator do
     end
 
     context "when SiteSetting.allow_anonymous_to_inherit_group is true" do
-      it "returns a shadow which inherits the users groups" do
-        SiteSetting.allow_anonymous_to_inherit_group = true
-        shadow = AnonymousShadowCreator.get(user)
+      before { SiteSetting.allow_anonymous_to_inherit_group = true }
 
-        expect(user.groups).to eq(shadow.groups)
+      context "when group.anonymous_user_inheritance is true" do
+        before do
+          user.groups.each do |g|
+            g.anonymous_user_inheritance = true
+            g.save!
+          end
+        end
+
+        it "returns a shadow which inherits the users groups" do
+          shadow = AnonymousShadowCreator.get(user)
+
+          expect(user.groups).to eq(shadow.groups)
+        end
+      end
+
+      context "with some non-inherited groups" do
+        before do
+          g = user.groups.first
+          g.anonymous_user_inheritance = true
+          g.save!
+        end
+
+        it "only inherits groups where anonymous_user_inheritance is true" do
+          shadow = AnonymousShadowCreator.get(user)
+
+          expect(user.groups.count).to eq(4)
+          expect(shadow.groups.count).to eq(1)
+        end
       end
     end
 
     context "when SiteSetting.allow_anonymous_to_inherit_group is false" do
+      before { SiteSetting.allow_anonymous_to_inherit_group = false }
+
       it "returns a shadow which inherits the users groups" do
-        SiteSetting.allow_anonymous_to_inherit_group = false
         shadow = AnonymousShadowCreator.get(user)
 
         expect(shadow.groups).to eq([])

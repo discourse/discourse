@@ -36,6 +36,7 @@ acceptance("Group Requests", function (needs) {
           bio_cooked: null,
           public_admission: false,
           public_exit: false,
+          anonymous_user_inheritance: false,
           allow_membership_requests: true,
           full_name: "Macdonald",
           default_notification_level: 3,

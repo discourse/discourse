@@ -27,6 +27,16 @@
   <label>
     <Input
       @type="checkbox"
+      class="group-form-anonymous-user-inheritance"
+      @checked={{this.model.anonymous_user_inheritance}}
+    />
+
+    {{i18n "groups.anonymous_user_inheritance"}}
+  </label>
+
+  <label>
+    <Input
+      @type="checkbox"
       class="group-form-allow-membership-requests"
       @checked={{this.model.allow_membership_requests}}
       disabled={{this.disableMembershipRequestSetting}}

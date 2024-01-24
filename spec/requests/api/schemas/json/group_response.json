@@ -128,6 +128,9 @@
         "publish_read_state": {
           "type": "boolean"
         },
+        "anonymous_user_inheritance": {
+          "type": "boolean"
+        },
         "is_group_owner_display": {
           "type": "boolean"
         },
@@ -380,7 +383,8 @@
         "tracking_category_ids",
         "watching_first_post_category_ids",
         "regular_category_ids",
-        "muted_category_ids"
+        "muted_category_ids",
+        "anonymous_user_inheritance"
       ]
     },
     "extras": {

@@ -55,7 +55,14 @@ class AnonymousShadowCreator
           trust_level: 1,
           manual_locked_trust_level: 1,
           approved: true,
-          groups: SiteSetting.allow_anonymous_to_inherit_group ? user.groups : [],
+          groups:
+            (
+              if SiteSetting.allow_anonymous_to_inherit_group
+                user.groups.select { |g| g.anonymous_user_inheritance }
+              else
+                []
+              end
+            ),
           approved_at: 1.day.ago,
           created_at: 1.day.ago, # bypass new user restrictions
         )

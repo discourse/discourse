@@ -890,6 +890,7 @@ en:
         description: "Members of this group can access these categories"
       public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
+      anonymous_user_inheritance: "If anonymous group inheritance is enabled, users will retain this group membership when they enter anonymous mode.  Note: enabling this setting may make group members vulnerable to identity deduction."
       empty:
         posts: "There are no posts by members of this group."
         members: "There are no members in this group."

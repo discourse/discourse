@@ -2578,6 +2578,7 @@ export default {
           full_name: null,
           default_notification_level: 3,
           membership_request_template: null,
+          anonymous_user_inheritance: false,
         },
         {
           id: 11,
@@ -2605,6 +2606,7 @@ export default {
           full_name: null,
           default_notification_level: 3,
           membership_request_template: null,
+          anonymous_user_inheritance: false,
         },
         {
           id: 12,
@@ -2632,6 +2634,7 @@ export default {
           full_name: null,
           default_notification_level: 3,
           membership_request_template: null,
+          anonymous_user_inheritance: false,
         },
         {
           id: 13,
@@ -2659,6 +2662,7 @@ export default {
           full_name: null,
           default_notification_level: 3,
           membership_request_template: null,
+          anonymous_user_inheritance: false,
         },
         {
           id: 14,
@@ -2686,6 +2690,7 @@ export default {
           full_name: null,
           default_notification_level: 3,
           membership_request_template: null,
+          anonymous_user_inheritance: false,
         },
       ],
       group_users: [
@@ -3065,6 +3070,7 @@ export default {
           full_name: null,
           default_notification_level: 3,
           membership_request_template: null,
+          anonymous_user_inheritance: false,
         },
         {
           id: 11,
@@ -3090,6 +3096,7 @@ export default {
           full_name: null,
           default_notification_level: 3,
           membership_request_template: null,
+          anonymous_user_inheritance: false,
         },
       ],
       group_users: [

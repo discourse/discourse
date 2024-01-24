@@ -748,6 +748,7 @@ class GroupsController < ApplicationController
         :public_exit,
         :public_admission,
         :membership_request_template,
+        :anonymous_user_inheritance,
       )
     end
 

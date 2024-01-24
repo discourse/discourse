@@ -124,6 +124,9 @@
         },
         "publish_read_state": {
           "type": "boolean"
+        },
+        "anonymous_user_inheritance": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -154,7 +157,8 @@
         "members_visibility_level",
         "can_see_members",
         "can_admin_group",
-        "publish_read_state"
+        "publish_read_state",
+        "anonymous_user_inheritance"
       ]
     }
   },
