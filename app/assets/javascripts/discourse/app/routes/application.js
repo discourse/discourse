@@ -33,16 +33,19 @@ function unlessStrictlyReadOnly(method, message) {
 const ApplicationRoute = DiscourseRoute.extend({
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
-  documentTitle: service(),
-  dialog: service(),
-  composer: service(),
-  modal: service(),
-  loadingSlider: service(),
-  router: service(),
-  siteSettings: service(),
+
   clientErrorHandler: service(),
-  login: service(),
+  composer: service(),
+  currentUser: service(),
+  dialog: service(),
+  documentTitle: service(),
   historyStore: service(),
+  loadingSlider: service(),
+  login: service(),
+  modal: service(),
+  router: service(),
+  site: service(),
+  siteSettings: service(),
 
   get isOnlyOneExternalLoginMethod() {
     return (
