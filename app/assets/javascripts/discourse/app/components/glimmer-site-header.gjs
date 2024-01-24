@@ -101,7 +101,7 @@ export default class GlimmerSiteHeader extends Component {
     this.appEvents.on("header:show-topic", this, this._setTopic);
     this.appEvents.on("header:hide-topic", this, this._setTopic);
     this.appEvents.on("user-menu:rendered", this, this._animateMenu);
-    this.appEvents.on("dom:clean", this, this._cleanDom);
+    // this.appEvents.on("dom:clean", this, this._cleanDom);
     if (this.dropDownHeaderEnabled) {
       this.appEvents.on(
         "sidebar-hamburger-dropdown:rendered",
@@ -199,11 +199,11 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
-  _cleanDom() {
-    if (document.querySelector(".menu-panel")) {
-      this.eventDispatched("dom:clean", "header");
-    }
-  }
+  // _cleanDom() {
+  //   if (document.querySelector(".menu-panel")) {
+  //     this.eventDispatched("dom:clean", "header");
+  //   }
+  // }
 
   _animateMenu() {
     const menuPanels = document.querySelectorAll(".menu-panel");
@@ -298,7 +298,7 @@ export default class GlimmerSiteHeader extends Component {
     super.willDestroy(...arguments);
     this.appEvents.off("header:show-topic", this, this._setTopic);
     this.appEvents.off("header:hide-topic", this, this._setTopic);
-    this.appEvents.off("dom:clean", this, this._cleanDom);
+    // this.appEvents.off("dom:clean", this, this._cleanDom);
     this.appEvents.off("user-menu:rendered", this, this._animateMenu);
 
     if (this.dropDownHeaderEnabled) {
