@@ -1,11 +1,10 @@
-import { getOwner } from "@ember/application";
+import { isEmpty } from "@ember/utils";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
-// import { ADMIN_PANEL } from "discourse/services/sidebar-state";
-const ADMIN_PANEL = "admin"; // TODO... importing from services/sidebar-state causes a circular module dependency
+import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import I18n from "discourse-i18n";
 
@@ -16,60 +15,52 @@ export function clearAdditionalAdminSidebarSectionLinks() {
   additionalAdminSidebarSectionLinks = {};
 }
 
-function defineAdminSectionLink() {
-  class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
-    constructor({ adminSidebarNavLink }) {
-      super(...arguments);
-      this.adminSidebarNavLink = adminSidebarNavLink;
-    }
-
-    get name() {
-      return this.adminSidebarNavLink.name;
-    }
-
-    get classNames() {
-      return "admin-sidebar-nav-link";
-    }
-
-    get route() {
-      return this.adminSidebarNavLink.route;
-    }
-
-    get href() {
-      return this.adminSidebarNavLink.href;
-    }
-
-    get models() {
-      return this.adminSidebarNavLink.routeModels;
-    }
-
-    get text() {
-      return this.adminSidebarNavLink.label
-        ? I18n.t(this.adminSidebarNavLink.label)
-        : this.adminSidebarNavLink.text;
-    }
-
-    get prefixType() {
-      return "icon";
-    }
-
-    get prefixValue() {
-      return this.adminSidebarNavLink.icon;
-    }
-
-    get title() {
-      return this.adminSidebarNavLink.text;
-    }
+class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
+  constructor({ adminSidebarNavLink }) {
+    super(...arguments);
+    this.adminSidebarNavLink = adminSidebarNavLink;
   }
 
-  return SidebarAdminSectionLink;
+  get name() {
+    return this.adminSidebarNavLink.name;
+  }
+
+  get classNames() {
+    return "admin-sidebar-nav-link";
+  }
+
+  get route() {
+    return this.adminSidebarNavLink.route;
+  }
+
+  get href() {
+    return this.adminSidebarNavLink.href;
+  }
+
+  get models() {
+    return this.adminSidebarNavLink.routeModels;
+  }
+
+  get text() {
+    return this.adminSidebarNavLink.label
+      ? I18n.t(this.adminSidebarNavLink.label)
+      : this.adminSidebarNavLink.text;
+  }
+
+  get prefixType() {
+    return "icon";
+  }
+
+  get prefixValue() {
+    return this.adminSidebarNavLink.icon;
+  }
+
+  get title() {
+    return this.adminSidebarNavLink.text;
+  }
 }
 
-function defineAdminSection(
-  adminNavSectionData,
-  BaseCustomSidebarSection,
-  adminSectionLinkClass
-) {
+function defineAdminSection(adminNavSectionData) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
       super(...arguments);
@@ -98,7 +89,7 @@ function defineAdminSection(
     get links() {
       return this.sectionLinks.map(
         (sectionLinkData) =>
-          new adminSectionLinkClass({ adminSidebarNavLink: sectionLinkData })
+          new SidebarAdminSectionLink({ adminSidebarNavLink: sectionLinkData })
       );
     }
 
@@ -165,8 +156,6 @@ export function useAdminNavConfig(navMap) {
   return navMap;
 }
 
-let adminSectionLinkClass = null;
-
 // This is used for a plugin API.
 export function addAdminSidebarSectionLink(sectionName, link) {
   if (!additionalAdminSidebarSectionLinks.hasOwnProperty(sectionName)) {
@@ -225,6 +214,11 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   hidden = true;
 
   get sections() {
+    const siteSettings = getOwnerWithFallback().lookup("service:site-settings");
+    if (isEmpty(siteSettings.admin_sidebar_enabled_groups)) {
+      return [];
+    }
+
     this.adminSidebarExperimentStateManager = getOwnerWithFallback(this).lookup(
       "service:admin-sidebar-experiment-state-manager"
     );
@@ -234,10 +228,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
 
-    if (
-      getOwnerWithFallback().lookup("service:site-settings")
-        .experimental_form_templates
-    ) {
+    if (siteSettings.experimental_form_templates) {
       navMap.findBy("name", "customize").links.push({
         name: "admin_customize_form_templates",
         route: "adminCustomizeFormTemplates",
@@ -249,14 +240,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const navConfig = useAdminNavConfig(navMap);
 
     return navConfig.map((adminNavSectionData) => {
-      // We only want to define the link class once even though we have many different sections.
-      adminSectionLinkClass = adminSectionLinkClass || defineAdminSectionLink();
-
-      return defineAdminSection(
-        adminNavSectionData,
-        BaseCustomSidebarSection,
-        adminSectionLinkClass
-      );
+      return defineAdminSection(adminNavSectionData);
     });
   }
 }
