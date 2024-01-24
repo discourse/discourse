@@ -144,7 +144,6 @@ export default class GlimmerHeader extends Component {
           {{#if this.search.visible}}
             <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
           {{else if this.hamburgerVisible}}
-            foo
             <HamburgerDropdownWrapper
               @toggleHamburger={{this.toggleHamburger}}
             />
