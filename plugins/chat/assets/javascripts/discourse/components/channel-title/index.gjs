@@ -2,7 +2,7 @@ import concatClass from "discourse/helpers/concat-class";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 
-const ChannelTitle = <template>
+const ChatChannelTitle = <template>
   <div
     class={{concatClass
       "chat-channel-title"
@@ -18,4 +18,4 @@ const ChannelTitle = <template>
   </div>
 </template>;
 
-export default ChannelTitle;
+export default ChatChannelTitle;
