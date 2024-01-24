@@ -117,4 +117,10 @@
       text-overflow: ellipsis;
     }
   }
+
+  .chat-channel-icon {
+    &__users-count {
+      font-size: var(--font-up-2);
+    }
+  }
 }
