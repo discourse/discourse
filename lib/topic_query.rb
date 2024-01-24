@@ -83,7 +83,7 @@ class TopicQuery
   end
 
   # Maps `order` to a columns in `topics`
-  DEFAULT_SORTABLE_MAPPING = {
+  SORTABLE_MAPPING = {
     "likes" => "like_count",
     "op_likes" => "op_likes",
     "views" => "views",
@@ -663,19 +663,21 @@ class TopicQuery
     result.where("topics.category_id != ?", drafts_category_id)
   end
 
-  def sortable_mapping
-    @sortable_mapping ||=
-      DiscoursePluginRegistry.apply_modifier(
-        :topic_query_sortable_mapping,
-        DEFAULT_SORTABLE_MAPPING.dup,
-        self,
-      )
-  end
-
   def apply_ordering(result, options = {})
     order_option = options[:order]
-    sort_column = sortable_mapping[order_option] || "default"
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
+
+    new_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_query_apply_ordering_result,
+        result,
+        order_option,
+        sort_dir,
+        options,
+        self,
+      )
+    return new_result if !new_result.nil? && new_result != result
+    sort_column = SORTABLE_MAPPING[order_option] || "default"
 
     # If we are sorting in the default order desc, we should consider including pinned
     # topics. Otherwise, just use bumped_at.
@@ -709,20 +711,6 @@ class TopicQuery
       return(
         result.order(
           "(SELECT CASE WHEN EXISTS (SELECT true FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') THEN (SELECT value::integer FROM topic_custom_fields tcf WHERE tcf.topic_id::integer = topics.id::integer AND tcf.name = '#{field}') ELSE 0 END) #{sort_dir}",
-        )
-      )
-    end
-
-    if order_option.present? && DEFAULT_SORTABLE_MAPPING[order_option].blank? &&
-         sortable_mapping[order_option].present?
-      return(
-        DiscoursePluginRegistry.apply_modifier(
-          :topic_query_apply_ordering_result,
-          result,
-          sort_column,
-          sort_dir,
-          options,
-          self,
         )
       )
     end

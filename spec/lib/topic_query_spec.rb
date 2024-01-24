@@ -964,7 +964,7 @@ RSpec.describe TopicQuery do
 
           # adds the custom field as a viable sort option
           class ::TopicQuery
-            DEFAULT_SORTABLE_MAPPING["sheep"] = "custom_fields.sheep"
+            SORTABLE_MAPPING["sheep"] = "custom_fields.sheep"
           end
           # returns the topics in the sheep order if requested" do
           expect(ids_in_order("sheep")).to eq(
@@ -2096,24 +2096,32 @@ RSpec.describe TopicQuery do
     fab!(:topic2) { Fabricate(:topic, spam_count: 2, bumped_at: 3.minutes.ago) }
     fab!(:topic3) { Fabricate(:topic, spam_count: 3, bumped_at: 1.hour.ago) }
 
-    it "applies both topic_query_sortable_mapping and topic_query_apply_ordering_result modifiers" do
+    let(:modifier_block) do
+      Proc.new do |result, sort_column, sort_dir, options, topic_query|
+        if sort_column == "spam"
+          sort_column = "spam_count"
+          result.order("topics.#{sort_column} #{sort_dir}, bumped_at DESC")
+        end
+      end
+    end
+
+    it "returns the result of topic_query_apply_ordering_result modifier" do
       plugin_instance = Plugin::Instance.new
-
-      plugin_instance.register_modifier(
-        :topic_query_sortable_mapping,
-      ) do |sortable_mapping, topic_qeury|
-        sortable_mapping["spam"] = "spam_count"
-        sortable_mapping
-      end
-
-      plugin_instance.register_modifier(
-        :topic_query_apply_ordering_result,
-      ) do |result, sort_column, sort_dir, options, topic_query|
-        result.order("topics.#{sort_column} #{sort_dir}, bumped_at DESC")
-      end
+      plugin_instance.register_modifier(:topic_query_apply_ordering_result, &modifier_block)
 
       topics = TopicQuery.new(nil, order: "spam", ascending: "false").list_latest.topics
       expect(topics.map(&:id)).to eq([topic3.id, topic1.id, topic2.id])
+
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :topic_query_apply_ordering_result,
+        &modifier_block
+      )
+    end
+
+    it "ignores the result of topic_query_apply_ordering_result if modifier not registered" do
+      topics = TopicQuery.new(nil, order: "spam", ascending: "false").list_latest.topics
+      expect(topics.map(&:id)).to eq([topic2.id, topic3.id, topic1.id])
     end
   end
 
