@@ -1122,6 +1122,9 @@ posting:
   max_allowed_message_recipients:
     default: 30
     min: 1
+  disable_watched_word_checking_in_user_fields:
+    hidden: true
+    default: false
   watched_words_regular_expressions:
     client: true
     default: false

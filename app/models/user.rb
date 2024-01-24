@@ -151,7 +151,10 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
-  validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
+  validates :validatable_user_fields_values,
+            watched_words: true,
+            unless: :should_skip_user_fields_validation?
+
   validates_associated :primary_email,
                        message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
 
@@ -352,6 +355,10 @@ class User < ActiveRecord::Base
         suggested_topics: 5,
         admin_guide: 6,
       )
+  end
+
+  def should_skip_user_fields_validation?
+    custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
   end
 
   def secured_sidebar_category_ids(user_guardian = nil)
