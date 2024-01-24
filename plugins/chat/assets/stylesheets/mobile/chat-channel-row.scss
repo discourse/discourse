@@ -9,6 +9,7 @@
   transform-origin: top center;
   will-change: height, opacity, left;
   position: relative;
+  height: 4em;
 
   &.-fade-out {
     .chat-channel-row__content {
@@ -26,7 +27,6 @@
     z-index: 2;
     box-sizing: border-box;
     transition: border-radius 0.25s ease-in-out;
-    height: 4em;
 
     &.-animate-reset {
       transition: margin-right 0.15s ease-out;
