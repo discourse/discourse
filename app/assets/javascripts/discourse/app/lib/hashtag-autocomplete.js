@@ -2,7 +2,17 @@ import { cancel } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
-import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
+import {
+  decorateHashtags,
+  fetchUnseenHashtagsInContext,
+  generatePlaceholderHashtagHTML,
+  linkSeenHashtagsInContext,
+} from "discourse/lib/hashtag-decorator";
+import {
+  cleanUpHashtagTypeClasses,
+  getHashtagTypeClasses,
+  registerHashtagType,
+} from "discourse/lib/hashtag-type-registry";
 import { emojiUnescape } from "discourse/lib/text";
 import {
   caretPosition,
@@ -13,6 +23,18 @@ import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
+
+// TODO (martin) Remove this once plugins have changed to use hashtag-decorator and
+// hashtag-type-registry imports
+export {
+  fetchUnseenHashtagsInContext,
+  linkSeenHashtagsInContext,
+  generatePlaceholderHashtagHTML,
+  decorateHashtags,
+  getHashtagTypeClasses,
+  registerHashtagType,
+  cleanUpHashtagTypeClasses,
+};
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
