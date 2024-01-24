@@ -11,10 +11,8 @@ import { Promise } from "rsvp";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ajax } from "discourse/lib/ajax";
 import { SKIP } from "discourse/lib/autocomplete";
-import {
-  linkSeenHashtagsInContext,
-  setupHashtagAutocomplete,
-} from "discourse/lib/hashtag-autocomplete";
+import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import { linkSeenHashtagsInContext } from "discourse/lib/hashtag-decorator";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";

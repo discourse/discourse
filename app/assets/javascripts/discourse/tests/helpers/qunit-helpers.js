@@ -32,7 +32,7 @@ import { clearAdditionalAdminSidebarSectionLinks } from "discourse/instance-init
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
-import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-autocomplete";
+import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import {
   clearExtraKeyboardShortcutHelp,
   PLATFORM_KEY_MODIFIER,
