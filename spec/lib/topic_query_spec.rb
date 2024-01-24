@@ -2111,7 +2111,7 @@ RSpec.describe TopicQuery do
 
       topics = TopicQuery.new(nil, order: "spam", ascending: "false").list_latest.topics
       expect(topics.map(&:id)).to eq([topic3.id, topic1.id, topic2.id])
-
+   ensure
       DiscoursePluginRegistry.unregister_modifier(
         plugin_instance,
         :topic_query_apply_ordering_result,
