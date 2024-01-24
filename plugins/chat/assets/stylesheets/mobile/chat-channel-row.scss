@@ -21,14 +21,12 @@
   }
 
   &__content {
-    justify-content: flex-start;
     padding-inline: 1.5rem;
     padding-block: 0.5rem;
     z-index: 2;
-    background: var(--primary-very-low);
     box-sizing: border-box;
     transition: border-radius 0.25s ease-in-out;
-    gap: 0.75rem;
+    height: 4em;
 
     &.-animate-reset {
       transition: margin-right 0.15s ease-out;
@@ -95,15 +93,13 @@
     }
   }
 
-  .chat-channel-title__users-count {
-    font-size: var(--font-up-2);
-    font-weight: normal;
-  }
-
   .chat-channel {
+    &__user-info,
+    &__channel-info {
+      grid-area: name;
+    }
     &__metadata {
       grid-area: metadata;
-      align-self: flex-start;
       .chat-channel-unread-indicator {
         font-size: var(--font-down-2);
         margin-top: 0.25rem;

@@ -33,7 +33,7 @@
         }
       }
 
-      .chat-channel-metadata {
+      .chat-channel__metadata {
         display: none;
       }
     }
@@ -41,16 +41,12 @@
 
   &:hover,
   &.active {
-    .chat-channel-icon {
-      &,
-      .category-chat-name,
-      .dm-usernames {
-        color: var(--primary);
-      }
+    .chat-channel__name {
+      color: var(--primary);
+    }
 
-      .d-icon-lock {
-        background-color: var(--primary-low);
-      }
+    .d-icon-lock {
+      background-color: var(--primary-low);
     }
   }
 
@@ -64,17 +60,24 @@
 
   &__content {
     display: flex;
-    justify-content: space-between;
     max-width: 100%;
     align-items: center;
     flex-grow: 1;
-    height: 4em;
+    gap: 0.75rem;
+    overflow: hidden;
+  }
+
+  &__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    overflow: hidden;
   }
 
   .chat-channel {
     &__user-info,
     &__channel-info {
-      grid-area: name;
       white-space: nowrap;
       overflow: hidden;
       @include ellipsis;
@@ -111,18 +114,6 @@
       white-space: nowrap;
     }
 
-    // &__data {
-    //   overflow: hidden;
-    //   text-overflow: ellipsis;
-    //   width: 100%;
-    //   display: block;
-    // }
-
-    // &__usernames {
-    //   display: flex;
-    //   align-items: center;
-    //   justify-content: start;
-    // }
     &__name {
       overflow: hidden;
       text-overflow: ellipsis;
