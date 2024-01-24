@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { schedule, scheduleOnce, throttle } from "@ember/runloop";
@@ -105,7 +106,7 @@ export default Component.extend(
       $(this.element).on(
         "click.discourse-redirect",
         ".cooked a, a.track-link",
-        (e) => ClickTrack.trackClick(e, this.siteSettings)
+        (e) => ClickTrack.trackClick(e, getOwner(this))
       );
       this.appEvents.on("discourse:focus-changed", this, "gotFocus");
       this.appEvents.on("post:highlight", this, "_highlightPost");

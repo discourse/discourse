@@ -88,6 +88,10 @@ export default {
             get links() {
               return [new SidebarChatMyThreadsSectionLink()];
             }
+
+            get text() {
+              return null;
+            }
           };
 
           return SidebarChatMyThreadsSection;

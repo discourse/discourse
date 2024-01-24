@@ -2153,6 +2153,9 @@ vi:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
+  onebox:
+    github:
+      closed: "đã "
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'

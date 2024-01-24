@@ -2182,7 +2182,6 @@ ja:
     use_name_for_username_suggestions: "ユーザー名を提案する際に、ユーザーの氏名を使用します。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"
     splash_screen: "サイトアセットの読み込み中に一時的なローディング画面を表示します"
-    navigation_menu: "使用するナビゲーションメニューを決定します。サイドバーとヘッダーナビゲーションはユーザーがカスタマイズできます。下位互換性を得るには、レガシーオプションを使用できます。"
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '実験的: 未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクします。'
@@ -4558,6 +4557,9 @@ ja:
   onebox:
     discourse:
       user_joined_community: "%{date} に参加"
+    github:
+      opened: "オープン"
+      closed: "閉鎖"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} が「%{topic}」であなたをメンションしました - %{site_title}'

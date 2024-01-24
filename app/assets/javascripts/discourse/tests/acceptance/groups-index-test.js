@@ -8,7 +8,9 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Groups", function () {
+acceptance("Groups", function (needs) {
+  needs.settings({ enable_passkeys: false });
+
   test("Browsing Groups", async function (assert) {
     await visit("/g?username=eviltrout");
     assert.strictEqual(count(".group-box"), 1, "it displays user's groups");

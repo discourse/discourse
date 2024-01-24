@@ -12,6 +12,10 @@ chat:
     default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
+  chat_threads_enabled:
+    client: true
+    default: false
+    hidden: true
   needs_chat_seeded:
     default: true
     hidden: true

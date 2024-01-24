@@ -2293,6 +2293,8 @@ fa_IR:
   onebox:
     discourse:
       user_joined_community: "در %{date} عضو شدن"
+    github:
+      closed: "بسته"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'

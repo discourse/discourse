@@ -600,7 +600,7 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
       "arrow down sets focus to more results link"
     );
 
-    await triggerKeyEvent("#search-term", "keyup", "Escape");
+    await triggerKeyEvent("#search-term", "keydown", "Escape");
     assert.strictEqual(
       document.activeElement,
       query("#search-button"),

@@ -1021,7 +1021,6 @@ nl:
       said: "%{username}:"
       profile: "Profiel"
       profile_possessive: "Profiel van %{username}"
-      account_possessive: "s account"
       mute: "Dempen"
       edit: "Voorkeuren bewerken"
       download_archive:

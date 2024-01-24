@@ -2961,6 +2961,10 @@ zh_TW:
         title: "你的 Discourse 已經準備就緒！"
   search_logs:
     graph_title: "搜尋計數"
+  onebox:
+    github:
+      opened: "已打開"
+      closed: "不公開"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}在"%{topic}"提及您 - %{site_title}'

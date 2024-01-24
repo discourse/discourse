@@ -37,6 +37,7 @@ module Chat
     contract default_values_from: :channel
     step :update_channel
     step :mark_all_threads_as_read_if_needed
+    step :update_site_settings_if_needed
     step :publish_channel_update
     step :auto_join_users_if_needed
 
@@ -75,6 +76,10 @@ module Chat
     def mark_all_threads_as_read_if_needed(channel:, **)
       return if !(context.threading_enabled_changed && channel.threading_enabled)
       Jobs.enqueue(Jobs::Chat::MarkAllChannelThreadsRead, channel_id: channel.id)
+    end
+
+    def update_site_settings_if_needed
+      SiteSetting.chat_threads_enabled = Chat::Channel.exists?(threading_enabled: true)
     end
 
     def publish_channel_update(channel:, guardian:, **)

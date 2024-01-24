@@ -2850,6 +2850,9 @@ hy:
         title: "Ձեր Discourse -ը պատրաստ է!"
   search_logs:
     graph_title: "Որոնումների Քանակ"
+  onebox:
+    github:
+      closed: "փակված"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} -ը նշել է Ձեզ այստեղ՝ "%{topic}" - %{site_title}'

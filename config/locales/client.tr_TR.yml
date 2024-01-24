@@ -1021,7 +1021,6 @@ tr_TR:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} adlı kullanıcının profili"
-      account_possessive: " adlı kullanıcının hesabı"
       mute: "Sessiz"
       edit: "Tercihleri Düzenle"
       download_archive:

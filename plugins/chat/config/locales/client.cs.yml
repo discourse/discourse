@@ -164,7 +164,11 @@ cs:
         title: "Chat"
         export_messages:
           description: "Tímto se exportují všechny zprávy ze všech kanálů."
+      my_threads:
+        title: Moje vlákna
+        aria_label: "Přepnout na můj seznam vláken"
       direct_messages:
+        title: "Soukromé zprávy"
         new: "Vytvořit osobní chat"
       channel_list:
         title: "Kanály"

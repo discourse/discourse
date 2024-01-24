@@ -6,7 +6,13 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Signing In", function () {
+acceptance("Signing In", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get(`/session/passkey/challenge.json`, () =>
+      helper.response({ challenge: "smth" })
+    );
+  });
+
   test("sign in", async function (assert) {
     await visit("/");
     await click("header .login-button");

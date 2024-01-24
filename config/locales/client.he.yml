@@ -1135,6 +1135,7 @@ he:
       said: "%{username}:"
       profile: "פרופיל"
       profile_possessive: "הפרופיל של %{username}"
+      account_possessive: "החשבון של %{name}"
       mute: "השתקה"
       edit: "עריכת העדפות"
       download_archive:
@@ -2977,6 +2978,7 @@ he:
         bookmarks: "אין לך עדיין סימניות לנושאים."
         category: "אין נושאים בקטגוריה %{category}."
         top: "אין נושאים מובילים."
+        hot: "אין נושאים חמים."
         filter: "אין נושאים."
         educate:
           new: '<p>הנושאים החדשים שלך יופיעו כאן. כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> אם הם נוצרו ביומיים האחרונים. </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
@@ -2992,6 +2994,7 @@ he:
         category: "אין עוד נושאים בקטגוריה %{category}."
         tag: "אין יותר נושאי %{tag}."
         top: "אין עוד נושאים מובילים."
+        hot: "אין נושאים חמים נוספים."
         bookmarks: "אין עוד סימניות לנושאים."
         filter: "אין נושאים נוספים."
     topic:
@@ -4105,6 +4108,10 @@ he:
         title: "לא נראו"
         lower_title: "לא נראו"
         help: "נושאים חדשים ונושאים שאתם כרגע צופים או עוקבים אחריהם עם פוסטים שלא נקראו"
+      hot:
+        title: "חמים"
+        lower_title: "חמים"
+        help: "הנושאים המובילים לאחרונה"
       new:
         lower_title_with_count:
           one: "חדש (%{count})"

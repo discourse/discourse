@@ -1021,7 +1021,7 @@ de:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil von %{username}"
-      account_possessive: " – Konto"
+      account_possessive: "Konto von %{name}"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive:
@@ -2716,6 +2716,7 @@ de:
         bookmarks: "Du hast noch keine Themen mit einem Lesezeichen versehen."
         category: "Es gibt keine Themen in %{category}."
         top: "Es gibt keine angesagten Themen."
+        hot: "Es gibt keine heißen Themen."
         filter: "Es gibt keine Themen."
         educate:
           new: '<p>Hier werden deine neuen Themen angezeigt. Standardmäßig werden Themen als neu erachtet und mit einem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-Indikator dargestellt, wenn sie in den letzten 2 Tagen erstellt wurden. </p><p>Besuche deine <a href="%{userPrefsUrl}">Einstellungen</a>, um dies zu ändern.</p>'
@@ -2731,6 +2732,7 @@ de:
         category: "Das waren alle Themen in der Kategorie „%{category}“."
         tag: "Das waren alle Themen mit dem Schlagwort „%{tag}“."
         top: "Das waren alle angesagten Themen."
+        hot: "Es gibt keine heißen Themen mehr."
         bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
         filter: "Es gibt keine weiteren Themen."
     topic:
@@ -3734,6 +3736,10 @@ de:
         title: "Ungesehen"
         lower_title: "ungesehen"
         help: "neue Themen und Themen mit ungelesenen Beiträgen, die du derzeit beobachtest oder verfolgst"
+      hot:
+        title: "Heiß"
+        lower_title: "heiß"
+        help: "aktuelle Top-Themen"
       new:
         lower_title_with_count:
           one: "%{count} neues"

@@ -24,6 +24,7 @@ class Group < ActiveRecord::Base
 
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
+  has_many :human_users, -> { human_users }, through: :group_users, source: :user
   has_many :requesters, through: :group_requests, source: :user
   has_many :group_histories, dependent: :destroy
   has_many :category_reviews,

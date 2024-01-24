@@ -14,6 +14,8 @@ RSpec.describe "Chat footer on mobile", type: :system, mobile: true do
 
   context "with multiple tabs" do
     it "shows footer" do
+      SiteSetting.chat_threads_enabled = false
+
       visit("/")
       chat_page.open_from_header
 
@@ -37,9 +39,7 @@ RSpec.describe "Chat footer on mobile", type: :system, mobile: true do
     end
 
     it "shows threads tab when user has threads" do
-      thread = Fabricate(:chat_thread, channel: channel, original_message: message)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread)
-      thread.update!(replies_count: 1)
+      SiteSetting.chat_threads_enabled = true
 
       visit("/")
       chat_page.open_from_header
@@ -51,6 +51,7 @@ RSpec.describe "Chat footer on mobile", type: :system, mobile: true do
 
   context "with only 1 tab" do
     before do
+      SiteSetting.chat_threads_enabled = false
       SiteSetting.direct_message_enabled_groups = "3" # staff only
     end
 

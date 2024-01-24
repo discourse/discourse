@@ -1021,7 +1021,6 @@ pt_BR:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
-      account_possessive: "conta de"
       mute: "Silenciar"
       edit: "Editar preferências"
       download_archive:
