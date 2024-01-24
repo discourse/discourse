@@ -644,7 +644,7 @@ class Group < ActiveRecord::Base
       end
 
     DB.exec <<-SQL
-      WITH X AS (
+      WITH tally AS (
         SELECT
           group_id,
           COUNT(user_id) users
@@ -653,10 +653,10 @@ class Group < ActiveRecord::Base
         GROUP BY group_id
       )
       UPDATE groups
-         SET user_count = X.users
-        FROM X
-       WHERE id = X.group_id
-         AND user_count <> X.users
+         SET user_count = tally.users
+        FROM tally
+       WHERE id = tally.group_id
+         AND user_count <> tally.users
     SQL
   end
   private_class_method :reset_groups_user_count!
