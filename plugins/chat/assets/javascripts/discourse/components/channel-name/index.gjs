@@ -4,7 +4,6 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserStatusMessage from "discourse/components/user-status-message";
-import concatClass from "discourse/helpers/concat-class";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 
 export default class ChatChannelName extends Component {
@@ -42,7 +41,7 @@ export default class ChatChannelName extends Component {
   }
 
   <template>
-    <div class={{concatClass "chat-channel-name"}}>
+    <div class="chat-channel-name">
       {{#if @channel.isDirectMessageChannel}}
         {{#if this.groupDirectMessage}}
           <span class="chat-channel-name__label">
