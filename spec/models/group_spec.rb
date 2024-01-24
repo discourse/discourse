@@ -491,24 +491,23 @@ RSpec.describe Group do
     Group.delete_all
     Group.refresh_automatic_groups!
 
-    groups = Group.includes(:users).to_a
-    expect(groups.count).to eq Group::AUTO_GROUPS.count
+    expect(Group.count).to eq Group::AUTO_GROUPS.count
 
-    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:admins] }
-    expect(g.users.count).to eq g.user_count
-    expect(g.users.pluck(:id)).to contain_exactly(admin.id)
+    g = Group[:admins]
+    expect(g.human_users.count).to eq(g.user_count)
+    expect(g.human_users).to contain_exactly(admin)
 
-    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:staff] }
-    expect(g.users.count).to eq g.user_count
-    expect(g.users.pluck(:id)).to contain_exactly(admin.id)
+    g = Group[:admins]
+    expect(g.human_users.count).to eq(g.user_count)
+    expect(g.human_users).to contain_exactly(admin)
 
-    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_1] }
-    expect(g.users.count).to eq g.user_count
-    expect(g.users.pluck(:id)).to contain_exactly(admin.id, user.id)
+    g = Group[:trust_level_1]
+    expect(g.human_users.count).to eq(g.user_count)
+    expect(g.human_users).to contain_exactly(admin, user)
 
-    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_2] }
-    expect(g.users.count).to eq g.user_count
-    expect(g.users.pluck(:id)).to contain_exactly(user.id)
+    g = Group[:trust_level_2]
+    expect(g.human_users.count).to eq(g.user_count)
+    expect(g.human_users).to contain_exactly(user)
   end
 
   it "can set members via usernames helper" do
