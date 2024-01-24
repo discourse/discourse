@@ -35,6 +35,11 @@
     display: flex;
     font-size: var(--font-up-1);
     position: relative;
+
+    .chat-message-creator & {
+      justify-content: center;
+      width: 24px;
+    }
   }
 
   &__restricted-category-icon {
