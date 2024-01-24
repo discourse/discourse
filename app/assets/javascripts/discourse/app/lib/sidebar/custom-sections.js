@@ -2,6 +2,7 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import I18n from "discourse-i18n";
+import AdminSidebarPanel from "./admin-sidebar";
 
 class MainSidebarPanel {
   sections = [];
@@ -23,7 +24,7 @@ class MainSidebarPanel {
   }
 }
 
-export let customPanels = [new MainSidebarPanel()];
+export let customPanels = [new MainSidebarPanel(), new AdminSidebarPanel()];
 
 export let currentPanelKey = "main";
 

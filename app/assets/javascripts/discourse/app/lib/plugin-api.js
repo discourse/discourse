@@ -41,7 +41,6 @@ import {
 } from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
-import { addAdminSidebarSectionLink } from "discourse/instance-initializers/admin-sidebar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
@@ -66,6 +65,7 @@ import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 import { addSearchResultsCallback } from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
+import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   addSidebarPanel,

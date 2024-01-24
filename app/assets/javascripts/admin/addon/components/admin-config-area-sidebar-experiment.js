@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import {
   buildAdminSidebar,
   useAdminNavConfig,
-} from "discourse/instance-initializers/admin-sidebar";
+} from "discourse/lib/sidebar/admin-sidebar";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import { resetPanelSections } from "discourse/lib/sidebar/custom-sections";
 import { ADMIN_PANEL } from "discourse/services/sidebar-state";
