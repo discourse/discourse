@@ -4,9 +4,10 @@ import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
+import UserTip from "../user-tip";
 
 export default class Notifications extends Component {
-  @service userTips;
   @service currentUser;
   @service siteSettings;
 
@@ -42,9 +43,15 @@ export default class Notifications extends Component {
   <template>
     {{this.avatar}}
 
-    {{!-- {{#if this._shouldHighlightAvatar}}
-        {{this.attach "header-user-tip-shim"}}
-      {{/if}} --}}
+    {{#if this._shouldHighlightAvatar}}
+      <UserTip
+        @id="first_notification"
+        @triggerSelector=".header-dropdown-toggle.current-user"
+        @placement="bottom-end"
+        @titleText={{i18n "user_tips.first_notification.title"}}
+        @contentText={{i18n "user_tips.first_notification.content"}}
+      />
+    {{/if}}
 
     {{!-- {{#if this.currentUser.status}}
         {{this.attach "user-status-bubble" this.currentUser.status}}
