@@ -2978,6 +2978,13 @@ en:
         bookmarks: "There are no more bookmarked topics."
         filter: "There are no more topics."
 
+    topic_bulk_actions:
+      close_topics:
+        name: "Close Topics"
+      update_category:
+        name: "Update Category"
+        description: "Choose the new category for the selected topics"
+
     topic:
       filter_to:
         one: "%{count} post in topic"

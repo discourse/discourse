@@ -199,10 +199,8 @@ export default class TopicBulkActions extends Component {
   constructor() {
     super(...arguments);
 
-    if (this.args.model.initialAction) {
-      if (this.args.model.initialAction === "set-component") {
-        this.setComponent(this.args.model.initialComponent);
-      }
+    if (this.args.model.initialAction === "set-component") {
+      this.setComponent(this.args.model.initialComponent);
     }
   }
 

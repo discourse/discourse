@@ -130,7 +130,6 @@ export default class BulkTopicActions extends Component {
         <div>
           {{htmlSafe (i18n "topics.bulk.selected" count=@model.topics.length)}}
         </div>
-        <div>body</div>
       </:body>
 
       <:footer>

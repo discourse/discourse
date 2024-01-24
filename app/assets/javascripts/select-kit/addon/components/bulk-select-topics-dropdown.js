@@ -25,13 +25,13 @@ export default DropdownSelectBoxComponent.extend({
       {
         id: "update-category",
         icon: "pencil-alt",
-        name: "Update Category",
-        description: "Choose the new category for the selected topics",
+        name: i18n("topic_bulk_actions.update_category.name"),
+        description: i18n("topic_bulk_actions.update_category.description"),
       },
       {
         id: "close-topics",
         icon: "lock",
-        name: "Close Topics",
+        name: i18n("topic_bulk_actions.close_topics.name"),
       },
     ]);
     return options;
@@ -57,7 +57,6 @@ export default DropdownSelectBoxComponent.extend({
           model: {
             action: "close",
             title: i18n("topics.bulk.close_topics"),
-            topics: this.bulkSelectHelper.selected,
             bulkSelectHelper: this.bulkSelectHelper,
             refreshClosure: () => this.router.refresh(),
             allowSilent: true,
