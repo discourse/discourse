@@ -2091,6 +2091,40 @@ RSpec.describe TopicQuery do
     end
   end
 
+  describe "#apply_ordering" do
+    fab!(:topic1) { Fabricate(:topic, spam_count: 3, bumped_at: 3.hours.ago) }
+    fab!(:topic2) { Fabricate(:topic, spam_count: 2, bumped_at: 3.minutes.ago) }
+    fab!(:topic3) { Fabricate(:topic, spam_count: 3, bumped_at: 1.hour.ago) }
+
+    let(:modifier_block) do
+      Proc.new do |result, sort_column, sort_dir, options, topic_query|
+        if sort_column == "spam"
+          sort_column = "spam_count"
+          result.order("topics.#{sort_column} #{sort_dir}, bumped_at DESC")
+        end
+      end
+    end
+
+    it "returns the result of topic_query_apply_ordering_result modifier" do
+      plugin_instance = Plugin::Instance.new
+      plugin_instance.register_modifier(:topic_query_apply_ordering_result, &modifier_block)
+
+      topics = TopicQuery.new(nil, order: "spam", ascending: "false").list_latest.topics
+      expect(topics.map(&:id)).to eq([topic3.id, topic1.id, topic2.id])
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :topic_query_apply_ordering_result,
+        &modifier_block
+      )
+    end
+
+    it "ignores the result of topic_query_apply_ordering_result if modifier not registered" do
+      topics = TopicQuery.new(nil, order: "spam", ascending: "false").list_latest.topics
+      expect(topics.map(&:id)).to eq([topic2.id, topic3.id, topic1.id])
+    end
+  end
+
   describe "show_category_definitions_in_topic_lists setting" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
