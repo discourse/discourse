@@ -23,11 +23,11 @@ export default class ChatChannelIcon extends Component {
     {{#if @channel.isDirectMessageChannel}}
       <div class="chat-channel-icon is-dm">
         {{#if this.groupDirectMessage}}
-          <span class="chat-channel-title__users-count">
+          <span class="chat-channel-icon__users-count">
             {{@channel.membershipsCount}}
           </span>
         {{else}}
-          <div class="chat-channel-title__avatar">
+          <div class="chat-channel-icon__avatar">
             <ChatUserAvatar @user={{this.firstUser}} @interactive={{false}} />
           </div>
         {{/if}}

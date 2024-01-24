@@ -44,37 +44,37 @@ export default class ChatChannelName extends Component {
 
   <template>
     {{#if @channel.isDirectMessageChannel}}
-      <div class="chat-channel-name is-dm">
-        <div class="chat-channel-name__user-info">
-          <div class="chat-channel-name__usernames">
-            {{#if this.groupDirectMessage}}
-              <span class="chat-channel-name__name">
-                {{this.groupsDirectMessageTitle}}
-              </span>
-            {{else}}
-              <span class="chat-channel-name__name">
-                {{this.firstUser.username}}
-              </span>
-              {{#if this.showUserStatus}}
-                <UserStatusMessage
-                  @status={{get this.users "0.status"}}
-                  @showDescription={{if this.site.mobileView "true"}}
-                  class="chat-channel-name__user-status-message"
-                />
-              {{/if}}
-              <PluginOutlet
-                @name="after-chat-channel-username"
-                @outletArgs={{hash user=@user}}
-                @tagName=""
-                @connectorTagName=""
-              />
-            {{/if}}
-          </div>
-        </div>
+
+      <div class="chat-channel__user-info">
+
+        {{#if this.groupDirectMessage}}
+          <span class="chat-channel__name">
+            {{this.groupsDirectMessageTitle}}
+          </span>
+        {{else}}
+          <span class="chat-channel__name">
+            {{this.firstUser.username}}
+          </span>
+          {{#if this.showUserStatus}}
+            <UserStatusMessage
+              @status={{get this.users "0.status"}}
+              @showDescription={{if this.site.mobileView "true"}}
+              class="chat-channel__user-status-message"
+            />
+          {{/if}}
+          <PluginOutlet
+            @name="after-chat-channel-username"
+            @outletArgs={{hash user=@user}}
+            @tagName=""
+            @connectorTagName=""
+          />
+        {{/if}}
+
       </div>
+
     {{else if @channel.isCategoryChannel}}
-      <div class="chat-channel-name is-category">
-        <span class="chat-channel-name__name">
+      <div class="chat-channel__channel-info">
+        <span class="chat-channel__name">
           {{replaceEmoji @channel.title}}
         </span>
 

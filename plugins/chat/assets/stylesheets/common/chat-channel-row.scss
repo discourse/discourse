@@ -7,14 +7,6 @@
   cursor: pointer;
   color: var(--primary);
 
-  &__content {
-    display: flex;
-    justify-content: space-between;
-    max-width: 100%;
-    align-items: center;
-    flex-grow: 1;
-  }
-
   @media (hover: none) {
     &:hover,
     &:focus {
@@ -49,7 +41,7 @@
 
   &:hover,
   &.active {
-    .chat-channel-title {
+    .chat-channel-icon {
       &,
       .category-chat-name,
       .dm-usernames {
@@ -70,33 +62,70 @@
     opacity: 0.65;
   }
 
-  .chat-channel-title {
-    overflow: hidden;
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+    align-items: center;
+    flex-grow: 1;
+    height: 4em;
+  }
 
-    &__users-count {
-      width: var(--channel-list-avatar-size);
-      height: var(--channel-list-avatar-size);
-      padding: 0;
-      font-size: var(--font-up-1);
-      justify-content: center;
-      flex-shrink: 0;
+  .chat-channel {
+    &__user-info,
+    &__channel-info {
+      grid-area: name;
+      white-space: nowrap;
+      overflow: hidden;
+      @include ellipsis;
+      display: flex;
+      align-items: center;
     }
 
-    &__avatar {
-      .chat-user-avatar {
-        img {
-          width: calc(var(--channel-list-avatar-size) - 2px);
-          height: calc(var(--channel-list-avatar-size) - 2px);
+    &__metadata {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: column;
+      margin-left: 0.5em;
+
+      .chat-channel-unread-indicator {
+        @include chat-unread-indicator;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 8px;
+        height: 8px;
+
+        &.-urgent {
+          width: auto;
+          height: auto;
+          min-width: 0.6em;
+          padding: 0.3em 0.5em;
         }
       }
     }
-    &__user-info {
-      @include ellipsis;
+
+    &__metadata-date {
+      color: var(--primary-high);
+      font-size: var(--font-down-2);
+      white-space: nowrap;
     }
-    &__usernames {
-      display: flex;
-      align-items: center;
-      justify-content: start;
+
+    // &__data {
+    //   overflow: hidden;
+    //   text-overflow: ellipsis;
+    //   width: 100%;
+    //   display: block;
+    // }
+
+    // &__usernames {
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: start;
+    // }
+    &__name {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .user-status-message {
       display: inline-block;
@@ -109,32 +138,48 @@
     }
   }
 
-  .chat-channel-metadata {
-    display: flex;
-    align-items: flex-end;
-    flex-direction: column;
-    margin-left: 0.5em;
-
-    &__date {
+  .chat-channel-icon {
+    flex-shrink: 0;
+    &__users-count {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: rgba(var(--primary-rgb), 0.1);
+      box-sizing: border-box;
       color: var(--primary-high);
-      font-size: var(--font-down-2);
-      white-space: nowrap;
+      width: var(--channel-list-avatar-size);
+      height: var(--channel-list-avatar-size);
+      padding: 0;
+      font-size: var(--font-up-2);
     }
 
-    .chat-channel-unread-indicator {
-      @include chat-unread-indicator;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 8px;
-      height: 8px;
-
-      &.-urgent {
-        width: auto;
-        height: auto;
-        min-width: 0.6em;
-        padding: 0.3em 0.5em;
+    &__avatar {
+      .chat-user-avatar {
+        img {
+          width: calc(var(--channel-list-avatar-size) - 2px);
+          height: calc(var(--channel-list-avatar-size) - 2px);
+        }
       }
+    }
+
+    &__category-badge {
+      color: var(--primary-medium);
+      display: flex;
+      font-size: var(--font-up-1);
+      position: relative;
+    }
+
+    &__restricted-category-icon {
+      background-color: var(--secondary);
+      position: absolute;
+      border-radius: 50%;
+      padding: 2px 2px 3px;
+      color: var(--primary-high);
+      height: 0.5rem;
+      width: 0.5rem;
+      right: -0.5rem;
+      top: -0.1rem;
     }
   }
 

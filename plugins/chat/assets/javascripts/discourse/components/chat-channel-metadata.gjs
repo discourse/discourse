@@ -18,9 +18,9 @@ export default class ChatChannelMetadata extends Component {
   }
 
   <template>
-    <div class="chat-channel-metadata">
+    <div class="chat-channel__metadata">
       {{#if @channel.lastMessage}}
-        <div class="chat-channel-metadata__date">
+        <div class="chat-channel__metadata-date">
           {{this.lastMessageFormattedDate}}
         </div>
       {{/if}}

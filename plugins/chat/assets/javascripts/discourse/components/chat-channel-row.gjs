@@ -180,6 +180,7 @@ export default class ChatChannelRow extends Component {
       <div
         class={{concatClass
           "chat-channel-row__content"
+          (if @channel.isCategoryChannel "is-category" "is-dm")
           (if this.shouldReset "-animate-reset")
         }}
         {{(if this.shouldHandleSwipe (modifier this.registerSwipableRow))}}
@@ -195,7 +196,7 @@ export default class ChatChannelRow extends Component {
             @unreadIndicator={{true}}
           />
           {{#if (and this.site.mobileView @channel.lastMessage)}}
-            <div class="chat-channel-last-message">
+            <div class="chat-channel__last-message">
               {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
             </div>
           {{/if}}
