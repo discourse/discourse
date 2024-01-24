@@ -554,13 +554,13 @@ class Group < ActiveRecord::Base
     remove_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id <= 0 OR NOT admin OR staged"
+        "SELECT id FROM users WHERE NOT admin OR staged"
       when :moderators
-        "SELECT id FROM users WHERE id <= 0 OR NOT moderator OR staged"
+        "SELECT id FROM users WHERE NOT moderator OR staged"
       when :staff
-        "SELECT id FROM users WHERE id <= 0 OR (NOT admin AND NOT moderator) OR staged"
+        "SELECT id FROM users WHERE (NOT admin AND NOT moderator) OR staged"
       when :trust_level_0, :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE id < -1 OR trust_level < #{id - 10} OR staged"
+        "SELECT id FROM users WHERE trust_level < #{id - 10} OR staged"
       end
 
     removed_user_ids = DB.query_single <<-SQL
@@ -584,15 +584,15 @@ class Group < ActiveRecord::Base
     insert_subquery =
       case name
       when :admins
-        "SELECT id FROM users WHERE id > 0 AND admin AND NOT staged"
+        "SELECT id FROM users WHERE admin AND NOT staged"
       when :moderators
-        "SELECT id FROM users WHERE id > 0 AND moderator AND NOT staged"
+        "SELECT id FROM users WHERE moderator AND NOT staged"
       when :staff
-        "SELECT id FROM users WHERE id > 0 AND (moderator OR admin) AND NOT staged"
+        "SELECT id FROM users WHERE (moderator OR admin) AND NOT staged"
       when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
-        "SELECT id FROM users WHERE id >= -1 AND trust_level >= #{id - 10} AND NOT staged"
+        "SELECT id FROM users WHERE trust_level >= #{id - 10} AND NOT staged"
       when :trust_level_0
-        "SELECT id FROM users WHERE id >= -1 AND NOT staged"
+        "SELECT id FROM users WHERE NOT staged"
       end
 
     added_user_ids = DB.query_single <<-SQL
