@@ -112,14 +112,10 @@ describe FinalDestination::HTTP do
   end
 
   it "validates address argument against nil value" do
-    expect do
-      FinalDestination::HTTP.start(nil) {}
-    end.to raise_error(ArgumentError)
+    expect do FinalDestination::HTTP.start(nil) {} end.to raise_error(ArgumentError)
   end
 
   it "validates address argument against empty value" do
-    expect do
-      FinalDestination::HTTP.start("") {}
-    end.to raise_error(ArgumentError)
+    expect do FinalDestination::HTTP.start("") {} end.to raise_error(ArgumentError)
   end
 end
