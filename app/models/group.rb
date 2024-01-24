@@ -24,6 +24,7 @@ class Group < ActiveRecord::Base
 
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
+  has_many :human_users, -> { human_users }, through: :group_users, source: :user
   has_many :requesters, through: :group_requests, source: :user
   has_many :group_histories, dependent: :destroy
   has_many :category_reviews,
@@ -939,7 +940,9 @@ class Group < ActiveRecord::Base
       SET user_count =
         (SELECT COUNT(gu.user_id)
          FROM group_users gu
-         WHERE gu.group_id = g.id)
+         JOIN users u ON u.id = gu.user_id
+         WHERE gu.group_id = g.id
+         AND u.id > 0)
       WHERE g.id = #{self.id};
     SQL
   end

@@ -57,6 +57,14 @@ RSpec.describe Group do
     end
   end
 
+  describe ".human_users" do
+    before { group.users << user << Discourse.system_user }
+
+    it "returns only human users" do
+      expect(group.human_users).to contain_exactly(user)
+    end
+  end
+
   describe "#posts_for" do
     it "returns the post in the group" do
       p = Fabricate(:post)
