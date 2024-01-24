@@ -6,17 +6,17 @@ import PluginOutlet from "../plugin-outlet";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import and from "truth-helpers/helpers/and";
 import TopicInfo from "./topic/info";
+import { hash } from "@ember/helper";
+import not from "truth-helpers/helpers/not";
 
 export default class Contents extends Component {
   @service site;
   @service currentUser;
   @service siteSettings;
 
-  // transform() {
-  //   return {
-  //     showBootstrapMode: this.currentUser?.staff && this.site.desktopView,
-  //   };
-  // }
+  get topicPresent() {
+    return !!this.args.topic;
+  }
 
   <template>
     <div class="contents">
@@ -28,8 +28,10 @@ export default class Contents extends Component {
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          {{! I don't think data is working here }}
-          {{!-- <MountWidget @widget="home-logo" @attrs={{@args}} /> --}}
+          <MountWidget
+            @widget="home-logo"
+            @args={{hash minimized=this.topicPresent}}
+          />
         </PluginOutlet>
       </div>
 
@@ -47,12 +49,12 @@ export default class Contents extends Component {
         </div>
       {{/if}}
 
-      {{!-- <PluginOutlet
-        @name="before-header-panel"
-        @outletArgs={{hash topic=@args.topic}}
-      /> --}}
-      {{!-- {{before-header-panel-outlet attrs=@args}} --}}
-
+      <div class="before-header-panel-outlet">
+        <PluginOutlet
+          @name="before-header-panel"
+          @outletArgs={{hash topic=@topic}}
+        />
+      </div>
       <div class="panel" role="navigation">{{yield}}</div>
     </div>
   </template>

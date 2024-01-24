@@ -1,29 +1,29 @@
-createWidget("hamburger-dropdown-wrapper", {
-  buildAttributes() {
-    return { "data-click-outside": true };
-  },
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
+import { modifier } from "ember-modifier";
+import { on } from "@ember/modifier";
+import HamburgerDropdown from "../sidebar/hamburger-dropdown";
+import { hash } from "@ember/helper";
+import { isTesting } from "discourse-common/config/environment";
+import discourseLater from "discourse-common/lib/later";
 
-  html() {
-    return [
-      new RenderGlimmer(
-        this,
-        "div.widget-component-connector",
-        hbs`<Sidebar::HamburgerDropdown />`
-      ),
-    ];
-  },
-
+export default class HamburgerDropdownWrapper extends Component {
+  @action
   click(event) {
     if (
       event.target.closest(".sidebar-section-header-button") ||
       event.target.closest(".sidebar-section-link-button") ||
       event.target.closest(".sidebar-section-link")
     ) {
-      this.sendWidgetAction("toggleHamburger");
+      this.args.toggleHamburger();
     }
-  },
+  }
 
+  @action
   clickOutside(e) {
+    console.log(e);
     if (
       e.target.classList.contains("header-cloak") &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -42,9 +42,9 @@ createWidget("hamburger-dropdown-wrapper", {
         })
         .finished.then(() => {
           if (isTesting()) {
-            this.sendWidgetAction("toggleHamburger");
+            this.args.toggleHamburger();
           } else {
-            discourseLater(() => this.sendWidgetAction("toggleHamburger"));
+            discourseLater(() => this.args.toggleHamburger());
           }
         });
       headerCloak.animate([{ opacity: 0 }], {
@@ -53,7 +53,21 @@ createWidget("hamburger-dropdown-wrapper", {
         easing: "ease-in",
       });
     } else {
-      this.sendWidgetAction("toggleHamburger");
+      this.args.toggleHamburger();
     }
-  },
-});
+  }
+  <template>
+    <div
+      class="hamburger-dropdown-wrapper"
+      data-click-outside={{true}}
+      {{on "click" this.click}}
+      {{(modifier
+        CloseOnClickOutside
+        this.clickOutside
+        (hash targetSelector=".hamburger-panel")
+      )}}
+    >
+      <HamburgerDropdown />
+    </div>
+  </template>
+}

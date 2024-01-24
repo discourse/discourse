@@ -36,7 +36,7 @@ export default class CloseOnClickOutside extends Modifier {
       return;
     }
 
-    this.closeFn();
+    this.closeFn(event);
   }
 
   cleanup() {

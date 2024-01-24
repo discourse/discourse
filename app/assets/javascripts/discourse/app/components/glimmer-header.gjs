@@ -21,7 +21,7 @@ import Contents from "./glimmer-header/contents";
 import AuthButtons from "./glimmer-header/auth-buttons";
 import Icons from "./glimmer-header/icons";
 import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
-// import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
+import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
 // import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
 // import HeaderCloak from "./glimmer-header/cloak";
 
@@ -131,9 +131,10 @@ export default class GlimmerHeader extends Component {
               @hamburgerVisible={{this.hamburgerVisible}}
               @userVisible={{this.userVisible}}
               @searchVisible={{this.search.visible}}
-              @user={{this.currentUser}}
               @sidebarEnabled={{@sidebarEnabled}}
               @toggleSearchMenu={{this.toggleSearchMenu}}
+              @toggleHamburger={{this.toggleHamburger}}
+              @toggleUserMenu={{this.toggleUserMenu}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
             />
           {{/unless}}
@@ -142,9 +143,11 @@ export default class GlimmerHeader extends Component {
           {{/each}} --}}
 
           {{#if this.search.visible}}
-            <SearchMenuWrapper @toggleSearchMenu={{this.toggleSearchMenu}} />
+            <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
           {{else if this.hamburgerVisible}}
-            {{! <HamburgerDropdownWrapper /> }}
+            <HamburgerDropdownWrapper
+              @toggleHamburger={{this.toggleHamburger}}
+            />
           {{else if this.userVisible}}
             {{! <UserMenuWrapper /> }}
           {{/if}}
