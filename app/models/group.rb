@@ -940,9 +940,7 @@ class Group < ActiveRecord::Base
       SET user_count =
         (SELECT COUNT(gu.user_id)
          FROM group_users gu
-         JOIN users u ON u.id = gu.user_id
-         WHERE gu.group_id = g.id
-         AND u.id > 0)
+         WHERE gu.group_id = g.id)
       WHERE g.id = #{self.id};
     SQL
   end

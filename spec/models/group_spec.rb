@@ -205,18 +205,6 @@ RSpec.describe Group do
     end
   end
 
-  def real_admins
-    Group[:admins].user_ids.reject { |id| id < 0 }
-  end
-
-  def real_moderators
-    Group[:moderators].user_ids.reject { |id| id < 0 }
-  end
-
-  def real_staff
-    Group[:staff].user_ids.reject { |id| id < 0 }
-  end
-
   describe "#primary_group=" do
     before { group.add(user) }
 
@@ -432,33 +420,33 @@ RSpec.describe Group do
 
     Group.refresh_automatic_groups!(:admins, :staff, :moderators)
 
-    expect(real_admins).to eq [admin.id]
-    expect(real_moderators).to eq [moderator.id]
-    expect(real_staff.sort).to eq [moderator.id, admin.id].sort
+    expect(Group[:admins].human_users).to contain_exactly(admin)
+    expect(Group[:moderators].human_users).to contain_exactly(moderator)
+    expect(Group[:staff].human_users).to contain_exactly(moderator, admin)
 
     admin.admin = false
     admin.save
 
     Group.refresh_automatic_group!(:admins)
-    expect(real_admins).to be_empty
+    expect(Group[:admins].human_users).to be_empty
 
     moderator.revoke_moderation!
 
     admin.grant_admin!
-    expect(real_admins).to eq [admin.id]
-    expect(real_staff).to eq [admin.id]
+    expect(Group[:admins].human_users).to contain_exactly(admin)
+    expect(Group[:staff].human_users).to contain_exactly(admin)
 
     admin.revoke_admin!
-    expect(real_admins).to be_empty
-    expect(real_staff).to be_empty
+    expect(Group[:admins].human_users).to be_empty
+    expect(Group[:staff].human_users).to be_empty
 
     admin.grant_moderation!
-    expect(real_moderators).to eq [admin.id]
-    expect(real_staff).to eq [admin.id]
+    expect(Group[:moderators].human_users).to contain_exactly(admin)
+    expect(Group[:staff].human_users).to contain_exactly(admin)
 
     admin.revoke_moderation!
-    expect(real_admins).to be_empty
-    expect(real_staff).to eq []
+    expect(Group[:admins].human_users).to be_empty
+    expect(Group[:staff].human_users).to be_empty
 
     # we need some work to set min username to 6
 
