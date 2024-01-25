@@ -119,7 +119,7 @@ export default {
           "btn-default",
           "btn",
           "btn-icon",
-          ...(props.label ? ["no-text"] : [""]),
+          ...(props.label ? ["no-text"] : []),
         ];
 
         openPopupBtn.classList.add(...defaultClasses);
