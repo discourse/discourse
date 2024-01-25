@@ -1870,7 +1870,6 @@ RSpec.describe TopicQuery do
       SiteSetting.shared_drafts_category = shared_drafts_category.id
       SiteSetting.shared_drafts_allowed_groups =
         Group::AUTO_GROUPS[:trust_level_3].to_s + "|" + Group::AUTO_GROUPS[:staff].to_s
-      Group.refresh_automatic_groups!
     end
 
     context "with destination_category_id" do

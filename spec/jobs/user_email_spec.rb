@@ -3,7 +3,7 @@
 RSpec.describe Jobs::UserEmail do
   before { SiteSetting.email_time_window_mins = 10 }
 
-  fab!(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago) }
+  fab!(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago, refresh_auto_groups: true) }
   fab!(:staged) { Fabricate(:user, staged: true, last_seen_at: 11.minutes.ago) }
   fab!(:suspended) do
     Fabricate(
@@ -133,10 +133,7 @@ RSpec.describe Jobs::UserEmail do
         data: { original_post_id: post.id }.to_json,
       )
     end
-    before do
-      user.update_column(:last_seen_at, 9.minutes.ago)
-      Group.refresh_automatic_groups!
-    end
+    before { user.update_column(:last_seen_at, 9.minutes.ago) }
 
     it "doesn't send an email to a user that's been recently seen" do
       Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)

@@ -128,7 +128,7 @@ RSpec.describe ApplicationController do
 
   describe "#redirect_to_second_factor_if_required" do
     let(:admin) { Fabricate(:admin) }
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     before do
       admin # to skip welcome wizard at home page `/`
@@ -153,7 +153,7 @@ RSpec.describe ApplicationController do
     it "should not redirect anonymous users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.allow_anonymous_posting = true
-      Group.refresh_automatic_groups!
+
       sign_in(user)
 
       post "/u/toggle-anon.json"

@@ -1687,8 +1687,6 @@ RSpec.describe Email::Receiver do
       category.set_permissions(Group[:trust_level_4] => :full)
       category.save!
 
-      Group.refresh_automatic_group!(:trust_level_4)
-
       expect { process(:tl3_user) }.to raise_error(Email::Receiver::InvalidPost)
       expect { process(:tl4_user) }.to change(Topic, :count)
     end

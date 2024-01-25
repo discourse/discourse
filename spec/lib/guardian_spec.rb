@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Guardian do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:member) { Fabricate(:user) }
   fab!(:owner) { Fabricate(:user) }
-  fab!(:moderator)
-  fab!(:admin)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:anonymous_user) { Fabricate(:anonymous) }
   fab!(:staff_post) { Fabricate(:post, user: moderator) }
   fab!(:group)
@@ -20,15 +20,12 @@ RSpec.describe Guardian do
   fab!(:trust_level_3) { Fabricate(:user, trust_level: 3, refresh_auto_groups: true) }
   fab!(:trust_level_4) { Fabricate(:user, trust_level: 4, refresh_auto_groups: true) }
   fab!(:another_admin) { Fabricate(:admin) }
-  fab!(:coding_horror)
+  fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
 
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
-  before do
-    Group.refresh_automatic_groups!
-    Guardian.enable_topic_can_see_consistency_check
-  end
+  before { Guardian.enable_topic_can_see_consistency_check }
 
   after { Guardian.disable_topic_can_see_consistency_check }
 
@@ -4312,8 +4309,6 @@ RSpec.describe Guardian do
   end
 
   describe "#can_mention_here?" do
-    before { Group.refresh_automatic_groups! }
-
     it "returns false if disabled" do
       SiteSetting.max_here_mentioned = 0
       expect(admin.guardian.can_mention_here?).to eq(false)

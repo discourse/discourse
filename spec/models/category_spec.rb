@@ -632,11 +632,13 @@ RSpec.describe Category do
   end
 
   describe "update_stats" do
-    before { @category = Fabricate(:category_with_definition) }
+    before do
+      @category =
+        Fabricate(:category_with_definition, user: Fabricate(:user, refresh_auto_groups: true))
+    end
 
     context "with regular topics" do
       before do
-        Group.refresh_automatic_groups!
         create_post(user: @category.user, category: @category.id)
         Category.update_stats
         @category.reload
@@ -675,7 +677,6 @@ RSpec.describe Category do
 
     context "with revised post" do
       before do
-        Group.refresh_automatic_groups!
         post = create_post(user: @category.user, category: @category.id)
 
         SiteSetting.editing_grace_period = 1.minute
@@ -714,7 +715,6 @@ RSpec.describe Category do
     end
 
     context "when there are no topics left" do
-      before { Group.refresh_automatic_groups! }
       let!(:topic) { create_post(user: @category.user, category: @category.id).reload.topic }
 
       it "can update the topic count to zero" do

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicGuardian do
-  fab!(:user)
-  fab!(:admin)
-  fab!(:tl3_user) { Fabricate(:trust_level_3) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:tl3_user) { Fabricate(:trust_level_3, refresh_auto_groups: true) }
   fab!(:tl4_user) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
   fab!(:moderator)
   fab!(:category)
@@ -18,8 +18,6 @@ RSpec.describe TopicGuardian do
   after { Guardian.disable_topic_can_see_consistency_check }
 
   describe "#can_create_shared_draft?" do
-    before { Group.refresh_automatic_groups! }
-
     it "when shared_drafts are disabled" do
       SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
@@ -49,8 +47,6 @@ RSpec.describe TopicGuardian do
   end
 
   describe "#can_see_shared_draft?" do
-    before { Group.refresh_automatic_groups! }
-
     it "when shared_drafts are disabled (existing shared drafts)" do
       SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 

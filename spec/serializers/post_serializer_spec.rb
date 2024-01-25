@@ -3,10 +3,8 @@
 RSpec.describe PostSerializer do
   fab!(:post)
 
-  before { Group.refresh_automatic_groups! }
-
   context "with a post with lots of actions" do
-    fab!(:actor) { Fabricate(:user) }
+    fab!(:actor) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin)
     let(:acted_ids) do
       PostActionType.public_types.values.concat(

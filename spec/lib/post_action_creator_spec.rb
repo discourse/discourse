@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe PostActionCreator do
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post)
   let(:like_type_id) { PostActionType.types[:like] }
-
-  before { Group.refresh_automatic_groups! }
 
   describe "rate limits" do
     before { RateLimiter.enable }

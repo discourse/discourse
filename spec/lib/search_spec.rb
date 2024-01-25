@@ -633,10 +633,16 @@ RSpec.describe Search do
     end
 
     context "with personal-direct and group_messages flags" do
-      let!(:current) { Fabricate(:user, admin: true, username: "current_user") }
-      let!(:participant) { Fabricate(:user, username: "participant_1") }
-      let!(:participant_2) { Fabricate(:user, username: "participant_2") }
-      let!(:non_participant) { Fabricate(:user, username: "non_participant") }
+      let!(:current) do
+        Fabricate(:user, admin: true, username: "current_user", refresh_auto_groups: true)
+      end
+      let!(:participant) { Fabricate(:user, username: "participant_1", refresh_auto_groups: true) }
+      let!(:participant_2) do
+        Fabricate(:user, username: "participant_2", refresh_auto_groups: true)
+      end
+      let!(:non_participant) do
+        Fabricate(:user, username: "non_participant", refresh_auto_groups: true)
+      end
 
       let(:group) do
         group = Fabricate(:group, has_messages: true)
@@ -646,7 +652,6 @@ RSpec.describe Search do
       end
 
       def create_pm(users:, group: nil)
-        Group.refresh_automatic_groups!
         pm = Fabricate(:private_message_post_one_user, user: users.first).topic
         users[1..-1].each do |u|
           pm.invite(users.first, u.username)
