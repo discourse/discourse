@@ -6,7 +6,6 @@ Chat::Engine.routes.draw do
     get "/channels" => "channels#index"
     get "/me/channels" => "current_user_channels#index"
     get "/me/threads" => "current_user_threads#index"
-    get "/me/threads/count" => "current_user_threads#thread_count"
     post "/channels" => "channels#create"
     put "/channels/read/" => "reads#update_all"
     put "/channels/:channel_id/read/:message_id" => "reads#update"

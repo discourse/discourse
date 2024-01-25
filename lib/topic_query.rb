@@ -664,8 +664,20 @@ class TopicQuery
   end
 
   def apply_ordering(result, options = {})
-    sort_column = SORTABLE_MAPPING[options[:order]] || "default"
+    order_option = options[:order]
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
+
+    new_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_query_apply_ordering_result,
+        result,
+        order_option,
+        sort_dir,
+        options,
+        self,
+      )
+    return new_result if !new_result.nil? && new_result != result
+    sort_column = SORTABLE_MAPPING[order_option] || "default"
 
     # If we are sorting in the default order desc, we should consider including pinned
     # topics. Otherwise, just use bumped_at.

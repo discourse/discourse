@@ -1,4 +1,4 @@
-import { ADMIN_PANEL, MAIN_PANEL } from "discourse/services/sidebar-state";
+import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 
 export const CHAT_PANEL = "chat";

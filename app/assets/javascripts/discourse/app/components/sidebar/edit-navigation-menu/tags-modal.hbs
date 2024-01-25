@@ -15,7 +15,7 @@
   @filterSelected={{this.filterSelected}}
   @filterUnselected={{this.filterUnselected}}
   @closeModal={{@closeModal}}
-  @loading={{(or this.tagsLoading this.disableFiltering)}}
+  @loading={{or this.tagsLoading this.disableFiltering}}
   class="sidebar__edit-navigation-menu__tags-modal"
 >
   {{#if this.tagsLoading}}

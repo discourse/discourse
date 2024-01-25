@@ -191,7 +191,8 @@ RSpec.describe UserSearch do
     end
 
     it "only reveals topic participants to people with permission" do
-      pm_topic = Fabricate(:private_message_post).topic
+      pm_topic =
+        Fabricate(:private_message_post, user: Fabricate(:user, refresh_auto_groups: true)).topic
 
       # Anonymous, does not have access
       expect do search_for("", topic_id: pm_topic.id) end.to raise_error(Discourse::InvalidAccess)
@@ -201,7 +202,6 @@ RSpec.describe UserSearch do
         Discourse::InvalidAccess,
       )
 
-      Group.refresh_automatic_groups!
       pm_topic.invite(pm_topic.user, mr_b.username)
 
       results = search_for("", topic_id: pm_topic.id, searching_user: mr_b)

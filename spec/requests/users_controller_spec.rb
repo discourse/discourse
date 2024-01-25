@@ -3,9 +3,9 @@
 require "rotp"
 
 RSpec.describe UsersController do
-  fab!(:user)
-  fab!(:user1) { Fabricate(:user, username: "someusername") }
-  fab!(:another_user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user1) { Fabricate(:user, username: "someusername", refresh_auto_groups: true) }
+  fab!(:another_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
@@ -6786,10 +6786,9 @@ RSpec.describe UsersController do
   end
 
   describe "#private_message_topic_tracking_state" do
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
 
     fab!(:private_message) do
-      Group.refresh_automatic_groups!
       create_post(
         user: user1,
         target_usernames: [user_2.username],

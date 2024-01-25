@@ -29,11 +29,11 @@ export default class ChatDrawerRoutesChannel extends Component {
     <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
       <navbar.BackButton />
       <navbar.ChannelTitle @channel={{this.chat.activeChannel}} />
-      <navbar.Actions as |action|>
-        <action.ThreadsListButton @channel={{this.chat.activeChannel}} />
-        <action.ToggleDrawerButton />
-        <action.FullPageButton />
-        <action.CloseDrawerButton />
+      <navbar.Actions as |a|>
+        <a.ThreadsListButton @channel={{this.chat.activeChannel}} />
+        <a.ToggleDrawerButton />
+        <a.FullPageButton />
+        <a.CloseDrawerButton />
       </navbar.Actions>
     </Navbar>
 

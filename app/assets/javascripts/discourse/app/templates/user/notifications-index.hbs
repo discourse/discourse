@@ -7,10 +7,12 @@
     {{/if}}
   </div>
 {{else if this.doesNotHaveNotifications}}
-  <EmptyState
-    @title={{i18n "user.no_notifications_page_title"}}
-    @body={{this.emptyStateBody}}
-  />
+  <PluginOutlet @name="user-notifications-empty-state">
+    <EmptyState
+      @title={{i18n "user.no_notifications_page_title"}}
+      @body={{this.emptyStateBody}}
+    />
+  </PluginOutlet>
 {{else}}
   <div class="user-notifications-filter">
     <NotificationsFilter

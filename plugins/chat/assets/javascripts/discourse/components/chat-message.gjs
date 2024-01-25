@@ -61,10 +61,9 @@ export default class ChatMessage extends Component {
   @service chatChannelsManager;
   @service router;
   @service toasts;
+  @optionalService adminTools;
 
   @tracked isActive = false;
-
-  @optionalService adminTools;
 
   toggleCheckIfPossible = modifier((element) => {
     let addedListener = false;

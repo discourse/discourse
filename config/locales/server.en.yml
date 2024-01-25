@@ -402,7 +402,7 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
-  no_embedded_media_allowed_trust: "Sorry, you can't embed media items in a post."
+  no_embedded_media_allowed_group: "Sorry, you can't embed media items in a post."
   no_embedded_media_allowed: "Sorry, new users can't embed media items in posts."
   too_many_embedded_media:
     one: "Sorry, new users can only put one embedded media item in a post."
@@ -1986,6 +1986,7 @@ en:
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     post_links_allowed_groups: "Groups that are allowed to include links in posts."
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
+    embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post"
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
     min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
     user_card_background_allowed_groups: "Groups that are allowed to upload a user card background."
@@ -2590,6 +2591,7 @@ en:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
 

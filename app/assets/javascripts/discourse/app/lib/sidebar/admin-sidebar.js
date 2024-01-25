@@ -1,10 +1,11 @@
+import { isEmpty } from "@ember/utils";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
-import {
-  addSidebarPanel,
-  addSidebarSection,
-} from "discourse/lib/sidebar/custom-sections";
-import { ADMIN_PANEL } from "discourse/services/sidebar-state";
+import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
+import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
+import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
+import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import I18n from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
@@ -14,60 +15,52 @@ export function clearAdditionalAdminSidebarSectionLinks() {
   additionalAdminSidebarSectionLinks = {};
 }
 
-function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
-  const SidebarAdminSectionLink = class extends BaseCustomSidebarSectionLink {
-    constructor({ adminSidebarNavLink }) {
-      super(...arguments);
-      this.adminSidebarNavLink = adminSidebarNavLink;
-    }
+class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
+  constructor({ adminSidebarNavLink }) {
+    super(...arguments);
+    this.adminSidebarNavLink = adminSidebarNavLink;
+  }
 
-    get name() {
-      return this.adminSidebarNavLink.name;
-    }
+  get name() {
+    return this.adminSidebarNavLink.name;
+  }
 
-    get classNames() {
-      return "admin-sidebar-nav-link";
-    }
+  get classNames() {
+    return "admin-sidebar-nav-link";
+  }
 
-    get route() {
-      return this.adminSidebarNavLink.route;
-    }
+  get route() {
+    return this.adminSidebarNavLink.route;
+  }
 
-    get href() {
-      return this.adminSidebarNavLink.href;
-    }
+  get href() {
+    return this.adminSidebarNavLink.href;
+  }
 
-    get models() {
-      return this.adminSidebarNavLink.routeModels;
-    }
+  get models() {
+    return this.adminSidebarNavLink.routeModels;
+  }
 
-    get text() {
-      return this.adminSidebarNavLink.label
-        ? I18n.t(this.adminSidebarNavLink.label)
-        : this.adminSidebarNavLink.text;
-    }
+  get text() {
+    return this.adminSidebarNavLink.label
+      ? I18n.t(this.adminSidebarNavLink.label)
+      : this.adminSidebarNavLink.text;
+  }
 
-    get prefixType() {
-      return "icon";
-    }
+  get prefixType() {
+    return "icon";
+  }
 
-    get prefixValue() {
-      return this.adminSidebarNavLink.icon;
-    }
+  get prefixValue() {
+    return this.adminSidebarNavLink.icon;
+  }
 
-    get title() {
-      return this.adminSidebarNavLink.text;
-    }
-  };
-
-  return SidebarAdminSectionLink;
+  get title() {
+    return this.adminSidebarNavLink.text;
+  }
 }
 
-function defineAdminSection(
-  adminNavSectionData,
-  BaseCustomSidebarSection,
-  adminSectionLinkClass
-) {
+function defineAdminSection(adminNavSectionData) {
   const AdminNavSection = class extends BaseCustomSidebarSection {
     constructor() {
       super(...arguments);
@@ -96,7 +89,7 @@ function defineAdminSection(
     get links() {
       return this.sectionLinks.map(
         (sectionLinkData) =>
-          new adminSectionLinkClass({ adminSidebarNavLink: sectionLinkData })
+          new SidebarAdminSectionLink({ adminSidebarNavLink: sectionLinkData })
       );
     }
 
@@ -163,27 +156,6 @@ export function useAdminNavConfig(navMap) {
   return navMap;
 }
 
-let adminSectionLinkClass = null;
-export function buildAdminSidebar(navConfig) {
-  navConfig.forEach((adminNavSectionData) => {
-    addSidebarSection(
-      (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-        // We only want to define the link class once even though we have many different sections.
-        adminSectionLinkClass =
-          adminSectionLinkClass ||
-          defineAdminSectionLink(BaseCustomSidebarSectionLink);
-
-        return defineAdminSection(
-          adminNavSectionData,
-          BaseCustomSidebarSection,
-          adminSectionLinkClass
-        );
-      },
-      ADMIN_PANEL
-    );
-  });
-}
-
 // This is used for a plugin API.
 export function addAdminSidebarSectionLink(sectionName, link) {
   if (!additionalAdminSidebarSectionLinks.hasOwnProperty(sectionName)) {
@@ -237,33 +209,18 @@ function pluginAdminRouteLinks() {
   );
 }
 
-export default {
-  name: "admin-sidebar-initializer",
+export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
+  key = ADMIN_PANEL;
+  hidden = true;
 
-  initialize(owner) {
-    this.currentUser = owner.lookup("service:current-user");
-    this.siteSettings = owner.lookup("service:site-settings");
-
-    if (
-      !this.currentUser?.staff ||
-      !this.siteSettings.userInAnyGroups(
-        "admin_sidebar_enabled_groups",
-        this.currentUser
-      )
-    ) {
-      return;
+  get sections() {
+    const siteSettings = getOwnerWithFallback().lookup("service:site-settings");
+    if (isEmpty(siteSettings.admin_sidebar_enabled_groups)) {
+      return [];
     }
 
-    this.adminSidebarExperimentStateManager = owner.lookup(
+    this.adminSidebarExperimentStateManager = getOwnerWithFallback(this).lookup(
       "service:admin-sidebar-experiment-state-manager"
-    );
-
-    addSidebarPanel(
-      (BaseCustomSidebarPanel) =>
-        class AdminSidebarPanel extends BaseCustomSidebarPanel {
-          key = ADMIN_PANEL;
-          hidden = true;
-        }
     );
 
     const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
@@ -271,7 +228,7 @@ export default {
 
     navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
 
-    if (this.siteSettings.experimental_form_templates) {
+    if (siteSettings.experimental_form_templates) {
       navMap.findBy("name", "customize").links.push({
         name: "admin_customize_form_templates",
         route: "adminCustomizeFormTemplates",
@@ -280,6 +237,10 @@ export default {
       });
     }
 
-    buildAdminSidebar(useAdminNavConfig(navMap), adminSectionLinkClass);
-  },
-};
+    const navConfig = useAdminNavConfig(navMap);
+
+    return navConfig.map((adminNavSectionData) => {
+      return defineAdminSection(adminNavSectionData);
+    });
+  }
+}

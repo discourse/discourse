@@ -100,7 +100,7 @@ export default {
   name: "inline-footnotes",
 
   initialize(container) {
-    if (!container.lookup("site-settings:main").display_footnotes_inline) {
+    if (!container.lookup("service:site-settings").display_footnotes_inline) {
       return;
     }
 
