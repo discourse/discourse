@@ -60,7 +60,7 @@ export default Controller.extend({
   },
 
   _mainOutletAnimate() {
-    document.querySelector("body").classList.remove("sidebar-animate");
+    document.body.classList.remove("sidebar-animate");
   },
 
   @discourseComputed(
@@ -110,7 +110,7 @@ export default Controller.extend({
   @action
   toggleSidebar() {
     // enables CSS transitions, but not on did-insert
-    document.querySelector("body").classList.add("sidebar-animate");
+    document.body.classList.add("sidebar-animate");
 
     discourseDebounce(this, this._mainOutletAnimate, 250);
 

@@ -35,10 +35,7 @@ export default {
         }
       });
 
-      const bodyElement = document.querySelector("body");
-      if (bodyElement) {
-        this._resizeObserver.observe(bodyElement);
-      }
+      this._resizeObserver.observe(document.body);
     }
   },
 };
