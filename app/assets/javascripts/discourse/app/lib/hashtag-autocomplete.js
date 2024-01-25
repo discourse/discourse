@@ -226,7 +226,7 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
         // Convert :emoji: in the result text to HTML safely.
         result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
 
-        const hashtagType = getHashtagTypeClasses()[result.type];
+        const hashtagType = getHashtagTypeClassesNew()[result.type];
         result.icon = hashtagType.generateIconHTML({
           icon: result.icon,
           id: result.id,
