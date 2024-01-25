@@ -5,9 +5,10 @@ module SecondFactor::Actions
     include Rails.application.routes.url_helpers
     attr_reader :current_user, :guardian, :request
 
-    def initialize(guardian, request, opts = nil)
+    def initialize(guardian, request, target_user:, opts: nil)
       @guardian = guardian
       @current_user = guardian.user
+      @target_user = target_user
       @request = request
       @opts = HashWithIndifferentAccess.new(opts)
     end
