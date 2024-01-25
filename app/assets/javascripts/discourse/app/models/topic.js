@@ -806,12 +806,18 @@ Topic.reopenClass({
     return promise;
   },
 
-  bulkOperation(topics, operation, tracked) {
+  bulkOperation(topics, operation, options, tracked) {
     const data = {
       topic_ids: topics.mapBy("id"),
       operation,
       tracked,
     };
+
+    if (options) {
+      if (options.select) {
+        data.silent = true;
+      }
+    }
 
     return ajax("/topics/bulk", {
       type: "PUT",
