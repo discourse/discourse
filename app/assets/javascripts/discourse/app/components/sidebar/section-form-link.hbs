@@ -41,7 +41,7 @@
       @type="text"
       @value={{@link.name}}
       class={{@link.nameCssClass}}
-      {{on "input" (action (mut @link.name) value="target.value")}}
+      {{on "input" (pick (fn (mut @link.name)))}}
     />
     {{#if @link.invalidNameMessage}}
       <div class="name warning">
@@ -55,7 +55,7 @@
       @type="text"
       @value={{@link.value}}
       class={{@link.valueCssClass}}
-      {{on "input" (action (mut @link.value) value="target.value")}}
+      {{on "input" (pick (fn (mut @link.value)))}}
     />
     {{#if @link.invalidValueMessage}}
       <div class="value warning">

@@ -18,10 +18,7 @@
             @type="text"
             @value={{this.transformedModel.title}}
             class={{this.transformedModel.titleCssClass}}
-            {{on
-              "input"
-              (action (mut this.transformedModel.title) value="target.value")
-            }}
+            {{on "input" (pick (fn (mut this.transformedModel.title)))}}
           />
 
           {{#if this.transformedModel.invalidTitleMessage}}

@@ -30,7 +30,7 @@
           placeholder={{@inputFilterPlaceholder}}
           @type="text"
           @value={{this.filter}}
-          {{on "input" (action @onFilterInput value="target.value")}}
+          {{on "input" (pick @onFilterInput)}}
           autofocus="true"
         />
       </div>
