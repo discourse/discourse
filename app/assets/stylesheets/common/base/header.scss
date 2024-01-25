@@ -338,6 +338,7 @@
     display: inline-flex;
     align-items: center;
     max-width: 100%;
+    gap: 0.5em;
     .discourse-tags {
       display: inline;
       color: var(--header_primary-high);
