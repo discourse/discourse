@@ -2,7 +2,7 @@
 
 RSpec.describe InvitesController do
   fab!(:admin)
-  fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
   describe "#show" do
     fab!(:invite)

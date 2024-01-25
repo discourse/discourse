@@ -16,7 +16,7 @@ RSpec.describe "spam rules for users" do
     end
 
     context "when spammer is a new user" do
-      fab!(:spammer) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+      fab!(:spammer) { Fabricate(:user, trust_level: TrustLevel[0]) }
 
       context "when spammer post is not flagged enough times" do
         let!(:spam_post) { create_post(user: spammer) }
@@ -98,7 +98,7 @@ RSpec.describe "spam rules for users" do
     end
 
     context "when spammer has trust level basic" do
-      let(:spammer) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
+      let(:spammer) { Fabricate(:user, trust_level: TrustLevel[1]) }
 
       context "when one spam post is flagged enough times by enough users" do
         let!(:spam_post) { Fabricate(:post, user: spammer) }

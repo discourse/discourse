@@ -276,7 +276,7 @@ RSpec.describe Post do
   end
 
   describe "maximum media embeds" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
     let(:post_two_images) do
@@ -424,7 +424,7 @@ RSpec.describe Post do
   end
 
   describe "maximum attachments" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_attachments) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_attachment) do
       post_with_body(
@@ -477,7 +477,7 @@ RSpec.describe Post do
   end
 
   describe "links" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
     let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
     let(:two_links) do
@@ -560,7 +560,7 @@ RSpec.describe Post do
   end
 
   describe "maximums" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_one_link) do
       post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser)
     end
@@ -689,7 +689,7 @@ RSpec.describe Post do
     end
 
     context "with max mentions" do
-      fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+      fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
       let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
       let(:post_with_two_mentions) do
         post_with_body("@Jake @Finn are the people I'm mentioning", newuser)
@@ -1763,7 +1763,7 @@ RSpec.describe Post do
     end
 
     describe "#update_uploads_secure_status" do
-      fab!(:user) { Fabricate(:user, trust_level: 0, refresh_auto_groups: true) }
+      fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
 
       let(:raw) { <<~RAW }
         <a href="#{attachment_upload.url}">Link</a>

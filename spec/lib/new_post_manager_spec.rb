@@ -467,7 +467,7 @@ RSpec.describe NewPostManager do
   end
 
   describe "user needs approval?" do
-    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
 
     it "handles post_needs_approval? correctly" do
       user.user_stat = UserStat.new(post_count: 0, new_since: DateTime.now)
