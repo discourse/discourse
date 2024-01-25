@@ -1286,6 +1286,10 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_post_stripper({ block: block }, self)
   end
 
+  def register_search_group_query_callback(callback)
+    DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
+  end
+
   protected
 
   def self.js_path
@@ -1365,10 +1369,6 @@ class Plugin::Instance
 
   def register_topic_preloader_associations(fields)
     DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
-  end
-
-  def register_search_group_query_callback(callback)
-    DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
   end
 
   private
