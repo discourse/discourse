@@ -15,6 +15,7 @@ import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";
+import { hash } from "discourse-common/lib/helpers";
 
 import Contents from "./glimmer-header/contents";
 import AuthButtons from "./glimmer-header/auth-buttons";
@@ -22,9 +23,15 @@ import Icons from "./glimmer-header/icons";
 import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
 import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
 import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
+import MountWidget from "./mount-widget";
 // import HeaderCloak from "./glimmer-header/cloak";
 
 const SEARCH_BUTTON_ID = "search-button";
+
+let additionalPanels = [];
+export function attachAdditionalPanel(name, toggle, transformAttrs) {
+  additionalPanels.push({ name, toggle, transformAttrs });
+}
 
 export default class GlimmerHeader extends Component {
   @service router;
@@ -137,9 +144,11 @@ export default class GlimmerHeader extends Component {
               @searchButtonId={{SEARCH_BUTTON_ID}}
             />
           {{/unless}}
-          {{!-- {{#each this.additionalPanels as |panel|}}
-            <Panel />
-          {{/each}} --}}
+
+          {{#each this.additionalPanels as |panel|}}
+            {{! we need toggle state and attrs }}
+            <MountWidget @widget={{panel.name}} />
+          {{/each}}
 
           {{#if this.search.visible}}
             <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
@@ -158,11 +167,6 @@ export default class GlimmerHeader extends Component {
       </div>
     </header>
   </template>
-}
-
-let additionalPanels = [];
-export function attachAdditionalPanel(name, toggle, transformAttrs) {
-  additionalPanels.push({ name, toggle, transformAttrs });
 }
 
 // let additionalPanels = [];

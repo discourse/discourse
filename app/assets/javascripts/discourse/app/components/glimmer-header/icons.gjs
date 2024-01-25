@@ -6,6 +6,7 @@ import or from "truth-helpers/helpers/or";
 import not from "truth-helpers/helpers/not";
 import { array } from "@ember/helper";
 import UserDropdown from "./user-dropdown";
+import MountWidget from "../mount-widget";
 
 let _extraHeaderIcons = [];
 
@@ -24,15 +25,9 @@ export default class Icons extends Component {
   <template>
     <ul class="icons d-header-icons">
       {{#each _extraHeaderIcons as |icon|}}
-        <Dropdown
-          @title={{icon.title}}
-          @icon={{icon.icon}}
-          @iconId={{icon.iconId}}
-          @onClick={{icon.onClick}}
-          @active={{icon.active}}
-          @href={{getURL icon.href}}
-          @className={{icon.className}}
-        />
+        <MountWidget @widget={{icon}} />
+        {{! I am not sure how we are going to render glimmer components here without
+        being able to import them. }}
       {{/each}}
 
       <Dropdown
