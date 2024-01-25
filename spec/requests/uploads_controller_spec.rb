@@ -137,8 +137,8 @@ RSpec.describe UploadsController do
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(422)
 
-        user.update!(trust_level: 3)
-        Group.refresh_automatic_groups!
+        user.change_trust_level!(TrustLevel[3])
+
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(200)
       end

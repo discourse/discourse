@@ -9,11 +9,9 @@ RSpec.describe UsersController do
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:moderator)
   fab!(:inactive_user)
-
-  before { Group.refresh_automatic_groups! }
 
   # Unfortunately, there are tests that depend on the user being created too
   # late for fab! to work.
@@ -604,10 +602,7 @@ RSpec.describe UsersController do
     it "allows you to toggle anon if enabled" do
       SiteSetting.allow_anonymous_posting = true
 
-      user = sign_in(Fabricate(:user))
-      user.trust_level = 1
-      user.save!
-      Group.refresh_automatic_groups!
+      user = sign_in(Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true))
 
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
@@ -1711,7 +1706,7 @@ RSpec.describe UsersController do
     context "while logged in" do
       let(:old_username) { "OrigUsername" }
       let(:new_username) { "#{old_username}1234" }
-      fab!(:user) { Fabricate(:user, username: "OrigUsername") }
+      fab!(:user) { Fabricate(:user, username: "OrigUsername", refresh_auto_groups: true) }
 
       before do
         user.username = old_username
@@ -2261,7 +2256,7 @@ RSpec.describe UsersController do
     context "with authenticated user" do
       context "with permission to update" do
         fab!(:upload)
-        fab!(:user)
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
         before { sign_in(user) }
 
@@ -3400,8 +3395,8 @@ RSpec.describe UsersController do
             }
         expect(response.status).to eq(422)
 
-        user1.update!(trust_level: 3)
-        Group.refresh_automatic_groups!
+        user1.change_trust_level!(TrustLevel[3])
+
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,

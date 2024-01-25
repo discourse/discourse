@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe "Automatic user removal from channels" do
-  fab!(:user_1) { Fabricate(:user, trust_level: TrustLevel[1]) }
+  fab!(:user_1) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
   let(:user_1_guardian) { Guardian.new(user_1) }
-  fab!(:user_2) { Fabricate(:user, trust_level: TrustLevel[1]) }
+  fab!(:user_2) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
 
   fab!(:secret_group) { Fabricate(:group) }
   fab!(:private_category) { Fabricate(:private_category, group: secret_group) }
@@ -15,7 +15,6 @@ describe "Automatic user removal from channels" do
   before do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
     SiteSetting.chat_enabled = true
-    Group.refresh_automatic_groups!
     Jobs.run_immediately!
 
     secret_group.add(user_1)

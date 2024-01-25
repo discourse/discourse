@@ -10,7 +10,7 @@ RSpec.describe TopicsController do
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:post_author1) { Fabricate(:user) }
+  fab!(:post_author1) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post_author2) { Fabricate(:user) }
   fab!(:post_author3) { Fabricate(:user) }
   fab!(:post_author4) { Fabricate(:user) }
@@ -32,7 +32,7 @@ RSpec.describe TopicsController do
     end
   end
 
-  fab!(:group_user)
+  fab!(:group_user) { Fabricate(:group_user, user: Fabricate(:user, refresh_auto_groups: true)) }
 
   fab!(:tag)
 
@@ -242,7 +242,6 @@ RSpec.describe TopicsController do
       before do
         sign_in(user)
         SiteSetting.enable_category_group_moderation = true
-        Group.refresh_automatic_groups!
       end
 
       it "moves the posts" do
@@ -3194,8 +3193,6 @@ RSpec.describe TopicsController do
     end
 
     describe "image only topic" do
-      before { Group.refresh_automatic_groups! }
-
       it "uses image alt tag for meta description" do
         post =
           Fabricate(

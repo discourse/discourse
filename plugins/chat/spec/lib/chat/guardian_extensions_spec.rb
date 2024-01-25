@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Chat::GuardianExtensions do
   fab!(:chatters) { Fabricate(:group) }
-  fab!(:user) { Fabricate(:user, group_ids: [chatters.id]) }
+  fab!(:user) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }
   fab!(:staff) { Fabricate(:user, admin: true) }
   fab!(:chat_group) { Fabricate(:group) }
   fab!(:channel) { Fabricate(:category_channel) }
@@ -25,10 +25,8 @@ RSpec.describe Chat::GuardianExtensions do
   end
 
   it "allows TL1 to chat by default and by extension higher trust levels" do
-    Group.refresh_automatic_groups!
     expect(guardian.can_chat?).to eq(true)
-    user.update!(trust_level: TrustLevel[3])
-    Group.refresh_automatic_groups!
+    user.change_trust_level!(TrustLevel[3])
     expect(guardian.can_chat?).to eq(true)
   end
 
@@ -588,8 +586,6 @@ RSpec.describe Chat::GuardianExtensions do
       end
 
       context "for direct message channels" do
-        before { Group.refresh_automatic_groups! }
-
         it "it still allows the user to message even if they are not in direct_message_enabled_groups because they are not creating the channel" do
           SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
           dm_channel.update!(status: :open)

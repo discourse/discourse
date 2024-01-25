@@ -1041,7 +1041,6 @@ RSpec.describe Group do
 
     it "should return the right groups" do
       Group.delete_all
-      Group.refresh_automatic_groups!
 
       group_name =
         Fabricate(:group, name: "tEsT_more_things", full_name: "Abc something awesome").name

@@ -39,9 +39,9 @@ RSpec.describe PostAlerter do
   fab!(:group)
 
   fab!(:admin)
-  fab!(:evil_trout)
+  fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   fab!(:coding_horror)
-  fab!(:walterwhite) { Fabricate(:walter_white) }
+  fab!(:walterwhite) { Fabricate(:walter_white, refresh_auto_groups: true) }
   fab!(:user)
   fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 

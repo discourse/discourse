@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::DirectMessagesController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }
@@ -21,8 +21,6 @@ RSpec.describe Chat::Api::DirectMessagesController do
   end
 
   describe "#create" do
-    before { Group.refresh_automatic_groups! }
-
     describe "dm with one other user" do
       let(:usernames) { user1.username }
       let(:direct_message_user_ids) { [current_user.id, user1.id] }

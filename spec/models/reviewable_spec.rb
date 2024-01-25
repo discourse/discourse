@@ -244,8 +244,6 @@ RSpec.describe Reviewable, type: :model do
       fab!(:admin)
 
       it "respects category id on the reviewable" do
-        Group.refresh_automatic_group!(:staff)
-
         reviewable =
           ReviewableFlaggedPost.needs_review!(
             target: post,

@@ -1760,7 +1760,7 @@ RSpec.describe User do
   end
 
   describe "#purge_unactivated" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:unactivated) { Fabricate(:user, active: false) }
     fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     fab!(:unactivated_old_with_system_pm) do
@@ -1769,11 +1769,11 @@ RSpec.describe User do
     fab!(:unactivated_old_with_human_pm) do
       Fabricate(:user, active: false, created_at: 2.months.ago)
     end
-    fab!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    fab!(:unactivated_old_with_post) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
 
     before do
-      Group.refresh_automatic_groups!
-
       PostCreator.new(
         Discourse.system_user,
         title: "Welcome to our Discourse",

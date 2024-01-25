@@ -3,8 +3,8 @@
 
 RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
-  fab!(:user)
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:whisperers_group) { Fabricate(:group) }
   fab!(:user2) { Fabricate(:user, groups: [whisperers_group]) }
   fab!(:moderator)
@@ -782,10 +782,7 @@ RSpec.describe Topic do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     context "with rate limits" do
-      before do
-        RateLimiter.enable
-        Group.refresh_automatic_groups!
-      end
+      before { RateLimiter.enable }
 
       use_redis_snapshotting
 
@@ -869,8 +866,6 @@ RSpec.describe Topic do
     describe "private message" do
       fab!(:user) { trust_level_2 }
       fab!(:topic) { Fabricate(:private_message_topic, user: trust_level_2) }
-
-      before { Group.refresh_automatic_groups! }
 
       describe "by username" do
         it "should be able to invite a user" do
@@ -977,8 +972,6 @@ RSpec.describe Topic do
       end
 
       describe "by email" do
-        before { Group.refresh_automatic_groups! }
-
         it "should be able to invite a user" do
           expect(topic.invite(user, user1.email)).to eq(true)
           expect(topic.allowed_users).to include(user1)
@@ -1121,9 +1114,8 @@ RSpec.describe Topic do
   end
 
   describe "private message" do
-    fab!(:pm_user) { Fabricate(:user) }
+    fab!(:pm_user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:topic) do
-      Group.refresh_automatic_groups!
       PostCreator
         .new(
           pm_user,
@@ -2730,7 +2722,6 @@ RSpec.describe Topic do
     use_redis_snapshotting
 
     it "limits according to max_personal_messages_per_day" do
-      Group.refresh_automatic_groups!
       create_post(
         user: user,
         archetype: "private_message",

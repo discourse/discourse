@@ -9,7 +9,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    Group.refresh_automatic_groups!
+
     sign_in(current_user)
   end
 

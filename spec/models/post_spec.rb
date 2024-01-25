@@ -359,8 +359,6 @@ RSpec.describe Post do
     end
 
     describe "embedded_media_allowed_groups" do
-      before { Group.refresh_automatic_groups! }
-
       it "doesn't allow users outside of `embedded_media_post_allowed_groups`" do
         SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
         post_one_image.user.change_trust_level!(3)
