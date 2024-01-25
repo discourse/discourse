@@ -1,4 +1,4 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
@@ -214,9 +214,13 @@ const Topic = RestModel.extend({
     return { type: "topic", id };
   },
 
-  @discourseComputed("category_id")
-  category() {
+  @computed("category_id")
+  get category() {
     return Category.findById(this.category_id);
+  },
+
+  set category(newCategory) {
+    this.set("category_id", newCategory?.id);
   },
 
   @discourseComputed("url")
