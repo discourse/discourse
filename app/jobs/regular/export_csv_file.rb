@@ -103,7 +103,9 @@ module Jobs
           if upload.persisted?
             user_export.update_columns(upload_id: upload.id)
           else
-            Rails.logger.warn("Failed to upload the file #{zip_filename}")
+            Rails.logger.warn(
+              "Failed to upload the file #{zip_filename}: #{upload.errors.full_messages}",
+            )
           end
         end
 
