@@ -49,7 +49,7 @@ export default class BulkSelectHelper {
         this.router.currentRoute.queryParams["filter"]) === "tracked";
 
     const promise = this.selected.length
-      ? Topic.bulkOperation(this.selected, operation, {}, isTracked)
+      ? Topic.bulkOperation(this.selected, operation, isTracked)
       : Topic.bulkOperationByFilter("unread", operation, options, isTracked);
 
     promise.then((result) => {

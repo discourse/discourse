@@ -2349,8 +2349,6 @@ en:
         filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
-        bulk_select_topics_dropdown:
-          title: "Bulk Actions"
 
     date_time_picker:
       from: From
@@ -2888,7 +2886,6 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
-        confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
@@ -2947,7 +2944,6 @@ en:
         progress:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
-        silent: "Perform this action silently."
 
       none:
         unread: "You have no unread topics."
@@ -2978,13 +2974,6 @@ en:
         hot: "There are no more hot topics."
         bookmarks: "There are no more bookmarked topics."
         filter: "There are no more topics."
-
-    topic_bulk_actions:
-      close_topics:
-        name: "Close Topics"
-      update_category:
-        name: "Update Category"
-        description: "Choose the new category for the selected topics"
 
     topic:
       filter_to:
