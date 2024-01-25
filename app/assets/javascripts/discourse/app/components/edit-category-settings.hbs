@@ -5,8 +5,9 @@
         {{i18n "category.position"}}
       </label>
       <NumberField
-        @value={{this.category.position}}
+        @number={{this.category.position}}
         @id="category-position"
+        @type="number"
         @min="0"
         class="position-input"
       />
@@ -35,8 +36,9 @@
       {{/if}}
     </label>
     <NumberField
-      @value={{this.category.num_featured_topics}}
+      @number={{this.category.num_featured_topics}}
       @id="category-number-featured-topics"
+      @type="number"
       @min="1"
     />
   </section>
@@ -185,8 +187,9 @@
       {{i18n "category.num_auto_bump_daily"}}
     </label>
     <NumberField
-      @value={{this.category.category_setting.num_auto_bump_daily}}
+      @number={{this.category.category_setting.num_auto_bump_daily}}
       @id="category-number-daily-bump"
+      @type="number"
       @min="0"
     />
   </section>
@@ -196,8 +199,9 @@
       {{i18n "category.auto_bump_cooldown_days"}}
     </label>
     <NumberField
-      @value={{this.category.category_setting.auto_bump_cooldown_days}}
+      @number={{this.category.category_setting.auto_bump_cooldown_days}}
       @id="category-auto-bump-cooldown-days"
+      @type="number"
       @min="0"
     />
   </section>
