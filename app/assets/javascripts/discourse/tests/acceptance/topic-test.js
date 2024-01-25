@@ -285,7 +285,7 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/-/299/1");
 
     const link = query(".title-wrapper .topic-featured-link");
-    assert.strictEqual(link.innerText, " example.com");
+    assert.strictEqual(link.innerText, "example.com");
     assert.strictEqual(link.getAttribute("rel"), "ugc");
   });
 
