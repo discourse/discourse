@@ -47,6 +47,7 @@ module Jobs
         user = membership.user
         return unless user.guardian.can_join_chat_channel?(@chat_channel)
         return if ::Chat::Notifier.user_has_seen_message?(membership, @chat_message.id)
+        Rails.logger.warn "online_user_ids: #{online_user_ids}"
         return if online_user_ids.include?(user.id)
 
         translation_key =
