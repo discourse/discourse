@@ -15,6 +15,20 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     context "when category channels" do
       fab!(:category_channel_1) { Fabricate(:category_channel) }
 
+      it "doesn’t show the last message" do
+        message =
+          Fabricate(
+            :chat_message,
+            chat_channel: category_channel_1,
+            user: current_user,
+            use_service: true,
+          )
+
+        visit("/chat/direct-messages")
+
+        expect(page).to have_no_selector(".chat-channel__last-message", text: message.message)
+      end
+
       context "when member of the channel" do
         before { category_channel_1.add(current_user) }
 
@@ -61,6 +75,20 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
       fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
 
+      it "show the last message" do
+        message =
+          Fabricate(
+            :chat_message,
+            chat_channel: dm_channel_1,
+            user: current_user,
+            use_service: true,
+          )
+
+        visit("/chat/direct-messages")
+
+        expect(page).to have_selector(".chat-channel__last-message", text: message.message)
+      end
+
       context "when member of the channel" do
         it "shows the channel in the correct section" do
           visit("/chat/direct-messages")
@@ -80,6 +108,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
   context "when no category channels" do
     it "hides the section" do
       visit("/chat/channels")
+
       expect(page).to have_no_css(".channels-list-container")
     end
 

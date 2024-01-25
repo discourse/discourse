@@ -101,7 +101,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       expect(page.find(".c-channel-settings__name")["innerHTML"].strip).to eq(
         "&lt;script&gt;alert('hello')&lt;/script&gt;",
       )
-      expect(page.find(".chat-channel-title__name")["innerHTML"].strip).to eq(
+      expect(page.find(".chat-channel-name__label")["innerHTML"].strip).to eq(
         "&lt;script&gt;alert('hello')&lt;/script&gt;",
       )
     end
