@@ -3,15 +3,15 @@ import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import {
-  decorateHashtags,
-  fetchUnseenHashtagsInContext,
-  generatePlaceholderHashtagHTML,
-  linkSeenHashtagsInContext,
+  decorateHashtags as decorateHashtagsNew,
+  fetchUnseenHashtagsInContext as fetchUnseenHashtagsInContextNew,
+  generatePlaceholderHashtagHTML as generatePlaceholderHashtagHTMLNew,
+  linkSeenHashtagsInContext as linkSeenHashtagsInContextNew,
 } from "discourse/lib/hashtag-decorator";
 import {
-  cleanUpHashtagTypeClasses,
-  getHashtagTypeClasses,
-  registerHashtagType,
+  cleanUpHashtagTypeClasses as cleanUpHashtagTypeClassesNew,
+  getHashtagTypeClasses as getHashtagTypeClassesNew,
+  registerHashtagType as registerHashtagTypeNew,
 } from "discourse/lib/hashtag-type-registry";
 import { emojiUnescape } from "discourse/lib/text";
 import {
@@ -21,20 +21,89 @@ import {
 } from "discourse/lib/utilities";
 import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
+import deprecated from "discourse-common/lib/deprecated";
 import discourseLater from "discourse-common/lib/later";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 
 // TODO (martin) Remove this once plugins have changed to use hashtag-decorator and
 // hashtag-type-registry imports
-export {
-  fetchUnseenHashtagsInContext,
-  linkSeenHashtagsInContext,
-  generatePlaceholderHashtagHTML,
-  decorateHashtags,
-  getHashtagTypeClasses,
-  registerHashtagType,
-  cleanUpHashtagTypeClasses,
-};
+export function fetchUnseenHashtagsInContext() {
+  deprecated(
+    `fetchUnseenHashtagsInContext is has been moved to the module 'discourse/lib/hashtag-decorator'`,
+    {
+      id: "discourse.hashtag.fetchUnseenHashtagsInContext",
+      since: "3.2.0.beta5-dev",
+      dropFrom: "3.2.1",
+    }
+  );
+  return fetchUnseenHashtagsInContextNew(...arguments);
+}
+export function linkSeenHashtagsInContext() {
+  deprecated(
+    `linkSeenHashtagsInContext is has been moved to the module 'discourse/lib/hashtag-decorator'`,
+    {
+      id: "discourse.hashtag.linkSeenHashtagsInContext",
+      since: "3.2.0.beta5-dev",
+      dropFrom: "3.2.1",
+    }
+  );
+  return linkSeenHashtagsInContextNew(...arguments);
+}
+export function generatePlaceholderHashtagHTML() {
+  deprecated(
+    `generatePlaceholderHashtagHTML is has been moved to the module 'discourse/lib/hashtag-decorator'`,
+    {
+      id: "discourse.hashtag.generatePlaceholderHashtagHTML",
+      since: "3.2.0.beta5-dev",
+      dropFrom: "3.2.1",
+    }
+  );
+  return generatePlaceholderHashtagHTMLNew(...arguments);
+}
+export function decorateHashtags() {
+  deprecated(
+    `decorateHashtags is has been moved to the module 'discourse/lib/hashtag-decorator'`,
+    {
+      id: "discourse.hashtag.decorateHashtags",
+      since: "3.2.0.beta5-dev",
+      dropFrom: "3.2.1",
+    }
+  );
+  return decorateHashtagsNew(...arguments);
+}
+export function getHashtagTypeClasses() {
+  deprecated(
+    `getHashtagTypeClasses is has been moved to the module 'discourse/lib/hashtag-type-registry'`,
+    {
+      id: "discourse.hashtag.getHashtagTypeClasses",
+      since: "3.2.0.beta5-dev",
+      dropFrom: "3.2.1",
+    }
+  );
+  return getHashtagTypeClassesNew(...arguments);
+}
+export function registerHashtagType() {
+  deprecated(
+    `registerHashtagType is has been moved to the module 'discourse/lib/hashtag-type-registry'`,
+    {
+      id: "discourse.hashtag.registerHashtagType",
+      since: "3.2.0.beta5-dev",
+      dropFrom: "3.2.1",
+    }
+  );
+  return registerHashtagTypeNew(...arguments);
+}
+export function cleanUpHashtagTypeClasses() {
+  deprecated(
+    `cleanUpHashtagTypeClasses is has been moved to the module 'discourse/lib/hashtag-type-registry'`,
+    {
+      id: "discourse.hashtag.cleanUpHashtagTypeClasses",
+      since: "3.2.0.beta5-dev",
+      dropFrom: "3.2.1",
+    }
+  );
+  return cleanUpHashtagTypeClassesNew(...arguments);
+}
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
