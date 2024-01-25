@@ -1,11 +1,11 @@
 import { click, fillIn, tab, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Modal - Login", function () {
-  test("You can tab to the login button", async function (assert) {
+  chromeTest("You can tab to the login button", async function (assert) {
     await visit("/");
     await click("header .login-button");
     // you have to press the tab key twice to get to the login button
