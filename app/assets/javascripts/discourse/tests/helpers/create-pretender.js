@@ -1298,6 +1298,10 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/c/:id/visible_groups.json", () => response({ groups: [] }));
+
+  pretender.get("/session/passkey/challenge.json", () =>
+    response({ challenge: "123" })
+  );
 }
 
 export function resetPretender() {
