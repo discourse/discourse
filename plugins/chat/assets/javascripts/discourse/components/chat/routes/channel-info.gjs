@@ -78,7 +78,6 @@ export default class ChatRoutesChannelInfo extends Component {
                   @model={{@channel}}
                   @replace={{true}}
                 >
-                  {{log @channel.chatableType @channel.membershipsCount}}
                   {{this.membersLabel}}
                   {{#if (eq @channel.chatableType "Category")}}
                     <span
