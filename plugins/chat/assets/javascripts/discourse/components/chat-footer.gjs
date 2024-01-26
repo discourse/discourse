@@ -4,7 +4,11 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 import eq from "truth-helpers/helpers/eq";
-import ChatFooterUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/footer/unread-indicator";
+import {
+  UnreadChannelsIndicator,
+  UnreadDirectMessagesIndicator,
+  UnreadThreadsIndicator,
+} from "discourse/plugins/chat/discourse/components/chat/footer/unread-indicator";
 
 export default class ChatFooter extends Component {
   @service router;
@@ -36,7 +40,7 @@ export default class ChatFooter extends Component {
             (if (eq this.router.currentRouteName "chat.channels") "--active")
           }}
         >
-          <ChatFooterUnreadIndicator @messageType="channels" />
+          <UnreadChannelsIndicator />
         </DButton>
 
         {{#if this.directMessagesEnabled}}
@@ -55,7 +59,7 @@ export default class ChatFooter extends Component {
               )
             }}
           >
-            <ChatFooterUnreadIndicator @messageType="dms" />
+            <UnreadDirectMessagesIndicator />
           </DButton>
         {{/if}}
 
@@ -72,7 +76,7 @@ export default class ChatFooter extends Component {
               (if (eq this.router.currentRouteName "chat.threads") "--active")
             }}
           >
-            <ChatFooterUnreadIndicator @messageType="threads" />
+            <UnreadThreadsIndicator />
           </DButton>
         {{/if}}
       </nav>

@@ -1,17 +1,32 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 
+const CHANNELS_TAB = "channels";
+const DMS_TAB = "dms";
+const THREADS_TAB = "threads";
 const MAX_UNREAD_COUNT = 99;
 
-export default class ChatFooterUnreadIndicator extends Component {
+export const UnreadChannelsIndicator = <template>
+  <FooterUnreadIndicator @badgeType={{CHANNELS_TAB}} />
+</template>;
+
+export const UnreadDirectMessagesIndicator = <template>
+  <FooterUnreadIndicator @badgeType={{DMS_TAB}} />
+</template>;
+
+export const UnreadThreadsIndicator = <template>
+  <FooterUnreadIndicator @badgeType={{THREADS_TAB}} />
+</template>;
+
+export default class FooterUnreadIndicator extends Component {
   @service chatTrackingStateManager;
 
-  badgeType = this.args.messageType;
+  badgeType = this.args.badgeType;
 
   get urgentCount() {
-    if (this.badgeType === "channels") {
+    if (this.badgeType === CHANNELS_TAB) {
       return this.chatTrackingStateManager.publicChannelMentionCount;
-    } else if (this.badgeType === "dms") {
+    } else if (this.badgeType === DMS_TAB) {
       return this.chatTrackingStateManager.directMessageUnreadCount;
     } else {
       return 0;
@@ -19,9 +34,9 @@ export default class ChatFooterUnreadIndicator extends Component {
   }
 
   get unreadCount() {
-    if (this.badgeType === "channels") {
+    if (this.badgeType === CHANNELS_TAB) {
       return this.chatTrackingStateManager.publicChannelUnreadCount;
-    } else if (this.badgeType === "threads") {
+    } else if (this.badgeType === THREADS_TAB) {
       return this.chatTrackingStateManager.hasUnreadThreads ? 1 : 0;
     } else {
       return 0;
