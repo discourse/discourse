@@ -9,7 +9,6 @@ import ChatFooterUnreadIndicator from "discourse/plugins/chat/discourse/componen
 export default class ChatFooter extends Component {
   @service router;
   @service chat;
-  @service chatTrackingStateManager;
   @service siteSettings;
 
   threadsEnabled = this.siteSettings.chat_threads_enabled;
