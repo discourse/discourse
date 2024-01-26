@@ -1,10 +1,23 @@
 import TextField from "discourse/components/text-field";
 import { allowOnlyNumericInput } from "discourse/lib/utilities";
+import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default TextField.extend({
   classNameBindings: ["invalid"],
+
+  init() {
+    this._super(...arguments);
+    deprecated(
+      `NumberField component is deprecated. Use native <input> elements instead.\ne.g. <input {{on "input" (action (mut this.value) value="target.value")}} type="number" value={{this.value}} />`,
+      {
+        id: "discourse.number-field",
+        since: "3.2.0.beta5",
+        dropFrom: "3.3.0",
+      }
+    );
+  },
 
   keyDown: function (event) {
     allowOnlyNumericInput(event, this._minNumber && this._minNumber < 0);

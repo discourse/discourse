@@ -4,11 +4,15 @@
       <label for="category-position">
         {{i18n "category.position"}}
       </label>
-      <NumberField
-        @number={{this.category.position}}
-        @id="category-position"
-        @type="number"
-        @min="0"
+      <input
+        {{on
+          "input"
+          (action (mut this.category.position) value="target.value")
+        }}
+        value={{this.category.position}}
+        type="number"
+        min="0"
+        id="category-position"
         class="position-input"
       />
     </section>
@@ -35,11 +39,15 @@
         {{i18n "category.num_featured_topics"}}
       {{/if}}
     </label>
-    <NumberField
-      @number={{this.category.num_featured_topics}}
-      @id="category-number-featured-topics"
-      @type="number"
-      @min="1"
+    <input
+      {{on
+        "input"
+        (action (mut this.category.num_featured_topics) value="target.value")
+      }}
+      value={{this.category.num_featured_topics}}
+      type="number"
+      min="1"
+      id="category-number-featured-topics"
     />
   </section>
 
@@ -186,11 +194,18 @@
     <label for="category-number-daily-bump">
       {{i18n "category.num_auto_bump_daily"}}
     </label>
-    <NumberField
-      @number={{this.category.category_setting.num_auto_bump_daily}}
-      @id="category-number-daily-bump"
-      @type="number"
-      @min="0"
+    <input
+      {{on
+        "input"
+        (action
+          (mut this.category.category_setting.num_auto_bump_daily)
+          value="target.value"
+        )
+      }}
+      value={{this.category.category_setting.num_auto_bump_daily}}
+      type="number"
+      min="0"
+      id="category-number-daily-bump"
     />
   </section>
 
@@ -198,11 +213,18 @@
     <label for="category-auto-bump-cooldown-days">
       {{i18n "category.auto_bump_cooldown_days"}}
     </label>
-    <NumberField
-      @number={{this.category.category_setting.auto_bump_cooldown_days}}
-      @id="category-auto-bump-cooldown-days"
-      @type="number"
-      @min="0"
+    <input
+      {{on
+        "input"
+        (action
+          (mut this.category.category_setting.auto_bump_cooldown_days)
+          value="target.value"
+        )
+      }}
+      value={{this.category.category_setting.auto_bump_cooldown_days}}
+      type="number"
+      min="0"
+      id="category-auto-bump-cooldown-days"
     />
   </section>
 </section>
