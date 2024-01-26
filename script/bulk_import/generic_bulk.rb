@@ -493,9 +493,12 @@ class BulkImport::Generic < BulkImport::Base
 
     users = query(<<~SQL)
       SELECT id, timezone, email_level, email_messages_level, email_digests
-      FROM users
-      WHERE timezone IS NOT NULL
-      ORDER BY id
+        FROM users
+       WHERE timezone IS NOT NULL
+          OR email_level IS NOT NULL
+          OR email_messages_level IS NOT NULL
+          OR email_digests IS NOT NULL
+       ORDER BY id
     SQL
 
     existing_user_ids = UserOption.pluck(:user_id).to_set
