@@ -30,6 +30,7 @@
       flex-shrink: 0;
       padding-block: 0.75rem;
       height: 100%;
+      position: relative;
 
       &.--active {
         .d-icon,
@@ -51,6 +52,14 @@
       .d-button-label {
         font-size: var(--font-down-1-rem);
         color: var(--primary-medium);
+      }
+
+      .chat-channel-unread-indicator,
+      .chat-channel-unread-indicator.-urgent {
+        top: 0.25rem;
+        right: unset;
+        left: 50%;
+        margin-left: 0.75rem;
       }
     }
   }
