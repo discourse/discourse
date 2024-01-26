@@ -52,6 +52,26 @@ RSpec.describe Jobs::ExportCsvFile do
         admin.uploads.each(&:destroy!)
       end
     end
+
+    it "generates csv export failed message if upload is too large" do
+      action_log
+      SiteSetting.max_export_file_size_kb = 0
+
+      begin
+        Jobs::ExportCsvFile.new.execute(user_id: admin.id, entity: "staff_action")
+
+        system_message = admin.topics_allowed.last
+
+        expect(system_message.title).to eq(
+          I18n.t(
+            "system_messages.csv_export_failed.subject_template",
+            export_title: "Data export failed",
+          ),
+        )
+      ensure
+        admin.uploads.each(&:destroy!)
+      end
+    end
   end
 
   describe ".report_export" do
