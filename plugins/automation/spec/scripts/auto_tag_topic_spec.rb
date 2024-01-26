@@ -7,7 +7,7 @@ describe "AutoTagTopic" do
   fab!(:tag1) { Fabricate(:tag, name: "tag1") }
   fab!(:tag2) { Fabricate(:tag, name: "tag2") }
   fab!(:tag3) { Fabricate(:tag, name: "tag3") }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   fab!(:automation) do
     Fabricate(:automation, script: DiscourseAutomation::Scriptable::AUTO_TAG_TOPIC)
