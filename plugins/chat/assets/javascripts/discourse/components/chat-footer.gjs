@@ -22,7 +22,7 @@ export default class ChatFooter extends Component {
 
   <template>
     {{#if this.shouldRenderFooter}}
-      <nav class="c-footer" {{this.updateThreadCount}}>
+      <nav class="c-footer">
         <DButton
           @route="chat.channels"
           @icon="comments"
