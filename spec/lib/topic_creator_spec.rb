@@ -106,7 +106,7 @@ RSpec.describe TopicCreator do
       before do
         SiteSetting.tagging_enabled = true
         SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-        SiteSetting.min_trust_level_to_tag_topics = 0
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       end
 
       context "with regular tags" do
@@ -214,7 +214,7 @@ RSpec.describe TopicCreator do
         end
 
         it "lets new user create a topic if they don't have sufficient trust level to tag topics" do
-          SiteSetting.min_trust_level_to_tag_topics = 1
+          SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
           new_user = Fabricate(:newuser, refresh_auto_groups: true)
           topic =
             TopicCreator.create(

@@ -414,7 +414,7 @@ RSpec.describe TopicsBulkAction do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       topic.tags = [tag1, tag2]
     end
 
@@ -482,7 +482,7 @@ RSpec.describe TopicsBulkAction do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       topic.tags = [tag1, tag2]
     end
 
@@ -552,7 +552,7 @@ RSpec.describe TopicsBulkAction do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       topic.tags = [tag1, tag2]
     end
 
