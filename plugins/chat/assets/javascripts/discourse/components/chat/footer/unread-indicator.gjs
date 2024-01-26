@@ -9,9 +9,9 @@ export default class ChatFooterUnreadIndicator extends Component {
   badgeType = this.args.messageType;
 
   get urgentCount() {
-    if (this.badgeType == "channels") {
+    if (this.badgeType === "channels") {
       return this.chatTrackingStateManager.publicChannelMentionCount;
-    } else if (this.badgeType == "dms") {
+    } else if (this.badgeType === "dms") {
       return this.chatTrackingStateManager.directMessageUnreadCount;
     } else {
       return 0;
@@ -19,9 +19,9 @@ export default class ChatFooterUnreadIndicator extends Component {
   }
 
   get unreadCount() {
-    if (this.badgeType == "channels") {
+    if (this.badgeType === "channels") {
       return this.chatTrackingStateManager.publicChannelUnreadCount;
-    } else if (this.badgeType == "threads") {
+    } else if (this.badgeType === "threads") {
       return this.chatTrackingStateManager.hasUnreadThreads ? 1 : 0;
     } else {
       return 0;
