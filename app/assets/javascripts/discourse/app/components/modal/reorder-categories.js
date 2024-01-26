@@ -134,12 +134,13 @@ export default class ReorderCategories extends Component {
   }
 
   @action
-  change(category, event) {
-    let newPosition = parseFloat(event.target.value);
+  change(category, newPosition) {
+    newPosition = parseInt(newPosition, 10);
     newPosition =
       newPosition < category.get("position")
         ? Math.ceil(newPosition)
         : Math.floor(newPosition);
+
     const direction = newPosition - category.get("position");
     this.move(category, direction);
   }

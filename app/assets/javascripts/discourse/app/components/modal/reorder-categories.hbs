@@ -20,10 +20,14 @@
 
             <td>
               <div class="reorder-categories-actions">
-                <NumberField
-                  @value={{readonly category.position}}
-                  @change={{fn this.change category}}
-                  @min="0"
+                <input
+                  {{on
+                    "input"
+                    (action (fn this.change category) value="target.value")
+                  }}
+                  value={{category.position}}
+                  type="number"
+                  min="0"
                 />
                 <DButton
                   @action={{fn this.move category -1}}
