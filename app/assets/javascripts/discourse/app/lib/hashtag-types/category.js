@@ -12,29 +12,20 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     return this.site.categories || [];
   }
 
-  generateColorCssClasses(category) {
-    const generatedCssClasses = [];
-    const backgroundGradient = [`var(--category-${category.id}-color) 50%`];
-    if (category.parentCategory) {
-      backgroundGradient.push(
-        `var(--category-${category.parentCategory.id}-color) 50%`
-      );
-    } else {
-      backgroundGradient.push(`var(--category-${category.id}-color) 50%`);
-    }
-
-    generatedCssClasses.push(`.hashtag-color--category-${category.id} {
-  background: linear-gradient(-90deg, ${backgroundGradient.join(", ")});
-}`);
-
-    return generatedCssClasses;
+  generateColorCssClasses() {
+    // We rely on default CSS styling
+    return [];
   }
 
   generateIconHTML(hashtag) {
-    const hashtagId = parseInt(hashtag.id, 10);
-    const colorCssClass = !this.preloadedData.mapBy("id").includes(hashtagId)
-      ? "hashtag-missing"
-      : `hashtag-color--${this.type}-${hashtag.id}`;
-    return `<span class="hashtag-category-badge ${colorCssClass}"></span>`;
+    if (hashtag.colors?.length) {
+      let style =
+        hashtag.colors.length === 1
+          ? `--category-badge-color: #${hashtag.colors[0]}`
+          : `--parent-category-badge-color: #${hashtag.colors[0]}; --category-badge-color: #${hashtag.colors[1]}`;
+      return `<span class="hashtag-category-badge badge-category" style="${style}"></span>`;
+    } else {
+      return `<span class="hashtag-category-badge badge-category" data-category-id="${hashtag.id}"></span>`;
+    }
   }
 }

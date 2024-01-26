@@ -467,7 +467,11 @@ Category.reopenClass({
     return ids.every((id) => loadedCategoryIds.has(id));
   },
 
-  async asyncFindByIds(ids = []) {
+  async asyncFindByIds(ids) {
+    if (Category.hasAsyncFoundAll(ids)) {
+      return [];
+    }
+
     const result = await ajax("/categories/find", { data: { ids } });
 
     const categories = result["categories"].map((category) =>

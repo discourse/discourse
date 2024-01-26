@@ -85,6 +85,9 @@ class HashtagAutocompleteService
     # The icon to display in the UI autocomplete menu for the item.
     attr_accessor :icon
 
+    # The colors to use when displaying the symbol/icon for the hashtag, e.g. category badge
+    attr_accessor :colors
+
     # Distinguishes between different entities e.g. tag, category.
     attr_accessor :type
 
@@ -106,6 +109,7 @@ class HashtagAutocompleteService
       @text = params[:text]
       @description = params[:description]
       @icon = params[:icon]
+      @colors = params[:colors]
       @type = params[:type]
       @ref = params[:ref]
       @slug = params[:slug]
@@ -118,6 +122,7 @@ class HashtagAutocompleteService
         text: self.text,
         description: self.description,
         icon: self.icon,
+        colors: self.colors,
         type: self.type,
         ref: self.ref,
         slug: self.slug,

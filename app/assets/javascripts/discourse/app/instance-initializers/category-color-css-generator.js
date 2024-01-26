@@ -1,3 +1,35 @@
+export function generateCategoriesCss(categories) {
+  if (!categories?.length) {
+    return "";
+  }
+
+  // Define color variables
+  const css = [
+    ":root {",
+    ...categories.map(
+      (category) => `--category-${category.id}-color: #${category.color};`
+    ),
+    "}",
+  ];
+
+  // Define classes for badges
+  categories.forEach((category) => {
+    css.push(`.badge-category[data-category-id="${category.id}"] {`);
+    css.push(`--category-badge-color: var(--category-${category.id}-color);`);
+    css.push(`--category-badge-text-color: #${category.text_color};`);
+    if (category.parentCategory) {
+      css.push(
+        `--parent-category-badge-color: var(--category-${category.parentCategory.id}-color);`
+      );
+    }
+    css.push(`}`);
+  });
+
+  css.push("");
+
+  return css.join("\n");
+}
+
 export default {
   after: "register-hashtag-types",
 
@@ -11,23 +43,11 @@ export default {
   initialize(owner) {
     this.site = owner.lookup("service:site");
 
-    // If the site is login_required and the user is anon there will be no categories preloaded.
-    if (!this.site.categories?.length) {
-      return;
-    }
-
-    const generatedCssVariables = [
-      ":root {",
-      ...this.site.categories.map(
-        (category) => `--category-${category.id}-color: #${category.color};`
-      ),
-      "}",
-    ];
-
     const cssTag = document.createElement("style");
     cssTag.type = "text/css";
-    cssTag.id = "category-color-css-generator";
-    cssTag.innerHTML = generatedCssVariables.join("\n");
+    cssTag.id = "category-colors";
+    cssTag.innerHTML = generateCategoriesCss(this.site.categories);
+
     document.head.appendChild(cssTag);
   },
 };

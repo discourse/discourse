@@ -306,6 +306,8 @@ class CategoriesController < ApplicationController
 
     if params[:ids].present?
       categories = Category.secured(guardian).where(id: params[:ids])
+      categories =
+        Category.secured(guardian).where(id: categories.select(:parent_category_id)) + categories
     elsif params[:slug_path_with_id].present?
       category = Category.find_by_slug_path_with_id(params[:slug_path_with_id])
       raise Discourse::NotFound if category.blank?

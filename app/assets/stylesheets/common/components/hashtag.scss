@@ -55,17 +55,22 @@ a.hashtag {
     display: inline;
   }
 
-  .hashtag-category-badge {
+  .badge-category {
     flex: 0 0 auto;
     width: 0.72em;
     height: 0.72em;
     margin-right: 0.25em;
     margin-left: 0.1em;
     display: inline-block;
-
-    &.hashtag-missing {
-      background-color: var(--primary-medium);
-    }
+    background: linear-gradient(
+      -90deg,
+      var(--category-badge-color, var(--primary-medium)) 50%,
+      var(
+          --parent-category-badge-color,
+          var(--category-badge-color, var(--primary-medium))
+        )
+        50%
+    );
   }
 }
 
@@ -121,6 +126,15 @@ a.hashtag {
       height: 15px;
       margin-right: 5px;
       display: inline-block;
+      background: linear-gradient(
+        -90deg,
+        var(--category-badge-color, var(--primary-medium)) 50%,
+        var(
+            --parent-category-badge-color,
+            var(--category-badge-color, var(--primary-medium))
+          )
+          50%
+      );
     }
   }
 

@@ -158,6 +158,7 @@ export default ComboBoxComponent.extend({
 
     const opts = {
       parentCategoryId: this.options.parentCategory?.id,
+      includeUncategorized: this.siteSettings.allow_uncategorized_topics,
     };
 
     if (filter) {
