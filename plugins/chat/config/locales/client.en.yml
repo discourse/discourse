@@ -40,6 +40,7 @@ en:
       back_to_forum: "Forum"
       deleted_chat_username: deleted
       dates:
+        yesterday: "Yesterday"
         time_tiny: "h:mm"
       all_loaded: "Showing all messages"
       already_enabled: "Chat is already enabled on this topic. Please refresh."
