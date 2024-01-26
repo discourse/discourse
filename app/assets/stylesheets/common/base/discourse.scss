@@ -281,11 +281,6 @@ textarea {
   color: var(--d-input-text-color);
   caret-color: currentColor;
 
-  &[class*="span"] {
-    float: none;
-    margin-left: 0;
-  }
-
   &[disabled],
   &[readonly] {
     cursor: not-allowed;
