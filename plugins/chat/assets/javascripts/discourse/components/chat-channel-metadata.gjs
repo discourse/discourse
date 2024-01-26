@@ -9,7 +9,7 @@ export default class ChatChannelMetadata extends Component {
 
   get lastMessageFormattedDate() {
     return moment(this.args.channel.lastMessage.createdAt).calendar(null, {
-      sameDay: "[LT]",
+      sameDay: "LT",
       lastDay: `[${I18n.t("chat.dates.yesterday")}]`,
       lastWeek: "dddd",
       sameElse: "l",
