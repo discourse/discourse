@@ -2,6 +2,7 @@ import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { setting } from "discourse/lib/computed";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   getEditCategoryUrl,
@@ -39,6 +40,7 @@ export default ComboBoxComponent.extend({
     displayCategoryDescription: "displayCategoryDescription",
     headerComponent: "category-drop/category-drop-header",
     parentCategory: false,
+    allowUncategorized: setting("allow_uncategorized_topics"),
   },
 
   modifyComponentForRow() {
