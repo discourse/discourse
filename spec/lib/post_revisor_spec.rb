@@ -854,7 +854,7 @@ RSpec.describe PostRevisor do
     end
 
     describe "admin editing a new user's post" do
-      fab!(:changed_by) { Fabricate(:admin, refresh_auto_groups: true) }
+      fab!(:changed_by) { Fabricate(:admin) }
 
       before do
         SiteSetting.newuser_max_embedded_media = 0

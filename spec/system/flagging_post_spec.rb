@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Flagging post", type: :system do
-  fab!(:current_user) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:current_user) { Fabricate(:admin) }
   fab!(:first_post) { Fabricate(:post) }
   fab!(:post_to_flag) { Fabricate(:post, topic: first_post.topic) }
 
