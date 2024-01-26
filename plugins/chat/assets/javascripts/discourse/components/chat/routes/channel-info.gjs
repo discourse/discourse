@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
 import I18n from "discourse-i18n";
+import eq from "truth-helpers/helpers/eq";
 import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
@@ -77,7 +78,13 @@ export default class ChatRoutesChannelInfo extends Component {
                   @model={{@channel}}
                   @replace={{true}}
                 >
+                  {{log @channel.chatableType @channel.membershipsCount}}
                   {{this.membersLabel}}
+                  {{#if (eq @channel.chatableType "Category")}}
+                    <span
+                      class="c-channel-info__membercount"
+                    >({{@channel.membershipsCount}})</span>
+                  {{/if}}
                 </LinkTo>
               </li>
             </ul>
