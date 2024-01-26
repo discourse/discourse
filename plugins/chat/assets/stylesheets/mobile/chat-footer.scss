@@ -61,6 +61,11 @@
         left: 50%;
         margin-left: 0.75rem;
       }
+
+      .chat-channel-unread-indicator:not(.-urgent) {
+        width: 11px;
+        height: 11px;
+      }
     }
   }
 }
