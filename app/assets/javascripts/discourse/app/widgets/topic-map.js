@@ -182,26 +182,6 @@ export default createWidget("topic-map", {
   },
 
   buildTopicMapSummary(attrs, state) {
-    const {
-      participants,
-      participantCount,
-      createdByUsername,
-      createdByAvatarTemplate,
-      createdByName,
-      lastPostUsername,
-      lastPostAvatarTemplate,
-      lastPostName,
-      lastPostAt,
-      lastPostUrl,
-      topicCreatedAt,
-      topicReplyCount,
-      topicViews,
-      topicViewsHeat,
-      topicLikeCount,
-      topicLinkCount,
-      topicPostsCount,
-      userFilters,
-    } = attrs;
     const { collapsed } = state;
     const wrapperClass = collapsed
       ? "section.map.map-collapsed"
@@ -211,47 +191,13 @@ export default createWidget("topic-map", {
       this,
       wrapperClass,
       hbs`<TopicMap::TopicMapSummary
-        @participants={{@data.participants}}
-        @participantCount={{@data.participantCount}}
-        @createdByUsername={{@data.createdByUsername}}
-        @createdByAvatarTemplate={{@data.createdByAvatarTemplate}}
-        @createdByName={{@data.createdByName}}
-        @lastPostUsername={{@data.lastPostUsername}}
-        @lastPostAvatarTemplate={{@data.lastPostAvatarTemplate}}
-        @lastPostName={{@data.lastPostName}}
-        @lastPostAt={{@data.lastPostAt}}
-        @lastPostUrl={{@data.lastPostUrl}}
-        @topicCreatedAt={{@data.topicCreatedAt}}
-        @topicReplyCount={{@data.topicReplyCount}}
-        @topicViews={{@data.topicViews}}
-        @topicViewsHeat={{@data.topicViewsHeat}}
-        @topicLikeCount={{@data.topicLikeCount}}
-        @topicLinkCount={{@data.topicLinkCount}}
-        @topicPostsCount={{@data.topicPostsCount}}
-        @userFilters={{@data.userFilters}}
+        @postAttrs={{@data.postAttrs}}
         @toggleMap={{@data.toggleMap}}
         @collapsed={{@data.collapsed}}
       />`,
       {
         toggleMap: this.toggleMap.bind(this),
-        topicViews,
-        participants,
-        participantCount,
-        createdByUsername,
-        createdByAvatarTemplate,
-        createdByName,
-        lastPostUsername,
-        lastPostAvatarTemplate,
-        lastPostName,
-        lastPostAt,
-        lastPostUrl,
-        topicCreatedAt,
-        topicReplyCount,
-        topicViewsHeat,
-        topicLikeCount,
-        topicLinkCount,
-        topicPostsCount,
-        userFilters,
+        postAttrs: attrs,
         collapsed,
       }
     );
