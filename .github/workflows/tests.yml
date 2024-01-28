@@ -145,6 +145,7 @@ jobs:
             ${{ runner.os }}-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ hashFiles('config/environments/test.rb') }}-
             ${{ env.USES_PARALLEL_DATABASES }}
 
       - name: Restore database from cache
