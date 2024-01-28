@@ -28,9 +28,9 @@ if should_setup
   run "mkdir -p #{DATA}"
   run "#{BIN}/initdb -D #{DATA}"
 
-  run "echo fsync = off >> #{DATA}/postgresql.conf"
-  run "echo full_page_writes = off >> #{DATA}/postgresql.conf"
-  run "echo shared_buffers = 500MB >> #{DATA}/postgresql.conf"
+  # run "echo fsync = off >> #{DATA}/postgresql.conf"
+  # run "echo full_page_writes = off >> #{DATA}/postgresql.conf"
+  # run "echo shared_buffers = 500MB >> #{DATA}/postgresql.conf"
 end
 
 if should_exec
