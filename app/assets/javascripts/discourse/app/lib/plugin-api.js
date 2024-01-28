@@ -46,7 +46,7 @@ import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/a
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
-import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
+import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
 import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
