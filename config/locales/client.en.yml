@@ -1565,9 +1565,9 @@ en:
           description: "Please confirm you would like your email address changed to:"
           description_add: "Please confirm you would like to add an alternate email address:"
         authorizing_old:
-          title: "Confirming new email address"
-          description: "Please confirm your email address change"
-          description_add: "Please confirm you would like to add an alternate email address:"
+          title: "Verify old email address"
+          description: "Please verify your old email address to continue changing your email:"
+          description_add: "Please verify your existing email address to continue adding an alternate address:"
           old_email: "Old email: %{email}"
           new_email: "New email: %{email}"
           confirm_success: "We have sent an email to your new email address to confirm the change!"
