@@ -204,7 +204,7 @@ input {
   &[type="search"],
   &[type="tel"],
   &[type="color"],
-  .input-setting-integer {
+  &.input-setting-integer {
     @include appearance-none;
     @include form-item-sizing;
     display: inline-block;
