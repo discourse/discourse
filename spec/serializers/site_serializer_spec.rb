@@ -132,6 +132,9 @@ RSpec.describe SiteSerializer do
   end
 
   context "with lazy loaded categories enabled" do
+    fab!(:user)
+    let(:guardian) { Guardian.new(user) }
+
     before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
 
     it "categories does not include any categories for anonymous users" do
@@ -141,13 +144,20 @@ RSpec.describe SiteSerializer do
     end
 
     it "categories include only sidebar categories" do
-      user = Fabricate(:user)
-      guardian = Guardian.new(user)
       Fabricate(:category_sidebar_section_link, linkable: category, user: user)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
       expect(serialized[:categories].map { |c| c[:id] }).to contain_exactly(category.id)
+    end
+
+    it "categories include only visible sidebar categories" do
+      Fabricate(:category_sidebar_section_link, linkable: category, user: user)
+      category.update!(read_restricted: true)
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:categories]).to eq(nil)
     end
   end
 
