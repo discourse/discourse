@@ -104,4 +104,10 @@ Discourse::Application.configure do
 
     SiteSetting.refresh!
   end
+
+  if ENV["CI"].present?
+    config.to_prepare do
+      ActiveSupport.on_load(:active_record_postgresqladapter) { self.create_unlogged_tables = true }
+    end
+  end
 end
