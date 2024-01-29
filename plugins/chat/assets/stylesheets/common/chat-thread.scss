@@ -1,4 +1,4 @@
-.chat-thread {
+div.chat-thread {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -13,9 +13,12 @@
     display: flex;
     flex-direction: column-reverse;
     transition: padding-top 0.2s ease-in-out;
-    padding-top: calc(
-      var(--chat-thread-header-offset, var(--chat-header-offset)) -
-        var(--chat-header-offset)
-    );
+
+    &.chat-messages-scroll {
+      padding-top: calc(
+        var(--chat-thread-header-offset, var(--chat-header-offset)) -
+          var(--chat-header-offset)
+      );
+    }
   }
 }

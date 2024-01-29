@@ -13,12 +13,12 @@
     // This is to keep the buttons in the same place.
     // 1px to account for the border.
     .c-navbar__title {
-      padding-block: calc(0.75rem + 0.5px);
+      padding-block: calc(0.75rem + 1px);
     }
 
     .c-navbar__actions,
     .c-navbar__back-button {
-      height: calc(var(--chat-header-offset) - 1px);
+      height: var(--chat-header-offset);
     }
   }
 
@@ -47,7 +47,6 @@
   }
 
   .c-navbar__channel-title {
-    @include ellipsis();
     font-weight: 700;
   }
 

@@ -6,7 +6,7 @@ import ThreadHeader from "discourse/plugins/chat/discourse/components/chat/threa
 import Thread from "discourse/plugins/chat/discourse/components/chat-thread";
 
 export default class ChatRoutesChannelThread extends Component {
-  @tracked showfullTitle = true;
+  @tracked showfullTitle = false;
 
   @action
   setFullTitle(value) {
