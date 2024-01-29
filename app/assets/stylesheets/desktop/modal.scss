@@ -13,17 +13,6 @@
     }
   }
 }
-//legacy
-// Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
-.bootbox.modal {
-  top: 50%;
-  left: 50%;
-  width: 610px;
-  margin: -250px 0 0 -305px;
-  .cancel {
-    margin-left: 1em;
-  }
-}
 
 .modal.in {
   animation: fade 0.25s;

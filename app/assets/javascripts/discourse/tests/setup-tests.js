@@ -9,8 +9,6 @@ import {
   setApplication,
   setResolver,
 } from "@ember/test-helpers";
-import "bootstrap/js/modal";
-import bootbox from "bootbox";
 import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
 import $ from "jquery";
 import MessageBus from "message-bus-client";
@@ -278,7 +276,6 @@ export default function setupTests(config) {
 
   let app;
   QUnit.testStart(function (ctx) {
-    bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
     resetThemeSettings();
 
