@@ -107,7 +107,7 @@
     @outletArgs={{hash model=this.model user=this.user}}
   />
 
-  <div class="top-section">
+  <div class="top-section replies-and-topics-section">
     <UserSummarySection @title="top_replies" class="replies-section pull-left">
       <UserSummaryTopicsList
         @type="replies"
@@ -141,7 +141,7 @@
     </UserSummarySection>
   </div>
 
-  <div class="top-section">
+  <div class="top-section links-and-replied-to-section">
     <UserSummarySection @title="top_links" class="links-section pull-left">
       {{#if this.model.links.length}}
         <ul>
