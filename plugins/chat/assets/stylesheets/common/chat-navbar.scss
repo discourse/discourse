@@ -47,6 +47,7 @@
   }
 
   .c-navbar__channel-title {
+    @include ellipsis();
     font-weight: 700;
   }
 
