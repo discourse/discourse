@@ -72,13 +72,12 @@ html.has-full-page-chat {
   margin-left: 0;
 }
 
-.header-dropdown-toggle.chat-header-icon {
-  .icon {
-    &.active .d-icon {
-      color: var(--primary-medium);
-    }
-    .chat-channel-unread-indicator {
-      border-color: var(--primary-very-low);
-    }
+.header-dropdown-toggle.chat-header-icon .icon,
+.c-footer .c-footer__item {
+  &.active .d-icon {
+    color: var(--primary-medium);
+  }
+  .chat-channel-unread-indicator {
+    border-color: var(--primary-very-low);
   }
 }

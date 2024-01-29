@@ -64,26 +64,25 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   }
 }
 
-.header-dropdown-toggle.chat-header-icon {
-  .icon {
-    .chat-channel-unread-indicator {
-      @include chat-unread-indicator;
-      border: 2px solid var(--header_background);
-      position: absolute;
-      top: 0;
-      right: 2px;
+.header-dropdown-toggle.chat-header-icon .icon,
+.c-footer .c-footer__item {
+  .chat-channel-unread-indicator {
+    @include chat-unread-indicator;
+    border: 2px solid var(--header_background);
+    position: absolute;
+    top: 0;
+    right: 2px;
 
-      &.-urgent {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: auto;
-        height: 1em;
-        min-width: 0.6em;
-        padding: 0.21em 0.42em;
-        top: -1px;
-        right: 0;
-      }
+    &.-urgent {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      height: 1em;
+      min-width: 0.6em;
+      padding: 0.21em 0.42em;
+      top: -1px;
+      right: 0;
     }
   }
 
