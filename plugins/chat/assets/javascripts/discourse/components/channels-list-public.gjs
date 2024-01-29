@@ -12,6 +12,7 @@ import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListPublic extends Component {
   @service chatChannelsManager;
+  @service chatTrackingStateManager;
   @service site;
   @service siteSettings;
   @service currentUser;
@@ -40,9 +41,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   get hasUnreadThreads() {
-    return this.chatChannelsManager.publicMessageChannels.some(
-      (channel) => channel.unreadThreadsCount > 0
-    );
+    return this.chatTrackingStateManager.hasUnreadThreads;
   }
 
   @action
