@@ -147,6 +147,15 @@ class SessionController < ApplicationController
       else
         render json: { result: "second_factor_auth_completed" }
       end
+    rescue StandardError => e
+      # Normally this would be checked by the consumer before calling `run_second_factor!`
+      # but since this is a test route, we allow passing a bad value into the API, catch the error
+      # and return a JSON response to assert against.
+      if e.message == "running 2fa against another user is not allowed"
+        render json: { result: "wrong user" }, status: 400
+      else
+        raise e
+      end
     end
   end
 

@@ -2859,8 +2859,8 @@ RSpec.describe SessionController do
       other_user = Fabricate(:user)
       post "/session/2fa/test-action?username=#{other_user.username}", xhr: true
 
-      # This would normally be handled by the calling route, but this test route deliberately doesn't handle it so we get a 500
-      expect(response.status).to eq(500)
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["result"]).to eq("wrong user")
     end
 
     context "when logged in" do
