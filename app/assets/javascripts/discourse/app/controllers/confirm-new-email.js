@@ -17,7 +17,7 @@ export default class ConfirmNewEmailController extends Controller {
     this.loading = true;
     try {
       await ajax(`/u/confirm-new-email/${this.model.token}.json`, {
-        method: "PUT",
+        type: "PUT",
       });
     } catch (error) {
       const nonce = error.jqXHR?.responseJSON?.second_factor_challenge_nonce;

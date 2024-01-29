@@ -17,7 +17,7 @@ export default class ConfirmOldEmailController extends Controller {
     this.loading = true;
     try {
       await ajax(`/u/confirm-old-email/${this.model.token}.json`, {
-        method: "PUT",
+        type: "PUT",
       });
     } catch (error) {
       popupAjaxError(error);

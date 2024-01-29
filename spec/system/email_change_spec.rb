@@ -113,4 +113,35 @@ describe "Changing email", type: :system do
 
     expect(user.reload.email).to eq(new_email)
   end
+
+  it "allows admin to verify old email while logged out" do
+    user.update!(admin: true)
+    sign_in user
+
+    confirm_old_link = generate_confirm_link
+
+    Capybara.reset_sessions! # log out
+
+    # Confirm old email
+    visit confirm_old_link
+    find(".confirm-old-email .btn-primary").click
+    expect(page).to have_css(
+      ".dialog-body",
+      text: I18n.t("js.user.change_email.authorizing_old.confirm_success"),
+    )
+    find(".dialog-footer .btn-primary").click
+
+    # Confirm new email
+    wait_for(timeout: 5) { ActionMailer::Base.deliveries.count === 2 }
+    confirm_new_link = get_link_from_email(:new)
+
+    visit confirm_new_link
+
+    find(".confirm-new-email .btn-primary").click
+
+    expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
+    find(".dialog-footer .btn-primary").click
+
+    expect(user.reload.email).to eq(new_email)
+  end
 end
