@@ -14,11 +14,11 @@ RSpec.describe Guardian do
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
   fab!(:plain_category) { Fabricate(:category) }
 
-  fab!(:trust_level_0) { Fabricate(:user, trust_level: 0, refresh_auto_groups: true) }
-  fab!(:trust_level_1) { Fabricate(:user, trust_level: 1, refresh_auto_groups: true) }
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2, refresh_auto_groups: true) }
-  fab!(:trust_level_3) { Fabricate(:user, trust_level: 3, refresh_auto_groups: true) }
-  fab!(:trust_level_4) { Fabricate(:user, trust_level: 4, refresh_auto_groups: true) }
+  fab!(:trust_level_0)
+  fab!(:trust_level_1)
+  fab!(:trust_level_2)
+  fab!(:trust_level_3)
+  fab!(:trust_level_4)
   fab!(:another_admin) { Fabricate(:admin) }
   fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
 
@@ -1225,37 +1225,35 @@ RSpec.describe Guardian do
         SiteSetting.min_trust_to_create_topic = 1
         SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(
-          Guardian.new(Fabricate(:user, trust_level: 0, refresh_auto_groups: true)).can_create?(
-            Topic,
-            plain_category,
-          ),
+          Guardian.new(Fabricate(:user, trust_level: 0)).can_create?(Topic, plain_category),
         ).to be_falsey
       end
 
       it "is true if user has met or exceeded the minimum trust level" do
         SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(
-          Guardian.new(Fabricate(:user, trust_level: 1, refresh_auto_groups: true)).can_create?(
+          Guardian.new(Fabricate(:user, trust_level: TrustLevel[1])).can_create?(
             Topic,
             plain_category,
           ),
         ).to be_truthy
         expect(
-          Guardian.new(Fabricate(:user, trust_level: 2, refresh_auto_groups: true)).can_create?(
+          Guardian.new(Fabricate(:user, trust_level: TrustLevel[2])).can_create?(
             Topic,
             plain_category,
           ),
         ).to be_truthy
         expect(
-          Guardian.new(Fabricate(:admin, trust_level: 0, refresh_auto_groups: true)).can_create?(
+          Guardian.new(Fabricate(:admin, trust_level: TrustLevel[0])).can_create?(
             Topic,
             plain_category,
           ),
         ).to be_truthy
         expect(
-          Guardian.new(
-            Fabricate(:moderator, trust_level: 0, refresh_auto_groups: true),
-          ).can_create?(Topic, plain_category),
+          Guardian.new(Fabricate(:moderator, trust_level: TrustLevel[0])).can_create?(
+            Topic,
+            plain_category,
+          ),
         ).to be_truthy
       end
     end
@@ -3542,7 +3540,7 @@ RSpec.describe Guardian do
 
     context "when muter's trust level is below tl1" do
       let(:guardian) { Guardian.new(trust_level_0) }
-      let!(:trust_level_0) { Fabricate(:user, trust_level: 0) }
+      fab!(:trust_level_0)
 
       it "does not allow muting user" do
         expect(guardian.can_mute_user?(another_user)).to eq(false)

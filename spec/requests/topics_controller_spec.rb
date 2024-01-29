@@ -18,9 +18,9 @@ RSpec.describe TopicsController do
   fab!(:post_author6) { Fabricate(:user) }
   fab!(:moderator)
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:trust_level_0) { Fabricate(:trust_level_0, refresh_auto_groups: true) }
-  fab!(:trust_level_1) { Fabricate(:trust_level_1, refresh_auto_groups: true) }
-  fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
+  fab!(:trust_level_0)
+  fab!(:trust_level_1)
+  fab!(:trust_level_4)
 
   fab!(:category)
   fab!(:tracked_category) { Fabricate(:category) }

@@ -67,7 +67,7 @@ RSpec.describe UserApiKeysController do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
-      user = Fabricate(:user, trust_level: 1, moderator: true, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[1], moderator: true)
 
       sign_in(user)
 
@@ -79,7 +79,7 @@ RSpec.describe UserApiKeysController do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
-      user = Fabricate(:user, trust_level: 1, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[1])
       sign_in(user)
 
       post "/user-api-key.json", params: args
@@ -91,7 +91,7 @@ RSpec.describe UserApiKeysController do
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       SiteSetting.allow_user_api_key_scopes = "write"
 
-      user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       post "/user-api-key.json", params: args
@@ -156,7 +156,7 @@ RSpec.describe UserApiKeysController do
       args[:scopes] = "push,read"
       args[:push_url] = "https://push.it/here"
 
-      user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       post "/user-api-key.json", params: args
@@ -189,7 +189,7 @@ RSpec.describe UserApiKeysController do
       args[:scopes] = "push,notifications,message_bus,session_info,one_time_password"
       args[:push_url] = "https://push.it/here"
 
-      user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       post "/user-api-key.json", params: args
@@ -235,7 +235,7 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will just show the payload if no redirect" do
-      user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       args.delete(:auth_redirect)
@@ -252,7 +252,7 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will just show the JSON payload if no redirect" do
-      user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       args.delete(:auth_redirect)
@@ -282,7 +282,7 @@ RSpec.describe UserApiKeysController do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
 
-      user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       query_str = "/?param1=val1"
@@ -320,7 +320,7 @@ RSpec.describe UserApiKeysController do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
 
-      user = Fabricate(:user, trust_level: 1, moderator: true, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[1], moderator: true)
 
       sign_in(user)
 
@@ -332,7 +332,7 @@ RSpec.describe UserApiKeysController do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
 
-      user = Fabricate(:user, trust_level: 1, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[1])
       sign_in(user)
 
       post "/user-api-key/otp", params: otp_args

@@ -12,7 +12,7 @@ RSpec.describe Topic do
   fab!(:evil_trout)
   fab!(:admin)
   fab!(:group)
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2, refresh_auto_groups: true) }
+  fab!(:trust_level_2)
 
   it_behaves_like "it has custom fields"
 

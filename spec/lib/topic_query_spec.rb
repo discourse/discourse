@@ -1884,7 +1884,7 @@ RSpec.describe TopicQuery do
       end
 
       it "allow group members with enough trust level to query destination_category_id" do
-        member = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)
+        member = Fabricate(:user, trust_level: TrustLevel[3])
         group.add(member)
 
         list = TopicQuery.new(member, destination_category_id: category.id).list_latest
@@ -1893,7 +1893,7 @@ RSpec.describe TopicQuery do
       end
 
       it "doesn't allow group members without enough trust level to query destination_category_id" do
-        member = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+        member = Fabricate(:user, trust_level: TrustLevel[2])
         group.add(member)
 
         list = TopicQuery.new(member, destination_category_id: category.id).list_latest

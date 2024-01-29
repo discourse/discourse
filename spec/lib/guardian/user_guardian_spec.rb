@@ -31,8 +31,8 @@ RSpec.describe UserGuardian do
 
   let(:moderator_upload) { Upload.new(user_id: moderator.id, id: 4) }
 
-  fab!(:trust_level_1) { Fabricate(:user, trust_level: 1, refresh_auto_groups: true) }
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2, refresh_auto_groups: true) }
+  fab!(:trust_level_1)
+  fab!(:trust_level_2)
 
   describe "#can_pick_avatar?" do
     let :guardian do
