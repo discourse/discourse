@@ -19,7 +19,7 @@ export default class ChatChannelUnreadIndicator extends Component {
   }
 
   get unreadCount() {
-    if (this.#onlyMentions() && this.#hasChannelMentions()) {
+    if (this.#hasChannelMentions()) {
       return this.args.channel.tracking.mentionCount;
     }
     return this.args.channel.tracking.unreadCount;
