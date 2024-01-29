@@ -4,7 +4,30 @@
   width: 100%;
   gap: 0.25rem;
 
+  &.-full-title {
+    position: absolute;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--primary-low);
+    background: var(--secondary);
+
+    // This is to keep the buttons in the same place.
+    // 1px to account for the border.
+    .c-navbar__title {
+      padding-block: calc(0.75rem + 0.5px);
+    }
+
+    .c-navbar__actions,
+    .c-navbar__back-button {
+      height: calc(var(--chat-header-offset) - 1px);
+    }
+  }
+
+  &:not(.-full-title) .c-navbar__title {
+    @include ellipsis();
+  }
+
   &-container {
+    position: relative;
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
     height: var(--chat-header-offset);
@@ -29,11 +52,14 @@
   }
 
   .c-navbar__title {
-    @include ellipsis();
     font-weight: 700;
 
     .chat-drawer & {
       padding-left: 1rem;
+    }
+
+    .d-icon {
+      vertical-align: middle;
     }
   }
 
