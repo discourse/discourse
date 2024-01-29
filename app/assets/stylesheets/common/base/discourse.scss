@@ -203,7 +203,8 @@ input {
   &[type="url"],
   &[type="search"],
   &[type="tel"],
-  &[type="color"] {
+  &[type="color"],
+  .input-setting-integer {
     @include appearance-none;
     @include form-item-sizing;
     display: inline-block;
