@@ -239,27 +239,32 @@
           <tbody>
             {{#each this.model.top_categories as |category|}}
               <tr>
-                <td class="category-link">
-                  {{category-link
-                    category
-                    allowUncategorized="true"
-                    hideParent=false
-                  }}
-                </td>
-                <td class="topic-count">
-                  <UserSummaryCategorySearch
-                    @user={{this.user}}
-                    @category={{category}}
-                    @count={{category.topic_count}}
-                  />
-                </td>
-                <td class="reply-count">
-                  <UserSummaryCategorySearch
-                    @user={{this.user}}
-                    @category={{category}}
-                    @count={{category.post_count}}
-                  />
-                </td>
+                <PluginOutlet
+                  @name="user-summary-top-category-row"
+                  @outletArgs={{hash category=category user=this.user}}
+                >
+                  <td class="category-link">
+                    {{category-link
+                      category
+                      allowUncategorized="true"
+                      hideParent=false
+                    }}
+                  </td>
+                  <td class="topic-count">
+                    <UserSummaryCategorySearch
+                      @user={{this.user}}
+                      @category={{category}}
+                      @count={{category.topic_count}}
+                    />
+                  </td>
+                  <td class="reply-count">
+                    <UserSummaryCategorySearch
+                      @user={{this.user}}
+                      @category={{category}}
+                      @count={{category.post_count}}
+                    />
+                  </td>
+                </PluginOutlet>
               </tr>
             {{/each}}
           </tbody>
