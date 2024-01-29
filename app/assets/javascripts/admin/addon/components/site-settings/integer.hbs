@@ -1,5 +1,6 @@
 <input
   {{on "input" (action (mut this.value) value="target.value")}}
+  type="number"
   value={{this.value}}
   min={{if this.setting.min this.setting.min null}}
   max={{if this.setting.max this.setting.max null}}
