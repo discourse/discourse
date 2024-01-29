@@ -47,34 +47,7 @@ import { buildResolver } from "discourse-common/resolver";
 import Application from "../app";
 import { loadSprites } from "../lib/svg-sprite-loader";
 
-const Plugin = $.fn.modal;
-const Modal = Plugin.Constructor;
 let cancelled = false;
-
-function AcceptanceModal(option, _relatedTarget) {
-  return this.each(function () {
-    let $this = $(this);
-    let data = $this.data("bs.modal");
-    let options = Object.assign(
-      {},
-      Modal.DEFAULTS,
-      $this.data(),
-      typeof option === "object" && option
-    );
-
-    if (!data) {
-      $this.data("bs.modal", (data = new Modal(this, options)));
-    }
-    data.$body = $("#ember-testing");
-
-    if (typeof option === "string") {
-      data[option](_relatedTarget);
-    } else if (options.show) {
-      data.show(_relatedTarget);
-    }
-  });
-}
-
 let started = false;
 
 function createApplication(config, settings) {
@@ -250,8 +223,6 @@ export default function setupTests(config) {
   } else {
     window.Logster = { enabled: false };
   }
-
-  $.fn.modal = AcceptanceModal;
 
   Object.defineProperty(window, "exists", {
     get() {
