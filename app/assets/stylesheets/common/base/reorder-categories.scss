@@ -4,16 +4,12 @@
       padding-bottom: 0.5em;
     }
   }
-  input[type="text"] {
-    margin: 0;
-    max-width: 2.5em;
-    padding: 0.35em;
-    text-align: center;
 
-    @include breakpoint(mobile-extra-large) {
-      width: 2em;
-    }
+  input[type="number"] {
+    margin: 0;
+    max-width: 4em;
   }
+
   table {
     padding-bottom: 150px;
     margin: 0 0.667em;
@@ -25,6 +21,7 @@
       }
     }
   }
+
   .badge-category__wrapper .badge-category {
     max-width: 20em;
     @include breakpoint(mobile-extra-large) {
