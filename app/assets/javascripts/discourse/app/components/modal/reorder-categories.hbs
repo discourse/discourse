@@ -22,7 +22,7 @@
               <div class="reorder-categories-actions">
                 <input
                   {{on
-                    "input"
+                    "change"
                     (action (fn this.change category) value="target.value")
                   }}
                   value={{category.position}}
