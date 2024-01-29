@@ -4,6 +4,7 @@ describe "Changing email", type: :system do
   fab!(:password) { "mysupersecurepassword" }
   fab!(:user) { Fabricate(:user, active: true, password: password) }
   let(:new_email) { "newemail@example.com" }
+  let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
 
   before { Jobs.run_immediately! }
 
@@ -58,6 +59,40 @@ describe "Changing email", type: :system do
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
 
     find("button[type=submit]").click
+
+    try_until_success { expect(current_url).to match("/u/#{user.username}/preferences/account") }
+
+    expect(user.reload.email).to eq(new_email)
+  end
+
+  it "works when user has webauthn 2fa" do
+    sign_in user
+
+    DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
+    options =
+      ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
+        user_verification: true,
+        user_verified: true,
+        resident_key: true,
+      )
+    authenticator = page.driver.browser.add_virtual_authenticator(options)
+
+    user_preferences_security_page.visit(user)
+    user_preferences_security_page.visit_second_factor(password)
+
+    find(".security-key .new-security-key").click
+    expect(user_preferences_security_page).to have_css("input#security-key-name")
+
+    find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
+    find(".add-security-key").click
+
+    expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
+
+    visit generate_confirm_link
+
+    find(".confirm-new-email .btn-primary").click
+
+    find("#security-key-authenticate-button").click
 
     try_until_success { expect(current_url).to match("/u/#{user.username}/preferences/account") }
 
