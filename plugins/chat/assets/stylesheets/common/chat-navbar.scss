@@ -89,3 +89,7 @@
   display: flex;
   align-items: center;
 }
+
+.chat-drawer:not(.is-expanded) .c-navbar .c-navbar__title {
+  @include ellipsis();
+}
