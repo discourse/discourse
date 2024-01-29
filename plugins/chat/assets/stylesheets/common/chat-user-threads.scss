@@ -31,6 +31,14 @@
   }
 }
 
+.c-user-threads .empty-state-threads {
+  display: flex;
+  justify-content: center;
+  padding: 1.25rem 1rem;
+  font-size: var(--font-up-1-rem);
+  color: var(--primary);
+}
+
 //sidebar
 #sidebar-section-content-user-threads {
   padding-bottom: 0.5rem;
