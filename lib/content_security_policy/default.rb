@@ -87,6 +87,7 @@ class ContentSecurityPolicy
         end
 
         sources << "'#{SplashScreenHelper.fingerprint}'" if SiteSetting.splash_screen
+        sources << "'#{DeferScriptHelper.fingerprint}'"
       end
     end
 
