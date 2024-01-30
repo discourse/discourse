@@ -97,6 +97,9 @@ tr_TR:
       user_global_notice:
         title: Kullanıcı küresel bildirimi
         description: Bir kullanıcı için genel bir bildirim görüntülemeye izin verir
+      user_group_membership_through_badge:
+        title: Rozet ile Kullanıcı Grubu Üyeliği
+        description: Kullanıcı grubu üyeliğini rozete göre değiştir
       suspend_user_by_email_with_api_call:
         doc: Bir api çağrısı ile "suspend_user_by_email" tetiklendiğinde, uç nokta gönderilen parametreleri içinde geçerli bir "email" bulunmasını bekler. "reasons" ve "suspend_until (ISO 8601 format)" de varsayılan alan değerlerini geçersiz kılmak için kullanılabilir.
       user_global_notice_with_stalled_topic:

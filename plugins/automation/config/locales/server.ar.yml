@@ -97,6 +97,9 @@ ar:
       user_global_notice:
         title: الإشعار العام للمستخدم
         description: يسمح بعرض إشعار عام للمستخدم
+      user_group_membership_through_badge:
+        title: عضوية مجموعة المستخدمين من خلال الشارة
+        description: تعديل عضوية مجموعة المستخدمين حسب الشارة
       suspend_user_by_email_with_api_call:
         doc: عند تشغيل `suspend_user_by_email` باستخدام استدعاء API، تتوقع نقطة النهاية وجود `email` صالح في المعلمات المُرسلة. يمكن أيضًا استخدام `reasons` و`suspend_until (ISO 8601 format)` لتجاوز قيم الحقول الافتراضية.
       user_global_notice_with_stalled_topic:

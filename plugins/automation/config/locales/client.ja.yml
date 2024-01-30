@@ -26,6 +26,9 @@ ja:
       destroy_automation:
         confirm: "`%{name}` を削除してもよろしいですか？"
       fields:
+        key_value:
+          label:
+            other: 構成の編集 (%{count})
         user:
           label: ユーザー
         pm:
@@ -147,8 +150,22 @@ ja:
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
             restricted_category:
               label: カテゴリ
+              description: オプション。投稿のトピックがこのカテゴリにある場合にのみトリガーされます。
             restricted_group:
               label: グループ
+              description: オプション。投稿のトピックがこのグループの受信トレイにあるプライベートメッセージである場合にのみトリガーされます。
+            ignore_group_members:
+              label: グループメンバーを無視
+              description: 送信者が上記に指定されたグループのメンバーである場合はトリガーをスキップします。
+            ignore_automated:
+              label: 自動送信元を無視
+              description: 送信者のメールが noreply メールである場合、または自動送信元から送信されたものである場合はスキップします。メールで作成された投稿にのみ適用されます。
+            first_post_only:
+              label: 最初の投稿のみ
+              description: 投稿がユーザーが作成した最初の投稿である場合にのみトリガーされます。
+            first_topic_only:
+              label: 最初のトピックのみ
+              description: トピックがユーザーが作成した最初のトピックである場合にのみトリガーされます。
           created: 作成
           edited: 編集
         category_created_edited:
@@ -158,11 +175,21 @@ ja:
               description: オプション。トリガーの実行をこのカテゴリに限定できます
         pm_created:
           fields:
+            restricted_user:
+              label: ユーザー
+              description: このユーザーに送信された PM に対してのみトリガーされます。
             restricted_group:
               label: グループ
+              description: このグループに送信された PM に対してのみトリガーされます
             ignore_staff:
               label: スタッフを無視する
               description: 送信者がスタッフユーザーである場合は、トリガーをスキップします
+            ignore_group_members:
+              label: グループメンバーを無視
+              description: 送信者が上記に指定されたグループのメンバーである場合はトリガーをスキップします。
+            ignore_automated:
+              label: 自動送信元を無視
+              description: 送信者のメールが noreply メールである場合、または自動送信元から送信されたものである場合はスキップします。メールで作成された PM にのみ適用されます。
             valid_trust_levels:
               label: 有効な信頼レベル
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
@@ -173,8 +200,10 @@ ja:
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
             restricted_category:
               label: カテゴリ
+              description: オプション。投稿のトピックがこのカテゴリにある場合にのみトリガーされます。
             restricted_tags:
               label: タグ
+              description: オプション。投稿にこれらのいずれかのタグが設定されている場合にのみトリガーされます。
       scriptables:
         not_found: 自動化 `%{automation}` のスクリプト `%{script}` が見つかりませんでした。関連するプラグインがインストールされていることを確認してください。
         zapier_webhook:
@@ -189,6 +218,7 @@ ja:
               description: トピックごとに 1 回だけ応答します
             word_answer_list:
               label: 単語/回答ペアのリスト
+              description: "キー/値グループのリストを定義します。`key` は検索された語で、`value` は返信テキストです。コンテンツに関係なくすべてのトリガーに応答する場合は、`key` を空白のままにできます。`value` は、返信の `key` の値と置換されるプレースホルダーとして、`%%KEY%%` を受け入れることに注意してください。`key` は正規表現として評価されます。`.` といった特殊文字は、実際にドットを意味する場合は、エスケープが必要であることに注意してください（例: `\\.`）。"
             answering_user:
               label: 回答するユーザー
               description: デフォルトでシステムユーザー
@@ -228,10 +258,20 @@ ja:
             error: エラー
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: バッジ名
             group:
               label: グループ
+              description: ターゲットグループ。指定されたバッジを持つユーザーがこのグループに追加されます。
+            update_user_title_and_flair:
+              label: ユーザーのタイトルとフレアを更新
+              description: オプション。ユーザーのタイトルとフレアを更新します。
+            remove_members_without_badge:
+              label: バッジのない既存のメンバーを削除
+              description: オプション。指定されたバッジのない既存のグループメンバーを削除します。
             badge:
               label: バッジ
+              description: バッジの選択
         suspend_user_by_email:
           fields:
             suspend_until:

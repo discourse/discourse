@@ -97,6 +97,9 @@ it:
       user_global_notice:
         title: Avviso globale agli utenti
         description: Consente di visualizzare un avviso globale per un utente
+      user_group_membership_through_badge:
+        title: Iscrizione al gruppo utenti tramite distintivo
+        description: Modifica l'appartenenza al gruppo utenti in base a un distintivo
       suspend_user_by_email_with_api_call:
         doc: Quando si attiva `suspend_user_by_email` con una chiamata API, l'endpoint si aspetta un valore `email` valido nei parametri inviati. I parametri `reasons` e `suspend_until (formato ISO 8601)` possono anche essere usati per sovrascrivere i valori predefiniti dei campi.
       user_global_notice_with_stalled_topic:

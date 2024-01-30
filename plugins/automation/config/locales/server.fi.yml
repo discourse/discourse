@@ -97,6 +97,9 @@ fi:
       user_global_notice:
         title: Käyttäjän yleinen ilmoitus
         description: Mahdollistaa yleisen ilmoituksen näyttämisen käyttäjälle
+      user_group_membership_through_badge:
+        title: Käyttäjäryhmän jäsenyys kunniamerkin kautta
+        description: Muokkaa käyttäjäryhmän jäsenyyttä kunniamerkin perusteella
       suspend_user_by_email_with_api_call:
         doc: Kun "suspend_user_by_email" käynnistetään API-kutsulla, päätepiste odottaa, että lähetettyihin parametreihin sisältyy kelvollinen "email". Parametreja "reasons" ja "suspend_until (ISO 8601 -muoto)" voidaan myös käyttää oletusarvoisten kenttien arvojen ohittamiseen.
       user_global_notice_with_stalled_topic:

@@ -98,8 +98,8 @@ zh_CN:
         title: 用户全局通知
         description: 允许为用户显示全局通知
       user_group_membership_through_badge:
-        title: 通过徽章将用户加入群组
-        description: 根据徽章调整群组成员
+        title: 通过徽章获得用户群组成员资格
+        description: 根据徽章修改用户群组成员关系
       suspend_user_by_email_with_api_call:
         doc: 当使用 API 调用触发 `suspend_user_by_email` 时，端点期望发送的参数中存在有效的 `email`。`reasons` 和 `suspend_until (ISO 8601 format)` 也可以用于重写默认字段值。
       user_global_notice_with_stalled_topic:

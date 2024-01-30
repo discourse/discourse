@@ -97,6 +97,9 @@ pt_BR:
       user_global_notice:
         title: Aviso global do usuário
         description: Permite exibir um aviso global para um usuário
+      user_group_membership_through_badge:
+        title: Assinatura de grupo de usuário(a) sem emblema
+        description: Modificar assinatura de grupo de usuário(a) com base no emblema
       suspend_user_by_email_with_api_call:
         doc: Ao acionar `suspend_user_by_email` com uma chamada de API, o endpoint espera que um `email` válido esteja presente nos parâmetros enviados. `reasons` e `suspend_until (formato ISO 8601)` também podem ser usados para substituir valores de campos padrão.
       user_global_notice_with_stalled_topic:

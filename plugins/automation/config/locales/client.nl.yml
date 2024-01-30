@@ -26,6 +26,10 @@ nl:
       destroy_automation:
         confirm: "Weet je zeker dat je '%{name}' wilt verwijderen?"
       fields:
+        key_value:
+          label:
+            one: Configuratie bewerken (%{count})
+            other: Configuratie bewerken (%{count})
         user:
           label: Gebruiker
         pm:
@@ -147,8 +151,22 @@ nl:
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
             restricted_category:
               label: Categorie
+              description: Optioneel, wordt alleen geactiveerd als het topic van het bericht in deze categorie valt
             restricted_group:
               label: Groep
+              description: Optioneel, wordt alleen geactiveerd als het topic van het bericht een privébericht is in de inbox van deze groep
+            ignore_group_members:
+              label: Groepsleden negeren
+              description: Sla de trigger over als de afzender lid is van de hierboven opgegeven groep
+            ignore_automated:
+              label: Geautomatiseerd negeren
+              description: Sla de trigger over als de afzender een noreply-e-mailadres heeft of een geautomatiseerde bron is. Alleen van toepassing op berichten die via e-mail zijn gemaakt
+            first_post_only:
+              label: Alleen eerste bericht
+              description: Wordt alleen geactiveerd als het bericht het eerste bericht is dat een gebruiker heeft gemaakt
+            first_topic_only:
+              label: Alleen eerste topic
+              description: Wordt alleen geactiveerd als het topic het eerste topic is dat een gebruiker heeft gemaakt
           created: Gemaakt
           edited: Bewerkt
         category_created_edited:
@@ -158,11 +176,21 @@ nl:
               description: Optioneel, maakt het mogelijk om de uitvoering van triggers te beperken tot deze categorie
         pm_created:
           fields:
+            restricted_user:
+              label: Gebruikers
+              description: Wordt alleen geactiveerd voor PB's die naar deze gebruiker worden verzonden
             restricted_group:
               label: Groep
+              description: Wordt alleen geactiveerd voor PB's die naar deze groep worden verzonden
             ignore_staff:
               label: Medewerkers negeren
               description: Sla de trigger over als de afzender een medewerker is
+            ignore_group_members:
+              label: Groepsleden negeren
+              description: Sla de trigger over als de afzender lid is van de hierboven opgegeven groep
+            ignore_automated:
+              label: Geautomatiseerd negeren
+              description: Sla de trigger over als de afzender een noreply-e-mailadres heeft of een geautomatiseerde bron is. Alleen van toepassing op PB's die via e-mail zijn gemaakt
             valid_trust_levels:
               label: Geldige vertrouwensniveaus
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
@@ -173,8 +201,10 @@ nl:
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
             restricted_category:
               label: Categorie
+              description: Optioneel, wordt alleen geactiveerd als het topic van het bericht in deze categorie valt
             restricted_tags:
               label: Tags
+              description: Optioneel, wordt alleen geactiveerd als het bericht een van deze tags heeft
       scriptables:
         not_found: Kon script '%{script}' voor automatisering '%{automation}' niet vinden, controleer of de bijbehorende plug-in is geïnstalleerd
         zapier_webhook:
@@ -189,6 +219,7 @@ nl:
               description: Reageert slechts één keer per topic
             word_answer_list:
               label: Lijst van woord-antwoordparen
+              description: "Definieert een lijst van sleutel-waardegroepen, waarbij de 'sleutel' de gezochte term is en de 'waarde' de tekst van het antwoord. De 'sleutel' kan leeg worden gelaten om te reageren op alle triggers, ongeacht de inhoud. Merk op dat 'waarde' '%%KEY%%' accepteert als tijdelijke aanduiding die moet worden vervangen door de waarde van 'sleutel' in het antwoord. Merk op dat 'sleutel' wordt geëvalueerd als een reguliere expressie en dat speciale tekens zoals '.' moeten worden ge-escaped als je daadwerkelijk een punt bedoelt, bijvoorbeeld: '\\.'"
             answering_user:
               label: Antwoordende gebruiker
               description: Standaard ingesteld op Systeemgebruiker
@@ -228,10 +259,20 @@ nl:
             error: Fout
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: Badgenaam
             group:
               label: Groep
+              description: Doelgroep. Gebruikers met de opgegeven badge worden aan deze groep toegevoegd.
+            update_user_title_and_flair:
+              label: Gebruikerstitel en flair bijwerken
+              description: 'Optioneel: werk de gebruikerstitel en flair bij'
+            remove_members_without_badge:
+              label: Bestaande leden zonder badge verwijderen
+              description: 'Optioneel: verwijder bestaande groepsleden zonder de opgegeven badge'
             badge:
               label: Badge
+              description: Selecteer badge
         suspend_user_by_email:
           fields:
             suspend_until:

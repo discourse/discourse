@@ -26,6 +26,10 @@ fi:
       destroy_automation:
         confirm: "Haluatko varmasti poistaa kohteen \"%{name}\"?"
       fields:
+        key_value:
+          label:
+            one: Muokkaa määritystä (%{count})
+            other: Muokkaa määritystä (%{count})
         user:
           label: Käyttäjä
         pm:
@@ -147,8 +151,22 @@ fi:
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä, oletusarvo on mikä tahansa luottamustaso
             restricted_category:
               label: Alue
+              description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_group:
               label: Ryhmä
+              description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti tämän ryhmän postilaatikossa
+            ignore_group_members:
+              label: Ohita ryhmän jäsenet
+              description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen
+            ignore_automated:
+              label: Ohita automaattiset
+              description: Ohita triggeri, jos lähettäjällä on sähköpostiosoite, joka ei ota vastaan vastauksia, tai se on automatisoidusta lähteestä. Koskee vain sähköpostitse luotuja viestejä.
+            first_post_only:
+              label: Vain ensimmäinen viesti
+              description: Käynnistyy vain, jos viesti on ensimmäinen käyttäjän luoma viesti
+            first_topic_only:
+              label: Vain ensimmäinen ketju
+              description: Käynnistyy vain, jos ketju on ensimmäinen käyttäjän luoma ketju
           created: Luotu
           edited: Muokattu
         category_created_edited:
@@ -158,11 +176,21 @@ fi:
               description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen tähän alueeseen
         pm_created:
           fields:
+            restricted_user:
+              label: Käyttäjät
+              description: Käynnistyy vain tälle käyttäjälle lähetetyille yksityisviesteille
             restricted_group:
               label: Ryhmä
+              description: Käynnistyy vain tälle ryhmälle lähetetyille yksityisviesteille
             ignore_staff:
               label: Ohita henkilökunta
               description: Ohita triggeri, jos lähettäjä on henkilökunnan käyttäjä
+            ignore_group_members:
+              label: Ohita ryhmän jäsenet
+              description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen
+            ignore_automated:
+              label: Ohita automaattiset
+              description: Ohita triggeri, jos lähettäjällä on sähköpostiosoite, joka ei ota vastaan vastauksia, tai se on automatisoidusta lähteestä. Koskee vain sähköpostitse luotuja yksityisviestejä.
             valid_trust_levels:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
@@ -173,8 +201,10 @@ fi:
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
             restricted_category:
               label: Alue
+              description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_tags:
               label: Tunnisteet
+              description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
       scriptables:
         not_found: Skriptiä %{script} automaatiolle %{automation} ei löytynyt. Varmista, että siihen liittyvä lisäosa on asennettuna.
         zapier_webhook:
@@ -189,6 +219,7 @@ fi:
               description: Vastaa vain kerran ketjua kohden
             word_answer_list:
               label: Sana ja vastaus -parien luettelo
+              description: "Määrittää avain/arvoryhmien luettelon, jossa avain on haettu ehto ja arvo on vastauksen teksti. Avaimen voi jättää tyhjäksi kaikkiin triggereihin reagoimiseksi sisällöstä riippumatta. Huomioi, että arvo hyväksyy tekstin \"%%KEY%%\" paikkamerkkinä, joka korvataan avaimen arvolla vastauksessa. Avain arvioidaan säännöllisenä lausekkeena, ja erikoismerkkien, kuten \".\", yhteydessä tulisi käyttää koodinvaihtomerkkiä, jos todella tarkoitat pistettä, esim. \"\\.\"."
             answering_user:
               label: Vastaava käyttäjä
               description: Oletuksena järjestelmäkäyttäjä
@@ -228,10 +259,20 @@ fi:
             error: Virhe
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: Kunniamerkin nimi
             group:
               label: Ryhmä
+              description: Kohderyhmä. Käyttäjät, joilla on määritetty kunniamerkki, lisätään tähän ryhmään
+            update_user_title_and_flair:
+              label: Päivitä käyttäjän nimike ja flair
+              description: Valinnainen, päivitä käyttäjän nimike ja flair
+            remove_members_without_badge:
+              label: Poista olemassa olevat jäsenet ilman kunniamerkkiä
+              description: Valinnainen, poista olemassa olevat ryhmän jäsenet ilman määritettyä kunniamerkkiä
             badge:
               label: Kunniamerkki
+              description: Valitse kunniaerkki
         suspend_user_by_email:
           fields:
             suspend_until:

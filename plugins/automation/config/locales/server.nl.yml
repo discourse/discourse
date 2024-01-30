@@ -97,6 +97,9 @@ nl:
       user_global_notice:
         title: Algemene kennisgeving voor gebruiker
         description: Maakt het mogelijk om een globale kennisgeving weer te geven voor een gebruiker
+      user_group_membership_through_badge:
+        title: Lidmaatschap van gebruikersgroep via badge
+        description: Wijzig het lidmaatschap van een gebruikersgroep op basis van een badge
       suspend_user_by_email_with_api_call:
         doc: Bij het triggeren van 'suspend_user_by_email' met een API-aanroep, verwacht het eindpunt dat er een geldige 'email' aanwezig is in de verzonden parameters. 'reasons' en 'suspend_until' (ISO 8601-notatie) kunnen ook worden gebruikt om standaardveldwaarden te overschrijven.
       user_global_notice_with_stalled_topic:

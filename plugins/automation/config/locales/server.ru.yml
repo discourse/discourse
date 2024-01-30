@@ -97,6 +97,9 @@ ru:
       user_global_notice:
         title: Глобальное уведомление пользователей
         description: Позволяет отобразить пользователю глобальное уведомление
+      user_group_membership_through_badge:
+        title: Участие в группе пользователей на основе награды
+        description: Изменить участие в группе пользователей на основе награды
       suspend_user_by_email_with_api_call:
         doc: При запуске `suspend_user_by_email` с помощью вызова API конечная точка ожидает, что в передаваемых параметрах будет присутствовать правильный адрес `email`. Причины `reasons` и время `suspend_until` (в формате ISO 8601) также могут быть использованы для переопределения значений по умолчанию.
       user_global_notice_with_stalled_topic:

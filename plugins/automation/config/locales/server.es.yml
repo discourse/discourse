@@ -97,6 +97,9 @@ es:
       user_global_notice:
         title: Aviso global para un usuario
         description: Permite mostrarle un aviso global a un usuario
+      user_group_membership_through_badge:
+        title: Pertenencia a grupos de usuarios mediante una insignia
+        description: Modificar la pertenencia a un grupo de usuarios en función de una insignia
       suspend_user_by_email_with_api_call:
         doc: Al activar «suspend_user_by_email» con una llamada API, se espera que haya un «email» válido en los parámetros enviados. También se pueden utilizar «reasons» y «suspend_until (formato ISO 8601)» para anular los valores de los campos por defecto.
       user_global_notice_with_stalled_topic:

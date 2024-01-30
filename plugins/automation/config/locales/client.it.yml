@@ -26,6 +26,10 @@ it:
       destroy_automation:
         confirm: "Vuoi davvero eliminare `%{name}`?"
       fields:
+        key_value:
+          label:
+            one: Modifica configurazione (%{count})
+            other: Modifica configurazione (%{count})
         user:
           label: Utente
         pm:
@@ -147,8 +151,22 @@ it:
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
             restricted_category:
               label: Categoria
+              description: Facoltativo, verrà attivato solo se l'argomento del post rientra in questa categoria
             restricted_group:
               label: Gruppo
+              description: Facoltativo, verrà attivato solo se l'argomento del post è un messaggio privato nella posta in arrivo di questo gruppo
+            ignore_group_members:
+              label: Ignora i membri del gruppo
+              description: Salta l'attivazione se il mittente è un membro del gruppo specificato sopra
+            ignore_automated:
+              label: Ignora automatizzati
+              description: Salta l'attivazione se il mittente ha un'e-mail che non accetta risposte o che proviene da una fonte automatizzata. Si applica solo ai messaggi creati via e-mail
+            first_post_only:
+              label: Solo il primo messaggio
+              description: Si attiverà solo se il messaggio è il primo messaggio creato da un utente
+            first_topic_only:
+              label: Solo il primo argomento
+              description: Si attiverà solo se l'argomento è il primo creato da un utente
           created: Creati
           edited: Modificati
         category_created_edited:
@@ -158,11 +176,21 @@ it:
               description: Facoltativo, consente di limitare l'attivazione di questa categoria
         pm_created:
           fields:
+            restricted_user:
+              label: Utenti
+              description: Si attiverà solo per i MP inviati a questo utente
             restricted_group:
               label: Gruppo
+              description: Si attiverà solo per i MP inviati a questo gruppo
             ignore_staff:
               label: Ignora staff
               description: Salta l'attivazione se il mittente è un utente dello staff
+            ignore_group_members:
+              label: Ignora i membri del gruppo
+              description: Salta l'attivazione se il mittente è un membro del gruppo specificato sopra
+            ignore_automated:
+              label: Ignora automatizzati
+              description: Salta l'attivazione se il mittente ha un'e-mail che non accetta risposte o che proviene da una fonte automatizzata. Si applica solo ai MP creati via e-mail
             valid_trust_levels:
               label: Livelli di attendibilità validi
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
@@ -173,8 +201,10 @@ it:
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
             restricted_category:
               label: Categoria
+              description: Facoltativo, verrà attivato solo se l'argomento del post rientra in questa categoria
             restricted_tags:
               label: Tag
+              description: Facoltativo, si attiverà solo se il messaggio ha una di queste etichette
       scriptables:
         not_found: Impossibile trovare lo script `%{script}` per l'automazione `%{automation}`, verifica che il plugin associato sia installato
         zapier_webhook:
@@ -189,6 +219,7 @@ it:
               description: Risponde solo una volta per argomento
             word_answer_list:
               label: Elenco di coppie parole/risposte
+              description: "Definisce un elenco di gruppi chiave/valore (key/value), dove `key` è il termine cercato e `value` il testo della risposta. Il parametro `key` può essere lasciato vuoto per rispondere a tutte le attivazioni, indipendentemente dal contenuto Il parametro `value` accetta `%%KEY%%` come segnaposto che sarà sostituito con il valore di `key` nella risposta. Il parametro `key` sarà valutato come regex e i caratteri speciali come `.` devono essere preceduti da escape se si intende effettivamente indicare un punto, ad esempio: `\\.`"
             answering_user:
               label: Utente che risponde
               description: Ripristina impostazione predefinita Utente di sistema
@@ -228,10 +259,20 @@ it:
             error: Errore
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: Nome del distintivo
             group:
               label: Gruppo
+              description: Gruppo di destinazione. Gli utenti con il distintivo specificato saranno aggiunti a questo gruppo.
+            update_user_title_and_flair:
+              label: Aggiorna il titolo e lo stile dell'utente
+              description: Facoltativo, aggiorna il titolo e lo stile dell'utente
+            remove_members_without_badge:
+              label: Rimuovi i membri esistenti senza distintivo
+              description: Facoltativo, rimuovi i membri del gruppo esistenti senza il distintivo specificato
             badge:
               label: Distintivo
+              description: Seleziona il distintivo
         suspend_user_by_email:
           fields:
             suspend_until:

@@ -26,6 +26,10 @@ tr_TR:
       destroy_automation:
         confirm: "Şunu silmek istediğinizden emin misiniz: \"%{name}\"?"
       fields:
+        key_value:
+          label:
+            one: Yapılandırmayı Düzenle (%{count})
+            other: Yapılandırmayı Düzenle (%{count})
         user:
           label: Kullanıcı
         pm:
@@ -147,8 +151,22 @@ tr_TR:
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
             restricted_category:
               label: Kategori
+              description: İsteğe bağlı, yalnızca gönderinin konusu bu kategorideyse tetiklenir
             restricted_group:
               label: Grup
+              description: İsteğe bağlı, yalnızca gönderinin konusu bu grubun gelen kutusundaki bir özel mesajsa tetiklenir
+            ignore_group_members:
+              label: Grup üyelerini yok say
+              description: Gönderen yukarıda belirtilen Grubun bir üyesiyse tetikleyiciyi atla
+            ignore_automated:
+              label: Otomatikleştirmeyi yok say
+              description: Gönderenin noreply e-postası varsa veya otomatik bir kaynaktan geliyorsa tetikleyiciyi atla. Yalnızca e-posta yoluyla oluşturulan gönderiler için geçerlidir
+            first_post_only:
+              label: Sadece ilk gönderi
+              description: Yalnızca gönderi bir kullanıcının oluşturduğu ilk gönderiyse tetiklenir
+            first_topic_only:
+              label: Yalnızca ilk konu
+              description: Yalnızca konu bir kullanıcının oluşturduğu ilk konuysa tetiklenir
           created: Oluşturuldu
           edited: Düzenlendi
         category_created_edited:
@@ -158,11 +176,21 @@ tr_TR:
               description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
         pm_created:
           fields:
+            restricted_user:
+              label: Kullanıcılar
+              description: Yalnızca bu kullanıcıya gönderilen kişisel mesajlar için tetiklenir
             restricted_group:
               label: Grup
+              description: Yalnızca bu gruba gönderilen kişisel mesajlar için tetiklenir
             ignore_staff:
               label: Personeli yok say
               description: Gönderen bir personel kullanıcısıysa tetikleyiciyi atla
+            ignore_group_members:
+              label: Grup üyelerini yok say
+              description: Gönderen yukarıda belirtilen Grubun bir üyesiyse tetikleyiciyi atla
+            ignore_automated:
+              label: Otomatikleştirmeyi yok say
+              description: Gönderenin noreply e-postası varsa veya otomatik bir kaynaktan geliyorsa tetikleyiciyi atla. Yalnızca e-posta yoluyla oluşturulan kişisel mesajlar için geçerlidir
             valid_trust_levels:
               label: Geçerli güven seviyeleri
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
@@ -173,8 +201,10 @@ tr_TR:
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
             restricted_category:
               label: Kategori
+              description: İsteğe bağlı, yalnızca gönderinin konusu bu kategorideyse tetiklenir
             restricted_tags:
               label: Etiketler
+              description: 'İsteğe bağlı, yalnızca gönderide şu etiketlerden herhangi biri varsa tetiklenir:'
       scriptables:
         not_found: '"%{automation}" otomasyonu için "%{script}" komut dosyası bulunamadı, ilişkili eklentinin yüklü olduğundan emin olun'
         zapier_webhook:
@@ -189,6 +219,7 @@ tr_TR:
               description: Konuya göre yalnızca bir kez yanıt verir
             word_answer_list:
               label: Kelime/yanıt çiftlerinin listesi
+              description: "Anahtar/değer gruplarının bir listesini tanımlar; burada `key` aranan terim, `value` ise yanıt metnidir. İçeriğe bakılmaksızın tüm tetikleyicilere yanıt vermek için `key` boş bırakılabilir. `value` ifadesinin, yanıtta `key` değeriyle değiştirilecek bir yer tutucu olarak `%%KEY%%` ifadesini kabul ettiğini unutmayın. `key` ifadesinin bir regex olarak değerlendirileceğini ve `.` gibi özel karakterlerin aslında bir noktayı kastediyorsanız dışarıda olması gerektiğini unutmayın, örneğin: `\\.`"
             answering_user:
               label: Yanıtlayan kullanıcı
               description: Varsayılan olarak Sistem kullanıcısını ayarlar
@@ -228,10 +259,20 @@ tr_TR:
             error: Hata
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: Rozet Adı
             group:
               label: Grup
+              description: Hedef grup. Belirtilen rozete sahip kullanıcılar bu gruba eklenir
+            update_user_title_and_flair:
+              label: Kullanıcı unvanını ve yeteneğini güncelle
+              description: İsteğe bağlı, Kullanıcı unvanını ve yeteneğini güncelle
+            remove_members_without_badge:
+              label: Rozeti olmayan mevcut üyeleri kaldır
+              description: İsteğe bağlı, Belirtilen rozete sahip olmayan mevcut grup üyelerini kaldır
             badge:
               label: Rozet
+              description: Rozet seç
         suspend_user_by_email:
           fields:
             suspend_until:

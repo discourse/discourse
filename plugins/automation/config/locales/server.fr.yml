@@ -98,6 +98,7 @@ fr:
         title: Avis global de l'utilisateur
         description: Permet d'afficher un avis global pour un utilisateur
       user_group_membership_through_badge:
+        title: Adhésion à un groupe d'utilisateurs par le biais d'un badge
         description: Modifier l'appartenance à un groupe d'utilisateurs en fonction d'un badge
       suspend_user_by_email_with_api_call:
         doc: Lorsque vous déclenchez « suspend_user_by_email » avec un appel d'API, le terminal s'attend à ce qu'un « email » valide soit présent dans les paramètres envoyés. « reasons » et « suspend_until » (format ISO 8601) peuvent également être utilisés pour remplacer les valeurs des champs par défaut.

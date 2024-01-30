@@ -97,6 +97,9 @@ de:
       user_global_notice:
         title: Globaler Hinweis für Benutzer
         description: Ermöglicht die Anzeige eines globalen Hinweises für einen Benutzer
+      user_group_membership_through_badge:
+        title: Benutzergruppenmitgliedschaft über Abzeichen
+        description: Benutzergruppenmitgliedschaft anhand eines Abzeichens ändern
       suspend_user_by_email_with_api_call:
         doc: Beim Auslösen von `suspend_user_by_email` mit einem API-Aufruf erwartet der Endpunkt, dass eine gültige `email` in den gesendeten Parametern vorhanden ist. `reasons` und `suspend_until (ISO 8601 format)` können auch verwendet werden, um Standardfeldwerte zu überschreiben.
       user_global_notice_with_stalled_topic:

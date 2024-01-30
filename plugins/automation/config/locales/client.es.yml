@@ -26,6 +26,10 @@ es:
       destroy_automation:
         confirm: "¿Seguro que quieres eliminar «%{name}»?"
       fields:
+        key_value:
+          label:
+            one: Editar configuración (%{count})
+            other: Editar configuración (%{count})
         user:
           label: Usuario
         pm:
@@ -147,8 +151,22 @@ es:
               description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
             restricted_category:
               label: Categoría
+              description: Opcional, solo se activará si el tema de la publicación está en esta categoría
             restricted_group:
               label: Grupo
+              description: Opcional, solo se activará si el tema de la publicación es un mensaje privado en la bandeja de entrada de este grupo
+            ignore_group_members:
+              label: Ignorar a los miembros del grupo
+              description: Omitir el activador si el remitente es un miembro del Grupo especificado anteriormente
+            ignore_automated:
+              label: Ignorar la automatización
+              description: Omite el activador si el remitente tiene un correo electrónico de no respuesta o procede de una fuente automatizada. Solo se aplica a las publicaciones creadas por correo electrónico
+            first_post_only:
+              label: Solo la primera publicación
+              description: Se activará solo si la publicación es la primera que creó un usuario.
+            first_topic_only:
+              label: Solo el primer tema
+              description: Se activará solo si el tema es el primer tema que creó un usuario
           created: Creado
           edited: Editado
         category_created_edited:
@@ -158,11 +176,21 @@ es:
               description: Opcional, permite limitar la ejecución del activador a esta categoría
         pm_created:
           fields:
+            restricted_user:
+              label: Usuarios
+              description: Se activará solo para los MP enviados a este usuario
             restricted_group:
               label: Grupo
+              description: Se activará solo para los MP enviados a este grupo
             ignore_staff:
               label: Ignorar personal
               description: Omitir la activación si el remitente es un usuario del personal
+            ignore_group_members:
+              label: Ignorar a los miembros del grupo
+              description: Omitir el activador si el remitente es un miembro del Grupo especificado anteriormente
+            ignore_automated:
+              label: Ignorar la automatización
+              description: Omite el activador si el remitente tiene un correo electrónico de no respuesta o procede de una fuente automatizada. Solo se aplica a los MP creados por correo electrónico
             valid_trust_levels:
               label: Niveles de confianza válidos
               description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
@@ -173,8 +201,10 @@ es:
               description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
             restricted_category:
               label: Categoría
+              description: Opcional, solo se activará si el tema de la publicación está en esta categoría
             restricted_tags:
               label: Etiquetas
+              description: Opcional, solo se activará si la publicación tiene alguna de estas etiquetas
       scriptables:
         not_found: No se ha podido encontrar el script «%{script}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
         zapier_webhook:
@@ -189,6 +219,7 @@ es:
               description: Solo responde una vez por tema
             word_answer_list:
               label: Lista de pares de palabras/respuestas
+              description: "Define una lista de grupos clave/valor, donde la «clave» es el término buscado, y el «valor» el texto de la respuesta. La «clave» puede dejarse en blanco para responder a todos los activadores, independientemente de su contenido. Ten en cuenta que «valor» acepta «%%KEY%%» como marcador de posición que será sustituido por el valor de «clave» en la respuesta. Ten en cuenta que «clave» se evaluará como una expresión regular, y los caracteres especiales como «.» deben escaparse si en realidad se trata de un punto, por ejemplo: «\\.»"
             answering_user:
               label: Usuario que responde
               description: Por defecto, usuario del sistema
@@ -228,10 +259,20 @@ es:
             error: Error
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: Nombre de la insignia
             group:
               label: Grupo
+              description: Grupo objetivo. Los usuarios con la insignia especificada se añadirán a este grupo
+            update_user_title_and_flair:
+              label: Actualizar el título y el estilo del usuario
+              description: Opcional, actualizar el título y el estilo del usuario
+            remove_members_without_badge:
+              label: Eliminar miembros existentes sin insignia
+              description: Opcional, eliminar miembros del grupo existentes sin la insignia especificada
             badge:
               label: Insignia
+              description: Seleccionar insignia
         suspend_user_by_email:
           fields:
             suspend_until:

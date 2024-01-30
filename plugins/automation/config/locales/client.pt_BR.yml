@@ -26,6 +26,10 @@ pt_BR:
       destroy_automation:
         confirm: "Tem certeza de que deseja excluir `%{name}`?"
       fields:
+        key_value:
+          label:
+            one: Editar configuração (%{count})
+            other: Editar configurações (%{count})
         user:
           label: Usuário
         pm:
@@ -147,8 +151,22 @@ pt_BR:
               description: Será acionado apenas se a postagem for criada pelo usuário nesses níveis de confiança, o padrão é qualquer nível de confiança
             restricted_category:
               label: Categoria
+              description: Opcional, ativa apenas se o tópico da postagem estiver nesta categoria
             restricted_group:
               label: Grupo
+              description: Opcional, será ativado apenas se o tópico da postagem for uma mensagem privada na caixa de mensagens deste grupo
+            ignore_group_members:
+              label: Ignorar membros de grupo
+              description: Ignorar o gatilho se o remetente for um membro do Grupo especificado acima
+            ignore_automated:
+              label: Ignorar automatizado
+              description: Ignore o gatilho se o remetente tiver um e-mail sem resposta ou for de uma fonte automatizada. Aplica-se apenas a postagens criadas por e-mail.
+            first_post_only:
+              label: Apenas primeira postagem
+              description: Ativa apenas se a postagem for a primeira postagem criada pelo(a) usuário(a)
+            first_topic_only:
+              label: Apenas primeiro tópico
+              description: Ativa apenas se o tópico for o primeiro tópico criado pelo(a) usuário(a)
           created: Criado(a)
           edited: Editado(a)
         category_created_edited:
@@ -158,11 +176,21 @@ pt_BR:
               description: Opcional, permite limitar a execução do acionador a esta categoria
         pm_created:
           fields:
+            restricted_user:
+              label: Usuários(as)
+              description: Ativa apenas para MPs enviadas a este(a) usuário(a)
             restricted_group:
               label: Grupo
+              description: Ativa apenas para MPs enviadas a este grupo
             ignore_staff:
               label: Ignorar equipe
               description: Ignore o acionador se o remetente for um usuário da equipe
+            ignore_group_members:
+              label: Ignorar membros de grupo
+              description: Ignorar o gatilho se o remetente for um membro do Grupo especificado acima
+            ignore_automated:
+              label: Ignorar automatizado
+              description: Ignore o gatilho se o remetente tiver um e-mail sem resposta ou for de uma fonte automatizada. Aplica-se apenas a MPs criadas por e-mail.
             valid_trust_levels:
               label: Níveis de confiança válidos
               description: Será acionado apenas se a postagem for criada pelo(a) usuário(a) nesses níveis de confiança, o padrão é qualquer nível de confiança
@@ -173,8 +201,10 @@ pt_BR:
               description: Será acionado apenas se a postagem for criada pelo usuário nesses níveis de confiança, o padrão é qualquer nível de confiança
             restricted_category:
               label: Categoria
+              description: Opcional, ativa apenas se o tópico da postagem estiver nesta categoria
             restricted_tags:
               label: Tags
+              description: Opcional, ativa apenas se a postagem tiver alguma destas etiquetas
       scriptables:
         not_found: Não foi possível encontrar o script `%{script}` para automação `%{automation}`, verifique se o plugin associado está instalado
         zapier_webhook:
@@ -189,6 +219,7 @@ pt_BR:
               description: Responde apenas uma vez por tópico
             word_answer_list:
               label: Lista de pares palavra/resposta
+              description: "Define uma lista de grupos de chave/valor, em que `key` é o termo pesquisado e `value` é o texto da resposta. A `key` pode ficar em branco para responder a todos os gatilhos, seja qual for o conteúdo. Observe que `value` aceita `%%KEY%%` como um espaço reservado para ser substituído pelo valor de `key` na resposta. Observe que `key` será avaliado como um regex, e caracteres especiais como `.` devem ser evitados se você realmente se referir a um ponto, por exemplo: `\\.`"
             answering_user:
               label: Respondendo ao usuário
               description: Padrões para o usuário do Sistema
@@ -228,10 +259,20 @@ pt_BR:
             error: Erro
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: Nome do emblema
             group:
               label: Grupo
+              description: Grupo de destino. Os(as) usuários(as) com o emblema especificado serão adicionados(as) a este grupo
+            update_user_title_and_flair:
+              label: Atualizar estilo e título do(a) usuário(a)
+              description: Opcional, atualizar estilo e título do(a) usuário(a)
+            remove_members_without_badge:
+              label: Remover membros existentes sem emblema
+              description: Opcional, remover membros do grupo existentes sem o emblema especificado
             badge:
               label: Emblema
+              description: Selecionar emblema
         suspend_user_by_email:
           fields:
             suspend_until:

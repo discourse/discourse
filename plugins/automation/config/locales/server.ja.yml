@@ -97,6 +97,9 @@ ja:
       user_global_notice:
         title: ユーザーのグローバル通知
         description: ユーザーのグローバル通知を表示できるようにします
+      user_group_membership_through_badge:
+        title: バッジによるユーザーグループメンバーシップ
+        description: バッジに基づいてユーザーグループのメンバーシップを変更します。
       suspend_user_by_email_with_api_call:
         doc: API 呼び出しで `suspend_user_by_email` をトリガーする場合、エンドポイントでは送信されたパラメーターに有効な `email` が存在することを必要としてます。デフォルトのフィールド値をオーバーライドするには、`reasons` と `suspend_until（ISO 8601 形式）` を使用することも可能です。
       user_global_notice_with_stalled_topic:
