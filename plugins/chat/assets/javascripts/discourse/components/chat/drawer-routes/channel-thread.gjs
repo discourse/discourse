@@ -16,7 +16,11 @@ export default class ChatDrawerRoutesChannelThread extends Component {
   @service chatChannelsManager;
   @service chatHistory;
 
-  @tracked showfullTitle = false;
+  @tracked showThreadFullTitle = false;
+
+  get showfullTitle() {
+    return this.chatStateManager.isDrawerExpanded && this.showThreadFullTitle;
+  }
 
   get backButton() {
     const link = {
@@ -70,7 +74,7 @@ export default class ChatDrawerRoutesChannelThread extends Component {
 
   @action
   setFullTitle(value) {
-    this.showfullTitle = value;
+    this.showThreadFullTitle = value;
   }
 
   <template>

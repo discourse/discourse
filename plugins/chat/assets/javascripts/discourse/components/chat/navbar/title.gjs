@@ -9,12 +9,14 @@ const ChatNavbarTitle = <template>
     class={{concatClass "c-navbar__title" (if @showFullTitle "full-title")}}
   >
     {{#if (has-block)}}
-      {{if @icon (icon @icon)}}
-      {{@title}}
+      <span class="c-navbar__title-text">{{if @icon (icon @icon)}}
+        {{@title}}</span>
       {{yield (hash SubTitle=SubTitle)}}
     {{else}}
-      {{if @icon (icon @icon)}}
-      {{@title}}
+      <span class="c-navbar__title-text">{{if
+          @icon
+          (icon @icon)
+        }}{{@title}}</span>
     {{/if}}
   </div>
 </template>;

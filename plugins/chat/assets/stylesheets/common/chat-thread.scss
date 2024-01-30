@@ -1,8 +1,8 @@
-div.chat-thread {
+.chat-thread {
   display: flex;
   flex-direction: column;
   position: relative;
-  @include chat-height;
+  @include chat-height(var(--chat-header-expanded-offset, 0px));
 
   &__body {
     overflow-y: scroll;
@@ -13,12 +13,5 @@ div.chat-thread {
     display: flex;
     flex-direction: column-reverse;
     transition: padding-top 0.2s ease-in-out;
-
-    &.chat-messages-scroll {
-      padding-top: calc(
-        var(--chat-thread-header-offset, var(--chat-header-offset)) -
-          var(--chat-header-offset)
-      );
-    }
   }
 }

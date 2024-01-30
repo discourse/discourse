@@ -15,23 +15,28 @@ export default class ChatNavbar extends Component {
   handleResize(entries) {
     for (let entry of entries) {
       const height = entry.target.clientHeight;
-      document.documentElement.style.setProperty(
-        "--chat-thread-header-offset",
-        `${height}px`
-      );
+
+      requestAnimationFrame(() => {
+        document.documentElement.style.setProperty(
+          "--chat-header-expanded-offset",
+          `${height}px`
+        );
+      });
     }
   }
 
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     <div
-      class={{concatClass "c-navbar-container" (if @onClick "-clickable")}}
+      class={{concatClass
+        "c-navbar-container"
+        (if @onClick "-clickable")
+        (if @showFullTitle "-full-title")
+      }}
       {{on "click" (if @onClick @onClick (noop))}}
+      {{ChatOnResize this.handleResize}}
     >
-      <nav
-        class={{concatClass "c-navbar" (if @showFullTitle "-full-title")}}
-        {{ChatOnResize this.handleResize}}
-      >
+      <nav class="c-navbar">
         {{yield
           (hash
             BackButton=BackButton
