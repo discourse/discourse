@@ -473,6 +473,7 @@ te:
         taken: "క్షమించాలి. ఆ ఈమెయిల్ అందుబాటులో లేదు."
         error: "మీ ఈమెయిల్ మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఇప్పటికే ఈ సైటులో వాడుకలో ఉందేమో? "
         success: "ఆ చిరునామాకు మేము వేగు పంపాము. అందులోని సూచనలు అనుసరించండి. "
+        confirm_success: "మీ ఈమెయిల్ చిరునామా మారింది."
       change_avatar:
         title: "మీ ప్రవర బొమ్మ మార్చండి."
         letter_based: "వ్యవస్థ కేటాయించిన ప్రవర బొమ్మ"
@@ -695,6 +696,9 @@ te:
       categories_only: "వర్గాలు మాత్రమే"
     select_kit:
       delete_item: "%{name} తొలగించు"
+      components:
+        bulk_select_topics_dropdown:
+          title: "బహుళ చర్యలు"
     emoji_picker:
       flags: కేతనాలు
     composer:
@@ -816,6 +820,9 @@ te:
         tag: "ఇంకా %{tag} విషయాలు లేవు."
         top: "ఇంకా అగ్ర విషయాలు లేవు."
         bookmarks: "ఇంకా పేజీక విషయాలు లేవు."
+    topic_bulk_actions:
+      close_topics:
+        name: "విషయాలు మూయు"
     topic:
       create: "కొత్త విషయం"
       create_long: "కొత్త విషయం సృష్టించు"

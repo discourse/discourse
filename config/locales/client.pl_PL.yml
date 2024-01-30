@@ -1605,6 +1605,15 @@ pl_PL:
         success_via_admin: "Wysłaliśmy wiadomość e-mail na ten adres. Użytkownik będzie musiał postępować zgodnie z instrukcjami potwierdzenia zawartymi w wiadomości e-mail."
         success_staff: "Wysłaliśmy wiadomość na bieżący adres. Proszę przestrzegać informacji dotyczących potwierdzenia adresu."
         back_to_preferences: "Powrót do preferencji"
+        confirm_success: "Twój email został zmieniony."
+        confirm: "Potwierdź"
+        authorizing_new:
+          description: "Potwierdź, że chcesz zmienić swój adres e-mail na:"
+          description_add: "Potwierdź, że chcesz dodać alternatywny adres e-mail:"
+        authorizing_old:
+          old_email: "Stary adres e-mail: %{email}"
+          new_email: "Nowy adres e-mail: %{email}"
+          confirm_success: "Wysłaliśmy e-maila na nowy adres, aby potwierdzić tę zmianę!"
       change_avatar:
         title: "Zmień swój awatar"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a> , na podstawie"
@@ -2317,10 +2326,11 @@ pl_PL:
         many: "Wybierz co najmniej %{count} elementów."
         other: "Wybierz co najmniej %{count} elementów."
       components:
-        tag_drop:
-          filter_for_more: Filtruj po więcej...
+        filter_for_more: Filtruj po więcej...
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
+        bulk_select_topics_dropdown:
+          title: "Operacje grupowe"
     date_time_picker:
       from: Od
       to: Do
@@ -2890,6 +2900,7 @@ pl_PL:
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
+        confirm: "Potwierdź"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystko"
         unlist_topics: "Ukryj tematy"
@@ -2993,6 +3004,9 @@ pl_PL:
         hot: "Nie ma już gorących tematów."
         bookmarks: "Nie ma więcej zakładek."
         filter: "Nie ma więcej tematów."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zamknij tematy"
     topic:
       filter_to:
         one: "%{count} post w temacie"

@@ -1153,6 +1153,15 @@ gl:
         success: "Enviamos un correo electrónico a ese enderezo. Siga as instrucións de confirmación."
         success_via_admin: "Enviouse unha mensaxe de correo a ese enderezo. O usuario deberá seguir as instrucións de confirmación expostas na mensaxe de correo."
         success_staff: "Enviamos un correo electrónico ao teu enderezo actual. Siga as instrucións de confirmación."
+        confirm_success: "O seu enderezo electrónico foi actualizado."
+        confirm: "Confirmar"
+        authorizing_new:
+          description: "Confirme que quere cambiar o seu enderezo electrónico a:"
+          description_add: "Confirme que quere engadir un enderezo electrónico alternativo:"
+        authorizing_old:
+          old_email: "Correo electrónico antigo: %{email}"
+          new_email: "Novo correo electrónico: %{email}"
+          confirm_success: "Enviámoslle unha mensaxe ao seu novo enderezo electrónico para confirmar o cambio!"
       change_avatar:
         title: "Cambie a foto do perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baseado en"
@@ -1695,6 +1704,8 @@ gl:
       components:
         categories_admin_dropdown:
           title: "Xestionar categorías"
+        bulk_select_topics_dropdown:
+          title: "Accións en bloque"
     date_time_picker:
       from: De
       to: A
@@ -2050,6 +2061,7 @@ gl:
     topics:
       new_messages_marker: "última visita"
       bulk:
+        confirm: "Confirmar"
         select_all: "Seleccionar todo"
         clear_all: "Borrar todo"
         unlist_topics: "Retirar temas da listaxe"
@@ -2105,6 +2117,9 @@ gl:
         tag: "Non hai máis temas en %{tag}."
         top: "Non hai máis temas destacados."
         bookmarks: "Non hai máis temas marcados."
+    topic_bulk_actions:
+      close_topics:
+        name: "Pechar temas"
     topic:
       filter_to:
         one: "%{count} publicación no tema"

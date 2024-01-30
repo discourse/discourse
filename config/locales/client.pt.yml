@@ -1287,6 +1287,7 @@ pt:
         success: "Enviámos um email para esse endereço. Por favor siga as instruções de confirmação."
         success_via_admin: "Enviámos um e-mail para esse endereço. O utilizador terá de seguir as instruções de confirmação no e-mail.."
         success_staff: "Nós enviámos uma mensagem para o seu endereço atual. Por favor, siga as instruções de confirmação."
+        confirm_success: "O seu email foi atualizado."
       change_avatar:
         title: "Alterar a sua imagem de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, com base em"
@@ -1865,10 +1866,11 @@ pt:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
       components:
-        tag_drop:
-          filter_for_more: Filtrar por mais…
+        filter_for_more: Filtrar por mais…
         categories_admin_dropdown:
           title: "Gerir categorias"
+        bulk_select_topics_dropdown:
+          title: "Ações em Massa"
     date_time_picker:
       from: De
       to: Para
@@ -2322,6 +2324,9 @@ pt:
         tag: "Não existem mais tópicos em %{tag}."
         top: "Não existem mais tópicos recentes."
         bookmarks: "Não há mais tópicos marcados."
+    topic_bulk_actions:
+      close_topics:
+        name: "Fechar Tópicos"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"

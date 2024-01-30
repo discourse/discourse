@@ -24,6 +24,8 @@ et:
     chat:
       back_to_forum: "Foorum"
       deleted_chat_username: kustutatud
+      dates:
+        yesterday: "Eile"
       bot: "bot"
       create: "Loo"
       cancel: "Tühista"

@@ -45,6 +45,7 @@ fr:
       back_to_forum: "Forum"
       deleted_chat_username: supprimé
       dates:
+        yesterday: "Hier"
         time_tiny: "h:mm"
       all_loaded: "Affichage de tous les messages"
       already_enabled: "La discussion est déjà activée sur ce sujet. Veuillez actualiser."

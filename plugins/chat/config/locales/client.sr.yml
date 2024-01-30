@@ -13,6 +13,7 @@ sr:
           never: "Nikad"
     chat:
       dates:
+        yesterday: "Juče"
         time_tiny: "h:mm"
       cancel: "Odustani"
       channel_settings:

@@ -13,6 +13,8 @@ el:
           never: "Ποτέ"
     chat:
       deleted_chat_username: διεγράφη
+      dates:
+        yesterday: "Χτες"
       create: "Δημιουργία"
       cancel: "Ακύρωση"
       channel_settings:

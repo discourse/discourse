@@ -1456,6 +1456,15 @@ es:
         success_via_admin: "Hemos enviado un correo electrónico a esa dirección. El usuario tendrá que seguir las instrucciones de confirmación."
         success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Sigue las instrucciones de confirmación."
         back_to_preferences: "Volver a preferencias"
+        confirm_success: "Se actualizó tu correo electrónico."
+        confirm: "Confirmar"
+        authorizing_new:
+          description: "Confirma que quieres cambiar tu dirección de correo electrónico a:"
+          description_add: "Confirma que quieres añadir una dirección de correo electrónico alternativa:"
+        authorizing_old:
+          old_email: "Correo electrónico antiguo: %{email}"
+          new_email: "Correo electrónico nuevo: %{email}"
+          confirm_success: "¡Enviamos un correo electrónico a tu nueva dirección de correo electrónico para confirmar el cambio!"
       change_avatar:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basado en"
@@ -2134,10 +2143,11 @@ es:
         one: "Selecciona al menos %{count} elemento."
         other: "Selecciona al menos %{count} elementos."
       components:
-        tag_drop:
-          filter_for_more: Filtrar para más…
+        filter_for_more: Filtrar para más…
         categories_admin_dropdown:
           title: "Gestionar categorías"
+        bulk_select_topics_dropdown:
+          title: "Acciones en bloque"
     date_time_picker:
       from: Desde
       to: Hasta
@@ -2647,6 +2657,7 @@ es:
     topics:
       new_messages_marker: "última visita"
       bulk:
+        confirm: "Confirmar"
         select_all: "Seleccionar todo"
         clear_all: "Limpiar todo"
         unlist_topics: "Hacer invisibles"
@@ -2732,6 +2743,9 @@ es:
         top: "No hay más temas destacados."
         bookmarks: "No hay más temas guardados en marcadores."
         filter: "No hay más temas."
+    topic_bulk_actions:
+      close_topics:
+        name: "Cerrar temas"
     topic:
       filter_to:
         one: "%{count} publicación en el tema"

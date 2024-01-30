@@ -16,7 +16,7 @@ it:
   poll:
     poll: "sondaggio"
     invalid_argument: "Valore '%{value}' non valido per l'argomento '%{argument}'."
-    multiple_polls_without_name: "Quando crei più sondaggi, includi nomi univoci aggiungendo <code>name=example</code> alle tue etichette <code>[poll]</code>."
+    multiple_polls_without_name: "Quando crei più sondaggi, includi nomi univoci aggiungendo <code>name=esempio</code> alle tue etichette <code>[poll]</code>."
     multiple_polls_with_same_name: "Ci sono più sondaggi con lo stesso nome: <strong>%{name}</strong>. Usa l'attributo '<code>name</code>' per identificare univocamente i tuoi sondaggi."
     default_poll_must_have_at_least_1_option: " Il sondaggio deve avere almeno 1 opzione."
     named_poll_must_have_at_least_1_option: "Il sondaggio di nome <strong>%{name}</strong> deve avere almeno 1 opzione."

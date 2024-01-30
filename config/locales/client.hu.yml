@@ -1329,6 +1329,15 @@ hu:
         success_via_admin: "Küldtünk egy levelet a megadott e-mail-címre. A felhasználónak követnie kell a levélben szereplő megerősítési utasításokat."
         success_staff: "Küldtünk egy levelet a jelenlegi e-mail-címére. Kövesse a megerősítési utasításokat."
         back_to_preferences: "Vissza a beállításokhoz"
+        confirm_success: "Az e-mail címe frissítve lett."
+        confirm: "Megerősít"
+        authorizing_new:
+          description: "Kérjük, erősítsd meg, hogy szeretnéd az e-mail címedet a következőre módosítani:"
+          description_add: "Kérjük, erősítsd meg, hogy alternatív e-mail címet szeretnél hozzáadni:"
+        authorizing_old:
+          old_email: "Régi e-mail: %{email}"
+          new_email: "Új e-mail: %{email}"
+          confirm_success: "Küldtünk egy e-mailt az új e-mail címedre, hogy megerősítsük a változást!"
       change_avatar:
         title: "Profilkép megváltoztatása"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, ez alapján:"
@@ -1944,6 +1953,8 @@ hu:
       components:
         categories_admin_dropdown:
           title: "Kategóriák kezelése"
+        bulk_select_topics_dropdown:
+          title: "Csoportos műveletek"
     date_time_picker:
       from: Feladó
       to: Címzett
@@ -2421,6 +2432,7 @@ hu:
     topics:
       new_messages_marker: "utolsó látogatás"
       bulk:
+        confirm: "Megerősít"
         select_all: "Összes kiválasztása"
         clear_all: "Összes törlése"
         unlist_topics: "Témák listázásnak megszüntetése"
@@ -2489,6 +2501,9 @@ hu:
         tag: "Nincs több „%{tag}” címkéjű téma."
         top: "Nincs több népszerű téma."
         bookmarks: "Nincs több könyvjelzőzött téma."
+    topic_bulk_actions:
+      close_topics:
+        name: "Témák lezárása"
     topic:
       filter_to:
         one: "%{count} bejegyzés a témában"

@@ -197,8 +197,6 @@ lv:
         other: "pirms %{count} dienām"
   password_reset:
     title: "Atjaunot paroli"
-  change_email:
-    please_continue: "Turpināt %{site_name}"
   activation:
     continue_button: "Turpināt %{site_name}"
     welcome_to: "Laipni lūdzam %{site_name}!"

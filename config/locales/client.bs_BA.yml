@@ -1096,6 +1096,7 @@ bs_BA:
         error: "Desila se greška pri promjeni vašeg email-a. Možda se ta email adresa kod nas već koristi?"
         success: "Poslali smo email na datu email adresu. Molimo vas da tamo slijedite instrukcije za potvrdu aktivacije."
         success_staff: "Poslali smo email na vašu trenutnu email adresu. Molimo vas da tamo slijedite instrukcije za potvrdu aktivacije."
+        confirm_success: "Your email has been updated."
       change_avatar:
         title: "Promjeni sliku"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, na temelju"
@@ -1576,6 +1577,9 @@ bs_BA:
         one: "Označi bar %{count} predmet."
         few: "Označi bar %{count} predmeta."
         other: "Označi bar %{count} predmeta."
+      components:
+        bulk_select_topics_dropdown:
+          title: "Masovno odrađene akcije"
     date_time_picker:
       from: Od
       to: Ka
@@ -1931,6 +1935,9 @@ bs_BA:
         tag: "Nema više %{tag} tema."
         top: "Nema više top tema."
         bookmarks: "U zabilješkama više nema spremljenih tema."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zatvori teme"
     topic:
       filter_to:
         one: "%{count} objava u temi"

@@ -32,6 +32,8 @@ sl:
       text_copied: Besedilo je bilo kopirano v odložišče
       link_copied: Povezava je bila kopirana v odložišče
       deleted_chat_username: izbrisano
+      dates:
+        yesterday: "Včeraj"
       create: "Ustvari"
       cancel: "Prekliči"
       channel_settings:

@@ -45,6 +45,7 @@ pl_PL:
       back_to_forum: "Forum"
       deleted_chat_username: usunięte
       dates:
+        yesterday: "Wczoraj"
         time_tiny: "h:mm"
       all_loaded: "Pokazuje wszystkie wiadomości"
       already_enabled: "Czat jest już włączony w tym temacie. Spróbuj odświeżyć strone."

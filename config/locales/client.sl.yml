@@ -1270,6 +1270,8 @@ sl:
         success: "Poslali smo e-sporočilo na ta naslov. Sledite navodilom za potrditev."
         success_via_admin: "Poslali smo e-sporočilo na ta naslov. Uporabnik bo moral slediti navodilom za potrditev."
         success_staff: "Poslali smo e-sporočilo na vaš trenutni naslov. Sledite navodilom za potrditev."
+        confirm_success: "Vaš e-naslov je bil spremenjen."
+        confirm: "Potrdi"
       change_avatar:
         title: "Menjaj profilno sliko"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, na podlagi"
@@ -1878,6 +1880,9 @@ sl:
         two: "Izberite vsaj %{count} stvari."
         few: "Izberite vsaj %{count} stvari."
         other: "Izberite vsaj %{count} stvari."
+      components:
+        bulk_select_topics_dropdown:
+          title: "Množična dejanja"
     date_time_picker:
       from: Od
       to: Do
@@ -2243,6 +2248,7 @@ sl:
     topics:
       new_messages_marker: "zadnji obisk"
       bulk:
+        confirm: "Potrdi"
         select_all: "Izberi vse"
         clear_all: "Počisti vse"
         unlist_topics: "Izloči temo iz seznamov"
@@ -2296,6 +2302,9 @@ sl:
         tag: "Ni več tem z oznako %{tag}."
         top: "Ni več najboljših tem."
         bookmarks: "Ni več tem z zaznamki."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zapri teme"
     topic:
       filter_to:
         one: "%{count} prispevek v temi"

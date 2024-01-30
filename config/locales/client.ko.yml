@@ -1214,6 +1214,15 @@ ko:
         success_via_admin: "이 주소로 이메일을 전송했습니다. 사용자는 이메일에 있는 확인 지침을 따라야 합니다."
         success_staff: "현재 주소로 이메일을 전송했습니다. 확인 지침을 따라주세요."
         back_to_preferences: "환경설정으로 돌아가기"
+        confirm_success: "이메일 주소가 변경되었습니다."
+        confirm: "확인"
+        authorizing_new:
+          description: "이메일 주소를 다음으로 변경할 것인지 확인하십시오:"
+          description_add: "보조 이메일 주소를 추가 할 것인지 확인하십시오:"
+        authorizing_old:
+          old_email: "오래된 이메일 : %{email}"
+          new_email: "새로운 이메일 : %{email}"
+          confirm_success: "변경 사항을 확인하기 위해 새 이메일 주소로 이메일을 보냈습니다!"
       change_avatar:
         title: "프로필 사진 변경"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, 기반:"
@@ -1782,6 +1791,8 @@ ko:
       components:
         categories_admin_dropdown:
           title: "카테고리 관리"
+        bulk_select_topics_dropdown:
+          title: "일괄 적용"
     date_time_picker:
       from: 시작
       to: 끝
@@ -2194,6 +2205,7 @@ ko:
     topics:
       new_messages_marker: "마지막 방문"
       bulk:
+        confirm: "확인"
         select_all: "모두 선택"
         clear_all: "모두 지우기"
         unlist_topics: "목록에서 주제 숨기기"
@@ -2256,6 +2268,9 @@ ko:
         tag: "더 이상 %{tag} 주제가 없습니다."
         top: "더 이상 주요 주제가 없습니다."
         bookmarks: "더 이상 북마크한 주제가 없습니다."
+    topic_bulk_actions:
+      close_topics:
+        name: "글 닫기"
     topic:
       filter_to:
         other: "이 주제의 게시물 %{count}개"
