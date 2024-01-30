@@ -51,6 +51,10 @@ class ThemeSettingsManager
     @opts[:refresh]
   end
 
+  def editor_component
+    @opts[:editor_component]
+  end
+
   def value=(new_value)
     ensure_is_valid_value!(new_value)
 
@@ -247,5 +251,8 @@ class ThemeSettingsManager
 
       theme_field.upload_id
     end
+  end
+
+  class Editor < self
   end
 end

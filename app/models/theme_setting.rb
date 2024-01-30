@@ -24,7 +24,7 @@ class ThemeSetting < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5, upload: 6)
+    @types ||= Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5, upload: 6, editor: 7)
   end
 
   def self.acceptable_value_for_type?(value, type)

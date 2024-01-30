@@ -15,6 +15,9 @@ class Admin::ThemesController < Admin::AdminController
     redirect_to path("/?preview_theme_id=#{theme.id}")
   end
 
+  def editor
+  end
+
   def upload_asset
     ban_in_allowlist_mode!
 

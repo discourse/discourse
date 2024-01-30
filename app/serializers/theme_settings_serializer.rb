@@ -9,7 +9,8 @@ class ThemeSettingsSerializer < ApplicationSerializer
              :valid_values,
              :list_type,
              :textarea,
-             :json_schema
+             :json_schema,
+             :editor_component
 
   def setting
     object.name
@@ -69,7 +70,15 @@ class ThemeSettingsSerializer < ApplicationSerializer
     object.json_schema
   end
 
+  def editor_component
+    object.editor_component
+  end
+
   def include_json_schema?
     object.type == ThemeSetting.types[:string] && object.json_schema.present?
+  end
+
+  def include_editor_component?
+    object.editor_component.present?
   end
 end
