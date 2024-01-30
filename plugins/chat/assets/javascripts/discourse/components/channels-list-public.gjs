@@ -47,7 +47,7 @@ export default class ChannelsListPublic extends Component {
 
   get isThreadEnabledInAnyChannel() {
     return this.currentUser?.chat_channels?.public_channels?.some(
-      (channel) => channel.threading_enabled === true
+      (channel) => channel.threading_enabled
     );
   }
 
