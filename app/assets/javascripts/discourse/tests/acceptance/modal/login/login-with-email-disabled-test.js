@@ -6,7 +6,6 @@ acceptance("Login with email disabled", function (needs) {
   needs.settings({
     enable_local_logins_via_email: false,
     enable_facebook_logins: true,
-    enable_passkeys: false,
   });
 
   test("with email button", async function (assert) {

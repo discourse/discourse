@@ -9,12 +9,6 @@ import {
 acceptance("Login Required", function (needs) {
   needs.settings({ login_required: true });
 
-  needs.pretender((server, helper) => {
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({ challenge: "smth" })
-    );
-  });
-
   test("redirect", async function (assert) {
     await visit("/latest");
     assert.strictEqual(

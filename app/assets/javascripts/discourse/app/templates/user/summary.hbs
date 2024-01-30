@@ -107,7 +107,7 @@
     @outletArgs={{hash model=this.model user=this.user}}
   />
 
-  <div class="top-section">
+  <div class="top-section replies-and-topics-section">
     <UserSummarySection @title="top_replies" class="replies-section pull-left">
       <UserSummaryTopicsList
         @type="replies"
@@ -141,7 +141,7 @@
     </UserSummarySection>
   </div>
 
-  <div class="top-section">
+  <div class="top-section links-and-replied-to-section">
     <UserSummarySection @title="top_links" class="links-section pull-left">
       {{#if this.model.links.length}}
         <ul>
@@ -239,27 +239,32 @@
           <tbody>
             {{#each this.model.top_categories as |category|}}
               <tr>
-                <td class="category-link">
-                  {{category-link
-                    category
-                    allowUncategorized="true"
-                    hideParent=false
-                  }}
-                </td>
-                <td class="topic-count">
-                  <UserSummaryCategorySearch
-                    @user={{this.user}}
-                    @category={{category}}
-                    @count={{category.topic_count}}
-                  />
-                </td>
-                <td class="reply-count">
-                  <UserSummaryCategorySearch
-                    @user={{this.user}}
-                    @category={{category}}
-                    @count={{category.post_count}}
-                  />
-                </td>
+                <PluginOutlet
+                  @name="user-summary-top-category-row"
+                  @outletArgs={{hash category=category user=this.user}}
+                >
+                  <td class="category-link">
+                    {{category-link
+                      category
+                      allowUncategorized="true"
+                      hideParent=false
+                    }}
+                  </td>
+                  <td class="topic-count">
+                    <UserSummaryCategorySearch
+                      @user={{this.user}}
+                      @category={{category}}
+                      @count={{category.topic_count}}
+                    />
+                  </td>
+                  <td class="reply-count">
+                    <UserSummaryCategorySearch
+                      @user={{this.user}}
+                      @category={{category}}
+                      @count={{category.post_count}}
+                    />
+                  </td>
+                </PluginOutlet>
               </tr>
             {{/each}}
           </tbody>
