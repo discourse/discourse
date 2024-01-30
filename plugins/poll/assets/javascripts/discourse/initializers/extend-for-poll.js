@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import WidgetGlue from "discourse/widgets/glue";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { bind, observes } from "discourse-common/utils/decorators";
-import { withPluginApi } from "discourse/lib/plugin-api";
 
 const PLUGIN_ID = "discourse-poll";
 let _glued = [];
@@ -131,11 +131,10 @@ function initializePolls(api) {
   api.includePostAttributes("polls", "polls_votes");
   api.decorateCookedElement(attachPolls, {
     onlyStream: true,
-    id: "discourse-poll",
   });
   api.cleanupStream(cleanUpPolls);
 
-  const siteSettings = api.container.lookup("site-settings:main");
+  const siteSettings = api.container.lookup("service:site-settings");
   if (siteSettings.poll_enabled) {
     api.addSearchSuggestion("in:polls");
   }

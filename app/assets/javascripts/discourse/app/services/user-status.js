@@ -1,9 +1,11 @@
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
+@disableImplicitInjections
 export default class UserStatusService extends Service {
-  @service appEvents;
+  @service currentUser;
 
   async set(status, pauseNotifications) {
     await ajax({

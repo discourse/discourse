@@ -1,17 +1,17 @@
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import User from "discourse/models/user";
+import {
+  joinChannel,
+  leaveChannel,
+  presentUserIds,
+} from "discourse/tests/helpers/presence-pretender";
 import {
   acceptance,
   count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import {
-  joinChannel,
-  leaveChannel,
-  presentUserIds,
-} from "discourse/tests/helpers/presence-pretender";
-import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Discourse Presence Plugin", function (needs) {

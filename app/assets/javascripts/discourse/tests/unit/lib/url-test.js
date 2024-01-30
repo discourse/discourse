@@ -1,15 +1,18 @@
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import DiscourseURL, {
+  getCanonicalUrl,
   getCategoryAndTagUrl,
   prefixProtocol,
   userPath,
 } from "discourse/lib/url";
-import { module, test } from "qunit";
-import User from "discourse/models/user";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setPrefix } from "discourse-common/lib/get-url";
-import sinon from "sinon";
 
-module("Unit | Utility | url", function () {
+module("Unit | Utility | url", function (hooks) {
+  setupTest(hooks);
+
   test("isInternal with a HTTP url", function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
 
@@ -74,8 +77,6 @@ module("Unit | Utility | url", function () {
 
   test("routeTo with prefix", async function (assert) {
     setPrefix("/forum");
-    logIn();
-    const user = User.current();
 
     sinon.stub(DiscourseURL, "router").get(() => {
       return {
@@ -85,8 +86,21 @@ module("Unit | Utility | url", function () {
     sinon.stub(DiscourseURL, "handleURL");
     DiscourseURL.routeTo("/my/messages");
     assert.ok(
-      DiscourseURL.handleURL.calledWith(`/u/${user.username}/messages`),
+      DiscourseURL.handleURL.calledWith(`/my/messages`),
       "it should navigate to the messages page"
+    );
+  });
+
+  test("routeTo does not rewrite routes started with /my", async function (assert) {
+    logIn();
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return { currentURL: "/" };
+    });
+    sinon.stub(DiscourseURL, "handleURL");
+    DiscourseURL.routeTo("/myfeed");
+    assert.ok(
+      DiscourseURL.handleURL.calledWith(`/myfeed`),
+      "it should navigate to the unmodified route"
     );
   });
 
@@ -163,6 +177,40 @@ module("Unit | Utility | url", function () {
     assert.ok(
       DiscourseURL.replaceState.calledWith("#heading1"),
       "in-page anchors call replaceState with the url fragment"
+    );
+  });
+
+  test("getCanonicalUrl", function (assert) {
+    assert.strictEqual(
+      getCanonicalUrl("http://eviltrout.com/t/this-is-a-test/1/"),
+      "http://eviltrout.com/t/this-is-a-test/1",
+      "trailing slashes are removed"
+    );
+
+    assert.strictEqual(
+      getCanonicalUrl(
+        "http://eviltrout.com/t/this-is-a-test/1/?page=2&u=john&not_allowed=true"
+      ),
+      "http://eviltrout.com/t/this-is-a-test/1?page=2",
+      "disallowed query params are removed"
+    );
+
+    assert.strictEqual(
+      getCanonicalUrl("http://eviltrout.com/t/this-is-a-test/2"),
+      "http://eviltrout.com/t/this-is-a-test/2",
+      "canonical urls are not modified"
+    );
+
+    assert.strictEqual(
+      getCanonicalUrl("http://eviltrout.com/t/this-is-a-test/2/?"),
+      "http://eviltrout.com/t/this-is-a-test/2",
+      "trailing /? are removed"
+    );
+
+    assert.strictEqual(
+      getCanonicalUrl("http://eviltrout.com/t/this-is-a-test/2?"),
+      "http://eviltrout.com/t/this-is-a-test/2",
+      "trailing ? are removed"
     );
   });
 });

@@ -1,10 +1,10 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { capitalize } from "@ember/string";
 import { inject as service } from "@ember/service";
+import { capitalize } from "@ember/string";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const Tab = EmberObject.extend({
   init() {
@@ -22,6 +22,7 @@ export default Controller.extend({
   dialog: service(),
   currentUser: service(),
   router: service(),
+  composer: service(),
 
   counts: null,
   showing: "members",
@@ -130,7 +131,7 @@ export default Controller.extend({
 
   @action
   messageGroup() {
-    this.send("createNewMessageViaParams", {
+    this.composer.openNewMessage({
       recipients: this.get("model.name"),
       hasGroups: true,
     });

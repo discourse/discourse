@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import discourseLater from "discourse-common/lib/later";
+import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 class Block {
   @tracked show = false;

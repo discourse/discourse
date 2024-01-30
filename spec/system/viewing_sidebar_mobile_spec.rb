@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Viewing sidebar mobile", type: :system, mobile: true do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
   let(:composer) { PageObjects::Components::Composer.new }
 
@@ -59,14 +59,14 @@ describe "Viewing sidebar mobile", type: :system, mobile: true do
   end
 
   it "toggles to desktop view after clicking on the toggle to desktop view button" do
-    visit ("/latest")
+    visit("/latest")
 
     expect(page).to have_css(".mobile-view")
 
     sidebar_dropdown.click
     sidebar_dropdown.click_toggle_to_desktop_view_button
 
-    visit ("/latest")
+    visit("/latest")
 
     expect(page).to have_css(".desktop-view")
   end

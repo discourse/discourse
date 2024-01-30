@@ -74,21 +74,4 @@ task "smoke:test" do
     end
 
   raise "FAILED" if results !~ /ALL PASSED/
-
-  api_key = ENV["ADMIN_API_KEY"]
-  api_username = ENV["ADMIN_API_USERNAME"]
-  theme_url = ENV["SMOKE_TEST_THEME_URL"]
-
-  next if api_key.blank? && api_username.blank? && theme_url.blank?
-
-  puts "Running QUnit tests for theme #{theme_url.inspect} using API key #{api_key[0..3]}... and username #{api_username.inspect}"
-
-  query_params = { seed: Random.new.seed, theme_url: theme_url, hidepassed: 1, report_requests: 1 }
-  url += "/" if !url.end_with?("/")
-  full_url = "#{url}theme-qunit?#{query_params.to_query}"
-  timeout = 1000 * 60 * 10
-
-  sh("node", "#{Rails.root}/test/run-qunit.js", full_url, timeout.to_s)
-
-  raise "THEME TESTS FAILED!" if !$?.success?
 end

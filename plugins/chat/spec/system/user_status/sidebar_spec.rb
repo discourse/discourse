@@ -16,8 +16,6 @@ RSpec.describe "User status | sidebar", type: :system do
   end
 
   it "shows user status" do
-    Jobs.run_immediately!
-
     visit("/")
 
     expect(find(".user-status-message .emoji")["alt"]).to eq("heart")
@@ -26,20 +24,16 @@ RSpec.describe "User status | sidebar", type: :system do
 
   context "when changing status" do
     it "updates status" do
-      Jobs.run_immediately!
-
       visit("/")
+
       current_user.set_status!("offline", "tooth")
 
-      expect(page).to have_css('.user-status-message .emoji[alt="tooth"]')
-      expect(find(".user-status-message .emoji")["src"]).to include("tooth")
+      expect(page).to have_css('.user-status-message img.emoji[alt="tooth"]')
     end
   end
 
   context "when removing status" do
     it "removes status" do
-      Jobs.run_immediately!
-
       visit("/")
       current_user.clear_status!
 

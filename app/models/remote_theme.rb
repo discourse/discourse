@@ -34,11 +34,11 @@ class RemoteTheme < ActiveRecord::Base
 
   has_one :theme, autosave: false
   scope :joined_remotes,
-        -> {
+        -> do
           joins("JOIN themes ON themes.remote_theme_id = remote_themes.id").where.not(
             remote_url: "",
           )
-        }
+        end
 
   validates_format_of :minimum_discourse_version,
                       :maximum_discourse_version,
@@ -68,16 +68,37 @@ class RemoteTheme < ActiveRecord::Base
   def self.update_zipped_theme(
     filename,
     original_filename,
-    match_theme: false,
     user: Discourse.system_user,
     theme_id: nil,
-    update_components: nil
+    update_components: nil,
+    run_migrations: true
   )
-    importer = ThemeStore::ZipImporter.new(filename, original_filename)
+    update_theme(
+      ThemeStore::ZipImporter.new(filename, original_filename),
+      user:,
+      theme_id:,
+      update_components:,
+      run_migrations:,
+    )
+  end
+
+  # This is only used in the development and test environment and is currently not supported for other environments
+  if Rails.env.test? || Rails.env.development?
+    def self.import_theme_from_directory(directory)
+      update_theme(ThemeStore::DirectoryImporter.new(directory))
+    end
+  end
+
+  def self.update_theme(
+    importer,
+    user: Discourse.system_user,
+    theme_id: nil,
+    update_components: nil,
+    run_migrations: true
+  )
     importer.import!
 
     theme_info = RemoteTheme.extract_theme_info(importer)
-    theme = Theme.find_by(name: theme_info["name"]) if match_theme # Old theme CLI method, remove Jan 2020
     theme = Theme.find_by(id: theme_id) if theme_id # New theme CLI method
 
     existing = true
@@ -92,30 +113,39 @@ class RemoteTheme < ActiveRecord::Base
     remote_theme = new
     remote_theme.theme = theme
     remote_theme.remote_url = ""
-    remote_theme.update_from_remote(importer, skip_update: true)
 
-    theme.save!
+    do_update_child_components = false
 
-    if existing && update_components.present? && update_components != "none"
-      child_components = child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+    theme.transaction do
+      remote_theme.update_from_remote(
+        importer,
+        skip_update: true,
+        already_in_transaction: true,
+        run_migrations:,
+      )
 
-      if update_components == "sync"
-        ChildTheme
-          .joins(child_theme: :remote_theme)
-          .where("remote_themes.remote_url NOT IN (?)", child_components)
-          .delete_all
+      if existing && update_components.present? && update_components != "none"
+        child_components = child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+
+        if update_components == "sync"
+          ChildTheme
+            .joins(child_theme: :remote_theme)
+            .where("remote_themes.remote_url NOT IN (?)", child_components)
+            .delete_all
+        end
+
+        child_components -=
+          theme
+            .child_themes
+            .joins(:remote_theme)
+            .where("remote_themes.remote_url IN (?)", child_components)
+            .pluck("remote_themes.remote_url")
+        theme.child_components = child_components
+        do_update_child_components = true
       end
-
-      child_components -=
-        theme
-          .child_themes
-          .joins(:remote_theme)
-          .where("remote_themes.remote_url IN (?)", child_components)
-          .pluck("remote_themes.remote_url")
-      theme.child_components = child_components
-      theme.update_child_components
     end
 
+    theme.update_child_components if do_update_child_components
     theme
   ensure
     begin
@@ -124,6 +154,7 @@ class RemoteTheme < ActiveRecord::Base
       Rails.logger.warn("Failed cleanup remote path #{e}")
     end
   end
+  private_class_method :update_theme
 
   def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
     importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
@@ -141,9 +172,9 @@ class RemoteTheme < ActiveRecord::Base
     remote_theme.private_key = private_key
     remote_theme.branch = branch
     remote_theme.remote_url = importer.url
+
     remote_theme.update_from_remote(importer)
 
-    theme.save!
     theme
   ensure
     begin
@@ -190,7 +221,13 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
-  def update_from_remote(importer = nil, skip_update: false)
+  def update_from_remote(
+    importer = nil,
+    skip_update: false,
+    raise_if_theme_save_fails: true,
+    already_in_transaction: false,
+    run_migrations: true
+  )
     cleanup = false
 
     unless importer
@@ -249,6 +286,7 @@ class RemoteTheme < ActiveRecord::Base
     METADATA_PROPERTIES.each do |property|
       self.public_send(:"#{property}=", theme_info[property.to_s])
     end
+
     if !self.valid?
       raise ImportError,
             I18n.t(
@@ -263,6 +301,7 @@ class RemoteTheme < ActiveRecord::Base
         theme_info.dig("modifiers", modifier_name.to_s),
       )
     end
+
     if !theme.theme_modifier_set.valid?
       raise ImportError,
             I18n.t(
@@ -312,12 +351,6 @@ class RemoteTheme < ActiveRecord::Base
       updated_fields << theme.set_field(**opts.merge(value: value))
     end
 
-    theme.convert_settings
-
-    # Destroy fields that no longer exist in the remote theme
-    field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }
-    ThemeField.where(id: field_ids_to_destroy).destroy_all
-
     if !skip_update
       self.remote_updated_at = Time.zone.now
       self.remote_version = importer.version
@@ -325,9 +358,30 @@ class RemoteTheme < ActiveRecord::Base
       self.commits_behind = 0
     end
 
-    update_theme_color_schemes(theme, theme_info["color_schemes"]) unless theme.component
+    transaction_block = -> do
+      # Destroy fields that no longer exist in the remote theme
+      field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }
+      ThemeField.where(id: field_ids_to_destroy).destroy_all
 
-    self.save!
+      update_theme_color_schemes(theme, theme_info["color_schemes"]) unless theme.component
+
+      self.save!
+
+      if raise_if_theme_save_fails
+        theme.save!
+      else
+        raise ActiveRecord::Rollback if !theme.save
+      end
+
+      theme.migrate_settings(start_transaction: false) if run_migrations
+    end
+
+    if already_in_transaction
+      transaction_block.call
+    else
+      self.transaction(&transaction_block)
+    end
+
     self
   ensure
     begin

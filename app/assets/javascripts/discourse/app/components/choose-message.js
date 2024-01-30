@@ -1,9 +1,10 @@
 import Component from "@ember/component";
 import { action, get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
-import { debounce, observes } from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
+import $ from "jquery";
 import { searchForTerm } from "discourse/lib/search";
+import { debounce, observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   loading: null,

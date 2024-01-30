@@ -1,14 +1,14 @@
-import Component from "@ember/component";
-import { classNameBindings } from "@ember-decorators/component";
-import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import LinkLookup from "discourse/lib/link-lookup";
-import { not } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import Component from "@ember/component";
+import EmberObject, { action } from "@ember/object";
+import { not } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { classNameBindings } from "@ember-decorators/component";
+import { ajax } from "discourse/lib/ajax";
+import LinkLookup from "discourse/lib/link-lookup";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { debounce } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 let _messagesCache = {};
 

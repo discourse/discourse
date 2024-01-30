@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "chat bbcode quoting in posts" do
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
 
   before { SiteSetting.chat_enabled = true }
 

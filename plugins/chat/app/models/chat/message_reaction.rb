@@ -6,6 +6,8 @@ module Chat
 
     belongs_to :chat_message, class_name: "Chat::Message"
     belongs_to :user
+
+    validates :emoji, length: { maximum: 100 }
   end
 end
 

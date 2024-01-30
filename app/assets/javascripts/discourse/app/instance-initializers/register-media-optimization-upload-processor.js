@@ -1,6 +1,6 @@
+import { Promise } from "rsvp";
 import { addComposerUploadPreProcessor } from "discourse/components/composer-editor";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
-import { Promise } from "rsvp";
 
 export default {
   initialize(owner) {

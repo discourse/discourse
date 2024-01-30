@@ -1,11 +1,11 @@
-import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import Site from "discourse/models/site";
 import {
   acceptance,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import Site from "discourse/models/site";
 
 acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
   needs.settings({

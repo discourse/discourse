@@ -132,7 +132,7 @@ RSpec.describe BackupRestore::SystemInterface do
           key = "#{hostname}:#{pid}"
           process = { pid: pid, hostname: hostname }
 
-          conn.sadd("processes", key)
+          conn.sadd?("processes", key)
           conn.hmset(key, "info", Sidekiq.dump_json(process))
 
           data =

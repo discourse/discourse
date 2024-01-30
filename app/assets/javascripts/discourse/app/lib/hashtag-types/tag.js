@@ -1,5 +1,5 @@
-import HashtagTypeBase from "./base";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import HashtagTypeBase from "./base";
 
 export default class TagHashtagType extends HashtagTypeBase {
   get type() {

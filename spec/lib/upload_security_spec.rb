@@ -7,7 +7,7 @@ RSpec.describe UploadSecurity do
   fab!(:post_in_secure_context) do
     Fabricate(:post, topic: Fabricate(:topic, category: private_category))
   end
-  fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload)
 
   let(:type) { nil }
   let(:opts) { { type: type, creating: creating } }
@@ -26,6 +26,14 @@ RSpec.describe UploadSecurity do
 
         it "returns true" do
           expect(security.should_be_secure?).to eq(true)
+        end
+
+        context "if secure_uploads_pm_only" do
+          before { SiteSetting.secure_uploads_pm_only = true }
+
+          it "returns false" do
+            expect(security.should_be_secure?).to eq(false)
+          end
         end
 
         context "when uploading in public context" do
@@ -59,13 +67,6 @@ RSpec.describe UploadSecurity do
 
           describe "for a public type profile_background" do
             let(:type) { "profile_background" }
-            it "returns false" do
-              expect(security.should_be_secure?).to eq(false)
-            end
-          end
-
-          describe "for a public type avatar" do
-            let(:type) { "avatar" }
             it "returns false" do
               expect(security.should_be_secure?).to eq(false)
             end

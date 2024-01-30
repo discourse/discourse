@@ -5,11 +5,18 @@
 # https://translate.discourse.org/
 
 pt_BR:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          fullscreen: "Quando o chat estiver em tela cheia"
+          never: "Nunca"
       logs:
         staff_actions:
           actions:
@@ -21,12 +28,24 @@ pt_BR:
           descriptions:
             chat:
               create_message: "Crie uma mensagem de chat em um canal especificado."
+      web_hooks:
+        chat_event:
+          group_name: "Eventos de chat"
+          chat_message_created: "Mensagem criada"
+          chat_message_edited: "Mensagem editada"
+          chat_message_trashed: "Mensagem descartada"
+          chat_message_restored: "Mensagem restaurada"
     about:
       chat_messages_count: "Mensagens de chat"
       chat_channels_count: "Canais de chat"
-      chat_users_count: "Usuários do chat"
+      chat_users_count: "Usuários(as) do chat"
     chat:
+      text_copied: Texto copiado para área de transferência
+      link_copied: Link copiado para área de transferência
+      back_to_forum: "Fórum"
+      deleted_chat_username: excluído(a)
       dates:
+        yesterday: "Ontem"
         time_tiny: "h:mm"
       all_loaded: "Mostrando todas as mensagens"
       already_enabled: "O chat já foi ativado neste tópico. Atualize."
@@ -53,6 +72,7 @@ pt_BR:
         delete_channel: "Excluir canal"
         join_channel: "Entrar no canal"
         leave_channel: "Sair do canal"
+        leave_groupchat_info: "Ao sair do chat em grupo, você não terá mais acesso a ele nem receberá as notificações relacionadas. Para entrar novamente, você precisa ser convidado(a) novamente por um membro do chat em grupo."
         join: "Participar"
         leave: "Sair"
         save_label:
@@ -81,6 +101,7 @@ pt_BR:
         create: "Novo canal"
       click_to_join: "Clique aqui para visualizar os canais disponíveis."
       close: "Fechar"
+      remove: "Remover"
       collapse: "Recolher gaveta de chat"
       expand: "Expandir Chat"
       confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"
@@ -105,7 +126,10 @@ pt_BR:
         title: "Mostrar indicador de atividade no cabeçalho"
         all_new: "Todas as Novas Mensagens"
         dm_and_mentions: "Mensagens Diretas e Menções"
+        only_mentions: "Apenas menções"
         never: "Nunca"
+      separate_sidebar_mode:
+        title: "Mostrar modos de barra lateral separados para o fórum e o chat"
       enable: "Ativar chat"
       flag: "Sinalizar"
       emoji: "Inserir emoji"
@@ -124,27 +148,11 @@ pt_BR:
           one: "Última hora"
           other: "Últimas %{count} horas"
       mention_warning:
-        dismiss: "ignorar"
-        cannot_see: "%{username} não pode acessar este canal e não foi notificado(a)."
-        cannot_see_multiple:
-          one: "%{username} e %{count} outro usuário não podem acessar este canal e não foram notificados"
-          other: "%{username} e %{count} outros usuários não podem acessar este canal e não foram notificados"
         invitations_sent:
           one: "Convite enviado"
           other: "Convites enviados"
         invite: "convidar para canal"
-        without_membership: "%{username} não entrou neste canal."
-        without_membership_multiple:
-          one: "%{username} e %{count} outro usuário não se juntaram a este canal"
-          other: "%{username} e %{count} outros(as) usuários(as) não se juntaram a este canal"
-        group_mentions_disabled: "%{group_name} não permite menções."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} e %{count} outro grupo não permitem menções"
-          other: "%{group_name} e %{count} outros grupos não permitem menções"
-        too_many_members: "%{group_name} tem membros demais. Ninguém foi notificado."
-        too_many_members_multiple:
-          one: "%{group_name} e %{count} outro grupo têm membros demais. Ninguém foi notificado."
-          other: "%{group_name} e %{count} outros grupos têm membros demais. Ninguém foi notificado."
+        channel_wide_mentions_disallowed: "As menções @here e @all foram desabilitadas neste canal."
         groups:
           header:
             some: "Alguns usuários não serão notificados"
@@ -239,13 +247,12 @@ pt_BR:
         closed: "Canal fechado, não é possível enviar novas mensagens no momento."
         read_only: "Canal somente para leitura, não é possível enviar novas mensagens no momento."
       placeholder_silenced: "Você não pode enviar mensagens neste momento."
-      placeholder_start_conversation: "Iniciar uma conversa com ..."
-      placeholder_start_conversation_users: "Iniciar uma conversa com %{commaSeparatedUsernames}"
       remove_upload: "Remover arquivo"
       react: "Reagir com emoji"
       reply: "Responder"
       edit: "Editar"
       copy_link: "Copiar link"
+      copy_text: "Copiar texto"
       rebake_message: "Reconstruir HTML"
       retry_staged_message:
         title: "Erro de rede"
@@ -257,7 +264,8 @@ pt_BR:
       save: "Salvar"
       select: "Selecionar"
       return_to_list: "Retornar para lista de canais"
-      return_to_threads_list: "Retornar às linhas de discussão em andamento"
+      return_to_channel: "Voltar para o canal"
+      return_to_threads_list: "Voltar para a lista de linhas de discussão"
       unread_threads_count:
         one: "Você tem %{count} linha de discussão não lida"
         other: "Você tem %{count} linhas de discussão não lidas"
@@ -304,6 +312,8 @@ pt_BR:
         yesterday: Ontem
       members_view:
         filter_placeholder: Encontrar membros
+        add_member: Adicionar membro
+        back_to_settings: "Voltar para as configurações"
       about_view:
         associated_topic: Tópico vinculado
         associated_category: Categoria vinculada
@@ -314,7 +324,6 @@ pt_BR:
         back_to_all_channels: "Todos os canais"
         back_to_channel: "Voltar"
         tabs:
-          about: Sobre
           members: Membros
           settings: Configurações
       new_message_modal:
@@ -325,9 +334,15 @@ pt_BR:
         default_search_placeholder: "#a-channel, @alguém ou alguma coisa"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@alguém"
-        user_search_placeholder: "... adicionar mais usuários"
+        user_search_placeholder: "... incluir mais membros"
         disabled_user: "desativou o chat"
         no_items: "Nenhum item"
+        create_group_placeholder: "Nome do chat em grupo (opcional)"
+        participants_counter: "%{selection_count}/%{max} participantes"
+        new_group_chat: "Novo chat em grupo"
+        filter: "Filtro"
+        cant_add_more_members: "Número máximo de membros alcançado"
+        create_new_group_chat: "Criar chat em grupo"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Adicionar um nome
@@ -339,10 +354,15 @@ pt_BR:
         input_placeholder: Adicione uma descrição
         description: Diga às pessoas do que se trata este canal
       direct_message_creator:
+        add_to_channel: "Adicionar ao canal"
         title: Novas mensagens
         prefix: "Para:"
         no_results: Nenhum resultado
         selected_user_title: "Desmarcar %{username}"
+        group_name: "Nome do chat em grupo (opcional)"
+        members_counter:
+          one: "%{count}/%{max} membro"
+          other: "%{count}/%{max} membros"
       channel:
         no_memberships: Este canal não tem membros
         no_memberships_found: Nenhum membro encontrado
@@ -396,17 +416,17 @@ pt_BR:
       reviewable:
         type: "Mensagem de chat"
       reactions:
-        only_you: "Você reagiu com :%{emoji}:"
-        you_and_single_user: "Você e %{username} reagiram com :%{emoji}:"
-        you_and_multiple_users: "Você, %{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
+        only_you: "<span>Você reagiu com </span>:%{emoji}:"
+        you_and_single_user: "<span>Você e %{username} reagiram com </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Você, %{commaSeparatedUsernames} e %{username} reagiram com </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
-          other: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
-        single_user: "%{username} reagiu com :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
+          one: "<span>Você, %{commaSeparatedUsernames} e mais %{count} reagiram com </span>:%{emoji}:"
+          other: "<span>Você, %{commaSeparatedUsernames} e mais %{count} reagiram com </span>:%{emoji}:"
+        single_user: "<span>%{username} reagiu com </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} e %{username} reagiram com </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
-          other: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} e mais %{count} reagiram com </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} e mais %{count} reagiram com </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Ativar/desativar barra de ferramentas"
         italic_text: "texto enfatizado"
@@ -416,6 +436,7 @@ pt_BR:
       quote:
         original_channel: 'Originalmente enviado em <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Citação do chat copiada para área de transferência"
+        default_thread_title: "Linha de discussão"
       notification_levels:
         never: "Nunca"
         mention: "Apenas para menções"
@@ -444,19 +465,26 @@ pt_BR:
         saved: "Salvou"
         unfollow: "Sair"
         admin_title: "Administrador(a)"
+        settings_title: "Configurações"
+        info_title: "Informações do canal"
+        category_label: "Categoria"
+        history_label: "Histórico"
+        members_label: "Membros"
       admin:
         title: "Chat"
         export_messages:
           title: "Exportar mensagens do chat"
-          description: "A exportação está atualmente limitada a 10.000 mensagens mais recentes nos últimos 6 meses."
+          description: "As mensagens de todos os canais são exportadas."
           create_export: "Criar exportação"
           export_has_started: "A exportação foi iniciada. Você receberá uma MP quando estiver pronta."
       direct_messages:
-        title: "Chat pessoal"
         new: "Criar um chat pessoal"
         create: "Ir"
         leave: "Sair deste chat pessoal"
+        close: "Fechar este chat pessoal"
         cannot_create: "Desculpe, você não pode enviar mensagens diretas."
+      channel_list:
+        title: "Canais"
       incoming_webhooks:
         back: "Voltar"
         channel_placeholder: "Selecione um canal"
@@ -514,14 +542,14 @@ pt_BR:
           one: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
           other: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
       retention_reminders:
-        public_none: "O histórico do canal é mantido indefinidamente."
-        public:
-          one: "O histórico do canal é mantido por %{count} dia."
-          other: "O histórico do canal é mantido por %{count} dias."
-        dm_none: "O histórico do chat pessoal é mantido indefinidamente."
-        dm:
-          one: "O histórico do chat pessoal é mantido por %{count} dia."
-          other: "O histórico do chat pessoal é mantido por %{count} dias."
+        indefinitely_short: "indefinidamente"
+        indefinitely_long: "As configurações do chat foram definidas para manter as mensagens do canal indefinidamente."
+        short:
+          one: "%{count} dia"
+          other: "%{count} dias"
+        long:
+          one: "As configurações do chat foram definidas para manter as mensagens do canal durante %{count} dia."
+          other: "As configurações do chat foram definidas para manter as mensagens do canal durante %{count} dias."
       flags:
         off_topic: "Esta mensagem não é relevante para a discussão atual, conforme definido pelo título do canal, e provavelmente deve ser movida para outro lugar."
         inappropriate: "Esta mensagem contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação de <a href=\"%{basePath}/guidelines\">nossas diretrizes da comunidade</a>."
@@ -546,7 +574,6 @@ pt_BR:
       thread:
         title: "Título"
         view_thread: Visualizar linha de discussão
-        default_title: "Linha de discussão"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostas"
@@ -568,7 +595,7 @@ pt_BR:
           other: "+%{count}"
       threads:
         open: "Linha de discussão aberta"
-        list: "Discussões em andamento"
+        list: "Linhas de discussão"
         none: "Você não está participando de nenhuma linha de discussão neste canal."
       draft_channel_screen:
         header: "Novas mensagens"
@@ -616,6 +643,9 @@ pt_BR:
       types:
         chat_reviewable_message:
           title: "Mensagem de chat sinalizada"
+        reviewable_chat_message:
+          title: "Mensagem de chat sinalizada"
+          noun: "mensagem de chat"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -651,3 +681,7 @@ pt_BR:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

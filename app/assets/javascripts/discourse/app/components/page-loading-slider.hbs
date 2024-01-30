@@ -1,4 +1,4 @@
-{{#if this.loadingSlider.enabled}}
+{{#if (eq this.loadingSlider.mode "slider")}}
   <div
     class={{concat-class
       "loading-indicator-container"

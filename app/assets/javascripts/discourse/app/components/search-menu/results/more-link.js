@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { focusSearchButton } from "discourse/components/search-menu";
+import DiscourseURL from "discourse/lib/url";
 
 export default class MoreLink extends Component {
   @service search;
@@ -18,15 +18,23 @@ export default class MoreLink extends Component {
   }
 
   @action
+  transitionToMoreUrl(event) {
+    event.preventDefault();
+    this.args.closeSearchMenu();
+    DiscourseURL.routeTo(this.moreUrl);
+    return false;
+  }
+
+  @action
   moreOfType(type) {
     this.args.updateTypeFilter(type);
     this.args.triggerSearch();
+    this.args.closeSearchMenu();
   }
 
   @action
   onKeyup(e) {
     if (e.key === "Escape") {
-      focusSearchButton();
       this.args.closeSearchMenu();
       e.preventDefault();
       return false;

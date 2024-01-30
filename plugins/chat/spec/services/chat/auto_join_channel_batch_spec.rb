@@ -52,8 +52,9 @@ describe Chat::AutoJoinChannelBatch do
     fab!(:channel) { Fabricate(:chat_channel, auto_join_users: true) }
 
     let(:channel_id) { channel.id }
-    let(:start_user_id) { 0 }
-    let(:end_user_id) { 10 }
+    let(:user_ids) { [Fabricate(:user).id] }
+    let(:start_user_id) { user_ids.first }
+    let(:end_user_id) { user_ids.last }
     let(:params) do
       { channel_id: channel_id, start_user_id: start_user_id, end_user_id: end_user_id }
     end
@@ -84,44 +85,35 @@ describe Chat::AutoJoinChannelBatch do
       end
 
       context "when channel is found" do
-        fab!(:users) { Fabricate.times(2, :user) }
-
-        let(:manager) { mock.responds_like_instance_of(Chat::ChannelMembershipManager) }
-
-        before do
-          Chat::Action::CreateMembershipsForAutoJoin
-            .stubs(:call)
-            .with(has_entries(channel: channel, contract: instance_of(described_class::Contract)))
-            .returns(user_ids)
-          Chat::ChannelMembershipManager.stubs(:new).with(channel).returns(manager)
-          manager.stubs(:recalculate_user_count)
-        end
-
         context "when more than one membership is created" do
-          let(:user_ids) { users.map(&:id) }
+          let(:user_ids) { Fabricate.times(2, :user).map(&:id) }
 
           it "does not recalculate user count" do
-            manager.expects(:recalculate_user_count).never
+            ::Chat::ChannelMembershipManager.any_instance.expects(:recalculate_user_count).never
             result
           end
 
-          it "publishes an event" do
-            Chat::Publisher.expects(:publish_new_channel).with(channel, users)
-            result
+          it "publishes an event for each user" do
+            messages =
+              MessageBus.track_publish(::Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL) do
+                result
+              end
+            expect(messages.length).to eq(2)
           end
         end
 
         context "when only one membership is created" do
-          let(:user_ids) { [users.first.id] }
-
           it "recalculates user count" do
-            manager.expects(:recalculate_user_count)
+            ::Chat::ChannelMembershipManager.any_instance.expects(:recalculate_user_count).once
             result
           end
 
           it "publishes an event" do
-            Chat::Publisher.expects(:publish_new_channel).with(channel, [users.first])
-            result
+            messages =
+              MessageBus.track_publish(::Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL) do
+                result
+              end
+            expect(messages.length).to eq(1)
           end
         end
       end

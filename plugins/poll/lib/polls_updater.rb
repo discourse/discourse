@@ -67,7 +67,9 @@ module DiscoursePoll
                     )
 
                   post.errors.add(:base, error)
+                  # rubocop:disable Lint/NonLocalExitFromIterator
                   return
+                  # rubocop:enable Lint/NonLocalExitFromIterator
                 end
               end
 

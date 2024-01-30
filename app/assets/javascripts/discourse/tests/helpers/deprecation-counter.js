@@ -1,6 +1,6 @@
 import { registerDeprecationHandler } from "@ember/debug";
-import { bind } from "discourse-common/utils/decorators";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class DeprecationCounter {
   counts = new Map();

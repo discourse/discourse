@@ -19,7 +19,12 @@ RSpec.describe Upload do
   describe ".with_no_non_post_relations" do
     it "does not find non-post related uploads" do
       post_upload = Fabricate(:upload)
-      post = Fabricate(:post, raw: "<img src='#{post_upload.url}'>")
+      post =
+        Fabricate(
+          :post,
+          raw: "<img src='#{post_upload.url}'>",
+          user: Fabricate(:user, refresh_auto_groups: true),
+        )
       post.link_post_uploads
 
       badge_upload = Fabricate(:upload)
@@ -324,6 +329,32 @@ RSpec.describe Upload do
     end
   end
 
+  describe ".sha1_from_long_url" do
+    it "should be able to get the sha1 from a regular upload URL" do
+      expect(
+        Upload.sha1_from_long_url(
+          "https://cdn.test.com/test/original/4X/7/6/5/1b6453892473a467d07372d45eb05abc2031647a.png",
+        ),
+      ).to eq("1b6453892473a467d07372d45eb05abc2031647a")
+    end
+
+    it "should be able to get the sha1 from a secure upload URL" do
+      expect(
+        Upload.sha1_from_long_url(
+          "#{Discourse.base_url}\/secure-uploads/original/1X/1b6453892473a467d07372d45eb05abc2031647a.png",
+        ),
+      ).to eq("1b6453892473a467d07372d45eb05abc2031647a")
+    end
+
+    it "doesn't get a sha1 for a URL that does not match our scheme" do
+      expect(
+        Upload.sha1_from_long_url(
+          "#{Discourse.base_url}\/blah/1b6453892473a467d07372d45eb05abc2031647a.png",
+        ),
+      ).to eq(nil)
+    end
+  end
+
   describe "#base62_sha1" do
     it "should return the right value" do
       upload.update!(sha1: "0000c513e1da04f7b4e99230851ea2aafeb8cc4e")
@@ -418,6 +449,7 @@ RSpec.describe Upload do
       end
 
       it "marks the upload as not secure if its access control post is a public post" do
+        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload)
         upload.update!(secure: true, access_control_post: Fabricate(:post))
         upload.update_secure_status
         expect(upload.secure).to eq(false)
@@ -427,6 +459,21 @@ RSpec.describe Upload do
         upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
         upload.update_secure_status
         expect(upload.secure).to eq(true)
+      end
+
+      it "does not attempt to change the ACL if the secure status has not changed" do
+        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload).never
+        upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+        upload.update_secure_status
+      end
+
+      it "does not attempt to change the ACL if s3_use_acls is disabled" do
+        SiteSetting.secure_uploads = false
+        SiteSetting.s3_use_acls = false
+        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload).never
+        upload.update!(secure: true, access_control_post: Fabricate(:post))
+        upload.update_secure_status
+        expect(upload.secure).to eq(false)
       end
 
       it "marks an image upload as secure if login_required is enabled" do
@@ -491,15 +538,37 @@ RSpec.describe Upload do
         SiteSetting.login_required = true
         SiteSetting.authorized_extensions = ""
         expect do
-          upl =
-            Fabricate(
-              :upload,
-              access_control_post: Fabricate(:private_message_post),
-              security_last_changed_at: Time.zone.now,
-              security_last_changed_reason: "test",
-              secure: true,
-            )
+          Fabricate(
+            :upload,
+            access_control_post: Fabricate(:private_message_post),
+            security_last_changed_at: Time.zone.now,
+            security_last_changed_reason: "test",
+            secure: true,
+          )
         end.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      context "when secure_uploads_pm_only is true" do
+        before { SiteSetting.secure_uploads_pm_only = true }
+
+        it "does not mark an image upload as secure if login_required is enabled" do
+          SiteSetting.login_required = true
+          upload.update!(secure: false)
+          expect { upload.update_secure_status }.not_to change { upload.secure }
+          expect(upload.reload.secure).to eq(false)
+        end
+
+        it "marks the upload as not secure if its access control post is a public post" do
+          upload.update!(secure: true, access_control_post: Fabricate(:post))
+          upload.update_secure_status
+          expect(upload.secure).to eq(false)
+        end
+
+        it "leaves the upload as secure if its access control post is a PM post" do
+          upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+          upload.update_secure_status
+          expect(upload.secure).to eq(true)
+        end
       end
     end
   end

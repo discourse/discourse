@@ -1,23 +1,22 @@
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
-import showModal from "discourse/lib/show-modal";
-import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
-import Bookmark from "discourse/models/bookmark";
-import BookmarkModal from "discourse/components/modal/bookmark";
-import { BookmarkFormData } from "discourse/lib/bookmark";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { tracked } from "@glimmer/tracking";
+import { getOwner, setOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { isTesting } from "discourse-common/config/environment";
+import BookmarkModal from "discourse/components/modal/bookmark";
+import FlagModal from "discourse/components/modal/flag";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { BookmarkFormData } from "discourse/lib/bookmark";
 import { clipboardCopy } from "discourse/lib/utilities";
+import Bookmark from "discourse/models/bookmark";
+import getURL from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
+import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageReaction, {
   REACTIONS,
 } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import { setOwner } from "@ember/application";
-import { tracked } from "@glimmer/tracking";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
-import I18n from "I18n";
 
 const removedSecondaryActions = new Set();
 
@@ -45,6 +44,7 @@ export default class ChatMessageInteractor {
   @service router;
   @service modal;
   @service capabilities;
+  @service toasts;
 
   @tracked message = null;
   @tracked context = null;
@@ -166,6 +166,14 @@ export default class ChatMessageInteractor {
       icon: "link",
     });
 
+    if (this.site.mobileView) {
+      buttons.push({
+        id: "copyText",
+        name: I18n.t("chat.copy_text"),
+        icon: "clipboard",
+      });
+    }
+
     if (this.canEdit) {
       buttons.push({
         id: "edit",
@@ -237,6 +245,14 @@ export default class ChatMessageInteractor {
     }
   }
 
+  copyText() {
+    clipboardCopy(this.message.message);
+    this.toasts.success({
+      duration: 3000,
+      data: { message: I18n.t("chat.text_copied") },
+    });
+  }
+
   copyLink() {
     const { protocol, host } = window.location;
     const channelId = this.message.channel.id;
@@ -251,6 +267,10 @@ export default class ChatMessageInteractor {
 
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
+    this.toasts.success({
+      duration: 1500,
+      data: { message: I18n.t("chat.link_copied") },
+    });
   }
 
   @action
@@ -263,7 +283,7 @@ export default class ChatMessageInteractor {
       return;
     }
 
-    if (this.capabilities.canVibrate && !isTesting()) {
+    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(5);
     }
 
@@ -338,8 +358,13 @@ export default class ChatMessageInteractor {
     const model = new ChatMessage(this.message.channel, this.message);
     model.username = this.message.user?.username;
     model.user_id = this.message.user?.id;
-    const controller = showModal("flag", { model });
-    controller.set("flagTarget", new ChatMessageFlag());
+    this.modal.show(FlagModal, {
+      model: {
+        flagTarget: new ChatMessageFlag(getOwner(this)),
+        flagModel: model,
+        setHidden: () => model.set("hidden", true),
+      },
+    });
   }
 
   @action

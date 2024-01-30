@@ -15,7 +15,6 @@
     "muted": { "type": "boolean" },
     "desktop_notification_level": { "type": "string" },
     "mobile_notification_level": { "type": "string" },
-    "last_viewed_at": { "type": "string" },
     "following": { "type": "boolean" },
     "user": {
       "type": ["object", "null"],
@@ -24,7 +23,9 @@
         "id": { "type": "number" },
         "name": { "type": "string" },
         "avatar_template": { "type": "string" },
-        "username": { "type": "string" }
+        "username": { "type": "string" },
+        "can_chat": { "type": "boolean" },
+        "has_chat_enabled": { "type": "boolean" }
       }
     },
     "last_viewed_at": { "type": "datetime" }

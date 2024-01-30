@@ -1,13 +1,13 @@
-import KeyValueStore from "discourse/lib/key-value-store";
 import RestAdapter from "discourse/adapters/rest";
-import Store from "discourse/services/store";
 import TopicListAdapter from "discourse/adapters/topic-list";
-import TopicTrackingState from "discourse/models/topic-tracking-state";
-import { buildResolver } from "discourse-common/resolver";
-import { currentSettings } from "discourse/tests/helpers/site-settings";
-import Site from "discourse/models/site";
+import KeyValueStore from "discourse/lib/key-value-store";
 import RestModel from "discourse/models/rest";
+import Site from "discourse/models/site";
+import TopicTrackingState from "discourse/models/topic-tracking-state";
+import Store from "discourse/services/store";
+import { currentSettings } from "discourse/tests/helpers/site-settings";
 import deprecated from "discourse-common/lib/deprecated";
+import { buildResolver } from "discourse-common/resolver";
 
 const CatAdapter = RestAdapter.extend({
   primaryKey: "cat_id",

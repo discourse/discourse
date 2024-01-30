@@ -18,32 +18,25 @@
     align-items: center;
     justify-content: space-between;
     background: var(--tertiary-low);
-    padding: 0.5em 0 0.5em 1em;
+    padding: 0.5rem;
     color: var(--primary);
-    padding: 0.5em 0 0.5em 1em;
     min-width: 280px;
     margin-left: auto;
     margin-right: auto;
+    gap: 0.25rem;
   }
 
   .dismiss-btn {
-    margin: 0 0.25em;
     color: var(--primary-medium);
     align-self: flex-start;
 
     &:hover,
     &:focus {
-      background-color: transparent;
-      .d-icon {
-        color: var(--primary);
-      }
-    }
-    .d-icon {
-      color: var(--primary-medium);
+      background: var(--tertiary-medium);
     }
   }
 }
 
 .full-page-chat .chat-notices {
-  top: 4rem;
+  top: 2rem;
 }

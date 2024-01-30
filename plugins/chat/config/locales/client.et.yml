@@ -5,21 +5,27 @@
 # https://translate.discourse.org/
 
 et:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Vestlus
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Alati"
+          never: "Mitte kunagi"
       logs:
         staff_actions:
           actions:
             chat_channel_status_change: "Vestluskanali staatus muutus"
             chat_channel_delete: "Vestlus on kustutatud"
-    about:
-      chat_messages_count: "Vestlussõnumid"
-      chat_channels_count: "Vestluskanalid"
-      chat_users_count: "Vestluskasutajad"
     chat:
+      back_to_forum: "Foorum"
+      deleted_chat_username: kustutatud
+      dates:
+        yesterday: "Eile"
       bot: "bot"
       create: "Loo"
       cancel: "Tühista"
@@ -35,6 +41,7 @@ et:
         join: "Liitu"
         leave: "Lahku"
       close: "Sulge"
+      remove: "Eemalda"
       delete: "Kustuta"
       muted: "vaigistatud"
       joined: "liitus"
@@ -46,8 +53,6 @@ et:
       heading: "Vestlus"
       join: "Liitu"
       last_visit: "viimane visiit"
-      mention_warning:
-        dismiss: "ignoreeri"
       reply: "Vasta"
       edit: "Muuda"
       rebake_message: "Rekonstrueeri HTML"
@@ -76,9 +81,11 @@ et:
       channel_info:
         back_to_channel: "Tagasi"
         tabs:
-          about: Teave
           members: Liikmed
           settings: Sätted
+      new_message_modal:
+        filter: "Filter"
+        create_new_group_chat: "Looge grupivestlus"
       direct_message_creator:
         title: Uus sõnum
         prefix: "Kellele:"
@@ -104,8 +111,15 @@ et:
         saved: "Salvestatud"
         unfollow: "Lahku"
         admin_title: "Admin"
+        settings_title: "Sätted"
+        info_title: "Kanali info"
+        category_label: "Foorum"
+        history_label: "Ajalugu"
+        members_label: "Liikmed"
       admin:
         title: "Vestlus"
+      channel_list:
+        title: "Kanalid"
       incoming_webhooks:
         back: "Tagasi"
         description: "Kirjeldus"
@@ -126,6 +140,10 @@ et:
           title: "Liiguta olemasolevasse teemasse"
         new_message:
           title: "Liiguta uude sõnumisse"
+      retention_reminders:
+        short:
+          one: "%{count} päev"
+          other: "%{count} päeva"
       emoji_picker:
         objects: "Objektid"
         flags: "Tähised"
@@ -162,3 +180,7 @@ et:
       sections:
         chat:
           title: Vestlus
+    sidebar:
+      panels:
+        chat:
+          label: "Vestlus"

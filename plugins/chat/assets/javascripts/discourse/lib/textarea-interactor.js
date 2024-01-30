@@ -1,9 +1,9 @@
-import EmberObject from "@ember/object";
-import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
-import { next, schedule } from "@ember/runloop";
 import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
 import { registerDestructor } from "@ember/destroyable";
+import EmberObject from "@ember/object";
+import { next, schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
 
 // This class sole purpose is to provide a way to interact with the textarea
 // using the existing TextareaTextManipulation mixin without using it directly

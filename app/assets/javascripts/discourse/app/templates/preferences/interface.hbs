@@ -74,7 +74,7 @@
           @action={{action "undoColorSchemePreview"}}
           @label="user.color_schemes.undo"
           @icon="undo"
-          @class="btn-default btn-small undo-preview"
+          class="btn-default btn-small undo-preview"
         />
       {{/if}}
       <div class="controls color-scheme-checkbox">
@@ -168,42 +168,42 @@
   <PreferenceCheckbox
     @labelKey="user.external_links_in_new_tab"
     @checked={{this.model.user_option.external_links_in_new_tab}}
-    @class="pref-external-links"
     data-setting-name="user-external-links"
+    class="pref-external-links"
   />
   <PreferenceCheckbox
     @labelKey="user.enable_quoting"
     @checked={{this.model.user_option.enable_quoting}}
-    @class="pref-enable-quoting"
     data-setting-name="user-enable-quoting"
+    class="pref-enable-quoting"
   />
   <PreferenceCheckbox
     @labelKey="user.enable_defer"
     @checked={{this.model.user_option.enable_defer}}
-    @class="pref-defer-unread"
     data-setting-name="user-enable-defer"
+    class="pref-defer-unread"
   />
   {{#if this.siteSettings.automatically_unpin_topics}}
     <PreferenceCheckbox
       @labelKey="user.automatically_unpin_topics"
       @checked={{this.model.user_option.automatically_unpin_topics}}
-      @class="pref-auto-unpin"
       data-setting-name="user-auto-unpin"
+      class="pref-auto-unpin"
     />
   {{/if}}
   {{#if this.siteSettings.allow_users_to_hide_profile}}
     <PreferenceCheckbox
       @labelKey="user.hide_profile_and_presence"
       @checked={{this.model.user_option.hide_profile_and_presence}}
-      @class="pref-hide-profile"
       data-setting-name="user-hide-profile"
+      class="pref-hide-profile"
     />
   {{/if}}
   <PreferenceCheckbox
     @labelKey="user.dynamic_favicon"
     @checked={{this.model.user_option.dynamic_favicon}}
-    @class="pref-dynamic-favicon"
     data-setting-name="user-dynamic-favicon"
+    class="pref-dynamic-favicon"
   />
   <div
     class="controls controls-dropdown pref-page-title"
@@ -240,14 +240,14 @@
   <PreferenceCheckbox
     @labelKey="user.skip_new_user_tips.description"
     @checked={{this.model.user_option.skip_new_user_tips}}
-    @class="pref-new-user-tips"
     data-setting-name="user-new-user-tips"
+    class="pref-new-user-tips"
   />
   {{#if this.site.user_tips}}
     <DButton
-      @class="pref-reset-seen-user-tips"
       @action={{action "resetSeenUserTips"}}
       data-setting-name="user-reset-seen-user-tips"
+      class="btn-default pref-reset-seen-user-tips"
     >{{i18n "user.reset_seen_user_tips"}}</DButton>
   {{/if}}
 </fieldset>

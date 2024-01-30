@@ -5,8 +5,8 @@
   @collapsable={{@collapsable}}
   @headerActions={{this.section.headerActions}}
   @headerActionsIcon={{this.section.headerActionIcon}}
-  @class={{this.section.dragCss}}
   @hideSectionHeader={{this.section.hideSectionHeader}}
+  class={{this.section.dragCss}}
 >
   {{#each this.section.links as |link|}}
     {{#if link.externalOrFullReload}}
@@ -18,16 +18,7 @@
         @prefixValue={{link.prefixValue}}
         @fullReload={{link.fullReload}}
         @href={{link.value}}
-        @class={{link.linkDragCss}}
-        {{(if
-          this.section.reorderable
-          (modifier
-            "draggable"
-            didStartDrag=link.didStartDrag
-            didEndDrag=link.didEndDrag
-            dragMove=link.dragMove
-          )
-        )}}
+        @linkClass={{link.linkDragCss}}
       />
     {{else}}
       <Sidebar::SectionLink
@@ -47,16 +38,7 @@
         @suffixValue={{link.suffixValue}}
         @suffixType={{link.suffixType}}
         @currentWhen={{link.currentWhen}}
-        @class={{link.linkDragCss}}
-        {{(if
-          this.section.reorderable
-          (modifier
-            "draggable"
-            didStartDrag=link.didStartDrag
-            didEndDrag=link.didEndDrag
-            dragMove=link.dragMove
-          )
-        )}}
+        @linkClass={{link.linkDragCss}}
       />
     {{/if}}
   {{/each}}
@@ -82,5 +64,11 @@
         @moreButtonIcon={{this.section.moreSectionButtonIcon}}
       />
     {{/if}}
+  {{else if this.section.moreSectionButtonAction}}
+    <Sidebar::SectionLinkButton
+      @action={{this.section.moreSectionButtonAction}}
+      @icon={{this.section.moreSectionButtonIcon}}
+      @text={{this.section.moreSectionButtonText}}
+    />
   {{/if}}
 </Sidebar::Section>

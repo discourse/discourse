@@ -1,5 +1,5 @@
-import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
+import RestModel from "discourse/models/rest";
 
 const TopicTimer = RestModel.extend({});
 

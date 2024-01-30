@@ -1,11 +1,11 @@
-import BadgeGrouping from "discourse/models/badge-grouping";
 import EmberObject from "@ember/object";
-import { Promise } from "rsvp";
-import RestModel from "discourse/models/rest";
-import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
 import { alias, none } from "@ember/object/computed";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import BadgeGrouping from "discourse/models/badge-grouping";
+import RestModel from "discourse/models/rest";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const Badge = RestModel.extend({
   newBadge: none("id"),

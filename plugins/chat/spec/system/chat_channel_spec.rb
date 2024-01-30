@@ -5,9 +5,10 @@ RSpec.describe "Chat channel", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-  let(:chat) { PageObjects::Pages::Chat.new }
+  let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
 
   before do
     chat_system_bootstrap
@@ -15,11 +16,53 @@ RSpec.describe "Chat channel", type: :system do
     sign_in(current_user)
   end
 
+  context "when has unread threads" do
+    fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
+
+    before do
+      channel_1.update!(threading_enabled: true)
+      thread_1.add(current_user)
+      Fabricate(:chat_message, thread: thread_1, use_service: true)
+    end
+
+    context "when visiting channel" do
+      it "opens thread panel" do
+        chat_page.visit_channel(channel_1)
+
+        expect(side_panel_page).to have_open_thread_list
+      end
+    end
+
+    context "when visiting channel on mobile", mobile: true do
+      it "doesn’t open  thread panel" do
+        chat_page.visit_channel(channel_1)
+
+        expect(side_panel_page).to have_no_open_thread_list
+      end
+    end
+
+    context "when visiting thread" do
+      it "doesn’t open thread panel" do
+        chat_page.visit_thread(thread_1)
+
+        expect(side_panel_page).to have_no_open_thread_list
+      end
+    end
+
+    context "when opening channel message" do
+      it "doesn’t open  thread panel" do
+        chat_page.visit_channel(channel_1, message_id: message_1.id)
+
+        expect(side_panel_page).to have_no_open_thread_list
+      end
+    end
+  end
+
   context "when first batch of messages doesnt fill page" do
     before { 30.times { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) } }
 
     it "autofills for more messages" do
-      chat.prefers_full_page
+      chat_page.prefers_full_page
       visit("/")
       # cheap trick to ensure the messages don't fill the initial page
       page.execute_script(
@@ -37,7 +80,7 @@ RSpec.describe "Chat channel", type: :system do
 
       it "loads most recent messages" do
         unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-        chat.visit_channel(channel_1, message_id: message_1.id)
+        chat_page.visit_channel(channel_1, message_id: message_1.id)
 
         expect(channel_page.messages).to have_no_message(id: unloaded_message.id)
 
@@ -49,30 +92,28 @@ RSpec.describe "Chat channel", type: :system do
 
     context "with two sessions opened on same channel" do
       it "syncs the messages" do
+        Jobs.run_immediately!
+
         using_session(:tab_1) do
           sign_in(current_user)
-          chat.visit_channel(channel_1)
+          chat_page.visit_channel(channel_1)
         end
 
         using_session(:tab_2) do
           sign_in(current_user)
-          chat.visit_channel(channel_1)
+          chat_page.visit_channel(channel_1)
         end
 
-        using_session(:tab_1) do |session|
-          channel_page.send_message("test_message")
-          session.quit
-        end
+        using_session(:tab_1) { channel_page.send_message("test_message") }
 
-        using_session(:tab_2) do |session|
-          expect(channel_page).to have_message(text: "test_message")
-          session.quit
+        using_session(:tab_2) do
+          expect(channel_page.messages).to have_message(text: "test_message")
         end
       end
     end
 
     it "allows to edit this message once persisted" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
       channel_page.send_message("aaaaaa")
 
       expect(channel_page.messages).to have_message(persisted: true, text: "aaaaaa")
@@ -91,7 +132,7 @@ RSpec.describe "Chat channel", type: :system do
 
     it "jumps to the bottom of the channel" do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-      visit("/chat/message/#{message_1.id}")
+      visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
@@ -107,7 +148,7 @@ RSpec.describe "Chat channel", type: :system do
     it "jumps to the bottom of the channel" do
       channel_1.membership_for(current_user).update!(last_read_message: message_1)
       messages = 50.times.map { Fabricate(:chat_message, chat_channel: channel_1) }
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       expect(page).to have_css("[data-id='#{messages.first.id}']")
       expect(page).to have_no_css("[data-id='#{messages.last.id}']")
@@ -123,7 +164,7 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     xit "doesn’t scroll the pane" do
-      visit("/chat/message/#{message_1.id}")
+      visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
 
       new_message = Fabricate(:chat_message, chat_channel: channel_1)
 
@@ -145,7 +186,7 @@ RSpec.describe "Chat channel", type: :system do
     before { channel_1.add(other_user) }
 
     it "highlights the mentions" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       expect(page).to have_selector(".mention.highlighted.valid-mention", text: "@here")
       expect(page).to have_selector(".mention.highlighted.valid-mention", text: "@all")
@@ -161,10 +202,10 @@ RSpec.describe "Chat channel", type: :system do
       SiteSetting.enable_user_status = true
       current_user.set_status!("off to dentist", "tooth")
       other_user.set_status!("surfing", "surfing_man")
-      Fabricate(:chat_mention, user: current_user, chat_message: message)
-      Fabricate(:chat_mention, user: other_user, chat_message: message)
+      Fabricate(:user_chat_mention, user: current_user, chat_message: message)
+      Fabricate(:user_chat_mention, user: other_user, chat_message: message)
 
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       expect(page).to have_selector(
         ".mention .user-status-message img[alt='#{current_user.user_status.emoji}']",
@@ -184,7 +225,7 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     it "doesn’t show the reply-to line" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       expect(page).to have_no_selector(".chat-reply__excerpt")
     end
@@ -200,7 +241,7 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     it "shows the reply-to line" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       expect(page).to have_selector(".chat-reply__excerpt")
     end
@@ -224,7 +265,7 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     it "renders text in the reply-to" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
         "&lt;mark&gt;not marked&lt;/mark&gt;",
@@ -232,12 +273,15 @@ RSpec.describe "Chat channel", type: :system do
     end
 
     it "renders safe HTML like mentions (which are just links) in the reply-to" do
-      message_2.update!(message: "@#{other_user.username} <mark>not marked</mark>")
-      message_2.rebake!
-      chat.visit_channel(channel_1)
+      update_message!(
+        message_2,
+        user: other_user,
+        text: "@#{other_user.username} <mark>not marked</mark>",
+      )
+      chat_page.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
       )
     end
   end
@@ -246,7 +290,7 @@ RSpec.describe "Chat channel", type: :system do
     before { Fabricate(:chat_message, chat_channel: channel_1, created_at: 2.days.ago) }
 
     it "shows a date separator" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       expect(page).to have_selector(".chat-message-separator__text", text: "Today")
     end
@@ -262,7 +306,7 @@ RSpec.describe "Chat channel", type: :system do
       MESSAGE
 
     it "adds the correct lang" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       expect(page).to have_selector("code.lang-ruby")
     end
@@ -272,7 +316,7 @@ RSpec.describe "Chat channel", type: :system do
     before { 50.times { Fabricate(:chat_message, chat_channel: channel_1) } }
 
     it "resets the active message" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
       last_message = find(".chat-message-container:last-child")
       last_message.hover
 
@@ -284,6 +328,33 @@ RSpec.describe "Chat channel", type: :system do
 
       expect(page).to have_no_css(
         ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
+    end
+  end
+
+  context "when opening message secondary options" do
+    it "doesn’t hide dropdown on mouseleave" do
+      chat_page.visit_channel(channel_1)
+      last_message = find(".chat-message-container:last-child")
+      last_message.hover
+
+      expect(page).to have_css(
+        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
+
+      find(".chat-message-actions-container .secondary-actions").click
+      expect(page).to have_css(
+        ".chat-message-actions-container .secondary-actions .select-kit-body",
+      )
+
+      find("#site-logo").hover
+      expect(page).to have_css(
+        ".chat-message-actions-container .secondary-actions .select-kit-body",
+      )
+
+      find("#site-logo").click
+      expect(page).to have_no_css(
+        ".chat-message-actions-container .secondary-actions .select-kit-body",
       )
     end
   end

@@ -1,17 +1,17 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
-import { action } from "@ember/object";
-import I18n from "I18n";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
+
+const DEFAULT_LIMIT = 60;
+let limit = DEFAULT_LIMIT;
+
+export function setNotificationsLimit(newLimit) {
+  limit = newLimit;
+}
 
 export default DiscourseRoute.extend(ViewingActionType, {
   controllerName: "user-notifications",
   queryParams: { filter: { refreshModel: true } },
-
-  @action
-  didTransition() {
-    this.controllerFor("user-notifications")._showFooter();
-    return true;
-  },
 
   model(params) {
     const username = this.modelFor("user").get("username");
@@ -23,6 +23,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
       return this.store.find("notification", {
         username,
         filter: params.filter,
+        limit,
       });
     }
   },

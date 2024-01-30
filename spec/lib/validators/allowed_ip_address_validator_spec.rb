@@ -11,7 +11,9 @@ RSpec.describe AllowedIpAddressValidator do
       ScreenedIpAddress.stubs(:should_block?).returns(true)
       validate
       expect(record.errors[:ip_address]).to be_present
-      expect(record.errors[:ip_address][0]).to eq(I18n.t("user.ip_address.blocked"))
+      expect(record.errors[:ip_address][0]).to eq(
+        I18n.t("activerecord.errors.models.user.attributes.ip_address.blocked"),
+      )
     end
   end
 
@@ -21,7 +23,9 @@ RSpec.describe AllowedIpAddressValidator do
       validate
       expect(record.errors[:ip_address]).to be_present
       expect(record.errors[:ip_address][0]).to eq(
-        I18n.t("user.ip_address.max_new_accounts_per_registration_ip"),
+        I18n.t(
+          "activerecord.errors.models.user.attributes.ip_address.max_new_accounts_per_registration_ip",
+        ),
       )
     end
   end

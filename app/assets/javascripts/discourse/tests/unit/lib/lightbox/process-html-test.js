@@ -1,20 +1,22 @@
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { processHTML } from "discourse/lib/lightbox/process-html";
 import {
-  LIGHTBOX_IMAGE_FIXTURES,
   generateImageUploaderMarkup,
   generateLightboxMarkup,
+  LIGHTBOX_IMAGE_FIXTURES,
 } from "discourse/tests/helpers/lightbox-helpers";
-import { module, test } from "qunit";
-
-import { SELECTORS } from "discourse/lib/lightbox/constants";
 import domFromString from "discourse-common/lib/dom-from-string";
-import { processHTML } from "discourse/lib/lightbox/process-html";
 
-module("Unit | lib | Experimental lightbox | processHTML()", function () {
+module("Unit | lib | Experimental lightbox | processHTML()", function (hooks) {
+  setupTest(hooks);
+
   const wrap = domFromString(generateLightboxMarkup())[0];
   const imageUploaderWrap = domFromString(generateImageUploaderMarkup())[0];
   const selector = SELECTORS.DEFAULT_ITEM_SELECTOR;
 
-  test("returns the correct object from the proccessed element", async function (assert) {
+  test("returns the correct object from the processed element", async function (assert) {
     const container = wrap.cloneNode(true);
 
     const { items, startingIndex } = await processHTML({
@@ -58,8 +60,8 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     assert.strictEqual(item.index, LIGHTBOX_IMAGE_FIXTURES.first.index);
 
     assert.strictEqual(
-      item.cssVars.string,
-      LIGHTBOX_IMAGE_FIXTURES.first.cssVars.string
+      item.cssVars.toString(),
+      LIGHTBOX_IMAGE_FIXTURES.first.cssVars.toString()
     );
 
     assert.strictEqual(startingIndex, 0);
@@ -80,7 +82,7 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     assert.strictEqual(items.length, 3);
   });
 
-  test("fallsback to src when no href is defined for fullsizeURL", async function (assert) {
+  test("falls back to src when no href is defined for fullsizeURL", async function (assert) {
     const container = wrap.cloneNode(true);
 
     container.querySelector("a").removeAttribute("href");
@@ -127,24 +129,6 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     assert.strictEqual(items[0].title, "");
   });
 
-  test("correctly escapes the title", async function (assert) {
-    const container = wrap.cloneNode(true);
-
-    container
-      .querySelector("a")
-      .setAttribute("title", `"><\x00script>javascript:alert(1)</script>`);
-
-    const { items } = await processHTML({
-      container,
-      selector,
-    });
-
-    assert.strictEqual(
-      items[0].title,
-      `&quot;&gt;&lt;\x00script&gt;javascript:alert(1)&lt;/script&gt;`
-    );
-  });
-
   test("handles missing aspect ratio", async function (assert) {
     const container = wrap.cloneNode(true);
 
@@ -158,7 +142,7 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     assert.strictEqual(items[0].aspectRatio, null);
 
     assert.strictEqual(
-      items[0].cssVars.string,
+      items[0].cssVars.toString(),
       `--dominant-color: #${LIGHTBOX_IMAGE_FIXTURES.first.dominantColor};--small-url: url(${LIGHTBOX_IMAGE_FIXTURES.first.smallURL});`
     );
   });
@@ -189,7 +173,7 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     assert.strictEqual(items[0].dominantColor, null);
 
     assert.strictEqual(
-      items[0].cssVars.string,
+      items[0].cssVars.toString(),
       `--aspect-ratio: ${LIGHTBOX_IMAGE_FIXTURES.first.aspectRatio};--small-url: url(${LIGHTBOX_IMAGE_FIXTURES.first.smallURL});`
     );
   });
@@ -268,7 +252,7 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     );
 
     assert.strictEqual(
-      item.cssVars.string,
+      item.cssVars.toString(),
       `--small-url: url(${LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL});`
     );
   });

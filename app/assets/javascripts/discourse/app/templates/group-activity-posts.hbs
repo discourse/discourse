@@ -1,3 +1,7 @@
+{{#if this.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
 <LoadMore @selector=".user-stream-item" @action={{action "loadMore"}}>
   <div class="user-stream">
     {{#each this.model as |post|}}

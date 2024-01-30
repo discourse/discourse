@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::SiteSettingsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#index" do
     context "when logged in as an admin" do
@@ -267,6 +267,30 @@ RSpec.describe Admin::SiteSettingsController do
         put "/admin/site_settings/title.json", params: { title: "" }
         expect(response.status).to eq(200)
         expect(SiteSetting.title).to eq("")
+      end
+
+      it "sanitizes integer values" do
+        put "/admin/site_settings/suggested_topics.json", params: { suggested_topics: "1,000" }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.suggested_topics).to eq(1000)
+      end
+
+      it "sanitizes file_size_restriction values" do
+        put "/admin/site_settings/max_image_size_kb.json", params: { max_image_size_kb: "4096" }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.max_image_size_kb).to eq(4096)
+      end
+
+      it "sanitizes negative integer values correctly" do
+        put "/admin/site_settings/pending_users_reminder_delay_minutes.json",
+            params: {
+              pending_users_reminder_delay_minutes: "-1",
+            }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(-1)
       end
 
       context "with default user options" do

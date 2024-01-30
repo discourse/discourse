@@ -25,6 +25,7 @@ module FileStore
         S3Helper.new(
           s3_bucket,
           Rails.configuration.multisite ? multisite_tombstone_prefix : TOMBSTONE_PREFIX,
+          use_accelerate_endpoint: SiteSetting.Upload.enable_s3_transfer_acceleration,
         )
     end
 
@@ -162,7 +163,6 @@ module FileStore
         else
           return true
         end
-        return false
       end
 
       return false if SiteSetting.Upload.s3_cdn_url.blank?
@@ -252,13 +252,13 @@ module FileStore
       presigned_get_url(key, expires_in: expires_in, force_download: force_download)
     end
 
-    def signed_url_for_temporary_upload(
+    def signed_request_for_temporary_upload(
       file_name,
       expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
       metadata: {}
     )
       key = temporary_upload_path(file_name)
-      s3_helper.presigned_url(
+      s3_helper.presigned_request(
         key,
         method: :put_object,
         expires_in: expires_in,

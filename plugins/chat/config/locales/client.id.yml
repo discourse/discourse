@@ -5,11 +5,17 @@
 # https://translate.discourse.org/
 
 id:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Obrolan
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Selalu"
+          never: "Tidak pernah"
       logs:
         staff_actions:
           actions:
@@ -20,11 +26,10 @@ id:
           descriptions:
             chat:
               create_message: "Buat pesan obrolan di kanal tertentu"
-    about:
-      chat_messages_count: "Pesan Obrolan"
-      chat_channels_count: "Kanal Obrolan"
-      chat_users_count: "Pengguna Obrolan"
     chat:
+      text_copied: Teks disalin ke papan klip
+      link_copied: Tautan disalin ke papan klip
+      deleted_chat_username: dihapus
       dates:
         time_tiny: "h:mm"
       all_loaded: "Menampilkan semua pesan"
@@ -48,6 +53,7 @@ id:
         join: "Gabung"
         leave: "Keluar"
       close: "Tutup"
+      remove: "Hapus"
       delete: "Hapus"
       muted: "diredam"
       joined: "joined"
@@ -66,22 +72,10 @@ id:
         since:
           other: "%{count} jam terakhir"
       mention_warning:
-        dismiss: "bubar"
-        cannot_see: "%{username} tidak dapat mengakses kanal ini dan tidak diberi tahu."
-        cannot_see_multiple:
-          other: "%{username} dan %{count} pengguna lainnya tidak dapat mengakses kanal ini dan tidak diberi tahu."
         invitations_sent:
           other: "Undangan terkirim"
         invite: "Undang ke kanal"
-        without_membership: "%{username} belum bergabung dengan kanal ini."
-        without_membership_multiple:
-          other: "%{username} dan %{count} pengguna lainnya belum bergabung dengan kanal ini."
-        group_mentions_disabled: "%{group_name} tidak mengizinkan penyebutan."
-        group_mentions_disabled_multiple:
-          other: "%{group_name} dan %{count} grup lainnya tidak mengizinkan penyebutan."
-        too_many_members: "%{group_name} memiliki terlalu banyak anggota. Tidak ada yang diberitahu."
-        too_many_members_multiple:
-          other: "%{group_name} dan %{count} grup lainnya memiliki terlalu banyak anggota. Tidak ada yang diberitahu."
+        channel_wide_mentions_disallowed: "Penyebutan @here dan @all dinonaktifkan di kanal ini."
         groups:
           unreachable_1: "@%{group} tidak mengizinkan penyebutan."
           unreachable_multiple:
@@ -89,10 +83,10 @@ id:
       placeholder_silenced: "Anda tidak dapat mengirim pesan saat ini."
       reply: "Balas"
       edit: "Ubah"
+      copy_text: "Salin teks"
       bookmark_message: "Penandaan"
       bookmark_message_edit: "Edit Bookmark"
       save: "Simpan"
-      return_to_threads_list: "Kembali ke diskusi yang sedang berlangsung"
       sounds:
         none: "Tidak ada"
       title: "obrolan"
@@ -108,13 +102,14 @@ id:
         filter_all: Semua
         filter_closed: Tertutup
         filter_archived: Diarsipkan
+      members_view:
+        back_to_settings: "Kembali ke pengaturan"
       about_view:
         title: Judul
         name: Nama
         description: Deskripsi
       channel_info:
         tabs:
-          about: Tentang
           members: Anggota
           settings: Pengaturan
       new_message_modal:
@@ -125,9 +120,9 @@ id:
         default_search_placeholder: "#a-channel, @somebody atau apapun"
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@somebody"
-        user_search_placeholder: "...menambahkan lebih banyak pengguna"
         disabled_user: "telah menonaktifkan obrolan"
         no_items: "Tidak ada item"
+        filter: "Filter"
       direct_message_creator:
         title: Pesan Baru
         prefix: "Kepada:"
@@ -141,6 +136,8 @@ id:
         types:
           category: "Kategori"
           topic: "Topik"
+      quote:
+        default_thread_title: "Utas"
       notification_levels:
         never: "Tidak pernah"
       settings:
@@ -155,15 +152,20 @@ id:
         saved: "Tersimpan"
         unfollow: "Keluar"
         admin_title: "Admin"
+        settings_title: "Pengaturan"
+        category_label: "Kategori"
+        members_label: "Anggota"
       admin:
         title: "Obrolan"
         export_messages:
           title: "Ekspor pesan obrolan"
-          description: "Ekspor saat ini dibatasi hingga 10.000 pesan terbaru dalam 6 bulan terakhir."
+          description: "Ini mengekspor semua pesan dari semua kanal."
           create_export: "Buat ekspor"
           export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
       direct_messages:
         cannot_create: "Maaf, Anda tidak dapat mengirim pesan langsung."
+      channel_list:
+        title: "Kanal"
       incoming_webhooks:
         description: "Deskripsi"
         delete: "Hapus"
@@ -176,12 +178,14 @@ id:
         cancel: "Batal"
         new_topic:
           title: "Pindahkan sebagai Topik Baru"
+      retention_reminders:
+        short:
+          other: "%{count} hari"
       emoji_picker:
         objects: "Objek"
         flags: "Flags"
       thread:
         title: "Judul"
-        default_title: "Utas"
         replies:
           other: "%{count} balasan"
         label: Utas
@@ -199,7 +203,6 @@ id:
         participants_other_count:
           other: "+%{count}"
       threads:
-        list: "Diskusi yang sedang berlangsung"
         none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."
       draft_channel_screen:
         header: "Pesan Baru"
@@ -211,6 +214,11 @@ id:
           fields:
             message:
               label: pesan
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Pesan obrolan yang ditandai"
+          noun: "pesan obrolan"
     keyboard_shortcuts_help:
       chat:
         title: "Obrolan"
@@ -218,3 +226,7 @@ id:
       sections:
         chat:
           title: Obrolan
+    sidebar:
+      panels:
+        chat:
+          label: "Obrolan"

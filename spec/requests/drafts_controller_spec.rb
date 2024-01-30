@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DraftsController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "#index" do
     it "requires you to be logged in" do

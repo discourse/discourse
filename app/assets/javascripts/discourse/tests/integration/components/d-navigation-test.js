@@ -1,8 +1,8 @@
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render } from "@ember/test-helpers";
 import { count, query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | d-navigation", function (hooks) {
   setupRenderingTest(hooks);
@@ -20,7 +20,7 @@ module("Integration | Component | d-navigation", function (hooks) {
   });
 
   test("filters indirectly muted categories", async function (assert) {
-    await render(hbs`<DNavigation @filterType="categories" />`);
+    await render(hbs`<DNavigation @filterMode="categories" />`);
     await click(".category-drop .select-kit-header-wrapper");
 
     assert.strictEqual(

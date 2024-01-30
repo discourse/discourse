@@ -6,6 +6,9 @@ RSpec.describe Chat::DirectMessageChannel do
   it_behaves_like "a chat channel model"
 
   it { is_expected.to delegate_method(:allowed_user_ids).to(:direct_message).as(:user_ids) }
+  it { is_expected.to validate_length_of(:description).is_at_most(500) }
+  it { is_expected.to validate_length_of(:chatable_type).is_at_most(100) }
+  it { is_expected.to validate_length_of(:type).is_at_most(100) }
 
   describe "#category_channel?" do
     it "always returns false" do

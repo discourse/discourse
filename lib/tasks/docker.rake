@@ -1,12 +1,110 @@
 # frozen_string_literal: true
 
-# rake docker:test is designed to be used inside the discourse/docker_test image
-# running it anywhere else will likely fail
-#
+# The Rake tasks in this file are designed to be used inside the `discourse/discourse_test:release` image.
+# Running it anywhere else is not supported.
+
+def run_or_fail(command)
+  log(command)
+  pid = Process.spawn(command)
+  Process.wait(pid)
+  $?.exitstatus == 0
+end
+
+def log(message)
+  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
+end
+
+def setup_postgres(skip_init:)
+  unless skip_init
+    log "Initializing postgres"
+    system("script/start_test_db.rb --skip-run", exception: true)
+  end
+
+  log "Starting postgres"
+  Process.spawn("script/start_test_db.rb --skip-setup --exec")
+end
+
+def setup_redis
+  log "Starting background redis"
+  data_directory = "#{Rails.root}/tmp/test_data/redis"
+  `rm -rf #{data_directory} && mkdir -p #{data_directory}`
+  Process.spawn("redis-server --dir #{data_directory}")
+end
+
+def setup_test_env(
+  setup_multisite: false,
+  create_db: true,
+  create_parallel_dbs: false,
+  install_all_official: false,
+  update_all_plugins: false,
+  plugins_to_remove: "",
+  load_plugins: false
+)
+  ENV["RAILS_ENV"] = "test"
+  # this shaves all the creation of the multisite db off
+  # for js tests
+  ENV["SKIP_MULTISITE"] = "1" unless setup_multisite
+
+  success = true
+  success &&= run_or_fail("bundle exec rake db:create") if create_db
+  success &&= run_or_fail("bundle exec rake parallel:create") if create_parallel_dbs
+  success &&= run_or_fail("bundle exec rake plugin:install_all_official") if install_all_official
+  success &&= run_or_fail("bundle exec rake plugin:update_all") if update_all_plugins
+
+  if !plugins_to_remove.blank?
+    plugins_to_remove
+      .split(",")
+      .map(&:strip)
+      .each do |plugin|
+        puts "[SKIP_INSTALL_PLUGINS] Removing #{plugin}"
+        `rm -fr plugins/#{plugin}`
+      end
+  end
+
+  success &&= migrate_databases(parallel: create_parallel_dbs, load_plugins: load_plugins)
+  success
+end
+
+def migrate_databases(parallel: false, load_plugins: false)
+  migrate_env = load_plugins ? "LOAD_PLUGINS=1" : "LOAD_PLUGINS=0"
+
+  success = true
+  success &&=
+    run_or_fail("#{migrate_env} script/silence_successful_output bundle exec rake db:migrate")
+  success &&=
+    run_or_fail(
+      "#{migrate_env} script/silence_successful_output bundle exec rake parallel:migrate",
+    ) if parallel
+  success
+end
+
+def system_tests_parallel_tests_processors_env
+  "PARALLEL_TEST_PROCESSORS=#{Etc.nprocessors / 2}"
+end
+
+# Environment Variables (specific to this rake task)
+# => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all official plugins
+# => UPDATE_ALL_PLUGINS        set to 1 to update all plugins
+# => LOAD_PLUGINS              set to 1 to load plugins
+# => CREATE_PARALLEL_DATABASES set to 1 to setup parallel test databases
+desc "Setups up the test environment"
+task "docker:test:setup" do
+  setup_redis
+  setup_postgres(skip_init: false)
+
+  setup_test_env(
+    setup_multisite: true,
+    create_db: true,
+    create_parallel_dbs: !!ENV["CREATE_PARALLEL_DATABASES"],
+    load_plugins: !!ENV["LOAD_PLUGINS"],
+    install_all_official: !!ENV["INSTALL_OFFICIAL_PLUGINS"],
+    update_all_plugins: !!ENV["UPDATE_ALL_PLUGINS"],
+  )
+end
+
 # Environment Variables (specific to this rake task)
 # => SKIP_LINT                 set to 1 to skip linting (eslint and rubocop)
 # => SKIP_TESTS                set to 1 to skip all tests
-# => SKIP_WIZARD_TESTS         set to 1 to skip wizard tests
 # => SKIP_CORE                 set to 1 to skip core tests (rspec and qunit)
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
 # => SKIP_INSTALL_PLUGINS      comma separated list of plugins you want to skip installing
@@ -34,30 +132,18 @@
 #       docker run -e SKIP_CORE=1 -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
 #   Run tests for a specific plugin (with a plugin mounted from host filesystem):
 #       docker run -e SKIP_CORE=1 SINGLE_PLUGIN='my-awesome-plugin' -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
-
-def run_or_fail(command)
-  log(command)
-  pid = Process.spawn(command)
-  Process.wait(pid)
-  $?.exitstatus == 0
-end
-
-def run_or_fail_prettier(*patterns)
-  if patterns.any? { |p| Dir[p].any? }
-    patterns = patterns.map { |p| "'#{p}'" }.join(" ")
-    run_or_fail("yarn pprettier --list-different #{patterns}")
-  else
-    puts "Skipping prettier. Pattern not found."
-    true
-  end
-end
-
-def log(message)
-  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
-end
-
 desc "Run all tests (JS and code in a standalone environment)"
 task "docker:test" do
+  def run_or_fail_prettier(*patterns)
+    if patterns.any? { |p| Dir[p].any? }
+      patterns = patterns.map { |p| "'#{p}'" }.join(" ")
+      run_or_fail("yarn pprettier --list-different #{patterns}")
+    else
+      puts "Skipping prettier. Pattern not found."
+      true
+    end
+  end
+
   begin
     @good = true
     @good &&= run_or_fail("yarn install")
@@ -121,60 +207,23 @@ task "docker:test" do
     end
 
     unless ENV["SKIP_TESTS"]
-      puts "Cleaning up old test tmp data in tmp/test_data"
-      `rm -fr tmp/test_data && mkdir -p tmp/test_data/redis && mkdir tmp/test_data/pg`
+      @redis_pid = setup_redis
+      @pg_pid = setup_postgres(skip_init: ENV["SKIP_DB_CREATE"].present?)
 
-      puts "Starting background redis"
-      @redis_pid = Process.spawn("redis-server --dir tmp/test_data/redis")
-
-      unless ENV["SKIP_DB_CREATE"]
-        puts "Initializing postgres"
-        system("script/start_test_db.rb --skip-run", exception: true)
-      end
-
-      puts "Starting postgres"
-      @pg_pid = Process.spawn("script/start_test_db.rb --skip-setup --exec")
-
-      ENV["RAILS_ENV"] = "test"
-      # this shaves all the creation of the multisite db off
-      # for js tests
-      ENV["SKIP_MULTISITE"] = "1" if ENV["JS_ONLY"]
-
-      @good &&= run_or_fail("bundle exec rake db:create") unless ENV["SKIP_DB_CREATE"]
-
-      @good &&= run_or_fail("bundle exec rake parallel:create") if ENV["USE_TURBO"]
-
-      if ENV["INSTALL_OFFICIAL_PLUGINS"]
-        @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
-      end
-
-      @good &&= run_or_fail("bundle exec rake plugin:update_all") if ENV["UPDATE_ALL_PLUGINS"]
-
-      if skip_install = ENV["SKIP_INSTALL_PLUGINS"]
-        skip_install
-          .split(",")
-          .map(&:strip)
-          .each do |plugin|
-            puts "[SKIP_INSTALL_PLUGINS] Removing #{plugin}"
-            `rm -fr plugins/#{plugin}`
-          end
-      end
-
-      command_prefix =
-        if ENV["SKIP_PLUGINS"]
-          # Make sure not to load plugins. bin/rake will add LOAD_PLUGINS=1 automatically unless we set it to 0 explicitly
-          "LOAD_PLUGINS=0 "
-        else
-          "LOAD_PLUGINS=1 "
-        end
-
-      @good &&= run_or_fail("#{command_prefix}bundle exec rake db:migrate")
-
-      if ENV["USE_TURBO"]
-        @good &&= run_or_fail("#{command_prefix}bundle exec rake parallel:migrate")
-      end
+      @good &&=
+        setup_test_env(
+          setup_multisite: !ENV["JS_ONLY"],
+          create_db: !ENV["SKIP_DB_CREATE"],
+          create_parallel_dbs: !!ENV["USE_TURBO"],
+          install_all_official: !!ENV["INSTALL_OFFICIAL_PLUGINS"],
+          update_all_plugins: !!ENV["UPDATE_ALL_PLUGINS"],
+          plugins_to_remove: ENV["SKIP_INSTALL_PLUGINS"] || "",
+          load_plugins: !ENV["SKIP_PLUGINS"],
+        )
 
       unless ENV["JS_ONLY"]
+        @good &&= run_or_fail("bin/ember-cli --build") if ENV["RUN_SYSTEM_TESTS"]
+
         if ENV["WARMUP_TMP_FOLDER"]
           run_or_fail("bundle exec rspec ./spec/requests/groups_controller_spec.rb")
         end
@@ -189,23 +238,6 @@ task "docker:test" do
             params << "--seed #{ENV["RSPEC_SEED"]}" if ENV["RSPEC_SEED"]
           end
 
-          if ENV["PARALLEL"]
-            parts = ENV["PARALLEL"].split("/")
-            total = parts[1].to_i
-            subset = parts[0].to_i - 1
-
-            spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
-            # quick and dirty load balancing
-            if (spec_partials.count > 3)
-              spec_partials[0].concat(spec_partials[total - 1].shift(30))
-              spec_partials[1].concat(spec_partials[total - 2].shift(30))
-            end
-
-            params << spec_partials[subset].join(" ")
-
-            puts "Running spec subset #{subset + 1} of #{total}"
-          end
-
           if ENV["USE_TURBO"]
             @good &&=
               run_or_fail("bundle exec ./bin/turbo_rspec --verbose #{params.join(" ")}".strip)
@@ -214,24 +246,44 @@ task "docker:test" do
           end
 
           if ENV["RUN_SYSTEM_TESTS"]
-            @good &&= run_or_fail("bin/ember-cli --build")
-            @good &&= run_or_fail("timeout --verbose 1800 bundle exec rspec spec/system")
+            @good &&=
+              if ENV["USE_TURBO"]
+                run_or_fail(
+                  "#{system_tests_parallel_tests_processors_env} timeout --verbose 1800 bundle exec ./bin/turbo_rspec spec/system",
+                )
+              else
+                run_or_fail("timeout --verbose 1800 bundle exec rspec spec/system")
+              end
           end
         end
 
         unless ENV["SKIP_PLUGINS"]
           if ENV["SINGLE_PLUGIN"]
             @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
+
+            if ENV["RUN_SYSTEM_TESTS"]
+              @good &&=
+                run_or_fail(
+                  "LOAD_PLUGINS=1 timeout --verbose 1600 bundle exec rspec plugins/#{ENV["SINGLE_PLUGIN"]}/spec/system".strip,
+                )
+            end
           else
             fail_fast = "RSPEC_FAILFAST=1" unless ENV["SKIP_FAILFAST"]
-            @good &&= run_or_fail("#{fail_fast} bundle exec rake plugin:spec")
-          end
+            task = ENV["USE_TURBO"] ? "plugin:turbo_spec" : "plugin:spec"
+            @good &&= run_or_fail("#{fail_fast} bundle exec rake #{task}")
 
-          if ENV["RUN_SYSTEM_TESTS"]
-            @good &&=
-              run_or_fail(
-                "LOAD_PLUGINS=1 timeout --verbose 1600 bundle exec rspec plugins/*/spec/system".strip,
-              )
+            if ENV["RUN_SYSTEM_TESTS"]
+              @good &&=
+                if ENV["USE_TURBO"]
+                  run_or_fail(
+                    "LOAD_PLUGINS=1 #{system_tests_parallel_tests_processors_env} timeout --verbose 1600 bundle exec ./bin/turbo_rspec plugins/*/spec/system",
+                  )
+                else
+                  run_or_fail(
+                    "LOAD_PLUGINS=1 timeout --verbose 1600 bundle exec rspec plugins/*/spec/system",
+                  )
+                end
+            end
           end
         end
       end

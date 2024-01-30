@@ -54,6 +54,9 @@ gl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
+  components:
+    enabled_filter: "Activado"
+    disabled_filter: "Desactivado"
   themes:
     bad_color_scheme: "Non se pode actualizar o tema; paleta de cores non válida"
     other_error: "Xurdiu un problema ao actualizar o tema"
@@ -182,7 +185,6 @@ gl:
       default_tags_already_selected: "Non pode seleccionar unha etiqueta utilizada noutra listaxe."
       s3_upload_bucket_is_required: "Non se poden activar as cargas a S3 a menos que proporcione un valor 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Non se pode activar o inventario a S3 a menos que active as cargas en S3."
-      page_publishing_requirements: "A publicación de páxinas non se pode activar se está activados multimedia seguros."
       s3_backup_requires_s3_settings: "Non se pode utilizar S3 como localización da copia de seguranza a menos que proporcionara '%{setting_name}'."
       s3_bucket_reused: "Non pode utilizar o mesmo contedor (bucket) para 's3_upload_bucket' e 's3_backup_bucket'. Elixa un contedor diferente ou utilice un camiño distinto para cada un deles."
       share_quote_facebook_requirements: "Debe definir un ID de aplicación de Facebook para activar o reparto de cota para Facebook."
@@ -274,7 +276,6 @@ gl:
     more_replies:
       one: "%{count} resposta máis"
       other: "%{count} respostas máis"
-    loading: "Cargando discusión..."
     permalink: "Ligazón permanente"
     imported_from: "Este é un tema de discusión complementario da entrada %{link}"
     in_reply_to: "▶ %{username}"
@@ -295,7 +296,7 @@ gl:
   too_many_mentions_newuser:
     one: "Sentímolo, mais os novos usuarios só poden mencionar un usuario nunha publicación."
     other: "Sentímolo, mais os novos usuarios só poden mencionar a %{count} usuarios nunha publicación."
-  no_embedded_media_allowed_trust: "Non pode inserir elementos multimedia nunha publicación."
+  no_embedded_media_allowed_group: "Non pode inserir elementos multimedia nunha publicación."
   no_embedded_media_allowed: "Os novos usuarios non poden inserir elementos multimedia nas publicacións."
   too_many_embedded_media:
     one: "Os novos usuarios só poden inserir un elemento multimedia nunha publicación."
@@ -505,7 +506,8 @@ gl:
             name:
               same_as_password: "é igual ca o seu contrasinal."
             ip_address:
-              signup_not_allowed: "Non esta permitido rexistrarse desde esta conta."
+              blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
+              max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o seu enderezo IP (alcanzouse o límite). Contacte cun membro do equipo."
         user_profile:
           attributes:
             featured_topic_id:
@@ -702,26 +704,11 @@ gl:
       windows: "Microsoft Windows"
       unknown: "sistema operativo descoñecido"
   change_email:
-    wrong_account_error: "Iniciou sesión cunha conta incorrecta; saia e vólvao tentar."
-    confirmed: "O seu enderezo electrónico foi actualizado."
-    please_continue: "Continuar a %{site_name}"
     error: "Produciuse un erro ao cambiar o enderezo electrónico. Estarase usando xa ese enderezo?"
     doesnt_exist: "Este enderezo electrónico non está asociado coa súa conta."
     error_staged: "Produciuse un erro ao cambiar o enderezo electrónico. O enderezo xa está sendo usado por un usuario transitorio."
     already_done: "Sentímolo, a ligazón de confirmación xa non está dispoñible. Cambiaría xa o seu correo electrónico?"
     confirm: "Confirmar"
-    authorizing_new:
-      title: "Confirme o seu novo correo electrónico"
-      description: "Confirme que quere cambiar o seu enderezo electrónico a:"
-      description_add: "Confirme que quere engadir un enderezo electrónico alternativo:"
-    authorizing_old:
-      title: "Cambiar o seu enderezo electrónico"
-      description: "Confirme o seu cambio de enderezo electrónico"
-      description_add: "Confirme que quere engadir un enderezo electrónico alternativo:"
-      old_email: "Correo electrónico antigo: %{email}"
-      new_email: "Novo correo electrónico: %{email}"
-      almost_done_title: "Confirmando o novo enderezo electrónico"
-      almost_done_description: "Enviámoslle unha mensaxe ao seu novo enderezo electrónico para confirmar o cambio!"
   associated_accounts:
     revoke_failed: "Erro ao revogar a súa conta con %{provider_name}."
     connected: "(conectadas)"
@@ -1260,9 +1247,6 @@ gl:
     allow_user_locale: "Permite que os usuarios escollan o idioma de interface que prefiran"
     set_locale_from_accept_language_header: "definir o idioma da interface para usuarios anónimos a partir das cabeceiras de idioma do seu navegador"
     support_mixed_text_direction: "Admite direccións mixtas de texto de esquerda a dereita e de dereita a esquerda."
-    min_post_length: "Extensión mínima das publicacións en número de caracteres"
-    min_first_post_length: "Extensión mínima da primeira publicación (corpo do tema) en número de caracteres"
-    min_personal_message_post_length: "Número mínimo de caracteres permitido para unha mensaxe"
     max_post_length: "Extensión máxima das publicacións en número de caracteres"
     topic_featured_link_enabled: "Activar a publicación dunha ligazón con temas."
     show_topic_featured_link_in_digest: "Mostrar a ligazón salientada do tema no correo electrónico de resumo."
@@ -1306,7 +1290,6 @@ gl:
     show_pinned_excerpt_desktop: "Mostrar o extracto de temas pegados na vista de escritorio."
     post_onebox_maxlength: "Lonxitude máxima en caracteres dunha publicación de Discourse en formato caixa (onebox)."
     allowed_inline_onebox_domains: "Unha listaxe de dominios que se mostrarán en formato onebox en miniatura se son ligados sen un título"
-    enable_inline_onebox_on_all_domains: "Ignorar o axuste do sitio inline_onebox_domain_whitelist e permitir incluír onebox en todos os dominios."
     force_custom_user_agent_hosts: "Hosts que se utilizarán para o axente de usuario personalizado de onebox en todas as solicitudes (especialmente útil para hosts que limitan o acceso por axente de usuario)."
     max_oneboxes_per_post: "Número máximo de caixas (oneboxes) nunha publicación."
     facebook_app_access_token: "Un token xerado a partir do ID da súa app de Facebook e o seu segredo. Utilízase para xerar caixas (oneboxes) de Instagram."
@@ -1326,7 +1309,6 @@ gl:
     email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
     email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
-    enforce_second_factor: "Obriga os usuarios a activar a autenticación de dobre paso. Seleccione «todo» para aplicalo a todos os usuarios. Seleccione «equipo» para forzalo en usuarios do equipo."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída en «Resumir este tema»."
     summary_posts_required: "Número mínimo de publicacións antes de que «Resumir este tema» estea activado. Os cambios neste axuste aplicaranse retroactivamente despois dunha semana."
@@ -1348,7 +1330,6 @@ gl:
     tl2_additional_likes_per_day_multiplier: "Incrementar o número de gústame por día para usuarios con nivel de confianza 2 (membros) multiplicándoo por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar o límite de gústame por día para usuarios con nivel de confianza 3 (habituais) multiplicándoo por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar o número de gústame por día para usuarios con nivel de confianza 4 (líderes) multiplicándoo por este número"
-    num_users_to_silence_new_user: "Se as publicacións dun usuario novo se denuncian como lixo ou non desexadas por num_spam_flags_to_silence_new_user, agochar todas as súas publicacións e evitar que publique no futuro. Valor en 0 para desactivar."
     num_tl3_flags_to_silence_new_user: "Se as publicacións dun usuario novo reciben este número de denuncias num_tl3_users_to_silence_new_user de diferentes usuarios con nivel de confianza 3, agochar todas as súas publicacións e evitar que publique no futuro. Valor en 0 para desactivar."
     num_tl3_users_to_silence_new_user: "Se as publicacións dun usuario novo reciben num_tl3_users_to_silence_new_user denuncias deste número de usuarios con nivel de confianza 3, agochar todas as súas publicacións e evitar que publique no futuro. Valor en 0 para desactivar."
     notify_mods_when_user_silenced: "Se un usuario é silenciado automaticamente, enviarlles unha mensaxe a todos os moderadores."
@@ -1368,7 +1349,6 @@ gl:
     ga_universal_tracking_code: "Id de código de seguimento de Google Universal Analytics, por exemplo: UA-12345678-9; véxase <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nome de dominio de Google Universal Analytics, por exemplo: mysite.com; véxase <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Active o seguimento entre dominios de Google Universal Analytics. As ligazóns de saída a estes dominios engadirán o id do cliente. Consulte a <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Guía de seguimento entre dominios de Google.</a>"
-    gtm_container_id: "Id do contedor de Google Tag Manager. Por exemplo: GTM-ABCDEF. <br/>Nota: pode ser que teñan que estar listados os scripts de terceiros cargados con GTM na «pantalla de script da política de seguridade de contido\"."
     enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún rastrexador web. Véxase <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variábel env DISCOURSE_ENABLE_CORS débese estabelecer como verdadeira para activar CORS."
     use_admin_ip_allowlist: "Os administradores só poden iniciar sesión se están nun enderezo IP definido na listaxe de enderezos IP revisados (Administración > Rexistros > IP revisados)."
@@ -1379,14 +1359,9 @@ gl:
     allowed_crawler_user_agents: "Axentes de usuario de rastreadores web aos que se lles debería permitir o acceso ao sitio. AVISO! AO CONFIGURAR ISTO, VETARÁ TODOS OS RASTREXADORES NON LISTADOS AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensíbel a maiúsculas e minúsculas na cadea de axente de usuario que identifica rastrexadores web que non deberían ter permitido o acceso ao sitio. Non se lle aplica se está definida a listaxe de permitidos."
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents está especificado, este valor aplicarase a todos os rastrexadores (número de segundos de demora entre respostas)"
-    content_security_policy: "Activar a política de seguridade de contido (CSP)"
-    content_security_policy_report_only: "Activar só o informe de política de seguridade de contido"
     content_security_policy_collect_reports: "Activar a recolección de informes de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restrinxir quen pode incorporar este sitio en iframes mediante CSP. O control de servidores permitidos en <a href='%{base_path}/admin/customize/embedding'>Incorporación</a>"
-    content_security_policy_script_src: "Fontes de script adicionais permitidas. O servidor actual e a rede de distribución de contido CDN inclúense de xeito predeterminado. Consulte <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar os ataques XSS coa política de seguridade de contido.</a>"
     invalidate_inactive_admin_email_after_days: "As contas administrativas que non visiten o sitio neste número de días terán que volver validar o seu enderezo electrónico antes de iniciar sesión. Estabelecer en 0 para desactivalo."
-    top_menu: "Determinar que elementos aparecen no menú de navegación da páxina de inicio e en que orde. Exemplo últimos|recentes|senler|categorías|destacados|publicados|marcadores"
-    post_menu: "Determinar os elementos que aparecen no menú de publicación e en que orde. Exemplo: gústame|editar|denunciar|eliminar|compartir|gardar en marcadores|responder"
     post_menu_hidden_items: "Os elementos do menú que se ocultan por defecto no menú de publicación salvo que se prema no botón para expandir as opcións."
     share_links: "Determinar que elementos aparecen no cadro de compartir e en que orde."
     site_contact_username: "Nome de usuario do membro do equipo desde onde se enviarán todas as mensaxes automáticas. Se se deixa en branco, utilizarase a conta predeterminada do sistema."
@@ -1401,7 +1376,6 @@ gl:
     topics_per_period_in_top_summary: "Número de temas destacados que se mostran no resumo de temas destacados."
     topics_per_period_in_top_page: "Número de temas destacados que se mostran na vista expandida ao premer en «Mostrar máis»."
     redirect_users_to_top_page: "Redirixir automaticamente á páxina de destacados aos usuarios novos e aos que estiveron ausentes durante moito tempo."
-    top_page_default_timeframe: "Período predefinido para a páxina de temas destacados."
     moderators_view_emails: "Permitir que os moderadores vexan os correos electrónicos dos usuarios"
     prioritize_username_in_ux: "Mostrar o nome de usuario primeiro na páxina de usuario, a tarxeta de usuario e nas publicacións (cando está desactivado, o nome móstrase primeiro)"
     enable_rich_text_paste: "Activar conversión automática de HTML a Markdown ao pegar texto no editor. (Experimental)"
@@ -1481,7 +1455,6 @@ gl:
     enable_safe_mode: "Permitir que os usuarios entren no modo seguro para depurar complementos."
     rate_limit_create_topic: "Despois de crear un tema, os usuarios deben agardar (n) segundos antes de crear un outro."
     rate_limit_create_post: "Despois de publicar, os usuarios deben agardar (n) segundos antes de crear unha outra publicación."
-    rate_limit_new_user_create_topic: "Despois de crear un tema, os novos usuarios deben agardar (n) segundos antes de crear un outro."
     rate_limit_new_user_create_post: "Despois de publicar, os novos usuarios deben agardar (n) segundos antes de crear unha outra publicación."
     max_likes_per_day: "Número máximo de gústame por usuario e día."
     max_flags_per_day: "Número máximo de denuncias por usuario e día."
@@ -1591,14 +1564,8 @@ gl:
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."
     desktop_category_page_style: "Estilo visual para a páxina de /categorías."
     category_colors: "Unha listaxe de valores hexadecimais das cores permitidas para as categorías."
-    category_style: "Estilo visual para as insignias das categorías."
     default_dark_mode_color_scheme_id: "O esquema de cores empregado no modo escuro."
     dark_mode_none: "Ningún"
-    max_image_size_kb: "O tamaño máximo dunha imaxe en kB. Isto configúrase en nginx (client_max_body_size) / apache ou proxy tamén. As imaxes cun tamaño superior e inferior ao client_max_body_size serán adaptadas para se axustar ao tamaño de subida."
-    max_attachment_size_kb: "O tamaño máximo dos ficheiros anexos en kB. Isto configúrase en nginx (client_max_body_size) / apache ou proxy tamén."
-    authorized_extensions: "Unha listaxe das extensións de ficheiro permitidas para subir (utiliza '*' para activar todos os tipos de ficheiro)"
-    authorized_extensions_for_staff: "Unha listaxe das extensións de ficheiro permitidas para subir aos membros do equipo sumada á listaxe definida na configuración `authorized_extensions` (utiliza '*' para activar todos os tipos de ficheiros)"
-    theme_authorized_extensions: "Unha listaxe das extensións de ficheiro permitidas para subir temas (utiliza '*' para activar todos os tipos de ficheiro)"
     max_similar_results: "Número de temas similares que se mostran na parte superior do editor cando se está a redactar un novo tema. A comparación baséase no título e mais no corpo da mensaxe."
     max_image_megapixels: "Número máximo de megapíxeles permitidos para unha imaxe. Aquelas cun número superior serán rexeitadas."
     title_prettify: "Previr erros frecuentes no título, incluídos os títulos escritos con todo en maiúsculas, coa primeira letra en minúscula, con múltiples signos ! ou ?, punto final etc."
@@ -1668,6 +1635,7 @@ gl:
     forwarded_emails_behaviour: "Como tratar o correo electrónico reenviado en Discourse"
     always_show_trimmed_content: "Mostrar sempre a parte recortada dos correos electrónicos entrantes. AVISO: podería supor ofrecer enderezos de correo."
     private_email: "Non incluír contido de publicacións ou temas no título ou o corpo do correo electrónico. NOTA: tamén desactiva os boletíns por correo electrónico."
+    email_total_attachment_size_limit_kb: "Tamaño máximo total dos ficheiros anexos a correos electrónicos saíntes. Estabelecer en 0 para desactivar o envío de ficheiros anexos."
     post_excerpts_in_emails: "Nos correos de notificación, enviar sempre extractos no canto de publicacións completas"
     raw_email_max_length: "Número de caracteres que deben almacenarse para o correo entrante."
     raw_rejected_email_max_length: "Número de caracteres que deben almacenarse para o correo entrante rexeitado."
@@ -1770,13 +1738,11 @@ gl:
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
     short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
     warn_reviving_old_topic_age: "Cando alguén comeza a responder a un tema onde a última resposta é máis antiga que uns días, amosará un aviso. Desactívase estabelecendo en 0."
-    autohighlight_all_code: "Forza a aplicación do resaltado de código en todos os bloques de código preformatados, mesmo aínda que non se especificase a linguaxe de xeito explícito."
     highlighted_languages: "Regras de realzado de sintaxe incluídas. (Aviso: incluír demasiadas linguaxes pode afectar o rendemento) véxase: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para unha demostración"
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_topics_list: "Admite a incorporación en HTML de listaxes de temas"
     embed_set_canonical_url: "Estableza o URL canónico dos temas incorporados no URL do contido incorporado."
     embed_truncate: "Truncar as publicacións incorporadas."
-    embed_unlisted: "Os temas importados non serán listados ata que un usuario responda."
     embed_support_markdown: "Admite o formatado Markdown para publicacións incorporadas."
     allowed_embed_selectors: "Unha listaxe separada por comas de elementos CSS que se permiten nas incorporacións."
     allowed_href_schemes: "Esquemas permitidos en ligazóns ademais de http e https."
@@ -1791,9 +1757,6 @@ gl:
     emoji_autocomplete_min_chars: "Número mínimo de caracteres necesarios para disparar a xanela emerxente de autocompletar emoji"
     enable_inline_emoji_translation: "Activar a tradución de emojis en liña (sen ningún espazo nin puntuación anterior)"
     approve_post_count: "A cantidade de publicacións dun usuario novo ou básico que deba aprobarse"
-    approve_unless_trust_level: "As publicacións dirixidas a usuarios por debaixo deste nivel de confianza deben ser aprobadas"
-    approve_new_topics_unless_trust_level: "Os novos temas dirixidos a usuarios por debaixo deste nivel de confianza deben ser aprobados"
-    approve_unless_staged: "Novos temas e publicacións para usuarios transitorios que se deben aprobar"
     notify_about_queued_posts_after: "Se hai publicacións que levan máis de varias horas agardando ser revisadas, envíese unha notificación a todos os moderadores. Estabelecer en 0 para desactivar estas notificacións."
     auto_close_messages_post_count: "Número máximo de publicacións permitidas nunha mensaxe antes do peche automático (0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicacións permitidas nun tema antes do peche automático (0 para desactivar)"
@@ -1844,12 +1807,9 @@ gl:
     default_title_count_mode: "Modo predefinido para a páxina do contador do título"
     retain_web_hook_events_period_days: "Número de días para reter rexistros de eventos de web hook."
     retry_web_hook_events: "Volver tentar automaticamente 4 veces os eventos de web hook frustrados. Os intervalos entre os novos intentos son de 1, 5, 25 e 125 minutos."
-    revoke_api_keys_days: "Número de días antes de que unha chave API sen usar sexa revogada automaticamente (0 para nunca)"
-    allow_user_api_keys: "Permitir a xeración de chaves API de usuario"
     allow_user_api_key_scopes: "Listaxe de ámbitos permitidos para as chaves API de usuario"
     allowed_user_api_auth_redirects: "URL permitido para redireccionar a autenticación das chaves API de usuario. O símbolo do comodín pódese utilizar para que coincida calquera parte súa (ex.: www.exemplo.com/*)."
     allowed_user_api_push_urls: "Enderezos URL permitidos para que servidor envíe á API de usuario"
-    expire_user_api_keys_days: "Número de días antes de que a chave API de usuario caduque automaticamente (0 para nunca)"
     tagging_enabled: "Activar etiquetas nos temas?"
     min_trust_to_create_tag: "O nivel de confianza mínimo para crear unha etiqueta."
     max_tags_per_topic: "O número máximo de etiquetas aplicables a un tema."
@@ -1863,7 +1823,6 @@ gl:
     suppress_overlapping_tags_in_list: "Se unha etiqueta coincide con palabras exactas do título dun tema, non se mostrará"
     remove_muted_tags_from_latest: "Non mostrar na listaxe de temas máis recentes aqueles etiquetados unicamente con etiquetas silenciadas."
     force_lowercase_tags: "Forzar que todas as etiquetas estean integramente en minúsculas."
-    company_name: "Nome da empresa"
     governing_law: "Lei que rexe"
     city_for_disputes: "Cidade para disputas"
     shared_drafts_category: "Active a funcionalidade Borradores compartidos designando unha categoría para os borradores de temas. Os temas desta categoría suprimiranse das listaxes de temas para os usuarios do equipo."
@@ -2087,18 +2046,6 @@ gl:
   admin:
     email:
       sent_test: "enviado!"
-    user:
-      merge_user:
-        updating_username: "Actualizando nome de usuario..."
-        changing_post_ownership: "Cambiando o propietario da publicación ..."
-        merging_given_daily_likes: "Combinando os gústame diarios..."
-        merging_post_timings: "Combinando os intres de publicación..."
-        merging_user_visits: "Combinando as visitas de usuario..."
-        updating_site_settings: "Actualizando a configuración do sitio..."
-        updating_user_stats: "Actualizando as estatísticas de usuario..."
-        merging_user_attributes: "Combinando os atributos de usuario..."
-        updating_user_ids: "Actualizando os id de usuario..."
-        deleting_source_user: "Eliminando o usuario orixe..."
   user:
     deactivated: "Desactivado debido a excesivos correos devoltos con «%{email}»."
     deactivated_by_staff: "Desactivado polo equipo"
@@ -2124,9 +2071,6 @@ gl:
       blocked: "non está permitido."
       revoked: "Non se enviarán máis correos electrónicos a '%{email}' ata %{date}."
       does_not_exist: "N/D"
-    ip_address:
-      blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
-      max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o seu enderezo IP (alcanzouse o límite). Contacte cun membro do equipo."
     website:
       domain_not_allowed: "O sitio web non é válido. Os dominios permitidos son: %{domains}"
     auto_rejected: "Rexeitouse automaticamente debido á idade. Véxase o axuste do sitio auto_handle_queued_age."
@@ -3676,6 +3620,9 @@ gl:
           <p>Páseo ben e moita sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>organizando a súa nova comunidade.</a></p>
   search_logs:
     graph_title: "Análise das buscas"
+  onebox:
+    github:
+      closed: "pechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'
@@ -3730,8 +3677,6 @@ gl:
         description: "Restaurar a publicación para que todos os usuarios a poidan ver."
       delete_single:
         title: "Eliminar"
-      delete:
-        title: "Eliminar..."
       delete_and_ignore_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
       delete_and_agree_replies:
@@ -3754,7 +3699,6 @@ gl:
       approve_user:
         title: "Aprobar usuario"
       reject_user:
-        title: "Eliminar usuario..."
         delete:
           title: "Eliminar usuario"
           description: "O usuario será eliminado do foro."

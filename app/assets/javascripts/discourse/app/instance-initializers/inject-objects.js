@@ -1,7 +1,7 @@
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import User from "discourse/models/user";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
 import deprecated from "discourse-common/lib/deprecated";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 
 export default {
   after: "sniff-capabilities",

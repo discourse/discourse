@@ -1,11 +1,11 @@
-import { tagName } from "@ember-decorators/component";
-import { equal } from "@ember/object/computed";
 import Component from "@ember/component";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import { propertyEqual } from "discourse/lib/computed";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 
 @tagName("")
 export default class PollBreakdownOption extends Component {

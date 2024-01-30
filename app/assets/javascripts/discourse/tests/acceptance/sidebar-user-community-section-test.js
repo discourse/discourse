@@ -1,11 +1,13 @@
-import I18n from "I18n";
-import { test } from "qunit";
 import {
   click,
   currentRouteName,
   currentURL,
   visit,
 } from "@ember/test-helpers";
+import { test } from "qunit";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   count,
@@ -15,10 +17,8 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { NotificationLevels } from "discourse/lib/notification-levels";
+import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   needs.user({
@@ -60,6 +60,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "additional section links are displayed"
     );
 
+    assert.ok(
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary[aria-expanded='true']"
+      ),
+      "aria-expanded toggles to true when additional links are displayed"
+    );
+
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
@@ -82,6 +89,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
       ),
       "additional section links are hidden when clicking outside"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary[aria-expanded='false']"
+      ),
+      "aria-expanded toggles to false when additional links are hidden"
     );
   });
 

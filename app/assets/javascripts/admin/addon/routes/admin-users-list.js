@@ -1,9 +1,9 @@
 import { action } from "@ember/object";
-import AdminUser from "admin/models/admin-user";
-import DiscourseRoute from "discourse/routes/discourse";
+import { inject as service } from "@ember/service";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import { inject as service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
+import AdminUser from "admin/models/admin-user";
 
 export default class AdminUsersListRoute extends DiscourseRoute {
   @service router;

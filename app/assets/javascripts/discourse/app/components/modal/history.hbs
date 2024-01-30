@@ -1,7 +1,7 @@
 <DModal
   @title={{i18n this.modalTitleKey}}
   @closeModal={{@closeModal}}
-  class="history-modal"
+  class="history-modal -max {{concat '--mode-' (dasherize this.viewMode)}}"
 >
   <:body>
     <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
@@ -31,6 +31,7 @@
         @bodyDiff={{this.bodyDiff}}
         @calculateBodyDiff={{this.calculateBodyDiff}}
         @titleDiff={{this.titleDiff}}
+        @viewMode={{this.viewMode}}
       />
     </ConditionalLoadingSpinner>
   </:body>

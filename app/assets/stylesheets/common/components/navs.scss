@@ -124,3 +124,10 @@
     line-height: var(--line-height-large);
   }
 }
+
+.user-navigation .nav-pills > li {
+  a,
+  button {
+    border-radius: 0px;
+  }
+}

@@ -1,11 +1,11 @@
-import { alias, equal, gte, none } from "@ember/object/computed";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import DiscourseURL from "discourse/lib/url";
-import Controller from "@ember/controller";
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
-import { action } from "@ember/object";
 import { cached } from "@glimmer/tracking";
+import Controller from "@ember/controller";
+import { action } from "@ember/object";
+import { alias, equal, gte, none } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import DiscourseURL from "discourse/lib/url";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 // The controller for the nice error page
 export default Controller.extend({

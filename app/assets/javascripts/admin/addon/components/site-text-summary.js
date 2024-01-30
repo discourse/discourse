@@ -1,7 +1,7 @@
-import { classNameBindings, classNames } from "@ember-decorators/component";
 import Component from "@ember/component";
-import highlightHTML from "discourse/lib/highlight-html";
+import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
+import highlightHTML from "discourse/lib/highlight-html";
 
 @classNames("site-text")
 @classNameBindings("siteText.overridden")

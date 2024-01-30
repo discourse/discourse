@@ -1,6 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject, { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
   @service router;

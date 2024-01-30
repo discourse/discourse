@@ -1,7 +1,10 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Columns from "discourse/lib/columns";
 
 module("Unit | Columns", function (hooks) {
+  setupTest(hooks);
+
   hooks.afterEach(function () {
     document.getElementById("qunit-fixture").innerHTML = "";
   });
@@ -149,6 +152,36 @@ module("Unit | Columns", function (hooks) {
       ).length,
       1,
       "one element in column 3"
+    );
+  });
+
+  test("renders a single item in a P tag", function (assert) {
+    document.getElementById(
+      "qunit-fixture"
+    ).innerHTML = `<div class="d-image-grid">
+<p><img src="/images/avatar.png" alt role="presentation"></p>
+</div>`;
+
+    const grid = document.querySelector(".d-image-grid");
+    const cols = new Columns(grid);
+    assert.strictEqual(cols.items.length, 1);
+
+    assert.strictEqual(
+      grid.dataset.disabled,
+      "true",
+      "disabled attribute is added"
+    );
+
+    assert.strictEqual(
+      document.querySelectorAll(".d-image-grid > .d-image-grid-column").length,
+      0,
+      "no column elements are rendered"
+    );
+
+    assert.strictEqual(
+      document.querySelectorAll(".d-image-grid > p > img").length,
+      1,
+      "an image element is rendered"
     );
   });
 });

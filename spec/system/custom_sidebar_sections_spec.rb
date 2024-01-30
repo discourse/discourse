@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Custom sidebar sections", type: :system do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
@@ -55,6 +55,21 @@ describe "Custom sidebar sections", type: :system do
     expect(sidebar).to have_section_link("My preferences", target: "_self")
   end
 
+  it "allows the user to create custom section with `/` path which generates a link based on the first item in the `top_menu` site settings" do
+    SiteSetting.top_menu = "read|posted|latest"
+
+    sign_in user
+    visit("/latest")
+
+    sidebar.click_add_section_button
+    section_modal.fill_name("My section")
+    section_modal.fill_link("Home", "/")
+    section_modal.save
+
+    expect(sidebar).to have_section("My section")
+    expect(sidebar).to have_section_link("Home", href: "/read")
+  end
+
   it "allows the user to create custom section with /pub link" do
     sign_in user
     visit("/latest")
@@ -93,6 +108,23 @@ describe "Custom sidebar sections", type: :system do
       href: "https://discourse.org",
       target: "_blank",
     )
+  end
+
+  it "allows the user to create custom section with anchor" do
+    sign_in user
+    visit("/latest")
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("My section")
+    section_modal.fill_link("Faq", "/faq#anchor")
+    section_modal.save
+
+    expect(sidebar).to have_section("My section")
+    expect(sidebar).to have_section_link("Faq", target: "_blank")
   end
 
   it "allows the user to edit custom section" do
@@ -146,9 +178,12 @@ describe "Custom sidebar sections", type: :system do
       ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"],
     )
 
-    tags_link = find(".sidebar-section-link[data-link-name='Sidebar Tags']")
-    latest_link = find(".sidebar-section-link[data-link-name='Sidebar Latest']")
+    sidebar.edit_custom_section("My section")
+
+    tags_link = find(".draggable[data-link-name='Sidebar Tags']")
+    latest_link = find(".draggable[data-link-name='Sidebar Latest']")
     tags_link.drag_to(latest_link, html5: true, delay: 0.4)
+    section_modal.save
 
     expect(sidebar.primary_section_links("my-section")).to eq(
       ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],

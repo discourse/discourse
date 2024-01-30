@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Editing Sidebar Community Section", type: :system do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:sidebar_header_dropdown) { PageObjects::Components::NavigationMenu::HeaderDropdown.new }
@@ -51,6 +51,23 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
     expect(sidebar.primary_section_icons("community")).to eq(
       %w[layer-group user flag wrench ellipsis-v],
     )
+  end
+
+  it "allows admin to edit community section when no secondary section links" do
+    SidebarSection
+      .where(title: "Community")
+      .first
+      .sidebar_section_links
+      .where.not(position: 0)
+      .destroy_all
+
+    sign_in(admin)
+
+    visit("/latest")
+
+    modal = sidebar.click_customize_community_section_button
+
+    expect(modal).to be_visible
   end
 
   it "should allow admins to open modal to edit the section when `navigation_menu` site setting is `header dropdown`" do

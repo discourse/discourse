@@ -45,9 +45,9 @@
         <p class="actions">
           <DButton
             @action={{this.refreshProblems}}
-            @class="btn-default"
             @icon="sync"
             @label="admin.dashboard.refresh_problems"
+            class="btn-default"
           />
           {{i18n "admin.dashboard.last_checked"}}:
           {{this.problemsTimestamp}}

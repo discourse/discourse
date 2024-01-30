@@ -9,6 +9,7 @@ class ApplicationSerializer < ActiveModel::Serializer
     def initialize(json)
       @json = json
     end
+
     def as_json(*_args)
       @json
     end

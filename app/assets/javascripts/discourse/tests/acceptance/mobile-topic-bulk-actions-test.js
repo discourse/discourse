@@ -1,12 +1,12 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Topic - Bulk Actions - Mobile", function (needs) {
   needs.user();
@@ -121,7 +121,7 @@ acceptance("Topic - Bulk Actions - Mobile", function (needs) {
     await click(queryAll("input.bulk-select")[1]);
 
     await click(".bulk-select-actions");
-    await click(".modal-body .delete-topics");
+    await click(".d-modal__body .delete-topics");
 
     assert
       .dom(".topic-bulk-actions-modal")

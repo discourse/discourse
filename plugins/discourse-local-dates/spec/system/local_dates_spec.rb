@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 describe "Local dates", type: :system do
-  fab!(:topic) { Fabricate(:topic) }
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:topic)
+  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:year) { Time.zone.now.year + 1 }
+  let(:month) { Time.zone.now.month }
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
+  let(:composer) { PageObjects::Components::Composer.new }
+  let(:insert_datetime_modal) { PageObjects::Modals::InsertDateTime.new }
 
   before do
     create_post(user: current_user, topic: topic, title: "Date range test post", raw: <<~RAW)
@@ -28,43 +31,124 @@ describe "Local dates", type: :system do
 
       expect(topic_page).to have_content(topic.title)
 
-      post_dates = topic_page.find_all("span[data-date]")
-
       # Single date in a paragraph.
       #
-      post_dates[0].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
-
-      expect(tippy_date).to have_text("#{formatted_date_for_year(12, 15)}\n2:19 PM", exact: true)
+      find("span[data-date]:nth-of-type(1)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
+        "#{formatted_date_for_year(12, 15)}\n2:19 PM",
+        exact: true,
+      )
+      page.send_keys(:escape)
 
       # Two single dates in the same paragraph.
       #
-      post_dates[1].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
+      find("span[data-date]:nth-of-type(2)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
+        "#{formatted_date_for_year(12, 15)}\n1:20 AM",
+        exact: true,
+      )
+      page.send_keys(:escape)
 
-      expect(tippy_date).to have_text("#{formatted_date_for_year(12, 15)}\n1:20 AM", exact: true)
-
-      post_dates[2].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
-
-      expect(tippy_date).to have_text("#{formatted_date_for_year(12, 15)}\n2:40 AM", exact: true)
+      find("span[data-date]:nth-of-type(3)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
+        "#{formatted_date_for_year(12, 15)}\n2:40 AM",
+        exact: true,
+      )
+      page.send_keys(:escape)
 
       # Two date ranges in the same paragraph.
       #
-      post_dates[3].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
-
-      expect(tippy_date).to have_text(
+      find("span[data-date]:nth-of-type(4)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
         "#{formatted_date_for_year(12, 15)}\n11:25 AM → 12:26 AM",
         exact: true,
       )
+      page.send_keys(:escape)
 
-      post_dates[5].click
-      tippy_date = topic_page.find(".tippy-content .current .date-time")
-
-      expect(tippy_date).to have_text(
+      find("span[data-date]:nth-of-type(6)").click
+      expect(page.find("[data-content] .current .date-time")).to have_text(
         "#{formatted_date_for_year(12, 22)} 11:57 AM → #{formatted_date_for_year(12, 23)} 11:58 AM",
         exact: true,
+      )
+      page.send_keys(:escape)
+    end
+  end
+
+  describe "insert modal" do
+    let(:timezone) { "Australia/Brisbane" }
+
+    before do
+      current_user.user_option.update!(timezone: timezone)
+      sign_in(current_user)
+    end
+
+    it "allows selecting a date without a time and inserts into the post" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      composer.click_toolbar_button("local-dates")
+      expect(insert_datetime_modal).to be_open
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(16)
+      insert_datetime_modal.click_primary_button
+      expect(composer.composer_input.value).to have_content(
+        "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} timezone=\"#{timezone}\"]",
+      )
+    end
+
+    it "allows selecting a date with a time and inserts into the post" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      composer.click_toolbar_button("local-dates")
+      expect(insert_datetime_modal).to be_open
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(16)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45am")
+      insert_datetime_modal.click_primary_button
+
+      expect(composer.composer_input.value).to have_content(
+        "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} time=11:45:00 timezone=\"#{timezone}\"]",
+      )
+    end
+
+    it "allows selecting a start date and time and an end date and time" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      composer.click_toolbar_button("local-dates")
+      expect(insert_datetime_modal).to be_open
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(16)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45am")
+      insert_datetime_modal.select_to
+
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(23)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("12:45pm")
+
+      insert_datetime_modal.click_primary_button
+      expect(composer.composer_input.value).to have_content(
+        "[date-range from=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")}T11:45:00 to=#{Date.parse("#{year}-#{month}-23").strftime("%Y-%m-%d")}T12:45:00 timezone=\"#{timezone}\"]",
+      )
+    end
+
+    it "allows clearing the end date and time" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      composer.click_toolbar_button("local-dates")
+      expect(insert_datetime_modal).to be_open
+
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(16)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45am")
+      insert_datetime_modal.select_to
+
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(23)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("12:45pm")
+      insert_datetime_modal.delete_to
+
+      insert_datetime_modal.click_primary_button
+      expect(composer.composer_input.value).to have_content(
+        "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} time=11:45:00 timezone=\"#{timezone}\"]",
       )
     end
   end

@@ -295,16 +295,6 @@ hy:
         not_found: |-
           Դժվարանո՞ւմ եք: Հիշեք, որ <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ցուցադրել ավելին-ը ցույց կտա <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> վերականգման կոճակը:
       category_hashtag:
-        instructions: |-
-          Գիտեի՞ք, որ Ձեր գրառման մեջ կարող եք հղում կատարել կատեգորիաների և թեգերի: Օրինակ՝ տեսե՞լ եք %{category} կատեգորիան:
-
-          Գրեք `#` նախադասության մեջտեղում և ընտրեք ցանկացած կատեգորիա կամ թեգ:
-        not_found: |-
-          Հմմ, Ես այստեղ որևէ տեղ կատեգորիա չեմ տեսնում: Նկատի ունեցեք, որ `#`-ի չի կարող լինել առաջին սիմվոլը: Կարո՞ղ եք կրկնօրինակել սա Ձեր հաջորդ պատասխանում:
-
-          ```text
-          Ես կարող եմ ստեղծել կատեգորիայի հղում # -ի միջոցով
-          ```
         reply: |-
           Գերազանց է! հիշեք, որ սա աշխատում է _և՛_ կատեգորիաների, _և՛_ թեգերի համար, եթե թեգերը միացված են:
       change_topic_notification_level:

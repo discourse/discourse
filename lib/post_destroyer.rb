@@ -60,9 +60,11 @@ class PostDestroyer
   end
 
   def destroy
-    payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
+    payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(
+      :post_destroyed,
+    ).exists?
     is_first_post = @post.is_first_post? && @topic
-    has_topic_web_hooks = is_first_post && WebHook.active_web_hooks(:topic).exists?
+    has_topic_web_hooks = is_first_post && WebHook.active_web_hooks(:topic_destroyed).exists?
 
     if has_topic_web_hooks
       topic_view = TopicView.new(@topic.id, Discourse.system_user, skip_staff_action: true)

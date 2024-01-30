@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
-import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { inject as service } from "@ember/service";
+import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 export default class ChatStyleguideChatMessage extends Component {
   @service currentUser;

@@ -311,11 +311,11 @@ sk:
     advanced_user_narrative:
       title: ":arrow_up: Pokročilé funkcie používateľa"
       category_hashtag:
-        instructions_experimental: |-
+        instructions: |-
           Vedeli ste, že vo svojom príspevku môžete odkazovať na kategórie a značky? Videli ste napríklad kategóriu %{category} ?
 
           Napíšte „#“ kdekoľvek vo vete a vyberte ľubovoľnú kategóriu alebo značku.
-        not_found_experimental: |-
+        not_found: |-
           Hmm, nikde tam nevidím kategóriu. Môžete to skopírovať do ďalšej odpovede?
 
           ```text

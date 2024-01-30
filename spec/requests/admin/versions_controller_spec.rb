@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::VersionsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   before do
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)

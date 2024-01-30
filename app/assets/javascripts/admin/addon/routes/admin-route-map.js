@@ -14,6 +14,10 @@ export default function () {
         path: "/dashboard/reports",
         resetNamespace: true,
       });
+      this.route("admin.dashboardNewFeatures", {
+        path: "/dashboard/whats-new",
+        resetNamespace: true,
+      });
     });
 
     this.route(
@@ -58,6 +62,11 @@ export default function () {
           }
         );
 
+        this.route("adminCustomizeThemeComponents", {
+          path: "theme-components",
+          resetNamespace: true,
+        });
+
         this.route(
           "adminSiteText",
           { path: "/site_texts", resetNamespace: true },
@@ -101,7 +110,7 @@ export default function () {
           "adminCustomizeFormTemplates",
           { path: "/form-templates", resetNamespace: true },
           function () {
-            this.route("new", { path: "/new" });
+            this.route("new");
             this.route("edit", { path: "/:id" });
           }
         );
@@ -109,7 +118,6 @@ export default function () {
           "adminWatchedWords",
           { path: "/watched_words", resetNamespace: true },
           function () {
-            this.route("index", { path: "/" });
             this.route("action", { path: "/action/:action_id" });
           }
         );
@@ -122,7 +130,7 @@ export default function () {
         { path: "/keys", resetNamespace: true },
         function () {
           this.route("show", { path: "/:api_key_id" });
-          this.route("new", { path: "/new" });
+          this.route("new");
         }
       );
 
@@ -165,7 +173,7 @@ export default function () {
           { path: "/search_logs", resetNamespace: true },
           function () {
             this.route("index", { path: "/" });
-            this.route("term", { path: "/term" });
+            this.route("term");
           }
         );
       }
@@ -210,5 +218,15 @@ export default function () {
         this.route("index", { path: "/" });
       }
     );
+  });
+
+  // EXPERIMENTAL: These admin routes are hidden behind an `enable_experimental_admin_ui_groups`
+  // site setting and are subject to constant change.
+  this.route("admin-revamp", { resetNamespace: true }, function () {
+    this.route("lobby", { path: "/" }, function () {});
+
+    this.route("config", function () {
+      this.route("area", { path: "/:area" });
+    });
   });
 }

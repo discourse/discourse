@@ -1,15 +1,15 @@
 import Component from "@ember/component";
-import { BookmarkFormData } from "discourse/lib/bookmark";
-import BookmarkModal from "discourse/components/modal/bookmark";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { Promise } from "rsvp";
+import BookmarkModal from "discourse/components/modal/bookmark";
 import { ajax } from "discourse/lib/ajax";
+import { BookmarkFormData } from "discourse/lib/bookmark";
 import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
-import I18n from "I18n";
-import { Promise } from "rsvp";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   dialog: service(),

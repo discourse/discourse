@@ -1,11 +1,10 @@
+import User from "discourse/models/user";
+import { cloneJSON } from "discourse-common/lib/object";
 import {
   chatChannels,
   directMessageChannels,
   generateChatView,
 } from "discourse/plugins/chat/chat-fixtures";
-
-import { cloneJSON } from "discourse-common/lib/object";
-import User from "discourse/models/user";
 
 export function baseChatPretenders(server, helper) {
   server.get("/chat/:chatChannelId/messages.json", () =>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemesInstallTask do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   before { Discourse::Application.load_tasks }
 

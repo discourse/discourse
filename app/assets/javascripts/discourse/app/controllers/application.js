@@ -1,8 +1,9 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import discourseDebounce from "discourse-common/lib/debounce";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
@@ -10,8 +11,8 @@ export default Controller.extend({
   queryParams: [{ navigationMenuQueryParamOverride: "navigation_menu" }],
 
   showTop: true,
-  showFooter: false,
   router: service(),
+  footer: service(),
   showSidebar: false,
   navigationMenuQueryParamOverride: null,
   sidebarDisabledRouteOverride: false,
@@ -20,6 +21,18 @@ export default Controller.extend({
   init() {
     this._super(...arguments);
     this.showSidebar = this.calculateShowSidebar();
+  },
+
+  get showFooter() {
+    return this.footer.showFooter;
+  },
+
+  set showFooter(value) {
+    deprecated(
+      "showFooter state is now stored in the `footer` service, and should be controlled by adding the {{hide-application-footer}} helper to an Ember template.",
+      { id: "discourse.application-show-footer" }
+    );
+    this.footer.showFooter = value;
   },
 
   @discourseComputed
@@ -47,7 +60,7 @@ export default Controller.extend({
   },
 
   _mainOutletAnimate() {
-    document.querySelector("body").classList.remove("sidebar-animate");
+    document.body.classList.remove("sidebar-animate");
   },
 
   @discourseComputed(
@@ -74,10 +87,7 @@ export default Controller.extend({
       return true;
     }
 
-    if (
-      navigationMenuQueryParamOverride === "legacy" ||
-      navigationMenuQueryParamOverride === "header_dropdown"
-    ) {
+    if (navigationMenuQueryParamOverride === "header_dropdown") {
       return false;
     }
 
@@ -100,7 +110,7 @@ export default Controller.extend({
   @action
   toggleSidebar() {
     // enables CSS transitions, but not on did-insert
-    document.querySelector("body").classList.add("sidebar-animate");
+    document.body.classList.add("sidebar-animate");
 
     discourseDebounce(this, this._mainOutletAnimate, 250);
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Composer Preview", type: :system do
-  fab!(:user) { Fabricate(:user, username: "bob") }
+  fab!(:user) { Fabricate(:user, username: "bob", refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
 
   before { sign_in user }

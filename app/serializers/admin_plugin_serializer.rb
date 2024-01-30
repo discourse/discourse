@@ -11,8 +11,12 @@ class AdminPluginSerializer < ApplicationSerializer
              :enabled_setting,
              :has_settings,
              :is_official,
+             :is_discourse_owned,
+             :label,
              :commit_hash,
-             :commit_url
+             :commit_url,
+             :meta_url,
+             :authors
 
   def id
     object.directory_name
@@ -32,6 +36,10 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def url
     object.metadata.url
+  end
+
+  def authors
+    object.metadata.authors
   end
 
   def enabled
@@ -71,11 +79,29 @@ class AdminPluginSerializer < ApplicationSerializer
     Plugin::Metadata::OFFICIAL_PLUGINS.include?(object.name)
   end
 
+  def include_label?
+    is_discourse_owned
+  end
+
+  def label
+    return if !is_discourse_owned
+    object.metadata.label
+  end
+
+  def is_discourse_owned
+    object.discourse_owned?
+  end
+
   def commit_hash
     object.commit_hash
   end
 
   def commit_url
     object.commit_url
+  end
+
+  def meta_url
+    return if object.metadata.meta_topic_id.blank?
+    "https://meta.discourse.org/t/#{object.metadata.meta_topic_id}"
   end
 end

@@ -1,10 +1,13 @@
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import $ from "jquery";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import { Promise } from "rsvp";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
+  historyStore: service(),
   templateName: "user/bookmarks",
 
   queryParams: {
@@ -12,11 +15,11 @@ export default DiscourseRoute.extend({
     q: { refreshModel: true },
   },
 
-  model(params, transition) {
+  model(params) {
     const controller = this.controllerFor("user-activity-bookmarks");
 
     if (
-      this.isPoppedState(transition) &&
+      this.historyStore.isPoppedState &&
       this.session.bookmarksModel &&
       this.session.bookmarksModel.searchTerm === params.q
     ) {
@@ -50,12 +53,6 @@ export default DiscourseRoute.extend({
 
   titleToken() {
     return I18n.t("user_action_groups.3");
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("user-activity")._showFooter();
-    return true;
   },
 
   @action

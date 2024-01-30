@@ -34,6 +34,29 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Flags a message in a channel.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} messageId - The ID of the message to flag.
+   * @param {object} params - Params of the flag.
+   * @param {integer} params.flag_type_id
+   * @param {string} [params.message]
+   * @param {boolean} [params.is_warning]
+   * @param {boolean} [params.queue_for_review]
+   * @param {boolean} [params.take_action]
+   * @returns {Promise}
+   *
+   * @example
+   *
+   *    this.chatApi.flagMessage(5, 1);
+   */
+  flagMessage(channelId, messageId, params = {}) {
+    return this.#postRequest(
+      `/channels/${channelId}/messages/${messageId}/flags`,
+      params
+    );
+  }
+
+  /**
    * Get a thread in a channel by its ID.
    * @param {number} channelId - The ID of the channel.
    * @param {number} threadId - The ID of the thread.
@@ -71,12 +94,16 @@ export default class ChatApi extends Service {
    *
    *    this.chatApi.channels.then(channels => { ... })
    */
-  channels() {
-    return new Collection(`${this.#basePath}/channels`, (response) => {
-      return response.channels.map((channel) =>
-        this.chatChannelsManager.store(channel)
-      );
-    });
+  channels(params = {}) {
+    return new Collection(
+      `${this.#basePath}/channels`,
+      (response) => {
+        return response.channels.map((channel) =>
+          this.chatChannelsManager.store(channel)
+        );
+      },
+      params
+    );
   }
 
   /**
@@ -153,7 +180,6 @@ export default class ChatApi extends Service {
    * @param {number} [data.in_reply_to_id] - The ID of the replied-to message.
    * @param {number} [data.staged_id] - The staged ID of the message before it was persisted.
    * @param {number} [data.thread_id] - The ID of the thread where this message should be posted.
-   * @param {number} [data.staged_thread_id] - The staged ID of the thread before it was persisted.
    * @param {Array.<number>} [data.upload_ids] - Array of upload ids linked to the message.
    * @returns {Promise}
    */
@@ -205,6 +231,21 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Creates a thread.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} originalMessageId - The ID of the original message.
+   * @param {object} data - Params of the thread.
+   * @param {string} [data.title] - Title of the thread.
+   * @returns {Promise}
+   */
+  createThread(channelId, originalMessageId, data = {}) {
+    return this.#postRequest(`/channels/${channelId}/threads`, {
+      title: data.title,
+      original_message_id: originalMessageId,
+    });
+  }
+
+  /**
    * Updates the status of a channel.
    * @param {number} channelId - The ID of the channel.
    * @param {string} status - The new status, can be "open" or "closed".
@@ -219,14 +260,15 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Collection}
    */
-  listChannelMemberships(channelId) {
+  listChannelMemberships(channelId, params = {}) {
     return new Collection(
       `${this.#basePath}/channels/${channelId}/memberships`,
       (response) => {
         return response.memberships.map((membership) =>
           UserChatChannelMembership.create(membership)
         );
-      }
+      },
+      params
     );
   }
 
@@ -235,7 +277,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   listCurrentUserChannels() {
-    return this.#getRequest("/channels/me");
+    return this.#getRequest("/me/channels");
   }
 
   /**
@@ -255,9 +297,28 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   unfollowChannel(channelId) {
-    return this.#deleteRequest(`/channels/${channelId}/memberships/me`).then(
-      (result) => UserChatChannelMembership.create(result.membership)
-    );
+    return this.#deleteRequest(
+      `/channels/${channelId}/memberships/me/follows`
+    ).then((result) => UserChatChannelMembership.create(result.membership));
+  }
+
+  /**
+   * Destroys the membership of current user on a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @returns {Promise}
+   */
+  leaveChannel(channelId) {
+    return this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+  }
+
+  /**
+   * Get the list of tracked threads for the current user.
+   *
+   * @returns {Promise}
+   */
+  userThreads(handler) {
+    return new Collection(`${this.#basePath}/me/threads`, handler);
   }
 
   /**
@@ -298,11 +359,16 @@ export default class ChatApi extends Service {
    * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
-  saveDraft(channelId, data) {
-    return ajax("/chat/drafts", {
+  saveDraft(channelId, data, options = {}) {
+    let endpoint = `/chat/api/channels/${channelId}`;
+    if (options.threadId) {
+      endpoint += `/threads/${options.threadId}`;
+    }
+    endpoint += "/drafts";
+
+    return ajax(endpoint, {
       type: "POST",
       data: {
-        chat_channel_id: channelId,
         data,
       },
       ignoreUnsent: false,
@@ -371,10 +437,10 @@ export default class ChatApi extends Service {
    * @param {Array<number>} data.upload_ids - The uploads attached to the message after editing.
    */
   editMessage(channelId, messageId, data) {
-    return ajax(`/chat/${channelId}/edit/${messageId}`, {
-      type: "PUT",
-      data,
-    });
+    return this.#putRequest(
+      `/channels/${channelId}/messages/${messageId}`,
+      data
+    );
   }
 
   /**
@@ -458,9 +524,9 @@ export default class ChatApi extends Service {
    * @param {number} options.chat_message_id - A message ID to display in the invite.
    */
   invite(channelId, userIds, options = {}) {
-    return ajax(`/chat/${channelId}/invite`, {
-      type: "put",
-      data: { user_ids: userIds, chat_message_id: options.messageId },
+    return this.#postRequest(`/channels/${channelId}/invites`, {
+      user_ids: userIds,
+      message_id: options.messageId,
     });
   }
 
@@ -473,6 +539,21 @@ export default class ChatApi extends Service {
    */
   summarize(channelId, options = {}) {
     return this.#getRequest(`/channels/${channelId}/summarize`, options);
+  }
+
+  /**
+   * Add members to a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {object} targets
+   * @param {Array<string>} targets.usernames - The usernames of the users to add.
+   * @param {Array<string>} targets.groups - The groups names of the groups to add.
+   */
+  addMembersToChannel(channelId, targets) {
+    return this.#postRequest(`/channels/${channelId}/memberships`, {
+      usernames: targets.usernames,
+      groups: targets.groups,
+    });
   }
 
   get #basePath() {

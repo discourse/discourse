@@ -1,14 +1,14 @@
-import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
-import { inject as service } from "@ember/service";
-import { or } from "@ember/object/computed";
-import Category from "discourse/models/category";
 import Component from "@ember/component";
-import I18n from "I18n";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { or } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import Category from "discourse/models/category";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 @tagName("tr")
 export default class EmbeddableHost extends Component.extend(

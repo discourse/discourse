@@ -1,6 +1,6 @@
 import { alias, and, or } from "@ember/object/computed";
-import { propertyEqual, setting } from "discourse/lib/computed";
 import Mixin from "@ember/object/mixin";
+import { propertyEqual, setting } from "discourse/lib/computed";
 
 export default Mixin.create({
   isCurrentUser: propertyEqual("model.id", "currentUser.id"),

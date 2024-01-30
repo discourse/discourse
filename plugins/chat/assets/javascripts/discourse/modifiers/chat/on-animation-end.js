@@ -1,6 +1,6 @@
-import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
 import { cancel, schedule } from "@ember/runloop";
+import Modifier from "ember-modifier";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatOnAnimationEnd extends Modifier {

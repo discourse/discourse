@@ -1,8 +1,8 @@
-import { not, or, reads } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { htmlSafe } from "@ember/template";
+import { not, or, reads } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   composer: service(),

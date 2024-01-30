@@ -11,15 +11,16 @@ RSpec.describe "Message errors", type: :system do
   context "when message is too long" do
     fab!(:channel) { Fabricate(:chat_channel) }
 
+    before { channel.add(current_user) }
+
     it "only shows the error, not the message" do
-      channel.add(current_user)
       sign_in(current_user)
       chat_page.visit_channel(channel)
 
       channel_page.send_message("atoolongmessage" + "a" * max_length)
 
-      expect(page).to have_no_content("atoolongmessage")
       expect(page).to have_content(I18n.t("chat.errors.message_too_long", count: max_length))
+      expect(page).to have_no_content("atoolongmessage")
     end
   end
 end

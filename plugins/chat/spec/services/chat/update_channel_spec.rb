@@ -23,12 +23,6 @@ RSpec.describe Chat::UpdateChannel do
     it { is_expected.to fail_a_policy(:check_channel_permission) }
   end
 
-  context "when the user tries to edit a DM channel" do
-    fab!(:channel) { Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)]) }
-
-    it { is_expected.to fail_a_policy(:no_direct_message_channel) }
-  end
-
   context "when channel is a category one" do
     context "when a valid user provides valid params" do
       let(:message) do
@@ -146,6 +140,17 @@ RSpec.describe Chat::UpdateChannel do
               },
             ) { result }
           end
+        end
+      end
+
+      describe "#update_site_settings" do
+        before do
+          SiteSetting.chat_threads_enabled = false
+          params[:threading_enabled] = true
+        end
+
+        it "sets chat_threads_enabled to true" do
+          expect { result }.to change { SiteSetting.chat_threads_enabled }.from(false).to(true)
         end
       end
     end

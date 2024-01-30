@@ -1,7 +1,8 @@
 import { htmlSafe } from "@ember/template";
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
-registerUnbound("topic-link", (topic, args) => {
+registerRawHelper("topic-link", topicLink);
+export default function topicLink(topic, args = {}) {
   const title = topic.get("fancyTitle");
 
   const url = topic.linked_post_number
@@ -21,4 +22,4 @@ registerUnbound("topic-link", (topic, args) => {
         class='${classes.join(" ")}'
         data-topic-id='${topic.id}'>${title}</a>`
   );
-});
+}

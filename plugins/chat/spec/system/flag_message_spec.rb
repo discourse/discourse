@@ -19,7 +19,7 @@ RSpec.describe "Flag message", type: :system do
 
     it "allows to flag a message" do
       chat.visit_channel(category_channel_1)
-      channel.flag_message(message_1)
+      channel.messages.flag(message_1)
 
       expect(page).to have_css(".flag-modal")
 

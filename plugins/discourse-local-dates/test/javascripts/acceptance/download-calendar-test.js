@@ -1,10 +1,10 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import I18n from "I18n";
 import { test } from "qunit";
-import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
+import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 acceptance(
   "Local Dates - Download calendar without default calendar option set",
@@ -90,7 +90,7 @@ acceptance(
         assert.deepEqual(
           [...arguments],
           [
-            `https://www.google.com/calendar/event?action=TEMPLATE&text=title%20to%20trim&dates=${startDate}T180000Z/${startDate}T190000Z`,
+            `https://www.google.com/calendar/event?action=TEMPLATE&text=title+to+trim&dates=${startDate}T180000Z%2F${startDate}T190000Z`,
             "_blank",
             "noopener",
             "noreferrer",

@@ -1,0 +1,12 @@
+.invites-show {
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 0 1em 1em;
+
+  .invitation-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 2rem;
+  }
+}

@@ -1,14 +1,21 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import I18n from "I18n";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 acceptance("Topic move posts", function (needs) {
   needs.user();
+  needs.pretender((server, helper) => {
+    server.post("/t/280/move-posts", () => {
+      return helper.response(404, {
+        errors: ["Invalid title"],
+      });
+    });
+  });
 
   test("default", async function (assert) {
     await visit("/t/internationalization-localization");
@@ -25,7 +32,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"
@@ -53,6 +60,20 @@ acceptance("Topic move posts", function (needs) {
     );
   });
 
+  test("display error when new topic has invalid title", async function (assert) {
+    await visit("/t/internationalization-localization");
+    await click(".toggle-admin-menu");
+    await click(".topic-admin-multi-select .btn");
+    await click("#post_11 .select-below");
+    await click(".selected-posts .move-to-topic");
+    await fillIn(".choose-topic-modal #split-topic-name", "Existing topic");
+    await click(".choose-topic-modal .d-modal__footer .btn-primary");
+    assert.strictEqual(
+      query("#modal-alert").innerText.trim(),
+      I18n.t("topic.move_to.error")
+    );
+  });
+
   test("moving all posts", async function (assert) {
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
@@ -61,7 +82,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"
@@ -138,7 +159,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"
@@ -174,7 +195,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      query(".choose-topic-modal .title").innerHTML.includes(
+      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
         I18n.t("topic.move_to.title")
       ),
       "it opens move to modal"

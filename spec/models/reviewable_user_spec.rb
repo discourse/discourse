@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableUser, type: :model do
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator)
   let(:user) do
     user = Fabricate(:user)
     user.activate
     user
   end
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "#actions_for" do
-    fab!(:reviewable) { Fabricate(:reviewable) }
+    fab!(:reviewable)
 
     it "returns correct actions in the pending state" do
       actions = reviewable.actions_for(Guardian.new(moderator))
@@ -26,7 +26,7 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:delete_user_block)).to eq(false)
     end
 
-    it "can delete a user without a giving a rejection reason if the user was a spammer" do
+    it "doesn't ask for a rejection reason when deleting a user who was flagged as a possible spammer" do
       reviewable.reviewable_scores.build(user: admin, reason: "suspect_user")
 
       assert_require_reject_reason(:delete_user, false)
@@ -36,10 +36,10 @@ RSpec.describe ReviewableUser, type: :model do
       assert_require_reject_reason(:delete_user, true)
     end
 
-    it "can delete and block a user without giving a rejection reason if the user was a spammer" do
+    it "doesn't ask for a rejection reason when blocking a user who was flagged as a possible spammer" do
       reviewable.reviewable_scores.build(user: admin, reason: "suspect_user")
 
-      assert_require_reject_reason(:delete_user, false)
+      assert_require_reject_reason(:delete_user_block, false)
     end
 
     it "requires a rejection reason to delete and block a user" do
@@ -49,13 +49,15 @@ RSpec.describe ReviewableUser, type: :model do
     def assert_require_reject_reason(id, expected)
       actions = reviewable.actions_for(Guardian.new(moderator))
 
-      expect(actions.to_a.find { |a| a.id == id }.require_reject_reason).to eq(expected)
+      expect(actions.to_a.find { |a| a.server_action.to_sym == id }.require_reject_reason).to eq(
+        expected,
+      )
     end
   end
 
   describe "#update_fields" do
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:reviewable) { Fabricate(:reviewable) }
+    fab!(:moderator)
+    fab!(:reviewable)
 
     it "doesn't raise errors with an empty update" do
       expect(reviewable.update_fields(nil, moderator)).to eq(true)
@@ -76,7 +78,7 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   describe "#perform" do
-    fab!(:reviewable) { Fabricate(:reviewable) }
+    fab!(:reviewable)
 
     context "when approving" do
       it "allows us to approve a user" do
@@ -228,17 +230,6 @@ RSpec.describe ReviewableUser, type: :model do
           },
         ) { @reviewable.perform(admin, :approve_user) }
       end
-    end
-
-    it "triggers a extensibility event" do
-      user && admin # bypass the user_created event
-      event =
-        DiscourseEvent
-          .track_events { ReviewableUser.find_by(target: user).perform(admin, :approve_user) }
-          .first
-
-      expect(event[:event_name]).to eq(:user_approved)
-      expect(event[:params].first).to eq(user)
     end
 
     it "triggers a extensibility event" do

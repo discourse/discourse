@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Chat::GuardianExtensions do
   fab!(:chatters) { Fabricate(:group) }
-  fab!(:user) { Fabricate(:user, group_ids: [chatters.id]) }
+  fab!(:user) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }
   fab!(:staff) { Fabricate(:user, admin: true) }
   fab!(:chat_group) { Fabricate(:group) }
   fab!(:channel) { Fabricate(:category_channel) }
@@ -25,10 +25,8 @@ RSpec.describe Chat::GuardianExtensions do
   end
 
   it "allows TL1 to chat by default and by extension higher trust levels" do
-    Group.refresh_automatic_groups!
     expect(guardian.can_chat?).to eq(true)
-    user.update!(trust_level: TrustLevel[3])
-    Group.refresh_automatic_groups!
+    user.change_trust_level!(TrustLevel[3])
     expect(guardian.can_chat?).to eq(true)
   end
 
@@ -46,9 +44,39 @@ RSpec.describe Chat::GuardianExtensions do
       expect(staff_guardian.can_create_chat_channel?).to eq(true)
     end
 
-    it "only staff can edit chat channels" do
-      expect(guardian.can_edit_chat_channel?).to eq(false)
-      expect(staff_guardian.can_edit_chat_channel?).to eq(true)
+    context "when category channel" do
+      it "allows staff to edit chat channels" do
+        expect(guardian.can_edit_chat_channel?(channel)).to eq(false)
+        expect(staff_guardian.can_edit_chat_channel?(channel)).to eq(true)
+      end
+    end
+
+    context "when direct message channel" do
+      context "when member of channel" do
+        context "when group" do
+          before do
+            dm_channel.chatable.update!(group: true)
+            add_users_to_channel(user, dm_channel)
+          end
+
+          it "allows to edit the channel" do
+            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(true)
+          end
+        end
+
+        context "when not group" do
+          it "doesn’t allow  to edit the channel" do
+            Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
+            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(false)
+          end
+        end
+      end
+
+      context "when not member of channel" do
+        it "doesn’t allow to edit the channel" do
+          expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(false)
+        end
+      end
     end
 
     it "only staff can close chat channels" do
@@ -91,7 +119,7 @@ RSpec.describe Chat::GuardianExtensions do
       end
 
       context "for category channel" do
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
         fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
 
         it "returns true if the user can join the category" do
@@ -207,7 +235,7 @@ RSpec.describe Chat::GuardianExtensions do
           end
 
           context "when user can't post in chatable" do
-            fab!(:group) { Fabricate(:group) }
+            fab!(:group)
             fab!(:channel) { Fabricate(:private_category_channel, group: group) }
 
             before do
@@ -558,8 +586,6 @@ RSpec.describe Chat::GuardianExtensions do
       end
 
       context "for direct message channels" do
-        before { Group.refresh_automatic_groups! }
-
         it "it still allows the user to message even if they are not in direct_message_enabled_groups because they are not creating the channel" do
           SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
           dm_channel.update!(status: :open)

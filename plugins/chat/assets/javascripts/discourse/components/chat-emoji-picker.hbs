@@ -6,7 +6,6 @@
   <div
     class={{concat-class
       "chat-emoji-picker"
-      @class
       (if this.chatEmojiPickerManager.closing "closing")
     }}
     {{did-insert this.addClickOutsideEventListener}}
@@ -15,21 +14,22 @@
     {{will-destroy (if @willDestroy @willDestroy (noop))}}
     {{will-destroy this.removeClickOutsideEventListener}}
     {{on "keydown" this.trapKeyDownEvents}}
+    ...attributes
   >
     <div class="chat-emoji-picker__filter-container">
       <DcFilterInput
-        @class="chat-emoji-picker__filter"
-        @value={{this.chatEmojiPickerManager.picker.initialFilter}}
-        @filterAction={{action this.didInputFilter value="target.value"}}
-        @icons={{hash left="search"}}
-        placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
-        autofocus={{true}}
         {{did-insert (if this.site.desktopView this.focusFilter (noop))}}
         {{did-insert
           (fn
             this.didInputFilter this.chatEmojiPickerManager.picker.initialFilter
           )
         }}
+        @value={{this.chatEmojiPickerManager.picker.initialFilter}}
+        @filterAction={{action this.didInputFilter value="target.value"}}
+        @icons={{hash left="search"}}
+        @containerClass="chat-emoji-picker__filter"
+        autofocus={{true}}
+        placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
       >
         <div
           class="chat-emoji-picker__fitzpatrick-scale"
@@ -109,7 +109,7 @@
                   width="18"
                   height="18"
                   class="emoji"
-                  src={{emojis.firstObject.url}}
+                  src={{get emojis "0.url"}}
                 />
               {{/if}}
             </DButton>
@@ -177,7 +177,7 @@
               </h2>
               <div class="chat-emoji-picker__section-emojis">
                 {{! we always want the first emoji for tabbing}}
-                {{#let emojis.firstObject as |emoji|}}
+                {{#let (get emojis "0") as |emoji|}}
                   <img
                     width="32"
                     height="32"

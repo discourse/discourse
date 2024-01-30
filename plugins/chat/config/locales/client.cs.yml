@@ -5,11 +5,17 @@
 # https://translate.discourse.org/
 
 cs:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vždy"
+          never: "Nikdy"
       logs:
         staff_actions:
           actions:
@@ -22,11 +28,12 @@ cs:
             chat:
               create_message: "Vytvořit chatovací zprávu v určeném kanálu."
     about:
-      chat_messages_count: "Zprávy v chatu"
-      chat_channels_count: "Chatovací kanály"
-      chat_users_count: "Uživatelé chatu"
+      chat_channels_count: "Kanály chatu"
     chat:
+      back_to_forum: "Fórum"
+      deleted_chat_username: smazáno
       dates:
+        yesterday: "Včera"
         time_tiny: "h:mm"
       all_loaded: "Zobrazení všech zpráv"
       create: "Vytvoř"
@@ -36,6 +43,7 @@ cs:
       channel_settings:
         edit: "Upravit"
         add: "přidat"
+        leave_groupchat_info: "Opuštěním tohoto skupinového chatu k němu již nebudete mít přístup a nebudete dostávat s ním spojená upozornění. Chcete-li se do něj znovu připojit, musíte být znovu pozváni některým ze členů skupinového chatu."
         join: "Přidat se ke skupině"
         leave: "Opustit skupinu"
       channel_close:
@@ -45,6 +53,7 @@ cs:
         create: "Nový kanál"
       click_to_join: "Kliknutím sem zobrazíte dostupné kanály."
       close: "Zavřít"
+      remove: "Smazat"
       expand: "Rozbalit menu chatu"
       delete: "Smazat"
       edited: "upraveno"
@@ -61,8 +70,6 @@ cs:
       heading: "Chat"
       join: "Přidat se ke skupině"
       last_visit: "poslední návštěva"
-      mention_warning:
-        dismiss: "označit jako přečtené"
       aria_roles:
         channels_list: "Seznam kanálů chatu"
       no_public_channels: "Nepřipojili jste se k žádným kanálům."
@@ -92,6 +99,8 @@ cs:
       chat_message_separator:
         today: Dnes
         yesterday: Včera
+      members_view:
+        back_to_settings: "Zpět na nastavení"
       about_view:
         title: Nadpis
         name: Jméno
@@ -100,9 +109,10 @@ cs:
         back_to_all_channels: "Všechny kanály"
         back_to_channel: "Zpět"
         tabs:
-          about: O fóru
           members: Členové
           settings: Nastavení
+      new_message_modal:
+        filter: "Filtr"
       direct_message_creator:
         title: Nová zpráva
         prefix: "Komu:"
@@ -112,10 +122,28 @@ cs:
         types:
           category: "Kategorie"
           topic: "Témata"
+      reactions:
+        only_you: "<span>Reagovali jste pomocí </span>:%{emoji}:"
+        you_and_single_user: "<span>Vy a %{username} jste reagovali pomocí </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Vy, %{commaSeparatedUsernames} a %{username} jste reagovali pomocí </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Vy, %{commaSeparatedUsernames} a %{count} další jste reagovali pomocí </span>:%{emoji}:"
+          few: "<span>Vy, %{commaSeparatedUsernames} a %{count} další jste reagovali pomocí </span>:%{emoji}:"
+          many: "<span>Vy, %{commaSeparatedUsernames} a %{count} dalších jste reagovali pomocí </span>:%{emoji}:"
+          other: "<span>Vy, %{commaSeparatedUsernames} a %{count} dalších jste reagovali pomocí </span>:%{emoji}:"
+        single_user: "<span>%{username} reagoval pomocí </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} a %{username} reagovali pomocí </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} a %{count} další reagovali na </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} a %{count} další reagovali na </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} a %{count} dalších reagovalo na </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} a %{count} dalších reagovalo na </span>:%{emoji}:"
       composer:
         italic_text: "text kurzívou"
         bold_text: "tučný text"
         send: "Poslat"
+      quote:
+        default_thread_title: "Vlákno"
       notification_levels:
         never: "Nikdy"
       settings:
@@ -131,10 +159,22 @@ cs:
         saved: "Uloženo"
         unfollow: "Opustit skupinu"
         admin_title: "Administrace"
+        settings_title: "Nastavení"
+        category_label: "Kategorie"
+        history_label: "Historie"
+        members_label: "Členové"
       admin:
         title: "Chat"
+        export_messages:
+          description: "Tímto se exportují všechny zprávy ze všech kanálů."
+      my_threads:
+        title: Moje vlákna
+        aria_label: "Přepnout na můj seznam vláken"
       direct_messages:
+        title: "Soukromé zprávy"
         new: "Vytvořit osobní chat"
+      channel_list:
+        title: "Kanály"
       incoming_webhooks:
         back: "Zpět"
         description: "Popis"
@@ -155,6 +195,18 @@ cs:
           title: "Sloučit téma"
         new_message:
           title: "Přesunout do nové zprávy"
+      retention_reminders:
+        indefinitely_long: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly po neomezenou dobu."
+        short:
+          one: "%{count} den"
+          few: "%{count} dny"
+          many: "%{count} dní"
+          other: "%{count} dní"
+        long:
+          one: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} den."
+          few: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dny."
+          many: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
+          other: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
       emoji_picker:
         objects: "Objekty"
         activities: "Aktivity"
@@ -163,7 +215,6 @@ cs:
         search_placeholder: "Vyhledávání podle názvu a přezdívky emoji..."
       thread:
         title: "Nadpis"
-        default_title: "Vlákno"
         replies:
           one: "%{count} odpověď"
           few: "%{count} odpovědí"
@@ -190,6 +241,10 @@ cs:
           fields:
             message:
               label: Zpráva
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Označená zpráva chatu"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -199,3 +254,7 @@ cs:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

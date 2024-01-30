@@ -355,16 +355,6 @@ sl:
 
           Vedite, da imate samo ur%{deletion_after}ur za preklic izbrisa prispevka.
       category_hashtag:
-        instructions: |-
-          Ali ste vedeli, da se lahko navežete na kategorijo ali oznako v vašem prispevku? Na primer, ali ste videli %{category} kategorijo?
-
-          Vnesite `#` sredi stavka in izberite poljubno kategorijo ali oznako.
-        not_found: |-
-          Hmm, ne vidim nobene kategorije tukaj. Bodite pozorni da `#` ni prvi znak v vrstici. Ali lahko tole skopirate v naslednji odgovor?
-
-          ```text
-          Povezavo na kategorijo lahko naredim preko #
-          ```
         reply: |-
           Odlično! Zapomnite si da to deluje tako za kategorije _kot_ za oznake, če so omogočene.
       change_topic_notification_level:

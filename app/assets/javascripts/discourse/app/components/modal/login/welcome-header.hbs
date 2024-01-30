@@ -1,0 +1,9 @@
+<div class="login-welcome-header">
+  <h1 class="login-title">{{i18n "login.header_title"}}</h1>
+  <img src={{@wavingHandURL}} alt="" class="waving-hand" />
+  <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
+  <PluginOutlet
+    @name="login-header-bottom"
+    @outletArgs={{hash createAccount=@createAccount}}
+  />
+</div>

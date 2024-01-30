@@ -1,12 +1,11 @@
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 export default class extends Component {
   @service currentUser;
@@ -18,9 +17,8 @@ export default class extends Component {
   @tracked onlySelected = false;
   @tracked onlyUnselected = false;
 
-  @tracked selectedSidebarCategoryIds = [
-    ...this.currentUser.sidebar_category_ids,
-  ];
+  @tracked
+  selectedSidebarCategoryIds = [...this.currentUser.sidebar_category_ids];
 
   categoryGroupings = [];
 

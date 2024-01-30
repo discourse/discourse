@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableHistory, type: :model do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:moderator)
 
   it "adds a `created` history event when a reviewable is created" do
     reviewable = ReviewableUser.needs_review!(target: user, created_by: admin)
@@ -36,7 +36,7 @@ RSpec.describe ReviewableHistory, type: :model do
 
   it "won't log a transition to the same state" do
     p0 = Fabricate(:post)
-    reviewable = PostActionCreator.spam(Fabricate(:user), p0).reviewable
+    reviewable = PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), p0).reviewable
     expect(reviewable.reviewable_histories.size).to eq(1)
     PostActionCreator.inappropriate(Fabricate(:user), p0)
     expect(reviewable.reload.reviewable_histories.size).to eq(1)

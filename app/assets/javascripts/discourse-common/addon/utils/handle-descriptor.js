@@ -1,5 +1,5 @@
-import CoreObject from "@ember/object/core";
 import { computed, get } from "@ember/object";
+import CoreObject from "@ember/object/core";
 import extractValue from "./extract-value";
 
 export default function handleDescriptor(target, key, desc, params = []) {

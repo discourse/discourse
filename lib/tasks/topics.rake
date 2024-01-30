@@ -20,7 +20,7 @@ def close_old_topics(category)
   end
 
   topics.find_each do |topic|
-    topic.update_status("closed", true, Discourse.system_user)
+    topic.update_status("closed", true, Discourse.system_user, { silent: true })
     RakeHelpers.print_status_with_label("    closing old topics: ", topics_closed += 1, total)
   end
 end

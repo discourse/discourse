@@ -53,6 +53,9 @@ lv:
   on_another_topic: "Par citu tēmu"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} - %{username}"
+  components:
+    enabled_filter: "Ieslēgts"
+    disabled_filter: "Atslēgt"
   emails:
     incoming:
       default_subject: "Šim ierakstam ir nepieciešams nosaukums"
@@ -69,7 +72,6 @@ lv:
       zero: "vel %{count} atbildes"
       one: "vel %{count} atbilde"
       other: "vel %{count} atbildes"
-    loading: "Diskusijas Ielādēšana..."
     in_reply_to: "▶ %{username}"
     replies:
       zero: "%{count} atbildes"
@@ -195,8 +197,6 @@ lv:
         other: "pirms %{count} dienām"
   password_reset:
     title: "Atjaunot paroli"
-  change_email:
-    please_continue: "Turpināt %{site_name}"
   activation:
     continue_button: "Turpināt %{site_name}"
     welcome_to: "Laipni lūdzam %{site_name}!"
@@ -496,6 +496,9 @@ lv:
                 label: "Sadaļas un jaunākās tēmas"
               categories_and_top_topics:
                 label: "Kategorijas un populārākās tēmas"
+  onebox:
+    github:
+      closed: "slēgts"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'

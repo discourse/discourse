@@ -217,6 +217,7 @@ RSpec.describe ScreenedIpAddress do
           :screened_ip_address,
           ip_address: "111.234.23.11",
           action_type: described_class.actions[:block],
+          match_count: 0,
         )
       expect(described_class.should_block?("222.12.12.12")).to eq(false)
       expect(screened_ip_address.reload.match_count).to eq(0)
@@ -257,6 +258,7 @@ RSpec.describe ScreenedIpAddress do
             :screened_ip_address,
             ip_address: "111.234.23.11",
             action_type: described_class.actions[:do_nothing],
+            match_count: 0,
           )
         expect(described_class.should_block?("111.234.23.11")).to eq(false)
         expect(screened_ip_address.reload.match_count).to eq(0)
@@ -268,6 +270,7 @@ RSpec.describe ScreenedIpAddress do
             :screened_ip_address,
             ip_address: "111.234.23.11",
             action_type: described_class.actions[:block],
+            match_count: 0,
           )
         expect(described_class.should_block?("111.234.23.11")).to eq(true)
         expect(screened_ip_address.reload.match_count).to eq(1)
@@ -281,6 +284,7 @@ RSpec.describe ScreenedIpAddress do
             :screened_ip_address,
             ip_address: "2001:db8::ff00:42:8329",
             action_type: described_class.actions[:do_nothing],
+            match_count: 0,
           )
         expect(described_class.should_block?("2001:db8::ff00:42:8329")).to eq(false)
         expect(screened_ip_address.reload.match_count).to eq(0)
@@ -292,6 +296,7 @@ RSpec.describe ScreenedIpAddress do
             :screened_ip_address,
             ip_address: "2001:db8::ff00:42:8329",
             action_type: described_class.actions[:block],
+            match_count: 0,
           )
         expect(described_class.should_block?("2001:db8::ff00:42:8329")).to eq(true)
         expect(screened_ip_address.reload.match_count).to eq(1)
@@ -310,6 +315,7 @@ RSpec.describe ScreenedIpAddress do
           :screened_ip_address,
           ip_address: "111.234.23.11",
           action_type: described_class.actions[:do_nothing],
+          match_count: 0,
         )
       expect(described_class.is_allowed?("222.12.12.12")).to eq(false)
       expect(screened_ip_address.reload.match_count).to eq(0)
@@ -322,6 +328,7 @@ RSpec.describe ScreenedIpAddress do
             :screened_ip_address,
             ip_address: "111.234.23.11",
             action_type: described_class.actions[:do_nothing],
+            match_count: 0,
           )
         expect(described_class.is_allowed?("111.234.23.11")).to eq(true)
         expect(screened_ip_address.reload.match_count).to eq(1)
@@ -333,6 +340,7 @@ RSpec.describe ScreenedIpAddress do
             :screened_ip_address,
             ip_address: "111.234.23.11",
             action_type: described_class.actions[:block],
+            match_count: 0,
           )
         expect(described_class.is_allowed?("111.234.23.11")).to eq(false)
         expect(screened_ip_address.reload.match_count).to eq(0)
@@ -346,6 +354,7 @@ RSpec.describe ScreenedIpAddress do
             :screened_ip_address,
             ip_address: "2001:db8::ff00:42:8329",
             action_type: described_class.actions[:do_nothing],
+            match_count: 0,
           )
         expect(described_class.is_allowed?("2001:db8::ff00:42:8329")).to eq(true)
         expect(screened_ip_address.reload.match_count).to eq(1)
@@ -357,6 +366,7 @@ RSpec.describe ScreenedIpAddress do
             :screened_ip_address,
             ip_address: "2001:db8::ff00:42:8329",
             action_type: described_class.actions[:block],
+            match_count: 0,
           )
         expect(described_class.is_allowed?("2001:db8::ff00:42:8329")).to eq(false)
         expect(screened_ip_address.reload.match_count).to eq(0)

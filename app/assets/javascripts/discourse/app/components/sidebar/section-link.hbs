@@ -1,7 +1,6 @@
 {{#if this.shouldDisplay}}
   <li
     class="sidebar-section-link-wrapper"
-    {{did-insert this.didInsert this.args}}
     data-list-item-name={{@linkName}}
     ...attributes
   >
@@ -10,9 +9,9 @@
         href={{@href}}
         rel="noopener noreferrer"
         target={{this.target}}
-        class={{this.classNames}}
         title={{@title}}
         data-link-name={{@linkName}}
+        class={{this.linkClass}}
       >
         <Sidebar::SectionLinkPrefix
           @prefixType={{@prefixType}}
@@ -28,13 +27,13 @@
       </a>
     {{else}}
       <LinkTo
-        class={{this.classNames}}
         @route={{@route}}
         @query={{or @query (hash)}}
         @models={{this.models}}
         @current-when={{@currentWhen}}
         title={{@title}}
         data-link-name={{@linkName}}
+        class={{this.linkClass}}
       >
 
         <Sidebar::SectionLinkPrefix

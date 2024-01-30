@@ -1,54 +1,53 @@
-<DSection @pageClass="user-preferences" @tagName="">
-  <section class="user-content user-preferences solo-preference">
-    <form class="form-vertical">
-      {{#if this.success}}
-        <div class="alert alert-success">{{this.successMessage}}</div>
-        <LinkTo @route="preferences.account" class="success-back">
-          {{d-icon "arrow-left"}}
-          {{i18n "user.change_email.back_to_preferences"}}
-        </LinkTo>
+{{body-class "user-preferences-page"}}
 
-      {{else}}
-        {{#if this.error}}
-          <div class="alert alert-error">{{this.errorMessage}}</div>
-        {{/if}}
-        <div class="control-group">
-          <label class="control-label">
-            {{i18n
-              (if this.new "user.add_email.title" "user.change_email.title")
-            }}
-          </label>
-          <div class="controls">
-            <TextField
-              @value={{this.newEmail}}
-              @id="change-email"
-              @classNames="input-xxlarge"
-              @autofocus="autofocus"
-            />
-            <div class="instructions">
-              {{#if this.taken}}
-                {{i18n "user.change_email.taken"}}
-              {{else}}
-                {{i18n "user.email.instructions"}}
-              {{/if}}
-            </div>
-            <InputTip @validation={{this.emailValidation}} />
-          </div>
-        </div>
-        <div class="controls save-button">
-          <DButton
-            @class="btn-primary"
-            @action={{action "saveEmail"}}
-            @type="submit"
-            @disabled={{this.saveDisabled}}
-            @translatedLabel={{this.saveButtonText}}
-          />
-          <CancelLink
-            @route="preferences.account"
-            @args={{this.model.username}}
-          />
-        </div>
+<section class="user-content user-preferences solo-preference">
+  <form class="form-vertical">
+    {{#if this.success}}
+      <div class="alert alert-success">{{this.successMessage}}</div>
+      <LinkTo @route="preferences.account" class="success-back">
+        {{d-icon "arrow-left"}}
+        {{i18n "user.change_email.back_to_preferences"}}
+      </LinkTo>
+    {{else}}
+      {{#if this.error}}
+        <div class="alert alert-error">{{this.errorMessage}}</div>
       {{/if}}
-    </form>
-  </section>
-</DSection>
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n
+            (if this.new "user.add_email.title" "user.change_email.title")
+          }}
+        </label>
+        <div class="controls">
+          <TextField
+            @value={{this.newEmail}}
+            @id="change-email"
+            @classNames="input-xxlarge"
+            @autofocus="autofocus"
+          />
+          <div class="instructions">
+            {{#if this.taken}}
+              {{i18n "user.change_email.taken"}}
+            {{else}}
+              {{i18n "user.email.instructions"}}
+            {{/if}}
+          </div>
+          <InputTip @validation={{this.emailValidation}} />
+        </div>
+      </div>
+      <div class="controls save-button">
+        <DButton
+          @action={{action "saveEmail"}}
+          @disabled={{this.saveDisabled}}
+          @translatedLabel={{this.saveButtonText}}
+          type="submit"
+          class="btn-primary"
+        />
+        <CancelLink
+          @route="preferences.account"
+          @args={{this.model.username}}
+        />
+      </div>
+    {{/if}}
+  </form>
+</section>

@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import I18n from "discourse-i18n";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import I18n from "I18n";
 
 module(
   "Discourse Chat | Component | Chat::Message::LeftGutter",

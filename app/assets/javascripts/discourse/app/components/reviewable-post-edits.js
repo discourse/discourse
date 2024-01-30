@@ -1,11 +1,11 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
-import { historyHeat } from "discourse/widgets/post-edits-indicator";
-import { longDate } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
 import HistoryModal from "discourse/components/modal/history";
+import { longDate } from "discourse/lib/formatter";
+import { historyHeat } from "discourse/widgets/post-edits-indicator";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   modal: service(),

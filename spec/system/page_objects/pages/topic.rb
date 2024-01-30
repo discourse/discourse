@@ -6,18 +6,18 @@ module PageObjects
       def initialize
         @composer_component = PageObjects::Components::Composer.new
         @fast_edit_component = PageObjects::Components::FastEditor.new
+        @topic_map_component = PageObjects::Components::TopicMap.new
       end
 
       def visit_topic(topic, post_number: nil)
         url = "/t/#{topic.id}"
         url += "/#{post_number}" if post_number
-        page.visit url
+        page.visit(url)
         self
       end
 
       def open_new_topic
-        page.visit "/"
-        find("button#create-topic").click
+        page.visit "/new-topic"
         self
       end
 
@@ -32,6 +32,14 @@ module PageObjects
         self
       end
 
+      def current_topic_id
+        find("h1[data-topic-id]")["data-topic-id"]
+      end
+
+      def current_topic
+        ::Topic.find(current_topic_id)
+      end
+
       def has_topic_title?(text)
         has_css?("h1 .fancy-title", text: text)
       end
@@ -44,9 +52,9 @@ module PageObjects
         has_css?("#post_#{number}")
       end
 
-      def post_by_number(post_or_number)
+      def post_by_number(post_or_number, wait: Capybara.default_max_wait_time)
         post_or_number = post_or_number.is_a?(Post) ? post_or_number.post_number : post_or_number
-        find(".topic-post:not(.staged) #post_#{post_or_number}")
+        find(".topic-post:not(.staged) #post_#{post_or_number}", wait: wait)
       end
 
       def post_by_number_selector(post_number)
@@ -77,7 +85,27 @@ module PageObjects
           post_by_number(post).find(".bookmark.with-reminder").click
         when :reply
           post_by_number(post).find(".post-controls .reply").click
+        when :flag
+          post_by_number(post).find(".post-controls .create-flag").click
+        when :copy_link
+          post_by_number(post).find(".post-controls .post-action-menu__copy-link").click
         end
+      end
+
+      def expand_post_admin_actions(post)
+        post_by_number(post).find(".show-post-admin-menu").click
+      end
+
+      def click_post_admin_action_button(post, button)
+        element_klass = "[data-content][data-identifier='admin-post-menu']"
+        case button
+        when :grant_badge
+          element_klass += " .grant-badge"
+        when :change_owner
+          element_klass += " .change-owner"
+        end
+
+        find(element_klass).click
       end
 
       def click_topic_footer_button(button)
@@ -146,10 +174,35 @@ module PageObjects
         @fast_edit_component.fast_edit_input
       end
 
+      def copy_quote_button_selector
+        ".quote-button .copy-quote"
+      end
+
+      def copy_quote_button
+        find(copy_quote_button_selector)
+      end
+
       def click_mention(post, mention)
         within post_by_number(post) do
           find("a.mention-group", text: mention).click
         end
+      end
+
+      def click_footer_reply
+        find("#topic-footer-buttons .btn-primary", text: "Reply").click
+        self
+      end
+
+      def click_like_reaction_for(post)
+        post_by_number(post).find(".post-controls .actions .like").click
+      end
+
+      def has_topic_map?
+        @topic_map_component.is_visible?
+      end
+
+      def has_no_topic_map?
+        @topic_map_component.is_not_visible?
       end
 
       private

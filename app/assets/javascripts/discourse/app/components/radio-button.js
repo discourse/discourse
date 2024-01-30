@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import $ from "jquery";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({

@@ -1,18 +1,19 @@
-import categoryFromId from "discourse-common/utils/category-macro";
-import I18n from "I18n";
-import { Promise } from "rsvp";
-import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
-import Topic from "discourse/models/topic";
-import { ajax } from "discourse/lib/ajax";
 import { computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { formattedReminderTime } from "discourse/lib/bookmark";
-import getURL from "discourse-common/lib/get-url";
-import { longDate } from "discourse/lib/formatter";
 import { none } from "@ember/object/computed";
 import { capitalize } from "@ember/string";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { formattedReminderTime } from "discourse/lib/bookmark";
+import { longDate } from "discourse/lib/formatter";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
+import RestModel from "discourse/models/rest";
+import Topic from "discourse/models/topic";
+import User from "discourse/models/user";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import Category from "./category";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -89,9 +90,33 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    return I18n.t("topic.bumped_at_title", {
-      createdAtDate: longDate(createdAt),
-      bumpedAtDate: longDate(bumpedAt),
+    const BUMPED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+    if (moment(bumpedAt).isValid() && moment(createdAt).isValid()) {
+      const bumpedAtStr = moment(bumpedAt).format(BUMPED_FORMAT);
+      const createdAtStr = moment(createdAt).format(BUMPED_FORMAT);
+
+      return bumpedAtStr !== createdAtStr
+        ? `${I18n.t("topic.created_at", {
+            date: longDate(createdAt),
+          })}\n${I18n.t("topic.bumped_at", { date: longDate(bumpedAt) })}`
+        : I18n.t("topic.created_at", { date: longDate(createdAt) });
+    }
+  },
+
+  @discourseComputed("name", "reminder_at")
+  reminderTitle(name, reminderAt) {
+    if (!isEmpty(reminderAt)) {
+      return I18n.t("bookmarks.created_with_reminder_generic", {
+        date: formattedReminderTime(
+          reminderAt,
+          this.currentUser?.user_option?.timezone || moment.tz.guess()
+        ),
+        name: name || "",
+      });
+    }
+
+    return I18n.t("bookmarks.created_generic", {
+      name: name || "",
     });
   },
 
@@ -118,14 +143,17 @@ const Bookmark = RestModel.extend({
     return newTags;
   },
 
-  category: categoryFromId("category_id"),
+  @computed("category_id")
+  get category() {
+    return Category.findById(this.category_id);
+  },
 
   @discourseComputed("reminder_at", "currentUser")
   formattedReminder(bookmarkReminderAt, currentUser) {
     return capitalize(
       formattedReminderTime(
         bookmarkReminderAt,
-        currentUser.user_option.timezone
+        currentUser?.user_option?.timezone || moment.tz.guess()
       )
     );
   },

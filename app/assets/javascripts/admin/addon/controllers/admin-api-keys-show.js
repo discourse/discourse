@@ -1,16 +1,17 @@
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
-import Controller from "@ember/controller";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
-import { inject as service } from "@ember/service";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import ApiKeyUrlsModal from "../components/modal/api-key-urls";
 
 export default class AdminApiKeysShowController extends Controller.extend(
   bufferedProperty("model")
 ) {
   @service router;
+  @service modal;
 
   @empty("model.id") isNew;
 
@@ -67,8 +68,7 @@ export default class AdminApiKeysShowController extends Controller.extend(
 
   @action
   showURLs(urls) {
-    return showModal("admin-api-key-urls", {
-      admin: true,
+    this.modal.show(ApiKeyUrlsModal, {
       model: {
         urls,
       },

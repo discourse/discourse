@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::RefreshUsersReviewableCounts do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
-  fab!(:group) { Fabricate(:group) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:group)
+  fab!(:topic)
   fab!(:reviewable1) do
     Fabricate(:reviewable, reviewable_by_group: group, reviewable_by_moderator: true, topic: topic)
   end
@@ -18,7 +18,6 @@ RSpec.describe Jobs::RefreshUsersReviewableCounts do
     SiteSetting.enable_category_group_moderation = true
     group.add(user)
     topic.category.update!(reviewable_by_group: group)
-    Group.refresh_automatic_groups!
   end
 
   describe "#execute" do

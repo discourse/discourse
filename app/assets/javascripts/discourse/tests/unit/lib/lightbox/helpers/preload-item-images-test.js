@@ -1,11 +1,10 @@
-import {
-  LIGHTBOX_IMAGE_FIXTURES,
-  generateLightboxObject,
-} from "discourse/tests/helpers/lightbox-helpers";
 import { module, test } from "qunit";
-
-import { cloneJSON } from "discourse-common/lib/object";
 import { preloadItemImages } from "discourse/lib/lightbox/helpers";
+import {
+  generateLightboxObject,
+  LIGHTBOX_IMAGE_FIXTURES,
+} from "discourse/tests/helpers/lightbox-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
 
 module(
   "Unit | lib | Experimental Lightbox | Helpers | preloadItemImages()",

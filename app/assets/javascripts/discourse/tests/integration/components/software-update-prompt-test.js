@@ -1,12 +1,12 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
 import {
   count,
   exists,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | software-update-prompt", function (hooks) {
   setupRenderingTest(hooks);

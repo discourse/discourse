@@ -24,10 +24,10 @@
 
     {{#if this.isLongPost}}
       <DButton
-        @class="btn-default btn-icon post-body__toggle-btn"
         @action={{this.toggleContent}}
         @label={{this.collapseButtonProps.label}}
         @icon={{this.collapseButtonProps.icon}}
+        class="btn-default btn-icon post-body__toggle-btn"
       />
     {{/if}}
     <span>

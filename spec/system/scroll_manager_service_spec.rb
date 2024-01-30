@@ -7,7 +7,6 @@ describe "Ember route-scroll-manager service", type: :system do
   end
 
   let(:discovery) { PageObjects::Pages::Discovery.new }
-  let(:topic) { PageObjects::Pages::Topic.new }
 
   def current_scroll_y
     page.evaluate_script("window.scrollY")

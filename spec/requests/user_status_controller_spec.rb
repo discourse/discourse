@@ -18,7 +18,7 @@ RSpec.describe UserStatusController do
     end
 
     describe "when feature is enabled and a user is logged in" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       before do
         sign_in(user)
@@ -28,7 +28,7 @@ RSpec.describe UserStatusController do
       it "returns user status" do
         status = "off to dentist"
         status_emoji = "tooth"
-        ends_at = "2100-01-01T18:00:00.000Z"
+        ends_at = "2100-01-01T18:00:00Z"
         user.set_status!(status, status_emoji, DateTime.parse(ends_at))
 
         get "/user-status.json"
@@ -58,7 +58,7 @@ RSpec.describe UserStatusController do
     end
 
     describe "feature is enabled and user is logged in" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       before do
         sign_in(user)

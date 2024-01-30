@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
+import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
+import I18n from "discourse-i18n";
 
 const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
 const SCSS_VARIABLE_NAMES = [
@@ -55,6 +56,8 @@ export default class ThemeUploadAdd extends Component {
   @tracked fileSelected = false;
   @tracked flash;
 
+  uploadUrl = this.args.model.uploadUrl || "/admin/themes/upload_asset";
+
   get disabled() {
     return this.errorMessage && this.fileSelected;
   }
@@ -97,7 +100,7 @@ export default class ThemeUploadAdd extends Component {
     options.data.append("file", file);
 
     try {
-      const result = await ajax("/admin/themes/upload_asset", options);
+      const result = await ajax(this.uploadUrl, options);
       const upload = {
         upload_id: result.upload_id,
         name: this.name,
@@ -106,7 +109,7 @@ export default class ThemeUploadAdd extends Component {
       this.args.model.addUpload(upload);
       this.args.closeModal();
     } catch (e) {
-      this.flash = e.jqXHR.responseJSON.errors.join(". ");
+      this.flash = extractError(e);
     }
   }
 }

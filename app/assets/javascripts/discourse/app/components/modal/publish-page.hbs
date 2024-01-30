@@ -20,7 +20,7 @@
               @onChange={{this.checkSlug}}
               @onChangeImmediate={{this.startCheckSlug}}
               @disabled={{this.existing}}
-              @class="publish-slug"
+              class="publish-slug"
             />
           </div>
 
@@ -75,16 +75,16 @@
       <DButton
         @label="topic.publish_page.unpublish"
         @icon="trash-alt"
-        @class="btn-danger"
         @isLoading={{this.unpublishing}}
         @action={{this.unpublish}}
+        class="btn-danger"
       />
 
       <DButton
-        @class="close-publish-page"
         @icon="times"
         @label="close"
         @action={{@closeModal}}
+        class="close-publish-page"
       />
     {{else if this.unpublished}}
       <DButton
@@ -94,11 +94,11 @@
     {{else}}
       <DButton
         @label="topic.publish_page.publish"
-        @class="btn-primary publish-page"
         @icon="file"
         @disabled={{this.disabled}}
         @isLoading={{this.saving}}
         @action={{this.publish}}
+        class="btn-primary publish-page"
       />
     {{/if}}
   </:footer>

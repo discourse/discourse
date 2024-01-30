@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    spoiler:
+      title: تمويه حرق الأحداث
+      label:
+        show: "إظهار المحتوى المخفي"
+    composer:
+      spoiler_text: "سيتم تمويه هذا النص"

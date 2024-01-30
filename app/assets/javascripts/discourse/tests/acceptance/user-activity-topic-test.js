@@ -1,8 +1,8 @@
-import { acceptance, exists, query, queryAll } from "../helpers/qunit-helpers";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import I18n from "discourse-i18n";
 import userFixtures from "../fixtures/user-fixtures";
-import I18n from "I18n";
+import { acceptance, exists, query, queryAll } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / Topics - bulk actions", function (needs) {
   const currentUser = "eviltrout";

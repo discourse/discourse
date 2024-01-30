@@ -547,6 +547,10 @@ class Reviewable < ActiveRecord::Base
     TYPE_TO_BASIC_SERIALIZER[self.type.to_sym] || BasicReviewableSerializer
   end
 
+  def type_class
+    Reviewable.sti_class_for(self.type)
+  end
+
   def self.lookup_serializer_for(type)
     "#{type}Serializer".constantize
   rescue NameError
@@ -656,22 +660,21 @@ class Reviewable < ActiveRecord::Base
     self.score
   end
 
-  def delete_user_actions(actions, require_reject_reason: false)
-    reject =
+  def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
+    bundle ||=
       actions.add_bundle(
         "reject_user",
         icon: "user-times",
         label: "reviewables.actions.reject_user.title",
       )
 
-    actions.add(:delete_user, bundle: reject) do |a|
+    actions.add(:delete_user, bundle: bundle) do |a|
       a.icon = "user-times"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.require_reject_reason = require_reject_reason
-      a.description = "reviewables.actions.reject_user.delete.description"
     end
 
-    actions.add(:delete_user_block, bundle: reject) do |a|
+    actions.add(:delete_user_block, bundle: bundle) do |a|
       a.icon = "ban"
       a.label = "reviewables.actions.reject_user.block.title"
       a.require_reject_reason = require_reject_reason
@@ -715,6 +718,15 @@ class Reviewable < ActiveRecord::Base
     else
       partial_result.where(status: statuses[status])
     end
+  end
+
+  def self.find_by_flagger_or_queued_post_creator(id:, user_id:)
+    Reviewable.find_by(
+      "id = :id AND (created_by_id = :user_id
+       OR (target_created_by_id = :user_id AND type = 'ReviewableQueuedPost'))",
+      id: id,
+      user_id: user_id,
+    )
   end
 
   private

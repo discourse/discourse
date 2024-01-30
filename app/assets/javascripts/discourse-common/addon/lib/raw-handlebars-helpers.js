@@ -4,10 +4,13 @@ export const RUNTIME_OPTIONS = {
   allowProtoPropertiesByDefault: true,
 };
 
-export function registerRawHelpers(hbs, handlebarsClass) {
+export function registerRawHelpers(hbs, handlebarsClass, owner) {
   if (!hbs.helpers) {
     hbs.helpers = Object.create(handlebarsClass.helpers);
   }
+
+  lazyLoadHelpers(hbs, owner);
+
   if (hbs.__helpers_registered) {
     return;
   }
@@ -84,4 +87,25 @@ export function registerRawHelpers(hbs, handlebarsClass) {
 
   stringCompatHelper("if");
   stringCompatHelper("with");
+}
+
+function lazyLoadHelpers(hbs, owner) {
+  // Reimplements `helperMissing` so that it triggers a lookup() for
+  // a helper of that name. Means we don't need to eagerly load all
+  // helpers/* files during boot.
+  hbs.registerHelper("helperMissing", function (...args) {
+    const opts = args[args.length - 1];
+    if (opts?.name) {
+      // Lookup and evaluate the relevant module. Raw helpers may be registed as a side effect
+      owner.lookup(`helper:${opts.name}`);
+
+      if (hbs.helpers[opts.name]) {
+        // Helper now exists, invoke it
+        return hbs.helpers[opts.name]?.call(this, ...arguments);
+      } else {
+        // Not a helper, treat as property
+        return hbs.helpers["get"].call(this, ...arguments);
+      }
+    }
+  });
 }

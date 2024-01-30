@@ -24,6 +24,15 @@ module Onebox
           link: link,
           gist_files: gist_files.take(MAX_FILES),
           truncated_files?: truncated_files?,
+          i18n: i18n,
+        }
+      end
+
+      def i18n
+        {
+          truncated_file: I18n.t("onebox.github.truncated_file"),
+          more_than_three_files: I18n.t("onebox.github.more_than_three_files"),
+          show_original: I18n.t("onebox.github.show_original"),
         }
       end
 

@@ -371,20 +371,10 @@ cs:
           Upozorňuji, že máš na vrácení příspěvku pouze %{deletion_after} hodin.
       category_hashtag:
         instructions: |-
-          Věděl/a jsi, že v příspěvku můžeš odkazovat na kategorie a štítky? Viděl/a jsi například kategorii %{category}?
-
-          Napiš `#` doprostřed věty a vyber libovolnou kategorii nebo štítek.
-        instructions_experimental: |-
           Věděl/a jsi, že v příspěvku můžeš odkazovat na kategorie a štítky? Viděl/a jsti například kategorii %{category} ?
 
           Zadej `#` kdekoli ve větě a vyber libovolnou kategorii nebo štítek.
         not_found: |-
-          Hmm, nikde tam nevidím žádnou kategorii. Všimni si, že `#` nemůže být první znak. Můžeš zkopírovat tohle do další odpovědi?
-
-          ```text
-          Odkaz na kategorii mohu vytvořit pomocí #
-          ```
-        not_found_experimental: |-
           Hmm, nikde tam nevidím žádnou kategorii. Můžeš zkopírovat tohle do další odpovědi?
 
           ```text

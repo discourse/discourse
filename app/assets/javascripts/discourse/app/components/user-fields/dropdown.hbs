@@ -1,4 +1,7 @@
-<label class="control-label" for={{concat "user-" this.elementId}}>
+<label
+  class="control-label alt-placeholder"
+  for={{concat "user-" this.elementId}}
+>
   {{this.field.name}}
   {{#if this.field.required}}
     <span class="required">*</span>

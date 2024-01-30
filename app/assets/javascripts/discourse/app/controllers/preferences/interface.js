@@ -1,20 +1,20 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import Session from "discourse/models/session";
-import { setDefaultHomepage } from "discourse/lib/utilities";
+import { computed } from "@ember/object";
+import { not, reads } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { reload } from "discourse/helpers/page-reloader";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   listColorSchemes,
   loadColorSchemeStylesheet,
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
-import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
-import { not, reads } from "@ember/object/computed";
-import I18n from "I18n";
-import { computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { reload } from "discourse/helpers/page-reloader";
 import { propertyEqual } from "discourse/lib/computed";
+import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
+import { setDefaultHomepage } from "discourse/lib/utilities";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const USER_HOMES = {
   1: "latest",
@@ -30,6 +30,8 @@ const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default Controller.extend({
+  session: service(),
+
   currentThemeId: -1,
   previewingColorScheme: false,
   selectedDarkColorSchemeId: null,
@@ -42,6 +44,10 @@ export default Controller.extend({
     this._super(...arguments);
 
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
+
+    if (this.siteSettings.experimental_hot_topics) {
+      USER_HOMES[8] = "hot";
+    }
   },
 
   @discourseComputed("makeThemeDefault")
@@ -409,10 +415,10 @@ export default Controller.extend({
           this.themeId,
           true
         );
-        Session.currentProp("darkModeAvailable", false);
+        this.session.set("darkModeAvailable", false);
       } else {
         loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
-        Session.currentProp("darkModeAvailable", true);
+        this.session.set("darkModeAvailable", true);
       }
     },
 

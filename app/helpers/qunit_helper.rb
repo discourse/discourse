@@ -11,6 +11,6 @@ module QunitHelper
         "#{Discourse.base_path}" \
         "/theme-javascripts/tests/#{theme.id}-#{digest}.js" \
         "?__ws=#{Discourse.current_hostname}"
-    "<script defer src='#{src}'></script>".html_safe
+    "<script defer src='#{src}' data-theme-id='#{theme.id}'></script>".html_safe
   end
 end

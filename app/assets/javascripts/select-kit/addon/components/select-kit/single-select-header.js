@@ -1,8 +1,8 @@
 import { computed } from "@ember/object";
 import { or } from "@ember/object/computed";
+import I18n from "discourse-i18n";
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 import UtilsMixin from "select-kit/mixins/utils";
-import I18n from "I18n";
 
 export default SelectKitHeaderComponent.extend(UtilsMixin, {
   tagName: "summary",

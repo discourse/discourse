@@ -1,13 +1,13 @@
 import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
-import getURL from "discourse-common/lib/get-url";
-import { propertyEqual } from "discourse/lib/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { underscore } from "@ember/string";
+import { propertyEqual } from "discourse/lib/computed";
+import DiscourseURL from "discourse/lib/url";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   tagName: "li",

@@ -1,36 +1,33 @@
 <div
   id="suggested-topics"
-  class="suggested-topics"
+  class="more-topics__list {{if this.hidden 'hidden'}}"
   role="complementary"
   aria-labelledby="suggested-topics-title"
+  {{did-insert this.registerList}}
+  {{will-destroy this.removeList}}
 >
-  <UserTip @id="suggested_topics" @selector=".user-tip-reference" />
+  {{#unless this.hidden}}
+    <UserTip
+      @id="suggested_topics"
+      @titleText={{i18n "user_tips.suggested_topics.title"}}
+      @contentText={{i18n "user_tips.suggested_topics.content"}}
+      @placement="top-start"
+    />
+  {{/unless}}
 
-  <h3 id="suggested-topics-title" class="suggested-topics-title">
+  <h3 id="suggested-topics-title" class="more-topics__list-title">
     {{i18n this.suggestedTitleLabel}}
   </h3>
 
   <div class="topics">
-    {{#if this.topic.isPrivateMessage}}
+    {{#if @topic.isPrivateMessage}}
       <BasicTopicList
         @hideCategory="true"
         @showPosters="true"
-        @topics={{this.topic.suggestedTopics}}
+        @topics={{@topic.suggestedTopics}}
       />
     {{else}}
-      <BasicTopicList @topics={{this.topic.suggestedTopics}} />
+      <BasicTopicList @topics={{@topic.suggestedTopics}} />
     {{/if}}
   </div>
-
-  <h3 class="suggested-topics-message">
-    {{html-safe this.browseMoreMessage}}
-  </h3>
 </div>
-
-<span>
-  <PluginOutlet
-    @name="below-suggested-topics"
-    @connectorTagName="div"
-    @outletArgs={{hash topic=this.topic}}
-  />
-</span>

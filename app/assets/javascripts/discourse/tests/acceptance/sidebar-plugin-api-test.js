@@ -1,6 +1,13 @@
-import { test } from "qunit";
-import I18n from "I18n";
 import { click, settled, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
+import {
+  resetCustomCategoryLockIcon,
+  resetCustomCategorySectionLinkPrefix,
+  resetCustomCountables,
+} from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
+import Site from "discourse/models/site";
 import {
   acceptance,
   exists,
@@ -8,15 +15,8 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
-import Site from "discourse/models/site";
-import {
-  resetCustomCategoryLockIcon,
-  resetCustomCategorySectionLinkPrefix,
-  resetCustomCountables,
-} from "discourse/lib/sidebar/user/categories-section/category-section-link";
-import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({});
@@ -466,176 +466,6 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
   });
 
-  test("API bridge for decorating hamburger-menu widget with footer links", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
-      api.decorateWidget("hamburger-menu:footerLinks", () => {
-        return {
-          route: "discovery.top",
-          rawLabel: "my top",
-          className: "my-custom-top",
-        };
-      });
-    });
-
-    await visit("/");
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
-    );
-
-    const myCustomTopSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content-main .sidebar-section-link[data-link-name='my-custom-top']"
-    );
-
-    assert.ok(
-      myCustomTopSectionLink,
-      "adds my custom top section link to community section under the secondary section in the More... links drawer"
-    );
-
-    assert.ok(
-      myCustomTopSectionLink.href.endsWith("/top"),
-      "sets the right href attribute for the my custom top section link"
-    );
-
-    assert.strictEqual(
-      myCustomTopSectionLink.textContent.trim(),
-      "my top",
-      "displays the right text for my custom top section link"
-    );
-  });
-
-  test("API bridge for decorating hamburger-menu widget with general links", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          route: "discovery.latest",
-          label: "filters.latest.title",
-        };
-      });
-
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          route: "discovery.unread",
-          rawLabel: "my unreads",
-        };
-      });
-
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          route: "discovery.top",
-          rawLabel: "my top",
-          className: "my-custom-top",
-        };
-      });
-
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          href: "/c/bug?status=open",
-          rawLabel: "open bugs",
-        };
-      });
-
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          href: "/t/internationalization-localization/280",
-          rawLabel: "my favourite topic",
-        };
-      });
-    });
-
-    await visit("/");
-
-    const customLatestSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='latest']"
-    );
-
-    assert.ok(
-      customLatestSectionLink,
-      "adds custom latest section link to community section"
-    );
-
-    assert.ok(
-      customLatestSectionLink.href.endsWith("/latest"),
-      "sets the right href attribute for the custom latest section link"
-    );
-
-    assert.strictEqual(
-      customLatestSectionLink.textContent.trim(),
-      I18n.t("filters.latest.title"),
-      "displays the right text for custom latest section link"
-    );
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
-    );
-
-    const customUnreadSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-unreads']"
-    );
-
-    assert.ok(
-      customUnreadSectionLink,
-      "adds custom unread section link to community section"
-    );
-
-    assert.ok(
-      customUnreadSectionLink.href.endsWith("/unread"),
-      "sets the right href attribute for the custom unread section link"
-    );
-
-    assert.strictEqual(
-      customUnreadSectionLink.textContent.trim(),
-      "my unreads",
-      "displays the right text for custom unread section link"
-    );
-
-    const customTopSectionLInk = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-custom-top']"
-    );
-
-    assert.ok(
-      customTopSectionLInk,
-      "adds custom top section link to community section with right link class"
-    );
-
-    const openBugsSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='open-bugs']"
-    );
-
-    assert.ok(
-      openBugsSectionLink,
-      "adds custom open bugs section link to community section with right link class"
-    );
-
-    assert.ok(
-      openBugsSectionLink.href.endsWith("/c/bug?status=open"),
-      "sets the right href attribute for the custom open bugs section link"
-    );
-
-    // close more links
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
-    );
-
-    await visit("/t/internationalization-localization/280");
-
-    assert.ok(
-      exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-favourite-topic'].active"
-      ),
-      "displays my favourite topic custom section link when current route matches the link's route"
-    );
-
-    await visit("/t/short-topic-with-two-posts/54077");
-
-    assert.notOk(
-      exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-favourite-topic.active"
-      ),
-      "does not display my favourite topic custom section link when current route does not match the link's route"
-    );
-  });
-
   test("Section that is not displayed via displaySection", async function (assert) {
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
@@ -915,7 +745,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     }
   });
 
-  test("New custom sidebar panel and option to set default", async function (assert) {
+  test("New custom sidebar panel and option to set default and show/hide switch buttons", async function (assert) {
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
         const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
@@ -1014,6 +844,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
         "new-panel"
       );
       api.setSidebarPanel("new-panel");
+      api.setSeparatedSidebarMode();
     });
 
     await visit("/");
@@ -1067,5 +898,134 @@ acceptance("Sidebar - Plugin API", function (needs) {
         ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
       )
       .exists();
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setSidebarPanel("new-panel");
+      api.hideSidebarSwitchPanelButtons();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").doesNotExist();
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setSidebarPanel("new-panel");
+      api.hideSidebarSwitchPanelButtons();
+      api.showSidebarSwitchPanelButtons();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").exists();
+  });
+
+  test("New hidden custom sidebar panel", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        const AdminSidebarPanel = class extends BaseCustomSidebarPanel {
+          get key() {
+            return "admin-panel";
+          }
+
+          get hidden() {
+            return true;
+          }
+        };
+        return AdminSidebarPanel;
+      });
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            get name() {
+              return "test-admin-section";
+            }
+
+            get text() {
+              return "test admin section";
+            }
+
+            get actionsIcon() {
+              return "cog";
+            }
+
+            get links() {
+              return [
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return "admin-link";
+                  }
+
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
+                  get route() {
+                    return "topic";
+                  }
+
+                  get models() {
+                    return ["some-slug", 1];
+                  }
+
+                  get title() {
+                    return "admin link";
+                  }
+
+                  get text() {
+                    return "admin link";
+                  }
+
+                  get prefixType() {
+                    return "icon";
+                  }
+
+                  get prefixValue() {
+                    return "cog";
+                  }
+
+                  get prefixColor() {
+                    return "FF0000";
+                  }
+
+                  get prefixBadge() {
+                    return "lock";
+                  }
+
+                  get suffixType() {
+                    return "icon";
+                  }
+
+                  get suffixValue() {
+                    return "circle";
+                  }
+
+                  get suffixCSSClass() {
+                    return "unread";
+                  }
+                })(),
+              ];
+            }
+          };
+        },
+        "admin-panel"
+      );
+      api.setSidebarPanel("admin-panel");
+      api.setSeparatedSidebarMode();
+    });
+
+    await visit("/");
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section[data-section-name='test-admin-section'] .sidebar-section-header-text"
+      ).textContent.trim(),
+      "test admin section",
+      "displays header with correct text"
+    );
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setSidebarPanel("main-panel");
+      api.setCombinedSidebarMode();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").doesNotExist();
+    assert
+      .dom(".sidebar-section[data-section-name='test-admin-section']")
+      .doesNotExist();
   });
 });

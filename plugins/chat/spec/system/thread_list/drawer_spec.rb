@@ -24,9 +24,7 @@ describe "Thread list in side panel | drawer", type: :system do
       visit("/")
       chat_page.open_from_header
       drawer_page.open_channel(channel)
-      expect(find(".chat-drawer-header__right-actions")).not_to have_css(
-        drawer_page.thread_list_button_selector,
-      )
+      expect(find(".chat-drawer")).not_to have_css(drawer_page.thread_list_button_selector)
     end
   end
 

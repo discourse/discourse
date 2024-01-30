@@ -1,3 +1,7 @@
+#main-outlet > .regular {
+  background: var(--d-content-background);
+}
+
 .button-count.has-pending {
   span {
     background-color: var(--danger);
@@ -17,7 +21,9 @@
   position: relative;
   overflow: hidden;
   &:before {
-    animation: placeHolderShimmer 4s linear infinite forwards;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
     position: absolute;
     left: 0;
     content: "";
@@ -61,6 +67,7 @@
     vertical-align: middle;
     a {
       color: var(--primary-high-or-secondary-low);
+      outline-offset: -1px;
     }
   }
   .fa {
@@ -444,7 +451,9 @@ nav.post-controls {
 }
 
 .has-like .d-icon.heart-animation {
-  animation: heartBump 0.4s;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: heartBump 0.4s;
+  }
 }
 
 @keyframes slideout {
@@ -461,10 +470,6 @@ nav.post-controls {
 aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
-
-  .badge-wrapper {
-    margin-left: 5px;
-  }
 
   .title {
     @include post-aside;
@@ -486,7 +491,9 @@ aside.quote {
     margin-top: 0;
     .expanded-quote {
       overflow: hidden;
-      animation: slideout 1s ease-in-out;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: slideout 1s ease-in-out;
+      }
       &.icon-only {
         text-align: center;
         font-size: var(--font-up-4);
@@ -560,17 +567,7 @@ aside.quote {
 }
 
 .quote-button {
-  display: none;
-  position: absolute;
-  z-index: z("dropdown");
-  background-color: var(--secondary);
-  border: 1px solid var(--primary-low);
-  box-shadow: var(--shadow-card);
   flex-direction: column;
-
-  &.animated {
-    transition: top 0.1s linear, left 0.1s linear;
-  }
 
   &.visible {
     display: flex;
@@ -609,13 +606,14 @@ aside.quote {
   }
 
   .btn-flat {
-    .d-icon {
-      color: var(--primary-high);
-    }
-    .discourse-no-touch & {
-      &:hover {
-        background-color: var(--tertiary-low);
+    &:hover {
+      .d-icon {
+        color: var(--tertiary);
       }
+    }
+
+    .d-button-label {
+      white-space: nowrap;
     }
   }
 
@@ -944,14 +942,23 @@ aside.quote {
     border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
   }
-  &.highlighted {
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .topic-body.highlighted,
+  .small-action-desc.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }
-  .deleted & {
-    // Disable so the deleted background is visible immediately
-    &.highlighted {
-      animation: none;
-    }
+  // Disable animation so deleted status is visible immediately
+  .deleted .topic-body.highlighted {
+    animation: none;
+  }
+}
+
+.small-action-desc,
+.topic-body {
+  &:focus-visible {
+    outline: none;
   }
 }
 
@@ -1120,6 +1127,7 @@ blockquote > *:last-child {
   }
 }
 
+.reviewable .post-body,
 .cooked table,
 .d-editor-preview table {
   thead {
@@ -1139,6 +1147,10 @@ blockquote > *:last-child {
 .small-action {
   display: flex;
   align-items: center;
+
+  &:focus-visible {
+    outline: none;
+  }
 
   &.deleted {
     background-color: var(--danger-low-mid);
@@ -1279,11 +1291,6 @@ span.mention {
   .topics {
     padding-bottom: 15px;
   }
-  .suggested-topics-message {
-    .badge-wrapper {
-      margin-right: 0;
-    }
-  }
 }
 
 .large-image-placeholder {
@@ -1386,7 +1393,7 @@ span.mention {
     position: relative;
     .select-posts {
       position: absolute;
-      right: 5em;
+      right: 7em;
       z-index: z("dropdown");
       top: 0.5em;
       height: 100px;
@@ -1437,6 +1444,11 @@ span.mention {
     .btn {
       margin-right: 0.5em;
       white-space: nowrap;
+
+      .d-icon {
+        color: inherit;
+      }
+
       &.btn-remind {
         background: var(--primary-very-low);
         margin-right: auto;
@@ -1485,6 +1497,11 @@ span.mention {
     color: var(--primary-high);
     margin-right: var(--topic-body-width-padding);
   }
+}
+
+html.anon #topic-footer-buttons {
+  display: flex;
+  justify-content: end;
 }
 
 #topic-footer-buttons {
@@ -1653,22 +1670,19 @@ iframe {
 }
 
 .open-popup-link {
+  display: inline;
+  margin-inline: 0.25em;
   position: sticky;
   left: 1rem;
   opacity: 0%;
   white-space: nowrap;
+  transition: 0.25s ease-in-out opacity;
 }
 
 .fullscreen-table-wrapper {
   transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: block;
   position: relative;
-
-  &--buttons {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-  }
 }
 
 .fullscreen-table-modal .modal-inner-container,
@@ -1701,6 +1715,21 @@ iframe {
 .fullscreen-code-modal {
   pre code {
     max-width: none;
+  }
+}
+
+.fullscreen-table-modal {
+  .d-modal__container {
+    width: auto;
+  }
+  .d-modal__body {
+    padding-top: 0;
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: var(--secondary);
+    }
   }
 }
 

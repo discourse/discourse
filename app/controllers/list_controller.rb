@@ -46,6 +46,7 @@ class ListController < ApplicationController
                   TopTopic.periods.map { |p| :"category_top_#{p}" },
                   TopTopic.periods.map { |p| :"category_none_top_#{p}" },
                   :group_topics,
+                  :filter,
                 ].flatten
 
   # Create our filters
@@ -91,7 +92,7 @@ class ListController < ApplicationController
 
         # Note the first is the default and we don't add a title
         if (filter.to_s != current_homepage) && use_crawler_layout?
-          filter_title = I18n.t("js.filters.#{filter.to_s}.title", count: 0)
+          filter_title = I18n.t("js.filters.#{filter}.title", count: 0)
 
           if list_opts[:category] && @category
             @title =
@@ -256,6 +257,14 @@ class ListController < ApplicationController
     TopTopic.validate_period(period)
 
     @topic_list = TopicQuery.new(nil).list_top_for(period)
+
+    render "list", formats: [:rss]
+  end
+
+  def hot_feed
+    discourse_expires_in 1.minute
+
+    @topic_list = TopicQuery.new(nil).list_hot
 
     render "list", formats: [:rss]
   end

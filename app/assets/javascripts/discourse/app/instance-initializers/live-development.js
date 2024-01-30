@@ -1,5 +1,3 @@
-import DiscourseURL from "discourse/lib/url";
-import { isDevelopment } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -7,23 +5,22 @@ import { bind } from "discourse-common/utils/decorators";
 export default {
   initialize(owner) {
     this.messageBus = owner.lookup("service:message-bus");
-    const session = owner.lookup("service:session");
+    this.session = owner.lookup("service:session");
 
-    // Preserve preview_theme_id=## and pp=async-flamegraph parameters across pages
+    const PRESERVED_QUERY_PARAMS = ["preview_theme_id", "pp", "safe_mode"];
     const params = new URLSearchParams(window.location.search);
-    const previewThemeId = params.get("preview_theme_id");
-    const flamegraph = params.get("pp") === "async-flamegraph";
-    if (flamegraph || previewThemeId !== null) {
+    const preservedParamValues = PRESERVED_QUERY_PARAMS.map((p) => [
+      p,
+      params.get(p),
+    ]).filter(([, v]) => v);
+    if (preservedParamValues.length) {
       ["replaceState", "pushState"].forEach((funcName) => {
         const originalFunc = window.history[funcName];
 
         window.history[funcName] = (stateObj, name, rawUrl) => {
           const url = new URL(rawUrl, window.location);
-          if (previewThemeId !== null) {
-            url.searchParams.set("preview_theme_id", previewThemeId);
-          }
-          if (flamegraph) {
-            url.searchParams.set("pp", "async-flamegraph");
+          for (const [param, value] of preservedParamValues) {
+            url.searchParams.set(param, value);
           }
 
           return originalFunc.call(window.history, stateObj, name, url.href);
@@ -31,16 +28,11 @@ export default {
       });
     }
 
-    // Useful to export this for debugging purposes
-    if (isDevelopment()) {
-      window.DiscourseURL = DiscourseURL;
-    }
-
     // Observe file changes
     this.messageBus.subscribe(
       "/file-change",
       this.onFileChange,
-      session.mbLastFileChangeId
+      this.session.mbLastFileChangeId
     );
   },
 
@@ -54,6 +46,14 @@ export default {
       if (me === "refresh") {
         // Refresh if necessary
         document.location.reload(true);
+      } else if (me === "development-mode-theme-changed") {
+        if (window.location.pathname.startsWith("/admin/customize/themes")) {
+          // don't refresh users on routes which make theme changes - would be very inconvenient.
+          // Instead, refresh on their next route navigation.
+          this.session.requiresRefresh = true;
+        } else {
+          document.location.reload(true);
+        }
       } else if (me.new_href && me.target) {
         let query = `link[data-target='${me.target}']`;
 

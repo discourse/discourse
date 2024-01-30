@@ -1,3 +1,5 @@
+discourse_sample_plugin:
+  discourse_sample_plugin_enabled: true
 site_settings:
   plugin_setting:
     default: "some value"

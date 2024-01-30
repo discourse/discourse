@@ -15,7 +15,7 @@ RSpec.describe "Deleted channel", type: :system do
     it "redirects to homepage" do
       chat_page.visit_channel(channel_1)
 
-      expect(page).to have_current_path("/latest")
+      expect(page).to have_content("Not Found") # this is not a translated key
     end
   end
 end

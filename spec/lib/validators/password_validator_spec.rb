@@ -2,7 +2,7 @@
 
 RSpec.describe PasswordValidator do
   def password_error_message(key)
-    I18n.t("activerecord.errors.models.user.attributes.password.#{key.to_s}")
+    I18n.t("activerecord.errors.models.user.attributes.password.#{key}")
   end
 
   subject(:validate) { validator.validate_each(record, :password, @password) }

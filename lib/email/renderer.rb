@@ -32,6 +32,7 @@ module Email
 
       style.format_basic
       style.format_html
+      DiscoursePluginRegistry.apply_modifier(:email_renderer_html, style, @message)
       style.to_html
     end
   end

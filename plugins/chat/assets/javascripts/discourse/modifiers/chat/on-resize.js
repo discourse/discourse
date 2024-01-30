@@ -1,6 +1,6 @@
-import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
 import { cancel, throttle } from "@ember/runloop";
+import Modifier from "ember-modifier";
 
 export default class ChatOnResize extends Modifier {
   constructor(owner, args) {

@@ -6,7 +6,8 @@ RSpec.describe Chat::CreateDirectMessageChannel do
 
     let(:params) { { target_usernames: %w[lechuck elaine] } }
 
-    it { is_expected.to validate_presence_of :target_usernames }
+    it { is_expected.to validate_presence_of :target_usernames if :target_groups.blank? }
+    it { is_expected.to validate_presence_of :target_groups if :target_usernames.blank? }
 
     context "when the target_usernames argument is a string" do
       let(:params) { { target_usernames: "lechuck,elaine" } }
@@ -16,23 +17,37 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         expect(contract.target_usernames).to eq(%w[lechuck elaine])
       end
     end
+    context "when the target_groups argument is a string" do
+      let(:params) { { target_groups: "admins,moderators" } }
+
+      it "splits it into an array" do
+        contract.validate
+        expect(contract.target_groups).to eq(%w[admins moderators])
+      end
+    end
   end
 
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
-    fab!(:current_user) { Fabricate(:user, username: "guybrush") }
+    fab!(:current_user) { Fabricate(:user, username: "guybrush", refresh_auto_groups: true) }
     fab!(:user_1) { Fabricate(:user, username: "lechuck") }
     fab!(:user_2) { Fabricate(:user, username: "elaine") }
+    fab!(:user_3) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:public_group, users: [user_3]) }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { guardian: guardian, target_usernames: %w[lechuck elaine] } }
-
-    before { Group.refresh_automatic_groups! }
+    let(:target_usernames) { [user_1.username, user_2.username] }
+    let(:name) { "" }
+    let(:params) { { guardian: guardian, target_usernames: target_usernames, name: name } }
 
     context "when all steps pass" do
       it "sets the service result as successful" do
         expect(result).to be_a_success
+      end
+
+      it "updates user count" do
+        expect(result.channel.user_count).to eq(3) # current user + user_1 + user_2
       end
 
       it "creates the channel" do
@@ -57,19 +72,102 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         end
       end
 
-      context "when there is an existing direct message channel for the target users" do
-        before { described_class.call(params) }
+      it "includes users from target groups" do
+        params.delete(:target_usernames)
+        params.merge!(target_groups: [group.name])
 
-        it "does not create a channel" do
-          expect { result }.to not_change { Chat::Channel.count }.and not_change {
-                  Chat::DirectMessage.count
-                }
+        expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to include(user_3.id)
+      end
+
+      it "combines target_usernames and target_groups" do
+        params.merge!(target_groups: [group.name])
+
+        expect(result.channel.user_chat_channel_memberships.pluck(:user_id)).to contain_exactly(
+          current_user.id,
+          user_1.id,
+          user_2.id,
+          user_3.id,
+        )
+      end
+
+      context "with user count validation" do
+        before { SiteSetting.chat_max_direct_message_users = 4 }
+
+        it "succeeds when target_usernames does not exceed limit" do
+          expect { result }.to change { Chat::UserChatChannelMembership.count }.by(3)
+          expect(result).to be_a_success
         end
 
-        it "does not double-insert the channel memberships" do
-          expect { result }.not_to change { Chat::UserChatChannelMembership.count }
+        it "succeeds when target_usernames and target_groups does not exceed limit" do
+          params.merge!(target_groups: [group.name])
+
+          expect { result }.to change { Chat::UserChatChannelMembership.count }.by(4)
+          expect(result).to be_a_success
         end
       end
+
+      context "when there is an existing direct message channel for the target users" do
+        context "when a name has been given" do
+          let(:target_usernames) { [user_1.username] }
+          let(:name) { "Monkey Island" }
+
+          it "creates a second channel" do
+            described_class.call(params)
+
+            expect { result }.to change { Chat::Channel.count }.and change {
+                    Chat::DirectMessage.count
+                  }
+          end
+        end
+
+        context "when the channel has more than one user" do
+          let(:target_usernames) { [user_1.username, user_2.username] }
+
+          it "creates a second channel" do
+            described_class.call(params)
+
+            expect { result }.to change { Chat::Channel.count }.and change {
+                    Chat::DirectMessage.count
+                  }
+          end
+        end
+
+        context "when the channel has one user and no name" do
+          let(:target_usernames) { [user_1.username] }
+
+          it "reuses the existing channel" do
+            existing_channel = described_class.call(params).channel
+
+            expect(result.channel.id).to eq(existing_channel.id)
+          end
+        end
+
+        context "when theres also a group channel with same users" do
+          let(:target_usernames) { [user_1.username] }
+
+          it "returns the non group existing channel" do
+            group_channel = described_class.call(params.merge(name: "cats")).channel
+            channel = described_class.call(params).channel
+
+            expect(result.channel.id).to_not eq(group_channel.id)
+            expect(result.channel.id).to eq(channel.id)
+          end
+        end
+      end
+
+      context "when a name is given" do
+        let(:name) { "Monkey Island" }
+
+        it "sets it as the channel name" do
+          expect(result.channel.name).to eq(name)
+        end
+      end
+    end
+
+    context "when target_usernames exceeds chat_max_direct_message_users" do
+      before { SiteSetting.chat_max_direct_message_users = 2 }
+
+      it { is_expected.to fail_a_step(:validate_user_count) }
     end
 
     context "when the current user cannot make direct messages" do
@@ -78,18 +176,6 @@ RSpec.describe Chat::CreateDirectMessageChannel do
       before { SiteSetting.direct_message_enabled_groups = Fabricate(:group).id }
 
       it { is_expected.to fail_a_policy(:can_create_direct_message) }
-    end
-
-    context "when the number of target users exceeds chat_max_direct_message_users" do
-      before { SiteSetting.chat_max_direct_message_users = 1 }
-
-      it { is_expected.to fail_a_policy(:satisfies_dms_max_users_limit) }
-
-      context "when the user is staff" do
-        fab!(:current_user) { Fabricate(:admin) }
-
-        it { is_expected.not_to fail_a_policy(:satisfies_dms_max_users_limit) }
-      end
     end
 
     context "when the actor is not allowing anyone to message them" do

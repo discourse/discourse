@@ -1,5 +1,5 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 import { ORIGINS } from "discourse/plugins/chat/discourse/services/chat-channel-info-route-origin-manager";
 import withChatChannel from "./chat-channel-decorator";
 

@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import {
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,
   HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
   HEADER_INDICATOR_PREFERENCE_NEVER,
+  HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
 } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
-import { tracked } from "@glimmer/tracking";
 
 export default class ChatStyleguideChatHeaderIcon extends Component {
   @tracked isActive = false;
@@ -18,6 +19,7 @@ export default class ChatStyleguideChatHeaderIcon extends Component {
     return [
       HEADER_INDICATOR_PREFERENCE_ALL_NEW,
       HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+      HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
       HEADER_INDICATOR_PREFERENCE_NEVER,
     ];
   }

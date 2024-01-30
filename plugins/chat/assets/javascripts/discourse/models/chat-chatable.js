@@ -1,7 +1,9 @@
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import User from "discourse/models/user";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
+import Category from "discourse/models/category";
+import Group from "discourse/models/group";
+import User from "discourse/models/user";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatChatable {
   static create(args = {}) {
@@ -13,6 +15,14 @@ export default class ChatChatable {
       type: "user",
       model,
       identifier: `u-${model.id}`,
+    });
+  }
+
+  static createGroup(model) {
+    return new ChatChatable({
+      type: "group",
+      model,
+      identifier: `g-${model.id}`,
     });
   }
 
@@ -59,6 +69,16 @@ export default class ChatChatable {
 
         this.model = User.create(args.model);
         break;
+      case "group":
+        this.enabled = args.model.can_chat;
+
+        if (args.model instanceof Group) {
+          this.model = args.model;
+          break;
+        }
+
+        this.model = Group.create(args.model);
+        break;
     }
   }
 
@@ -66,7 +86,11 @@ export default class ChatChatable {
     return this.type === "user";
   }
 
-  get isSingleUserChannel() {
-    return this.type === "channel" && this.model?.chatable?.users?.length === 1;
+  get isGroup() {
+    return this.type === "group";
+  }
+
+  get isCategory() {
+    return this instanceof Category;
   }
 }

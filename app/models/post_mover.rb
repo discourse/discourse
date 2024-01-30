@@ -260,7 +260,13 @@ class PostMover
 
     PostAction.copy(post, new_post)
 
-    attrs_to_update = { reply_count: @reply_count[1] || 0 }
+    PostRevision.copy(post, new_post)
+
+    attrs_to_update = {
+      reply_count: @reply_count[1] || 0,
+      version: post.version,
+      public_version: post.public_version,
+    }
 
     if new_post.post_number != @move_map[post.post_number]
       attrs_to_update[:post_number] = @move_map[post.post_number]
@@ -271,6 +277,7 @@ class PostMover
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
 
+    DiscourseEvent.trigger(:first_post_moved, new_post, post)
     DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
 
     # we don't want to keep the old topic's OP bookmarked when we are
@@ -584,7 +591,7 @@ class PostMover
               if posts.first.is_first_post?
                 "[#{destination_topic.title}](#{destination_topic.relative_url})"
               else
-                "[#{destination_topic.title}](#{posts.first.url})"
+                "[#{destination_topic.title}](#{posts.first.relative_url})"
               end
             ),
         )

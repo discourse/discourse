@@ -1,8 +1,8 @@
+import { blur, click, fillIn, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { count, query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module("Integration | Component | value-list", function (hooks) {

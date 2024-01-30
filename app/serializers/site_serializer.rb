@@ -46,6 +46,8 @@ class SiteSerializer < ApplicationSerializer
     :denied_emojis,
     :tos_url,
     :privacy_policy_url,
+    :system_user_avatar_template,
+    :lazy_load_categories,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -210,7 +212,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.serializable_word_matcher_regexp(:censor, engine: :js)
+    WordWatcher.serialized_regexps_for_action(:censor, engine: :js)
   end
 
   def custom_emoji_translation
@@ -226,15 +228,19 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_replace
-    WordWatcher.word_matcher_regexps(:replace, engine: :js)
+    WordWatcher.regexps_for_action(:replace, engine: :js)
   end
 
   def watched_words_link
-    WordWatcher.word_matcher_regexps(:link, engine: :js)
+    WordWatcher.regexps_for_action(:link, engine: :js)
   end
 
   def categories
     object.categories.map { |c| c.to_h }
+  end
+
+  def include_categories?
+    !scope.can_lazy_load_categories?
   end
 
   def markdown_additional_options
@@ -268,7 +274,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_navigation_menu_site_top_tags?
-    !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled
+    SiteSetting.tagging_enabled
   end
 
   def anonymous_default_navigation_menu_tags
@@ -278,12 +284,12 @@ class SiteSerializer < ApplicationSerializer
           SiteSetting.default_navigation_menu_tags.split("|") -
             DiscourseTagging.hidden_tag_names(scope)
 
-        serialize_tags(Tag.where(name: tag_names))
+        serialize_tags(Tag.where(name: tag_names).order(:name))
       end
   end
 
   def include_anonymous_default_navigation_menu_tags?
-    scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled &&
+    scope.anonymous? && SiteSetting.tagging_enabled &&
       SiteSetting.default_navigation_menu_tags.present? &&
       anonymous_default_navigation_menu_tags.present?
   end
@@ -330,6 +336,22 @@ class SiteSerializer < ApplicationSerializer
 
   def include_privacy_policy_url?
     privacy_policy_url.present?
+  end
+
+  def system_user_avatar_template
+    Discourse.system_user.avatar_template
+  end
+
+  def include_system_user_avatar_template?
+    SiteSetting.show_user_menu_avatars
+  end
+
+  def lazy_load_categories
+    true
+  end
+
+  def include_lazy_load_categories?
+    scope.can_lazy_load_categories?
   end
 
   private

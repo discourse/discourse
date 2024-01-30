@@ -1,17 +1,17 @@
 import EmberObject, { get } from "@ember/object";
 import { alias, sort } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import PreloadStore from "discourse/lib/preload-store";
+import Singleton from "discourse/mixins/singleton";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
-import PreloadStore from "discourse/lib/preload-store";
 import RestModel from "discourse/models/rest";
-import Singleton from "discourse/mixins/singleton";
 import TrustLevel from "discourse/models/trust-level";
 import deprecated from "discourse-common/lib/deprecated";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import discourseComputed from "discourse-common/utils/decorators";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { isEmpty } from "@ember/utils";
-import { htmlSafe } from "@ember/template";
 
 const Site = RestModel.extend({
   isReadOnly: alias("is_readonly"),
@@ -20,6 +20,7 @@ const Site = RestModel.extend({
     this._super(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
+    this.categories = this.categories || [];
   },
 
   @discourseComputed("notification_types")
@@ -124,6 +125,20 @@ const Site = RestModel.extend({
       newCategory = this.store.createRecord("category", newCategory);
       categories.pushObject(newCategory);
       this.categoriesById[categoryId] = newCategory;
+      newCategory.set(
+        "parentCategory",
+        this.categoriesById[newCategory.parent_category_id]
+      );
+      newCategory.set(
+        "subcategories",
+        this.categories.filterBy("parent_category_id", categoryId)
+      );
+      if (newCategory.parentCategory) {
+        if (!newCategory.parentCategory.subcategories) {
+          newCategory.parentCategory.set("subcategories", []);
+        }
+        newCategory.parentCategory.subcategories.pushObject(newCategory);
+      }
       return newCategory;
     }
   },
@@ -132,7 +147,7 @@ const Site = RestModel.extend({
 Site.reopenClass(Singleton, {
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
     siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
     siteAttributes["isStaffWritesOnly"] = PreloadStore.get("isStaffWritesOnly");

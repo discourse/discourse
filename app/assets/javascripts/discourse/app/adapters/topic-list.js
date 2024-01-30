@@ -1,6 +1,6 @@
-import PreloadStore from "discourse/lib/preload-store";
 import RestAdapter from "discourse/adapters/rest";
 import { ajax } from "discourse/lib/ajax";
+import PreloadStore from "discourse/lib/preload-store";
 
 export default RestAdapter.extend({
   find(store, type, { filter, params }) {

@@ -15,7 +15,9 @@
   position: absolute;
   z-index: z("composer", "dropdown") + 1;
   cursor: pointer;
-  animation: 0.15s slidein 3;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: 0.15s slidein 3;
+  }
 
   &.bad {
     background: var(--danger-medium);

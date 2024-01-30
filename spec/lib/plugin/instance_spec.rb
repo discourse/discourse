@@ -1,9 +1,59 @@
 # frozen_string_literal: true
 
 RSpec.describe Plugin::Instance do
-  subject(:plugin_instance) { described_class.new }
+  subject(:plugin_instance) { described_class.new(metadata) }
+
+  let(:metadata) { Plugin::Metadata.parse <<TEXT }
+# name: discourse-sample-plugin
+# about: about: my plugin
+# version: 0.1
+# authors: Frank Zappa
+# contact emails: frankz@example.com
+# url: http://discourse.org
+# required version: 1.3.0beta6+48
+# meta_topic_id: 1234
+# label: experimental
+
+some_ruby
+TEXT
 
   after { DiscoursePluginRegistry.reset! }
+
+  # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
+
+  describe ".humanized_name" do
+    before do
+      TranslationOverride.upsert!(
+        "en",
+        "admin_js.admin.site_settings.categories.discourse_sample_plugin",
+        "Sample Plugin Category Name",
+      )
+    end
+
+    it "defaults to using the plugin name with the discourse- prefix removed" do
+      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+    end
+
+    it "uses the plugin setting category name if it exists" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      expect(plugin_instance.humanized_name).to eq("Sample Plugin Category Name")
+    end
+
+    it "the plugin name the plugin site settings are still under the generic plugins: category" do
+      plugin_instance.stubs(:setting_catgory).returns("plugins")
+      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+    end
+
+    it "removes any Discourse prefix from the setting category name" do
+      TranslationOverride.upsert!(
+        "en",
+        "admin_js.admin.site_settings.categories.discourse_sample_plugin",
+        "Discourse Sample Plugin Category Name",
+      )
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      expect(plugin_instance.humanized_name).to eq("Sample Plugin Category Name")
+    end
+  end
 
   describe "find_all" do
     it "can find plugins correctly" do
@@ -14,17 +64,88 @@ RSpec.describe Plugin::Instance do
       expect(plugin.name).to eq("plugin-name")
       expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
 
-      git_repo = plugin.git_repo
       plugin.git_repo.stubs(:latest_local_commit).returns("123456")
       plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
 
       expect(plugin.commit_hash).to eq("123456")
       expect(plugin.commit_url).to eq("http://github.com/discourse/discourse-plugin/commit/123456")
+      expect(plugin.discourse_owned?).to eq(true)
     end
 
     it "does not blow up on missing directory" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/frank_zappa")
       expect(plugins.count).to eq(0)
+    end
+  end
+
+  describe "stats" do
+    after { DiscoursePluginRegistry.reset! }
+
+    it "returns core stats" do
+      stats = Plugin::Instance.stats
+      expect(stats.keys).to contain_exactly(
+        :topics_last_day,
+        :topics_7_days,
+        :topics_30_days,
+        :topics_count,
+        :posts_last_day,
+        :posts_7_days,
+        :posts_30_days,
+        :posts_count,
+        :users_last_day,
+        :users_7_days,
+        :users_30_days,
+        :users_count,
+        :active_users_last_day,
+        :active_users_7_days,
+        :active_users_30_days,
+        :likes_last_day,
+        :likes_7_days,
+        :likes_30_days,
+        :likes_count,
+      )
+    end
+
+    it "returns stats registered by plugins" do
+      plugin = Plugin::Instance.new
+      stats_name = "plugin_stats"
+      plugin.register_stat(stats_name) do
+        { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
+      end
+
+      stats = Plugin::Instance.stats
+
+      expect(stats.with_indifferent_access).to match(
+        hash_including(
+          "#{stats_name}_last_day": 1,
+          "#{stats_name}_7_days": 10,
+          "#{stats_name}_30_days": 100,
+          "#{stats_name}_count": 1000,
+        ),
+      )
+    end
+  end
+
+  describe "git repo details" do
+    describe ".discourse_owned?" do
+      it "returns true if the plugin is on github in discourse-org or discourse orgs" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+        plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
+        expect(plugin.discourse_owned?).to eq(true)
+
+        plugin.git_repo.stubs(:url).returns("http://github.com/discourse-org/discourse-plugin")
+        expect(plugin.discourse_owned?).to eq(true)
+
+        plugin.git_repo.stubs(:url).returns("http://github.com/someguy/someguy-plugin")
+        expect(plugin.discourse_owned?).to eq(false)
+      end
+
+      it "returns false if the commit_url is missing because of git command issues" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns(nil)
+        expect(plugin.discourse_owned?).to eq(false)
+      end
     end
   end
 
@@ -45,6 +166,7 @@ RSpec.describe Plugin::Instance do
           "a trout"
         end
       end
+
       class TroutJuniorSerializer < TroutSerializer
         attribute :i_am_child
 
@@ -218,14 +340,14 @@ RSpec.describe Plugin::Instance do
     # No enabled_site_setting
     authenticator = SimpleAuthenticator.new
     plugin.auth_provider(authenticator: authenticator)
-    plugin.notify_before_auth
+    plugin.notify_after_initialize
     expect(authenticator.enabled?).to eq(true)
 
     # With enabled site setting
     plugin = Plugin::Instance.new
     authenticator = SimpleAuthenticator.new
     plugin.auth_provider(enabled_setting: "enable_badges", authenticator: authenticator)
-    plugin.notify_before_auth
+    plugin.notify_after_initialize
     expect(authenticator.enabled?).to eq(false)
 
     # Defines own method
@@ -241,7 +363,7 @@ RSpec.describe Plugin::Instance do
         end
         .new
     plugin.auth_provider(enabled_setting: "enable_badges", authenticator: authenticator)
-    plugin.notify_before_auth
+    plugin.notify_after_initialize
     expect(authenticator.enabled?).to eq(false)
   end
 
@@ -271,7 +393,7 @@ RSpec.describe Plugin::Instance do
       plugin = plugin_from_fixtures("my_plugin")
       plugin.activate!
       expect(DiscoursePluginRegistry.auth_providers.count).to eq(0)
-      plugin.notify_before_auth
+      plugin.notify_after_initialize
       expect(DiscoursePluginRegistry.auth_providers.count).to eq(1)
       auth_provider = DiscoursePluginRegistry.auth_providers.to_a[0]
       expect(auth_provider.authenticator.name).to eq("facebook")
@@ -464,10 +586,10 @@ RSpec.describe Plugin::Instance do
       expect(
         JsLocaleHelper.find_message_format_locale(["foo_BAR"], fallback_to_english: true),
       ).to eq(locale[:message_format])
-      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq (locale[:moment_js])
-      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"], timezone_names: true)).to eq (
-           locale[:moment_js_timezones]
-         )
+      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq(locale[:moment_js])
+      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"], timezone_names: true)).to eq(
+        locale[:moment_js_timezones],
+      )
     end
 
     it "correctly registers a new locale using a fallback locale" do
@@ -493,7 +615,7 @@ RSpec.describe Plugin::Instance do
       expect(JsLocaleHelper.find_message_format_locale(["tup"], fallback_to_english: true)).to eq(
         locale[:message_format],
       )
-      expect(JsLocaleHelper.find_moment_locale(["tup"])).to eq (locale[:moment_js])
+      expect(JsLocaleHelper.find_moment_locale(["tup"])).to eq(locale[:moment_js])
     end
 
     it "correctly registers a new locale when some files exist in core" do
@@ -516,7 +638,7 @@ RSpec.describe Plugin::Instance do
       expect(JsLocaleHelper.find_message_format_locale(["tlh"], fallback_to_english: true)).to eq(
         locale[:message_format],
       )
-      expect(JsLocaleHelper.find_moment_locale(["tlh"])).to eq (locale[:moment_js])
+      expect(JsLocaleHelper.find_moment_locale(["tlh"])).to eq(locale[:moment_js])
     end
 
     it "does not register a new locale when the fallback locale does not exist" do
@@ -707,7 +829,7 @@ RSpec.describe Plugin::Instance do
   end
 
   describe "#register_site_categories_callback" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
 
     it "adds a callback to the Site#categories" do
       instance = Plugin::Instance.new
@@ -731,7 +853,7 @@ RSpec.describe Plugin::Instance do
 
   describe "#register_notification_consolidation_plan" do
     let(:plugin) { Plugin::Instance.new }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     after { DiscoursePluginRegistry.reset_register!(:notification_consolidation_plans) }
 
@@ -748,12 +870,12 @@ RSpec.describe Plugin::Instance do
           to: Notification.types[:code_review_commit_approved],
           threshold: 1,
           consolidation_window: 1.minute,
-          unconsolidated_query_blk: ->(notifications, _data) {
+          unconsolidated_query_blk: ->(notifications, _data) do
             notifications.where("(data::json ->> 'consolidated') IS NULL")
-          },
-          consolidated_query_blk: ->(notifications, _data) {
+          end,
+          consolidated_query_blk: ->(notifications, _data) do
             notifications.where("(data::json ->> 'consolidated') IS NOT NULL")
-          },
+          end,
         ).set_mutations(
           set_data_blk: ->(notification) { notification.data_hash.merge(consolidated: true) },
         )
@@ -808,15 +930,15 @@ RSpec.describe Plugin::Instance do
     end
   end
 
-  describe "#register_about_stat_group" do
+  describe "#register_stat" do
     let(:plugin) { Plugin::Instance.new }
 
     after { DiscoursePluginRegistry.reset! }
 
     it "registers an about stat group correctly" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_about_stat_group("some_group", show_in_ui: true) { stats }
-      expect(About.new.plugin_stats.with_indifferent_access).to match(
+      plugin.register_stat("some_group", show_in_ui: true) { stats }
+      expect(Stat.all_stats.with_indifferent_access).to match(
         hash_including(
           some_group_last_day: 1,
           some_group_7_days: 10,
@@ -828,15 +950,15 @@ RSpec.describe Plugin::Instance do
 
     it "hides the stat group from the UI by default" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_about_stat_group("some_group") { stats }
+      plugin.register_stat("some_group") { stats }
       expect(About.displayed_plugin_stat_groups).to eq([])
     end
 
     it "does not allow duplicate named stat groups" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_about_stat_group("some_group") { stats }
-      plugin.register_about_stat_group("some_group") { stats }
-      expect(DiscoursePluginRegistry.about_stat_groups.count).to eq(1)
+      plugin.register_stat("some_group") { stats }
+      plugin.register_stat("some_group") { stats }
+      expect(DiscoursePluginRegistry.stats.count).to eq(1)
     end
   end
 
@@ -845,7 +967,7 @@ RSpec.describe Plugin::Instance do
 
     after { DiscoursePluginRegistry.reset_register!(:user_destroyer_on_content_deletion_callbacks) }
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "calls the callback when the UserDestroyer runs with the delete_posts opt set to true" do
       callback_called = false

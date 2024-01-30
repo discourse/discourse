@@ -1,6 +1,6 @@
-import { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 
 const CSS_VAR = "--chat-vh";
@@ -12,7 +12,7 @@ export default class ChatVh extends Component {
   tagName = "";
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     if ("virtualKeyboard" in navigator) {
       navigator.virtualKeyboard.overlaysContent = true;
@@ -25,7 +25,7 @@ export default class ChatVh extends Component {
   }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.activeWindow?.removeEventListener("resize", this.setVH);
     lastVH = null;

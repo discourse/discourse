@@ -17,6 +17,8 @@ module PageObjects
 
         def open_thread(thread)
           item_by_id(thread.id).click
+          has_css?(".chat-thread.loading")
+          has_no_css?(".chat-thread.loading")
         end
 
         def has_thread?(thread)
@@ -40,11 +42,7 @@ module PageObjects
         end
 
         def last_reply_datetime_selector(last_reply)
-          ".chat-thread-list-item__last-reply .relative-date[data-time='#{(last_reply.created_at.iso8601.to_time.to_f * 1000).to_i}']"
-        end
-
-        def has_no_unread_item?(id)
-          component.has_no_css?(item_by_id_selector(id) + ".-is-unread")
+          ".chat-thread-list-item__last-reply-timestamp .relative-date[data-time='#{(last_reply.created_at.iso8601.to_time.to_f * 1000).to_i}']"
         end
 
         def has_unread_item?(id, count: nil)

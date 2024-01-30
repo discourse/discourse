@@ -1,6 +1,10 @@
-<AdminWrapper @class="container">
-  <div class="row">
-    <div class="full-width">
+{{hide-application-footer}}
+{{html-class "admin-area"}}
+{{body-class "admin-interface"}}
+
+<div class="row">
+  <div class="full-width">
+    {{#unless this.showAdminSidebar}}
       <div class="admin-main-nav">
         <ul class="nav nav-pills">
           <NavItem @route="admin.dashboard" @label="admin.dashboard.title" />
@@ -32,12 +36,12 @@
           <PluginOutlet @name="admin-menu" />
         </ul>
       </div>
+    {{/unless}}
 
-      <div class="boxed white admin-content">
-        <div class="admin-contents {{this.adminContentsClassName}}">
-          {{outlet}}
-        </div>
+    <div class="boxed white admin-content">
+      <div class="admin-contents {{this.adminContentsClassName}}">
+        {{outlet}}
       </div>
     </div>
   </div>
-</AdminWrapper>
+</div>

@@ -19,6 +19,8 @@ class TopicQuery
         array_or_string = lambda { |x| Array === x || String === x }
 
         {
+          before: zero_up_to_max_int,
+          bumped_before: zero_up_to_max_int,
           max_posts: zero_up_to_max_int,
           min_posts: zero_up_to_max_int,
           page: zero_up_to_max_int,
@@ -36,7 +38,7 @@ class TopicQuery
   end
 
   def self.public_valid_options
-    # For these to work in Ember, add them to `controllers/discovery-sortable.js`
+    # For these to work in Ember, add them to `controllers/discovery/list.js`
     @public_valid_options ||= %i[
       page
       before
@@ -53,6 +55,7 @@ class TopicQuery
       search
       q
       f
+      subset
       group_name
       tags
       match_all_tags
@@ -304,7 +307,16 @@ class TopicQuery
 
   def list_new
     if @user&.new_new_view_enabled?
-      create_list(:new, { unordered: true }, new_and_unread_results)
+      list =
+        case @options[:subset]
+        when "topics"
+          new_results
+        when "replies"
+          unread_results
+        else
+          new_and_unread_results
+        end
+      create_list(:new, { unordered: true }, list)
     else
       create_list(:new, { unordered: true }, new_results)
     end
@@ -324,6 +336,17 @@ class TopicQuery
 
   def list_bookmarks
     create_list(:bookmarks) { |l| l.where("tu.bookmarked") }
+  end
+
+  def list_hot
+    create_list(:hot, unordered: true) do |topics|
+      topics = remove_muted_topics(topics, user)
+      topics = remove_muted_categories(topics, user, exclude: options[:category])
+      TopicQuery.remove_muted_tags(topics, user, options)
+      topics.joins("JOIN topic_hot_scores on topics.id = topic_hot_scores.topic_id").order(
+        "topic_hot_scores.score DESC",
+      )
+    end
   end
 
   def list_top_for(period)
@@ -641,8 +664,20 @@ class TopicQuery
   end
 
   def apply_ordering(result, options = {})
-    sort_column = SORTABLE_MAPPING[options[:order]] || "default"
+    order_option = options[:order]
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
+
+    new_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_query_apply_ordering_result,
+        result,
+        order_option,
+        sort_dir,
+        options,
+        self,
+      )
+    return new_result if !new_result.nil? && new_result != result
+    sort_column = SORTABLE_MAPPING[order_option] || "default"
 
     # If we are sorting in the default order desc, we should consider including pinned
     # topics. Otherwise, just use bumped_at.
@@ -739,7 +774,7 @@ class TopicQuery
         # category default sort order
         sort_order, sort_ascending =
           Category.where(id: category_id).pick(:sort_order, :sort_ascending)
-        if sort_order && (filter.blank? || %i[latest unseen].include?(filter))
+        if sort_order && (filter.blank? || %w[default latest unseen].include?(filter.to_s))
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? "true" : "false"
         else

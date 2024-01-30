@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def has_right_title?(title)
-        has_css?(".sidebar__edit-navigation-menu__modal .title", text: title)
+        has_css?(".sidebar__edit-navigation-menu__modal .d-modal__title-text", text: title)
       end
 
       def has_focus_on_filter_input?
@@ -67,7 +67,9 @@ module PageObjects
       private
 
       def dropdown_filter
-        PageObjects::Components::SelectKit.new(".sidebar__edit-navigation-menu__filter-dropdown")
+        PageObjects::Components::SelectKit.new(
+          ".sidebar__edit-navigation-menu__filter-dropdown",
+        ).tap(&:is_not_disabled?)
       end
     end
   end

@@ -1,25 +1,25 @@
 import {
+  click,
+  currentURL,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
+import { test } from "qunit";
+import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import searchFixtures from "discourse/tests/fixtures/search-fixtures";
+import {
   acceptance,
   count,
   exists,
   query,
   queryAll,
-  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import I18n from "I18n";
-import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
+import I18n from "discourse-i18n";
 
 acceptance("Search - Glimmer - Anonymous", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
-  needs.hooks.beforeEach(() => {
-    updateCurrentUser({ is_anonymous: true });
-  });
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
@@ -158,7 +158,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.strictEqual(
       query(".search-link .search-item-tag").textContent.trim(),
       "important",
-      "frst option includes tag"
+      "first option includes tag"
     );
 
     await fillIn("#search-term", "smth");
@@ -203,13 +203,13 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     );
 
     assert.strictEqual(
-      secondOption.querySelector(".category-name").textContent.trim(),
+      secondOption.querySelector(".badge-category__name").textContent.trim(),
       "bug",
       "second option includes category slug"
     );
 
     assert.ok(
-      exists(`${contextSelector} span.badge-wrapper`),
+      exists(`${contextSelector} span.badge-category__wrapper`),
       "category badge is a span (i.e. not a link)"
     );
   });
@@ -432,9 +432,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 });
 
 acceptance("Search - Glimmer - Authenticated", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
+  needs.user();
   needs.settings({
     log_search_queries: true,
     allow_uncategorized_topics: true,
@@ -481,6 +479,10 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
         ],
       })
     );
+
+    server.get("/t/2179.json", () => {
+      return helper.response({});
+    });
   });
 
   test("full page search - the right filters are shown", async function (assert) {
@@ -524,6 +526,42 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
     );
   });
 
+  test("topic results - topic search scope - clicking a search result navigates to topic url", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+
+    const firstSearchResult =
+      ".search-menu .results li:nth-of-type(1) a.search-link";
+    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
+    assert.strictEqual(
+      query(firstSearchResult).getAttribute("href"),
+      firstTopicResultUrl
+    );
+
+    await click(firstSearchResult);
+    assert.strictEqual(
+      currentURL(),
+      firstTopicResultUrl,
+      "redirects to clicked search result url"
+    );
+  });
+
+  test("topic results - search result escapes html in topic title when use_pg_headlines_for_excerpt is true", async function (assert) {
+    this.siteSettings.use_pg_headlines_for_excerpt = true;
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
+
+    assert
+      .dom(
+        ".search-menu .search-result-topic .item:first-of-type .topic-title span.search-highlight"
+      )
+      .exists("html in the topic title is properly escaped");
+  });
+
   test("search menu keyboard navigation", async function (assert) {
     const container = ".search-menu .results";
     await visit("/");
@@ -562,7 +600,7 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
       "arrow down sets focus to more results link"
     );
 
-    await triggerKeyEvent("#search-term", "keyup", "Escape");
+    await triggerKeyEvent("#search-term", "keydown", "Escape");
     assert.strictEqual(
       document.activeElement,
       query("#search-button"),
@@ -626,6 +664,30 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
     );
   });
 
+  // see https://meta.discourse.org/t/keyboard-navigation-messes-up-the-search-menu/285405
+  test("search menu keyboard navigation - on 'Enter' keydown navigate to selected search item url", async function (assert) {
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "J");
+    await click("#search-button");
+    await fillIn("#search-term", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+
+    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
+    assert.strictEqual(
+      document.activeElement.getAttribute("href"),
+      firstTopicResultUrl,
+      "first search result is highlighted"
+    );
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Enter");
+    assert.strictEqual(
+      currentURL(),
+      firstTopicResultUrl,
+      "redirects to selected search result url"
+    );
+  });
+
   test("initial options - recent search results", async function (assert) {
     await visit("/");
     await click("#search-button");
@@ -646,13 +708,75 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
       "shows second recent search"
     );
   });
+
+  test("initial options - overriding behavior with addSearchMenuAssistantSelectCallback", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+
+    withPluginApi("1.20.0", (api) => {
+      api.addSearchMenuAssistantSelectCallback((args) => {
+        if (args.usage === "recent-search") {
+          args.searchTermChanged("hijacked!");
+          return false;
+        }
+
+        return true;
+      });
+    });
+
+    await click(
+      ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
+    );
+
+    assert.strictEqual(query("#search-term").value, "hijacked!");
+  });
 });
 
 acceptance("Search - Glimmer - with tagging enabled", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
+  needs.user();
   needs.settings({ tagging_enabled: true });
+  needs.pretender((server, helper) => {
+    server.get("/tag/dev/notifications", () => {
+      return helper.response({
+        tag_notification: { id: "dev", notification_level: 2 },
+      });
+    });
+
+    server.get("/tags/c/bug/1/dev/l/latest.json", () => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 1,
+              name: "dev",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      });
+    });
+
+    server.get("/tags/intersection/dev/foo.json", () => {
+      return helper.response({
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          topics: [],
+        },
+      });
+    });
+  });
 
   test("topic results - displays tags", async function (assert) {
     await visit("/");
@@ -664,9 +788,21 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
       query(
         ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
       ).textContent.trim(),
-      "dev slow",
+      "devslow",
       "tags displayed in search results"
     );
+  });
+
+  test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+    await click("#search-button");
+    await fillIn("#search-term", "#dev");
+    await click(
+      ".search-menu .results .search-menu-assistant .search-menu-assistant-item:nth-child(1)"
+    );
+    assert
+      .dom(".search-input .btn.search-context")
+      .doesNotExist("'in this topic' button is not shown");
   });
 
   test("initial results - displays tag shortcuts", async function (assert) {
@@ -681,13 +817,91 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
     const firstTag = query(`${firstItem} .search-item-tag`).textContent.trim();
     assert.strictEqual(firstTag, "monkey");
   });
+
+  test("initial options - tag search scope - shows category / tag combination shortcut when both are present", async function (assert) {
+    await visit("/tags/c/bug/dev");
+    await click("#search-button");
+
+    assert.strictEqual(
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
+      "bug",
+      "Category is displayed"
+    );
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
+        .innerText,
+      "dev",
+      "Tag is displayed"
+    );
+  });
+
+  test("initial options - tag and category search scope - updates tag / category combination search suggestion when typing", async function (assert) {
+    await visit("/tags/c/bug/dev");
+    await click("#search-button");
+    await fillIn("#search-term", "foo bar");
+
+    assert.strictEqual(
+      query(
+        ".search-menu .results ul.search-menu-assistant .search-item-prefix"
+      ).innerText,
+      "foo bar",
+      "Input is applied to search query"
+    );
+
+    assert.strictEqual(
+      query(
+        ".search-menu .results ul.search-menu-assistant .badge-category__name"
+      ).innerText,
+      "bug"
+    );
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
+        .innerText,
+      "dev",
+      "Tag is displayed"
+    );
+  });
+
+  test("initial options - tag intersection search scope - shows tag combination shortcut when visiting tag intersection", async function (assert) {
+    await visit("/tags/intersection/dev/foo");
+    await click("#search-button");
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
+        .innerText,
+      "tags:dev+foo",
+      "Tags are displayed"
+    );
+  });
+
+  test("initial options - tag intersection search scope - updates tag intersection search suggestion when typing", async function (assert) {
+    await visit("/tags/intersection/dev/foo");
+    await click("#search-button");
+    await fillIn("#search-term", "foo bar");
+
+    assert.strictEqual(
+      query(
+        ".search-menu .results ul.search-menu-assistant .search-item-prefix"
+      ).innerText,
+      "foo bar",
+      "Input is applied to search query"
+    );
+
+    assert.strictEqual(
+      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
+        .innerText,
+      "tags:dev+foo",
+      "Tags are displayed"
+    );
+  });
 });
 
 acceptance("Search - Glimmer - assistant", function (needs) {
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
-
+  needs.user();
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
       if (request.queryParams["search_context[type]"] === "private_messages") {
@@ -830,53 +1044,12 @@ acceptance("Search - Glimmer - assistant", function (needs) {
       return helper.response(searchFixtures["search/query"]);
     });
 
-    server.get("/tag/dev/notifications", () => {
-      return helper.response({
-        tag_notification: { id: "dev", notification_level: 2 },
-      });
-    });
-
-    server.get("/tags/c/bug/1/dev/l/latest.json", () => {
-      return helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          can_create_topic: true,
-          draft: null,
-          draft_key: "new_topic",
-          draft_sequence: 1,
-          per_page: 30,
-          tags: [
-            {
-              id: 1,
-              name: "dev",
-              topic_count: 1,
-            },
-          ],
-          topics: [],
-        },
-      });
-    });
-
-    server.get("/tags/intersection/dev/foo.json", () => {
-      return helper.response({
-        topic_list: {
-          can_create_topic: true,
-          draft: null,
-          draft_key: "new_topic",
-          draft_sequence: 1,
-          per_page: 30,
-          topics: [],
-        },
-      });
-    });
-
     server.get("/u/search/users", () => {
       return helper.response({
         users: [
           {
             username: "TeaMoe",
-            name: "TeaMoe",
+            name: "TeaMoe Full",
             avatar_template:
               "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
           },
@@ -904,88 +1077,9 @@ acceptance("Search - Glimmer - assistant", function (needs) {
 
     assert.strictEqual(
       query(
-        ".search-menu .results ul.search-menu-assistant .search-link .category-name"
+        ".search-menu .results ul.search-menu-assistant .search-link .badge-category__name"
       ).innerText,
       "support"
-    );
-  });
-
-  test("initial options - tag search scope - shows category / tag combination shortcut when both are present", async function (assert) {
-    await visit("/tags/c/bug/dev");
-    await click("#search-button");
-
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
-      "bug",
-      "Category is displayed"
-    );
-
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
-        .innerText,
-      "dev",
-      "Tag is displayed"
-    );
-  });
-
-  test("initial options - tag and category search scope - updates tag / category combination search suggestion when typing", async function (assert) {
-    await visit("/tags/c/bug/dev");
-    await click("#search-button");
-    await fillIn("#search-term", "foo bar");
-
-    assert.strictEqual(
-      query(
-        ".search-menu .results ul.search-menu-assistant .search-item-prefix"
-      ).innerText,
-      "foo bar",
-      "Input is applied to search query"
-    );
-
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .category-name")
-        .innerText,
-      "bug"
-    );
-
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
-        .innerText,
-      "dev",
-      "Tag is displayed"
-    );
-  });
-
-  test("initial options - tag intersection search scope - shows tag combination shortcut when visiting tag intersection", async function (assert) {
-    await visit("/tags/intersection/dev/foo");
-    await click("#search-button");
-
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
-        .innerText,
-      "tags:dev+foo",
-      "Tags are displayed"
-    );
-  });
-
-  test("initial options - tag intersection search scope - updates tag intersection search suggestion when typing", async function (assert) {
-    await visit("/tags/intersection/dev/foo");
-    await click("#search-button");
-    await fillIn("#search-term", "foo bar");
-
-    assert.strictEqual(
-      query(
-        ".search-menu .results ul.search-menu-assistant .search-item-prefix"
-      ).innerText,
-      "foo bar",
-      "Input is applied to search query"
-    );
-
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
-        .innerText,
-      "tags:dev+foo",
-      "Tags are displayed"
     );
   });
 
@@ -1022,14 +1116,27 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "@");
-    const firstUser =
-      ".search-menu .results ul.search-menu-assistant .search-item-user";
-    const firstUsername = query(firstUser).innerText.trim();
+    const firstUser = query(
+      ".search-menu .results ul.search-menu-assistant .search-item-user"
+    );
+    const username = firstUser.querySelector(".username").innerText.trim();
+    assert.strictEqual(username, "TeaMoe");
 
-    assert.strictEqual(firstUsername, "TeaMoe");
+    await click(firstUser);
+    assert.strictEqual(query("#search-term").value, `@${username}`);
+  });
 
-    await click(query(firstUser));
-    assert.strictEqual(query("#search-term").value, `@${firstUsername}`);
+  test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+    await click("#search-button");
+    await fillIn("#search-term", "@");
+    await click(
+      ".search-menu .results .search-menu-assistant .search-menu-assistant-item:nth-child(1)"
+    );
+
+    assert
+      .dom(".search-input .btn.search-context")
+      .doesNotExist("'in this topic' button is not shown");
   });
 
   test("initial options - private message search scope - shows 'in messages' button when in an inbox", async function (assert) {
@@ -1069,7 +1176,7 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     const firstCategory =
       ".search-menu .results ul.search-menu-assistant .search-link";
     const firstCategoryName = query(
-      `${firstCategory} .category-name`
+      `${firstCategory} .badge-category__name`
     ).innerText;
     await click(firstCategory);
 

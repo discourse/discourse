@@ -1,9 +1,9 @@
-import { classNameBindings } from "@ember-decorators/component";
 import Component from "@ember/component";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { on } from "@ember-decorators/object";
 import { action, set } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { classNameBindings } from "@ember-decorators/component";
+import { on } from "@ember-decorators/object";
+import I18n from "discourse-i18n";
 
 @classNameBindings(":value-list", ":secret-value-list")
 export default class SecretValueList extends Component {

@@ -32,23 +32,49 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.default_event_types
-    [WebHookEventType.find(WebHookEventType::POST)]
+    WebHookEventType.where(
+      id: [
+        WebHookEventType::TYPES[:post_created],
+        WebHookEventType::TYPES[:post_edited],
+        WebHookEventType::TYPES[:post_destroyed],
+        WebHookEventType::TYPES[:post_recovered],
+      ],
+    )
   end
 
   def strip_url
     self.payload_url = (payload_url || "").strip.presence
   end
 
-  def self.active_web_hooks(type)
+  EVENT_NAME_TO_EVENT_TYPE_MAP = {
+    /\Atopic_\w+_status_updated\z/ => "topic_edited",
+    "reviewable_score_updated" => "reviewable_updated",
+    "reviewable_transitioned_to" => "reviewable_updated",
+  }
+
+  def self.translate_event_name_to_type(event_name)
+    EVENT_NAME_TO_EVENT_TYPE_MAP.each do |key, value|
+      if key.is_a?(Regexp)
+        return value if event_name.to_s =~ key
+      else
+        return value if event_name.to_s == key
+      end
+    end
+    event_name.to_s
+  end
+
+  def self.active_web_hooks(event)
+    event_type = translate_event_name_to_type(event)
+
     WebHook
       .where(active: true)
       .joins(:web_hook_event_types)
-      .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, type.to_s)
+      .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, event_type)
       .distinct
   end
 
   def self.enqueue_hooks(type, event, opts = {})
-    active_web_hooks(type).each do |web_hook|
+    active_web_hooks(event).each do |web_hook|
       Jobs.enqueue(
         :emit_web_hook_event,
         opts.merge(web_hook_id: web_hook.id, event_name: event.to_s, event_type: type.to_s),
@@ -57,7 +83,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.enqueue_object_hooks(type, object, event, serializer = nil, opts = {})
-    if active_web_hooks(type).exists?
+    if active_web_hooks(event).exists?
       payload = WebHook.generate_payload(type, object, serializer)
 
       WebHook.enqueue_hooks(type, event, opts.merge(id: object.id, payload: payload))
@@ -65,7 +91,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.enqueue_topic_hooks(event, topic, payload = nil)
-    if active_web_hooks("topic").exists? && topic.present?
+    if active_web_hooks(event).exists? && topic.present?
       payload ||=
         begin
           topic_view = TopicView.new(topic.id, Discourse.system_user, skip_staff_action: true)
@@ -84,7 +110,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.enqueue_post_hooks(event, post, payload = nil)
-    if active_web_hooks("post").exists? && post.present?
+    if active_web_hooks(event).exists? && post.present?
       payload ||= WebHook.generate_payload(:post, post)
 
       WebHook.enqueue_hooks(

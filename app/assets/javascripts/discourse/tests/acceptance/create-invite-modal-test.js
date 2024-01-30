@@ -1,4 +1,5 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
@@ -6,8 +7,7 @@ import {
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 acceptance("Invites - Create & Edit Invite Modal", function (needs) {
   needs.user();
@@ -58,13 +58,13 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
 
     assert
       .dom("table.user-invite-list tbody tr")
-      .exists({ count: 2 }, "is seeded with two rows");
+      .exists({ count: 3 }, "is seeded with three rows");
 
     await click(".btn-primary");
 
     assert
       .dom("table.user-invite-list tbody tr")
-      .exists({ count: 3 }, "gets added to the list");
+      .exists({ count: 4 }, "gets added to the list");
   });
 
   test("copying saves invite", async function (assert) {
@@ -239,6 +239,48 @@ acceptance(
       await visit("/u/eviltrout/invited/pending");
       await click(".user-invite-buttons .btn:first-child");
       assert.ok(!exists(".invite-to-topic"));
+    });
+  }
+);
+
+acceptance(
+  "Invites - Populates Edit Invite Form with saved invite data",
+  function (needs) {
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.get("/groups/search.json", () => {
+        return helper.response([
+          {
+            id: 41,
+            automatic: false,
+            name: "Macdonald",
+          },
+          {
+            id: 47, // must match group-fixtures.js because lookup is by ID
+            automatic: false,
+            name: "Discourse",
+          },
+        ]);
+      });
+    });
+
+    test("shows correct saved data in form", async function (assert) {
+      await visit("/u/eviltrout/invited/pending");
+      await click(
+        ".user-invite-list tbody tr:nth-child(3) .invite-actions .btn:first-child"
+      ); // third invite edit button
+      assert.dom("#invite-max-redemptions").hasValue("10");
+      assert
+        .dom(".invite-to-topic .name")
+        .hasText("Welcome to Discourse! :wave:");
+      assert.dom(".invite-to-groups .formatted-selection").hasText("Macdonald");
+      assert.dom("#invite-email").hasValue("cat.com");
+    });
+
+    test("shows correct saved data in group invite form", async function (assert) {
+      await visit("/g/discourse");
+      await click(".group-members-invite");
+      assert.dom(".invite-to-groups .formatted-selection").hasText("Discourse");
     });
   }
 );

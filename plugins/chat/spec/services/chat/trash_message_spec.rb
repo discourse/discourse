@@ -49,21 +49,25 @@ RSpec.describe Chat::TrashMessage do
 
         it "destroys notifications for mentions" do
           notification = Fabricate(:notification)
-          mention = Fabricate(:chat_mention, chat_message: message, notification: notification)
+          mention =
+            Fabricate(:user_chat_mention, chat_message: message, notifications: [notification])
 
           result
 
           mention = Chat::Mention.find_by(id: mention.id)
           expect(mention).to be_present
-          expect(mention.notification_id).to be_nil
+          expect(mention.notifications).to be_empty
         end
 
         it "publishes associated Discourse and MessageBus events" do
           freeze_time
           messages = nil
           event =
-            DiscourseEvent.track_events { messages = MessageBus.track_publish { result } }.first
-          expect(event[:event_name]).to eq(:chat_message_trashed)
+            DiscourseEvent
+              .track_events { messages = MessageBus.track_publish { result } }
+              .find { |e| e[:event_name] == :chat_message_trashed }
+
+          expect(event).to be_present
           expect(event[:params]).to eq([message, message.chat_channel, current_user])
           expect(messages.find { |m| m.channel == "/chat/#{message.chat_channel_id}" }.data).to eq(
             {
@@ -124,7 +128,7 @@ RSpec.describe Chat::TrashMessage do
           next_message =
             Fabricate(:chat_message, chat_channel: message.chat_channel, user: current_user)
           params[:message_id] = next_message.id
-          expect(message.chat_channel.reload.last_message).to eq(next_message)
+          message.chat_channel.update!(last_message: next_message)
           result
           expect(message.chat_channel.reload.last_message).to eq(message)
         end
@@ -174,9 +178,15 @@ RSpec.describe Chat::TrashMessage do
           end
 
           it "updates the thread last_message_id to the previous message in the thread" do
-            next_message = Fabricate(:chat_message, thread: thread, user: current_user)
+            next_message =
+              Fabricate(
+                :chat_message,
+                thread: thread,
+                user: current_user,
+                chat_channel: message.chat_channel,
+              )
             params[:message_id] = next_message.id
-            expect(thread.reload.last_message).to eq(next_message)
+            thread.update!(last_message: next_message)
             result
             expect(thread.reload.last_message).to eq(message)
           end

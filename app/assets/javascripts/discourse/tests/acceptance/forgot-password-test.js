@@ -1,11 +1,11 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import I18n from "I18n";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 let userFound = false;
 
@@ -62,7 +62,7 @@ acceptance("Forgot password", function (needs) {
     );
 
     assert.strictEqual(
-      query(".modal-body").innerHTML.trim(),
+      query(".d-modal__body").innerHTML.trim(),
       I18n.t("forgot_password.complete_username_found", {
         username: "someuser",
       }),
@@ -76,7 +76,7 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.strictEqual(
-      query(".modal-body").innerHTML.trim(),
+      query(".d-modal__body").innerHTML.trim(),
       I18n.t("forgot_password.complete_email_found", {
         email: "someuser@gmail.com",
       }),
@@ -108,7 +108,7 @@ acceptance(
       await click(".forgot-password-reset");
 
       assert.strictEqual(
-        query(".modal-body").innerHTML.trim(),
+        query(".d-modal__body").innerHTML.trim(),
         I18n.t("forgot_password.complete_username", {
           username: "someuser",
         }),

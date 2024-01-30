@@ -1,13 +1,12 @@
-import { click, render, settled } from "@ember/test-helpers";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import { module, test } from "qunit";
-
-import domFromString from "discourse-common/lib/dom-from-string";
-import { generateLightboxMarkup } from "discourse/tests/helpers/lightbox-helpers";
+import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import { setupLightboxes } from "discourse/lib/lightbox";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { generateLightboxMarkup } from "discourse/tests/helpers/lightbox-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Integration | Component | d-lightbox", function (hooks) {
   setupRenderingTest(hooks);
@@ -35,8 +34,6 @@ module("Integration | Component | d-lightbox", function (hooks) {
     );
     await click(lightboxedElement);
 
-    await settled();
-
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-visible");
 
     assert
@@ -59,11 +56,10 @@ module("Integration | Component | d-lightbox", function (hooks) {
     // the content has an aria-labelledby attribute
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).hasAttribute("aria-labelledby");
 
-    assert.strictEqual(
+    assert.true(
       query(SELECTORS.LIGHTBOX_CONTENT)
         .getAttribute("style")
         .match(/--d-lightbox/g).length > 0,
-      true,
       "the content has the correct css variables added"
     );
 
@@ -71,7 +67,6 @@ module("Integration | Component | d-lightbox", function (hooks) {
     assert.dom(SELECTORS.FOCUS_TRAP).exists();
 
     await click(SELECTORS.CLOSE_BUTTON);
-    await settled();
 
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-visible");
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();

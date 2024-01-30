@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserSecondFactor do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe ".methods" do
     it "should retain the right order" do

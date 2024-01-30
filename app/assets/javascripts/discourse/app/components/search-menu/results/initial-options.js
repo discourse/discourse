@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
-import AssistantItem from "./assistant-item";
+import I18n from "discourse-i18n";
 import Assistant from "./assistant";
-import I18n from "I18n";
+import AssistantItem from "./assistant-item";
 
 const SEARCH_CONTEXT_TYPE_COMPONENTS = {
   topic: AssistantItem,
@@ -28,18 +28,16 @@ export default class InitialOptions extends Component {
         this.contextTypeComponent =
           SEARCH_CONTEXT_TYPE_COMPONENTS[this.search.searchContext.type];
         // set attributes for the component
-        this.attributesForSearchContextType(this.search.searchContext.type);
+        this.setAttributesForSearchContextType(this.search.searchContext.type);
       }
     }
   }
 
   get termMatchesContextTypeKeyword() {
-    return this.search.activeGlobalSearchTerm?.match(MODIFIER_REGEXP)
-      ? true
-      : false;
+    return this.search.activeGlobalSearchTerm?.match(MODIFIER_REGEXP);
   }
 
-  attributesForSearchContextType(type) {
+  setAttributesForSearchContextType(type) {
     switch (type) {
       case "topic":
         this.topicContextType();

@@ -4,6 +4,10 @@ class ReviewableFlaggedPostSerializer < ReviewableSerializer
   target_attributes :cooked, :raw, :reply_count, :reply_to_post_number
   attributes :blank_post, :post_updated_at, :post_version
 
+  def created_from_flag?
+    true
+  end
+
   def post_version
     object.target&.version
   end

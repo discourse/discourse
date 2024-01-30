@@ -50,6 +50,9 @@ sl:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} uporabnika %{username}"
+  components:
+    enabled_filter: "Vključeno"
+    disabled_filter: "Onemogočeno"
   emails:
     incoming:
       default_subject: "Tema potrebuje naslov"
@@ -272,6 +275,8 @@ sl:
               same_as_password: "je enako kot vaše geslo."
             name:
               same_as_password: "je enako kot vaše geslo."
+            ip_address:
+              max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
         topic_timer:
           attributes:
             duration_minutes:
@@ -475,8 +480,6 @@ sl:
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   change_email:
-    confirmed: "Vaš e-naslov je bil spremenjen."
-    please_continue: "Nadaljujte na %{site_name}"
     error: "Prišlo je do napake med spremembo vašega e-naslova. Mogoče je e-naslov že uporabljen?"
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."
     already_done: "Oprostite, vendar povezava za potrditev ni več veljavna. Mogoče je bil vaš e-naslov že spremenjen?"
@@ -860,22 +863,9 @@ sl:
   admin:
     email:
       sent_test: "poslano!"
-    user:
-      merge_user:
-        updating_username: "Posodabljanje uporabniškega imena ..."
-        changing_post_ownership: "Spreminjanje lastništva objave ..."
-        merging_given_daily_likes: "Združevanje danih dnevnih všečkov ..."
-        merging_user_visits: "Združevanje obiskov uporabnikov ..."
-        updating_site_settings: "Posodabljanje nastavitev mesta..."
-        updating_user_stats: "Posodabljanje uporabniške statistike ..."
-        merging_user_attributes: "Združevanje uporabniških atributov..."
-        updating_user_ids: "Posodabljanje uporabniških ID-jev ..."
-        deleting_source_user: "Brisanje izvornega uporabnika..."
   user:
     email:
       does_not_exist: "N/A"
-    ip_address:
-      max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
     destroy_reasons:
       unused_staged_user: "Neuporabljen prirejen uporabnik"
   invite_mailer:
@@ -1966,6 +1956,9 @@ sl:
                 label: "Kategorije in najboljše teme"
       invites:
         disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
+  onebox:
+    github:
+      closed: "zaprto"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je omenil v "%{topic}" - %{site_title}'
@@ -2009,8 +2002,6 @@ sl:
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
       delete_single:
         title: "Izbriši"
-      delete:
-        title: "Izbriši..."
       delete_and_ignore_replies:
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
       delete_and_agree_replies:
@@ -2032,7 +2023,6 @@ sl:
       approve_user:
         title: "Odobri uporabnika"
       reject_user:
-        title: "Izbriši uporabnika..."
         delete:
           title: "Izbriši uporabnika"
           description: "Ta uporabnik bo izbrisan iz foruma."

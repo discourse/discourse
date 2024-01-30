@@ -1,9 +1,9 @@
-import { guidFor } from "@ember/object/internals";
-import { computed, get } from "@ember/object";
 import Component from "@ember/component";
-import UtilsMixin from "select-kit/mixins/utils";
-import { makeArray } from "discourse-common/lib/helpers";
+import { computed, get } from "@ember/object";
 import { reads } from "@ember/object/computed";
+import { guidFor } from "@ember/object/internals";
+import { makeArray } from "discourse-common/lib/helpers";
+import UtilsMixin from "select-kit/mixins/utils";
 
 export default Component.extend(UtilsMixin, {
   tagName: "",

@@ -7,11 +7,14 @@
     {{/if}}
   </div>
 {{else if this.doesNotHaveNotifications}}
-  <EmptyState
-    @title={{i18n "user.no_notifications_page_title"}}
-    @body={{this.emptyStateBody}}
-  />
+  <PluginOutlet @name="user-notifications-empty-state">
+    <EmptyState
+      @title={{i18n "user.no_notifications_page_title"}}
+      @body={{this.emptyStateBody}}
+    />
+  </PluginOutlet>
 {{else}}
+  <PluginOutlet @name="user-notifications-above-filter" />
   <div class="user-notifications-filter">
     <NotificationsFilter
       @value={{this.filter}}
@@ -22,7 +25,15 @@
   {{#if this.nothingFound}}
     <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
   {{else}}
-    <UserNotificationsLarge @notifications={{this.model}} />
-    <ConditionalLoadingSpinner @condition={{this.loading}} />
+    <div class={{this.listContainerClassNames}}>
+      {{#each this.items as |item|}}
+        <UserMenu::MenuItem @item={{item}} />
+      {{/each}}
+      <ConditionalLoadingSpinner @condition={{this.loading}} />
+      <PluginOutlet
+        @name="user-notifications-list-bottom"
+        @outletArgs={{hash controller=this}}
+      />
+    </div>
   {{/if}}
 {{/if}}

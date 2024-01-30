@@ -481,7 +481,7 @@ RSpec.describe Stylesheet::Manager do
   end
 
   describe "color_scheme_digest" do
-    fab!(:theme) { Fabricate(:theme) }
+    fab!(:theme)
 
     it "changes with category background image" do
       category1 = Fabricate(:category, uploaded_background_id: 123, updated_at: 1.week.ago)
@@ -886,7 +886,7 @@ RSpec.describe Stylesheet::Manager do
 
     after do
       STDERR.unstub(:write)
-      FileUtils.rm_rf("tmp/stylesheet-cache")
+      Stylesheet::Manager.rm_cache_folder
     end
 
     it "correctly generates precompiled CSS" do

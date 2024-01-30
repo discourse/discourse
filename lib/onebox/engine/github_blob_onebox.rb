@@ -15,6 +15,15 @@ module Onebox
 
       include Onebox::Mixins::GitBlobOnebox
 
+      def i18n
+        {
+          binary_file: I18n.t("onebox.github.binary_file"),
+          truncated_file: I18n.t("onebox.github.truncated_file"),
+          show_original: I18n.t("onebox.github.show_original"),
+          requires_iframe: I18n.t("onebox.github.requires_iframe"),
+        }
+      end
+
       def raw_regexp
         %r{github\.com/(?<user>[^/]+)/(?<repo>[^/]+)/blob/(?<sha1>[^/]+)/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?}mi
       end

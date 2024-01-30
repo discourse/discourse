@@ -1,14 +1,14 @@
 import { filter, gt, lt, not, or } from "@ember/object/computed";
-import Group from "discourse/models/group";
-import I18n from "I18n";
 import { Promise } from "rsvp";
-import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
+import Group from "discourse/models/group";
+import User from "discourse/models/user";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class AdminUser extends User {
   static find(user_id) {

@@ -1,51 +1,53 @@
 const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
 const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
-function calculateCapabilities() {
-  const capabilities = {};
+const ua = navigator.userAgent;
 
-  const ua = navigator.userAgent;
+class Capabilities {
+  touch = navigator.maxTouchPoints > 1 || "ontouchstart" in window;
 
-  capabilities.touch = navigator.maxTouchPoints > 1 || "ontouchstart" in window;
+  isAndroid = ua.includes("Android");
+  isWinphone = ua.includes("Windows Phone");
+  isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
 
-  capabilities.isAndroid = ua.includes("Android");
-  capabilities.isWinphone = ua.includes("Windows Phone");
-  capabilities.isIpadOS =
-    ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && capabilities.touch;
-  capabilities.isIOS =
-    (/iPhone|iPod/.test(navigator.userAgent) || capabilities.isIpadOS) &&
-    !window.MSStream;
-  capabilities.isApple =
+  isIOS = (/iPhone|iPod/.test(ua) || this.isIpadOS) && !window.MSStream;
+  isApple =
     APPLE_NAVIGATOR_PLATFORMS.test(navigator.platform) ||
     (navigator.userAgentData &&
       APPLE_USER_AGENT_DATA_PLATFORM.test(navigator.userAgentData.platform));
 
-  capabilities.isOpera = !!window.opera || ua.includes(" OPR/");
-  capabilities.isFirefox = ua.includes("Firefox");
-  capabilities.isChrome = !!window.chrome && !capabilities.isOpera;
-  capabilities.isSafari =
+  isOpera = !!window.opera || ua.includes(" OPR/");
+  isFirefox = ua.includes("Firefox");
+  isChrome = !!window.chrome && !this.isOpera;
+  isSafari =
     /Constructor/.test(window.HTMLElement) ||
     window.safari?.pushNotification?.toString() ===
       "[object SafariRemoteNotification]";
 
-  capabilities.hasContactPicker =
-    "contacts" in navigator && "ContactsManager" in window;
-  capabilities.canVibrate = "vibrate" in navigator;
-  capabilities.isPwa =
+  hasContactPicker = "contacts" in navigator && "ContactsManager" in window;
+
+  canVibrate = "vibrate" in navigator;
+
+  isPwa =
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone ||
     document.referrer.includes("android-app://");
-  capabilities.isiOSPWA = capabilities.isPwa && capabilities.isIOS;
-  capabilities.wasLaunchedFromDiscourseHub =
-    window.location.search.includes("discourse_app=1");
-  capabilities.isAppWebview = window.ReactNativeWebView !== undefined;
+  isiOSPWA = this.isPwa && this.isIOS;
 
-  return capabilities;
+  wasLaunchedFromDiscourseHub =
+    window.location.search.includes("discourse_app=1");
+  isAppWebview = window.ReactNativeWebView !== undefined;
+
+  get userHasBeenActive() {
+    return (
+      !("userActivation" in navigator) || navigator.userActivation.hasBeenActive
+    );
+  }
 }
 
-export const capabilities = calculateCapabilities();
+export const capabilities = new Capabilities();
 
-export default class CapabilitiesService {
+export default class CapabilitiesServiceShim {
   static isServiceFactory = true;
 
   static create() {

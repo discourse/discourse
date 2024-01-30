@@ -1,20 +1,21 @@
 <DModal
-  class={{concat-class "sidebar__edit-navigation-menu__modal" @class}}
   @title={{i18n @title}}
   @closeModal={{@closeModal}}
+  class="sidebar__edit-navigation-menu__modal -large"
+  ...attributes
 >
-  <:headerBelowTitle>
+  <:belowModalTitle>
     <p class="sidebar__edit-navigation-menu__deselect-wrapper">
       <DButton
-        @class="btn-flat sidebar__edit-navigation-menu__deselect-button"
         @label="sidebar.edit_navigation_modal_form.deselect_button_text"
         @ariaLabel="sidebar.edit_navigation_modal_form.deselect_button_text"
         @action={{@deselectAll}}
+        class="btn-flat sidebar__edit-navigation-menu__deselect-button"
       />
 
       {{@deselectAllText}}
     </p>
-  </:headerBelowTitle>
+  </:belowModalTitle>
 
   <:belowHeader>
     <div class="sidebar__edit-navigation-menu__filter">
@@ -36,11 +37,11 @@
 
       <div class="sidebar__edit-navigation-menu__filter-dropdown-wrapper">
         <DropdownSelectBox
-          @class="sidebar__edit-navigation-menu__filter-dropdown"
           @value={{this.filterDropdownValue}}
           @content={{this.filterDropdownContent}}
           @onChange={{this.onFilterDropdownChange}}
-          @options={{hash showCaret=true}}
+          @options={{hash showCaret=true disabled=@loading}}
+          class="sidebar__edit-navigation-menu__filter-dropdown"
         />
       </div>
     </div>
@@ -53,19 +54,19 @@
   <:footer>
     <div class="sidebar__edit-navigation-menu__footer">
       <DButton
-        @class="btn-primary sidebar__edit-navigation-menu__save-button"
         @label="save"
         @disabled={{@saving}}
         @action={{@save}}
+        class="btn-primary sidebar__edit-navigation-menu__save-button"
       />
 
       {{#if @showResetDefaultsButton}}
         <DButton
           @icon="undo"
-          @class="btn-flat btn-text sidebar__edit-navigation-menu__reset-defaults-button"
           @label="sidebar.edit_navigation_modal_form.reset_to_defaults"
           @disabled={{@saving}}
           @action={{@resetToDefaults}}
+          class="btn-flat btn-text sidebar__edit-navigation-menu__reset-defaults-button"
         />
       {{/if}}
     </div>

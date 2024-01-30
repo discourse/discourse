@@ -1,4 +1,6 @@
-<DSection @bodyClass="static-login" @class="container">
+{{body-class "static-login"}}
+
+<section class="container">
   <div class="contents clearfix body-page">
     <div class="login-welcome">
       <PluginOutlet @name="above-login" @outletArgs={{hash model=this.model}} />
@@ -15,18 +17,18 @@
         {{#if this.application.canSignUp}}
           <DButton
             @action={{route-action "showCreateAccount"}}
-            @class="btn-primary sign-up-button"
             @label="sign_up"
+            class="btn-primary sign-up-button"
           />
         {{/if}}
 
         <DButton
           @action={{route-action "showLogin"}}
-          @class="btn-primary login-button"
           @icon="user"
           @label="log_in"
+          class="btn-primary login-button"
         />
       </div>
     </div>
   </div>
-</DSection>
+</section>

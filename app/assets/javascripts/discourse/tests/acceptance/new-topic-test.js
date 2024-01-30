@@ -1,7 +1,7 @@
+import { currentURL, visit, waitFor } from "@ember/test-helpers";
+import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import { currentURL, visit, waitFor } from "@ember/test-helpers";
 
 acceptance("New Topic - Anonymous", function () {
   test("accessing new-topic route when logged out", async function (assert) {

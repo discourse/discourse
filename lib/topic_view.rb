@@ -726,6 +726,12 @@ class TopicView
     Summarization::Base.can_see_summary?(@topic, @user)
   end
 
+  def categories
+    categories = [category, category&.parent_category]
+    categories += suggested_topics.categories if suggested_topics
+    categories.compact.uniq
+  end
+
   protected
 
   def read_posts_set

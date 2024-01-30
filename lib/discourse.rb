@@ -313,11 +313,11 @@ module Discourse
   end
 
   def self.filters
-    @filters ||= %i[latest unread new unseen top read posted bookmarks]
+    @filters ||= %i[latest unread new unseen top read posted bookmarks hot]
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= %i[latest top categories]
+    @anonymous_filters ||= %i[latest top categories hot]
   end
 
   def self.top_menu_items
@@ -375,6 +375,13 @@ module Discourse
 
   def self.visible_plugins
     plugins.filter(&:visible?)
+  end
+
+  def self.plugins_sorted_by_name(enabled_only: true)
+    if enabled_only
+      return visible_plugins.filter(&:enabled?).sort_by { |plugin| plugin.humanized_name.downcase }
+    end
+    visible_plugins.sort_by { |plugin| plugin.humanized_name.downcase }
   end
 
   def self.plugin_themes
@@ -606,15 +613,18 @@ module Discourse
     if SiteSetting.tos_url.present?
       SiteSetting.tos_url
     else
-      urls_cache["tos"] ||= (
+      return urls_cache["tos"] if urls_cache["tos"].present?
+
+      tos_url =
         if SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
           "#{Discourse.base_path}/tos"
-        else
-          :nil
         end
-      )
 
-      urls_cache["tos"] != :nil ? urls_cache["tos"] : nil
+      if tos_url
+        urls_cache["tos"] = tos_url
+      else
+        urls_cache.delete("tos")
+      end
     end
   end
 
@@ -622,15 +632,18 @@ module Discourse
     if SiteSetting.privacy_policy_url.present?
       SiteSetting.privacy_policy_url
     else
-      urls_cache["privacy_policy"] ||= (
+      return urls_cache["privacy_policy"] if urls_cache["privacy_policy"].present?
+
+      privacy_policy_url =
         if SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
           "#{Discourse.base_path}/privacy"
-        else
-          :nil
         end
-      )
 
-      urls_cache["privacy_policy"] != :nil ? urls_cache["privacy_policy"] : nil
+      if privacy_policy_url
+        urls_cache["privacy_policy"] = privacy_policy_url
+      else
+        urls_cache.delete("privacy_policy")
+      end
     end
   end
 

@@ -1,16 +1,16 @@
 import { visit } from "@ember/test-helpers";
-import I18n from "I18n";
 import { test } from "qunit";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import Site from "discourse/models/site";
+import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   exists,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import Site from "discourse/models/site";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 acceptance("Topic Discovery Tracked", function (needs) {
   needs.user({

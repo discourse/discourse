@@ -1,26 +1,20 @@
-import EmberRouter from "@ember/routing/router";
+import EmbroiderRouter from "@embroider/router";
 import Site from "discourse/models/site";
-import { defaultHomepage } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
-import { rewritePath } from "discourse/lib/url";
+import getURL from "discourse-common/lib/get-url";
+import applyRouterHomepageOverrides from "./lib/homepage-router-overrides";
 
-const BareRouter = EmberRouter.extend({
-  location: isTesting() ? "none" : "discourse-location",
+class BareRouter extends EmbroiderRouter {
+  location = isTesting() ? "none" : "history";
 
-  handleURL(url) {
-    url = rewritePath(url);
-    const params = url.split("?");
-
-    if (params[0] === "/" || params[0] === "") {
-      url = defaultHomepage();
-      if (params[1] && params[1].length) {
-        url = `${url}?${params[1]}`;
-      }
+  setupRouter() {
+    const didSetup = super.setupRouter(...arguments);
+    if (didSetup) {
+      applyRouterHomepageOverrides(this);
     }
-    return this._super(url);
-  },
-});
+    return didSetup;
+  }
+}
 
 // Ember's router can't be extended. We need to allow plugins to add routes to routes that were defined
 // in the core app. This class has the same API as Ember's `Router.map` but saves the results in a tree.
@@ -111,7 +105,7 @@ export function mapRoutes() {
   // will be built automatically. You can supply a `resource` property to
   // automatically put it in that resource, such as `admin`. That way plugins
   // can define admin routes.
-  Object.keys(requirejs._eak_seen).forEach(function (key) {
+  Object.keys(requirejs.entries).forEach(function (key) {
     if (/route-map$/.test(key)) {
       let module = requirejs(key, null, null, true);
       if (!module || !module.default) {

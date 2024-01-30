@@ -30,12 +30,15 @@ en_GB:
         date_year: "MMM 'YY"
       medium:
         date_year: "D MMM 'YY"
-    suggested_topics:
-      title: "Suggested Topics"
     review:
       types:
+        reviewable_flagged_post:
+          noun: "post"
+        reviewable_queued_post:
+          noun: "post"
         reviewable_post:
           title: "Post"
+          noun: "post"
     groups:
       manage:
         email:
@@ -109,7 +112,6 @@ en_GB:
       navigation:
         title: "Navigation"
     tagging:
-      description: "Description"
       manage_groups_description: "Define groups to organise tags"
     sidebar:
       sections:

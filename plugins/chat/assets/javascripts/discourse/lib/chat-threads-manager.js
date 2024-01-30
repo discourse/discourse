@@ -1,9 +1,9 @@
-import { inject as service } from "@ember/service";
+import { cached, tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
+import { TrackedMap, TrackedObject } from "@ember-compat/tracked-built-ins";
 import Promise from "rsvp";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
-import { cached, tracked } from "@glimmer/tracking";
-import { TrackedMap, TrackedObject } from "@ember-compat/tracked-built-ins";
 
 /*
   The ChatThreadsManager is responsible for managing the loaded chat threads

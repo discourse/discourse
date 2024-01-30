@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserBookmarkList do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:list) { UserBookmarkList.new(user: user, guardian: Guardian.new(user)) }
 
   before do

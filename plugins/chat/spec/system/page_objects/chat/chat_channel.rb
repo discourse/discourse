@@ -96,45 +96,9 @@ module PageObjects
         find(".more-buttons").click
       end
 
-      def flag_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='flag']").click
-      end
-
-      def copy_link(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='copyLink']").click
-      end
-
-      def flag_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='flag']").click
-      end
-
-      def delete_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='delete']").click
-      end
-
-      def restore_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='restore']").click
-      end
-
-      def open_edit_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='edit']").click
-      end
-
       def edit_message(message, text = nil)
-        open_edit_message(message)
-        send_message(message.message + text) if text
+        messages.edit(message)
+        send_message(message.message + " " + text) if text
       end
 
       def send_message(text = nil)
@@ -142,6 +106,7 @@ module PageObjects
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         composer.fill_in(with: text)
         click_send_message
+        expect(page).to have_no_css(".chat-message.-not-processed")
         text
       end
 
@@ -192,27 +157,6 @@ module PageObjects
         find(".chat-composer-dropdown__action-btn.#{action_button_class}").click
       end
 
-      def has_message?(text: nil, id: nil)
-        check_message_presence(exists: true, text: text, id: id)
-      end
-
-      def has_no_message?(text: nil, id: nil)
-        check_message_presence(exists: false, text: text, id: id)
-      end
-
-      def check_message_presence(exists: true, text: nil, id: nil)
-        css_method = exists ? :has_css? : :has_no_css?
-        if text
-          find(".chat-channel").send(css_method, ".chat-message-text", text: text, wait: 5)
-        elsif id
-          find(".chat-channel").send(
-            css_method,
-            ".chat-message-container[data-id=\"#{id}\"]",
-            wait: 10,
-          )
-        end
-      end
-
       def has_thread_indicator?(message)
         message_thread_indicator(message).exists?
       end
@@ -243,7 +187,7 @@ module PageObjects
       end
 
       def thread_list_button_selector
-        ".chat-threads-list-button"
+        ".c-navbar__threads-list-button"
       end
 
       private

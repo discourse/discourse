@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
-import Category from "discourse/models/category";
-import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import Category from "discourse/models/category";
 
 module("Unit | Model | category", function (hooks) {
   setupTest(hooks);
@@ -69,8 +69,6 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("findBySlug", function (assert) {
-    assert.expect(6);
-
     const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {
@@ -134,8 +132,6 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("findSingleBySlug", function (assert) {
-    assert.expect(6);
-
     const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {

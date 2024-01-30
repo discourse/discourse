@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ReportsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#bulk" do
     context "when logged in as an admin" do
@@ -169,7 +169,7 @@ RSpec.describe Admin::ReportsController do
       end
 
       describe "when report is scoped to a category" do
-        fab!(:category) { Fabricate(:category) }
+        fab!(:category)
         fab!(:topic) { Fabricate(:topic, category: category) }
         fab!(:other_topic) { Fabricate(:topic) }
 
@@ -186,9 +186,9 @@ RSpec.describe Admin::ReportsController do
       end
 
       describe "when report is scoped to a group" do
-        fab!(:user) { Fabricate(:user) }
+        fab!(:user)
         fab!(:other_user) { Fabricate(:user) }
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
 
         it "should render the report as JSON" do
           group.add(user)

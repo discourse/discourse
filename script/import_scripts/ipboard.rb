@@ -620,7 +620,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
           if DEBUG
             raw = "Gallery ID: #{last_id}\n" + clean_up(gallery["raw"])
             raw +=
-              "Cat: #{last_gallery["category"].to_s} - #{category_id_from_imported_category_id(last_gallery["category"].to_s + "gal")}"
+              "Cat: #{last_gallery["category"]} - #{category_id_from_imported_category_id(last_gallery["category"].to_s + "gal")}"
           end
           raw += "#{clean_up(images.first["description"])}\n"
           raw += "### #{gallery["caption"]}\n"
@@ -628,7 +628,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
           raw += "#{UPLOADS}/#{gallery["orig"]}\n"
           gallery_count += 1
           unless QUIET
-            puts "#{gallery_count}--Cat: #{last_gallery["category"].to_s} ==> #{category_id_from_imported_category_id(last_gallery["category"].to_s + "gal")}"
+            puts "#{gallery_count}--Cat: #{last_gallery["category"]} ==> #{category_id_from_imported_category_id(last_gallery["category"].to_s + "gal")}"
           end
           {
             id: "gallery#" + last_gallery["tid"].to_s + last_gallery["image_id"].to_s,

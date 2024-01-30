@@ -13,6 +13,7 @@ export default SingleSelectComponent.extend({
     caretDownIcon: "caret-down",
     showCaret: false,
     customStyle: null,
+    btnCustomClasses: null,
   },
 
   modifyComponentForRow() {

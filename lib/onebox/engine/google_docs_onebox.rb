@@ -22,7 +22,7 @@ module Onebox
         short_type = SHORT_TYPES[match[:endpoint].to_sym]
 
         description =
-          if Onebox::Helpers.blank?(og_data.description)
+          if og_data.description.blank?
             "This #{short_type.to_s.chop.capitalize} is private"
           else
             Onebox::Helpers.truncate(og_data.description, 250)

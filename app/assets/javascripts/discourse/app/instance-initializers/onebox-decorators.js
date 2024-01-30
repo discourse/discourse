@@ -40,14 +40,9 @@ function _cleanUp() {
 export default {
   initialize() {
     withPluginApi("0.8.42", (api) => {
-      api.decorateCookedElement(
-        (element) => {
-          decorateGithubOneboxBody(element);
-        },
-        {
-          id: "onebox-github-body",
-        }
-      );
+      api.decorateCookedElement((element) => {
+        decorateGithubOneboxBody(element);
+      });
 
       api.cleanupStream(_cleanUp);
     });

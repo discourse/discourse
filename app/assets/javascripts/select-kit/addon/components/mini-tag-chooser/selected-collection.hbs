@@ -4,10 +4,9 @@
       <DButton
         @translatedTitle={{tag.value}}
         @icon="times"
-        @action={{action this.selectKit.deselect}}
-        @actionParam={{tag.value}}
-        @class={{tag.classNames}}
-        @tabindex={{0}}
+        @action={{fn (action this.selectKit.deselect) tag.value}}
+        tabindex="0"
+        class={{tag.classNames}}
       >
         {{discourse-tag tag.value noHref=true}}
       </DButton>

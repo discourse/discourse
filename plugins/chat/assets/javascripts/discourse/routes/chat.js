@@ -1,14 +1,21 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
-import { defaultHomepage } from "discourse/lib/utilities";
-import { inject as service } from "@ember/service";
-import { scrollTop } from "discourse/mixins/scroll-top";
 import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { defaultHomepage } from "discourse/lib/utilities";
+import { scrollTop } from "discourse/mixins/scroll-top";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
+import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
+import {
+  CHAT_PANEL,
+  initSidebarState,
+} from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
 export default class ChatRoute extends DiscourseRoute {
   @service chat;
   @service router;
   @service chatStateManager;
+  @service currentUser;
 
   titleToken() {
     return I18n.t("chat.title_capitalized");
@@ -21,6 +28,9 @@ export default class ChatRoute extends DiscourseRoute {
 
     const INTERCEPTABLE_ROUTES = [
       "chat.channel",
+      "chat.direct-messages",
+      "chat.channels",
+      "chat.threads",
       "chat.channel.thread",
       "chat.channel.thread.index",
       "chat.channel.thread.near-message",
@@ -57,6 +67,21 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   activate() {
+    withPluginApi("1.8.0", (api) => {
+      api.setSidebarPanel(CHAT_PANEL);
+
+      const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
+        this.currentUser
+      );
+
+      if (chatSeparateSidebarMode.never) {
+        api.setCombinedSidebarMode();
+        api.hideSidebarSwitchPanelButtons();
+      } else {
+        api.setSeparatedSidebarMode();
+      }
+    });
+
     this.chatStateManager.storeAppURL();
     this.chat.updatePresence();
 
@@ -68,6 +93,10 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   deactivate(transition) {
+    withPluginApi("1.8.0", (api) => {
+      initSidebarState(api, this.currentUser);
+    });
+
     if (transition) {
       const url = this.router.urlFor(transition.from.name);
       this.chatStateManager.storeChatURL(url);

@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Session from "discourse/models/session";
+import { inject as service } from "@ember/service";
 
 export default class UserMenuItemsList extends Component {
+  @service session;
+
   @tracked loading = false;
   @tracked items = [];
 
@@ -67,14 +69,14 @@ export default class UserMenuItemsList extends Component {
   #getCachedItems() {
     const key = this.itemsCacheKey;
     if (key) {
-      return Session.currentProp(`user-menu-items:${key}`);
+      return this.session[`user-menu-items:${key}`];
     }
   }
 
   #setCachedItems(newItems) {
     const key = this.itemsCacheKey;
     if (key) {
-      Session.currentProp(`user-menu-items:${key}`, newItems);
+      this.session.set(`user-menu-items:${key}`, newItems);
     }
   }
 

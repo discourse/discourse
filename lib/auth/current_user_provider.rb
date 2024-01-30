@@ -2,6 +2,7 @@
 
 module Auth
 end
+
 class Auth::CurrentUserProvider
   # do all current user initialization here
   def initialize(env)

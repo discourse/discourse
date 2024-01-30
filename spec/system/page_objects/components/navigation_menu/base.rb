@@ -4,14 +4,32 @@ module PageObjects
   module Components
     module NavigationMenu
       class Base < PageObjects::Components::Base
-        def community_section
-          find(".sidebar-section[data-section-name='community']")
+        SIDEBAR_SECTION_LINK_SELECTOR = "sidebar-section-link"
+
+        def visible?
+          has_css?("#d-sidebar.sidebar-container")
         end
 
-        SIDEBAR_SECTION_LINK_SELECTOR = "sidebar-section-link"
+        def hidden?
+          has_no_css?("#d-sidebar.sidebar-container")
+        end
+
+        def community_section
+          find_section("community")
+        end
+
+        def find_section(name)
+          find(".sidebar-section[data-section-name='#{name}']")
+        end
 
         def click_section_link(name)
           find(".#{SIDEBAR_SECTION_LINK_SELECTOR}", text: name).click
+        end
+
+        def click_link_in_section(section_name, link_name)
+          find_section(section_name.parameterize).find(
+            ".#{SIDEBAR_SECTION_LINK_SELECTOR}[data-link-name=\"#{link_name.parameterize}\"]",
+          ).click
         end
 
         def has_one_active_section_link?
@@ -32,6 +50,30 @@ module PageObjects
 
         def has_no_section?(name)
           has_no_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
+        end
+
+        def switch_to_chat
+          find(".sidebar__panel-switch-button[data-key='chat']").click
+        end
+
+        def switch_to_main
+          find(".sidebar__panel-switch-button[data-key='main']").click
+        end
+
+        def has_switch_button?(key = nil)
+          if key
+            page.has_css?(".sidebar__panel-switch-button[data-key='#{key.parameterize}']")
+          else
+            page.has_css?(".sidebar__panel-switch-button")
+          end
+        end
+
+        def has_no_switch_button?(key = nil)
+          if key
+            page.has_no_css?(".sidebar__panel-switch-button[data-key='#{key.parameterize}']")
+          else
+            page.has_no_css?(".sidebar__panel-switch-button")
+          end
         end
 
         def has_categories_section?

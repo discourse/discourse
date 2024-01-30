@@ -7,11 +7,19 @@
 ro:
   js:
     admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Întotdeauna"
+          never: "Niciodată"
       logs:
         staff_actions:
           actions:
             chat_auto_remove_membership: "Membrii sunt eliminați automat din canale"
     chat:
+      back_to_forum: "Forum"
+      deleted_chat_username: șters
+      dates:
+        yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulare"
       move_to_channel:
@@ -22,11 +30,13 @@ ro:
       channel_settings:
         edit: "Modifică"
         add: "Adaugă"
+        leave_groupchat_info: "Dacă părăsești această discuție de grup, nu vei mai avea acces la ea și nu vei mai primi notificări legate de ea. Pentru a reveni, va trebui să te re-invite un membru al discuției de grup."
         join: "Alătură-te"
         leave: "Părăsește"
       channel_delete:
         instructions: "<p>Șterge canalul <strong>%{name}</strong> și istoricul de chat. Toate mesajele și datele asociate, cum ar fi reacțiile și încărcările, vor fi șterse permanent. Dacă doriți să păstrați istoricul canalului și să-l decomisionați, s-ar putea să doriți să arhivați canalul în schimb.</p> <p>Sunteți sigur că doriți să ștergeți <strong>permanent</strong> canalul? Pentru a confirma, tastați numele canalului în caseta de mai jos.</p>"
       close: "Închide sondajul"
+      remove: "Elimină"
       expand: "Extinde sertarul de chat"
       delete: "Șterge"
       muted: "silențios"
@@ -46,19 +56,6 @@ ro:
         description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
         summarize: "Rezumat"
       mention_warning:
-        dismiss: "renunță"
-        cannot_see: "%{username} nu poate accesa acest canal și nu a fost notificat."
-        without_membership: "%{username} nu s-a alăturat acestui canal."
-        without_membership_multiple:
-          one: "%{username} și încă %{count} utilizator nu s-au alăturat acestui canal."
-          few: "%{username} și alți %{count} utilizatori nu s-au alăturat acestui canal."
-          other: "%{username} și alți %{count} utilizatori nu s-au alăturat acestui canal."
-        group_mentions_disabled: "%{group_name} nu permite mențiuni."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} și %{count} alt grup nu permit mențiuni."
-          few: "%{group_name} și %{count} alte grupuri nu permit mențiuni."
-          other: "%{group_name} și %{count} alte grupuri nu permit mențiuni."
-        too_many_members: "%{group_name} are prea mulți membri. Nimeni nu a fost anunțat."
         groups:
           unreachable_1: "@%{group} nu permite mențiuni."
           unreachable_multiple:
@@ -71,6 +68,8 @@ ro:
       bookmark_message: "Semn de carte"
       bookmark_message_edit: "Editați marcajul"
       save: "Salvare"
+      return_to_channel: "Revino la canal"
+      return_to_threads_list: "Revino la lista de fire"
       sounds:
         none: "Nimeni"
       exit: "înapoi"
@@ -84,6 +83,9 @@ ro:
       chat_message_separator:
         today: Astăzi
         yesterday: Ieri
+      members_view:
+        add_member: Adaugă membru
+        back_to_settings: "Înapoi la setări"
       about_view:
         title: Titlu
         name: Nume
@@ -91,21 +93,50 @@ ro:
       channel_info:
         back_to_channel: "Înapoi"
         tabs:
-          about: Despre
           members: Membri
           settings: Opțiuni
+      new_message_modal:
+        user_search_placeholder: "...adaugă mai mulți membri"
+        create_group_placeholder: "Nume grup discuție (opțional)"
+        participants_counter: "%{selection_count}/%{max} participanți"
+        new_group_chat: "Grup nou de discuție"
+        filter: "Filtru"
+        cant_add_more_members: "Numărul maxim de membri a fost atins"
+        create_new_group_chat: "Creează grup de discuție"
       direct_message_creator:
+        add_to_channel: "Adaugă la canal"
         title: Mesaj nou
         prefix: "Către:"
+        group_name: "Nume grup discuție (opțional)"
+        members_counter:
+          one: "%{count}/%{max} membru"
+          few: "%{count}/%{max} membri"
+          other: "%{count}/%{max} de membri"
       create_channel:
         type: "Tip"
         types:
           category: "Categorie"
           topic: "Discuție"
+      reactions:
+        only_you: "<span>Ai reacționat cu </span>:%{emoji}:"
+        you_and_single_user: "<span>Tu și %{username} ați reacționat cu </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Tu, %{commaSeparatedUsernames} și %{username} ați reacționat cu </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+          few: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+          other: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+        single_user: "<span>%{username} a reacționat cu </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} și %{username} au reacționat cu </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
       composer:
         italic_text: "text italic"
         bold_text: "text aldin"
         send: "Trimite"
+      quote:
+        default_thread_title: "Fir"
       notification_levels:
         never: "Niciodată"
       settings:
@@ -119,6 +150,12 @@ ro:
         saved: "Salvat"
         unfollow: "Părăsește"
         admin_title: "Administrator"
+        settings_title: "Opțiuni"
+        category_label: "Categorie"
+        history_label: "Istoric"
+        members_label: "Membri"
+      direct_messages:
+        close: "Închide această conversație personală"
       incoming_webhooks:
         back: "Înapoi"
         description: "Descriere"
@@ -137,12 +174,16 @@ ro:
           title: "Mutare în subiect nou."
         existing_topic:
           title: "Mută în subiect deja existent"
+      retention_reminders:
+        short:
+          one: "%{count} zi"
+          few: "%{count} zile"
+          other: "%{count} de zile"
       emoji_picker:
         objects: "Obiecte"
         flags: "Marcaje de avertizare"
       thread:
         title: "Titlu"
-        default_title: "Fir"
         replies:
           one: "%{count} răspuns"
           few: "%{count} răspunsuri"
@@ -155,6 +196,8 @@ ro:
             title: "Normal"
           tracking:
             title: "Urmărire"
+      threads:
+        list: "Fire"
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulare"
@@ -166,3 +209,7 @@ ro:
           fields:
             message:
               label: Mesaj
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Mesaj discuție semnalat"

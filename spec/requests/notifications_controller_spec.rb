@@ -32,7 +32,10 @@ RSpec.describe NotificationsController do
   context "when logged in" do
     context "as normal user" do
       fab!(:user) { sign_in(Fabricate(:user)) }
-      fab!(:notification) { Fabricate(:notification, user: user) }
+      fab!(:acting_user) { Fabricate(:user) }
+      fab!(:notification) do
+        Fabricate(:notification, user: user, data: { username: acting_user.username }.to_json)
+      end
 
       describe "#index" do
         it "should succeed for recent" do
@@ -90,10 +93,32 @@ RSpec.describe NotificationsController do
         describe "when limit params is invalid" do
           include_examples "invalid limit params",
                            "/notifications.json",
-                           described_class::INDEX_LIMIT,
+                           described_class::INDEX_LIMIT + 1,
                            params: {
                              recent: true,
                            }
+        end
+
+        it "respects limit param and properly bumps offset for load_more_notifications URL" do
+          7.times { notification = Fabricate(:notification, user: user) }
+
+          get "/notifications.json", params: { username: user.username, limit: 2 }
+          expect(response.parsed_body["notifications"].count).to eq(2)
+          expect(response.parsed_body["load_more_notifications"]).to eq(
+            "/notifications?limit=2&offset=2&username=#{user.username}",
+          )
+
+          # Same as response above but we need .json added before query params.
+          get "/notifications.json?limit=2&offset=2&username=#{user.username}"
+          expect(response.parsed_body["load_more_notifications"]).to eq(
+            "/notifications?limit=2&offset=4&username=#{user.username}",
+          )
+
+          # We are seeing that the offset is increasing properly and limit is staying the same
+          get "/notifications.json?limit=2&offset=4&username=#{user.username}"
+          expect(response.parsed_body["load_more_notifications"]).to eq(
+            "/notifications?limit=2&offset=6&username=#{user.username}",
+          )
         end
 
         it "get notifications with all filters" do
@@ -389,12 +414,6 @@ RSpec.describe NotificationsController do
               get "/notifications.json", params: { recent: true }
               expect(response.status).to eq(200)
               expect_correct_notifications(response)
-
-              SiteSetting.navigation_menu = "legacy"
-
-              get "/notifications.json", params: { recent: true }
-              expect(response.status).to eq(200)
-              expect_correct_notifications(response)
             end
           end
 
@@ -405,12 +424,20 @@ RSpec.describe NotificationsController do
               get "/notifications.json"
               expect(response.status).to eq(200)
               expect_correct_notifications(response)
+            end
+          end
+        end
 
-              SiteSetting.navigation_menu = "legacy"
+        context "with `show_user_menu_avatars` setting enabled" do
+          before { SiteSetting.show_user_menu_avatars = true }
 
-              get "/notifications.json"
-              expect(response.status).to eq(200)
-              expect_correct_notifications(response)
+          it "serializes acting_user_avatar_template into notifications" do
+            get "/notifications.json"
+
+            notifications = response.parsed_body["notifications"]
+            expect(notifications).not_to be_empty
+            notifications.each do |notification|
+              expect(notification["acting_user_avatar_template"]).to be_present
             end
           end
         end

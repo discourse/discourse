@@ -1,7 +1,7 @@
-import { ajax } from "discourse/lib/ajax";
 import { tracked } from "@glimmer/tracking";
-import { bind } from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { bind } from "discourse-common/utils/decorators";
 
 /**
  * Handles a paginated API response.
@@ -12,9 +12,10 @@ export default class Collection {
   @tracked loading = false;
   @tracked fetchedOnce = false;
 
-  constructor(resourceURL, handler) {
+  constructor(resourceURL, handler, params = {}) {
     this._resourceURL = resourceURL;
     this._handler = handler;
+    this._params = params;
     this._fetchedAll = false;
   }
 
@@ -94,6 +95,6 @@ export default class Collection {
   }
 
   #fetch(url) {
-    return ajax(url, { type: "GET" });
+    return ajax(url, { type: "GET", data: this._params });
   }
 }

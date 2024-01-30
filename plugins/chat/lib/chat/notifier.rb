@@ -83,9 +83,15 @@ module Chat
 
     def notify_edit
       already_notified_user_ids =
-        Chat::Mention
-          .where(chat_message: @chat_message)
-          .where.not(notification: nil)
+        Notification
+          .where(notification_type: Notification.types[:chat_mention])
+          .joins(
+            "INNER JOIN chat_mention_notifications ON chat_mention_notifications.notification_id = notifications.id",
+          )
+          .joins(
+            "INNER JOIN chat_mentions ON chat_mentions.id = chat_mention_notifications.chat_mention_id",
+          )
+          .where("chat_mentions.chat_message_id = ?", @chat_message.id)
           .pluck(:user_id)
 
       to_notify, inaccessible, all_mentioned_user_ids = list_users_to_notify
@@ -198,7 +204,6 @@ module Chat
         @parsed_mentions
           .group_mentions
           .not_suspended
-          .where("user_count <= ?", SiteSetting.max_users_notified_per_group_mention)
           .where.not(username_lower: @user.username_lower)
           .where.not(id: already_covered_ids)
 
@@ -225,21 +230,107 @@ module Chat
     end
 
     def notify_creator_of_inaccessible_mentions(inaccessible)
-      group_mentions_disabled = @parsed_mentions.groups_with_disabled_mentions.to_a
-      too_many_members = @parsed_mentions.groups_with_too_many_members.to_a
-      if inaccessible.values.all?(&:blank?) && group_mentions_disabled.empty? &&
-           too_many_members.empty?
-        return
+      # Notify when mentioned users can join channel, but don't have a membership
+      if inaccessible[:welcome_to_join].any?
+        publish_inaccessible_mentions(inaccessible[:welcome_to_join])
       end
 
-      Chat::Publisher.publish_inaccessible_mentions(
-        @user.id,
-        @chat_message,
-        inaccessible[:unreachable].to_a,
-        inaccessible[:welcome_to_join].to_a,
-        too_many_members,
-        group_mentions_disabled,
+      # Notify when mentioned users are not able to access the channel
+      publish_unreachable_mentions(inaccessible[:unreachable]) if inaccessible[:unreachable].any?
+
+      # Notify when `@all` or `@here` is used when channel has global mentions disabled
+      publish_global_mentions_disabled if global_mentions_disabled
+
+      # Notify when groups are mentioned and have mentions disabled
+      group_mentions_disabled = @parsed_mentions.groups_with_disabled_mentions.to_a
+      publish_group_mentions_disabled(group_mentions_disabled) if group_mentions_disabled.any?
+
+      # Notify when large groups are mentioned, exceeding `max_users_notified_per_group_mention`
+      too_many_members = @parsed_mentions.groups_with_too_many_members.to_a
+      publish_too_many_members_in_group_mention(too_many_members) if too_many_members.any?
+    end
+
+    def publish_inaccessible_mentions(users)
+      Chat::Publisher.publish_notice(
+        user_id: @user.id,
+        channel_id: @chat_channel.id,
+        type: "mention_without_membership",
+        data: {
+          user_ids: users.map(&:id),
+          text:
+            mention_warning_text(
+              single: "chat.mention_warning.without_membership",
+              multiple: "chat.mention_warning.without_membership_multiple",
+              first_identifier: users.first.username,
+              count: users.count,
+            ),
+          message_id: @chat_message.id,
+        },
       )
+    end
+
+    def publish_group_mentions_disabled(groups)
+      Chat::Publisher.publish_notice(
+        user_id: @user.id,
+        channel_id: @chat_channel.id,
+        text_content:
+          mention_warning_text(
+            single: "chat.mention_warning.group_mentions_disabled",
+            multiple: "chat.mention_warning.group_mentions_disabled_multiple",
+            first_identifier: groups.first.name,
+            count: groups.count,
+          ),
+      )
+    end
+
+    def publish_global_mentions_disabled
+      Chat::Publisher.publish_notice(
+        user_id: @user.id,
+        channel_id: @chat_channel.id,
+        text_content: I18n.t("chat.mention_warning.global_mentions_disallowed"),
+      )
+    end
+
+    def publish_unreachable_mentions(users)
+      Chat::Publisher.publish_notice(
+        user_id: @user.id,
+        channel_id: @chat_channel.id,
+        text_content:
+          mention_warning_text(
+            single: "chat.mention_warning.cannot_see",
+            multiple: "chat.mention_warning.cannot_see_multiple",
+            first_identifier: users.first.username,
+            count: users.count,
+          ),
+      )
+    end
+
+    def publish_too_many_members_in_group_mention(groups)
+      Chat::Publisher.publish_notice(
+        user_id: @user.id,
+        channel_id: @chat_channel.id,
+        text_content:
+          mention_warning_text(
+            single: "chat.mention_warning.too_many_members",
+            multiple: "chat.mention_warning.too_many_members_multiple",
+            first_identifier: groups.first.name,
+            count: groups.count,
+          ),
+      )
+    end
+
+    def mention_warning_text(single:, multiple:, first_identifier:, count:)
+      translation_key = count == 1 ? single : multiple
+      I18n.t(translation_key, first_identifier: first_identifier, count: count - 1)
+    end
+
+    def global_mentions_disabled
+      return @global_mentions_disabled if defined?(@global_mentions_disabled)
+
+      @global_mentions_disabled =
+        (@parsed_mentions.has_global_mention || @parsed_mentions.has_here_mention) &&
+          !@chat_channel.allow_channel_wide_mentions
+      @global_mentions_disabled
     end
 
     # Filters out users from global, here, group, and direct mentions that are
@@ -273,7 +364,7 @@ module Chat
           chat_message_id: @chat_message.id,
           to_notify_ids_map: to_notify.as_json,
           already_notified_user_ids: already_notified_user_ids,
-          timestamp: @timestamp,
+          timestamp: @timestamp.to_s,
         },
       )
     end
@@ -281,7 +372,7 @@ module Chat
     def notify_watching_users(except: [])
       Jobs.enqueue(
         Jobs::Chat::NotifyWatching,
-        { chat_message_id: @chat_message.id, except_user_ids: except, timestamp: @timestamp },
+        { chat_message_id: @chat_message.id, except_user_ids: except, timestamp: @timestamp.to_s },
       )
     end
   end

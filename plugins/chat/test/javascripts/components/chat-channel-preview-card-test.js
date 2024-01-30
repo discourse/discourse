@@ -1,8 +1,8 @@
+import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import { render } from "@ember/test-helpers";
-import { module, test } from "qunit";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -24,13 +24,13 @@ module(
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
       assert.strictEqual(
-        query(".chat-channel-title__name").innerText,
+        query(".chat-channel-name__label").innerText,
         this.channel.title,
         "it shows the channel title"
       );
 
       assert.true(
-        exists(query(".chat-channel-title__category-badge")),
+        exists(query(".chat-channel-icon.--category-badge")),
         "it shows the category hashtag badge"
       );
     });

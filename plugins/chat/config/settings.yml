@@ -12,6 +12,10 @@ chat:
     default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
+  chat_threads_enabled:
+    client: true
+    default: false
+    hidden: true
   needs_chat_seeded:
     default: true
     hidden: true
@@ -116,3 +120,23 @@ chat:
   max_chat_draft_length:
     default: 50_000
     hidden: true
+  chat_separate_sidebar_mode:
+    client: true
+    default: "never"
+    type: enum
+    enum: "Chat::SeparateSidebarModeSiteSetting"
+  chat_editing_grace_period:
+    client: true
+    type: integer
+    default: 30
+    min: 0
+  chat_editing_grace_period_max_diff_low_trust:
+    client: true
+    type: integer
+    default: 10
+    min: 0
+  chat_editing_grace_period_max_diff_high_trust:
+    client: true
+    type: integer
+    default: 40
+    min: 0

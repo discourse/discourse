@@ -13,6 +13,14 @@ module PageObjects
         find(@context)
       end
 
+      def visible?
+        has_css?(@context)
+      end
+
+      def hidden?
+        has_no_css?(@context)
+      end
+
       def expanded_component
         expand_if_needed
         find(@context + ".is-expanded")
@@ -28,6 +36,10 @@ module PageObjects
 
       def is_collapsed?
         has_css?(context + ":not(.is-expanded)", wait: 0)
+      end
+
+      def is_not_disabled?
+        has_css?(@context + ":not(.disabled)", wait: 0)
       end
 
       def has_selected_value?(value)

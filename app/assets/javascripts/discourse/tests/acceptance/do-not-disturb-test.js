@@ -1,3 +1,6 @@
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import DoNotDisturb from "discourse/lib/do-not-disturb";
 import {
   acceptance,
   count,
@@ -6,9 +9,6 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import DoNotDisturb from "discourse/lib/do-not-disturb";
 
 acceptance("Do not disturb", function (needs) {
   needs.pretender((server, helper) => {

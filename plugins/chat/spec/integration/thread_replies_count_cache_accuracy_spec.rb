@@ -3,10 +3,16 @@
 RSpec.describe "Chat::Thread replies_count cache accuracy" do
   include ActiveSupport::Testing::TimeHelpers
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:thread) { Fabricate(:chat_thread) }
 
-  before { SiteSetting.chat_enabled = true }
+  let(:guardian) { user.guardian }
+
+  before do
+    SiteSetting.chat_enabled = true
+    thread.add(user)
+    thread.channel.add(user)
+  end
 
   it "keeps an accurate replies_count cache" do
     freeze_time
@@ -17,26 +23,26 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
 
     # Create 5 replies
     5.times do |i|
-      Chat::MessageCreator.create(
-        chat_channel: thread.channel,
-        user: user,
+      Chat::CreateMessage.call(
+        chat_channel_id: thread.channel_id,
+        guardian: guardian,
         thread_id: thread.id,
-        content: "Hello world #{i}",
+        message: "Hello world #{i}",
       )
     end
 
     # The job only runs to completion if the cache has not been recently
     # updated, so the DB count will only be 1.
-    expect(thread.replies_count_cache).to eq(5)
+    expect(thread.reload.replies_count_cache).to eq(5)
     expect(thread.reload.replies_count).to eq(1)
 
     # Travel to the future so the cache expires.
     travel_to 6.minutes.from_now
-    Chat::MessageCreator.create(
-      chat_channel: thread.channel,
-      user: user,
+    Chat::CreateMessage.call(
+      chat_channel_id: thread.channel_id,
+      guardian: guardian,
       thread_id: thread.id,
-      content: "Hello world now that time has passed",
+      message: "Hello world now that time has passed",
     )
     expect(thread.replies_count_cache).to eq(6)
     expect(thread.reload.replies_count).to eq(6)
@@ -44,21 +50,14 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
     # Lose the cache intentionally.
     Chat::Thread.clear_caches!(thread.id)
     message_to_destroy = thread.last_message
-    Chat::TrashMessage.call(
-      message_id: message_to_destroy.id,
-      channel_id: thread.channel_id,
-      guardian: Guardian.new(user),
-    )
+    trash_message!(message_to_destroy, user: guardian.user)
     expect(thread.replies_count_cache).to eq(5)
     expect(thread.reload.replies_count).to eq(5)
 
     # Lose the cache intentionally.
     Chat::Thread.clear_caches!(thread.id)
-    Chat::RestoreMessage.call(
-      message_id: message_to_destroy.id,
-      channel_id: thread.channel_id,
-      guardian: Guardian.new(user),
-    )
+
+    restore_message!(message_to_destroy, user: guardian.user)
     expect(thread.replies_count_cache).to eq(6)
     expect(thread.reload.replies_count).to eq(6)
   end

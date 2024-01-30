@@ -1,7 +1,10 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import SuffixTrie from "discourse-common/lib/suffix-trie";
 
-module("Unit | SuffixTrie", function () {
+module("Unit | SuffixTrie", function (hooks) {
+  setupTest(hooks);
+
   test("SuffixTrie", function (assert) {
     const t = new SuffixTrie("/");
     t.add("a/b/c/d");

@@ -10,8 +10,8 @@ import {
   register as registerPushNotifications,
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
-import { isTesting } from "discourse-common/config/environment";
 import Notification from "discourse/models/notification";
+import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 
 export default {
@@ -30,7 +30,7 @@ export default {
     this.appEvents = owner.lookup("service:app-events");
     this.siteSettings = owner.lookup("service:site-settings");
     this.site = owner.lookup("service:site");
-    this.router = owner.lookup("router:main");
+    this.router = owner.lookup("service:router");
 
     this.reviewableCountsChannel = `/reviewable_counts/${this.currentUser.id}`;
 

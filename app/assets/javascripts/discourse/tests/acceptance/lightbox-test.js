@@ -1,8 +1,8 @@
 import { click, visit } from "@ember/test-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
+import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Lightbox", function (needs) {
   needs.user();

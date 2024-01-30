@@ -5,15 +5,21 @@
 # https://translate.discourse.org/
 
 lt:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Pokalbis
-    about:
-      chat_messages_count: "Pokalbių žinutės"
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Visada"
+          never: "Niekada"
     chat:
+      deleted_chat_username: ištrintas
       dates:
+        yesterday: "Vakar"
         time_tiny: "h:mm"
       bot: "botas"
       create: "Sukurti"
@@ -28,6 +34,7 @@ lt:
       channels_list_popup:
         browse: "Naršyti kanalus"
       close: "Uždaryti"
+      remove: "Pašalinti"
       delete: "Pašalinti"
       edited: "taisytas"
       muted: "nutyldita"
@@ -42,8 +49,6 @@ lt:
       last_visit: "paskutinis apsilankymas"
       summarization:
         summarize: "Apibendrinti"
-      mention_warning:
-        dismiss: "praleisti"
       reply: "Atsakyti"
       edit: "Redaguoti"
       rebake_message: "Perkurti HTML"
@@ -72,11 +77,11 @@ lt:
       channel_info:
         back_to_channel: "Atgal"
         tabs:
-          about: Apie
           members: Nariai
           settings: Nustatymai
       new_message_modal:
         no_items: "Nėra elementų"
+        filter: "Filtruoti"
       direct_message_creator:
         title: Nauja žinutė
         prefix: "Kam:"
@@ -102,6 +107,10 @@ lt:
         saved: "Išsaugota"
         unfollow: "Palikti"
         admin_title: "Administratorius"
+        settings_title: "Nustatymai"
+        category_label: "Kategorija"
+        history_label: "Istorija"
+        members_label: "Nariai"
       admin:
         title: "Pokalbis"
       incoming_webhooks:
@@ -124,6 +133,12 @@ lt:
           title: "Perkelti į esamą temą"
         new_message:
           title: "Pereiti prie naujos žinutės"
+      retention_reminders:
+        short:
+          one: "%{count} diena"
+          few: "%{count} dienos"
+          many: "%{count} dienų"
+          other: "%{count} dienų"
       emoji_picker:
         objects: "Objektai"
         activities: "Veikla"
@@ -166,3 +181,7 @@ lt:
       sections:
         chat:
           title: Pokalbis
+    sidebar:
+      panels:
+        chat:
+          label: "Pokalbis"

@@ -50,6 +50,10 @@ et:
   remove_posts_deleted_by_author: "Autori poolt kustutatud"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "postituse nr%{post_number} tegi %{username}"
+  components:
+    enabled_filter: "Sisse lülitatud"
+    disabled_filter: "Välja lülitatud"
+    updates_available_filter: "Uuendused on saadaval"
   emails:
     incoming:
       default_subject: "See teema vajab pealkirja"
@@ -150,7 +154,6 @@ et:
     more_replies:
       one: "veel %{count} vastus"
       other: "veel %{count} vastust"
-    loading: "Laen arutelu..."
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
@@ -263,8 +266,6 @@ et:
               same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
               same_as_current: "ühtib sinu hetkel kehtiva parooliga."
               unique_characters: "sisaldab liiga palju korduvaid tähemärke. Palun kasuta turvalisemat parooli."
-            ip_address:
-              signup_not_allowed: "Sellelt kontolt pole liitumine lubatud."
         color_scheme_color:
           attributes:
             hex:
@@ -414,8 +415,6 @@ et:
       windows: "Microsoft Windows"
       unknown: "tundmatu operatsioonisüsteem"
   change_email:
-    confirmed: "Sinu meiliaadress on uuendatud."
-    please_continue: "Edasi saidile %{site_name}"
     error: "Sinu meiliaadressi muutmisel esines tõrge. Äkki on see juba kasutuses?"
     error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."
     already_done: "Vabandust, see kinnitamise link ei kehti enam. Äkki on teie meiliaadress juba muudetud?"
@@ -721,7 +720,6 @@ et:
     host_names_warning: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
   site_settings:
     disabled: "välja lülitatud"
-    min_post_length: "Lühim lubatud postituse pikkus"
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
@@ -1028,6 +1026,9 @@ et:
         title: "Kutsu meeskonda"
       finished:
         title: "Sinu Discourse on valmis!"
+  onebox:
+    github:
+      closed: "suletud"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
@@ -1063,7 +1064,6 @@ et:
       approve_user:
         title: "Kiida kasutaja heaks"
       reject_user:
-        title: "Kustuta kasutaja..."
         delete:
           title: "Kustuta kasutaja"
       reject:

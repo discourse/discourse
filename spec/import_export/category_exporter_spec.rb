@@ -3,9 +3,9 @@
 require "import_export"
 
 RSpec.describe ImportExport::CategoryExporter do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:group) { Fabricate(:group) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:category)
+  fab!(:group)
+  fab!(:user)
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }
 

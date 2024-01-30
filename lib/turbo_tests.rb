@@ -63,10 +63,11 @@ module TurboTests
       :metadata,
       :location_rerun_argument,
       :process_id,
+      :command_string,
     )
 
   class FakeExample
-    def self.from_obj(obj, process_id)
+    def self.from_obj(obj, process_id:, command_string:)
       obj = obj.symbolize_keys
       metadata = obj[:metadata].symbolize_keys
 
@@ -86,6 +87,7 @@ module TurboTests
         metadata,
         obj[:location_rerun_argument],
         process_id,
+        command_string,
       )
     end
 

@@ -1,4 +1,5 @@
 import EmberObject from "@ember/object";
+import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 

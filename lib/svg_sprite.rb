@@ -19,6 +19,7 @@ module SvgSprite
         archive
         arrow-down
         arrow-left
+        arrow-right
         arrow-up
         arrows-alt-h
         arrows-alt-v
@@ -34,6 +35,7 @@ module SvgSprite
         book
         book-reader
         bookmark
+        bookmark-delete
         briefcase
         bullseye
         calendar-alt
@@ -72,6 +74,7 @@ module SvgSprite
         discourse-emojis
         discourse-expand
         discourse-other-tab
+        discourse-sparkles
         discourse-threads
         download
         ellipsis-h
@@ -169,6 +172,7 @@ module SvgSprite
         mobile-alt
         moon
         paint-brush
+        palette
         paper-plane
         pause
         pencil-alt
@@ -243,7 +247,7 @@ module SvgSprite
 
   THEME_SPRITE_VAR_NAME = "icons-sprite"
 
-  MAX_THEME_SPRITE_SIZE = 512.kilobytes
+  MAX_THEME_SPRITE_SIZE = 1024.kilobytes
 
   def self.preload
     settings_icons

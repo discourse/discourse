@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
-import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminReportsShowRoute extends DiscourseRoute {
   @service router;

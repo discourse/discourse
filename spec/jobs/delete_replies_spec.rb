@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::DeleteReplies do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:topic_timer) do
     Fabricate(
       :topic_timer,
@@ -20,7 +20,7 @@ RSpec.describe Jobs::DeleteReplies do
   it "can delete replies of a topic" do
     SiteSetting.skip_auto_delete_reply_likes = 0
 
-    freeze_time (2.days.from_now)
+    freeze_time(2.days.from_now)
 
     expect { described_class.new.execute(topic_timer_id: topic_timer.id) }.to change {
       topic.posts.count
@@ -33,7 +33,7 @@ RSpec.describe Jobs::DeleteReplies do
   it "does not delete posts with likes over the threshold" do
     SiteSetting.skip_auto_delete_reply_likes = 3
 
-    freeze_time (2.days.from_now)
+    freeze_time(2.days.from_now)
 
     topic.posts.last.update!(like_count: SiteSetting.skip_auto_delete_reply_likes + 1)
 

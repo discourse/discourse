@@ -24,24 +24,27 @@
                   </a>
 
                   {{#if this.model.description}}
-                    {{#if this.model.description_link}}
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href={{this.model.description_link}}
-                        class="info"
-                        data-tooltip={{this.model.description}}
-                      >
+                    <DTooltip
+                      @interactive={{this.model.description_link.length}}
+                    >
+                      <:trigger>
                         {{d-icon "question-circle"}}
-                      </a>
-                    {{else}}
-                      <span
-                        class="info"
-                        data-tooltip={{this.model.description}}
-                      >
-                        {{d-icon "question-circle"}}
-                      </span>
-                    {{/if}}
+                      </:trigger>
+                      <:content>
+                        {{#if this.model.description_link}}
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={{this.model.description_link}}
+                            class="info"
+                          >
+                            {{this.model.description}}
+                          </a>
+                        {{else}}
+                          <span>{{this.model.description}}</span>
+                        {{/if}}
+                      </:content>
+                    </DTooltip>
                   {{/if}}
                 </li>
               {{/unless}}
@@ -143,10 +146,9 @@
               <div class="modes">
                 {{#each this.displayedModes as |displayedMode|}}
                   <DButton
-                    @action={{action "onChangeMode"}}
-                    @actionParam={{displayedMode.mode}}
-                    @class={{displayedMode.cssClass}}
+                    @action={{fn this.onChangeMode displayedMode.mode}}
                     @icon={{displayedMode.icon}}
+                    class={{displayedMode.cssClass}}
                   />
                 {{/each}}
               </div>
@@ -162,9 +164,9 @@
                 {{#each this.chartGroupings as |chartGrouping|}}
                   <DButton
                     @label={{chartGrouping.label}}
-                    @action={{action "changeGrouping" chartGrouping.id}}
-                    @class={{chartGrouping.class}}
+                    @action={{fn this.changeGrouping chartGrouping.id}}
                     @disabled={{chartGrouping.disabled}}
+                    class={{chartGrouping.class}}
                   />
                 {{/each}}
               </div>
@@ -180,7 +182,7 @@
                   <DateTimeInputRange
                     @from={{this.startDate}}
                     @to={{this.endDate}}
-                    @onChange={{action "onChangeDateRange"}}
+                    @onChange={{this.onChangeDateRange}}
                     @showFromTime={{false}}
                     @showToTime={{false}}
                   />
@@ -203,7 +205,7 @@
                     (concat "report-filters/" filter.type)
                     model=this.model
                     filter=filter
-                    applyFilter=(action "applyFilter")
+                    applyFilter=this.applyFilter
                   }}
                 </div>
               </div>
@@ -212,10 +214,10 @@
             <div class="control">
               <div class="input">
                 <DButton
-                  @class="btn-default export-csv-btn"
-                  @action={{action "exportCsv"}}
+                  @action={{this.exportCsv}}
                   @label="admin.export_csv.button_text"
                   @icon="download"
+                  class="btn-default export-csv-btn"
                 />
               </div>
             </div>
@@ -224,10 +226,10 @@
               <div class="control">
                 <div class="input">
                   <DButton
-                    @class="refresh-report-btn btn-primary"
-                    @action={{action "refreshReport"}}
+                    @action={{this.refreshReport}}
                     @label="admin.dashboard.reports.refresh_report"
                     @icon="sync"
+                    class="refresh-report-btn btn-primary"
                   />
                 </div>
               </div>

@@ -1,12 +1,9 @@
-import { autoUpdatingRelativeAge, durationTiny } from "discourse/lib/formatter";
 import { htmlSafe } from "@ember/template";
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
-registerUnbound("format-age", function (dt) {
+registerRawHelper("format-age", formatAge);
+export default function formatAge(dt) {
   dt = new Date(dt);
   return htmlSafe(autoUpdatingRelativeAge(dt));
-});
-
-registerUnbound("format-duration", function (seconds) {
-  return htmlSafe(durationTiny(seconds));
-});
+}

@@ -3,8 +3,10 @@
 RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:current_user) { Fabricate(:admin) }
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
-  fab!(:thread_1) { Fabricate(:chat_message, user: current_user, in_reply_to: message_1).thread }
+  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
+  fab!(:thread_1) do
+    Fabricate(:chat_message, user: current_user, in_reply_to: message_1, use_service: true).thread
+  end
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
@@ -32,7 +34,7 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
     let(:last_thread_message) { thread_1.replies.last }
 
     context "when there are editable messages" do
-      before { Fabricate(:chat_message, user: current_user, thread: thread_1) }
+      before { Fabricate(:chat_message, user: current_user, thread: thread_1, use_service: true) }
 
       it "starts editing the last editable message" do
         chat_page.visit_thread(thread_1)

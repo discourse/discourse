@@ -1,15 +1,15 @@
-import { inject as service } from "@ember/service";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty, equal, notEmpty } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
-import icon from "discourse-common/helpers/d-icon";
-import deprecated from "discourse-common/lib/deprecated";
 import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
+import icon from "discourse-common/helpers/d-icon";
+import deprecated from "discourse-common/lib/deprecated";
+import I18n from "discourse-i18n";
 import or from "truth-helpers/helpers/or";
-import { on } from "@ember/modifier";
-import I18n from "I18n";
 
 const ACTION_AS_STRING_DEPRECATION_ARGS = [
   "DButton no longer supports @action as a string. Please refactor to use an closure action instead.",
@@ -17,72 +17,13 @@ const ACTION_AS_STRING_DEPRECATION_ARGS = [
 ];
 
 export default class DButton extends GlimmerComponentWithDeprecatedParentView {
-  <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
-    <button
-      {{! For legacy compatibility. Prefer passing class as attributes. }}
-      class={{concatClass
-        @class
-        (if @isLoading "is-loading")
-        (if this.btnLink "btn-link" "btn")
-        (if this.noText "no-text")
-        this.btnType
-      }}
-      {{! For legacy compatibility. Prefer passing these as html attributes. }}
-      id={{@id}}
-      form={{@form}}
-      aria-controls={{@ariaControls}}
-      aria-expanded={{this.computedAriaExpanded}}
-      tabindex={{@tabindex}}
-      type={{or @type "button"}}
-      ...attributes
-      disabled={{this.isDisabled}}
-      title={{this.computedTitle}}
-      aria-label={{this.computedAriaLabel}}
-      {{on "keydown" this.keyDown}}
-      {{on "click" this.click}}
-      {{on "mousedown" this.mouseDown}}
-    >
-      {{#if @isLoading}}
-        {{~icon "spinner" class="loading-icon"~}}
-      {{else}}
-        {{#if @icon}}
-          {{#if @ariaHidden}}
-            <span aria-hidden="true">
-              {{~icon @icon~}}
-            </span>
-          {{else}}
-            {{~icon @icon~}}
-          {{/if}}
-        {{/if}}
-      {{/if}}
-
-      {{~#if this.computedLabel~}}
-        <span class="d-button-label">
-          {{~htmlSafe this.computedLabel~}}
-          {{~#if @ellipsis~}}
-            &hellip;
-          {{~/if~}}
-        </span>
-      {{~else~}}
-        &#8203;
-        {{! Zero-width space character, so icon-only button height = regular button height }}
-      {{~/if~}}
-
-      {{yield}}
-    </button>
-  </template>
-
   @service router;
 
-  @notEmpty("args.icon")
-  btnIcon;
+  @notEmpty("args.icon") btnIcon;
 
-  @equal("args.display", "link")
-  btnLink;
+  @equal("args.display", "link") btnLink;
 
-  @empty("computedLabel")
-  noText;
+  @empty("computedLabel") noText;
 
   constructor() {
     super(...arguments);
@@ -202,4 +143,60 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
       return false;
     }
   }
+
+  <template>
+    {{! template-lint-disable no-pointer-down-event-binding }}
+    <button
+      {{! For legacy compatibility. Prefer passing class as attributes. }}
+      class={{concatClass
+        @class
+        (if @isLoading "is-loading")
+        (if this.btnLink "btn-link" "btn")
+        (if this.noText "no-text")
+        this.btnType
+      }}
+      {{! For legacy compatibility. Prefer passing these as html attributes. }}
+      id={{@id}}
+      form={{@form}}
+      aria-controls={{@ariaControls}}
+      aria-expanded={{this.computedAriaExpanded}}
+      tabindex={{@tabindex}}
+      type={{or @type "button"}}
+      ...attributes
+      disabled={{this.isDisabled}}
+      title={{this.computedTitle}}
+      aria-label={{this.computedAriaLabel}}
+      {{on "keydown" this.keyDown}}
+      {{on "click" this.click}}
+      {{on "mousedown" this.mouseDown}}
+    >
+      {{#if @isLoading}}
+        {{~icon "spinner" class="loading-icon"~}}
+      {{else}}
+        {{#if @icon}}
+          {{#if @ariaHidden}}
+            <span aria-hidden="true">
+              {{~icon @icon~}}
+            </span>
+          {{else}}
+            {{~icon @icon~}}
+          {{/if}}
+        {{/if}}
+      {{/if}}
+
+      {{~#if this.computedLabel~}}
+        <span class="d-button-label">
+          {{~htmlSafe this.computedLabel~}}
+          {{~#if @ellipsis~}}
+            &hellip;
+          {{~/if~}}
+        </span>
+      {{~else~}}
+        &#8203;
+        {{! Zero-width space character, so icon-only button height = regular button height }}
+      {{~/if~}}
+
+      {{yield}}
+    </button>
+  </template>
 }

@@ -1,21 +1,62 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import Route from "@ember/routing/route";
-import showModal from "discourse/lib/show-modal";
-import I18n from "I18n";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
+import InstallThemeModal from "../components/modal/install-theme";
 
 export default class AdminCustomizeThemesRoute extends Route {
   @service dialog;
   @service router;
+  @service modal;
 
   queryParams = {
     repoUrl: null,
     repoName: null,
+    tab: null,
   };
 
   model() {
     return this.store.findAll("theme");
+  }
+
+  setupController(controller, model) {
+    super.setupController(controller, model);
+
+    if (controller.tab) {
+      controller.setProperties({
+        editingTheme: false,
+        currentTab: controller.tab,
+
+        // this is to get rid of the queryString since we don't want it hanging around
+        tab: undefined,
+      });
+    }
+
+    if (controller.repoUrl) {
+      next(() => {
+        this.modal.show(InstallThemeModal, {
+          model: {
+            uploadUrl: controller.repoUrl,
+            uploadName: controller.repoName,
+            selection: "directRepoInstall",
+            clearParams: this.clearParams,
+            ...this.installThemeOptions(model),
+          },
+        });
+      });
+    }
+  }
+
+  installThemeOptions(model) {
+    return {
+      selectedType: this.controller.currentTab,
+      userId: model.userId,
+      content: model.content,
+      installedThemes: this.controller.installedThemes,
+      addTheme: this.addTheme,
+      updateSelectedType: this.updateSelectedType,
+    };
   }
 
   @action
@@ -23,37 +64,37 @@ export default class AdminCustomizeThemesRoute extends Route {
     this.refresh();
   }
 
-  setupController(controller, model) {
-    super.setupController(controller, model);
-    controller.set("editingTheme", false);
-
-    if (controller.repoUrl) {
-      next(() => {
-        showModal("admin-install-theme", {
-          admin: true,
-        }).setProperties({
-          uploadUrl: controller.repoUrl,
-          uploadName: controller.repoName,
-          selection: "directRepoInstall",
-        });
+  @action
+  installModal() {
+    const currentTheme = this.modelFor("adminCustomizeThemes");
+    if (this.currentModel?.warnUnassignedComponent) {
+      this.dialog.yesNoConfirm({
+        message: I18n.t("admin.customize.theme.unsaved_parent_themes"),
+        didConfirm: () => {
+          currentTheme.set("recentlyInstalled", false);
+          this.modal.show(InstallThemeModal, {
+            model: { ...this.installThemeOptions(currentTheme) },
+          });
+        },
+      });
+    } else {
+      this.modal.show(InstallThemeModal, {
+        model: { ...this.installThemeOptions(currentTheme) },
       });
     }
   }
 
   @action
-  installModal() {
-    const currentTheme = this.controllerFor("adminCustomizeThemes.show").model;
-    if (currentTheme?.warnUnassignedComponent) {
-      this.dialog.yesNoConfirm({
-        message: I18n.t("admin.customize.theme.unsaved_parent_themes"),
-        didConfirm: () => {
-          currentTheme.set("recentlyInstalled", false);
-          showModal("admin-install-theme", { admin: true });
-        },
-      });
-    } else {
-      showModal("admin-install-theme", { admin: true });
-    }
+  updateSelectedType(type) {
+    this.controller.set("currentTab", type);
+  }
+
+  @action
+  clearParams() {
+    this.controller.setProperties({
+      repoUrl: null,
+      repoName: null,
+    });
   }
 
   @action

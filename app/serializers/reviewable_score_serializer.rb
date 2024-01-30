@@ -4,7 +4,9 @@ class ReviewableScoreSerializer < ApplicationSerializer
   REASONS_AND_SETTINGS = {
     post_count: "approve_post_count",
     trust_level: "approve_unless_trust_level",
+    group: "approve_unless_allowed_groups",
     new_topics_unless_trust_level: "approve_new_topics_unless_trust_level",
+    new_topics_unless_allowed_groups: "approve_new_topics_unless_allowed_groups",
     fast_typer: "min_first_post_typing_time",
     auto_silence_regex: "auto_silence_first_post_regex",
     staged: "approve_unless_staged",
@@ -12,7 +14,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
     invite_only: "invite_only",
     email_spam: "email_in_spam_header",
     suspect_user: "approve_suspect_users",
-    contains_media: "review_media_unless_trust_level",
+    contains_media: "skip_media_review_groups",
   }
 
   attributes :id, :score, :agree_stats, :reason, :created_at, :reviewed_at

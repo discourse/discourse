@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-class ThemeStore::GitImporter < ThemeStore::Importer
+class ThemeStore::GitImporter < ThemeStore::BaseImporter
   COMMAND_TIMEOUT_SECONDS = 20
 
   attr_reader :url
 
   def initialize(url, private_key: nil, branch: nil)
-    super
-
     @url = GitUrl.normalize(url)
     @private_key = private_key
     @branch = branch
@@ -16,7 +14,7 @@ class ThemeStore::GitImporter < ThemeStore::Importer
   def import!
     clone!
 
-    if version = Discourse.find_compatible_git_resource(@temp_folder)
+    if version = Discourse.find_compatible_git_resource(temp_folder)
       begin
         execute "git", "cat-file", "-e", version
       rescue RuntimeError => e
@@ -54,10 +52,6 @@ class ThemeStore::GitImporter < ThemeStore::Importer
     execute("git", "rev-parse", "HEAD").strip
   end
 
-  def cleanup!
-    FileUtils.rm_rf(@temp_folder)
-  end
-
   protected
 
   def redirected_uri
@@ -68,7 +62,7 @@ class ThemeStore::GitImporter < ThemeStore::Importer
 
     redirected_uri = FinalDestination.resolve(first_clone_uri.to_s, http_verb: :get)
 
-    if redirected_uri&.path.ends_with?("/info/refs")
+    if redirected_uri&.path&.ends_with?("/info/refs")
       redirected_uri.path.gsub!(%r{/info/refs\z}, "")
       redirected_uri.query = nil
       redirected_uri
@@ -109,7 +103,7 @@ class ThemeStore::GitImporter < ThemeStore::Importer
 
     args.concat(["--single-branch", "-b", @branch]) if @branch.present?
 
-    args.concat([url, @temp_folder])
+    args.concat([url, temp_folder])
 
     args
   end
@@ -170,6 +164,6 @@ class ThemeStore::GitImporter < ThemeStore::Importer
   end
 
   def execute(*args)
-    Discourse::Utils.execute_command(*args, chdir: @temp_folder, timeout: COMMAND_TIMEOUT_SECONDS)
+    Discourse::Utils.execute_command(*args, chdir: temp_folder, timeout: COMMAND_TIMEOUT_SECONDS)
   end
 end

@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import SectionLink from "discourse/lib/sidebar/section-link";
 import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
+import { ajax } from "discourse/lib/ajax";
+import SectionLink from "discourse/lib/sidebar/section-link";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class Section {
   @service currentUser;
@@ -14,8 +14,6 @@ export default class Section {
 
   @tracked dragCss;
   @tracked links;
-
-  reorderable = true;
 
   constructor({ section, owner }) {
     setOwner(this, owner);
@@ -37,7 +35,7 @@ export default class Section {
   }
 
   get headerActions() {
-    if (!this.section.public || this.currentUser?.staff) {
+    if (!this.section.public || this.currentUser?.admin) {
       return [
         {
           action: () => {

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Notification < ActiveRecord::Base
+  attr_accessor :acting_user
+  attr_accessor :acting_username
+
   belongs_to :user
   belongs_to :topic
 
@@ -25,14 +28,14 @@ class Notification < ActiveRecord::Base
         }
   scope :unread_type, ->(user, type, limit = 30) { unread_types(user, [type], limit) }
   scope :unread_types,
-        ->(user, types, limit = 30) {
+        ->(user, types, limit = 30) do
           where(user_id: user.id, read: false, notification_type: types)
             .visible
             .includes(:topic)
             .limit(limit)
-        }
+        end
   scope :prioritized,
-        ->(deprioritized_types = []) {
+        ->(deprioritized_types = []) do
           scope = order("notifications.high_priority AND NOT notifications.read DESC")
           if deprioritized_types.present?
             scope =
@@ -46,11 +49,11 @@ class Notification < ActiveRecord::Base
             scope = scope.order("NOT notifications.read DESC")
           end
           scope.order("notifications.created_at DESC")
-        }
+        end
   scope :for_user_menu,
-        ->(user_id, limit: 30) {
+        ->(user_id, limit: 30) do
           where(user_id: user_id).visible.prioritized.includes(:topic).limit(limit)
-        }
+        end
 
   attr_accessor :skip_send_email
 
@@ -347,6 +350,25 @@ class Notification < ActiveRecord::Base
     else
       []
     end
+  end
+
+  def self.populate_acting_user(notifications)
+    usernames =
+      notifications.map do |notification|
+        notification.acting_username =
+          (
+            notification.data_hash[:username] || notification.data_hash[:display_username] ||
+              notification.data_hash[:mentioned_by_username] ||
+              notification.data_hash[:invited_by_username]
+          )&.downcase
+      end
+
+    users = User.where(username_lower: usernames.uniq).index_by(&:username_lower)
+    notifications.each do |notification|
+      notification.acting_user = users[notification.acting_username]
+    end
+
+    notifications
   end
 
   def unread_high_priority?

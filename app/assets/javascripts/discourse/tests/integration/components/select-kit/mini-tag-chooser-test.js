@@ -1,10 +1,10 @@
+import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 
 module(
   "Integration | Component | select-kit/mini-tag-chooser",
@@ -222,7 +222,7 @@ module(
         .dom(".select-kit-header .filter-input")
         .hasAttribute(
           "placeholder",
-          "Search...",
+          "Search…",
           "Placeholder is back to default when there is no selection"
         );
     });

@@ -117,6 +117,24 @@ RSpec.describe GroupSmtpMailer do
     expect(sent_mail.subject).to eq("Re: Hello from John")
   end
 
+  it "configures delivery options for SMTP correctly" do
+    mail = GroupSmtpMailer.send_mail(group, user.email, Fabricate(:post))
+    expect(mail.delivery_method.settings).to eq(
+      {
+        address: "smtp.gmail.com",
+        port: 587,
+        domain: "gmail.com",
+        user_name: "bugs@gmail.com",
+        password: "super$secret$password",
+        authentication: GlobalSetting.smtp_authentication,
+        enable_starttls_auto: true,
+        return_response: true,
+        open_timeout: GlobalSetting.group_smtp_open_timeout,
+        read_timeout: GlobalSetting.group_smtp_read_timeout,
+      },
+    )
+  end
+
   context "when the site has a reply by email address configured" do
     before do
       SiteSetting.manual_polling_enabled = true

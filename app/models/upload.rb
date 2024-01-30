@@ -433,6 +433,10 @@ class Upload < ActiveRecord::Base
     self.sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
   end
 
+  def self.sha1_from_long_url(url)
+    $2 if url =~ URL_REGEX || url =~ OptimizedImage::URL_REGEX
+  end
+
   def self.sha1_from_base62_encoded(encoded_sha1)
     sha1 = Base62.decode(encoded_sha1).to_s(16)
 
@@ -466,7 +470,7 @@ class Upload < ActiveRecord::Base
     secure_status_did_change = self.secure? != mark_secure
     self.update(secure_params(mark_secure, reason, source))
 
-    if Discourse.store.external?
+    if secure_status_did_change && SiteSetting.s3_use_acls && Discourse.store.external?
       begin
         Discourse.store.update_upload_ACL(self)
       rescue Aws::S3::Errors::NotImplemented => err

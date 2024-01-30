@@ -29,9 +29,9 @@ class Admin::RobotsTxtController < Admin::AdminController
   def original_robots_txt
     if SiteSetting.allow_index_in_robots_txt?
       @robots_info = ::RobotsTxtController.fetch_default_robots_info
-      render_to_string "robots_txt/index"
+      render_to_string "robots_txt/index", layout: false
     else
-      render_to_string "robots_txt/no_index"
+      render_to_string "robots_txt/no_index", layout: false
     end
   end
 end

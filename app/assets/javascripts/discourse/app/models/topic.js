@@ -1,28 +1,28 @@
+import EmberObject, { computed } from "@ember/object";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
-import { fmt, propertyEqual } from "discourse/lib/computed";
-import ActionSummary from "discourse/models/action-summary";
-import categoryFromId from "discourse-common/utils/category-macro";
-import Bookmark from "discourse/models/bookmark";
-import EmberObject from "@ember/object";
-import I18n from "I18n";
-import PreloadStore from "discourse/lib/preload-store";
 import { Promise } from "rsvp";
+import { resolveShareUrl } from "discourse/helpers/share-url";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { fmt, propertyEqual } from "discourse/lib/computed";
+import { longDate } from "discourse/lib/formatter";
+import { applyModelTransformations } from "discourse/lib/model-transformers";
+import PreloadStore from "discourse/lib/preload-store";
+import { emojiUnescape } from "discourse/lib/text";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import DiscourseURL, { userPath } from "discourse/lib/url";
+import ActionSummary from "discourse/models/action-summary";
+import Bookmark from "discourse/models/bookmark";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
+import { flushMap } from "discourse/services/store";
+import deprecated from "discourse-common/lib/deprecated";
+import getURL from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { emojiUnescape } from "discourse/lib/text";
-import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { flushMap } from "discourse/services/store";
-import getURL from "discourse-common/lib/get-url";
-import { longDate } from "discourse/lib/formatter";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { resolveShareUrl } from "discourse/helpers/share-url";
-import DiscourseURL, { userPath } from "discourse/lib/url";
-import deprecated from "discourse-common/lib/deprecated";
-import { applyModelTransformations } from "discourse/lib/model-transformers";
+import I18n from "discourse-i18n";
+import Category from "./category";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -36,6 +36,7 @@ export function loadTopicView(topic, args) {
   return PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
     ajax(jsonUrl, { data })
   ).then((json) => {
+    json.categories?.forEach((c) => topic.site.updateCategory(c));
     topic.updateFromJson(json);
     return json;
   });
@@ -127,10 +128,17 @@ const Topic = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    return I18n.t("topic.bumped_at_title", {
-      createdAtDate: longDate(createdAt),
-      bumpedAtDate: longDate(bumpedAt),
-    });
+    const BUMPED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+    if (moment(bumpedAt).isValid() && moment(createdAt).isValid()) {
+      const bumpedAtStr = moment(bumpedAt).format(BUMPED_FORMAT);
+      const createdAtStr = moment(createdAt).format(BUMPED_FORMAT);
+
+      return bumpedAtStr !== createdAtStr
+        ? `${I18n.t("topic.created_at", {
+            date: longDate(createdAt),
+          })}\n${I18n.t("topic.bumped_at", { date: longDate(bumpedAt) })}`
+        : I18n.t("topic.created_at", { date: longDate(createdAt) });
+    }
   },
 
   @discourseComputed("created_at")
@@ -191,7 +199,7 @@ const Topic = RestModel.extend({
   },
 
   set details(value) {
-    return (this._details = value);
+    this._details = value;
   },
 
   @discourseComputed("visible")
@@ -206,7 +214,14 @@ const Topic = RestModel.extend({
     return { type: "topic", id };
   },
 
-  category: categoryFromId("category_id"),
+  @computed("category_id")
+  get category() {
+    return Category.findById(this.category_id);
+  },
+
+  set category(newCategory) {
+    this.set("category_id", newCategory?.id);
+  },
 
   @discourseComputed("url")
   shareUrl(url) {
@@ -477,8 +492,10 @@ const Topic = RestModel.extend({
               (group) => group.name === this.category?.reviewable_by_group_name
             ) &&
             !(
-              this.siteSettings.tl4_delete_posts_and_topics &&
-              deleted_by.trust_level >= 4
+              this.siteSettings.delete_all_posts_and_topics_allowed_groups &&
+              deleted_by.isInAnyGroups(
+                this.siteSettings.delete_all_posts_and_topics_allowed_groups
+              )
             ))
         ) {
           DiscourseURL.redirectTo("/");
@@ -789,12 +806,18 @@ Topic.reopenClass({
     return promise;
   },
 
-  bulkOperation(topics, operation, tracked) {
+  bulkOperation(topics, operation, options, tracked) {
     const data = {
       topic_ids: topics.mapBy("id"),
       operation,
       tracked,
     };
+
+    if (options) {
+      if (options.select) {
+        data.silent = true;
+      }
+    }
 
     return ajax("/topics/bulk", {
       type: "PUT",

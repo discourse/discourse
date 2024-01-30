@@ -6,7 +6,15 @@
 
 ur:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "ہمیشہ"
+          never: "کبھی نہیں"
     chat:
+      deleted_chat_username: حذف کردہ
+      dates:
+        yesterday: "کَل"
       create: "بنائیں"
       cancel: "منسوخ"
       channel_settings:
@@ -15,6 +23,7 @@ ur:
         join: "شمولیت اختیار کریں"
         leave: "چھوڑ دیں"
       close: "بند کریں"
+      remove: "خارج کریں"
       delete: "مٹائیں"
       edited: "ترمیم کردہ"
       muted: "خاموش کِیا ہوا"
@@ -28,8 +37,6 @@ ur:
       last_visit: "آخری وزٹ"
       summarization:
         summarize: "خلاصہ"
-      mention_warning:
-        dismiss: "بر خاست کریں"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"
@@ -56,11 +63,11 @@ ur:
       channel_info:
         back_to_channel: "واپس"
         tabs:
-          about: بارے میں
           members: ممبران
           settings: ترتیبات
       new_message_modal:
         no_items: "کوئی اشیاء نہیں"
+        filter: "فِلٹر"
       direct_message_creator:
         title: نیا پیغام
         prefix: "کے لئے:"
@@ -85,6 +92,10 @@ ur:
         saved: "محفوظ کر لیا گیا"
         unfollow: "چھوڑ دیں"
         admin_title: "منتظم"
+        settings_title: "ترتیبات"
+        category_label: "زمرہ"
+        history_label: "تاریخی"
+        members_label: "ممبران"
       incoming_webhooks:
         back: "واپس"
         description: "تفصیل"
@@ -105,6 +116,10 @@ ur:
           title: "موجودہ ٹاپک میں منتقل کریں"
         new_message:
           title: "نئے پیغام پر منتقل کریں"
+      retention_reminders:
+        short:
+          one: "%{count} دن"
+          other: "%{count} دن"
       emoji_picker:
         objects: "اشیاء"
         activities: "سرگرمیاں"

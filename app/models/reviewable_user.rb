@@ -5,6 +5,10 @@ class ReviewableUser < Reviewable
     create(created_by_id: Discourse.system_user.id, target: user)
   end
 
+  def self.additional_args(params)
+    { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
+  end
+
   def build_actions(actions, guardian, args)
     return unless pending?
 

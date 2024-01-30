@@ -30,6 +30,18 @@ module PageObjects
         page.has_no_css?(topic_list_item_class(topic))
       end
 
+      def has_topic_checkbox?(topic)
+        page.has_css?("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}")
+      end
+
+      def has_closed_status?(topic)
+        page.has_css?("#{topic_list_item_closed(topic)}")
+      end
+
+      def click_topic_checkbox(topic)
+        find("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}").click
+      end
+
       def visit_topic_with_title(title)
         find("#{TOPIC_LIST_BODY_SELECTOR} a", text: title).click
       end
@@ -38,10 +50,23 @@ module PageObjects
         find("#{topic_list_item_class(topic)} a.raw-topic-link").click
       end
 
+      def visit_topic_last_reply_via_keyboard(topic)
+        find("#{topic_list_item_class(topic)} a.post-activity").native.send_keys(:return)
+      end
+
+      def visit_topic_first_reply_via_keyboard(topic)
+        find("#{topic_list_item_class(topic)} button.posts-map").native.send_keys(:return)
+        find("#topic-entrance button.jump-top").native.send_keys(:return)
+      end
+
       private
 
       def topic_list_item_class(topic)
         "#{TOPIC_LIST_ITEM_SELECTOR}[data-topic-id='#{topic.id}']"
+      end
+
+      def topic_list_item_closed(topic)
+        "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg.locked"
       end
     end
   end

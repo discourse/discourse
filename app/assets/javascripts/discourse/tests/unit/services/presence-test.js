@@ -1,14 +1,14 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import { setTestPresence } from "discourse/lib/user-presence";
+import { PresenceChannelNotFound } from "discourse/services/presence";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   currentUser,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { module, test } from "qunit";
-import { PresenceChannelNotFound } from "discourse/services/presence";
-import { setTestPresence } from "discourse/lib/user-presence";
-import sinon from "sinon";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function usersFixture() {
   return [

@@ -5,8 +5,6 @@ class SearchLog < ActiveRecord::Base
 
   belongs_to :user
 
-  attr_reader :ctr
-
   def ctr
     return 0 if click_through == 0 || searches == 0
 

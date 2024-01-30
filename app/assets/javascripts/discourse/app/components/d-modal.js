@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
+import { cached, tracked } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { action } from "@ember/object";
-import { cached, tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
@@ -22,7 +22,6 @@ export default class DModal extends Component {
       this.handleDocumentKeydown
     );
     this.wrapperElement = element;
-    this.trapTab();
   }
 
   @action
@@ -60,7 +59,7 @@ export default class DModal extends Component {
   }
 
   @action
-  handleMouseUp(e) {
+  handleWrapperClick(e) {
     if (e.button !== 0) {
       return; // Non-default mouse button
     }
@@ -69,14 +68,9 @@ export default class DModal extends Component {
       return;
     }
 
-    if (
-      e.target.classList.contains("modal-middle-container") ||
-      e.target.classList.contains("modal-outer-container")
-    ) {
-      return this.args.closeModal?.({
-        initiatedBy: CLOSE_INITIATED_BY_CLICK_OUTSIDE,
-      });
-    }
+    return this.args.closeModal?.({
+      initiatedBy: CLOSE_INITIATED_BY_CLICK_OUTSIDE,
+    });
   }
 
   @action
@@ -86,77 +80,15 @@ export default class DModal extends Component {
     }
 
     if (event.key === "Escape" && this.dismissable) {
+      event.stopPropagation();
       this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_ESC });
     }
 
     if (event.key === "Enter" && this.shouldTriggerClickOnEnter(event)) {
-      this.wrapperElement.querySelector(".modal-footer .btn-primary")?.click();
+      this.wrapperElement
+        .querySelector(".d-modal__footer .btn-primary")
+        ?.click();
       event.preventDefault();
-    }
-
-    if (event.key === "Tab") {
-      this.trapTab(event);
-    }
-  }
-
-  @action
-  trapTab(event) {
-    if (this.args.hidden) {
-      return true;
-    }
-
-    const innerContainer = this.wrapperElement.querySelector(
-      ".modal-inner-container"
-    );
-    if (!innerContainer) {
-      return;
-    }
-
-    let focusableElements =
-      '[autofocus], a, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])';
-
-    if (!event) {
-      // on first trap we don't allow to focus modal-close
-      // and apply manual focus only if we don't have any autofocus element
-      const autofocusedElement = innerContainer.querySelector("[autofocus]");
-      if (
-        !autofocusedElement ||
-        document.activeElement !== autofocusedElement
-      ) {
-        // if there's not autofocus, or the activeElement, is not the autofocusable element
-        // attempt to focus the first of the focusable elements or just the modal-body
-        // to make it possible to scroll with arrow down/up
-        (
-          autofocusedElement ||
-          innerContainer.querySelector(
-            focusableElements + ", button:not(.modal-close)"
-          ) ||
-          innerContainer.querySelector(".modal-body")
-        )?.focus();
-      }
-
-      return;
-    }
-
-    focusableElements += ", button:enabled";
-
-    const firstFocusableElement =
-      innerContainer.querySelector(focusableElements);
-    const focusableContent = innerContainer.querySelectorAll(focusableElements);
-    const lastFocusableElement = focusableContent[focusableContent.length - 1];
-
-    if (event.shiftKey) {
-      if (document.activeElement === firstFocusableElement) {
-        lastFocusableElement?.focus();
-        event.preventDefault();
-      }
-    } else {
-      if (document.activeElement === lastFocusableElement) {
-        (
-          innerContainer.querySelector(".modal-close") || firstFocusableElement
-        )?.focus();
-        event.preventDefault();
-      }
     }
   }
 

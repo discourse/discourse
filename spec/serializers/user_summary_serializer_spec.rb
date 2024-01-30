@@ -3,8 +3,8 @@
 RSpec.describe UserSummarySerializer do
   it "returns expected data" do
     UserActionManager.enable
-    user = Fabricate(:user)
-    liked_user = Fabricate(:user, name: "John Doe", username: "john_doe")
+    user = Fabricate(:user, refresh_auto_groups: true)
+    liked_user = Fabricate(:user, name: "John Doe", username: "john_doe", refresh_auto_groups: true)
     liked_post = create_post(user: liked_user)
     PostActionCreator.like(user, liked_post)
 
@@ -29,7 +29,7 @@ RSpec.describe UserSummarySerializer do
   end
 
   it "returns correct links data ranking" do
-    topic = Fabricate(:topic)
+    topic = Fabricate(:topic, user: Fabricate(:user, refresh_auto_groups: true))
     post = Fabricate(:post_with_external_links, user: topic.user, topic: topic)
     TopicLink.extract_from(post)
     TopicLink

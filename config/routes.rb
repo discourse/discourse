@@ -27,8 +27,6 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    get "/bootstrap" => "bootstrap#index"
-
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
     end
@@ -99,6 +97,14 @@ Discourse::Application.routes.draw do
     get "wizard" => "wizard#index"
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
+
+    namespace :admin_revamp,
+              path: "admin-revamp",
+              module: "admin",
+              constraints: StaffConstraint.new do
+      get "" => "admin#index"
+      get "config/:area" => "admin#index"
+    end
 
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
@@ -213,6 +219,7 @@ Discourse::Application.routes.draw do
 
       get "customize" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/themes" => "themes#index", :constraints => AdminConstraint.new
+      get "customize/theme-components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/colors" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/colors/:id" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/permalinks" => "permalinks#index", :constraints => AdminConstraint.new
@@ -230,6 +237,7 @@ Discourse::Application.routes.draw do
           post "import" => "themes#import"
           post "upload_asset" => "themes#upload_asset"
           post "generate_key_pair" => "themes#generate_key_pair"
+          delete "bulk_destroy" => "themes#bulk_destroy"
         end
       end
 
@@ -312,8 +320,7 @@ Discourse::Application.routes.draw do
       get "dashboard/moderation" => "dashboard#moderation"
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
-      get "dashboard/new-features" => "dashboard#new_features"
-      put "dashboard/mark-new-features-as-seen" => "dashboard#mark_new_features_as_seen"
+      get "dashboard/whats-new" => "dashboard#new_features"
 
       resources :dashboard, only: [:index] do
         collection { get "problems" }
@@ -428,6 +435,8 @@ Discourse::Application.routes.draw do
     if Rails.env.test?
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
+    get "session/passkey/challenge" => "session#passkey_challenge"
+    post "session/passkey/auth" => "session#passkey_login"
     get "session/scopes" => "session#scopes"
     get "composer/mentions" => "composer#mentions"
     get "composer_messages" => "composer_messages#index"
@@ -465,6 +474,9 @@ Discourse::Application.routes.draw do
         end
       end
 
+      get "#{root_path}/trusted-session" => "users#trusted_session"
+      post "#{root_path}/confirm-session" => "users#confirm_session"
+
       post "#{root_path}/second_factors" => "users#list_second_factors"
       put "#{root_path}/second_factor" => "users#update_second_factor"
 
@@ -478,6 +490,11 @@ Discourse::Application.routes.draw do
       put "#{root_path}/disable_second_factor" => "users#disable_second_factor"
 
       put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
+
+      post "#{root_path}/create_passkey" => "users#create_passkey"
+      post "#{root_path}/register_passkey" => "users#register_passkey"
+      put "#{root_path}/rename_passkey/:id" => "users#rename_passkey"
+      delete "#{root_path}/delete_passkey/:id" => "users#delete_passkey"
 
       put "#{root_path}/update-activation-email" => "users#update_activation_email"
       post "#{root_path}/email-login" => "users#email_login"
@@ -521,10 +538,10 @@ Discourse::Application.routes.draw do
       )
 
       get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"
-      put "#{root_path}/confirm-old-email" => "users_email#confirm_old_email"
+      put "#{root_path}/confirm-old-email/:token" => "users_email#confirm_old_email"
 
       get "#{root_path}/confirm-new-email/:token" => "users_email#show_confirm_new_email"
-      put "#{root_path}/confirm-new-email" => "users_email#confirm_new_email"
+      put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
 
       get(
         {
@@ -1006,7 +1023,6 @@ Discourse::Application.routes.draw do
     get "posts/by-date/:topic_id/:date" => "posts#by_date"
     get "posts/:id/reply-history" => "posts#reply_history"
     get "posts/:id/reply-ids" => "posts#reply_ids"
-    get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
     get "posts/:username/deleted" => "posts#deleted_posts",
         :constraints => {
           username: RouteFormat.username,
@@ -1144,6 +1160,8 @@ Discourse::Application.routes.draw do
 
     resources :categories, except: %i[show new edit]
     post "categories/reorder" => "categories#reorder"
+    get "categories/find" => "categories#find"
+    get "categories/search" => "categories#search"
 
     scope path: "category/:category_id" do
       post "/move" => "categories#move"
@@ -1199,6 +1217,7 @@ Discourse::Application.routes.draw do
 
     get "latest.rss" => "list#latest_feed", :format => :rss
     get "top.rss" => "list#top_feed", :format => :rss
+    get "hot.rss" => "list#hot_feed", :format => :rss
 
     Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
 
@@ -1414,6 +1433,7 @@ Discourse::Application.routes.draw do
 
     resources :invites, only: %i[create update destroy]
     get "/invites/:id" => "invites#show", :constraints => { format: :html }
+    post "invites/create-multiple" => "invites#create_multiple", :constraints => { format: :json }
 
     post "invites/upload_csv" => "invites#upload_csv"
     post "invites/destroy-all-expired" => "invites#destroy_all_expired"
@@ -1446,11 +1466,6 @@ Discourse::Application.routes.draw do
     end
 
     get "cdn_asset/:site/*path" => "static#cdn_asset",
-        :format => false,
-        :constraints => {
-          format: /.*/,
-        }
-    get "brotli_asset/*path" => "static#brotli_asset",
         :format => false,
         :constraints => {
           format: /.*/,
@@ -1570,6 +1585,16 @@ Discourse::Application.routes.draw do
 
     get "/theme-qunit" => "qunit#theme"
 
+    # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
+    # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to
+    # handle it here.
+    if Rails.env.development?
+      get "/testem-theme-qunit/:testem_id/theme-qunit" => "qunit#theme",
+          :constraints => {
+            testem_id: /\d+/,
+          }
+    end
+
     post "/push_notifications/subscribe" => "push_notification#subscribe"
     post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
 
@@ -1588,7 +1613,6 @@ Discourse::Application.routes.draw do
     delete "user-status" => "user_status#clear"
 
     resources :sidebar_sections, only: %i[index create update destroy]
-    post "/sidebar_sections/reorder" => "sidebar_sections#reorder"
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new

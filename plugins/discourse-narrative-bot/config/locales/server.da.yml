@@ -370,16 +370,6 @@ da:
 
           Vær opmærksom på, at du kun har %{deletion_after} time(r) til at annullere et indlæg.
       category_hashtag:
-        instructions: |-
-          Vidste du, at du kan henvise til kategorier og mærker i dit indlæg? Har du for eksempel set %{category} kategorien?
-
-          Skriv '#' i midten af en sætning, og vælg en hvilken som helst kategori eller et mærke.
-        not_found: |-
-          Hmm, jeg kan ikke se en kategori nogen steder. Bemærk, at '#' ikke må være det første tegn. Kan du kopiere dette i dit næste svar?
-
-          ```text
-          Jeg kan oprette et kategorilink via #
-          ```
         reply: |-
           Fremragende! Husk, at dette fungerer for både kategorier _og_ mærker, hvis mærker er aktiveret.
       change_topic_notification_level:

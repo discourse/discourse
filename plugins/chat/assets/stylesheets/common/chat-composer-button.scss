@@ -1,9 +1,12 @@
 .chat-composer-button {
+  @include breakpoint(mobile-large) {
+    width: 50px;
+  }
   box-sizing: border-box;
-  width: 50px;
   border: 0;
   height: 50px;
   background: none;
+  padding-inline: 0.75rem;
 
   .is-disabled & {
     cursor: not-allowed;
@@ -53,7 +56,9 @@
     }
 
     .chat-composer.is-sending & {
-      animation: sendingScales 1s infinite linear;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: sendingScales 1s infinite linear;
+      }
     }
 
     .d-icon {
@@ -72,6 +77,11 @@
   }
 
   &.-emoji {
+    transition: transform 0.1s ease-in-out;
+
+    &:hover {
+      transform: scale(1.1);
+    }
     .d-icon {
       .is-focused & {
         color: var(--tertiary);

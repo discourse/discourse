@@ -76,7 +76,7 @@ module Onebox
         script = page.at_css('script[type="application/ld+json"]')
 
         if json_string = script&.text
-          @og_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(json_string))
+          @og_data = ::MultiJson.load(json_string, symbolize_keys: true)
         else
           @og_data = {}
         end

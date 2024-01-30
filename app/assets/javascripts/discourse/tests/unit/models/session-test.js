@@ -1,6 +1,6 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Session from "discourse/models/session";
-import { setupTest } from "ember-qunit";
 
 module("Unit | Model | session", function (hooks) {
   setupTest(hooks);

@@ -17,11 +17,11 @@ bs_BA:
           description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
         disagree:
           title: "Disagree"
-        ignore:
-          title: "Zanemari"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "odbaci"
   discourse_push_notifications:
     popup:
       chat_mention:

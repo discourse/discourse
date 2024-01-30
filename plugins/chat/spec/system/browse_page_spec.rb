@@ -67,9 +67,9 @@ RSpec.describe "Browse page", type: :system do
     context "when on mobile", mobile: true do
       it "has a back button" do
         chat_page.visit_browse
-        find(".chat-full-page-header__back-btn").click
+        find(".c-navbar__back-button").click
 
-        expect(browse_page).to have_current_path("/chat")
+        expect(browse_page).to have_current_path("/chat/channels")
       end
     end
 
@@ -80,6 +80,7 @@ RSpec.describe "Browse page", type: :system do
       context "when results are found" do
         it "lists expected results" do
           chat_page.visit_browse
+
           browse_page.search(category_channel_1.name)
 
           expect(browse_page).to have_channel(name: category_channel_1.name)

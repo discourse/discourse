@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   @discourseComputed("siteSettings.mute_all_categories_by_default")
@@ -17,28 +17,29 @@ export default Controller.extend({
   },
 
   @discourseComputed(
-    "siteSettings.mute_all_categories_by_default",
     "model.watchedCategories",
     "model.watchedFirstPostCategories",
     "model.trackedCategories",
     "model.mutedCategories",
-    "model.regularCategories"
+    "model.regularCategories",
+    "siteSettings.mute_all_categories_by_default"
   )
   selectedCategories(
-    muteAllCategoriesByDefault,
     watched,
     watchedFirst,
     tracked,
     muted,
-    regular
+    regular,
+    muteAllCategoriesByDefault
   ) {
-    let categories = [].concat(watched, watchedFirst, tracked);
-
-    categories = categories.concat(
-      muteAllCategoriesByDefault ? regular : muted
-    );
-
-    return categories.filter((t) => t);
+    return []
+      .concat(
+        watched,
+        watchedFirst,
+        tracked,
+        muteAllCategoriesByDefault ? regular : muted
+      )
+      .filter(Boolean);
   },
 
   @discourseComputed

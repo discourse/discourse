@@ -1,7 +1,7 @@
-import SelectedChoiceComponent from "select-kit/components/selected-choice";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import SelectedChoiceComponent from "select-kit/components/selected-choice";
 
 export default SelectedChoiceComponent.extend({
   tagName: "",

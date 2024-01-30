@@ -1,12 +1,13 @@
+import $ from "jquery";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
-import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import highlightSyntax from "discourse/lib/highlight-syntax";
-import I18n from "I18n";
+import loadScript from "discourse/lib/load-script";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 import { samePrefix } from "discourse-common/lib/get-url";
-import loadScript from "discourse/lib/load-script";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import I18n from "discourse-i18n";
 
 export default {
   name: "chat-decorators",
@@ -158,9 +159,12 @@ export default {
         image: {
           verticalFit: true,
         },
+        gallery: {
+          enabled: true,
+        },
         callbacks: {
           elementParse: (item) => {
-            item.src = item.el[0].src;
+            item.src = item.el[0].dataset.largeSrc || item.el[0].src;
           },
         },
       });

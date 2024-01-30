@@ -355,7 +355,7 @@ module ExternalUploadHelpers
   def debug_upload_error(err, friendly_message)
     return if !SiteSetting.enable_upload_debug_mode
     Discourse.warn_exception(err, message: friendly_message)
-    Rails.env.development? ? friendly_message : I18n.t("upload.failed")
+    (Rails.env.development? || Rails.env.test?) ? friendly_message : I18n.t("upload.failed")
   end
 
   def multipart_store(upload_type)
@@ -363,11 +363,11 @@ module ExternalUploadHelpers
   end
 
   def external_store_check
-    return render_404 if !Discourse.store.external?
+    render_404 if !Discourse.store.external?
   end
 
   def direct_s3_uploads_check
-    return render_404 if !SiteSetting.enable_direct_s3_uploads
+    render_404 if !SiteSetting.enable_direct_s3_uploads
   end
 
   def can_upload_external?

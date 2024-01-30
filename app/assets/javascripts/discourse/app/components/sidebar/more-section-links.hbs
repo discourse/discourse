@@ -5,9 +5,10 @@
 <li class="sidebar-section-link-wrapper">
   <DButton
     @icon="ellipsis-v"
-    @action={{action this.toggleSectionLinks}}
-    @class="btn-flat sidebar-more-section-links-details-summary"
+    @action={{this.toggleSectionLinks}}
     @label="sidebar.more"
+    class="btn-flat sidebar-more-section-links-details-summary"
+    aria-expanded={{if this.open "true" "false"}}
   />
 </li>
 

@@ -8,7 +8,6 @@ RSpec.describe "users" do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.navigation_menu = "legacy"
     Jobs.run_immediately!
     sign_in(admin)
   end
@@ -186,7 +185,7 @@ RSpec.describe "users" do
       response "200", "avatar updated" do
         expected_response_schema = load_spec_schema("success_ok_response")
 
-        let(:user) { Fabricate(:user) }
+        let(:user) { Fabricate(:user, refresh_auto_groups: true) }
         let(:username) { user.username }
         let(:upload) { Fabricate(:upload, user: user) }
         let(:params) { { "upload_id" => upload.id, "type" => "uploaded" } }
@@ -576,7 +575,23 @@ RSpec.describe "users" do
                 }
       parameter name: :asc, in: :query, schema: { type: :string, enum: ["true"] }
       parameter name: :page, in: :query, type: :integer
-      parameter name: :show_emails, in: :query, type: :boolean
+      parameter name: :show_emails,
+                in: :query,
+                type: :boolean,
+                description:
+                  "Include user email addresses in response. These requests will be logged in the staff action logs."
+      parameter name: :stats,
+                in: :query,
+                type: :boolean,
+                description: "Include user stats information"
+      parameter name: :email,
+                in: :query,
+                type: :string,
+                description: "Filter to the user with this email address"
+      parameter name: :ip,
+                in: :query,
+                type: :string,
+                description: "Filter to users with this IP address"
 
       produces "application/json"
       response "200", "response" do
@@ -585,6 +600,9 @@ RSpec.describe "users" do
         let(:asc) { "true" }
         let(:page) { 0 }
         let(:show_emails) { false }
+        let(:stats) { nil }
+        let(:email) { nil }
+        let(:ip) { nil }
 
         expected_response_schema = load_spec_schema("admin_user_list_response")
         schema(expected_response_schema)

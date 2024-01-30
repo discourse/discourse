@@ -3,14 +3,14 @@
 RSpec.describe Jobs::ProcessShelvedNotifications do
   subject(:job) { described_class.new }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:post) { Fabricate(:post) }
 
   it "removes all past do not disturb timings" do
     future = Fabricate(:do_not_disturb_timing, ends_at: 1.day.from_now)
     past = Fabricate(:do_not_disturb_timing, starts_at: 2.day.ago, ends_at: 1.minute.ago)
 
-    expect { job.execute({}) }.to change { DoNotDisturbTiming.count }.by (-1)
+    expect { job.execute({}) }.to change { DoNotDisturbTiming.count }.by(-1)
     expect(DoNotDisturbTiming.find_by(id: future.id)).to eq(future)
     expect(DoNotDisturbTiming.find_by(id: past.id)).to eq(nil)
   end

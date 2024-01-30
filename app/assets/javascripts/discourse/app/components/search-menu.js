@@ -1,37 +1,32 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { Promise } from "rsvp";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import {
   isValidSearchTerm,
   searchForTerm,
   updateRecentSearches,
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
+import userSearch from "discourse/lib/user-search";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { Promise } from "rsvp";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import userSearch from "discourse/lib/user-search";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
-import { cancel } from "@ember/runloop";
+import { bind } from "discourse-common/utils/decorators";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
 export const SEARCH_INPUT_ID = "search-term";
-export const SEARCH_BUTTON_ID = "search-button";
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
 export function focusSearchInput() {
   document.getElementById(SEARCH_INPUT_ID).focus();
-}
-
-export function focusSearchButton() {
-  document.getElementById(SEARCH_BUTTON_ID).focus();
 }
 
 export default class SearchMenu extends Component {
@@ -40,29 +35,90 @@ export default class SearchMenu extends Component {
   @service siteSettings;
   @service appEvents;
 
-  @tracked inTopicContext = this.args.inTopicContext;
   @tracked loading = false;
   @tracked results = {};
   @tracked noResults = false;
-  @tracked inPMInboxContext =
-    this.search.searchContext?.type === "private_messages";
+  @tracked
+  inPMInboxContext = this.search.searchContext?.type === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
   @tracked invalidTerm = false;
+  @tracked menuPanelOpen = false;
+
   _debouncer = null;
   _activeSearch = null;
+
+  @bind
+  setupEventListeners() {
+    // We only need to register click events when the search menu is rendered outside of the header.
+    // The header handles clicking outside.
+    if (!this.args.inlineResults) {
+      document.addEventListener("mousedown", this.onDocumentPress);
+      document.addEventListener("touchend", this.onDocumentPress);
+    }
+  }
+
+  willDestroy() {
+    if (!this.args.inlineResults) {
+      document.removeEventListener("mousedown", this.onDocumentPress);
+      document.removeEventListener("touchend", this.onDocumentPress);
+    }
+    super.willDestroy(...arguments);
+  }
+
+  @bind
+  onDocumentPress(event) {
+    if (!this.menuPanelOpen) {
+      return;
+    }
+
+    if (!event.target.closest(".search-menu-container.menu-panel-results")) {
+      this.close();
+    }
+  }
+
+  get classNames() {
+    const classes = ["search-menu-container"];
+
+    if (!this.args.inlineResults) {
+      classes.push("menu-panel-results");
+    }
+
+    if (this.loading) {
+      classes.push("loading");
+    }
+
+    return classes.join(" ");
+  }
 
   get includesTopics() {
     return this.typeFilter !== DEFAULT_TYPE_FILTER;
   }
 
   get searchContext() {
-    if (this.inTopicContext || this.inPMInboxContext) {
+    if (this.search.inTopicContext || this.inPMInboxContext) {
       return this.search.searchContext;
     }
 
     return false;
+  }
+
+  @action
+  close() {
+    if (this.args?.onClose) {
+      return this.args.onClose();
+    }
+
+    // We want to blur the search input when in stand-alone mode
+    // so that when we focus on the search input again, the menu panel pops up
+    document.getElementById(SEARCH_INPUT_ID)?.blur();
+    this.menuPanelOpen = false;
+  }
+
+  @action
+  open() {
+    this.menuPanelOpen = true;
   }
 
   @bind
@@ -89,6 +145,18 @@ export default class SearchMenu extends Component {
     return getURL(url);
   }
 
+  get advancedSearchButtonHref() {
+    return this.fullSearchUrl({ expanded: true });
+  }
+
+  get displayMenuPanelResults() {
+    if (this.args.inlineResults) {
+      return false;
+    }
+
+    return this.menuPanelOpen;
+  }
+
   @bind
   clearSearch(e) {
     e.stopPropagation();
@@ -102,7 +170,7 @@ export default class SearchMenu extends Component {
   searchTermChanged(term, opts = {}) {
     this.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
     if (opts.setTopicContext) {
-      this.inTopicContext = true;
+      this.search.inTopicContext = true;
     }
     this.search.activeGlobalSearchTerm = term;
     this.triggerSearch();
@@ -129,7 +197,7 @@ export default class SearchMenu extends Component {
 
   @action
   clearTopicContext() {
-    this.inTopicContext = false;
+    this.search.inTopicContext = false;
   }
 
   // for cancelling debounced search
@@ -208,6 +276,7 @@ export default class SearchMenu extends Component {
       this.loading = false;
       this.invalidTerm = true;
     } else {
+      this.loading = true;
       this.invalidTerm = false;
 
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
@@ -286,7 +355,7 @@ export default class SearchMenu extends Component {
       }
     } else {
       this.loading = false;
-      if (!this.inTopicContext) {
+      if (!this.search.inTopicContext) {
         this._debouncer = discourseDebounce(this, this.perform, 400);
       }
     }

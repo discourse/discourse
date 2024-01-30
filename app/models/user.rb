@@ -6,12 +6,15 @@ class User < ActiveRecord::Base
   include HasCustomFields
   include SecondFactorManager
   include HasDestroyedWebHook
+  include HasDeprecatedColumns
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
 
   PASSWORD_SALT_LENGTH = 16
   TARGET_PASSWORD_ALGORITHM =
     "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
+
+  deprecate_column :flag_level, drop_from: "3.2"
 
   # not deleted on user delete
   has_many :posts
@@ -100,7 +103,7 @@ class User < ActiveRecord::Base
 
   has_many :badges, through: :user_badges
   has_many :default_featured_user_badges,
-           -> {
+           -> do
              max_featured_rank =
                (
                  if SiteSetting.max_favorite_badges > 0
@@ -110,7 +113,7 @@ class User < ActiveRecord::Base
                  end
                )
              for_enabled_badges.grouped_with_count.where("featured_rank <= ?", max_featured_rank)
-           },
+           end,
            class_name: "UserBadge"
 
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
@@ -146,11 +149,14 @@ class User < ActiveRecord::Base
   validate :password_validator
   validate :name_validator, if: :will_save_change_to_name?
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
-  validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
+  validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
-  validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
+  validates :validatable_user_fields_values,
+            watched_words: true,
+            unless: :should_skip_user_fields_validation?
+
   validates_associated :primary_email,
-                       message: ->(_, user_email) { user_email[:value]&.errors[:email]&.first }
+                       message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
 
   after_initialize :add_trust_level
 
@@ -177,7 +183,7 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
-  before_save :apply_watched_words, unless: :custom_fields_clean?
+  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -246,18 +252,18 @@ class User < ActiveRecord::Base
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
 
   scope :with_primary_email,
-        ->(email) {
+        ->(email) do
           joins(:user_emails).where(
             "lower(user_emails.email) IN (?) AND user_emails.primary",
             email,
           )
-        }
+        end
 
   scope :human_users, -> { where("users.id > 0") }
 
   # excluding fake users like the system user or anonymous users
   scope :real,
-        -> {
+        -> do
           human_users.where(
             "NOT EXISTS(
                      SELECT 1
@@ -265,7 +271,7 @@ class User < ActiveRecord::Base
                      WHERE a.user_id = users.id
                   )",
           )
-        }
+        end
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
@@ -278,16 +284,16 @@ class User < ActiveRecord::Base
   scope :not_staged, -> { where(staged: false) }
 
   scope :filter_by_username,
-        ->(filter) {
+        ->(filter) do
           if filter.is_a?(Array)
             where("username_lower ~* ?", "(#{filter.join("|")})")
           else
             where("username_lower ILIKE ?", "%#{filter}%")
           end
-        }
+        end
 
   scope :filter_by_username_or_email,
-        ->(filter) {
+        ->(filter) do
           if filter.is_a?(String) && filter =~ /.+@.+/
             # probably an email so try the bypass
             if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pick(:user_id)
@@ -308,10 +314,10 @@ class User < ActiveRecord::Base
               filter: "%#{filter}%",
             )
           end
-        }
+        end
 
   scope :watching_topic,
-        ->(topic) {
+        ->(topic) do
           joins(
             DB.sql_fragment(
               "LEFT JOIN category_users ON category_users.user_id = users.id AND category_users.category_id = :category_id",
@@ -330,7 +336,7 @@ class User < ActiveRecord::Base
             .where(
               "category_users.notification_level > 0 OR topic_users.notification_level > 0 OR tag_users.notification_level > 0",
             )
-        }
+        end
 
   module NewTopicDuration
     ALWAYS = -1
@@ -349,6 +355,10 @@ class User < ActiveRecord::Base
         suggested_topics: 5,
         admin_guide: 6,
       )
+  end
+
+  def should_skip_user_fields_validation?
+    custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
   end
 
   def secured_sidebar_category_ids(user_guardian = nil)
@@ -513,7 +523,9 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & belonging_to_group_ids).any?
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+      (is_system_user? && (Group.auto_groups_between(:admins, :trust_level_4) & group_ids).any?) ||
+      (group_ids & belonging_to_group_ids).any?
   end
 
   def belonging_to_group_ids
@@ -1194,6 +1206,13 @@ class User < ActiveRecord::Base
     user_warnings.count
   end
 
+  def flags_received_count
+    posts
+      .includes(:post_actions)
+      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
+      .count
+  end
+
   def private_topics_count
     topics_allowed.where(archetype: Archetype.private_message).count
   end
@@ -1252,7 +1271,7 @@ class User < ActiveRecord::Base
   end
 
   def full_suspend_reason
-    return suspend_record.try(:details) if suspended?
+    suspend_record.try(:details) if suspended?
   end
 
   def suspend_reason
@@ -1397,10 +1416,6 @@ class User < ActiveRecord::Base
     cats.pluck("categories.id").sort
   end
 
-  def topic_create_allowed_category_ids
-    Category.topic_create_allowed(self.id).select(:id)
-  end
-
   # Flag all posts from a user as spam
   def flag_linked_posts_as_spam
     results = []
@@ -1524,14 +1539,8 @@ class User < ActiveRecord::Base
   end
 
   def number_of_flagged_posts
-    posts
-      .with_deleted
-      .includes(:post_actions)
-      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
-      .where("post_actions.agreed_at IS NOT NULL")
-      .count
+    ReviewableFlaggedPost.where(target_created_by: self.id).count
   end
-  alias_method :flags_received_count, :number_of_flagged_posts
 
   def number_of_rejected_posts
     ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count
@@ -1619,8 +1628,6 @@ class User < ActiveRecord::Base
       secondary_match.mark_for_destruction
       primary_email.skip_validate_unique_email = true
     end
-
-    new_email
   end
 
   def emails
@@ -1726,11 +1733,18 @@ class User < ActiveRecord::Base
     new_secure_identifier
   end
 
+  def second_factor_security_keys
+    security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor])
+  end
+
   def second_factor_security_key_credential_ids
-    security_keys
-      .select(:credential_id)
-      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
-      .pluck(:credential_id)
+    second_factor_security_keys.pluck(:credential_id)
+  end
+
+  def passkey_credential_ids
+    security_keys.where(factor_type: UserSecurityKey.factor_types[:first_factor]).pluck(
+      :credential_id,
+    )
   end
 
   def encoded_username(lower: false)
@@ -1800,10 +1814,6 @@ class User < ActiveRecord::Base
 
   def new_new_view_enabled?
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
-  end
-
-  def experimental_search_menu_groups_enabled?
-    in_any_groups?(SiteSetting.experimental_search_menu_groups_map)
   end
 
   def watched_precedence_over_muted
@@ -2045,7 +2055,6 @@ class User < ActiveRecord::Base
   private
 
   def set_default_sidebar_section_links(update: false)
-    return if SiteSetting.legacy_navigation_menu?
     return if staged? || bot?
 
     if SiteSetting.default_navigation_menu_categories.present?

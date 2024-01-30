@@ -1,41 +1,43 @@
-import Category from "discourse/models/category";
-import Controller, { inject as controller } from "@ember/controller";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import Controller from "@ember/controller";
+import EmberObject, { action } from "@ember/object";
 import { alias, and, not, or } from "@ember/object/computed";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
-import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { isEmpty, isPresent } from "@ember/utils";
 import { next, schedule } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import BookmarkModal from "discourse/components/modal/bookmark";
+import { inject as service } from "@ember/service";
+import { isEmpty, isPresent } from "@ember/utils";
+import { Promise } from "rsvp";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
 } from "discourse/components/d-modal";
-import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import Composer from "discourse/models/composer";
-import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import Post from "discourse/models/post";
-import { Promise } from "rsvp";
+import BookmarkModal from "discourse/components/modal/bookmark";
+import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
+import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
+import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
+import JumpToPost from "discourse/components/modal/jump-to-post";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { BookmarkFormData } from "discourse/lib/bookmark";
+import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
+import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
+import DiscourseURL, { userPath } from "discourse/lib/url";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import Category from "discourse/models/category";
+import Composer from "discourse/models/composer";
+import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
-import { ajax } from "discourse/lib/ajax";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { buildQuote } from "discourse/lib/quote";
+import discourseLater from "discourse-common/lib/later";
 import { deepMerge } from "discourse-common/lib/object";
-import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
-import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { BookmarkFormData } from "discourse/lib/bookmark";
-import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 let customPostMessageCallbacks = {};
 
@@ -55,7 +57,6 @@ export function registerCustomPostMessageCallback(type, callback) {
 
 export default Controller.extend(bufferedProperty("model"), {
   composer: service(),
-  application: controller(),
   dialog: service(),
   documentTitle: service(),
   screenTrack: service(),
@@ -449,7 +450,7 @@ export default Controller.extend(bufferedProperty("model"), {
         } else if (composer.get("model.viewDraft")) {
           const model = composer.get("model");
           model.set("reply", model.get("reply") + "\n" + quotedText);
-          composer.send("openIfDraft");
+          composer.openIfDraft();
         } else {
           composer.open(composerOpts);
         }
@@ -566,6 +567,14 @@ export default Controller.extend(bufferedProperty("model"), {
         });
     },
 
+    collapseSummary() {
+      this.get("model.postStream").collapseSummary();
+    },
+
+    showSummary() {
+      this.get("model.postStream").showSummary(this.currentUser);
+    },
+
     removeAllowedUser(user) {
       return this.get("model.details")
         .removeAllowedUser(user)
@@ -588,7 +597,7 @@ export default Controller.extend(bufferedProperty("model"), {
     toggleArchiveMessage() {
       const topic = this.model;
 
-      if (topic.get("archiving")) {
+      if (!topic || topic.get("archiving") || !topic.isPrivateMessage) {
         return;
       }
 
@@ -630,10 +639,6 @@ export default Controller.extend(bufferedProperty("model"), {
 
     // Post related methods
     replyToPost(post) {
-      if (this.currentUser && this.siteSettings.enable_user_tips) {
-        this.currentUser.hideUserTipForever("post_menu");
-      }
-
       const composerController = this.composer;
       const topic = post ? post.get("topic") : this.model;
       const quoteState = this.quoteState;
@@ -656,7 +661,8 @@ export default Controller.extend(bufferedProperty("model"), {
 
       if (
         composerController.get("model.topic.id") === topic.get("id") &&
-        composerController.get("model.action") === Composer.REPLY
+        composerController.get("model.action") === Composer.REPLY &&
+        post?.get("post_number") !== 1
       ) {
         composerController.set("model.post", post);
         composerController.set("model.composeState", Composer.OPEN);
@@ -879,15 +885,12 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     jumpToPostPrompt() {
-      const topic = this.model;
-      const modal = showModal("jump-to-post", {
-        modalClass: "jump-to-post-modal",
-      });
-      modal.setProperties({
-        topic,
-        postNumber: null,
-        jumpToIndex: (index) => this.send("jumpToIndex", index),
-        jumpToDate: (date) => this.send("jumpToDate", date),
+      this.modal.show(JumpToPost, {
+        model: {
+          topic: this.model,
+          jumpToIndex: (index) => this.send("jumpToIndex", index),
+          jumpToDate: (date) => this.send("jumpToDate", date),
+        },
       });
     },
 
@@ -1002,15 +1005,8 @@ export default Controller.extend(bufferedProperty("model"), {
       this.send("showGrantBadgeModal");
     },
 
-    changeNotice(post) {
-      return new Promise(function (resolve, reject) {
-        const modal = showModal("change-post-notice", { model: post });
-        modal.setProperties({
-          resolve,
-          reject,
-          notice: post.notice ? post.notice.raw : "",
-        });
-      });
+    async changeNotice(post) {
+      await this.modal.show(ChangePostNoticeModal, { model: { post } });
     },
 
     filterParticipant(user) {
@@ -1185,9 +1181,8 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     convertToPublicTopic() {
-      showModal("convert-to-public-topic", {
-        model: this.model,
-        modalClass: "convert-to-public-topic",
+      this.modal.show(ConvertToPublicTopicModal, {
+        model: { topic: this.model },
       });
     },
 
@@ -1555,6 +1550,19 @@ export default Controller.extend(bufferedProperty("model"), {
     this.model.recover();
   },
 
+  @action
+  buildQuoteMarkdown() {
+    const { postId, buffer, opts } = this.quoteState;
+    const loadedPost = this.get("model.postStream").findLoadedPost(postId);
+    const promise = loadedPost
+      ? Promise.resolve(loadedPost)
+      : this.get("model.postStream").loadPost(postId);
+
+    return promise.then((post) => {
+      return buildQuote(post, buffer, opts);
+    });
+  },
+
   deleteTopic(opts = {}) {
     if (opts.force_destroy) {
       return this.model.destroy(this.currentUser, opts);
@@ -1630,6 +1638,9 @@ export default Controller.extend(bufferedProperty("model"), {
       this.onMessage,
       this.get("model.message_bus_last_id")
     );
+
+    const summariesChannel = `/summaries/topic/${this.get("model.id")}`;
+    this.messageBus.subscribe(summariesChannel, this._updateSummary);
   },
 
   unsubscribe() {
@@ -1639,6 +1650,13 @@ export default Controller.extend(bufferedProperty("model"), {
     }
 
     this.messageBus.unsubscribe("/topic/*", this.onMessage);
+    this.messageBus.unsubscribe("/summaries/topic/*", this._updateSummary);
+  },
+
+  @bind
+  _updateSummary(update) {
+    const postStream = this.get("model.postStream");
+    postStream.processSummaryUpdate(update);
   },
 
   @bind
@@ -1807,13 +1825,5 @@ export default Controller.extend(bufferedProperty("model"), {
         }
       }
     }
-  },
-
-  @observes("model.postStream.loaded", "model.postStream.loadedAllPosts")
-  _showFooter() {
-    const showFooter =
-      this.get("model.postStream.loaded") &&
-      this.get("model.postStream.loadedAllPosts");
-    this.set("application.showFooter", showFooter);
   },
 });

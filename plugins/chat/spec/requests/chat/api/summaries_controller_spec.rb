@@ -2,13 +2,13 @@
 
 RSpec.describe Chat::Api::SummariesController do
   fab!(:current_user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   let(:plugin) { Plugin::Instance.new }
 
   before do
     group.add(current_user)
 
-    strategy = DummyCustomSummarization.new("dummy")
+    strategy = DummyCustomSummarization.new({ summary: "dummy", chunks: [] })
     plugin.register_summarization_strategy(strategy)
     SiteSetting.summarization_strategy = strategy.model
     SiteSetting.custom_summarization_allowed_groups = group.id
@@ -17,6 +17,8 @@ RSpec.describe Chat::Api::SummariesController do
     SiteSetting.chat_allowed_groups = group.id
     sign_in(current_user)
   end
+
+  after { DiscoursePluginRegistry.reset_register!(:summarization_strategies) }
 
   describe "#get_summary" do
     context "when the user is not allowed to join the channel" do

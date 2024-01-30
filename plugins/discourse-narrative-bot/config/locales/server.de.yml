@@ -374,20 +374,10 @@ de:
           Bitte beachte, dass du nur %{deletion_after} Stunde(n) hast, um einen Beitrag wiederherzustellen.
       category_hashtag:
         instructions: |-
-          Wusstest du, dass du auf Kategorien und Schlagwörter in deinen Beiträgen verweisen kannst? Hast du zum Beispiel die Kategorie %{category} schon gesehen?
-
-          Gib `#` in der Mitte eines Satzes ein und wähle eine Kategorie oder ein Schlagwort aus.
-        instructions_experimental: |-
-          Wusstest du, dass du auf Kategorien und Schlagwörter in deinen Beiträgen verweisen kannst? Hast du zum Beispiel die Kategorie %{category} schon gesehen?
+          Wusstest du, dass du in deinen Beiträgen auf Kategorien und Schlagwörter verweisen kannst? Hast du zum Beispiel die Kategorie %{category} schon gesehen?
 
           Gib `#` in einem Satz ein und wähle eine Kategorie oder ein Schlagwort aus.
         not_found: |-
-          Hmm, ich sehe darin nirgendwo eine Kategorie. Beachte, dass `#` nicht das erste Zeichen sein darf. Kannst du dies in deine nächste Antwort kopieren?
-
-          ```text
-          Ich erstelle einen Kategorie-Link per #
-          ```
-        not_found_experimental: |-
           Hmm, ich sehe nirgendwo eine Kategorie. Kannst du das in deine nächste Antwort kopieren?
 
           ```text

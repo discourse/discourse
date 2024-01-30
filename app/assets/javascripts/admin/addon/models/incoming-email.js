@@ -1,6 +1,6 @@
-import AdminUser from "admin/models/admin-user";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import AdminUser from "admin/models/admin-user";
 
 export default class IncomingEmail extends EmberObject {
   static create(attrs) {

@@ -4,12 +4,6 @@
     "name": {
       "type": "string"
     },
-    "email": {
-      "type": "string"
-    },
-    "password": {
-      "type": "string"
-    },
     "external_ids": {
       "type": "object"
     }

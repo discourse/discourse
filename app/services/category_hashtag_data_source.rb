@@ -5,7 +5,7 @@
 # categories via the # autocomplete character.
 class CategoryHashtagDataSource
   def self.enabled?
-    SiteSetting.enable_experimental_hashtag_autocomplete
+    true
   end
 
   def self.icon
@@ -25,14 +25,9 @@ class CategoryHashtagDataSource
       item.relative_url = category.url
       item.id = category.id
 
-      # Single-level category heirarchy should be enough to distinguish between
+      # Single-level category hierarchy should be enough to distinguish between
       # categories here.
-      item.ref =
-        if category.parent_category_id
-          "#{category.parent_category.slug}:#{category.slug}"
-        else
-          category.slug
-        end
+      item.ref = category.slug_ref
     end
   end
 

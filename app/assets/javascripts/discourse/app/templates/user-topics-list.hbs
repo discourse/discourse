@@ -1,3 +1,7 @@
+{{#if this.model.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
 {{#if this.noContent}}
   <EmptyState
     @title={{this.model.emptyState.title}}
@@ -5,17 +9,21 @@
   />
 {{else}}
   <LoadMore
-    @class="paginated-topics-list"
     @selector=".paginated-topics-list .topic-list .topic-list-item"
     @action={{action "loadMore"}}
+    class="paginated-topics-list"
   >
     <TopicDismissButtons
       @position="top"
-      @selectedTopics={{this.selected}}
+      @selectedTopics={{this.bulkSelectHelper.selected}}
       @model={{this.model}}
       @showResetNew={{this.showResetNew}}
       @showDismissRead={{this.showDismissRead}}
       @resetNew={{action "resetNew"}}
+      @dismissRead={{if
+        this.showDismissRead
+        (route-action "dismissReadTopics")
+      }}
     />
 
     {{#if (gt this.incomingCount 0)}}
@@ -39,24 +47,26 @@
       @topicList={{this.model}}
       @hideCategory={{this.hideCategory}}
       @showPosters={{this.showPosters}}
-      @bulkSelectEnabled={{this.bulkSelectEnabled}}
-      @bulkSelectAction={{action "refresh"}}
-      @selected={{this.selected}}
       @tagsForUser={{this.tagsForUser}}
       @canBulkSelect={{this.canBulkSelect}}
-      @toggleBulkSelect={{action "toggleBulkSelect"}}
-      @updateAutoAddTopicsToBulkSelect={{action
-        "updateAutoAddTopicsToBulkSelect"
-      }}
+      @bulkSelectHelper={{this.bulkSelectHelper}}
+      @changeSort={{this.changeSort}}
+      @order={{this.order}}
+      @ascending={{this.ascending}}
+      @focusLastVisitedTopic={{true}}
     />
 
     <TopicDismissButtons
       @position="bottom"
-      @selectedTopics={{this.selected}}
+      @selectedTopics={{this.bulkSelectHelper.selected}}
       @model={{this.model}}
       @showResetNew={{this.showResetNew}}
       @showDismissRead={{this.showDismissRead}}
       @resetNew={{action "resetNew"}}
+      @dismissRead={{if
+        this.showDismissRead
+        (route-action "dismissReadTopics")
+      }}
     />
 
     <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />

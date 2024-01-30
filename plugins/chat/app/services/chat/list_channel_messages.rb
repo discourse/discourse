@@ -59,7 +59,7 @@ module Chat
     private
 
     def fetch_channel(contract:, **)
-      ::Chat::Channel.strict_loading.includes(:chatable).find_by(id: contract.channel_id)
+      ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
     end
 
     def fetch_optional_membership(channel:, guardian:, **)
@@ -84,11 +84,18 @@ module Chat
 
     def target_message_exists(channel:, guardian:, **)
       return true if context.target_message_id.blank?
+
       target_message =
         Chat::Message.with_deleted.find_by(id: context.target_message_id, chat_channel: channel)
       return false if target_message.blank?
+
       return true if !target_message.trashed?
-      target_message.user_id == guardian.user.id || guardian.is_staff?
+      if target_message.trashed? && target_message.user_id == guardian.user.id || guardian.is_staff?
+        return true
+      end
+
+      context.target_message_id = nil
+      true
     end
 
     def fetch_messages(channel:, contract:, guardian:, enabled_threads:, **)
@@ -158,7 +165,9 @@ module Chat
     end
 
     def update_membership_last_viewed_at(guardian:, **)
-      context.membership&.update!(last_viewed_at: Time.zone.now)
+      Scheduler::Defer.later "Chat::ListChannelMessages - defer update_membership_last_viewed_at" do
+        context.membership&.update!(last_viewed_at: Time.zone.now)
+      end
     end
   end
 end

@@ -140,8 +140,6 @@ te:
     character_count:
       one: "%{count} అక్షరం"
       other: "%{count} అక్షరాలు"
-    suggested_topics:
-      title: "సూచించే విషయాలు"
     about:
       simple_title: "గురించి"
       title: "%{title} గురించి"
@@ -149,13 +147,9 @@ te:
       our_admins: "మా అధికారులు"
       our_moderators: "మా నిర్వాహకులు"
       moderators: "నిర్వాహకులు"
-      stat:
-        all_time: "ఆల్ టైమ్"
       like_count: "ఇష్టాలు"
       topic_count: "విషయాలు"
       post_count: "టపాలు"
-      active_user_count: "క్రియాశీల సభ్యులు"
-      contact: "మమ్ము సంప్రదించండి"
       contact_info: "ఈ సంధర్భంలో క్లిష్టమైన సమస్య లేదా అత్యవసర విషయం సైట్ ను ప్రభావితం చేస్తుంది, దయచేసి మమ్మల్ని సంప్రదించండి %{contact_info}."
     bookmarked:
       title: "పేజీక"
@@ -171,10 +165,8 @@ te:
     preview: "మునుజూపు"
     cancel: "రద్దు"
     save: "మార్పులు భద్రపరచండి"
-    saving: "భద్రపరుస్తున్నాం..."
     saved: "భద్రం!"
     upload: "ఎగుమతించు"
-    uploading: "ఎగుమతవుతోంది..."
     uploaded: "ఎగుమతైంది!"
     enable: "చేతనం"
     disable: "అచేతనం"
@@ -185,6 +177,8 @@ te:
     review:
       explain:
         total: "మొత్తం"
+      revise_and_reject_post:
+        reason: "కారణం"
       delete: "తొలగించు"
       settings:
         save_changes: "మార్పులను భద్రపరచు"
@@ -215,8 +209,11 @@ te:
       context_question:
         delimiter: "లేదా"
       types:
+        reviewable_queued_topic:
+          noun: "విషయం"
         reviewable_user:
           title: "సభ్యుడు"
+          noun: "సభ్యుడు"
       approval:
         ok: "సరే"
       example_username: "సభ్యనామం"
@@ -461,6 +458,8 @@ te:
         edit: "సవరించు"
         security_key:
           save: "భద్రపరచు"
+      passkeys:
+        save: "భద్రపరుచు"
       change_about:
         title: "నా గురించి మార్చు"
       change_username:
@@ -474,6 +473,7 @@ te:
         taken: "క్షమించాలి. ఆ ఈమెయిల్ అందుబాటులో లేదు."
         error: "మీ ఈమెయిల్ మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఇప్పటికే ఈ సైటులో వాడుకలో ఉందేమో? "
         success: "ఆ చిరునామాకు మేము వేగు పంపాము. అందులోని సూచనలు అనుసరించండి. "
+        confirm_success: "మీ ఈమెయిల్ చిరునామా మారింది."
       change_avatar:
         title: "మీ ప్రవర బొమ్మ మార్చండి."
         letter_based: "వ్యవస్థ కేటాయించిన ప్రవర బొమ్మ"
@@ -496,8 +496,6 @@ te:
         cancel: "రద్దుచేయి"
       name:
         title: "పేరు"
-        instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)"
-        instructions_required: "మీ పూర్తి పేరు"
         too_short: "మీ పేరు మరీ చిన్నది"
         ok: "మీ పేరు బాగుంది"
       username:
@@ -508,7 +506,6 @@ te:
         not_available_no_suggestion: "అందుబాటులో లేదు"
         too_short: "మీ సభ్యనామం మరీ చిన్నది"
         too_long: "మీ సభ్యనామం మరీ పొడుగు"
-        checking: "సభ్యనామం అందుబాటు పరిశీలిస్తున్నాం..."
         prefilled: "ఈమెయిల్ రిజిస్టరు అయిన సభ్యనామంతో సరిపోతోంది"
       locale:
         title: "ఇంటర్ఫేస్ భాష"
@@ -557,7 +554,6 @@ te:
         edit: "సవరించు"
         remove: "తొలగించు"
         reinvited: "ఆహ్వానం మరలా పంపారు"
-        search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
         user: "ఆహ్వానించిన సభ్యుడు"
         redeemed: "మన్నించిన ఆహ్వానాలు"
         redeemed_at: "మన్నించిన"
@@ -603,7 +599,6 @@ te:
         the_topic: "విషయం"
     user_status:
       save: "భద్రపరచు"
-    loading: "లోడవుతోంది..."
     errors:
       prev_page: "ఎక్కించుట ప్రయత్నిస్తున్నప్పుడు"
       reasons:
@@ -628,7 +623,6 @@ te:
     refresh: "తాజాపరుచు"
     read_only_mode:
       login_disabled: "సేటు కేవలం చదివే రీతిలో ఉన్నప్పుడు లాగిన్ వీలవదు."
-    learn_more: "మరింత తెలుసుకోండి..."
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
     time_read: చదివిన
@@ -675,9 +669,7 @@ te:
       error: "తెలీని దోషం"
       blank_username_or_password: "దయచేసి మీ ఈమెయిల్ లేదా సభ్యనామం మరియు సంకేతపదం రాయండి"
       reset_password: "రీసెట్ సంకేతపదం"
-      logging_in: "ప్రవేశపెడ్తోన్నాం"
       or: "లేదా"
-      authenticating: "ద్రువీకరిస్తున్నాము..."
       awaiting_activation: "మీ ఖాతా చేతనం కోసం ఎదురుచూస్తుంది. సంకేతపదం మర్చిపోయా లంకెను వాడు మరో చేతన ఈమెయిల్ పొందండి."
       awaiting_approval: "మీ ఖాతా ఇంకా సిబ్బంది ఒప్పుకొనలేదు. సిబ్బంది ఒప్పుకోగానే మీకు ఒక ఈమెయిల్ వస్తుంది."
       requires_invite: "క్షమించాలి. ఈ పోరమ్ ప్రవేశం కేవలం ఆహ్వానితులకు మాత్రమే."
@@ -702,10 +694,11 @@ te:
       twitter: "ట్విట్టర్"
     category_page_style:
       categories_only: "వర్గాలు మాత్రమే"
-    conditional_loading_section:
-      loading: లోడవుతోంది...
     select_kit:
       delete_item: "%{name} తొలగించు"
+      components:
+        bulk_select_topics_dropdown:
+          title: "బహుళ చర్యలు"
     emoji_picker:
       flags: కేతనాలు
     composer:
@@ -713,7 +706,6 @@ te:
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
       posting_not_on_topic: "ఏ విషయానికి మీరు జవాబివ్వాలనుకుంటున్నారు? "
       saved_local_draft_tip: "స్థానికంగా భద్రం"
-      similar_topics: "మీ విషయం దీని వలె ఉంది..."
       drafts_offline: "చిత్తుప్రతులు ఆఫ్లైను."
       error:
         title_missing: "శీర్షిక తప్పనిసరి"
@@ -725,7 +717,6 @@ te:
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
       view_new_post: "మీ కొత్త టపా చూడండి"
       saved: "భద్రం!"
-      uploading: "ఎగుమతవుతోంది..."
       quote_post_title: "మొత్తం టపాను కోట్ చేయి"
       bold_title: "బొద్దు"
       bold_text: "బొద్దు పాఠ్యం"
@@ -829,6 +820,9 @@ te:
         tag: "ఇంకా %{tag} విషయాలు లేవు."
         top: "ఇంకా అగ్ర విషయాలు లేవు."
         bookmarks: "ఇంకా పేజీక విషయాలు లేవు."
+    topic_bulk_actions:
+      close_topics:
+        name: "విషయాలు మూయు"
     topic:
       create: "కొత్త విషయం"
       create_long: "కొత్త విషయం సృష్టించు"
@@ -926,7 +920,6 @@ te:
         title: "కేతనం"
         help: "ఈ విషయాన్ని ప్రైవేటుగా కేతనించు లేదా ప్రైవేటు ప్రకటన పంపు"
         success_message: "ఈ విషయాన్ని మీరు కేతనించారు"
-      inviting: "ఆహ్వానిస్తున్నామ్..."
       invite_private:
         email_or_username: "ఆహ్వానితుని ఈమెయిల్ లేదా సభ్యనామం"
         email_or_username_placeholder: "ఈమెయిల్ చిరునామా లేదా సభ్యనామం"
@@ -992,7 +985,6 @@ te:
       errors:
         create: "క్షమించాలి. మీ టపా సృష్టించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
         edit: "క్షమించాలి. మీ టపా సవరించుటలో దోషం. మరలా ప్రయత్నించండి"
-        upload: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
         too_many_uploads: "క్షమించాలి. మీరు ఒకసారి ఒక దస్త్రం మాత్రమే ఎగుమతించగలరు"
         image_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు బొమ్మలు ఎగుమతి చేయలేరు."
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
@@ -1116,9 +1108,6 @@ te:
       title: "మా కమ్యునిటీని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు"
       action: "టపాను కేతనించు"
       take_action_options:
-        default:
-          title: "చర్య తీసుకో"
-          details: "మరిన్ని కమ్యునిటీ కేతనాల కోసం ఎదురు చూడకుండా ఇప్పుడే కేతన గట్టు చేరు"
         suspend:
           title: "సభ్యుడిని సస్పెండు చేయి"
       delete_spammer: "స్పామరును తొలగించు"
@@ -1126,7 +1115,6 @@ te:
       ip_address_missing: "వర్తించదు"
       hidden_email_address: "(దాయబడింది)"
       submit_tooltip: "ఒక ప్రైవేటు కేతనం అందించు"
-      take_action_tooltip: "మరిన్ని కమ్యునిటీ కేతనాల కోసం ఎదురు చూడకుండా ఇప్పుడే కేతన గట్టు చేరు"
       cant: "క్షమించాలి. ఇప్పుడు ఈ టపాను కేతనిచంలేరు."
       formatted_name:
         off_topic: "ఇది విషయాంతరం"
@@ -1210,6 +1198,9 @@ te:
         lower_title: "కొత్త"
         title: "కొత్త"
         help: "గత కొద్ది రోజులలో సృష్టించిన టపాలు"
+        all: "అన్ని"
+        topics: "విషయాలు"
+        replies: "జవాబులు"
       posted:
         title: "నా టపాలు"
         help: "మీరు టపా రాసిన విషయాలు"
@@ -1292,7 +1283,6 @@ te:
     tagging:
       tags: "ట్యాగులు"
       add_synonyms: "కలుపు"
-      description: "వివరణ"
       sort_by_name: "పేరు"
       filters:
         without_category: "%{filter} %{tag} విషయాలు"
@@ -1381,11 +1371,22 @@ te:
             my_posts:
               content: "నా టపాలు"
     form_templates:
+      upload_field:
+        upload: "ఎక్కించు"
+        uploading: "ఎగుమతవుతోంది"
       errors:
         typeMismatch:
           default: "దయచేసి చెల్లే విలువ రాయండి"
+    table_builder:
+      edit:
+        modal:
+          cancel: "రద్దు"
+          create: "భద్రపరుచు"
+          reason: "మీరెందుకు సవరిస్తున్నారు?"
+      spreadsheet:
+        show: "చూపు"
+        about: "గురించి"
   admin_js:
-    type_to_filter: "జల్లించుటకు రాయి..."
     admin:
       title: "డిస్కోర్సు అధికారి"
       moderator: "నిర్వాహకుడు"
@@ -1405,6 +1406,8 @@ te:
         version_check_pending: "మీరు ఇటీవలే ఉన్నతీకరించినట్టున్నారు. అద్భుతం!"
         installed_version: "ప్రతిష్టించబడింది"
         latest_version: "తాజా"
+        new_features:
+          learn_more: "మరింత తెలుసుకోండి..."
         last_checked: "చివరగా సరిచూసినది"
         refresh_problems: "తాజాపరుచు"
         no_problems: "ఎటువంటి సమస్యలూ కనిపించలేదు"
@@ -1489,6 +1492,7 @@ te:
         enabled: "చేతమైందా?"
         change_settings_short: "అమరికలు"
         howto: "పొడిగింతలు నేను ఎలా ప్రతిష్టించగలను?"
+        author: " %{author} రాసిన"
       backups:
         title: "బ్యాకప్పులు"
         menu:
@@ -1500,17 +1504,13 @@ te:
             title: "కేవలం చదివే రీతి చేతనించు"
           disable:
             title: "కేవలం చదివే రీతి అచేతనం చేయి"
-        logs:
-          none: "ఇంకా లాగులు లేవు..."
         columns:
           filename: "దస్త్రం పేరు"
           size: "పరిమాణం"
         upload:
           label: "ఎక్కించు"
-          uploading: "ఎగుమతవుతోంది..."
           error: "'%{filename}' ఎగుమతించుటలో దోషం: %{message}"
         operations:
-          is_running: "ఒక కార్యం ప్రస్తుతం నడుస్తోంది..."
           failed: "కార్యం విఫలమైంది. దయచేసి లాగులు చూడండి."
           cancel:
             label: "రద్దుచేయి"
@@ -1559,6 +1559,8 @@ te:
           title: "ఈమెయిల్"
           subject: "సబ్జెక్టు"
           body: "శరీరం"
+        component:
+          all_filter: "అన్ని"
         theme:
           theme: "అలంకారం"
           title: "అలంకారాలు"
@@ -1567,6 +1569,7 @@ te:
           save: "భద్రపరుచు"
           edit: "సవరించు"
           settings: "అమరికలు"
+          cancel: "రద్దుచేయి"
           upload: "ఎక్కించు"
           installed: "ప్రతిష్టించబడింది"
           install_popular: "ప్రముఖ"
@@ -1583,6 +1586,8 @@ te:
             text: "ఫుటరు"
           body_tag:
             text: "శరీరం"
+          all_filter: "అన్ని"
+          active_filter: "క్రియాశీల"
         colors:
           title: "రంగులు"
           copy_name_prefix: "దీనికి నకలు"
@@ -1624,7 +1629,6 @@ te:
       email:
         settings: "అమరికలు"
         preview_digest: "డైజెస్టు మునుజూపు"
-        sending_test: "పరీక్షా ఈమెయిల్ పంపుతున్నామ్..."
         error: "<b>దోషం</b> - %{server_error}"
         test_error: "టెస్ట్ మెయిల్ పంపడంలో ఒక సమస్య ఉంది.దయచేసి మీ మెయిల్ సెట్టింగ్స్ రెండోసారి తనిఖీ చేసి,మీ హోస్ట్ మెయిల్ కనెక్షన్ నిరోధించుటలేదని నిర్ధారించుకోండి, మరియు తిరిగి ప్రయత్నించండి."
         sent: "పంపిన"
@@ -1660,7 +1664,6 @@ te:
             title: "జల్లెడ"
             user_placeholder: "సభ్యనామం"
             address_placeholder: "name@example.com"
-            type_placeholder: "డైజెస్ట్, సైనప్..."
             reply_key_placeholder: "జవాబు కీ"
       logs:
         title: "లాగులు"
@@ -1981,6 +1984,8 @@ te:
           navigation: "నావిగేషను"
         default_categories:
           modal_yes: "అవును"
+        file_types_list:
+          add_image_types: "బొమ్మలు"
       badges:
         title: బ్యాడ్జీలు
         new_badge: కొత్త బ్యాడ్జీ
@@ -2036,7 +2041,6 @@ te:
       emoji:
         title: "ఇమోజి"
         add: "కొత్త ఇమోజి కలుపు"
-        uploading: "ఎగుమతవుతోంది..."
         name: "పేరు"
         group: "సమూహం"
         image: "బొమ్మ"
@@ -2061,7 +2065,6 @@ te:
     wizard:
       back: "వెనుకకు"
       next: "తదుపరి"
-      uploading: "ఎగుమతవుతోంది..."
       upload_error: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
       invites:
         add_user: "కలుపు"

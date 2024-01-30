@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ApiController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   fab!(:key1, refind: false) { Fabricate(:api_key, description: "my key") }
   fab!(:key2, refind: false) { Fabricate(:api_key, user: admin) }
@@ -290,6 +290,27 @@ RSpec.describe Admin::ApiController do
           expect(scope.allowed_parameters["topic_id"]).to contain_exactly("55")
         end
 
+        it "creates an scope for /logs" do
+          post "/admin/api/keys.json",
+               params: {
+                 key: {
+                   description: "logs",
+                   scopes: [{ scope_id: "logs:messages" }],
+                 },
+               }
+          expect(response.status).to eq(200)
+
+          data = response.parsed_body
+          scope = ApiKeyScope.find_by(api_key_id: data.dig("key", "id"))
+
+          expect(scope.resource).to eq("logs")
+          expect(scope.action).to eq("messages")
+
+          api_key = data.dig("key", "key")
+          post "/logs/messages.json", headers: { "Api-Key": api_key, "Api-Username": "system" }
+          expect(response.status).to eq(200)
+        end
+
         it "allows multiple parameters separated by a comma" do
           post "/admin/api/keys.json",
                params: {
@@ -430,6 +451,7 @@ RSpec.describe Admin::ApiController do
           "email",
           "posts",
           "tags",
+          "tag_groups",
           "uploads",
           "user_status",
           "global",
@@ -439,6 +461,7 @@ RSpec.describe Admin::ApiController do
           "search",
           "invites",
           "wordpress",
+          "logs",
         )
 
         topic_routes = [
@@ -463,6 +486,25 @@ RSpec.describe Admin::ApiController do
 
         expect(scopes["posts"].any? { |h| h["urls"].include?("/posts (GET)") }).to be_truthy
         expect(scopes["posts"].any? { |h| h["urls"].include?("/private-posts (GET)") }).to be_truthy
+
+        expect(scopes["users"].find { _1["key"] == "update" }["urls"]).to contain_exactly(
+          "/users/:username (PUT)",
+          "/users/:username/preferences/badge_title (PUT)",
+          "/users/:username/preferences/avatar/pick (PUT)",
+          "/users/:username/preferences/avatar/select (PUT)",
+          "/users/:username/feature-topic (PUT)",
+          "/users/:username/clear-featured-topic (PUT)",
+          "/u/:username (PUT)",
+          "/u/:username/preferences/badge_title (PUT)",
+          "/u/:username/preferences/avatar/pick (PUT)",
+          "/u/:username/preferences/avatar/select (PUT)",
+          "/u/:username/feature-topic (PUT)",
+          "/u/:username/clear-featured-topic (PUT)",
+        )
+
+        expect(
+          scopes["logs"].any? { |h| h["urls"].include?("/logs/messages.json (POST)") },
+        ).to be_truthy
       end
     end
 

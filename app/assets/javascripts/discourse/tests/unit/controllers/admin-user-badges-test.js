@@ -1,11 +1,14 @@
-import { module, test } from "qunit";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import Badge from "discourse/models/badge";
+import UserBadge from "discourse/models/user-badge";
 
 module("Unit | Controller | admin-user-badges", function (hooks) {
   setupTest(hooks);
 
-  test("grantableBadges", function (assert) {
+  test("availableBadges", function (assert) {
     const badgeFirst = Badge.create({
       id: 3,
       name: "A Badge",
@@ -50,12 +53,63 @@ module("Unit | Controller | admin-user-badges", function (hooks) {
     });
 
     const sortedNames = [badgeFirst.name, badgeMiddle.name, badgeLast.name];
-    const badgeNames = controller.grantableBadges.map((badge) => badge.name);
+    const badgeNames = controller.availableBadges.map((badge) => badge.name);
 
     assert.notOk(
       badgeNames.includes(badgeDisabled),
       "excludes disabled badges"
     );
     assert.deepEqual(badgeNames, sortedNames, "sorts badges by name");
+  });
+
+  test("performGrantBadge", async function (assert) {
+    const GrantBadgeStub = sinon.stub(UserBadge, "grant");
+    const controller = this.owner.lookup("controller:admin-user-badges");
+    const store = this.owner.lookup("service:store");
+
+    const badgeToGrant = store.createRecord("badge", {
+      id: 3,
+      name: "Granted Badge",
+      enabled: true,
+      manually_grantable: true,
+    });
+
+    const otherBadge = store.createRecord("badge", {
+      id: 4,
+      name: "Other Badge",
+      enabled: true,
+      manually_grantable: true,
+    });
+
+    const badgeReason = "Test Reason";
+
+    const user = { username: "jb", name: "jack black", id: 42 };
+
+    controller.setProperties({
+      model: [],
+      adminUser: { model: user },
+      badgeReason,
+      selectedBadgeId: badgeToGrant.id,
+      badges: [badgeToGrant, otherBadge],
+    });
+
+    const newUserBadge = store.createRecord("badge", {
+      id: 88,
+      badge_id: badgeToGrant.id,
+      user_id: user.id,
+    });
+
+    GrantBadgeStub.returns(Promise.resolve(newUserBadge));
+    controller.performGrantBadge();
+    await settled();
+
+    assert.ok(
+      GrantBadgeStub.calledWith(badgeToGrant.id, user.username, badgeReason)
+    );
+
+    assert.equal(controller.badgeReason, "");
+    assert.equal(controller.userBadges.length, 1);
+    assert.equal(controller.userBadges[0].id, newUserBadge.id);
+    assert.equal(controller.selectedBadgeId, otherBadge.id);
   });
 });

@@ -1,15 +1,16 @@
+import { resetAjax, trackNextAjaxAsPageview } from "discourse/lib/ajax";
 import {
   googleTagManagerPageChanged,
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
-import { resetAjax, trackNextAjaxAsPageview } from "discourse/lib/ajax";
 
 export default {
   after: "inject-objects",
 
   initialize(owner) {
     // Tell our AJAX system to track a page transition
+    // eslint-disable-next-line ember/no-private-routing-service
     const router = owner.lookup("router:main");
     router.on("routeWillChange", this.handleRouteWillChange);
 
@@ -65,10 +66,17 @@ export default {
   },
 
   handleRouteWillChange(transition) {
-    // will be null on initial boot transition, which is already tracked as a pageview via the HTML request
-    if (transition.from) {
-      trackNextAjaxAsPageview();
+    // transition.from will be null on initial boot transition, which is already tracked as a pageview via the HTML request
+    if (!transition.from) {
+      return;
     }
+
+    // Ignore intermediate transitions (e.g. loading substates)
+    if (transition.isIntermediate) {
+      return;
+    }
+
+    trackNextAjaxAsPageview();
   },
 
   teardown() {

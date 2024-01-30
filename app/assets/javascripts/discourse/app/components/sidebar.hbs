@@ -1,4 +1,6 @@
-<DSection @pageClass="has-sidebar" @id="d-sidebar" @class="sidebar-container">
+{{body-class "has-sidebar-page"}}
+
+<section id="d-sidebar" class="sidebar-container">
   {{#if this.showSwitchPanelButtonsOnTop}}
     <Sidebar::SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
   {{/if}}
@@ -7,7 +9,7 @@
     <Sidebar::Sections
       @currentUser={{this.currentUser}}
       @collapsableSections={{true}}
-      @panel={{this.currentPanel}}
+      @panel={{this.sidebarState.currentPanel}}
     />
   {{else}}
     <Sidebar::ApiPanels
@@ -21,4 +23,4 @@
   {{/unless}}
 
   <Sidebar::Footer />
-</DSection>
+</section>

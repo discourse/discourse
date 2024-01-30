@@ -1,20 +1,27 @@
-import { alias, and } from "@ember/object/computed";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import LoadMore from "discourse/mixins/load-more";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { alias } from "@ember/object/computed";
 import { on } from "@ember/object/evented";
 import { inject as service } from "@ember/service";
+import LoadMore from "discourse/mixins/load-more";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import TopicBulkActions from "./modal/topic-bulk-actions";
 
 export default Component.extend(LoadMore, {
   modal: service(),
+  router: service(),
 
   tagName: "table",
   classNames: ["topic-list"],
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
-  canDoBulkActions: and("currentUser.canManageTopic", "selected.length"),
+
+  get canDoBulkActions() {
+    return (
+      this.currentUser?.canManageTopic && this.bulkSelectHelper?.selected.length
+    );
+  },
 
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
@@ -26,9 +33,24 @@ export default Component.extend(LoadMore, {
     this.refreshLastVisited();
   }),
 
-  @discourseComputed("bulkSelectEnabled")
-  toggleInTitle(bulkSelectEnabled) {
-    return !bulkSelectEnabled && this.canBulkSelect;
+  get selected() {
+    return this.bulkSelectHelper?.selected;
+  },
+
+  @dependentKeyCompat // for the classNameBindings
+  get bulkSelectEnabled() {
+    return this.bulkSelectHelper?.bulkSelectEnabled;
+  },
+
+  get toggleInTitle() {
+    return (
+      !this.bulkSelectHelper?.bulkSelectEnabled && this.get("canBulkSelect")
+    );
+  },
+
+  @discourseComputed
+  experimentalTopicBulkActionsEnabled() {
+    return this.currentUser?.use_experimental_topic_bulk_actions;
   },
 
   @discourseComputed
@@ -138,10 +160,6 @@ export default Component.extend(LoadMore, {
     );
   },
 
-  updateAutoAddTopicsToBulkSelect(newVal) {
-    this.set("autoAddTopicsToBulkSelect", newVal);
-  },
-
   click(e) {
     const onClick = (sel, callback) => {
       let target = e.target.closest(sel);
@@ -152,19 +170,19 @@ export default Component.extend(LoadMore, {
     };
 
     onClick("button.bulk-select", () => {
-      this.toggleBulkSelect();
+      this.bulkSelectHelper.toggleBulkSelect();
       this.rerender();
     });
 
     onClick("button.bulk-select-all", () => {
-      this.updateAutoAddTopicsToBulkSelect(true);
+      this.bulkSelectHelper.autoAddTopicsToBulkSelect = true;
       document
         .querySelectorAll("input.bulk-select:not(:checked)")
         .forEach((el) => el.click());
     });
 
     onClick("button.bulk-clear-all", () => {
-      this.updateAutoAddTopicsToBulkSelect(false);
+      this.bulkSelectHelper.autoAddTopicsToBulkSelect = false;
       document
         .querySelectorAll("input.bulk-select:checked")
         .forEach((el) => el.click());
@@ -178,11 +196,22 @@ export default Component.extend(LoadMore, {
     onClick("button.bulk-select-actions", () => {
       this.modal.show(TopicBulkActions, {
         model: {
-          topics: this.selected,
+          topics: this.bulkSelectHelper.selected,
           category: this.category,
-          refreshClosure: this.bulkSelectAction,
+          refreshClosure: () => this.router.refresh(),
         },
       });
+    });
+
+    onClick("button.topics-replies-toggle", (element) => {
+      if (element.classList.contains("--all")) {
+        this.changeNewListSubset(null);
+      } else if (element.classList.contains("--topics")) {
+        this.changeNewListSubset("topics");
+      } else if (element.classList.contains("--replies")) {
+        this.changeNewListSubset("replies");
+      }
+      this.rerender();
     });
   },
 

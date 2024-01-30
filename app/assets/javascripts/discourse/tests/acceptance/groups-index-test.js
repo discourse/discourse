@@ -1,3 +1,5 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -5,8 +7,6 @@ import {
   invisible,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 acceptance("Groups", function () {
   test("Browsing Groups", async function (assert) {
@@ -29,7 +29,7 @@ acceptance("Groups", function () {
     await click(".group-index-join");
     assert.ok(exists(".modal.login-modal"), "it shows the login modal");
 
-    await click(".login-modal .close");
+    await click(".login-modal .modal-close");
     assert.ok(invisible(".modal.login-modal"), "it closes the login modal");
 
     await click(".group-index-request");

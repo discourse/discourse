@@ -1,8 +1,7 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import User from "discourse/models/user";
-import { action } from "@ember/object";
-import { focusSearchButton } from "discourse/components/search-menu";
 
 export default class RecentSearches extends Component {
   @service currentUser;
@@ -32,7 +31,6 @@ export default class RecentSearches extends Component {
   @action
   onKeyup(e) {
     if (e.key === "Escape") {
-      focusSearchButton();
       this.args.closeSearchMenu();
       e.preventDefault();
       return false;

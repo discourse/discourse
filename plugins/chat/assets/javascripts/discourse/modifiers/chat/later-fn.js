@@ -1,6 +1,6 @@
-import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
 import { cancel } from "@ember/runloop";
+import Modifier from "ember-modifier";
 import discourseLater from "discourse-common/lib/later";
 
 export default class ChatLaterFn extends Modifier {

@@ -99,11 +99,13 @@ class MethodProfiler
 
   def self.stop
     finish = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
     if data = Thread.current[:_method_profiler]
       Thread.current[:_method_profiler] = nil
       start = data.delete(:__start)
       data[:total_duration] = finish - start
     end
+
     data
   end
 

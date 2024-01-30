@@ -1,13 +1,14 @@
+import { run } from "@ember/runloop";
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { bind } from "discourse-common/utils/decorators";
-import { isTesting } from "discourse-common/config/environment";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   getHighestReadCache,
   resetHighestReadCache,
   setHighestReadCache,
 } from "discourse/lib/topic-list-tracker";
-import { run } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
+import { bind } from "discourse-common/utils/decorators";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -17,8 +18,14 @@ const ANON_MAX_TOPIC_IDS = 5;
 const AJAX_FAILURE_DELAYS = [5000, 10000, 20000, 40000];
 const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 
+@disableImplicitInjections
 export default class ScreenTrack extends Service {
   @service appEvents;
+  @service currentUser;
+  @service keyValueStore;
+  @service session;
+  @service siteSettings;
+  @service topicTrackingState;
 
   _consolidatedTimings = [];
   _lastTick = null;
@@ -132,7 +139,7 @@ export default class ScreenTrack extends Service {
         }
       });
       found.topicTime += topicTime;
-      found.timings = Object.assign({}, timings, found.timings);
+      found.timings = { ...timings, ...found.timings };
     } else {
       this._consolidatedTimings.push({ timings, topicTime, topicId });
     }

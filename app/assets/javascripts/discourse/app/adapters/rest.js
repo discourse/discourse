@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
+import { underscore } from "@ember/string";
 import { ajax } from "discourse/lib/ajax";
 import { hashString } from "discourse/lib/hash";
-import { underscore } from "@ember/string";
 
 const ADMIN_MODELS = [
   "plugin",

@@ -21,3 +21,7 @@
     line-height: var(--line-height-small);
   }
 }
+
+.c-unread-indicator {
+  @include chat-unread-indicator;
+}
