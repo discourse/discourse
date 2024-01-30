@@ -192,7 +192,10 @@ export default Controller.extend({
         );
         ajax(response.callback_path, {
           type: response.callback_method,
-          data: { second_factor_nonce: this.nonce },
+          data: {
+            second_factor_nonce: this.nonce,
+            ...response.callback_params,
+          },
         })
           .then((callbackResponse) => {
             const redirectUrl =

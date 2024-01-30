@@ -919,29 +919,12 @@ en:
       unknown: "unknown operating system"
 
   change_email:
-    wrong_account_error: "You are logged in the wrong account, please log out and try again."
-    confirmed: "Your email has been updated."
-    please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
     doesnt_exist: "That email address is not associated with your account."
     error_staged: "There was an error changing your email address. The address is already in use by a staged user."
     already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
     confirm: "Confirm"
     max_secondary_emails_error: "You have reached the maximum allowed secondary emails limit."
-
-    authorizing_new:
-      title: "Confirm your new email"
-      description: "Please confirm you would like your email address changed to:"
-      description_add: "Please confirm you would like to add an alternate email address:"
-
-    authorizing_old:
-      title: "Change your email address"
-      description: "Please confirm your email address change"
-      description_add: "Please confirm you would like to add an alternate email address:"
-      old_email: "Old email: %{email}"
-      new_email: "New email: %{email}"
-      almost_done_title: "Confirming new email address"
-      almost_done_description: "We have sent an email to your new email address to confirm the change!"
 
   associated_accounts:
     revoke_failed: "Failed to revoke your account with %{provider_name}."

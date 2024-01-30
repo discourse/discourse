@@ -1559,6 +1559,18 @@ en:
         success_via_admin: "We've sent an email to that address. The user will need to follow the confirmation instructions in the email."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
         back_to_preferences: "Back to preferences"
+        confirm_success: "Your email has been updated."
+        confirm: "Confirm"
+        authorizing_new:
+          description: "Please confirm you would like your email address changed to:"
+          description_add: "Please confirm you would like to add an alternate email address:"
+        authorizing_old:
+          title: "Verify old email address"
+          description: "Please verify your old email address to continue changing your email:"
+          description_add: "Please verify your existing email address to continue adding an alternate address:"
+          old_email: "Old email: %{email}"
+          new_email: "New email: %{email}"
+          confirm_success: "We have sent an email to your new email address to confirm the change!"
 
       change_avatar:
         title: "Change your profile picture"
