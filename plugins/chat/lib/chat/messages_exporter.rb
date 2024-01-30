@@ -48,10 +48,10 @@ module Chat
             yield(
               [
                 chat_message.id,
-                chat_message.chat_channel.id,
-                chat_message.chat_channel.name,
-                chat_message.user.id,
-                chat_message.user.username,
+                chat_message.chat_channel&.id,
+                chat_message.chat_channel&.name,
+                chat_message.user&.id,
+                chat_message.user&.username,
                 chat_message.message,
                 chat_message.cooked,
                 chat_message.created_at,
