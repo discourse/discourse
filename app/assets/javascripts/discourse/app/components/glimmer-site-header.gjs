@@ -12,6 +12,7 @@ import { classNameBindings } from "@ember-decorators/component";
 import { schedule } from "@ember/runloop";
 import { bind } from "discourse-common/utils/decorators";
 import GlimmerHeader from "./glimmer-header";
+import discourseLater from "discourse-common/lib/later";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
@@ -31,6 +32,7 @@ export default class GlimmerSiteHeader extends Component {
   @tracked _applicationElement = null;
   @tracked _resizeObserver = null;
   @tracked _docAt = null;
+  @tracked _animate = false;
 
   header = null;
 
@@ -53,6 +55,8 @@ export default class GlimmerSiteHeader extends Component {
     if (this.currentUser.staff) {
       document.body.classList.add("staff");
     }
+
+    schedule("afterRender", () => this._animateMenu());
   }
 
   @bind
@@ -207,10 +211,9 @@ export default class GlimmerSiteHeader extends Component {
 
   _animateMenu() {
     const menuPanels = document.querySelectorAll(".menu-panel");
-    let animate;
 
     if (menuPanels.length === 0) {
-      animate = this.site.mobileView || this.site.narrowDesktopView;
+      this._animate = this.site.mobileView || this.site.narrowDesktopView;
       return;
     }
 
@@ -222,7 +225,7 @@ export default class GlimmerSiteHeader extends Component {
     menuPanels.forEach((panel) => {
       if (menuPanelContainsClass(panel)) {
         viewMode = "drop-down";
-        animate = false;
+        this._animate = false;
       }
 
       const headerCloak = document.querySelector(".header-cloak");
@@ -231,7 +234,7 @@ export default class GlimmerSiteHeader extends Component {
       panel.classList.remove("slide-in");
       panel.classList.add(viewMode);
 
-      if (animate) {
+      if (this._animate) {
         let animationFinished = null;
         let finalPosition = PANEL_WIDTH;
         this._swipeMenuOrigin = "right";
@@ -265,7 +268,7 @@ export default class GlimmerSiteHeader extends Component {
         });
       }
 
-      animate = false;
+      this._animate = false;
     });
   }
 
@@ -292,6 +295,24 @@ export default class GlimmerSiteHeader extends Component {
         this._dockedHeader = false;
       }
     }
+  }
+
+  _animateOpening(panel, event = null) {
+    const headerCloak = document.querySelector(".header-cloak");
+    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+    if (event && this.pxClosed > 0) {
+      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        this.pxClosed / Math.abs(event.velocityX)
+      );
+    }
+    const timing = {
+      duration: durationMs,
+      fill: "forwards",
+      easing: "ease-out",
+    };
+    panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
+    headerCloak.animate([{ opacity: 1 }], timing);
+    this.pxClosed = null;
   }
 
   willDestroy() {
