@@ -116,7 +116,6 @@ export default class ReorderCategories extends Component {
 
     // Update other categories between current and target position
     for (const e of this.sortedEntries) {
-      // debugger;
       if (delta > 0) {
         // Moving down (position gets larger)
         if (e.position > entry.position && e.position <= targetPosition) {
