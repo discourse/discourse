@@ -45,6 +45,7 @@ de:
       back_to_forum: "Forum"
       deleted_chat_username: gelöscht
       dates:
+        yesterday: "Gestern"
         time_tiny: "h:mm"
       all_loaded: "Alle Nachrichten werden angezeigt"
       already_enabled: "Der Chat ist für dieses Thema bereits aktiviert. Bitte aktualisieren."

@@ -1456,6 +1456,15 @@ nl:
         success_via_admin: "We hebben een e-mail naar dat adres gestuurd. Volg de bevestigingsinstructies in de e-mail."
         success_staff: "We hebben een e-mail naar je huidige adres gestuurd. Volg de bevestigingsinstructies."
         back_to_preferences: "Terug naar voorkeuren"
+        confirm_success: "Je e-mailadres is bijgewerkt."
+        confirm: "Bevestigen"
+        authorizing_new:
+          description: "Bevestig dat je je e-mailadres wilt wijzigen naar:"
+          description_add: "Bevestig dat je een alternatief e-mailadres wilt toevoegen:"
+        authorizing_old:
+          old_email: "Oud e-mailadres: %{email}"
+          new_email: "Nieuw e-mailadres: %{email}"
+          confirm_success: "Er is een e-mail naar je nieuwe e-mailadres gestuurd om de wijziging te bevestigen!"
       change_avatar:
         title: "Je profielafbeelding wijzigen"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, gebaseerd op"
@@ -2134,10 +2143,11 @@ nl:
         one: "Selecteer minimaal %{count} item."
         other: "Selecteer minimaal %{count} items."
       components:
-        tag_drop:
-          filter_for_more: Filteren voor meer…
+        filter_for_more: Filteren voor meer…
         categories_admin_dropdown:
           title: "Categorieën beheren"
+        bulk_select_topics_dropdown:
+          title: "Bulkacties"
     date_time_picker:
       from: Van
       to: Aan
@@ -2647,6 +2657,7 @@ nl:
     topics:
       new_messages_marker: "laatste bezoek"
       bulk:
+        confirm: "Bevestigen"
         select_all: "Alles selecteren"
         clear_all: "Alles wissen"
         unlist_topics: "Topics onzichtbaar maken"
@@ -2732,6 +2743,9 @@ nl:
         top: "Er zijn verder geen toptopics."
         bookmarks: "Er zijn verder geen topics met bladwijzers."
         filter: "Er zijn geen verdere topics."
+    topic_bulk_actions:
+      close_topics:
+        name: "Topics sluiten"
     topic:
       filter_to:
         one: "%{count} bericht in topic"

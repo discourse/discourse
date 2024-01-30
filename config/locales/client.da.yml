@@ -1264,6 +1264,15 @@ da:
         success: "Vi har sendt en e-mail til din nye adresse. Klik på linket i mail’en for at aktivere din nye e-mail-adresse."
         success_via_admin: "Vi har sendt en e-mail til den adressen. Brugeren skal følge bekræftelsesinstruktionerne i e-mailen."
         success_staff: "Vi har sendt en email til din nuværende adresse. Følg venligst bekræftelsesinstruktionerne."
+        confirm_success: "Din e-mail-adresse er blevet opdateret."
+        confirm: "Bekræft"
+        authorizing_new:
+          description: "Bekræft venligst, at du gerne vil have din e-mailadresse ændret til:"
+          description_add: "Bekræft venligst, at du gerne vil tilføje en alternativ e-mailadresse:"
+        authorizing_old:
+          old_email: "Gammel e-mail: %{email}"
+          new_email: "Ny e-mail: %{email}"
+          confirm_success: "Vi har sendt en e-mail til din nye e-mail-adresse for at bekræfte ændringen!"
       change_avatar:
         title: "Skift dit profilbillede"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baseret på"
@@ -1869,10 +1878,11 @@ da:
         one: "Vælg mindst %{count} punkt."
         other: "Vælg mindst %{count} punkter."
       components:
-        tag_drop:
-          filter_for_more: Filtrer for mere…
+        filter_for_more: Filtrer for mere…
         categories_admin_dropdown:
           title: "Administrer kategorier"
+        bulk_select_topics_dropdown:
+          title: "Handlinger på flere indlæg"
     date_time_picker:
       from: Fra
       to: Til
@@ -2280,6 +2290,7 @@ da:
     topics:
       new_messages_marker: "sidste besøg"
       bulk:
+        confirm: "Bekræft"
         select_all: "Vælg alle"
         clear_all: "Ryd alle"
         unlist_topics: "Fjern emner fra liste"
@@ -2340,6 +2351,9 @@ da:
         top: "Der er ikke flere top emner"
         bookmarks: "Der er ikke flere bogmærkede emner."
         filter: "Der er ikke flere emner."
+    topic_bulk_actions:
+      close_topics:
+        name: "Luk indlæg"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"

@@ -512,8 +512,6 @@ nb_NO:
   email_login:
     title: "E-post innlogging"
   change_email:
-    confirmed: "E-postaddressen din er blitt oppdatert."
-    please_continue: "Fortsett til %{site_name}"
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."
     already_done: "Beklager, denne godkjenningslenken er ikke lenger gyldig. Kanskje e-postadressen din allerede er byttet?"

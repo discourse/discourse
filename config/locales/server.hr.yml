@@ -284,7 +284,7 @@ hr:
     one: "Žao nam je, novi korisnici mogu spomenuti samo jednog korisnika u objavi."
     few: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
     other: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
-  no_embedded_media_allowed_trust: "Nažalost, ne možete ugraditi medijske stavke u post."
+  no_embedded_media_allowed_group: "Nažalost, ne možete ugraditi medijske stavke u post."
   no_embedded_media_allowed: "Nažalost, novi korisnici ne mogu ugraditi medijske stavke u objave."
   no_attachments_allowed: "Žao nam je novi korisnici ne mogu stavljati privitke u objave."
   too_many_attachments:
@@ -650,27 +650,12 @@ hr:
       windows: "Microsoft Windows"
       unknown: "nepoznati operacijski sustav"
   change_email:
-    wrong_account_error: "Prijavljeni ste na krivi račun, odjavite se i pokušajte ponovo."
-    confirmed: "Email vam je ažuriran."
-    please_continue: "Nastavite na %{site_name}"
     error: "Dogodila se greška u promijeni tvog e-maila. Možda se ta adresa već koristi?"
     doesnt_exist: "Ta adresa e-pošte nije povezana s vašim računom."
     error_staged: "Dogodila se greška pri promjeni vaše email adrese. Adresu već koristi drugi korisnik."
     already_done: "Žao nam je, ova poveznica za potvrdu nije više važeća. Možda je vaš email već promijenjen?"
     confirm: "Potvrdi"
     max_secondary_emails_error: "Dosegli ste maksimalno dopušteno ograničenje sekundarne e-pošte."
-    authorizing_new:
-      title: "Potvrdite svoju novu e-poštu"
-      description: "Molimo potvrdite da želite da se vaša adresa e-pošte promijeni u:"
-      description_add: "Potvrdite da želite dodati zamjensku adresu e-pošte:"
-    authorizing_old:
-      title: "Promijenite adresu e-pošte"
-      description: "Molimo potvrdite promjenu adrese e-pošte"
-      description_add: "Potvrdite da želite dodati zamjensku adresu e-pošte:"
-      old_email: "Stari email: %{email}"
-      new_email: "Novi email: %{email}"
-      almost_done_title: "Potvrđivanje nove adrese e-pošte"
-      almost_done_description: "Poslali smo e-poruku na vašu novu adresu e-pošte kako bismo potvrdili promjenu!"
   associated_accounts:
     connected: "(povezano)"
   activation:
@@ -1386,9 +1371,6 @@ hr:
     emoji_autocomplete_min_chars: "Minimalan broj znakova potreban za pokretanje skočnog prozora s emojijima za automatsko dovršavanje"
     enable_inline_emoji_translation: "Omogućuje prijevod za ugrađene emojije (bez razmaka ili interpunkcijskih znakova prije)"
     approve_post_count: "Količina objava novog ili osnovnog korisnika koja mora biti odobrena"
-    approve_unless_trust_level: "Objave za korisnike ispod ove razine povjerenja moraju biti odobrene"
-    approve_new_topics_unless_trust_level: "Nove teme za korisnike ispod ove razine povjerenja moraju biti odobrene"
-    approve_unless_staged: "Nove teme i postovi za stupnjevite korisnike moraju biti odobreni"
     notify_about_queued_posts_after: "Ako postoje postovi koji čekaju na pregled dulje od ovog broja sati, pošaljite obavijest svim moderatorima. Postavite na 0 da biste onemogućili ove obavijesti."
     auto_close_messages_post_count: "Maksimalan broj dopuštenih postova u poruci prije nego što se automatski zatvori (0 za onemogućiti)"
     auto_close_topics_post_count: "Maksimalan broj dopuštenih postova u temi prije nego što se automatski zatvori (0 za onemogućiti)"

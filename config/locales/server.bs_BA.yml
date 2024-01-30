@@ -314,8 +314,6 @@ bs_BA:
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
   change_email:
-    confirmed: "Your email has been updated."
-    please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
   activation:
     action: "Kliknite ovdje kako bi aktivirali vaš korisnički račun"

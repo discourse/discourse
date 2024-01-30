@@ -554,6 +554,7 @@ be:
         taken: "Выбачайце, гэты адрас не даступны."
         error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
         success: "Мы надсилалы ліст на гэтую скрыню. Выканайце інструкцыі па пидтердження."
+        confirm_success: "Ваш электронны адрас быў абноўлены."
       change_avatar:
         letter_based: "Ваша выява дададзена сістэмай"
         uploaded_avatar: "Іншая выява"
@@ -804,6 +805,9 @@ be:
       categories_and_top_topics: "Катэгорыі і асноўныя тэмы"
     select_kit:
       delete_item: "Выдаліць %{name}"
+      components:
+        bulk_select_topics_dropdown:
+          title: "масавыя дзеянні"
     date_time_picker:
       from: ад
       to: да
@@ -955,6 +959,9 @@ be:
         tag: "Больш няма тым у катэгорыі %{tag}."
         top: "There are no more top topics."
         bookmarks: "Тэмы ў закладках адсутнічаюць."
+    topic_bulk_actions:
+      close_topics:
+        name: "Закрыць тэму"
     topic:
       create: "пачаць новую тэму"
       create_long: "Стварыць новую тэму"

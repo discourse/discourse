@@ -296,7 +296,7 @@ ko:
   no_mentions_allowed_newuser: "신규 사용자는 다른 사용자를 멘션할 수 없습니다."
   too_many_mentions_newuser:
     other: "신규 사용자는 게시물에서 %{count}명의 사용자만 멘션할 수 있습니다."
-  no_embedded_media_allowed_trust: "게시물에 미디어 항목을 임베드할 수 없습니다."
+  no_embedded_media_allowed_group: "죄송합니다. 게시물에 미디어 항목을 포함할 수 없습니다."
   no_embedded_media_allowed: "신규 사용자는 게시물에 미디어 항목을 임베드할 수 없습니다."
   too_many_embedded_media:
     other: "신규 사용자는 게시물에 미디어 항목을 %{count}개만 임베드할 수 있습니다."
@@ -700,27 +700,12 @@ ko:
       windows: "마이크로소프트 윈도우"
       unknown: "알 수 없는 운영체제"
   change_email:
-    wrong_account_error: "잘못된 계정으로 로그인했습니다. 로그아웃한 후 다시 시도하세요."
-    confirmed: "이메일 주소가 업데이트되었습니다."
-    please_continue: "%{site_name}에서 계속하기"
     error: "이메일 주소 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일일 수 있습니다."
     doesnt_exist: "이 이메일 주소는 내 계정과 연결되어 있지 않습니다."
     error_staged: "이메일 주소 변경 중에 오류가 발생했습니다. 스테이징된 사용자가 사용 중인 이메일일 수 있습니다."
     already_done: "이 확인 링크는 더 이상 유효하지 않습니다. 이메일이 이미 변경되지는 않았나요?"
     confirm: "확인"
     max_secondary_emails_error: "허용되는 최대 보조 이메일 한도에 도달했습니다."
-    authorizing_new:
-      title: "새 이메일 확인"
-      description: "이메일 주소를 다음으로 변경할지 확인하세요."
-      description_add: "대체 이메일 주소를 추가할지 확인하세요."
-    authorizing_old:
-      title: "이메일 주소 변경"
-      description: "이메일 주소 변경을 확인하세요"
-      description_add: "대체 이메일 주소를 추가할지 확인하세요."
-      old_email: "기존 이메일: %{email}"
-      new_email: "새로운 이메일 : %{email}"
-      almost_done_title: "새 이메일 주소 확인"
-      almost_done_description: "변경사항을 확인하기 위해 새 이메일 주소로 이메일을 보냈습니다!"
   associated_accounts:
     revoke_failed: "%{provider_name}의 계정을 해지하지 못했습니다."
     connected: "(연결됨)"
@@ -1815,9 +1800,6 @@ ko:
     enable_inline_emoji_translation: "인라인 이모티콘 번역 활성화(앞에 공백이나 구두점 없이)."
     emoji_deny_list: "이러한 이모티콘은 메뉴나 단축코드에 사용할 수 없습니다."
     approve_post_count: "승인을 받아야 하는 신규 또는 기본 사용자의 게시물 수"
-    approve_unless_trust_level: "이 신뢰 수준 미만의 사용자 게시물은 승인되어야 합니다"
-    approve_new_topics_unless_trust_level: "이 신뢰 수준 미만의 사용자 주제는 승인되어야 합니다"
-    approve_unless_staged: "스테이징된 사용자의 새 주제 및 게시물은 승인되어야 합니다"
     notify_about_queued_posts_after: "이 시간 이상 검토 대기 중인 게시물이 있는 경우 모든 운영자에게 알림을 보냅니다. 이러한 알림을 비활성화하려면 0으로 설정하세요."
     auto_close_messages_post_count: "자동으로 종료되기 전에 메시지에 허용되는 최대 게시물 수(비활성화하려면 0으로 설정)"
     auto_close_topics_post_count: "자동으로 종료되기 전에 주제에 허용되는 최대 게시물 수(비활성화하려면 0으로 설정)"

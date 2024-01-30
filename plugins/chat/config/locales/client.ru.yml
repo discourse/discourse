@@ -45,6 +45,7 @@ ru:
       back_to_forum: "Форум"
       deleted_chat_username: удалён
       dates:
+        yesterday: "Вчера"
         time_tiny: "h:mm"
       all_loaded: "Показать все сообщения"
       already_enabled: "Чат в этой теме уже включён . Обновите страницу."

@@ -372,7 +372,7 @@ fr:
   too_many_mentions_newuser:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un même message."
     other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un même message."
-  no_embedded_media_allowed_trust: "Nous sommes désolés, il ne vous est pas possible d'inclure des médias dans un message."
+  no_embedded_media_allowed_group: "Nous sommes désolés, il ne vous est pas possible d'inclure des médias dans un message."
   no_embedded_media_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas inclure de médias dans leurs messages."
   too_many_embedded_media:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure qu'un seul média dans leurs messages."
@@ -851,27 +851,12 @@ fr:
       windows: "Microsoft Windows"
       unknown: "système d'exploitation inconnu"
   change_email:
-    wrong_account_error: "Vous êtes connecté(e) avec le mauvais compte, veuillez vous déconnecter et réessayer."
-    confirmed: "Votre adresse e-mail a été mise à jour."
-    please_continue: "Continuer vers %{site_name}"
     error: "Une erreur s'est produite lors de la modification de votre adresse e-mail. L'adresse est peut-être déjà utilisée ?"
     doesnt_exist: "Cette adresse e-mail n'est pas associée à votre compte."
     error_staged: "Une erreur est survenue lors de la modification de votre adresse e-mail. Cette adresse est déjà utilisée par un utilisateur distant."
     already_done: "Nous sommes désolés, ce lien de confirmation n'est plus valide. Votre adresse e-mail a peut-être déjà été modifiée ?"
     confirm: "Confirmer"
     max_secondary_emails_error: "Vous avez atteint la limite autorisée du nombre d'adresses e-mail secondaires."
-    authorizing_new:
-      title: "Confirmez votre nouvelle adresse e-mail"
-      description: "Veuillez confirmer que vous souhaitez remplacer votre adresse e-mail par :"
-      description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse e-mail alternative :"
-    authorizing_old:
-      title: "Modifier votre adresse e-mail"
-      description: "Veuillez confirmer votre changement d'adresse e-mail"
-      description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse e-mail alternative :"
-      old_email: "Adresse e-mail précédente : %{email}"
-      new_email: "Nouvelle adresse e-mail : %{email}"
-      almost_done_title: "Confirmer une nouvelle adresse e-mail"
-      almost_done_description: "Nous avons envoyé un e-mail à votre nouvelle adresse pour confirmer le changement !"
   associated_accounts:
     revoke_failed: "Échec de la révocation de votre compte avec %{provider_name}."
     connected: "(connecté)"
@@ -2111,11 +2096,6 @@ fr:
     enable_inline_emoji_translation: "Active la traduction d'émojis en ligne (non précédés par un espace ou un signe de ponctuation)"
     emoji_deny_list: "Ces émojis ne seront pas disponibles dans les menus ou les shortcodes."
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
-    approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
-    approve_unless_allowed_groups: "Les messages des utilisateurs qui ne font pas partie de ces groupes doivent être approuvés."
-    approve_new_topics_unless_trust_level: "Les nouveaux sujets des utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
-    approve_new_topics_unless_allowed_groups: "Les nouveaux sujets pour les utilisateurs qui ne font pas partie de ces groupes doivent être approuvés."
-    approve_unless_staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés"
     notify_about_queued_posts_after: "Après tant d'heures écoulées, envoyer un e-mail à tous les modérateurs si des messages sont en attente d'examen. Désactiver l'envoi de ces e-mails en renseignant la valeur « 0 »."
     reviewable_revision_reasons: "Liste des raisons qui peuvent être sélectionnées lors du rejet d'un message révisable en file d'attente avec une révision. L'option Autre est également toujours disponible, ce qui permet de saisir une raison personnalisée."
     auto_close_messages_post_count: "Nombre maximal de messages dans un message privé avant qu'il soit automatiquement fermé (0 pour désactiver)"

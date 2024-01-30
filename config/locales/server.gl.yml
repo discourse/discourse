@@ -296,7 +296,7 @@ gl:
   too_many_mentions_newuser:
     one: "Sentímolo, mais os novos usuarios só poden mencionar un usuario nunha publicación."
     other: "Sentímolo, mais os novos usuarios só poden mencionar a %{count} usuarios nunha publicación."
-  no_embedded_media_allowed_trust: "Non pode inserir elementos multimedia nunha publicación."
+  no_embedded_media_allowed_group: "Non pode inserir elementos multimedia nunha publicación."
   no_embedded_media_allowed: "Os novos usuarios non poden inserir elementos multimedia nas publicacións."
   too_many_embedded_media:
     one: "Os novos usuarios só poden inserir un elemento multimedia nunha publicación."
@@ -704,26 +704,11 @@ gl:
       windows: "Microsoft Windows"
       unknown: "sistema operativo descoñecido"
   change_email:
-    wrong_account_error: "Iniciou sesión cunha conta incorrecta; saia e vólvao tentar."
-    confirmed: "O seu enderezo electrónico foi actualizado."
-    please_continue: "Continuar a %{site_name}"
     error: "Produciuse un erro ao cambiar o enderezo electrónico. Estarase usando xa ese enderezo?"
     doesnt_exist: "Este enderezo electrónico non está asociado coa súa conta."
     error_staged: "Produciuse un erro ao cambiar o enderezo electrónico. O enderezo xa está sendo usado por un usuario transitorio."
     already_done: "Sentímolo, a ligazón de confirmación xa non está dispoñible. Cambiaría xa o seu correo electrónico?"
     confirm: "Confirmar"
-    authorizing_new:
-      title: "Confirme o seu novo correo electrónico"
-      description: "Confirme que quere cambiar o seu enderezo electrónico a:"
-      description_add: "Confirme que quere engadir un enderezo electrónico alternativo:"
-    authorizing_old:
-      title: "Cambiar o seu enderezo electrónico"
-      description: "Confirme o seu cambio de enderezo electrónico"
-      description_add: "Confirme que quere engadir un enderezo electrónico alternativo:"
-      old_email: "Correo electrónico antigo: %{email}"
-      new_email: "Novo correo electrónico: %{email}"
-      almost_done_title: "Confirmando o novo enderezo electrónico"
-      almost_done_description: "Enviámoslle unha mensaxe ao seu novo enderezo electrónico para confirmar o cambio!"
   associated_accounts:
     revoke_failed: "Erro ao revogar a súa conta con %{provider_name}."
     connected: "(conectadas)"
@@ -1772,9 +1757,6 @@ gl:
     emoji_autocomplete_min_chars: "Número mínimo de caracteres necesarios para disparar a xanela emerxente de autocompletar emoji"
     enable_inline_emoji_translation: "Activar a tradución de emojis en liña (sen ningún espazo nin puntuación anterior)"
     approve_post_count: "A cantidade de publicacións dun usuario novo ou básico que deba aprobarse"
-    approve_unless_trust_level: "As publicacións dirixidas a usuarios por debaixo deste nivel de confianza deben ser aprobadas"
-    approve_new_topics_unless_trust_level: "Os novos temas dirixidos a usuarios por debaixo deste nivel de confianza deben ser aprobados"
-    approve_unless_staged: "Novos temas e publicacións para usuarios transitorios que se deben aprobar"
     notify_about_queued_posts_after: "Se hai publicacións que levan máis de varias horas agardando ser revisadas, envíese unha notificación a todos os moderadores. Estabelecer en 0 para desactivar estas notificacións."
     auto_close_messages_post_count: "Número máximo de publicacións permitidas nunha mensaxe antes do peche automático (0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicacións permitidas nun tema antes do peche automático (0 para desactivar)"

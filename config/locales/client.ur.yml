@@ -1229,6 +1229,15 @@ ur:
         success: "ہم نے اِس ایڈریس پر ایک اِی میل بھیج دی ہے۔ براہ کرم، تصدیق کی ہدایات پر عمل کریں۔"
         success_via_admin: "ہم نے اس پتے پر ایک ای میل بھیجا ہے۔ صارف کو ای میل میں تصدیق کے ہدایات پر عمل کرنے کی ضرورت ہوگی۔"
         success_staff: "ہم نے آپ کے موجودہ ایڈریس پر ایک اِی میل بھیج دی ہے۔ براہ کرم، تصدیق کی ہدایات پر عمل کریں۔"
+        confirm_success: "آپ کا اِی میل اپڈیٹ کر دیا کیا ہے۔"
+        confirm: "تصدیق کریں"
+        authorizing_new:
+          description: "براہ کرم تصدیق کریں کہ آپ اپنا ای میل پتہ اس میں تبدیل کرنا چاہتے ہیں:"
+          description_add: "براہ کرم تصدیق کریں کہ آپ ایک متبادل ای میل پتہ شامل کرنا چاہتے ہیں:"
+        authorizing_old:
+          old_email: "پرانا ای میل: %{email}"
+          new_email: "نیا ای میل: %{email}"
+          confirm_success: "تبدیلی کی تصدیق کے لیے ہم نے آپ کے نئے ای میل پتے پر ایک ای میل بھیجی ہے!"
       change_avatar:
         title: "اپنے پروفائل کی تصویر تبدیل کریں"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>، پر مبنی"
@@ -1790,6 +1799,8 @@ ur:
       components:
         categories_admin_dropdown:
           title: "زمرے کا انتظام کریں"
+        bulk_select_topics_dropdown:
+          title: "بَلک عمل"
     date_time_picker:
       from: سے
       to: کیلئے
@@ -2199,6 +2210,7 @@ ur:
     topics:
       new_messages_marker: "آخری وزٹ"
       bulk:
+        confirm: "تصدیق کریں"
         select_all: "تمام منتخب کریں"
         clear_all: "تمام کو صاف کریں"
         unlist_topics: "ٹاپکس کو فہرست سے ہٹائیں"
@@ -2265,6 +2277,9 @@ ur:
         tag: "مزید کوئی %{tag} کے ٹاپک موجود نہیں۔"
         top: "مزید کوئی ٹاپ ٹاپک موجود نہیں۔"
         bookmarks: "مزید کوئی بک مارک کیے ہوئے ٹاپک موجود نہیں۔"
+    topic_bulk_actions:
+      close_topics:
+        name: "ٹاپکس بند کریں"
     topic:
       filter_to:
         one: "ٹاپک میں %{count} پوسٹ"

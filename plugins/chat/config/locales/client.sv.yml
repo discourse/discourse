@@ -45,6 +45,7 @@ sv:
       back_to_forum: "Forum"
       deleted_chat_username: raderat
       dates:
+        yesterday: "Igår"
         time_tiny: "h:mm"
       all_loaded: "Visar alla meddelanden"
       already_enabled: "Chatt är redan aktiverat för detta ämne. Vänligen uppdatera."

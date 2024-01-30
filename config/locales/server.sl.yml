@@ -480,8 +480,6 @@ sl:
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   change_email:
-    confirmed: "Vaš e-naslov je bil spremenjen."
-    please_continue: "Nadaljujte na %{site_name}"
     error: "Prišlo je do napake med spremembo vašega e-naslova. Mogoče je e-naslov že uporabljen?"
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."
     already_done: "Oprostite, vendar povezava za potrditev ni več veljavna. Mogoče je bil vaš e-naslov že spremenjen?"

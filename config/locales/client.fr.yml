@@ -1456,6 +1456,15 @@ fr:
         success_via_admin: "Nous avons envoyé un e-mail à cette adresse. L'utilisateur devra suivre les instructions de confirmation qui y sont indiquées."
         success_staff: "Nous avons envoyé un e-mail à votre adresse actuelle. Merci de suivre les instructions qui y figurent."
         back_to_preferences: "Retour aux préférences"
+        confirm_success: "Votre adresse e-mail a été mise à jour."
+        confirm: "Confirmer"
+        authorizing_new:
+          description: "Veuillez confirmer que vous souhaitez remplacer votre adresse e-mail par :"
+          description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse e-mail alternative :"
+        authorizing_old:
+          old_email: "Adresse e-mail précédente : %{email}"
+          new_email: "Nouvelle adresse e-mail : %{email}"
+          confirm_success: "Nous avons envoyé un e-mail à votre nouvelle adresse pour confirmer le changement !"
       change_avatar:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, associé à"
@@ -2134,10 +2143,11 @@ fr:
         one: "Sélectionnez au moins %{count} élément."
         other: "Sélectionnez au moins %{count} éléments."
       components:
-        tag_drop:
-          filter_for_more: Filtrer pour plus…
+        filter_for_more: Filtrer pour plus…
         categories_admin_dropdown:
           title: "Gérer les catégories"
+        bulk_select_topics_dropdown:
+          title: "Actions sur la sélection"
     date_time_picker:
       from: De
       to: À
@@ -2647,6 +2657,7 @@ fr:
     topics:
       new_messages_marker: "dernière visite"
       bulk:
+        confirm: "Confirmer"
         select_all: "Tout sélectionner"
         clear_all: "Tout désélectionner"
         unlist_topics: "Rendre les sujets invisibles"
@@ -2732,6 +2743,9 @@ fr:
         top: "Il n'y a pas d'autres meilleurs sujets à consulter."
         bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
         filter: "Il n'y a plus de sujets."
+    topic_bulk_actions:
+      close_topics:
+        name: "Fermer les sujets"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"

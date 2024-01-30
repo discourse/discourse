@@ -372,7 +372,7 @@ it:
   too_many_mentions_newuser:
     one: "Spiacenti, i nuovi utenti possono menzionare al massimo un utente in un messaggio."
     other: "Spiacenti, i nuovi utenti possono menzionare al massimo %{count} utenti in un messaggio."
-  no_embedded_media_allowed_trust: "Spiacenti, non puoi incorporare elementi multimediali in un messaggio."
+  no_embedded_media_allowed_group: "Spiacenti, non puoi incorporare elementi multimediali in un messaggio."
   no_embedded_media_allowed: "Spiacenti, i nuovi utenti non possono incorporare elementi multimediali nei messaggi."
   too_many_embedded_media:
     one: "Spiacenti, i nuovi utenti possono inserire solo un elemento multimediale incorporato in un messaggio."
@@ -851,27 +851,12 @@ it:
       windows: "Microsoft Windows"
       unknown: "sistema operativo sconosciuto"
   change_email:
-    wrong_account_error: "Hai effettuato l'accesso con un account sbagliato, esci e riprova."
-    confirmed: "La tua email è stata aggiornata."
-    please_continue: "Procedi su %{site_name}."
     error: "Si è verificato un errore durante la modifica del tuo indirizzo email. Forse l'indirizzo è già in uso?"
     doesnt_exist: "Questo indirizzo email non è associato al tuo account."
     error_staged: "Si è verificato un errore durante il cambio di indirizzo email. L'indirizzo è già stato usato da un utente temporaneo."
     already_done: "Spiacenti, il collegamento di conferma non è più valido. Hai forse già cambiato email?"
     confirm: "Conferma"
     max_secondary_emails_error: "Hai raggiunto il limite massimo consentito per le email secondarie."
-    authorizing_new:
-      title: "Conferma il tuo nuovo indirizzo email"
-      description: "Conferma di voler cambiare il tuo indirizzo email in:"
-      description_add: "Conferma di voler aggiungere un indirizzo email alternativo:"
-    authorizing_old:
-      title: "Cambia il tuo indirizzo email"
-      description: "Conferma la modifica del tuo indirizzo email"
-      description_add: "Conferma di voler aggiungere un indirizzo email alternativo:"
-      old_email: "Vecchia email: %{email}"
-      new_email: "Nuova email: %{email}"
-      almost_done_title: "Conferma nuovo indirizzo email"
-      almost_done_description: "Abbiamo inviato un'email al tuo nuovo indirizzo per confermare la modifica!"
   associated_accounts:
     revoke_failed: "Impossibile revocare il tuo account con %{provider_name}."
     connected: "(connesso)"
@@ -2110,11 +2095,6 @@ it:
     enable_inline_emoji_translation: "Abilita la traduzione per gli emoji in linea (senza spazio o punteggiatura precedente)"
     emoji_deny_list: "Queste emoji non saranno disponibili per l'uso nei menu o nei codici brevi."
     approve_post_count: "La quantità di messaggi di un utente nuovo o di base che deve essere approvata"
-    approve_unless_trust_level: "I messaggi degli utenti al di sotto di questo livello di attendibilità devono essere approvati"
-    approve_unless_allowed_groups: "I messaggi per gli utenti non presenti in questi gruppi devono essere approvati"
-    approve_new_topics_unless_trust_level: "I nuovi argomenti degli utenti al di sotto di questo livello di attendibilità devono essere approvati"
-    approve_new_topics_unless_allowed_groups: "I nuovi argomenti per gli utenti non presenti in questi gruppi devono essere approvati"
-    approve_unless_staged: "Nuovi argomenti e messaggi per gli utenti temporanei devono essere approvati"
     notify_about_queued_posts_after: "Se ci sono messaggi che sono in attesa di essere revisionati per più di questo numero di ore, invia una notifica a tutti i moderatori. Impostare su 0 per disabilitare queste notifiche."
     reviewable_revision_reasons: "Elenco di motivi che possono essere selezionati quando si rifiuta un messaggio in coda di revisione con una revisione. È sempre disponibile anche Altro, che consente di inserire un motivo personalizzato."
     auto_close_messages_post_count: "Numero massimo di messaggi consentiti in un messaggio privato prima di essere automaticamente chiuso (0 per disabilitare)"

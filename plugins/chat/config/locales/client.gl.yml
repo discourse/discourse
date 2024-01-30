@@ -13,6 +13,8 @@ gl:
           never: "Nunca"
     chat:
       deleted_chat_username: eliminado
+      dates:
+        yesterday: "Onte"
       create: "Crear"
       cancel: "Cancelar"
       channel_settings:

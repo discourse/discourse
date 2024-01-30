@@ -161,8 +161,6 @@ th:
         other: "%{count}เดือนที่แล้ว"
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
-  change_email:
-    please_continue: "ดำเนินการต่อไปยัง %{site_name}"
   activation:
     continue_button: "ดำเนินการต่อไปยัง %{site_name}"
     welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"

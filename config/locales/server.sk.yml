@@ -519,8 +519,6 @@ sk:
     success: "Heslo bolo úspešne zmenené a ste prihlasený do systému. "
     success_unapproved: "Heslo bolo úspešne zmenené."
   change_email:
-    confirmed: "Vaša emailova adresa bola aktualizovaná"
-    please_continue: "Pokračujte na %{site_name}"
     error: "Nastala chyba pri aktualizácii emailu. Nieje už náhodou použitý?"
     already_done: "Ľutujeme, tento podvrdzovací odkaz je už neplatný. Nie je Váš email už zmenený?"
     confirm: "Potvrďte"
@@ -1087,9 +1085,6 @@ sk:
     slug_generation_method: "Vybrať metódu generovania koncovej časti adresy. 'encoded' vygeneruje percentami zakódovaní reťazec. 'none' vypne koncovú časť adresy úplne."
     enable_emoji: "Zapnúť emoji"
     emoji_set: "Aké emoji chcete mať?"
-    approve_unless_trust_level: "Príspevky používateľov pod touto úrovňou důvery musia byť schválené"
-    approve_unless_allowed_groups: "Príspevky pre používateľov, ktorí nie sú v týchto skupinách, musia byť schválené"
-    approve_new_topics_unless_allowed_groups: "Nové témy pre používateľov, ktorí nie sú v týchto skupinách, musia byť schválené"
     reviewable_revision_reasons: "Zoznam dôvodov, ktoré je možné zvoliť pri odmietnutí recenzovateľného príspevku v rade s revíziou. Vždy je k dispozícii aj iné, čo umožňuje zadanie z vlastného dôvodu."
     auto_close_messages_post_count: "Maximálny počet povolených príspevkov v správe kým je automaticky uzavretá (0 znamená vypnuté)"
     auto_close_topics_post_count: "Maximálny počet povolených príspevkov v téme kým je automaticky uzavretá (0 znamená vypnuté)"

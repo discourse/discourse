@@ -1382,6 +1382,15 @@ zh_CN:
         success_via_admin: "我们已向该地址发送一封电子邮件。用户需要按照电子邮件中的确认说明进行操作。"
         success_staff: "我们已向您当前的地址发送一封电子邮件。请按照确认说明进行操作。"
         back_to_preferences: "返回偏好设置"
+        confirm_success: "您的电子邮件已被更新。"
+        confirm: "确认"
+        authorizing_new:
+          description: "请确认您要使用的新电子邮件地址："
+          description_add: "请确认您要添加的备用电子邮件地址："
+        authorizing_old:
+          old_email: "旧电子邮件：%{email}"
+          new_email: "新电子邮件：%{email}"
+          confirm_success: "我们已向您的新电子邮件地址发送电子邮件以确认更改！"
       change_avatar:
         title: "更改个人资料照片"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>，基于"
@@ -1823,7 +1832,7 @@ zh_CN:
       refresh_page: "刷新页面"
     summary:
       in_progress: "使用 AI 总结话题"
-      summarized_on: "已在 %{date}使用 AI 总结"
+      summarized_on: "在 %{date}使用 AI 总结"
       model_used: "使用的 AI：%{model}"
       outdated: "摘要已过时"
       outdated_posts:
@@ -2043,10 +2052,11 @@ zh_CN:
       min_content_not_reached:
         other: "至少选择 %{count} 个条目。"
       components:
-        tag_drop:
-          filter_for_more: 筛选更多…
+        filter_for_more: 筛选更多…
         categories_admin_dropdown:
           title: "管理类别"
+        bulk_select_topics_dropdown:
+          title: "批量操作"
     date_time_picker:
       from: 从
       to: 至
@@ -2526,6 +2536,7 @@ zh_CN:
     topics:
       new_messages_marker: "上次访问"
       bulk:
+        confirm: "确认"
         select_all: "全选"
         clear_all: "全部清除"
         unlist_topics: "取消公开话题"
@@ -2576,6 +2587,7 @@ zh_CN:
           other: "所有标签将从 <b>%{count}</b> 个话题中移除。确定吗？"
         progress:
           other: "进度：<strong>%{count}</strong> 个话题"
+        silent: "静默执行此操作。"
       none:
         unread: "您没有未读话题。"
         unseen: "您没有未读话题。"
@@ -2605,6 +2617,12 @@ zh_CN:
         hot: "没有更多热门话题了。"
         bookmarks: "没有更多已加入书签的话题了。"
         filter: "没有更多话题了。"
+    topic_bulk_actions:
+      close_topics:
+        name: "关闭话题"
+      update_category:
+        name: "更新类别"
+        description: "为所选主题选择新类别"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -3881,7 +3899,7 @@ zh_CN:
       approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "嘿，您应该加入此论坛！"
       custom_message_template_topic: "嘿，我想您可能会喜欢此话题！"
-    forced_anonymous: "由于负载过大，这会暂时向所有人显示，因此退出登录的用户会看到它。"
+    forced_anonymous: "由于负载过大，暂时向所有人显示退出登录的用户可以看到的内容。"
     forced_anonymous_login_required: "该站点正处于极端负载状态，当前无法加载，请在几分钟后再试。"
     footer_nav:
       back: "返回"

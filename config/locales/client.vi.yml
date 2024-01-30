@@ -1206,6 +1206,8 @@ vi:
         success: "Chúng tôi đã gửi email tới địa chỉ đó. Vui lòng làm theo chỉ dẫn để xác nhận lại."
         success_via_admin: "Chúng tôi đã gửi một email đến địa chỉ đó. Người dùng sẽ cần làm theo hướng dẫn xác nhận trong email."
         success_staff: "Chúng tôi đã gửi một email đến địa chỉ hiện tại của bạn. Vui lòng làm theo hướng dẫn xác nhận."
+        confirm_success: "Email của bạn đã được cập nhật."
+        confirm: "Xác nhận"
       change_avatar:
         title: "Đổi ảnh đại diện"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, dựa trên"
@@ -1792,6 +1794,8 @@ vi:
       components:
         categories_admin_dropdown:
           title: "Quản lý Danh mục"
+        bulk_select_topics_dropdown:
+          title: "Hành động theo lô"
     date_time_picker:
       from: Từ
       to: Tới
@@ -2235,6 +2239,7 @@ vi:
     topics:
       new_messages_marker: "lần thăm cuối"
       bulk:
+        confirm: "Xác nhận"
         select_all: "Chọn hết"
         clear_all: "Xoá hết"
         unlist_topics: "Chủ đề không công khai"
@@ -2297,6 +2302,9 @@ vi:
         tag: "Không có thêm %{tag} chủ đề."
         top: "Không còn của đề top nào nữa."
         bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
+    topic_bulk_actions:
+      close_topics:
+        name: "Đóng các chủ đề"
     topic:
       filter_to:
         other: "%{count} bài viết trong chủ đề"

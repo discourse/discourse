@@ -1614,6 +1614,9 @@ lv:
     select_kit:
       delete_item: "Izdzēst %{name}"
       create: "Izveidot: '%{content}'"
+      components:
+        bulk_select_topics_dropdown:
+          title: "Darbības ar vairumu"
     date_time_picker:
       from: "No"
       to: Kam
@@ -1890,6 +1893,9 @@ lv:
         tag: "Vairāk sadaļās %{tag} tēmu nav. "
         top: "Vairāk svarīgu tēmu nav. "
         bookmarks: "Vairāk grāmatzīmēs ievietoto tēmu nav. "
+    topic_bulk_actions:
+      close_topics:
+        name: "Slēgt tēmas"
     topic:
       filter_to:
         zero: "tēmā ziņu nav"

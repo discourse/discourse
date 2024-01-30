@@ -1456,6 +1456,15 @@ tr_TR:
         success_via_admin: "Bu adrese bir e-posta gönderdik. Kullanıcının e-postadaki onay talimatlarını izlemesi gerekiyor."
         success_staff: "Mevcut adresinize bir e-posta gönderdik. Lütfen onay talimatlarını izleyin."
         back_to_preferences: "Tercihlere geri dön"
+        confirm_success: "E-postanız güncellendi."
+        confirm: "Onayla"
+        authorizing_new:
+          description: "Lütfen e-posta adresinizin şu şekilde değiştirilmesini istediğinizi onaylayın:"
+          description_add: "Lütfen alternatif bir e-posta adresi eklemek istediğinizi onaylayın:"
+        authorizing_old:
+          old_email: "Eski e-posta: %{email}"
+          new_email: "Yeni e-posta: %{email}"
+          confirm_success: "Değişikliği onaylamak için yeni e-posta adresinize bir e-posta gönderdik!"
       change_avatar:
         title: "Profil resminizi değiştirin"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, şuna dayalı"
@@ -2134,10 +2143,11 @@ tr_TR:
         one: "En az %{count} öge seçin."
         other: "En az %{count} öge seçin."
       components:
-        tag_drop:
-          filter_for_more: Daha fazlası için filtreleyin…
+        filter_for_more: Daha fazlası için filtreleyin…
         categories_admin_dropdown:
           title: "Kategorileri yönetin"
+        bulk_select_topics_dropdown:
+          title: "Toplu Eylemler"
     date_time_picker:
       from: Kimden
       to: Kime
@@ -2647,6 +2657,7 @@ tr_TR:
     topics:
       new_messages_marker: "son ziyaret"
       bulk:
+        confirm: "Onayla"
         select_all: "Tümünü Seç"
         clear_all: "Tümünü Temizle"
         unlist_topics: "Konuları listeden kaldır"
@@ -2732,6 +2743,9 @@ tr_TR:
         top: "Başka popüler konu yok."
         bookmarks: "Başka yer imli konu yok."
         filter: "Başka konu kalmadı."
+    topic_bulk_actions:
+      close_topics:
+        name: "Konuları Kapat"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -4087,7 +4101,7 @@ tr_TR:
       enabled: "Güvenli mod etkin, güvenli moddan çıkmak için bu tarayıcı penceresini kapatın"
     image_removed: "(görüntü kaldırıldı)"
     pause_notifications:
-      title: "Şunlar için bildirimleri duraklat…"
+      title: "Bildirimleri şu süreyle duraklat…"
       label: "Bildirimleri duraklat"
       options:
         half_hour: "30 dakika"
