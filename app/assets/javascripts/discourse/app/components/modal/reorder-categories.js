@@ -86,7 +86,7 @@ export default class ReorderCategories extends Component {
       // Moving down (position gets larger)
       if (entry.descendantCount) {
         // This category has subcategories, adjust targetPosition to account for them
-        if (entry.descendantCount > delta) {
+        if (entry.descendantCount >= delta) {
           // Only apply offset if target position is occupied by a subcategory
           // Seems weird but fixes a UX quirk
           targetPosition += entry.descendantCount;
