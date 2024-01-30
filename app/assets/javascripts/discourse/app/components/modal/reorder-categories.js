@@ -19,6 +19,7 @@ class Entry {
 export default class ReorderCategories extends Component {
   @service site;
 
+  @tracked changed = false;
   @tracked entries = this.reorder();
 
   get sortedEntries() {
@@ -133,6 +134,7 @@ export default class ReorderCategories extends Component {
     entry.position = targetPosition;
 
     this.entries = this.reorder(this.sortedEntries);
+    this.changed = true;
   }
 
   @action

@@ -52,6 +52,7 @@
     <DButton
       @action={{this.save}}
       @label="categories.reorder.save"
+      @disabled={{not this.changed}}
       class="btn-primary"
     />
   </:footer>
