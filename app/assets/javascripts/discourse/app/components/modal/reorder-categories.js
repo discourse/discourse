@@ -26,9 +26,9 @@ export default class ReorderCategories extends Component {
   }
 
   reorder(from) {
-    from ??= this.site.categories.map((c) => ({
-      category: c,
-      position: c.position,
+    from ??= this.site.categories.map((category) => ({
+      category,
+      position: category.position,
     }));
 
     return this.createEntries([...from.sortBy("position")]);
