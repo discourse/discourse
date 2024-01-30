@@ -503,6 +503,10 @@ module ApplicationHelper
     CategoryBadge.html_for(category, opts).html_safe
   end
 
+  def email_category_badge(category, opts = nil)
+    EmailCategoryBadge.html_for(category, opts).html_safe
+  end
+
   def self.all_connectors
     @all_connectors = Dir.glob("plugins/*/app/views/connectors/**/*.html.erb")
   end
