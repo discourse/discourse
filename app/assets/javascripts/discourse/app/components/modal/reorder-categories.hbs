@@ -10,11 +10,11 @@
         <th>{{i18n "categories.reorder.position"}}</th>
       </thead>
       <tbody>
-        {{#each this.categoriesOrdered as |category|}}
-          <tr data-category-id={{category.id}}>
+        {{#each this.sortedEntries as |entry|}}
+          <tr data-category-id={{entry.category.id}}>
             <td>
-              <div class={{concat "reorder-categories-depth-" category.depth}}>
-                {{category-badge category allowUncategorized="true"}}
+              <div class={{concat "reorder-categories-depth-" entry.depth}}>
+                {{category-badge entry.category allowUncategorized="true"}}
               </div>
             </td>
 
@@ -23,19 +23,19 @@
                 <input
                   {{on
                     "change"
-                    (action (fn this.change category) value="target.value")
+                    (action (fn this.change entry) value="target.value")
                   }}
-                  value={{category.position}}
+                  value={{entry.position}}
                   type="number"
                   min="0"
                 />
                 <DButton
-                  @action={{fn this.move category -1}}
+                  @action={{fn this.move entry -1}}
                   @icon="arrow-up"
                   class="btn-default no-text"
                 />
                 <DButton
-                  @action={{fn this.move category 1}}
+                  @action={{fn this.move entry 1}}
                   @icon="arrow-down"
                   class="btn-default no-text"
                 />
