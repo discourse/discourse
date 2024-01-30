@@ -20,8 +20,8 @@ module("Unit | Component | reorder-categories", function (hooks) {
 
     component.reorder();
 
-    component.categoriesOrdered.forEach((category, index) => {
-      assert.strictEqual(category.get("position"), index);
+    component.sortedEntries.forEach((category, index) => {
+      assert.strictEqual(category.position, index);
     });
   });
 
@@ -61,7 +61,7 @@ module("Unit | Component | reorder-categories", function (hooks) {
     component.reorder();
 
     assert.deepEqual(
-      component.categoriesOrdered.mapBy("slug"),
+      component.sortedEntries.mapBy("category.slug"),
       expectedOrderSlugs
     );
   });
@@ -72,33 +72,34 @@ module("Unit | Component | reorder-categories", function (hooks) {
       .create();
     const store = getOwner(this).lookup("service:store");
 
-    const elem1 = store.createRecord("category", {
+    const foo = store.createRecord("category", {
       id: 1,
       position: 0,
       slug: "foo",
     });
 
-    const elem2 = store.createRecord("category", {
+    const bar = store.createRecord("category", {
       id: 2,
       position: 1,
       slug: "bar",
     });
 
-    const elem3 = store.createRecord("category", {
+    const baz = store.createRecord("category", {
       id: 3,
       position: 2,
-      slug: "test",
+      slug: "baz",
     });
 
     const site = getOwner(this).lookup("service:site");
-    site.set("categories", [elem1, elem2, elem3]);
+    site.set("categories", [foo, bar, baz]);
 
     // Move category 'foo' from position 0 to position 2
-    component.change(elem1, "2");
+    const entry = component.sortedEntries.findBy("category.slug", "foo");
+    component.change(entry, "2");
 
-    assert.deepEqual(component.categoriesOrdered.mapBy("slug"), [
+    assert.deepEqual(component.sortedEntries.mapBy("category.slug"), [
       "bar",
-      "test",
+      "baz",
       "foo",
     ]);
   });
@@ -109,39 +110,40 @@ module("Unit | Component | reorder-categories", function (hooks) {
       .create();
     const store = getOwner(this).lookup("service:store");
 
-    const elem1 = store.createRecord("category", {
+    const foo = store.createRecord("category", {
       id: 1,
       position: 0,
       slug: "foo",
     });
 
-    const child1 = store.createRecord("category", {
+    const fooChild = store.createRecord("category", {
       id: 4,
       position: 1,
       slug: "foo-child",
       parent_category_id: 1,
     });
 
-    const elem2 = store.createRecord("category", {
+    const bar = store.createRecord("category", {
       id: 2,
       position: 2,
       slug: "bar",
     });
 
-    const elem3 = store.createRecord("category", {
+    const baz = store.createRecord("category", {
       id: 3,
       position: 3,
-      slug: "test",
+      slug: "baz",
     });
 
     const site = getOwner(this).lookup("service:site");
-    site.set("categories", [elem1, child1, elem2, elem3]);
+    site.set("categories", [foo, fooChild, bar, baz]);
 
-    component.change(elem1, "3");
+    const entry = component.sortedEntries.findBy("category.slug", "foo");
+    component.change(entry, "3");
 
-    assert.deepEqual(component.categoriesOrdered.mapBy("slug"), [
+    assert.deepEqual(component.sortedEntries.mapBy("category.slug"), [
       "bar",
-      "test",
+      "baz",
       "foo",
       "foo-child",
     ]);
@@ -153,53 +155,54 @@ module("Unit | Component | reorder-categories", function (hooks) {
       .create();
     const store = getOwner(this).lookup("service:store");
 
-    const child2 = store.createRecord("category", {
+    const fooChildChild = store.createRecord("category", {
       id: 105,
       position: 2,
       slug: "foo-child-child",
       parent_category_id: 104,
     });
 
-    const child1 = store.createRecord("category", {
+    const fooChild = store.createRecord("category", {
       id: 104,
       position: 1,
       slug: "foo-child",
       parent_category_id: 101,
-      subcategories: [child2],
+      subcategories: [fooChildChild],
     });
 
-    const elem1 = store.createRecord("category", {
+    const foo = store.createRecord("category", {
       id: 101,
       position: 0,
       slug: "foo",
-      subcategories: [child1],
+      subcategories: [fooChild],
     });
 
-    const elem2 = store.createRecord("category", {
+    const bar = store.createRecord("category", {
       id: 102,
       position: 3,
       slug: "bar",
     });
 
-    const elem3 = store.createRecord("category", {
+    const baz = store.createRecord("category", {
       id: 103,
       position: 4,
-      slug: "test",
+      slug: "baz",
     });
 
     const site = getOwner(this).lookup("service:site");
-    site.set("categories", [elem1, child1, child2, elem2, elem3]);
+    site.set("categories", [foo, fooChild, fooChildChild, bar, baz]);
 
     component.reorder();
 
-    component.move(elem1, 1);
+    const entry = component.sortedEntries.findBy("category.slug", "foo");
+    component.move(entry, 1);
 
-    assert.deepEqual(component.categoriesOrdered.mapBy("slug"), [
+    assert.deepEqual(component.sortedEntries.mapBy("category.slug"), [
       "bar",
       "foo",
       "foo-child",
       "foo-child-child",
-      "test",
+      "baz",
     ]);
   });
 });
