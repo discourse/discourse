@@ -1,6 +1,7 @@
 <DModal
   @title={{i18n "categories.reorder.title"}}
   @closeModal={{@closeModal}}
+  @inline={{@inline}}
   class="reorder-categories"
 >
   <:body>
@@ -32,12 +33,12 @@
                 <DButton
                   @action={{fn this.move entry -1}}
                   @icon="arrow-up"
-                  class="btn-default no-text"
+                  class="btn-default no-text move-up"
                 />
                 <DButton
                   @action={{fn this.move entry 1}}
                   @icon="arrow-down"
-                  class="btn-default no-text"
+                  class="btn-default no-text move-down"
                 />
               </div>
             </td>
