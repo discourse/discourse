@@ -17,10 +17,27 @@ RSpec.describe "User threads", type: :system do
   end
 
   context "when in sidebar" do
-    it "shows a link to user threads" do
-      visit("/")
+    context "when user is a member of at least one channel with threads" do
+      before { channel_1.add(current_user) }
 
-      expect(sidebar_page).to have_user_threads_section
+      it "shows a link to user threads" do
+        visit("/")
+
+        expect(sidebar_page).to have_user_threads_section
+      end
+    end
+
+    context "when user is not a member of any channel with threads" do
+      before do
+        channel_1.update!(threading_enabled: false)
+        channel_1.add(current_user)
+      end
+
+      it "does not show a link to user threads" do
+        visit("/")
+
+        expect(sidebar_page).to have_no_user_threads_section
+      end
     end
 
     context "when user has unreads" do
@@ -100,11 +117,29 @@ RSpec.describe "User threads", type: :system do
   end
 
   context "when in drawer" do
-    it "shows a link to user threads" do
-      visit("/")
-      chat_page.open_from_header
+    context "when user is a member of at least one channel with threads" do
+      before { channel_1.add(current_user) }
 
-      expect(drawer_page).to have_user_threads_section
+      it "shows a link to user threads" do
+        visit("/")
+        chat_page.open_from_header
+
+        expect(drawer_page).to have_user_threads_section
+      end
+    end
+
+    context "when user is not a member of any channel with threads" do
+      before do
+        channel_1.update!(threading_enabled: false)
+        channel_1.add(current_user)
+      end
+
+      it "does not show a link to user threads" do
+        visit("/")
+        chat_page.open_from_header
+
+        expect(drawer_page).to have_no_user_threads_section
+      end
     end
 
     context "when user has unreads" do

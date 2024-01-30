@@ -41,6 +41,10 @@ module PageObjects
         has_css?(".chat-channel-row.--threads[href='/chat/threads']")
       end
 
+      def has_no_user_threads_section?
+        has_no_css?(".chat-channel-row.--threads[href='/chat/threads']")
+      end
+
       def has_unread_user_threads?
         has_css?(".chat-channel-row.--threads .c-unread-indicator")
       end
