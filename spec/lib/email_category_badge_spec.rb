@@ -16,13 +16,14 @@ RSpec.describe EmailCategoryBadge do
     c = Fabricate(:category, color: "123456", text_color: "654321")
     html = EmailCategoryBadge.html_for(c)
 
-    expect(html).to have_tag("span[data-category-id]", with: { style: "color: #654321;" })
+    expect(html).to have_selector(
+      "span[data-category-id]", 
+      style: "color: #654321;"
+    )
 
-    expect(html).to have_tag(
+    expect(html).to have_selector(
       "span[data-category-id] > span > span",
-      with: {
-        style: "background-color: #123456;",
-      },
+      style: "background-color: #123456;"
     )
   end
 end
