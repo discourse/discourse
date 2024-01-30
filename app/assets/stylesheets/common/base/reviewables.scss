@@ -1,4 +1,6 @@
 .reviewable {
+  background: var(--d-content-background);
+
   .flagged-post-header {
     width: 100%;
     display: flex;
@@ -91,6 +93,12 @@
       width: 8em;
       font-weight: bold;
       margin-right: 1em;
+    }
+    .value {
+      max-width: calc(
+        100% - 8em - 1em
+      ); // subtracting width of name and margin-right
+      word-wrap: break-word;
     }
     margin-bottom: 0.5em;
   }
@@ -273,15 +281,17 @@
 
     button {
       white-space: nowrap;
+    }
 
-      &.approve-post {
-        background-color: var(--success);
-        color: var(--secondary);
-      }
-      &.reject-post {
-        background-color: var(--danger);
-        color: var(--secondary);
-      }
+    .approve-post,
+    .approve-post > summary {
+      background-color: var(--success);
+      color: var(--secondary);
+    }
+    .reject-post,
+    .reject-post > summary {
+      background-color: var(--danger);
+      color: var(--secondary);
     }
 
     .reviewable-action,
@@ -539,6 +549,13 @@
       display: block;
       font-size: var(--font-up-2);
       margin-right: 0.75em;
+    }
+    .badge-category__wrapper {
+      margin-left: 0.25em;
+    }
+    .discourse-tag {
+      vertical-align: bottom;
+      padding-left: 0.1em;
     }
   }
 

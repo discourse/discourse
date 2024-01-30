@@ -374,20 +374,10 @@ tr_TR:
           Bir gönderiyi silme işlemini geri almak için yalnızca %{deletion_after} saatiniz olduğunu unutmayın.
       category_hashtag:
         instructions: |-
-          Gönderinizde kategorilere ve etiketlere atıfta bulunabileceğinizi biliyor muydunuz? Örneğin, %{category} kategorisini gördünüz mü?
-
-          Bir cümlenin ortasına "#" yazın ve herhangi bir kategori veya etiketi seçin.
-        instructions_experimental: |-
           Gönderinizde kategorilere ve etiketlere atıfta bulunabileceğinizi biliyor muydunuz? Mesela %{category} kategorisini gördünüz mü?
 
           Cümle içinde herhangi bir yere `#` yazın ve herhangi bir kategori veya etiketi seçin.
         not_found: |-
-          Hmm, orada hiçbir yerde bir kategori göremiyorum. İlk karakterin "#" olamayacağını unutmayın. Bunu bir sonraki yanıtınıza kopyalayabilir misiniz?
-
-          ```text
-          # aracılığıyla kategori bağlantısı oluşturabilirim
-          ```
-        not_found_experimental: |-
           Hmm, orada hiçbir yerde bir kategori göremiyorum. Bunu bir sonraki yanıtınıza kopyalayabilir misiniz?
 
           ```text

@@ -5,11 +5,18 @@
 # https://translate.discourse.org/
 
 sk:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vždy"
+          fullscreen: "Keď je čet v režime celej obrazovky"
+          never: "Nikdy"
       logs:
         staff_actions:
           actions:
@@ -21,12 +28,24 @@ sk:
           descriptions:
             chat:
               create_message: "Vytvorte chatovú správu v určenom kanáli."
+      web_hooks:
+        chat_event:
+          group_name: "Chatové udalosti"
+          chat_message_created: "Správa je vytvorená"
+          chat_message_edited: "Správa je upravená"
+          chat_message_trashed: "Správa je vyhodená do koša"
+          chat_message_restored: "Správa je obnovená"
     about:
       chat_messages_count: "Chat správy"
       chat_channels_count: "Chatové kanály"
       chat_users_count: "Používatelia chatu"
     chat:
+      text_copied: Text bol skopírovaný do schránky
+      link_copied: Odkaz bol skopírovaný do schránky
+      back_to_forum: "fórum"
+      deleted_chat_username: vymazané
       dates:
+        yesterday: "Včera"
         time_tiny: "h:mm"
       all_loaded: "Zobrazenie všetkých správ"
       already_enabled: "Chat na túto tému je už povolený. Prosím, obnovte ho."
@@ -50,6 +69,7 @@ sk:
         delete_channel: "Odstrániť kanál"
         join_channel: "Pripojte sa ku kanálu"
         leave_channel: "Opustiť kanál"
+        leave_groupchat_info: "Keď opustíte tento skupinový čet, už k nemu nebudete mať prístup a nebudete dostávať súvisiace upozornenia. Ak sa chcete znova pripojiť, musíte byť znova pozvaní členom skupinového rozhovoru."
         join: "Pridať sa"
         leave: "Opustiť"
         save_label:
@@ -78,6 +98,7 @@ sk:
         create: "Nový kanál"
       click_to_join: "Kliknutím sem zobrazíte dostupné kanály."
       close: "Zavrieť"
+      remove: "Odstrániť"
       expand: "Rozbaliť chat"
       confirm_flag: "Naozaj chcete označiť správu od %{username}?"
       deleted:
@@ -101,7 +122,10 @@ sk:
         title: "Zobrazenie indikátora aktivity v záhlaví"
         all_new: "Všetky nové správy"
         dm_and_mentions: "Súkromné správy a zmienky"
+        only_mentions: "Iba zmienky"
         never: "Nikdy"
+      separate_sidebar_mode:
+        title: "Zobraziť samostatné režimy bočného panela pre fórum a chat"
       enable: "Povoliť chat"
       flag: "Označenie"
       heading: "Chat"
@@ -117,12 +141,8 @@ sk:
           many: "Posledných %{count} hodín"
           other: "Posledných %{count} hodín"
       mention_warning:
-        dismiss: "zahodiť"
-        cannot_see: "%{username} nemá prístup k tomuto kanálu a nebol upozornený."
         invite: "Pozvať na kanál"
-        without_membership: "%{username} sa nepripojil k tomuto kanálu."
-        group_mentions_disabled: "%{group_name} nepovoľuje označovanie."
-        too_many_members: "%{group_name} má príliš veľa členov. Nikto nebol informovaný."
+        channel_wide_mentions_disallowed: "Zmienky @here a @all sú v tomto kanáli zakázané."
         groups:
           unreachable_1: "@%{group} nepovoľuje označovanie."
           unreachable_2: "@%{group1} a @%{group2} nepovoľujú oznčovanie."
@@ -134,15 +154,15 @@ sk:
         archived: "Kanál je archivovaný, nie je možné posielať nové správy."
         closed: "Kanál je zatvorený, nie je možné posielať nové správy."
         read_only: "Kanál je len na čítanie, nie je možné posielať nové správy."
-      placeholder_start_conversation: "Začnite konverzáciu s ..."
-      placeholder_start_conversation_users: "Začnite konverzáciu s %{commaSeparatedUsernames}"
       reply: "Odpoveď"
       edit: "Upraviť"
+      copy_text: "Kopírovať text"
       rebake_message: "Pregenerovať HTML"
       bookmark_message: "Záložka"
       save: "Uložiť"
       select: "Vyberte"
-      return_to_threads_list: "Návrat k prebiehajúcim diskusiám"
+      return_to_channel: "Späť na kanál"
+      return_to_threads_list: "Späť na zoznam vlákien"
       unread_threads_count:
         one: "Máte %{count} neprečítanú diskusiu"
         few: "Máte %{count} neprečítaných diskusií"
@@ -186,6 +206,8 @@ sk:
         yesterday: Včera
       members_view:
         filter_placeholder: Nájdite členov
+        add_member: Pridať člena
+        back_to_settings: "Späť na nastavenia"
       about_view:
         associated_topic: Prepojená téma
         associated_category: Prepojená kategória
@@ -196,7 +218,6 @@ sk:
         back_to_all_channels: "Všetky kanály"
         back_to_channel: "Späť"
         tabs:
-          about: O stránke
           members: Členovia
           settings: Nastavenia
       new_message_modal:
@@ -207,9 +228,15 @@ sk:
         default_search_placeholder: "#a-channel, @somebody alebo čokoľvek."
         default_channel_search_placeholder: "#a-channel"
         default_user_search_placeholder: "@niekto"
-        user_search_placeholder: "...pridať ďalších používateľov"
+        user_search_placeholder: "...pridať ďalších členov"
         disabled_user: "má vypnutý chat"
         no_items: "Žiadne položky"
+        create_group_placeholder: "Názov skupinového chatu (nepovinné)"
+        participants_counter: "%{selection_count}/%{max} účastníci"
+        new_group_chat: "Nový skupinový chat"
+        filter: "Filter"
+        cant_add_more_members: "Bol dosiahnutý maximálny počet členov"
+        create_new_group_chat: "Vytvorte skupinový chat"
       channel_edit_name_slug_modal:
         title: Upraviť kanál
         input_placeholder: Pridať meno
@@ -221,10 +248,12 @@ sk:
         input_placeholder: Pridanie popisu
         description: Povedzte ľuďom, o čom je tento kanál
       direct_message_creator:
+        add_to_channel: "Pridať do kanála"
         title: Nová správa
         prefix: "Komu:"
         no_results: Žiadne výsledky
         selected_user_title: "Zrušiť výber %{username}"
+        group_name: "Názov skupinového chatu (nepovinné)"
       channel:
         no_memberships: Tento kanál nemá žiadnych členov
         no_memberships_found: Nenašli sa žiadni členovia
@@ -251,14 +280,17 @@ sk:
       reviewable:
         type: "Chatová správa"
       reactions:
-        only_you: "Reagovali ste s :%{emoji}:"
-        you_and_single_user: "Vy a %{username} ste reagovali s :%{emoji}:"
-        you_and_multiple_users: "Vy, %{commaSeparatedUsernames} a %{username} ste reagovali s :%{emoji}:"
-        single_user: "%{username} reagoval s :%{emoji}:"
+        only_you: "<span>Reagovali ste na </span>:%{emoji}:"
+        you_and_single_user: "<span>Vy a %{username} ste reagovali pomocou </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Vy, %{commaSeparatedUsernames} a %{username} ste reagovali pomocou </span>:%{emoji}:"
+        single_user: "<span>%{username} reagoval s </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} a %{username} reagoval s </span>:%{emoji}:"
       composer:
         italic_text: "zdôraznený text"
         bold_text: "výrazný text"
         send: "Odoslať"
+      quote:
+        default_thread_title: "Vlákno"
       notification_levels:
         never: "Nikdy"
       settings:
@@ -273,13 +305,22 @@ sk:
         saved: "Uložené"
         unfollow: "Opustiť"
         admin_title: "Admin"
+        settings_title: "Nastavenia"
+        info_title: "Informácie o kanáli"
+        category_label: "Kategória"
+        history_label: "História"
+        members_label: "Členovia"
       admin:
         title: "Chat"
         export_messages:
           title: "Exportovať správy z chatu"
-          description: "Export je v súčasnosti obmedzený na 10000 najnovších správ za posledných 6 mesiacov."
+          description: "Týmto sa exportujú všetky správy zo všetkých kanálov."
           create_export: "Vytvoriť export"
           export_has_started: "Export sa začal. Keď bude hotový, budeme Vás informovať cez súkromnú správu."
+      direct_messages:
+        close: "Zatvorte tento osobný chat"
+      channel_list:
+        title: "Kanály"
       incoming_webhooks:
         back: "Späť"
         description: "Popis"
@@ -299,13 +340,13 @@ sk:
         existing_topic:
           title: "Presuň do existujúcej témy."
       retention_reminders:
-        public_none: "História kanálov sa uchováva na neurčito."
-        dm_none: "História osobných chatov sa uchováva na neurčito."
-        dm:
-          one: "História súkromných správ sa uchováva na %{count} deň."
-          few: "História súkromných správ sa uchováva počas %{count} dní."
-          many: "História súkromných správ sa uchováva počas %{count} dní."
-          other: "História súkromných správ sa uchováva počas %{count} dní."
+        indefinitely_short: "na dobu neurčitú"
+        indefinitely_long: "Nastavenia chatu boli nastavené tak, aby uchovávali správy kanálov na neurčito."
+        short:
+          one: "%{count} deň"
+          few: "%{count} dni"
+          many: "%{count} dní"
+          other: "%{count} dní"
       emoji_picker:
         objects: "Objekty"
         flags: "Označenia"
@@ -313,7 +354,6 @@ sk:
       thread:
         title: "Názov"
         view_thread: Zobraziť vlákno
-        default_title: "Vlákno"
         replies:
           one: "%{count} odpoveď"
           few: "%{count} odpovede"
@@ -339,7 +379,7 @@ sk:
           other: "+%{count}"
       threads:
         open: "Otvoriť vlákno"
-        list: "Prebiehajúca diskusia"
+        list: "Vlákna"
         none: "Nezúčastňujete sa na žiadnych vláknach v tomto kanáli."
       draft_channel_screen:
         header: "Nová správa"
@@ -354,6 +394,9 @@ sk:
       types:
         chat_reviewable_message:
           title: "Označená správa"
+        reviewable_chat_message:
+          title: "Označená správa v chate"
+          noun: "správa v chate"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -363,3 +406,7 @@ sk:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

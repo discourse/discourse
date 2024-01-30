@@ -34,7 +34,10 @@ describe Chat::MessageMover do
   fab!(:message4) { Fabricate(:chat_message, chat_channel: destination_channel) }
   fab!(:message5) { Fabricate(:chat_message, chat_channel: destination_channel) }
   fab!(:message6) { Fabricate(:chat_message, chat_channel: destination_channel) }
+
   let(:move_message_ids) { [message1.id, message2.id, message3.id] }
+
+  before { source_channel.update!(last_message: message3) }
 
   describe "#move_to_channel" do
     def move!(move_message_ids = [message1.id, message2.id, message3.id])
@@ -113,7 +116,7 @@ describe Chat::MessageMover do
     it "updates references for reactions, uploads, revisions, mentions, etc." do
       reaction = Fabricate(:chat_message_reaction, chat_message: message1)
       upload = Fabricate(:upload_reference, target: message1)
-      mention = Fabricate(:chat_mention, chat_message: message2, user: acting_user)
+      mention = Fabricate(:user_chat_mention, chat_message: message2, user: acting_user)
       revision = Fabricate(:chat_message_revision, chat_message: message3)
       webhook_event = Fabricate(:chat_webhook_event, chat_message: message3)
       move!

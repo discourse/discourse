@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::BackupsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   let(:backup_filename) { "2014-02-10-065935.tar.gz" }
   let(:backup_filename2) { "2014-02-11-065935.tar.gz" }

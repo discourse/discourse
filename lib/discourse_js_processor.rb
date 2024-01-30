@@ -49,9 +49,9 @@ class DiscourseJsProcessor
     { data: data }
   end
 
-  def self.transpile(data, root_path, logical_path, theme_id: nil)
+  def self.transpile(data, root_path, logical_path, theme_id: nil, extension: nil)
     transpiler = Transpiler.new(skip_module: skip_module?(data))
-    transpiler.perform(data, root_path, logical_path, theme_id: theme_id)
+    transpiler.perform(data, root_path, logical_path, theme_id: theme_id, extension: extension)
   end
 
   def self.should_transpile?(filename)
@@ -98,21 +98,30 @@ class DiscourseJsProcessor
   end
 
   class Transpiler
+    TRANSPILER_PATH =
+      (
+        if Rails.env.production?
+          "tmp/theme-transpiler.js"
+        else
+          "tmp/theme-transpiler/#{Process.pid}.js"
+        end
+      )
+
     @mutex = Mutex.new
     @ctx_init = Mutex.new
+    @processor_mutex = Mutex.new
 
     def self.mutex
       @mutex
     end
 
-    def self.load_file_in_context(ctx, path, wrap_in_module: nil)
-      contents = File.read("#{Rails.root}/app/assets/javascripts/#{path}")
-      contents = <<~JS if wrap_in_module
-          define(#{wrap_in_module.to_json}, ["exports", "require", "module"], function(exports, require, module){
-            #{contents}
-          });
-        JS
-      ctx.eval(contents, filename: path)
+    def self.build_theme_transpiler
+      Discourse::Utils.execute_command(
+        "node",
+        "app/assets/javascripts/theme-transpiler/build.js",
+        TRANSPILER_PATH,
+      )
+      TRANSPILER_PATH
     end
 
     def self.create_new_context
@@ -123,120 +132,11 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
       ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
-      ctx.eval(<<~JS, filename: "environment-setup.js")
-        window = {};
-        console = {
-          prefix: "[DiscourseJsProcessor] ",
-          log: function(...args){ rails.logger.info(console.prefix + args.join(" ")); },
-          warn: function(...args){ rails.logger.warn(console.prefix + args.join(" ")); },
-          error: function(...args){ rails.logger.error(console.prefix + args.join(" ")); }
-        };
-      JS
-
-      # define/require support
-      load_file_in_context(ctx, "node_modules/loader.js/dist/loader/loader.js")
-
-      # Babel
-      load_file_in_context(ctx, "node_modules/@babel/standalone/babel.js")
-      ctx.eval <<~JS
-        globalThis.rawBabelTransform = function(){
-          return Babel.transform(...arguments).code;
-        }
-      JS
-
-      # Terser
-      load_file_in_context(ctx, "node_modules/source-map/dist/source-map.js")
-      load_file_in_context(ctx, "node_modules/terser/dist/bundle.min.js")
-
-      # Template Compiler
-      load_file_in_context(ctx, "node_modules/ember-source/dist/ember-template-compiler.js")
-      load_file_in_context(
-        ctx,
-        "node_modules/babel-plugin-ember-template-compilation/src/plugin.js",
-        wrap_in_module: "babel-plugin-ember-template-compilation/index",
-      )
-      load_file_in_context(
-        ctx,
-        "node_modules/babel-plugin-ember-template-compilation/src/expression-parser.js",
-        wrap_in_module: "babel-plugin-ember-template-compilation/expression-parser",
-      )
-      load_file_in_context(
-        ctx,
-        "node_modules/babel-plugin-ember-template-compilation/src/js-utils.js",
-        wrap_in_module: "babel-plugin-ember-template-compilation/js-utils",
-      )
-      load_file_in_context(
-        ctx,
-        "node_modules/babel-plugin-ember-template-compilation/src/public-types.js",
-        wrap_in_module: "babel-plugin-ember-template-compilation/public-types",
-      )
-      load_file_in_context(
-        ctx,
-        "node_modules/babel-import-util/src/index.js",
-        wrap_in_module: "babel-import-util",
-      )
-      load_file_in_context(
-        ctx,
-        "node_modules/ember-cli-htmlbars/lib/colocated-babel-plugin.js",
-        wrap_in_module: "colocated-babel-plugin",
-      )
-
-      # Widget HBS compiler
-      widget_hbs_compiler_source =
-        File.read(
-          "#{Rails.root}/app/assets/javascripts/discourse-widget-hbs/lib/widget-hbs-compiler.js",
-        )
-      widget_hbs_compiler_source = <<~JS
-        define("widget-hbs-compiler", ["exports"], function(exports){
-          #{widget_hbs_compiler_source}
-        });
-      JS
-      widget_hbs_compiler_transpiled =
-        ctx.call(
-          "rawBabelTransform",
-          widget_hbs_compiler_source,
-          { ast: false, moduleId: "widget-hbs-compiler", plugins: DISCOURSE_COMMON_BABEL_PLUGINS },
-        )
-      ctx.eval(widget_hbs_compiler_transpiled, filename: "widget-hbs-compiler.js")
-
-      # Raw HBS compiler
-      load_file_in_context(
-        ctx,
-        "node_modules/handlebars/dist/handlebars.js",
-        wrap_in_module: "handlebars",
-      )
-
-      raw_hbs_transpiled =
-        ctx.call(
-          "rawBabelTransform",
-          File.read(
-            "#{Rails.root}/app/assets/javascripts/discourse-common/addon/lib/raw-handlebars.js",
-          ),
-          {
-            ast: false,
-            moduleId: "raw-handlebars",
-            plugins: [
-              ["transform-modules-amd", { noInterop: true }],
-              *DISCOURSE_COMMON_BABEL_PLUGINS,
-            ],
-          },
-        )
-      ctx.eval(raw_hbs_transpiled, filename: "raw-handlebars.js")
 
       # Theme template AST transformation plugins
-      load_file_in_context(
-        ctx,
-        "discourse-js-processor.js",
-        wrap_in_module: "discourse-js-processor",
-      )
+      @processor_mutex.synchronize { build_theme_transpiler } if !Rails.env.production?
 
-      # Make interfaces available via `v8.call`
-      ctx.eval <<~JS
-        globalThis.compileRawTemplate = require('discourse-js-processor').compileRawTemplate;
-        globalThis.transpile = require('discourse-js-processor').transpile;
-        globalThis.minify = require('discourse-js-processor').minify;
-        globalThis.getMinifyResult = require('discourse-js-processor').getMinifyResult;
-      JS
+      ctx.eval(File.read(TRANSPILER_PATH), filename: "theme-transpiler.js")
 
       ctx
     end
@@ -288,7 +188,7 @@ class DiscourseJsProcessor
       @skip_module = skip_module
     end
 
-    def perform(source, root_path = nil, logical_path = nil, theme_id: nil)
+    def perform(source, root_path = nil, logical_path = nil, theme_id: nil, extension: nil)
       self.class.v8_call(
         "transpile",
         source,
@@ -296,6 +196,7 @@ class DiscourseJsProcessor
           skipModule: @skip_module,
           moduleId: module_name(root_path, logical_path),
           filename: logical_path || "unknown",
+          extension: extension,
           themeId: theme_id,
           commonPlugins: DISCOURSE_COMMON_BABEL_PLUGINS,
         },

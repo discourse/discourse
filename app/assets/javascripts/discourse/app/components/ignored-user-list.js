@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { inject as service } from "@ember/service";
-import User from "discourse/models/user";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import User from "discourse/models/user";
 import IgnoreDurationModal from "./modal/ignore-duration-with-username";
 
 export default Component.extend({

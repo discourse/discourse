@@ -5,11 +5,17 @@
 # https://translate.discourse.org/
 
 hr:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
-          chat: Čet
+          chat: Čavrljanje
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Uvijek"
+          never: "Nikad"
       logs:
         staff_actions:
           actions:
@@ -21,10 +27,10 @@ hr:
           descriptions:
             chat:
               create_message: "Izradite chat poruku na određenom kanalu."
-    about:
-      chat_messages_count: "Chat poruke"
     chat:
+      deleted_chat_username: izbrisao
       dates:
+        yesterday: "Jučer"
         time_tiny: "h:mm"
       all_loaded: "Prikaz svih poruka"
       already_enabled: "Chat je već omogućen na ovu temu. Molimo osvježite."
@@ -69,6 +75,7 @@ hr:
         browse: "Pretražujte kanale"
       click_to_join: "Kliknite ovdje da biste vidjeli dostupne kanale."
       close: "Zatvori"
+      remove: "Ukloni"
       collapse: "Sažmi ladicu za chat"
       expand: "Proširi ladicu za čavrljanje"
       confirm_flag: "Jeste li sigurni da želite označiti poruku korisnika %{username}?"
@@ -107,32 +114,11 @@ hr:
           few: "Posljednja %{count} sata"
           other: "Posljednjih %{count} sati"
       mention_warning:
-        dismiss: "skloni"
-        cannot_see: "%{username} ne može pristupiti ovom kanalu i nije obaviješten."
-        cannot_see_multiple:
-          one: "%{username} i %{count} drugi korisnik ne mogu pristupiti ovom kanalu i nisu bili obaviješteni."
-          few: "%{username} i %{count} druga korisnika ne mogu pristupiti ovom kanalu i nisu bili obaviješteni."
-          other: "%{username} i %{count} drugih korisnika ne može pristupiti ovom kanalu i nisu bili obaviješteni."
         invitations_sent:
           one: "Poziv poslan"
           few: "Pozivnice poslane"
           other: "Pozivnice poslane"
         invite: "Pozovite na kanal"
-        without_membership: "%{username} se nije pridružio ovom kanalu."
-        without_membership_multiple:
-          one: "%{username} i još %{count} korisnik se nisu pridružili ovom kanalu."
-          few: "%{username} i još %{count} korisnika se nisu pridružili ovom kanalu."
-          other: "%{username} i još %{count} korisnika se nisu pridružili ovom kanalu."
-        group_mentions_disabled: "%{group_name} ne dopušta spominjanje."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} i %{count} druga grupa ne dopuštaju spominjanje."
-          few: "%{group_name} i %{count} druge grupe ne dopuštaju spominjanje."
-          other: "%{group_name} i %{count} drugih grupa ne dopuštaju spominjanje."
-        too_many_members: "%{group_name} ima previše članova. Nitko nije obaviješten."
-        too_many_members_multiple:
-          one: "%{group_name} i %{count} druga grupa imaju previše članova. Nitko nije obaviješten."
-          few: "%{group_name} i %{count} druge grupe imaju previše članova. Nitko nije obaviješten."
-          other: "%{group_name} i %{count} drugih grupa imaju previše članova. Nitko nije obaviješten."
         groups:
           unreachable_1: "@%{group} ne dopušta spominjanje."
           unreachable_2: "@%{group1} i @%{group2} ne dopuštaju spominjanje."
@@ -159,15 +145,12 @@ hr:
         archived: "Kanal je arhiviran, trenutno ne možete slati nove poruke."
         closed: "Kanal je zatvoren, trenutno ne možete slati nove poruke."
         read_only: "Kanal je samo za čitanje, trenutno ne možete slati nove poruke."
-      placeholder_start_conversation: "Započnite razgovor s..."
-      placeholder_start_conversation_users: "Započnite razgovor s %{commaSeparatedUsernames}"
       reply: "Odgovor"
       edit: "Uredi"
       rebake_message: "Popravi HTML"
       bookmark_message: "Zabilješka"
       bookmark_message_edit: "Uredi oznaku"
       save: "Spremi"
-      return_to_threads_list: "Povratak na tekuće rasprave"
       unread_threads_count:
         one: "Imate %{count} nepročitanu raspravu"
         few: "Imate %{count} nepročitane rasprave"
@@ -198,11 +181,11 @@ hr:
       channel_info:
         back_to_channel: "Natrag"
         tabs:
-          about: O nama
           members: Članovi
           settings: Postavke
       new_message_modal:
         no_items: "Nema stvari"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Uredi kanal
         input_placeholder: Dodajte ime
@@ -232,23 +215,12 @@ hr:
         types:
           category: "Kategorija"
           topic: "Tema"
-      reactions:
-        you_and_single_user: "Vi i %{username} ste reagirali s :%{emoji}:"
-        you_and_multiple_users: "Vi, %{commaSeparatedUsernames} i %{username} ste reagirali s :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Vi, %{commaSeparatedUsernames} i još %{count} ste reagirali s :%{emoji}:"
-          few: "Vi, %{commaSeparatedUsernames} i još njih %{count} ste reagirali s :%{emoji}:"
-          other: "Vi, %{commaSeparatedUsernames} i još njih %{count} ste reagirali s :%{emoji}:"
-        single_user: "%{username} je reagirao s :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} i %{username} reagirali su s :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} i još %{count} reagirali su s :%{emoji}:"
-          few: "%{commaSeparatedUsernames} i još %{count} reagirali su s :%{emoji}:"
-          other: "%{commaSeparatedUsernames} i još %{count} reagirali su s :%{emoji}:"
       composer:
         italic_text: "naglašen tekst"
         bold_text: "jaki text"
         send: "Pošalji"
+      quote:
+        default_thread_title: "Nit"
       notification_levels:
         never: "Nikad"
       settings:
@@ -264,11 +236,14 @@ hr:
         saved: "Spremljeno"
         unfollow: "Napustiti"
         admin_title: "Administrator"
+        settings_title: "Postavke"
+        category_label: "Kategorija"
+        history_label: "Povijest"
+        members_label: "Članovi"
       admin:
         title: "Čet"
         export_messages:
           title: "Izvezi poruke čavrljanja"
-          description: "Izvoz je trenutno ograničen na 10 000 najnovijih poruka u zadnjih 6 mjeseci."
           create_export: "Stvori izvoz"
           export_has_started: "Izvoz je počeo. Dobit ćete PM kad bude spreman."
       incoming_webhooks:
@@ -292,16 +267,10 @@ hr:
         new_message:
           title: "Premjestite u novu poruku"
       retention_reminders:
-        public_none: "Povijest kanala čuva se na neodređeno vrijeme."
-        public:
-          one: "Povijest kanala čuva se %{count} dan."
-          few: "Povijest kanala čuva se %{count} dana."
-          other: "Povijest kanala čuva se %{count} dana."
-        dm_none: "Osobna povijest čavrljanja čuva se na neodređeno vrijeme."
-        dm:
-          one: "Osobna povijest čavrljanja čuva se %{count} dan."
-          few: "Osobna povijest čavrljanja čuva se %{count} dana."
-          other: "Osobna povijest čavrljanja čuva se %{count} dana."
+        short:
+          one: "%{count} dan"
+          few: "%{count} dana"
+          other: "%{count} dana"
       emoji_picker:
         objects: "Objekti"
         activities: "Aktivnosti"
@@ -310,7 +279,6 @@ hr:
       thread:
         title: "Naslov"
         view_thread: Pogledaj nit
-        default_title: "Nit"
         replies:
           one: "%{count} odgovor"
           few: "%{count} odgovora"
@@ -334,7 +302,6 @@ hr:
           other: "+%{count}"
       threads:
         open: "Otvori nit"
-        list: "Tekuće rasprave"
         none: "Ne sudjelujete ni u jednoj niti na ovom kanalu."
       draft_channel_screen:
         header: "Nova poruka"
@@ -361,3 +328,7 @@ hr:
       sections:
         chat:
           title: Čavrljanje
+    sidebar:
+      panels:
+        chat:
+          label: "Čavrljanje"

@@ -1,6 +1,6 @@
+import { hbs } from "ember-cli-htmlbars";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import getVideoAttributes from "../lib/lazy-video-attributes";
-import { hbs } from "ember-cli-htmlbars";
 
 function initLazyEmbed(api) {
   api.decorateCookedElement(
@@ -12,7 +12,7 @@ function initLazyEmbed(api) {
       const lazyContainers = cooked.querySelectorAll(".lazy-video-container");
 
       lazyContainers.forEach((container) => {
-        const siteSettings = api.container.lookup("site-settings:main");
+        const siteSettings = api.container.lookup("service:site-settings");
         const videoAttributes = getVideoAttributes(container);
 
         if (siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {
@@ -33,7 +33,7 @@ function initLazyEmbed(api) {
         }
       });
     },
-    { onlyStream: true, id: "discourse-lazy-videos" }
+    { onlyStream: true }
   );
 }
 

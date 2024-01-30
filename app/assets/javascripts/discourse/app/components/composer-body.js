@@ -1,15 +1,15 @@
+import Component from "@ember/component";
 import { cancel, schedule, throttle } from "@ember/runloop";
+import { headerOffset } from "discourse/lib/offset-calculator";
+import positioningWorkaround from "discourse/lib/safari-hacks";
+import KeyEnterEscape from "discourse/mixins/key-enter-escape";
+import Composer from "discourse/models/composer";
+import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import Composer from "discourse/models/composer";
-import KeyEnterEscape from "discourse/mixins/key-enter-escape";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { headerOffset } from "discourse/lib/offset-calculator";
-import positioningWorkaround from "discourse/lib/safari-hacks";
 
 const START_DRAG_EVENTS = ["touchstart", "mousedown"];
 const DRAG_EVENTS = ["touchmove", "mousemove"];

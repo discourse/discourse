@@ -11,7 +11,7 @@ RSpec.describe TopicLinkClick do
 
   describe "topic_links" do
     before do
-      @topic = Fabricate(:topic)
+      @topic = Fabricate(:topic, user: Fabricate(:user, refresh_auto_groups: true))
       @post = Fabricate(:post_with_external_links, user: @topic.user, topic: @topic)
       TopicLink.extract_from(@post)
       @topic_link = @topic.topic_links.first
@@ -247,7 +247,7 @@ RSpec.describe TopicLinkClick do
 
       context "with a query param and google analytics" do
         before do
-          @topic = Fabricate(:topic)
+          @topic = Fabricate(:topic, user: Fabricate(:user, refresh_auto_groups: true))
           @post =
             Fabricate(
               :post,

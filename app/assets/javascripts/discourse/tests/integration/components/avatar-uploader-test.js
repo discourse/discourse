@@ -1,9 +1,9 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
-import { createFile } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { createFile } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | avatar-uploader", function (hooks) {
   setupRenderingTest(hooks);

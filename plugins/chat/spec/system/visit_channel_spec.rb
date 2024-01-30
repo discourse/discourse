@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Visit channel", type: :system do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:category)
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user) { Fabricate(:user) }
   fab!(:category_channel_1) { Fabricate(:category_channel) }
@@ -134,7 +134,7 @@ RSpec.describe "Visit channel", type: :system do
             chat.visit_channel(category_channel_1)
 
             expect(page).to have_content(category_channel_1.name)
-            expect(chat).to have_message(message_1)
+            expect(channel_page.messages).to have_message(id: message_1.id)
           end
         end
 
@@ -167,7 +167,7 @@ RSpec.describe "Visit channel", type: :system do
             chat.visit_channel(category_channel_1)
 
             expect(page).to have_content(category_channel_1.name)
-            expect(chat).to have_message(message_1)
+            expect(channel_page.messages).to have_message(id: message_1.id)
           end
 
           context "when URL doesn’t contain slug" do
@@ -195,10 +195,10 @@ RSpec.describe "Visit channel", type: :system do
             it "does not error" do
               visit(early_message.url)
               expect(channel_page).to have_no_loading_skeleton
-              expect(channel_page).to have_message(id: early_message.id)
+              expect(channel_page.messages).to have_message(id: early_message.id)
               sidebar_page.open_channel(other_channel)
               expect(dialog).to be_closed
-              expect(channel_page).to have_message(id: other_channel_message.id)
+              expect(channel_page.messages).to have_message(id: other_channel_message.id)
             end
           end
         end
@@ -217,7 +217,7 @@ RSpec.describe "Visit channel", type: :system do
           it "shows a preview of the channel" do
             chat.visit_channel(dm_channel_1)
 
-            expect(chat).to have_message(message_1)
+            expect(channel_page.messages).to have_message(id: message_1.id)
           end
 
           context "when URL doesn’t contain slug" do

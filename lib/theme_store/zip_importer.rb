@@ -2,24 +2,22 @@
 
 require "compression/engine"
 
-class ThemeStore::ZipImporter < ThemeStore::Importer
+class ThemeStore::ZipImporter < ThemeStore::BaseImporter
   attr_reader :url
 
   def initialize(filename, original_filename)
-    super
-
     @filename = filename
     @original_filename = original_filename
   end
 
   def import!
-    FileUtils.mkdir(@temp_folder)
+    FileUtils.mkdir(temp_folder)
 
     available_size = SiteSetting.decompressed_theme_max_file_size_mb
     Compression::Engine
       .engine_for(@original_filename)
       .tap do |engine|
-        engine.decompress(@temp_folder, @filename, available_size)
+        engine.decompress(temp_folder, @filename, available_size)
         strip_root_directory
       end
   rescue RuntimeError
@@ -28,18 +26,14 @@ class ThemeStore::ZipImporter < ThemeStore::Importer
     raise RemoteTheme::ImportError, I18n.t("themes.import_error.file_too_big")
   end
 
-  def cleanup!
-    FileUtils.rm_rf(@temp_folder)
-  end
-
   def version
     ""
   end
 
   def strip_root_directory
-    root_files = Dir.glob("#{@temp_folder}/*")
+    root_files = Dir.glob("#{temp_folder}/*")
     if root_files.size == 1 && File.directory?(root_files[0])
-      FileUtils.mv(Dir.glob("#{@temp_folder}/*/*"), @temp_folder)
+      FileUtils.mv(Dir.glob("#{temp_folder}/*/*"), temp_folder)
     end
   end
 end

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemeField do
-  fab!(:theme) { Fabricate(:theme) }
+  fab!(:theme)
 
   before do
     SvgSprite.clear_plugin_svg_sprite_cache!
@@ -255,14 +255,14 @@ HTML
 
     # All together
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]",
+      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", ",
     )
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/controllers/discovery\"",
+      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery\"",
     )
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"",
+      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery-2\"",
     )
     expect(theme.javascript_cache.content).to include("const settings =")
     expect(theme.javascript_cache.content).to include(
@@ -595,6 +595,57 @@ HTML
         expect(fr1.javascript_cache.content).to include("helloworld")
         expect(fr1.javascript_cache.content).to include("enval1")
       end
+
+      it "is recreated when data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
+      end
+
+      it "is recreated when fallback data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: {} }.deep_stringify_keys.to_yaml,
+        )
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
+      end
     end
 
     describe "prefix injection" do
@@ -671,7 +722,7 @@ HTML
       fname = "theme-icon-sprite.svg"
       symbols = ""
 
-      1500.times do |i|
+      3500.times do |i|
         id = "icon-id-#{i}"
         path =
           "M#{rand(1..100)} 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 .008z"
@@ -773,6 +824,69 @@ HTML
       expect(theme.scss_variables).to include("$test_js: unquote(\"#{upload.url}\");")
 
       expect(theme.scss_variables).not_to include("theme_uploads")
+    end
+  end
+
+  describe "migration JavaScript field" do
+    it "must match a specific format for filename" do
+      field = Fabricate(:migration_theme_field, theme: theme)
+      field.name = "12-some-name"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "12-some-name"),
+      )
+
+      field.name = "00012-some-name"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "00012-some-name"),
+      )
+
+      field.name = "0012some-name"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012some-name"),
+      )
+
+      field.name = "0012"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012"),
+      )
+
+      field.name = "0012-something"
+
+      expect(field.valid?).to eq(true)
+    end
+
+    it "doesn't allow weird characters in the name" do
+      field = Fabricate(:migration_theme_field, theme: theme)
+      field.name = "0012-ëèard"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012-ëèard"),
+      )
+    end
+
+    it "imposes a limit on the name part in the filename" do
+      stub_const(ThemeField, "MIGRATION_NAME_PART_MAX_LENGTH", 10) do
+        field = Fabricate(:migration_theme_field, theme: theme)
+        field.name = "0012-#{"a" * 11}"
+
+        expect(field.valid?).to eq(false)
+        expect(field.errors.full_messages).to contain_exactly(
+          I18n.t("themes.import_error.migrations.name_too_long", count: 10),
+        )
+
+        field.name = "0012-#{"a" * 10}"
+
+        expect(field.valid?).to eq(true)
+      end
     end
   end
 end

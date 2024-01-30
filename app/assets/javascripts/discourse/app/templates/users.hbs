@@ -1,4 +1,9 @@
-<DSection @pageClass="users">
+{{#if this.model.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
+{{body-class "users-page"}}
+<section>
   <LoadMore
     @selector=".directory-table .directory-table__cell"
     @action={{action "loadMore"}}
@@ -43,18 +48,18 @@
             />
             {{#if this.showGroupFilter}}
               <ComboBox
-                @class="directory-group-selector"
                 @value={{this.group}}
                 @content={{this.groupOptions}}
                 @onChange={{action this.groupChanged}}
                 @options={{hash none="directory.group.all"}}
+                class="directory-group-selector"
               />
             {{/if}}
             {{#if this.currentUser.staff}}
               <DButton
                 @icon="wrench"
-                @action={{action "showEditColumnsModal"}}
-                @class="btn-default open-edit-columns-btn"
+                @action={{this.showEditColumnsModal}}
+                class="btn-default open-edit-columns-btn"
               />
             {{/if}}
             <PluginOutlet
@@ -79,8 +84,7 @@
             <p>{{i18n "directory.no_results"}}</p>
           {{/if}}
         </ConditionalLoadingSpinner>
-
       </div>
     </div>
   </LoadMore>
-</DSection>
+</section>

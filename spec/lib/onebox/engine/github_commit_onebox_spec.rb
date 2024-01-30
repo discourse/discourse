@@ -15,12 +15,8 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
     it_behaves_like "an engine"
 
     describe "#to_html" do
-      it "includes owner" do
-        expect(html).to include("discourse")
-      end
-
       it "includes repository name" do
-        expect(html).to include("discourse")
+        expect(html).to include("discourse/discourse")
       end
 
       it "includes commit sha" do
@@ -75,12 +71,8 @@ RSpec.describe Onebox::Engine::GithubCommitOnebox do
     # it_behaves_like "an engine"
 
     describe "#to_html" do
-      it "includes owner" do
-        expect(html).to include("discourse")
-      end
-
       it "includes repository name" do
-        expect(html).to include("discourse")
+        expect(html).to include("discourse/discourse")
       end
 
       it "includes commit sha" do

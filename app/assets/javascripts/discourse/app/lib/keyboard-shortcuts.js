@@ -1,19 +1,17 @@
-import { bind } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { getOwner, setOwner } from "@ember/application";
 import { run, throttle } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
+import { ajax } from "discourse/lib/ajax";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import {
   nextTopicUrl,
   previousTopicUrl,
 } from "discourse/lib/topic-list-tracker";
-import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
-import domUtils from "discourse-common/utils/dom-utils";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import { ajax } from "discourse/lib/ajax";
-import { headerOffset } from "discourse/lib/offset-calculator";
+import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseLater from "discourse-common/lib/later";
+import domUtils from "discourse-common/utils/dom-utils";
 
 let extraKeyboardShortcutsHelp = {};
 function addExtraKeyboardShortcutHelp(help) {
@@ -47,6 +45,7 @@ const DEFAULT_BINDINGS = {
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },
   ".": { click: ".alert.alert-info.clickable", anonymous: true }, // show incoming/updated topics
+  a: { handler: "toggleArchivePM" },
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
   "shift+c": { handler: "focusComposer" },
@@ -360,7 +359,7 @@ export default {
   },
 
   goToFirstSuggestedTopic() {
-    const el = document.querySelector(".suggested-topics a.raw-topic-link");
+    const el = document.querySelector("#suggested-topics a.raw-topic-link");
     if (el) {
       el.click();
     } else {
@@ -749,8 +748,11 @@ export default {
 
     for (const a of articles) {
       a.classList.remove("selected");
+      a.removeAttribute("tabindex");
     }
     article.classList.add("selected");
+    article.setAttribute("tabindex", "0");
+    article.focus();
 
     this.appEvents.trigger("keyboard:move-selection", {
       articles,
@@ -767,8 +769,7 @@ export default {
       );
     } else if (article.classList.contains("topic-post")) {
       return this._scrollTo(
-        article.querySelector("#post_1") ? 0 : articleTopPosition,
-        { focusTabLoc: true }
+        article.querySelector("#post_1") ? 0 : articleTopPosition
       );
     }
 
@@ -785,25 +786,11 @@ export default {
     this._scrollTo(articleTopPosition - window.innerHeight * scrollRatio);
   },
 
-  _scrollTo(scrollTop, opts = {}) {
+  _scrollTo(scrollTop) {
     window.scrollTo({
       top: scrollTop,
       behavior: "smooth",
     });
-
-    if (opts.focusTabLoc) {
-      window.addEventListener("scroll", this._onScrollEnds, { passive: true });
-    }
-  },
-
-  @bind
-  _onScrollEnds() {
-    window.removeEventListener("scroll", this._onScrollEnds, { passive: true });
-    discourseDebounce(this, this._onScrollEndsCallback, animationDuration);
-  },
-
-  _onScrollEndsCallback() {
-    document.querySelector(".topic-post.selected span.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {
@@ -832,10 +819,10 @@ export default {
       );
     } else if (document.querySelector(".topic-list")) {
       return document.querySelectorAll(".topic-list .topic-list-item");
-    } else if ((categoriesTopicsList = this.categoriesTopicsList())) {
-      return categoriesTopicsList;
     } else if (document.querySelector(".search-results")) {
       return document.querySelectorAll(".search-results .fps-result");
+    } else if ((categoriesTopicsList = this.categoriesTopicsList())) {
+      return categoriesTopicsList;
     }
   },
 
@@ -887,6 +874,10 @@ export default {
 
   toggleAdminActions() {
     this.appEvents.trigger("topic:toggle-actions");
+  },
+
+  toggleArchivePM() {
+    getOwner(this).lookup("controller:topic").send("toggleArchiveMessage");
   },
 
   webviewKeyboardBack() {

@@ -1,19 +1,23 @@
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { avatarImg } from "discourse/widgets/post";
-import { createWidget } from "discourse/widgets/widget";
-import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { schedule } from "@ember/runloop";
-import { scrollTop } from "discourse/mixins/scroll-top";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { logSearchLinkClick } from "discourse/lib/search";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
-import { hideUserTip } from "discourse/lib/user-tips";
-import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
+import $ from "jquery";
+import { h } from "virtual-dom";
+import { addExtraUserClasses } from "discourse/helpers/user-avatar";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import scrollLock from "discourse/lib/scroll-lock";
+import { logSearchLinkClick } from "discourse/lib/search";
+import DiscourseURL from "discourse/lib/url";
+import { scrollTop } from "discourse/mixins/scroll-top";
+import { avatarImg } from "discourse/widgets/post";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { createWidget } from "discourse/widgets/widget";
+import { isTesting } from "discourse-common/config/environment";
+import getURL from "discourse-common/lib/get-url";
+import { iconNode } from "discourse-common/lib/icon-library";
+import discourseLater from "discourse-common/lib/later";
+import I18n from "discourse-i18n";
+
+const SEARCH_BUTTON_ID = "search-button";
 
 let _extraHeaderIcons = [];
 
@@ -47,6 +51,8 @@ export const dropdown = {
 };
 
 createWidget("header-notifications", {
+  services: ["user-tips"],
+
   settings: {
     avatarSize: "medium",
   },
@@ -67,13 +73,15 @@ createWidget("header-notifications", {
       avatarImg(
         this.settings.avatarSize,
         Object.assign(
-          {
-            alt: "user.avatar.header_title",
-          },
+          { alt: "user.avatar.header_title" },
           addExtraUserClasses(user, avatarAttrs)
         )
       ),
     ];
+
+    if (this.currentUser && this._shouldHighlightAvatar()) {
+      contents.push(this.attach("header-user-tip-shim"));
+    }
 
     if (this.currentUser.status) {
       contents.push(this.attach("user-status-bubble", this.currentUser.status));
@@ -135,6 +143,7 @@ createWidget("header-notifications", {
         );
       }
     }
+
     return contents;
   },
 
@@ -146,34 +155,6 @@ createWidget("header-notifications", {
       !user.enforcedSecondFactor &&
       !attrs.active
     );
-  },
-
-  didRenderWidget() {
-    if (!this.currentUser || !this._shouldHighlightAvatar()) {
-      return;
-    }
-
-    this.currentUser.showUserTip({
-      id: "first_notification",
-
-      titleText: I18n.t("user_tips.first_notification.title"),
-      contentText: I18n.t("user_tips.first_notification.content"),
-
-      reference: document
-        .querySelector(".d-header .badge-notification")
-        ?.parentElement?.querySelector(".avatar"),
-      appendTo: document.querySelector(".d-header .panel"),
-
-      placement: "bottom-end",
-    });
-  },
-
-  destroy() {
-    hideUserTip("first_notification");
-  },
-
-  willRerenderWidget() {
-    hideUserTip("first_notification");
   },
 });
 
@@ -195,7 +176,9 @@ createWidget(
               "aria-haspopup": true,
               "aria-expanded": attrs.active,
               href: attrs.user.path,
-              title: attrs.user.name || attrs.user.username,
+              "aria-label": I18n.t("user.account_possessive", {
+                name: attrs.user.name || attrs.user.username,
+              }),
               "data-auto-route": true,
             },
           },
@@ -243,6 +226,7 @@ createWidget(
 );
 
 createWidget("header-icons", {
+  services: ["search"],
   tagName: "ul.icons.d-header-icons",
 
   html(attrs) {
@@ -263,7 +247,7 @@ createWidget("header-icons", {
       icon: "search",
       iconId: SEARCH_BUTTON_ID,
       action: "toggleSearchMenu",
-      active: attrs.searchVisible,
+      active: attrs.searchVisible || this.search.visible,
       href: getURL("/search"),
       classNames: ["search-dropdown"],
     });
@@ -278,24 +262,6 @@ createWidget("header-icons", {
       action: "toggleHamburger",
       href: "",
       classNames: ["hamburger-dropdown"],
-
-      contents() {
-        let { currentUser } = this;
-        if (
-          currentUser?.reviewable_count &&
-          this.siteSettings.navigation_menu === "legacy"
-        ) {
-          return h(
-            "div.badge-notification.reviewables",
-            {
-              attributes: {
-                title: I18n.t("notifications.reviewable_items"),
-              },
-            },
-            this.currentUser.reviewable_count
-          );
-        }
-      },
     });
 
     if (!attrs.sidebarEnabled || this.site.mobileView) {
@@ -362,7 +328,7 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
 
-createWidget("revamped-hamburger-menu-wrapper", {
+createWidget("hamburger-dropdown-wrapper", {
   buildAttributes() {
     return { "data-click-outside": true };
   },
@@ -387,8 +353,38 @@ createWidget("revamped-hamburger-menu-wrapper", {
     }
   },
 
-  clickOutside() {
-    this.sendWidgetAction("toggleHamburger");
+  clickOutside(e) {
+    if (
+      e.target.classList.contains("header-cloak") &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      const panel = document.querySelector(".menu-panel");
+      const headerCloak = document.querySelector(".header-cloak");
+      const finishPosition =
+        document.querySelector("html").classList["direction"] === "rtl"
+          ? "340px"
+          : "-340px";
+      panel
+        .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
+          duration: 200,
+          fill: "forwards",
+          easing: "ease-in",
+        })
+        .finished.then(() => {
+          if (isTesting()) {
+            this.sendWidgetAction("toggleHamburger");
+          } else {
+            discourseLater(() => this.sendWidgetAction("toggleHamburger"));
+          }
+        });
+      headerCloak.animate([{ opacity: 0 }], {
+        duration: 200,
+        fill: "forwards",
+        easing: "ease-in",
+      });
+    } else {
+      this.sendWidgetAction("toggleHamburger");
+    }
   },
 });
 
@@ -414,18 +410,49 @@ createWidget("revamped-user-menu-wrapper", {
     this.sendWidgetAction("toggleUserMenu");
   },
 
-  clickOutside() {
-    this.closeUserMenu();
+  clickOutside(e) {
+    if (
+      e.target.classList.contains("header-cloak") &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      const panel = document.querySelector(".menu-panel");
+      const headerCloak = document.querySelector(".header-cloak");
+      const finishPosition =
+        document.querySelector("html").classList["direction"] === "rtl"
+          ? "-340px"
+          : "340px";
+      panel
+        .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
+          duration: 200,
+          fill: "forwards",
+          easing: "ease-in",
+        })
+        .finished.then(() => {
+          if (isTesting) {
+            this.closeUserMenu();
+          } else {
+            discourseLater(() => this.closeUserMenu());
+          }
+        });
+      headerCloak.animate([{ opacity: 0 }], {
+        duration: 200,
+        fill: "forwards",
+        easing: "ease-in",
+      });
+    } else {
+      this.closeUserMenu();
+    }
   },
 });
 
 createWidget("glimmer-search-menu-wrapper", {
+  services: ["search"],
   buildAttributes() {
     return { "data-click-outside": true, "aria-live": "polite" };
   },
 
   buildClasses() {
-    return ["search-menu"];
+    return ["search-menu glimmer-search-menu"];
   },
 
   html() {
@@ -433,17 +460,9 @@ createWidget("glimmer-search-menu-wrapper", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<SearchMenu
-          @inTopicContext={{@data.inTopicContext}}
-          @searchVisible={{@data.searchVisible}}
-          @animationClass={{@data.animationClass}}
-          @closeSearchMenu={{@data.closeSearchMenu}}
-        />`,
+        hbs`<SearchMenuPanel @closeSearchMenu={{@data.closeSearchMenu}} />`,
         {
           closeSearchMenu: this.closeSearchMenu.bind(this),
-          inTopicContext: this.attrs.inTopicContext,
-          searchVisible: this.attrs.searchVisible,
-          animationClass: this.attrs.animationClass,
         }
       ),
     ];
@@ -451,6 +470,7 @@ createWidget("glimmer-search-menu-wrapper", {
 
   closeSearchMenu() {
     this.sendWidgetAction("toggleSearchMenu");
+    document.getElementById(SEARCH_BUTTON_ID)?.focus();
   },
 
   clickOutside() {
@@ -480,8 +500,7 @@ export default createWidget("header", {
 
   html(attrs, state) {
     let inTopicRoute = false;
-
-    if (this.state.inTopicContext) {
+    if (this.state.inTopicContext || this.search.inTopicContext) {
       inTopicRoute = this.router.currentRouteName.startsWith("topic.");
     }
 
@@ -489,7 +508,7 @@ export default createWidget("header", {
       const headerIcons = this.attach("header-icons", {
         hamburgerVisible: state.hamburgerVisible,
         userVisible: state.userVisible,
-        searchVisible: state.searchVisible,
+        searchVisible: state.searchVisible || this.search.visible,
         flagCount: attrs.flagCount,
         user: this.currentUser,
         sidebarEnabled: attrs.sidebarEnabled,
@@ -501,15 +520,11 @@ export default createWidget("header", {
 
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
-      if (state.searchVisible) {
-        if (this.currentUser?.experimental_search_menu_groups_enabled) {
-          panels.push(
-            this.attach("glimmer-search-menu-wrapper", {
-              inTopicContext: state.inTopicContext && inTopicRoute,
-              searchVisible: state.searchVisible,
-              animationClass: this.animationClass(),
-            })
-          );
+      if (state.searchVisible || this.search.visible) {
+        if (this.siteSettings.experimental_search_menu) {
+          this.search.inTopicContext =
+            this.search.inTopicContext && inTopicRoute;
+          panels.push(this.attach("glimmer-search-menu-wrapper"));
         } else {
           panels.push(
             this.attach("search-menu", {
@@ -518,16 +533,7 @@ export default createWidget("header", {
           );
         }
       } else if (state.hamburgerVisible) {
-        if (
-          attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
-          (attrs.navigationMenuQueryParamOverride !== "legacy" &&
-            this.siteSettings.navigation_menu !== "legacy" &&
-            (!attrs.sidebarEnabled || this.site.narrowDesktopView))
-        ) {
-          panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
-        } else {
-          panels.push(this.attach("hamburger-menu"));
-        }
+        panels.push(this.attach("hamburger-dropdown-wrapper", {}));
       } else if (state.userVisible) {
         panels.push(this.attach("revamped-user-menu-wrapper", {}));
       }
@@ -557,26 +563,21 @@ export default createWidget("header", {
 
     return h(
       "div.wrap",
-      this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))
+      this.attach("header-contents", { ...attrs, ...contentsAttrs })
     );
   },
 
   updateHighlight() {
-    if (!this.state.searchVisible) {
-      this.search.set("highlightTerm", "");
+    if (!this.state.searchVisible || !this.search.visible) {
+      this.search.highlightTerm = "";
     }
-  },
-
-  animationClass() {
-    return this.site.mobileView || this.site.narrowDesktopView
-      ? "slide-in"
-      : "drop-down";
   },
 
   closeAll() {
     this.state.userVisible = false;
     this.state.hamburgerVisible = false;
     this.state.searchVisible = false;
+    this.search.visible = false;
     this.toggleBodyScrolling(false);
   },
 
@@ -617,12 +618,15 @@ export default createWidget("header", {
     }
 
     this.state.searchVisible = !this.state.searchVisible;
+    this.search.visible = !this.search.visible;
     this.updateHighlight();
 
     if (this.state.searchVisible) {
+      // only used by the widget search-menu
       this.focusSearchInput();
     } else {
       this.state.inTopicContext = false;
+      this.search.inTopicContext = false;
     }
   },
 
@@ -637,24 +641,15 @@ export default createWidget("header", {
   },
 
   toggleHamburger() {
-    if (
-      this.siteSettings.navigation_menu !== "legacy" &&
-      this.attrs.sidebarEnabled &&
-      !this.site.narrowDesktopView
-    ) {
+    if (this.attrs.sidebarEnabled && !this.site.narrowDesktopView) {
       this.sendWidgetAction("toggleSidebar");
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
 
       schedule("afterRender", () => {
-        if (this.siteSettings.navigation_menu !== "legacy") {
-          // Remove focus from hamburger toggle button
-          document.querySelector("#toggle-hamburger-menu")?.blur();
-        } else {
-          // auto focus on first link in dropdown
-          document.querySelector(".hamburger-panel .menu-links a")?.focus();
-        }
+        // Remove focus from hamburger toggle button
+        document.querySelector("#toggle-hamburger-menu")?.blur();
       });
     }
   },
@@ -663,48 +658,12 @@ export default createWidget("header", {
     if (!this.site.mobileView) {
       return;
     }
-    if (bool) {
-      document.body.addEventListener("touchmove", this.preventDefault, {
-        passive: false,
-      });
-    } else {
-      document.body.removeEventListener("touchmove", this.preventDefault, {
-        passive: false,
-      });
-    }
-  },
-
-  preventDefault(e) {
-    const windowHeight = window.innerHeight;
-
-    // allow profile menu tabs to scroll if they're taller than the window
-    if (e.target.closest(".menu-panel .menu-tabs-container")) {
-      const topTabs = document.querySelector(".menu-panel .top-tabs");
-      const bottomTabs = document.querySelector(".menu-panel .bottom-tabs");
-      const profileTabsHeight =
-        topTabs?.offsetHeight + bottomTabs?.offsetHeight || 0;
-
-      if (profileTabsHeight > windowHeight) {
-        return;
-      }
-    }
-
-    // allow menu panels to scroll if contents are taller than the window
-    if (e.target.closest(".menu-panel")) {
-      const menuContentHeight =
-        document.querySelector(".menu-panel .panel-body-contents")
-          .offsetHeight || 0;
-
-      if (menuContentHeight > windowHeight) {
-        return;
-      }
-    }
-
-    e.preventDefault();
+    scrollLock(bool);
   },
 
   togglePageSearch() {
     const { state } = this;
+    this.search.inTopicContext = false;
     state.inTopicContext = false;
 
     let showSearch = this.router.currentRouteName.startsWith("topic.");
@@ -720,13 +679,14 @@ export default createWidget("header", {
         $(".topic-post .cooked, .small-action:not(.time-gap)").length < total;
     }
 
-    if (state.searchVisible) {
+    if (state.searchVisible || this.search.visible) {
       this.toggleSearchMenu();
       return showSearch;
     }
 
     if (showSearch) {
       state.inTopicContext = true;
+      this.search.inTopicContext = true;
       this.toggleSearchMenu();
       return false;
     }
@@ -737,7 +697,12 @@ export default createWidget("header", {
   domClean() {
     const { state } = this;
 
-    if (state.searchVisible || state.hamburgerVisible || state.userVisible) {
+    if (
+      state.searchVisible ||
+      this.search.visible ||
+      state.hamburgerVisible ||
+      state.userVisible
+    ) {
       this.closeAll();
     }
   },
@@ -762,12 +727,11 @@ export default createWidget("header", {
     }
   },
 
+  // only used by the widget search-menu
   focusSearchInput() {
-    // the glimmer search menu handles the focusing of the search
-    // input within the search component
     if (
       this.state.searchVisible &&
-      !this.currentUser?.experimental_search_menu_groups_enabled
+      !this.siteSettings.experimental_search_menu
     ) {
       schedule("afterRender", () => {
         const searchInput = document.querySelector("#search-term");
@@ -777,11 +741,13 @@ export default createWidget("header", {
     }
   },
 
+  // only used by the widget search-menu
   setTopicContext() {
     this.state.inTopicContext = true;
     this.focusSearchInput();
   },
 
+  // only used by the widget search-menu
   clearContext() {
     this.state.inTopicContext = false;
     this.focusSearchInput();

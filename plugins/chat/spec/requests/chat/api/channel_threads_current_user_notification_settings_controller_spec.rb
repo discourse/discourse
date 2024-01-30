@@ -10,6 +10,7 @@ RSpec.describe Chat::Api::ChannelThreadsCurrentUserNotificationsSettingsControll
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     sign_in(current_user)
+    thread.update!(last_message: last_reply)
   end
 
   describe "#update" do

@@ -5,8 +5,8 @@ RSpec.describe Chat::AutoRemove::HandleChatAllowedGroupsChange do
     subject(:result) { described_class.call(params) }
 
     let(:params) { { new_allowed_groups: new_allowed_groups } }
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin_1) { Fabricate(:admin) }
     fab!(:admin_2) { Fabricate(:admin) }
 
@@ -124,7 +124,6 @@ RSpec.describe Chat::AutoRemove::HandleChatAllowedGroupsChange do
         before do
           public_channel_1.add(user_1)
           public_channel_2.add(user_1)
-          Group.refresh_automatic_groups!
         end
 
         it "does nothing" do

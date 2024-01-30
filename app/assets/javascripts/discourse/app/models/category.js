@@ -1,15 +1,16 @@
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { get } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { get } from "@ember/object";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 const STAFF_GROUP_NAME = "staff";
+const CATEGORY_ASYNC_SEARCH_CACHE = {};
 
 const Category = RestModel.extend({
   permissions: null,
@@ -77,9 +78,9 @@ const Category = RestModel.extend({
     }
   },
 
-  @discourseComputed("subcategories")
-  isParent(subcategories) {
-    return subcategories && subcategories.length > 0;
+  @discourseComputed("has_children", "subcategories")
+  isParent(hasChildren, subcategories) {
+    return hasChildren || (subcategories && subcategories.length > 0);
   },
 
   @discourseComputed("subcategories")
@@ -232,6 +233,7 @@ const Category = RestModel.extend({
         uploaded_logo_id: this.get("uploaded_logo.id"),
         uploaded_logo_dark_id: this.get("uploaded_logo_dark.id"),
         uploaded_background_id: this.get("uploaded_background.id"),
+        uploaded_background_dark_id: this.get("uploaded_background_dark.id"),
         allow_badges: this.allow_badges,
         category_setting_attributes: this.category_setting,
         custom_fields: this.custom_fields,
@@ -345,6 +347,16 @@ const Category = RestModel.extend({
   isUncategorizedCategory(id) {
     return Category.isUncategorized(id);
   },
+
+  get canCreateTopic() {
+    return this.permission === PermissionType.FULL;
+  },
+
+  get subcategoryWithCreateTopicPermission() {
+    return this.subcategories?.find(
+      (subcategory) => subcategory.canCreateTopic
+    );
+  },
 });
 
 let _uncategorized;
@@ -365,7 +377,7 @@ Category.reopenClass({
     const reduce = (values) =>
       values.flatMap((c) => [c, reduce(children.get(c.id) || [])]).flat();
 
-    return reduce(children.get(-1));
+    return reduce(children.get(-1) || []);
   },
 
   isUncategorized(categoryId) {
@@ -373,7 +385,9 @@ Category.reopenClass({
   },
 
   slugEncoded() {
-    let siteSettings = getOwner(this).lookup("service:site-settings");
+    let siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
     return siteSettings.slug_generation_method === "encoded";
   },
 
@@ -448,6 +462,26 @@ Category.reopenClass({
     return categories;
   },
 
+  hasAsyncFoundAll(ids) {
+    const loadedCategoryIds = Site.current().loadedCategoryIds || new Set();
+    return ids.every((id) => loadedCategoryIds.has(id));
+  },
+
+  async asyncFindByIds(ids = []) {
+    const result = await ajax("/categories/find", { data: { ids } });
+
+    const categories = result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
+
+    // Update loadedCategoryIds list
+    const loadedCategoryIds = Site.current().loadedCategoryIds || new Set();
+    ids.forEach((id) => loadedCategoryIds.add(id));
+    Site.current().set("loadedCategoryIds", loadedCategoryIds);
+
+    return categories;
+  },
+
   findBySlugAndParent(slug, parentCategory) {
     if (this.slugEncoded()) {
       slug = encodeURI(slug);
@@ -472,6 +506,18 @@ Category.reopenClass({
     }
 
     return category;
+  },
+
+  async asyncFindBySlugPathWithID(slugPathWithID) {
+    const result = await ajax("/categories/find", {
+      data: { slug_path_with_id: slugPathWithID },
+    });
+
+    const categories = result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
+
+    return categories[categories.length - 1];
   },
 
   findBySlugPathWithID(slugPathWithID) {
@@ -639,6 +685,28 @@ Category.reopenClass({
     }
 
     return data.sortBy("read_restricted");
+  },
+
+  async asyncSearch(term, opts) {
+    opts ||= {};
+
+    const data = {
+      term,
+      parent_category_id: opts.parentCategoryId,
+      include_uncategorized: opts.includeUncategorized,
+      select_category_ids: opts.selectCategoryIds,
+      reject_category_ids: opts.rejectCategoryIds,
+      include_subcategories: opts.includeSubcategories,
+      prioritized_category_id: opts.prioritizedCategoryId,
+      limit: opts.limit,
+    };
+
+    const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=
+      await ajax("/categories/search", { data }));
+
+    return result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
   },
 });
 

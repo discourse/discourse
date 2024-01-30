@@ -1,10 +1,10 @@
-import I18n from "I18n";
+import { h } from "virtual-dom";
+import { userPath } from "discourse/lib/url";
+import hbs from "discourse/widgets/hbs-compiler";
 import { avatarFor } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
-import hbs from "discourse/widgets/hbs-compiler";
-import { userPath } from "discourse/lib/url";
+import I18n from "discourse-i18n";
 
 export function smallUserAtts(user) {
   return {

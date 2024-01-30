@@ -1,21 +1,36 @@
-import ChatComposer from "../../chat-composer";
-import { inject as service } from "@ember/service";
-import I18n from "I18n";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { debounce } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import ChatComposer from "../../chat-composer";
 
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
-  @service chatDraftsManager;
   @service currentUser;
+  @service chatDraftsManager;
 
   context = "channel";
 
   composerId = "channel-composer";
 
-  get shouldRenderReplyingIndicator() {
-    return this.args.channel;
+  @debounce(2000)
+  persistDraft() {
+    this.chatDraftsManager.add(this.draft, this.args.channel.id);
+  }
+
+  @action
+  destroyDraft() {
+    this.chatDraftsManager.remove(this.args.channel.id);
+  }
+
+  @action
+  resetDraft() {
+    this.args.channel.resetDraft(this.currentUser);
+  }
+
+  get draft() {
+    return this.args.channel.draft;
   }
 
   get presenceChannelName() {
@@ -28,33 +43,6 @@ export default class ChatComposerChannel extends ChatComposer {
       !this.chat.userCanInteractWithChat ||
       !this.args.channel.canModifyMessages(this.currentUser)
     );
-  }
-
-  @action
-  reset() {
-    this.composer.reset(this.args.channel);
-  }
-
-  @action
-  persistDraft() {
-    this.chatDraftsManager.add(this.currentMessage);
-
-    this._persistHandler = discourseDebounce(
-      this,
-      this._debouncedPersistDraft,
-      this.args.channel.id,
-      this.currentMessage.toJSONDraft(),
-      2000
-    );
-  }
-
-  @action
-  _debouncedPersistDraft(channelId, jsonDraft) {
-    this.chatApi.saveDraft(channelId, jsonDraft).then(() => {
-      if (this.currentMessage) {
-        this.currentMessage.draftSaved = true;
-      }
-    });
   }
 
   get lastMessage() {
@@ -82,10 +70,10 @@ export default class ChatComposerChannel extends ChatComposer {
   handleEscape(event) {
     event.stopPropagation();
 
-    if (this.currentMessage?.inReplyTo) {
-      this.reset();
-    } else if (this.currentMessage?.editing) {
-      this.composer.cancel(this.args.channel);
+    if (this.draft?.inReplyTo) {
+      this.draft.inReplyTo = null;
+    } else if (this.draft?.editing) {
+      this.args.channel.resetDraft(this.currentUser);
     } else {
       event.target.blur();
     }
@@ -93,19 +81,25 @@ export default class ChatComposerChannel extends ChatComposer {
 
   #messageRecipients(channel) {
     if (channel.isDirectMessageChannel) {
-      const directMessageRecipients = channel.chatable.users;
-      if (
-        directMessageRecipients.length === 1 &&
-        directMessageRecipients[0].id === this.currentUser.id
-      ) {
-        return I18n.t("chat.placeholder_self");
-      }
+      if (channel.chatable.group && channel.title) {
+        return I18n.t("chat.placeholder_channel", {
+          channelName: `#${channel.title}`,
+        });
+      } else {
+        const directMessageRecipients = channel.chatable.users;
+        if (
+          directMessageRecipients.length === 1 &&
+          directMessageRecipients[0].id === this.currentUser.id
+        ) {
+          return I18n.t("chat.placeholder_self");
+        }
 
-      return I18n.t("chat.placeholder_users", {
-        commaSeparatedNames: directMessageRecipients
-          .map((u) => u.name || `@${u.username}`)
-          .join(I18n.t("word_connector.comma")),
-      });
+        return I18n.t("chat.placeholder_users", {
+          commaSeparatedNames: directMessageRecipients
+            .map((u) => u.name || `@${u.username}`)
+            .join(I18n.t("word_connector.comma")),
+        });
+      }
     } else {
       return I18n.t("chat.placeholder_channel", {
         channelName: `#${channel.title}`,

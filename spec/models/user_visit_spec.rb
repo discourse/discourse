@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserVisit do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:other_user) { Fabricate(:user) }
 
   it "can ensure consistency" do

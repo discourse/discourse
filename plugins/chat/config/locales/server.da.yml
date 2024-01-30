@@ -6,6 +6,8 @@
 
 da:
   site_settings:
+    chat_separate_sidebar_mode: "Vis separate sidebjælke-tilstande for forum og chat."
+    chat_enabled: "Aktiver chat."
     default_emoji_reactions: "Standard emoji-reaktioner for chatbeskeder. Tilføj op til 5 emojis for hurtig reaktion."
   chat:
     deleted_chat_username: slettet
@@ -27,23 +29,29 @@ da:
         agree_and_delete:
           title: "Slet Besked"
           description: "Slet meddelelsen, så brugerne ikke kan se den."
-        delete_and_agree:
-          title: "Slet Besked"
         disagree:
           title: "Uenig"
         ignore:
-          title: "Ignorér"
+          title: "Gør ingenting"
     channel:
       archive:
         first_post_raw: "Dette emne er et arkiv af chatkanalen [%{channel_name}] (%{channel_url})."
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "afvis"
+      invitations_sent:
+        one: "Invitation sendt"
+        other: "Invitationer sendt"
+      invite: "Inviter til kanal"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "indeholder ikke-ascii- tegn"
     bookmarkable:
       notification_title: "besked i %{channel_name}"
     personal_chat: "personlig chat"
+    onebox:
+      thread_title_connector: "i"
   discourse_push_notifications:
     popup:
       chat_mention:

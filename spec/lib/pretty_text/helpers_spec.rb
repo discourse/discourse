@@ -16,37 +16,6 @@ RSpec.describe PrettyText::Helpers do
     end
   end
 
-  describe ".category_tag_hashtag_lookup" do
-    fab!(:tag) { Fabricate(:tag, name: "somecooltag") }
-    fab!(:category) do
-      Fabricate(:category, name: "Some Awesome Category", slug: "someawesomecategory")
-    end
-
-    it "handles tags based on slug with TAG_HASHTAG_POSTFIX" do
-      expect(
-        PrettyText::Helpers.category_tag_hashtag_lookup(
-          +"somecooltag#{PrettyText::Helpers::TAG_HASHTAG_POSTFIX}",
-        ),
-      ).to eq([tag.url, "somecooltag"])
-    end
-
-    it "handles categories based on slug" do
-      expect(PrettyText::Helpers.category_tag_hashtag_lookup("someawesomecategory")).to eq(
-        [category.url, "someawesomecategory"],
-      )
-    end
-
-    it "handles tags based on slug without TAG_HASHTAG_POSTFIX" do
-      expect(PrettyText::Helpers.category_tag_hashtag_lookup(+"somecooltag")).to eq(
-        [tag.url, "somecooltag"],
-      )
-    end
-
-    it "returns nil when no tag or category that matches exists" do
-      expect(PrettyText::Helpers.category_tag_hashtag_lookup("blah")).to eq(nil)
-    end
-  end
-
   describe ".hashtag_lookup" do
     fab!(:tag) { Fabricate(:tag, name: "somecooltag", description: "Coolest things ever") }
     fab!(:category) do
@@ -57,7 +26,7 @@ RSpec.describe PrettyText::Helpers do
         description: "Really great stuff here",
       )
     end
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "handles tags and categories based on slug with type suffix" do
       expect(

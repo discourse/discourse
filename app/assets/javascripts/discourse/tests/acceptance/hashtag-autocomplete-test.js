@@ -1,15 +1,14 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   emulateAutocomplete,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 acceptance("#hashtag autocompletion in composer", function (needs) {
   needs.user();
   needs.settings({
     tagging_enabled: true,
-    enable_experimental_hashtag_autocomplete: true,
   });
   needs.pretender((server, helper) => {
     server.get("/hashtags", () => {

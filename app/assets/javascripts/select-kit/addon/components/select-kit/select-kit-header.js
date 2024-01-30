@@ -1,7 +1,7 @@
 import Component from "@ember/component";
-import UtilsMixin from "select-kit/mixins/utils";
 import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
+import UtilsMixin from "select-kit/mixins/utils";
 
 export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-header"],

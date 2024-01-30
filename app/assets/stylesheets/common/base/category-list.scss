@@ -58,7 +58,7 @@
     border-width: 0;
     border-left-width: 6px;
     border-style: solid;
-    border-color: var(--category-color, var(--primary-low));
+    border-color: var(--category-badge-color, var(--primary-low));
 
     .mobile-view & {
       width: 100%;
@@ -227,7 +227,7 @@
       align-items: center;
       @include ellipsis;
       margin-bottom: 0.6em;
-      .badge-wrapper {
+      .badge-category__wrapper {
         overflow: hidden;
       }
       .subcategory-image-placeholder {

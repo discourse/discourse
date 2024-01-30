@@ -36,7 +36,7 @@ module Chat
 
     def mentioned_users
       object
-        .chat_mentions
+        .user_mentions
         .limit(SiteSetting.max_mentions_per_chat_message)
         .map(&:user)
         .compact
@@ -50,7 +50,7 @@ module Chat
     end
 
     def user
-      object.user || Chat::DeletedUser.new
+      object.user || Chat::NullUser.new
     end
 
     def excerpt

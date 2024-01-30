@@ -1,20 +1,23 @@
 @mixin chat-height($inset: 0px) {
   // desktop and mobile
+  // -1px is for the bottom border of the chat navbar
   height: calc(
     var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-      var(--composer-height, 0px)
+      var(--composer-height, 0px) - 1px - $inset
   );
 
   // mobile with keyboard opened
   .keyboard-visible & {
-    height: calc(var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px));
+    height: calc(
+      var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) - 1px - $inset
+    );
   }
 
   // ipad
   .footer-nav-ipad & {
     height: calc(
       var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-        var(--composer-height, 0px)
+        var(--composer-height, 0px) - 1px - $inset
     );
   }
 }

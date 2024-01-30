@@ -1,6 +1,6 @@
-import { test } from "qunit";
-import I18n from "I18n";
 import { click, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   acceptance,
   count,
@@ -10,7 +10,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { NotificationLevels } from "discourse/lib/notification-levels";
+import I18n from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Messages Section - user does not have can_send_private_messages permission",

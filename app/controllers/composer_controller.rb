@@ -65,8 +65,12 @@ class ComposerController < ApplicationController
                 .count
 
             if notified_count > 0
-              group_reasons[group.name] = :some_not_allowed
-              serialized_group[:notified_count] = notified_count
+              if notified_count == group.user_count
+                group_reasons.delete(group.name)
+              else
+                group_reasons[group.name] = :some_not_allowed
+                serialized_group[:notified_count] = notified_count
+              end
             end
           end
 

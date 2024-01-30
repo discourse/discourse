@@ -1,6 +1,5 @@
 const SILENCED_WARN_PREFIXES = [
   "Setting the `jquery-integration` optional feature flag",
-  "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
 ];
 
 class DeprecationSilencer {

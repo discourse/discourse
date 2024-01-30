@@ -122,12 +122,18 @@ class UserAuthToken < ActiveRecord::Base
     expire_before = SiteSetting.maximum_session_age.hours.ago
 
     user_token =
-      find_by(
+      where(
         "(auth_token = :token OR
                           prev_auth_token = :token) AND rotated_at > :expire_before",
         token: token,
         expire_before: expire_before,
       )
+
+    if SiteSetting.verbose_auth_token_logging && path = opts.dig(:path)
+      user_token = user_token.annotate("path:#{path}")
+    end
+
+    user_token = user_token.first
 
     if !user_token
       log_verbose(

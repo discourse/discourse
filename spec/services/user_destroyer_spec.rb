@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe UserDestroyer do
-  fab!(:user) { Fabricate(:user_with_secondary_email) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user_with_secondary_email, refresh_auto_groups: true) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   describe ".new" do
     it "raises an error when user is nil" do
@@ -202,6 +202,26 @@ RSpec.describe UserDestroyer do
 
               reviewable.reload
               expect(reviewable).to be_approved
+            end
+
+            it "rejects pending posts" do
+              post = Fabricate(:post, user: user)
+              reviewable =
+                Fabricate(
+                  :reviewable,
+                  type: "ReviewablePost",
+                  target_type: "Post",
+                  target_id: post.id,
+                  created_by: Discourse.system_user,
+                  target_created_by: user,
+                )
+
+              expect(reviewable).to be_pending
+
+              destroy
+
+              reviewable.reload
+              expect(reviewable).to be_rejected
             end
           end
         end

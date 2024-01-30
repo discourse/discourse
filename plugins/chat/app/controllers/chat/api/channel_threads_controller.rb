@@ -12,12 +12,12 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
             tracking: result.tracking,
             memberships: result.memberships,
             load_more_url: result.load_more_url,
+            threads_participants: result.participants,
           ),
           ::Chat::ThreadListSerializer,
           root: false,
         )
       end
-      on_failed_policy(:threaded_discussions_enabled) { raise Discourse::NotFound }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise Discourse::NotFound }
@@ -38,7 +38,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
           participants: result.participants,
         )
       end
-      on_failed_policy(:threaded_discussions_enabled) { raise Discourse::NotFound }
+
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_model_not_found(:thread) { raise Discourse::NotFound }
     end
@@ -46,13 +46,32 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
 
   def update
     with_service(::Chat::UpdateThread) do
-      on_failed_policy(:threaded_discussions_enabled) { raise Discourse::NotFound }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_failed_policy(:can_edit_thread) { raise Discourse::InvalidAccess }
       on_model_not_found(:thread) { raise Discourse::NotFound }
       on_failed_step(:update) do
         render json: failed_json.merge(errors: [result["result.step.update"].error]), status: 422
+      end
+    end
+  end
+
+  def create
+    with_service(::Chat::CreateThread) do
+      on_success do
+        render_serialized(
+          result.thread,
+          ::Chat::ThreadSerializer,
+          root: false,
+          membership: result.membership,
+          include_thread_original_message: true,
+        )
+      end
+      on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
+      on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
+      on_failed_step(:create_thread) do
+        render json: failed_json.merge(errors: [result["result.step.create_thread"].error]),
+               status: 422
       end
     end
   end

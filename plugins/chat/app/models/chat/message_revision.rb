@@ -4,6 +4,9 @@ module Chat
   class MessageRevision < ActiveRecord::Base
     self.table_name = "chat_message_revisions"
 
+    validates :old_message, length: { maximum: 50_000 }
+    validates :new_message, length: { maximum: 50_000 }
+
     belongs_to :chat_message, class_name: "Chat::Message"
     belongs_to :user
   end

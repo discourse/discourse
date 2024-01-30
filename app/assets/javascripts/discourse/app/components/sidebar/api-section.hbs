@@ -7,12 +7,13 @@
   @willDestroy={{this.section.willDestroy}}
   @collapsable={{@collapsable}}
   @displaySection={{this.section.displaySection}}
+  @hideSectionHeader={{this.section.hideSectionHeader}}
 >
 
   {{#each this.section.links as |link|}}
     <Sidebar::SectionLink
       @linkName={{link.name}}
-      @class={{link.classNames}}
+      @linkClass={{link.classNames}}
       @route={{link.route}}
       @model={{link.model}}
       @models={{link.models}}

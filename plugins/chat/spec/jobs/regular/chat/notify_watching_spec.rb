@@ -4,7 +4,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   let(:except_user_ids) { [] }
 
   before do
@@ -50,7 +50,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
         {
           username: user1.username,
           notification_type: Notification.types[:chat_message],
-          post_url: channel.relative_url,
+          post_url: message.url,
           translated_title:
             I18n.t(
               "discourse_push_notifications.popup.new_chat_message",
@@ -87,7 +87,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
             {
               username: user1.username,
               notification_type: Notification.types[:chat_message],
-              post_url: channel.relative_url,
+              post_url: message.url,
               translated_title:
                 I18n.t(
                   "discourse_push_notifications.popup.new_chat_message",
@@ -190,7 +190,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
         {
           username: user1.username,
           notification_type: Notification.types[:chat_message],
-          post_url: channel.relative_url,
+          post_url: message.url,
           translated_title:
             I18n.t(
               "discourse_push_notifications.popup.new_direct_chat_message",
@@ -227,7 +227,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
             {
               username: user1.username,
               notification_type: Notification.types[:chat_message],
-              post_url: channel.relative_url,
+              post_url: message.url,
               translated_title:
                 I18n.t(
                   "discourse_push_notifications.popup.new_direct_chat_message",

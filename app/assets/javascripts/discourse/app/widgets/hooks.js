@@ -1,4 +1,5 @@
 /*eslint no-loop-func:0*/
+import $ from "jquery";
 
 const CLICK_ATTRIBUTE_NAME = "_discourse_click_widget";
 const DOUBLE_CLICK_ATTRIBUTE_NAME = "_discourse_double_click_widget";

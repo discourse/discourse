@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import { alias, not } from "@ember/object/computed";
+import $ from "jquery";
 import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
 
 export default Component.extend({
   loadingMore: alias("topicList.loadingMore"),

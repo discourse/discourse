@@ -1,5 +1,5 @@
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import ItsATrap from "@discourse/itsatrap";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 export default {
   initialize(owner) {

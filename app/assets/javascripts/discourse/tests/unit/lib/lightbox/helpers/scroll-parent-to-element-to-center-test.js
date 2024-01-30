@@ -1,5 +1,4 @@
 import { module, test } from "qunit";
-
 import { scrollParentToElementCenter } from "discourse/lib/lightbox/helpers";
 
 module(

@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 
-describe "Composer Form Template Validations", type: :system, js: true do
-  fab!(:user) { Fabricate(:user) }
+describe "Composer Form Template Validations", type: :system do
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:form_template) do
     Fabricate(
       :form_template,
       name: "Bug Reports",
       template:
         "- type: input
+  id: full-name
   attributes:
     label: What is your full name?
     placeholder: John Doe
   validations:
     required: true
     type: email
-    min: 10",
+    minimum: 10",
     )
   end
 
@@ -24,6 +25,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
       name: "Websites",
       template:
         "- type: input
+  id: website-name
   attributes:
     label: What is your website name?
     placeholder: https://www.example.com
@@ -92,7 +94,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
     composer.create
     composer.fill_form_template_field("input", "b@b.com")
     expect(composer).to have_form_template_field_error(
-      I18n.t("js.form_templates.errors.tooShort", minLength: 10),
+      I18n.t("js.form_templates.errors.tooShort", count: 10),
     )
   end
 

@@ -5,23 +5,27 @@
 # https://translate.discourse.org/
 
 ko:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: 채팅
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "항상"
+          never: "알림 받지 않기"
       logs:
         staff_actions:
           actions:
             chat_channel_status_change: "채팅 채널 상태 변경됨"
             chat_channel_delete: "채팅 채널 삭제됨"
             chat_auto_remove_membership: "채널에서 자동으로 제거된 멤버십"
-    about:
-      chat_messages_count: "채팅 메시지"
-      chat_channels_count: "채팅 채널"
-      chat_users_count: "채팅 사용자"
     chat:
+      deleted_chat_username: 삭제되었습니다
       dates:
+        yesterday: "어제"
         time_tiny: "h:mm"
       all_loaded: "모든 메시지 보기"
       bot: "봇"
@@ -53,6 +57,7 @@ ko:
         browse: "채널 찾아보기"
         create: "새 채널"
       close: "닫기"
+      remove: "제거"
       expand: "채팅창 확장"
       deleted:
         other: "%{count}메시지가 삭제되었습니다 [모두 보기]"
@@ -86,19 +91,6 @@ ko:
         since:
           other: "약 %{count}시간"
       mention_warning:
-        dismiss: "무시"
-        cannot_see: "%{username} 이 채널에 액세스할 수 없으며 알림을 받지 않았습니다."
-        cannot_see_multiple:
-          other: "%{username}명 외 %{count}명의 사용자가 이 채널에 액세스할 수 없으며 알림을 받지 않았습니다."
-        without_membership: "%{username}이 채널에 참여하지 않았습니다."
-        without_membership_multiple:
-          other: "%{username} 및 %{count}명의 다른 사용자가 이 채널에 가입하지 않았습니다."
-        group_mentions_disabled: "%{group_name}은 언급을 허용하지 않습니다."
-        group_mentions_disabled_multiple:
-          other: "%{group_name} 및 %{count}개의 다른 그룹은 멘션을 허용하지 않습니다."
-        too_many_members: "%{group_name}은(는) 구성원이 너무 많습니다. 아무도 알림을 받지 않았습니다."
-        too_many_members_multiple:
-          other: "%{group_name} 및 %{count}개의 그룹은 회원 수가 너무 많습니다. 아무도 알림을 받지 않았습니다."
         groups:
           unreachable_1: "@%{group}에서 멘션을 허용하지 않습니다."
           unreachable_2: "%{group1} 및 %{group2}는 언급을 허용하지 않습니다."
@@ -123,8 +115,6 @@ ko:
       placeholder_new_message_disallowed:
         archived: "채널이 보관되어 메시지를 보낼 수 없습니다."
         read_only: "채널이 읽기 전용이므로 메시지를 보낼 수 없습니다."
-      placeholder_start_conversation: "대화 시작..."
-      placeholder_start_conversation_users: "%{commaSeparatedUsernames}과 대화 시작"
       remove_upload: "파일 제거"
       reply: "댓글쓰기"
       edit: "편집"
@@ -139,7 +129,6 @@ ko:
       save: "저장"
       select: "선택"
       return_to_list: "채널 목록으로 돌아가기"
-      return_to_threads_list: "진행 중인 토론으로 돌아가기"
       unread_threads_count:
         other: "읽지 않은 토론이 %{count}개 있습니다."
       scroll_to_bottom: "맨 아래로 스크롤"
@@ -186,7 +175,6 @@ ko:
         back_to_all_channels: "모든 채널"
         back_to_channel: "뒤로"
         tabs:
-          about: 소개
           members: 회원
           settings: 설정
       new_message_modal:
@@ -196,9 +184,9 @@ ko:
         default_search_placeholder: "#채널, @사용자 또는 아무거나"
         default_channel_search_placeholder: "#채널"
         default_user_search_placeholder: "@누군가"
-        user_search_placeholder: "...사용자 추가"
         disabled_user: "채팅 비활성화됨"
         no_items: "항목이 없습니다"
+        filter: "필터"
       channel_edit_name_slug_modal:
         title: 채널 수정
         input_placeholder: 이름 추가
@@ -231,17 +219,14 @@ ko:
           topic: "글"
       reviewable:
         type: "채팅 메시지"
-      reactions:
-        you_and_single_user: "당신과 %{username}이 :%{emoji}:로 반응했습니다"
-        you_and_multiple_users: "당신, %{commaSeparatedUsernames}, %{username}이 :%{emoji}:로 반응했습니다"
-        you_multiple_users_and_more:
-          other: "당신, %{commaSeparatedUsernames} 외 %{count}명이 :%{emoji}:로 반응했습니다"
       composer:
         toggle_toolbar: "툴바 전환"
         italic_text: "강조하기"
         bold_text: "굵게하기"
         code_text: "코드 텍스트"
         send: "보내기"
+      quote:
+        default_thread_title: "스레드"
       notification_levels:
         never: "알림 받지 않기"
       settings:
@@ -260,17 +245,22 @@ ko:
         saved: "저장되었습니다"
         unfollow: "나가기"
         admin_title: "관리자"
+        settings_title: "설정"
+        category_label: "카테고리"
+        history_label: "히스토리"
+        members_label: "회원"
       admin:
         title: "채팅"
         export_messages:
           title: "채팅 내보내기"
-          description: "내보내기는 지난 6개월 동안의 최근 메시지 10000개로 제한됩니다."
           create_export: "내보내기"
           export_has_started: "내보내기가 시작되었습니다. 준비가 되면 메시지를 받을 것입니다."
       direct_messages:
         create: "이동"
         leave: "이 개인 채팅에서 나가기"
         cannot_create: "죄송합니다. 다이렉트 메시지를 보낼 수 없습니다."
+      channel_list:
+        title: "채널"
       incoming_webhooks:
         back: "뒤로"
         channel_placeholder: "채널 선택"
@@ -302,12 +292,8 @@ ko:
       replying_indicator:
         single_user: "%{username}님이 입력 중"
       retention_reminders:
-        public_none: "채널 기록은 평생 보관됩니다."
-        public:
-          other: "채널 기록은 %{count}일 동안 보관됩니다."
-        dm_none: "개인 채팅 기록은 평생 보관됩니다."
-        dm:
-          other: "개인 채팅 기록은 %{count}일 동안 보관됩니다."
+        short:
+          other: "%{count}일"
       flagging:
         action: "신고 메시지"
       emoji_picker:
@@ -324,7 +310,6 @@ ko:
       thread:
         title: "제목"
         view_thread: 스레드 보기
-        default_title: "스레드"
         replies:
           other: "%{count} 댓글"
         label: 스레드
@@ -367,6 +352,8 @@ ko:
       types:
         chat_reviewable_message:
           title: "신고된 채팅 메시지"
+        reviewable_chat_message:
+          noun: "채팅 메시지"
     keyboard_shortcuts_help:
       chat:
         title: "채팅"
@@ -381,3 +368,7 @@ ko:
       sections:
         chat:
           title: 채팅
+    sidebar:
+      panels:
+        chat:
+          label: "채팅"

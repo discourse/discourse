@@ -18,7 +18,9 @@
   position: relative;
   overflow: hidden;
   &:before {
-    animation: placeHolderShimmer 4s linear infinite forwards;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
     position: absolute;
     left: 0;
     content: "";
@@ -37,11 +39,14 @@
 .user-card,
 .group-card {
   width: var(--card-width);
-  box-shadow: var(--shadow-card);
   color: var(--primary);
   background: var(--secondary) center center;
   background-size: cover;
-  outline: 2px solid transparent;
+  position: unset !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: unset !important;
+  z-index: unset !important;
 
   .card-content {
     padding: 10px;

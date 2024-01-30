@@ -1,6 +1,6 @@
-import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 import { computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
+import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 
 export default SelectKitHeaderComponent.extend({
   tagName: "summary",

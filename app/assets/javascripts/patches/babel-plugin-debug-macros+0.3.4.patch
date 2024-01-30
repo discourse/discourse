@@ -1,0 +1,76 @@
+diff --git a/node_modules/babel-plugin-debug-macros/src/utils/builder.js b/node_modules/babel-plugin-debug-macros/src/utils/builder.js
+index ea61084..e17eb68 100644
+--- a/node_modules/babel-plugin-debug-macros/src/utils/builder.js
++++ b/node_modules/babel-plugin-debug-macros/src/utils/builder.js
+@@ -7,6 +7,7 @@ module.exports = class Builder {
+     this.global = options.global;
+     this.assertPredicateIndex = options.assertPredicateIndex;
+     this.isDebug = options.isDebug;
++    this.deprecationsEnabled = true;
+     this.expressions = [];
+   }
+ 
+@@ -89,11 +90,16 @@ module.exports = class Builder {
+     let expression = path.node.expression;
+     let callee = expression.callee;
+     let args = expression.arguments;
++    let flag = this.isDebug;
+ 
+     if (options.validate) {
+       options.validate(expression, args);
+     }
+ 
++    if (options.flag !== undefined) {
++      flag = options.flag;
++    }
++
+     let callExpression;
+     if (this.module) {
+       callExpression = expression;
+@@ -115,7 +121,7 @@ module.exports = class Builder {
+ 
+     this.expressions.push([
+       path,
+-      this._buildLogicalExpressions(prefixedIdentifiers, callExpression),
++      this._buildLogicalExpressions(prefixedIdentifiers, callExpression, flag),
+     ]);
+   }
+ 
+@@ -165,6 +171,8 @@ module.exports = class Builder {
+           throw new ReferenceError(`deprecate's meta information requires an "id" field.`);
+         }
+       },
++
++      flag: this.deprecationsEnabled,
+     });
+   }
+ 
+@@ -173,12 +181,11 @@ module.exports = class Builder {
+    */
+   expandMacros() {
+     let t = this.t;
+-    let flag = t.booleanLiteral(this.isDebug);
+     for (let i = 0; i < this.expressions.length; i++) {
+       let expression = this.expressions[i];
+       let exp = expression[0];
+       let logicalExp = expression[1];
+-      exp.replaceWith(t.parenthesizedExpression(logicalExp(flag)));
++      exp.replaceWith(t.parenthesizedExpression(logicalExp()));
+     }
+   }
+ 
+@@ -196,11 +203,11 @@ module.exports = class Builder {
+     return t.callExpression(t.memberExpression(t.identifier('console'), identifier), args);
+   }
+ 
+-  _buildLogicalExpressions(identifiers, callExpression) {
++  _buildLogicalExpressions(identifiers, callExpression, flagValue) {
+     let t = this.t;
+ 
+-    return debugIdentifier => {
+-      identifiers.unshift(debugIdentifier);
++    return () => {
++      identifiers.unshift(t.booleanLiteral(flagValue));
+       identifiers.push(callExpression);
+       let logicalExpressions;
+ 

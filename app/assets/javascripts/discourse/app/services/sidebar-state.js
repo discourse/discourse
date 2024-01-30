@@ -1,19 +1,22 @@
-import Service from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-
+import Service from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   currentPanelKey,
   customPanels as panels,
 } from "discourse/lib/sidebar/custom-sections";
+import {
+  COMBINED_MODE,
+  MAIN_PANEL,
+  SEPARATED_MODE,
+} from "discourse/lib/sidebar/panels";
 
-const COMBINED_MODE = "combined";
-const SEPARATED_MODE = "separated";
-const MAIN_PANEL = "main";
-
+@disableImplicitInjections
 export default class SidebarState extends Service {
   @tracked currentPanelKey = currentPanelKey;
   @tracked panels = panels;
   @tracked mode = COMBINED_MODE;
+  @tracked displaySwitchPanelButtons = false;
 
   constructor() {
     super(...arguments);
@@ -23,7 +26,6 @@ export default class SidebarState extends Service {
 
   setPanel(name) {
     this.currentPanelKey = name;
-    this.mode = SEPARATED_MODE;
   }
 
   get currentPanel() {
@@ -32,11 +34,21 @@ export default class SidebarState extends Service {
 
   setSeparatedMode() {
     this.mode = SEPARATED_MODE;
+    this.showSwitchPanelButtons();
   }
 
   setCombinedMode() {
     this.mode = COMBINED_MODE;
     this.currentPanelKey = MAIN_PANEL;
+    this.hideSwitchPanelButtons();
+  }
+
+  showSwitchPanelButtons() {
+    this.displaySwitchPanelButtons = true;
+  }
+
+  hideSwitchPanelButtons() {
+    this.displaySwitchPanelButtons = false;
   }
 
   get combinedMode() {

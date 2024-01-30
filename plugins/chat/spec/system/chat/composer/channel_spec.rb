@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat | composer | channel", type: :system, js: true do
+RSpec.describe "Chat | composer | channel", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
   fab!(:current_user) { Fabricate(:admin) }
@@ -16,16 +16,21 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
   end
 
   describe "reply to message" do
-    it "renders text in the details" do
-      message_1.update!(message: "<mark>not marked</mark>")
-      message_1.rebake!
-      chat_page.visit_channel(channel_1)
-      channel_page.reply_to(message_1)
+    context "when raw contains html" do
+      fab!(:message_1) do
+        Fabricate(:chat_message, chat_channel: channel_1, message: "<mark>not marked</mark>")
+      end
 
-      expect(channel_page.composer.message_details).to have_message(
-        id: message_1.id,
-        exact_text: "<mark>not marked</mark>",
-      )
+      it "renders text in the details" do
+        chat_page.visit_channel(channel_1)
+
+        channel_page.reply_to(message_1)
+
+        expect(channel_page.composer.message_details).to have_message(
+          id: message_1.id,
+          exact_text: "<mark>not marked</mark>",
+        )
+      end
     end
 
     context "when threading is disabled" do
@@ -65,7 +70,7 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
       channel_page.edit_message(message_1, "instant")
 
       expect(channel_page.messages).to have_message(
-        text: message_1.message + "instant",
+        text: message_1.message + " instant",
         persisted: false,
       )
     ensure
@@ -92,6 +97,21 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
         expect(channel_page.composer).to be_editing_no_message
         expect(channel_page.composer.value).to eq("")
       end
+    end
+  end
+
+  context "when click on reply indicator" do
+    before do
+      Fabricate(:chat_message, chat_channel: channel_1)
+      Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: message_1)
+    end
+
+    it "highlights the message" do
+      chat_page.visit_channel(channel_1)
+
+      page.find(".chat-reply").click
+
+      expect(channel_page.messages).to have_message(id: message_1.id, highlighted: true)
     end
   end
 end

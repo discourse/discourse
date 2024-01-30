@@ -1,10 +1,10 @@
 <form>
   <div class="control-group">
     <ComboBox
-      @class="timer-type"
       @onChange={{this.onChangeStatusType}}
       @content={{this.timerTypes}}
       @value={{this.statusType}}
+      class="timer-type"
     />
   </div>
   {{#if this.publishToCategory}}

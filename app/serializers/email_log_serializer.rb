@@ -3,10 +3,19 @@
 class EmailLogSerializer < ApplicationSerializer
   include EmailLogsMixin
 
-  attributes :reply_key, :bounced, :has_bounce_key, :smtp_transaction_response
+  attributes :cc_addresses,
+             :post_id,
+             :reply_key,
+             :bounced,
+             :has_bounce_key,
+             :smtp_transaction_response
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 
+  def cc_addresses
+    return if object.cc_addresses.blank?
+    object.cc_addresses_split
+  end
   def include_reply_key?
     reply_keys = @options[:reply_keys]
     reply_keys.present? && reply_keys[[object.post_id, object.user_id]]

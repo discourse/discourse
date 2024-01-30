@@ -1,6 +1,6 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
 import { formatUsername } from "discourse/lib/utilities";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
   get label() {
@@ -12,8 +12,7 @@ export default class extends NotificationTypeBase {
     } else if (this.count > 2) {
       return I18n.t("notifications.liked_by_multiple_users", {
         username: this.username,
-        username2: this.#username2,
-        count: this.count - 2,
+        count: this.count - 1,
       });
     } else {
       return super.label;

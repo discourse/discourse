@@ -1,10 +1,16 @@
+/* eslint-disable simple-import-sort/imports */
+import "./loader-shims";
 import "./global-compat";
+/* eslint-enable simple-import-sort/imports */
 
-import require from "require";
 import Application from "@ember/application";
-import { buildResolver } from "discourse-common/resolver";
+import require from "require";
+import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
+import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { isTesting } from "discourse-common/config/environment";
-import { normalizeEmberEventHandling } from "./lib/ember-events";
+import { buildResolver } from "discourse-common/resolver";
+import { VERSION } from "@ember/version";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -22,16 +28,25 @@ const Discourse = Application.extend({
 
   // Start up the Discourse application by running all the initializers we've defined.
   start() {
-    document.querySelector("noscript")?.remove();
+    printDebugInfo();
+
+    document.querySelectorAll("noscript").forEach((el) => el.remove());
 
     // Rewire event handling to eliminate event delegation for better compat
     // between Glimmer and Classic components.
     normalizeEmberEventHandling(this);
 
+    // Register Discourse's standard implicit injections on common framework classes.
+    registerDiscourseImplicitInjections();
+
     if (Error.stackTraceLimit) {
       // We need Errors to have full stack traces for `lib/source-identifier`
       Error.stackTraceLimit = Infinity;
     }
+
+    // Our scroll-manager service takes care of storing and restoring scroll position.
+    // Disable browser handling:
+    window.history.scrollRestoration = "manual";
 
     loadInitializers(this);
   },
@@ -85,7 +100,7 @@ function loadInitializers(app) {
   let discourseInitializers = [];
   let discourseInstanceInitializers = [];
 
-  for (let moduleName of Object.keys(requirejs._eak_seen)) {
+  for (let moduleName of Object.keys(requirejs.entries)) {
     if (moduleName.startsWith("discourse/") && !moduleName.endsWith("-test")) {
       // In discourse core, initializers follow standard Ember conventions
       if (moduleName.startsWith("discourse/initializers/")) {
@@ -143,8 +158,6 @@ function loadInitializers(app) {
   }
 
   // Plugins that are registered via `<script>` tags.
-  const { withPluginApi } = require("discourse/lib/plugin-api");
-
   for (let [i, callback] of _pluginCallbacks.entries()) {
     app.instanceInitializer({
       name: `_discourse_plugin_${i}`,
@@ -205,4 +218,32 @@ function resolveDiscourseInitializer(moduleName, themeId) {
   return initializer;
 }
 
+let printedDebugInfo = false;
+function printDebugInfo() {
+  if (printedDebugInfo) {
+    return;
+  }
+
+  let str = "ℹ️ ";
+
+  const generator = document.querySelector("meta[name=generator]")?.content;
+  const parts = generator?.split(" ");
+  if (parts) {
+    const discourseVersion = parts[1];
+    const gitVersion = parts[5]?.substr(0, 10);
+    str += `Discourse v${discourseVersion} — https://github.com/discourse/discourse/commits/${gitVersion} — `;
+  }
+
+  str += `Ember v${VERSION}`;
+
+  // eslint-disable-next-line no-console
+  console.log(str);
+
+  printedDebugInfo = true;
+}
+
 export default Discourse;
+
+/**
+ * @typedef {import('ember-source/types')} EmberTypes
+ */

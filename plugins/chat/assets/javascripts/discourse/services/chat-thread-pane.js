@@ -1,5 +1,5 @@
-import ChatChannelPane from "./chat-channel-pane";
 import { inject as service } from "@ember/service";
+import ChatChannelPane from "./chat-channel-pane";
 
 export default class ChatThreadPane extends ChatChannelPane {
   @service chat;

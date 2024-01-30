@@ -3,7 +3,7 @@
 # mixin for all guardian methods dealing with post permissions
 module PostGuardian
   def unrestricted_link_posting?
-    authenticated? && @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+    authenticated? && @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map)
   end
 
   def link_posting_access
@@ -58,7 +58,19 @@ module PostGuardian
 
         if action_key == :notify_user &&
              !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
-          return false
+          # The modifier below is used to add additional permissions for notifying users.
+          # In core the only method of notifying a user is personal messages so we check if the
+          # user can PM. Plugins can extend the behavior of how users are notifier via `notify_user`
+          # post action, and this allows extension for that use case.
+          can_notify = false
+          can_notify =
+            DiscoursePluginRegistry.apply_modifier(
+              :post_guardian_can_notify_user,
+              can_notify,
+              self,
+              post,
+            )
+          return can_notify
         end
 
         # we allow flagging for trust level 1 and higher
@@ -66,7 +78,7 @@ module PostGuardian
         (
           is_flag && not(already_did_flagging) &&
             (
-              @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_flag_posts]) ||
+              @user.in_any_groups?(SiteSetting.flag_post_allowed_groups_map) ||
                 post.topic.private_message?
             )
         ) ||
@@ -147,11 +159,11 @@ module PostGuardian
       return true
     end
 
-    if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+    if post.wiki && @user.in_any_groups?(SiteSetting.edit_wiki_post_allowed_groups_map)
       return can_create_post?(post.topic)
     end
 
-    return false if @user.trust_level < SiteSetting.min_trust_to_edit_post
+    return false if !trusted_with_edits?
 
     if is_my_own?(post)
       return false if @user.silenced?
@@ -195,7 +207,7 @@ module PostGuardian
 
     return true if is_staff? || is_category_group_moderator?(post.topic&.category)
 
-    return true if SiteSetting.tl4_delete_posts_and_topics && user.has_trust_level?(TrustLevel[4])
+    return true if user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
 
     # Can't delete posts in archived topics unless you are staff
     return false if post.topic&.archived?
@@ -320,7 +332,7 @@ module PostGuardian
     return false unless authenticated?
     return true if is_staff? || @user.has_trust_level?(TrustLevel[4])
 
-    if @user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) && is_my_own?(post)
+    if @user.in_any_groups?(SiteSetting.self_wiki_allowed_groups_map) && is_my_own?(post)
       return false if post.hidden?
       return !post.edit_time_limit_expired?(@user)
     end
@@ -342,7 +354,7 @@ module PostGuardian
 
   def can_see_deleted_posts?(category = nil)
     is_staff? || is_category_group_moderator?(category) ||
-      (SiteSetting.tl4_delete_posts_and_topics && @user.has_trust_level?(TrustLevel[4]))
+      @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
   end
 
   def can_view_raw_email?(post)
@@ -358,6 +370,11 @@ module PostGuardian
   end
 
   private
+
+  def trusted_with_edits?
+    @user.trust_level >= SiteSetting.min_trust_to_edit_post ||
+      @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
+  end
 
   def can_create_post_in_topic?(topic)
     if !SiteSetting.enable_system_message_replies? && topic.try(:subtype) == "system_message"

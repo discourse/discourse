@@ -1,10 +1,10 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Local Dates - composer", function (needs) {
@@ -130,7 +130,7 @@ acceptance("Local Dates - composer", function (needs) {
     await click(".delete-to-date");
 
     assert.notOk(
-      query(".pika-table .is-selected"),
+      query(".date-time-control.to.is-selected"),
       "deleting selected TO date works"
     );
 

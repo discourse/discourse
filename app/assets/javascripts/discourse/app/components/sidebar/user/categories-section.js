@@ -1,12 +1,11 @@
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { cached } from "@glimmer/tracking";
-
-import { debounce } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
 import SidebarCommonCategoriesSection from "discourse/components/sidebar/common/categories-section";
-import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
 import SidebarEditNavigationMenuCategoriesModal from "discourse/components/sidebar/edit-navigation-menu/categories-modal";
+import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
+import Category from "discourse/models/category";
+import { debounce } from "discourse-common/utils/decorators";
 
 export const REFRESH_COUNTS_APP_EVENT_NAME =
   "sidebar:refresh-categories-section-counts";

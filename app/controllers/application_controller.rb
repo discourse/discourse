@@ -52,6 +52,7 @@ class ApplicationController < ActionController::Base
                if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   after_action :add_noindex_header_to_non_canonical, if: :spa_boot_request?
   after_action :set_cross_origin_opener_policy_header, if: :spa_boot_request?
+  after_action :clean_xml, if: :is_feed_response?
   around_action :link_preload, if: -> { spa_boot_request? && GlobalSetting.preload_link_header }
 
   HONEYPOT_KEY ||= "HONEYPOT_KEY"
@@ -122,6 +123,7 @@ class ApplicationController < ActionController::Base
 
   class RenderEmpty < StandardError
   end
+
   class PluginDisabled < StandardError
   end
 
@@ -444,6 +446,8 @@ class ApplicationController < ActionController::Base
       current_user.sync_notification_channel_position
       preload_current_user_data
     end
+
+    preload_additional_json
   end
 
   def set_mobile_view
@@ -462,7 +466,7 @@ class ApplicationController < ActionController::Base
     return unless guardian.can_enable_safe_mode?
 
     safe_mode = params[SAFE_MODE]
-    if safe_mode&.is_a?(String)
+    if safe_mode.is_a?(String)
       safe_mode = safe_mode.split(",")
       request.env[NO_THEMES] = safe_mode.include?(NO_THEMES) || safe_mode.include?(LEGACY_NO_THEMES)
       request.env[NO_PLUGINS] = safe_mode.include?(NO_PLUGINS)
@@ -667,6 +671,10 @@ class ApplicationController < ActionController::Base
 
     # This is used in the wizard so we can preload fonts using the FontMap JS API.
     store_preloaded("fontMap", MultiJson.dump(load_font_map)) if current_user.admin?
+  end
+
+  def preload_additional_json
+    # noop, should be defined by subcontrollers
   end
 
   def custom_html_json
@@ -931,7 +939,7 @@ class ApplicationController < ActionController::Base
         Discourse
           .cache
           .fetch(key, expires_in: 10.minutes) do
-            category_topic_ids = Category.pluck(:topic_id).compact
+            category_topic_ids = Category.select(:topic_id).where.not(topic_id: nil)
             @top_viewed =
               TopicQuery
                 .new(nil, except_topic_ids: category_topic_ids)
@@ -968,6 +976,10 @@ class ApplicationController < ActionController::Base
     request.format.atom? || request.format.rss?
   end
 
+  def is_feed_response?
+    request.get? && response&.content_type&.match?(/(rss|atom)/)
+  end
+
   def add_noindex_header
     if request.get? && !response.headers["X-Robots-Tag"]
       if SiteSetting.allow_index_in_robots_txt
@@ -987,9 +999,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cross_origin_opener_policy_header
-    if SiteSetting.cross_origin_opener_policy_header != "unsafe-none"
-      response.headers["Cross-Origin-Opener-Policy"] = SiteSetting.cross_origin_opener_policy_header
-    end
+    response.headers["Cross-Origin-Opener-Policy"] = SiteSetting.cross_origin_opener_policy_header
   end
 
   protected
@@ -1053,9 +1063,15 @@ class ApplicationController < ActionController::Base
       end
   end
 
-  def run_second_factor!(action_class, action_data = nil)
-    action = action_class.new(guardian, request, action_data)
-    manager = SecondFactor::AuthManager.new(guardian, action)
+  def run_second_factor!(action_class, action_data: nil, target_user: current_user)
+    if current_user && target_user != current_user
+      # Anon can run 2fa against another target, but logged-in users should not.
+      # This should be validated at the `run_second_factor!` call site.
+      raise "running 2fa against another user is not allowed"
+    end
+
+    action = action_class.new(guardian, request, opts: action_data, target_user: target_user)
+    manager = SecondFactor::AuthManager.new(guardian, action, target_user: target_user)
     yield(manager) if block_given?
     result = manager.run!(request, params, secure_session)
 
@@ -1119,5 +1135,9 @@ class ApplicationController < ActionController::Base
     else
       default
     end
+  end
+
+  def clean_xml
+    response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
   end
 end

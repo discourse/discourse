@@ -1,4 +1,4 @@
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ReviewableTypeBase {
   constructor({ reviewable, currentUser, siteSettings, site }) {

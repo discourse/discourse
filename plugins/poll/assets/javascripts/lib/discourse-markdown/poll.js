@@ -1,5 +1,5 @@
 /*eslint no-bitwise:0 */
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL_NAME = "poll";

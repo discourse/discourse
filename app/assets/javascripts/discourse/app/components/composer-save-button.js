@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
 import { translateModKey } from "discourse/lib/utilities";
+import I18n from "discourse-i18n";
 
 export default class ComposerSaveButton extends Component {
   get translatedTitle() {

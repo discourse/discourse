@@ -138,6 +138,13 @@ class NotificationEmailer
 
     email_user = EmailUser.new(notification, no_delay: no_delay)
     email_method = Notification.types[notification.notification_type]
+
+    if DiscoursePluginRegistry.email_notification_filters.any? { |filter|
+         !filter.call(notification)
+       }
+      return
+    end
+
     email_user.public_send(email_method) if email_user.respond_to? email_method
   end
 end

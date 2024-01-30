@@ -15,19 +15,36 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     context "when category channels" do
       fab!(:category_channel_1) { Fabricate(:category_channel) }
 
+      it "doesn’t show the last message" do
+        message =
+          Fabricate(
+            :chat_message,
+            chat_channel: category_channel_1,
+            user: current_user,
+            use_service: true,
+          )
+
+        visit("/chat/direct-messages")
+
+        expect(page).to have_no_selector(".chat-channel__last-message", text: message.message)
+      end
+
       context "when member of the channel" do
         before { category_channel_1.add(current_user) }
 
         it "shows the channel in the correct section" do
-          visit("/chat")
+          visit("/chat/channels")
           expect(page.find(".public-channels")).to have_content(category_channel_1.name)
         end
       end
 
       context "when not member of the channel" do
         it "doesn’t show the channel" do
-          visit("/chat")
-          expect(page.find(".public-channels")).to have_no_content(category_channel_1.name)
+          visit("/chat/channels")
+
+          expect(page.find(".public-channels", visible: :all)).to have_no_content(
+            category_channel_1.name,
+          )
         end
       end
     end
@@ -43,6 +60,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
 
       it "sorts them alphabetically" do
         visit("/chat")
+        page.find("#c-footer-channels").click
 
         expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(
           channel_2.id.to_s,
@@ -57,9 +75,23 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
       fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
 
+      it "show the last message" do
+        message =
+          Fabricate(
+            :chat_message,
+            chat_channel: dm_channel_1,
+            user: current_user,
+            use_service: true,
+          )
+
+        visit("/chat/direct-messages")
+
+        expect(page).to have_selector(".chat-channel__last-message", text: message.message)
+      end
+
       context "when member of the channel" do
         it "shows the channel in the correct section" do
-          visit("/chat")
+          visit("/chat/direct-messages")
           expect(page.find(".direct-message-channels")).to have_content(current_user.username)
         end
       end
@@ -74,25 +106,26 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
   end
 
   context "when no category channels" do
-    it "doesn’t show the section" do
-      visit("/chat")
-      expect(page).to have_no_css(".public-channels-section")
+    it "hides the section" do
+      visit("/chat/channels")
+
+      expect(page).to have_no_css(".channels-list-container")
     end
 
     context "when user can create channels" do
       before { current_user.update!(admin: true) }
 
       it "shows the section" do
-        visit("/chat")
-        expect(page).to have_css(".public-channels-section")
+        visit("/chat/channels")
+        expect(page).to have_css(".channels-list-container")
       end
     end
   end
 
   context "when no direct message channels" do
     it "shows the section" do
-      visit("/chat")
-      expect(page).to have_css(".direct-message-channels-section")
+      visit("/chat/direct-messages")
+      expect(page).to have_selector(".channels-list-container")
     end
   end
 
@@ -120,8 +153,8 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
   end
 
   it "has a new dm channel button" do
-    visit("/chat")
-    find(".open-new-message-btn").click
+    visit("/chat/direct-messages")
+    find(".c-navbar__new-dm-button").click
 
     expect(chat.message_creator).to be_opened
   end

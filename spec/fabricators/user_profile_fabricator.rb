@@ -5,4 +5,4 @@ Fabricator(:user_profile) do
   user
 end
 
-Fabricator(:user_profile_long, from: :user_profile) { bio_raw ("trout" * 1000) }
+Fabricator(:user_profile_long, from: :user_profile) { bio_raw("trout" * 1000) }

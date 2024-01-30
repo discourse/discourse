@@ -144,4 +144,7 @@
   --shadow-header: 0 2px 4px -1px rgba(0, 0, 0, #{$shadow-opacity-header});
   --shadow-footer-nav: 0 0 2px 0 rgba(0, 0, 0, #{$shadow-opacity-footer-nav});
   --shadow-focus-danger: 0 0 6px 0 var(--danger);
+
+  --float-kit-arrow-stroke-color: var(--primary-low);
+  --float-kit-arrow-fill-color: var(--secondary);
 }

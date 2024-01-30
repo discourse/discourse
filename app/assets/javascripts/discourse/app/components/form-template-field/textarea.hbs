@@ -7,13 +7,21 @@
       {{/if}}
     </label>
   {{/if}}
+
+  {{#if @attributes.description}}
+    <span class="form-template-field__description">
+      {{html-safe @attributes.description}}
+    </span>
+  {{/if}}
+
   <Textarea
-    name={{@attributes.label}}
+    name={{@id}}
+    @value={{@value}}
     class="form-template-field__textarea"
     placeholder={{@attributes.placeholder}}
     pattern={{@validations.pattern}}
-    minLength={{@validations.min}}
-    maxLength={{@validations.max}}
+    minlength={{@validations.minimum}}
+    maxlength={{@validations.maximum}}
     required={{if @validations.required "required" ""}}
   />
 </div>

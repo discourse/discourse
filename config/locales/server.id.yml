@@ -60,6 +60,9 @@ id:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} oleh %{username}"
+  components:
+    enabled_filter: "Diaktifkan"
+    disabled_filter: "Dinonaktifkan"
   themes:
     bad_color_scheme: "Tidak dapat memperbarui tema, palet warna tidak valid"
     other_error: "Terjadi masalah saat memperbarui tema"
@@ -199,7 +202,6 @@ id:
       default_tags_already_selected: "Anda tidak dapat memilih tag yang digunakan di daftar lain."
       s3_upload_bucket_is_required: "Anda tidak dapat mengaktifkan unggahan ke S3 kecuali Anda telah menyediakan 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Anda tidak dapat mengaktifkan penggunaan inventaris S3 kecuali Anda telah mengaktifkan unggahan S3."
-      page_publishing_requirements: "Penerbitan halaman tidak dapat diaktifkan jika media aman diaktifkan."
       s3_backup_requires_s3_settings: "Anda tidak dapat menggunakan S3 sebagai lokasi cadangan kecuali Anda telah memberikan '%{setting_name}'."
       s3_bucket_reused: "Anda tidak dapat menggunakan keranjang yang sama untuk 's3_upload_bucket' dan 's3_backup_bucket'. Pilih keranjang yang berbeda atau gunakan jalur yang berbeda untuk setiap keranjang."
       secure_uploads_requirements: "Unggahan S3 dan ACL S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
@@ -211,7 +213,7 @@ id:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Anda tidak dapat menonaktifkan login lokal jika 2FA diterapkan. Nonaktifkan 2FA yang diberlakukan sebelum menonaktifkan login lokal."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Anda tidak dapat mengaktifkan unggahan S3 karena unggahan S3 sudah diaktifkan secara global, dan mengaktifkan site-level ini dapat menyebabkan masalah kritis pada unggahan"
       cors_origins_should_not_have_trailing_slash: "Anda tidak boleh menambahkan garis miring (/) ke CORS origins."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agen pengguna harus memiliki panjang minimal 3 karakter untuk menghindari kesalahan pembatasan pengguna manusia."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agen pengguna harus memiliki panjang minimal 3 karakter untuk menghindari pengguna sah yang secara tidak sengaja dibatasi lajunya."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Anda tidak dapat menambahkan salah satu nilai berikut ke setelan: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Anda tidak dapat menonaktifkan metadata gambar strip jika 'composer media optimization image enabled' diaktifkan. Nonaktifkan 'composer media optimization image enabled' sebelum menonaktifkan metadata gambar strip."
       twitter_summary_large_image_no_svg: "Gambar ringkasan Twitter yang digunakan untuk twitter:image metadata tidak boleh berupa gambar .svg."
@@ -317,7 +319,6 @@ id:
     configure: "Konfigurasi Penyematan"
     more_replies:
       other: "%{count} jawaban lainnya"
-    loading: "Sedang memuat diskusi..."
     permalink: "Permalink"
     imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
@@ -334,7 +335,7 @@ id:
   no_mentions_allowed_newuser: "Maaf, pengguna baru tidak diijinkan untuk menyebut pengguna lain."
   too_many_mentions_newuser:
     other: "Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
-  no_embedded_media_allowed_trust: "Maaf, Anda tidak dapat menyematkan item media dalam sebuah post."
+  no_embedded_media_allowed_group: "Maaf, Anda tidak dapat menyematkan item media dalam sebuah post."
   no_embedded_media_allowed: "Maaf, pengguna baru tidak dapat menyematkan item media dalam post."
   too_many_embedded_media:
     other: "Maaf, pengguna baru hanya dapat menempatkan %{count} item media yang disematkan dalam sebuah post."
@@ -521,7 +522,8 @@ id:
             name:
               same_as_password: "sama dengan kata sandi Anda."
             ip_address:
-              signup_not_allowed: "Pendaftaran tidak diperbolehkan dari akun ini."
+              blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
+              max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
         user_profile:
           attributes:
             featured_topic_id:
@@ -585,13 +587,13 @@ id:
 
       Berikut adalah beberapa hal yang dapat Anda lakukan untuk memulai:
 
-      :speaking_head: **Perkenalkan diri Anda** dengan menambahkan gambar dan informasi tentang diri Anda dan minat Anda ke [profil Anda](%{base_path}/my/preferences/account). Apa satu hal yang ingin Anda tanyakan?
+      :speaking_head: **Perkenalkan diri Anda** dengan menambahkan gambar dan informasi tentang diri Anda dan minat Anda ke [profil Anda](%{base_path}/my/preferences/account). Ada hal yang ingin Anda tanyakan?
 
-      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sudah berlangsung di sini. Saat Anda menemukan post yang menarik, informatif, atau menghibur, gunakan :heart: untuk menunjukkan penghargaan atau dukungan Anda!
+      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sedang berlangsung di sini. Saat Anda menemukan post yang menarik, informatif, atau menghibur, gunakan :heart: untuk menunjukkan penghargaan atau dukungan Anda!
 
       :handshake: **Berkontribusi** dengan berkomentar, membagikan perspektif Anda sendiri, mengajukan pertanyaan, atau menawarkan umpan balik dalam diskusi. Sebelum membalas atau memulai topik baru, harap tinjau [Pedoman Komunitas](%{base_path}/faq).
 
-      > Jika Anda memerlukan bantuan atau memiliki saran, silakan bertanya di [#feedback](%{base_path}/c/site-feedback) atau [hubungi admin](%{base_path}/about).
+      > Jika Anda memerlukan bantuan atau memiliki saran, silakan bertanya di %{feedback_category} atau [hubungi admin](%{base_path}/about).
   admin_quick_start_title: "Panduan Admin: Memulai"
   category:
     topic_prefix: "Tentang kategori %{category}"
@@ -626,6 +628,7 @@ id:
     media_placeholder:
       blocked_hotlinked_title: "Media dihosting di situs lain. Klik untuk membuka di tab baru."
       blocked_hotlinked: "Media Eksternal"
+    hidden_bidi_character: "Karakter kontrol dua arah dapat mengubah urutan perenderan teks. Ini dapat digunakan untuk mengaburkan kode berbahaya."
     has_likes:
       other: "%{count} Suka"
   rate_limiter:
@@ -722,23 +725,10 @@ id:
       windows: "Microsoft Windows"
       unknown: "sistem operasi yang tidak dikenal"
   change_email:
-    confirmed: "Surel anda telah diperbaharui."
-    please_continue: "Lanjut ke %{site_name}"
     error: "Ada kesalahan dalam merubah alamat email Anda. Mungkinkah alamat ini telah digunakan oleh pengguna lain?"
     error_staged: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain."
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah anda telah mengubah surel anda?"
     confirm: "Konfirmasi"
-    authorizing_new:
-      title: "Konfirmasi email baru Anda"
-      description: "Konfirmasikan bahwa Anda ingin alamat email Anda diubah menjadi:"
-      description_add: "Konfirmasikan bahwa Anda ingin menambahkan alamat email alternatif:"
-    authorizing_old:
-      title: "Ubah alamat email Anda"
-      description: "Harap konfirmasi perubahan alamat email Anda"
-      description_add: "Konfirmasikan bahwa Anda ingin menambahkan alamat email alternatif:"
-      old_email: "Email lama: %{email}"
-      new_email: "Email baru: %{email}"
-      almost_done_title: "Konfirmasi alamat email baru"
   associated_accounts:
     revoke_failed: "Gagal mencabut akun Anda di %{provider_name}."
     connected: "(terhubung)"
@@ -805,6 +795,8 @@ id:
   draft_backup:
     pm_title: "Draf Cadangan dari topik yang sedang berlangsung"
     pm_body: "Topik berisi draf cadangan"
+  user_activity:
+    no_log_search_queries: "Log permintaan pencarian saat ini dinonaktifkan (administrator dapat mengaktifkannya di pengaturan situs)."
   email_settings:
     smtp_server_busy_error: "Server SMTP sedang sibuk, coba lagi nanti."
     smtp_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server SMTP. %{message}"
@@ -816,6 +808,7 @@ id:
     validation:
       invalid_type_error: "Jenis webauthn yang diberikan tidak valid. Jenis yang valid adalah webauthn.get dan webauthn.create."
       malformed_attestation_error: "Terjadi kesalahan saat mengartikan data pengesahan."
+      user_presence_error: "Kehadiran pengguna diperlukan."
       user_verification_error: "Verifikasi pengguna diperlukan."
       unsupported_public_key_algorithm_error: "Algoritma kunci publik yang disediakan tidak didukung oleh server."
       unsupported_attestation_format_error: "Format pengesahan tidak didukung oleh server."
@@ -824,6 +817,7 @@ id:
       ownership_error: "Kunci keamanan tidak dimiliki oleh pengguna."
       not_found_error: "Kunci keamanan dengan ID kredensial yang diberikan tidak dapat ditemukan."
       unknown_cose_algorithm_error: "Algoritma yang digunakan untuk kunci keamanan tidak dikenali."
+      malformed_public_key_credential_error: "Kunci publik yang diberikan tidak valid."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1199,10 +1193,13 @@ id:
       other: "Email polling telah menghasilkan %{count} kesalahan dalam 24 jam terakhir. Lihatlah <a href='%{base_path}/logs' target='_blank'>log</a> untuk lebih jelasnya."
     missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
     v3_analytics_deprecated: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
-    legacy_navigation_menu_deprecated: "Discourse Anda saat ini menggunakan menu navigasi 'lama' yang <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>akan dihapus pada rilis beta pertama Discourse 3.2</a>. Migrasi ke menu navigasi yang baru dengan memperbarui pengaturan situs menu navigasi <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'></a> ke 'sidebar' atau 'header dropdown'."
+    category_style_deprecated: "Discourse Anda saat ini menggunakan gaya kategori yang sudah tidak digunakan lagi dan akan dihapus sebelum rilis beta terakhir dari Discourse 3.2. Silakan merujuk ke <a href='https://meta.discourse.org/t/282441'>Pindah ke Pengaturan Situs Gaya Kategori Tunggal</a> untuk petunjuk tentang cara mempertahankan gaya kategori yang Anda pilih."
   site_settings:
     disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
+    min_post_length: "Panjang post minimum yang diperbolehkan dalam karakter (tidak termasuk pesan pribadi)"
+    min_first_post_length: "Panjang post pertama (isi topik) minimum yang diperbolehkan (tidak termasuk pesan pribadi)"
+    min_personal_message_post_length: "Panjang post minimum yang diperbolehkan dalam karakter untuk pesan (postingan pertama dan balasan)"
     topic_featured_link_enabled: "Aktifkan post tautan dengan topik."
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     max_form_template_title_length: "Panjang maksimum yang diperbolehkan untuk judul templat formulir."
@@ -1211,8 +1208,12 @@ id:
     apple_touch_icon: "Ikon yang digunakan untuk perangkat sentuh Apple. Backround transparan tidak disarankan. Akan secara otomatis diubah ukurannya menjadi 180x180. Jika dibiarkan kosong, large_icon akan digunakan."
     summarization_strategy: "Cara tambahan untuk meringkas konten yang didaftarkan oleh plugin"
     custom_summarization_allowed_groups: "Grup diizinkan untuk meringkas konten menggunakan `summarization_strategy`."
+    num_users_to_silence_new_user: "Jika post pengguna baru melebihi pengaturan hide_post_sensitive, dan memiliki tanda spam dari banyak pengguna yang berbeda, sembunyikan semua posting mereka dan cegah post lagi di masa mendatang. 0 untuk menonaktifkan."
+    gtm_container_id: "ID penampung Google Pengelola Tag. misalnya: GTM-ABCD12E. <br/>Catatan: Untuk menggunakan GTM saat Kebijakan Keamanan Konten (CSP) diaktifkan, lihat dokumentasi tentang meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Gunakan nonce dalam skrip Google Pengelola Tag</a>."
     include_secure_categories_in_tag_counts: "Saat diaktifkan, jumlah topik untuk sebuah tag akan menyertakan topik yang berada dalam kategori yang dibatasi untuk dibaca bagi semua pengguna. Saat dinonaktifkan, pengguna normal hanya ditampilkan sejumlah topik untuk tag yang semua topiknya berada dalam kategori publik."
     display_personal_messages_tag_counts: "Saat diaktifkan, jumlah pesan pribadi yang diberi tag dengan tag tertentu akan ditampilkan."
+    top_menu: "Tentukan item mana yang muncul di navigasi beranda, dan dalam urutan apa."
+    post_menu: "Tentukan item mana yang muncul di menu post, dan dalam urutan apa."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
     hidden_post_visible_groups: "Izinkan anggota grup ini untuk melihat post tersembunyi. Pengguna staf selalu dapat melihat post tersembunyi."
     blocked_email_domains: "Daftar domain email yang dipisahkan tanda pipa yang tidak diizinkan untuk didaftarkan akun oleh pengguna. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. Contoh: mailinator.com|trashmail.net"
@@ -1226,6 +1227,8 @@ id:
     tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
     edit_all_topic_groups: "Izinkan pengguna di grup ini untuk mengedit judul topik, tag, dan kategori dari pengguna lain"
     edit_all_post_groups: "Izinkan pengguna di grup ini untuk mengedit post pengguna lain"
+    invite_allowed_groups: "Grup yang diperbolehkan mengundang pengguna."
+    ignore_allowed_groups: "Grup yang diperbolehkan mengabaikan pengguna lain."
     dark_mode_none: "Tidak ada"
     sendgrid_verification_key: "Kunci verifikasi Sendgrid digunakan untuk memverifikasi pesan webhook."
     mailjet_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailjet?t=supersecret"
@@ -1255,6 +1258,7 @@ id:
     enable_max_tags_per_email_subject: "Gunakan max_tags_per_email_subject saat membuat subjek email"
     max_tags_per_email_subject: "Tag maksimum yang dapat dimasukkan ke dalam subjek email"
     create_post_for_category_and_tag_changes: "Buat post tindakan kecil saat kategori atau tag topik berubah"
+    automatically_clean_unused_tags: "Secara otomatis menghapus tag yang tidak digunakan pada topik atau pesan pribadi apa pun setiap hari."
     watched_precedence_over_muted: "Beri tahu saya tentang topik dalam kategori atau tag yang saya ikuti yang juga termasuk dalam kategori yang telah saya nonaktifkan"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
     default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
@@ -1262,7 +1266,6 @@ id:
     experimental_new_new_view_groups: 'EKSPERIMENTAL: Aktifkan daftar topik baru yang menggabungkan topik yang belum dibaca dan topik baru dan buat tautan "Everything" di tautan sidebar ke sana.'
     enable_custom_sidebar_sections: "EKSPERIMENTAL: Mengaktifkan bagian bilah sisi custom"
     experimental_topics_filter: "EKSPERIMENTAL: Mengaktifkan rute filter topik eksperimental di /filter"
-    experimental_search_menu_groups: "EKSPERIMENTAL: Mengaktifkan menu pencarian baru yang telah ditingkatkan untuk menggunakan glimmer"
     enable_experimental_lightbox: "EKSPERIMENTAL: Ganti lightbox gambar bawaan dengan desain yang diubah."
     page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
@@ -1272,6 +1275,9 @@ id:
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       invalid_uncategorized_category_setting: 'Kategori "Uncategorized" tidak dapat dipilih jika ''allow uncategorized topics'' tidak diaktifkan.'
       invalid_search_ranking_weights: "Nilai tidak valid untuk setelan situs search_ranking_weights. Contoh: '{0.1,0.2,0.3,1.0}'. Perhatikan bahwa nilai maksimum untuk setiap bobot adalah 1,0."
+    keywords:
+      invite_allowed_groups: "min_trust_level_to_allow_invite"
+      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
   search:
     within_post: "#%{post_number} oleh %{username}"
     types:
@@ -1298,9 +1304,6 @@ id:
       blank: "tidak boleh kosong."
       not_allowed: "tidak diijinkan dari penyedia layanan email ini. Silahkan gunakan alamat email yang lain."
       blocked: "tidak diperbolehkan."
-    ip_address:
-      blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
-      max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
   system_messages:
     queued_by_staff:
       title: "Pesan Membutuhkan Persetujuan"
@@ -1686,6 +1689,8 @@ id:
   onebox:
     discourse:
       user_joined_community: "Bergabung %{date}"
+    github:
+      closed: "tertutup"
   staff_action_logs:
     unknown: "tidak diketahui"
   reviewables:
@@ -1736,6 +1741,8 @@ id:
         title: "Tidak, pulihkan postingan"
       disagree:
         title: "Tidak"
+      discard_post:
+        title: "Buang Post"
       ignore:
         title: "Abaikan"
       ignore_and_do_nothing:
@@ -1744,7 +1751,6 @@ id:
       approve:
         title: "Terima"
       reject_user:
-        title: "Hapus Pengguna..."
         delete:
           title: "Hapus Pengguna"
       reject:
@@ -1755,6 +1761,10 @@ id:
       invalid_yaml: "bukan string YAML yang valid"
       invalid_type: "berisi tipe templat yang tidak valid: %{type} (tipe yang valid adalah: %{valid_types})"
       missing_type: "tidak dapat menemukan tipe bidang"
+      missing_id: "tidak ada id bidang"
+      duplicate_ids: "memiliki id duplikat"
+      reserved_id: "memiliki kata kunci khusus sebagai id: %{id}"
+      unsafe_description: "memiliki deskripsi HTML yang tidak aman"
   activemodel:
     errors:
       <<: *errors

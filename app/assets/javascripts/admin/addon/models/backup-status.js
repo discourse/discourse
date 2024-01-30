@@ -1,5 +1,5 @@
-import { not } from "@ember/object/computed";
 import EmberObject from "@ember/object";
+import { not } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default class BackupStatus extends EmberObject {

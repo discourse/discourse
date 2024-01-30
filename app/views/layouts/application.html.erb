@@ -32,14 +32,15 @@
     <%- end %>  
     <%= preload_script 'browser-detect' %>
 
-    <%= preload_script "locales/#{I18n.locale}" %>
-    <%- if ExtraLocalesController.client_overrides_exist? %>
-      <%= preload_script_url ExtraLocalesController.url('overrides') %>
-    <%- end %>
     <%= preload_script "vendor" %>
     <%= preload_script "discourse" %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
       <%= preload_script file %>
+    <%- end %>
+
+    <%= preload_script "locales/#{I18n.locale}" %>
+    <%- if ExtraLocalesController.client_overrides_exist? %>
+      <%= preload_script_url ExtraLocalesController.url('overrides') %>
     <%- end %>
 
     <%- if staff? %>
@@ -49,7 +50,6 @@
 
     <%- if admin? %>
       <%= preload_script_url ExtraLocalesController.url("wizard") %>
-      <%= preload_script "wizard" %>
     <%- end %>
 
     <%- unless customization_disabled? %>
@@ -145,5 +145,7 @@
     <%- if allow_plugins? %>
       <%= build_plugin_html 'server:before-body-close' %>
     <%- end %>
+
+    <%= DeferScriptHelper.safari_workaround_script %>
   </body>
 </html>

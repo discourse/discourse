@@ -1,4 +1,5 @@
-import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
+import EmberObject, { action } from "@ember/object";
 import {
   empty,
   filterBy,
@@ -6,16 +7,15 @@ import {
   match,
   notEmpty,
 } from "@ember/object/computed";
-import { COMPONENTS, THEMES } from "admin/models/theme";
-import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import ThemeSettings from "admin/models/theme-settings";
-import discourseComputed from "discourse-common/utils/decorators";
-import { makeArray } from "discourse-common/lib/helpers";
+import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { url } from "discourse/lib/computed";
+import { makeArray } from "discourse-common/lib/helpers";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import ThemeSettingsEditor from "admin/components/theme-settings-editor";
+import { COMPONENTS, THEMES } from "admin/models/theme";
+import ThemeSettings from "admin/models/theme-settings";
 import ThemeUploadAddModal from "../components/theme-upload-add";
 
 const THEME_UPLOAD_VAR = 2;
@@ -446,5 +446,10 @@ export default class AdminCustomizeThemesShowController extends Controller {
     this.model
       .saveChanges("enabled")
       .catch(() => this.model.set("enabled", true));
+  }
+
+  @action
+  editColorScheme() {
+    this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
   }
 }

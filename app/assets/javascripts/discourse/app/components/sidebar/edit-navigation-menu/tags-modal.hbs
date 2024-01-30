@@ -1,11 +1,11 @@
 <Sidebar::EditNavigationMenu::Modal
-  @class="sidebar__edit-navigation-menu__tags-modal"
   @title="sidebar.tags_form_modal.title"
   @saving={{this.saving}}
   @save={{this.save}}
-  @showResetDefaultsButton={{(gt
-    this.siteSettings.default_navigation_menu_tags.length 0
-  )}}
+  @showResetDefaultsButton={{gt
+    this.siteSettings.default_navigation_menu_tags.length
+    0
+  }}
   @resetToDefaults={{this.resetToDefaults}}
   @deselectAll={{this.deselectAll}}
   @deselectAllText={{i18n "sidebar.tags_form_modal.subtitle.text"}}
@@ -15,11 +15,13 @@
   @filterSelected={{this.filterSelected}}
   @filterUnselected={{this.filterUnselected}}
   @closeModal={{@closeModal}}
+  @loading={{or this.tagsLoading this.disableFiltering}}
+  class="sidebar__edit-navigation-menu__tags-modal"
 >
-  <form class="sidebar-tags-form">
-    {{#if this.tagsLoading}}
-      <div class="spinner"></div>
-    {{else}}
+  {{#if this.tagsLoading}}
+    {{loading-spinner size="large"}}
+  {{else}}
+    <form class="sidebar-tags-form">
       {{#if (gt this.tags.length 0)}}
         {{#each this.tags as |tag|}}
           <div
@@ -32,7 +34,7 @@
               class="sidebar-tags-form__input"
               @type="checkbox"
               @checked={{includes this.selectedTags tag.name}}
-              {{on "click" (action "toggleTag" tag.name)}}
+              {{on "click" (fn this.toggleTag tag.name)}}
             />
 
             <label
@@ -56,8 +58,8 @@
           {{i18n "sidebar.tags_form_modal.no_tags"}}
         </div>
       {{/if}}
-    {{/if}}
-  </form>
+    </form>
+  {{/if}}
 
   <ConditionalLoadingSpinner @condition={{this.tags.loadingMore}} />
 </Sidebar::EditNavigationMenu::Modal>

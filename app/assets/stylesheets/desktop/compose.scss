@@ -18,12 +18,19 @@
   &.private-message {
     .with-tags {
       .title-and-category {
-        flex-wrap: nowrap; // force title and tags on same line for PMs
+        flex-wrap: nowrap;
+        gap: 0.5em;
         .mini-tag-chooser {
+          max-width: 50%;
           margin-bottom: 8px; // match title input margin
-          flex: 0 0 auto;
-          margin-left: 8px; // matches margin between category and tag input
-          width: 39%;
+          flex: 1 1 auto;
+        }
+      }
+      .title-input {
+        max-width: 50%;
+        min-width: 0;
+        input {
+          min-width: 0;
         }
       }
     }
@@ -92,6 +99,14 @@
   box-shadow: var(--shadow-dropdown);
   background: var(--highlight-bg);
 
+  > p,
+  h3 {
+    &:first-of-type {
+      margin-top: 0;
+      margin-right: 3em;
+    }
+  }
+
   &.urgent {
     background: var(--danger-low);
   }
@@ -105,10 +120,9 @@
     bottom: unset;
     padding: 2.25em 6em 2.5em 2.25em;
     p {
-      margin-top: 0;
       font-size: var(--font-up-1);
     }
-    button {
+    button:not(.close) {
       margin-top: 0.5em;
     }
   }
@@ -117,21 +131,27 @@
     margin-bottom: 10px;
   }
 
-  a.close {
-    display: flex;
+  .btn.close {
+    flex-direction: row-reverse;
     align-items: center;
     position: absolute;
-    right: 10px;
-    top: 10px;
-    color: var(--primary);
-    opacity: 0.5;
+    right: 0;
+    top: 0;
+    color: var(--primary-medium);
     font-size: var(--font-0);
     .d-icon {
+      color: currentColor;
       font-size: var(--font-up-1);
-      margin-left: 0.25em;
+      margin: 0 0 0 0.25em;
     }
-    &:hover {
-      opacity: 1;
+    .discourse-no-touch & {
+      &:active,
+      &:focus {
+        background: transparent;
+        .d-icon {
+          color: var(--primary);
+        }
+      }
     }
   }
 
@@ -203,7 +223,8 @@
       .second-line {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: baseline;
+        gap: 0.5em;
 
         .discourse-tags {
           font-size: var(--font-down-1);
@@ -290,6 +311,9 @@ a.toggle-preview {
   animation-delay: 1.5s;
   animation-direction: reverse;
   animation-fill-mode: forwards;
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
   position: fixed;
   left: 50%;
   top: 10%;
@@ -306,5 +330,39 @@ a.toggle-preview {
   border-radius: 2px;
   kbd {
     background: none;
+  }
+}
+
+@media screen and (min-width: $reply-area-max-width) {
+  .sidebar-wrapper .sidebar-container {
+    .has-sidebar-page & {
+      height: auto;
+    }
+  }
+  #reply-control:not(.fullscreen) {
+    .has-sidebar-page & {
+      width: auto;
+      max-width: calc(
+        (var(--d-max-width) + (var(--d-sidebar-width) / 2)) - 1.5rem
+      );
+      margin-left: 0;
+      margin-right: 0;
+      transform: translateX(
+        calc(
+          ((100vw - var(--d-max-width) - (var(--d-sidebar-width) / 0.5)) / 2) +
+            17em + 1rem
+        )
+      );
+
+      &.hide-preview {
+        max-width: calc(740px);
+        transform: translateX(
+          calc(
+            ((100vw - 740px - var(--d-sidebar-width)) / 2) +
+              var(--d-sidebar-width)
+          )
+        );
+      }
+    }
   }
 }

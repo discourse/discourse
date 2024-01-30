@@ -1,20 +1,29 @@
-import EmberObject, { computed, get, getProperties } from "@ember/object";
-import { camelize } from "@ember/string";
-import cookie, { removeCookie } from "discourse/lib/cookie";
-import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
+import EmberObject, { computed, get, getProperties } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
+import Evented from "@ember/object/evented";
+import { cancel } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { camelize } from "@ember/string";
+import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { url } from "discourse/lib/computed";
+import cookie, { removeCookie } from "discourse/lib/cookie";
+import { longDate } from "discourse/lib/formatter";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import PreloadStore from "discourse/lib/preload-store";
+import { emojiUnescape } from "discourse/lib/text";
+import { userPath } from "discourse/lib/url";
+import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
+import Singleton from "discourse/mixins/singleton";
 import Badge from "discourse/models/badge";
 import Bookmark from "discourse/models/bookmark";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
-import I18n from "I18n";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import PreloadStore from "discourse/lib/preload-store";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
-import Singleton from "discourse/mixins/singleton";
 import Site from "discourse/models/site";
 import UserAction from "discourse/models/user-action";
 import UserActionStat from "discourse/models/user-action-stat";
@@ -22,26 +31,13 @@ import UserBadge from "discourse/models/user-badge";
 import UserDraftsStream from "discourse/models/user-drafts-stream";
 import UserPostsStream from "discourse/models/user-posts-stream";
 import UserStream from "discourse/models/user-stream";
-import { ajax } from "discourse/lib/ajax";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
-import { emojiUnescape } from "discourse/lib/text";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { isEmpty } from "@ember/utils";
-import { longDate } from "discourse/lib/formatter";
-import { url } from "discourse/lib/computed";
-import { userPath } from "discourse/lib/url";
-import { htmlSafe } from "@ember/template";
-import Evented from "@ember/object/evented";
-import { cancel } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
-import {
-  hideUserTip,
-  showNextUserTip,
-  showUserTip,
-} from "discourse/lib/user-tips";
-import { dependentKeyCompat } from "@ember/object/compat";
+import deprecated from "discourse-common/lib/deprecated";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import discourseLater from "discourse-common/lib/later";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -174,6 +170,9 @@ function userOption(userOptionKey) {
 }
 
 const User = RestModel.extend({
+  appEvents: service(),
+  userTips: service(),
+
   mailing_list_mode: userOption("mailing_list_mode"),
   external_links_in_new_tab: userOption("external_links_in_new_tab"),
   enable_quoting: userOption("enable_quoting"),
@@ -541,9 +540,8 @@ const User = RestModel.extend({
     });
   },
 
-  loadSecondFactorCodes(password) {
+  loadSecondFactorCodes() {
     return ajax("/u/second_factors.json", {
-      data: { password },
       type: "POST",
     });
   },
@@ -558,6 +556,29 @@ const User = RestModel.extend({
     return ajax("/u/register_second_factor_security_key.json", {
       data: credential,
       type: "POST",
+    });
+  },
+
+  trustedSession() {
+    return ajax("/u/trusted-session.json");
+  },
+
+  createPasskey() {
+    return ajax("/u/create_passkey.json", {
+      type: "POST",
+    });
+  },
+
+  registerPasskey(credential) {
+    return ajax("/u/register_passkey.json", {
+      data: credential,
+      type: "POST",
+    });
+  },
+
+  deletePasskey(id) {
+    return ajax(`/u/delete_passkey/${id}`, {
+      type: "DELETE",
     });
   },
 
@@ -835,6 +856,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get mutedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.muted_category_ids)
+    ) {
+      Category.asyncFindByIds(this.muted_category_ids).then(() =>
+        this.notifyPropertyChange("muted_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("muted_category_ids"));
   },
   set mutedCategories(categories) {
@@ -846,6 +876,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get regularCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.regular_category_ids)
+    ) {
+      Category.asyncFindByIds(this.regular_category_ids).then(() =>
+        this.notifyPropertyChange("regular_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("regular_category_ids"));
   },
   set regularCategories(categories) {
@@ -857,6 +896,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get trackedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.tracked_category_ids)
+    ) {
+      Category.asyncFindByIds(this.tracked_category_ids).then(() =>
+        this.notifyPropertyChange("tracked_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("tracked_category_ids"));
   },
   set trackedCategories(categories) {
@@ -868,6 +916,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get watchedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.watched_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watched_category_ids).then(() =>
+        this.notifyPropertyChange("watched_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("watched_category_ids"));
   },
   set watchedCategories(categories) {
@@ -879,6 +936,15 @@ const User = RestModel.extend({
 
   @dependentKeyCompat
   get watchedFirstPostCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.watched_first_post_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watched_first_post_category_ids).then(() =>
+        this.notifyPropertyChange("watched_first_post_category_ids")
+      );
+    }
+
     return Category.findByIds(this.get("watched_first_post_category_ids"));
   },
   set watchedFirstPostCategories(categories) {
@@ -961,7 +1027,7 @@ const User = RestModel.extend({
   },
 
   summary() {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     return ajax(userPath(`${this.username_lower}/summary.json`)).then(
       (json) => {
@@ -1172,72 +1238,6 @@ const User = RestModel.extend({
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
   },
-
-  canSeeUserTip(id) {
-    const userTips = Site.currentProp("user_tips");
-    if (!userTips || this.user_option?.skip_new_user_tips) {
-      return false;
-    }
-
-    if (!userTips[id]) {
-      if (!isTesting()) {
-        // eslint-disable-next-line no-console
-        console.warn("Cannot show user tip with type =", id);
-      }
-      return false;
-    }
-
-    const seenUserTips = this.user_option?.seen_popups || [];
-    if (seenUserTips.includes(-1) || seenUserTips.includes(userTips[id])) {
-      return false;
-    }
-
-    return true;
-  },
-
-  showUserTip(options) {
-    if (this.canSeeUserTip(options.id)) {
-      showUserTip({
-        ...options,
-        onDismiss: () => {
-          options.onDismiss?.();
-          this.hideUserTipForever(options.id);
-        },
-      });
-    }
-  },
-
-  hideUserTipForever(userTipId) {
-    const userTips = Site.currentProp("user_tips");
-    if (!userTips || this.user_option?.skip_new_user_tips) {
-      return;
-    }
-
-    // Empty userTipId means all user tips.
-    if (!userTips[userTipId]) {
-      // eslint-disable-next-line no-console
-      console.warn("Cannot hide user tip with type =", userTipId);
-      return;
-    }
-
-    // Hide user tips and maybe show the next one.
-    hideUserTip(userTipId, true);
-    showNextUserTip();
-
-    // Update list of seen user tips.
-    let seenUserTips = this.user_option?.seen_popups || [];
-    if (seenUserTips.includes(userTips[userTipId])) {
-      return;
-    }
-    seenUserTips.push(userTips[userTipId]);
-
-    // Save seen user tips on the server.
-    if (!this.user_option) {
-      this.set("user_option", {});
-    }
-    this.set("user_option.seen_popups", seenUserTips);
-    return this.save(["seen_popups"]);
-  },
 });
 
 User.reopenClass(Singleton, {
@@ -1267,7 +1267,7 @@ User.reopenClass(Singleton, {
         this._saveTimezone(userJson);
       }
 
-      const store = getOwner(this).lookup("service:store");
+      const store = getOwnerWithFallback(this).lookup("service:store");
       const currentUser = store.createRecord("user", userJson);
       currentUser.trackStatus();
       return currentUser;
@@ -1355,6 +1355,7 @@ User.reopenClass(Singleton, {
   create(args) {
     args = args || {};
     this.deleteStatusTrackingFields(args);
+
     return this._super(args);
   },
 
@@ -1384,7 +1385,7 @@ User.reopen(Evented, {
 
   // always call stopTrackingStatus() when done with a user
   trackStatus() {
-    if (!this.id) {
+    if (!this.id && !isTesting()) {
       // eslint-disable-next-line no-console
       console.warn(
         "It's impossible to track user status on a user model that doesn't have id. This user model won't be receiving live user status updates."

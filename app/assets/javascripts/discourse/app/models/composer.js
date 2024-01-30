@@ -1,26 +1,26 @@
 import EmberObject, { set } from "@ember/object";
 import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
-import { emailValid, escapeExpression } from "discourse/lib/utilities";
-import { tinyAvatar } from "discourse-common/lib/avatar-utils";
-import Draft from "discourse/models/draft";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
+import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
+import { propertyNotEqual } from "discourse/lib/computed";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
+import { prioritizeNameFallback } from "discourse/lib/settings";
+import { emailValid, escapeExpression } from "discourse/lib/utilities";
+import Draft from "discourse/models/draft";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { inject as service } from "@ember/service";
+import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import deprecated from "discourse-common/lib/deprecated";
-import { isEmpty } from "@ember/utils";
-import { propertyNotEqual } from "discourse/lib/computed";
-import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
-import { prioritizeNameFallback } from "discourse/lib/settings";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 let _customizations = [];
 export function registerCustomizationCallback(cb) {
@@ -791,7 +791,7 @@ const Composer = RestModel.extend({
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
       whisper: opts.whisper,
-      tags: opts.tags,
+      tags: opts.tags || [],
       noBump: opts.noBump,
     });
 
@@ -824,7 +824,10 @@ const Composer = RestModel.extend({
     });
 
     // We set the category id separately for topic templates on opening of composer
-    this.set("categoryId", opts.categoryId || this.get("topic.category.id"));
+    this.set(
+      "categoryId",
+      opts.topicCategoryId || opts.categoryId || this.get("topic.category.id")
+    );
 
     if (!this.categoryId && this.creatingTopic) {
       const categories = this.site.categories;

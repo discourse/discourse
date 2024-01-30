@@ -28,6 +28,19 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
+    context "when readonly mode" do
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
+
+      before { Discourse.enable_readonly_mode }
+      after { Discourse.disable_readonly_mode }
+
+      it "works" do
+        get "/chat/api/channels/#{channel.id}/messages"
+
+        expect(response.status).to eq(200)
+      end
+    end
+
     context "when channnel doesn’t exist" do
       it "returns a 404" do
         get "/chat/api/channels/-999/messages"

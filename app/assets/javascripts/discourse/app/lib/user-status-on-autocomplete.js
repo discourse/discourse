@@ -1,16 +1,16 @@
-import createUserStatusMessage from "discourse/lib/user-status-message";
+import { UserStatusMessage } from "discourse/lib/user-status-message";
 
-let tippyInstances = [];
+let userStatusMessages = [];
 
-export function initUserStatusHtml(users) {
+export function initUserStatusHtml(owner, users) {
   (users || []).forEach((user, index) => {
     if (user.status) {
       user.index = index;
-      user.statusHtml = createUserStatusMessage(user.status, {
-        showTooltip: true,
+      const userStatusMessage = new UserStatusMessage(owner, user.status, {
         showDescription: true,
       });
-      tippyInstances.push(user.statusHtml._tippy);
+      user.statusHtml = userStatusMessage.html;
+      userStatusMessages.push(userStatusMessage);
     }
   });
 }
@@ -28,9 +28,9 @@ export function renderUserStatusHtml(options) {
   });
 }
 
-export function destroyTippyInstances() {
-  tippyInstances.forEach((instance) => {
+export function destroyUserStatuses() {
+  userStatusMessages.forEach((instance) => {
     instance.destroy();
   });
-  tippyInstances = [];
+  userStatusMessages = [];
 }

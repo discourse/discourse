@@ -47,6 +47,9 @@
   // Fade in header avatar + icons if topic title is not visible in mobile header
   .panel {
     animation: fadein 0.5s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
   // A rendering bug in safari causes header SVGs to jitter after animations.
   // translateZ() forces gpu rendering which fixes the issue.

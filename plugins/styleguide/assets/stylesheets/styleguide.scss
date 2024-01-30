@@ -75,12 +75,6 @@
         width: 100%;
         position: relative;
 
-        .component {
-          padding: 2rem;
-          border: 2px dotted var(--primary-low);
-          margin-bottom: 2rem;
-        }
-
         .component-properties {
           width: 100%;
 
@@ -195,6 +189,10 @@
     margin-right: 0.5em;
     margin-bottom: 0.5em;
   }
+
+  .d-toggle-switch {
+    display: inline-block;
+  }
 }
 
 .icons-examples,
@@ -228,6 +226,45 @@
     span {
       font-size: var(--font-down-1);
       word-wrap: break-word;
+    }
+  }
+}
+
+.styleguide__component {
+  border: 2px dotted var(--primary-low);
+  margin-bottom: 2rem;
+  position: relative;
+
+  &-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px 6px;
+    background: var(--primary-low);
+    max-width: 25%;
+    @include ellipsis;
+  }
+
+  &-sample {
+    display: flex;
+    padding: 2rem;
+  }
+
+  &-actions {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+  }
+
+  &-code {
+    display: flex;
+
+    .ember-view {
+      width: 100%;
+    }
+
+    pre {
+      margin: 0;
     }
   }
 }

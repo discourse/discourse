@@ -373,20 +373,10 @@ id:
           Perhatikan bahwa Anda hanya memiliki waktu %{deletion_after} jam untuk membatalkan penghapusan kiriman.
       category_hashtag:
         instructions: |-
-          Apakah Anda tahu kalau bisa mengunjungi kategori atau label dalam pos? Contohnya, sudah melihat kategori %{category}?
-
-          Ketik `#` di tengah kalimat dan pilih kategori atau label yang diinginkan.
-        instructions_experimental: |-
           Tahukah Anda bahwa Anda dapat merujuk ke kategori dan tag di post Anda? Misalnya, pernahkah Anda melihat kategori %{category} ?
 
           Ketik `#` di mana saja dalam kalimat dan pilih kategori atau tag apa saja.
         not_found: |-
-          Hmm, saya tidak melihat kategori yang dituliskan di sana. Ingat `#` tidak bisa muncul pada karakter awal. Bisakah Anda menyalin ini di balasan selanjutnya?
-
-          ```text
-          Saya membuat tautan kategori dengan #
-          ```
-        not_found_experimental: |-
           Hmm, saya tidak melihat kategori di sana. Bisakah Anda menyalin ini di balasan berikutnya?
 
           ```text

@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
-import ChangeCategory from "../bulk-actions/change-category";
-import NotificationLevel from "../bulk-actions/notification-level";
-import ChangeTags from "../bulk-actions/change-tags";
+import I18n from "discourse-i18n";
 import AppendTags from "../bulk-actions/append-tags";
-import { getOwner } from "discourse-common/lib/get-owner";
+import ChangeCategory from "../bulk-actions/change-category";
+import ChangeTags from "../bulk-actions/change-tags";
+import NotificationLevel from "../bulk-actions/notification-level";
 
 const _customButtons = [];
 
@@ -195,6 +195,14 @@ export default class TopicBulkActions extends Component {
       },
     },
   ];
+
+  constructor() {
+    super(...arguments);
+
+    if (this.args.model.initialAction === "set-component") {
+      this.setComponent(this.args.model.initialComponent);
+    }
+  }
 
   get buttons() {
     return [...this.defaultButtons, ..._customButtons].filter(({ visible }) => {

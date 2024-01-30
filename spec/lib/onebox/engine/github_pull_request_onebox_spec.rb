@@ -44,7 +44,7 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
     end
 
     it "includes number of deletions" do
-      expect(html).to include("1")
+      expect(html).to include("5")
     end
 
     it "includes the body without comments" do

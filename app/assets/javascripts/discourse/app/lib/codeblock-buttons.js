@@ -1,13 +1,13 @@
-import { cancel } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import Mobile from "discourse/lib/mobile";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
 import { guidFor } from "@ember/object/internals";
-import { clipboardCopy } from "discourse/lib/utilities";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { cancel } from "@ember/runloop";
 import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
+import Mobile from "discourse/lib/mobile";
+import { clipboardCopy } from "discourse/lib/utilities";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseLater from "discourse-common/lib/later";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 // Use to attach copy/fullscreen buttons to a block of code, either
 // within the post stream or for a regular element that contains
@@ -119,11 +119,7 @@ export default class CodeblockButtons {
         }px`;
       }
 
-      if (
-        this.showFullscreen &&
-        !Mobile.isMobileDevice &&
-        codeBlock.scrollWidth > codeBlock.clientWidth
-      ) {
+      if (this.showFullscreen && !Mobile.isMobileDevice) {
         const fullscreenButton = document.createElement("button");
         fullscreenButton.classList.add("btn", "nohighlight", "fullscreen-cmd");
         fullscreenButton.ariaLabel = I18n.t("copy_codeblock.fullscreen");
@@ -173,7 +169,7 @@ export default class CodeblockButtons {
           this._copyComplete(button);
         }
       } else if (action === "fullscreen") {
-        const modal = getOwner(this).lookup("service:modal");
+        const modal = getOwnerWithFallback(this).lookup("service:modal");
         modal.show(FullscreenCodeModal, {
           model: {
             code: text,

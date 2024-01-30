@@ -5,20 +5,19 @@ styleguide to use them, and eventually to generate dummy data
 in a placeholder component. It should not be used for any other case.
 */
 
+import Bookmark from "discourse/models/bookmark";
+import Category from "discourse/models/category";
+import Group from "discourse/models/group";
+import User from "discourse/models/user";
 import ChatChannel, {
   CHANNEL_STATUSES,
   CHATABLE_TYPES,
 } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
-import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
-import ChatMessageMentionWarning from "discourse/plugins/chat/discourse/models/chat-message-mention-warning";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import User from "discourse/models/user";
-import Bookmark from "discourse/models/bookmark";
-import Category from "discourse/models/category";
-import Group from "discourse/models/group";
 
 let sequence = 0;
 
@@ -53,21 +52,29 @@ function messageFabricator(args = {}) {
 
 function channelFabricator(args = {}) {
   const id = args.id || sequence++;
+  const chatable = args.chatable || categoryFabricator();
 
   const channel = ChatChannel.create({
     id,
     chatable_type:
-      args.chatable?.type ||
-      args.chatable_type ||
-      CHATABLE_TYPES.categoryChannel,
-    chatable_id: args.chatable?.id || args.chatable_id,
-    title: args.title || "General",
+      (chatable instanceof Category
+        ? CHATABLE_TYPES.categoryChannel
+        : CHATABLE_TYPES.directMessageChannel) ||
+      chatable?.type ||
+      args.chatable_type,
+    chatable_id: chatable?.id || args.chatable_id,
+    title: args.title
+      ? args.title
+      : chatable instanceof Category
+      ? "General"
+      : null,
     description: args.description,
-    chatable: args.chatable || categoryFabricator(),
+    chatable,
     status: args.status || CHANNEL_STATUSES.open,
-    slug: args.chatable?.slug || "general",
+    slug: chatable?.slug || chatable instanceof Category ? "general" : null,
     meta: Object.assign({ can_delete_self: true }, args.meta || {}),
     archive_failed: args.archive_failed ?? false,
+    memberships_count: args.memberships_count ?? 0,
   });
 
   channel.lastMessage = messageFabricator({ channel });
@@ -79,7 +86,7 @@ function categoryFabricator(args = {}) {
   return Category.create({
     id: args.id || sequence++,
     color: args.color || "D56353",
-    read_restricted: false,
+    read_restricted: args.read_restricted ?? false,
     name: args.name || "General",
     slug: args.slug || "general",
   });
@@ -87,8 +94,8 @@ function categoryFabricator(args = {}) {
 
 function directMessageFabricator(args = {}) {
   return ChatDirectMessage.create({
-    id: args.id || sequence++,
-    users: args.users || [userFabricator(), userFabricator()],
+    group: args.group ?? false,
+    users: args.users ?? [userFabricator(), userFabricator()],
   });
 }
 
@@ -97,6 +104,8 @@ function directMessageChannelFabricator(args = {}) {
     args.chatable ||
     directMessageFabricator({
       id: args.chatable_id || sequence++,
+      group: args.group ?? false,
+      users: args.users,
     });
 
   return channelFabricator(
@@ -104,6 +113,7 @@ function directMessageChannelFabricator(args = {}) {
       chatable_type: CHATABLE_TYPES.directMessageChannel,
       chatable_id: directMessage.id,
       chatable: directMessage,
+      memberships_count: directMessage.users.length,
     })
   );
 }
@@ -128,6 +138,7 @@ function threadFabricator(args = {}) {
   const channel = args.channel || channelFabricator();
   return ChatThread.create(channel, {
     id: args.id || sequence++,
+    title: args.title,
     original_message: args.original_message || messageFabricator({ channel }),
     preview: args.preview || threadPreviewFabricator({ channel }),
   });
@@ -137,15 +148,17 @@ function threadPreviewFabricator(args = {}) {
     last_reply_id: args.last_reply_id || sequence++,
     last_reply_created_at: args.last_reply_created_at || Date.now(),
     last_reply_excerpt: args.last_reply_excerpt || "This is a reply",
+    participant_count: args.participant_count ?? 0,
+    participant_users: args.participant_users ?? [],
   });
 }
 
 function reactionFabricator(args = {}) {
   return ChatMessageReaction.create({
-    count: args.count || 1,
+    count: args.count ?? 1,
     users: args.users || [userFabricator()],
     emoji: args.emoji || "heart",
-    reacted: args.reacted || false,
+    reacted: args.reacted ?? false,
   });
 }
 
@@ -153,10 +166,6 @@ function groupFabricator(args = {}) {
   return Group.create({
     name: args.name || "Engineers",
   });
-}
-
-function messageMentionWarningFabricator(message, args = {}) {
-  return ChatMessageMentionWarning.create(message, args);
 }
 
 function uploadFabricator() {
@@ -189,6 +198,5 @@ export default {
   upload: uploadFabricator,
   category: categoryFabricator,
   directMessage: directMessageFabricator,
-  messageMentionWarning: messageMentionWarningFabricator,
   group: groupFabricator,
 };

@@ -1,6 +1,5 @@
-import { SELECTORS } from "./constants";
-import { escapeExpression } from "discourse/lib/utilities";
 import { htmlSafe } from "@ember/template";
+import { SELECTORS } from "./constants";
 
 export async function processHTML({ container, selector, clickTarget }) {
   selector ??= SELECTORS.DEFAULT_ITEM_SELECTOR;
@@ -24,7 +23,12 @@ export async function processHTML({ container, selector, clickTarget }) {
         item.parentElement?.style?.backgroundImage ||
         null;
 
-      const _fullsizeURL = item.href || item.src || innerImage.src || null;
+      const _fullsizeURL =
+        item.dataset?.largeSrc ||
+        item.href ||
+        item.src ||
+        innerImage.src ||
+        null;
 
       const _smallURL =
         innerImage.currentSrc ||
@@ -41,7 +45,7 @@ export async function processHTML({ container, selector, clickTarget }) {
         null;
 
       const _title =
-        item.title || item.alt || innerImage.title || innerImage.alt || null;
+        item.title || item.alt || innerImage.title || innerImage.alt || "";
 
       const _aspectRatio =
         item.dataset?.aspectRatio ||
@@ -55,7 +59,10 @@ export async function processHTML({ container, selector, clickTarget }) {
           .querySelector(SELECTORS.FILE_DETAILS_CONTAINER)
           ?.innerText.trim() || null;
 
-      const _dominantColor = innerImage.dataset?.dominantColor || null;
+      const _dominantColor =
+        item.dataset?.dominantColor ??
+        innerImage.dataset?.dominantColor ??
+        null;
 
       const _cssVars = [
         _dominantColor && `--dominant-color: #${_dominantColor};`,
@@ -67,7 +74,7 @@ export async function processHTML({ container, selector, clickTarget }) {
         fullsizeURL: encodeURI(_fullsizeURL),
         smallURL: encodeURI(_smallURL),
         downloadURL: encodeURI(_downloadURL),
-        title: escapeExpression(_title),
+        title: _title,
         fileDetails: _fileDetails,
         dominantColor: _dominantColor,
         aspectRatio: _aspectRatio,

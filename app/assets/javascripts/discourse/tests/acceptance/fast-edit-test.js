@@ -1,12 +1,12 @@
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import postFixtures from "discourse/tests/fixtures/post";
 import {
   acceptance,
   metaModifier,
   query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import postFixtures from "discourse/tests/fixtures/post";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Fast Edit", function (needs) {
@@ -45,6 +45,9 @@ acceptance("Fast Edit", function (needs) {
     const textNode = query("#post_1 .cooked p").childNodes[0];
 
     await selectText(textNode, 9);
+
+    assert.dom(".quote-button").exists();
+
     await triggerKeyEvent(document, "keypress", "E");
 
     assert.dom("#fast-edit-input").exists();
@@ -60,7 +63,11 @@ acceptance("Fast Edit", function (needs) {
 
     // Closing
     await selectText(textNode, 9);
+
+    assert.dom(".quote-button").exists();
+
     await triggerKeyEvent(document, "keypress", "E");
+
     assert.dom("#fast-edit-input").exists();
 
     await triggerKeyEvent("#fast-edit-input", "keydown", "Escape");

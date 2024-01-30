@@ -1,5 +1,5 @@
-import { createWidget } from "discourse/widgets/widget";
 import hbs from "discourse/widgets/hbs-compiler";
+import { createWidget } from "discourse/widgets/widget";
 
 createWidget("header-contents", {
   tagName: "div.contents",
@@ -15,7 +15,9 @@ createWidget("header-contents", {
       {{/if}}
     {{/if}}
 
-    {{home-logo attrs=attrs}}
+    {{before-header-logo-outlet attrs=attrs}}
+
+    {{home-logo-wrapper-outlet attrs=attrs}}
 
     {{#if attrs.topic}}
       {{header-topic-info attrs=attrs}}

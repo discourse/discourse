@@ -213,7 +213,12 @@ RSpec.describe "tasks/version_bump" do
     Dir.chdir(origin_path) do
       # Check each fix has been added as a single commit, with the message matching the first commit on the branch
       expect(run("git", "log", "--pretty=%s", "main").lines.map(&:strip)).to eq(
-        ["security fix two", "security fix one, commit one", "Initial commit"],
+        [
+          "security fix two",
+          "security fix one, commit two",
+          "security fix one, commit one",
+          "Initial commit",
+        ],
       )
 
       # Check all the files from both fixes are present

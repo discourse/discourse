@@ -1,5 +1,5 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default {

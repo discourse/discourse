@@ -1,14 +1,15 @@
-import { escapeExpression } from "discourse/lib/utilities";
-import { ajax } from "discourse/lib/ajax";
-import { cancel } from "@ember/runloop";
-import discourseDebounce from "discourse-common/lib/debounce";
 import Component from "@glimmer/component";
-import I18n from "I18n";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { isBlank, isPresent } from "@ember/utils";
-import { htmlSafe } from "@ember/template";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { isBlank, isPresent } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
+import { escapeExpression } from "discourse/lib/utilities";
+import discourseDebounce from "discourse-common/lib/debounce";
+import I18n from "discourse-i18n";
 
 const DEFAULT_HINT = htmlSafe(
   I18n.t("chat.create_channel.choose_category.default_hint", {
@@ -39,6 +40,7 @@ export default class ChatModalCreateChannel extends Component {
   #generateSlugHandler = null;
 
   willDestroy() {
+    super.willDestroy(...arguments);
     cancel(this.#generateSlugHandler);
   }
 
@@ -108,17 +110,16 @@ export default class ChatModalCreateChannel extends Component {
     }
   }
 
-  #createChannel(data) {
-    return this.chatApi
-      .createChannel(data)
-      .then((channel) => {
-        this.args.closeModal();
-        this.chatChannelsManager.follow(channel);
-        this.router.transitionTo("chat.channel", ...channel.routeModels);
-      })
-      .catch((e) => {
-        this.flash = e.jqXHR.responseJSON.errors[0];
-      });
+  async #createChannel(data) {
+    try {
+      const channel = await this.chatApi.createChannel(data);
+
+      this.args.closeModal();
+      this.chatChannelsManager.follow(channel);
+      this.router.transitionTo("chat.channel", ...channel.routeModels);
+    } catch (e) {
+      this.flash = extractError(e);
+    }
   }
 
   #buildCategorySlug(category) {

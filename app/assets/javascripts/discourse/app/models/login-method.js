@@ -1,11 +1,11 @@
 import EmberObject from "@ember/object";
-import I18n from "I18n";
 import { Promise } from "rsvp";
+import { updateCsrfToken } from "discourse/lib/ajax";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
-import { updateCsrfToken } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const LoginMethod = EmberObject.extend({
   @discourseComputed

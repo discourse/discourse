@@ -1,7 +1,7 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import UserAction from "discourse/models/user-action";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Unit | Model | user-action", function (hooks) {
   setupTest(hooks);

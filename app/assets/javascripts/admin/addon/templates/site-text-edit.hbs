@@ -16,9 +16,9 @@
       <h5>{{i18n "admin.site_text.outdated.new_default"}}</h5>
       <p>{{this.siteText.new_default}}</p>
       <DButton
-        @class="btn-default"
-        @action={{action "dismissOutdated"}}
+        @action={{this.dismissOutdated}}
         @label="admin.site_text.outdated.dismiss"
+        class="btn-default"
       />
     </div>
   {{/if}}
@@ -26,7 +26,7 @@
   <ExpandingTextArea
     @value={{this.buffered.value}}
     @rows="1"
-    @class="site-text-value"
+    class="site-text-value"
   />
 
   {{#if this.siteText.has_interpolation_keys}}
@@ -43,9 +43,9 @@
   >
     {{#if this.siteText.can_revert}}
       <DButton
-        @action={{action "revertChanges"}}
+        @action={{this.revertChanges}}
         @label="admin.site_text.revert"
-        @class="revert-site-text"
+        class="revert-site-text"
       />
     {{/if}}
   </SaveControls>
@@ -58,5 +58,4 @@
     {{d-icon "arrow-left"}}
     {{i18n "admin.site_text.go_back"}}
   </LinkTo>
-
 </div>

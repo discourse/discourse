@@ -3,6 +3,15 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
+:root {
+  --d-input-bg-color: var(--secondary);
+  --d-input-text-color: var(--primary);
+  --d-input-border: 1px solid var(--primary-400);
+  --d-input-bg-color--disabled: var(--primary-low);
+  --d-input-text-color--disabled: var(--primary);
+  --d-input-border--disabled: 1px solid var(--primary-low);
+}
+
 // Animation Keyframes
 @keyframes ping {
   0% {
@@ -47,19 +56,21 @@
   }
 }
 
-.placeholder-animation {
-  animation-duration: 4s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-  animation-name: placeHolderShimmer;
-  animation-timing-function: linear;
-  background: var(--primary-very-low);
-  background: linear-gradient(
-    to right,
-    var(--primary-very-low) 10%,
-    var(--primary-low) 18%,
-    var(--primary-very-low) 33%
-  );
+@media (prefers-reduced-motion: no-preference) {
+  .placeholder-animation {
+    animation-duration: 4s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: var(--primary-very-low);
+    background: linear-gradient(
+      to right,
+      var(--primary-very-low) 10%,
+      var(--primary-low) 18%,
+      var(--primary-very-low) 33%
+    );
+  }
 }
 
 // Base Elements
@@ -133,6 +144,11 @@ label {
   display: flex;
   margin-bottom: 5px;
   align-items: flex-start;
+  color: var(--primary-high);
+
+  &:not(.checkbox-label) {
+    font-weight: bold;
+  }
   > .d-icon {
     align-self: center;
     margin-right: 4px;
@@ -173,35 +189,6 @@ input {
   }
 }
 
-input,
-select,
-textarea {
-  color: var(--primary);
-  caret-color: currentColor;
-
-  &[class*="span"] {
-    float: none;
-    margin-left: 0;
-  }
-
-  &[disabled],
-  &[readonly] {
-    cursor: not-allowed;
-    background-color: var(--primary-low);
-    border-color: var(--primary-low);
-  }
-
-  &:focus:required:invalid {
-    color: var(--danger);
-    border-color: var(--danger);
-  }
-
-  &:focus:required:invalid:focus {
-    border-color: var(--danger);
-    box-shadow: var(--shadow-focus-danger);
-  }
-}
-
 input {
   &[type="text"],
   &[type="password"],
@@ -216,14 +203,15 @@ input {
   &[type="url"],
   &[type="search"],
   &[type="tel"],
-  &[type="color"] {
+  &[type="color"],
+  &.input-setting-integer {
     @include appearance-none;
     @include form-item-sizing;
     display: inline-block;
     margin-bottom: 9px;
-    color: var(--primary);
-    background-color: var(--secondary);
-    border: 1px solid var(--primary-medium);
+    color: var(--d-input-text-color);
+    background-color: var(--d-input-bg-color);
+    border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
     &:focus {
       @include default-focus;
@@ -267,7 +255,7 @@ textarea {
   box-sizing: border-box;
   height: auto;
   background-color: var(--secondary);
-  border: 1px solid var(--primary-medium);
+  border: 1px solid var(--primary-400);
   border-radius: 0;
 
   &:focus {
@@ -285,6 +273,27 @@ table {
     color: var(--primary-medium);
     text-align: left;
     padding: 0.5em;
+  }
+}
+
+input,
+select,
+textarea {
+  color: var(--d-input-text-color);
+  caret-color: currentColor;
+
+  &[disabled],
+  &[readonly] {
+    cursor: not-allowed;
+    color: var(--d-input-text-color--disabled);
+    background-color: var(--d-input-bg-color--disabled);
+    border: var(--d-input-border--disabled);
+  }
+
+  &:focus:required:invalid {
+    color: var(--danger);
+    border-color: var(--danger);
+    outline: 1px solid var(--danger);
   }
 }
 
@@ -709,55 +718,6 @@ table {
   }
 }
 
-.pref-auth-tokens {
-  .row {
-    border-bottom: 1px solid #ddd;
-    margin: 5px 0px;
-    padding-bottom: 5px;
-
-    &:last-child {
-      border-bottom: 0;
-    }
-  }
-
-  .auth-token-icon {
-    color: var(--primary-medium);
-    font-size: 2.25em;
-    float: left;
-    margin-right: 10px;
-  }
-
-  .auth-token-first {
-    font-size: 1.1em;
-
-    .auth-token-device {
-      font-weight: bold;
-    }
-  }
-
-  .auth-token-second {
-    color: var(--primary-medium);
-
-    .active {
-      color: var(--success);
-      font-weight: bold;
-    }
-  }
-
-  .auth-token-dropdown {
-    float: right;
-
-    .btn,
-    .btn:hover {
-      background: transparent;
-
-      .d-icon {
-        color: var(--primary-high);
-      }
-    }
-  }
-}
-
 .topic-statuses {
   // avoid adding margin/padding on this parent; sometimes it appears as an empty container
   float: left;
@@ -777,7 +737,7 @@ table {
   }
 }
 
-.broken-theme-alert {
+.broken-theme-alert-banner {
   font-size: var(--base-font-size);
   font-weight: bold;
   padding: 5px 0;
@@ -830,4 +790,9 @@ a#skip-link {
     top: 0px;
     transition: top 0.15s ease-in;
   }
+}
+
+.scroll-lock {
+  overflow: hidden !important;
+  margin-right: var(--scroll-gap, 0);
 }

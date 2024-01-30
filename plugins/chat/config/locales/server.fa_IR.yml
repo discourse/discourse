@@ -6,6 +6,7 @@
 
 fa_IR:
   site_settings:
+    chat_enabled: "گفتگو را فعال کنید."
     enable_public_channels: "کانال های عمومی را بر اساس دسته ها فعال کنید."
     chat_allowed_groups: "کاربران در این گروه‌ها می‌توانند گفتگو کنند. توجه داشته باشید که کارکنان همیشه می‌توانند به گفتگو دسترسی داشته باشند."
     chat_allow_uploads: "بارگذاری در کانال‌های گفتگو عمومی و کانال‌های پیام مستقیم مجاز است."
@@ -44,15 +45,11 @@ fa_IR:
         agree_and_delete:
           title: "حذف پیام"
           description: "پیام را حذف کنید تا کاربران نتوانند آن را ببینند."
-        delete_and_agree:
-          title: "حذف پیام"
         disagree_and_restore:
           title: "مخالفت و بازگرداندن پیام"
           description: "پیام را بازیابی کنید تا همه کاربران بتوانند آن را ببینند."
         disagree:
           title: "مخالف"
-        ignore:
-          title: "چشم پوشی"
       direct_messages:
         transcript_title: "رونوشت پیام‌های قبلی در %{channel_name}"
         transcript_body: "برای ارائه متن بیشتر به شما، رونوشتی از پیام‌های قبلی را در این گفتگو (حداکثر ده مورد) قرار دادیم:\n\n%{transcript}"
@@ -62,6 +59,8 @@ fa_IR:
         multi_user_truncated:
           one: "%{comma_separated_usernames} و %{count} نفر دیگر"
           other: "%{comma_separated_usernames} و %{count} نفر دیگر"
+    mention_warning:
+      dismiss: "رد کردن"
     bookmarkable:
       notification_title: "پیام در %{channel_name}"
     personal_chat: "گفتگوی شخصی"

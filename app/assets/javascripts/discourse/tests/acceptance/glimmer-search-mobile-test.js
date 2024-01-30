@@ -1,17 +1,14 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 acceptance("Search - Glimmer - Mobile", function (needs) {
   needs.mobileView();
-  needs.user({
-    experimental_search_menu_groups_enabled: true,
-  });
 
   test("search", async function (assert) {
     await visit("/");

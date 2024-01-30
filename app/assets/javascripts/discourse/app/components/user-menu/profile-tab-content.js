@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
-import DoNotDisturb from "discourse/lib/do-not-disturb";
+import { inject as service } from "@ember/service";
 import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
+import UserStatusModal from "discourse/components/modal/user-status";
+import { ajax } from "discourse/lib/ajax";
+import DoNotDisturb from "discourse/lib/do-not-disturb";
+import { userPath } from "discourse/lib/url";
 
 const _extraItems = [];
 
@@ -26,8 +28,10 @@ export default class UserMenuProfileTabContent extends Component {
   get showToggleAnonymousButton() {
     return (
       (this.siteSettings.allow_anonymous_posting &&
-        this.currentUser.trust_level >=
-          this.siteSettings.anonymous_posting_min_trust_level) ||
+        this.siteSettings.userInAnyGroups(
+          "anonymous_posting_allowed_groups",
+          this.currentUser
+        )) ||
       this.currentUser.is_anonymous
     );
   }
@@ -81,9 +85,8 @@ export default class UserMenuProfileTabContent extends Component {
   @action
   setUserStatusClick() {
     this.args.closeUserMenu();
-    showModal("user-status", {
-      title: "user_status.set_custom_status",
-      modalClass: "user-status",
+
+    this.modal.show(UserStatusModal, {
       model: {
         status: this.currentUser.status,
         pauseNotifications: this.currentUser.isInDoNotDisturb(),
@@ -92,5 +95,11 @@ export default class UserMenuProfileTabContent extends Component {
         deleteAction: () => this.userStatus.clear(),
       },
     });
+  }
+
+  @action
+  async toggleAnonymous() {
+    await ajax(userPath("toggle-anon"), { type: "POST" });
+    window.location.reload();
   }
 }

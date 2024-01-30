@@ -1,5 +1,5 @@
-import PreloadStore from "discourse/lib/preload-store";
 import { htmlSafe } from "@ember/template";
+import PreloadStore from "discourse/lib/preload-store";
 
 let _customizations = {};
 

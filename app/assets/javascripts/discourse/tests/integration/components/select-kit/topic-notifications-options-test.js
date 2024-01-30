@@ -1,10 +1,10 @@
+import { getOwner } from "@ember/application";
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
-import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { getOwner } from "discourse-common/lib/get-owner";
+import I18n from "discourse-i18n";
 
 function extractDescriptions(rows) {
   return [...rows].map((el) => el.querySelector(".desc").textContent.trim());

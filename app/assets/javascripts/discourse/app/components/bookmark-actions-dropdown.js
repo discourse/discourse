@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import I18n from "I18n";
 
 const ACTION_REMOVE = "remove";
 const ACTION_EDIT = "edit";

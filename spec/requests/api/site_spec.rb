@@ -2,8 +2,8 @@
 require "swagger_helper"
 
 RSpec.describe "site" do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:admin)
+  fab!(:category)
   fab!(:subcategory) { Fabricate(:category, parent_category: category) }
 
   before do

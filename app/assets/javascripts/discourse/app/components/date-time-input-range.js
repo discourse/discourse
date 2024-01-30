@@ -39,7 +39,7 @@ export default Component.extend({
         }
       }
 
-      const newState = Object.assign({}, state, diff);
+      const newState = { ...state, ...diff };
       this.onChange(newState);
     }
   },

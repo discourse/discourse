@@ -1,11 +1,11 @@
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { skip } from "qunit";
 import {
   acceptance,
   exists,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
-import { skip } from "qunit";
 import {
   baseChatPretenders,
   chatChannelPretender,

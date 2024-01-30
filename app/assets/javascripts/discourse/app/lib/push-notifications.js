@@ -1,5 +1,5 @@
-import KeyValueStore from "discourse/lib/key-value-store";
 import { ajax } from "discourse/lib/ajax";
+import KeyValueStore from "discourse/lib/key-value-store";
 import { helperContext } from "discourse-common/lib/helpers";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
@@ -16,25 +16,6 @@ function sendSubscriptionToServer(subscription, sendConfirmation) {
       send_confirmation: sendConfirmation,
     },
   });
-}
-
-function resetIdle() {
-  if (
-    "controller" in navigator.serviceWorker &&
-    navigator.serviceWorker.controller != null
-  ) {
-    navigator.serviceWorker.controller.postMessage({ lastAction: Date.now() });
-  }
-}
-
-function setupActivityListeners(appEvents) {
-  window.addEventListener("focus", resetIdle);
-
-  if (document) {
-    document.addEventListener("scroll", resetIdle);
-  }
-
-  appEvents.on("page:changed", resetIdle);
 }
 
 export function isPushNotificationsSupported() {
@@ -66,7 +47,7 @@ export function isPushNotificationsEnabled(user) {
   );
 }
 
-export function register(user, router, appEvents) {
+export function register(user, router) {
   if (!isPushNotificationsSupported()) {
     return;
   }
@@ -83,7 +64,6 @@ export function register(user, router, appEvents) {
           // Resync localStorage
           keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
         }
-        setupActivityListeners(appEvents);
       })
       .catch((e) => {
         // eslint-disable-next-line no-console
@@ -93,8 +73,7 @@ export function register(user, router, appEvents) {
 
   navigator.serviceWorker.addEventListener("message", (event) => {
     if ("url" in event.data) {
-      const url = event.data.url;
-      router.handleURL(url);
+      router.transitionTo(event.data.url);
     }
   });
 }

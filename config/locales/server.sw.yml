@@ -52,6 +52,9 @@ sw:
   redirect_warning: "Tumeshindwa kuthibitisha kua kiungo ulichokichagua kipo kwenye hii jamii. Kama ungependa kuendelea, chagua kiungo hapo chini."
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} za %{username}"
+  components:
+    enabled_filter: "Imeruhusiwa"
+    disabled_filter: "Imezuiwa"
   themes:
     other_error: "Tatizo limetokea kwenye kusasisha mandhari"
     import_error:
@@ -154,7 +157,6 @@ sw:
     start_discussion: "Anzisha Majadiliano"
     continue: "Endelea Kujadiliana"
     error: "Hitilafu ya Uambatanishi"
-    loading: "Inapakua Majadiliano..."
     permalink: "Kiungo cha mtandao cha Mda Mrefu"
     in_reply_to: "▶ %{username}"
     replies:
@@ -298,7 +300,8 @@ sw:
               same_as_current: "ni sawa na nywila unayotumia sasa."
               unique_characters: "ina herufi zilizorudiwa sana. Tafadhali tumia nywila iliyo salama zaidi."
             ip_address:
-              signup_not_allowed: "Hauruhusiwi kujiunga kupitia akaunti hii."
+              blocked: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao."
+              max_new_accounts_per_registration_ip: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao (kiwango cha juu kimefika). Wasiliana na mfanyakazi."
         user_email:
           attributes:
             user_id:
@@ -415,8 +418,6 @@ sw:
   email_login:
     title: "Ingia kupitia barua pepe"
   change_email:
-    confirmed: "Barua pepe yako imesasishwa."
-    please_continue: "Endelea kwenye %{site_name}"
     error: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Labda barua pepe tayari inatumika?"
     error_staged: "Hitilafu imetokea wakati wa kubadilisha barua pepe yako. Barua pepe inatumika na mtumiaji aliyekuwa staged."
     already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda barua pepe yako imeshabadilishwa??"
@@ -763,9 +764,6 @@ sw:
     delete_old_hidden_posts: "Futa machapisho yote ambayo yatakuwa yamefichwa baada ya siku 30."
     allow_user_locale: "Waruhusu watumiaji wachague lugha ya kutumia au kuwasiliana"
     support_mixed_text_direction: "ruhusu mchanganyiko wa mwelekeo wa maneno wa kushoto-kwenda-kulia na kulia-kwenda-kushoto"
-    min_post_length: "Kiwango cha chini cha herufi za chapisho zinazokubaliwa"
-    min_first_post_length: "Kiwango cha chini cha herufi za chapisho la kwanza (mwili wa mada) zinazokubaliwa"
-    min_personal_message_post_length: "Kiwango cha chini cha herufi za chapisho zinazokubaliwa kwenye ujumbe"
     max_post_length: "Kiwango cha juu cha herufi za chapisho zinazokubaliwa"
     topic_featured_link_enabled: "Ruhusu uchapishaji wa kiungo pamoja na mada."
     show_topic_featured_link_in_digest: "Onyesha kiungo cha mada kwenye barua pepe."
@@ -798,7 +796,6 @@ sw:
     topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
     topics_per_period_in_top_page: "Idadi ya mada za juu zitakazo onyeshwa kwenye upande wa 'Onyesha Zaidi' mada za juu."
     redirect_users_to_top_page: "Otomatikali watumiaji wapya na wale ambao hawapo watapelekwa juu ya ukurasa."
-    top_page_default_timeframe: "Chaguo-msingi la mda wa fremu kwa ajili ya kurasa wa juu wa kuangalia."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
     enable_badges: "Ruhusu mfumo wa beji"
     new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
@@ -816,7 +813,6 @@ sw:
     backup_frequency: "idadi ya siku kati ya machelezo."
     rate_limit_create_topic: "Baada ya kutengeneza mada, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     rate_limit_create_post: "Baada ya kuchapisha, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
-    rate_limit_new_user_create_topic: "Baada ya kutengeneza mada, watumiaji wapya wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     rate_limit_new_user_create_post: "Baada ya kuchapisha, watumiaji wapya wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     max_likes_per_day: "Kiwango cha juu cha upendo kwa kila mtumiaji kwa siku."
     max_flags_per_day: "Kiwango cha juu cha bendera kwa kila mtumiaji kwa siku."
@@ -908,9 +904,6 @@ sw:
     enable_emoji: "Ruhusu ishara"
     emoji_set: "Ungependa ishara yako iwe vipi?"
     approve_post_count: "Namba za machapisho kutoka kwa mtumiaji mpya au wa msingi ambazo lazima zipate kibali"
-    approve_unless_trust_level: "Namba za machapisho kutoka kwa mtumiaji mwenye kiwango hichi cha uaminifu lazima zipate kibali"
-    approve_new_topics_unless_trust_level: "Mada mpya za watumiaji wenge kiwango cha chini cha uaminifu lazima zipate kibali"
-    approve_unless_staged: "Mada na machapisho kwa ajili ya watumiaji waliokuwa staged lazima zipate kibali"
     notify_about_queued_posts_after: "Kama kuna machapisho ambayo yamekuwa yanasubirishwa kwa zaidi ya masaa haya, tuma taarifa kwa wasimamizi wote. Andika 0 kuzima hizi taarifa."
     auto_close_topics_post_count: "Idadi ya juu ya machapisho yanayoruhusiwa kwenye mada kabla haijafungwa (0 kuzima)"
     max_allowed_message_recipients: "Kiwango cha juu cha wapokeaji wanaoruhusiwa kwenye ujumbe."
@@ -1028,9 +1021,6 @@ sw:
       not_allowed: "hairuhusiwi kutoka kwa mtoaji barua pepe. Tafadhali tumia barua pepe nyingine."
       blocked: "hairuhusiwi."
       revoked: "hatutatuma barua pepe kwenda kwa '%{email}' mpaka %{date}."
-    ip_address:
-      blocked: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao."
-      max_new_accounts_per_registration_ip: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao (kiwango cha juu kimefika). Wasiliana na mfanyakazi."
     website:
       domain_not_allowed: "Tovuti ni batili. Vikoa vinavyoruhusiwa ni: %{domains}"
     auto_rejected: "Imekataliwa otomatikali kwa sababu ya umri. Ona mpangilio wa tovuti wa auto_handle_queued_age"
@@ -2028,6 +2018,9 @@ sw:
         title: "Discourse yako iko Tayari!"
   search_logs:
     graph_title: "Idadi ya Utafiti"
+  onebox:
+    github:
+      closed: "imefungwa"
   discourse_push_notifications:
     popup:
       mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'
@@ -2065,7 +2058,6 @@ sw:
       approve:
         title: "Imethibitishwa"
       reject_user:
-        title: "Futa Mtumiaji..."
         delete:
           title: "Futa Mtumiaji"
       reject:

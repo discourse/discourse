@@ -25,8 +25,7 @@ module Onebox
           HTML
         else
           html = Onebox::Engine::AllowlistedGenericOnebox.new(@url, @timeout).to_html
-          return if Onebox::Helpers.blank?(html)
-          html
+          html.presence
         end
       end
     end

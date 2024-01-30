@@ -6,11 +6,13 @@
     class="d-lightbox__screen-reader-title"
     id={{@titleElementId}}
   >
-    {{i18n
-      "experimental_lightbox.screen_reader_image_title"
-      current=@counterIndex
-      total=@totalItemCount
-      title=@currentItem.title
-    }}
+    {{#if @currentItem.title}}
+      {{i18n
+        "experimental_lightbox.screen_reader_image_title"
+        current=@counterIndex
+        total=@totalItemCount
+        title=@currentItem.title
+      }}
+    {{/if}}
   </h2>
 </div>

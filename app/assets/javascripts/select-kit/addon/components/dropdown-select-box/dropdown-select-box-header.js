@@ -1,6 +1,6 @@
-import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
+import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
 
 export default SingleSelectHeaderComponent.extend({
   classNames: ["dropdown-select-box-header"],

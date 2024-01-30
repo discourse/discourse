@@ -155,7 +155,7 @@ RSpec.describe DiscourseJsProcessor do
       Handlebars.registerHelper('dummy-helper', function(string) {
         return `dummy(${string})`
       })
-      JS
+    JS
 
     let(:mini_racer) do
       ctx = MiniRacer::Context.new

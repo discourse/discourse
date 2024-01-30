@@ -16,7 +16,7 @@ RSpec.describe DestroyTask do
       destroy_task = DestroyTask.new(StringIO.new)
       expect { destroy_task.destroy_topics(c.slug) }.to change {
         Topic.where(category_id: c.id).count
-      }.by (-1)
+      }.by(-1)
     end
 
     it "destroys all topics in a sub category" do
@@ -55,7 +55,7 @@ RSpec.describe DestroyTask do
 
       expect { destroy_task.destroy_category(c.id) }.to change {
         Category.where(id: c.id).count
-      }.by (-1)
+      }.by(-1)
     end
 
     it "destroys sub-categories when destroying parent category" do
@@ -63,7 +63,7 @@ RSpec.describe DestroyTask do
 
       expect { destroy_task.destroy_category(c2.id) }.to change {
         Category.where(id: sc.id).count
-      }.by (-1)
+      }.by(-1)
     end
   end
 

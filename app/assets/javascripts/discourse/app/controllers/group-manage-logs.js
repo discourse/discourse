@@ -42,11 +42,6 @@ export default Controller.extend({
       });
   },
 
-  @observes("model.all_loaded")
-  _showFooter() {
-    this.set("application.showFooter", this.get("model.all_loaded"));
-  },
-
   reset() {
     this.setProperties({
       offset: 0,

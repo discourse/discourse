@@ -1,5 +1,5 @@
-import { bind } from "discourse-common/utils/decorators";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { bind } from "discourse-common/utils/decorators";
 
 // Dear traveler, you are entering a zone where we are at war with the browser.
 // The browser is insisting on positioning scrollTop per the location it was in
@@ -84,18 +84,16 @@ export default class LockOn {
   }
 
   _addListener() {
-    const body = document.querySelector("body");
-
     SCROLL_EVENTS.forEach((event) => {
-      body.addEventListener(event, this._scrollListener, { passive: true });
+      document.body.addEventListener(event, this._scrollListener, {
+        passive: true,
+      });
     });
   }
 
   _removeListener() {
-    const body = document.querySelector("body");
-
     SCROLL_EVENTS.forEach((event) => {
-      body.removeEventListener(event, this._scrollListener);
+      document.body.removeEventListener(event, this._scrollListener);
     });
   }
 

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
-import { translateModKey } from "discourse/lib/utilities";
-import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { inject as service } from "@ember/service";
+import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
+import { translateModKey } from "discourse/lib/utilities";
+import I18n from "discourse-i18n";
 
 const KEY = "keyboard_shortcuts_help";
 const SHIFT = I18n.t("shortcut_modifier_key.shift");
@@ -150,6 +150,12 @@ export default class KeyboardShortcutsHelp extends Component {
             keys1: [SHIFT, "a"],
             keysDelimiter: PLUS,
           }),
+          archive_private_message: buildShortcut(
+            "actions.archive_private_message",
+            {
+              keys1: ["a"],
+            }
+          ),
         },
       },
       navigation: {

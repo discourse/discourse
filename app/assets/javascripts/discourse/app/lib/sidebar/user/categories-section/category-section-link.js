@@ -1,10 +1,8 @@
-import I18n from "I18n";
-
 import { tracked } from "@glimmer/tracking";
 import { get, set } from "@ember/object";
-
-import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const UNREAD_AND_NEW_COUNTABLE = {
   propertyName: "unreadAndNewCount",

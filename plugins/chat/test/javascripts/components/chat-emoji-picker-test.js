@@ -1,9 +1,9 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 function emojisResponse() {
   return {

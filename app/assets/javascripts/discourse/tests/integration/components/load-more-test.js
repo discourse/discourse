@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
-import { configureEyeline } from "discourse/lib/eyeline";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { configureEyeline } from "discourse/lib/eyeline";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | load-more", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,7 +23,7 @@ module("Integration | Component | load-more", function (hooks) {
 
     await render(hbs`
       <LoadMore @selector=".numbers tr" @action={{this.loadMore}}>
-        <table class="numbers"><tr></tr></table>
+        <table class="numbers"><tbody><tr></tr></tbody></table>
       </LoadMore>
     `);
 

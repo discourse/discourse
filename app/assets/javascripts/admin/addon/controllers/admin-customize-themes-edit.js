@@ -1,9 +1,9 @@
-import { action } from "@ember/object";
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { url } from "discourse/lib/computed";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { url } from "discourse/lib/computed";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class AdminCustomizeThemesEditController extends Controller {
   @service router;

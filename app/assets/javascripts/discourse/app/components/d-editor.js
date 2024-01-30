@@ -1,43 +1,44 @@
+import Component from "@ember/component";
+import { action, computed } from "@ember/object";
+import { schedule, scheduleOnce } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import ItsATrap from "@discourse/itsatrap";
+import $ from "jquery";
+import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
+import { translations } from "pretty-text/emoji/data";
+import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
+import { Promise } from "rsvp";
+import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ajax } from "discourse/lib/ajax";
+import { SKIP } from "discourse/lib/autocomplete";
+import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import { linkSeenHashtagsInContext } from "discourse/lib/hashtag-decorator";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
+import { linkSeenMentions } from "discourse/lib/link-mentions";
+import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import loadScript from "discourse/lib/load-script";
+import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
+import { siteDir } from "discourse/lib/text-direction";
 import {
   caretPosition,
   inCodeBlock,
   translateModKey,
 } from "discourse/lib/utilities";
+import TextareaTextManipulation, {
+  getHead,
+} from "discourse/mixins/textarea-text-manipulation";
+import { isTesting } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import deprecated from "discourse-common/lib/deprecated";
+import { getRegister } from "discourse-common/lib/get-owner";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {
   bind,
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import { schedule, scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
-import I18n from "I18n";
-import ItsATrap from "@discourse/itsatrap";
-import { Promise } from "rsvp";
-import { SKIP } from "discourse/lib/autocomplete";
-import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { getRegister } from "discourse-common/lib/get-owner";
-import { isTesting } from "discourse-common/config/environment";
-import { linkSeenHashtags } from "discourse/lib/link-hashtags";
-import { linkSeenMentions } from "discourse/lib/link-mentions";
-import { loadOneboxes } from "discourse/lib/load-oneboxes";
-import loadScript from "discourse/lib/load-script";
-import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
-import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
-import { siteDir } from "discourse/lib/text-direction";
-import { translations } from "pretty-text/emoji/data";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { action, computed } from "@ember/object";
-import TextareaTextManipulation, {
-  getHead,
-} from "discourse/mixins/textarea-text-manipulation";
+import I18n from "discourse-i18n";
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
@@ -60,22 +61,26 @@ class Toolbar {
       { group: "extras", buttons: [] },
     ];
 
+    const boldLabel = getButtonLabel("composer.bold_label", "B");
+    const boldIcon = boldLabel ? null : "bold";
     this.addButton({
       id: "bold",
       group: "fontStyles",
-      icon: "bold",
-      label: getButtonLabel("composer.bold_label", "B"),
+      icon: boldIcon,
+      label: boldLabel,
       shortcut: "B",
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("**", "**", "bold_text"),
     });
 
+    const italicLabel = getButtonLabel("composer.italic_label", "I");
+    const italicIcon = italicLabel ? null : "italic";
     this.addButton({
       id: "italic",
       group: "fontStyles",
-      icon: "italic",
-      label: getButtonLabel("composer.italic_label", "I"),
+      icon: italicIcon,
+      label: italicLabel,
       shortcut: "I",
       preventFocus: true,
       trimLeading: true,
@@ -85,6 +90,7 @@ class Toolbar {
     if (opts.showLink) {
       this.addButton({
         id: "link",
+        icon: "link",
         group: "insertions",
         shortcut: "K",
         preventFocus: true,
@@ -111,6 +117,7 @@ class Toolbar {
         id: "code",
         group: "insertions",
         shortcut: "E",
+        icon: "code",
         preventFocus: true,
         trimLeading: true,
         action: (...args) => this.context.send("formatCode", args),
@@ -167,12 +174,13 @@ class Toolbar {
       tabindex: button.tabindex || "-1",
       className: button.className || button.id,
       label: button.label,
-      icon: button.label ? null : button.icon || button.id,
+      icon: button.icon,
       action: button.action || ((a) => this.context.send("toolbarButton", a)),
       perform: button.perform || function () {},
       trimLeading: button.trimLeading,
       popupMenu: button.popupMenu || false,
       preventFocus: button.preventFocus || false,
+      condition: button.condition || (() => true),
     };
 
     if (button.sendAction) {
@@ -216,6 +224,9 @@ export function onToolbarCreate(func) {
 }
 
 export default Component.extend(TextareaTextManipulation, {
+  emojiStore: service("emoji-store"),
+  modal: service(),
+
   classNames: ["d-editor"],
   ready: false,
   lastSel: null,
@@ -223,7 +234,6 @@ export default Component.extend(TextareaTextManipulation, {
   showLink: true,
   emojiPickerIsActive: false,
   emojiFilter: "",
-  emojiStore: service("emoji-store"),
   isEditorFocused: false,
   processPreview: true,
   composerFocusSelector: "#reply-control .d-editor-input",
@@ -438,8 +448,10 @@ export default Component.extend(TextareaTextManipulation, {
       if (this.siteSettings.enable_diffhtml_preview) {
         const cookedElement = document.createElement("div");
         cookedElement.innerHTML = cooked;
-
-        linkSeenHashtags(cookedElement);
+        linkSeenHashtagsInContext(
+          this.site.hashtag_configurations["topic-composer"],
+          cookedElement
+        );
         linkSeenMentions(cookedElement, this.siteSettings);
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
@@ -455,9 +467,6 @@ export default Component.extend(TextareaTextManipulation, {
         previewPromise = loadScript("/javascripts/diffhtml.min.js").then(() => {
           const previewElement =
             this.element.querySelector(".d-editor-preview");
-          // This is a workaround for a known bug in diffHTML
-          // https://github.com/tbranyen/diffhtml/issues/217#issuecomment-1479956332
-          window.diff.release(previewElement);
           window.diff.innerHTML(previewElement, cookedElement.innerHTML);
         });
       }
@@ -766,9 +775,11 @@ export default Component.extend(TextareaTextManipulation, {
         linkText = this._lastSel.value;
       }
 
-      showModal("insert-hyperlink").setProperties({
-        linkText,
-        toolbarEvent,
+      this.modal.show(InsertHyperlink, {
+        model: {
+          linkText,
+          toolbarEvent,
+        },
       });
     },
 

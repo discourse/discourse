@@ -6,7 +6,6 @@
 
 pt:
   site_settings:
-    chat_enabled: "Ativar o plug-in de bate-papo."
     chat_allowed_groups: "Os usuários desses grupos podem bater papo. Observe que a equipe sempre pode acessar o chat."
     chat_channel_retention_days: "As mensagens de bate-papo em canais regulares serão retidas por essa quantidade de dias. Defina como '0' para reter as mensagens para sempre."
     chat_dm_retention_days: "As conversas em canais de bate-papo pessoais serão retidas por essa quantidade de dias. Defina como '0' para reter as mensagens para sempre."
@@ -59,11 +58,13 @@ pt:
           title: "Silenciar Usuário"
         disagree:
           title: "Discordar"
-        ignore:
-          title: "Ignorar"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "marcar Visto"
+    onebox:
+      thread_title_connector: "em"
   discourse_push_notifications:
     popup:
       chat_mention:

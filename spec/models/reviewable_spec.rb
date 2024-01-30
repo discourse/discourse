@@ -6,8 +6,8 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe ".create" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:admin)
+    fab!(:user)
 
     let(:reviewable) { Fabricate.build(:reviewable, created_by: admin) }
 
@@ -38,8 +38,8 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe ".needs_review!" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:admin)
+    fab!(:user)
 
     it "will return a new reviewable the first them, and re-use the second time" do
       r0 = ReviewableUser.needs_review!(target: user, created_by: admin)
@@ -61,7 +61,7 @@ RSpec.describe Reviewable, type: :model do
 
     it "will update the category if the topic category changes" do
       post = Fabricate(:post)
-      moderator = Fabricate(:moderator)
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
       reviewable = PostActionCreator.spam(moderator, post).reviewable
       expect(reviewable.category).to eq(post.topic.category)
       new_cat = Fabricate(:category)
@@ -105,14 +105,14 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe ".list_for" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "returns an empty list for nil user" do
       expect(Reviewable.list_for(nil)).to eq([])
     end
 
     context "with a pending item" do
-      fab!(:post) { Fabricate(:post) }
+      fab!(:post)
       let(:reviewable) { Fabricate(:reviewable, target: post) }
 
       it "works with the reviewable by moderator flag" do
@@ -240,12 +240,10 @@ RSpec.describe Reviewable, type: :model do
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       let(:topic) { Fabricate(:topic, category: category) }
       let(:post) { Fabricate(:post, topic: topic) }
-      fab!(:moderator) { Fabricate(:moderator) }
-      fab!(:admin) { Fabricate(:admin) }
+      fab!(:moderator)
+      fab!(:admin)
 
       it "respects category id on the reviewable" do
-        Group.refresh_automatic_group!(:staff)
-
         reviewable =
           ReviewableFlaggedPost.needs_review!(
             target: post,
@@ -265,9 +263,9 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe ".unseen_list_for" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:admin)
+    fab!(:moderator)
+    fab!(:group)
     fab!(:user) { Fabricate(:user, groups: [group]) }
     fab!(:admin_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false) }
     fab!(:mod_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: true) }
@@ -350,7 +348,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe "message bus notifications" do
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
     let(:post) { Fabricate(:post) }
 
     it "triggers a notification on create" do
@@ -364,9 +362,11 @@ RSpec.describe Reviewable, type: :model do
       reviewable = PostActionCreator.create(moderator, post, :inappropriate).reviewable
       reviewable.perform(moderator, :disagree)
 
-      expect { PostActionCreator.spam(Fabricate(:user), post) }.to change {
-        reviewable.reload.status
-      }.from("rejected").to("pending").and change { Jobs::NotifyReviewable.jobs.size }.by(1)
+      expect {
+        PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
+      }.to change { reviewable.reload.status }.from("rejected").to("pending").and change {
+              Jobs::NotifyReviewable.jobs.size
+            }.by(1)
     end
 
     it "triggers a notification on pending -> approve" do
@@ -424,8 +424,8 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe "flag_stats" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:post) { Fabricate(:post) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:post)
     let(:reviewable) { PostActionCreator.spam(user, post).reviewable }
 
     it "increases flags_agreed when agreed" do
@@ -637,8 +637,8 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe ".unseen_reviewable_count" do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:group)
+    fab!(:user)
     fab!(:admin_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false) }
     fab!(:mod_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: true) }
     fab!(:group_reviewable) do

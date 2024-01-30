@@ -1,21 +1,21 @@
-import SectionLink from "discourse/lib/sidebar/section-link";
+import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
-
-import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
-import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
-import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 import AboutSectionLink from "discourse/lib/sidebar/common/community-section/about-section-link";
-import FAQSectionLink from "discourse/lib/sidebar/common/community-section/faq-section-link";
-import UsersSectionLink from "discourse/lib/sidebar/common/community-section/users-section-link";
-import GroupsSectionLink from "discourse/lib/sidebar/common/community-section/groups-section-link";
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
-import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
+import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
+import FAQSectionLink from "discourse/lib/sidebar/common/community-section/faq-section-link";
+import GroupsSectionLink from "discourse/lib/sidebar/common/community-section/groups-section-link";
+import UsersSectionLink from "discourse/lib/sidebar/common/community-section/users-section-link";
 import {
   customSectionLinks,
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
+import SectionLink from "discourse/lib/sidebar/section-link";
+import AdminRevampSectionLink from "discourse/lib/sidebar/user/community-section/admin-revamp-section-link";
+import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
+import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
+import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
 
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
@@ -26,6 +26,7 @@ const SPECIAL_LINKS_MAP = {
   "/review": ReviewSectionLink,
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,
+  "/admin-revamp": AdminRevampSectionLink,
   "/g": GroupsSectionLink,
 };
 
@@ -40,7 +41,6 @@ export default class CommunitySection {
   @tracked links;
   @tracked moreLinks;
 
-  reorderable = false;
   hideSectionHeader = true;
 
   constructor({ section, owner }) {

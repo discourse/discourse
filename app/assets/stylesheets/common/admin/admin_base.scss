@@ -10,6 +10,7 @@ $mobile-breakpoint: 700px;
   width: 100%;
   overflow: hidden;
   height: 100%;
+  background: var(--d-content-background);
 
   @include breakpoint(tablet) {
     width: calc(100% + 10px);
@@ -1045,9 +1046,13 @@ a.inline-editable-field {
 @import "common/admin/admin_report";
 @import "common/admin/admin_report_counters";
 @import "common/admin/admin_report_chart";
+@import "common/admin/admin_report_radar";
 @import "common/admin/admin_report_stacked_chart";
 @import "common/admin/admin_report_table";
 @import "common/admin/admin_report_inline_table";
 @import "common/admin/admin_intro";
 @import "common/admin/admin_emojis";
 @import "common/admin/mini_profiler";
+
+// EXPERIMENTAL: Revamped admin styles, probably can be split up later down the line.
+@import "common/admin/admin_revamp";

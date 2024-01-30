@@ -296,7 +296,6 @@ class Badge < ActiveRecord::Base
 
   def long_description=(val)
     self[:long_description] = val if val != long_description
-    val
   end
 
   def description
@@ -311,7 +310,6 @@ class Badge < ActiveRecord::Base
 
   def description=(val)
     self[:description] = val if val != description
-    val
   end
 
   def slug

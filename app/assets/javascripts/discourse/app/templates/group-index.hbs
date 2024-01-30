@@ -1,12 +1,15 @@
+{{#if (or this.loading this.canLoadMore)}}
+  {{hide-application-footer}}
+{{/if}}
+
 <section class="user-content">
   <div class="group-members-actions">
-
     {{#if this.canManageGroup}}
       <DButton
-        @class="bulk-select"
         @icon="list"
-        @action={{action "toggleBulkSelect"}}
+        @action={{this.toggleBulkSelect}}
         @title="topics.bulk.toggle"
+        class="bulk-select"
       />
     {{/if}}
 
@@ -15,12 +18,11 @@
         @value={{this.filterInput}}
         @placeholderKey={{this.filterPlaceholder}}
         @autocomplete="off"
-        @class="group-username-filter no-blur"
+        class="group-username-filter no-blur"
       />
     {{/if}}
 
     {{#if this.canManageGroup}}
-
       {{#if this.isBulk}}
         <span class="bulk-select-buttons-wrap">
           {{#if this.bulkSelection}}
@@ -32,20 +34,19 @@
             />
 
             <DButton
-              @action={{action "bulkClearAll"}}
+              @action={{this.bulkClearAll}}
               @label="topics.bulk.clear_all"
               @icon="far-square"
-              @class="bulk-select-clear"
+              class="bulk-select-clear"
             />
           {{/if}}
 
           <DButton
-            @action={{action "bulkSelectAll"}}
+            @action={{this.bulkSelectAll}}
             @label="topics.bulk.select_all"
             @icon="check-square"
-            @class="bulk-select-all"
+            class="bulk-select-all"
           />
-
         </span>
       {{/if}}
 
@@ -54,7 +55,7 @@
           @icon="plus"
           @action={{route-action "showAddMembersModal"}}
           @label="groups.manage.add_members"
-          @class="btn-default group-members-add"
+          class="btn-default group-members-add"
         />
 
         {{#if this.currentUser.can_invite_to_forum}}
@@ -62,7 +63,7 @@
             @icon="plus"
             @action={{route-action "showInviteModal"}}
             @label="groups.manage.invite_members"
-            @class="btn-default group-members-add"
+            class="btn-default group-members-invite"
           />
         {{/if}}
       </div>
@@ -74,7 +75,6 @@
       @selector=".directory-table .directory-table__cell"
       @action={{action "loadMore"}}
     >
-
       <ResponsiveTable
         @className="group-members
           {{if this.isBulk 'sticky-header' ''}}
@@ -86,9 +86,9 @@
             @asc={{this.asc}}
             @field="username_lower"
             @labelKey="username"
-            @class="directory-table__column-header--username username"
             @automatic={{true}}
             @colspan="2"
+            class="directory-table__column-header--username username"
           />
 
           {{#if this.canManageGroup}}
@@ -97,29 +97,34 @@
             ></div>
           {{/if}}
 
+          <PluginOutlet
+            @name="group-index-table-header-after-username"
+            @outletArgs={{hash group=this.model asc=this.asc order=this.order}}
+          />
+
           <TableHeaderToggle
-            @class="directory-table__column-header--added"
             @order={{this.order}}
             @asc={{this.asc}}
             @field="added_at"
             @labelKey="groups.member_added"
             @automatic={{true}}
+            class="directory-table__column-header--added"
           />
           <TableHeaderToggle
-            @class="directory-table__column-header--last-posted"
             @order={{this.order}}
             @asc={{this.asc}}
             @field="last_posted_at"
             @labelKey="last_post"
             @automatic={{true}}
+            class="directory-table__column-header--last-posted"
           />
           <TableHeaderToggle
-            @class="directory-table__column-header--last-seen"
             @order={{this.order}}
             @asc={{this.asc}}
             @field="last_seen_at"
             @labelKey="last_seen"
             @automatic={{true}}
+            class="directory-table__column-header--last-seen"
           />
 
           {{#if this.canManageGroup}}
@@ -132,7 +137,6 @@
         <:body>
           {{#each this.model.members as |m|}}
             <div class="directory-table__row">
-
               <div
                 class="directory-table__cell directory-table__cell--username group-member"
                 colspan="2"
@@ -175,6 +179,12 @@
 
                 </div>
               {{/if}}
+
+              <PluginOutlet
+                @name="group-index-table-row-after-username"
+                @outletArgs={{hash member=m}}
+              />
+
               <div class="directory-table__cell directory-table__cell--added">
                 <span class="directory-table__label">
                   <span>{{i18n "groups.member_added"}}</span>
@@ -228,15 +238,12 @@
             </div>
           {{/each}}
         </:body>
-
       </ResponsiveTable>
-
     </LoadMore>
 
     <ConditionalLoadingSpinner @condition={{this.loading}} />
   {{else}}
     <br />
-
     <div>{{i18n this.emptyMessageKey}}</div>
   {{/if}}
 </section>

@@ -5,7 +5,7 @@ module PageObjects
     class ChatChannelEdit < PageObjects::Modals::Base
       include SystemHelpers
 
-      EDIT_MODAL_SELECTOR = PageObjects::Pages::ChatChannelAbout::EDIT_MODAL_SELECTOR
+      EDIT_MODAL_SELECTOR = PageObjects::Pages::ChatChannelSettings::EDIT_MODAL_SELECTOR
       SLUG_INPUT_SELECTOR = ".chat-channel-edit-name-slug-modal__slug-input"
       NAME_INPUT_SELECTOR = ".chat-channel-edit-name-slug-modal__name-input"
 

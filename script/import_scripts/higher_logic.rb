@@ -189,9 +189,7 @@ class ImportScripts::HigherLogic < ImportScripts::Base
 
               post.raw << "\n\n" << html
               post.save!
-              unless PostUpload.where(post: post, upload: upload).exists?
-                PostUpload.create!(post: post, upload: upload)
-              end
+              UploadReference.ensure_exist!(upload_ids: [upload.id], target: post)
             end
           end
         end

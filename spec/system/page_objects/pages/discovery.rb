@@ -18,6 +18,10 @@ module PageObjects
       def tag_drop
         Components::SelectKit.new(".category-breadcrumb .tag-drop")
       end
+
+      def nav_item(name)
+        find("#navigation-bar .nav-item_#{name}")
+      end
     end
   end
 end

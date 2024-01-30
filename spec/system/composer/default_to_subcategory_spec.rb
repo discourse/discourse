@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Default to Subcategory when parent Category doesn't allow posting", type: :system do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:group)
   fab!(:group_user) { Fabricate(:group_user, user: user, group: group) }
   fab!(:default_latest_category) { Fabricate(:category, name: "General") }
   fab!(:category) { Fabricate(:private_category, group: group, permission_type: 3) }
@@ -41,13 +41,9 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
             end
           end
           describe "Category does not have subcategory" do
-            it "should have the 'New Topic' button enabled and default Subcategory set to latest default subcategory" do
+            it "should have the 'New Topic' button disabled" do
               category_page.visit(category_with_no_subcategory)
-              expect(category_page).to have_button("New Topic", disabled: false)
-              category_page.new_topic_button.click
-              select_kit =
-                PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-              expect(select_kit).to have_selected_value(default_latest_category.id)
+              expect(category_page).to have_button("New Topic", disabled: true)
             end
           end
         end
@@ -70,13 +66,9 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
         end
         describe "Can't post on parent category" do
           describe "Category does not have subcategory" do
-            it "should have the 'New Topic' button enabled and default Subcategory not set" do
+            it "should have the 'New Topic' button disabled" do
               category_page.visit(category_with_no_subcategory)
-              expect(category_page).to have_button("New Topic", disabled: false)
-              category_page.new_topic_button.click
-              select_kit =
-                PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-              expect(select_kit).to have_selected_name("category&hellip;")
+              expect(category_page).to have_button("New Topic", disabled: true)
             end
           end
         end

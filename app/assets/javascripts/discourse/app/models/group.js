@@ -1,14 +1,15 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
-import GroupHistory from "discourse/models/group-history";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { equal } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import Category from "discourse/models/category";
+import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { equal } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 const Group = RestModel.extend({
   user_count: 0,
@@ -197,29 +198,109 @@ const Group = RestModel.extend({
     }
   },
 
-  @discourseComputed("watching_category_ids")
-  watchingCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  @dependentKeyCompat
+  get watchingCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.watching_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_category_ids).then(() =>
+        this.notifyPropertyChange("watching_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("watching_category_ids"));
   },
 
-  @discourseComputed("tracking_category_ids")
-  trackingCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  set watchingCategories(categories) {
+    this.set(
+      "watching_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("watching_first_post_category_ids")
-  watchingFirstPostCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  @dependentKeyCompat
+  get trackingCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.tracking_category_ids)
+    ) {
+      Category.asyncFindByIds(this.tracking_category_ids).then(() =>
+        this.notifyPropertyChange("tracking_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("tracking_category_ids"));
   },
 
-  @discourseComputed("regular_category_ids")
-  regularCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  set trackingCategories(categories) {
+    this.set(
+      "tracking_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("muted_category_ids")
-  mutedCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  @dependentKeyCompat
+  get watchingFirstPostCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.watching_first_post_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_first_post_category_ids).then(() =>
+        this.notifyPropertyChange("watching_first_post_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("watching_first_post_category_ids"));
+  },
+
+  set watchingFirstPostCategories(categories) {
+    this.set(
+      "watching_first_post_category_ids",
+      categories.map((c) => c.id)
+    );
+  },
+
+  @dependentKeyCompat
+  get regularCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.regular_category_ids)
+    ) {
+      Category.asyncFindByIds(this.regular_category_ids).then(() =>
+        this.notifyPropertyChange("regular_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("regular_category_ids"));
+  },
+
+  set regularCategories(categories) {
+    this.set(
+      "regular_category_ids",
+      categories.map((c) => c.id)
+    );
+  },
+
+  @dependentKeyCompat
+  get mutedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      !Category.hasAsyncFoundAll(this.muted_category_ids)
+    ) {
+      Category.asyncFindByIds(this.muted_category_ids).then(() =>
+        this.notifyPropertyChange("muted_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("muted_category_ids"));
+  },
+
+  set mutedCategories(categories) {
+    this.set(
+      "muted_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
   asJSON() {
@@ -348,8 +429,8 @@ const Group = RestModel.extend({
     const type = opts.type || "posts";
     const data = {};
 
-    if (opts.beforePostId) {
-      data.before_post_id = opts.beforePostId;
+    if (opts.before) {
+      data.before = opts.before;
     }
 
     if (opts.categoryId) {

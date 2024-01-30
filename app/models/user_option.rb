@@ -185,6 +185,12 @@ class UserOption < ActiveRecord::Base
       "bookmarks"
     when 7
       "unseen"
+    when 8
+      if SiteSetting.experimental_hot_topics
+        "hot"
+      else
+        SiteSetting.homepage
+      end
     else
       SiteSetting.homepage
     end
@@ -292,6 +298,7 @@ end
 #  sidebar_link_to_filtered_list        :boolean          default(FALSE), not null
 #  sidebar_show_count_of_new_items      :boolean          default(FALSE), not null
 #  watched_precedence_over_muted        :boolean
+#  chat_separate_sidebar_mode           :integer          default(0), not null
 #
 # Indexes
 #

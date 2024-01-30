@@ -56,7 +56,7 @@ RSpec.describe Chat::MessageUserSerializer do
   end
 
   context "when user has a primary group" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     before { params[:primary_group_id] = group.id }
 

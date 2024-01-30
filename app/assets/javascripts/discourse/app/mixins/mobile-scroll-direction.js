@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import $ from "jquery";
 import discourseDebounce from "discourse-common/lib/debounce";
 
 // Small buffer so that very tiny scrolls don't trigger mobile header switch

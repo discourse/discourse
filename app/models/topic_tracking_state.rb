@@ -43,7 +43,7 @@ class TopicTrackingState
     return unless topic.regular?
 
     tag_ids, tags = nil
-    tag_ids, tags = topic.tags.pluck(:id, :name).transpose if SiteSetting.tagging_enabled
+    tag_ids, tags = topic.tags.pluck(:id, :name).transpose if include_tags_in_report?
 
     payload = {
       last_read_post_number: nil,
@@ -71,7 +71,7 @@ class TopicTrackingState
     return unless topic.regular?
 
     tag_ids, tags = nil
-    tag_ids, tags = topic.tags.pluck(:id, :name).transpose if SiteSetting.tagging_enabled
+    tag_ids, tags = topic.tags.pluck(:id, :name).transpose if include_tags_in_report?
 
     message = {
       topic_id: topic.id,
@@ -276,11 +276,7 @@ class TopicTrackingState
   end
 
   def self.include_tags_in_report?
-    SiteSetting.tagging_enabled && (@include_tags_in_report || !SiteSetting.legacy_navigation_menu?)
-  end
-
-  def self.include_tags_in_report=(v)
-    @include_tags_in_report = v
+    SiteSetting.tagging_enabled
   end
 
   # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
@@ -340,7 +336,7 @@ class TopicTrackingState
   end
 
   def self.tags_included_wrapped_sql(sql)
-    return <<~SQL if SiteSetting.tagging_enabled && TopicTrackingState.include_tags_in_report?
+    return <<~SQL if include_tags_in_report?
         WITH tags_included_cte AS (
           #{sql}
         )

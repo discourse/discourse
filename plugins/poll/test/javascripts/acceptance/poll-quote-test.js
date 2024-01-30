@@ -1,14 +1,10 @@
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Poll quote", function (needs) {
   needs.user();
   needs.settings({ poll_enabled: true });
-  needs.hooks.beforeEach(() => {
-    clearPopupMenuOptionsCallback();
-  });
 
   needs.pretender((server, helper) => {
     server.get("/posts/by_number/130/1", () => {

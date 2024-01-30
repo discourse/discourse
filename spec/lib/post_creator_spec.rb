@@ -4,10 +4,10 @@ require "post_creator"
 require "topic_subtype"
 
 RSpec.describe PostCreator do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
+  fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   let(:topic) { Fabricate(:topic, user: user) }
 
   describe "new topic" do
@@ -206,7 +206,6 @@ RSpec.describe PostCreator do
         cat.save
 
         created_post = nil
-        other_user_tracking_topic = nil
 
         messages =
           MessageBus.track_publish do
@@ -556,8 +555,8 @@ RSpec.describe PostCreator do
 
           context "when can create tags" do
             before do
-              SiteSetting.min_trust_to_create_tag = 0
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             end
 
             it "can create all tags if none exist" do
@@ -577,8 +576,8 @@ RSpec.describe PostCreator do
 
           context "when cannot create tags" do
             before do
-              SiteSetting.min_trust_to_create_tag = 4
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             end
 
             it "only uses existing tags" do
@@ -590,8 +589,8 @@ RSpec.describe PostCreator do
 
           context "when automatically tagging first posts" do
             before do
-              SiteSetting.min_trust_to_create_tag = 0
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
               Fabricate(:tag, name: "greetings")
               Fabricate(:tag, name: "hey")
               Fabricate(:tag, name: "about-art")
@@ -1082,7 +1081,6 @@ RSpec.describe PostCreator do
     fab!(:target_user2) { Fabricate(:moderator) }
     fab!(:unrelated_user) { Fabricate(:user) }
     let(:post) do
-      Group.refresh_automatic_groups!
       PostCreator.create!(
         user,
         title: "hi there welcome to my topic",
@@ -1091,6 +1089,25 @@ RSpec.describe PostCreator do
         target_usernames: [target_user1.username, target_user2.username].join(","),
         category: 1,
       )
+    end
+
+    it "respects min_personal_message_post_length" do
+      SiteSetting.min_personal_message_post_length = 5
+      SiteSetting.min_first_post_length = 20
+      SiteSetting.min_post_length = 25
+      SiteSetting.body_min_entropy = 20
+      user.change_trust_level!(TrustLevel[3])
+
+      expect {
+        PostCreator.create!(
+          user,
+          title: "hi there welcome to my PM",
+          raw: "sorry",
+          archetype: Archetype.private_message,
+          target_usernames: [target_user1.username, target_user2.username].join(","),
+          category: 1,
+        )
+      }.not_to raise_error
     end
 
     it "acts correctly" do
@@ -1179,13 +1196,12 @@ RSpec.describe PostCreator do
     end
 
     it "does not increase posts count for small actions" do
-      topic = Fabricate(:private_message_topic, user: Fabricate(:user))
+      topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
 
       Fabricate(:post, topic: topic)
 
       1.upto(3) do |i|
         user = Fabricate(:user)
-        Group.refresh_automatic_groups!
         topic.invite(topic.user, user.username)
         topic.reload
         expect(topic.posts_count).to eq(1)
@@ -1216,7 +1232,6 @@ RSpec.describe PostCreator do
     end
 
     it "works as expected" do
-      Group.refresh_automatic_groups!
       # Invalid archetype
       creator = PostCreator.new(user, base_args)
       creator.create
@@ -1305,7 +1320,6 @@ RSpec.describe PostCreator do
     end
     fab!(:unrelated) { Fabricate(:user) }
     let(:post) do
-      Group.refresh_automatic_groups!
       PostCreator.create!(
         user,
         title: "hi there welcome to my topic",
@@ -1445,8 +1459,15 @@ RSpec.describe PostCreator do
       creator.create
       expect(creator.errors).to be_blank
       expect(TopicEmbed.where(embed_url: embed_url).exists?).to eq(true)
+    end
 
-      # If we try to create another topic with the embed url, should fail
+    it "does not create topics with the same embed url" do
+      PostCreator.create(
+        user,
+        embed_url: embed_url,
+        title: "Reviews of Science Ovens",
+        raw: "Did you know that you can use microwaves to cook your dinner? Science!",
+      )
       creator =
         PostCreator.new(
           user,
@@ -1457,6 +1478,22 @@ RSpec.describe PostCreator do
       result = creator.create
       expect(result).to be_present
       expect(creator.errors).to be_present
+    end
+
+    it "sets the embed content sha1" do
+      content = "Did you know that you can use microwaves to cook your dinner? Science!"
+      content_sha1 = Digest::SHA1.hexdigest(content)
+      creator =
+        PostCreator.new(
+          user,
+          embed_url: embed_url,
+          embed_content_sha1: content_sha1,
+          title: "Reviews of Science Ovens",
+          raw: content,
+        )
+      creator.create
+      expect(creator.errors).to be_blank
+      expect(TopicEmbed.where(content_sha1: content_sha1).exists?).to eq(true)
     end
   end
 
@@ -1536,7 +1573,7 @@ RSpec.describe PostCreator do
   end
 
   describe "staged users" do
-    fab!(:staged) { Fabricate(:staged) }
+    fab!(:staged) { Fabricate(:staged, refresh_auto_groups: true) }
 
     it "automatically watches all messages it participates in" do
       post =
@@ -2023,9 +2060,9 @@ RSpec.describe PostCreator do
   end
 
   describe "#create_post_notice" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:staged) { Fabricate(:staged) }
-    fab!(:anonymous) { Fabricate(:anonymous) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:staged) { Fabricate(:staged, refresh_auto_groups: true) }
+    fab!(:anonymous) { Fabricate(:anonymous, refresh_auto_groups: true) }
 
     it "generates post notices for new users" do
       post =
@@ -2072,7 +2109,7 @@ RSpec.describe PostCreator do
     end
   end
 
-  describe "secure uploads uploads" do
+  describe "secure uploads" do
     fab!(:image_upload) { Fabricate(:upload, secure: true) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:public_topic) { Fabricate(:topic) }
@@ -2085,12 +2122,13 @@ RSpec.describe PostCreator do
     end
 
     it "links post uploads" do
-      _public_post =
+      public_post =
         PostCreator.create(
           user,
           topic_id: public_topic.id,
-          raw: "A public post with an image.\n![](#{image_upload.short_path})",
+          raw: "A public post with an image.\n![secure image](#{image_upload.short_path})",
         )
+      expect(public_post.reload.uploads.map(&:access_control_post_id)).to eq([public_post.id])
     end
   end
 

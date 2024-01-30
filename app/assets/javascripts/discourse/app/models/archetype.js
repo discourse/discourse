@@ -1,6 +1,6 @@
 import { gt, not } from "@ember/object/computed";
-import RestModel from "discourse/models/rest";
 import { propertyEqual } from "discourse/lib/computed";
+import RestModel from "discourse/models/rest";
 
 export default RestModel.extend({
   hasOptions: gt("options.length", 0),

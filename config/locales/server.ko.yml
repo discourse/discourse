@@ -55,6 +55,9 @@ ko:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} 님의 게시물 #%{post_number}"
+  components:
+    enabled_filter: "활성화"
+    disabled_filter: "비활성"
   themes:
     bad_color_scheme: "테마, 유효하지 않은 색상 팔레트를 업데이트할 수 없습니다"
     other_error: "테마를 업데이트하는 중에 문제가 발생했습니다"
@@ -182,7 +185,6 @@ ko:
       default_tags_already_selected: "다른 목록에서 사용된 태그는 선택할 수 없습니다."
       s3_upload_bucket_is_required: "'s3_upload_bucket'을 제공하지 않으면 S3 업로드를 활성화할 수 없습니다."
       enable_s3_uploads_is_required: "S3 업로드를 활성화하지 않으면 S3 인벤토리 사용을 활성화할 수 없습니다."
-      page_publishing_requirements: "보안 미디어를 활성화한 경우 페이지 게시를 활성화할 수 없습니다."
       s3_backup_requires_s3_settings: "'%{setting_name}' 설정을 제공하지 않으면 S3를 백업 위치로 사용할 수 없습니다."
       s3_bucket_reused: "'s3_upload_bucket' 및 's3_backup_bucket'에 동일한 버킷을 사용할 수 없습니다. 다른 버킷을 선택하거나 각 버킷에 다른 경로를 사용하세요."
       share_quote_facebook_requirements: "Facebook 인용 공유를 활성화하려면 Facebook 앱 ID를 설정해야 합니다."
@@ -278,7 +280,6 @@ ko:
     configure: "임베딩 환경설정"
     more_replies:
       other: "%{count}개 댓글 더 보기"
-    loading: "토론 로드 중..."
     permalink: "Permalink"
     imported_from: "%{link}에 있는 원본 엔트리의 동반 토론 주제입니다."
     in_reply_to: "▶ %{username}"
@@ -295,7 +296,7 @@ ko:
   no_mentions_allowed_newuser: "신규 사용자는 다른 사용자를 멘션할 수 없습니다."
   too_many_mentions_newuser:
     other: "신규 사용자는 게시물에서 %{count}명의 사용자만 멘션할 수 있습니다."
-  no_embedded_media_allowed_trust: "게시물에 미디어 항목을 임베드할 수 없습니다."
+  no_embedded_media_allowed_group: "죄송합니다. 게시물에 미디어 항목을 포함할 수 없습니다."
   no_embedded_media_allowed: "신규 사용자는 게시물에 미디어 항목을 임베드할 수 없습니다."
   too_many_embedded_media:
     other: "신규 사용자는 게시물에 미디어 항목을 %{count}개만 임베드할 수 있습니다."
@@ -505,7 +506,8 @@ ko:
             name:
               same_as_password: "비밀번호와 같습니다."
             ip_address:
-              signup_not_allowed: "이 계정으로는 가입할 수 없습니다."
+              blocked: "이 IP주소에서는 가입이 안됩니다."
+              max_new_accounts_per_registration_ip: "이 IP에서는 가입이 더이상 되지 않습니다(최대 가입 제한 도달). 스태프에게 연락주세요."
         user_profile:
           attributes:
             featured_topic_id:
@@ -698,27 +700,12 @@ ko:
       windows: "마이크로소프트 윈도우"
       unknown: "알 수 없는 운영체제"
   change_email:
-    wrong_account_error: "잘못된 계정으로 로그인했습니다. 로그아웃한 후 다시 시도하세요."
-    confirmed: "이메일 주소가 업데이트되었습니다."
-    please_continue: "%{site_name}에서 계속하기"
     error: "이메일 주소 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일일 수 있습니다."
     doesnt_exist: "이 이메일 주소는 내 계정과 연결되어 있지 않습니다."
     error_staged: "이메일 주소 변경 중에 오류가 발생했습니다. 스테이징된 사용자가 사용 중인 이메일일 수 있습니다."
     already_done: "이 확인 링크는 더 이상 유효하지 않습니다. 이메일이 이미 변경되지는 않았나요?"
     confirm: "확인"
     max_secondary_emails_error: "허용되는 최대 보조 이메일 한도에 도달했습니다."
-    authorizing_new:
-      title: "새 이메일 확인"
-      description: "이메일 주소를 다음으로 변경할지 확인하세요."
-      description_add: "대체 이메일 주소를 추가할지 확인하세요."
-    authorizing_old:
-      title: "이메일 주소 변경"
-      description: "이메일 주소 변경을 확인하세요"
-      description_add: "대체 이메일 주소를 추가할지 확인하세요."
-      old_email: "기존 이메일: %{email}"
-      new_email: "새로운 이메일 : %{email}"
-      almost_done_title: "새 이메일 주소 확인"
-      almost_done_description: "변경사항을 확인하기 위해 새 이메일 주소로 이메일을 보냈습니다!"
   associated_accounts:
     revoke_failed: "%{provider_name}의 계정을 해지하지 못했습니다."
     connected: "(연결됨)"
@@ -781,8 +768,6 @@ ko:
   draft_backup:
     pm_title: "진행 중인 주제의 백업 초안"
     pm_body: "백업 초안이 포함된 주제"
-  user_activity:
-    no_log_search_queries: "검색 로그 쿼리는 현재 비활성화되어 있습니다(관리자가 사이트 설정에서 활성화할 수 있음)."
   email_settings:
     pop3_authentication_error: "제공된 POP3 크리덴셜에 문제가 있습니다. 아이디와 비밀번호를 확인하고 다시 시도하세요."
     imap_authentication_error: "제공된 IMAP 크리덴셜에 문제가 있습니다. 아이디와 비밀번호를 확인하고 다시 시도하세요."
@@ -1276,9 +1261,6 @@ ko:
     allow_user_locale: "사용자가 자체 인터페이스 환경설정을 선택하도록 허용"
     set_locale_from_accept_language_header: "익명 사용자의 인터페이스 언어를 웹브라우저 언어 헤더를 기준으로 설정"
     support_mixed_text_direction: "왼쪽에서 오른쪽 및 오른쪽에서 왼쪽 텍스트 방향 혼합을 지원합니다."
-    min_post_length: "게시물에 허용되는 최소 문자 수"
-    min_first_post_length: "첫 게시물(주제 본문)에 허용되는 최소 문자 수"
-    min_personal_message_post_length: "메시지용 게시물에 허용되는 최소 문자 수"
     max_post_length: "게시물에 허용되는 최대 문자 수"
     topic_featured_link_enabled: "주제와 함께 링크 게시를 활성화합니다."
     show_topic_featured_link_in_digest: "다이제스트 메일에 주제 추천 링크를 표시합니다."
@@ -1325,7 +1307,6 @@ ko:
     show_pinned_excerpt_desktop: "데스크톱 뷰에서 고정된 주제의 발췌를 표시합니다."
     post_onebox_maxlength: "onebox 적용된 Discourse 게시물의 최대 문자 수입니다."
     allowed_inline_onebox_domains: "제목 없이 링크된 경우 미니어처 형식으로 onebox 적용되는 도메인 목록"
-    enable_inline_onebox_on_all_domains: "inline_onebox_domain_whitelist 사이트 설정을 무시하고 모든 도메인에서 인라인 onebox를 허용합니다."
     force_custom_user_agent_hosts: "모든 요청에서 사용자 지정 onebox 사용자 에이전트를 사용할 호스트입니다. (특히 사용자 에이전트의 액세스를 제한하는 호스트에 유용합니다)"
     max_oneboxes_per_post: "게시물당 최대 onebox 수"
     facebook_app_access_token: "Facebook 앱 ID 및 암호에서 생성된 토큰입니다. Instagram onebox를 생성하는 데 사용됩니다."
@@ -1345,7 +1326,6 @@ ko:
     email_custom_headers: "사용자 지정 이메일 헤더의 파이프(|)로 구분된 목록"
     email_subject: "표준 이메일에 대한 사용자 지정 가능한 제목 형식입니다. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>을 참조하세요."
     detailed_404: "특정 주제에 액세스할 수 없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고: URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
-    enforce_second_factor: "사용자가 2단계 인증을 사용하도록 강제합니다. 모든 사용자에게 적용하려면 '모두'를 선택하세요. 운영진에게만 적용하려면 '운영진'을 선택하세요."
     force_https: "사이트가 HTTPS만을 사용하도록 강제합니다. 경고: HTTPS가 완벽히 구성되어 제대로 작동하는 것을 확인하기 전까지는 이 옵션을 활성화하지 마세요. CDN, 소셜 로그인, 외부 로고 / 종속성이 HTTPS와 호환하는지 확인하셨나요?"
     summary_score_threshold: "'이 주제 요약'에 포함되기 위한 게시물의 최소 점수"
     summary_posts_required: "'이 주제 요약'이 활성화되기 전 주제의 최소 게시물 수입니다. 이 설정에 대한 변경사항은 일주일 이내에 소급 적용됩니다."
@@ -1374,7 +1354,6 @@ ko:
     tl2_additional_flags_per_day_multiplier: "tl2(회원)의 일일 신고 한도를 올릴 배수"
     tl3_additional_flags_per_day_multiplier: "tl3(정회원)의 일일 신고 한도를 올릴 배수"
     tl4_additional_flags_per_day_multiplier: "tl4(리더)의 일일 신고 한도를 올릴 배수"
-    num_users_to_silence_new_user: "신규 사용자의 게시물이 많은 다른 사용자로부터 num_spam_flags_to_silence_new_user 스팸 신고를 받으면 해당 사용자의 모든 게시물을 숨기고 향후 게시를 방지합니다. 비활성화하려면 0으로 설정하세요."
     num_tl3_flags_to_silence_new_user: "신규 사용자의 게시물이 num_tl3_users_to_silence_new_user 다른 신뢰 레벨 3 사용자로부터 많은 신고를 받으면 모든 게시물을 숨기고 향후 게시를 방지합니다. 비활성화하려면 0으로 설정하세요."
     num_tl3_users_to_silence_new_user: "신규 사용자의 게시물이 많은 다른 사용자로부터 num_tl3_flags_to_silence_new_user 신고를 받으면 해당 사용자의 모든 게시물을 숨기고 향후 게시를 방지합니다. 비활성화하려면 0으로 설정하세요."
     notify_mods_when_user_silenced: "사용자가 자동으로 차단되면 모든 운영자에게 메시지를 전송합니다."
@@ -1388,7 +1367,6 @@ ko:
     must_approve_users: "운영진은 모든 신규 사용자가 사이트에 액세스할 수 있기 전에 해당 계정을 승인해야 합니다."
     invite_code: "계정 등록을 하려면 이 코드를 입력해야 합니다(대소문자 구분). 비어 있으면 무시합니다."
     approve_suspect_users: "검토 대기열에 의심스러운 사용자를 추가합니다. 의심스러운 사용자가 소개/웹사이트를 방문했지만 읽기 활동은 없습니다."
-    review_every_post: "모든 게시물을 검토해야 합니다. 경고! 사용량이 많은 사이트에는 권장되지 않습니다."
     pending_users_reminder_delay_minutes: "신규 사용자가 이 시간(분) 이상 승인을 기다리는 경우 운영자에게 알립니다. 알림을 비활성화하려면 -1로 설정합니다."
     persistent_sessions: "사용자는 웹 브라우저를 닫아도 로그인 상태를 유지합니다."
     maximum_session_age: "마지막 방문 이후 n시간 사용자의 로그인이 유지됩니다"
@@ -1396,7 +1374,6 @@ ko:
     ga_universal_tracking_code: "Google Universal Analytics 추적 코드 ID입니다. 예: UA-12345678-9, <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>를 참조하세요."
     ga_universal_domain_name: "Google Universal Analytics 도메인 이름입니다. 예: mysite.com, <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>를 참조하세요."
     ga_universal_auto_link_domains: "Google Google Universal Analytics 교차 도메인 추적을 활성화합니다. 이러한 도메인으로 나가는 링크에는 클라이언트 ID가 추가됩니다. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google의 교차 도메인 추적 가이드</a>를 참조하세요."
-    gtm_container_id: "Google Tag Manager 컨테이너 ID입니다. 예 : GTM-ABCDEF. <br/>참고 : GTM에서 로드한 서드파티 스크립트는 '콘텐츠 보안 정책 스크립트 소스'의 허용 목록에 있어야 합니다."
     enable_escaped_fragments: "웹 크롤러가 탐지되지 않으면 Google의 Ajax-Crawling API로 폴백하세요. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>를 참조하세요."
     moderators_change_post_ownership: "운영자가 게시물 소유자를 변경할 수 있도록 허용"
     cors_origins: "교차 출처 요청(Cross-Origin Resource Sharing, CORS)의 허용된 출처입니다. 각 출처는 반드시 http:// 나 https://를 포함해야 합니다. DISCOURSE_ENABLE_CORS 환경 변수를 true로 설정해야 CORS를 활성화할 수 있습니다."
@@ -1408,14 +1385,9 @@ ko:
     allowed_crawler_user_agents: "사이트 액세스를 허용해야 하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
     blocked_crawler_user_agents: "사이트 액세스가 허용되지 않아야 하는 웹 크롤러를 식별하는 사용자 에이전트 스트링에서 대소문자를 구분하지 않는 고유한 단어입니다. 허용 목록이 정의된 경우 적용되지 않습니다."
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면 이 비율이 모든 크롤러에 적용됩니다(요청 간 지연 시간(초))."
-    content_security_policy: "콘텐츠 보안 정책 활성화"
-    content_security_policy_report_only: "콘텐츠 보안 정책 리포트만 활성화"
     content_security_policy_collect_reports: "/csp_reports에서 CSP 위반 리포트 수집 활성화"
     content_security_policy_frame_ancestors: "CSP를 통해 iframe에 이 사이트를 임베드할 수 있는 사용자를 제한합니다. <a href='%{base_path}/admin/customize/embedding'>임베딩</a>에서 허용된 호스트를 제어합니다."
-    content_security_policy_script_src: "추가 허용 목록에 있는 스크립트 소스입니다. 현재 호스트와 CDN이 기본적으로 포함됩니다. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>콘텐츠 보안 정책으로 XSS 공격 완화</a>를 참조하세요."
     invalidate_inactive_admin_email_after_days: "이 기간에 사이트를 방문하지 않은 관리자 계정은 로그인하기 전에 이메일 주소를 다시 확인해야 합니다. 비활성화하려면 0으로 설정하세요."
-    top_menu: "홈페이지 메뉴에 표시할 항목과 순서를 결정합니다. 예: 최신|신규|읽지 않음|카테고리|주요|읽음|게시함|북마크"
-    post_menu: "게시물 메뉴에 표시할 항목과 순서를 결정합니다. 예: 좋아요|편집|신고|삭제|공유|북마크|댓글"
     post_menu_hidden_items: "펼치기 아이콘을 클릭하지 않을 경우 게시물 메뉴에서 기본적으로 숨길 메뉴 항목입니다."
     share_links: "공유 대화창에 표시할 항목과 순서를 결정합니다."
     site_contact_username: "모든 자동 메시지를 보낼 유효한 운영진 아이디입니다. 비워 두면 기본 시스템 계정이 사용됩니다."
@@ -1430,7 +1402,6 @@ ko:
     topics_per_period_in_top_summary: "디폴트 주요 주제 요약에 표시할 주요 주제 수입니다."
     topics_per_period_in_top_page: "주요 주제에서 '더 보기'를 펼칠 때 표시할 주요 주제 수입니다."
     redirect_users_to_top_page: "신규 사용자와 오랜만에 방문한 사용자를 주요 페이지로 자동 리디렉션합니다."
-    top_page_default_timeframe: "주요 페이지용 디폴트 타임라인입니다."
     moderators_view_emails: "운영자가 사용자 이메일을 볼 수 있도록 허용"
     prioritize_username_in_ux: "아이디를 사용자 페이지, 사용자 카드 및 게시물에 가장 먼저 표시(비활성화 시 이름이 가장 먼저 표시됨)"
     enable_rich_text_paste: "작성기에 텍스트를 붙여 넣을 때 HTML에서 Markdown으로의 자동 변환을 활성화합니다. (실험단계)"
@@ -1515,7 +1486,6 @@ ko:
     enable_safe_mode: "사용자가 안전 모드에서 플러그인을 디버깅하도록 허용합니다."
     rate_limit_create_topic: "주제 생성 후 추가로 주제를 생성하려면 (n)초 기다려야 합니다."
     rate_limit_create_post: "게시물 작성 후 추가로 게시물을 작성하려면 (n)초 기다려야 합니다."
-    rate_limit_new_user_create_topic: "신규 사용자가 주제 생성 후 추가로 주제를 생성하려면 (n)초 기다려야 합니다."
     rate_limit_new_user_create_post: "신규 사용자가 게시물 작성 후 추가로 게시물을 작성하려면 (n)초 기다려야 합니다."
     max_likes_per_day: "사용자당 일일 최대 좋아요 수입니다."
     max_flags_per_day: "사용자당 일일 최대 신고 수입니다."
@@ -1631,14 +1601,8 @@ ko:
     min_title_similar_length: "유사 주제를 확인하기 전 최소 제목 길이입니다."
     desktop_category_page_style: "/categories 페이지의 비주얼 스타일입니다."
     category_colors: "카테고리에 허용된 16진수 색상 값의 목록입니다."
-    category_style: "카테고리 배지의 비주얼 스타일입니다."
     default_dark_mode_color_scheme_id: "다크 모드에서 사용되는 색상 구성표입니다."
     dark_mode_none: "없음"
-    max_image_size_kb: "최대 이미지 업로드 크기(KB)입니다. 이는 nginx(client_max_body_size) / Apache 또는 프록시에서도 환경설정되어야 합니다. 이보다 크고 client_max_body_size보다 작은 이미지는 업로드 시 크기에 맞게 조정됩니다."
-    max_attachment_size_kb: "최대 첨부 파일 업로드 크기(KB)입니다. 이는 nginx(client_max_body_size) / Apache 또는 프록시에서도 환경설정되어야 합니다."
-    authorized_extensions: "업로드에 허용되는 파일 확장자 목록('*'을 사용하면 모든 파일 유형 허용)"
-    authorized_extensions_for_staff: "`authorized_extensions` 사이트 설정에 정의된 목록 외에 운영진이 업로드할 수 있는 파일 확장자 목록입니다. ('*'을 사용하면 모든 파일 유형 허용)"
-    theme_authorized_extensions: "테마 업로드에 허용되는 파일 확장자 목록('*'을 사용하면 모든 파일 유형 허용)"
     max_similar_results: "새 주제를 작성할 때 에디터 위에 표시할 유사 주제의 수입니다. 비교는 제목과 본문을 기준으로 합니다."
     max_image_megapixels: "이미지에 허용되는 최대 메가픽셀 수입니다. 메가픽셀 수가 많은 이미지는 거부됩니다."
     title_prettify: "모두 대문자 표기, 소문자로 시작, 중복된 ! 및 ?, 문장 뒤 불필요한 추가 마침표 등 일반적인 제목 오타 및 오류를 방지합니다."
@@ -1709,7 +1673,7 @@ ko:
     always_show_trimmed_content: "수신 이메일의 잘린 부분을 항상 표시합니다. 경고: 이메일 주소가 노출될 수 있습니다."
     trim_incoming_emails: "수신 이메일 중 관련이 없는 부분을 잘라냅니다."
     private_email: "이메일 제목이나 본문에 게시물이나 주제의 콘텐츠를 포함하지 마세요. 참고: 다이제스트 이메일도 비활성화합니다."
-    email_total_attachment_size_limit_kb: "보내는 이메일에 첨부된 파일의 최대 총 크기(kB)입니다. 첨부 파일 전송을 비활성화하려면 0으로 설정하세요."
+    email_total_attachment_size_limit_kb: "발신 이메일에 첨부 된 파일의 최대 총 크기입니다. 첨부 파일 전송을 비활성화하려면 0으로 설정하십시오."
     post_excerpts_in_emails: "알림 이메일에서 항상 전체 게시물 대신 발췌문을 보내세요."
     raw_email_max_length: "수신 이메일에 저장해야 하는 문자 수입니다."
     raw_rejected_email_max_length: "거부된 수신 이메일에 저장해야 하는 문자 수입니다."
@@ -1813,14 +1777,12 @@ ko:
     show_time_gap_days: "이 정도 일 수의 간격으로 두 개의 게시물을 작성한 경우 주제에 시간 간격을 표시합니다."
     short_progress_text_threshold: "주제의 게시물 수가 이 수를 초과하면 진행률 표시줄에 현재 게시물 번호만 표시됩니다. 진행률 표시줄의 너비를 변경하는 경우 이 값을 변경해야 할 수도 있습니다."
     warn_reviving_old_topic_age: "마지막 댓글이 이 날짜보다 오래된 주제에 누군가가 댓글을 달기 시작하면 경고가 표시됩니다. 비활성화하려면 0으로 설정합니다. "
-    autohighlight_all_code: "언어를 명시적으로 지정하지 않은 경우에도 미리 형식이 지정된 모든 코드 블록에 코드 하이라이트를 적용합니다."
     highlighted_languages: "구문 강조 규칙이 포함되었습니다. (경고: 너무 많은 언어를 포함하면 퍼포먼스에 영향을 줄 수 있습니다) 데모는 <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>를 참조하세요."
     show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립보드에 복사합니다."
     embed_any_origin: "출처와 상관없이 임베드 가능한 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_topics_list: "주제 목록의 HTML 임베딩 지원"
     embed_set_canonical_url: "임베드된 주제의 표준 URL을 임베드 콘텐츠의 URL로 설정합니다."
     embed_truncate: "임베드된 게시물을 자릅니다."
-    embed_unlisted: "임포트한 주제는 댓글이 있을 때까지 나열되지 않습니다."
     embed_support_markdown: "임베드된 게시물에 대한 Markdown 서식을 지원합니다."
     allowed_embed_selectors: "임베드에서 허용되는 쉼표로 구분된 CSS 요소 목록입니다."
     allowed_href_schemes: "http 및 https 외에도 링크에 허용되는 스키마입니다."
@@ -1838,9 +1800,6 @@ ko:
     enable_inline_emoji_translation: "인라인 이모티콘 번역 활성화(앞에 공백이나 구두점 없이)."
     emoji_deny_list: "이러한 이모티콘은 메뉴나 단축코드에 사용할 수 없습니다."
     approve_post_count: "승인을 받아야 하는 신규 또는 기본 사용자의 게시물 수"
-    approve_unless_trust_level: "이 신뢰 수준 미만의 사용자 게시물은 승인되어야 합니다"
-    approve_new_topics_unless_trust_level: "이 신뢰 수준 미만의 사용자 주제는 승인되어야 합니다"
-    approve_unless_staged: "스테이징된 사용자의 새 주제 및 게시물은 승인되어야 합니다"
     notify_about_queued_posts_after: "이 시간 이상 검토 대기 중인 게시물이 있는 경우 모든 운영자에게 알림을 보냅니다. 이러한 알림을 비활성화하려면 0으로 설정하세요."
     auto_close_messages_post_count: "자동으로 종료되기 전에 메시지에 허용되는 최대 게시물 수(비활성화하려면 0으로 설정)"
     auto_close_topics_post_count: "자동으로 종료되기 전에 주제에 허용되는 최대 게시물 수(비활성화하려면 0으로 설정)"
@@ -1891,12 +1850,9 @@ ko:
     default_title_count_mode: "페이지 제목 카운터의 디폴트 모드"
     retain_web_hook_events_period_days: "Webhook 이벤트 기록 보유 기간(일)입니다."
     retry_web_hook_events: "실패한 Webhook 이벤트를 4번 자동으로 재시도합니다. 재시도 간 간격은 1, 5, 25 및 125분입니다."
-    revoke_api_keys_days: "사용하지 않는 API 키가 자동으로 취소되기까지의 기간(일)(0은 취소 안 함)"
-    allow_user_api_keys: "사용자 API 키 생성 허용"
     allow_user_api_key_scopes: "사용자 API 키에 허용되는 범위 목록"
     allowed_user_api_auth_redirects: "사용자 API 키의 인증 리디렉션을 위해 허용된 URL입니다. 와일드 카드 기호 *를 사용하면 일부를 일치시킬 수 있습니다(예 : www.example.com/*)."
     allowed_user_api_push_urls: "사용자 API의 서버 푸시를 위한 허용된 URL"
-    expire_user_api_keys_days: "사용자 API 키가 자동으로 만료되기까지의 기간(일)(0은 만료 안 함)"
     tagging_enabled: "주제에 태그를 활성화할까요?"
     min_trust_to_create_tag: "태그를 생성하기 위한 최소 신뢰 레벨입니다."
     max_tags_per_topic: "주제에 적용할 수 있는 최대 태그입니다."
@@ -1910,7 +1866,6 @@ ko:
     suppress_overlapping_tags_in_list: "태그가 주제 제목의 단어와 정확히 일치하면 태그를 표시하지 않습니다."
     remove_muted_tags_from_latest: "최신 주제 목록에서 뮤트된 태그로만 태그된 주제를 표시하지 않습니다."
     force_lowercase_tags: "모든 새 태그를 완전히 소문자로 만듭니다."
-    company_name: "회사 이름"
     governing_law: "준거법"
     city_for_disputes: "분쟁 도시"
     shared_drafts_category: "주제 초안에 카테고리를 지정하여 공유 초안을 활성화합니다. 이 카테고리의 주제는 운영진의 주제 목록에서 표시되지 않습니다."
@@ -2123,18 +2078,6 @@ ko:
   admin:
     email:
       sent_test: "전송되었습니다!"
-    user:
-      merge_user:
-        updating_username: "아이디 업데이트 중..."
-        changing_post_ownership: "게시물 소유자 변경 중..."
-        merging_given_daily_likes: "보낸 일일 좋아요 병합 중..."
-        merging_post_timings: "게시물 시간 병합 중..."
-        merging_user_visits: "사용자 방문 병합 중..."
-        updating_site_settings: "사이트 설정 업데이트 중..."
-        updating_user_stats: "사용자 통계 업데이트 중..."
-        merging_user_attributes: "사용자 어트리뷰트 병합 중..."
-        updating_user_ids: "사용자 ID 업데이트 중..."
-        deleting_source_user: "소스 사용자 삭제 중..."
   user:
     deactivated: "'%{email}'에 반송 이메일이 너무 많아 비활성화되었습니다."
     deactivated_by_staff: "운영진에 의해 비활성화됨"
@@ -2160,9 +2103,6 @@ ko:
       blocked: "는 허용되지 않습니다"
       revoked: "%{date}까지는 '%{email}' 주소로 이메일을 보내지 않습니다."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "이 IP 주소에서는 신규 등록할 수 없습니다."
-      max_new_accounts_per_registration_ip: "이 IP 주소에서는 신규 등록할 수 없습니다(최대 한도에 도달함). 운영진에게 문의하세요."
     website:
       domain_not_allowed: "유효하지 않은 웹사이트입니다. 허용되는 도메인: %{domains}"
     auto_rejected: "나이 때문에 자동으로 거부됩니다. auto_handle_queued_age 사이트 설정을 참조하세요."
@@ -3823,6 +3763,10 @@ ko:
           <p>즐거운 시간 보내세요! <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>새로운 커뮤니티 구축에 행운을 빕니다!</a></p>
   search_logs:
     graph_title: "검색 횟수"
+  onebox:
+    github:
+      opened: "열림"
+      closed: "닫힘"
   discourse_push_notifications:
     popup:
       mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 멘션했습니다'
@@ -3888,8 +3832,6 @@ ko:
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
       delete_single:
         title: "삭제"
-      delete:
-        title: "삭제..."
       delete_and_ignore_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
       delete_and_agree_replies:
@@ -3912,7 +3854,6 @@ ko:
       approve_user:
         title: "사용자 승인"
       reject_user:
-        title: "사용자 삭제..."
         delete:
           title: "사용자 삭제"
           description: "사용자가 포럼에서 삭제됩니다."
@@ -3921,7 +3862,6 @@ ko:
           description: "사용자가 삭제되고 IP 및 이메일 주소가 차단됩니다."
       reject:
         title: "거부"
-        bundle_title: "거부..."
       reject_and_suspend:
         title: "사용자 거부 정지"
       reject_and_silence:

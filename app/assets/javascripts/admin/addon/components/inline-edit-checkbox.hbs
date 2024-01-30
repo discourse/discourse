@@ -4,13 +4,13 @@
 </label>
 {{#if this.changed}}
   <DButton
-    @action={{action "apply"}}
-    @class="btn-primary btn-small submit-edit"
+    @action={{this.apply}}
     @icon="check"
+    class="btn-primary btn-small submit-edit"
   />
   <DButton
-    @action={{action "cancel"}}
-    @class="btn-small cancel-edit"
+    @action={{this.cancel}}
     @icon="times"
+    class="btn-small cancel-edit"
   />
 {{/if}}

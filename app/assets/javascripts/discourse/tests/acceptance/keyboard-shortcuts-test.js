@@ -1,13 +1,14 @@
 import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "I18n";
+import { test } from "qunit";
+import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
+  chromeTest,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import { test } from "qunit";
+import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
   needs.pretender((server, helper) => {
@@ -70,7 +71,8 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
     );
   });
 
-  test("j/k navigation skips hidden elements", async function (assert) {
+  // FIXME: For reasons unknown this test if flaky on firefox
+  chromeTest("j/k navigation skips hidden elements", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     document.querySelector("#qunit-fixture").innerHTML = `
@@ -80,19 +82,30 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
     `;
 
     await triggerKeyEvent(document, "keypress", "J");
+
     assert
-      .dom(".post-stream .topic-post.selected #post_1")
-      .exists("first post is selected");
+      .dom(".post-stream .topic-post.selected article")
+      .hasAttribute("id", "post_1", "first post is selected");
 
     await triggerKeyEvent(document, "keypress", "J");
+
     assert
-      .dom(".post-stream .topic-post.selected #post_4")
-      .exists("pressing j moves selection to next visible post");
+      .dom(".post-stream .topic-post.selected article")
+      .hasAttribute(
+        "id",
+        "post_4",
+        "pressing j moves selection to next visible post"
+      );
 
     await triggerKeyEvent(document, "keypress", "K");
+
     assert
-      .dom(".post-stream .topic-post.selected #post_1")
-      .exists("pressing k moves selection to previous visible post");
+      .dom(".post-stream .topic-post.selected article")
+      .hasAttribute(
+        "id",
+        "post_1",
+        "pressing k moves selection to previous visible post"
+      );
   });
 });
 
@@ -147,7 +160,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       "confirmation modal to dismiss unread is present"
     );
     assert.strictEqual(
-      query(".modal-body").innerText,
+      query(".d-modal__body").innerText,
       I18n.t("topics.bulk.also_dismiss_topics")
     );
     await click("#dismiss-read-confirm");
@@ -177,7 +190,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       "confirmation modal to dismiss unread is present"
     );
     assert.strictEqual(
-      query(".modal-body").innerText,
+      query(".d-modal__body").innerText,
       "Stop tracking these topics so they never show up as unread for me again"
     );
 

@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe TopicBookmarkable do
   subject(:registered_bookmarkable) { RegisteredBookmarkable.new(TopicBookmarkable) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
 
   let(:guardian) { Guardian.new(user) }

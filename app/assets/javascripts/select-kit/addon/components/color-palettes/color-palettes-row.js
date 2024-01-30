@@ -1,6 +1,6 @@
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 
 export default SelectKitRowComponent.extend({
   classNames: ["color-palettes-row"],

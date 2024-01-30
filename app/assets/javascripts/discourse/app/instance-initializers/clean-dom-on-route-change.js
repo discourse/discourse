@@ -1,4 +1,5 @@
 import { scheduleOnce } from "@ember/runloop";
+import $ from "jquery";
 
 function _clean(transition) {
   if (window.MiniProfiler && transition.from) {
@@ -36,7 +37,7 @@ export default {
   after: "inject-objects",
 
   initialize(owner) {
-    const router = owner.lookup("router:main");
+    const router = owner.lookup("service:router");
 
     router.on("routeDidChange", (transition) => {
       if (transition.isAborted) {

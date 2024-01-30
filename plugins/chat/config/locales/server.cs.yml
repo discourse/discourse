@@ -21,8 +21,6 @@ cs:
           description: "Schválit nahlášení a ztišit uživatele."
         disagree:
           title: "Neschvaluji"
-        ignore:
-          title: "ignorovat"
     channel:
       dm_title:
         single_user: "%{username}"
@@ -31,6 +29,13 @@ cs:
           few: "%{comma_separated_usernames} a %{count} další"
           many: "%{comma_separated_usernames} a %{count} další"
           other: "%{comma_separated_usernames} a %{count} dalších"
+    mention_warning:
+      dismiss: "označit jako přečtené"
+    onebox:
+      thread_title_connector: "v"
+    transcript:
+      default_thread_title: "Vlákno"
+      split_thread_range: "zprávy %{start} až %{end} z %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:

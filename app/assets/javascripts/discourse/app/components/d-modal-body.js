@@ -1,11 +1,12 @@
 // Remove when legacy modals are dropped (deprecation: discourse.modal-controllers)
 
 import Component from "@glimmer/component";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
 import { DEBUG } from "@glimmer/env";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import $ from "jquery";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const LEGACY_ERROR =
   "d-modal-body should only be used inside a legacy controller-based d-modal. https://meta.discourse.org/t/268057";
@@ -65,6 +66,7 @@ export default class DModalBody extends Component {
 
   @action
   willDestroy() {
+    super.willDestroy(...arguments);
     this.appEvents.trigger("modal:body-dismissed");
   }
 }

@@ -1,7 +1,7 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
 
 export default Component.extend({
   @discourseComputed("secondFactorMethod")

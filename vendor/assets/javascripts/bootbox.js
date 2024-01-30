@@ -1,11 +1,16 @@
-/**
- * bootbox.js v3.2.0
- *
- * http://bootboxjs.com/license.txt
- */
-var bootbox =
-  window.bootbox ||
-  (function (document, $) {
+define("bootbox", ["jquery", "exports"], function (jQuery, __exports__) {
+  if ("bootbox" in window) {
+    throw new Error("bootbox unexpectedly loaded twice!");
+  }
+
+  /**
+   * bootbox.js v3.2.0
+   *
+   * http://bootboxjs.com/license.txt
+   */
+  var bootbox =
+    window.bootbox ||
+    (function (document, $) {
     /*jshint scripturl:true sub:true */
 
     var _locale = "en",
@@ -705,11 +710,10 @@ var bootbox =
     }
 
     return that;
-  })(document, window.jQuery);
+  })(document, jQuery);
 
-// @see https://github.com/makeusabrew/bootbox/issues/71
-window.bootbox = bootbox;
+  // @see https://github.com/makeusabrew/bootbox/issues/71
+  window.bootbox = bootbox;
 
-define("bootbox", ["exports"], function (__exports__) {
   __exports__.default = window.bootbox;
 });

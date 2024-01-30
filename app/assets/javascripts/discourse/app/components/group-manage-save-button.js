@@ -1,12 +1,12 @@
 import Component from "@ember/component";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
-import { or } from "@ember/object/computed";
 import { action } from "@ember/object";
+import { or } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
+import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   modal: service(),

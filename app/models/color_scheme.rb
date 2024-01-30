@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ColorScheme < ActiveRecord::Base
-  # rubocop:disable Layout/HashAlignment
-
   CUSTOM_SCHEMES = {
     Dark: {
       "primary" => "dddddd",
@@ -113,7 +111,7 @@ class ColorScheme < ActiveRecord::Base
       "primary-medium" => "696969",
       "primary-low-mid" => "909090",
       "secondary" => "ffffff",
-      "tertiary" => "3369FF",
+      "tertiary" => "0033CC",
       "quaternary" => "3369FF",
       "header_background" => "ffffff",
       "header_primary" => "000000",
@@ -139,8 +137,8 @@ class ColorScheme < ActiveRecord::Base
       "highlight" => "3369FF",
       "selected" => "0d2569",
       "hover" => "002382",
-      "danger" => "BB1122",
-      "success" => "3d854d",
+      "danger" => "FF697A",
+      "success" => "70B880",
       "love" => "9D256B",
     },
     # By @zenorocha
@@ -278,8 +276,6 @@ class ColorScheme < ActiveRecord::Base
       "love" => "fa6c8d",
     },
   }
-
-  # rubocop:enable Layout/HashAlignment
 
   LIGHT_THEME_ID = "Light"
 

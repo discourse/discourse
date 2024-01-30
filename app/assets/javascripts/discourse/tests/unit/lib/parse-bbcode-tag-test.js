@@ -1,7 +1,10 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
+import { parseBBCodeTag } from "discourse-markdown-it/features/bbcode-block";
 
-module("Unit | Utility | parseBBCodeTag", function () {
+module("Unit | Utility | parseBBCodeTag", function (hooks) {
+  setupTest(hooks);
+
   test("block with multiple quoted attributes", function (assert) {
     const parsed = parseBBCodeTag('[test one="foo" two="bar bar"]', 0, 30);
 

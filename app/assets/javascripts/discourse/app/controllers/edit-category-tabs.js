@@ -1,14 +1,14 @@
-import { and, readOnly } from "@ember/object/computed";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
 import Controller from "@ember/controller";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import PermissionType from "discourse/models/permission-type";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { underscore } from "@ember/string";
+import { and, readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import { underscore } from "@ember/string";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
+import PermissionType from "discourse/models/permission-type";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   dialog: service(),
@@ -97,6 +97,7 @@ export default Controller.extend({
       );
 
       this.set("saving", true);
+      const previousParentCategory = model.get("parentCategory");
       model.set("parentCategory", parentCategory);
 
       model
@@ -118,6 +119,8 @@ export default Controller.extend({
         .catch((error) => {
           popupAjaxError(error);
           this.set("saving", false);
+          model.set("parent_category_id", undefined);
+          model.set("parentCategory", previousParentCategory);
         });
     },
 

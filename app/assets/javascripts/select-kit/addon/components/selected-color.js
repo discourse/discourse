@@ -1,6 +1,6 @@
-import SelectedNameComponent from "select-kit/components/selected-name";
-import { escapeExpression } from "discourse/lib/utilities";
 import { schedule } from "@ember/runloop";
+import { escapeExpression } from "discourse/lib/utilities";
+import SelectedNameComponent from "select-kit/components/selected-name";
 
 export default SelectedNameComponent.extend({
   classNames: ["select-kit-selected-color"],

@@ -16,6 +16,9 @@ class FormTemplate < ActiveRecord::Base
 
   has_many :category_form_templates, dependent: :destroy
   has_many :categories, through: :category_form_templates
+
+  class NotAllowed < StandardError
+  end
 end
 
 # == Schema Information

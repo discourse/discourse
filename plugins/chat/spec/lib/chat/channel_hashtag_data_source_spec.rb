@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::ChannelHashtagDataSource do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:category) { Fabricate(:category) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:category)
+  fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:channel1) do
     Fabricate(
@@ -26,11 +26,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
   end
   let!(:guardian) { Guardian.new(user) }
 
-  before do
-    SiteSetting.enable_experimental_hashtag_autocomplete = true
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
-    Group.refresh_automatic_groups!
-  end
+  before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1] }
 
   describe "#enabled?" do
     it "returns false if public channels are disabled" do
@@ -88,7 +84,6 @@ RSpec.describe Chat::ChannelHashtagDataSource do
 
     it "returns nothing if the user cannot chat" do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-      Group.refresh_automatic_groups!
       expect(described_class.lookup(Guardian.new(user), ["random"])).to be_empty
     end
   end
@@ -153,7 +148,6 @@ RSpec.describe Chat::ChannelHashtagDataSource do
 
     it "returns nothing if the user cannot chat" do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-      Group.refresh_automatic_groups!
       expect(described_class.search(Guardian.new(user), "rand", 10)).to be_empty
     end
   end
@@ -196,7 +190,6 @@ RSpec.describe Chat::ChannelHashtagDataSource do
 
     it "returns nothing if the user cannot chat" do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-      Group.refresh_automatic_groups!
       expect(described_class.search_without_term(Guardian.new(user), 10)).to be_empty
     end
   end

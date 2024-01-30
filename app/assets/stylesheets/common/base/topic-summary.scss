@@ -103,9 +103,14 @@
       }
       &.show {
         animation: appear 0.5s cubic-bezier(0.445, 0.05, 0.55, 0.95) 0s forwards;
+        @media (prefers-reduced-motion) {
+          animation-duration: 0s;
+        }
       }
-      &.blink {
-        animation: blink 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+      @media (prefers-reduced-motion: no-preference) {
+        &.blink {
+          animation: blink 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+        }
       }
     }
     &__generating-text {
@@ -118,7 +123,9 @@
     }
     &__indicator-dot {
       display: inline-block;
-      animation: ai-summary__indicator-wave 1.8s linear infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: ai-summary__indicator-wave 1.8s linear infinite;
+      }
       &:nth-child(2) {
         animation-delay: -1.6s;
       }

@@ -5,11 +5,17 @@
 # https://translate.discourse.org/
 
 zh_TW:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: 聊天
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "總是"
+          never: "永不"
       logs:
         staff_actions:
           actions:
@@ -20,12 +26,10 @@ zh_TW:
           descriptions:
             chat:
               create_message: "在指定頻道中建立聊天訊息。"
-    about:
-      chat_messages_count: "聊天訊息"
-      chat_channels_count: "聊天頻道"
-      chat_users_count: "聊天使用者"
     chat:
+      deleted_chat_username: 已刪除
       dates:
+        yesterday: "昨天"
         time_tiny: "h:mm"
       all_loaded: "顯示所有訊息"
       already_enabled: "此主題已啟用聊天功能。請重新整理。"
@@ -63,6 +67,7 @@ zh_TW:
       channel_delete:
         title: "刪除頻道"
       close: "關閉"
+      remove: "移除"
       delete: "刪除"
       edited: "已編輯"
       muted: "靜音"
@@ -84,9 +89,6 @@ zh_TW:
         summarize: "總結"
         since:
           other: "前 %{count} 小時"
-      mention_warning:
-        dismiss: "忽略"
-      placeholder_start_conversation_users: "與 %{commaSeparatedUsernames} 開始聊天"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"
@@ -139,7 +141,6 @@ zh_TW:
         back_to_all_channels: "所有頻道"
         back_to_channel: "上一步"
         tabs:
-          about: 關於
           members: 成員
           settings: 設定
       new_message_modal:
@@ -147,6 +148,7 @@ zh_TW:
         add_user_short: <span>新增使用者</span>
         open_channel: <span>開啟頻道</span>
         no_items: "沒有項目"
+        filter: "過濾"
       channel_edit_name_slug_modal:
         title: 編輯頻道
         name: 變更名稱
@@ -169,12 +171,12 @@ zh_TW:
           topic: "話題"
       reviewable:
         type: "聊天訊息"
-      reactions:
-        single_user: "%{username} 以 :%{emoji}: 回應"
       composer:
         italic_text: "斜體字"
         bold_text: "粗體字"
         send: "傳送"
+      quote:
+        default_thread_title: "討論串"
       notification_levels:
         never: "永不"
       settings:
@@ -190,6 +192,10 @@ zh_TW:
         saved: "已儲存"
         unfollow: "離開"
         admin_title: "管理員"
+        settings_title: "設定"
+        category_label: "分類"
+        history_label: "歷史記錄"
+        members_label: "成員"
       admin:
         title: "聊天"
         export_messages:
@@ -198,6 +204,8 @@ zh_TW:
       direct_messages:
         create: "開始"
         cannot_create: "抱歉，您無法傳送私訊。"
+      channel_list:
+        title: "頻道"
       incoming_webhooks:
         back: "上一步"
         description: "簡述"
@@ -220,6 +228,9 @@ zh_TW:
           title: "移至已存在的話題"
         new_message:
           title: "移動到新訊息"
+      retention_reminders:
+        short:
+          other: "%{count} 天"
       flagging:
         action: "檢舉訊息"
       emoji_picker:
@@ -231,7 +242,6 @@ zh_TW:
       thread:
         title: "標題"
         view_thread: 檢視討論串
-        default_title: "討論串"
         replies:
           other: "%{count}個回覆"
         label: 討論串
@@ -247,7 +257,6 @@ zh_TW:
           other: "+%{count}"
       threads:
         open: "開啟討論串"
-        list: "進行中的討論"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"
@@ -259,6 +268,10 @@ zh_TW:
           fields:
             message:
               label: 訊息
+    review:
+      types:
+        reviewable_chat_message:
+          noun: "聊天訊息"
     keyboard_shortcuts_help:
       chat:
         title: "聊天"
@@ -266,3 +279,7 @@ zh_TW:
       sections:
         chat:
           title: 聊天
+    sidebar:
+      panels:
+        chat:
+          label: "聊天"

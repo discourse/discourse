@@ -1,11 +1,11 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Post controls", function () {
   test("accessibility of the likes list below the post", async function (assert) {

@@ -1,7 +1,7 @@
-import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import { isPresent } from "@ember/utils";
+import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { isPresent } from "@ember/utils";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
@@ -53,8 +53,8 @@ export default Component.extend({
 
     if (
       !isPresent(this.date) &&
-      !isPresent(this.attrs.hours) &&
-      !isPresent(this.attrs.minutes)
+      !isPresent(this.hours) &&
+      !isPresent(this.minutes)
     ) {
       this.setProperties({
         hours: null,

@@ -7,7 +7,7 @@ RSpec.describe "Topic Thumbnails" do
 
   fab!(:image) { Fabricate(:image_upload, width: 50, height: 50) }
   fab!(:topic) { Fabricate(:topic, image_upload_id: image.id) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "latest" do
     def get_topic

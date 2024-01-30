@@ -1,33 +1,13 @@
 @import "common/foundation/mixins";
 
 .full-page-chat {
-  overflow: hidden; //prevents double scroll
-
   .channels-list {
-    overflow-y: overlay;
     padding-bottom: 6rem;
     box-sizing: border-box;
 
     .channels-list-container {
       background: var(--secondary);
-    }
-
-    .chat-channel-row {
-      height: 4em;
-      margin: 0;
-      padding: 0 1.5rem;
-      border-radius: 0;
-      border-bottom: 1px solid var(--primary-low);
-
-      .chat-channel-metadata {
-        .chat-channel-unread-indicator {
-          font-size: var(--font-down-2);
-          margin-top: 0.25rem;
-        }
-        &__date {
-          font-size: var(--font-down-2);
-        }
-      }
+      overflow: hidden;
     }
 
     .chat-channel-divider {
@@ -38,8 +18,26 @@
       }
 
       .channel-title {
-        color: var(--quaternary);
+        color: var(--primary);
         font-size: var(--font-down-1);
+      }
+    }
+
+    .chat-channel-row {
+      &.--threads {
+        color: var(--primary);
+        padding-inline: 1.5rem;
+        font-size: var(--font-up-1-rem);
+        border: 0;
+
+        .chat-channel-title {
+          gap: 0.5rem;
+        }
+
+        .c-unread-indicator {
+          width: 8px;
+          height: 8px;
+        }
       }
     }
 
@@ -50,9 +48,6 @@
     }
 
     .chat-channel-title {
-      width: 100%;
-      overflow: hidden;
-
       &__users-count {
         font-size: var(--font-up-2);
         & + .chat-channel-title__name {
@@ -76,4 +71,11 @@
       }
     }
   }
+}
+
+.c-routes-direct-messages,
+.c-routes-channels,
+.c-routes-threads {
+  background: var(--primary-very-low);
+  max-width: 100vw;
 }

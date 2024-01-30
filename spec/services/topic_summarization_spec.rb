@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 describe TopicSummarization do
-  fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { Fabricate(:admin) }
-  fab!(:post_1) { Fabricate(:post, topic: topic) }
-  fab!(:post_2) { Fabricate(:post, topic: topic) }
+  fab!(:topic) { Fabricate(:topic, highest_post_number: 2) }
+  fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+  fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
 
   shared_examples "includes only public-visible topics" do
     subject { described_class.new(DummyCustomSummarization.new({})) }
@@ -100,6 +100,24 @@ describe TopicSummarization do
         section = summarization.summarize(topic, user)
         expect(section.summarized_text).to eq(cached_summary_text)
       end
+
+      context "when the topic has embed content cached" do
+        it "embed content is used instead of the raw text" do
+          topic_embed =
+            Fabricate(
+              :topic_embed,
+              topic: topic,
+              embed_content_cache: "<p>hello world new post :D</p>",
+            )
+
+          summarization.summarize(topic, user)
+
+          first_post_data =
+            strategy.content[:contents].detect { |c| c[:id] == topic.first_post.post_number }
+
+          expect(first_post_data[:text]).to eq(topic_embed.embed_content_cache)
+        end
+      end
     end
 
     context "when the content was summarized in multiple chunks" do
@@ -184,6 +202,18 @@ describe TopicSummarization do
             end
           end
         end
+      end
+    end
+
+    describe "stream partial updates" do
+      let(:summary) { { summary: "This is the final summary", chunks: [] } }
+
+      it "receives a blk that is passed to the underlying strategy and called with partial summaries" do
+        partial_result = nil
+
+        summarization.summarize(topic, user) { |partial_summary| partial_result = partial_summary }
+
+        expect(partial_result).to eq(summary[:summary])
       end
     end
   end

@@ -7,7 +7,7 @@ module PageObjects
         attr_reader :context
         attr_reader :component
 
-        SELECTOR = ".chat-message-container:not(.has-thread-indicator)"
+        SELECTOR = ".chat-message-container"
 
         def initialize(context)
           @context = context
@@ -30,6 +30,16 @@ module PageObjects
           component.find(".chat-message-expand").click
         end
 
+        def secondary_action(action)
+          if page.has_css?("html.mobile-view", wait: 0)
+            component.find(".chat-message-text").click(delay: 0.6)
+            page.find(".chat-message-actions [data-id=\"#{action}\"]").click
+          else
+            open_more_menu
+            page.find("[data-value='#{action}']").click
+          end
+        end
+
         def select(shift: false)
           if component[:class].include?("-selectable")
             message_selector = component.find(".chat-message-selector")
@@ -42,14 +52,7 @@ module PageObjects
             return
           end
 
-          if page.has_css?("html.mobile-view", wait: 0)
-            component.click(delay: 0.6)
-            page.find(".chat-message-actions [data-id=\"select\"]").click
-          else
-            hover
-            click_more_button
-            page.find("[data-value='select']").click
-          end
+          secondary_action("select")
         end
 
         def find(**args)
@@ -57,12 +60,8 @@ module PageObjects
           text = args[:text]
           text = I18n.t("js.chat.deleted", count: args[:deleted]) if args[:deleted]
 
-          if text
-            @component =
-              find(context).find("#{selector} .chat-message-text", text: /#{Regexp.escape(text)}/)
-          else
-            @component = page.find(context).find(selector)
-          end
+          @component =
+            page.find("#{context} #{selector}", text: text ? /#{Regexp.escape(text)}/ : nil)
 
           self
         end
@@ -78,7 +77,7 @@ module PageObjects
             page.find(context).send(
               selector_method,
               selector + " " + ".chat-message-text",
-              text: /#{Regexp.escape(text)}/,
+              exact_text: text,
             )
           else
             page.find(context).send(selector_method, selector)
@@ -93,11 +92,19 @@ module PageObjects
 
         def build_selector(**args)
           selector = SELECTOR
+
+          if args[:not_processed]
+            selector += ".-not-processed"
+          else
+            selector += ".-processed.-persisted"
+          end
+
           selector += "[data-id=\"#{args[:id]}\"]" if args[:id]
           selector += ".-selected" if args[:selected]
           selector += ".-persisted" if args[:persisted]
           selector += ".-staged" if args[:staged]
           selector += ".-deleted" if args[:deleted]
+          selector += ".-highlighted" if args[:highlighted]
           selector
         end
       end

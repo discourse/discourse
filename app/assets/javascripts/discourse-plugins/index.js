@@ -15,13 +15,18 @@ function fixLegacyExtensions(tree) {
     getDestinationPath: function (relativePath) {
       if (relativePath.endsWith(".es6")) {
         return relativePath.slice(0, -4);
-      } else if (relativePath.includes("/templates/")) {
-        if (relativePath.endsWith(".raw.hbs")) {
-          relativePath = relativePath.replace(".raw.hbs", ".hbr");
-        }
+      } else if (relativePath.endsWith(".raw.hbs")) {
+        relativePath = relativePath.replace(".raw.hbs", ".hbr");
+      }
 
-        if (relativePath.endsWith(".hbr")) {
-          return relativePath.replace("/templates/", "/raw-templates/");
+      if (relativePath.endsWith(".hbr")) {
+        if (relativePath.includes("/templates/")) {
+          relativePath = relativePath.replace("/templates/", "/raw-templates/");
+        } else if (relativePath.includes("/connectors/")) {
+          relativePath = relativePath.replace(
+            "/connectors/",
+            "/raw-templates/connectors/"
+          );
         }
       }
 
@@ -94,6 +99,14 @@ module.exports = {
     babel: {
       plugins: [require.resolve("deprecation-silencer")],
     },
+
+    "ember-cli-babel": {
+      throwUnlessParallelizable: true,
+    },
+
+    "ember-this-fallback": {
+      enableLogging: false,
+    },
   },
 
   pluginInfos() {
@@ -147,14 +160,18 @@ module.exports = {
     });
   },
 
-  generatePluginsTree() {
+  generatePluginsTree(withTests) {
     if (!this.shouldLoadPlugins()) {
       return mergeTrees([]);
     }
-    const appTree = this._generatePluginAppTree();
-    const testTree = this._generatePluginTestTree();
-    const adminTree = this._generatePluginAdminTree();
-    return mergeTrees([appTree, testTree, adminTree]);
+    const trees = [
+      this._generatePluginAppTree(),
+      this._generatePluginAdminTree(),
+    ];
+    if (withTests) {
+      trees.push(this._generatePluginTestTree());
+    }
+    return mergeTrees(trees);
   },
 
   _generatePluginAppTree() {
@@ -238,11 +255,6 @@ module.exports = {
     return true;
   },
 
-  treeFor() {
-    // This addon doesn't contribute any 'real' trees to the app
-    return;
-  },
-
   // Matches logic from GlobalSetting.load_plugins? in the ruby app
   shouldLoadPlugins() {
     if (process.env.LOAD_PLUGINS === "1") {
@@ -253,6 +265,74 @@ module.exports = {
       return false;
     } else {
       return true;
+    }
+  },
+
+  pluginScriptTags(config) {
+    const scripts = [];
+
+    const pluginInfos = this.pluginInfos();
+
+    for (const {
+      pluginName,
+      directoryName,
+      hasJs,
+      hasAdminJs,
+    } of pluginInfos) {
+      if (hasJs) {
+        scripts.push({
+          src: `plugins/${directoryName}.js`,
+          name: pluginName,
+        });
+      }
+
+      if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
+        scripts.push({
+          src: `plugins/${directoryName}_extras.js`,
+          name: pluginName,
+        });
+      }
+
+      if (hasAdminJs) {
+        scripts.push({
+          src: `plugins/${directoryName}_admin.js`,
+          name: pluginName,
+        });
+      }
+    }
+
+    return scripts
+      .map(
+        ({ src, name }) =>
+          `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
+      )
+      .join("\n");
+  },
+
+  pluginTestScriptTags(config) {
+    return this.pluginInfos()
+      .filter(({ hasTests }) => hasTests)
+      .map(
+        ({ directoryName, pluginName }) =>
+          `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
+      )
+      .join("\n");
+  },
+
+  contentFor(type, config) {
+    if (!this.shouldLoadPlugins()) {
+      return;
+    }
+
+    switch (type) {
+      case "test-plugin-js":
+        return this.pluginScriptTags(config);
+
+      case "test-plugin-tests-js":
+        return this.pluginTestScriptTags(config);
+
+      case "test-plugin-css":
+        return `<link rel="stylesheet" href="${config.rootURL}bootstrap/plugin-css-for-tests.css" data-discourse-plugin="_all" />`;
     }
   },
 };

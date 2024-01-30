@@ -1,8 +1,8 @@
-import { MAIN_COLLECTION } from "select-kit/components/select-kit";
-import MultiSelectComponent from "select-kit/components/multi-select";
 import { computed } from "@ember/object";
-import { makeArray } from "discourse-common/lib/helpers";
 import { readOnly } from "@ember/object/computed";
+import { makeArray } from "discourse-common/lib/helpers";
+import MultiSelectComponent from "select-kit/components/multi-select";
+import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["list-setting"],

@@ -1,4 +1,11 @@
+{{#let this.model.postStream as |postStream|}}
+  {{#unless (and postStream.loaded postStream.loadedAllPosts)}}
+    {{hide-application-footer}}
+  {{/unless}}
+{{/let}}
+
 <DiscourseTopic
+  {{sticky-avatars}}
   @multiSelect={{this.multiSelect}}
   @enteredAt={{this.enteredAt}}
   @topic={{this.model}}
@@ -12,8 +19,6 @@
     <AddTopicStatusClasses @topic={{this.model}} />
     <div class="container">
       <DiscourseBanner
-        @user={{this.currentUser}}
-        @banner={{this.site.banner}}
         @overlay={{this.hasScrolled}}
         @hide={{this.model.errorLoading}}
       />
@@ -58,9 +63,9 @@
 
             {{#if this.showCategoryChooser}}
               <CategoryChooser
-                @class="small"
                 @value={{this.buffered.category_id}}
                 @onChange={{action "topicCategoryChanged"}}
+                class="small"
               />
             {{/if}}
 
@@ -89,15 +94,15 @@
             <div class="edit-controls">
               <DButton
                 @action={{action "finishedEditingTopic"}}
-                @class="btn-primary submit-edit"
                 @icon="check"
                 @ariaLabel="composer.save_edit"
+                class="btn-primary submit-edit"
               />
               <DButton
                 @action={{action "cancelEditingTopic"}}
-                @class="btn-default cancel-edit"
                 @icon="times"
                 @ariaLabel="composer.cancel"
+                class="btn-default cancel-edit"
               />
 
               {{#if this.canRemoveTopicFeaturedLink}}
@@ -159,7 +164,7 @@
             />
           </h1>
 
-          <TopicCategory @topic={{this.model}} @class="topic-category" />
+          <TopicCategory @topic={{this.model}} class="topic-category" />
         {{/if}}
       </TopicTitle>
 
@@ -213,18 +218,21 @@
       <PluginOutlet @name="above-timeline" @connectorTagName="div" />
 
       <TopicNavigation
-        @class="topic-navigation"
         @topic={{this.model}}
         @jumpToDate={{action "jumpToDate"}}
         @jumpToIndex={{action "jumpToIndex"}}
+        class="topic-navigation"
         as |info|
       >
         <PluginOutlet
           @name="topic-navigation"
           @connectorTagName="div"
-          @outletArgs={{hash topic=this.model}}
+          @outletArgs={{hash
+            topic=this.model
+            renderTimeline=info.renderTimeline
+            topicProgressExpanded=info.topicProgressExpanded
+          }}
         />
-
         {{#if info.renderTimeline}}
           <TopicTimeline
             @info={{info}}
@@ -293,6 +301,12 @@
             />
           </TopicProgress>
         {{/if}}
+
+        <PluginOutlet
+          @name="topic-navigation-bottom"
+          @connectorTagName="div"
+          @outletArgs={{hash model=this.model}}
+        />
       </TopicNavigation>
 
       <div class="row">
@@ -346,6 +360,8 @@
                 @toggleWiki={{action "toggleWiki"}}
                 @showTopReplies={{action "showTopReplies"}}
                 @cancelFilter={{action "cancelFilter"}}
+                @collapseSummary={{action "collapseSummary"}}
+                @showSummary={{action "showSummary"}}
                 @removeAllowedUser={{action "removeAllowedUser"}}
                 @removeAllowedGroup={{action "removeAllowedGroup"}}
                 @topVisibleChanged={{action "topVisibleChanged"}}
@@ -402,10 +418,10 @@
                       </div>
                       <div class="reviewable-actions">
                         <DButton
-                          @class="btn-danger"
                           @label="review.delete"
                           @icon="trash-alt"
-                          @action={{action "deletePending" pending}}
+                          @action={{fn (action "deletePending") pending}}
+                          class="btn-danger"
                         />
                       </div>
                     </div>
@@ -526,15 +542,12 @@
           />
         {{else}}
           <div id="topic-footer-buttons">
-            <DButton
-              @icon="reply"
-              @class="btn-primary pull-right"
-              @action={{route-action "showLogin"}}
-              @label="topic.reply.title"
-            />
+            <AnonymousTopicFooterButtons @topic={{this.model}} />
           </div>
         {{/if}}
       {{/if}}
+
+      <br />
 
       <span>
         <PluginOutlet
@@ -543,20 +556,8 @@
           @outletArgs={{hash model=this.model}}
         />
       </span>
-      <div
-        class="{{if
-            this.model.relatedMessages.length
-            'related-messages-wrapper'
-          }}
-          {{if this.model.suggestedTopics.length 'suggested-topics-wrapper'}}"
-      >
-        {{#if this.model.relatedMessages.length}}
-          <RelatedMessages @topic={{this.model}} />
-        {{/if}}
-        {{#if this.model.suggestedTopics.length}}
-          <SuggestedTopics @topic={{this.model}} />
-        {{/if}}
-      </div>
+
+      <MoreTopics @topic={{this.model}} />
     {{/if}}
   {{else}}
     <div class="container">
@@ -570,17 +571,17 @@
               {{#unless this.currentUser}}
                 <DButton
                   @action={{route-action "showLogin"}}
-                  @class="btn-primary topic-retry"
                   @icon="user"
                   @label="log_in"
+                  class="btn-primary topic-retry"
                 />
               {{/unless}}
             {{else}}
               <DButton
                 @action={{action "retryLoading"}}
-                @class="btn-primary topic-retry"
                 @icon="sync"
                 @label="errors.buttons.again"
+                class="btn-primary topic-retry"
               />
             {{/if}}
           </div>
@@ -590,9 +591,10 @@
     </div>
   {{/if}}
 
-  <QuoteButton
+  <PostTextSelection
     @quoteState={{this.quoteState}}
     @selectText={{action "selectText"}}
+    @buildQuoteMarkdown={{this.buildQuoteMarkdown}}
     @editPost={{action "editPost"}}
     @topic={{this.model}}
   />

@@ -15,16 +15,15 @@
         @value={{this.bookmark.name}}
         name="bookmark-name"
         class="bookmark-name"
-        @enter={{action "saveAndClose"}}
         placeholder={{i18n "post.bookmarks.name_placeholder"}}
         aria-label={{i18n "post.bookmarks.name_input_label"}}
       />
       <DButton
         @icon="cog"
         @action={{this.toggleShowOptions}}
-        class="bookmark-options-button"
         @ariaLabel="post.bookmarks.options"
         @title="post.bookmarks.options"
+        class="bookmark-options-button"
       />
     </div>
 
@@ -37,9 +36,9 @@
         <ComboBox
           @content={{this.autoDeletePreferences}}
           @value={{this.bookmark.autoDeletePreference}}
-          @class="bookmark-option-selector"
           @id="bookmark-auto-delete-preference"
           @onChange={{action (mut this.bookmark.autoDeletePreference)}}
+          class="bookmark-option-selector"
         />
       </div>
     {{/if}}
@@ -63,7 +62,7 @@
         <TimeShortcutPicker
           @timeShortcuts={{this.timeOptions}}
           @prefilledDatetime={{this.prefilledDatetime}}
-          @onTimeSelected={{action "onTimeSelected"}}
+          @onTimeSelected={{this.onTimeSelected}}
           @hiddenOptions={{this.hiddenTimeShortcutOptions}}
           @customLabels={{this.customTimeShortcutLabels}}
           @_itsatrap={{this._itsatrap}}
@@ -78,20 +77,20 @@
 
   <:footer>
     <DButton
-      id="save-bookmark"
       @label="bookmarks.save"
-      class="btn-primary"
       @action={{this.saveAndClose}}
+      id="save-bookmark"
+      class="btn-primary"
     />
-    <DModalCancel @close={{action "closeWithoutSavingBookmark"}} />
+    <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
     {{#if this.showDelete}}
       <DButton
-        id="delete-bookmark"
         @icon="trash-alt"
-        class="delete-bookmark btn-danger"
         @action={{this.delete}}
         @ariaLabel="post.bookmarks.actions.delete_bookmark.name"
         @title="post.bookmarks.actions.delete_bookmark.name"
+        id="delete-bookmark"
+        class="delete-bookmark btn-danger"
       />
     {{/if}}
   </:footer>

@@ -1,3 +1,5 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -6,10 +8,8 @@ import {
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("User notification schedule", function (needs) {
   needs.user();

@@ -4,10 +4,10 @@
 
 <div class="watched-word-controls">
   <DButton
-    @class="btn-default download-link"
     @href={{this.downloadLink}}
     @icon="download"
     @label="admin.watched_words.download"
+    class="btn-default download-link"
   />
 
   <WatchedWordUploader
@@ -18,17 +18,17 @@
   />
 
   <DButton
-    @class="watched-word-test"
     @label="admin.watched_words.test.button_label"
     @icon="far-eye"
-    @action={{action "test"}}
+    @action={{this.test}}
+    class="watched-word-test"
   />
 
   <DButton
-    @class="btn-danger clear-all"
     @label="admin.watched_words.clear_all"
     @icon="trash-alt"
-    @action={{action "clearAll"}}
+    @action={{this.clearAll}}
+    class="btn-danger clear-all"
   />
 </div>
 

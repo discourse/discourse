@@ -1,12 +1,21 @@
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import * as GlimmerManager from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
+import { isTesting } from "discourse-common/config/environment";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 const COLOCATED_TEMPLATE_OVERRIDES = new Map();
+
+let THROW_GJS_ERROR = isTesting();
+
+/** For use in tests/integration/component-templates-test only */
+export function overrideThrowGjsError(value) {
+  THROW_GJS_ERROR = value;
+}
 
 // This patch is not ideal, but Ember does not allow us to change a component template after initial association
 // https://github.com/glimmerjs/glimmer-vm/blob/03a4b55c03/packages/%40glimmer/manager/lib/public/template.ts#L14-L20
 const originalGetTemplate = GlimmerManager.getComponentTemplate;
+// eslint-disable-next-line no-import-assign
 GlimmerManager.getComponentTemplate = (component) => {
   return (
     COLOCATED_TEMPLATE_OVERRIDES.get(component) ??
@@ -34,15 +43,31 @@ export default {
 
       const component = owner.resolveRegistration(`component:${componentName}`);
 
-      if (component && originalGetTemplate(component)) {
-        const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
-        const overrideTemplate = require(finalOverrideModuleName).default;
-
-        COLOCATED_TEMPLATE_OVERRIDES.set(component, overrideTemplate);
-      } else if (!component) {
+      if (!component) {
         // Plugin/theme component template with no backing class.
         // Treat as classic component to emulate pre-template-only-glimmer-component behaviour.
         owner.register(`component:${componentName}`, ClassicComponent);
+        return;
+      }
+
+      const originalTemplate = originalGetTemplate(component);
+      const isStrictMode = originalTemplate?.()?.parsedLayout?.isStrictMode;
+      const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
+
+      if (isStrictMode) {
+        const message =
+          `[${finalOverrideModuleName}] ${componentName} was authored using gjs and its template cannot be overridden. ` +
+          `Ignoring override. For more information on the future of template overrides, see https://meta.discourse.org/t/247487`;
+        if (THROW_GJS_ERROR) {
+          throw new Error(message);
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(message);
+        }
+      } else if (originalTemplate) {
+        const overrideTemplate = require(finalOverrideModuleName).default;
+
+        COLOCATED_TEMPLATE_OVERRIDES.set(component, overrideTemplate);
       }
     });
   },

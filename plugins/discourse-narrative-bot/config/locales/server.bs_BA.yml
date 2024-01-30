@@ -253,10 +253,6 @@ bs_BA:
         reply: |-
           Uf, to je bilo blizu! Hvala za popravku da: wink: Imajte na umu da imate samo %{deletion_after} sat (e) da povratite post.
       category_hashtag:
-        instructions: |-
-          Da li ste znali da možete koristiti kategorije i oznake u svom postu? Na primjer, jeste li vidjeli kategoriju %{category}? Upišite `#` u sredinu rečenice i odaberite bilo koju kategoriju ili oznaku.
-        not_found: |-
-          Hmm, tamo ne vidim nijednu kategoriju. Imajte na umu da `#` ne može biti prvi znak. Možete li ovo kopirati u sljedećem odgovoru? `` `tekst Mogu kreirati link za kategoriju preko #` ``
         reply: |-
           Odlično! Zapamtite ovo radi za obje kategorije _i_ oznake, ako su oznake omogućene.
       change_topic_notification_level:

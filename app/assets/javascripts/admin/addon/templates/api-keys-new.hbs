@@ -15,8 +15,8 @@
       <DButton
         @icon="angle-right"
         @label="admin.api.continue"
-        @action={{action "continue"}}
-        @class="btn-primary"
+        @action={{this.continue}}
+        class="btn-primary"
       />
     </AdminFormRow>
   {{else}}
@@ -88,22 +88,21 @@
                 <td><Input @type="checkbox" @checked={{act.selected}} /></td>
                 <td>
                   <div class="scope-name">{{act.name}}</div>
-                  <span
-                    class="scope-tooltip"
-                    data-tooltip={{i18n
+                  <DTooltip
+                    @icon="question-circle"
+                    @content={{i18n
                       (concat
                         "admin.api.scopes.descriptions." resource "." act.key
                       )
+                      class="scope-tooltip"
                     }}
-                  >
-                    {{d-icon "question-circle"}}
-                  </span>
+                  />
                 </td>
                 <td>
                   <DButton
                     @icon="link"
-                    @action={{action "showURLs" act.urls}}
-                    @class="btn-info"
+                    @action={{fn this.showURLs act.urls}}
+                    class="btn-info"
                   />
                 </td>
                 <td>
@@ -125,9 +124,9 @@
     <DButton
       @icon="check"
       @label="admin.api.save"
-      @action={{action "save"}}
-      @class="btn-primary"
+      @action={{this.save}}
       @disabled={{this.saveDisabled}}
+      class="btn-primary"
     />
   {{/if}}
 </div>

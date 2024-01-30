@@ -1,9 +1,9 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
 
 acceptance("Site Banner", function () {
   test("shows and hides correctly", async function (assert) {

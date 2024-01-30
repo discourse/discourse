@@ -1,6 +1,6 @@
+import { readOnly } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
-import { readOnly } from "@ember/object/computed";
 
 export default RestModel.extend({
   pmOnly: readOnly("pm_only"),

@@ -47,6 +47,8 @@ class S3Helper
     setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
     options = S3Helper.s3_options(setting_klass)
     options[:client] = s3_client if s3_client.present?
+    options[:use_accelerate_endpoint] = !for_backup &&
+      SiteSetting.Upload.enable_s3_transfer_acceleration
 
     bucket =
       if for_backup
@@ -349,7 +351,30 @@ class S3Helper
   def presigned_url(key, method:, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, opts: {})
     Aws::S3::Presigner.new(client: s3_client).presigned_url(
       method,
-      { bucket: s3_bucket_name, key: key, expires_in: expires_in }.merge(opts),
+      {
+        bucket: s3_bucket_name,
+        key: key,
+        expires_in: expires_in,
+        use_accelerate_endpoint: @s3_options[:use_accelerate_endpoint],
+      }.merge(opts),
+    )
+  end
+
+  # Returns url, headers in a tuple which is needed in some cases.
+  def presigned_request(
+    key,
+    method:,
+    expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+    opts: {}
+  )
+    Aws::S3::Presigner.new(client: s3_client).presigned_request(
+      method,
+      {
+        bucket: s3_bucket_name,
+        key: key,
+        expires_in: expires_in,
+        use_accelerate_endpoint: @s3_options[:use_accelerate_endpoint],
+      }.merge(opts),
     )
   end
 

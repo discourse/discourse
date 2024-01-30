@@ -1,18 +1,18 @@
-import { module, test } from "qunit";
-import DiscourseURL from "discourse/lib/url";
+import { getOwner } from "@ember/application";
 import { getProperties } from "@ember/object";
-import Category from "discourse/models/category";
+import { setupTest } from "ember-qunit";
 import MessageBus from "message-bus-client";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
+import TopicTrackingState from "discourse/models/topic-tracking-state";
+import User from "discourse/models/user";
 import {
   fakeTime,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import TopicTrackingState from "discourse/models/topic-tracking-state";
-import User from "discourse/models/user";
-import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { setupTest } from "ember-qunit";
 
 module("Unit | Model | topic-tracking-state", function (hooks) {
   setupTest(hooks);

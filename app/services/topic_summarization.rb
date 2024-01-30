@@ -5,7 +5,7 @@ class TopicSummarization
     @strategy = strategy
   end
 
-  def summarize(topic, user, opts = {})
+  def summarize(topic, user, opts = {}, &on_partial_blk)
     existing_summary = SummarySection.find_by(target: topic, meta_section_id: nil)
 
     # Existing summary shouldn't be nil in this scenario because the controller checks its existence.
@@ -18,9 +18,7 @@ class TopicSummarization
 
     if use_cached?(existing_summary, can_summarize, current_topic_sha, !!opts[:skip_age_check])
       # It's important that we signal a cached summary is outdated
-      if can_summarize && new_targets?(existing_summary, current_topic_sha)
-        existing_summary.mark_as_outdated
-      end
+      existing_summary.mark_as_outdated if new_targets?(existing_summary, current_topic_sha)
 
       return existing_summary
     end
@@ -34,10 +32,16 @@ class TopicSummarization
     }
 
     targets_data.map do |(pn, raw, username)|
-      content[:contents] << { poster: username, id: pn, text: raw }
+      raw_text = raw
+
+      if pn == 1 && topic.topic_embed&.embed_content_cache.present?
+        raw_text = topic.topic_embed&.embed_content_cache
+      end
+
+      content[:contents] << { poster: username, id: pn, text: raw_text }
     end
 
-    summarization_result = strategy.summarize(content)
+    summarization_result = strategy.summarize(content, user, &on_partial_blk)
 
     cache_summary(summarization_result, targets_data.map(&:first), topic)
   end

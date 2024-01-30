@@ -1,3 +1,7 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import {
   ANIMATION_DURATION,
   KEYBOARD_SHORTCUTS,
@@ -16,13 +20,8 @@ import {
   setCarouselScrollPosition,
   setSiteThemeColor,
 } from "discourse/lib/lightbox/helpers";
-
-import Component from "@glimmer/component";
-import { bind } from "discourse-common/utils/decorators";
 import discourseLater from "discourse-common/lib/later";
-import { htmlSafe } from "@ember/template";
-import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class DLightbox extends Component {
   @service appEvents;
@@ -38,7 +37,7 @@ export default class DLightbox extends Component {
   @tracked isFullScreen = false;
   @tracked rotationAmount = 0;
 
-  @tracked hasCarousel = false;
+  @tracked hasCarousel = true;
   @tracked hasExpandedTitle = false;
 
   options = {};
@@ -66,7 +65,7 @@ export default class DLightbox extends Component {
       return htmlSafe(variables.join(""));
     }
 
-    const { width, height, aspectRatio, dominantColor, fullsizeURL, smallURL } =
+    const { width, height, aspectRatio, dominantColor, fullsizeURL } =
       this.currentItem;
 
     variables.push(
@@ -75,8 +74,7 @@ export default class DLightbox extends Component {
       `${base}-height: ${height}px`,
       `${base}-aspect-ratio: ${aspectRatio}`,
       `${base}-dominant-color: #${dominantColor}`,
-      `${base}-full-size-url: url(${encodeURI(fullsizeURL)})`,
-      `${base}-small-url: url(${encodeURI(smallURL)})`
+      `${base}-full-size-url: url(${encodeURI(fullsizeURL)})`
     );
 
     return htmlSafe(variables.filter(Boolean).join(";"));
@@ -122,13 +120,18 @@ export default class DLightbox extends Component {
   }
 
   get shouldDisplayCarousel() {
-    return this.hasCarousel && !this.isZoomed && !this.isRotated;
+    return (
+      this.hasCarousel &&
+      this.totalItemCount >= this.options.minCarouselItemCount &&
+      !this.isZoomed &&
+      !this.isRotated
+    );
   }
 
   get shouldDisplayCarouselArrows() {
     return (
       !this.options.isMobile &&
-      this.totalItemCount >= this.options.minCarosuelArrowItemCount
+      this.totalItemCount >= this.options.minCarouselArrowItemCount
     );
   }
 
@@ -187,7 +190,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  deregisterAppEventListners() {
+  deregisterAppEventListeners() {
     this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.OPEN, this.open);
     this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.CLOSE, this.close);
   }
@@ -358,6 +361,15 @@ export default class DLightbox extends Component {
   }
 
   @bind
+  onKeydown(event) {
+    if (event.key === KEYBOARD_SHORTCUTS.CLOSE) {
+      event.preventDefault();
+      event.stopPropagation();
+      return this.close();
+    }
+  }
+
+  @bind
   onKeyup({ key }) {
     if (KEYBOARD_SHORTCUTS.PREVIOUS.includes(key)) {
       return this.showPreviousItem();
@@ -365,10 +377,6 @@ export default class DLightbox extends Component {
 
     if (KEYBOARD_SHORTCUTS.NEXT.includes(key)) {
       return this.showNextItem();
-    }
-
-    if (key === KEYBOARD_SHORTCUTS.CLOSE) {
-      return this.close();
     }
 
     if (key === KEYBOARD_SHORTCUTS.ZOOM) {
@@ -435,11 +443,8 @@ export default class DLightbox extends Component {
       case SWIPE_DIRECTIONS.RIGHT:
         this.options.isRTL ? this.showPreviousItem() : this.showNextItem();
         break;
-      case SWIPE_DIRECTIONS.UP:
-        this.close();
-        break;
       case SWIPE_DIRECTIONS.DOWN:
-        this.toggleCarousel();
+        this.close();
         break;
     }
   }
@@ -447,7 +452,7 @@ export default class DLightbox extends Component {
   @bind
   cleanup() {
     if (this.isVisible) {
-      this.hasCarousel = !!document.querySelector(".d-lightbox.has-carousel");
+      this.hasCarousel = true;
       this.hasExpandedTitle = false;
       this.isLoading = false;
       this.items = [];

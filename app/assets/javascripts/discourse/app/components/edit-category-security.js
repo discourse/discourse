@@ -1,7 +1,7 @@
-import PermissionType from "discourse/models/permission-type";
-import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import discourseComputed from "discourse-common/utils/decorators";
 import { not } from "@ember/object/computed";
+import { buildCategoryPanel } from "discourse/components/edit-category-panel";
+import PermissionType from "discourse/models/permission-type";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default buildCategoryPanel("security", {
   selectedGroup: null,

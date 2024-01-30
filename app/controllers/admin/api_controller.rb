@@ -14,7 +14,6 @@ class Admin::ApiController < Admin::AdminController
       ApiKey
         .where(hidden: false)
         .includes(:user, :api_key_scopes)
-        # Sort revoked keys by revoked_at and active keys by created_at
         .order("revoked_at DESC NULLS FIRST, created_at DESC")
         .offset(offset)
         .limit(limit)

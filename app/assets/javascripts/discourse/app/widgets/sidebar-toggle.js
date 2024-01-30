@@ -7,9 +7,7 @@ export default createWidget("sidebar-toggle", {
     const attrs = this.attrs;
     return [
       this.attach("button", {
-        title: attrs.showSidebar
-          ? "sidebar.hide_sidebar"
-          : "sidebar.show_sidebar",
+        title: "sidebar.title",
         icon: "bars",
         action: this.site.narrowDesktopView
           ? "toggleHamburger"

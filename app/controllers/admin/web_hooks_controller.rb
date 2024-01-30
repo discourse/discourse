@@ -18,7 +18,7 @@ class Admin::WebHooksController < Admin::AdminController
     json = {
       web_hooks: serialize_data(web_hooks, AdminWebHookSerializer),
       extras: {
-        event_types: WebHookEventType.active,
+        grouped_event_types: WebHookEventType.active_grouped,
         default_event_types: WebHook.default_event_types,
         content_types: WebHook.content_types.map { |name, id| { id: id, name: name } },
         delivery_statuses:

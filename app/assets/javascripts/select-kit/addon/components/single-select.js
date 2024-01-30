@@ -1,6 +1,6 @@
-import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import SelectKitComponent from "select-kit/components/select-kit";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["single-select"],

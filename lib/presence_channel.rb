@@ -5,10 +5,13 @@
 class PresenceChannel
   class NotFound < StandardError
   end
+
   class InvalidAccess < StandardError
   end
+
   class ConfigNotLoaded < StandardError
   end
+
   class InvalidConfig < StandardError
   end
 
@@ -516,7 +519,7 @@ class PresenceChannel
       #{UPDATE_GLOBAL_CHANNELS_LUA}
 
       -- Update the user session count in the channel hash
-      local val = redis.call('HINCRBY', hash_key, user_id, -1)
+      local val = redis.call('HINCRBY', hash_key, user_id, #{Discourse::SYSTEM_USER_ID})
       if val <= 0 then
         redis.call('HDEL', hash_key, user_id)
         removed_users = 1
@@ -607,7 +610,7 @@ class PresenceChannel
         get_mutex()
       end
 
-      local val = redis.call('HINCRBY', hash_key, user_id, -1)
+      local val = redis.call('HINCRBY', hash_key, user_id, #{Discourse::SYSTEM_USER_ID})
       if val <= 0 then
         table.insert(expired_user_ids, tonumber(user_id))
         redis.call('HDEL', hash_key, user_id)

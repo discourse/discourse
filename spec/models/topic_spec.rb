@@ -3,18 +3,16 @@
 
 RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:whisperers_group) { Fabricate(:group) }
   fab!(:user2) { Fabricate(:user, groups: [whisperers_group]) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:group) { Fabricate(:group) }
-  fab!(:trust_level_2) do
-    Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite)
-  end
+  fab!(:moderator)
+  fab!(:coding_horror)
+  fab!(:evil_trout)
+  fab!(:admin)
+  fab!(:group)
+  fab!(:trust_level_2)
 
   it_behaves_like "it has custom fields"
 
@@ -736,7 +734,7 @@ RSpec.describe Topic do
       end
 
       context "with secure categories" do
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
         fab!(:private_category) { Fabricate(:private_category, group: group) }
 
         before { topic.update!(category: private_category) }
@@ -784,10 +782,7 @@ RSpec.describe Topic do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     context "with rate limits" do
-      before do
-        RateLimiter.enable
-        Group.refresh_automatic_groups!
-      end
+      before { RateLimiter.enable }
 
       use_redis_snapshotting
 
@@ -871,8 +866,6 @@ RSpec.describe Topic do
     describe "private message" do
       fab!(:user) { trust_level_2 }
       fab!(:topic) { Fabricate(:private_message_topic, user: trust_level_2) }
-
-      before { Group.refresh_automatic_groups! }
 
       describe "by username" do
         it "should be able to invite a user" do
@@ -979,8 +972,6 @@ RSpec.describe Topic do
       end
 
       describe "by email" do
-        before { Group.refresh_automatic_groups! }
-
         it "should be able to invite a user" do
           expect(topic.invite(user, user1.email)).to eq(true)
           expect(topic.allowed_users).to include(user1)
@@ -1001,7 +992,7 @@ RSpec.describe Topic do
           end
 
           describe "when user does not have sufficient trust level" do
-            before { user.update!(trust_level: TrustLevel[1]) }
+            before { user.change_trust_level!(TrustLevel[1]) }
 
             it "should not create an invite" do
               expect do expect(topic.invite(user, "test@email.com")).to eq(nil) end.to_not change {
@@ -1105,7 +1096,7 @@ RSpec.describe Topic do
         end
 
         describe "when user can invite via email" do
-          before { user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite) }
+          before { user.change_trust_level!(TrustLevel[2]) }
 
           it "should create an invite" do
             Jobs.run_immediately!
@@ -1123,9 +1114,8 @@ RSpec.describe Topic do
   end
 
   describe "private message" do
-    fab!(:pm_user) { Fabricate(:user) }
+    fab!(:pm_user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:topic) do
-      Group.refresh_automatic_groups!
       PostCreator
         .new(
           pm_user,
@@ -1334,7 +1324,7 @@ RSpec.describe Topic do
   end
 
   describe "moderator posts" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "creates a moderator post" do
       mod_post =
@@ -1595,7 +1585,7 @@ RSpec.describe Topic do
   end
 
   describe "banner" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:user) { topic.user }
     let(:banner) { { html: "<p>BANNER</p>", url: topic.url, key: topic.id } }
 
@@ -1706,7 +1696,7 @@ RSpec.describe Topic do
   end
 
   describe "after create" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "is a regular topic by default" do
       expect(topic.archetype).to eq(Archetype.default)
@@ -1728,7 +1718,7 @@ RSpec.describe Topic do
   end
 
   describe "#change_category_to_id" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:user) { topic.user }
     fab!(:category) { Fabricate(:category_with_definition, user: user) }
 
@@ -2077,7 +2067,7 @@ RSpec.describe Topic do
 
     let(:closing_topic) { Fabricate(:topic_timer, execute_at: 5.hours.from_now).topic }
 
-    fab!(:trust_level_4) { Fabricate(:trust_level_4) }
+    fab!(:trust_level_4)
 
     it "can take a number of hours as an integer" do
       freeze_time now
@@ -2321,6 +2311,28 @@ RSpec.describe Topic do
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
+      it "doesn't return topics from suppressed tags" do
+        category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
+        topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
+        topic2 = Fabricate(:topic, category: category, created_at: 1.minute.ago)
+        tag = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
+        Fabricate(:topic_tag, topic: topic, tag: tag)
+
+        SiteSetting.digest_suppress_tags = "#{tag.name}|#{tag2.name}"
+        topics = Topic.for_digest(user, 1.year.ago, top_order: true)
+        expect(topics).to eq([topic2])
+
+        Fabricate(
+          :topic_user,
+          user: user,
+          topic: topic,
+          notification_level: TopicUser.notification_levels[:regular],
+        )
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic2])
+      end
+
       it "doesn't return topics from TL0 users" do
         new_user = Fabricate(:user, trust_level: 0)
         Fabricate(:topic, user: new_user, created_at: 1.minute.ago)
@@ -2510,6 +2522,16 @@ RSpec.describe Topic do
         4.days.ago.to_date => 1,
       )
     end
+
+    it "returns the correct count with group filter" do
+      group = Fabricate(:group)
+      group.add(user)
+      topic = Fabricate(:topic, user: user)
+
+      expect(Topic.listable_count_per_day(2.days.ago, Time.now, nil, false, [group.id])).to include(
+        Time.now.utc.to_date => 1,
+      )
+    end
   end
 
   describe "#secure_category?" do
@@ -2531,7 +2553,7 @@ RSpec.describe Topic do
   end
 
   describe "trash!" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     context "with category's topic count" do
       fab!(:category) { Fabricate(:category_with_definition) }
@@ -2581,7 +2603,7 @@ RSpec.describe Topic do
   end
 
   describe "recover!" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     context "with category's topic count" do
       fab!(:category) { Fabricate(:category_with_definition) }
@@ -2651,7 +2673,7 @@ RSpec.describe Topic do
 
       freeze_time(start)
 
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
       topic_id = create_post(user: user).topic_id
 
       freeze_time(start + 10.minutes)
@@ -2671,7 +2693,7 @@ RSpec.describe Topic do
 
       freeze_time(start)
 
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
 
       freeze_time(start + 25.hours)
       topic_id = create_post(user: user).topic_id
@@ -2700,7 +2722,6 @@ RSpec.describe Topic do
     use_redis_snapshotting
 
     it "limits according to max_personal_messages_per_day" do
-      Group.refresh_automatic_groups!
       create_post(
         user: user,
         archetype: "private_message",
@@ -2842,7 +2863,7 @@ RSpec.describe Topic do
 
   describe "featured link" do
     before { SiteSetting.topic_featured_link_enabled = true }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
 
     it "can validate featured link" do
       topic.featured_link = " invalid string"
@@ -3097,7 +3118,7 @@ RSpec.describe Topic do
   end
 
   describe "#remove_allowed_user" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:private_topic) do
       Fabricate(
         :private_message_topic,
@@ -3385,7 +3406,7 @@ RSpec.describe Topic do
   end
 
   describe "#cannot_permanently_delete_reason" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     let!(:topic) { post.topic }
 
     before { freeze_time }

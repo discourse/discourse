@@ -52,6 +52,9 @@ nb_NO:
   redirect_warning: "Vi kunne ikke verifisere at lenken du valgte faktisk var publisert på forumet. Hvis du likevel ønsker å fortsette, velg lenken under."
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} av %{username}"
+  components:
+    enabled_filter: "Aktivert"
+    disabled_filter: "Deaktivert"
   themes:
     other_error: "Noe gikk galt under oppdateringen av drakten"
     import_error:
@@ -192,7 +195,6 @@ nb_NO:
     more_replies:
       one: "%{count} svar til"
       other: "%{count} svar til"
-    loading: "Laster inn diskusjon…"
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
@@ -356,7 +358,8 @@ nb_NO:
               same_as_current: "er det samme som nåværende passord."
               unique_characters: "har for mange gjentatte tegn. Benytt et sikrere passord."
             ip_address:
-              signup_not_allowed: "Registrering er ikke tillatt fra denne kontoen."
+              blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
+              max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
         user_email:
           attributes:
             user_id:
@@ -509,8 +512,6 @@ nb_NO:
   email_login:
     title: "E-post innlogging"
   change_email:
-    confirmed: "E-postaddressen din er blitt oppdatert."
-    please_continue: "Fortsett til %{site_name}"
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."
     already_done: "Beklager, denne godkjenningslenken er ikke lenger gyldig. Kanskje e-postadressen din allerede er byttet?"
@@ -911,9 +912,6 @@ nb_NO:
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
     allow_user_locale: "Tillat brukere å velge eget språk"
     support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre."
-    min_post_length: "Minimum tillatt lengde for innlegg i tegn"
-    min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
-    min_personal_message_post_length: "Minste lengde i antall tegn for en melding"
     max_post_length: "Maksimum tillatt lengde for innlegg i tegn"
     topic_featured_link_enabled: "Tillat publisering av lenker som emner."
     show_topic_featured_link_in_digest: "Vis den fremhevede lenken fra et emne i e-postsammendrag."
@@ -955,7 +953,6 @@ nb_NO:
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
-    num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."
@@ -1093,9 +1090,6 @@ nb_NO:
       blank: "Må være til stede"
     email:
       blocked: "er ikke tillatt."
-    ip_address:
-      blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
-      max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
   flags_dispositions:
     agreed: "Takk for at du sier ifra. Vi er enig at det er et problem her og vi ser på saken."
     disagreed: "Takk for at du sier ifra. Vi skal se på det. "
@@ -1323,6 +1317,9 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
+  onebox:
+    github:
+      closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
@@ -1369,7 +1366,6 @@ nb_NO:
       approve:
         title: "Godkjenn"
       reject_user:
-        title: "Slett bruker..."
         delete:
           title: "Slett bruker"
       reject:

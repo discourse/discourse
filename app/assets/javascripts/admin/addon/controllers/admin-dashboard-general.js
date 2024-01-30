@@ -1,14 +1,14 @@
+import { inject as controller } from "@ember/controller";
 import { computed } from "@ember/object";
-import Controller, { inject as controller } from "@ember/controller";
-import AdminDashboard from "admin/models/admin-dashboard";
-import I18n from "I18n";
-import PeriodComputationMixin from "admin/mixins/period-computation";
-import Report from "admin/models/report";
-import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
+import { setting } from "discourse/lib/computed";
 import getURL from "discourse-common/lib/get-url";
 import { makeArray } from "discourse-common/lib/helpers";
-import { setting } from "discourse/lib/computed";
-import { inject as service } from "@ember/service";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import AdminDashboard from "admin/models/admin-dashboard";
+import Report from "admin/models/report";
+import AdminDashboardTabController from "./admin-dashboard-tab";
 
 function staticReport(reportType) {
   return computed("reports.[]", function () {
@@ -16,9 +16,7 @@ function staticReport(reportType) {
   });
 }
 
-export default class AdminDashboardGeneralController extends Controller.extend(
-  PeriodComputationMixin
-) {
+export default class AdminDashboardGeneralController extends AdminDashboardTabController {
   @service router;
   @service siteSettings;
   @controller("exception") exceptionController;
@@ -73,9 +71,25 @@ export default class AdminDashboardGeneralController extends Controller.extend(
   }
 
   @discourseComputed
+  today() {
+    return moment().locale("en").utc().endOf("day");
+  }
+
+  @computed("startDate", "endDate")
+  get filters() {
+    return { startDate: this.startDate, endDate: this.endDate };
+  }
+
+  @discourseComputed
   activityMetricsFilters() {
+    const lastMonth = moment()
+      .locale("en")
+      .utc()
+      .startOf("day")
+      .subtract(1, "month");
+
     return {
-      startDate: this.lastMonth,
+      startDate: lastMonth,
       endDate: this.today,
     };
   }
@@ -144,14 +158,5 @@ export default class AdminDashboardGeneralController extends Controller.extend(
         })
         .finally(() => this.set("isLoading", false));
     }
-  }
-
-  @discourseComputed("startDate", "endDate")
-  filters(startDate, endDate) {
-    return { startDate, endDate };
-  }
-
-  _reportsForPeriodURL(period) {
-    return getURL(`/admin?period=${period}`);
   }
 }

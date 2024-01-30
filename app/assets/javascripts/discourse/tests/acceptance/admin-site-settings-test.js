@@ -1,20 +1,20 @@
 import {
-  acceptance,
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
-import {
   click,
   currentURL,
   fillIn,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
-import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import { test } from "qunit";
+import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import pretender from "discourse/tests/helpers/create-pretender";
+import {
+  acceptance,
+  count,
+  exists,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Site Settings", function (needs) {
   let updatedTitle;
@@ -27,7 +27,7 @@ acceptance("Admin - Site Settings", function (needs) {
     });
     server.get("/admin/site_settings", () => {
       const fixtures = siteSettingFixture["/admin/site_settings"].site_settings;
-      const titleSetting = Object.assign({}, fixtures[0]);
+      const titleSetting = { ...fixtures[0] };
 
       if (updatedTitle) {
         titleSetting.value = updatedTitle;
@@ -148,7 +148,7 @@ acceptance("Admin - Site Settings", function (needs) {
   });
 
   test("category name is preserved", async function (assert) {
-    await visit("admin/site_settings/category/basic?filter=menu");
+    await visit("/admin/site_settings/category/basic?filter=menu");
     assert.strictEqual(
       currentURL(),
       "/admin/site_settings/category/basic?filter=menu"
@@ -156,7 +156,7 @@ acceptance("Admin - Site Settings", function (needs) {
   });
 
   test("shows all_results if current category has none", async function (assert) {
-    await visit("admin/site_settings");
+    await visit("/admin/site_settings");
 
     await click(".admin-nav .basic a");
     assert.strictEqual(currentURL(), "/admin/site_settings/category/basic");

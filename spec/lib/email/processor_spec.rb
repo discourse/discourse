@@ -9,8 +9,8 @@ RSpec.describe Email::Processor do
 
   context "when reply via email is too short" do
     let(:mail) { file_from_fixtures("chinese_reply.eml", "emails").read }
-    fab!(:post) { Fabricate(:post) }
-    fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+    fab!(:post)
+    fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
 
     fab!(:post_reply_key) do
       Fabricate(
@@ -177,7 +177,7 @@ RSpec.describe Email::Processor do
 
   describe "when replying to a post that is too old" do
     fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic, created_at: 3.days.ago) }
     let(:mail) do
       file_from_fixtures("old_destination.eml", "emails")

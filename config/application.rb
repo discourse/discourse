@@ -181,6 +181,15 @@ module Discourse
                                  charset: :unicode
     Sprockets.register_postprocessor "application/javascript", DiscourseJsProcessor
 
+    class SprocketsSassUnsupported
+      def self.call(*args)
+        raise "Discourse does not support compiling scss/sass files via Sprockets"
+      end
+    end
+
+    Sprockets.register_engine(".sass", SprocketsSassUnsupported, silence_deprecation: true)
+    Sprockets.register_engine(".scss", SprocketsSassUnsupported, silence_deprecation: true)
+
     Discourse::Application.initializer :prepend_ember_assets do |app|
       # Needs to be in its own initializer so it runs after the append_assets_path initializer defined by Sprockets
       app

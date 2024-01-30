@@ -142,17 +142,19 @@ class Admin::ThemesController < Admin::AdminController
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]
       update_components = params[:components]
-      match_theme_by_name = !!params[:bundle] && !params.key?(:theme_id) # Old theme CLI behavior, match by name. Remove Jan 2020
+      run_migrations = !params[:skip_migrations]
+
       begin
         @theme =
           RemoteTheme.update_zipped_theme(
             bundle.path,
             bundle.original_filename,
-            match_theme: match_theme_by_name,
             user: theme_user,
-            theme_id: theme_id,
-            update_components: update_components,
+            theme_id:,
+            update_components:,
+            run_migrations:,
           )
+
         log_theme_change(nil, @theme)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
@@ -162,6 +164,8 @@ class Admin::ThemesController < Admin::AdminController
       render_json_error I18n.t("themes.import_error.unknown_file_type"),
                         status: :unprocessable_entity
     end
+  rescue Theme::SettingsMigrationError => err
+    render_json_error err.message
   end
 
   def index
@@ -228,10 +232,14 @@ class Admin::ThemesController < Admin::AdminController
 
     @theme.remote_theme.update_remote_version if params[:theme][:remote_check]
 
-    @theme.remote_theme.update_from_remote if params[:theme][:remote_update]
+    if params[:theme][:remote_update]
+      @theme.remote_theme.update_from_remote(raise_if_theme_save_fails: false)
+    else
+      @theme.save
+    end
 
     respond_to do |format|
-      if @theme.save
+      if @theme.errors.blank?
         update_default_theme
 
         @theme = Theme.include_relations.find(@theme.id)
@@ -255,6 +263,8 @@ class Admin::ThemesController < Admin::AdminController
     end
   rescue RemoteTheme::ImportError => e
     render_json_error e.message
+  rescue Theme::SettingsMigrationError => e
+    render_json_error e.message
   end
 
   def destroy
@@ -263,6 +273,18 @@ class Admin::ThemesController < Admin::AdminController
 
     StaffActionLogger.new(current_user).log_theme_destroy(@theme)
     @theme.destroy
+
+    respond_to { |format| format.json { head :no_content } }
+  end
+
+  def bulk_destroy
+    themes = Theme.where(id: params[:theme_ids])
+    raise Discourse::InvalidParameters.new(:id) unless themes.present?
+
+    ActiveRecord::Base.transaction do
+      themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }
+      themes.destroy_all
+    end
 
     respond_to { |format| format.json { head :no_content } }
   end

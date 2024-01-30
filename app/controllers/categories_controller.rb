@@ -11,6 +11,8 @@ class CategoriesController < ApplicationController
                    redirect
                    find_by_slug
                    visible_groups
+                   find
+                   search
                  ]
 
   before_action :fetch_category, only: %i[show update destroy visible_groups]
@@ -19,6 +21,7 @@ class CategoriesController < ApplicationController
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
+  MAX_CATEGORIES_LIMIT = 25
 
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
@@ -44,6 +47,7 @@ class CategoriesController < ApplicationController
       include_topics: include_topics(parent_category),
       include_subcategories: include_subcategories,
       tag: params[:tag],
+      page: params[:page],
     }
 
     @category_list = CategoryList.new(guardian, category_options)
@@ -192,8 +196,8 @@ class CategoriesController < ApplicationController
       category_params.delete(:custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in]&.blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
+      category_params[:email_in] = nil if category_params[:email_in].blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags].blank?
 
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
@@ -297,6 +301,96 @@ class CategoriesController < ApplicationController
     render json: success_json.merge(groups: groups || [])
   end
 
+  def find
+    categories = []
+
+    if params[:ids].present?
+      categories = Category.secured(guardian).where(id: params[:ids])
+    elsif params[:slug_path_with_id].present?
+      category = Category.find_by_slug_path_with_id(params[:slug_path_with_id])
+      raise Discourse::NotFound if category.blank?
+      guardian.ensure_can_see!(category)
+
+      ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+      categories = [*ancestors, category]
+    end
+
+    raise Discourse::NotFound if categories.blank?
+
+    Category.preload_user_fields!(guardian, categories)
+
+    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+  end
+
+  def search
+    term = params[:term].to_s.strip
+    parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
+    include_uncategorized =
+      (
+        if params[:include_uncategorized].present?
+          ActiveModel::Type::Boolean.new.cast(params[:include_uncategorized])
+        else
+          true
+        end
+      )
+    select_category_ids = params[:select_category_ids].presence
+    reject_category_ids = params[:reject_category_ids].presence
+    include_subcategories =
+      if params[:include_subcategories].present?
+        ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
+      else
+        true
+      end
+    prioritized_category_id = params[:prioritized_category_id].to_i if params[
+      :prioritized_category_id
+    ].present?
+    limit = params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT) if params[:limit].present?
+
+    categories = Category.secured(guardian)
+
+    categories =
+      categories
+        .includes(:category_search_data)
+        .references(:category_search_data)
+        .where(
+          "category_search_data.search_data @@ #{Search.ts_query(term: term)}",
+        ) if term.present?
+
+    categories =
+      (
+        if parent_category_id != -1
+          categories.where(parent_category_id: parent_category_id)
+        else
+          categories.where(parent_category_id: nil)
+        end
+      ) if parent_category_id.present?
+
+    categories =
+      categories.where.not(id: SiteSetting.uncategorized_category_id) if !include_uncategorized
+
+    categories = categories.where(id: select_category_ids) if select_category_ids
+
+    categories = categories.where.not(id: reject_category_ids) if reject_category_ids
+
+    categories = categories.where(parent_category_id: nil) if !include_subcategories
+
+    categories = categories.limit(limit || MAX_CATEGORIES_LIMIT)
+
+    categories = categories.order(<<~SQL) if prioritized_category_id.present?
+      CASE
+      WHEN id = #{prioritized_category_id} THEN 1
+      WHEN parent_category_id = #{prioritized_category_id} THEN 2
+      ELSE 3
+      END
+    SQL
+
+    categories = categories.order(:id)
+
+    Category.preload_user_fields!(guardian, categories)
+
+    render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+  end
+
   private
 
   def self.topics_per_page
@@ -314,6 +408,7 @@ class CategoriesController < ApplicationController
       is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: false,
+      page: params[:page],
     }
 
     topic_options = { per_page: CategoriesController.topics_per_page, no_definitions: true }
@@ -393,6 +488,7 @@ class CategoriesController < ApplicationController
             :uploaded_logo_id,
             :uploaded_logo_dark_id,
             :uploaded_background_id,
+            :uploaded_background_dark_id,
             :slug,
             :allow_badges,
             :topic_template,
@@ -411,7 +507,12 @@ class CategoriesController < ApplicationController
             :read_only_banner,
             :default_list_filter,
             :reviewable_by_group_id,
-            category_setting_attributes: %i[auto_bump_cooldown_days],
+            category_setting_attributes: %i[
+              auto_bump_cooldown_days
+              num_auto_bump_daily
+              require_reply_approval
+              require_topic_approval
+            ],
             custom_fields: [custom_field_params],
             permissions: [*p.try(:keys)],
             allowed_tags: [],

@@ -1,12 +1,11 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { buildPermissionDescription } from "discourse/models/permission-type";
-import { inject as service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
   router: service(),
-  showFooter: true,
 
   titleToken() {
     return I18n.t("groups.permissions.title");

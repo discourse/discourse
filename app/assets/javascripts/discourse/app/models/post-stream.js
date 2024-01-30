@@ -1,19 +1,20 @@
-import { and, equal, not, or } from "@ember/object/computed";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
-import { Promise } from "rsvp";
-import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { deepMerge } from "discourse-common/lib/object";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
-import { highlightPost } from "discourse/lib/utilities";
-import { isEmpty } from "@ember/utils";
-import { loadTopicView } from "discourse/models/topic";
+import { and, equal, not, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
+import TopicSummary from "discourse/lib/topic-summary";
+import DiscourseURL from "discourse/lib/url";
+import { highlightPost } from "discourse/lib/utilities";
+import RestModel from "discourse/models/rest";
+import { loadTopicView } from "discourse/models/topic";
+import User from "discourse/models/user";
+import deprecated from "discourse-common/lib/deprecated";
+import { deepMerge } from "discourse-common/lib/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 let _lastEditNotificationClick = null;
 export function setLastEditNotificationClick(
@@ -48,6 +49,7 @@ export default RestModel.extend({
   filterRepliesToPostNumber: null,
   filterUpwardsPostID: null,
   filter: null,
+  topicSummary: null,
 
   init() {
     this._identityMap = {};
@@ -71,6 +73,7 @@ export default RestModel.extend({
       loadingFilter: false,
       stagingPost: false,
       timelineLookup: [],
+      topicSummary: new TopicSummary(),
     });
   },
 
@@ -388,7 +391,6 @@ export default RestModel.extend({
       // Insert the gap at the appropriate place
 
       let postIdx = currentPosts.indexOf(post);
-      const origIdx = postIdx;
 
       let headGap = gap.slice(0, this.topic.chunk_size);
       let tailGap = gap.slice(this.topic.chunk_size);
@@ -399,7 +401,10 @@ export default RestModel.extend({
             this._initUserModels(p);
             const stored = this.storePost(p);
             if (!currentPosts.includes(stored)) {
-              currentPosts.insertAt(postIdx++, stored);
+              const insertAtIndex = postIdx++;
+              this.postsWithPlaceholders.insertPost(insertAtIndex, () => {
+                currentPosts.insertAt(insertAtIndex, stored);
+              });
             }
           });
 
@@ -408,11 +413,7 @@ export default RestModel.extend({
           } else {
             delete this.get("gaps.before")[postId];
           }
-          this.postsWithPlaceholders.arrayContentDidChange(
-            origIdx,
-            0,
-            posts.length
-          );
+
           post.set("hasGap", false);
           this.gapExpanded();
         });
@@ -1258,6 +1259,18 @@ export default RestModel.extend({
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
       topic.set("noRetry", error.jqXHR.status === 403);
     }
+  },
+
+  collapseSummary() {
+    this.topicSummary.collapse();
+  },
+
+  showSummary(currentUser) {
+    this.topicSummary.generateSummary(currentUser, this.get("topic.id"));
+  },
+
+  processSummaryUpdate(update) {
+    this.topicSummary.processUpdate(update);
   },
 
   _initUserModels(post) {

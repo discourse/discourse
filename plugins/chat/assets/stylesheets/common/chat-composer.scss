@@ -29,6 +29,10 @@
     align-self: flex-end;
   }
 
+  .chat-composer-separator {
+    flex-shrink: 0;
+  }
+
   &__outer-container {
     display: flex;
     align-items: center;

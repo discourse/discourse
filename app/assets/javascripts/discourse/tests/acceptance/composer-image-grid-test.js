@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Image Grid", function (needs) {
   needs.user();
@@ -137,7 +137,7 @@ and a second group of images
       `[grid]${uploads[0]} ${uploads[1]} ${uploads[0]} ${uploads[1]}[/grid]`
     );
 
-    assert.ok(
+    assert.strictEqual(
       document.querySelectorAll(".d-editor-preview .d-image-grid-column")
         .length,
       2,

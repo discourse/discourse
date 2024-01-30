@@ -6,10 +6,10 @@
         <input type="checkbox" class="bulk-select" id="bulk-select-{{topic.id}}">
       </label>
     {{else}}
-      <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.lastPosterUser.username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
+    <a href="{{topic.lastPostUrl}}" aria-label="{{i18n 'latest_poster_link' username=topic.lastPosterUser.username}}" data-user-card="{{topic.lastPosterUser.username}}">{{avatar topic.lastPosterUser imageSize="large"}}</a>
     {{/if}}
   </div>
-  <div class='right'>
+  <div class='topic-item-metadata right'>
     {{!--
       The `~` syntax strip spaces between the elements, making it produce
       `<a class=topic-post-badges>Some text</a><span class=topic-post-badges>`,

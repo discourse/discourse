@@ -1,25 +1,30 @@
-import { avatarFor, avatarImg } from "discourse/widgets/post";
-import { dateNode, numberNode } from "discourse/helpers/node";
-import I18n from "I18n";
-import { createWidget } from "discourse/widgets/widget";
+import { htmlSafe } from "@ember/template";
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
+import { dateNode, numberNode } from "discourse/helpers/node";
 import { replaceEmoji } from "discourse/widgets/emoji";
-import autoGroupFlairForUser from "discourse/lib/avatar-flair";
-import { userPath } from "discourse/lib/url";
+import { avatarFor } from "discourse/widgets/post";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { createWidget } from "discourse/widgets/widget";
+import I18n from "discourse-i18n";
 
 const LINKS_SHOWN = 5;
 
-function renderParticipants(userFilters, participants) {
-  if (!participants) {
-    return;
-  }
-
-  userFilters = userFilters || [];
-  return participants.map((p) => {
-    return this.attach("topic-participant", p, {
-      state: { toggled: userFilters.includes(p.username) },
-    });
-  });
+function renderParticipants(wrapperElement, title, userFilters, participants) {
+  return new RenderGlimmer(
+    this,
+    wrapperElement,
+    hbs`<TopicMap::TopicParticipants
+        @title={{@data.title}}
+        @participants={{@data.participants}}
+        @userFilters={{@data.userFilters}}
+      />`,
+    {
+      title,
+      userFilters,
+      participants,
+    }
+  );
 }
 
 createWidget("topic-map-show-links", {
@@ -38,70 +43,6 @@ createWidget("topic-map-show-links", {
 
   showLinks() {
     this.sendWidgetAction("showAllLinks");
-  },
-});
-
-let addTopicParticipantClassesCallbacks = null;
-export function addTopicParticipantClassesCallback(callback) {
-  addTopicParticipantClassesCallbacks =
-    addTopicParticipantClassesCallbacks || [];
-  addTopicParticipantClassesCallbacks.push(callback);
-}
-createWidget("topic-participant", {
-  buildClasses(attrs) {
-    const classNames = [];
-    if (attrs.primary_group_name) {
-      classNames.push(`group-${attrs.primary_group_name}`);
-    }
-    if (addTopicParticipantClassesCallbacks) {
-      for (let i = 0; i < addTopicParticipantClassesCallbacks.length; i++) {
-        let pluginClasses = addTopicParticipantClassesCallbacks[i].call(
-          this,
-          attrs
-        );
-        if (pluginClasses) {
-          classNames.push.apply(classNames, pluginClasses);
-        }
-      }
-    }
-    return classNames;
-  },
-
-  html(attrs, state) {
-    const linkContents = [
-      avatarImg("medium", {
-        username: attrs.username,
-        template: attrs.avatar_template,
-        name: attrs.name,
-      }),
-    ];
-
-    if (attrs.post_count > 1) {
-      linkContents.push(h("span.post-count", attrs.post_count.toString()));
-    }
-
-    if (attrs.flair_group_id) {
-      if (attrs.flair_url || attrs.flair_bg_color) {
-        linkContents.push(this.attach("avatar-flair", attrs));
-      } else {
-        const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
-        if (autoFlairAttrs) {
-          linkContents.push(this.attach("avatar-flair", autoFlairAttrs));
-        }
-      }
-    }
-    return h(
-      "a.poster.trigger-user-card",
-      {
-        className: state.toggled ? "toggled" : null,
-        attributes: {
-          title: attrs.username,
-          "data-user-card": attrs.username,
-          href: userPath(attrs.username),
-        },
-      },
-      linkContents
-    );
   },
 });
 
@@ -243,10 +184,12 @@ createWidget("topic-map-summary", {
     ) {
       const participants = renderParticipants.call(
         this,
+        "li.avatars",
+        "",
         attrs.userFilters,
         attrs.participants.slice(0, 3)
       );
-      contents.push(h("li.avatars", participants));
+      contents.push(participants);
     }
 
     const nav = h(
@@ -311,10 +254,13 @@ createWidget("topic-map-expanded", {
     let avatars;
 
     if (attrs.participants && attrs.participants.length > 0) {
-      avatars = h("section.avatars", [
-        h("h3", I18n.t("topic_map.participants_title")),
-        renderParticipants.call(this, attrs.userFilters, attrs.participants),
-      ]);
+      avatars = renderParticipants.call(
+        this,
+        "section.avatars",
+        htmlSafe(`<h3>${I18n.t("topic_map.participants_title")}</h3>`),
+        attrs.userFilters,
+        attrs.participants
+      );
     }
 
     const result = [avatars];
@@ -387,7 +333,7 @@ export default createWidget("topic-map", {
     }
 
     if (attrs.hasTopRepliesSummary || attrs.summarizable) {
-      contents.push(this.attach("toggle-topic-summary", attrs));
+      contents.push(this.buildSummaryBox(attrs));
     }
 
     if (attrs.showPMMap) {
@@ -398,5 +344,22 @@ export default createWidget("topic-map", {
 
   toggleMap() {
     this.state.collapsed = !this.state.collapsed;
+  },
+
+  buildSummaryBox(attrs) {
+    return new RenderGlimmer(
+      this,
+      "section.information.toggle-summary",
+      hbs`<SummaryBox
+        @postAttrs={{@data.postAttrs}}
+        @actionDispatchFunc={{@data.actionDispatchFunc}}
+      />`,
+      {
+        postAttrs: attrs,
+        actionDispatchFunc: (actionName) => {
+          this.sendWidgetAction(actionName);
+        },
+      }
+    );
   },
 });

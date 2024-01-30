@@ -1,11 +1,12 @@
-import getURL from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
-import I18n from "I18n";
-import { escape } from "pretty-text/sanitizer";
+import $ from "jquery";
 import toMarkdown from "discourse/lib/to-markdown";
-import deprecated from "discourse-common/lib/deprecated";
-import * as AvatarUtils from "discourse-common/lib/avatar-utils";
 import { capabilities } from "discourse/services/capabilities";
+import * as AvatarUtils from "discourse-common/lib/avatar-utils";
+import deprecated from "discourse-common/lib/deprecated";
+import escape from "discourse-common/lib/escape";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 let _defaultHomepage;
 
@@ -76,19 +77,25 @@ export function highlightPost(postNumber) {
   if (!container) {
     return;
   }
-  const element = container.querySelector(".topic-body");
+
+  const element = container.querySelector(".topic-body, .small-action-desc");
   if (!element || element.classList.contains("highlighted")) {
     return;
   }
 
   element.classList.add("highlighted");
 
+  if (postNumber > 1) {
+    element.setAttribute("tabindex", "0");
+    element.focus();
+  }
+
   const removeHighlighted = function () {
     element.classList.remove("highlighted");
+    element.removeAttribute("tabindex");
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
-  container.querySelector(".tabLoc").focus();
 }
 
 export function emailValid(email) {
@@ -120,46 +127,50 @@ export function selectedText() {
     return "";
   }
 
-  const $div = $("<div>");
+  const div = document.createElement("div");
   for (let r = 0; r < selection.rangeCount; r++) {
     const range = selection.getRangeAt(r);
-    const $ancestor = $(range.commonAncestorContainer);
+    const ancestor =
+      range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+        ? range.commonAncestorContainer
+        : range.commonAncestorContainer.parentElement;
 
     // ensure we never quote text in the post menu area
-    const $postMenuArea = $ancestor.find(".post-menu-area")[0];
-    if ($postMenuArea) {
-      range.setEndBefore($postMenuArea);
+    const postMenuArea = ancestor.querySelector(".post-menu-area");
+    if (postMenuArea) {
+      range.setEndBefore(postMenuArea);
     }
 
-    const $oneboxTest = $ancestor.closest("aside.onebox[data-onebox-src]");
-    const $codeBlockTest = $ancestor.parents("pre");
-    if ($codeBlockTest.length) {
-      const $code = $("<code>");
-      $code.append(range.cloneContents());
+    const oneboxTest = ancestor.closest("aside.onebox[data-onebox-src]");
+    const codeBlockTest = ancestor.closest("pre");
+    if (codeBlockTest) {
+      const code = document.createElement("code");
+      code.append(range.cloneContents());
+
       // Even though this was a code block, produce a non-block quote if it's a single line.
-      if (/\n/.test($code.text())) {
-        const $pre = $("<pre>");
-        $pre.append($code);
-        $div.append($pre);
+      if (/\n/.test(code.innerText)) {
+        const pre = document.createElement("pre");
+        pre.append(code);
+        div.append(pre);
       } else {
-        $div.append($code);
+        div.append(code);
       }
-    } else if ($oneboxTest.length) {
+    } else if (oneboxTest) {
       // This is a partial quote from a onebox.
       // Treat it as though the entire onebox was quoted.
-      const oneboxUrl = $($oneboxTest).data("onebox-src");
-      $div.append(oneboxUrl);
+      const oneboxUrl = oneboxTest.dataset.oneboxSrc;
+      div.append(oneboxUrl);
     } else {
-      $div.append(range.cloneContents());
+      div.append(range.cloneContents());
     }
   }
 
-  $div.find("aside.onebox[data-onebox-src]").each(function () {
-    const oneboxUrl = $(this).data("onebox-src");
-    $(this).replaceWith(oneboxUrl);
+  div.querySelectorAll("aside.onebox[data-onebox-src]").forEach((element) => {
+    const oneboxUrl = element.dataset.oneboxSrc;
+    element.replaceWith(oneboxUrl);
   });
 
-  return toMarkdown($div.html());
+  return toMarkdown(div.outerHTML);
 }
 
 export function selectedNode() {
@@ -211,14 +222,10 @@ export function setCaretPosition(ctrl, pos) {
 }
 
 export function initializeDefaultHomepage(siteSettings) {
-  let homepage;
-  let sel = document.querySelector("meta[name='discourse_current_homepage']");
-  if (sel) {
-    homepage = sel.getAttribute("content");
-  }
-  if (!homepage) {
-    homepage = siteSettings.top_menu.split("|")[0].split(",")[0];
-  }
+  const sel = document.querySelector("meta[name='discourse_current_homepage']");
+  const homepage =
+    sel?.getAttribute("content") ||
+    siteSettings.top_menu.split("|")[0].split(",")[0];
   setDefaultHomepage(homepage);
 }
 
@@ -487,7 +494,11 @@ export function clipboardCopy(text) {
   }
 
   // ...Otherwise, use document.execCommand() fallback
-  return clipboardCopyFallback(text);
+  if (clipboardCopyFallback(text)) {
+    return Promise.resolve();
+  } else {
+    return Promise.reject();
+  }
 }
 
 // Use this version of clipboardCopy if you must use an AJAX call
@@ -593,4 +604,136 @@ export function mergeSortedLists(list1, list2, comparator) {
     }
   }
   return merged;
+}
+
+export function getCaretPosition(element, options) {
+  const jqueryElement = $(element);
+  const position = jqueryElement.caretPosition(options);
+
+  // Get the position of the textarea on the page
+  const textareaRect = element.getBoundingClientRect();
+
+  // Calculate the x and y coordinates by adding the element's position
+  const adjustedPosition = {
+    x: position.left + textareaRect.left,
+    y: position.top + textareaRect.top,
+  };
+
+  return adjustedPosition;
+}
+
+/**
+ * Generate markdown table from an array of objects
+ * Inspired by https://github.com/Ygilany/array-to-table
+ *
+ * @param  {Array} array       Array of objects
+ * @param  {Array} columns     Column headings
+ * @param  {String} colPrefix  Table column prefix
+ *
+ * @return {String} Markdown table
+ */
+export function arrayToTable(array, cols, colPrefix = "col") {
+  let table = "";
+
+  // Generate table headers
+  table += "|";
+  table += cols.join(" | ");
+  table += "|\r\n|";
+
+  // Generate table header separator
+  table += cols
+    .map(function () {
+      return "---";
+    })
+    .join(" | ");
+  table += "|\r\n";
+
+  // Generate table body
+  array.forEach(function (item) {
+    table += "|";
+
+    table +=
+      cols
+        .map(function (_key, index) {
+          return String(item[`${colPrefix}${index}`] || "").replace(
+            /\r?\n|\r/g,
+            " "
+          );
+        })
+        .join(" | ") + "|\r\n";
+  });
+
+  return table;
+}
+
+/**
+ *
+ * @returns a regular expression finding all markdown tables
+ */
+export function findTableRegex() {
+  return /((\r?){2}|^)(^\|[^\r\n]*(\r?\n)?)+(?=(\r?\n){2}|$)/gm;
+}
+
+export function tokenRange(tokens, start, end) {
+  const contents = [];
+  let startPushing = false;
+  let items = [];
+
+  tokens.forEach((token) => {
+    if (token.type === start) {
+      startPushing = true;
+    }
+
+    if (token.type === end) {
+      contents.push(items);
+      items = [];
+      startPushing = false;
+    }
+
+    if (startPushing) {
+      items.push(token);
+    }
+  });
+
+  return contents;
+}
+
+export function allowOnlyNumericInput(event, allowNegative = false) {
+  const ALLOWED_KEYS = [
+    "Enter",
+    "Backspace",
+    "Tab",
+    "Delete",
+    "ArrowLeft",
+    "ArrowUp",
+    "ArrowRight",
+    "ArrowDown",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+  ];
+
+  if (!ALLOWED_KEYS.includes(event.key)) {
+    if (allowNegative && event.key === "-") {
+      return;
+    } else {
+      event.preventDefault();
+    }
+  }
+}
+
+export function cleanNullQueryParams(params) {
+  for (const [key, val] of Object.entries(params)) {
+    if (val === "undefined" || val === "null") {
+      params[key] = null;
+    }
+  }
+  return params;
 }

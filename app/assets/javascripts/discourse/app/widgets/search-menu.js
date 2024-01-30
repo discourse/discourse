@@ -1,22 +1,22 @@
+import { cancel } from "@ember/runloop";
+import { Promise } from "rsvp";
+import { h } from "virtual-dom";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import {
   isValidSearchTerm,
   searchForTerm,
   updateRecentSearches,
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
+import userSearch from "discourse/lib/user-search";
+import { isiPad, translateModKey } from "discourse/lib/utilities";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { isiPad, translateModKey } from "discourse/lib/utilities";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { Promise } from "rsvp";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import userSearch from "discourse/lib/user-search";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
-import { cancel } from "@ember/runloop";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;

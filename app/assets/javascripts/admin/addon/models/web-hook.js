@@ -1,11 +1,11 @@
 import { computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
-import { isEmpty } from "@ember/utils";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default class WebHook extends RestModel {
   content_type = 1; // json
@@ -25,9 +25,16 @@ export default class WebHook extends RestModel {
     this.set("wildcard_web_hook", value === "wildcard");
   }
 
-  @discourseComputed("category_ids")
-  categories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  @computed("category_ids")
+  get categories() {
+    return Category.findByIds(this.category_ids);
+  }
+
+  set categories(value) {
+    this.set(
+      "category_ids",
+      value.map((c) => c.id)
+    );
   }
 
   @observes("group_ids")

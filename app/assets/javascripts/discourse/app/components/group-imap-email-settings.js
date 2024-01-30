@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
-import { isEmpty } from "@ember/utils";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
 import EmberObject, { action } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "",

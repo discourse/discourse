@@ -8,8 +8,8 @@ describe "Viewing sidebar preferences", type: :system do
   before { SiteSetting.navigation_menu = "sidebar" }
 
   context "as an admin" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:admin)
+    fab!(:user)
 
     before { sign_in(admin) }
 

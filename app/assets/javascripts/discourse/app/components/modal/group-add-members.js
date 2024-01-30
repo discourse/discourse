@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 import { tracked } from "@glimmer/tracking";
-import { emailValid } from "discourse/lib/utilities";
-import I18n from "I18n";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { extractError } from "discourse/lib/ajax-error";
+import { emailValid } from "discourse/lib/utilities";
+import I18n from "discourse-i18n";
 
 export default class GroupAddMembers extends Component {
   @service currentUser;
@@ -42,28 +43,33 @@ export default class GroupAddMembers extends Component {
   }
 
   @action
-  addMembers() {
+  async addMembers() {
     if (isEmpty(this.usernamesAndEmails)) {
       return;
     }
+
     this.loading = true;
-    const promise = this.setOwner
-      ? this.args.model.addOwners(this.usernames, true, this.notifyUsers)
-      : this.args.model.addMembers(
+
+    try {
+      if (this.setOwner) {
+        await this.args.model.addOwners(this.usernames, true, this.notifyUsers);
+      } else {
+        await this.args.model.addMembers(
           this.usernames,
           true,
           this.notifyUsers,
           this.emails
         );
+      }
 
-    promise
-      .then(() => {
-        this.router.transitionTo("group.members", this.args.model.name, {
-          queryParams: { ...(this.usernames && { filter: this.usernames }) },
-        });
-        this.args.closeModal();
-      })
-      .catch((e) => (this.flash = e))
-      .finally(() => (this.loading = false));
+      this.router.transitionTo("group.members", this.args.model.name, {
+        queryParams: { ...(this.usernames && { filter: this.usernames }) },
+      });
+      this.args.closeModal();
+    } catch (e) {
+      this.flash = extractError(e);
+    } finally {
+      this.loading = false;
+    }
   }
 }

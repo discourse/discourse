@@ -1,7 +1,7 @@
-import Site from "discourse/models/site";
 import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
 import { isRTL } from "discourse/lib/text-direction";
+import Site from "discourse/models/site";
 
 export function fancyTitle(topicTitle, supportMixedTextDirection) {
   let title = censor(

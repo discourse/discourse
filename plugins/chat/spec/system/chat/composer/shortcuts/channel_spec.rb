@@ -75,8 +75,10 @@ RSpec.describe "Chat | composer | shortcuts | channel", type: :system do
   end
 
   context "when using ArrowUp" do
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
-    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:message_1) do
+      Fabricate(:chat_message, chat_channel: channel_1, user: current_user, use_service: true)
+    end
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
 
     it "edits last editable message" do
       chat.visit_channel(channel_1)

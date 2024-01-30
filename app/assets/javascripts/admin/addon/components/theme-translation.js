@@ -1,7 +1,7 @@
-import SiteSettingComponent from "./site-setting";
+import { alias } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
-import { alias } from "@ember/object/computed";
+import SiteSettingComponent from "./site-setting";
 
 export default class ThemeTranslation extends SiteSettingComponent {
   @alias("translation") setting;

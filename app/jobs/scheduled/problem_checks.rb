@@ -5,6 +5,8 @@ module Jobs
   # on a regular basis. To add a problem check for this scheduled job run
   # call AdminDashboardData.add_scheduled_problem_check
   class ProblemChecks < ::Jobs::Scheduled
+    sidekiq_options retry: false
+
     every 10.minutes
 
     def execute(_args)

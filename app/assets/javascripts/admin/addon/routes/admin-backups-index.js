@@ -1,6 +1,6 @@
-import Backup from "admin/models/backup";
 import Route from "@ember/routing/route";
 import { bind } from "discourse-common/utils/decorators";
+import Backup from "admin/models/backup";
 
 export default class AdminBackupsIndexRoute extends Route {
   activate() {

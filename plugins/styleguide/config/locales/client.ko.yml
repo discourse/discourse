@@ -87,8 +87,7 @@ ko:
           title: "스피너"
         empty_state:
           title: "빈 상태"
-        rich_tooltip:
-          title: "리치 툴팁"
-          description: "설명"
-          header: "Header"
+        tooltips:
+          description: "내용"
+          header: "헤더"
           hover_to_see: "마우스를 올리면 툴팁이 표시됩니다."

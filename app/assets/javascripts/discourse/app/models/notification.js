@@ -1,6 +1,6 @@
-import RestModel from "discourse/models/rest";
 import { tracked } from "@glimmer/tracking";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
+import RestModel from "discourse/models/rest";
 
 export default class Notification extends RestModel {
   static async applyTransformations(notifications) {

@@ -4,11 +4,11 @@
     @id="watched-word"
     @value={{this.word}}
     @disabled={{this.formSubmitted}}
-    @class="watched-word-input-field"
     @autocorrect="off"
     @autocapitalize="off"
     @placeholderKey={{this.placeholderKey}}
     @title={{i18n this.placeholderKey}}
+    class="watched-word-input-field"
   />
 </div>
 
@@ -21,10 +21,10 @@
       @id="watched-replacement"
       @value={{this.replacement}}
       @disabled={{this.formSubmitted}}
-      @class="watched-word-input-field"
       @autocorrect="off"
       @autocapitalize="off"
       @placeholderKey="admin.watched_words.form.replace_placeholder"
+      class="watched-word-input-field"
     />
   </div>
 {{/if}}
@@ -36,11 +36,11 @@
       }}</label>
     <TagChooser
       @id="watched-tag"
-      @class="watched-word-input-field"
       @tags={{this.selectedTags}}
-      @onChange={{action "changeSelectedTags"}}
+      @onChange={{this.changeSelectedTags}}
       @everyTag={{true}}
       @options={{hash allowAny=true disabled=this.formSubmitted}}
+      class="watched-word-input-field"
     />
   </div>
 {{/if}}
@@ -54,10 +54,10 @@
       @id="watched-link"
       @value={{this.replacement}}
       @disabled={{this.formSubmitted}}
-      @class="watched-word-input-field"
       @autocorrect="off"
       @autocapitalize="off"
       @placeholderKey="admin.watched_words.form.link_placeholder"
+      class="watched-word-input-field"
     />
   </div>
 {{/if}}
@@ -77,11 +77,11 @@
 </div>
 
 <DButton
-  @type="submit"
-  @class="btn btn-primary"
-  @action={{action "submitForm"}}
+  @action={{this.submitForm}}
   @disabled={{this.submitDisabled}}
   @label="admin.watched_words.form.add"
+  type="submit"
+  class="btn-primary"
 />
 
 {{#if this.showMessage}}

@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
 describe Summarization::Base do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user)
+  fab!(:group)
+  fab!(:topic)
 
   let(:plugin) { Plugin::Instance.new }
 
   before do
     group.add(user)
 
-    strategy = DummyCustomSummarization.new("dummy")
+    strategy = DummyCustomSummarization.new({ summary: "dummy", chunks: [] })
     plugin.register_summarization_strategy(strategy)
     SiteSetting.summarization_strategy = strategy.model
   end
+
+  after { DiscoursePluginRegistry.reset_register!(:summarization_strategies) }
 
   describe "#can_see_summary?" do
     context "when the user cannot generate a summary" do

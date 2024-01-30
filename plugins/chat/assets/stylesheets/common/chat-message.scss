@@ -24,6 +24,18 @@
   }
 }
 
+[data-content][data-identifier="chat-message-reaction-tooltip"] {
+  font-size: var(--font-down-1);
+
+  .fk-d-tooltip__inner-content {
+    display: block;
+  }
+
+  .emoji {
+    padding-left: 0.25rem;
+  }
+}
+
 .chat-message {
   align-items: flex-start;
   padding: 0.25em 0.5em 0.25em 0.75em;
@@ -58,15 +70,12 @@
       width: 100%;
     }
 
-    .mention.highlighted {
-      background: var(--tertiary-low);
-      color: var(--primary);
-      display: inline-block;
-      font-size: 0.93em;
-      font-weight: normal;
-      padding: 0 0.3em 0.07em;
-      border-radius: 0.6em;
-      text-decoration: none;
+    .mention {
+      @include mention;
+
+      &.highlighted {
+        background: var(--tertiary-low);
+      }
     }
 
     // Automatic aspect-ratio mapping https://developer.mozilla.org/en-US/docs/Web/Media/images/aspect_ratio_mapping
@@ -168,7 +177,8 @@
 }
 
 .chat-message-container {
-  background-color: var(--secondary);
+  background-color: var(--d-content-background, var(--secondary));
+  width: 100%;
 
   &.-errored {
     color: var(--primary-medium);
@@ -226,10 +236,6 @@
     }
   }
 
-  &:has(.tippy-box) {
-    position: relative;
-    z-index: 1;
-  }
   .chat-message-reaction-list .chat-message-react-btn {
     display: none;
   }

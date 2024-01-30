@@ -4,7 +4,6 @@
     class="btn btn-social {{b.name}}"
     {{on "click" (action this.externalLogin b)}}
     aria-label={{b.screenReaderTitle}}
-    tabindex="3"
   >
     {{#if b.isGoogle}}
       <GoogleIcon />
@@ -13,7 +12,12 @@
     {{else}}
       {{d-icon "sign-in-alt"}}
     {{/if}}
-    {{b.title}}
+    <span class="btn-social-title">{{b.title}}</span>
   </button>
 {{/each}}
+
+{{#if this.showPasskeysButton}}
+  <PasskeyLoginButton @passkeyLogin={{this.passkeyLogin}} />
+{{/if}}
+
 <PluginOutlet @name="after-login-buttons" />

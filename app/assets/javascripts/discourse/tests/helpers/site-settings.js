@@ -1,8 +1,7 @@
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { createSiteSettingsFromPreloaded } from "discourse/services/site-settings";
 
 const CLIENT_SETTING_TEST_OVERRIDES = {
   title: "QUnit Discourse Tests",
-  site_logo_url: "/assets/logo.png",
   site_logo_url: "/assets/logo.png",
   site_logo_small_url: "/assets/logo-single.png",
   site_mobile_logo_url: "",
@@ -38,6 +37,6 @@ export function mergeSettings(other) {
 }
 
 export function resetSettings() {
-  siteSettings = new TrackedObject(ORIGINAL_CLIENT_SITE_SETTINGS);
+  siteSettings = createSiteSettingsFromPreloaded(ORIGINAL_CLIENT_SITE_SETTINGS);
   return siteSettings;
 }

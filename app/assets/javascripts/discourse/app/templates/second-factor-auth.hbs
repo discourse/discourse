@@ -10,12 +10,11 @@
   {{#if this.showSecurityKeyForm}}
     <div id="security-key">
       <DButton
-        @action={{action "authenticateSecurityKey"}}
+        @action={{this.authenticateSecurityKey}}
         @icon="key"
-        @id="security-key-authenticate-button"
         @label="login.security_key_authenticate"
-        @type="button"
-        @class="btn btn-large btn-primary"
+        id="security-key-authenticate-button"
+        class="btn-large btn-primary"
       />
     </div>
   {{else if (or this.showTotpForm this.showBackupCodesForm)}}
@@ -26,10 +25,10 @@
         @onTokenInput={{action "onTokenInput"}}
       />
       <DButton
-        @action={{action "authenticateToken"}}
-        @class="btn-primary"
+        @action={{this.authenticateToken}}
         @label="submit"
-        @type="submit"
+        type="submit"
+        class="btn-primary"
       />
     </form>
   {{/if}}

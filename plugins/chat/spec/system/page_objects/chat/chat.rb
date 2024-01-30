@@ -17,6 +17,12 @@ module PageObjects
         )
       end
 
+      def prefers_drawer
+        page.execute_script(
+          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"DRAWER_CHAT\"');",
+        )
+      end
+
       def open_from_header
         find(".chat-header-icon").click
       end
@@ -44,22 +50,26 @@ module PageObjects
 
       def visit_channel(channel, message_id: nil)
         visit(channel.url + (message_id ? "/#{message_id}" : ""))
-        has_no_css?(".chat-channel--not-loaded-once")
-        has_no_css?(".chat-skeleton")
+        has_finished_loading?
+      end
+
+      def visit_user_threads
+        visit("/chat/threads")
+        has_no_css?(".spinner")
       end
 
       def visit_thread(thread)
         visit(thread.url)
-        has_css?(".chat-skeleton")
-        has_no_css?(".chat-skeleton")
+        has_css?(".chat-thread:not(.loading)[data-id=\"#{thread.id}\"]")
+      end
+
+      def visit_threads_list(channel)
+        visit(channel.url + "/t")
+        has_finished_loading?
       end
 
       def visit_channel_settings(channel)
         visit(channel.url + "/info/settings")
-      end
-
-      def visit_channel_about(channel)
-        visit(channel.url + "/info/about")
       end
 
       def visit_channel_members(channel)
@@ -77,17 +87,16 @@ module PageObjects
         PageObjects::Pages::ChatBrowse.new.has_finished_loading?
       end
 
+      def has_finished_loading?
+        has_no_css?(".chat-channel--not-loaded-once")
+        has_no_css?(".chat-skeleton")
+      end
+
       def minimize_full_page
-        find(".open-drawer-btn").click
+        find(".c-navbar__open-drawer-button").click
       end
 
-      def has_message?(message)
-        container = find(".chat-message-container[data-id=\"#{message.id}\"]")
-        container.has_content?(message.message)
-        container.has_content?(message.user.username)
-      end
-
-      NEW_CHANNEL_BUTTON_SELECTOR = ".new-channel-btn"
+      NEW_CHANNEL_BUTTON_SELECTOR = ".c-navbar__new-channel-button"
 
       def new_channel_button
         find(NEW_CHANNEL_BUTTON_SELECTOR)

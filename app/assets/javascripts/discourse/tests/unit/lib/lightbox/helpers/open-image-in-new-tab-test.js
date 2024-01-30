@@ -1,7 +1,6 @@
 import { module, test } from "qunit";
-
-import { openImageInNewTab } from "discourse/lib/lightbox/helpers";
 import sinon from "sinon";
+import { openImageInNewTab } from "discourse/lib/lightbox/helpers";
 
 module(
   "Unit | lib | Experimental Lightbox | Helpers | openImageinNewTab()",

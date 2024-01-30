@@ -1,9 +1,9 @@
 .chat-thread-participants {
-  margin-left: 0.5rem;
   &__other-count {
     font-size: var(--font-down-2);
     color: var(--primary-high);
     white-space: nowrap;
+    margin-left: 0.25rem;
   }
 
   &__avatar-group {
@@ -19,8 +19,6 @@
       width: auto !important;
 
       .avatar {
-        width: 24px;
-        height: 24px;
         padding: 0;
       }
     }
@@ -38,8 +36,6 @@
           margin-right: -10px;
         }
         .avatar {
-          width: 22px;
-          height: 22px;
           border: 1px solid var(--primary-very-low);
         }
       }

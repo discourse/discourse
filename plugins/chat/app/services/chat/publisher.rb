@@ -14,7 +14,7 @@ module Chat
       "#{root_message_bus_channel(chat_channel_id)}/thread/#{thread_id}"
     end
 
-    def self.calculate_publish_targets(channel, message, staged_thread_id: nil)
+    def self.calculate_publish_targets(channel, message)
       return [root_message_bus_channel(channel.id)] if !allow_publish_to_thread?(channel)
 
       if message.thread_om?
@@ -22,9 +22,8 @@ module Chat
           root_message_bus_channel(channel.id),
           thread_message_bus_channel(channel.id, message.thread_id),
         ]
-      elsif staged_thread_id || message.thread_reply?
+      elsif message.thread_reply?
         targets = [thread_message_bus_channel(channel.id, message.thread_id)]
-        targets << thread_message_bus_channel(channel.id, staged_thread_id) if staged_thread_id
         targets
       else
         [root_message_bus_channel(channel.id)]
@@ -35,16 +34,12 @@ module Chat
       channel.threading_enabled
     end
 
-    def self.publish_new!(chat_channel, chat_message, staged_id, staged_thread_id: nil)
-      message_bus_targets =
-        calculate_publish_targets(chat_channel, chat_message, staged_thread_id: staged_thread_id)
+    def self.publish_new!(chat_channel, chat_message, staged_id)
+      message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
       publish_to_targets!(
         message_bus_targets,
         chat_channel,
-        serialize_message_with_type(chat_message, :sent).merge(
-          staged_id: staged_id,
-          staged_thread_id: staged_thread_id,
-        ),
+        serialize_message_with_type(chat_message, :sent).merge(staged_id: staged_id),
       )
 
       if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel)
@@ -101,14 +96,10 @@ module Chat
       )
     end
 
-    def self.publish_thread_created!(chat_channel, chat_message, thread_id, staged_thread_id)
+    def self.publish_thread_created!(chat_channel, chat_message, thread_id)
       publish_to_channel!(
         chat_channel,
-        serialize_message_with_type(
-          chat_message,
-          :thread_created,
-          { thread_id: thread_id, staged_thread_id: staged_thread_id },
-        ),
+        serialize_message_with_type(chat_message, :thread_created, { thread_id: thread_id }),
       )
     end
 
@@ -118,7 +109,7 @@ module Chat
       publish_to_targets!(
         message_bus_targets,
         chat_channel,
-        { type: :processed, chat_message: { id: chat_message.id, cooked: chat_message.cooked } },
+        serialize_message_with_type(chat_message, :processed),
       )
     end
 
@@ -388,29 +379,6 @@ module Chat
         end
     end
 
-    def self.publish_inaccessible_mentions(
-      user_id,
-      chat_message,
-      cannot_chat_users,
-      without_membership,
-      too_many_members,
-      mentions_disabled
-    )
-      MessageBus.publish(
-        "/chat/#{chat_message.chat_channel_id}",
-        {
-          type: :mention_warning,
-          chat_message_id: chat_message.id,
-          cannot_see: cannot_chat_users.map { |u| { username: u.username, id: u.id } }.as_json,
-          without_membership:
-            without_membership.map { |u| { username: u.username, id: u.id } }.as_json,
-          groups_with_too_many_members: too_many_members.map(&:name).as_json,
-          group_mentions_disabled: mentions_disabled.map(&:name).as_json,
-        },
-        user_ids: [user_id],
-      )
-    end
-
     def self.publish_kick_users(channel_id, user_ids)
       MessageBus.publish(
         kick_users_message_bus_channel(channel_id),
@@ -477,8 +445,19 @@ module Chat
       )
     end
 
-    def self.publish_notice(user_id:, channel_id:, text_content:)
-      payload = { type: "notice", text_content: text_content, channel_id: channel_id }
+    def self.publish_notice(user_id:, channel_id:, text_content: nil, type: nil, data: nil)
+      # Notices are either plain text sent to the client, or a "type" with data. The
+      # client will then translate that type and data into a front-end component.
+      if text_content.blank? && type.blank? && data.blank?
+        raise "Cannot publish notice without text content or a type"
+      end
+      payload = { type: "notice", channel_id: channel_id }
+      if text_content
+        payload[:text_content] = text_content
+      else
+        payload[:notice_type] = type
+        payload[:data] = data
+      end
 
       MessageBus.publish("/chat/#{channel_id}", payload, user_ids: [user_id])
     end

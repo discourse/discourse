@@ -237,9 +237,13 @@ a.reply-to-tab {
     align-items: center;
 
     .reason {
+      display: flex;
+      flex-direction: column;
       align-items: flex-start;
-      .select-kit {
-        max-width: 40%;
+
+      .text {
+        margin-left: 0;
+        margin-top: 0.25rem;
       }
     }
     @include breakpoint(mobile-medium) {
@@ -249,24 +253,6 @@ a.reply-to-tab {
         margin: 0.5em 0 0 0;
       }
     }
-  }
-}
-
-.suggested-topics {
-  clear: left;
-  padding: 20px 0 15px 0;
-  th.views,
-  td.views,
-  td.activity,
-  th.activity,
-  th.likes,
-  td.likes {
-    display: none;
-  }
-  a.badge-category,
-  a.badge-category-parent {
-    font-size: var(--font-down-1);
-    vertical-align: top;
   }
 }
 

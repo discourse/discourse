@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { module, test } from "qunit";
 import { buildQuote } from "discourse/lib/quote";
-import PrettyText from "pretty-text/pretty-text";
+import DiscourseMarkdownIt from "discourse-markdown-it";
 
 module("Unit | Utility | build-quote", function (hooks) {
   setupTest(hooks);
@@ -60,7 +60,7 @@ module("Unit | Utility | build-quote", function (hooks) {
   test("quoting a quote", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", {
-      cooked: new PrettyText().cook(
+      cooked: DiscourseMarkdownIt.minimal().cook(
         '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
       ),
       username: "eviltrout",

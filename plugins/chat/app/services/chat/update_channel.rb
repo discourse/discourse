@@ -7,7 +7,7 @@ module Chat
   # and threading_enabled are also editable.
   #
   # @example
-  #  Service::Chat::UpdateChannel.call(
+  #  ::Chat::UpdateChannel.call(
   #   channel_id: 2,
   #   guardian: guardian,
   #   name: "SuperChannel",
@@ -26,17 +26,18 @@ module Chat
     #   @option params_to_edit [String,nil] name
     #   @option params_to_edit [String,nil] description
     #   @option params_to_edit [String,nil] slug
+    #   @option params_to_edit [Boolean] threading_enabled
     #   @option params_to_edit [Boolean] auto_join_users Only valid for {CategoryChannel}. Whether active users
     #    with permission to see the category should automatically join the channel.
     #   @option params_to_edit [Boolean] allow_channel_wide_mentions Allow the use of @here and @all in the channel.
     #   @return [Service::Base::Context]
 
     model :channel, :fetch_channel
-    policy :no_direct_message_channel
     policy :check_channel_permission
     contract default_values_from: :channel
     step :update_channel
     step :mark_all_threads_as_read_if_needed
+    step :update_site_settings_if_needed
     step :publish_channel_update
     step :auto_join_users_if_needed
 
@@ -62,12 +63,8 @@ module Chat
       Chat::Channel.find_by(id: channel_id)
     end
 
-    def no_direct_message_channel(channel:, **)
-      !channel.direct_message_channel?
-    end
-
     def check_channel_permission(guardian:, channel:, **)
-      guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?
+      guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?(channel)
     end
 
     def update_channel(channel:, contract:, **)
@@ -79,6 +76,10 @@ module Chat
     def mark_all_threads_as_read_if_needed(channel:, **)
       return if !(context.threading_enabled_changed && channel.threading_enabled)
       Jobs.enqueue(Jobs::Chat::MarkAllChannelThreadsRead, channel_id: channel.id)
+    end
+
+    def update_site_settings_if_needed
+      SiteSetting.chat_threads_enabled = Chat::Channel.exists?(threading_enabled: true)
     end
 
     def publish_channel_update(channel:, guardian:, **)

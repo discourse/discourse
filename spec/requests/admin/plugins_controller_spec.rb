@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::PluginsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#index" do
     context "while logged in as an admin" do

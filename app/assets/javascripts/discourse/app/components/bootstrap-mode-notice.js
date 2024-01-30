@@ -1,21 +1,16 @@
-import getURL from "discourse-common/lib/get-url";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 export default class BootstrapModeNotice extends Component {
-  @service currentUser;
   @service siteSettings;
+  @service userTips;
 
-  @tracked showUserTip = false;
-
-  @action
-  setupUserTip() {
-    this.showUserTip = this.currentUser?.canSeeUserTip("admin_guide");
-  }
+  @tracked showUserTip = this.userTips.canSeeUserTip("admin_guide");
 
   @action
   routeToAdminGuide() {

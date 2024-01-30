@@ -1,8 +1,16 @@
+<UserTip
+  @id="topic_timeline"
+  @titleText={{i18n "user_tips.topic_timeline.title"}}
+  @contentText={{i18n "user_tips.topic_timeline.content"}}
+  @placement="left"
+  @triggerSelector=".timeline-scrollarea-wrapper"
+/>
+
 <div
   class={{concat-class "timeline-container" this.classes}}
   {{did-insert this.addShowClass}}
 >
-  <div class="topic-timeline" {{did-insert this.addUserTip}}>
+  <div class="topic-timeline">
     <TopicTimeline::Container
       @model={{@model}}
       @enteredIndex={{this.enteredIndex}}

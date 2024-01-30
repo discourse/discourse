@@ -1,19 +1,19 @@
+import { DEBUG } from "@glimmer/env";
+import runloop from "@ember/runloop";
+import RSVP from "rsvp";
+import PreloadStore from "discourse/lib/preload-store";
+import { setURLContainer } from "discourse/lib/url";
+import Session from "discourse/models/session";
 import {
   isDevelopment,
   isProduction,
   isTesting,
   setEnvironment,
 } from "discourse-common/config/environment";
-import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import PreloadStore from "discourse/lib/preload-store";
-import RSVP from "rsvp";
-import Session from "discourse/models/session";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import { setIconList } from "discourse-common/lib/icon-library";
-import { setURLContainer } from "discourse/lib/url";
-import runloop from "@ember/runloop";
-import { DEBUG } from "@glimmer/env";
+import I18n from "discourse-i18n";
 
 export default {
   // The very first initializer to run
@@ -67,7 +67,6 @@ export default {
     session.serviceWorkerURL = setupData.serviceWorkerUrl;
     session.assetVersion = setupData.assetVersion;
     session.disableCustomCSS = setupData.disableCustomCss === "true";
-    session.markdownItURL = setupData.markdownItUrl;
 
     if (setupData.mbLastFileChangeId) {
       session.mbLastFileChangeId = parseInt(setupData.mbLastFileChangeId, 10);

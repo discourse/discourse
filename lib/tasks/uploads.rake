@@ -609,11 +609,15 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
       update_uploads_access_control_post if SiteSetting.secure_uploads?
 
       puts "", "Analysing which uploads need to be marked secure and be rebaked.", ""
-      if SiteSetting.login_required?
-        # Simply mark all uploads linked to posts secure if login_required because no anons will be able to access them.
+      if SiteSetting.login_required? && !SiteSetting.secure_uploads_pm_only?
+        # Simply mark all uploads linked to posts secure if login_required because
+        # no anons will be able to access them; however if secure_uploads_pm_only is
+        # true then login_required will not mark other uploads secure.
         post_ids_to_rebake, all_upload_ids_changed = mark_all_as_secure_login_required
       else
-        # Otherwise only mark uploads linked to posts in secure categories or PMs as secure.
+        # Otherwise only mark uploads linked to posts either:
+        #   * In secure categories or PMs if !SiteSetting.secure_uploads_pm_only
+        #   * In PMs if SiteSetting.secure_uploads_pm_only
         post_ids_to_rebake, all_upload_ids_changed =
           update_specific_upload_security_no_login_required
       end
@@ -693,15 +697,24 @@ end
 def update_specific_upload_security_no_login_required
   # A simplification of the rules found in UploadSecurity which is a lot faster than
   # having to loop through records and use that class to check security.
+  filter_clause =
+    if SiteSetting.secure_uploads_pm_only?
+      "WHERE topics.archetype = 'private_message'"
+    else
+      <<~SQL
+        LEFT JOIN categories ON categories.id = topics.category_id
+        WHERE (topics.category_id IS NOT NULL AND categories.read_restricted) OR
+          (topics.archetype = 'private_message')
+      SQL
+    end
+
   post_upload_ids_marked_secure = DB.query_single(<<~SQL)
     WITH upl AS (
       SELECT DISTINCT ON (upload_id) upload_id
       FROM upload_references
       INNER JOIN posts ON posts.id = upload_references.target_id AND upload_references.target_type = 'Post'
       INNER JOIN topics ON topics.id = posts.topic_id
-      LEFT JOIN categories ON categories.id = topics.category_id
-      WHERE (topics.category_id IS NOT NULL AND categories.read_restricted) OR
-        (topics.archetype = 'private_message')
+      #{filter_clause}
     )
     UPDATE uploads
     SET secure = true,
@@ -952,6 +965,7 @@ def analyze_missing_s3
       %i[categories uploaded_logo_id],
       %i[categories uploaded_logo_dark_id],
       %i[categories uploaded_background_id],
+      %i[categories uploaded_background_dark_id],
       %i[custom_emojis upload_id],
       %i[theme_fields upload_id],
       %i[user_exports upload_id],

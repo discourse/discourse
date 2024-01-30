@@ -1,5 +1,7 @@
 import Service, { inject as service } from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
+@disableImplicitInjections
 export default class NavigationMenu extends Service {
   @service site;
   @service siteSettings;

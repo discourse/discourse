@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { notEmpty } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { notEmpty } from "@ember/object/computed";
+import I18n from "discourse-i18n";
 
 const DEFAULT_GROUP = "default";
 

@@ -5,11 +5,18 @@
 # https://translate.discourse.org/
 
 tr_TR:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Sohbet
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Her zaman"
+          fullscreen: "Sohbet tam ekran modundayken"
+          never: "Asla"
       logs:
         staff_actions:
           actions:
@@ -21,12 +28,24 @@ tr_TR:
           descriptions:
             chat:
               create_message: "Belirtilen kanalda bir sohbet mesajı oluşturun."
+      web_hooks:
+        chat_event:
+          group_name: "Sohbet olayları"
+          chat_message_created: "Mesaj oluşturuldu"
+          chat_message_edited: "Mesaj düzenlendi"
+          chat_message_trashed: "Mesaj çöpe atıldı"
+          chat_message_restored: "Mesaj geri yüklendi"
     about:
-      chat_messages_count: "Sohbet Mesajları"
-      chat_channels_count: "Sohbet Kanalları"
-      chat_users_count: "Sohbet Kullanıcıları"
+      chat_messages_count: "Sohbet mesajları"
+      chat_channels_count: "Sohbet kanalları"
+      chat_users_count: "Sohbet kullanıcıları"
     chat:
+      text_copied: Metin panoya kopyalandı
+      link_copied: Bağlantı panoya kopyalandı
+      back_to_forum: "Forum"
+      deleted_chat_username: silindi
       dates:
+        yesterday: "Dün"
         time_tiny: "h:mm"
       all_loaded: "Tüm mesajlar gösteriliyor"
       already_enabled: "Bu konuda sohbet zaten etkin. Lütfen yenileyin."
@@ -53,6 +72,7 @@ tr_TR:
         delete_channel: "Kanalı sil"
         join_channel: "Kanala katıl"
         leave_channel: "Kanaldan ayrıl"
+        leave_groupchat_info: "Bu grup sohbetinden ayrıldığınızda, artık bu sohbete erişiminiz olmayacak ve bununla ilgili bildirimler almayacaksınız. Yeniden katılmak için grup sohbetinin bir üyesi tarafından yeniden davet edilmeniz gerekecek."
         join: "Katıl"
         leave: "Ayrıl"
         save_label:
@@ -81,6 +101,7 @@ tr_TR:
         create: "Yeni kanal"
       click_to_join: "Mevcut kanalları görüntülemek için buraya tıklayın."
       close: "Kapat"
+      remove: "Kaldır"
       collapse: "Sohbet Çekmecesini Daralt"
       expand: "Sohbet Çekmecesini genişlet"
       confirm_flag: "%{username} adlı kullanıcının mesajına bayrak eklemek istediğinizden emin misiniz?"
@@ -105,7 +126,10 @@ tr_TR:
         title: "Etkinlik göstergesini başlıkta gösterin"
         all_new: "Tüm Yeni Mesajlar"
         dm_and_mentions: "Doğrudan Mesajlar ve Bahsetmeler"
+        only_mentions: "Yalnızca Bahsetmeler"
         never: "Asla"
+      separate_sidebar_mode:
+        title: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
       enable: "Sohbeti etkinleştir"
       flag: "Bayrak ekle"
       emoji: "Emoji ekle"
@@ -124,27 +148,11 @@ tr_TR:
           one: "Son bir saat"
           other: "Son %{count} saat"
       mention_warning:
-        dismiss: "kapat"
-        cannot_see: "%{username} bu kanala erişemiyor ve bilgilendirilmedi."
-        cannot_see_multiple:
-          one: "%{username} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
-          other: "%{username} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
         invitations_sent:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
-        without_membership: "%{username} bu kanala katılmadı."
-        without_membership_multiple:
-          one: "%{username} ve %{count} kullanıcı daha bu kanala katılmadı."
-          other: "%{username} ve %{count} kullanıcı daha bu kanala katılmadı."
-        group_mentions_disabled: "%{group_name} bahsetmeye izin vermiyor."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
-          other: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
-        too_many_members: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
-        too_many_members_multiple:
-          one: "%{group_name} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
-          other: "%{group_name} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
+        channel_wide_mentions_disallowed: "Bu kanalda @here ve @all bahsetmeleri devre dışı."
         groups:
           header:
             some: "Bazı kullanıcılara bildirim gönderilmeyecek"
@@ -239,13 +247,12 @@ tr_TR:
         closed: "Kanal kapalı, şu anda yeni mesaj gönderemezsiniz."
         read_only: "Kanal salt okunurdur, şu anda yeni mesaj gönderemezsiniz."
       placeholder_silenced: "Şu anda mesaj gönderemezsiniz."
-      placeholder_start_conversation: "Şu kişiyle konuşma başlatın:"
-      placeholder_start_conversation_users: "%{commaSeparatedUsernames} ile konuşma başlatın"
       remove_upload: "Dosyayı kaldır"
       react: "Emoji ile tepki ver"
       reply: "Yanıtla"
       edit: "Düzenle"
       copy_link: "Bağlantıyı kopyala"
+      copy_text: "Metni kopyala"
       rebake_message: "HTML'yi yeniden oluştur"
       retry_staged_message:
         title: "Ağ hatası"
@@ -257,7 +264,8 @@ tr_TR:
       save: "Kaydet"
       select: "Seç"
       return_to_list: "Kanal listesine dön"
-      return_to_threads_list: "Devam eden tartışmalara dönün"
+      return_to_channel: "Kanala geri dön"
+      return_to_threads_list: "İleti dizisi listesine dön"
       unread_threads_count:
         one: "%{count} okunmamış tartışmanız var"
         other: "%{count} okunmamış tartışmanız var"
@@ -304,6 +312,8 @@ tr_TR:
         yesterday: Dün
       members_view:
         filter_placeholder: Üye bul
+        add_member: Üye Ekle
+        back_to_settings: "Ayarlara geri dön"
       about_view:
         associated_topic: Bağlantılı konu
         associated_category: Bağlantılı kategori
@@ -314,7 +324,6 @@ tr_TR:
         back_to_all_channels: "Tüm kanallar"
         back_to_channel: "Geri"
         tabs:
-          about: Hakkında
           members: Üyeler
           settings: Ayarlar
       new_message_modal:
@@ -325,9 +334,15 @@ tr_TR:
         default_search_placeholder: "#bir-kanal, @biri veya herhangi bir şey"
         default_channel_search_placeholder: "#bir-kanal"
         default_user_search_placeholder: "@biri"
-        user_search_placeholder: "...daha fazla kullanıcı ekleyin"
+        user_search_placeholder: "... daha fazla üye ekle"
         disabled_user: "sohbeti devre dışı bıraktı"
         no_items: "Öge yok"
+        create_group_placeholder: "Grup sohbeti adı (isteğe bağlı)"
+        participants_counter: "%{selection_count}/%{max} katılımcı"
+        new_group_chat: "Yeni grup sohbeti"
+        filter: "Filtrele"
+        cant_add_more_members: "Maksimum üye sayısına ulaşıldı"
+        create_new_group_chat: "Grup sohbeti oluştur"
       channel_edit_name_slug_modal:
         title: Kanalı düzenleyin
         input_placeholder: Ad ekleyin
@@ -339,10 +354,15 @@ tr_TR:
         input_placeholder: Açıklama ekle
         description: İnsanlara bu kanalın neyle ilgili olduğunu söyleyin
       direct_message_creator:
+        add_to_channel: "Kanala ekle"
         title: Yeni Mesaj
         prefix: "Kime:"
         no_results: Sonuç yok
         selected_user_title: "%{username} seçimini kaldır"
+        group_name: "Grup sohbeti adı (isteğe bağlı)"
+        members_counter:
+          one: "%{count}/%{max} üye"
+          other: "%{count}/%{max} üye"
       channel:
         no_memberships: Bu kanalda üye yok
         no_memberships_found: Üye bulunamadı
@@ -396,17 +416,11 @@ tr_TR:
       reviewable:
         type: "Sohbet mesajı"
       reactions:
-        only_you: ":%{emoji}: ile tepki verdiniz"
-        you_and_single_user: "Siz ve %{username}, :%{emoji}: ile tepki verdiniz"
-        you_and_multiple_users: "Siz, %{commaSeparatedUsernames} ve %{username}, :%{emoji}: ile tepki verdiniz"
-        you_multiple_users_and_more:
-          one: "Siz, %{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdiniz"
-          other: "Siz, %{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdiniz"
-        single_user: "%{username} :%{emoji}: ile tepki verdi"
-        multiple_users: "%{commaSeparatedUsernames} ve %{username}, :%{emoji}: ile tepki verdi"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdi"
-          other: "%{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdi"
+        only_you: "<span>Şu şekilde tepki verdiniz: </span>:%{emoji}:"
+        you_and_single_user: "<span>Siz ve %{username} şu şekilde tepki verdiniz: </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Siz, %{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdiniz</span>:%{emoji}"
+        single_user: "<span>%{username} şu şekilde tepki verdi</span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdi</span>:%{emoji}:"
       composer:
         toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
@@ -416,6 +430,7 @@ tr_TR:
       quote:
         original_channel: 'İlk olarak <a href="%{channelLink}">%{channel}</a> adlı kanalda gönderildi'
         copy_success: "Sohbet alıntısı panoya kopyalandı"
+        default_thread_title: "İleti Dizisi"
       notification_levels:
         never: "Asla"
         mention: "Sadece bahsetmeler için"
@@ -444,19 +459,26 @@ tr_TR:
         saved: "Kaydedildi"
         unfollow: "Ayrıl"
         admin_title: "Yönetici"
+        settings_title: "Ayarlar"
+        info_title: "Kanal bilgisi"
+        category_label: "Kategori"
+        history_label: "Geçmiş"
+        members_label: "Üyeler"
       admin:
         title: "Sohbet"
         export_messages:
           title: "Sohbet mesajlarını dışa aktar"
-          description: "Dışa aktarma şu anda son 6 aydaki en son 10.000 mesajla sınırlıdır."
+          description: "Bu, tüm kanallardan gelen tüm mesajları dışa aktarır."
           create_export: "Dışa aktarma oluştur"
           export_has_started: "Dışa aktarma başladı. Hazır olduğunda bir kişisel mesaj alacaksınız."
       direct_messages:
-        title: "Kişisel sohbet"
         new: "Kişisel sohbet oluşturun"
         create: "Git"
         leave: "Bu kişisel sohbetten ayrıl"
+        close: "Bu kişisel sohbeti kapat"
         cannot_create: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
+      channel_list:
+        title: "Kanallar"
       incoming_webhooks:
         back: "Geri"
         channel_placeholder: "Kanal seçin"
@@ -514,14 +536,14 @@ tr_TR:
           one: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
       retention_reminders:
-        public_none: "Kanal geçmişi süresiz olarak saklanır."
-        public:
-          one: "Kanal geçmişi %{count} gün boyunca saklanır."
-          other: "Kanal geçmişi %{count} gün boyunca saklanır."
-        dm_none: "Kişisel sohbet geçmişi süresiz olarak saklanır."
-        dm:
-          one: "Kişisel sohbet geçmişi %{count} gün boyunca saklanır."
-          other: "Kişisel sohbet geçmişi %{count} gün boyunca saklanır."
+        indefinitely_short: "süresiz olarak"
+        indefinitely_long: "Sohbet ayarları, kanal mesajlarını süresiz olarak saklayacak şekilde ayarlandı."
+        short:
+          one: "%{count} gün"
+          other: "%{count} gün"
+        long:
+          one: "Sohbet ayarları, kanal mesajlarını %{count} gün saklayacak şekilde ayarlandı."
+          other: "Sohbet ayarları, kanal mesajlarını %{count} gün saklayacak şekilde ayarlandı."
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."
@@ -546,7 +568,6 @@ tr_TR:
       thread:
         title: "Başlık"
         view_thread: Konuyu görüntüle
-        default_title: "Konu"
         replies:
           one: "%{count} yanıt"
           other: "%{count} yanıt"
@@ -568,7 +589,7 @@ tr_TR:
           other: "+%{count}"
       threads:
         open: "Konu aç"
-        list: "Devam eden tartışmalar"
+        list: "İleti dizileri"
         none: "Bu kanaldaki herhangi bir konuya katılmıyorsunuz."
       draft_channel_screen:
         header: "Yeni Mesaj"
@@ -616,6 +637,9 @@ tr_TR:
       types:
         chat_reviewable_message:
           title: "Bayrak Eklenen Sohbet Mesajı"
+        reviewable_chat_message:
+          title: "Bayrak eklenen sohbet mesajı"
+          noun: "sohbet mesajı"
     keyboard_shortcuts_help:
       chat:
         title: "Sohbet"
@@ -651,3 +675,7 @@ tr_TR:
       sections:
         chat:
           title: Sohbet
+    sidebar:
+      panels:
+        chat:
+          label: "Sohbet"

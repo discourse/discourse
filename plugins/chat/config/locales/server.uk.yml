@@ -6,7 +6,8 @@
 
 uk:
   site_settings:
-    chat_enabled: "Увімкніть плаґін чату."
+    chat_separate_sidebar_mode: "Показувати окремі режими бічної панелі для форуму і чату."
+    chat_enabled: "Увімкнути чат."
     enable_public_channels: "Увімкнути публічні канали на основі категорій."
     chat_allowed_groups: "Користувачі в цих групах можуть спілкуватися в чаті. Зауважте, що команда обслуговування завжди має доступ до чату."
     chat_channel_retention_days: "Повідомлення чату в звичайних каналах зберігатимуться стільки днів. Встановіть «0», щоб зберігати повідомлення назавжди."
@@ -27,11 +28,15 @@ uk:
     max_mentions_per_chat_message: "Максимальна кількість сповіщень @name, які користувач може використовувати в повідомленні чату."
     chat_max_direct_message_users: "Під час створення нового прямого повідомлення користувачі не можуть додавати більше ніж цю кількість інших користувачів. Встановіть 0, щоб дозволити повідомлення лише собі. Персонал звільняється від цього параметра."
     chat_allow_archiving_channels: "Дозвольте співробітникам архівувати повідомлення в темі при закритті каналу."
+    chat_editing_grace_period: "Протягом (n) секунд після надсилання чату редагування не відображатиме (відредагований) тег у повідомленні чату."
+    chat_editing_grace_period_max_diff_low_trust: "Максимальна кількість змінених символів, дозволених у пільговому періоді редагування чату, а при більшій зміні показуватиметься тег (відредаговано) біля повідомлення чату (рівень довіри 0 і 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Максимальна кількість змін символів, дозволена протягом пільгового періоду редагування чату, якщо змінено більше, відображати тег (відредаговано) біля повідомлення чату (рівень довіри 2 і вище)."
     errors:
       chat_default_channel: "Канал чату за замовчуванням має бути публічним."
       direct_message_enabled_groups_invalid: "Ви повинні вказати принаймні одну групу для цього параметра. Якщо ви не хочете, щоб хтось, крім членів команди обслуговування, надсилав приватні повідомлення, виберіть групу команди обслуговування."
       chat_upload_not_allowed_secure_uploads: "Завантаження чату не дозволяється, якщо ввімкнено налаштування безпечного завантаження."
   system_messages:
+    private_channel_title: "Канал %{id}"
     chat_channel_archive_complete:
       title: "Архівацію каналу чату завершено"
       subject_template: "Архівацію каналу чату успішно завершено"
@@ -54,6 +59,7 @@ uk:
   chat:
     deleted_chat_username: видалено
     errors:
+      users_cant_be_added_to_channel: "Користувачі не можуть бути додані до цього каналу."
       channel_exists_for_category: "Для цієї категорії та назви вже існує канал"
       channel_new_message_disallowed:
         archived: "Канал заархівований, нові повідомлення не надсилаються"
@@ -123,18 +129,25 @@ uk:
           title: "Видалити повідомлення"
           description: "Видаліть повідомлення, щоб користувачі не бачили його."
         delete_and_agree:
-          title: "Видалити повідомлення"
+          title: "Ігнорувати прапорець і видалити повідомлення"
+          description: "Ігнорувати прапорець, видаливши його з черги і видаливши повідомлення."
         disagree_and_restore:
           title: "Не погодитися та відновити повідомлення"
           description: "Відновити повідомлення, щоб усі користувачі могли його бачити."
         disagree:
           title: "Відмовити"
         ignore:
-          title: "Ігнорувати"
+          title: "Нічого не робити"
+          description: "Ігнорувати прапорець, видаливши його з черги без жодних дій."
       direct_messages:
         transcript_title: "Зміст попередніх повідомлень в %{channel_name}"
         transcript_body: "Щоб надати вам більше контексту, ми включили зміст попередніх повідомлень у цій розмові (до десяти):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} був запрошений %{inviting_user}."
+        few: "%{invited_users} були запрошені %{inviting_user}."
+        many: "%{invited_users} були запрошені %{inviting_user}."
+        other: "%{invited_users} були запрошені %{inviting_user}."
       archive:
         first_post_raw: "Ця тема є архівом каналу чату [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -150,6 +163,39 @@ uk:
           few: "%{comma_separated_usernames} і ще %{count}"
           many: "%{comma_separated_usernames} і ще %{count}"
           other: "%{comma_separated_usernames} і ще %{count}"
+    mention_warning:
+      dismiss: "відхилити"
+      cannot_see: "%{first_identifier} не має доступу до цього каналу і не отримав сповіщення."
+      cannot_see_multiple:
+        one: "%{first_identifier} і %{count} інший користувач не мають доступу до цього каналу та не отримали сповіщення."
+        few: "%{first_identifier} і %{count} інші користувачі не мають доступу до цього каналу та не отримали сповіщення."
+        many: "%{first_identifier} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
+        other: "%{first_identifier} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
+      invitations_sent:
+        one: "Запрошення надіслано"
+        few: "Запрошення надіслані"
+        many: "Запрошення надіслані"
+        other: "Запрошення надіслані"
+      invite: "Запросити до каналу"
+      without_membership: "%{first_identifier} не приєднався до цього каналу."
+      without_membership_multiple:
+        one: "%{first_identifier} і ще %{count} користувач не приєдналися до цього каналу."
+        few: "%{first_identifier} і ще %{count} користувачі не приєдналися до цього каналу."
+        many: "%{first_identifier} і ще %{count} користувачів не приєдналися до цього каналу."
+        other: "%{first_identifier} і ще %{count} користувачів не приєдналися до цього каналу."
+      group_mentions_disabled: "%{first_identifier} не дозволяє згадувати."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} та %{count} інша група забороняють згадки."
+        few: "%{first_identifier} та %{count} інші групи забороняють згадки."
+        many: "%{first_identifier} та %{count} інших груп забороняють згадки."
+        other: "%{first_identifier} та %{count} інших груп забороняють згадки."
+      global_mentions_disallowed: "Згадки @here та @all вимкнені на цьому каналі."
+      too_many_members: "%{first_identifier} має занадто багато членів. Нікого не було повідомлено."
+      too_many_members_multiple:
+        one: "%{first_identifier} та %{count} інша група мають занадто багато членів. Ніхто не був сповіщений."
+        few: "%{first_identifier} та %{count} інші групи мають занадто багато членів. Ніхто не був сповіщений."
+        many: "%{first_identifier} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
+        other: "%{first_identifier} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "містить символи, які не є ASCII"
@@ -161,6 +207,7 @@ uk:
       inline_to_message: "Повідомлення №%{message_id} від %{username} – №%{chat_channel}"
       inline_to_channel: "Чат №%{chat_channel}"
       inline_to_topic_channel: "Чат для теми %{topic_title}"
+      thread_title_connector: "в"
       x_members:
         one: "%{count} учасник"
         few: "%{count} учасники"
@@ -173,6 +220,9 @@ uk:
         other: "та %{count} інших"
     summaries:
       no_targets: "За вибраний період повідомлень не було."
+    transcript:
+      default_thread_title: "Нитка"
+      split_thread_range: "повідомлення %{start} до %{end} із %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -209,6 +259,7 @@ uk:
         other: "У вас є нові повідомлення в чаті"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Нове повідомлення"
         direct_message_from_1: "[%{email_prefix}] Нове повідомлення від %{username}"
         direct_message_from_2: "[%{email_prefix}] Нове повідомлення від %{username1} і %{username2}"
         direct_message_from_more:

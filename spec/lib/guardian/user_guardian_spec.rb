@@ -31,8 +31,8 @@ RSpec.describe UserGuardian do
 
   let(:moderator_upload) { Upload.new(user_id: moderator.id, id: 4) }
 
-  let(:trust_level_1) { build(:user, trust_level: 1) }
-  let(:trust_level_2) { build(:user, trust_level: 2) }
+  fab!(:trust_level_1)
+  fab!(:trust_level_2)
 
   describe "#can_pick_avatar?" do
     let :guardian do
@@ -108,7 +108,7 @@ RSpec.describe UserGuardian do
 
     context "with hidden profile" do
       # Mixing Fabricate.build() and Fabricate() could cause ID clashes, so override :user
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       let(:hidden_user) do
         result = Fabricate(:user)
@@ -450,13 +450,13 @@ RSpec.describe UserGuardian do
 
     it "returns true if the trust level of user matches site setting" do
       guardian = Guardian.new(trust_level_2)
-      SiteSetting.min_trust_level_to_allow_user_card_background = 2
+      SiteSetting.user_card_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(guardian.can_upload_user_card_background?(trust_level_2)).to eq(true)
     end
 
     it "returns false if the trust level of user does not matches site setting" do
       guardian = Guardian.new(trust_level_1)
-      SiteSetting.min_trust_level_to_allow_user_card_background = 2
+      SiteSetting.user_card_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(guardian.can_upload_user_card_background?(trust_level_1)).to eq(false)
     end
   end

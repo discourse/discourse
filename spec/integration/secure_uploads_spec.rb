@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Secure uploads" do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:group)
   fab!(:secure_category) { Fabricate(:private_category, group: group) }
 
   before do

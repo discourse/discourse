@@ -4,8 +4,8 @@ import {
   resetChatMessageDecorators,
 } from "discourse/plugins/chat/discourse/components/chat-message";
 import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
-import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/services/chat-state-manager";
 import { removeChatComposerSecondaryActions } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/services/chat-state-manager";
 
 /**
  * Class exposing the javascript API available to plugins and themes.

@@ -1,10 +1,10 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
-import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 
 function initTags(context) {
   const categories = context.site.categoriesList;
@@ -82,5 +82,18 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
       "David x2",
       "it has the tag count"
     );
+  });
+
+  test("default global (no category)", async function (assert) {
+    this.siteSettings.max_tags_in_filter_list = 3;
+    await render(hbs`<TagDrop />`);
+
+    await this.subject.expand();
+    assert.dom(".filter-for-more").exists("it has the 'filter for more' note");
+
+    await this.subject.fillInFilter("dav");
+    assert
+      .dom(".filter-for-more")
+      .doesNotExist("it does not have the 'filter for more' note");
   });
 });

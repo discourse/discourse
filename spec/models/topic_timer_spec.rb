@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicTimer, type: :model do
-  fab!(:topic_timer) { Fabricate(:topic_timer) }
-  fab!(:topic) { Fabricate(:topic) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:topic_timer)
+  fab!(:topic)
+  fab!(:admin)
 
   before { freeze_time }
 

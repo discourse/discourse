@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { fmt } from "discourse/lib/computed";
-import { isDocumentRTL } from "discourse/lib/text-direction";
 import { action, computed } from "@ember/object";
 import { next } from "@ember/runloop";
+import { fmt } from "discourse/lib/computed";
+import { isDocumentRTL } from "discourse/lib/text-direction";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class AdminThemeEditor extends Component {
   warning = null;
@@ -69,7 +69,6 @@ export default class AdminThemeEditor extends Component {
 
   set activeSection(value) {
     this.theme.setField(this.currentTargetName, this.fieldName, value);
-    return value;
   }
 
   @discourseComputed("maximized")

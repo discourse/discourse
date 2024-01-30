@@ -362,14 +362,6 @@ pre.codeblock-buttons:hover {
   }
 }
 
-.suggested-topics {
-  margin: 4.5em 0 1em;
-
-  table {
-    margin-top: 10px;
-  }
-}
-
 span.post-count {
   background: var(--primary);
   color: var(--secondary);
@@ -531,7 +523,8 @@ blockquote {
   -webkit-font-smoothing: subpixel-antialiased;
 }
 
-.dropdown {
+.dropdown,
+.multiselect {
   position: relative;
 }
 

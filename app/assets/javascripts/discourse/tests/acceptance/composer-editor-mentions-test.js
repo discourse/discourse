@@ -1,5 +1,6 @@
-import { test } from "qunit";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { setCaretPosition } from "discourse/lib/utilities";
 import {
   acceptance,
   emulateAutocomplete,
@@ -9,7 +10,6 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { setCaretPosition } from "discourse/lib/utilities";
 
 acceptance("Composer - editor mentions", function (needs) {
   let clock = null;

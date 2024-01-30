@@ -13,16 +13,12 @@
 
           {{#if key.revoked}}
             <DButton
-              @action={{route-action "undoRevokeApiKey"}}
-              @actionParam={{key}}
-              @class="btn"
+              @action={{fn (route-action "undoRevokeApiKey") key}}
               @label="user.undo_revoke_access"
             />
           {{else}}
             <DButton
-              @action={{route-action "revokeApiKey"}}
-              @actionParam={{key}}
-              @class="btn"
+              @action={{fn (route-action "revokeApiKey") key}}
               @label="user.revoke_access"
             />
           {{/if}}

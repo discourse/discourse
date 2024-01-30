@@ -1,6 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import { isPresent } from "@ember/utils";
 import { action } from "@ember/object";
+import { isPresent } from "@ember/utils";
+import DiscourseRoute from "discourse/routes/discourse";
 import { bind } from "discourse-common/utils/decorators";
 
 export default DiscourseRoute.extend({

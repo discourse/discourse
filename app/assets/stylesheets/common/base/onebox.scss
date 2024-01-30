@@ -130,6 +130,7 @@ aside.onebox {
     h4 {
       font-size: var(--font-up-1);
       margin: 0 0 10px 0;
+      line-height: var(--line-height-medium);
     }
 
     a[href] {
@@ -153,24 +154,6 @@ aside.onebox {
       &.onebox-full-image {
         max-height: none;
         max-width: none;
-      }
-    }
-
-    .github-body-container {
-      margin: 1em 0 0 0;
-      color: var(--primary-very-high);
-      max-height: 400px;
-      white-space: pre-wrap;
-      overflow-y: auto;
-      word-break: break-word;
-      font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
-        "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-      flex: 1 0 100%;
-      box-sizing: border-box;
-
-      .show-more {
-        // padding on right for larger hitzone
-        padding: 0.5em 1.5em 0em 0.25em;
       }
     }
 
@@ -199,7 +182,6 @@ aside.onebox {
           max-width: initial;
           max-height: initial;
           float: none;
-          margin-right: none;
         }
       }
 
@@ -413,6 +395,7 @@ pre.onebox code ol.lines li {
   border-left: 1px solid #cfcfcf;
   min-height: 1.5em; //show empty li lines
   white-space: pre;
+  width: max-content;
 }
 
 pre.onebox code li.selected {
@@ -438,8 +421,27 @@ pre.onebox code {
 .onebox.githubcommit,
 .onebox.githubissue {
   .onebox-body {
+    display: grid;
+    grid-template-areas:
+      "icon title"
+      "icon branches"
+      "icon info"
+      "body body";
+    grid-template-columns: 2.5em 1fr;
+    gap: 0.25em 0.75em;
+
+    @include breakpoint(mobile-extra-large) {
+      gap: 0.25em 0.5em;
+      grid-template-columns: 1.5em 1fr;
+      grid-template-areas:
+        "icon title"
+        "branches branches"
+        "info info"
+        "body body";
+    }
+
     h4 {
-      margin-bottom: 5px;
+      margin-bottom: 0;
     }
 
     > .github-icon {
@@ -450,22 +452,26 @@ pre.onebox code {
   }
 
   .github-row {
-    display: flex;
+    display: contents;
   }
 
-  .github-icon-container {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
+  .github-icon-container,
+  .github-info-container {
+    display: contents;
   }
 
   .github-icon {
+    grid-area: icon;
+    align-self: center;
+    width: 100%;
+    height: 100%;
+    max-width: 2.15em;
+    margin: 0 auto;
     fill: var(--primary-high);
-    width: 40px;
-    height: 40px;
   }
 
   .branches {
+    grid-area: branches;
     font-size: var(--font-down-1);
     code {
       word-break: break-all;
@@ -474,21 +480,21 @@ pre.onebox code {
 
   .github-info-container {
     width: 100%;
+    overflow-x: hidden;
+    > span {
+      // TODO: remove in a few months
+      // replaced by .github-info in new commit oneboxes
+      grid-area: info;
+    }
   }
 
   .github-info {
+    grid-area: info;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
-
-    > div {
-      margin: 2.5px 0;
-    }
-
-    > div:not(:last-child) {
-      margin-right: 15px;
-    }
+    gap: 0.15em 1em;
 
     .lines {
       font-weight: bold;
@@ -500,17 +506,31 @@ pre.onebox code {
         color: var(--danger);
       }
     }
+
+    .discourse-local-date {
+      white-space: nowrap;
+    }
+  }
+
+  .github-body-container {
+    grid-area: body;
+    margin: 1em 0 0 0;
+    color: var(--primary-very-high);
+    max-height: 400px;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    word-break: break-word;
+    font-family: var(--d-font-family--monospace);
+    box-sizing: border-box;
+
+    .show-more {
+      // padding on right for larger hitzone
+      padding: 0.5em 1.5em 0em 0.25em;
+    }
   }
 
   .onebox-avatar-inline {
-    height: 20px;
-    width: 20px;
     border-radius: 2px;
-    float: none;
-    margin: 0;
-    padding: 0;
-    vertical-align: middle;
-    max-width: none;
   }
 
   .labels span {
@@ -914,6 +934,34 @@ aside.onebox.mixcloud-preview {
     height: 100%;
   }
 }
+.video-placeholder-container {
+  position: relative;
+  padding: 0 0 56.25% 0;
+  width: 100%;
+  background-color: black;
+
+  .video-placeholder-overlay {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: 150ms;
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 30%;
+    .d-icon {
+      color: white;
+      height: 2em;
+      width: 2em;
+      transition: width 0.15s, height 0.15s;
+    }
+  }
+
+  &:hover .video-placeholder-overlay .d-icon {
+    height: 3em;
+    width: 3em;
+  }
+}
 
 iframe.vimeo-onebox {
   width: 100%;
@@ -935,6 +983,9 @@ iframe.vimeo-onebox {
     position: absolute;
     width: calc(100% - 40px);
     animation: 0.5s fadeIn;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 }
 

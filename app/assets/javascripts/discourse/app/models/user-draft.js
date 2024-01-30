@@ -1,13 +1,13 @@
+import { userPath } from "discourse/lib/url";
+import { postUrl } from "discourse/lib/utilities";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
-import I18n from "I18n";
 import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
-import { postUrl } from "discourse/lib/utilities";
-import { userPath } from "discourse/lib/url";
+import I18n from "discourse-i18n";
 
 export default RestModel.extend({
   @discourseComputed("draft_username")

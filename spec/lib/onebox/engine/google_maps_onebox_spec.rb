@@ -72,13 +72,13 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
     end
   end
 
-  let(:data) { Onebox::Helpers.symbolize_keys(onebox.send(:data)) }
+  let(:data) { onebox.send(:data).deep_symbolize_keys }
   let(:link) { |example| URLS[example.metadata[:urltype] || :short][:test] }
 
   include_context "an engine", urltype: :short
 
   URLS.each do |kind, t|
-    it "processes #{kind.to_s} url correctly", urltype: kind do
+    it "processes #{kind} url correctly", urltype: kind do
       expect(onebox.url).to eq t[:expect]
       expect(onebox.streetview?).to t[:streetview] ? be_truthy : be_falsey
       expect(onebox.to_html).to include("<iframe")
