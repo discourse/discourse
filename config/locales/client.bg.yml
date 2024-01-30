@@ -1396,6 +1396,7 @@ bg:
         success_via_admin: "Изпратихме имейл на този адрес. Потребителят ще трябва да следва инструкциите за потвърждение в имейла."
         success_staff: "Изпратихме съобщение на този адрес. Моля, следвайте инструкциите за потвърждаване."
         back_to_preferences: "Обратно към предпочитанията"
+        confirm_success: "Вашият имейл беше актуализиран."
       change_avatar:
         title: "Сменете аватара на вашия профил "
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, въз основа на"
@@ -2035,6 +2036,8 @@ bg:
       components:
         categories_admin_dropdown:
           title: "Управление на категории"
+        bulk_select_topics_dropdown:
+          title: "Групови действия "
     date_time_picker:
       from: От
       to: До
@@ -2435,6 +2438,9 @@ bg:
         top: "Няма повече топ теми."
         bookmarks: "Няма теми в Отметки"
         filter: "Няма повече теми."
+    topic_bulk_actions:
+      close_topics:
+        name: "Затвори темите"
     topic:
       create: "Нова тема"
       create_disabled_category: "Нямате право да създавате теми в тази категория"

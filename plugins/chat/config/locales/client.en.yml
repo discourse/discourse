@@ -115,6 +115,7 @@ en:
         direct_message_cta: "Start a personal Chat"
         direct_message: "You can also start a personal chat with one or more users."
         title: "No channels found"
+        my_threads: "You don't have any threads yet. Threads you participate in will be displayed here."
       email_frequency:
         description: "We'll only email you if we haven't seen you in the last 15 minutes."
         never: "Never"

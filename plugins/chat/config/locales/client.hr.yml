@@ -30,6 +30,7 @@ hr:
     chat:
       deleted_chat_username: izbrisao
       dates:
+        yesterday: "Jučer"
         time_tiny: "h:mm"
       all_loaded: "Prikaz svih poruka"
       already_enabled: "Chat je već omogućen na ovu temu. Molimo osvježite."

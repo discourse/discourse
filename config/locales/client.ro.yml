@@ -1270,6 +1270,7 @@ ro:
         success: "Am trimis un email către adresa respectivă. Urmează instrucțiunile de confirmare."
         success_via_admin: "Am trimis un e-mail la acea adresă. Utilizatorul va trebui să urmeze instrucțiunile de confirmare din e-mail."
         success_staff: "Ți-am trimis un email la adresa curentă. Urmează instrucțiunile de confirmare."
+        confirm_success: "Emailul tău a fost actualizat."
       change_avatar:
         title: "Schimbă poza de profil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, bazat pe"
@@ -1746,6 +1747,9 @@ ro:
       delete_item: "Șterge %{name}"
       no_content: Nu s-au găsit potriviri
       create: "Creează: '%{content}'"
+      components:
+        bulk_select_topics_dropdown:
+          title: "Acțiuni multiple"
     date_time_picker:
       from: De la
       to: Către
@@ -2072,6 +2076,9 @@ ro:
         tag: "Nu mai există subiecte din categoria %{tag}."
         top: "Nu mai există subiecte de top."
         bookmarks: "Nu mai sunt semne de carte."
+    topic_bulk_actions:
+      close_topics:
+        name: "Închide subiectele"
     topic:
       filter_to:
         one: "O postare în subiect"

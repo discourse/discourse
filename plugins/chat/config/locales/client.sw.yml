@@ -13,6 +13,8 @@ sw:
           never: "Kamwe"
     chat:
       deleted_chat_username: imefutwa
+      dates:
+        yesterday: "Jana"
       create: "Tengeneza"
       cancel: "Ghairi"
       channel_settings:

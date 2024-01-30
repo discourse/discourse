@@ -13,6 +13,8 @@ nb_NO:
           never: "Aldri"
     chat:
       deleted_chat_username: slettet
+      dates:
+        yesterday: "I går"
       create: "Opprett"
       cancel: "Avbryt"
       channel_settings:

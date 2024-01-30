@@ -13,6 +13,8 @@ vi:
           never: "Không bao giờ"
     chat:
       deleted_chat_username: đã bị xóa
+      dates:
+        yesterday: "Hôm qua"
       create: "Tạo"
       cancel: "Huỷ"
       channel_settings:

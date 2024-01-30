@@ -45,6 +45,7 @@ uk:
       back_to_forum: "Форум"
       deleted_chat_username: видалено
       dates:
+        yesterday: "Вчора"
         time_tiny: "h:mm"
       all_loaded: "Показати всі повідомлення"
       already_enabled: "У цій темі вже увімкнено чат. Будь ласка, оновіть її."
@@ -373,6 +374,7 @@ uk:
         filter: "Filter"
         cant_add_more_members: "Досягнуто максимальної кількості учасників"
         create_new_group_chat: "Створити груповий чат"
+        group_with_too_many_members: "має забагато учасників (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Редагувати канал
         input_placeholder: Додайте назву

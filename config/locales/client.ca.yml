@@ -1056,6 +1056,12 @@ ca:
         error: "Hi ha hagut un error en canviar el vostre correu electrònic. Potser aquesta adreça ja està en ús. "
         success: "Hem enviat un correu electrònic a aquesta adreça. Seguiu les instruccions de confirmació."
         success_staff: "S'ha enviat un missatge a la vostra adreça actual. Seguiu les instruccions de confirmació."
+        confirm_success: "El vostre correu electrònic ha estat actualitzat."
+        confirm: "Confirma"
+        authorizing_old:
+          old_email: "Adreça electrònica antiga: %{email}"
+          new_email: "Adreça electrònica nova: %{email}"
+          confirm_success: "Hem enviat un correu electrònic a la vostra nova adreça electrònica per a confirmar el canvi."
       change_avatar:
         title: "Canvia la foto de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basat en"
@@ -1516,6 +1522,9 @@ ca:
       min_content_not_reached:
         one: "Selecciona almenys %{count} element."
         other: "Seleccioneu almenys %{count}elements."
+      components:
+        bulk_select_topics_dropdown:
+          title: "Accions massives"
     date_time_picker:
       from: De
       to: A
@@ -1824,6 +1833,7 @@ ca:
     topics:
       new_messages_marker: "darrera visita"
       bulk:
+        confirm: "Confirma"
         select_all: "Selecciona-ho tot"
         clear_all: "Neteja-ho tot"
         unlist_topics: "Fes temes invisibles"
@@ -1868,6 +1878,9 @@ ca:
         tag: "No hi ha més temes de %{tag}."
         top: "No hi ha més temes destacats."
         bookmarks: "No hi ha més temes marcats com a preferits."
+    topic_bulk_actions:
+      close_topics:
+        name: "Tanca temes"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"

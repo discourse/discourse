@@ -1177,6 +1177,7 @@ nb_NO:
         success: "Vi har sendt en e-post til den adressen. Følg instruksjonene i meldingen."
         success_via_admin: "Vi har sendt en e-post til den adressen. Følg instruksjonene i meldingen."
         success_staff: "Vi har sendt en e-post til den gjeldende adressen. Følg bekreftelsesinstruksjonene."
+        confirm_success: "E-postaddressen din er blitt oppdatert."
       change_avatar:
         title: "Bytt profilbilde"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basert på"
@@ -1726,6 +1727,8 @@ nb_NO:
       components:
         categories_admin_dropdown:
           title: "Administrere kategorier"
+        bulk_select_topics_dropdown:
+          title: "Massehandlinger"
     date_time_picker:
       from: Fra
       to: Til
@@ -2123,6 +2126,9 @@ nb_NO:
         tag: "Det finnes ingen %{tag}-emner igjen."
         top: "Det finnes ingen flere populære emner."
         bookmarks: "Det finnes ingen flere bokmerkede emner."
+    topic_bulk_actions:
+      close_topics:
+        name: "Lukk emner"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"

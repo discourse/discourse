@@ -13,6 +13,8 @@ sq:
           never: "Asnjëherë"
     chat:
       deleted_chat_username: deleted
+      dates:
+        yesterday: "Dje"
       cancel: "Anulo"
       channel_settings:
         edit: "Redakto"

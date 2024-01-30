@@ -965,6 +965,8 @@ sk:
         error: "Pri zmene emailu nastala chyba. Je možné, že je email už použitý?"
         success: "Na email sme odoslali správu. Nasledujte prosím inštrukcie pre potvrdenie."
         success_staff: "Na váš aktuálny email sme odoslali správu. Nasledujte prosím inštrukcie pre potvrdenie."
+        confirm_success: "Vaša emailova adresa bola aktualizovaná"
+        confirm: "Potvrďte"
       change_avatar:
         title: "Zmeniť váš profilový obrázok"
         letter_based: "Systém pridelil profilový obrázok"
@@ -1381,8 +1383,9 @@ sk:
       filter_placeholder: Hľadať…
       filter_placeholder_with_any: Vyhľadajte alebo vytvorte…
       components:
-        tag_drop:
-          filter_for_more: Filtrovať pre viac…
+        filter_for_more: Filtrovať pre viac…
+        bulk_select_topics_dropdown:
+          title: "Hromadné akcie"
     date_time_picker:
       from: Od
       to: Komu
@@ -1574,6 +1577,7 @@ sk:
     topics:
       new_messages_marker: "posledná návševa"
       bulk:
+        confirm: "Potvrďte"
         select_all: "Vyber všetko"
         clear_all: "Zruš všetko"
         unlist_topics: "Dôverné témy"
@@ -1621,6 +1625,9 @@ sk:
         tag: "Žiadne ďalšie témy v %{tag}."
         top: "Nie je už viac poulárnych tém"
         bookmarks: "Žiadne ďalšie témy v záložkách."
+    topic_bulk_actions:
+      close_topics:
+        name: "Uzavrieť tému"
     topic:
       filter_to:
         one: "%{count} príspevok k téme"

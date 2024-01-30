@@ -13,6 +13,8 @@ bs_BA:
           never: "Nikad"
     chat:
       deleted_chat_username: obrisano
+      dates:
+        yesterday: "Yesterday"
       create: "napravi"
       cancel: "Odustani"
       channel_settings:

@@ -13,6 +13,8 @@ lv:
           never: "Nekad"
     chat:
       deleted_chat_username: dzēsts
+      dates:
+        yesterday: "Vakar"
       create: "Izveidot"
       cancel: "Atcelt"
       channel_settings:

@@ -1606,6 +1606,15 @@ ru:
         success_via_admin: "На указанный адрес электронной почты отправлено письмо. Для подтверждения адреса пользователь должен следовать инструкциям в письме."
         success_staff: "На текущий адрес электронной почты отправлено письмо. Следуйте инструкциям по подтверждению в письме."
         back_to_preferences: "Вернуться в настройки"
+        confirm_success: "Адрес электронной почты обновлён."
+        confirm: "Подтвердить"
+        authorizing_new:
+          description: "Подтвердите изменение адреса электронной почты на новый:"
+          description_add: "Подтвердите добавление дополнительного адреса электронной почты:"
+        authorizing_old:
+          old_email: "Старая эл. почта: %{email}"
+          new_email: "Новая эл. почта: %{email}"
+          confirm_success: "Мы отправили письмо на новый адрес, чтобы подтвердить изменение!"
       change_avatar:
         title: "Изменить аватар"
         gravatar: "На основе <a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>"
@@ -2318,10 +2327,11 @@ ru:
         many: "Выберите хотя бы %{count} элементов."
         other: "Выберите хотя бы %{count} элемента."
       components:
-        tag_drop:
-          filter_for_more: Больше тегов…
+        filter_for_more: Больше тегов…
         categories_admin_dropdown:
           title: "Управление категориями"
+        bulk_select_topics_dropdown:
+          title: "Массовые действия"
     date_time_picker:
       from: От
       to: До
@@ -2891,6 +2901,7 @@ ru:
     topics:
       new_messages_marker: "последнее посещение"
       bulk:
+        confirm: "Подтвердить"
         select_all: "Выбрать всё"
         clear_all: "Отменить выбор"
         unlist_topics: "Скрыть темы"
@@ -2992,6 +3003,9 @@ ru:
         top: "Обсуждаемых тем больше нет."
         bookmarks: "Тем, помеченных закладкам,. больше нет."
         filter: "Тем больше нет."
+    topic_bulk_actions:
+      close_topics:
+        name: "Закрыть темы"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"

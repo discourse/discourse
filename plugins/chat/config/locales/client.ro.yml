@@ -18,6 +18,8 @@ ro:
     chat:
       back_to_forum: "Forum"
       deleted_chat_username: șters
+      dates:
+        yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulare"
       move_to_channel:

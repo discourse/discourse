@@ -1290,6 +1290,9 @@ th:
         other: "คุณสามารถเลือกได้ %{count} รายการเท่านั้น"
       min_content_not_reached:
         other: "เลือกอย่างน้อย %{count} รายการ"
+      components:
+        bulk_select_topics_dropdown:
+          title: "การดำเนินการจำนวนมาก"
     date_time_picker:
       from: จาก
       to: ถึง
@@ -1607,6 +1610,9 @@ th:
         tag: "ไม่มีกระทู้อื่นอีกใน %{tag}"
         top: "ไม่มีกระทู้ยอดนิยมอีกแล้ว"
         bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
+    topic_bulk_actions:
+      close_topics:
+        name: "ปิดกระทู้"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"

@@ -1060,6 +1060,9 @@ sr:
       alt: "Alt"
     select_kit:
       delete_item: "Obriši %{name}"
+      components:
+        bulk_select_topics_dropdown:
+          title: "Grupne aktivnosti"
     emoji_picker:
       flags: Zastave
     composer:
@@ -1204,6 +1207,9 @@ sr:
         tag: "Nema više %{tag} tema."
         top: "Nema više glavnih tema."
         bookmarks: "Nema više markiranih tema."
+    topic_bulk_actions:
+      close_topics:
+        name: "Zatvori Teme"
     topic:
       create: "Nova Tema"
       create_long: "Otvori novu Temu"

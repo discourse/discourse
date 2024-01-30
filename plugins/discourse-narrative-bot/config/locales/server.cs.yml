@@ -350,7 +350,7 @@ cs:
         instructions: |-
           Pokud chceš svůj příspěvek stáhnout, můžeš ho smazat.
 
-          Pokračuj a **odstraň** kterýkoli z výše uvedených příspěvků pomocí akce <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **odstranit**. Nemaž však první příspěvek!
+          Pokračuj a **odstraň** kterýkoli z výše uvedených příspěvků pomocí akce <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **odstranit**. Ale nemaž první příspěvek!
         not_found: |-
           Zatím nevidím žádné smazané příspěvky? Nezapomeň, že <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zobrazit více odhalí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> tlačítko smazat.
         reply: |-

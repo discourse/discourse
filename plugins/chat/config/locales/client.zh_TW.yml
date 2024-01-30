@@ -29,6 +29,7 @@ zh_TW:
     chat:
       deleted_chat_username: 已刪除
       dates:
+        yesterday: "昨天"
         time_tiny: "h:mm"
       all_loaded: "顯示所有訊息"
       already_enabled: "此主題已啟用聊天功能。請重新整理。"

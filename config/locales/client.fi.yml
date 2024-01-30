@@ -1456,6 +1456,15 @@ fi:
         success_via_admin: "Olemme lähettäneet sähköpostin tähän osoitteeseen. Käyttäjän täytyy noudattaa sähköpostissa annettuja vahvistusohjeita."
         success_staff: "Lähetimme sähköpostin nykyiseen osoitteeseesi. Noudata vahvistusohjeita."
         back_to_preferences: "Takaisin asetuksiin"
+        confirm_success: "Sähköpostiosoite päivitetty."
+        confirm: "Vahvista"
+        authorizing_new:
+          description: "Vahvista, että haluat sähköpostiosoitteesi muutettavan seuraavasti:"
+          description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
+        authorizing_old:
+          old_email: "Vanha sähköposti: %{email}"
+          new_email: "Uusi sähköposti: %{email}"
+          confirm_success: "Lähetimme sinulle sähköpostin uuteen osoitteeseesi, jotta voit vahvistaa muutoksen!"
       change_avatar:
         title: "Vaihda profiilikuvasi"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, perustuen"
@@ -2134,10 +2143,11 @@ fi:
         one: "Valitse ainakin %{count} kohde."
         other: "Valitse ainakin %{count} kohdetta."
       components:
-        tag_drop:
-          filter_for_more: Näytä lisää…
+        filter_for_more: Näytä lisää…
         categories_admin_dropdown:
           title: "Hallitse alueita"
+        bulk_select_topics_dropdown:
+          title: "Joukkotoiminnot"
     date_time_picker:
       from: Alkaen
       to: Päättyen
@@ -2647,6 +2657,7 @@ fi:
     topics:
       new_messages_marker: "edellinen vierailu"
       bulk:
+        confirm: "Vahvista"
         select_all: "Valitse kaikki"
         clear_all: "Tyhjennä kaikki"
         unlist_topics: "Poista ketjuja listauksista"
@@ -2732,6 +2743,9 @@ fi:
         top: "Suosittuja ketjuja ei ole enempää."
         bookmarks: "Kirjanmerkkeihin lisättyjä ketjuja ei ole enempää."
         filter: "Ketjuja ei ole enempää."
+    topic_bulk_actions:
+      close_topics:
+        name: "Sulje ketjut"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"

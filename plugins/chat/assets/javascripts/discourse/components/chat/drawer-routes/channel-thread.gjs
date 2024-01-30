@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -14,6 +15,12 @@ export default class ChatDrawerRoutesChannelThread extends Component {
   @service chatStateManager;
   @service chatChannelsManager;
   @service chatHistory;
+
+  @tracked showThreadFullTitle = false;
+
+  get showfullTitle() {
+    return this.chatStateManager.isDrawerExpanded && this.showThreadFullTitle;
+  }
 
   get backButton() {
     const link = {
@@ -65,8 +72,17 @@ export default class ChatDrawerRoutesChannelThread extends Component {
     }
   }
 
+  @action
+  setFullTitle(value) {
+    this.showThreadFullTitle = value;
+  }
+
   <template>
-    <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
+    <Navbar
+      @onClick={{this.chat.toggleDrawer}}
+      @showFullTitle={{this.showfullTitle}}
+      as |navbar|
+    >
       <navbar.BackButton
         @title={{this.backButton.title}}
         @route={{this.backButton.route}}
@@ -92,6 +108,7 @@ export default class ChatDrawerRoutesChannelThread extends Component {
             <ChatThread
               @thread={{thread}}
               @targetMessageId={{@params.messageId}}
+              @setFullTitle={{this.setFullTitle}}
             />
           {{/if}}
         {{/each}}
