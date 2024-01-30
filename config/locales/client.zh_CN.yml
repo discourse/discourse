@@ -1774,7 +1774,7 @@ zh_CN:
       refresh_page: "刷新页面"
     summary:
       in_progress: "使用 AI 总结话题"
-      summarized_on: "已在 %{date}使用 AI 总结"
+      summarized_on: "在 %{date}使用 AI 总结"
       model_used: "使用的 AI：%{model}"
       outdated: "摘要已过时"
       outdated_posts:
@@ -3798,7 +3798,7 @@ zh_CN:
       approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "嘿，您应该加入此论坛！"
       custom_message_template_topic: "嘿，我想您可能会喜欢此话题！"
-    forced_anonymous: "由于负载过大，这会暂时向所有人显示，因此退出登录的用户会看到它。"
+    forced_anonymous: "由于负载过大，暂时向所有人显示退出登录的用户可以看到的内容。"
     forced_anonymous_login_required: "该站点正处于极端负载状态，当前无法加载，请在几分钟后再试。"
     footer_nav:
       back: "返回"
