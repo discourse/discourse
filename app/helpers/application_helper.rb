@@ -736,6 +736,10 @@ module ApplicationHelper
     absolute_url
   end
 
+  def escape_noscript(&block)
+    raw capture(&block).gsub(%r{<(/\s*noscript)}i, '&lt;\1')
+  end
+
   def manifest_url
     # If you want the `manifest_url` to be different for a specific action,
     # in the action set @manifest_url = X. Originally added for chat to add a
