@@ -177,14 +177,17 @@ export default class PostTextSelection extends Component {
     if (this.canEditPost) {
       const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
       const matches = cooked.innerHTML.match(regexp);
-      const non_ascii_regex = /[^\x00-\x7F]/;
+      // allow letters (with diacritics), numbers, spaces and punctuation
+      // also works for CJK ranges (Chinese, Japanese, Korean, etc)
+      const validChars = /[\p{Letter}\p{Number}\p{Mark}\p{P}\s]/gu;
+      const validCharCount = quoteState.buffer.match(validChars)?.length || 0;
 
       if (
         quoteState.buffer.length === 0 ||
         quoteState.buffer.includes("|") || // tables are too complex
         quoteState.buffer.match(/\n/g) || // linebreaks are too complex
         matches?.length > 1 || // duplicates are too complex
-        non_ascii_regex.test(quoteState.buffer) // non-ascii chars break fast-edit
+        validCharCount !== quoteState.buffer.length // contains non-supported chars
       ) {
         supportsFastEdit = false;
       } else if (matches?.length === 1) {
