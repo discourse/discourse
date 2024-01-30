@@ -5020,7 +5020,7 @@ en:
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
               sync_sso: Synchronize a user using DiscourseConnect.
-              show: Obtain information about an user.
+              show: Obtain information about a user.
               check_emails: List user emails.
               update: Update user profile information.
               log_out: Log out all sessions for a user.
@@ -5142,14 +5142,14 @@ en:
           post_liked: "When a user likes a post."
         notification_event:
           group_name: "Notification Events"
-          notification_created: "An user receives a notification in their feed"
+          notification_created: "A user receives a notification in their feed"
         group_user_event:
           group_name: "Group User Events"
-          user_added_to_group: "An user is added to a group"
-          user_removed_from_group: "An user is removed from a group"
+          user_added_to_group: "A user is added to a group"
+          user_removed_from_group: "A user is removed from a group"
         user_promoted_event:
           group_name: "User Promoted Events"
-          user_promoted: "An user is promoted"
+          user_promoted: "A user is promoted"
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
