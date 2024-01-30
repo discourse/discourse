@@ -143,10 +143,10 @@ export default class ReorderCategories extends Component {
 
   @action
   async save() {
-    this.entries = this.reorder(this.sortedEntries);
+    const entries = this.reorder(this.sortedEntries);
 
     const data = {};
-    for (const { category, position } of this.entries) {
+    for (const { category, position } of entries) {
       data[category.id] = position;
     }
 
