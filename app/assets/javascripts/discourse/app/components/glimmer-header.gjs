@@ -24,7 +24,6 @@ import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
 import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
 import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
 import MountWidget from "./mount-widget";
-// import HeaderCloak from "./glimmer-header/cloak";
 
 const SEARCH_BUTTON_ID = "search-button";
 
@@ -145,11 +144,6 @@ export default class GlimmerHeader extends Component {
             />
           {{/unless}}
 
-          {{#each this.additionalPanels as |panel|}}
-            {{! we need toggle state and attrs }}
-            <MountWidget @widget={{panel.name}} />
-          {{/each}}
-
           {{#if this.search.visible}}
             <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
           {{else if this.hamburgerVisible}}
@@ -160,9 +154,14 @@ export default class GlimmerHeader extends Component {
             <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />
           {{/if}}
 
-          {{!-- {{#if (or this.site.mobileView this.site.narrowDesktopView)}}
-            <HeaderCloak />
-          {{/if}} --}}
+          {{#each this.additionalPanels as |panel|}}
+            {{! we need toggle state and attrs }}
+            <MountWidget @widget={{panel.name}} />
+          {{/each}}
+
+          {{#if (or this.site.mobileView this.site.narrowDesktopView)}}
+            <div class="header-cloak"></div>
+          {{/if}}
         </Contents>
       </div>
     </header>
