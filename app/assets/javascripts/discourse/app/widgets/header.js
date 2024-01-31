@@ -88,7 +88,9 @@ createWidget("header-notifications", {
     }
 
     if (user.isInDoNotDisturb()) {
-      contents.push(h("div.do-not-disturb-background", iconNode("moon")));
+      contents.push(
+        h("div.do-not-disturb-background", iconNode("discourse-dnd"))
+      );
     } else {
       if (user.new_personal_messages_notifications_count) {
         contents.push(
