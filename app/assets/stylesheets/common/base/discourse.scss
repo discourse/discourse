@@ -392,7 +392,6 @@ textarea {
   position: absolute;
   left: 0;
   bottom: -1px;
-  z-index: 1002;
 }
 
 .do-not-disturb-background {
@@ -400,16 +399,15 @@ textarea {
   align-items: center;
   justify-content: center;
   width: 1.25em;
-  background-color: var(--tertiary-med-or-tertiary);
+  background-color: var(--secondary);
   border-radius: 50%;
   height: 1.25em;
 
-  .d-icon.d-icon-moon {
-    display: block;
-    color: var(--tertiary-or-white) !important;
-    line-height: unset;
-    font-size: 0.875em;
-    margin: 0 !important;
+  .d-icon.d-icon-discourse-dnd {
+    color: var(--header_primary-medium) !important;
+    font-size: 1em;
+    height: 1em;
+    width: 1em;
   }
 }
 

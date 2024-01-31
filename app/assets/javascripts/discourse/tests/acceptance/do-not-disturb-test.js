@@ -41,8 +41,10 @@ acceptance("Do not disturb", function (needs) {
     assert.dom(".d-modal").doesNotExist("modal is hidden");
 
     assert.ok(
-      exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),
-      "moon icon is present in header"
+      exists(
+        ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
+      ),
+      "dnd icon is present in header"
     );
   });
 
@@ -73,8 +75,10 @@ acceptance("Do not disturb", function (needs) {
       .doesNotExist("DND modal is hidden after making a choice");
 
     assert.ok(
-      exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),
-      "moon icon is shown in header avatar"
+      exists(
+        ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
+      ),
+      "dnd icon is shown in header avatar"
     );
   });
 
@@ -87,7 +91,7 @@ acceptance("Do not disturb", function (needs) {
 
     assert.ok(
       exists(".do-not-disturb-background"),
-      "The active moon icon is shown"
+      "The active dnd icon is shown"
     );
 
     await click(".header-dropdown-toggle.current-user");
@@ -106,7 +110,7 @@ acceptance("Do not disturb", function (needs) {
 
     assert.notOk(
       exists(".do-not-disturb-background"),
-      "The active moon icons are removed"
+      "The active dnd icon is removed"
     );
     assert.notOk(
       exists(".do-not-disturb .relative-date"),
