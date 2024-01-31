@@ -5,10 +5,12 @@
 $footer-nav-height: 49px;
 
 :root {
-  --footer-nav-height: #{$footer-nav-height};
+  --footer-nav-height: 0px;
 }
 
 body.footer-nav-visible {
+  --footer-nav-height: #{$footer-nav-height};
+
   #main-outlet {
     padding-bottom: calc(var(--footer-nav-height) + 15px);
   }
