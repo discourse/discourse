@@ -1486,6 +1486,13 @@
   dependencies:
     "@simple-dom/interface" "^1.4.0"
 
+"@glimmer/interfaces@^0.88.1":
+  version "0.88.1"
+  resolved "https://registry.yarnpkg.com/@glimmer/interfaces/-/interfaces-0.88.1.tgz#e5ce6b5aea2a9fbc15d5f7f684e4b6d2695e7e8f"
+  integrity sha512-BOcN8xFNX/eppGxwS9Rm1+PlQaFX+tK91cuQLHj2sRwB+qVbL/WeutIa3AUQYr0VVEzMm2S6bYCLvG6p0a8v9A==
+  dependencies:
+    "@simple-dom/interface" "^1.4.0"
+
 "@glimmer/low-level@0.78.2":
   version "0.78.2"
   resolved "https://registry.yarnpkg.com/@glimmer/low-level/-/low-level-0.78.2.tgz#bca5f666760ce98345e87c5b3e37096e772cb2de"
@@ -1587,6 +1594,17 @@
     "@handlebars/parser" "~2.0.0"
     simple-html-tokenizer "^0.5.11"
 
+"@glimmer/syntax@^0.88.1":
+  version "0.88.1"
+  resolved "https://registry.yarnpkg.com/@glimmer/syntax/-/syntax-0.88.1.tgz#04c1827a43847867156a2d7d792b6bb5ebf57b80"
+  integrity sha512-tucexG0j5SSbk3d4ayCOnvjg5FldvWyrZbzxukZOBhDgAYhGWUnGFAqdoXjpr3w6FkD4xIVliVD9GFrH4lI8DA==
+  dependencies:
+    "@glimmer/interfaces" "^0.88.1"
+    "@glimmer/util" "^0.88.1"
+    "@glimmer/wire-format" "^0.88.1"
+    "@handlebars/parser" "~2.0.0"
+    simple-html-tokenizer "^0.5.11"
+
 "@glimmer/tracking@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@glimmer/tracking/-/tracking-1.1.2.tgz#74e71be07b0a7066518d24044d2665d0cf8281eb"
@@ -1608,6 +1626,14 @@
   version "0.44.0"
   resolved "https://registry.yarnpkg.com/@glimmer/util/-/util-0.44.0.tgz#45df98d73812440206ae7bda87cfe04aaae21ed9"
   integrity sha512-duAsm30uVK9jSysElCbLyU6QQYO2X9iLDLBIBUcCqck9qN1o3tK2qWiHbGK5d6g8E2AJ4H88UrfElkyaJlGrwg==
+
+"@glimmer/util@^0.88.1":
+  version "0.88.1"
+  resolved "https://registry.yarnpkg.com/@glimmer/util/-/util-0.88.1.tgz#a9e8cf0be78c5dc0d433294c71101ba1af8433e5"
+  integrity sha512-PV/24+vBmsReR78UQXJlEHDblU6QBAeIJa8MwKhQoxSD6WgvQHP4KmX23rvlCz11GxApTwyPm/2qyp/SwVvX2A==
+  dependencies:
+    "@glimmer/env" "0.1.7"
+    "@glimmer/interfaces" "^0.88.1"
 
 "@glimmer/validator@0.84.3":
   version "0.84.3"
@@ -1644,6 +1670,14 @@
   dependencies:
     "@glimmer/interfaces" "0.84.3"
     "@glimmer/util" "0.84.3"
+
+"@glimmer/wire-format@^0.88.1":
+  version "0.88.1"
+  resolved "https://registry.yarnpkg.com/@glimmer/wire-format/-/wire-format-0.88.1.tgz#75411def71a30ad4a3afaeb5a95d7cb9f8e22d9a"
+  integrity sha512-DPM2UiYRNzcWdOUrSa8/IFbWKovH+c2JPnbvtk04DpfQapU7+hteBj34coEN/pW3FJiP3WMvx/EuPfWROkeDsg==
+  dependencies:
+    "@glimmer/interfaces" "^0.88.1"
+    "@glimmer/util" "^0.88.1"
 
 "@handlebars/parser@~2.0.0":
   version "2.0.0"
