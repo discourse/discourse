@@ -34,13 +34,6 @@ export default class ChatChannelUnreadIndicator extends Component {
     );
   }
 
-  get showUnreadCount() {
-    if (this.#onlyMentions()) {
-      return this.#hasChannelMentions();
-    }
-    return this.args.channel.isDirectMessageChannel || this.isUrgent;
-  }
-
   #hasChannelMentions() {
     return this.args.channel.tracking.mentionCount > 0;
   }
@@ -58,7 +51,7 @@ export default class ChatChannelUnreadIndicator extends Component {
         }}
       >
         <div class="chat-channel-unread-indicator__number">{{#if
-            this.showUnreadCount
+            this.isUrgent
           }}{{this.unreadCount}}{{else}}&nbsp;{{/if}}</div>
       </div>
     {{/if}}
