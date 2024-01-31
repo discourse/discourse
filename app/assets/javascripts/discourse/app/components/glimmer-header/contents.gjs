@@ -13,9 +13,10 @@ export default class Contents extends Component {
   @service site;
   @service currentUser;
   @service siteSettings;
+  @service header;
 
   get topicPresent() {
-    return !!this.args.topic;
+    return !!this.header.topic;
   }
 
   <template>
@@ -35,8 +36,8 @@ export default class Contents extends Component {
         </PluginOutlet>
       </div>
 
-      {{#if @topic}}
-        <TopicInfo @topic={{@topic}} />
+      {{#if this.header.topic}}
+        <TopicInfo @topic={{this.header.topic}} />
       {{else if
         (and
           this.siteSettings.bootstrap_mode_enabled
@@ -52,7 +53,7 @@ export default class Contents extends Component {
       <div class="before-header-panel-outlet">
         <PluginOutlet
           @name="before-header-panel"
-          @outletArgs={{hash topic=@topic}}
+          @outletArgs={{hash topic=this.header.topic}}
         />
       </div>
       <div class="panel" role="navigation">{{yield}}</div>
