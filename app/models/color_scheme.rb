@@ -10,7 +10,7 @@ class ColorScheme < ActiveRecord::Base
       "header_background" => "111111",
       "header_primary" => "dddddd",
       "highlight" => "a87137",
-      "selected" => "2c2c2c",
+      "selected" => "052e3d",
       "hover" => "313131",
       "danger" => "e45735",
       "success" => "1ca551",
