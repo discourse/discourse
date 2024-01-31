@@ -20,7 +20,9 @@
     position: sticky;
     bottom: 0;
     left: 0;
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: calc(
+      env(safe-area-inset-bottom) + var(--footer-nav-height, 0px)
+    );
 
     &__item {
       display: flex;

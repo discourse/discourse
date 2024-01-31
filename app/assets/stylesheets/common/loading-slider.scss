@@ -54,7 +54,7 @@
   }
 
   body.footer-nav-ipad & {
-    top: var(--footer-nav-height);
+    top: var(--footer-nav-height, 0px);
   }
 }
 
