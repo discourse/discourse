@@ -41,7 +41,9 @@ acceptance("Do not disturb", function (needs) {
     assert.dom(".d-modal").doesNotExist("modal is hidden");
 
     assert.ok(
-      exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),
+      exists(
+        ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
+      ),
       "moon icon is present in header"
     );
   });
@@ -73,7 +75,9 @@ acceptance("Do not disturb", function (needs) {
       .doesNotExist("DND modal is hidden after making a choice");
 
     assert.ok(
-      exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),
+      exists(
+        ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
+      ),
       "moon icon is shown in header avatar"
     );
   });
