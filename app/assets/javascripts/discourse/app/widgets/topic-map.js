@@ -171,6 +171,7 @@ export default createWidget("topic-map", {
     }
 
     if (attrs.showPMMap) {
+      // contents.push(this.buildPrivateMessageMap(attrs));
       contents.push(this.attach("private-message-map", attrs));
     }
     return contents;
@@ -216,6 +217,27 @@ export default createWidget("topic-map", {
         actionDispatchFunc: (actionName) => {
           this.sendWidgetAction(actionName);
         },
+      }
+    );
+  },
+
+  buildPrivateMessageMap(attrs) {
+    return new RenderGlimmer(
+      this,
+      "section.information.private-message-map",
+      hbs`<TopicMap::PrivateMessageMap
+        @postAttrs={{@data.postAttrs}}
+        @showInvite={{@data.showInvite}}
+        @removeAllowedGroup={{@data.removeAllowedGroup}}
+        @removeAllowedUser={{@data.removeAllowedUser}}
+      />`,
+      {
+        postAttrs: attrs,
+        showInvite: (() => this.sendWidgetAction("showInvite")).bind(this),
+        removeAllowedGroup: ((group) =>
+          this.sendWidgetAction("removeAllowedGroup", group)).bind(this),
+        removeAllowedUser: ((user) =>
+          this.sendWidgetAction("removeAllowedUser", user)).bind(this),
       }
     );
   },
