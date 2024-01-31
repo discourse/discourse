@@ -1025,6 +1025,14 @@ RSpec.describe Search do
       results = Search.execute("tiger", guardian: Guardian.new(user))
       expect(results.posts).to eq([post])
     end
+
+    it "does not rely on postgres's proximity opreators" do
+      topic.update!(title: "End-to-end something something testing")
+
+      results = Search.execute("end-to-end test")
+
+      expect(results.posts).to eq([post])
+    end
   end
 
   describe "topics" do
@@ -2375,12 +2383,18 @@ RSpec.describe Search do
 
     it "escapes the term correctly" do
       expect(Search.ts_query(term: 'Title with trailing backslash\\')).to eq(
-        "REPLACE(TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')::text, '<->', '&')::tsquery",
+        "REGEXP_REPLACE(TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')::text, '<->|<\\d+>', '&', 'g')::tsquery",
       )
 
       expect(Search.ts_query(term: "Title with trailing quote'")).to eq(
-        "REPLACE(TO_TSQUERY('english', '''Title with trailing quote'''''':*')::text, '<->', '&')::tsquery",
+        "REGEXP_REPLACE(TO_TSQUERY('english', '''Title with trailing quote'''''':*')::text, '<->|<\\d+>', '&', 'g')::tsquery",
       )
+    end
+
+    it "remaps postgres's proximity operators '<->' and its `<N>` variant" do
+      expect(
+        DB.query_single("SELECT #{Search.ts_query(term: "end-to-end")}::text"),
+      ).to contain_exactly("'end-to-end':* & 'end':* & 'end':*")
     end
   end
 
