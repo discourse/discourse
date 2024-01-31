@@ -14,15 +14,23 @@ export default class ChatFooter extends Component {
   @service router;
   @service chat;
   @service siteSettings;
+  @service currentUser;
 
-  threadsEnabled = this.siteSettings.chat_threads_enabled;
+  get includeThreads() {
+    if (!this.siteSettings.chat_threads_enabled) {
+      return false;
+    }
+    return this.currentUser?.chat_channels?.public_channels?.some(
+      (channel) => channel.threading_enabled
+    );
+  }
 
   get directMessagesEnabled() {
     return this.chat.userCanAccessDirectMessages;
   }
 
   get shouldRenderFooter() {
-    return this.threadsEnabled || this.directMessagesEnabled;
+    return this.includeThreads || this.directMessagesEnabled;
   }
 
   <template>
@@ -63,7 +71,7 @@ export default class ChatFooter extends Component {
           </DButton>
         {{/if}}
 
-        {{#if this.threadsEnabled}}
+        {{#if this.includeThreads}}
           <DButton
             @route="chat.threads"
             @icon="discourse-threads"

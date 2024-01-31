@@ -40,14 +40,34 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
       expect(page).to have_current_path("/chat/channels")
     end
 
-    it "shows threads tab when user has threads" do
-      SiteSetting.chat_threads_enabled = true
+    context "when user is a member of at least one channel with threads" do
+      it "shows threads tab when user has threads" do
+        SiteSetting.chat_threads_enabled = true
 
-      visit("/")
-      chat_page.open_from_header
+        visit("/")
+        chat_page.open_from_header
 
-      expect(page).to have_css(".c-footer")
-      expect(page).to have_css("#c-footer-threads")
+        expect(page).to have_css(".c-footer")
+        expect(page).to have_css("#c-footer-threads")
+      end
+    end
+
+    context "when user is not a member of any channel with threads" do
+      before do
+        other_channel = Fabricate(:chat_channel, threading_enabled: false)
+        other_channel.add(user)
+        channel.remove(user)
+      end
+
+      it "shows threads tab when user has threads" do
+        SiteSetting.chat_threads_enabled = true
+
+        visit("/")
+        chat_page.open_from_header
+
+        expect(page).to have_css(".c-footer")
+        expect(page).to have_no_css("#c-footer-threads")
+      end
     end
   end
 
