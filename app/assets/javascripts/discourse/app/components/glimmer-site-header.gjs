@@ -25,7 +25,6 @@ export default class GlimmerSiteHeader extends Component {
   @service docking;
 
   @tracked _dockedHeader = false;
-  @tracked _topic = null;
   @tracked _swipeMenuOrigin = null;
   @tracked headerWrap = null;
   @tracked _swipeEvents = null;
@@ -102,10 +101,7 @@ export default class GlimmerSiteHeader extends Component {
 
   @action
   setupHeader() {
-    this.appEvents.on("header:show-topic", this, this._setTopic);
-    this.appEvents.on("header:hide-topic", this, this._setTopic);
     this.appEvents.on("user-menu:rendered", this, this._animateMenu);
-    // this.appEvents.on("dom:clean", this, this._cleanDom);
     if (this.dropDownHeaderEnabled) {
       this.appEvents.on(
         "sidebar-hamburger-dropdown:rendered",
@@ -170,12 +166,6 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
-  @action
-  _setTopic(topic) {
-    // this.eventDispatched("dom:clean", "header");
-    this._topic = topic;
-  }
-
   _handleArrowKeysNav(event) {
     const activeTab = document.querySelector(
       ".menu-tabs-container .btn.active"
@@ -202,12 +192,6 @@ export default class GlimmerSiteHeader extends Component {
         .focus();
     }
   }
-
-  // _cleanDom() {
-  //   if (document.querySelector(".menu-panel")) {
-  //     this.eventDispatched("dom:clean", "header");
-  //   }
-  // }
 
   _animateMenu() {
     const menuPanels = document.querySelectorAll(".menu-panel");
@@ -317,9 +301,6 @@ export default class GlimmerSiteHeader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.appEvents.off("header:show-topic", this, this._setTopic);
-    this.appEvents.off("header:hide-topic", this, this._setTopic);
-    // this.appEvents.off("dom:clean", this, this._cleanDom);
     this.appEvents.off("user-menu:rendered", this, this._animateMenu);
 
     if (this.dropDownHeaderEnabled) {
@@ -355,7 +336,6 @@ export default class GlimmerSiteHeader extends Component {
         @sidebarEnabled={{@sidebarEnabled}}
         @navigationMenuQueryParamOverride={{@navigationMenuQueryParamOverride}}
         @toggleSidebar={{@toggleSidebar}}
-        @topic={{this._topic}}
         @showCreateAccount={{@showCreateAccount}}
         @showLogin={{@showLogin}}
       />

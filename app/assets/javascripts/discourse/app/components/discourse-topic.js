@@ -12,6 +12,7 @@ import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import Scrolling from "discourse/mixins/scrolling";
 import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
 
@@ -28,6 +29,7 @@ export default Component.extend(
       "topic.category.read_restricted:read_restricted",
       "topic.deleted:deleted-topic",
     ],
+    header: service(),
     menuVisible: true,
     SHORT_POST: 1200,
 
@@ -59,7 +61,7 @@ export default Component.extend(
     },
 
     _hideTopicInHeader() {
-      this.appEvents.trigger("header:hide-topic");
+      this.header.topic = null;
       this._lastShowTopic = false;
     },
 
@@ -67,7 +69,7 @@ export default Component.extend(
       if (this.pauseHeaderTopicUpdate) {
         return;
       }
-      this.appEvents.trigger("header:show-topic", topic);
+      this.header.topic = topic;
       this._lastShowTopic = true;
     },
 

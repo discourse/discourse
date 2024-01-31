@@ -135,42 +135,39 @@ export default class Info extends Component {
                   @outletArgs={{hash topic=@topic}}
                 />
               </span>
-
-              {{#if (or @topic.details.loaded @topic.category)}}
-                {{#if
-                  (and
-                    @topic.category
-                    (or
-                      (not @topic.category.isUncategorizedCategory)
-                      (not this.siteSettings.suppress_uncategorized_badge)
-                    )
-                  )
-                }}
-                  <div class="categories-wrapper">
-                    {{#if @topic.category.parentCategory}}
-                      {{#if
-                        (and
-                          (gt this.siteSettings.max_category_nesting 2)
-                          (not this.site.mobileView)
-                        )
-                      }}
-                        {{categoryLink @topic.category.parentCategory}}
-                      {{/if}}
-
-                      {{categoryLink
-                        @topic.category.parentCategory
-                        (hash hideParent="true")
-                      }}
-                    {{/if}}
-                    {{categoryLink @topic.category}}
-                  </div>
-                {{/if}}
-
-              {{/if}}
             {{/if}}
           </h1>
 
           {{#if (or @topic.details.loaded @topic.category)}}
+            {{#if
+              (and
+                @topic.category
+                (or
+                  (not @topic.category.isUncategorizedCategory)
+                  (not this.siteSettings.suppress_uncategorized_badge)
+                )
+              )
+            }}
+              <div class="categories-wrapper">
+                {{#if @topic.category.parentCategory}}
+                  {{#if
+                    (and
+                      (gt this.siteSettings.max_category_nesting 2)
+                      (not this.site.mobileView)
+                    )
+                  }}
+                    {{categoryLink @topic.category.parentCategory}}
+                  {{/if}}
+
+                  {{categoryLink
+                    @topic.category.parentCategory
+                    (hash hideParent="true")
+                  }}
+                {{/if}}
+                {{categoryLink @topic.category}}
+              </div>
+            {{/if}}
+
             <div class="topic-header-extra">
               <div class="topic-header-participants">
                 <div class="list-tags">

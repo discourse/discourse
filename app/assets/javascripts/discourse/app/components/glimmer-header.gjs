@@ -119,14 +119,12 @@ export default class GlimmerHeader extends Component {
           @sidebarEnabled={{@sidebarEnabled}}
           @toggleHamburger={{this.toggleHamburger}}
           @showSidebar={{@showSidebar}}
-          @topic={{@topic}}
         >
           {{#unless this.currentUser}}
             <AuthButtons
               @showCreateAccount={{@showCreateAccount}}
               @showLogin={{@showLogin}}
               @canSignUp={{@canSignUp}}
-              @topic={{@topic}}
             />
           {{/unless}}
           {{#unless
