@@ -3658,6 +3658,7 @@ en:
           off_topic: "You flagged this as off-topic"
           spam: "You flagged this as spam"
           inappropriate: "You flagged this as inappropriate"
+          illegal: "You flagged this as illegal"
           notify_moderators: "You flagged this for moderation"
           notify_user: "You sent a message to this user"
 
@@ -3940,10 +3941,12 @@ en:
         off_topic: "It's Off-Topic"
         inappropriate: "It's Inappropriate"
         spam: "It's Spam"
+        illegal: "It's Illegal"
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
       notify_user_textarea_label: "Message for the user"
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       notify_moderators_textarea_label: "Message for the moderators"
+      custom_placeholder_illegal: "Let us know specifically why you believe this post is illegal, and provide relevant links and examples where possible."
       custom_message:
         at_least:
           one: "enter at least %{count} character"
