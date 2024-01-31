@@ -3,7 +3,10 @@ import { module, test } from "qunit";
 import SearchMenu from "discourse/components/search-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import I18n from "discourse-i18n";
+import searchFixtures from "discourse/tests/fixtures/search-fixtures";
+import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 
 // Note this isn't a full-fledge test of the search menu. Those tests are in
 // acceptance/glimmer-search-test.js. This is simply about the rendering of the
@@ -12,6 +15,20 @@ module("Integration | Component | search-menu", function (hooks) {
   setupRenderingTest(hooks);
 
   test("rendering standalone", async function (assert) {
+    pretender.get("/search/query", (request) => {
+      if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
+        // posts/topics are not present in the payload by default
+        return response({
+          users: searchFixtures["search/query"]["users"],
+          categories: searchFixtures["search/query"]["categories"],
+          groups: searchFixtures["search/query"]["groups"],
+          grouped_search_result:
+            searchFixtures["search/query"]["grouped_search_result"],
+        });
+      }
+      return response(searchFixtures["search/query"]);
+    });
+
     await render(<template><SearchMenu /></template>);
 
     assert.ok(
