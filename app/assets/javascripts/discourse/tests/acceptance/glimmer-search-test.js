@@ -440,7 +440,16 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
 
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
-      if (request.queryParams.term.includes("empty")) {
+      if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
+        // posts/topics are not present in the payload by default
+        return helper.response({
+          users: searchFixtures["search/query"]["users"],
+          categories: searchFixtures["search/query"]["categories"],
+          groups: searchFixtures["search/query"]["groups"],
+          grouped_search_result:
+            searchFixtures["search/query"]["grouped_search_result"],
+        });
+      } else if (request.queryParams.term.includes("empty")) {
         return helper.response({
           posts: [],
           users: [],
@@ -464,9 +473,9 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
             group_ids: [],
           },
         });
+      } else {
+        return helper.response(searchFixtures["search/query"]);
       }
-
-      return helper.response(searchFixtures["search/query"]);
     });
 
     server.get("/inline-onebox", () =>
@@ -736,6 +745,20 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
   needs.user();
   needs.settings({ tagging_enabled: true });
   needs.pretender((server, helper) => {
+    server.get("/search/query", (request) => {
+      if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
+        // posts/topics are not present in the payload by default
+        return helper.response({
+          users: searchFixtures["search/query"]["users"],
+          categories: searchFixtures["search/query"]["categories"],
+          groups: searchFixtures["search/query"]["groups"],
+          grouped_search_result:
+            searchFixtures["search/query"]["grouped_search_result"],
+        });
+      }
+      return helper.response(searchFixtures["search/query"]);
+    });
+
     server.get("/tag/dev/notifications", () => {
       return helper.response({
         tag_notification: { id: "dev", notification_level: 2 },
