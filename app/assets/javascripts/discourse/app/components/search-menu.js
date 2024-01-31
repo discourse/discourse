@@ -36,7 +36,6 @@ export default class SearchMenu extends Component {
   @service appEvents;
 
   @tracked loading = false;
-  @tracked results = {};
   @tracked noResults = false;
   @tracked
   inPMInboxContext = this.search.searchContext?.type === "private_messages";
@@ -93,7 +92,10 @@ export default class SearchMenu extends Component {
   }
 
   get includesTopics() {
-    return this.typeFilter !== DEFAULT_TYPE_FILTER;
+    return (
+      !!this.search.results?.topics?.length ||
+      this.typeFilter !== DEFAULT_TYPE_FILTER
+    );
   }
 
   get searchContext() {
@@ -214,7 +216,7 @@ export default class SearchMenu extends Component {
     const matchSuggestions = this.matchesSuggestions();
     if (matchSuggestions) {
       this.noResults = true;
-      this.results = {};
+      this.search.results = {};
       this.loading = false;
       this.suggestionResults = [];
 
@@ -265,14 +267,14 @@ export default class SearchMenu extends Component {
 
     if (!this.search.activeGlobalSearchTerm) {
       this.noResults = false;
-      this.results = {};
+      this.search.results = {};
       this.loading = false;
       this.invalidTerm = false;
     } else if (
       !isValidSearchTerm(this.search.activeGlobalSearchTerm, this.siteSettings)
     ) {
       this.noResults = true;
-      this.results = {};
+      this.search.results = {};
       this.loading = false;
       this.invalidTerm = true;
     } else {
@@ -297,7 +299,7 @@ export default class SearchMenu extends Component {
             }
 
             this.noResults = results.resultTypes.length === 0;
-            this.results = results;
+            this.search.results = results;
           }
         })
         .catch(popupAjaxError)

@@ -903,6 +903,9 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
 acceptance("Search - Glimmer - assistant", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
+    server.get("/t/2179.json", () => {
+      return helper.response({});
+    });
     server.get("/search/query", (request) => {
       if (request.queryParams["search_context[type]"] === "private_messages") {
         // return only one result for PM search
@@ -1034,6 +1037,41 @@ acceptance("Search - Glimmer - assistant", function (needs) {
                 slow: "slow description",
               },
             },
+            // {
+            //   id: 2479,
+            //   title: "Development mode is hurting",
+            //   fancy_title: "Development mode is hurting",
+            //   slug: "development-mode-is-hurting",
+            //   posts_count: 72,
+            //   reply_count: 53,
+            //   highest_post_number: 73,
+            //   image_url: null,
+            //   created_at: "2013-02-07T17:46:57.262Z",
+            //   last_posted_at: "2015-04-17T08:08:26.671Z",
+            //   bumped: true,
+            //   bumped_at: "2015-04-17T08:08:26.671Z",
+            //   unseen: false,
+            //   pinned: false,
+            //   unpinned: null,
+            //   visible: true,
+            //   closed: false,
+            //   archived: false,
+            //   bookmarked: null,
+            //   liked: null,
+            //   views: 9538,
+            //   like_count: 45,
+            //   has_summary: true,
+            //   archetype: "regular",
+            //   last_poster_username: null,
+            //   category_id: 7,
+            //   pinned_globally: false,
+            //   posters: [],
+            //   tags: ["dev", "slow"],
+            //   tags_descriptions: {
+            //     dev: "dev description",
+            //     slow: "slow description",
+            //   },
+            // },
           ],
           grouped_search_result: {
             term: "emoji",
@@ -1184,5 +1222,19 @@ acceptance("Search - Glimmer - assistant", function (needs) {
       query("#search-term").value,
       `sam #${firstCategoryName}`
     );
+  });
+
+  test("topic results - soft loads the topic results after closing then  search menu", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "Development mode");
+
+    // navigate to topic and close search menu
+    const firstTopicResult = ".search-menu .results .search-result-topic a";
+    await click(firstTopicResult);
+
+    // reopen search menu and previous search results are present
+    await click("#search-button");
+    assert.dom(firstTopicResult).exists();
   });
 });
