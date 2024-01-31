@@ -31,12 +31,6 @@ function getQuoteTitle(element) {
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 
-export function fixQuotes(str) {
-  // u+201c, u+201d = “ ”
-  // u+2018, u+2019 = ‘ ’
-  return str.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
-}
-
 export default class PostTextSelection extends Component {
   @service appEvents;
   @service capabilities;
@@ -177,14 +171,12 @@ export default class PostTextSelection extends Component {
     if (this.canEditPost) {
       const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
       const matches = cooked.innerHTML.match(regexp);
-      const non_ascii_regex = /[^\x00-\x7F]/;
 
       if (
         quoteState.buffer.length === 0 ||
         quoteState.buffer.includes("|") || // tables are too complex
         quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-        matches?.length > 1 || // duplicates are too complex
-        non_ascii_regex.test(quoteState.buffer) // non-ascii chars break fast-edit
+        matches?.length > 1 // duplicates are too complex
       ) {
         supportsFastEdit = false;
       } else if (matches?.length === 1) {
