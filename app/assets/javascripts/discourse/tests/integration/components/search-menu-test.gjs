@@ -1,12 +1,13 @@
 import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import SearchMenu from "discourse/components/search-menu";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import I18n from "discourse-i18n";
+import SearchMenu, {
+  DEFAULT_TYPE_FILTER,
+} from "discourse/components/search-menu";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
-import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 // Note this isn't a full-fledge test of the search menu. Those tests are in
 // acceptance/glimmer-search-test.js. This is simply about the rendering of the
