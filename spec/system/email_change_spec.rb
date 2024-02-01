@@ -19,7 +19,7 @@ describe "Changing email", type: :system do
 
     find(".save-button button").click
 
-    wait_for(timeout: 5) { ActionMailer::Base.deliveries.count === 1 }
+    wait_for(timeout: Capybara.default_max_wait_time) { ActionMailer::Base.deliveries.count === 1 }
 
     if user.admin?
       get_link_from_email(:old)
@@ -138,7 +138,7 @@ describe "Changing email", type: :system do
     find(".dialog-footer .btn-primary").click
 
     # Confirm new email
-    wait_for(timeout: 5) { ActionMailer::Base.deliveries.count === 2 }
+    wait_for(timeout: Capybara.default_max_wait_time) { ActionMailer::Base.deliveries.count === 2 }
     confirm_new_link = get_link_from_email(:new)
 
     visit confirm_new_link
@@ -169,7 +169,7 @@ describe "Changing email", type: :system do
     find(".dialog-footer .btn-primary").click
 
     # Confirm new email
-    wait_for(timeout: 5) { ActionMailer::Base.deliveries.count === 2 }
+    wait_for(timeout: Capybara.default_max_wait_time) { ActionMailer::Base.deliveries.count === 2 }
     confirm_new_link = get_link_from_email(:new)
 
     visit confirm_new_link
