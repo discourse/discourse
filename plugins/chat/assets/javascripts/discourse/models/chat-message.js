@@ -160,6 +160,10 @@ export default class ChatMessage {
     return this.channel.currentUserMembership?.lastReadMessageId >= this.id;
   }
 
+  get isOriginalThreadMessage() {
+    return this.thread?.originalMessage?.id === this.id;
+  }
+
   @cached
   get index() {
     return this.manager?.messages?.indexOf(this);

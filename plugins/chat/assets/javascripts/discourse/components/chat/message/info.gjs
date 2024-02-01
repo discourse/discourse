@@ -10,9 +10,12 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import and from "truth-helpers/helpers/and";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import formatChatDate from "../../../helpers/format-chat-date";
 
 export default class ChatMessageInfo extends Component {
+  @service site;
   @service siteSettings;
 
   @bind
@@ -57,7 +60,9 @@ export default class ChatMessageInfo extends Component {
   }
 
   get isFlagged() {
-    return this.#message?.reviewableId || this.#message?.userFlagStatus === 0;
+    return (
+      this.args.message?.reviewableId || this.args.message?.userFlagStatus === 0
+    );
   }
 
   get prioritizeName() {
@@ -72,11 +77,27 @@ export default class ChatMessageInfo extends Component {
   }
 
   get #user() {
-    return this.#message?.user;
+    return this.args.message?.user;
   }
 
-  get #message() {
-    return this.args.message;
+  get routeModels() {
+    if (this.site.mobileView) {
+      return [...this.args.message.channel.routeModels, this.args.message.id];
+    } else {
+      return [
+        ...this.args.message.channel.routeModels,
+        this.args.message.id,
+        this.args.message.thread.id,
+      ];
+    }
+  }
+
+  get route() {
+    if (this.site.mobileView) {
+      return "chat.channel.near-message";
+    } else {
+      return "chat.channel.near-message-with-thread";
+    }
   }
 
   <template>
@@ -140,6 +161,19 @@ export default class ChatMessageInfo extends Component {
               {{dIcon "flag" title="chat.you_flagged"}}
             {{/if}}
           </span>
+        {{/if}}
+
+        {{#if (and @threadContext @message.isOriginalThreadMessage)}}
+          <LinkTo
+            @route={{this.route}}
+            @models={{this.routeModels}}
+            class="chat-message-info__original-message"
+          >
+            <span class="chat-message-info__original-message__text">
+              {{i18n "chat.see_in"}}
+            </span>
+            <ChannelTitle @channel={{@message.channel}} />
+          </LinkTo>
         {{/if}}
       </div>
     {{/if}}

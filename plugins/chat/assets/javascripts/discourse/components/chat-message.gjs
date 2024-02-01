@@ -99,9 +99,7 @@ export default class ChatMessage extends Component {
   }
 
   get pane() {
-    return this.args.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatThreadPane
-      : this.chatChannelPane;
+    return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
   }
 
   get messageInteractor() {
@@ -459,7 +457,7 @@ export default class ChatMessage extends Component {
 
   get hideReplyToInfo() {
     return (
-      this.args.context === MESSAGE_CONTEXT_THREAD ||
+      this.threadContext ||
       this.args.message?.inReplyTo?.id ===
         this.args.message?.previousMessage?.id ||
       this.threadingEnabled
@@ -475,11 +473,15 @@ export default class ChatMessage extends Component {
 
   get showThreadIndicator() {
     return (
-      this.args.context !== MESSAGE_CONTEXT_THREAD &&
+      !this.threadContext &&
       this.threadingEnabled &&
       this.args.message?.thread &&
       this.args.message?.thread.preview.replyCount > 0
     );
+  }
+
+  get threadContext() {
+    return this.args.context === MESSAGE_CONTEXT_THREAD;
   }
 
   #teardownMentionedUsers() {
@@ -573,6 +575,7 @@ export default class ChatMessage extends Component {
                 <ChatMessageInfo
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
+                  @threadContext={{this.threadContext}}
                 />
 
                 <ChatMessageText

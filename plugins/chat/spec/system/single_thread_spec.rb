@@ -15,7 +15,7 @@ describe "Single thread in side panel", type: :system do
     sign_in(current_user)
   end
 
-  context "when threading_enabled is false for the channel" do
+  context "when threading is disabled for the channel" do
     fab!(:channel) { Fabricate(:chat_channel) }
 
     before { channel.update!(threading_enabled: false) }
@@ -80,6 +80,17 @@ describe "Single thread in side panel", type: :system do
       chat_drawer_page.back
 
       expect(chat_drawer_page).to have_open_channel(channel)
+    end
+
+    it "highlights the message in the channel when clicking original message link" do
+      chat_page.visit_thread(thread)
+
+      find(".chat-message-info__original-message").click
+
+      expect(channel_page.messages).to have_message(
+        id: thread.original_message.id,
+        highlighted: true,
+      )
     end
 
     it "opens the side panel for a single thread from the indicator" do
@@ -193,6 +204,14 @@ describe "Single thread in side panel", type: :system do
         channel_page.message_thread_indicator(thread.original_message).click
 
         expect(side_panel).to have_open_thread(thread)
+      end
+
+      it "navigates back to channel when clicking original message link", mobile: true do
+        chat_page.visit_thread(thread)
+
+        find(".chat-message-info__original-message").click
+
+        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}")
       end
     end
 
