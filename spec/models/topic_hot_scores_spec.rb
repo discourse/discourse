@@ -34,12 +34,24 @@ RSpec.describe TopicHotScore do
 
       hot_scoring = TopicHotScore.find_by(topic_id: topic.id)
 
-      expect(hot_scoring.recent_likes).to eq(3)
       expect(hot_scoring.recent_posters).to eq(2)
+      expect(hot_scoring.recent_likes).to eq(3)
       expect(hot_scoring.recent_first_bumped_at).to eq_time(new_reply.created_at)
       expect(hot_scoring.score).to be_within(0.001).of(1.771)
 
       expect(TopicHotScore.find_by(topic_id: -1).recent_likes).to eq(0)
+
+      # make sure we exclude whispers, deleted posts, small posts, etc
+      whisper =
+        Fabricate(:post, topic: topic, created_at: 1.hour.ago, post_type: Post.types[:whisper])
+      PostActionCreator.like(Fabricate(:admin), whisper)
+
+      TopicHotScore.update_scores
+
+      hot_scoring = TopicHotScore.find_by(topic_id: topic.id)
+
+      expect(hot_scoring.recent_posters).to eq(2)
+      expect(hot_scoring.recent_likes).to eq(3)
     end
 
     it "prefers recent_likes to topic like count for recent topics" do

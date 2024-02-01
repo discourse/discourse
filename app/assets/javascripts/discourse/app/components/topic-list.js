@@ -76,7 +76,7 @@ export default Component.extend(LoadMore, {
     }
   },
 
-  @observes("topics", "order", "ascending", "category", "top")
+  @observes("topics", "order", "ascending", "category", "top", "hot")
   lastVisitedTopicChanged() {
     this.refreshLastVisited();
   },
@@ -91,7 +91,7 @@ export default Component.extend(LoadMore, {
     onScroll.call(this);
   },
 
-  _updateLastVisitedTopic(topics, order, ascending, top) {
+  _updateLastVisitedTopic(topics, order, ascending, top, hot) {
     this.set("lastVisitedTopic", null);
 
     if (!this.highlightLastVisited) {
@@ -102,7 +102,7 @@ export default Component.extend(LoadMore, {
       return;
     }
 
-    if (top) {
+    if (top || hot) {
       return;
     }
 
@@ -156,7 +156,8 @@ export default Component.extend(LoadMore, {
       this.topics,
       this.order,
       this.ascending,
-      this.top
+      this.top,
+      this.hot
     );
   },
 
