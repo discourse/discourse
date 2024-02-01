@@ -8,16 +8,16 @@ import ItsATrap from "@discourse/itsatrap";
 import { waitForPromise } from "@ember/test-waiters";
 import { DEBUG } from "@glimmer/env";
 import SwipeEvents from "discourse/lib/swipe-events";
-import { classNameBindings } from "@ember-decorators/component";
 import { schedule } from "@ember/runloop";
 import { bind } from "discourse-common/utils/decorators";
 import GlimmerHeader from "./glimmer-header";
 import discourseLater from "discourse-common/lib/later";
+import { modifier } from "ember-modifier";
+import concatClass from "discourse/helpers/concat-class";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
 
-@classNameBindings("site.mobileView::drop-down-mode")
 export default class GlimmerSiteHeader extends Component {
   @service appEvents;
   @service currentUser;
@@ -109,15 +109,6 @@ export default class GlimmerSiteHeader extends Component {
         this._animateMenu
       );
     }
-
-    // this.dispatch("notifications:changed", "user-notifications");
-    // this.dispatch("header:keyboard-trigger", "header");
-    // this.dispatch("user-menu:navigation", "user-menu");
-
-    // if (this.currentUser) {
-    //   this.currentUser.on("status-changed", this, "queueRerender");
-    // }
-    // this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
     this._headerWrap = document.querySelector(".d-header-wrap");
     if (this._headerWrap) {
@@ -329,7 +320,13 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   <template>
-    <div class="d-header-wrap" {{didInsert this.setupHeader}}>
+    <div
+      class={{concatClass
+        (unless this.site.mobileView "drop-down-mode")
+        "d-header-wrap"
+      }}
+      {{didInsert this.setupHeader}}
+    >
       <GlimmerHeader
         @canSignUp={{@canSignUp}}
         @showSidebar={{@showSidebar}}
