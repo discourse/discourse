@@ -20,9 +20,14 @@
     position: sticky;
     bottom: 0;
     left: 0;
-    padding-bottom: calc(
-      env(safe-area-inset-bottom) + var(--footer-nav-height, 0px)
-    );
+    padding-bottom: env(safe-area-inset-bottom);
+
+    html.footer-nav-ipad &,
+    html.footer-nav-visible & {
+      padding-bottom: calc(
+        env(safe-area-inset-bottom) + var(--footer-nav-height, 0px)
+      );
+    }
 
     &__item {
       display: flex;

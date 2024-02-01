@@ -53,8 +53,8 @@
     top: 1px;
   }
 
-  body.footer-nav-ipad & {
-    top: var(--footer-nav-height, 0px);
+  html.footer-nav-ipad & {
+    top: var(--footer-nav-height);
   }
 }
 

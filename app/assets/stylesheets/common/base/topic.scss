@@ -169,7 +169,7 @@ $topic-progress-height: 42px;
     }
   }
 
-  body:not(.footer-nav-visible) & {
+  html:not(.footer-nav-visible) & {
     bottom: env(safe-area-inset-bottom);
   }
 
