@@ -191,8 +191,8 @@ export default class GlimmerHeader extends Component {
               @canSignUp={{@canSignUp}}
             />
           {{/unless}}
-          {{#unless
-            (and this.siteSettings.login_required (not this.currentUser))
+          {{#if
+            (not (and this.siteSettings.login_required (not this.currentUser)))
           }}
             <Icons
               @hamburgerVisible={{this.hamburgerVisible}}
@@ -204,7 +204,7 @@ export default class GlimmerHeader extends Component {
               @toggleUserMenu={{this.toggleUserMenu}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
             />
-          {{/unless}}
+          {{/if}}
 
           {{#if this.search.visible}}
             <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
