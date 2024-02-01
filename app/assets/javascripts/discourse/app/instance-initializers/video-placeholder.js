@@ -54,7 +54,16 @@ export default {
         });
 
         video.addEventListener("canplay", function () {
-          video.play();
+          if (caps.isIOS) {
+            // This is needed to fix video playback on iOS.
+            // Without it, videos will play, but they won't always be visible.
+            discourseLater(() => {
+              video.play();
+            }, 100);
+          } else {
+            video.play();
+          }
+
           wrapper.remove();
           video.style.display = "";
           parentDiv.classList.remove("video-placeholder-container");
