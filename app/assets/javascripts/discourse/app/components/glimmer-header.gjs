@@ -16,6 +16,7 @@ import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";
 import { hash } from "discourse-common/lib/helpers";
+import { modifier } from "ember-modifier";
 
 import Contents from "./glimmer-header/contents";
 import AuthButtons from "./glimmer-header/auth-buttons";
@@ -37,18 +38,51 @@ export default class GlimmerHeader extends Component {
   @service search;
   @service currentUser;
   @service site;
+  @service appEvents;
+  @service register;
 
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
-  @tracked inTopicContext = false;
   @tracked skipSearchContext = this.site.mobileView;
 
+  appEventsListeners = modifier(() => {
+    this.appEvents.on(
+      "header:keyboard-trigger",
+      this,
+      this.headerKeyboardTrigger
+    );
+    return () => {
+      this.appEvents.off(
+        "header:keyboard-trigger",
+        this,
+        this.headerKeyboardTrigger
+      );
+    };
+  });
+
   get inTopicRoute() {
-    return this.inTopicContext || this.search.inTopicContext;
+    return this.search.inTopicContext;
   }
 
-  get searchVisible() {
-    return this.search.visible;
+  @action
+  headerKeyboardTrigger(msg) {
+    switch (msg.type) {
+      case "search":
+        this.toggleSearchMenu();
+        break;
+      case "user":
+        this.toggleUserMenu();
+        break;
+      case "hamburger":
+        this.toggleHamburger();
+        break;
+      case "page-search":
+        if (!this.togglePageSearch()) {
+          msg.event.preventDefault();
+          msg.event.stopPropagation();
+        }
+        break;
+    }
   }
 
   @action
@@ -72,10 +106,40 @@ export default class GlimmerHeader extends Component {
     this.search.visible = !this.search.visible;
     if (!this.search.visible) {
       this.search.highlightTerm = "";
-      this.inTopicContext = false;
       this.search.inTopicContext = false;
       document.getElementById(SEARCH_BUTTON_ID)?.focus();
     }
+  }
+
+  @action
+  togglePageSearch() {
+    this.search.inTopicContext = false;
+
+    let showSearch = this.router.currentRouteName.startsWith("topic.");
+    // If we're viewing a topic, only intercept search if there are cloaked posts
+    if (showSearch) {
+      const controller = this.register.lookup("controller:topic");
+      const total = controller.get("model.postStream.stream.length") || 0;
+      const chunkSize = controller.get("model.chunk_size") || 0;
+      showSearch =
+        total > chunkSize &&
+        document.querySelector(
+          ".topic-post .cooked, .small-action:not(.time-gap)"
+        )?.length < total;
+    }
+
+    if (this.search.visible) {
+      this.toggleSearchMenu();
+      return showSearch;
+    }
+
+    if (showSearch) {
+      this.search.inTopicContext = true;
+      this.toggleSearchMenu();
+      return false;
+    }
+
+    return true;
   }
 
   @action
@@ -113,7 +177,7 @@ export default class GlimmerHeader extends Component {
   }
 
   <template>
-    <header class="d-header">
+    <header class="d-header" {{this.appEventsListeners}}>
       <div class="wrap">
         <Contents
           @sidebarEnabled={{@sidebarEnabled}}
@@ -165,15 +229,3 @@ export default class GlimmerHeader extends Component {
     </header>
   </template>
 }
-
-// let additionalPanels = [];
-// additionalPanels.forEach((panel) => {
-//   if (this.state[panel.toggle]) {
-//     additionalPanels.push(
-//       this.attach(
-//         panel.name,
-//         panel.transformAttrs.call(this, this.args, this.state)
-//       )
-//     );
-//   }
-// });
