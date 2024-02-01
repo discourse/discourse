@@ -328,7 +328,7 @@ HTML
       expect(scss).to include("background-color:red")
       expect(scss).to include("font-size:25px")
 
-      setting = theme.settings.find { |s| s.name == :font_size }
+      setting = theme.settings[:font_size]
       setting.value = "30px"
       theme.save!
 
@@ -418,7 +418,7 @@ HTML
       expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
       expect(theme_field.javascript_cache.content).to include("let a = () => {}")
 
-      setting = theme.settings.find { |s| s.name == :name }
+      setting = theme.settings[:name]
       setting.value = "bill"
       theme.save!
 
