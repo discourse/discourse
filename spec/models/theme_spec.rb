@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe Theme do
-  after { Theme.clear_cache! }
-
-  before { ThemeJavascriptCompiler.disable_terser! }
-  after { ThemeJavascriptCompiler.enable_terser! }
-
-  fab! :user do
-    Fabricate(:user)
-  end
+  fab!(:user)
+  fab!(:theme) { Fabricate(:theme, user: user) }
 
   let(:guardian) { Guardian.new(user) }
-
-  fab!(:theme) { Fabricate(:theme, user: user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
+
+  before { ThemeJavascriptCompiler.disable_terser! }
+
+  after do
+    Theme.clear_cache!
+    ThemeJavascriptCompiler.enable_terser!
+  end
 
   it "can properly clean up color schemes" do
     scheme = ColorScheme.create!(theme_id: theme.id, name: "test")

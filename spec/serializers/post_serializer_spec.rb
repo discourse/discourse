@@ -364,7 +364,7 @@ RSpec.describe PostSerializer do
 
   context "with mentions" do
     fab!(:user_status)
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:user1) { Fabricate(:user, user_status: user_status) }
     fab!(:post) { Fabricate(:post, user: user, raw: "Hey @#{user1.username}") }
     let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
