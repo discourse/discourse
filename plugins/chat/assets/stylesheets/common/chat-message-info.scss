@@ -72,16 +72,25 @@
   display: flex;
   align-items: center;
   font-size: var(--font-down-2);
-  gap: 5px;
+  color: var(--primary-high);
+  gap: 0.5em;
   line-height: 1.2;
-  background: var(--tertiary-low);
-  padding: 2.5px;
-  border-radius: var(--d-border-radius-large);
+  background: var(--tertiary-very-low);
+  padding: 0.25em 0.5em;
+  border-radius: 8px;
+
+  .chat-channel-title {
+    gap: 0.25em;
+  }
+
+  .chat-channel-name {
+    color: var(--tertiary);
+  }
 
   .chat-channel-icon {
     .d-icon {
-      height: 0.8rem;
-      width: 0.8rem;
+      height: 0.9em;
+      width: 0.9em;
     }
   }
 
