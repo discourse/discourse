@@ -812,16 +812,6 @@ class Plugin::Instance
     end
   end
 
-  def handlebars_includes
-    assets
-      .map do |asset, opts|
-        next if opts == :admin
-        next unless asset =~ DiscoursePluginRegistry::HANDLEBARS_REGEX
-        asset
-      end
-      .compact
-  end
-
   def javascript_includes
     assets
       .map do |asset, opts|
