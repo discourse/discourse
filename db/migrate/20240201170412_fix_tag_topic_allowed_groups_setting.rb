@@ -20,10 +20,8 @@ class FixTagTopicAllowedGroupsSetting < ActiveRecord::Migration[7.0]
       if "1#{configured_trust_level}" == configured_groups
         corresponding_group = "1|3|1#{configured_trust_level}"
 
-        # Data_type 20 is group_list.
         DB.exec(
-          "INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
-          VALUES('tag_topic_allowed_groups', :setting, '20', NOW(), NOW())",
+          "UPDATE site_settings SET value = :setting, updated_at = NOW() WHERE name = 'tag_topic_allowed_groups'",
           setting: corresponding_group,
         )
       end
