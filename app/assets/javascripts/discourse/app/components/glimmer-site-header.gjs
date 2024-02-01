@@ -302,14 +302,11 @@ export default class GlimmerSiteHeader extends Component {
       );
     }
 
-    // this.currentUser?.off?.("status-changed", this, "queueRerender");
-
     this._itsatrap?.destroy();
     this._itsatrap = null;
 
     window.removeEventListener("scroll", this._onScroll);
     this._resizeObserver?.disconnect();
-    // this.appEvents.off("site-header:force-refresh", this, "queueRerender");
     if (this.site.mobileView) {
       this._headerWrap.removeEventListener("swipestart", this.onSwipeStart);
       this._headerWrap.removeEventListener("swipeend", this.onSwipeEnd);
