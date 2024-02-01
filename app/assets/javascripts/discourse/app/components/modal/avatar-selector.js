@@ -41,7 +41,7 @@ export default class AvatarSelectorModal extends Component {
     return this.siteSettings.selectable_avatars_mode !== "disabled";
   }
 
-  get showAvatarUploader() {
+  get showCustomAvatarSelector() {
     const mode = this.siteSettings.selectable_avatars_mode;
     switch (mode) {
       case "no_one":
@@ -92,15 +92,8 @@ export default class AvatarSelectorModal extends Component {
 
   get allowAvatarUpload() {
     return (
-      this.siteSettingMatches &&
+      this.currentUser.can_upload_avatar &&
       allowsImages(this.currentUser.staff, this.siteSettings)
-    );
-  }
-
-  get siteSettingMatches() {
-    return this.siteSettings.userInAnyGroups(
-      "uploaded_avatars_allowed_groups",
-      this.currentUser
     );
   }
 
