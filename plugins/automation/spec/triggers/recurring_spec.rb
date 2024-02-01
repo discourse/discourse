@@ -111,14 +111,22 @@ describe "Recurring" do
     end
 
     describe "every_day" do
-      before { upsert_period_field!(1, "day") }
+      before do
+        automation.upsert_field!(
+          "start_date",
+          "date_time",
+          { value: 1.minute.from_now },
+          target: "trigger",
+        )
+        upsert_period_field!(1, "day")
+      end
 
       it "creates the next iteration one day later" do
         automation.trigger!
 
         pending_automation = DiscourseAutomation::PendingAutomation.last
         start_date = Time.parse(automation.trigger_field("start_date")["value"])
-        expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 1.day)
+        expect(pending_automation.execute_at).to be_within_one_minute_of(start_date)
       end
     end
 

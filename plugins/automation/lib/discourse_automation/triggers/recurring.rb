@@ -33,7 +33,7 @@ def setup_pending_automation(automation, fields)
     when "day"
       RRule::Rule
         .new("FREQ=DAILY;INTERVAL=#{interval}", dtstart: start_date)
-        .between(Time.now.end_of_day, interval_end.days.from_now)
+        .between(Time.now, interval_end.days.from_now)
         .first
     when "weekday"
       max_weekends = (interval_end.to_f / 5).ceil
