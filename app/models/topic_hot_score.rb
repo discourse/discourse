@@ -21,6 +21,7 @@ class TopicHotScore < ActiveRecord::Base
       max: max,
       private_message: Archetype.private_message,
       recent_cutoff: now - SiteSetting.hot_topics_recent_days.days,
+      regular: Post.types[:regular],
     }
 
     # insert up to BATCH_SIZE records that are missing from table
@@ -70,6 +71,9 @@ class TopicHotScore < ActiveRecord::Base
                 FROM post_actions pa
                 JOIN posts p2 ON p2.id = pa.post_id
                 WHERE p2.topic_id = t.id
+                  AND p2.post_type = :regular
+                  AND p2.deleted_at IS NULL
+                  AND p2.user_deleted = false
                   AND pa.post_action_type_id = 2 -- action_type for 'like'
                   AND pa.created_at >= :recent_cutoff
                   AND pa.deleted_at IS NULL
@@ -84,10 +88,12 @@ class TopicHotScore < ActiveRecord::Base
               AND t.archetype <> 'private_message'
               AND t.deleted_at IS NULL
               AND p.deleted_at IS NULL
+              AND p.user_deleted = false
               AND t.created_at <= :now
               AND t.bumped_at >= :recent_cutoff
               AND p.created_at < :now
               AND p.created_at >= :recent_cutoff
+              AND p.post_type = :regular
           GROUP BY
               t.id
         ) AS new_values

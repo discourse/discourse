@@ -43,6 +43,10 @@ export default class DiscoveryTopics extends Component {
     return filterTypeForMode(this.args.model.filter) === "top";
   }
 
+  get hot() {
+    return filterTypeForMode(this.args.model.filter) === "hot";
+  }
+
   get new() {
     return filterTypeForMode(this.args.model.filter) === "new";
   }
