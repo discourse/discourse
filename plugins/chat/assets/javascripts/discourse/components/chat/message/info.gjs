@@ -169,7 +169,9 @@ export default class ChatMessageInfo extends Component {
             @models={{this.routeModels}}
             class="chat-message-info__original-message"
           >
-            <span class="chat-message-info__original-message__text">See in</span>
+            <span class="chat-message-info__original-message__text">
+              {{i18n "chat.see_in"}}
+            </span>
             <ChannelTitle @channel={{@message.channel}} />
           </LinkTo>
         {{/if}}
