@@ -1573,7 +1573,6 @@ files:
     enum: "TrustLevelAndStaffAndDisabledSetting"
     hidden: true
   uploaded_avatars_allowed_groups:
-    client: true
     default: 10
     type: group_list
     allow_any: false

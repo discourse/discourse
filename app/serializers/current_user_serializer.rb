@@ -19,6 +19,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :trust_level,
              :can_send_private_email_messages,
              :can_send_private_messages,
+             :can_upload_avatar,
              :can_edit,
              :can_invite_to_forum,
              :no_password,
@@ -118,6 +119,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_messages
     scope.can_send_private_messages?
+  end
+
+  def can_upload_avatar
+    !is_anonymous && object.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
   end
 
   def can_edit
