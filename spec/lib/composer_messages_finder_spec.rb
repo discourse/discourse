@@ -445,7 +445,8 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     context "when user can't send private messages" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
+
       before { SiteSetting.personal_message_enabled_groups = group.id }
 
       it "does not show the message" do
