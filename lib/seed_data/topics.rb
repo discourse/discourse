@@ -86,7 +86,7 @@ module SeedData
           I18n.t(
             "guidelines_topic.body",
             base_path: Discourse.base_path,
-            feedback_category_hashtag: feedback_category_hashtag,
+            feedback_category: feedback_category_hashtag,
           ),
         category: staff_category,
         static_first_reply: true,
