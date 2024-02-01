@@ -4,6 +4,7 @@ RSpec.describe TopicHotScore do
   describe ".update_scores" do
     fab!(:user)
     fab!(:user2) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
 
     it "can correctly update like counts and post counts and account for activity" do
       freeze_time
@@ -24,35 +25,57 @@ RSpec.describe TopicHotScore do
       PostActionCreator.like(user2, new_reply)
       PostActionCreator.like(user, newer_reply)
 
+      # user 3 likes two posts, but we should only count 1
+      # this avoids a single user from trivially inflating hot scores
+      PostActionCreator.like(user3, new_reply)
+      PostActionCreator.like(user3, newer_reply)
+
       TopicHotScore.update_scores
 
       hot_scoring = TopicHotScore.find_by(topic_id: topic.id)
 
-      expect(hot_scoring.recent_likes).to eq(2)
+      expect(hot_scoring.recent_likes).to eq(3)
       expect(hot_scoring.recent_posters).to eq(2)
       expect(hot_scoring.recent_first_bumped_at).to eq_time(new_reply.created_at)
-      expect(hot_scoring.score).to be_within(0.001).of(1.219)
+      expect(hot_scoring.score).to be_within(0.001).of(1.771)
 
       expect(TopicHotScore.find_by(topic_id: -1).recent_likes).to eq(0)
+    end
+
+    it "prefers recent_likes to topic like count for recent topics" do
+      freeze_time
+
+      topic = Fabricate(:topic, created_at: 1.hour.ago)
+      post = Fabricate(:post, topic: topic, created_at: 1.minute.ago)
+      PostActionCreator.like(user, post)
+
+      TopicHotScore.update_scores
+      score = TopicHotScore.find_by(topic_id: topic.id).score
+
+      topic.update!(like_count: 100)
+
+      TopicHotScore.update_scores
+
+      expect(TopicHotScore.find_by(topic_id: topic.id).score).to be_within(0.001).of(score)
     end
 
     it "can correctly set scores for topics" do
       freeze_time
 
-      topic1 = Fabricate(:topic, like_count: 3, created_at: 1.hour.ago)
-      topic2 = Fabricate(:topic, like_count: 10, created_at: 3.hour.ago)
+      topic1 = Fabricate(:topic, like_count: 3, created_at: 2.weeks.ago)
+      topic2 = Fabricate(:topic, like_count: 10, created_at: 2.weeks.ago)
 
       TopicHotScore.update_scores
 
-      expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.001).of(0.535)
-      expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(1.304)
+      expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.001).of(0.002)
+      expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(0.009)
 
-      freeze_time(2.hours.from_now)
+      freeze_time(6.weeks.from_now)
 
       TopicHotScore.update_scores
 
-      expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.001).of(0.289)
-      expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(0.871)
+      expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.0001).of(0.0005)
+      expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(0.001)
     end
   end
 end
