@@ -1,3 +1,4 @@
+import { warn } from "@ember/debug";
 import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -8,6 +9,7 @@ import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { MultiCache } from "discourse-common/utils/multi-cache";
 
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
@@ -361,6 +363,18 @@ const Category = RestModel.extend({
 
 let _uncategorized;
 
+const categoryMultiCache = new MultiCache(async (ids) => {
+  const result = await ajax("/categories/find", { data: { ids } });
+
+  return new Map(
+    result["categories"].map((category) => [category.id, category])
+  );
+});
+
+export function resetCategoryCache() {
+  categoryMultiCache.reset();
+}
+
 Category.reopenClass({
   // Sort subcategories directly under parents
   sortCategories(categories) {
@@ -468,10 +482,15 @@ Category.reopenClass({
   },
 
   async asyncFindByIds(ids = []) {
-    const result = await ajax("/categories/find", { data: { ids } });
+    const result = await categoryMultiCache.fetch(ids);
+    if (categoryMultiCache.hadTooManyCalls()) {
+      warn(
+        "Multiple calls to Category.asyncFindByIds within a second. Could they be combined?"
+      );
+    }
 
-    const categories = result["categories"].map((category) =>
-      Site.current().updateCategory(category)
+    const categories = ids.map((id) =>
+      Site.current().updateCategory(result.get(id))
     );
 
     // Update loadedCategoryIds list
