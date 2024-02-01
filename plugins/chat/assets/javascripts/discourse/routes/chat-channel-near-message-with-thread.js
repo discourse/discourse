@@ -5,6 +5,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 // It's not a real route, it just redirects to the real route after setting a param on the controller.
 export default class ChatChannelNearMessageWithThread extends DiscourseRoute {
   @service router;
+  @service site;
 
   beforeModel() {
     const channel = this.modelFor("chat-channel");
@@ -18,7 +19,7 @@ export default class ChatChannelNearMessageWithThread extends DiscourseRoute {
       this.controllerFor("chat-channel").set("targetMessageId", messageId);
     }
 
-    if (threadId) {
+    if (threadId && this.site.desktopView) {
       this.router.replaceWith(
         "chat.channel.thread",
         ...channel.routeModels,

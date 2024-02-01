@@ -15,6 +15,7 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
 import formatChatDate from "../../../helpers/format-chat-date";
 
 export default class ChatMessageInfo extends Component {
+  @service site;
   @service siteSettings;
 
   @bind
@@ -80,11 +81,23 @@ export default class ChatMessageInfo extends Component {
   }
 
   get routeModels() {
-    return [
-      ...this.args.message.channel.routeModels,
-      this.args.message.id,
-      this.args.message.thread.id,
-    ];
+    if (this.site.mobileView) {
+      return [...this.args.message.channel.routeModels, this.args.message.id];
+    } else {
+      return [
+        ...this.args.message.channel.routeModels,
+        this.args.message.id,
+        this.args.message.thread.id,
+      ];
+    }
+  }
+
+  get route() {
+    if (this.site.mobileView) {
+      return "chat.channel.near-message";
+    } else {
+      return "chat.channel.near-message-with-thread";
+    }
   }
 
   <template>
@@ -152,7 +165,7 @@ export default class ChatMessageInfo extends Component {
 
         {{#if (and @threadContext @message.isOriginalThreadMessage)}}
           <LinkTo
-            @route="chat.channel.near-message-with-thread"
+            @route={{this.route}}
             @models={{this.routeModels}}
             class="chat-message-info__original-message"
           >
