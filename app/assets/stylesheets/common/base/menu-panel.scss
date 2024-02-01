@@ -659,7 +659,7 @@
 
   height: var(--base-height);
 
-  body.footer-nav-ipad & {
-    height: calc(var(--base-height) - var(--footer-nav-height, 0px));
+  html.footer-nav-ipad & {
+    height: calc(var(--base-height) - var(--footer-nav-height));
   }
 }
