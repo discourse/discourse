@@ -66,7 +66,7 @@ class TopicHotScore < ActiveRecord::Base
               t.id AS topic_id,
               COUNT(DISTINCT p.user_id) AS unique_participants,
               (
-                SELECT COUNT(*)
+                SELECT COUNT(distinct pa.user_id)
                 FROM post_actions pa
                 JOIN posts p2 ON p2.id = pa.post_id
                 WHERE p2.topic_id = t.id
@@ -100,7 +100,10 @@ class TopicHotScore < ActiveRecord::Base
     # we need an extra index for this
     DB.exec(<<~SQL, args)
       UPDATE topic_hot_scores ths
-      SET score = (topics.like_count - 1) /
+      SET score = (
+        CASE WHEN topics.created_at > :recent_cutoff
+          THEN ths.recent_likes ELSE topics.like_count END
+        ) /
         (EXTRACT(EPOCH FROM (:now - topics.created_at)) / 3600 + 2) ^ :gravity
  +
         CASE WHEN ths.recent_first_bumped_at IS NULL THEN 0 ELSE
