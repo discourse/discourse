@@ -97,6 +97,8 @@ describe "Changing email", type: :system do
     try_until_success { expect(current_url).to match("/u/#{user.username}/preferences/account") }
 
     expect(user.reload.email).to eq(new_email)
+  ensure
+    authenticator.remove!
   end
 
   it "does not require login to verify" do
