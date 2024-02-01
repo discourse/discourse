@@ -4,6 +4,11 @@ import HashtagTypeBase from "./base";
 export default class CategoryHashtagType extends HashtagTypeBase {
   @service site;
 
+  constructor() {
+    super(...arguments);
+    this.loadingIds = new Set();
+  }
+
   get type() {
     return "category";
   }
@@ -12,29 +17,42 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     return this.site.categories || [];
   }
 
-  generateColorCssClasses(category) {
-    const generatedCssClasses = [];
-    const backgroundGradient = [`var(--category-${category.id}-color) 50%`];
-    if (category.parentCategory) {
-      backgroundGradient.push(
-        `var(--category-${category.parentCategory.id}-color) 50%`
-      );
+  generateColorCssClasses(categoryOrHashtag) {
+    let color, parentColor;
+    if (categoryOrHashtag.colors) {
+      if (categoryOrHashtag.colors.length === 1) {
+        color = categoryOrHashtag.colors[0];
+      } else {
+        parentColor = categoryOrHashtag.colors[0];
+        color = categoryOrHashtag.colors[1];
+      }
     } else {
-      backgroundGradient.push(`var(--category-${category.id}-color) 50%`);
+      color = categoryOrHashtag.color;
+      if (categoryOrHashtag.parentCategory) {
+        parentColor = categoryOrHashtag.parentCategory.color;
+      }
     }
 
-    generatedCssClasses.push(`.hashtag-color--category-${category.id} {
-  background: linear-gradient(-90deg, ${backgroundGradient.join(", ")});
-}`);
+    let style;
+    if (parentColor) {
+      style = `background: linear-gradient(-90deg, #${color} 50%, #${parentColor} 50%);`;
+    } else {
+      style = `background-color: #${color};`;
+    }
 
-    return generatedCssClasses;
+    return [`.hashtag-color--category-${categoryOrHashtag.id} { ${style} }`];
   }
 
   generateIconHTML(hashtag) {
-    const hashtagId = parseInt(hashtag.id, 10);
-    const colorCssClass = !this.preloadedData.mapBy("id").includes(hashtagId)
-      ? "hashtag-missing"
-      : `hashtag-color--${this.type}-${hashtag.id}`;
+    if (!this.registeredIds.has(parseInt(hashtag.id, 10))) {
+      if (hashtag.colors) {
+        this.registerCss(hashtag);
+      } else {
+        this.load(hashtag.id);
+      }
+    }
+
+    const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;
     return `<span class="hashtag-category-badge ${colorCssClass}"></span>`;
   }
 }

@@ -62,10 +62,6 @@ a.hashtag {
     margin-right: 0.25em;
     margin-left: 0.1em;
     display: inline-block;
-
-    &.hashtag-missing {
-      background-color: var(--primary-medium);
-    }
   }
 }
 

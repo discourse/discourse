@@ -6,6 +6,11 @@ export default class ChannelHashtagType extends HashtagTypeBase {
   @service chatChannelsManager;
   @service currentUser;
 
+  constructor() {
+    super(...arguments);
+    this.loadingIds = new Set();
+  }
+
   get type() {
     return "channel";
   }
@@ -18,19 +23,27 @@ export default class ChannelHashtagType extends HashtagTypeBase {
     }
   }
 
-  generateColorCssClasses(channel) {
+  generateColorCssClasses(channelOrHashtag) {
+    const color = channelOrHashtag.colors
+      ? channelOrHashtag.colors[0]
+      : channelOrHashtag.chatable.color;
+
     return [
-      `.d-icon.hashtag-color--${this.type}-${channel.id} { color: var(--category-${channel.chatable.id}-color); }`,
+      `.d-icon.hashtag-color--${this.type}-${channelOrHashtag.id} { color: #${color} }`,
     ];
   }
 
   generateIconHTML(hashtag) {
-    const hashtagId = parseInt(hashtag.id, 10);
-    const colorCssClass = !this.preloadedData.mapBy("id").includes(hashtagId)
-      ? "hashtag-missing"
-      : `hashtag-color--${this.type}-${hashtag.id}`;
+    if (!this.registeredIds.has(parseInt(hashtag.id, 10))) {
+      if (hashtag.colors) {
+        this.registerCss(hashtag);
+      } else {
+        this.load(hashtag.id);
+      }
+    }
+
     return iconHTML(hashtag.icon, {
-      class: colorCssClass,
+      class: `hashtag-color--${this.type}-${hashtag.id}`,
     });
   }
 }

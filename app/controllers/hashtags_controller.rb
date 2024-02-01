@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class HashtagsController < ApplicationController
-  requires_login
+  requires_login except: [:by_ids]
+
+  def by_ids
+    render json: HashtagAutocompleteService.new(guardian).find_by_ids(params)
+  end
 
   def lookup
     render json: HashtagAutocompleteService.new(guardian).lookup(params[:slugs], params[:order])
