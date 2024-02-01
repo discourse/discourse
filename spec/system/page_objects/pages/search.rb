@@ -8,6 +8,15 @@ module PageObjects
         self
       end
 
+      def type_in_search_menu(input)
+        find("input#search-term").send_keys(input)
+        self
+      end
+
+      def click_search_menu_link
+        find(".search-menu .results .search-link").click
+      end
+
       def clear_search_input
         find("input.full-page-search").set("")
         self
