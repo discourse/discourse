@@ -826,7 +826,6 @@ class Plugin::Instance
     assets
       .map do |asset, opts|
         next if opts == :vendored_core_pretty_text
-        next if opts == :admin
         next unless asset =~ DiscoursePluginRegistry::JS_REGEX
         asset
       end
