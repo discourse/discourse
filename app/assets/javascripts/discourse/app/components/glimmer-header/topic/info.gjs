@@ -169,11 +169,8 @@ export default class Info extends Component {
             {{/if}}
 
             <div class="topic-header-extra">
+              {{htmlSafe this.tags}}
               <div class="topic-header-participants">
-                <div class="list-tags">
-                  {{htmlSafe this.tags}}
-                </div>
-
                 {{#if this.showPM}}
                   {{#each @topic.details.allowed_users as |user|}}
                     {{#unless

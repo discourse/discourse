@@ -61,6 +61,7 @@ export default Component.extend(
     },
 
     _hideTopicInHeader() {
+      this.appEvents.trigger("header:hide-topic");
       this.header.topic = null;
       this._lastShowTopic = false;
     },
@@ -69,6 +70,7 @@ export default Component.extend(
       if (this.pauseHeaderTopicUpdate) {
         return;
       }
+      this.appEvents.trigger("header:show-topic", topic);
       this.header.topic = topic;
       this._lastShowTopic = true;
     },
