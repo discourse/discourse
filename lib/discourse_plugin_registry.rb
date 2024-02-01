@@ -53,7 +53,6 @@ class DiscoursePluginRegistry
   define_register :javascripts, Set
   define_register :auth_providers, Set
   define_register :service_workers, Set
-  define_register :admin_javascripts, Set
   define_register :stylesheets, Hash
   define_register :mobile_stylesheets, Hash
   define_register :desktop_stylesheets, Hash
@@ -160,9 +159,7 @@ class DiscoursePluginRegistry
 
   def self.register_asset(asset, opts = nil, plugin_directory_name = nil)
     if asset =~ JS_REGEX
-      if opts == :admin
-        self.admin_javascripts << asset
-      elsif opts == :vendored_pretty_text
+      if opts == :vendored_pretty_text
         self.vendored_pretty_text << asset
       elsif opts == :vendored_core_pretty_text
         self.vendored_core_pretty_text << asset
