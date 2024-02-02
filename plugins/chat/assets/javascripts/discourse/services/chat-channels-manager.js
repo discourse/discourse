@@ -111,17 +111,18 @@ export default class ChatChannelsManager extends Service {
 
   @cached
   get publicMessageChannels() {
-    return this.channels
-      .filter(
-        (channel) =>
+    return this.#sortChannelsByUnread(
+      this.channels.filter((channel) => {
+        return (
           channel.isCategoryChannel && channel.currentUserMembership.following
-      )
-      .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
+        );
+      })
+    );
   }
 
   @cached
   get directMessageChannels() {
-    return this.#sortDirectMessageChannels(
+    return this.#sortChannelsByUnread(
       this.channels.filter((channel) => {
         const membership = channel.currentUserMembership;
         return channel.isDirectMessageChannel && membership.following;
@@ -154,7 +155,7 @@ export default class ChatChannelsManager extends Service {
     return this._cached[id];
   }
 
-  #sortDirectMessageChannels(channels) {
+  #sortChannelsByUnread(channels) {
     return channels.sort((a, b) => {
       if (!a.lastMessage.id) {
         return 1;
