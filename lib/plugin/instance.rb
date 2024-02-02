@@ -798,7 +798,7 @@ class Plugin::Instance
     javascript_includes.each { |js| contents << "require_asset('#{js}')" }
 
     if !contents.present?
-      [js_file_path, extra_js_file_path].each do |f|
+      [js_file_path, extra_js_file_path, extra_js_file_path.sub(".erb", "")].each do |f|
         File.delete(f)
       rescue Errno::ENOENT
       end
@@ -810,8 +810,8 @@ class Plugin::Instance
 
     Discourse::Utils.atomic_write_file(extra_js_file_path, contents.join("\n"))
 
-    begin
-      File.delete(js_file_path)
+    [js_file_path, extra_js_file_path.sub(".erb", "")].each do |f|
+      File.delete(f)
     rescue Errno::ENOENT
     end
   end
