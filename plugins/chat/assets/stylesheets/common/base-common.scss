@@ -249,6 +249,10 @@ html.has-full-page-chat {
   height: 100%;
   width: 100%;
 
+  &.footer-nav-ipad {
+    height: calc(100% - var(--footer-nav-height, 0px));
+  }
+
   body {
     height: 100%;
     width: 100%;
