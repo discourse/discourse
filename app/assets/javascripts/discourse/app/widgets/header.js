@@ -454,7 +454,7 @@ createWidget("search-menu-wrapper", {
   },
 
   buildClasses() {
-    return ["search-menu glimmer-search-menu"];
+    return ["search-menu"];
   },
 
   html() {
@@ -612,7 +612,7 @@ export default createWidget("header", {
     this.search.visible = !this.search.visible;
     this.updateHighlight();
 
-    if (!this.state.searchVisible) {
+    if (!this.search.searchVisible) {
       this.search.inTopicContext = false;
     }
   },
