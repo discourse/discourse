@@ -2,6 +2,10 @@
   @include sticky;
   top: 0;
   z-index: z("header");
+
+  .footer-nav-ipad & {
+    top: var(--footer-nav-height, 0px);
+  }
 }
 
 .d-header {
