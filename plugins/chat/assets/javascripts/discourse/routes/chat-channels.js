@@ -10,6 +10,10 @@ export default class ChatChannelsRoute extends DiscourseRoute {
   }
 
   model() {
+    if (this.site.desktopView) {
+      return this.router.replaceWith("chat");
+    }
+
     return this.chatChannelsManager.publicMessageChannels;
   }
 }
