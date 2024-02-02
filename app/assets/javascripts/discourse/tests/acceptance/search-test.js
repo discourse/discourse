@@ -19,7 +19,7 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
-acceptance("Search - Glimmer - Anonymous", function (needs) {
+acceptance("Search - Anonymous", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
@@ -431,7 +431,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
   });
 });
 
-acceptance("Search - Glimmer - Authenticated", function (needs) {
+acceptance("Search - Authenticated", function (needs) {
   needs.user();
   needs.settings({
     log_search_queries: true,
@@ -741,7 +741,7 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
   });
 });
 
-acceptance("Search - Glimmer - with tagging enabled", function (needs) {
+acceptance("Search - with tagging enabled", function (needs) {
   needs.user();
   needs.settings({ tagging_enabled: true });
   needs.pretender((server, helper) => {
@@ -923,7 +923,7 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
   });
 });
 
-acceptance("Search - Glimmer - assistant", function (needs) {
+acceptance("Search - assistant", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     server.get("/t/2179.json", () => {
