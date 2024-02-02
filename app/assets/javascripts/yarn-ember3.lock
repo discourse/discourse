@@ -4199,10 +4199,10 @@ content-tag@^1.1.2:
   resolved "https://registry.yarnpkg.com/content-tag/-/content-tag-1.2.2.tgz#8cbc3cdb9957a81f7c425b138e334330dd6fd78d"
   integrity sha512-9guqKIx2H+78N17otBpl8yLZbQGL5q1vBO/jDb3gF2JjixtcVpC62jDUNxjVMNoaZ09oxRX84ZOD6VX02qkVvg==
 
-content-tag@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/content-tag/-/content-tag-2.0.0.tgz#932e609c800aa85adf0a4ef07b86d91dd1492c0a"
-  integrity sha512-4P7sbMEX37J0yBS/b4HZn3cQCI+w+CR7URiA7KRSBSuI8P/bFuxu7Y1srfbV9BWTCXwyVGxXo1lIpNTGL0FQUQ==
+content-tag@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/content-tag/-/content-tag-2.0.1.tgz#0b908ed97e13df60b019039713ab63f1b73f2b22"
+  integrity sha512-jxsETSDs5NbNwyiDuIp672fUMhUyu8Qxc5MOBOJOcgW/fQESI6o5K1LBDrnEE7Bh810a685lWEZHTF4jQYGEEw==
 
 content-type@~1.0.4:
   version "1.0.5"

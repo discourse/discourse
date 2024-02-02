@@ -14,7 +14,7 @@ index 7be08fc..35777bf 100644
  const defaultOptions = {
    inline_source_map: false,
 diff --git a/node_modules/content-tag/pkg/standalone/content_tag.js b/node_modules/content-tag/pkg/standalone/content_tag.js
-index aaefe00..9374f10 100644
+index aaefe00..bb20026 100644
 --- a/node_modules/content-tag/pkg/standalone/content_tag.js
 +++ b/node_modules/content-tag/pkg/standalone/content_tag.js
 @@ -20,6 +20,7 @@ function takeObject(idx) {
