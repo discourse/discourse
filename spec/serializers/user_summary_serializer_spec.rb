@@ -4,11 +4,12 @@ RSpec.describe UserSummarySerializer do
   it "returns expected data" do
     UserActionManager.enable
     user = Fabricate(:user, refresh_auto_groups: true)
+    another_user = Fabricate(:user, refresh_auto_groups: true)
     liked_user = Fabricate(:user, name: "John Doe", username: "john_doe", refresh_auto_groups: true)
     liked_post = create_post(user: liked_user)
     PostActionCreator.like(user, liked_post)
 
-    guardian = Guardian.new(user)
+    guardian = Guardian.new(another_user)
     summary = UserSummary.new(user, guardian)
     serializer = UserSummarySerializer.new(summary, scope: guardian, root: false)
     json = serializer.as_json
@@ -26,6 +27,11 @@ RSpec.describe UserSummarySerializer do
     # do not include full name if disabled
     SiteSetting.enable_names = false
     expect(serializer.as_json[:most_liked_users][0][:name]).to eq(nil)
+
+    expect(json[:can_see_user_actions]).to eq(true)
+    SiteSetting.hide_user_activity_tab = true
+    serializer = UserSummarySerializer.new(summary, scope: guardian, root: false)
+    expect(serializer.as_json[:can_see_user_actions]).to eq(false)
   end
 
   it "returns correct links data ranking" do

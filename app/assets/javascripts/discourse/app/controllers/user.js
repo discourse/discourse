@@ -123,6 +123,11 @@ export default Controller.extend(CanCheckEmails, {
   },
 
   @discourseComputed("viewingSelf", "currentUser.admin")
+  showActivityTab(viewingSelf, isAdmin) {
+    return viewingSelf || isAdmin || !this.siteSettings.hide_user_activity_tab;
+  },
+
+  @discourseComputed("viewingSelf", "currentUser.admin")
   showNotificationsTab(viewingSelf, isAdmin) {
     return viewingSelf || isAdmin;
   },
