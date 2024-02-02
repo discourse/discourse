@@ -29,13 +29,18 @@ export default {
     this.currentUser = container.lookup("service:current-user");
 
     withPluginApi("1.8.0", (api) => {
+      const chatStateManager = container.lookup("service:chat-state-manager");
+
       api.addSidebarPanel(
         (BaseCustomSidebarPanel) =>
           class ChatSidebarPanel extends BaseCustomSidebarPanel {
             key = CHAT_PANEL;
             switchButtonLabel = I18n.t("sidebar.panels.chat.label");
             switchButtonIcon = "d-chat";
-            switchButtonDefaultUrl = getURL("/chat");
+
+            get switchButtonDefaultUrl() {
+              return getURL(chatStateManager.lastKnownChatURL || "/chat");
+            }
           }
       );
 

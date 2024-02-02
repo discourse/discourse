@@ -8,24 +8,34 @@ import getURL from "discourse-common/lib/get-url";
 export default class SwitchPanelButtons extends Component {
   @service router;
   @service sidebarState;
+  @tracked currentPanel;
   @tracked isSwitching = false;
+
+  get destination() {
+    if (this.currentPanel) {
+      const url =
+        this.currentPanel.switchButtonDefaultUrl ||
+        this.currentPanel.lastKnownURL;
+      return url === "/" ? `discovery.${defaultHomepage()}` : getURL(url);
+    }
+    return null;
+  }
 
   @action
   switchPanel(panel) {
     this.isSwitching = true;
+    this.currentPanel = panel;
     this.sidebarState.currentPanel.lastKnownURL = this.router.currentURL;
 
-    const url = panel.lastKnownURL || panel.switchButtonDefaultUrl;
-    const destination =
-      url === "/" ? `discovery.${defaultHomepage()}` : getURL(url);
-
-    this.router
-      .transitionTo(destination)
-      .then(() => {
-        this.sidebarState.setPanel(panel.key);
-      })
-      .finally(() => {
-        this.isSwitching = false;
-      });
+    if (this.destination) {
+      this.router
+        .transitionTo(this.destination)
+        .then(() => {
+          this.sidebarState.setPanel(this.currentPanel.key);
+        })
+        .finally(() => {
+          this.isSwitching = false;
+        });
+    }
   }
 }
