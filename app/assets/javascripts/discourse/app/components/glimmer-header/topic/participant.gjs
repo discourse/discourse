@@ -13,11 +13,9 @@ export default class Participant extends Component {
   @service appEvents;
 
   get url() {
-    if (this.args.type === "user") {
-      return this.args.user.path;
-    } else {
-      return getURL(`/g/${this.args.group.name}`);
-    }
+    return this.args.type === "user"
+      ? this.args.user.path
+      : getURL(`/g/${this.args.username}`);
   }
 
   get typeClass() {
@@ -25,10 +23,6 @@ export default class Participant extends Component {
   }
 
   get avatarImage() {
-    if (!this.args.user) {
-      return;
-    }
-
     return htmlSafe(
       avatarImg({
         avatarTemplate: this.args.user.avatar_template,
@@ -55,14 +49,14 @@ export default class Participant extends Component {
         {{on "click" this.click}}
         href={{this.url}}
         data-auto-route="true"
-        title={{@user.username}}
+        title={{@username}}
       >
         {{#if (eq @type "user")}}
           {{this.avatarImage}}
         {{else}}
           <span>
             {{icon "users"}}
-            {{@group.name}}
+            {{@username}}
           </span>
         {{/if}}
       </a>

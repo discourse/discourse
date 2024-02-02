@@ -5,7 +5,9 @@ import { renderAvatar } from "discourse/helpers/user-avatar";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import UserTip from "../user-tip";
+import UserTip from "../../user-tip";
+import UserStatusBubble from "./user-status-bubble";
+import { hash } from "@ember/helper";
 
 export default class Notifications extends Component {
   @service currentUser;
@@ -53,64 +55,54 @@ export default class Notifications extends Component {
       />
     {{/if}}
 
-    {{!-- {{#if this.currentUser.status}}
-        {{this.attach "user-status-bubble" this.currentUser.status}}
-      {{/if}} --}}
+    {{#if this.currentUser.status}}
+      <UserStatusBubble
+        @timezone={{this.this.currentUser.user_option.timezone}}
+        @status={{this.currentUser.status}}
+      />
+    {{/if}}
 
     {{#if this.isInDoNotDisturb}}
       <div class="do-not-disturb-background">{{icon "moon"}}</div>
     {{else}}
       {{#if this.currentUser.new_personal_messages_notifications_count}}
-        {{!-- {{this.attach
-            "link"
-            action=this.attrs.action
-            className="badge-notification with-icon new-pms"
-            icon="envelope"
-            omitSpan=true
-            title="notifications.tooltip.new_message_notification"
-            titleOptions=(hash
+        <a
+          href="#"
+          class="badge-notification with-icon new-pms"
+          title="notifications.tooltip.new_message_notification"
+          aria-label={{i18n
+            "notifications.tooltip.new_message_notification"
+            (hash
               count=this.currentUser.new_personal_messages_notifications_count
             )
-            attributes=(hash
-              "aria-label"
-              (t
-                "notifications.tooltip.new_message_notification"
-                (hash
-                  count=this.currentUser.new_personal_messages_notifications_count
-                )
-              )
-            )
-          }} --}}
+          }}
+        >
+          {{icon "envelope"}}
+        </a>
       {{else if this.currentUser.unseen_reviewable_count}}
-        {{!-- {{this.attach
-            "link"
-            action=this.attrs.action
-            className="badge-notification with-icon new-reviewables"
-            icon="flag"
-            omitSpan=true
-            title="notifications.tooltip.new_reviewable"
-            titleOptions=(hash count=this.currentUser.unseen_reviewable_count)
-            attributes=(hash
-              "aria-label"
-              (t
-                "notifications.tooltip.new_reviewable"
-                (hash count=this.currentUser.unseen_reviewable_count)
-              )
-            )
-          }} --}}
+        <a
+          href="#"
+          class="badge-notification with-icon new-reviewables"
+          title="notifications.tooltip.new_reviewable"
+          aria-label={{i18n
+            "notifications.tooltip.new_reviewable"
+            (hash count=this.currentUser.unseen_reviewable_count)
+          }}
+        >
+          {{icon "flag"}}
+        </a>
       {{else if this.currentUser.all_unread_notifications_count}}
-        {{!-- {{this.attach
-            "link"
-            action=this.attrs.action
-            className="badge-notification unread-notifications"
-            rawLabel=this.currentUser.all_unread_notifications_count
-            omitSpan=true
-            title="notifications.tooltip.regular"
-            titleOptions=(hash
-              count=this.currentUser.all_unread_notifications_count
-            )
-            attributes=(hash "aria-label" (t "user.notifications"))
-          }} --}}
+        <a
+          href="#"
+          class="badge-notification unread-notifications"
+          title="notifications.tooltip.regular"
+          aria-label={{i18n
+            "user.notifications"
+            (hash count=this.currentUser.all_unread_notifications_count)
+          }}
+        >
+          {{this.currentUser.all_unread_notifications_count}}
+        </a>
       {{/if}}
     {{/if}}
   </template>

@@ -15,6 +15,7 @@ import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";
 import gt from "truth-helpers/helpers/gt";
+import eq from "truth-helpers/helpers/eq";
 import gte from "truth-helpers/helpers/gte";
 import { htmlSafe } from "@ember/template";
 import categoryLink from "discourse/helpers/category-link";
@@ -26,7 +27,6 @@ import MountWidget from "../../mount-widget";
 import Status from "./status";
 
 let _additionalFancyTitleClasses = [];
-let _extraInfoComponentsCount;
 
 export function addHeaderFancyTitleClass(className) {
   _additionalFancyTitleClasses.push(className);
@@ -36,12 +36,6 @@ export default class Info extends Component {
   @service currentUser;
   @service site;
   @service siteSettings;
-
-  constructor() {
-    super(...arguments);
-    // reset the extra info components count
-    _extraInfoComponentsCount = 0;
-  }
 
   get showPM() {
     return !this.args.topic.is_warning && this.args.topic.isPrivateMessage;
@@ -55,8 +49,7 @@ export default class Info extends Component {
   }
 
   get maxExtraItems() {
-    const extraItems = this.totalParticipants + this.args.topic.tags?.length;
-    return extraItems > 0 ? 5 : 10;
+    return this.args.topic.tags?.length > 0 ? 5 : 10;
   }
 
   get additionalFancyTitleClasses() {
@@ -92,9 +85,12 @@ export default class Info extends Component {
     }
   }
 
-  @action
-  incrementExtraInfoComponentsCount() {
-    _extraInfoComponentsCount++;
+  get participants() {
+    const participants = [
+      ...this.args.topic.details.allowed_users,
+      ...this.args.topic.details.allowed_groups,
+    ];
+    return participants.slice(0, this.maxExtraItems);
   }
 
   <template>
@@ -172,30 +168,13 @@ export default class Info extends Component {
               {{htmlSafe this.tags}}
               <div class="topic-header-participants">
                 {{#if this.showPM}}
-                  {{#each @topic.details.allowed_users as |user|}}
-                    {{#unless
-                      (gte _extraInfoComponentsCount this.maxExtraItems)
-                    }}
-                      <Participant
-                        @user={{user}}
-                        @type="user"
-                        @username={{user.username}}
-                      />
-                      {{this.incrementExtraInfoComponentsCount}}
-                    {{/unless}}
-                  {{/each}}
-
-                  {{#each @topic.allowed_groups as |group|}}
-                    {{#unless
-                      (gte _extraInfoComponentsCount this.maxExtraItems)
-                    }}
-                      <Participant
-                        @group={{group}}
-                        @type="group"
-                        @username={{group.name}}
-                      />
-                      {{this.incrementExtraInfoComponentsCount}}
-                    {{/unless}}
+                  {{#each this.participants as |participant index|}}
+                    <Participant
+                      @user={{participant}}
+                      @type={{if participant.username "user" "group"}}
+                      {{! username for user, name for group }}
+                      @username={{or participant.username participant.name}}
+                    />
                   {{/each}}
 
                   {{#if (gt this.totalParticipants this.maxExtraItems)}}
