@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import or from "truth-helpers/helpers/or";
 import { concat } from "@ember/helper";
 import i18n from "discourse-common/helpers/i18n";
-import Notifications from "./notifications";
+import Notifications from "./user-dropdown/notifications";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { inject as service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
@@ -43,7 +43,6 @@ export default class UserDropdown extends Component {
       >
         <Notifications @active={{@active}} />
       </button>
-
     </li>
   </template>
 }
