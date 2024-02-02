@@ -133,7 +133,8 @@ export async function getPasskeyCredential(
   // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
   // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
   if (mediation === "conditional" && isFirefox) {
-    const isCMA = await PublicKeyCredential.isConditionalMediationAvailable();
+    const isCMA =
+      (await PublicKeyCredential.isConditionalMediationAvailable?.()) ?? false;
     if (!isCMA) {
       return;
     }
