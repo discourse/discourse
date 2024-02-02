@@ -19,8 +19,7 @@ export class MultiCache {
   }
 
   async fetch(ids) {
-    this.fetchTimes.push(new Date());
-    this.fetchTimes = this.fetchTimes.slice(-2);
+    this.fetchTimes = [this.fetchTimes[this.fetchTimes.length - 1], new Date()];
 
     const notFound = [];
 
