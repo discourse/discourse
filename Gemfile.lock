@@ -418,7 +418,7 @@ GEM
       parser (>= 3.2.1.0)
     rubocop-capybara (2.20.0)
       rubocop (~> 1.41)
-    rubocop-discourse (3.6.0)
+    rubocop-discourse (3.6.1)
       rubocop (>= 1.59.0)
       rubocop-rspec (>= 2.25.0)
     rubocop-factory_bot (2.25.1)
