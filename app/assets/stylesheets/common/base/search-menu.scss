@@ -14,6 +14,58 @@
 $search-pad-vertical: 0.25em;
 $search-pad-horizontal: 0.5em;
 
+// these styles will become the default once the glimmer search menu
+// is enabled for all users, and the old search menu is removed
+// we can then drop any '!important' rules
+.search-menu.glimmer-search-menu {
+  .search-item-tag .d-icon {
+    margin-right: 0 !important;
+  }
+
+  .search-item-user {
+    display: flex;
+    align-self: center;
+
+    .username {
+      margin-right: 0.33em;
+    }
+  }
+
+  .search-result-user {
+    .search-link {
+      display: flex;
+      align-items: center;
+
+      img.avatar {
+        margin-right: 10px;
+      }
+    }
+
+    .user-titles {
+      @include user-item-flex;
+
+      .username,
+      .name {
+        @include ellipsis;
+      }
+
+      .name {
+        font-weight: 700;
+      }
+
+      .username,
+      .name,
+      .custom-field {
+        color: var(--primary-high-or-secondary-low);
+      }
+
+      .custom-field {
+        font-size: var(--font-down-2);
+      }
+    }
+  }
+}
+
 .search-menu,
 .search-menu-container {
   .menu-panel .panel-body-contents {
@@ -218,6 +270,10 @@ $search-pad-horizontal: 0.5em;
 
     .search-item-tag {
       color: var(--primary-high);
+
+      .d-icon {
+        margin-right: 0;
+      }
     }
 
     .extra-hint {
@@ -374,58 +430,6 @@ $search-pad-horizontal: 0.5em;
   .search-result-post {
     .search-link {
       padding: 0.5em;
-    }
-  }
-}
-
-// these styles will become the default once the glimmer search menu
-// is enabled for all users, and the old search menu is removed
-// we can then drop any '!important' rules
-.search-menu.glimmer-search-menu {
-  .search-item-tag .d-icon {
-    margin-right: 0 !important;
-  }
-
-  .search-item-user {
-    display: flex;
-    align-self: center;
-
-    .username {
-      margin-right: 0.33em;
-    }
-  }
-
-  .search-result-user {
-    .search-link {
-      display: flex;
-      align-items: center;
-
-      img.avatar {
-        margin-right: 10px;
-      }
-    }
-
-    .user-titles {
-      @include user-item-flex;
-
-      .username,
-      .name {
-        @include ellipsis;
-      }
-
-      .name {
-        font-weight: 700;
-      }
-
-      .username,
-      .name,
-      .custom-field {
-        color: var(--primary-high-or-secondary-low);
-      }
-
-      .custom-field {
-        font-size: var(--font-down-2);
-      }
     }
   }
 }
