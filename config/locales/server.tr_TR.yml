@@ -110,7 +110,7 @@ tr_TR:
       optimized_link: Optimize edilmiş resim bağlantıları geçicidir ve tema kaynak koduna dahil edilmemelidir.
     settings_errors:
       invalid_yaml: "Sağlanan YAML geçersiz."
-      data_type_not_a_number: "\"%{name}\" türünün ayarlanması desteklenmiyor. Desteklenen türler şunlardır: \"integer\", \"bool\", \"list\", \"enum\" ve \"upload\""
+      data_type_inclusion: "\"%{name}\" türünün ayarlanması desteklenmiyor. Desteklenen türler şunlardır: \"integer\", \"bool\", \"list\", \"enum\" ve \"upload\""
       name_too_long: "Adı çok uzun olan bir ayar var. Maksimum uzunluk 255'tir"
       default_value_missing: "\"%{name}\" ayarının varsayılan değeri yok"
       default_not_match_type: "\"%{name}\" ayarının varsayılan değerinin türü ayar türüyle eşleşmiyor."

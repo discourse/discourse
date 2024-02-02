@@ -5,8 +5,12 @@ class ThemeSetting < ActiveRecord::Base
 
   has_many :upload_references, as: :target, dependent: :destroy
 
+  TYPES_ENUM =
+    Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5, upload: 6, objects: 7)
+
   validates_presence_of :name, :theme
-  validates :data_type, numericality: { only_integer: true }
+  before_validation :objects_type_enabled
+  validates :data_type, inclusion: { in: TYPES_ENUM.values }
   validates :name, length: { maximum: 255 }
 
   after_save :clear_settings_cache
@@ -24,7 +28,7 @@ class ThemeSetting < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5, upload: 6)
+    TYPES_ENUM
   end
 
   def self.acceptable_value_for_type?(value, type)
@@ -37,6 +41,9 @@ class ThemeSetting < ActiveRecord::Base
       value.is_a?(TrueClass) || value.is_a?(FalseClass)
     when self.types[:list]
       value.is_a?(String)
+    when self.types[:objects]
+      # TODO: This is a simple check now but we want to validate the default objects agianst the schema as well.
+      value.is_a?(Array)
     else
       true
     end
@@ -62,6 +69,15 @@ class ThemeSetting < ActiveRecord::Base
       types[:bool]
     end
   end
+
+  private
+
+  def objects_type_enabled
+    if self.data_type == ThemeSetting.types[:objects] &&
+         !SiteSetting.experimental_objects_type_for_theme_settings
+      self.data_type = nil
+    end
+  end
 end
 
 # == Schema Information
@@ -75,4 +91,5 @@ end
 #  theme_id   :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  json_value :jsonb
 #

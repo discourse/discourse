@@ -113,6 +113,21 @@ class ThemeSettingsManager
     (max.is_a?(::Integer) || max.is_a?(::Float)) && max != ::Float::INFINITY
   end
 
+  class Objects < self
+    def value
+      has_record? ? db_record.json_value : default.map!(&:deep_stringify_keys)
+    end
+
+    def value=(objects)
+      # TODO: Validate the objects against the schema
+
+      record = has_record? ? db_record : create_record!
+      record.json_value = objects
+      record.save!
+      record.json_value
+    end
+  end
+
   class List < self
     def list_type
       @opts[:list_type]

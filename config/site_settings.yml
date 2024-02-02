@@ -2364,6 +2364,9 @@ developer:
     list_type: compact
     allow_any: false
     refresh: true
+  experimental_objects_type_for_theme_settings:
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:

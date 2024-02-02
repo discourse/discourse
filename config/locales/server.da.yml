@@ -78,7 +78,7 @@ da:
       optimized_link: Optimerede billedlinks er midlertidige og bør ikke indgå i tema kildekode.
     settings_errors:
       invalid_yaml: "Leveret YAML er ugyldig."
-      data_type_not_a_number: "Indstilling`%{name}` typen understøttes ikke. Understøttede typer er `integer`, `bool`, `list`, `enum` og `upload`"
+      data_type_inclusion: "Indstilling`%{name}` typen understøttes ikke. Understøttede typer er `integer`, `bool`, `list`, `enum` og `upload`"
       name_too_long: "Der er en indstilling med et for langt navn. Maksimal længde er 255"
       default_value_missing: "Indstilling af `%{name}` har ingen standard værdi"
       default_not_match_type: "Indstilling af `%{name}`s standard værdi's type stemmer ikke overens med den type fundet i indstillingerne."

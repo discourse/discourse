@@ -112,7 +112,7 @@ uk:
       optimized_link: Посилання на оптимізовані зображення є тимчасовими і не повинні включатись у сирці теми.
     settings_errors:
       invalid_yaml: "Наданий YAML пошкоджений."
-      data_type_not_a_number: "Налаштування типу \"%{name}\" не підтримується. Підтримувані типи: `integer`, `bool`, `list`, `enum` і `upload`"
+      data_type_inclusion: "Налаштування типу \"%{name}\" не підтримується. Підтримувані типи: `integer`, `bool`, `list`, `enum` і `upload`"
       name_too_long: "У вас є параметр із занадто довгим імʼям. Максимальна довжина 255"
       default_value_missing: "Параметр `%{name}` не має стандартного значення"
       default_not_match_type: "Стандартне значення параметра `%{name}`, не збігається з типом параметра."

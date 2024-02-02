@@ -84,3 +84,16 @@ valid_json_schema_setting:
 causes_refresh:
   default: ""
   refresh: true
+
+valid_objects_setting:
+  type: objects
+  default:
+    - title: "Some title"
+      description: "Some description"
+  schema:
+    name: "Some Object"
+    fields:
+      title:
+        type: string
+      description:
+        type: string

@@ -110,7 +110,7 @@ pt_BR:
       optimized_link: Links otimizados de imagem são temporários e não devem ser incluídos no código-fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML informado é inválido."
-      data_type_not_a_number: "A configuração do tipo \"%{name}\" não é compatível. Os tipos compatíveis são \"integer\", \"bool\", \"list\", \"enum\" e \"upload\""
+      data_type_inclusion: "A configuração do tipo \"%{name}\" não é compatível. Os tipos compatíveis são \"integer\", \"bool\", \"list\", \"enum\" e \"upload\""
       name_too_long: "Esta é uma configuração com um nome muito longo. O comprimento máximo é de 255"
       default_value_missing: "A configuração \"%{name}\" não tem valor padrão"
       default_not_match_type: "O tipo de valor padrão da configuração \"%{name}\" não corresponde ao tipo de configuração."

@@ -12,6 +12,8 @@ RSpec.describe ThemeSettingsManager do
     theme.settings
   end
 
+  before { SiteSetting.experimental_objects_type_for_theme_settings = true }
+
   describe "Enum" do
     it "only accepts values from its choices" do
       enum_setting = theme_settings[:enum_setting]
@@ -182,6 +184,23 @@ RSpec.describe ThemeSettingsManager do
           expect(upload_setting.value).to eq(Discourse.store.cdn_url(upload.url))
         end
       end
+    end
+  end
+
+  describe ThemeSettingsManager::Objects do
+    it "can store a list of objects" do
+      objects_setting = theme_settings[:valid_objects_setting]
+
+      expect(objects_setting.value).to eq(
+        [{ "title" => "Some title", "description" => "Some description" }],
+      )
+
+      objects_setting.value = [{ title: "title 1", description: "description 1" }]
+      objects_setting = theme.reload.settings[:valid_objects_setting]
+
+      expect(objects_setting.value).to eq(
+        [{ "title" => "title 1", "description" => "description 1" }],
+      )
     end
   end
 end
