@@ -145,7 +145,7 @@ class HashtagAutocompleteService
         hashtags = data_source.find_by_ids(guardian, ids_by_type[type])
         next if hashtags.blank?
 
-        hash[type] = hashtags.map(&:to_h)
+        hash[type] = set_types(hashtags, type).map(&:to_h)
       end
   end
 
