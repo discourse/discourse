@@ -572,9 +572,10 @@ RSpec.configure do |config|
       #
       # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
       # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
-      if !File.directory?(File.expand_path("~/.cache/selenium"))
-        File.open("#{Rails.root}/tmp/chrome_driver_flock", File::RDWR | File::CREAT, 0644) do |file|
-          file.flock(File::LOCK_EX)
+      File.open("#{Rails.root}/tmp/chrome_driver_flock", File::RDWR | File::CREAT, 0644) do |file|
+        file.flock(File::LOCK_EX)
+
+        if !File.directory?(File.expand_path("~/.cache/selenium"))
           `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
         end
       end
