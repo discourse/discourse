@@ -46,6 +46,7 @@ export default class UserMenuBaseItem {
       avatarTemplate:
         this.avatarTemplate || this.site.system_user_avatar_template,
       icon: this.icon,
+      classNames: this.avatarTemplate ? "user-avatar" : "system-avatar",
     };
   }
 

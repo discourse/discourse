@@ -1133,4 +1133,11 @@ acceptance("User menu - avatars", function (needs) {
     assert.ok(exists("li.notification.bookmark-reminder .icon-avatar"));
     assert.ok(exists("li.bookmark .icon-avatar"));
   });
+
+  test("Icon avatars have correct class names based on system avatar usage", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    assert.ok(exists("li.group-message-summary .icon-avatar.system-avatar"));
+    assert.ok(exists("li.notification.replied .icon-avatar.user-avatar"));
+  });
 });
