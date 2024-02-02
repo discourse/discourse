@@ -735,6 +735,9 @@ class Plugin::Instance
 
     seed_data.each { |key, value| DiscoursePluginRegistry.register_seed_data(key, value) }
 
+    # Allow plugins to `register_asset` for images under /assets
+    Rails.configuration.assets.paths << File.dirname(path) + "/assets"
+
     # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
