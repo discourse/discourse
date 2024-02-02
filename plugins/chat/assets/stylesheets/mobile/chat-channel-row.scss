@@ -114,8 +114,12 @@
     &__last-message {
       @include ellipsis;
       grid-area: msg;
-      font-size: var(--font-down-1-rem);
       color: var(--primary-high);
+
+      .emoji {
+        width: 1em;
+        height: 1em;
+      }
     }
   }
 

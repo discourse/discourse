@@ -25,6 +25,15 @@
     }
   }
 
+  .chat-channel-icon {
+    font-size: var(--font-down-1-rem);
+  }
+
+  .chat-channel-name {
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+  }
+
   .chat-channel-title__name {
     color: var(--primary-high);
     font-size: var(--font-down-1);
