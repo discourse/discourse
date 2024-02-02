@@ -4,11 +4,6 @@ import HashtagTypeBase from "./base";
 export default class CategoryHashtagType extends HashtagTypeBase {
   @service site;
 
-  constructor() {
-    super(...arguments);
-    this.loadingIds = new Set();
-  }
-
   get type() {
     return "category";
   }
@@ -44,13 +39,7 @@ export default class CategoryHashtagType extends HashtagTypeBase {
   }
 
   generateIconHTML(hashtag) {
-    if (!this.registeredIds.has(parseInt(hashtag.id, 10))) {
-      if (hashtag.colors) {
-        this.registerCss(hashtag);
-      } else {
-        this.load(hashtag.id);
-      }
-    }
+    hashtag.colors ? this.onLoad(hashtag) : this.load(hashtag.id);
 
     const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;
     return `<span class="hashtag-category-badge ${colorCssClass}"></span>`;

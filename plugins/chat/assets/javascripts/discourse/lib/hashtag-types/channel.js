@@ -6,11 +6,6 @@ export default class ChannelHashtagType extends HashtagTypeBase {
   @service chatChannelsManager;
   @service currentUser;
 
-  constructor() {
-    super(...arguments);
-    this.loadingIds = new Set();
-  }
-
   get type() {
     return "channel";
   }
@@ -34,13 +29,7 @@ export default class ChannelHashtagType extends HashtagTypeBase {
   }
 
   generateIconHTML(hashtag) {
-    if (!this.registeredIds.has(parseInt(hashtag.id, 10))) {
-      if (hashtag.colors) {
-        this.registerCss(hashtag);
-      } else {
-        this.load(hashtag.id);
-      }
-    }
+    hashtag.colors ? this.onLoad(hashtag) : this.load(hashtag.id);
 
     return iconHTML(hashtag.icon, {
       class: `hashtag-color--${this.type}-${hashtag.id}`,
