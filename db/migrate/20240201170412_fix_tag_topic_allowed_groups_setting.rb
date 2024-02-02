@@ -19,7 +19,18 @@ class FixTagTopicAllowedGroupsSetting < ActiveRecord::Migration[7.0]
       # changed we need to add back in admin & staff if they match.
       if "1#{configured_trust_level}" == configured_groups
         corresponding_group = "1|3|1#{configured_trust_level}"
+      end
 
+      # Just in case this happend in the previous migration.
+      corresponding_group =
+        case configured_groups
+        when "1admin"
+          "1"
+        when "1staff"
+          "1|3"
+        end
+
+      if corresponding_group
         DB.exec(
           "UPDATE site_settings SET value = :setting, updated_at = NOW() WHERE name = 'tag_topic_allowed_groups'",
           setting: corresponding_group,
