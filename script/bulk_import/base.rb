@@ -1729,14 +1729,12 @@ class BulkImport::Base
       quote.gsub!(/^(<br>\n?)+/, "")
       quote.gsub!(/(<br>\n?)+$/, "")
 
-      user = User.find_by_username(username)
-
       if post_id.present? && topic_id.present?
         <<-HTML
           <aside class="quote" data-post="#{post_id}" data-topic="#{topic_id}">
             <div class="title">
               <div class="quote-controls"></div>
-              #{user ? user_avatar(user) : name_or_username}:
+              #{name_or_username}:
             </div>
             <blockquote>#{quote}</blockquote>
           </aside>
@@ -1746,7 +1744,7 @@ class BulkImport::Base
           <aside class="quote no-group" data-username="#{username}">
             <div class="title">
               <div class="quote-controls"></div>
-              #{user ? user_avatar(user) : name_or_username}:
+              #{name_or_username}:
             </div>
             <blockquote>#{quote}</blockquote>
           </aside>
