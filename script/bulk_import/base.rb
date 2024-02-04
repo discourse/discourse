@@ -231,7 +231,7 @@ class BulkImport::Base
   def load_indexes
     puts "Loading groups indexes..."
     @last_group_id = last_id(Group)
-    group_names = Group.unscoped.pluck(:name).map(&:downcase).to_set
+    @group_names_lower = Group.unscoped.pluck(:name).map(&:downcase).to_set
 
     puts "Loading users indexes..."
     @last_user_id = last_id(User)
@@ -239,7 +239,7 @@ class BulkImport::Base
     @last_sso_record_id = last_id(SingleSignOnRecord)
     @emails = UserEmail.pluck(:email, :user_id).to_h
     @external_ids = SingleSignOnRecord.pluck(:external_id, :user_id).to_h
-    @usernames_and_groupnames_lower = User.unscoped.pluck(:username_lower).to_set.merge(group_names)
+    @usernames_lower = User.unscoped.pluck(:username_lower).to_set
     @anonymized_user_suffixes =
       DB.query_single(
         "SELECT SUBSTRING(username_lower, 5)::BIGINT FROM users WHERE username_lower ~* '^anon\\d+$'",
@@ -954,9 +954,9 @@ class BulkImport::Base
 
     group[:name] = fix_name(group[:name])
 
-    unless @usernames_and_groupnames_lower.add?(group[:name].downcase)
+    if group_or_user_exist?(group[:name])
       group_name = group[:name] + "_1"
-      group_name.next! until @usernames_and_groupnames_lower.add?(group_name.downcase)
+      group_name.next! while group_or_user_exist?(group_name)
       group[:name] = group_name
     end
 
@@ -972,6 +972,12 @@ class BulkImport::Base
     group[:created_at] ||= NOW
     group[:updated_at] ||= group[:created_at]
     group
+  end
+
+  def group_or_user_exist?(name)
+    name_lowercase = name.downcase
+    return true if @usernames_lower.include?(name_lowercase)
+    @group_names_lower.add?(name_lowercase).nil?
   end
 
   def process_user(user)
@@ -1005,9 +1011,9 @@ class BulkImport::Base
     end
 
     # unique username_lower
-    unless @usernames_and_groupnames_lower.add?(user[:username].downcase)
+    if user_exist?(user[:username])
       username = user[:username] + "_1"
-      username.next! until @usernames_and_groupnames_lower.add?(username.downcase)
+      username.next! while user_exist?(username)
       user[:username] = username
     end
 
@@ -1032,6 +1038,11 @@ class BulkImport::Base
     @user_full_names_by_id[user[:id]] = user[:name] if user[:name].present?
 
     user
+  end
+
+  def user_exist?(username)
+    username_lowercase = username.downcase
+    @usernames_lower.add?(username_lowercase).nil?
   end
 
   def process_user_email(user_email)
@@ -1782,9 +1793,9 @@ class BulkImport::Base
       name = @mapped_usernames[$1] || $1
       normalized_name = User.normalize_username(name)
 
-      if User.where(username_lower: normalized_name).exists?
+      if @usernames_lower.include?(normalized_name)
         %|<a class="mention" href="/u/#{normalized_name}">@#{name}</a>|
-      elsif Group.where("LOWER(name) = ?", normalized_name).exists?
+      elsif @group_names_lower.include?(normalized_name)
         %|<a class="mention-group" href="/groups/#{normalized_name}">@#{name}</a>|
       else
         "@#{name}"
