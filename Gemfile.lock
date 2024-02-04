@@ -376,7 +376,7 @@ GEM
       rspec-mocks (~> 3.12.0)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
-    rspec-expectations (3.12.3)
+    rspec-expectations (3.12.4)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-html-matchers (0.10.0)
@@ -393,7 +393,7 @@ GEM
       rspec-expectations (~> 3.12)
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
-    rspec-support (3.12.1)
+    rspec-support (3.12.2)
     rss (0.3.0)
       rexml
     rswag-specs (2.13.0)
