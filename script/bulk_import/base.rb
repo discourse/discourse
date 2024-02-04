@@ -1764,8 +1764,8 @@ class BulkImport::Base
       upload_sha1 = Upload.sha1_from_short_url(short_url)
       upload_base62 = Upload.base62_sha1(upload_sha1)
       upload_id = @uploads_by_sha1[upload_sha1]
-      upload_url = @upload_urls_by_id[upload_id]
-      cdn_url = Discourse.store.cdn_url(upload_url)
+      upload_url = upload_id ? @upload_urls_by_id[upload_id] : nil
+      cdn_url = upload_url ? Discourse.store.cdn_url(upload_url) : ""
 
       attributes = +%{loading="lazy"}
       attributes << %{ alt="#{alt}"} if alt.present?
