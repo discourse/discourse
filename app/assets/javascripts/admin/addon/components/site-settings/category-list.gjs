@@ -1,9 +1,9 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import Category from "discourse/models/category";
-import CategorySelector from "select-kit/components/category-selector";
+import htmlSafe from "discourse-common/helpers/html-safe";
 import SettingValidationMessage from "admin/components/setting-validation-message";
-import htmlSafe from "discourse-common/helpers/html-safe"
+import CategorySelector from "select-kit/components/category-selector";
 
 export default class CategoryList extends Component {
   @computed("value")
