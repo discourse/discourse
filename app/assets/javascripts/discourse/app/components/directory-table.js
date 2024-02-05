@@ -13,7 +13,7 @@ export default Component.extend({
         : this.columns.length,
     });
 
-    this._table.style.gridTemplateColumns = `minmax(13em, 3fr) repeat(${this._columnCount}, minmax(max-content, 1fr))`;
+    this._table.style.gridTemplateColumns = `minmax(15em, 3fr) repeat(${this._columnCount}, minmax(max-content, 1fr))`;
   },
 
   @action
