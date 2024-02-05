@@ -262,6 +262,8 @@ acceptance(
           },
         ]);
       });
+
+      server.post("/invites", () => helper.response({}));
     });
 
     test("shows correct saved data in form", async function (assert) {
@@ -281,6 +283,8 @@ acceptance(
       await visit("/g/discourse");
       await click(".group-members-invite");
       assert.dom(".invite-to-groups .formatted-selection").hasText("Discourse");
+
+      await click(".save-invite");
     });
   }
 );

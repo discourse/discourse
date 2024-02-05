@@ -54,7 +54,7 @@ export default Component.extend(bufferedProperty("invite"), {
         moment()
           .add(this.siteSettings.invite_expiry_days, "days")
           .format(FORMAT),
-      groupIds: this.model.invite?.groupIds,
+      groupIds: this.model.groupIds ?? this.model.invite?.groupIds,
       topicId: this.model.invite?.topicId,
       topicTitle: this.model.invite?.topicTitle,
     });

@@ -36,7 +36,7 @@ export default DiscourseRoute.extend({
   showInviteModal() {
     const group = this.modelFor("group");
     this.modal.show(CreateInvite, {
-      model: { invite: { groupIds: [group.id] } },
+      model: { groupIds: [group.id] },
     });
   },
 
