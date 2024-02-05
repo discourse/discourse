@@ -2997,9 +2997,24 @@ en:
     topic_bulk_actions:
       close_topics:
         name: "Close Topics"
+      archive_topics:
+        name: "Archive Topics"
+      unlist_topics:
+        name: "Unlist Topics"
+      delete_topics:
+        name: "Delete Topics"
       update_category:
         name: "Update Category"
         description: "Choose the new category for the selected topics"
+      reset_bump_dates:
+        name: "Reset Bump Dates"
+        description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
+      defer:
+        name: "Defer Topics"
+        description: "Mark topics as unread"
+      update_notifications:
+        name: "Update Notifications…"
+        description: "Change notification level to Watching, Tracking, Normal, or Muted"
 
     topic:
       filter_to:

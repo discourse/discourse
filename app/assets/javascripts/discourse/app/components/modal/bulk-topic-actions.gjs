@@ -97,6 +97,21 @@ export default class BulkTopicActions extends Component {
       case "close":
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
         break;
+      case "archive":
+        this.forEachPerformed({ type: "archive" }, (t) => t.set("archived", true));
+        break;
+      case "unlist":
+        this.forEachPerformed({ type: "unlist" }, (t) => t.set("unlisted", true));
+        break;
+      case "delete":
+        this.performAndRefresh({ type: "delete" });
+        break;
+      case "reset-bump-dates":
+        this.performAndRefresh({ type: "reset_bump_dates" });
+        break;
+      case "defer":
+        this.performAndRefresh({ type: "destroy_post_timing" });
+        break;
     }
   }
 
@@ -118,6 +133,7 @@ export default class BulkTopicActions extends Component {
 
     this.args.model.refreshClosure?.();
     this.args.closeModal();
+    this.args.model.bulkSelectHelper.toggleBulkSelect();
   }
 
   <template>
@@ -128,7 +144,7 @@ export default class BulkTopicActions extends Component {
     >
       <:body>
         <div>
-          {{htmlSafe (i18n "topics.bulk.selected" count=@model.topics.length)}}
+          {{htmlSafe (i18n "topics.bulk.selected" count=this.args.model.bulkSelectHelper.selected.length)}}
         </div>
       </:body>
 
