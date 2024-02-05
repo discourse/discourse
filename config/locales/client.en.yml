@@ -5580,7 +5580,7 @@ en:
 
       email:
         title: "Emails"
-        settings: "Settings"
+        settings: "Email Settings"
         templates: "Templates"
         templates_title: "Email Templates"
         preview_digest: "Preview Summary"
