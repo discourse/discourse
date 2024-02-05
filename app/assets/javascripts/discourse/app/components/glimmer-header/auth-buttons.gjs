@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import and from "truth-helpers/helpers/and";
-import DButton from "discourse/components/d-button";
-import not from "truth-helpers/helpers/not";
 import { inject as service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
 
 export default class AuthButtons extends Component {
   @service header;

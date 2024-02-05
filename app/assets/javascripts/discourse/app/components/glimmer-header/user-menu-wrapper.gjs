@@ -1,11 +1,9 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
-import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
-import { modifier } from "ember-modifier";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
+import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
 import UserMenu from "../user-menu/menu";
 
 export default class UserMenuWrapper extends Component {

@@ -1,16 +1,16 @@
-import I18n from "discourse-i18n";
+import { hash } from "@ember/helper";
 import emoji from "discourse/helpers/emoji";
-import { fn, hash } from "@ember/helper";
+import I18n from "discourse-i18n";
 
 const title = (description, endsAt, timezone) => {
-  let title = description;
+  let content = description;
   if (endsAt) {
     const until = moment
       .tz(endsAt, timezone)
       .format(I18n.t("dates.long_date_without_year"));
-    title += `\n${I18n.t("until")} ${until}`;
+    content += `\n${I18n.t("until")} ${until}`;
   }
-  return title;
+  return content;
 };
 
 const UserStatusBubble = <template>

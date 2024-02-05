@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import getURL from "discourse-common/lib/get-url";
-import icon from "discourse-common/helpers/d-icon";
-import eq from "truth-helpers/helpers/eq";
-import { on } from "@ember/modifier";
-import { hash } from "@ember/helper";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
 import { htmlSafe } from "@ember/template";
+import icon from "discourse-common/helpers/d-icon";
+import { avatarImg } from "discourse-common/lib/avatar-utils";
+import getURL from "discourse-common/lib/get-url";
+import eq from "truth-helpers/helpers/eq";
 
 export default class Participant extends Component {
   @service appEvents;

@@ -1,13 +1,11 @@
 import Component from "@glimmer/component";
-import { iconNode } from "discourse-common/lib/icon-library";
-import TopicStatusIcons from "discourse/helpers/topic-status-icons";
-import { escapeExpression } from "discourse/lib/utilities";
-import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import I18n from "discourse-i18n";
+import { inject as service } from "@ember/service";
+import TopicStatusIcons from "discourse/helpers/topic-status-icons";
+import { escapeExpression } from "discourse/lib/utilities";
 import icon from "discourse-common/helpers/d-icon";
+import I18n from "discourse-i18n";
 
 export default class Status extends Component {
   @service currentUser;
@@ -20,7 +18,7 @@ export default class Status extends Component {
     let topicStatuses = [];
     TopicStatusIcons.render(this.args.topic, (name, key) => {
       const iconArgs = { class: key === "unpinned" ? "unpinned" : null };
-      const icon = { name, iconArgs };
+      const statusIcon = { name, iconArgs };
 
       const attributes = {
         title: escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
@@ -29,7 +27,7 @@ export default class Status extends Component {
       if (key === "unpinned" || key === "pinned") {
         klass += `.pin-toggle-button.${key}`;
       }
-      topicStatuses.push({ attributes, icon, klass });
+      topicStatuses.push({ attributes, statusIcon, klass });
     });
 
     return topicStatuses;
@@ -39,7 +37,7 @@ export default class Status extends Component {
   togglePinnedForUser(e) {
     const parent = e.target.closest(".topic-statuses");
     if (parent?.querySelector(".pin-toggle-button")?.contains(e.target)) {
-      this.attrs.topic.togglePinnedForUser();
+      this.args.topic.togglePinnedForUser();
     }
   }
 

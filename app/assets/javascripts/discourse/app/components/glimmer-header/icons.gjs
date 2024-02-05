@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import getURL from "discourse-common/lib/get-url";
-import Dropdown from "./dropdown";
-import or from "truth-helpers/helpers/or";
 import not from "truth-helpers/helpers/not";
-import { array } from "@ember/helper";
-import UserDropdown from "./user-dropdown";
+import or from "truth-helpers/helpers/or";
 import MountWidget from "../mount-widget";
+import Dropdown from "./dropdown";
+import UserDropdown from "./user-dropdown";
 
 let _extraHeaderIcons = [];
 
