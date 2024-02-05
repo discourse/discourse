@@ -680,7 +680,7 @@ class BulkImport::Generic < BulkImport::Base
     posts = query(<<~SQL)
       SELECT *
       FROM posts
-      ORDER BY topic_id, id
+      ORDER BY topic_id, post_number, id
     SQL
 
     group_names = Group.pluck(:id, :name).to_h
