@@ -1074,6 +1074,7 @@ HTML
       JS
 
       theme.migrate_settings
+
       expect(theme.get_setting("integer_setting")).to eq(9909)
       expect(theme.get_setting("list_setting")).to eq("ee,ff")
     end
@@ -1099,6 +1100,8 @@ HTML
       theme.update_setting(:list_setting, "zz,aa")
       theme.save!
 
+      expect(theme.cached_settings[:list_setting]).to eq("zz,aa")
+
       setting_record = theme.theme_settings.where(name: "list_setting").first
       expect(setting_record.data_type).to eq(ThemeSetting.types[:string])
       expect(setting_record.value).to eq("zz,aa")
@@ -1109,12 +1112,14 @@ HTML
           default: aa|bb
           type: list
       YAML
+
       migration_field.update!(value: <<~JS)
         export default function migrate(settings) {
           settings.set("list_setting", "zz|aa");
           return settings;
         }
       JS
+
       theme.reload
 
       theme.migrate_settings
@@ -1124,6 +1129,8 @@ HTML
 
       expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
       expect(setting_record.value).to eq("zz|aa")
+
+      expect(theme.cached_settings[:list_setting]).to eq("zz|aa")
 
       expect(
         theme.theme_settings_migrations.where(theme_field_id: migration_field.id).first.diff,

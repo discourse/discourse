@@ -880,6 +880,7 @@ class Theme < ActiveRecord::Base
       end
 
       self.reload
+      Theme.expire_site_cache!
     end
 
     if start_transaction
