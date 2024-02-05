@@ -27,7 +27,7 @@ export default class Status extends Component {
       if (key === "unpinned" || key === "pinned") {
         klass += `.pin-toggle-button.${key}`;
       }
-      topicStatuses.push({ attributes, statusIcon, klass });
+      topicStatuses.push({ attributes, klass, icon: statusIcon });
     });
 
     return topicStatuses;
