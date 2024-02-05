@@ -3070,7 +3070,7 @@ tags:
     client: true
     hidden: true
   tag_topic_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|3|10" # auto group admin, staff, and trust_level_0
     type: group_list
     allow_any: false
     refresh: true

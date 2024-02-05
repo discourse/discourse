@@ -10,7 +10,16 @@ class FillTagTopicAllowedGroupsBasedOnDeprecatedSettings < ActiveRecord::Migrati
     # Default for old setting is TL0, we only need to do anything if it's been changed in the DB.
     if configured_trust_level.present?
       # Matches Group::AUTO_GROUPS to the trust levels.
-      corresponding_group = "1#{configured_trust_level}"
+      corresponding_group =
+        case configured_trust_level
+        when "admin"
+          "1"
+        when "staff"
+          "1|3"
+          # Matches Group::AUTO_GROUPS to the trust levels.
+        else
+          "1|3|1#{configured_trust_level}"
+        end
 
       # Data_type 20 is group_list.
       DB.exec(
