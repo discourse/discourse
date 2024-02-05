@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class BasicUserSerializer < ApplicationSerializer
-  attributes :id, :username, :name, :avatar_template, :status
+  include UserStatusMixin
+
+  attributes :id, :username, :name, :avatar_template
 
   def name
     Hash === user ? user[:name] : user.try(:name)
@@ -35,13 +37,5 @@ class BasicUserSerializer < ApplicationSerializer
 
   def category_user_notification_levels
     @category_user_notification_levels ||= CategoryUser.notification_levels_for(user)
-  end
-
-  def include_status?
-    @options[:include_status] && SiteSetting.enable_user_status && user.has_status?
-  end
-
-  def status
-    UserStatusSerializer.new(user.user_status, root: false).as_json
   end
 end
