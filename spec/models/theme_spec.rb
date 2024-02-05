@@ -1095,11 +1095,42 @@ HTML
       )
     end
 
+    it "updates the theme's javascript cache after running migration" do
+      theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
+      theme.save!
+
+      expect(theme.javascript_cache.content).to include('"list_setting":"aa,bb"')
+
+      settings_field.update!(value: <<~YAML)
+        integer_setting: 1
+        list_setting:
+          default: aa|bb
+          type: list
+      YAML
+
+      migration_field.update!(value: <<~JS)
+      export default function migrate(settings) {
+        settings.set("list_setting", "zz|aa");
+        return settings;
+      }
+      JS
+
+      theme.reload
+      theme.migrate_settings
+
+      setting_record = theme.theme_settings.where(name: "list_setting").first
+
+      expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
+      expect(setting_record.value).to eq("zz|aa")
+      expect(theme.javascript_cache.content).to include('"list_setting":"zz|aa"')
+    end
+
     it "allows changing a setting's type" do
       theme.update_setting(:list_setting, "zz,aa")
       theme.save!
 
       setting_record = theme.theme_settings.where(name: "list_setting").first
+
       expect(setting_record.data_type).to eq(ThemeSetting.types[:string])
       expect(setting_record.value).to eq("zz,aa")
 
@@ -1109,12 +1140,14 @@ HTML
           default: aa|bb
           type: list
       YAML
+
       migration_field.update!(value: <<~JS)
         export default function migrate(settings) {
           settings.set("list_setting", "zz|aa");
           return settings;
         }
       JS
+
       theme.reload
 
       theme.migrate_settings
