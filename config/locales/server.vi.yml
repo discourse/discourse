@@ -283,7 +283,7 @@ vi:
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
     other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một bài viết."
-  no_embedded_media_allowed_trust: "Xin lỗi, bạn không thể nhúng các mục phương tiện vào một bài đăng."
+  no_embedded_media_allowed_group: "Xin lỗi, bạn không thể nhúng các mục phương tiện vào một bài đăng."
   no_embedded_media_allowed: "Xin lỗi, người dùng mới không thể nhúng các mục phương tiện vào bài viết."
   too_many_embedded_media:
     other: "Xin lỗi, người dùng mới chỉ có thể đưa %{count} mục phương tiện được nhúng vào một bài đăng."
@@ -590,8 +590,6 @@ vi:
     success: "Bạn đã thay đổi mật khẩu thành công và đã được đăng nhập."
     success_unapproved: "Bạn đã thay đổi mật khẩu thành công."
   change_email:
-    confirmed: "Email của bạn đã được cập nhật."
-    please_continue: "Tiếp tục đến %{site_name}"
     error: "Có một lỗi khi thay đổi địa chỉ email của bạn. Có lẽ email này đã được sử dụng rồi?"
     error_staged: "Có lỗi khi thay đổi địa chỉ email của bạn, email đã được người khác sử dụng."
     already_done: "Xin lỗi, liên kết xác nhận này không còn giá trị. Có lẽ email của bạn đã được thay đổi?"
@@ -1303,7 +1301,6 @@ vi:
     enable_emoji: "Kích hoạt emoji"
     emoji_set: "Bạn thích dùng gói emoji nào?"
     approve_post_count: "Số lượng bài viết từ một thành viên mới hoặc thành viên cũ phải được duyệt"
-    approve_unless_trust_level: "Bài viết của thành viên dưới cấp độ tin cậy này phải được duyệt"
     notify_about_queued_posts_after: "Nếu có bài đăng đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả người điều hành. Đặt thành 0 để tắt các thông báo này."
     auto_close_messages_post_count: "Số lượng bài đăng tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
     auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
@@ -2153,6 +2150,9 @@ vi:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
+  onebox:
+    github:
+      closed: "đã "
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'

@@ -129,6 +129,8 @@ fa_IR:
       facebook: "در فیس‌بوک به اشتراک بگذارید"
       email: "ارسال از طریق ایمیل"
       url: "کپی و اشتراک‌گذاری نشانی وب"
+    word_connector:
+      comma: "، "
     action_codes:
       public_topic: "این موضوع در %{when} عمومی شده"
       private_topic: "این موضوع در %{when} یک پیغام خصوصی شده"
@@ -1236,6 +1238,13 @@ fa_IR:
         error: "در تغییر ایمیلتان خطایی روی داد. شاید آن نشانی از پیش در حال استفاده است؟"
         success: "ما ایمیلی به آن نشانی فرستاده‌ایم. لطفاً دستورکار تأییده را در آن دنبال کنید."
         success_staff: "یک ایمیل به آدرس کنونی شما ارسال کردیم. لطفا دستورالعمل آن را دنبال کنید."
+        confirm_success: "ایمیل شما به روز شد."
+        confirm: "تایید"
+        authorizing_new:
+          description_add: "لطفا تایید کنید که می‌خواهید یک آدرس ایمیل جایگزین اضافه کنید:"
+        authorizing_old:
+          old_email: "ایمیل قدیمی: %{email}"
+          new_email: "ایمیل جدید: %{email}"
       change_avatar:
         title: "عکس نمایه خود را تغییر دهید"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>، بر اساس"
@@ -1838,6 +1847,8 @@ fa_IR:
       components:
         categories_admin_dropdown:
           title: "مدیریت دسته ها"
+        bulk_select_topics_dropdown:
+          title: "عملیات گروهی"
     date_time_picker:
       from: از طرف
       to: به
@@ -2243,6 +2254,7 @@ fa_IR:
     topics:
       new_messages_marker: "آخرین بازدید"
       bulk:
+        confirm: "تایید"
         select_all: "انتخاب همه"
         clear_all: "پاکسازی همه"
         unlist_topics: "از فهرست خارج کردن مباحث"
@@ -2303,6 +2315,9 @@ fa_IR:
         top: "موضوع برتر دیگری وجود ندارد"
         bookmarks: "موضوع نشانک‌دار دیگری وجود ندارد."
         filter: "هیچ موضوع بیشتری وجود ندارد."
+    topic_bulk_actions:
+      close_topics:
+        name: "بستن موضوعات"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"

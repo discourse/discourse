@@ -19,7 +19,12 @@ RSpec.describe Upload do
   describe ".with_no_non_post_relations" do
     it "does not find non-post related uploads" do
       post_upload = Fabricate(:upload)
-      post = Fabricate(:post, raw: "<img src='#{post_upload.url}'>")
+      post =
+        Fabricate(
+          :post,
+          raw: "<img src='#{post_upload.url}'>",
+          user: Fabricate(:user, refresh_auto_groups: true),
+        )
       post.link_post_uploads
 
       badge_upload = Fabricate(:upload)

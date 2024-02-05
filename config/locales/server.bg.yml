@@ -396,8 +396,6 @@ bg:
     os:
       android: "Android"
   change_email:
-    confirmed: "Вашият имейл беше актуализиран."
-    please_continue: "Продължете към %{site_name}"
     error: "Възникна грешка при промяната на вашия имейл адрес. Може би адресът вече се използва?"
   activation:
     action: "Кликнете тук, за да активирате вашия профил"
@@ -902,7 +900,6 @@ bg:
     enable_emoji: "Разреши емотикони"
     emoji_set: "Как бихте искали да е вашата емотикона?"
     emoji_deny_list: "Тези емотикони няма да бъдат налични за използване в менюта или кратки кодове."
-    approve_unless_trust_level: "Постовете на потребители с по-ниско от това ниво на доверие трябва да бъдат одобрени"
     default_email_mailing_list_mode: "Изпращай ми имейл по подразбиране за всяка нова публикация."
     default_other_new_topic_duration_minutes: "Глобално състояние по подразбиране за всяка тема, която се счита за нова."
     default_other_auto_track_topics_after_msecs: "Глобално време по подразбиране, преди темата да бъде автоматично следена."
@@ -1640,6 +1637,8 @@ bg:
   onebox:
     discourse:
       user_joined_community: "Присъединен на %{date}"
+    github:
+      closed: "затворена"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ви спомена в "%{topic}" - %{site_title}'

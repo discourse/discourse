@@ -355,7 +355,7 @@ ja:
   no_mentions_allowed_newuser: "新規ユーザーは他のユーザーをメンションできません。"
   too_many_mentions_newuser:
     other: "新規ユーザーは投稿につき %{count} 人のユーザーしかメンションできません。"
-  no_embedded_media_allowed_trust: "投稿にメディア項目を埋め込むことはできません。"
+  no_embedded_media_allowed_group: "投稿にメディア項目を埋め込むことはできません。"
   no_embedded_media_allowed: "新規ユーザーは投稿にメディア項目を埋め込むことはできません。"
   too_many_embedded_media:
     other: "新規ユーザーは、ポストにつき %{count} 個のメディア項目しか埋め込めません。"
@@ -798,27 +798,12 @@ ja:
       windows: "Microsoft Windows"
       unknown: "不明なオペレーティングシステム"
   change_email:
-    wrong_account_error: "間違ったアカウントにログインしています。ログアウトして、もう一度お試しください。"
-    confirmed: "メールアドレスが更新されました。"
-    please_continue: "%{site_name} に進む"
     error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
     doesnt_exist: "そのメールアドレスは、あなたのアカウントに関連付けられていません。"
     error_staged: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでにステージングユーザーに使われている可能性があります。"
     already_done: "この確認リンクは有効ではありません。すでにメールアドレスが変更されている可能性があります。"
     confirm: "確認"
     max_secondary_emails_error: "セカンダリメールアドレスの上限に達しました。"
-    authorizing_new:
-      title: "新しいメールの確認"
-      description: "メールアドレスを次のように変更することを確認してください:"
-      description_add: "代替メールアドレスを追加することを確認してください:"
-    authorizing_old:
-      title: "メールアドレスの変更"
-      description: "メールアドレスの変更を確認してください"
-      description_add: "代替メールアドレスを追加することを確認してください:"
-      old_email: "古いメール: %{email}"
-      new_email: "新しいメール: %{email}"
-      almost_done_title: "新しいメールアドレスの確認"
-      almost_done_description: "新しいメールアドレスに変更を確認するためのメールを送信しました！"
   associated_accounts:
     revoke_failed: "%{provider_name} のアカウントを取り消せませんでした。"
     connected: "(接続済み)"
@@ -2057,11 +2042,6 @@ ja:
     enable_inline_emoji_translation: "インライン絵文字の翻訳を有効にする (前にスペースや句読点を使用しない)"
     emoji_deny_list: "これらの絵文字はメニューやショートコードで使用できません。"
     approve_post_count: "承認が必要な新規またはベーシックユーザーの投稿数"
-    approve_unless_trust_level: "この信頼レベル以下のユーザーの投稿には承認が必要"
-    approve_unless_allowed_groups: "これらのグループに属しないユーザーの投稿には承認が必要です"
-    approve_new_topics_unless_trust_level: "この信頼レベル以下のユーザーの新規トピックに承認を必要とする"
-    approve_new_topics_unless_allowed_groups: "これらのグループに属しないユーザーの新しいトピックには承認が必要です"
-    approve_unless_staged: "ステージングユーザーの新規トピックと投稿に承認を必要とする"
     notify_about_queued_posts_after: "この時間以上レビュー待ち状態の投稿がある場合、すべてのモデレーターに通知を送信する。0 に設定するとこれらの通知が無効になります。"
     reviewable_revision_reasons: "リビジョンのあるレビュー待ちキューに入れられた投稿を拒否する場合に選択できる理由のリスト。カスタムの理由を入力できる「その他」も常に利用可能です。"
     auto_close_messages_post_count: "メッセージが自動的にクローズされるまでに許可される投稿の最大数 (0 に設定すると無効になります)"
@@ -2182,7 +2162,6 @@ ja:
     use_name_for_username_suggestions: "ユーザー名を提案する際に、ユーザーの氏名を使用します。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"
     splash_screen: "サイトアセットの読み込み中に一時的なローディング画面を表示します"
-    navigation_menu: "使用するナビゲーションメニューを決定します。サイドバーとヘッダーナビゲーションはユーザーがカスタマイズできます。下位互換性を得るには、レガシーオプションを使用できます。"
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '実験的: 未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクします。'
@@ -4558,6 +4537,9 @@ ja:
   onebox:
     discourse:
       user_joined_community: "%{date} に参加"
+    github:
+      opened: "オープン"
+      closed: "閉鎖"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} が「%{topic}」であなたをメンションしました - %{site_title}'

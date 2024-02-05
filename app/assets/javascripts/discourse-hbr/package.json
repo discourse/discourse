@@ -20,7 +20,7 @@
     "handlebars": "^4.7.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
+    "@babel/core": "^7.23.9",
     "@ember/optional-features": "^2.0.0",
     "@ember/string": "^3.1.1",
     "@embroider/test-setup": "^3.0.3",
@@ -36,7 +36,7 @@
     "ember-source": "~5.5.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.89.0"
+    "webpack": "^5.90.1"
   },
   "engines": {
     "node": "16.* || >= 18",

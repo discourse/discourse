@@ -28,11 +28,10 @@ import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/pro
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
-import { clearAdditionalAdminSidebarSectionLinks } from "discourse/instance-initializers/admin-sidebar";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
-import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-autocomplete";
+import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import {
   clearExtraKeyboardShortcutHelp,
   PLATFORM_KEY_MODIFIER,
@@ -50,6 +49,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
+import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import {

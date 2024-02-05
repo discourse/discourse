@@ -766,6 +766,7 @@ sw:
         error: "Hitilafu imetokea wakati wa kubadilisha barua pepe. Labda hiyo barua pepe imeshatumika?"
         success: "Tumekutumia barua kwenye barua pepe uliyotumia. Tafadhali fuata maelezo tuliyokutumia."
         success_staff: "Tumekutumia barua kwenye barua pepe uliyotumia. Tafadhali fuata maelezo tuliyokutumia."
+        confirm_success: "Barua pepe yako imesasishwa."
       change_avatar:
         title: "Badilisha Picha yako"
         letter_based: "Mfumo imekabidhi Picha"
@@ -1150,6 +1151,9 @@ sw:
       min_content_not_reached:
         one: " Chagua japo kitu %{count}."
         other: " Chagua japo vitu %{count}."
+      components:
+        bulk_select_topics_dropdown:
+          title: "Vitendo za Jumla"
     date_time_picker:
       from: Kutoka
       to: Kwenda
@@ -1446,6 +1450,9 @@ sw:
         tag: "Hakuna %{tag} mada zingine."
         top: "Hakuna mada za juu zingine."
         bookmarks: "Hakuna mada zingine zilizoalamishwa."
+    topic_bulk_actions:
+      close_topics:
+        name: "Funga Mada"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"

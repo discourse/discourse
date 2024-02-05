@@ -227,7 +227,7 @@ RSpec.describe UserUpdater do
     end
 
     it "allows user to update user card background when the user has required trust level" do
-      user = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       updater = UserUpdater.new(user, user)
       upload = Fabricate(:upload)
       SiteSetting.min_trust_level_to_allow_user_card_background = 2

@@ -59,75 +59,68 @@ export default class ChannelsListDirect extends Component {
   }
 
   <template>
-    <div
-      role="region"
-      aria-label={{i18n "chat.aria_roles.channels_list"}}
-      class="channels-list"
-    >
+    <PluginOutlet
+      @name="below-direct-chat-channels"
+      @tagName=""
+      @outletArgs={{hash inSidebar=this.inSidebar}}
+    />
 
-      <PluginOutlet
-        @name="below-direct-chat-channels"
-        @tagName=""
-        @outletArgs={{hash inSidebar=this.inSidebar}}
-      />
+    {{#if this.showDirectMessageChannels}}
+      {{#if this.site.desktopView}}
+        <div class="chat-channel-divider direct-message-channels-section">
+          {{#if this.inSidebar}}
+            <span
+              class="title-caret"
+              id="direct-message-channels-caret"
+              role="button"
+              title="toggle nav list"
+              {{on
+                "click"
+                (fn this.toggleChannelSection "direct-message-channels")
+              }}
+              data-toggleable="direct-message-channels"
+            >
+              {{dIcon "angle-up"}}
+            </span>
+          {{/if}}
 
-      {{#if this.showDirectMessageChannels}}
-        {{#if this.site.desktopView}}
-          <div class="chat-channel-divider direct-message-channels-section">
-            {{#if this.inSidebar}}
-              <span
-                class="title-caret"
-                id="direct-message-channels-caret"
-                role="button"
-                title="toggle nav list"
-                {{on
-                  "click"
-                  (fn this.toggleChannelSection "direct-message-channels")
-                }}
-                data-toggleable="direct-message-channels"
-              >
-                {{dIcon "angle-up"}}
-              </span>
-            {{/if}}
+          <span class="channel-title">{{i18n
+              "chat.direct_messages.title"
+            }}</span>
 
-            <span class="channel-title">{{i18n
-                "chat.direct_messages.title"
-              }}</span>
-
-            {{#if this.canCreateDirectMessageChannel}}
-              <DButton
-                @icon="plus"
-                class="no-text btn-flat open-new-message-btn"
-                @action={{this.openNewMessageModal}}
-                title={{i18n this.createDirectMessageChannelLabel}}
-              />
-            {{/if}}
-          </div>
-        {{/if}}
-      {{/if}}
-
-      <div
-        id="direct-message-channels"
-        class={{this.directMessageChannelClasses}}
-      >
-        {{#if this.directMessageChannelsEmpty}}
-          <div class="channel-list-empty-message">
-            <span class="channel-title">{{i18n
-                "chat.no_direct_message_channels"
-              }}</span>
-          </div>
-        {{else}}
-          {{#each
-            this.chatChannelsManager.truncatedDirectMessageChannels
-            as |channel|
-          }}
-            <ChatChannelRow
-              @channel={{channel}}
-              @options={{hash leaveButton=true}}
+          {{#if this.canCreateDirectMessageChannel}}
+            <DButton
+              @icon="plus"
+              class="no-text btn-flat open-new-message-btn"
+              @action={{this.openNewMessageModal}}
+              title={{i18n this.createDirectMessageChannelLabel}}
             />
-          {{/each}}
-        {{/if}}
-      </div>
+          {{/if}}
+        </div>
+      {{/if}}
+    {{/if}}
+
+    <div
+      id="direct-message-channels"
+      class={{this.directMessageChannelClasses}}
+    >
+      {{#if this.directMessageChannelsEmpty}}
+        <div class="channel-list-empty-message">
+          <span class="channel-title">{{i18n
+              "chat.no_direct_message_channels"
+            }}</span>
+        </div>
+      {{else}}
+        {{#each
+          this.chatChannelsManager.truncatedDirectMessageChannels
+          as |channel|
+        }}
+          <ChatChannelRow
+            @channel={{channel}}
+            @options={{hash leaveButton=true}}
+          />
+        {{/each}}
+      {{/if}}
     </div>
   </template>
 }

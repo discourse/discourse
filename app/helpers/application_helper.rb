@@ -301,7 +301,7 @@ module ApplicationHelper
     ) if opts[:twitter_summary_large_image].present?
 
     result = []
-    result << tag(:meta, property: "og:site_name", content: SiteSetting.title)
+    result << tag(:meta, property: "og:site_name", content: opts[:site_name] || SiteSetting.title)
     result << tag(:meta, property: "og:type", content: "website")
 
     generate_twitter_card_metadata(result, opts)
@@ -736,6 +736,10 @@ module ApplicationHelper
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"
     end
     absolute_url
+  end
+
+  def escape_noscript(&block)
+    raw capture(&block).gsub(%r{<(/\s*noscript)}i, '&lt;\1')
   end
 
   def manifest_url

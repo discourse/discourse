@@ -422,7 +422,7 @@ login:
     validator: "EnableLocalLoginsViaEmailValidator"
   enable_passkeys:
     client: true
-    default: false
+    default: true
     hidden: true
   allow_new_registrations:
     client: true
@@ -683,7 +683,7 @@ users:
     client: true
     hidden: true
   anonymous_posting_allowed_groups:
-    default: "11" # auto group trust_level_1
+    default: "3|11" # auto group staff and trust_level_1
     type: group_list
     client: true
     allow_any: false
@@ -749,6 +749,9 @@ users:
     default: false
   use_name_for_username_suggestions:
     default: true
+  hide_user_activity_tab:
+    default: false
+    client: true
 
 groups:
   enable_group_directory:
@@ -862,7 +865,7 @@ posting:
   enable_system_message_replies:
     default: true
   personal_message_enabled_groups:
-    default: "11" # auto group trust_level_1
+    default: "3|11" # auto group trust_level_1
     type: group_list
     client: true
     allow_any: false
@@ -961,7 +964,7 @@ posting:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   here_mention_allowed_groups:
-    default: "12" # auto group trust_level_2
+    default: "3|12" # auto group staff and trust_level_2
     type: group_list
     client: true
     allow_any: false
@@ -1071,7 +1074,7 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   approve_unless_allowed_groups:
-    default: 10
+    default: "3|10" # auto groups staff and trust_level_0
     type: group_list
     allow_any: false
     refresh: true
@@ -1081,7 +1084,7 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   approve_new_topics_unless_allowed_groups:
-    default: 10
+    default: "3|10" # auto groups staff and trust_level_0
     type: group_list
     allow_any: false
     refresh: true
@@ -1122,6 +1125,9 @@ posting:
   max_allowed_message_recipients:
     default: 30
     min: 1
+  disable_watched_word_checking_in_user_fields:
+    hidden: true
+    default: false
   watched_words_regular_expressions:
     client: true
     default: false
@@ -1152,7 +1158,7 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   skip_review_media_groups:
-    default: "10" # TL0 auto group
+    default: "3|10" # auto groups staff and trust_level_0
     type: group_list
     allow_any: false
     refresh: true
@@ -1270,7 +1276,7 @@ email:
     enum: "TrustLevelSetting"
     hidden: true
   email_in_allowed_groups:
-    default: 12
+    default: "3|12" # auto group staff and trust_level_2
     type: group_list
     allow_any: false
     refresh: true
@@ -1570,7 +1576,6 @@ files:
     enum: "TrustLevelAndStaffAndDisabledSetting"
     hidden: true
   uploaded_avatars_allowed_groups:
-    client: true
     default: 10
     type: group_list
     allow_any: false
@@ -1699,7 +1704,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   create_topic_allowed_groups:
-    default: 10
+    default: "3|10" # auto group staff and trust_level_0
     type: group_list
     allow_any: false
     refresh: true
@@ -1709,7 +1714,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   edit_wiki_post_allowed_groups:
-    default: 11
+    default: "3|11" # auto group staff and trust_level_1
     type: group_list
     allow_any: false
     refresh: true
@@ -1719,7 +1724,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   edit_post_allowed_groups:
-    default: "10"
+    default: "3|10" # auto group staff and trust_level_0
     type: group_list
     allow_any: false
     refresh: true
@@ -1729,7 +1734,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   self_wiki_allowed_groups:
-    default: "13"
+    default: "3|13" # auto group staff and trust_level_3
     type: group_list
     allow_any: false
     refresh: true
@@ -1739,7 +1744,7 @@ trust:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   send_email_messages_allowed_groups:
-    default: "1|3|14"
+    default: "1|3|14" # auto group admin, staff, and trust_level_4
     type: group_list
     allow_any: false
     refresh: true
@@ -1749,7 +1754,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   flag_post_allowed_groups:
-    default: "11"
+    default: "3|11" # auto group staff and trust_level_1
     type: group_list
     allow_any: false
     refresh: true
@@ -1759,7 +1764,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   post_links_allowed_groups:
-    default: "10"
+    default: "3|10" # auto group staff and trust_level_0
     type: group_list
     allow_any: false
     refresh: true
@@ -1767,6 +1772,13 @@ trust:
   min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
+    hidden: true
+  embedded_media_post_allowed_groups:
+    default: "3|10" # auto group staff and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_profile_background:
     default: 0
     client: true
@@ -1777,7 +1789,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   user_card_background_allowed_groups:
-    default: "10"
+    default: "3|10" # auto group staff and trust_level_0
     type: group_list
     allow_any: false
     refresh: true
@@ -1787,7 +1799,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   invite_allowed_groups:
-    default: "12"
+    default: "3|12" # auto group staff and trust_level_2
     type: group_list
     allow_any: false
     refresh: true
@@ -1798,7 +1810,7 @@ trust:
     client: true
     hidden: true
   ignore_allowed_groups:
-    default: "12"
+    default: "3|12" # auto group staff and trust_level_2
     type: group_list
     client: true
     allow_any: false
@@ -2348,6 +2360,13 @@ developer:
     default: ""
     client: true
     hidden: true
+  experimental_topic_bulk_actions_enabled_groups:
+    default: ""
+    hidden: true
+    type: group_list
+    list_type: compact
+    allow_any: false
+    refresh: true
 
 navigation:
   navigation_menu:
@@ -2987,7 +3006,7 @@ user_api:
     enum: "TrustLevelSetting"
     hidden: true
   user_api_key_allowed_groups:
-    default: "10"
+    default: "3|10" # auto group staff and trust_level_0
     type: group_list
     allow_any: false
     refresh: true
@@ -3040,7 +3059,7 @@ tags:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   create_tag_allowed_groups:
-    default: "1|3|13"
+    default: "1|3|13" # auto group admin, staff, and trust_level_3
     type: group_list
     allow_any: false
     refresh: true
@@ -3049,6 +3068,14 @@ tags:
     default: "0"
     enum: "TrustLevelAndStaffSetting"
     client: true
+    hidden: true
+  tag_topic_allowed_groups:
+    default: "1|3|10" # auto group admin, staff, and trust_level_0
+    type: group_list
+    allow_any: false
+    refresh: true
+    client: true
+    validator: "AtLeastOneGroupValidator"
   max_tag_search_results:
     client: true
     default: 5

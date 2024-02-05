@@ -45,6 +45,7 @@ zh_CN:
       back_to_forum: "论坛"
       deleted_chat_username: 已删除
       dates:
+        yesterday: "昨天"
         time_tiny: "h:mm"
       all_loaded: "显示所有消息"
       already_enabled: "此话题已启用聊天。请刷新。"
@@ -218,6 +219,7 @@ zh_CN:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
+      no_direct_message_channels: "你还没有加入任何私信渠道。"
       no_public_channels: "您还没有加入任何频道。"
       kicked_from_channel: "您无法再访问此频道。"
       only_chat_push_notifications:
@@ -333,6 +335,7 @@ zh_CN:
         filter: "筛选"
         cant_add_more_members: "已达到最大成员数"
         create_new_group_chat: "创建群组聊天"
+        group_with_too_many_members: "成员过多 (%{membersCount})"
       channel_edit_name_slug_modal:
         title: 编辑频道
         input_placeholder: 添加名称
@@ -453,7 +456,12 @@ zh_CN:
           description: "这将导出所有频道的所有消息。"
           create_export: "创建导出"
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
+      my_threads:
+        title: 我的对话
+        aria_label: "切换到我的话题列表"
       direct_messages:
+        title: "私信"
+        aria_label: "切换到私信"
         new: "创建个人聊天"
         create: "开始"
         leave: "离开此个人聊天"
@@ -461,6 +469,7 @@ zh_CN:
         cannot_create: "抱歉，您无法发送直接消息。"
       channel_list:
         title: "频道"
+        aria_label: "切换到频道列表"
       incoming_webhooks:
         back: "返回"
         channel_placeholder: "选择一个频道"

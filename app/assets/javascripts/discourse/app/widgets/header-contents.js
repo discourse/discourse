@@ -15,6 +15,8 @@ createWidget("header-contents", {
       {{/if}}
     {{/if}}
 
+    {{before-header-logo-outlet attrs=attrs}}
+
     {{home-logo-wrapper-outlet attrs=attrs}}
 
     {{#if attrs.topic}}

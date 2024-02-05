@@ -25,9 +25,16 @@ export default class WebHook extends RestModel {
     this.set("wildcard_web_hook", value === "wildcard");
   }
 
-  @discourseComputed("category_ids")
-  categories(categoryIds) {
-    return Category.findByIds(categoryIds);
+  @computed("category_ids")
+  get categories() {
+    return Category.findByIds(this.category_ids);
+  }
+
+  set categories(value) {
+    this.set(
+      "category_ids",
+      value.map((c) => c.id)
+    );
   }
 
   @observes("group_ids")

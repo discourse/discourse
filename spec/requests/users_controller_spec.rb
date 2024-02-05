@@ -3,17 +3,15 @@
 require "rotp"
 
 RSpec.describe UsersController do
-  fab!(:user)
-  fab!(:user1) { Fabricate(:user, username: "someusername") }
-  fab!(:another_user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user1) { Fabricate(:user, username: "someusername", refresh_auto_groups: true) }
+  fab!(:another_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:moderator)
   fab!(:inactive_user)
-
-  before { Group.refresh_automatic_groups! }
 
   # Unfortunately, there are tests that depend on the user being created too
   # late for fab! to work.
@@ -604,10 +602,7 @@ RSpec.describe UsersController do
     it "allows you to toggle anon if enabled" do
       SiteSetting.allow_anonymous_posting = true
 
-      user = sign_in(Fabricate(:user))
-      user.trust_level = 1
-      user.save!
-      Group.refresh_automatic_groups!
+      user = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
 
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
@@ -1711,7 +1706,7 @@ RSpec.describe UsersController do
     context "while logged in" do
       let(:old_username) { "OrigUsername" }
       let(:new_username) { "#{old_username}1234" }
-      fab!(:user) { Fabricate(:user, username: "OrigUsername") }
+      fab!(:user) { Fabricate(:user, username: "OrigUsername", refresh_auto_groups: true) }
 
       before do
         user.username = old_username
@@ -1979,7 +1974,7 @@ RSpec.describe UsersController do
     end
 
     it "returns success" do
-      user = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       Fabricate(:invite, invited_by: user)
 
       sign_in(user)
@@ -1991,7 +1986,7 @@ RSpec.describe UsersController do
     end
 
     it "filters by all if viewing self" do
-      inviter = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
       sign_in(inviter)
 
       Fabricate(:invite, email: "billybob@example.com", invited_by: inviter)
@@ -2018,8 +2013,8 @@ RSpec.describe UsersController do
     end
 
     it "doesn't filter by email if another regular user" do
-      inviter = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
-      sign_in(Fabricate(:user, trust_level: 2, refresh_auto_groups: true))
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
 
       Fabricate(:invite, email: "billybob@example.com", invited_by: inviter)
       redeemed_invite = Fabricate(:invite, email: "jimtom@example.com", invited_by: inviter)
@@ -2074,7 +2069,7 @@ RSpec.describe UsersController do
 
       context "with redeemed invites" do
         it "returns invited_users" do
-          inviter = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
+          inviter = Fabricate(:user, trust_level: TrustLevel[2])
           sign_in(inviter)
           invite = Fabricate(:invite, invited_by: inviter)
           _invited_user = Fabricate(:invited_user, invite: invite, user: invitee)
@@ -2093,7 +2088,7 @@ RSpec.describe UsersController do
       context "with pending invites" do
         context "with permission to see pending invites" do
           it "returns invites" do
-            inviter = Fabricate(:user, trust_level: 2, refresh_auto_groups: true)
+            inviter = Fabricate(:user, trust_level: TrustLevel[2])
             invite = Fabricate(:invite, invited_by: inviter)
             sign_in(inviter)
 
@@ -2122,7 +2117,7 @@ RSpec.describe UsersController do
 
         context "with permission to see invite links" do
           it "returns own invites" do
-            inviter = sign_in(Fabricate(:user, trust_level: 2, refresh_auto_groups: true))
+            inviter = sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
             invite =
               Fabricate(
                 :invite,
@@ -2261,9 +2256,14 @@ RSpec.describe UsersController do
     context "with authenticated user" do
       context "with permission to update" do
         fab!(:upload)
-        fab!(:user)
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-        before { sign_in(user) }
+        before do
+          User.set_callback(:create, :after, :ensure_in_trust_level_group)
+          sign_in(user)
+        end
+
+        after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
 
         it "allows the update" do
           SiteSetting.tagging_enabled = true
@@ -3400,8 +3400,8 @@ RSpec.describe UsersController do
             }
         expect(response.status).to eq(422)
 
-        user1.update!(trust_level: 3)
-        Group.refresh_automatic_groups!
+        user1.change_trust_level!(TrustLevel[3])
+
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -6786,10 +6786,9 @@ RSpec.describe UsersController do
   end
 
   describe "#private_message_topic_tracking_state" do
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
 
     fab!(:private_message) do
-      Group.refresh_automatic_groups!
       create_post(
         user: user1,
         target_usernames: [user_2.username],

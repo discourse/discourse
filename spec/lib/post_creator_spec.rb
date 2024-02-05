@@ -556,7 +556,7 @@ RSpec.describe PostCreator do
           context "when can create tags" do
             before do
               SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             end
 
             it "can create all tags if none exist" do
@@ -577,7 +577,7 @@ RSpec.describe PostCreator do
           context "when cannot create tags" do
             before do
               SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             end
 
             it "only uses existing tags" do
@@ -590,7 +590,7 @@ RSpec.describe PostCreator do
           context "when automatically tagging first posts" do
             before do
               SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
               Fabricate(:tag, name: "greetings")
               Fabricate(:tag, name: "hey")
               Fabricate(:tag, name: "about-art")
@@ -1081,7 +1081,6 @@ RSpec.describe PostCreator do
     fab!(:target_user2) { Fabricate(:moderator) }
     fab!(:unrelated_user) { Fabricate(:user) }
     let(:post) do
-      Group.refresh_automatic_groups!
       PostCreator.create!(
         user,
         title: "hi there welcome to my topic",
@@ -1097,8 +1096,7 @@ RSpec.describe PostCreator do
       SiteSetting.min_first_post_length = 20
       SiteSetting.min_post_length = 25
       SiteSetting.body_min_entropy = 20
-      user.update!(trust_level: 3)
-      Group.refresh_automatic_groups!
+      user.change_trust_level!(TrustLevel[3])
 
       expect {
         PostCreator.create!(
@@ -1198,13 +1196,12 @@ RSpec.describe PostCreator do
     end
 
     it "does not increase posts count for small actions" do
-      topic = Fabricate(:private_message_topic, user: Fabricate(:user))
+      topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
 
       Fabricate(:post, topic: topic)
 
       1.upto(3) do |i|
         user = Fabricate(:user)
-        Group.refresh_automatic_groups!
         topic.invite(topic.user, user.username)
         topic.reload
         expect(topic.posts_count).to eq(1)
@@ -1235,7 +1232,6 @@ RSpec.describe PostCreator do
     end
 
     it "works as expected" do
-      Group.refresh_automatic_groups!
       # Invalid archetype
       creator = PostCreator.new(user, base_args)
       creator.create
@@ -1324,7 +1320,6 @@ RSpec.describe PostCreator do
     end
     fab!(:unrelated) { Fabricate(:user) }
     let(:post) do
-      Group.refresh_automatic_groups!
       PostCreator.create!(
         user,
         title: "hi there welcome to my topic",

@@ -1,4 +1,4 @@
-import { getHashtagTypeClasses } from "discourse/lib/hashtag-autocomplete";
+import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 
 export default {
   after: "category-color-css-generator",

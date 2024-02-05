@@ -1021,7 +1021,6 @@ it:
       said: "%{username}:"
       profile: "Profilo"
       profile_possessive: "Profilo di %{username}"
-      account_possessive: "(account di)"
       mute: "Silenzia"
       edit: "Modifica opzioni"
       download_archive:
@@ -1457,6 +1456,15 @@ it:
         success_via_admin: "Abbiamo inviato un'email a quell'indirizzo. L'utente dovrà seguire le istruzioni di conferma contenute nell'email."
         success_staff: "Abbiamo inviato una email al tuo indirizzo corrente. Segui le istruzioni di conferma."
         back_to_preferences: "Torna alle preferenze"
+        confirm_success: "La tua email è stata aggiornata."
+        confirm: "Conferma"
+        authorizing_new:
+          description: "Conferma di voler cambiare il tuo indirizzo email in:"
+          description_add: "Conferma di voler aggiungere un indirizzo email alternativo:"
+        authorizing_old:
+          old_email: "Vecchia email: %{email}"
+          new_email: "Nuova email: %{email}"
+          confirm_success: "Abbiamo inviato un'email al tuo nuovo indirizzo per confermare la modifica!"
       change_avatar:
         title: "Cambia l'immagine del tuo profilo"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basato su"
@@ -2135,10 +2143,11 @@ it:
         one: "Seleziona almeno %{count} elemento."
         other: "Seleziona almeno %{count} elementi."
       components:
-        tag_drop:
-          filter_for_more: Filtra per altro…
+        filter_for_more: Filtra per altro…
         categories_admin_dropdown:
           title: "Gestisci le categorie"
+        bulk_select_topics_dropdown:
+          title: "Azioni Multiple"
     date_time_picker:
       from: Da
       to: A
@@ -2648,6 +2657,7 @@ it:
     topics:
       new_messages_marker: "ultima visita"
       bulk:
+        confirm: "Conferma"
         select_all: "Seleziona Tutto"
         clear_all: "Deseleziona Tutto"
         unlist_topics: "Rendi argomenti invisibili"
@@ -2733,6 +2743,9 @@ it:
         top: "Non ci sono altri argomenti popolari."
         bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
         filter: "Non ci sono altri argomenti."
+    topic_bulk_actions:
+      close_topics:
+        name: "Chiudi argomenti"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"

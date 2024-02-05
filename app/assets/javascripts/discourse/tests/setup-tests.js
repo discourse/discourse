@@ -21,6 +21,7 @@ import { resetSettings as resetThemeSettings } from "discourse/lib/theme-setting
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
+import { resetCategoryCache } from "discourse/models/category";
 import SiteSettingService from "discourse/services/site-settings";
 import { flushMap } from "discourse/services/store";
 import pretender, {
@@ -332,6 +333,8 @@ export default function setupTests(config) {
 
     PreloadStore.reset();
     resetSite();
+
+    resetCategoryCache();
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");

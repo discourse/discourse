@@ -16,7 +16,10 @@ class PermalinkSerializer < ApplicationSerializer
              :external_url,
              :tag_id,
              :tag_name,
-             :tag_url
+             :tag_url,
+             :user_id,
+             :user_url,
+             :username
 
   def topic_title
     object&.topic&.title
@@ -53,5 +56,13 @@ class PermalinkSerializer < ApplicationSerializer
 
   def tag_url
     object&.tag&.full_url
+  end
+
+  def user_url
+    object&.user&.full_url
+  end
+
+  def username
+    object&.user&.username
   end
 end

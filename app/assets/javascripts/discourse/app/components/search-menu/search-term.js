@@ -50,6 +50,15 @@ export default class SearchTerm extends Component {
   }
 
   @action
+  onKeydown(e) {
+    if (e.key === "Escape") {
+      this.args.closeSearchMenu();
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
+
+  @action
   onKeyup(e) {
     if (
       onKeyUpCallbacks.length &&
@@ -57,12 +66,6 @@ export default class SearchTerm extends Component {
     ) {
       // Return early if any callbacks return false
       return;
-    }
-
-    if (e.key === "Escape") {
-      this.args.closeSearchMenu();
-      e.preventDefault();
-      return false;
     }
 
     this.args.openSearchMenu();

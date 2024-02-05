@@ -31,8 +31,8 @@ RSpec.describe UserGuardian do
 
   let(:moderator_upload) { Upload.new(user_id: moderator.id, id: 4) }
 
-  fab!(:trust_level_1) { Fabricate(:user, trust_level: 1, refresh_auto_groups: true) }
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2, refresh_auto_groups: true) }
+  fab!(:trust_level_1)
+  fab!(:trust_level_2)
 
   describe "#can_pick_avatar?" do
     let :guardian do
@@ -135,6 +135,28 @@ RSpec.describe UserGuardian do
       it "is true if hiding profiles is disabled" do
         SiteSetting.allow_users_to_hide_profile = false
         expect(Guardian.new(user).can_see_profile?(hidden_user)).to eq(true)
+      end
+    end
+  end
+
+  describe "#can_see_user_actions?" do
+    it "is true by default" do
+      expect(Guardian.new.can_see_user_actions?(nil, [])).to eq(true)
+    end
+
+    context "with 'hide_user_activity_tab' setting" do
+      before { SiteSetting.hide_user_activity_tab = false }
+
+      it "returns true for self" do
+        expect(Guardian.new(user).can_see_user_actions?(user, [])).to eq(true)
+      end
+
+      it "returns true for admin" do
+        expect(Guardian.new(admin).can_see_user_actions?(user, [])).to eq(true)
+      end
+
+      it "returns false for regular user" do
+        expect(Guardian.new.can_see_user_actions?(user, [])).to eq(true)
       end
     end
   end

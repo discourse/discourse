@@ -421,6 +421,23 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
+    Capybara.register_driver :selenium_firefox_headless do |app|
+      options =
+        Selenium::WebDriver::Firefox::Options.new(
+          args: %w[--window-size=1400,1400 --headless],
+          prefs: {
+            "browser.download.dir": Downloads::FOLDER,
+          },
+          log_level: ENV["SELENIUM_BROWSER_LOG_LEVEL"] || :warn,
+        )
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :firefox,
+        timeout: BROWSER_READ_TIMEOUT,
+        options: options,
+      )
+    end
+
     if ENV["ELEVATED_UPLOADS_ID"]
       DB.exec "SELECT setval('uploads_id_seq', 10000)"
     else
@@ -458,14 +475,55 @@ RSpec.configure do |config|
     class SpecTimeoutError < StandardError
     end
 
+    mutex = Mutex.new
+    condition_variable = ConditionVariable.new
+    test_running = false
+    is_waiting = false
+
+    backtrace_logger =
+      Thread.new do
+        loop do
+          mutex.synchronize do
+            is_waiting = true
+            condition_variable.wait(mutex)
+            is_waiting = false
+          end
+
+          sleep PER_SPEC_TIMEOUT_SECONDS - 1
+
+          if mutex.synchronize { test_running }
+            puts "::group::[#{Process.pid}] Threads backtraces 1 second before timeout"
+
+            Thread.list.each do |thread|
+              puts "\n"
+              thread.backtrace.each { |line| puts line }
+              puts "\n"
+            end
+
+            puts "::endgroup::"
+          end
+        rescue StandardError => e
+          puts "Error in backtrace logger: #{e}"
+        end
+      end
+
     config.around do |example|
       Timeout.timeout(
         PER_SPEC_TIMEOUT_SECONDS,
         SpecTimeoutError,
         "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
       ) do
+        mutex.synchronize do
+          test_running = true
+          condition_variable.signal
+        end
+
         example.run
       rescue SpecTimeoutError
+      ensure
+        mutex.synchronize { test_running = false }
+        backtrace_logger.wakeup
+        sleep 0.01 while !mutex.synchronize { is_waiting }
       end
     end
   end
@@ -514,9 +572,10 @@ RSpec.configure do |config|
       #
       # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
       # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
-      if !File.directory?("~/.cache/selenium")
-        File.open("#{Rails.root}/tmp/chrome_driver_flock", "w") do |file|
-          file.flock(File::LOCK_EX)
+      File.open("#{Rails.root}/tmp/chrome_driver_flock", File::RDWR | File::CREAT, 0644) do |file|
+        file.flock(File::LOCK_EX)
+
+        if !File.directory?(File.expand_path("~/.cache/selenium"))
           `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
         end
       end
@@ -535,8 +594,15 @@ RSpec.configure do |config|
 
     driver = [:selenium]
     driver << :mobile if example.metadata[:mobile]
-    driver << :chrome
+    driver << (aarch64? ? :firefox : :chrome)
     driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
+
+    if driver.include?(:firefox)
+      STDERR.puts(
+        "WARNING: Running system specs using the Firefox driver is not officially supported. Some tests will fail.",
+      )
+    end
+
     driven_by driver.join("_").to_sym
 
     setup_system_test
@@ -554,7 +620,8 @@ RSpec.configure do |config|
       lines << "~~~~~ END DRIVER LOGS ~~~~~"
     end
 
-    js_logs = page.driver.browser.logs.get(:browser)
+    # The logs API isn’t available (yet?) with the Firefox driver
+    js_logs = aarch64? ? [] : page.driver.browser.logs.get(:browser)
 
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
@@ -854,6 +921,10 @@ def apply_base_chrome_options(options)
   if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
     options.add_argument("--force-device-scale-factor=1")
   end
+end
+
+def aarch64?
+  RUBY_PLATFORM == "aarch64-linux"
 end
 
 class SpecSecureRandom

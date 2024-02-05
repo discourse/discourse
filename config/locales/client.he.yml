@@ -1135,6 +1135,7 @@ he:
       said: "%{username}:"
       profile: "פרופיל"
       profile_possessive: "הפרופיל של %{username}"
+      account_possessive: "החשבון של %{name}"
       mute: "השתקה"
       edit: "עריכת העדפות"
       download_archive:
@@ -1606,6 +1607,15 @@ he:
         success_via_admin: "שלחנו הודעה לכתובת הדוא״ל הזו. על המשתמש יהיה לעקוב אחר הוראות האישור שבהודעה."
         success_staff: "שלחנו דואר אלקטרוני לכתובת הדואר הזו. אנא עיקבו אחרי הוראות האישור."
         back_to_preferences: "חזרה להעדפות"
+        confirm_success: "כתובת הדוא״ל שלך עודכנה."
+        confirm: "אישור"
+        authorizing_new:
+          description: "נא לאשר שכתובת הדוא״ל שלך תשתנה לכדי:"
+          description_add: "נא לאשר הוספת כתובת דוא״ל חלופית:"
+        authorizing_old:
+          old_email: "כתובת דוא״ל ישנה: %{email}"
+          new_email: "כתובת דוא״ל חדשה: %{email}"
+          confirm_success: "שלחנו הודעה לכתובת הדוא״ל החדשה שלך כדי לאשר את השינוי!"
       change_avatar:
         title: "שינוי תמונת הפרופיל"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, מבוסס על"
@@ -2320,10 +2330,11 @@ he:
         many: "נא לבחור ב־%{count} פריטים לפחות."
         other: "נא לבחור ב־%{count} פריטים לפחות."
       components:
-        tag_drop:
-          filter_for_more: לסנן לעוד…
+        filter_for_more: לסנן לעוד…
         categories_admin_dropdown:
           title: "ניהול קטגוריות"
+        bulk_select_topics_dropdown:
+          title: "מקבץ פעולות"
     date_time_picker:
       from: מאת
       to: אל
@@ -2893,6 +2904,7 @@ he:
     topics:
       new_messages_marker: "ביקור אחרון"
       bulk:
+        confirm: "אישור"
         select_all: "בחירה בהכול"
         clear_all: "לפנות הכול"
         unlist_topics: "הסרת נושאים"
@@ -2967,6 +2979,7 @@ he:
           two: "התקדמות: <strong>%{count}</strong> נושאים"
           many: "התקדמות: <strong>%{count}</strong> נושאים"
           other: "התקדמות: <strong>%{count}</strong> נושאים"
+        silent: "לבצע את הפעולה הזאת בשקט."
       none:
         unread: "אין לך נושאים שלא נקראו."
         unseen: "אין לך נושאים שלא ראית."
@@ -2977,6 +2990,7 @@ he:
         bookmarks: "אין לך עדיין סימניות לנושאים."
         category: "אין נושאים בקטגוריה %{category}."
         top: "אין נושאים מובילים."
+        hot: "אין נושאים חמים."
         filter: "אין נושאים."
         educate:
           new: '<p>הנושאים החדשים שלך יופיעו כאן. כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> אם הם נוצרו ביומיים האחרונים. </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
@@ -2992,8 +3006,15 @@ he:
         category: "אין עוד נושאים בקטגוריה %{category}."
         tag: "אין יותר נושאי %{tag}."
         top: "אין עוד נושאים מובילים."
+        hot: "אין נושאים חמים נוספים."
         bookmarks: "אין עוד סימניות לנושאים."
         filter: "אין נושאים נוספים."
+    topic_bulk_actions:
+      close_topics:
+        name: "סגירת נושאים"
+      update_category:
+        name: "עדכון קטגוריה"
+        description: "נא לבחור קטגוריה חדשה לנושאים הנבחרים"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"
@@ -4105,6 +4126,10 @@ he:
         title: "לא נראו"
         lower_title: "לא נראו"
         help: "נושאים חדשים ונושאים שאתם כרגע צופים או עוקבים אחריהם עם פוסטים שלא נקראו"
+      hot:
+        title: "חמים"
+        lower_title: "חמים"
+        help: "הנושאים המובילים לאחרונה"
       new:
         lower_title_with_count:
           one: "חדש (%{count})"

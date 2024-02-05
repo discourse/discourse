@@ -188,7 +188,7 @@ cs:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Pokud se ti líbí (a komu by ne!), pokračuj a stisknutím "to se mi líbí" tlačítka :heart: pod tímto příspěvkem mi to dej vědět.
+          Pokud se ti líbí (a komu by ne!), pokračuj a stisknutím tlačítka "Líbí se" :heart: pod tímto příspěvkem mi to dej vědět.
 
           Můžeš **odpovědět obrázkem?** Jakýkoli obrázek bude stačit! Přetáhni, stiskni tlačítko nahrávání nebo ho prostě jen zkopíruj a vlož.
         reply: |-
@@ -207,7 +207,7 @@ cs:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Pokud se ti líbí (a komu by se nelíbil!), stiskni tlačítko "To se mi líbí" :heart: pod tímto příspěvkem a dej mi vědět.
+          Pokud se ti líbí (a komu by se nelíbil!), stiskni tlačítko "Líbí se" :heart: pod tímto příspěvkem a dej mi vědět.
         reply: |-
           Dík, že se ti líbí můj příspěvek!
         not_found: |-
@@ -276,7 +276,7 @@ cs:
 
           Mohl/a bys ve své další odpovědi zmínit **`@%{discobot_username}`**?
         reply: |-
-          _Řekl někdo mé jméno!? _ :raised_hand: Věřím, že jsi to řekl/a ty! :wave: No, tady jsem! Díky za zmínku. :ok_hand:
+          _Řekl někdo mé jméno!?_ :raised_hand: Věřím, žes to byl/a ty! :wave: No, tady jsem! Díky za zmínku. :ok_hand:
         not_found: |-
           Nikde tam nevidím své jméno :frowning: . Můžeš mě zkusit znovu zmínit jako `@%{discobot_username}`?
 
@@ -315,13 +315,13 @@ cs:
           Hmm… Vypadá to, že bys mohl/a mít potíže. Omlouvám se za to. Hledal/a jsi na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> výraz **capy&#8203;bara**?
       end:
         message: |-
-          Díky, že jsi se mnou vydržel/a, @%{username}! Tohle jsem pro tebe vyrobil, myslím, že sis to zasloužil/a:
+          Díky, že jsi se mnou vydržel/a, @%{username}! Tohle jsem pro tebe vyrobil, myslím, že si to zasloužíš:
 
           %{certificate}
 
-          To je prozatím vše! Podívejte se na [**naše nejnovější diskusní témata**](%{base_uri}/latest) nebo [**kategorie diskusí**](%{base_uri}/categories). :sunglasses:
+          To je prozatím vše! Podívej se na [**naše nejnovější diskusní témata**](%{base_uri}/latest) nebo [**kategorie diskusí**](%{base_uri}/categories). :sunglasses:
 
-          (Pokud by sis se mnou chtěli znovu promluvit a dozvědět se víc, stačí kdykoli napsat zprávu nebo zmínit `@%{discobot_username}`!)
+          (Pokud by sis se mnou chtěl/a znovu promluvit a dozvědět se víc, stačí kdykoli napsat zprávu nebo zmínit `@%{discobot_username}`!)
       certificate:
         alt: "Osvědčení o úspěchu"
     advanced_user_narrative:
@@ -350,7 +350,7 @@ cs:
         instructions: |-
           Pokud chceš svůj příspěvek stáhnout, můžeš ho smazat.
 
-          Pokračuj a **odstraň** kterýkoli z výše uvedených příspěvků pomocí akce <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **odstranit**. Nemaž však první příspěvek!
+          Pokračuj a **odstraň** kterýkoli z výše uvedených příspěvků pomocí akce <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **odstranit**. Ale nemaž první příspěvek!
         not_found: |-
           Zatím nevidím žádné smazané příspěvky? Nezapomeň, že <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zobrazit více odhalí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> tlačítko smazat.
         reply: |-

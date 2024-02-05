@@ -1,11 +1,11 @@
 import { click, fillIn, tab, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Modal - Login", function () {
-  test("You can tab to the login button", async function (assert) {
+  chromeTest("You can tab to the login button", async function (assert) {
     await visit("/");
     await click("header .login-button");
     // you have to press the tab key twice to get to the login button
@@ -45,19 +45,7 @@ acceptance("Modal - Login - With 2FA", function (needs) {
   });
 });
 
-acceptance("Modal - Login - With Passkeys enabled", function (needs) {
-  needs.settings({
-    enable_passkeys: true,
-  });
-
-  needs.pretender((server, helper) => {
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({
-        challenge: "some-challenge",
-      })
-    );
-  });
-
+acceptance("Modal - Login - With Passkeys enabled", function () {
   test("Includes passkeys button and conditional UI", async function (assert) {
     await visit("/");
     await click("header .login-button");
@@ -86,17 +74,6 @@ acceptance("Modal - Login - With Passkeys disabled", function (needs) {
 
 acceptance("Modal - Login - Passkeys on mobile", function (needs) {
   needs.mobileView();
-  needs.settings({
-    enable_passkeys: true,
-  });
-
-  needs.pretender((server, helper) => {
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({
-        challenge: "some-challenge",
-      })
-    );
-  });
 
   test("Includes passkeys button and conditional UI", async function (assert) {
     await visit("/");

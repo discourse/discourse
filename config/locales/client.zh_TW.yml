@@ -1092,6 +1092,7 @@ zh_TW:
         error: "修改你的電子郵件地址時發生錯誤，可能此電子郵件地址已經有人使用?"
         success: "我們已經寄出一封郵件至此電子郵件地址，請遵照說明進行確認。"
         success_staff: "我們已傳送一封電子郵件至你目前的信箱。請根據確認指示進行操作。"
+        confirm_success: "你的電子郵箱已更新。"
       change_avatar:
         title: "設定個人資料圖片"
         letter_based: "系統分配的個人資料圖片"
@@ -1546,6 +1547,9 @@ zh_TW:
         other: "您只能選擇%{count}個項目"
       min_content_not_reached:
         other: "至少要選擇%{count}個項目"
+      components:
+        bulk_select_topics_dropdown:
+          title: "批次操作"
     date_time_picker:
       from: 自
       to: 至
@@ -1895,6 +1899,9 @@ zh_TW:
         tag: "%{tag} 分類已經沒有其它話題了。"
         top: "沒有更多精選話題。"
         bookmarks: "書籤裡沒有更多的話題了。"
+    topic_bulk_actions:
+      close_topics:
+        name: "關閉話題"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"

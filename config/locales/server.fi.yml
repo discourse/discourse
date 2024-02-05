@@ -372,7 +372,7 @@ fi:
   too_many_mentions_newuser:
     one: "Uudet käyttäjät voivat mainita viestissä vain yhden muun käyttäjän."
     other: "Uudet käyttäjät voivat mainita viestissä vain %{count} käyttäjää."
-  no_embedded_media_allowed_trust: "Et voi upottaa mediaobjekteja viesteihin."
+  no_embedded_media_allowed_group: "Et voi upottaa mediaobjekteja viesteihin."
   no_embedded_media_allowed: "Uudet käyttäjät eivät voi upottaa mediaobjekteja viesteihin."
   too_many_embedded_media:
     one: "Uudet käyttäjät voivat upottaa vain yhden mediaobjektin viesteihin."
@@ -851,27 +851,12 @@ fi:
       windows: "Microsoft Windows"
       unknown: "tuntematon käyttöjärjestelmä"
   change_email:
-    wrong_account_error: "Olet kirjautuneena väärällä tilillä. Kirjaudu ulos ja yritä uudelleen."
-    confirmed: "Sähköpostiosoite päivitetty."
-    please_continue: "Jatka sivustolle %{site_name}"
     error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä tämä sähköpostiosoite on jo käytössä?"
     doesnt_exist: "Sähköpostiosoitetta ei ole liitetty tiliisi."
     error_staged: "Sähköpostiosoitetta muutettaessa tapahtui virhe. Osoite on automaattisesti luodun esikäyttäjän käytössä."
     already_done: "Pahoittelut, tämä varmennuslinnkki ei ole enää voimassa. Ehkäpä sähköpostiosoitteesi on jo vaihdettu?"
     confirm: "Vahvista"
     max_secondary_emails_error: "Olet saavuttanut sallitun toissijaisten sähköpostiosoitteiden enimmäismäärän."
-    authorizing_new:
-      title: "Vahvista uusi sähköpostiosoite"
-      description: "Vahvista, että haluat sähköpostiosoitteesi muutettavan seuraavasti:"
-      description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
-    authorizing_old:
-      title: "Vaihda sähköpostiosoitteesi"
-      description: "Vahvista sähköpostiosoitteesi muutos"
-      description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
-      old_email: "Vanha sähköposti: %{email}"
-      new_email: "Uusi sähköposti: %{email}"
-      almost_done_title: "Vahvista uusi sähköpostiosoite"
-      almost_done_description: "Lähetimme sinulle sähköpostin uuteen osoitteeseesi, jotta voit vahvistaa muutoksen!"
   associated_accounts:
     revoke_failed: "Tunnustasi palveluntarjoajalla %{provider_name} ei voitu perua."
     connected: "(yhdistetty)"
@@ -2111,11 +2096,6 @@ fi:
     enable_inline_emoji_translation: "Ota käyttöön emojien kääntäminen merkkijonojen keskeltä (ei väliä tai välimerkkejä ennen emojia)"
     emoji_deny_list: "Nämä emojit eivät ole käytettävissä valikoista tai lyhytkoodeilla."
     approve_post_count: "Viestien lukumäärä, joka uusilta käyttäjiltä ja haastajilta täytyy hyväksyä"
-    approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien viestit täytyy hyväksyä"
-    approve_unless_allowed_groups: "Viestit käyttäjiltä, jotka eivät ole näissä ryhmissä, täytyy hyväksyä"
-    approve_new_topics_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien aloittamat ketjut täytyy hyväksyä"
-    approve_new_topics_unless_allowed_groups: "Uudet ketjut käyttäjiltä, jotka eivät ole näissä ryhmissä, täytyy hyväksyä"
-    approve_unless_staged: "Esikäyttäjien uudet ketjut ja viestit täytyy hyväksyä"
     notify_about_queued_posts_after: "Jos viestejä on ollut hyväksymättä näin monen tunnin ajan, lähetä ilmoitus valvojille. Poista ilmoitukset käytöstä asettamalla 0."
     reviewable_revision_reasons: "Listaus käytettävissä olevista syistä hylättäessä tarkistusjonon viestejä korjauksella. Myös \"Muu\" on aina käytettävissä, jolloin syy voidaan syöttää itse."
     auto_close_messages_post_count: "Maksimimäärä viestejä viestissä, kunnes se suljetaan automaattisesti (aseta 0 poistaaksesi käytöstä)"
@@ -2235,7 +2215,6 @@ fi:
     use_name_for_username_suggestions: "Käytä käyttäjän koko nimeä käyttäjätunnusten ehdottamiseen."
     suggest_weekends_in_date_pickers: "Sisällytä viikonloput (lauantai ja sunnuntai) päivämäärävalitsimen ehdotuksiin (poista tämä käytöstä, jos käytät Discoursea vain arkipäivisin maanantaista perjantaihin)."
     splash_screen: "Näyttää väliaikaisen latausnäytön sivuston resurssien latautuessa"
-    navigation_menu: "Määritä käytettävä navigointivalikko. Sivupalkin ja yläpalkin navigointi ovat käyttäjien mukautettavissa. Vanha vaihtoehto on käytettävissä yhteensopivuuden varmistamiseksi vanhojen versioiden kanssa."
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
     experimental_new_new_view_groups: 'KOKEELLINEN: ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
@@ -4655,6 +4634,9 @@ fi:
   onebox:
     discourse:
       user_joined_community: "Liittynyt %{date}"
+    github:
+      opened: "avattu"
+      closed: "suljettu"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'

@@ -99,15 +99,17 @@
 
     <%= render_google_tag_manager_body_code %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
-      <%= render partial: "layouts/noscript_header" %>
+      <%= escape_noscript do %>
+        <%= render partial: "layouts/noscript_header" %>
 
-      <div id="main-outlet" class="wrap" role="main">
-        <!-- preload-content: -->
-        <%= yield %>
-        <!-- :preload-content -->
-      </div>
+        <div id="main-outlet" class="wrap" role="main">
+          <!-- preload-content: -->
+          <%= yield %>
+          <!-- :preload-content -->
+        </div>
 
-      <%= render partial: "layouts/noscript_footer" %>
+        <%= render partial: "layouts/noscript_footer" %>
+      <% end %>
     </noscript>
 
     <%- unless customization_disabled? %>
@@ -143,5 +145,7 @@
     <%- if allow_plugins? %>
       <%= build_plugin_html 'server:before-body-close' %>
     <%- end %>
+
+    <%= DeferScriptHelper.safari_workaround_script %>
   </body>
 </html>

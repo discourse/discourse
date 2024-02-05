@@ -982,6 +982,7 @@ hy:
         error: "Ձեր էլ. հասցեն փոփոխելիս տեղի է ունեցել սխալ: Միգուցե այդ հասցեն արդեն օգտագործվո՞ւմ է:"
         success: "Մենք ուղարկել ենք էլ. նամակ այդ հասցեին: Խնդրում ենք հետևել հաստատման հրահանգներին:"
         success_staff: "Մենք ուղարկել ենք էլ. նամակ Ձեր ընթացիկ հասցեին: Խնդրում ենք հետևել հաստատման հրահանգներին:"
+        confirm_success: "Ձեր էլ. հասցեն թարմացվել է "
       change_avatar:
         title: "Փոխել Ձեր պրոֆիլի նկարը"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a> , հիմնված"
@@ -1434,6 +1435,9 @@ hy:
       min_content_not_reached:
         one: "Ընտրեք առնվազն%{count} տարր:"
         other: "Ընտրեք առնվազն %{count} տարր:"
+      components:
+        bulk_select_topics_dropdown:
+          title: "Զանգվածային Գործողությունները"
     date_time_picker:
       from: Ում կողմից
       to: Ում
@@ -1792,6 +1796,9 @@ hy:
         tag: "%{tag}-ում թեմաներ այլևս չկան:"
         top: "Թոփ թեմաներ այլևս չկան:"
         bookmarks: "Էջանշված թեմաներ այլևս չկան:"
+    topic_bulk_actions:
+      close_topics:
+        name: "Փակել Թեմաները"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"

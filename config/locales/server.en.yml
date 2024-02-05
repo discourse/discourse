@@ -402,7 +402,7 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
-  no_embedded_media_allowed_trust: "Sorry, you can't embed media items in a post."
+  no_embedded_media_allowed_group: "Sorry, you can't embed media items in a post."
   no_embedded_media_allowed: "Sorry, new users can't embed media items in posts."
   too_many_embedded_media:
     one: "Sorry, new users can only put one embedded media item in a post."
@@ -919,29 +919,12 @@ en:
       unknown: "unknown operating system"
 
   change_email:
-    wrong_account_error: "You are logged in the wrong account, please log out and try again."
-    confirmed: "Your email has been updated."
-    please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
     doesnt_exist: "That email address is not associated with your account."
     error_staged: "There was an error changing your email address. The address is already in use by a staged user."
     already_done: "Sorry, this confirmation link is no longer valid. Perhaps your email was already changed?"
     confirm: "Confirm"
     max_secondary_emails_error: "You have reached the maximum allowed secondary emails limit."
-
-    authorizing_new:
-      title: "Confirm your new email"
-      description: "Please confirm you would like your email address changed to:"
-      description_add: "Please confirm you would like to add an alternate email address:"
-
-    authorizing_old:
-      title: "Change your email address"
-      description: "Please confirm your email address change"
-      description_add: "Please confirm you would like to add an alternate email address:"
-      old_email: "Old email: %{email}"
-      new_email: "New email: %{email}"
-      almost_done_title: "Confirming new email address"
-      almost_done_description: "We have sent an email to your new email address to confirm the change!"
 
   associated_accounts:
     revoke_failed: "Failed to revoke your account with %{provider_name}."
@@ -1525,6 +1508,7 @@ en:
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
     category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
+    ember_version_warning: "Your site is running with the unsupported EMBER_VERSION=3 configuration. This may lead to unexpected issues with themes/plugins. Please remove the EMBER_VERSION configuration from your app.yml file and rebuild. See <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> for more information."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1986,6 +1970,7 @@ en:
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     post_links_allowed_groups: "Groups that are allowed to include links in posts."
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
+    embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post"
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
     min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
     user_card_background_allowed_groups: "Groups that are allowed to upload a user card background."
@@ -2221,6 +2206,7 @@ en:
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
     allow_users_to_hide_profile: "Allow users to hide their profile and presence"
+    hide_user_activity_tab: "Hide the activity tab on user profiles except for Admin and self."
 
     allow_featured_topic_on_user_profiles: "Allow users to feature a link to a topic on their user card and profile."
 
@@ -2339,11 +2325,11 @@ en:
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
-    approve_unless_trust_level: "Posts for users below this trust level must be approved"
-    approve_unless_allowed_groups: "Posts for users not in these groups must be approved"
-    approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
-    approve_new_topics_unless_allowed_groups: "New topics for users not in these groups must be approved"
-    approve_unless_staged: "New topics and posts for staged users must be approved"
+    approve_unless_trust_level: "Posts created by users below this trust level must be approved"
+    approve_unless_allowed_groups: "Posts created by users not in these groups must be approved"
+    approve_new_topics_unless_trust_level: "New topics created by users below this trust level must be approved"
+    approve_new_topics_unless_allowed_groups: "New topics created by users not in these groups must be approved"
+    approve_unless_staged: "New topics and posts created by staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
     reviewable_revision_reasons: "List of reasons that can be selected when rejecting a reviewable queued post with a revision. Other is always available as well, which allows for a custom reason to be entered."
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
@@ -2353,6 +2339,7 @@ en:
     code_formatting_style: "Code button in composer will default to this code formatting style"
 
     max_allowed_message_recipients: "Maximum recipients allowed in a message."
+    disable_watched_word_checking_in_user_fields: "disable watched word checking in user fields"
     watched_words_regular_expressions: "Watched words are regular expressions."
 
     enable_diffhtml_preview: "Experimental feature which uses diffHTML to sync preview instead of full re-render"
@@ -2447,6 +2434,7 @@ en:
     tag_style: "Visual style for tag badges."
     pm_tags_allowed_for_groups: "Allow members of included group(s) to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
+    tag_topic_allowed_groups: "Groups that are allowed to tag topics."
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
@@ -2497,7 +2485,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
-    navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
+    navigation_menu: "Determine which navigation menu to use."
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
@@ -2590,8 +2578,10 @@ en:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
 
     placeholder:
       discourse_connect_provider_secrets:

@@ -748,7 +748,6 @@ et:
       said: "%{username}:"
       profile: "Profiil"
       profile_possessive: "%{username} profiil"
-      account_possessive: "konto"
       mute: "Vaigista"
       edit: "Muuda Eelistusi"
       new_private_message: "Uus sõnum"
@@ -956,6 +955,7 @@ et:
         error: "Sinu meiliaadressi muutmisel esines tõrge. Äkki on see juba kasutuses?"
         success: "Saatsime sellele aadressile meili. Palun järgi seal olevaid juhiseid."
         success_via_admin: "Saatsime sellele meiliaadressile kirja. Kasutaja peab järgima kirjas olevaid juhiseid."
+        confirm_success: "Sinu meiliaadress on uuendatud."
       change_avatar:
         title: "Muuda oma profiilipilti"
         gravatar_title: "Muuda oma avatari %{gravatarName} veebisaidil"
@@ -1342,6 +1342,9 @@ et:
       no_content: Midagi ei leitud
       filter_placeholder: Otsi...
       filter_placeholder_with_any: Otsi või loo...
+      components:
+        bulk_select_topics_dropdown:
+          title: "Masstoimingud"
     date_time_picker:
       from: Kellelt
       to: Kellele
@@ -1630,6 +1633,9 @@ et:
         tag: "Rohkem %{tag} teemasid pole."
         top: "Rohkem tippteemasid pole."
         bookmarks: "Rohkem järjehoidjaga teemasid pole."
+    topic_bulk_actions:
+      close_topics:
+        name: "Sulge Teemad"
     topic:
       filter_to:
         one: "%{count} postitus teemas"

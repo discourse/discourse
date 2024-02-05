@@ -4,6 +4,7 @@ import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Signing In - Mobile", function (needs) {
   needs.mobileView();
+
   test("sign in", async function (assert) {
     await visit("/");
     await click("header .login-button");

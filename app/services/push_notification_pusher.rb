@@ -161,6 +161,8 @@ class PushNotificationPusher
       if subscription.first_error_at || subscription.error_count != 0
         subscription.update_columns(error_count: 0, first_error_at: nil)
       end
+
+      DiscourseEvent.trigger(:push_notification_sent, user, message)
     rescue WebPush::ExpiredSubscription
       subscription.destroy!
     rescue WebPush::ResponseError => e

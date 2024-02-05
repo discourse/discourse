@@ -23,7 +23,7 @@ RSpec.describe Chat::UpdateMessage do
     let(:guardian) { Guardian.new(user1) }
     fab!(:admin1) { Fabricate(:admin) }
     fab!(:admin2) { Fabricate(:admin) }
-    fab!(:user1) { Fabricate(:user) }
+    fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:user3) { Fabricate(:user) }
     fab!(:user4) { Fabricate(:user) }
@@ -46,7 +46,6 @@ RSpec.describe Chat::UpdateMessage do
       [admin1, admin2, user1, user2, user3, user4].each do |user|
         Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
       end
-      Group.refresh_automatic_groups!
     end
 
     def create_chat_message(user, message, channel, upload_ids: nil)

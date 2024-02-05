@@ -3,7 +3,7 @@
 RSpec.describe TrustLevel3Requirements do
   subject(:tl3_requirements) { described_class.new(user) }
 
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:moderator)
   fab!(:topic1) { Fabricate(:topic) }
   fab!(:topic2) { Fabricate(:topic) }
@@ -241,7 +241,6 @@ RSpec.describe TrustLevel3Requirements do
   describe "num_topics_replied_to" do
     it "counts topics in which user replied in last 100 days" do
       user.save
-      Group.refresh_automatic_groups!
 
       _not_a_reply = create_post(user: user) # user created the topic, so it doesn't count
 
@@ -461,7 +460,6 @@ RSpec.describe TrustLevel3Requirements do
     let(:recent_post1) { create_post(topic: topic, user: user, created_at: 1.hour.ago) }
     let(:recent_post2) { create_post(topic: topic, user: user, created_at: 10.days.ago) }
     let(:private_post) do
-      Group.refresh_automatic_groups!
       create_post(
         user: user,
         archetype: Archetype.private_message,

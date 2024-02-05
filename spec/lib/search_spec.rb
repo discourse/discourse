@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Search do
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:topic)
 
   before do
@@ -290,10 +290,17 @@ RSpec.describe Search do
   describe "post indexing" do
     fab!(:category) { Fabricate(:category_with_definition, name: "america") }
     fab!(:topic) { Fabricate(:topic, title: "sam saffron test topic", category: category) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+
     let!(:post) do
-      Fabricate(:post, topic: topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
+      Fabricate(
+        :post,
+        topic: topic,
+        raw: 'this <b>fun test</b> <img src="bla" title="my image">',
+        user: user,
+      )
     end
-    let!(:post2) { Fabricate(:post, topic: topic) }
+    let!(:post2) { Fabricate(:post, topic: topic, user: user) }
 
     it "should index correctly" do
       search_data = post.post_search_data.search_data
@@ -626,10 +633,16 @@ RSpec.describe Search do
     end
 
     context "with personal-direct and group_messages flags" do
-      let!(:current) { Fabricate(:user, admin: true, username: "current_user") }
-      let!(:participant) { Fabricate(:user, username: "participant_1") }
-      let!(:participant_2) { Fabricate(:user, username: "participant_2") }
-      let!(:non_participant) { Fabricate(:user, username: "non_participant") }
+      let!(:current) do
+        Fabricate(:user, admin: true, username: "current_user", refresh_auto_groups: true)
+      end
+      let!(:participant) { Fabricate(:user, username: "participant_1", refresh_auto_groups: true) }
+      let!(:participant_2) do
+        Fabricate(:user, username: "participant_2", refresh_auto_groups: true)
+      end
+      let!(:non_participant) do
+        Fabricate(:user, username: "non_participant", refresh_auto_groups: true)
+      end
 
       let(:group) do
         group = Fabricate(:group, has_messages: true)
@@ -639,7 +652,6 @@ RSpec.describe Search do
       end
 
       def create_pm(users:, group: nil)
-        Group.refresh_automatic_groups!
         pm = Fabricate(:private_message_post_one_user, user: users.first).topic
         users[1..-1].each do |u|
           pm.invite(users.first, u.username)
@@ -1013,6 +1025,14 @@ RSpec.describe Search do
       results = Search.execute("tiger", guardian: Guardian.new(user))
       expect(results.posts).to eq([post])
     end
+
+    it "does not rely on postgres's proximity opreators" do
+      topic.update!(title: "End-to-end something something testing")
+
+      results = Search.execute("end-to-end test")
+
+      expect(results.posts).to eq([post])
+    end
   end
 
   describe "topics" do
@@ -1378,7 +1398,7 @@ RSpec.describe Search do
         SiteSetting.tagging_enabled = true
         DiscourseTagging.tag_topic_by_names(
           post.topic,
-          Guardian.new(Fabricate.build(:admin)),
+          Guardian.new(Fabricate(:admin, refresh_auto_groups: true)),
           [tag.name, uppercase_tag.name],
         )
         post.topic.save
@@ -1995,8 +2015,9 @@ RSpec.describe Search do
     end
 
     it "can find posts with images" do
-      post_uploaded = Fabricate(:post_with_uploaded_image)
-      Fabricate(:post)
+      user = Fabricate(:user, refresh_auto_groups: true)
+      post_uploaded = Fabricate(:post_with_uploaded_image, user: user)
+      Fabricate(:post, user: user)
 
       CookedPostProcessor.new(post_uploaded).update_post_image
 
@@ -2362,12 +2383,18 @@ RSpec.describe Search do
 
     it "escapes the term correctly" do
       expect(Search.ts_query(term: 'Title with trailing backslash\\')).to eq(
-        "REPLACE(TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')::text, '<->', '&')::tsquery",
+        "REGEXP_REPLACE(TO_TSQUERY('english', '''Title with trailing backslash\\\\\\\\'':*')::text, '<->|<\\d+>', '&', 'g')::tsquery",
       )
 
       expect(Search.ts_query(term: "Title with trailing quote'")).to eq(
-        "REPLACE(TO_TSQUERY('english', '''Title with trailing quote'''''':*')::text, '<->', '&')::tsquery",
+        "REGEXP_REPLACE(TO_TSQUERY('english', '''Title with trailing quote'''''':*')::text, '<->|<\\d+>', '&', 'g')::tsquery",
       )
+    end
+
+    it "remaps postgres's proximity operators '<->' and its `<N>` variant" do
+      expect(
+        DB.query_single("SELECT #{Search.ts_query(term: "end-to-end")}::text"),
+      ).to contain_exactly("'end-to-end':* & 'end':* & 'end':*")
     end
   end
 

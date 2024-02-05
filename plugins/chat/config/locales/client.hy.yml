@@ -13,6 +13,8 @@ hy:
           never: "Երբեք"
     chat:
       deleted_chat_username: ջնջված
+      dates:
+        yesterday: "Երեկվա"
       create: "Ստեղծել"
       cancel: "Չեղարկել"
       channel_settings:

@@ -598,22 +598,10 @@ ca:
       windows: "Microsoft Windows"
       unknown: "sistema operatiu desconegut"
   change_email:
-    wrong_account_error: "Heu iniciat sessió amb un compte equivocat. Tanqueu la sessió i torneu-ho a provar."
-    confirmed: "El vostre correu electrònic ha estat actualitzat."
-    please_continue: "Continua a %{site_name}"
     error: "Hi ha hagut un error en canviar la vostra adreça de correu. Potser l'adreça ja està en ús."
     error_staged: "Hi ha hagut un error en canviar la vostra adreça electrònica. L'adreça ja està en ús per un usuari fictici."
     already_done: "Aquest enllaç de confirmació ja no és vàlid. Potser s'ha canviat el vostre correu electrònic."
     confirm: "Confirma"
-    authorizing_new:
-      title: "Confirmeu la vostra nova adreça electrònica"
-    authorizing_old:
-      title: "Canvieu la vostra adreça de correu electrònic"
-      description: "Confirmeu el canvi d’adreça electrònica"
-      old_email: "Adreça electrònica antiga: %{email}"
-      new_email: "Adreça electrònica nova: %{email}"
-      almost_done_title: "Confirmant la nova adreça electrònica"
-      almost_done_description: "Hem enviat un correu electrònic a la vostra nova adreça electrònica per a confirmar el canvi."
   associated_accounts:
     revoke_failed: "No s'ha pogut revocar el vostre compte amb %{provider_name}."
     connected: "(connectat)"
@@ -1559,9 +1547,6 @@ ca:
     emoji_autocomplete_min_chars: "Nombre mínim de caràcters necessaris per a activar el menú desplegable d'autocompleció d'emoji"
     enable_inline_emoji_translation: "Habilita la traducció per a emojis en línia (sense cap espai ni puntuació abans)"
     approve_post_count: "Nombre de publicacions d'un usuari nou o bàsic que cal aprovar."
-    approve_unless_trust_level: "Cal aprovar les publicacions per a usuaris amb aquest nivell de confiança"
-    approve_new_topics_unless_trust_level: "Cal aprovar els temes nous per a usuaris per sota d'aquest nivell de confiança"
-    approve_unless_staged: "Cal aprovar els temes i les publicacions noves per a usuaris ficticis"
     notify_about_queued_posts_after: "Si hi ha publicacions que han estat pendents de ser revisades durant més d'aquestes hores, envia una notificació a tots els moderadors. Poseu 0 per a inhabilitar aquestes notificacions."
     auto_close_messages_post_count: "Nombre màxim de publicacions permeses en un missatge abans no es tanqui automàticament (0 per desactivar)"
     auto_close_topics_post_count: "Nombre màxim de publicacions permeses en un tema abans no es tanqui automàticament (0 per desactivar)"
@@ -2906,6 +2891,9 @@ ca:
         title: "El vostre Discourse està a punt!"
   search_logs:
     graph_title: "Recompte de cerques"
+  onebox:
+    github:
+      closed: "tancat"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} us ha mencionat en "%{topic}" - %{site_title}'

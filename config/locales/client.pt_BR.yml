@@ -1021,7 +1021,6 @@ pt_BR:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
-      account_possessive: "conta de"
       mute: "Silenciar"
       edit: "Editar preferências"
       download_archive:
@@ -1457,6 +1456,15 @@ pt_BR:
         success_via_admin: "Enviamos um e-mail para esse endereço. O(a) usuário(a) precisará seguir as instruções de confirmação do e-mail."
         success_staff: "Enviamos um e-mail para o seu endereço atual. Siga as instruções para confirmar."
         back_to_preferences: "Voltar às preferências"
+        confirm_success: "O seu email foi atualizado."
+        confirm: "Confirmar"
+        authorizing_new:
+          description: "Confirme que gostaria de mudar seu endereço de e-mail para:"
+          description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
+        authorizing_old:
+          old_email: "E-mail antigo: %{email}"
+          new_email: "Novo e-mail: %{email}"
+          confirm_success: "Enviamos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
       change_avatar:
         title: "Alterar sua imagem de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baseado em"
@@ -2135,10 +2143,11 @@ pt_BR:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
       components:
-        tag_drop:
-          filter_for_more: Filtre para ver mais…
+        filter_for_more: Filtre para ver mais…
         categories_admin_dropdown:
           title: "Gerenciar categorias"
+        bulk_select_topics_dropdown:
+          title: "Ações em massa"
     date_time_picker:
       from: De
       to: Para
@@ -2648,6 +2657,7 @@ pt_BR:
     topics:
       new_messages_marker: "último acesso"
       bulk:
+        confirm: "Confirmar"
         select_all: "Selecionar tudo"
         clear_all: "Limpar tudo"
         unlist_topics: "Remover tópicos da lista"
@@ -2733,6 +2743,9 @@ pt_BR:
         top: "Não há mais melhores tópicos."
         bookmarks: "Não há mais tópicos favoritos."
         filter: "Não existem mais tópicos."
+    topic_bulk_actions:
+      close_topics:
+        name: "Fechar tópicos"
     topic:
       filter_to:
         one: "%{count} postagem no tópico"

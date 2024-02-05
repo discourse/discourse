@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Guardian do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:member) { Fabricate(:user) }
   fab!(:owner) { Fabricate(:user) }
-  fab!(:moderator)
-  fab!(:admin)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:anonymous_user) { Fabricate(:anonymous) }
   fab!(:staff_post) { Fabricate(:post, user: moderator) }
   fab!(:group)
@@ -14,21 +14,18 @@ RSpec.describe Guardian do
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
   fab!(:plain_category) { Fabricate(:category) }
 
-  fab!(:trust_level_0) { Fabricate(:user, trust_level: 0, refresh_auto_groups: true) }
-  fab!(:trust_level_1) { Fabricate(:user, trust_level: 1, refresh_auto_groups: true) }
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2, refresh_auto_groups: true) }
-  fab!(:trust_level_3) { Fabricate(:user, trust_level: 3, refresh_auto_groups: true) }
-  fab!(:trust_level_4) { Fabricate(:user, trust_level: 4, refresh_auto_groups: true) }
+  fab!(:trust_level_0)
+  fab!(:trust_level_1)
+  fab!(:trust_level_2)
+  fab!(:trust_level_3)
+  fab!(:trust_level_4)
   fab!(:another_admin) { Fabricate(:admin) }
-  fab!(:coding_horror)
+  fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
 
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
-  before do
-    Group.refresh_automatic_groups!
-    Guardian.enable_topic_can_see_consistency_check
-  end
+  before { Guardian.enable_topic_can_see_consistency_check }
 
   after { Guardian.disable_topic_can_see_consistency_check }
 
@@ -1228,37 +1225,35 @@ RSpec.describe Guardian do
         SiteSetting.min_trust_to_create_topic = 1
         SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(
-          Guardian.new(Fabricate(:user, trust_level: 0, refresh_auto_groups: true)).can_create?(
-            Topic,
-            plain_category,
-          ),
+          Guardian.new(Fabricate(:user, trust_level: 0)).can_create?(Topic, plain_category),
         ).to be_falsey
       end
 
       it "is true if user has met or exceeded the minimum trust level" do
         SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(
-          Guardian.new(Fabricate(:user, trust_level: 1, refresh_auto_groups: true)).can_create?(
+          Guardian.new(Fabricate(:user, trust_level: TrustLevel[1])).can_create?(
             Topic,
             plain_category,
           ),
         ).to be_truthy
         expect(
-          Guardian.new(Fabricate(:user, trust_level: 2, refresh_auto_groups: true)).can_create?(
+          Guardian.new(Fabricate(:user, trust_level: TrustLevel[2])).can_create?(
             Topic,
             plain_category,
           ),
         ).to be_truthy
         expect(
-          Guardian.new(Fabricate(:admin, trust_level: 0, refresh_auto_groups: true)).can_create?(
+          Guardian.new(Fabricate(:admin, trust_level: TrustLevel[0])).can_create?(
             Topic,
             plain_category,
           ),
         ).to be_truthy
         expect(
-          Guardian.new(
-            Fabricate(:moderator, trust_level: 0, refresh_auto_groups: true),
-          ).can_create?(Topic, plain_category),
+          Guardian.new(Fabricate(:moderator, trust_level: TrustLevel[0])).can_create?(
+            Topic,
+            plain_category,
+          ),
         ).to be_truthy
       end
     end
@@ -3545,7 +3540,7 @@ RSpec.describe Guardian do
 
     context "when muter's trust level is below tl1" do
       let(:guardian) { Guardian.new(trust_level_0) }
-      let!(:trust_level_0) { Fabricate(:user, trust_level: 0) }
+      fab!(:trust_level_0)
 
       it "does not allow muting user" do
         expect(guardian.can_mute_user?(another_user)).to eq(false)
@@ -3708,7 +3703,7 @@ RSpec.describe Guardian do
     context "when tagging is enabled" do
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_level_to_tag_topics = 1
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       end
 
       context "when minimum trust level to create tags is 3" do
@@ -3739,11 +3734,19 @@ RSpec.describe Guardian do
 
         describe "can_tag_topics" do
           it "returns false if trust level is too low" do
-            expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_tag_topics?).to be_falsey
+            expect(
+              Guardian.new(
+                Fabricate(:user, trust_level: 0, refresh_auto_groups: true),
+              ).can_tag_topics?,
+            ).to be_falsey
           end
 
           it "returns true if trust level is high enough" do
-            expect(Guardian.new(Fabricate(:user, trust_level: 1)).can_tag_topics?).to be_truthy
+            expect(
+              Guardian.new(
+                Fabricate(:user, trust_level: 1, refresh_auto_groups: true),
+              ).can_tag_topics?,
+            ).to be_truthy
           end
 
           it "returns true for staff" do
@@ -4312,8 +4315,6 @@ RSpec.describe Guardian do
   end
 
   describe "#can_mention_here?" do
-    before { Group.refresh_automatic_groups! }
-
     it "returns false if disabled" do
       SiteSetting.max_here_mentioned = 0
       expect(admin.guardian.can_mention_here?).to eq(false)

@@ -143,9 +143,7 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "doesn't notify users if 'allow_uploaded_avatars' setting is disabled" do
-      user.update!(trust_level: 3)
-      Group.refresh_automatic_groups!
-      user.reload
+      user.change_trust_level!(TrustLevel[3])
 
       SiteSetting.uploaded_avatars_allowed_groups = ""
       expect(finder.check_avatar_notification).to be_blank

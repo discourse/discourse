@@ -3,7 +3,7 @@
 RSpec.describe "Chat::Thread replies_count cache accuracy" do
   include ActiveSupport::Testing::TimeHelpers
 
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:thread) { Fabricate(:chat_thread) }
 
   let(:guardian) { user.guardian }
@@ -12,7 +12,6 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
     SiteSetting.chat_enabled = true
     thread.add(user)
     thread.channel.add(user)
-    Group.refresh_automatic_groups!
   end
 
   it "keeps an accurate replies_count cache" do

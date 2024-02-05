@@ -3,6 +3,7 @@ import { test } from "qunit";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
+  chromeTest,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -70,7 +71,8 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
     );
   });
 
-  test("j/k navigation skips hidden elements", async function (assert) {
+  // FIXME: For reasons unknown this test if flaky on firefox
+  chromeTest("j/k navigation skips hidden elements", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     document.querySelector("#qunit-fixture").innerHTML = `

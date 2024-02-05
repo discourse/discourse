@@ -372,7 +372,7 @@ nl:
   too_many_mentions_newuser:
     one: "Sorry, nieuwe gebruikers kunnen slechts één andere gebruiker noemen in een bericht."
     other: "Sorry, nieuwe gebruikers kunnen maximaal %{count} gebruikers noemen in een bericht."
-  no_embedded_media_allowed_trust: "Sorry, je kunt geen media-items insluiten in een bericht."
+  no_embedded_media_allowed_group: "Sorry, je kunt geen media-items insluiten in een bericht."
   no_embedded_media_allowed: "Sorry, nieuwe gebruikers kunnen geen media-items insluiten in berichten."
   too_many_embedded_media:
     one: "Sorry, nieuwe gebruikers kunnen slechts één ingesloten media-item in een bericht plaatsen."
@@ -851,27 +851,12 @@ nl:
       windows: "Microsoft Windows"
       unknown: "onbekend besturingssysteem"
   change_email:
-    wrong_account_error: "Je bent aangemeld op het de verkeerde account. Meld je af en probeer het opnieuw."
-    confirmed: "Je e-mailadres is bijgewerkt."
-    please_continue: "Doorgaan naar %{site_name}"
     error: "Er is een fout opgetreden bij het wijzigen van je e-mailadres. Misschien is het adres al in gebruik?"
     doesnt_exist: "Dat e-mailadres is niet aan je account gekoppeld."
     error_staged: "Er is een fout opgetreden bij het wijzigen van je e-mailadres. Het adres is al in gebruik door een gefaseerde gebruiker."
     already_done: "Sorry, deze bevestigingslink is niet meer geldig. Misschien is je e-mailadres al gewijzigd?"
     confirm: "Bevestigen"
     max_secondary_emails_error: "Je hebt de maximaal toegestane limiet voor secundaire e-mailadressen bereikt."
-    authorizing_new:
-      title: "Bevestig je nieuwe e-mailadres"
-      description: "Bevestig dat je je e-mailadres wilt wijzigen naar:"
-      description_add: "Bevestig dat je een alternatief e-mailadres wilt toevoegen:"
-    authorizing_old:
-      title: "Je e-mailadres wijzigen"
-      description: "Bevestig de wijziging van je e-mailadres"
-      description_add: "Bevestig dat je een alternatief e-mailadres wilt toevoegen:"
-      old_email: "Oud e-mailadres: %{email}"
-      new_email: "Nieuw e-mailadres: %{email}"
-      almost_done_title: "Bevestig nieuw e-mailadres"
-      almost_done_description: "Er is een e-mail naar je nieuwe e-mailadres gestuurd om de wijziging te bevestigen!"
   associated_accounts:
     revoke_failed: "Intrekken van je account bij %{provider_name} is mislukt."
     connected: "(verbonden)"
@@ -1857,9 +1842,9 @@ nl:
     max_users_notified_per_group_mention: "Maximale aantal gebruikers dat een melding kan ontvangen als een groep wordt genoemd (bij bereiken van drempel worden geen meldingen gestuurd)"
     enable_mentions: "Gebruikers mogen andere gebruikers noemen."
     here_mention: "De naam die wordt gebruikt voor een @vermelding zodat gemachtigde gebruikers maximaal 'max_here_mentioned' mensen die aan de topic deelnemen op de hoogte kunnen stellen. Mag geen bestaande gebruikersnaam zijn."
-    max_here_mentioned: "Maximaal aantal genoemde personen door @hier."
-    min_trust_level_for_here_mention: "Het minimale vertrouwensniveau dat is toegestaan om @hier te vermelden."
-    here_mention_allowed_groups: "Groepen die @hier mogen vermelden."
+    max_here_mentioned: "Maximaal aantal genoemde personen door @here."
+    min_trust_level_for_here_mention: "Het minimale vertrouwensniveau dat is toegestaan om @here te vermelden."
+    here_mention_allowed_groups: "Groepen die @here mogen vermelden."
     create_thumbnails: "Miniaturen maken voor lightbox-afbeeldingen die te groot zijn om in een bericht te passen."
     email_time_window_mins: "(n) minuten wachten met het verzenden van meldingen per e-mail, zodat gebruikers de kans hebben om hun berichten te bewerken en te voltooien."
     personal_email_time_window_seconds: "(n) minuten wachten met het verzenden van meldingen per e-mail voor persoonlijke berichten, zodat gebruikers de kans hebben om hun berichten te bewerken en te voltooien."
@@ -2111,11 +2096,6 @@ nl:
     enable_inline_emoji_translation: "Schakelt vertaling voor inline emoji in (zonder voorafgaande spaties of interpunctie)"
     emoji_deny_list: "Deze emoji zijn niet beschikbaar voor gebruik in menu's of shortcodes."
     approve_post_count: "Het aantal berichten van een nieuwe of basisgebruiker dat moet worden goedgekeurd"
-    approve_unless_trust_level: "Berichten voor gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
-    approve_unless_allowed_groups: "Berichten voor gebruikers die niet tot deze groepen behoren, moeten worden goedgekeurd"
-    approve_new_topics_unless_trust_level: "Nieuwe topics voor gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
-    approve_new_topics_unless_allowed_groups: "Nieuwe topics van gebruikers die niet tot deze groepen behoren, moeten worden goedgekeurd"
-    approve_unless_staged: "Nieuwe topics en berichten voor gefaseerde gebruikers moeten worden goedgekeurd"
     notify_about_queued_posts_after: "Als er berichten zijn die meer dan dit aantal uren op beoordeling wachten, een melding naar alle moderators sturen. Stel dit in op 0 om deze meldingen uit te schakelen."
     reviewable_revision_reasons: "Lijst van redenen die kunnen worden geselecteerd bij het afwijzen van een te beoordelen bericht in de wachtrij met een revisie. 'Anders' is ook altijd beschikbaar, waarmee een aangepaste reden kan worden ingevoerd."
     auto_close_messages_post_count: "Maximale aantal toegestane berichten in een bericht voordat het automatisch wordt gesloten (0 voor uitschakelen)"
@@ -2235,7 +2215,6 @@ nl:
     use_name_for_username_suggestions: "Gebruik de volledige naam van een gebruiker bij het voorstellen van gebruikersnamen."
     suggest_weekends_in_date_pickers: "Neem weekenden (zaterdag en zondag) op in suggesties voor datumkiezers (schakel dit uit als je Discourse alleen op weekdagen gebruikt, maandag t/m vrijdag)."
     splash_screen: "Geeft een tijdelijk laadscherm weer terwijl website-items worden geladen"
-    navigation_menu: "Bepaal welk navigatiemenu u wilt gebruiken. Zijbalk- en kopnavigatie kunnen door gebruikers worden aangepast. Een legacyoptie is beschikbaar voor terugwaartse compatibiliteit."
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'EXPERIMENTEEL: schakelt een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en maak de link "Alles" ernaartoe in de zijbalk.'
@@ -4664,6 +4643,9 @@ nl:
   onebox:
     discourse:
       user_joined_community: "Lid sinds %{date}"
+    github:
+      opened: "geopend"
+      closed: "gesloten"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'

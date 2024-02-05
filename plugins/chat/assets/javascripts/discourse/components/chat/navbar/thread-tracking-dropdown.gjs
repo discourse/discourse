@@ -57,7 +57,7 @@ export default class ChatNavbarThreadTrackingDropdown extends Component {
     <ThreadTrackingDropdown
       @value={{this.threadNotificationLevel}}
       @onChange={{this.updateThreadNotificationLevel}}
-      @class={{concatClass
+      class={{concatClass
         "c-navbar__thread-tracking-dropdown"
         (if this.persistedNotificationLevel "-persisted")
       }}

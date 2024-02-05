@@ -43,7 +43,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   test("renders correct channel title", async function (assert) {
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
-    assert.dom(".chat-channel-title").hasText(this.categoryChatChannel.title);
+    assert
+      .dom(".chat-channel-name__label")
+      .hasText(this.categoryChatChannel.title);
   });
 
   test("renders correct channel metadata", async function (assert) {
@@ -53,7 +55,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
     assert
-      .dom(".chat-channel-metadata")
+      .dom(".chat-channel__metadata-date")
       .hasText(
         moment(this.categoryChatChannel.lastMessage.createdAt).format("h:mm A")
       );

@@ -538,10 +538,10 @@ Discourse::Application.routes.draw do
       )
 
       get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"
-      put "#{root_path}/confirm-old-email" => "users_email#confirm_old_email"
+      put "#{root_path}/confirm-old-email/:token" => "users_email#confirm_old_email"
 
       get "#{root_path}/confirm-new-email/:token" => "users_email#show_confirm_new_email"
-      put "#{root_path}/confirm-new-email" => "users_email#confirm_new_email"
+      put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
 
       get(
         {

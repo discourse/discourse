@@ -372,7 +372,7 @@ pt_BR:
   too_many_mentions_newuser:
     one: "Desculpe, usuários(as) novos(as) podem mencionar apenas um(a) usuário(as) em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem mencionar apenas %{count} usuários(as) em uma postagem."
-  no_embedded_media_allowed_trust: "Desculpe, não é possível incorporar itens de mídia nesta postagem."
+  no_embedded_media_allowed_group: "Desculpe, não é possível incorporar itens de mídia nesta postagem."
   no_embedded_media_allowed: "Desculpe, novos(as) usuários(as) não podem incorporar itens de mídia em postagens."
   too_many_embedded_media:
     one: "Desculpe, novos(as) usuários(as) só podem inserir um item de mídia incorporado em uma postagem."
@@ -851,27 +851,12 @@ pt_BR:
       windows: "Microsoft Windows"
       unknown: "sistema operacional desconhecido"
   change_email:
-    wrong_account_error: "Você entrou com a conta errada, saia e tente novamente."
-    confirmed: "O seu email foi atualizado."
-    please_continue: "Continuar para %{site_name}"
     error: "Ocorreu um erro ao alterar o seu endereço de email. Talvez o endereço já esteja em uso?"
     doesnt_exist: "Esse endereço de e-mail não está associado à sua conta."
     error_staged: "Ocorreu um erro ao alterar o seu endereço de e-mail. O endereço já está usado por outro(a) usuário(a) encenado(a)."
     already_done: "Desculpe, este link de confirmação não é mais válido. Talvez o seu e-mail já tenha sido alterado?"
     confirm: "Confirmar"
     max_secondary_emails_error: "Você alcançou o limite máximo de e-mails secundários."
-    authorizing_new:
-      title: "Confirme seu novo e-mail"
-      description: "Confirme que gostaria de mudar seu endereço de e-mail para:"
-      description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
-    authorizing_old:
-      title: "Troque seu endereço de e-mail"
-      description: "Confirme a alteração do seu endereço de e-mail"
-      description_add: "Confirme que você gostaria de adicionar um endereço de e-mail alternativo:"
-      old_email: "E-mail antigo: %{email}"
-      new_email: "Novo e-mail: %{email}"
-      almost_done_title: "Confirmando seu novo endereço de e-mail"
-      almost_done_description: "Enviamos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
   associated_accounts:
     revoke_failed: "Falha ao revogar sua conta com %{provider_name}."
     connected: "(conectado(a))"
@@ -2111,11 +2096,6 @@ pt_BR:
     enable_inline_emoji_translation: "Permite a tradução de emojis em linha (sem qualquer espaço ou pontuação antes)"
     emoji_deny_list: "Estes emojis não estarão disponíveis para uso nos menus ou shortcodes."
     approve_post_count: "A quantidade de postagens de um(a) usuário(a) novo(a) ou básico(a) que devem ser aprovadas"
-    approve_unless_trust_level: "Postagens de usuários(as) abaixo deste nível de confiança devem ser aprovadas"
-    approve_unless_allowed_groups: "Postagens de usuários(as) que não estejam nestes grupos devem ser aprovadas"
-    approve_new_topics_unless_trust_level: "Novos tópicos de usuários(as) abaixo deste nível de confiança devem ser aprovados."
-    approve_new_topics_unless_allowed_groups: "Novos tópicos de usuários(as) que não estejam nestes grupos devem ser aprovados"
-    approve_unless_staged: "Novos tópicos e postagens para usuários(as) encenados(as) devem ser aprovados"
     notify_about_queued_posts_after: "Se houver postagens que estão aguardando revisão por muitas horas, envie uma notificação a todos(as) os(as) moderadores(as). Defina como 0 para desativar essas notificações."
     reviewable_revision_reasons: "A lista de motivos que podem ser selecionados ao recusar uma postagem revisável na fila com uma revisão. Sempre há disponível uma opção alternativa para inserir um motivo personalizado."
     auto_close_messages_post_count: "Quantidade máxima de postagens permitidas em uma mensagem antes de ser automaticamente fechada (0 para desativar)"
@@ -2235,7 +2215,6 @@ pt_BR:
     use_name_for_username_suggestions: "Use o nome completo de um usuário ao sugerir nomes de usuário."
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
     splash_screen: "Exibe uma tela de carregamento temporária enquanto os ativos do site são carregados"
-    navigation_menu: "Determine qual menu de navegação usar. A barra lateral e a navegação no cabeçalho podem ser personalizadas pelos usuários. A opção legada está disponível para compatibilidade com versões anteriores."
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
     experimental_new_new_view_groups: 'EXPERIMENTAL: ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
@@ -4650,6 +4629,9 @@ pt_BR:
   onebox:
     discourse:
       user_joined_community: "Juntou-se em %{date}"
+    github:
+      opened: "abertos"
+      closed: "fechados"
   discourse_push_notifications:
     popup:
       mentioned: 'Você foi mencionado(a) por %{username} em "%{topic}" - %{site_title}'

@@ -26,6 +26,7 @@ import {
 import { addOnKeyUpCallback } from "discourse/components/search-menu/search-term";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { forceDropdownForMenuPanels } from "discourse/components/site-header";
+import { addTopicParticipantClassesCallback } from "discourse/components/topic-map/topic-participant";
 import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
@@ -41,12 +42,11 @@ import {
 } from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
-import { addAdminSidebarSectionLink } from "discourse/instance-initializers/admin-sidebar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
-import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
+import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
 import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
@@ -66,6 +66,7 @@ import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 import { addSearchResultsCallback } from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
+import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   addSidebarPanel,
@@ -122,7 +123,6 @@ import {
   addSearchSuggestion,
   removeDefaultQuickSearchRandomTips as removeWidgetDefaultQuickSearchRandomTips,
 } from "discourse/widgets/search-menu-results";
-import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
 import {
   changeSetting,
   createWidget,
@@ -2432,7 +2432,7 @@ class PluginApi {
    *           get text() {
    *             return "dev channel";
    *           }
-   *           get prefixValue() {
+   *           get prefixType() {
    *             return "icon";
    *           }
    *           get prefixValue() {

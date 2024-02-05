@@ -45,6 +45,12 @@
     align-items: center;
     justify-content: space-between;
 
+    .primary-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     .secondary-actions {
       display: flex;
       align-items: center;

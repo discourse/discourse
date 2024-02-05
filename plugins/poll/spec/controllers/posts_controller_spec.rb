@@ -376,7 +376,7 @@ RSpec.describe PostsController do
   end
 
   describe "regular user with insufficient trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "invalidates the post" do
       log_in_user(Fabricate(:user, trust_level: 1, refresh_auto_groups: true))
@@ -409,7 +409,7 @@ RSpec.describe PostsController do
   end
 
   describe "regular user with equal trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "validates the post" do
       log_in_user(Fabricate(:user, trust_level: 2, refresh_auto_groups: true))
@@ -424,7 +424,7 @@ RSpec.describe PostsController do
   end
 
   describe "regular user with superior trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "validates the post" do
       log_in_user(Fabricate(:user, trust_level: 3, refresh_auto_groups: true))
@@ -439,7 +439,7 @@ RSpec.describe PostsController do
   end
 
   describe "staff with insufficient trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "validates the post" do
       log_in_user(Fabricate(:user, moderator: true, trust_level: 1))
@@ -454,7 +454,7 @@ RSpec.describe PostsController do
   end
 
   describe "staff editing posts of users with insufficient trust level" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 2 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
 
     it "validates the post" do
       log_in_user(Fabricate(:user, trust_level: 1, refresh_auto_groups: true))

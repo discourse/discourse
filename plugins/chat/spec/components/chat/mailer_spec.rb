@@ -4,8 +4,15 @@ require "rails_helper"
 
 describe Chat::Mailer do
   fab!(:chatters_group) { Fabricate(:group) }
-  fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id]) }
-  fab!(:user_1) { Fabricate(:user, group_ids: [chatters_group.id], last_seen_at: 15.minutes.ago) }
+  fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true) }
+  fab!(:user_1) do
+    Fabricate(
+      :user,
+      group_ids: [chatters_group.id],
+      last_seen_at: 15.minutes.ago,
+      refresh_auto_groups: true,
+    )
+  end
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:chat_message) { Fabricate(:chat_message, user: sender, chat_channel: chat_channel) }
   fab!(:user_1_chat_channel_membership) do
@@ -17,7 +24,6 @@ describe Chat::Mailer do
     )
   end
   fab!(:private_chat_channel) do
-    Group.refresh_automatic_groups!
     result =
       Chat::CreateDirectMessageChannel.call(
         guardian: sender.guardian,

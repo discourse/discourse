@@ -172,7 +172,9 @@ class Theme < ActiveRecord::Base
       js_compiler = ThemeJavascriptCompiler.new(id, name)
       js_compiler.append_tree(all_extra_js)
       settings_hash = build_settings_hash
+
       js_compiler.prepend_settings(settings_hash) if settings_hash.present?
+
       javascript_cache || build_javascript_cache
       javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)
     else
@@ -647,14 +649,15 @@ class Theme < ActiveRecord::Base
 
   def settings
     field = settings_field
-    return [] unless field && field.error.nil?
-    settings = []
+    settings = {}
 
-    ThemeSettingsParser
-      .new(field)
-      .load do |name, default, type, opts|
-        settings << ThemeSettingsManager.create(name, default, type, self, opts)
-      end
+    if field && field.error.nil?
+      ThemeSettingsParser
+        .new(field)
+        .load do |name, default, type, opts|
+          settings[name] = ThemeSettingsManager.create(name, default, type, self, opts)
+        end
+    end
 
     settings
   end
@@ -668,7 +671,7 @@ class Theme < ActiveRecord::Base
   def cached_default_settings
     Theme.get_set_cache "default_settings_for_theme_#{self.id}" do
       settings_hash = {}
-      self.settings.each { |setting| settings_hash[setting.name] = setting.default }
+      self.settings.each { |name, setting| settings_hash[name] = setting.default }
 
       theme_uploads = build_theme_uploads_hash
       settings_hash["theme_uploads"] = theme_uploads if theme_uploads.present?
@@ -682,7 +685,7 @@ class Theme < ActiveRecord::Base
 
   def build_settings_hash
     hash = {}
-    self.settings.each { |setting| hash[setting.name] = setting.value }
+    self.settings.each { |name, setting| hash[name] = setting.value }
 
     theme_uploads = build_theme_uploads_hash
     hash["theme_uploads"] = theme_uploads if theme_uploads.present?
@@ -724,13 +727,13 @@ class Theme < ActiveRecord::Base
   #   theme.get_setting(:some_string) => "hello"
   #
   def get_setting(setting_name)
-    target_setting = settings.find { |setting| setting.name == setting_name.to_sym }
+    target_setting = settings[setting_name.to_sym]
     raise Discourse::NotFound unless target_setting
     target_setting.value
   end
 
   def update_setting(setting_name, new_value)
-    target_setting = settings.find { |setting| setting.name == setting_name }
+    target_setting = settings[setting_name.to_sym]
     raise Discourse::NotFound unless target_setting
 
     target_setting.value = new_value
@@ -879,6 +882,7 @@ class Theme < ActiveRecord::Base
       end
 
       self.reload
+      self.update_javascript_cache!
     end
 
     if start_transaction

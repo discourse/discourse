@@ -33,6 +33,7 @@ cs:
       back_to_forum: "Fórum"
       deleted_chat_username: smazáno
       dates:
+        yesterday: "Včera"
         time_tiny: "h:mm"
       all_loaded: "Zobrazení všech zpráv"
       create: "Vytvoř"
@@ -42,6 +43,7 @@ cs:
       channel_settings:
         edit: "Upravit"
         add: "přidat"
+        leave_groupchat_info: "Opuštěním tohoto skupinového chatu k němu již nebudete mít přístup a nebudete dostávat s ním spojená upozornění. Chcete-li se do něj znovu připojit, musíte být znovu pozváni některým ze členů skupinového chatu."
         join: "Přidat se ke skupině"
         leave: "Opustit skupinu"
       channel_close:
@@ -64,6 +66,7 @@ cs:
       header_indicator_preference:
         never: "Nikdy"
       flag: "Nahlášení"
+      invitation_notification: "<span>%{username}</span> <span>vás pozval/a, abyste se připojili ke kanálu chatu</span>"
       heading: "Chat"
       join: "Přidat se ke skupině"
       last_visit: "poslední návštěva"
@@ -164,7 +167,11 @@ cs:
         title: "Chat"
         export_messages:
           description: "Tímto se exportují všechny zprávy ze všech kanálů."
+      my_threads:
+        title: Moje vlákna
+        aria_label: "Přepnout na můj seznam vláken"
       direct_messages:
+        title: "Soukromé zprávy"
         new: "Vytvořit osobní chat"
       channel_list:
         title: "Kanály"
@@ -225,6 +232,8 @@ cs:
         header: "Nová zpráva"
         cancel: "Zrušit"
     notifications:
+      chat_invitation: "vás pozval/a, abyste se připojili ke kanálu chatu"
+      chat_invitation_html: "<span>%{username}</span> <span>vás pozval/a, abyste se připojili ke kanálu chatu</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
     discourse_automation:
       scriptables:

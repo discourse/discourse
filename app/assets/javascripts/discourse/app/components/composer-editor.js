@@ -10,7 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
-} from "discourse/lib/hashtag-autocomplete";
+} from "discourse/lib/hashtag-decorator";
 import {
   fetchUnseenMentions,
   linkSeenMentions,

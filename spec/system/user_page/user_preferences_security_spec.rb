@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences for Security", type: :system do
+describe "User preferences | Security", type: :system do
   fab!(:password) { "kungfukenny" }
   fab!(:email) { "email@user.com" }
   fab!(:user) { Fabricate(:user, email: email, password: password) }

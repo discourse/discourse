@@ -45,6 +45,7 @@ de:
       back_to_forum: "Forum"
       deleted_chat_username: gelöscht
       dates:
+        yesterday: "Gestern"
         time_tiny: "h:mm"
       all_loaded: "Alle Nachrichten werden angezeigt"
       already_enabled: "Der Chat ist für dieses Thema bereits aktiviert. Bitte aktualisieren."
@@ -343,6 +344,7 @@ de:
         filter: "Filter"
         cant_add_more_members: "Maximale Anzahl von Mitgliedern erreicht"
         create_new_group_chat: "Gruppenchat erstellen"
+        group_with_too_many_members: "hat zu viele Mitglieder (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Kanal bearbeiten
         input_placeholder: Einen Namen hinzufügen

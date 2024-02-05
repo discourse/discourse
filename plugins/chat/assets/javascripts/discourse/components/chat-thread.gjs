@@ -150,6 +150,7 @@ export default class ChatThread extends Component {
     this.isScrolling = false;
     this.resetIdle();
     this.atBottom = state.atBottom;
+    this.args.setFullTitle?.(state.atTop);
 
     if (state.atBottom) {
       this.fetchMoreMessages({ direction: FUTURE });

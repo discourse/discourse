@@ -30,7 +30,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
-    fab!(:current_user) { Fabricate(:user, username: "guybrush") }
+    fab!(:current_user) { Fabricate(:user, username: "guybrush", refresh_auto_groups: true) }
     fab!(:user_1) { Fabricate(:user, username: "lechuck") }
     fab!(:user_2) { Fabricate(:user, username: "elaine") }
     fab!(:user_3) { Fabricate(:user) }
@@ -40,8 +40,6 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     let(:target_usernames) { [user_1.username, user_2.username] }
     let(:name) { "" }
     let(:params) { { guardian: guardian, target_usernames: target_usernames, name: name } }
-
-    before { Group.refresh_automatic_groups! }
 
     context "when all steps pass" do
       it "sets the service result as successful" do

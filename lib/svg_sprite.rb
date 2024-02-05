@@ -71,6 +71,7 @@ module SvgSprite
         discourse-bell-slash
         discourse-bookmark-clock
         discourse-compress
+        discourse-dnd
         discourse-emojis
         discourse-expand
         discourse-other-tab

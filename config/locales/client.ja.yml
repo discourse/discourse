@@ -964,7 +964,6 @@ ja:
       said: "%{username}:"
       profile: "プロファイル"
       profile_possessive: "%{username} のプロファイル"
-      account_possessive: "のアカウント"
       mute: "ミュート"
       edit: "プロファイルを編集"
       download_archive:
@@ -1382,6 +1381,15 @@ ja:
         success_via_admin: "このアドレスにメールを送信しました。ユーザーはメールに記載の確認手順に従う必要があります。"
         success_staff: "現在のメールアドレスにメールを送信しました。確認手順に従ってください。"
         back_to_preferences: "設定に戻る"
+        confirm_success: "メールアドレスが更新されました。"
+        confirm: "確認"
+        authorizing_new:
+          description: "メールアドレスを次のように変更することを確認してください:"
+          description_add: "代替メールアドレスを追加することを確認してください:"
+        authorizing_old:
+          old_email: "古いメール: %{email}"
+          new_email: "新しいメール: %{email}"
+          confirm_success: "新しいメールアドレスに変更を確認するためのメールを送信しました！"
       change_avatar:
         title: "プロファイル画像を変更する"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a> 取得場所:"
@@ -2043,10 +2051,11 @@ ja:
       min_content_not_reached:
         other: "少なくとも %{count} 項目を選択してください。"
       components:
-        tag_drop:
-          filter_for_more: もっとフィルタ…
+        filter_for_more: もっとフィルタ…
         categories_admin_dropdown:
           title: "カテゴリの管理"
+        bulk_select_topics_dropdown:
+          title: "一括操作"
     date_time_picker:
       from: 開始
       to: 終了
@@ -2526,6 +2535,7 @@ ja:
     topics:
       new_messages_marker: "最後の訪問"
       bulk:
+        confirm: "確認"
         select_all: "すべて選択"
         clear_all: "すべてクリア"
         unlist_topics: "トピックを非表示"
@@ -2603,6 +2613,9 @@ ja:
         top: "人気のトピックは以上です。"
         bookmarks: "ブックマーク済みのトピックは以上です。"
         filter: "トピックは以上です。"
+    topic_bulk_actions:
+      close_topics:
+        name: "トピックをクローズ"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"

@@ -43,6 +43,7 @@
   .topic-header-extra {
     display: inline-flex;
     align-items: center;
+    gap: 0.5em;
   }
 
   .badge-wrapper {
@@ -128,9 +129,6 @@
   .discourse-tags {
     font-size: var(--font-down-1);
   }
-  .discourse-tags + .topic-featured-link {
-    margin-left: 0.5em;
-  }
 }
 
 .discourse-tags {
@@ -155,7 +153,6 @@ header .discourse-tag {
 
 .list-tags {
   display: inline-block;
-  margin-right: 3px;
   font-size: var(--font-down-1);
 }
 

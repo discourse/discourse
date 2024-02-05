@@ -1,9 +1,7 @@
-import Component from "@glimmer/component";
+const EmptyState = <template>
+  <div class="c-list-empty-state" ...attributes>
+    {{yield}}
+  </div>
+</template>;
 
-export default class EmptyState extends Component {
-  <template>
-    <div class="c-list-empty-state" ...attributes>
-      {{yield}}
-    </div>
-  </template>
-}
+export default EmptyState;

@@ -355,7 +355,7 @@ zh_CN:
   no_mentions_allowed_newuser: "抱歉，新用户无法提及其他用户。"
   too_many_mentions_newuser:
     other: "抱歉，新用户在一个帖子中只能提及 %{count} 个用户。"
-  no_embedded_media_allowed_trust: "抱歉，您不能在帖子中嵌入媒体条目。"
+  no_embedded_media_allowed_group: "抱歉，您不能在帖子中嵌入媒体条目。"
   no_embedded_media_allowed: "抱歉，新用户不能在帖子中嵌入媒体条目。"
   too_many_embedded_media:
     other: "抱歉，新用户在一个帖子中只能添加 %{count} 个媒体条目。"
@@ -798,27 +798,12 @@ zh_CN:
       windows: "Microsoft Windows"
       unknown: "未知操作系统"
   change_email:
-    wrong_account_error: "您登录了错误的帐户，请退出并重试。"
-    confirmed: "您的电子邮件已被更新。"
-    please_continue: "继续访问 %{site_name}"
     error: "更改您的电子邮件地址时出错。也许该地址已被使用？"
     doesnt_exist: "该电子邮件地址未与您的帐户关联。"
     error_staged: "更改您的电子邮件地址时出错。该地址已被暂存用户使用。"
     already_done: "抱歉，此确认链接不再有效。也许您的电子邮件已被更改？"
     confirm: "确认"
     max_secondary_emails_error: "您已达到允许的最大辅助电子邮件数量。"
-    authorizing_new:
-      title: "确认您的新电子邮件"
-      description: "请确认您要使用的新电子邮件地址："
-      description_add: "请确认您要添加的备用电子邮件地址："
-    authorizing_old:
-      title: "更改您的电子邮件地址"
-      description: "请确认您的电子邮件地址更改"
-      description_add: "请确认您要添加的备用电子邮件地址："
-      old_email: "旧电子邮件：%{email}"
-      new_email: "新电子邮件：%{email}"
-      almost_done_title: "确认新电子邮件地址"
-      almost_done_description: "我们已向您的新电子邮件地址发送电子邮件以确认更改！"
   associated_accounts:
     revoke_failed: "无法使用 %{provider_name} 撤消您的帐户。"
     connected: "（已连接）"
@@ -1600,6 +1585,7 @@ zh_CN:
     log_out_strict: "退出时，退出用户在所有设备上的会话"
     version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 信息中心上显示新版本消息"
     new_version_emails: "当有新版本的 Discourse 时，向 contact_email 地址发送一封电子邮件。"
+    include_in_discourse_discover: "让 CDCK 公司 (\"Discourse\") 在 <a href='https://www.discourse.org/discover'>发现页面</a> 和 Discourse 营销材料中介绍本社区。这样，你将与 Discourse 共享社区元数据和匿名使用统计数据。请注意，社区的推广由 Discourse 决定。"
     invite_expiry_days: "用户邀请密钥的有效期，以天为单位"
     invite_only: "所有新用户必须由受信任的用户或管理人员明确邀请。公共注册被禁用。"
     login_required: "需要进行身份验证才能阅读此站点上的内容，禁止匿名访问。"
@@ -1785,7 +1771,9 @@ zh_CN:
     min_trust_to_flag_posts: "举报帖子所需的最低信任级别"
     flag_post_allowed_groups: "能够举报帖子的群组。"
     min_trust_to_post_links: "在帖子中包含链接所需的最低信任级别"
+    post_links_allowed_groups: "允许在帖子中包含链接的组。"
     min_trust_to_post_embedded_media: "在帖子中嵌入媒体条目所需的最低信任级别"
+    embedded_media_post_allowed_groups: "这些组中的用户可以在帖子中嵌入媒体项目"
     min_trust_level_to_allow_profile_background: "上传个人资料背景所需的最低信任级别"
     min_trust_level_to_allow_user_card_background: "上传用户卡背景所需的最低信任级别"
     user_card_background_allowed_groups: "能够上传用户卡片背景的群组。"
@@ -2057,11 +2045,11 @@ zh_CN:
     enable_inline_emoji_translation: "启用内联表情符号的翻译（之前没有任何空格或标点符号）"
     emoji_deny_list: "这些表情符号将无法在菜单或短代码中使用。"
     approve_post_count: "新用户或基本用户必须接受审批的帖子数量"
-    approve_unless_trust_level: "低于此信任级别的用户的帖子必须接受审批"
-    approve_unless_allowed_groups: "不在这些群组中的用户的帖子必须经过批准"
-    approve_new_topics_unless_trust_level: "低于此信任级别的用户的新话题必须接受审批"
-    approve_new_topics_unless_allowed_groups: "不在这些群组中的用户的新话题必须经过批准"
-    approve_unless_staged: "暂存用户的新话题和帖子必须接受审批"
+    approve_unless_trust_level: "低于此信任级别的用户创建的帖子必须获得批准"
+    approve_unless_allowed_groups: "不属于这些群组的用户创建的帖子必须经过批准"
+    approve_new_topics_unless_trust_level: "低于此信任级别的用户创建的新主题必须获得批准"
+    approve_new_topics_unless_allowed_groups: "不属于这些群组的用户创建的新主题必须获得批准"
+    approve_unless_staged: "暂存用户创建的新主题和帖子必须获得批准"
     notify_about_queued_posts_after: "如果有帖子等待审核的小时超过此数值，向所有版主发送通知。设置为 0 将禁用这些通知。"
     reviewable_revision_reasons: "拒绝带有修订的可审查队列帖子时，可以选择的原因列表。其他也始终可用，允许输入自定义原因。"
     auto_close_messages_post_count: "消息被自动关闭前允许的最大帖子数（设置为 0 将禁用）"
@@ -2078,6 +2066,7 @@ zh_CN:
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
     returning_users_days: "在用户被视为回访之前应经过的天数。"
     review_media_unless_trust_level: "如果包含嵌入式媒体，管理人员将审核信任级别较低的用户的帖子。"
+    skip_review_media_groups: "如果帖子包含嵌入式媒体，则不在上述任何组中的用户的帖子将发送给工作人员审查。"
     blur_tl0_flagged_posts_media: "模糊被举报的帖子图片以隐藏潜在的 NSFW 内容。"
     enable_page_publishing: "允许管理人员使用自己的样式将话题发布到新 URL。"
     show_published_pages_login_required: "即使需要登录，匿名用户也可以查看已发布的页面。"
@@ -2126,6 +2115,9 @@ zh_CN:
     min_trust_level_for_user_api_key: |
       生成用户 API 密钥所需的信任级别。<br>
       <b>警告</b>：更改信任级别将阻止信任级别较低的用户通过 Discourse Hub 登录
+    user_api_key_allowed_groups: |
+      生成用户 API 密钥所需的组成员资格。<br>
+      <b>警告</b>：更改信任级别将阻止信任级别较低的用户通过 Discourse Hub 登录
     allowed_user_api_auth_redirects: "用户 API 密钥身份验证重定向的允许 URL。通配符 * 可用于匹配它的任何部分（例如 www.example.com/*）。"
     allowed_user_api_push_urls: "服务器推送到用户 API 的允许 URL"
     revoke_user_api_keys_unused_days: "用户 API 密钥最后一次使用后被自动撤销前的天数（0 表示永不撤销）"
@@ -2144,6 +2136,7 @@ zh_CN:
     tag_style: "标签徽章的视觉样式。"
     pm_tags_allowed_for_groups: "允许所包含群组的成员标记任何个人消息"
     min_trust_level_to_tag_topics: "为话题添加标签所需的最低信任级别"
+    tag_topic_allowed_groups: "允许为主题添加标签的群组。"
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
     force_lowercase_tags: "强制所有新标签完全小写。"
@@ -2181,7 +2174,7 @@ zh_CN:
     use_name_for_username_suggestions: "建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     splash_screen: "在加载站点资源时显示临时加载屏幕"
-    navigation_menu: "确定要使用的导航菜单。边栏和标题导航可由用户自定义。旧版选项用于向后兼容。"
+    navigation_menu: "确定使用哪个导航菜单。"
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
     experimental_new_new_view_groups: '实验性：启用一个新的话题列表，将未读话题和新话题合并，并使边栏中的“一切”链接指向它。'
@@ -2189,6 +2182,8 @@ zh_CN:
     experimental_topics_filter: "实验性：在 /filter 下启用实验性话题筛选路由"
     enable_experimental_lightbox: "实验性：将默认图片灯箱替换为全新设计。"
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
+    admin_sidebar_enabled_groups: "实验：为指定组的管理员界面启用侧边栏导航，取代顶层管理员导航按钮。"
+    lazy_load_categories_groups: "实验：只为这些组的用户懒加载类别信息。这可以提高有许多类别的网站的性能。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
     errors:
@@ -2267,6 +2262,11 @@ zh_CN:
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "可以发送电子邮件的最低信任级别"
+      skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4568,6 +4568,22 @@ zh_CN:
   onebox:
     discourse:
       user_joined_community: "%{date}加入"
+    gitlab:
+      truncated_file: "该文件已被截断。"
+      show_original: "显示原文"
+    github:
+      binary_file: "该文件是二进制文件。"
+      truncated_file: "该文件已被截断。"
+      show_original: "显示原文"
+      requires_iframe: "查看器需要 iframe。"
+      committed: "已提交"
+      more_than_three_files: "文件不止三个。"
+      opened: "已打开"
+      closed: "已关闭"
+      commit_by: "提交者"
+      comment_by: "评论者"
+      review_by: "审核人"
+      pr_summary: "%{commits} 提交了更改后的 %{changed_files} 文件，其中 %{additions} 为新增文件， %{deletions} 为删除文件"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} 在“%{topic}”中提及了您 - %{site_title}'

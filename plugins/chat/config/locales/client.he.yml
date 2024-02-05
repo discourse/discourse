@@ -45,6 +45,7 @@ he:
       back_to_forum: "פורום"
       deleted_chat_username: נמחק
       dates:
+        yesterday: "אתמול"
         time_tiny: "h:mm"
       all_loaded: "כל ההודעות מוצגות"
       already_enabled: "כבר מופעל צ׳אט בנושא הזה. נא לרענן."
@@ -361,6 +362,7 @@ he:
         filter: "סינון"
         cant_add_more_members: "הגעת למספר החברים המרבי"
         create_new_group_chat: "יצירת צ׳אט קבוצתי"
+        group_with_too_many_members: "יותר מדי חברים (%{membersCount})"
       channel_edit_name_slug_modal:
         title: עריכת ערוץ
         input_placeholder: הוספת שם

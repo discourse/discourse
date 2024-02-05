@@ -510,22 +510,20 @@ export default SiteHeaderComponent.extend({
       });
     }
 
-    if ("ResizeObserver" in window) {
-      this._resizeObserver = new ResizeObserver((entries) => {
-        for (let entry of entries) {
-          if (entry.contentRect) {
-            const headerTop = this.header?.offsetTop;
-            document.documentElement.style.setProperty(
-              "--header-top",
-              `${headerTop}px`
-            );
-            this.updateHeaderOffset();
-          }
+    this._resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        if (entry.contentRect) {
+          const headerTop = this.header?.offsetTop;
+          document.documentElement.style.setProperty(
+            "--header-top",
+            `${headerTop}px`
+          );
+          this.updateHeaderOffset();
         }
-      });
+      }
+    });
 
-      this._resizeObserver.observe(this.headerWrap);
-    }
+    this._resizeObserver.observe(this.headerWrap);
 
     this._swipeEvents = new SwipeEvents(this.element);
     if (this.site.mobileView) {

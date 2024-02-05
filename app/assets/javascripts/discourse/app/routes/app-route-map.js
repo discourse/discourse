@@ -105,6 +105,8 @@ export default function () {
     this.route("resent");
     this.route("edit-email");
   });
+  this.route("confirm-new-email", { path: "/u/confirm-new-email/:token" });
+  this.route("confirm-old-email", { path: "/u/confirm-old-email/:token" });
   this.route(
     "user",
     { path: "/u/:username", resetNamespace: true },

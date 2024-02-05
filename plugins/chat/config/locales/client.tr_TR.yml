@@ -45,6 +45,7 @@ tr_TR:
       back_to_forum: "Forum"
       deleted_chat_username: silindi
       dates:
+        yesterday: "Dün"
         time_tiny: "h:mm"
       all_loaded: "Tüm mesajlar gösteriliyor"
       already_enabled: "Bu konuda sohbet zaten etkin. Lütfen yenileyin."
@@ -151,7 +152,7 @@ tr_TR:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
-        channel_wide_mentions_disallowed: "Bu kanalda @here ve @all mentionları devre dışı."
+        channel_wide_mentions_disallowed: "Bu kanalda @here ve @all bahsetmeleri devre dışı."
         groups:
           header:
             some: "Bazı kullanıcılara bildirim gönderilmeyecek"

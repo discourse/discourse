@@ -964,7 +964,7 @@ zh_CN:
       said: "%{username}："
       profile: "个人资料"
       profile_possessive: "%{username} 的个人资料"
-      account_possessive: "的帐户"
+      account_possessive: "%{name} 的账户"
       mute: "免打扰"
       edit: "编辑偏好设置"
       download_archive:
@@ -1382,6 +1382,15 @@ zh_CN:
         success_via_admin: "我们已向该地址发送一封电子邮件。用户需要按照电子邮件中的确认说明进行操作。"
         success_staff: "我们已向您当前的地址发送一封电子邮件。请按照确认说明进行操作。"
         back_to_preferences: "返回偏好设置"
+        confirm_success: "您的电子邮件已被更新。"
+        confirm: "确认"
+        authorizing_new:
+          description: "请确认您要使用的新电子邮件地址："
+          description_add: "请确认您要添加的备用电子邮件地址："
+        authorizing_old:
+          old_email: "旧电子邮件：%{email}"
+          new_email: "新电子邮件：%{email}"
+          confirm_success: "我们已向您的新电子邮件地址发送电子邮件以确认更改！"
       change_avatar:
         title: "更改个人资料照片"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>，基于"
@@ -1823,7 +1832,7 @@ zh_CN:
       refresh_page: "刷新页面"
     summary:
       in_progress: "使用 AI 总结话题"
-      summarized_on: "已在 %{date}使用 AI 总结"
+      summarized_on: "在 %{date}使用 AI 总结"
       model_used: "使用的 AI：%{model}"
       outdated: "摘要已过时"
       outdated_posts:
@@ -2043,10 +2052,11 @@ zh_CN:
       min_content_not_reached:
         other: "至少选择 %{count} 个条目。"
       components:
-        tag_drop:
-          filter_for_more: 筛选更多…
+        filter_for_more: 筛选更多…
         categories_admin_dropdown:
           title: "管理类别"
+        bulk_select_topics_dropdown:
+          title: "批量操作"
     date_time_picker:
       from: 从
       to: 至
@@ -2526,6 +2536,7 @@ zh_CN:
     topics:
       new_messages_marker: "上次访问"
       bulk:
+        confirm: "确认"
         select_all: "全选"
         clear_all: "全部清除"
         unlist_topics: "取消公开话题"
@@ -2576,6 +2587,7 @@ zh_CN:
           other: "所有标签将从 <b>%{count}</b> 个话题中移除。确定吗？"
         progress:
           other: "进度：<strong>%{count}</strong> 个话题"
+        silent: "静默执行此操作。"
       none:
         unread: "您没有未读话题。"
         unseen: "您没有未读话题。"
@@ -2586,6 +2598,7 @@ zh_CN:
         bookmarks: "您还没有将任何话题加入书签。"
         category: "没有%{category}话题。"
         top: "没有热门话题。"
+        hot: "没有热门话题了。"
         filter: "没有话题。"
         educate:
           new: '<p>您的新话题将显示在这里。默认情况下，如果是在过去 2 天内创建的，话题会被视为新话题，还会显示 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示器。</p><p>访问您的<a href="%{userPrefsUrl}">偏好设置</a>可以更改此设置。</p>'
@@ -2601,8 +2614,15 @@ zh_CN:
         category: "没有更多%{category}话题了。"
         tag: "没有更多%{tag}话题了。"
         top: "没有更多热门话题了。"
+        hot: "没有更多热门话题了。"
         bookmarks: "没有更多已加入书签的话题了。"
         filter: "没有更多话题了。"
+    topic_bulk_actions:
+      close_topics:
+        name: "关闭话题"
+      update_category:
+        name: "更新类别"
+        description: "为所选主题选择新类别"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -3549,6 +3569,10 @@ zh_CN:
         title: "未读"
         lower_title: "未读"
         help: "新话题和您当前正在关注或跟踪，具有未读帖子的话题"
+      hot:
+        title: "热门"
+        lower_title: "热门"
+        help: "最近热门话题"
       new:
         lower_title_with_count:
           other: "%{count} 新"
@@ -3875,7 +3899,7 @@ zh_CN:
       approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "嘿，您应该加入此论坛！"
       custom_message_template_topic: "嘿，我想您可能会喜欢此话题！"
-    forced_anonymous: "由于负载过大，这会暂时向所有人显示，因此退出登录的用户会看到它。"
+    forced_anonymous: "由于负载过大，暂时向所有人显示退出登录的用户可以看到的内容。"
     forced_anonymous_login_required: "该站点正处于极端负载状态，当前无法加载，请在几分钟后再试。"
     footer_nav:
       back: "返回"

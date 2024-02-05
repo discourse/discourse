@@ -1,4 +1,4 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
@@ -214,9 +214,13 @@ const Topic = RestModel.extend({
     return { type: "topic", id };
   },
 
-  @discourseComputed("category_id")
-  category() {
+  @computed("category_id")
+  get category() {
     return Category.findById(this.category_id);
+  },
+
+  set category(newCategory) {
+    this.set("category_id", newCategory?.id);
   },
 
   @discourseComputed("url")
@@ -802,12 +806,18 @@ Topic.reopenClass({
     return promise;
   },
 
-  bulkOperation(topics, operation, tracked) {
+  bulkOperation(topics, operation, options, tracked) {
     const data = {
       topic_ids: topics.mapBy("id"),
       operation,
       tracked,
     };
+
+    if (options) {
+      if (options.select) {
+        data.silent = true;
+      }
+    }
 
     return ajax("/topics/bulk", {
       type: "PUT",

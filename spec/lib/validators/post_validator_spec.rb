@@ -184,42 +184,44 @@ RSpec.describe PostValidator do
   end
 
   describe "too_many_embedded_media" do
+    fab!(:new_user) { Fabricate(:newuser, refresh_auto_groups: true) }
+
     before do
-      SiteSetting.min_trust_to_post_embedded_media = 0
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.newuser_max_embedded_media = 2
     end
 
     it "should be invalid when new user exceeds max mentions limit" do
-      post.acting_user = build(:newuser)
+      post.acting_user = new_user
       post.expects(:embedded_media_count).returns(3)
       validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be > 0
     end
 
     it "should be valid when new user does not exceed max mentions limit" do
-      post.acting_user = build(:newuser)
+      post.acting_user = new_user
       post.expects(:embedded_media_count).returns(2)
       validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be(0)
     end
 
     it "should be invalid when user trust level is not sufficient" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post.acting_user = build(:leader)
+      SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+      post.acting_user = Fabricate(:leader, groups: [])
       post.expects(:embedded_media_count).returns(2)
       validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be > 0
     end
 
     it "should be valid for moderator in all cases" do
-      post.acting_user = build(:moderator)
+      post.acting_user = Fabricate(:moderator)
       post.expects(:embedded_media_count).never
       validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be(0)
     end
 
     it "should be valid for admin in all cases" do
-      post.acting_user = build(:admin)
+      post.acting_user = Fabricate(:admin)
       post.expects(:embedded_media_count).never
       validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be(0)

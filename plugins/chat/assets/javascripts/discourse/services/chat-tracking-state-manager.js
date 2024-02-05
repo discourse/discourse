@@ -47,40 +47,36 @@ export default class ChatTrackingStateManager extends Service {
     }, 0);
   }
 
+  get directMessageUnreadCount() {
+    return this.#directMessageChannels.reduce((unreadCount, channel) => {
+      return unreadCount + channel.tracking.unreadCount;
+    }, 0);
+  }
+
+  get publicChannelMentionCount() {
+    return this.#publicChannels.reduce((mentionCount, channel) => {
+      return mentionCount + channel.tracking.mentionCount;
+    }, 0);
+  }
+
+  get directMessageMentionCount() {
+    return this.#directMessageChannels.reduce((dmMentionCount, channel) => {
+      return dmMentionCount + channel.tracking.mentionCount;
+    }, 0);
+  }
+
   get allChannelMentionCount() {
-    let totalPublicMentions = this.#publicChannels.reduce(
-      (channelMentionCount, channel) => {
-        return channelMentionCount + channel.tracking.mentionCount;
-      },
-      0
-    );
-
-    let totalPrivateMentions = this.#directMessageChannels.reduce(
-      (dmMentionCount, channel) => {
-        return dmMentionCount + channel.tracking.mentionCount;
-      },
-      0
-    );
-
-    return totalPublicMentions + totalPrivateMentions;
+    return this.publicChannelMentionCount + this.directMessageMentionCount;
   }
 
   get allChannelUrgentCount() {
-    let publicChannelMentionCount = this.#publicChannels.reduce(
-      (mentionCount, channel) => {
-        return mentionCount + channel.tracking.mentionCount;
-      },
-      0
-    );
+    return this.publicChannelMentionCount + this.directMessageUnreadCount;
+  }
 
-    let dmChannelUnreadCount = this.#directMessageChannels.reduce(
-      (unreadCount, channel) => {
-        return unreadCount + channel.tracking.unreadCount;
-      },
-      0
+  get hasUnreadThreads() {
+    return this.#publicChannels.some(
+      (channel) => channel.unreadThreadsCount > 0
     );
-
-    return publicChannelMentionCount + dmChannelUnreadCount;
   }
 
   willDestroy() {

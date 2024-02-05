@@ -463,8 +463,6 @@ ro:
     success: "Ți-ai schimbat cu succes parola și acum ești autentificat."
     success_unapproved: "Ți-ai schimbat cu succes parola."
   change_email:
-    confirmed: "Emailul tău a fost actualizat."
-    please_continue: "Continuă la %{site_name}"
     error: "A apărut o eroare la schimbarea adresei de email. Poate adresa e deja folosită?"
     error_staged: "A apărut o eroare la schimbarea adresei tale de email. Adresa este deja folosită de un utilizator în așteptare."
     already_done: "Ne pare rău, dar acest link de confirmare nu mai este valid. Poate că emailul tău a fost deja schimbat?"
@@ -1110,10 +1108,6 @@ ro:
     enable_emoji: "Activează emoji"
     emoji_set: "Cum ți-ar placea să fie emoji tăi?"
     approve_post_count: "Numărul de postări de la un utilizator simplu trebuie să fie aprobat"
-    approve_unless_trust_level: "Postările utilizatorilor care au un nivel de încredere mai mic decât acesta trebuie să fie aprobate."
-    approve_unless_allowed_groups: "Mesajele pentru utilizatorii care nu fac parte din aceste grupuri trebuie să fie aprobate."
-    approve_new_topics_unless_trust_level: "Crearea de subiecte noi pentru utilizatorii care se află sub acest nivel de încredere, trebuie aprobată"
-    approve_new_topics_unless_allowed_groups: "Subiectele noi pentru utilizatorii care nu fac parte din aceste grupuri trebuie să fie aprobate."
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "
     auto_close_topics_post_count: "Numărul maxim de postări permise într-un subiect înainte ca acesta să fie închis automat (0 pentru dezactivare)"
     code_formatting_style: "Butonul Cod din cadrul editorului va fi setat cu opțiunea implicită pe acest stil de formatare cod "
@@ -1996,6 +1990,9 @@ ro:
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."
       finished:
         title: "Discourse-ul tău e gata!"
+  onebox:
+    github:
+      closed: "închis"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te-a menționat în discuția "%{topic}" - %{site_title}'

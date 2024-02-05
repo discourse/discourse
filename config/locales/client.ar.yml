@@ -1249,7 +1249,7 @@ ar:
       said: "%{username}:"
       profile: "الملف الشخصي"
       profile_possessive: "الملف الشخصي لـ %{username}"
-      account_possessive: "حساب %@"
+      account_possessive: "حساب %{name}"
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive:
@@ -1749,6 +1749,15 @@ ar:
         success_via_admin: "لقد أرسلنا رسالة إلكترونية إلى هذا العنوان. سيحتاج المستخدم إلى اتباع تعليمات التأكيد الواردة في رسالة البريد الإلكتروني."
         success_staff: "لقد أرسلنا رسالة إلكترونية إلى عنوانك الحالي. يُرجى اتباع تعليمات التأكيد."
         back_to_preferences: "العودة إلى التفضيلات"
+        confirm_success: "تم تحديث بريدك الإلكتروني."
+        confirm: "تأكيد"
+        authorizing_new:
+          description: "يُرجى تأكيد رغبتك في تغيير عنوان بريدك الإلكتروني إلى:"
+          description_add: "يُرجى تأكيد رغبتك في إضافة عنوان بريد إلكتروني بديل:"
+        authorizing_old:
+          old_email: "البريد الإلكتروني القديم: %{email}"
+          new_email: "البريد الإلكتروني الجديد: %{email}"
+          confirm_success: "لقد أرسلنا رسالة إلكترونية إلى عنوان بريدك الإلكتروني الجديد لتأكيد التغيير!"
       change_avatar:
         title: "تغيير صورة ملفك الشخصي"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>، بناءً على"
@@ -2495,10 +2504,11 @@ ar:
         many: "حدِّد %{count} عنصرًا على الأقل."
         other: "حدِّد %{count} عنصر على الأقل."
       components:
-        tag_drop:
-          filter_for_more: التصفية للمزيد…
+        filter_for_more: التصفية للمزيد…
         categories_admin_dropdown:
           title: "إدارة الفئات"
+        bulk_select_topics_dropdown:
+          title: "الإجراءات الجماعية"
     date_time_picker:
       from: من
       to: إلى
@@ -3128,6 +3138,7 @@ ar:
     topics:
       new_messages_marker: "آخر زيارة"
       bulk:
+        confirm: "تأكيد"
         select_all: "تحديد الكل"
         clear_all: "مسح الكل"
         unlist_topics: "إلغاء إدراج الموضوعات"
@@ -3218,6 +3229,7 @@ ar:
           few: "التقدُّم: <strong>%{count}</strong> موضوعات"
           many: "التقدُّم: <strong>%{count}</strong> موضوعًا"
           other: "التقدُّم: <strong>%{count}</strong> موضوع"
+        silent: "تنفيذ هذا الإجراء بصمت."
       none:
         unread: "ليس لديك أي موضوع غير مقروء."
         unseen: "ليس لديك موضوعات غير مقروءة."
@@ -3228,6 +3240,7 @@ ar:
         bookmarks: "لم تضع إشارة مرجعية على أي موضوع بعد."
         category: "لا توجد موضوعات في الفئة %{category}."
         top: "لا توجد موضوعات في الأكثر نشاطًا."
+        hot: "لا توجد مواضيع ساخنة."
         filter: "لا توجد موضوعات."
         educate:
           new: '<p>ستظهر موضوعاتك الجديدة هنا. تُعتبَر الموضوعات جديدة بشكلٍ افتراضي وستعرض مؤشر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> إذا كان قد تم إنشاؤها في آخر يومين.</p><p>يمكنك الانتقال إلى <a href="%{userPrefsUrl}">تفضيلاتك</a> لتغيير ذلك.</p>'
@@ -3243,8 +3256,15 @@ ar:
         category: "لا يوجد المزيد من الموضوعات في الفئة %{category}."
         tag: "لا يوجد المزيد من الوضوعات التي تحمل الوسم %{tag}."
         top: "لا يوجد المزيد من الموضوعات الأكثر نشاطًا."
+        hot: "لا يوجد المزيد من المواضيع الساخنة."
         bookmarks: "لا يوجد المزيد من الموضوعات ذات الإشارات المرجعية."
         filter: "لا توجد موضوعات أخرى."
+    topic_bulk_actions:
+      close_topics:
+        name: "إغلاق الموضوعات"
+      update_category:
+        name: "تحديث الفئة"
+        description: "اختر الفئة الجديدة للموضوعات المحددة"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -3780,6 +3800,8 @@ ar:
       quote_reply_shortcut: "اقتباس (أو اضغط على q)"
       quote_edit: "تعديل"
       quote_edit_shortcut: "تعديل (أو اضغط على e)"
+      quote_copy: "انسخ الاقتباس"
+      quote_copied_to_clibboard: "نسخت الاقتباس إلى الحافظة"
       quote_share: "مشاركة"
       edit_reason: "السبب: "
       post_number: "المنشور %{number}"
@@ -4460,6 +4482,10 @@ ar:
         title: "غير مقروءة"
         lower_title: "غير مقروءة"
         help: "الموضوعات الجديدة والموضوعات التي تراقبها حاليًا أو تتتبَّعها وبها منشورات غير مقروءة"
+      hot:
+        title: "ساخن"
+        lower_title: "ساخن"
+        help: "أهم المواضيع الأخيرة"
       new:
         lower_title_with_count:
           zero: "%{count} جديد"

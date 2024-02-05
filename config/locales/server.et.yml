@@ -415,8 +415,6 @@ et:
       windows: "Microsoft Windows"
       unknown: "tundmatu operatsioonisüsteem"
   change_email:
-    confirmed: "Sinu meiliaadress on uuendatud."
-    please_continue: "Edasi saidile %{site_name}"
     error: "Sinu meiliaadressi muutmisel esines tõrge. Äkki on see juba kasutuses?"
     error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."
     already_done: "Vabandust, see kinnitamise link ei kehti enam. Äkki on teie meiliaadress juba muudetud?"
@@ -1028,6 +1026,9 @@ et:
         title: "Kutsu meeskonda"
       finished:
         title: "Sinu Discourse on valmis!"
+  onebox:
+    github:
+      closed: "suletud"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'

@@ -78,6 +78,11 @@ export default class ChatRoutesChannelInfo extends Component {
                   @replace={{true}}
                 >
                   {{this.membersLabel}}
+                  {{#if @channel.isCategoryChannel}}
+                    <span
+                      class="c-channel-info__member-count"
+                    >({{@channel.membershipsCount}})</span>
+                  {{/if}}
                 </LinkTo>
               </li>
             </ul>

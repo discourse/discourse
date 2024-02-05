@@ -308,7 +308,7 @@ da:
   too_many_mentions_newuser:
     one: "Beklager, nye brugere kan kun nævne en bruger i et indlæg."
     other: "Beklager, nye brugere kan kun nævne %{count} brugere i et indlæg."
-  no_embedded_media_allowed_trust: "Beklager, du kan ikke integrere medieelementer i et indlæg."
+  no_embedded_media_allowed_group: "Beklager, du kan ikke integrere medieelementer i et indlæg."
   no_embedded_media_allowed: "Beklager, men nye brugere kan ikke integrere medieelementer i indlæg."
   too_many_embedded_media:
     one: "Beklager, nye brugere kan kun indsætte ét indlejret medieelement i et indlæg."
@@ -715,27 +715,12 @@ da:
       windows: "Microsoft Windows"
       unknown: "ukendt operativsystem"
   change_email:
-    wrong_account_error: "Du er logget ind på den forkerte konto, log venligst ud og prøv igen."
-    confirmed: "Din e-mail-adresse er blevet opdateret."
-    please_continue: "Fortsæt til %{site_name}"
     error: "Der opstod en fejl under ændringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     doesnt_exist: "Denne e-mailadresse er ikke knyttet til din konto."
     error_staged: "Der opstod en fejl under opdateringen af din e-mail-adresse. Måske er adressen allerede i brug?"
     already_done: "Beklager, dette bekræftelseslink er ikke længere gyldigt. Måske er din email adresse allerede blevet ændret?"
     confirm: "Bekræft"
     max_secondary_emails_error: "Du har nået den maksimalt tilladte grænse for sekundære e-mails."
-    authorizing_new:
-      title: "Bekræft din nye e-mail"
-      description: "Bekræft venligst, at du gerne vil have din e-mailadresse ændret til:"
-      description_add: "Bekræft venligst, at du gerne vil tilføje en alternativ e-mailadresse:"
-    authorizing_old:
-      title: "Skift din e-mailadresse"
-      description: "Bekræft venligst din e-mail adresse ændring"
-      description_add: "Bekræft venligst, at du gerne vil tilføje en alternativ e-mailadresse:"
-      old_email: "Gammel e-mail: %{email}"
-      new_email: "Ny e-mail: %{email}"
-      almost_done_title: "Bekræfter ny e-mailadresse"
-      almost_done_description: "Vi har sendt en e-mail til din nye e-mail-adresse for at bekræfte ændringen!"
   associated_accounts:
     revoke_failed: "Det lykkedes ikke at tilbagekalde din konto med %{provider_name}."
     connected: "(tilsluttet)"
@@ -3240,6 +3225,9 @@ da:
         title: "Discourse er gjort klar til dig!"
   search_logs:
     graph_title: "Antal søgninger"
+  onebox:
+    github:
+      closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'

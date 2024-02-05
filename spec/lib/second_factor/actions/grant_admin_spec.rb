@@ -22,7 +22,7 @@ RSpec.describe SecondFactor::Actions::GrantAdmin do
 
   def create_instance(user, request = nil)
     request ||= create_request
-    SecondFactor::Actions::GrantAdmin.new(Guardian.new(user), request)
+    SecondFactor::Actions::GrantAdmin.new(Guardian.new(user), request, target_user: user)
   end
 
   describe "#no_second_factors_enabled!" do

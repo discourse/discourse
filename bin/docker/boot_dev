@@ -89,7 +89,15 @@ done
 # 9292 unicorn
 # 9405 prometheus exporter
 
-docker pull discourse/discourse_dev:release
+if [ "$(uname -m)" == "aarch64" ]; then
+    # NOTE: we currently (2024-01-17) don’t build an aarch64 image, so one must be pre-built locally.
+    # Avoiding `docker pull` so we don't override that local image.
+    ENV_ARGS+=" -e SE_MANAGER_PATH=/usr/local/bin/selenium-manager "
+else
+    # x86_64 environment - pull the latest image from dockerhub
+    docker pull discourse/discourse_dev:release
+fi
+
 docker run -d \
     -p $local_publish:8025:8025 \
     -p $local_publish:3000:3000 \

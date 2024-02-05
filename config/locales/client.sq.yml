@@ -656,6 +656,7 @@ sq:
         error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga dikush tjetër?"
         success: "Ju dërguam një email tek adresa që shkruajtët. Ju ftojmë të ndiqni udhëzimet e konfirmimit."
         success_staff: "Ju dërguam një email tek adresa që shkruajtët. Ju ftojmë të ndiqni udhëzimet e konfirmimit."
+        confirm_success: "Adresa e postës u azhornua."
       change_avatar:
         title: "Ndrysho fotografinë e profilit"
         letter_based: "Foto e profilit e caktuar nga sistemi"
@@ -989,6 +990,9 @@ sq:
       alt: "Alt"
     select_kit:
       delete_item: "Fshi %{name}"
+      components:
+        bulk_select_topics_dropdown:
+          title: "Veprime në masë"
     date_time_picker:
       from: Nga
       to: Për
@@ -1170,6 +1174,9 @@ sq:
         tag: "Nuk ka më tema nga %{tag}."
         top: "Nuk ka më tema popullore."
         bookmarks: "Nuk ka më tema të preferuara."
+    topic_bulk_actions:
+      close_topics:
+        name: "Mbyll temat"
     topic:
       filter_to:
         one: "%{count} postim në temë"

@@ -372,7 +372,7 @@ es:
   too_many_mentions_newuser:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en una publicación."
     other: "Lo sentimos, los usuarios nuevos solo pueden mencionar a %{count} usuarios en una publicación."
-  no_embedded_media_allowed_trust: "Lo sentimos, no puedes insertar elementos multimedia en una publicación."
+  no_embedded_media_allowed_group: "Lo sentimos, no puedes insertar elementos multimedia en una publicación."
   no_embedded_media_allowed: "Lo sentimos, los nuevos usuarios no pueden insertar elementos multimedia en las publicaciones."
   too_many_embedded_media:
     one: "Lo sentimos, los nuevos usuarios solo pueden poner un elemento multimedia incrustado en una publicación."
@@ -851,27 +851,12 @@ es:
       windows: "Microsoft Windows"
       unknown: "sistema operativo desconocido"
   change_email:
-    wrong_account_error: "Iniciaste sesión en la cuenta equivocada. Cierra sesión e inténtalo de nuevo."
-    confirmed: "Se actualizó tu correo electrónico."
-    please_continue: "Continuar a %{site_name}"
     error: "Hubo un problema al cambiar tu dirección de correo electrónico. ¿Quizás la dirección ya está en uso?"
     doesnt_exist: "Ese correo electrónico no está asociado a tu cuenta."
     error_staged: "Se produjo un error al cambiar tu correo electrónico. La dirección ya está en uso por un usuario temporal."
     already_done: "Lo sentimos, este enlace de confirmación ya no es válido. ¿Quizá tu correo electrónico ya fue cambiado?"
     confirm: "Confirmar"
     max_secondary_emails_error: "Has llegado al límite de cuentas de correo electrónico secundarias."
-    authorizing_new:
-      title: "Confirmar tu nuevo correo electrónico"
-      description: "Confirma que quieres cambiar tu dirección de correo electrónico a:"
-      description_add: "Confirma que quieres añadir una dirección de correo electrónico alternativa:"
-    authorizing_old:
-      title: "Cambiar tu dirección de correo electrónico"
-      description: "Confirma el cambio de tu dirección de correo electrónico"
-      description_add: "Confirma que quieres añadir una dirección de correo electrónico alternativa:"
-      old_email: "Correo electrónico antiguo: %{email}"
-      new_email: "Correo electrónico nuevo: %{email}"
-      almost_done_title: "Confirmando la nueva dirección de correo electrónico"
-      almost_done_description: "¡Enviamos un correo electrónico a tu nueva dirección de correo electrónico para confirmar el cambio!"
   associated_accounts:
     revoke_failed: "No pudo revocar tu cuenta con %{provider_name}."
     connected: "(conectados)"
@@ -2110,11 +2095,6 @@ es:
     enable_inline_emoji_translation: "Activa la traducción de emojis en línea (sin ningún espacio ni puntuación antes)"
     emoji_deny_list: "Estos emoji no estarán disponibles para su uso en menús o shortcodes."
     approve_post_count: "La cantidad de publicaciones de usuarios nuevos o de nivel básico que deben ser aprobadas"
-    approve_unless_trust_level: "Las publicaciones de usuarios con un nivel de confianza inferior a este deberán ser aprobadas"
-    approve_unless_allowed_groups: "Las publicaciones de usuarios que no pertenezcan a estos grupos deben ser aprobadas."
-    approve_new_topics_unless_trust_level: "Los temas nuevos de usuarios por debajo de este nivel de confianza deben ser aprobados"
-    approve_new_topics_unless_allowed_groups: "Los temas nuevos para usuarios que no pertenezcan a estos grupos deben ser aprobados"
-    approve_unless_staged: "Los temas y las publicaciones nuevas de usuarios temporales deben ser aprobadas"
     notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, enviar una notificación a todos los moderadores. Establece el valor en 0 para desactivar estas notificaciones."
     reviewable_revision_reasons: "Lista de razones que pueden seleccionarse al rechazar una publicación en cola revisable con una revisión. También está siempre disponible Other, que permite introducir un motivo personalizado."
     auto_close_messages_post_count: "Número máximo de publicaciones permitidas en un mensaje antes de que se cierre automáticamente (0 para desactivar)"
@@ -2234,7 +2214,6 @@ es:
     use_name_for_username_suggestions: "Usar el nombre completo para sugerir nombres de usuario"
     suggest_weekends_in_date_pickers: "Incluir fines de semana (sábados y domingos) en las sugerencias de los selectores de fecha (desactiva esto si solo usas Discourse de lunes a viernes)"
     splash_screen: "Muestra una pantalla de carga temporal mientras los archivos de la página se cargan"
-    navigation_menu: "Determina qué menú de navegación utilizar. La barra lateral y la navegación del encabezado son personalizables por los usuarios. La opción heredada está disponible para compatibilidad con versiones anteriores."
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'EXPERIMENTAL: Habilita una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
@@ -4656,6 +4635,9 @@ es:
   onebox:
     discourse:
       user_joined_community: "Se unió el %{date}"
+    github:
+      opened: "abierto"
+      closed: "cerrado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te mencionó en «%{topic}» - %{site_title}'

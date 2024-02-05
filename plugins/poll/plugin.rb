@@ -206,6 +206,10 @@ after_initialize do
       end
   end
 
+  add_to_serializer(:current_user, :can_create_poll) do
+    scope.user&.staff? || scope.user&.in_any_groups?(SiteSetting.poll_create_allowed_groups_map)
+  end
+
   add_to_class(PostSerializer, :preloaded_polls) do
     @preloaded_polls ||=
       if @topic_view.present?

@@ -1021,7 +1021,7 @@ sv:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}:s profil"
-      account_possessive: ":s konto"
+      account_possessive: "%{name}:s konto"
       mute: "Tysta"
       edit: "Redigera inställningar"
       download_archive:
@@ -1457,6 +1457,15 @@ sv:
         success_via_admin: "Vi har skickat e-post till den adressen. Var god följ bekräftelseinstruktionerna."
         success_staff: "Vi har skickat e-post till din nuvarande adress. Vänligen följ instruktionerna för konfirmering."
         back_to_preferences: "Tillbaka till inställningarna"
+        confirm_success: "Din e-postadress har uppdaterats."
+        confirm: "Bekräfta"
+        authorizing_new:
+          description: "Bekräfta att du önskar ändra din e-postadress till:"
+          description_add: "Bekräfta att du önskar lägga till en alternativ e-postadress:"
+        authorizing_old:
+          old_email: "Gammal e-postadress: %{email}"
+          new_email: "Ny e-postadress: %{email}"
+          confirm_success: "Vi har skickat e-post till din nya e-postadress för att bekräfta ändringen!"
       change_avatar:
         title: "Ändra din profilbild"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, baserat på"
@@ -2135,10 +2144,11 @@ sv:
         one: "Välj minst %{count} föremål."
         other: "Välj minst %{count} föremål."
       components:
-        tag_drop:
-          filter_for_more: Filtrera för mer…
+        filter_for_more: Filtrera för mer…
         categories_admin_dropdown:
           title: "Hantera kategorier"
+        bulk_select_topics_dropdown:
+          title: "Massändringar"
     date_time_picker:
       from: Från
       to: Till
@@ -2648,6 +2658,7 @@ sv:
     topics:
       new_messages_marker: "senaste besök"
       bulk:
+        confirm: "Bekräfta"
         select_all: "Välj alla"
         clear_all: "Rensa alla"
         unlist_topics: "Avlista ämnen"
@@ -2706,6 +2717,7 @@ sv:
         progress:
           one: "Förlopp: <strong>%{count}</strong> ämne"
           other: "Förlopp: <strong>%{count}</strong> ämnen"
+        silent: "Utför denna åtgärd tyst."
       none:
         unread: "Du har inga olästa ämnen."
         unseen: "Du har inga osedda ämnen."
@@ -2716,6 +2728,7 @@ sv:
         bookmarks: "Du har inga bokmärkta ämnen ännu."
         category: "Det finns inga ämnen i %{category}."
         top: "Det finns inga toppämnen."
+        hot: "Det finns inga heta ämnen."
         filter: "Det finns inga ämnen."
         educate:
           new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
@@ -2731,8 +2744,15 @@ sv:
         category: "Det finns inga fler ämnen i %{category}."
         tag: "Det finns inga fler %{tag}-ämnen."
         top: "Det finns inga fler toppämnen."
+        hot: "Det finns inte fler heta ämnen."
         bookmarks: "Inga fler bokmärkta ämnen hittades."
         filter: "Det finns inga fler ämnen."
+    topic_bulk_actions:
+      close_topics:
+        name: "Stäng ämnen"
+      update_category:
+        name: "Uppdatera kategori"
+        description: "Välj den nya kategorin för de valda ämnena"
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"
@@ -3734,6 +3754,10 @@ sv:
         title: "Osedda"
         lower_title: "osedda"
         help: "nya ämnen och ämnen som du bevakar eller följer med olästa inlägg"
+      hot:
+        title: "Hett"
+        lower_title: "hett"
+        help: "de senaste ämnena"
       new:
         lower_title_with_count:
           one: "%{count} ny"
@@ -6149,6 +6173,7 @@ sv:
       finish: "Avsluta konfigureringen"
       back: "Tillbaka"
       next: "Nästa"
+      configure_more: "Konfigurera fler…"
       step-text: "Steg"
       step: "%{current} av %{total}"
       upload: "Ladda upp fil"

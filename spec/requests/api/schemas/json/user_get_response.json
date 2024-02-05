@@ -324,6 +324,9 @@
             "null"
           ]
         },
+        "user_passkeys": {
+          "type": "array"
+        },
         "sidebar_tags": {
           "type": "array"
         },

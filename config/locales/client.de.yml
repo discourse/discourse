@@ -1021,7 +1021,7 @@ de:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil von %{username}"
-      account_possessive: " – Konto"
+      account_possessive: "Konto von %{name}"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive:
@@ -1457,6 +1457,15 @@ de:
         success_via_admin: "Wir haben eine E-Mail an diese Adresse gesendet. Der Benutzer muss den Bestätigungsanweisungen in der E-Mail folgen."
         success_staff: "Wir haben eine E-Mail an deine aktuelle Adresse geschickt. Bitte folge den Bestätigungsanweisungen."
         back_to_preferences: "Zurück zu den Einstellungen"
+        confirm_success: "Deine E-Mail-Adresse wurde aktualisiert."
+        confirm: "Bestätigen"
+        authorizing_new:
+          description: "Bitte bestätige, dass du deine E-Mail-Adresse ändern möchtest in:"
+          description_add: "Bitte bestätige, dass du eine alternative E-Mail-Adresse hinzufügen möchtest:"
+        authorizing_old:
+          old_email: "Alte Adresse: %{email}"
+          new_email: "Neue Adresse: %{email}"
+          confirm_success: "Wir haben eine E-Mail an deine neue Adresse gesendet, um die Änderung zu bestätigen!"
       change_avatar:
         title: "Ändere dein Profilbild"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basierend auf"
@@ -2135,10 +2144,11 @@ de:
         one: "Wähle mindestens %{count} Eintrag aus."
         other: "Wähle mindestens %{count} Einträge aus."
       components:
-        tag_drop:
-          filter_for_more: Filtern nach mehr …
+        filter_for_more: Filtern nach mehr …
         categories_admin_dropdown:
           title: "Kategorien verwalten"
+        bulk_select_topics_dropdown:
+          title: "Massenoperationen"
     date_time_picker:
       from: Von
       to: An
@@ -2648,6 +2658,7 @@ de:
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
+        confirm: "Bestätigen"
         select_all: "Alle auswählen"
         clear_all: "Auswahl aufheben"
         unlist_topics: "Themen unsichtbar machen"
@@ -2706,6 +2717,7 @@ de:
         progress:
           one: "Fortschritt: <strong>%{count}</strong> Thema"
           other: "Fortschritt: <strong>%{count}</strong> Themen"
+        silent: "Führe diese Aktion lautlos durch."
       none:
         unread: "Du hast alle Themen gelesen."
         unseen: "Du hast keine ungesehenen Themen."
@@ -2716,6 +2728,7 @@ de:
         bookmarks: "Du hast noch keine Themen mit einem Lesezeichen versehen."
         category: "Es gibt keine Themen in %{category}."
         top: "Es gibt keine angesagten Themen."
+        hot: "Es gibt keine heißen Themen."
         filter: "Es gibt keine Themen."
         educate:
           new: '<p>Hier werden deine neuen Themen angezeigt. Standardmäßig werden Themen als neu erachtet und mit einem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-Indikator dargestellt, wenn sie in den letzten 2 Tagen erstellt wurden. </p><p>Besuche deine <a href="%{userPrefsUrl}">Einstellungen</a>, um dies zu ändern.</p>'
@@ -2731,8 +2744,15 @@ de:
         category: "Das waren alle Themen in der Kategorie „%{category}“."
         tag: "Das waren alle Themen mit dem Schlagwort „%{tag}“."
         top: "Das waren alle angesagten Themen."
+        hot: "Es gibt keine heißen Themen mehr."
         bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
         filter: "Es gibt keine weiteren Themen."
+    topic_bulk_actions:
+      close_topics:
+        name: "Themen schließen"
+      update_category:
+        name: "Kategorie aktualisieren"
+        description: "Wähle die neue Kategorie für die ausgewählten Themen"
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -3734,6 +3754,10 @@ de:
         title: "Ungesehen"
         lower_title: "ungesehen"
         help: "neue Themen und Themen mit ungelesenen Beiträgen, die du derzeit beobachtest oder verfolgst"
+      hot:
+        title: "Heiß"
+        lower_title: "heiß"
+        help: "aktuelle Top-Themen"
       new:
         lower_title_with_count:
           one: "%{count} neues"
