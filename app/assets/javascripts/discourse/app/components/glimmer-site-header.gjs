@@ -55,7 +55,7 @@ export default class GlimmerSiteHeader extends Component {
       document.body.classList.add("staff");
     }
 
-    schedule("afterRender", () => this._animateMenu());
+    schedule("afterRender", () => this.animateMenu());
   }
 
   @bind
@@ -101,12 +101,12 @@ export default class GlimmerSiteHeader extends Component {
 
   @action
   setupHeader() {
-    this.appEvents.on("user-menu:rendered", this, this._animateMenu);
+    this.appEvents.on("user-menu:rendered", this, this.animateMenu);
     if (this.dropDownHeaderEnabled) {
       this.appEvents.on(
         "sidebar-hamburger-dropdown:rendered",
         this,
-        this._animateMenu
+        this.animateMenu
       );
     }
 
@@ -184,7 +184,8 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
-  _animateMenu() {
+  @action
+  animateMenu() {
     const menuPanels = document.querySelectorAll(".menu-panel");
 
     if (menuPanels.length === 0) {
@@ -292,13 +293,13 @@ export default class GlimmerSiteHeader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.appEvents.off("user-menu:rendered", this, this._animateMenu);
+    this.appEvents.off("user-menu:rendered", this, this.animateMenu);
 
     if (this.dropDownHeaderEnabled) {
       this.appEvents.off(
         "sidebar-hamburger-dropdown:rendered",
         this,
-        this._animateMenu
+        this.animateMenu
       );
     }
 
@@ -332,6 +333,7 @@ export default class GlimmerSiteHeader extends Component {
         @toggleSidebar={{@toggleSidebar}}
         @showCreateAccount={{@showCreateAccount}}
         @showLogin={{@showLogin}}
+        @animateMenu={{this.animateMenu}}
       />
     </div>
   </template>

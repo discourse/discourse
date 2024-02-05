@@ -11,6 +11,7 @@ import discourseLater from "discourse-common/lib/later";
 export default class HamburgerDropdownWrapper extends Component {
   @action
   click(event) {
+    event.preventDefault();
     if (
       event.target.closest(".sidebar-section-header-button") ||
       event.target.closest(".sidebar-section-link-button") ||
