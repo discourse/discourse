@@ -146,6 +146,7 @@ export default class GlimmerHeader extends Component {
   toggleUserMenu() {
     this.userVisible = !this.userVisible;
     this.toggleBodyScrolling(this.userVisible);
+    this.args.animateMenu();
 
     // auto focus on first button in dropdown
     schedule("afterRender", () =>
@@ -157,9 +158,11 @@ export default class GlimmerHeader extends Component {
   toggleHamburger() {
     if (this.args.sidebarEnabled && !this.site.narrowDesktopView) {
       this.args.toggleSidebar();
+      this.args.animateMenu();
     } else {
       this.hamburgerVisible = !this.hamburgerVisible;
       this.toggleBodyScrolling(this.hamburgerVisible);
+      this.args.animateMenu();
 
       schedule("afterRender", () => {
         // Remove focus from hamburger toggle button
@@ -221,7 +224,12 @@ export default class GlimmerHeader extends Component {
             <MountWidget @widget={{panel.name}} />
           {{/each}}
 
-          {{#if (or this.site.mobileView this.site.narrowDesktopView)}}
+          {{#if
+            (and
+              (or this.site.mobileView this.site.narrowDesktopView)
+              (or this.hamburgerVisible this.userVisible)
+            )
+          }}
             <div class="header-cloak"></div>
           {{/if}}
         </Contents>
