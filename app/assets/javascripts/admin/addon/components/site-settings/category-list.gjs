@@ -1,19 +1,18 @@
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import Category from "discourse/models/category";
 import htmlSafe from "discourse-common/helpers/html-safe";
 import SettingValidationMessage from "admin/components/setting-validation-message";
 import CategorySelector from "select-kit/components/category-selector";
 
 export default class CategoryList extends Component {
-  @computed("value")
   get selectedCategories() {
-    return Category.findByIds(this.value.split("|").filter(Boolean));
+    return Category.findByIds(this.args.value.split("|").filter(Boolean));
   }
 
   @action
   onChangeSelectedCategories(value) {
-    this.set("value", (value || []).mapBy("id").join("|"));
+    this.args.changeValueCallback((value || []).mapBy("id").join("|"));
   }
 
   <template>
