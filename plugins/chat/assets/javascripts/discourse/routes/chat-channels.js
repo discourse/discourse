@@ -9,11 +9,13 @@ export default class ChatChannelsRoute extends DiscourseRoute {
     this.chat.activeChannel = null;
   }
 
-  model() {
+  beforeModel() {
     if (this.site.desktopView) {
-      return this.router.replaceWith("chat");
+      this.router.transitionTo("chat");
     }
+  }
 
+  model() {
     return this.chatChannelsManager.publicMessageChannels;
   }
 }
