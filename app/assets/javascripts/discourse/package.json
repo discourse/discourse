@@ -92,7 +92,7 @@
     "ember-production-deprecations": "1.0.0",
     "ember-qunit": "^6.2.0",
     "ember-router-service-refresh-polyfill": "^1.1.0",
-    "ember-template-imports": "^4.0.0",
+    "ember-template-imports": "^4.1.0",
     "ember-test-selectors": "^6.0.0",
     "float-kit": "1.0.0",
     "html-entities": "^2.4.0",
