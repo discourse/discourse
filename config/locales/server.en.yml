@@ -2206,6 +2206,7 @@ en:
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
     allow_users_to_hide_profile: "Allow users to hide their profile and presence"
+    hide_user_activity_tab: "Hide the activity tab on user profiles except for Admin and self."
 
     allow_featured_topic_on_user_profiles: "Allow users to feature a link to a topic on their user card and profile."
 
