@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
-import { modifier } from "ember-modifier";
-import { on } from "@ember/modifier";
-import HamburgerDropdown from "../sidebar/hamburger-dropdown";
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
+import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
+import HamburgerDropdown from "../sidebar/hamburger-dropdown";
 
 export default class HamburgerDropdownWrapper extends Component {
   @action

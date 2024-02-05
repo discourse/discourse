@@ -1,6 +1,4 @@
-import Component from "@glimmer/component";
 import DButton from "discourse/components/d-button";
-
 import concatClass from "discourse/helpers/concat-class";
 
 const SidebarToggle = <template>

@@ -1,14 +1,13 @@
-import { wantsNewWindow } from "discourse/lib/intercept-click";
 import Component from "@glimmer/component";
-import i18n from "discourse-common/helpers/i18n";
-import concatClass from "discourse/helpers/concat-class";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import concatClass from "discourse/helpers/concat-class";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import icon from "discourse-common/helpers/d-icon";
-import { modifier } from "ember-modifier";
-import { hash } from "@ember/helper";
-import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
+import i18n from "discourse-common/helpers/i18n";
 import and from "truth-helpers/helpers/and";
+import CloseOnClickOutside from "../../modifiers/close-on-click-outside";
 
 export default class Dropdown extends Component {
   @action

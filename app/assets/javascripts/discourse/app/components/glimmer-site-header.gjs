@@ -1,19 +1,18 @@
 import Component from "@glimmer/component";
+import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { isTesting } from "discourse-common/config/environment";
-import ItsATrap from "@discourse/itsatrap";
-import { waitForPromise } from "@ember/test-waiters";
-import { DEBUG } from "@glimmer/env";
-import SwipeEvents from "discourse/lib/swipe-events";
 import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { waitForPromise } from "@ember/test-waiters";
+import ItsATrap from "@discourse/itsatrap";
+import concatClass from "discourse/helpers/concat-class";
+import SwipeEvents from "discourse/lib/swipe-events";
+import { isTesting } from "discourse-common/config/environment";
+import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 import GlimmerHeader from "./glimmer-header";
-import discourseLater from "discourse-common/lib/later";
-import { modifier } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
@@ -24,28 +23,16 @@ export default class GlimmerSiteHeader extends Component {
   @service site;
   @service docking;
 
+  @tracked headerWrap = null;
+  header = null;
   @tracked _dockedHeader = false;
   @tracked _swipeMenuOrigin = null;
-  @tracked headerWrap = null;
+
   @tracked _swipeEvents = null;
   @tracked _applicationElement = null;
   @tracked _resizeObserver = null;
   @tracked _docAt = null;
   @tracked _animate = false;
-
-  header = null;
-
-  get dropDownHeaderEnabled() {
-    return !this.sidebarEnabled || this.site.narrowDesktopView;
-  }
-
-  get leftMenuClass() {
-    if (document.querySelector("html").classList["direction"] === "rtl") {
-      return "user-menu";
-    } else {
-      return "hamburger-panel";
-    }
-  }
 
   constructor() {
     super(...arguments);
@@ -56,6 +43,17 @@ export default class GlimmerSiteHeader extends Component {
     }
 
     schedule("afterRender", () => this.animateMenu());
+  }
+  get dropDownHeaderEnabled() {
+    return !this.sidebarEnabled || this.site.narrowDesktopView;
+  }
+
+  get leftMenuClass() {
+    if (document.querySelector("html").classList["direction"] === "rtl") {
+      return "user-menu";
+    } else {
+      return "hamburger-panel";
+    }
   }
 
   @bind

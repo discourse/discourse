@@ -1,28 +1,20 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { createWidget } from "discourse/widgets/widget";
-import { isTesting } from "discourse-common/config/environment";
-import getURL from "discourse-common/lib/get-url";
-import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import not from "truth-helpers/helpers/not";
 import or from "truth-helpers/helpers/or";
-import { hash } from "discourse-common/lib/helpers";
-import { modifier } from "ember-modifier";
-
-import Contents from "./glimmer-header/contents";
 import AuthButtons from "./glimmer-header/auth-buttons";
+import Contents from "./glimmer-header/contents";
+import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
 import Icons from "./glimmer-header/icons";
 import SearchMenuWrapper from "./glimmer-header/search-menu-wrapper";
-import HamburgerDropdownWrapper from "./glimmer-header/hamburger-dropdown-wrapper";
 import UserMenuWrapper from "./glimmer-header/user-menu-wrapper";
 import MountWidget from "./mount-widget";
 

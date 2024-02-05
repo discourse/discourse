@@ -1,29 +1,22 @@
-import icon from "discourse-common/helpers/d-icon";
-import renderTags from "discourse/lib/render-tags";
-import { topicFeaturedLinkNode } from "discourse/lib/render-topic-featured-link";
-import { inject as service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import { action } from "@ember/object";
-import i18n from "discourse-common/helpers/i18n";
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import DiscourseURL from "discourse/lib/url";
-import and from "truth-helpers/helpers/and";
-import not from "truth-helpers/helpers/not";
-import or from "truth-helpers/helpers/or";
-import gt from "truth-helpers/helpers/gt";
-import eq from "truth-helpers/helpers/eq";
-import gte from "truth-helpers/helpers/gte";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import categoryLink from "discourse/helpers/category-link";
-import Participant from "./participant";
-import SidebarToggle from "../sidebar-toggle";
+import concatClass from "discourse/helpers/concat-class";
+import renderTags from "discourse/lib/render-tags";
+import DiscourseURL from "discourse/lib/url";
+import icon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
+import and from "truth-helpers/helpers/and";
+import gt from "truth-helpers/helpers/gt";
+import not from "truth-helpers/helpers/not";
+import or from "truth-helpers/helpers/or";
 import PluginOutlet from "../../plugin-outlet";
-import MountWidget from "../../mount-widget";
-
+import FeaturedLink from "./featured-link";
+import Participant from "./participant";
 import Status from "./status";
 
 let _additionalFancyTitleClasses = [];
@@ -103,7 +96,7 @@ export default class Info extends Component {
             {{#if this.showPM}}
               <a
                 class="private-message-glyph-wrapper"
-                href={{fn this.currentUser.pmPath topic}}
+                href={{fn this.currentUser.pmPath @topic}}
                 aria-label={{i18n "user.messages.inbox"}}
               >
                 {{icon "envelope" class="private-message-glyph"}}
@@ -168,7 +161,7 @@ export default class Info extends Component {
               {{htmlSafe this.tags}}
               <div class="topic-header-participants">
                 {{#if this.showPM}}
-                  {{#each this.participants as |participant index|}}
+                  {{#each this.participants as |participant|}}
                     <Participant
                       @user={{participant}}
                       @type={{if participant.username "user" "group"}}
@@ -189,6 +182,9 @@ export default class Info extends Component {
                   {{/if}}
                 {{/if}}
               </div>
+              {{#if this.siteSettings.topic_featured_link_enabled}}
+                <FeaturedLink />
+              {{/if}}
             </div>
           {{/if}}
         </div>
