@@ -3,7 +3,10 @@
 RSpec.describe "Glimmer Site Header", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
-  before { sign_in(current_user) }
+  before do
+    SiteSetting.experimental_glimmer_header_groups = Group::AUTO_GROUPS[:everyone]
+    sign_in(current_user)
+  end
 
   it "renders unread notifications count when user's notifications count is updated" do
     Fabricate(

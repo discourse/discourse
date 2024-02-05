@@ -69,7 +69,12 @@ export default class Notifications extends Component {
         <a
           href="#"
           class="badge-notification with-icon new-pms"
-          title="notifications.tooltip.new_message_notification"
+          title={{i18n
+            "notifications.tooltip.new_message_notification"
+            (hash
+              count=this.currentUser.new_personal_messages_notifications_count
+            )
+          }}
           aria-label={{i18n
             "notifications.tooltip.new_message_notification"
             (hash
@@ -83,7 +88,10 @@ export default class Notifications extends Component {
         <a
           href="#"
           class="badge-notification with-icon new-reviewables"
-          title="notifications.tooltip.new_reviewable"
+          title={{i18n
+            "notifications.tooltip.new_reviewable"
+            (hash count=this.currentUser.unseen_reviewable_count)
+          }}
           aria-label={{i18n
             "notifications.tooltip.new_reviewable"
             (hash count=this.currentUser.unseen_reviewable_count)
@@ -95,7 +103,10 @@ export default class Notifications extends Component {
         <a
           href="#"
           class="badge-notification unread-notifications"
-          title="notifications.tooltip.regular"
+          title={{i18n
+            "notifications.tooltip.regular"
+            (hash count=this.currentUser.all_unread_notifications_count)
+          }}
           aria-label={{i18n
             "user.notifications"
             (hash count=this.currentUser.all_unread_notifications_count)
