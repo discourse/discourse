@@ -200,6 +200,14 @@
     z-index: 1; // needs to be higher than image
     background: var(--secondary); // for when images are wider than controls
 
+    .generate-caption-button {
+      position: absolute;
+      top: -50px;
+      left: 10px;
+      background: var(--tertiary);
+      padding: 0.5em;
+    }
+
     &[editing] {
       opacity: 1;
     }

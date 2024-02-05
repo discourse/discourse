@@ -2,6 +2,13 @@ import I18n from "discourse-i18n";
 
 const SCALES = ["100", "75", "50"];
 
+let apiExtraMarkup = [];
+let apiExtraMarkupAllowList = [];
+export function addImageControlExtraMarkup(markup, allowList) {
+  apiExtraMarkup.push(markup);
+  apiExtraMarkupAllowList.push(allowList);
+}
+
 function isUpload(token) {
   return token.content.includes("upload://");
 }
@@ -156,6 +163,7 @@ function ruleWithImageControls(oldRule) {
       ).join("");
       result += `</span>`;
       result += buildImageDeleteButton();
+      result += apiExtraMarkup.join("");
 
       result += "</span></span>";
 
@@ -205,6 +213,8 @@ export function setup(helper) {
       "span.wrap-image-grid-button[data-image-count]",
       "svg[class=fa d-icon d-icon-th svg-icon svg-string]",
       "use[href=#th]",
+
+      ...apiExtraMarkupAllowList,
     ]);
 
     helper.registerPlugin((md) => {

@@ -138,6 +138,7 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
+import { addImageControlExtraMarkup } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
@@ -146,7 +147,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.24.0";
+export const PLUGIN_API_VERSION = "1.25.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2696,6 +2697,19 @@ class PluginApi {
     this.container
       .lookup("service:admin-custom-user-fields")
       .addProperty(userFieldProperty);
+  }
+
+  /**
+   * Add custom markup to the composer preview's image wrapper
+   *
+   *
+   * ```
+   * api.addImageWrapperExtraMarkup(`<span class="my-custom-button">My Button</span>`, ["my-custom-button"]);
+   * ```
+   *
+   */
+  addImageWrapperExtraMarkup(markup, allowList) {
+    addImageControlExtraMarkup(markup, allowList);
   }
 }
 
