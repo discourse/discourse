@@ -1,4 +1,4 @@
-.chat-user-threads {
+.c-user-threads {
   .chat__thread-title {
     justify-content: space-between;
   }
@@ -6,4 +6,27 @@
 
 .c-user-thread {
   margin-inline: 1.5rem;
+  padding-block: 0.5rem;
+
+  .chat-message-thread-indicator__last-reply-avatar,
+  .chat-message-thread-indicator__last-reply-info,
+  .chat-message-thread-indicator__last-reply-excerpt {
+    display: none;
+  }
+
+  .chat-message-thread-indicator {
+    grid-template-areas: "info participants replies";
+    background-color: unset;
+    margin-top: 0.5rem;
+    padding: 0;
+  }
+
+  .chat-thread-participants {
+    justify-content: flex-start;
+    margin: 0;
+  }
+
+  .chat-user-avatar:not(:last-child) {
+    margin-right: -6px;
+  }
 }
