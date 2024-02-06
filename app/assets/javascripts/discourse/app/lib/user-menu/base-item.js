@@ -61,11 +61,12 @@ export default class UserMenuBaseItem {
     if (wantsNewWindow(event)) {
       return;
     }
-    closeUserMenu();
-    const href = this.linkHref;
-    if (href) {
-      DiscourseURL.routeTo(href);
-    }
+
     event.preventDefault();
+    closeUserMenu?.();
+
+    if (this.linkHref) {
+      DiscourseURL.routeTo(this.linkHref);
+    }
   }
 }
