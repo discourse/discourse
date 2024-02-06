@@ -1741,3 +1741,17 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     opacity: 100%;
   }
 }
+
+.read-state {
+  position: absolute;
+  // We use absolute positioning here because we want it to display in the padding
+  align-self: center;
+  color: var(--tertiary-medium);
+  right: 0;
+  font-size: 0.571em;
+  &.read {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 1s, opacity ease-out 1s;
+  }
+}

@@ -340,10 +340,11 @@ textarea {
 }
 
 .wrap {
+  --d-wrap-padding-h: 10px;
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
-  padding: 0 10px;
+  padding: 0 var(--d-wrap-padding-h);
   .contents {
     position: relative;
   }
