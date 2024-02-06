@@ -42,11 +42,18 @@ export default class UserMenuBaseItem {
   }
 
   get iconComponentArgs() {
+    // Use endsWith to determine if the avatarTemplate is the system avatar, because locally the
+    // system avatar is a relative path and doesn't contain hostname. Exact matches will also
+    // evaluate to true.
+    const usingSystemAvatar =
+      !this.avatarTemplate ||
+      this.avatarTemplate.endsWith(this.site.system_user_avatar_template);
+
     return {
       avatarTemplate:
         this.avatarTemplate || this.site.system_user_avatar_template,
       icon: this.icon,
-      classNames: this.avatarTemplate ? "user-avatar" : "system-avatar",
+      classNames: usingSystemAvatar ? "system-avatar" : "user-avatar",
     };
   }
 
