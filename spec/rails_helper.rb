@@ -232,6 +232,8 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = true
 
+  config.full_cause_backtrace = true
+
   config.before(:suite) do
     CachedCounting.disable
 
