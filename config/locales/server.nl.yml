@@ -1824,7 +1824,9 @@ nl:
     min_trust_to_flag_posts: "Het minimale vertrouwensniveau dat nodig is om berichten te markeren"
     flag_post_allowed_groups: "Groepen die topics mogen markeren."
     min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om links op te nemen in berichten"
+    post_links_allowed_groups: "Groepen die links in berichten mogen opnemen."
     min_trust_to_post_embedded_media: "Het minimale vertrouwensniveau dat nodig is om media-items in een bericht in te bedden"
+    embedded_media_post_allowed_groups: "De gebruikers in deze groepen mogen media-items opnemen in een bericht"
     min_trust_level_to_allow_profile_background: "Het minimale vertrouwensniveau dat nodig is om een profielachtergrond te uploaden"
     min_trust_level_to_allow_user_card_background: "Het minimale vertrouwensniveau dat nodig is om een gebruikerskaartachtergrond te uploaden"
     user_card_background_allowed_groups: "Groepen die een gebruikerskaartachtergrond mogen uploaden."
@@ -1842,8 +1844,8 @@ nl:
     max_users_notified_per_group_mention: "Maximale aantal gebruikers dat een melding kan ontvangen als een groep wordt genoemd (bij bereiken van drempel worden geen meldingen gestuurd)"
     enable_mentions: "Gebruikers mogen andere gebruikers noemen."
     here_mention: "De naam die wordt gebruikt voor een @vermelding zodat gemachtigde gebruikers maximaal 'max_here_mentioned' mensen die aan de topic deelnemen op de hoogte kunnen stellen. Mag geen bestaande gebruikersnaam zijn."
-    max_here_mentioned: "Maximaal aantal genoemde personen door @here."
-    min_trust_level_for_here_mention: "Het minimale vertrouwensniveau dat is toegestaan om @here te vermelden."
+    max_here_mentioned: "Maximaal aantal genoemde personen door @hier."
+    min_trust_level_for_here_mention: "Het minimale vertrouwensniveau dat is toegestaan om @hier te vermelden."
     here_mention_allowed_groups: "Groepen die @here mogen vermelden."
     create_thumbnails: "Miniaturen maken voor lightbox-afbeeldingen die te groot zijn om in een bericht te passen."
     email_time_window_mins: "(n) minuten wachten met het verzenden van meldingen per e-mail, zodat gebruikers de kans hebben om hun berichten te bewerken en te voltooien."
@@ -2096,6 +2098,8 @@ nl:
     enable_inline_emoji_translation: "Schakelt vertaling voor inline emoji in (zonder voorafgaande spaties of interpunctie)"
     emoji_deny_list: "Deze emoji zijn niet beschikbaar voor gebruik in menu's of shortcodes."
     approve_post_count: "Het aantal berichten van een nieuwe of basisgebruiker dat moet worden goedgekeurd"
+    approve_unless_trust_level: "Berichten gemaakt door gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
+    approve_unless_allowed_groups: "Berichten gemaakt door gebruikers niet in deze groepen moeten worden goedgekeurd"
     notify_about_queued_posts_after: "Als er berichten zijn die meer dan dit aantal uren op beoordeling wachten, een melding naar alle moderators sturen. Stel dit in op 0 om deze meldingen uit te schakelen."
     reviewable_revision_reasons: "Lijst van redenen die kunnen worden geselecteerd bij het afwijzen van een te beoordelen bericht in de wachtrij met een revisie. 'Anders' is ook altijd beschikbaar, waarmee een aangepaste reden kan worden ingevoerd."
     auto_close_messages_post_count: "Maximale aantal toegestane berichten in een bericht voordat het automatisch wordt gesloten (0 voor uitschakelen)"
@@ -2178,6 +2182,7 @@ nl:
     tag_style: "Visuele stijl voor tagbadges."
     pm_tags_allowed_for_groups: "Sta leden van opgenomen groep(en) toe om elk persoonlijk bericht te taggen"
     min_trust_level_to_tag_topics: "Het minimale vertrouwensniveau dat nodig is om topics te taggen"
+    tag_topic_allowed_groups: "Groepen die onderwerpen mogen taggen."
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet weergeven"
     remove_muted_tags_from_latest: "Topics met alleen gedempte tags niet weergeven in de lijst van nieuwste topics."
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
@@ -2215,6 +2220,7 @@ nl:
     use_name_for_username_suggestions: "Gebruik de volledige naam van een gebruiker bij het voorstellen van gebruikersnamen."
     suggest_weekends_in_date_pickers: "Neem weekenden (zaterdag en zondag) op in suggesties voor datumkiezers (schakel dit uit als je Discourse alleen op weekdagen gebruikt, maandag t/m vrijdag)."
     splash_screen: "Geeft een tijdelijk laadscherm weer terwijl website-items worden geladen"
+    navigation_menu: "Bepaal welk navigatiemenu je wilt gebruiken."
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'EXPERIMENTEEL: schakelt een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en maak de link "Alles" ernaartoe in de zijbalk.'
@@ -2301,6 +2307,11 @@ nl:
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4643,9 +4654,17 @@ nl:
   onebox:
     discourse:
       user_joined_community: "Lid sinds %{date}"
+    gitlab:
+      truncated_file: "Dit bestand is afgekapt."
+      show_original: "toon origineel"
     github:
+      binary_file: "Dit bestand is binair."
+      truncated_file: "Dit bestand is afgekapt."
+      show_original: "toon origineel"
+      more_than_three_files: "Er zijn meer dan drie bestanden."
       opened: "geopend"
       closed: "gesloten"
+      review_by: "Review door"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'

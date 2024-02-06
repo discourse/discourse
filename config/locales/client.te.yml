@@ -1627,7 +1627,6 @@ te:
         email_style:
           css: "సీయస్ యస్"
       email:
-        settings: "అమరికలు"
         preview_digest: "డైజెస్టు మునుజూపు"
         error: "<b>దోషం</b> - %{server_error}"
         test_error: "టెస్ట్ మెయిల్ పంపడంలో ఒక సమస్య ఉంది.దయచేసి మీ మెయిల్ సెట్టింగ్స్ రెండోసారి తనిఖీ చేసి,మీ హోస్ట్ మెయిల్ కనెక్షన్ నిరోధించుటలేదని నిర్ధారించుకోండి, మరియు తిరిగి ప్రయత్నించండి."
@@ -1888,7 +1887,6 @@ te:
           title: "నమ్మకపు స్థాయి 3 అవసరాలు"
           value_heading: "విలువ"
           requirement_heading: "అవసరం"
-          visits: "సందర్శనాలు"
           days: "రోజులు"
           topics_replied_to: "విషయాలు సమాధానంగా"
           topics_viewed: "చూసిన విషయాలు "
@@ -2054,6 +2052,7 @@ te:
         topic_title: "విషయం"
         post_id: "టపా ఐడీ"
         category_title: "వర్గం"
+        username: "సభ్యనామం"
         form:
           label: "కొత్త:"
           add: "కలుపు"

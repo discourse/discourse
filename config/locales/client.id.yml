@@ -2279,7 +2279,6 @@ id:
           reset: "Setel ulang ke bawaan"
       email:
         title: "Surel"
-        settings: "Pengaturan"
         templates_title: "Templat Email"
         sent: "Mengirim"
         received: "Menerima"
@@ -2448,7 +2447,6 @@ id:
           read_time: "Waktu Baca"
           posts: "Pos"
         tl3_requirements:
-          visits: "mengunjungi"
           days: "hari"
           topics_viewed: "Topik dilihat"
           posts_read: "Tulisan dilihat"
@@ -2521,6 +2519,7 @@ id:
         topic_title: "Topik"
         post_title: "Postingan"
         category_title: "Kategori"
+        username: "Nama Pengguna"
         form:
           label: "Baru:"
           add: "Menambahkan"

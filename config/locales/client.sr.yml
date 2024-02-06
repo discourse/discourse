@@ -2085,7 +2085,6 @@ sr:
         email_style:
           css: "CSS"
       email:
-        settings: "Podešavanje"
         preview_digest: "Pregled sažetka"
         error: "<b>GREŠKA</b> - %{server_error}"
         test_error: "Dogodio se problem pri slanju test emaila. Molimo proverite podešavanja emaila, potvrdite da domaćin ne blokira email veze i pokušajte ponovo."
@@ -2358,7 +2357,6 @@ sr:
           title: "Predispozicije Za Nivo Poverenja 3"
           value_heading: "Vriednost"
           requirement_heading: "Predispozicija"
-          visits: "Poseta"
           days: "dana"
           topics_replied_to: "Teme Odgovrene U"
           topics_viewed: "Tema Pregledano"
@@ -2535,6 +2533,7 @@ sr:
         post_id: "ID Poruke"
         post_title: "Post"
         category_title: "Kategorija"
+        username: "Korisničko Ime"
         form:
           label: "Novo:"
           add: "Dodaj"

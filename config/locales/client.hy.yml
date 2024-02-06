@@ -3431,7 +3431,6 @@ hy:
           instructions: "Ձևանմուշի կարգավորում, որում պատկերվում են բոլոր html էլեկտրոնային փոստի հաղորդագրությունները և ոճը՝ օգտագործելով CSS:"
       email:
         title: "Էլ. հասցեներ"
-        settings: "Կարգավորումներ"
         templates: "Ձևանմուշներ"
         preview_digest: "Նախադիտման Ամփոփումը"
         advanced_test:
@@ -3919,7 +3918,6 @@ hy:
             other: "Վերջին %{count} օրվա ընթացքում՝ "
           value_heading: "Արժեք"
           requirement_heading: "Պահանջ"
-          visits: "Այցելություններ"
           days: "օր"
           topics_replied_to: "Պատասխանած Թեմաները"
           topics_viewed: "Դիտված Թեմաները"
@@ -4164,6 +4162,7 @@ hy:
         post_title: "Գրառում"
         category_id: "Կատեգորիայի ID"
         category_title: "Կատեգորիա"
+        username: "Օգտանուն"
         destination: "Նպատակներ "
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս մշտահղումը:'
         form:

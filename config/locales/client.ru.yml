@@ -668,7 +668,7 @@ ru:
         all:
           title: "Все"
       context_question:
-        is_this_post: "Это %{reviewable_type} %{reviewable_human_score_types}?"
+        is_this_post: "Эта %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "или"
         something_else_wrong: "Что-то не так со следующим: %{reviewable_type}?"
       types:
@@ -5063,7 +5063,6 @@ ru:
             users:
               bookmarks: Список закладок пользователя. Возвращает напоминания о закладках при использовании формата ICS.
               sync_sso: Синхронизация пользователя с помощью DiscourseConnect.
-              show: Получение информации о пользователе.
               check_emails: Список электронных писем пользователя.
               update: Обновление информации в профиле пользователя.
               log_out: Завершение всех сессий пользователя.
@@ -5184,14 +5183,10 @@ ru:
           post_liked: "При пометке публикации лайком."
         notification_event:
           group_name: "События уведомления"
-          notification_created: "Пользователь получает уведомление в своей ленте"
         group_user_event:
           group_name: "События группы пользователей"
-          user_added_to_group: "Пользователь добавлен в группу"
-          user_removed_from_group: "Пользователь удален из группы"
         user_promoted_event:
           group_name: "События повышения уровня доверия"
-          user_promoted: "Уровень доверия к пользователю повышен"
         delivery_status:
           title: "Статус передачи"
           inactive: "Неактивна"
@@ -5617,7 +5612,6 @@ ru:
           instructions: "Настройте шаблон, в котором отображаются все почтовые html-сообщения. Настройте стиль шаблона, используя CSS."
       email:
         title: "Письма"
-        settings: "Настройки"
         templates: "Шаблоны"
         templates_title: "Шаблоны электронных писем"
         preview_digest: "Предпросмотр сводки"
@@ -6286,7 +6280,6 @@ ru:
             other: "За последние %{count} дня:"
           value_heading: "Значение"
           requirement_heading: "Требование"
-          visits: "Посещений"
           days: "Дней"
           topics_replied_to: "Ответов на темы"
           topics_viewed: "Просмотров тем"
@@ -6596,6 +6589,7 @@ ru:
         category_title: "Категория"
         tag_name: "Имя тега"
         external_url: "Внешняя или относительная ссылка"
+        username: "Псевдоним"
         destination: "Назначения"
         copy_to_clipboard: "Скопировать ссылку в буфер обмена"
         delete_confirm: Удалить эту постоянную ссылку?

@@ -2138,6 +2138,11 @@ sk:
       custom_placeholder_notify_user: "Buďte konkrétny, buďte konštruktívny a buďte vždy milý."
       custom_placeholder_notify_moderators: "Dajte nám vedieť, z čoho konkrétne máte obavy, a priložte príslušné odkazy a príklady, ak je to možné."
       custom_message:
+        more:
+          one: "ostáva %{count}"
+          few: "ostáva %{count}"
+          many: "ostáva %{count}"
+          other: "ostáva %{count}"
         left:
           one: "%{count} zostáva"
           few: "%{count} zostávajú"
@@ -2530,6 +2535,21 @@ sk:
         typeMismatch:
           default: "Prosím zadajte platnú hodnotu."
           email: "Zadajte prosím platný email."
+        tooLong:
+          one: "Vstup musí mať menej ako %{count} znakov."
+          few: "Vstup musí mať menej ako %{count} znakov."
+          many: "Vstup musí mať menej ako %{count} znakov."
+          other: "Vstup musí mať menej ako %{count} znakov."
+        rangeOverflow:
+          one: "Vstup musí byť menší ako %{count}."
+          few: "Vstup musí byť menší ako %{count}."
+          many: "Vstup musí byť menší ako %{count}."
+          other: "Vstup musí byť menší ako %{count}."
+        rangeUnderflow:
+          one: "Vstup musí byť väčší ako %{count}."
+          few: "Vstup musí byť väčší ako %{count}."
+          many: "Vstup musí byť väčší ako %{count}."
+          other: "Vstup musí byť väčší ako %{count}."
     table_builder:
       title: "Zostavovač tabuľky"
       modal:
@@ -2781,14 +2801,10 @@ sk:
           post_liked: "Keď sa používateľovi páči príspevok."
         notification_event:
           group_name: "Udalosti upozornení"
-          notification_created: "Používateľ dostane upozornenie vo svojom informačnom kanáli"
         group_user_event:
           group_name: "Skupinové používateľské udalosti"
-          user_added_to_group: "Používateľ je pridaný do skupiny"
-          user_removed_from_group: "Používateľ je odstránený zo skupiny"
         user_promoted_event:
           group_name: "Udalosti podporované používateľom"
-          user_promoted: "Používateľ je povýšený"
         delivery_status:
           failed: "Nepodarilo sa"
           disabled: "Vypnuté"
@@ -3000,7 +3016,6 @@ sk:
           css: "CSS"
       email:
         title: "Email"
-        settings: "Nastavenia"
         templates: "Šablóny"
         preview_digest: "Súhrn"
         sending_test: "Odosiela sa testovací e-mail…"
@@ -3350,7 +3365,6 @@ sk:
           title: "Požiadavky pre stupeň dôvery 3"
           value_heading: "Hodnota"
           requirement_heading: "Požiadavka"
-          visits: "Návštev"
           days: "dní"
           topics_replied_to: "Témy na ktoré odpovedal"
           topics_viewed: "Zobrazených tém"
@@ -3574,6 +3588,7 @@ sk:
         post_title: "Príspevok"
         category_id: "ID kategórie"
         category_title: "Kategória"
+        username: "Používateľské meno"
         delete_confirm: Ste si istý, že chcete zmazať tento trvalý odkaz?
         form:
           label: "Nový:"

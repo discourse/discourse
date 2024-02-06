@@ -3745,7 +3745,6 @@ pt:
               write: Criar um novo tópico ou poste em um já existente.
               update: Atualize um tópico. Altere o título, categoria, tags, status, arquétipo, feature_link etc.
             users:
-              show: Obter informações sobre um utilizador.
               suspend: Suspender contas de utilizador.
             invites:
               create: Envie convites por e-mail ou gere links de convite.
@@ -4091,7 +4090,6 @@ pt:
           instructions: "Personalize o modelo no qual todos os emails html são renderizados e estilize usando CSS."
       email:
         title: "Emails"
-        settings: "Configurações"
         templates: "Templates"
         preview_digest: "Pré-visualizar Resumo"
         advanced_test:
@@ -4494,7 +4492,6 @@ pt:
             other: "Nos últimos %{count} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
-          visits: "Visitas"
           days: "dias"
           topics_replied_to: "Tópicos com Respostas"
           topics_viewed: "Tópicos Visualizados"
@@ -4724,6 +4721,7 @@ pt:
         post_title: "Mensagem"
         category_id: "ID da Categoria"
         category_title: "Categoria"
+        username: "Nome de Utilizador"
         delete_confirm: Tem a certeza que deseja eliminar esta ligação permanente?
         form:
           label: "Novo:"

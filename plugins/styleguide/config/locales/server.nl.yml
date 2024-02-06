@@ -8,3 +8,4 @@ nl:
   site_settings:
     styleguide_enabled: 'Een ''/styleguide''-pad voor hulp bij het vormgeven van Discourse inschakelen'
     styleguide_admin_only: "Beperkt de zichtbaarheid van de stijlgids tot beheerders"
+    styleguide_allowed_groups: "Beperkt de zichtbaarheid van de stijlgids tot leden van de opgegeven groepen"

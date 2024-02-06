@@ -3770,7 +3770,6 @@ ko:
             users:
               bookmarks: 사용자 북마크를 나열합니다. ICS 포맷을 사용하면 북마크 미리 알림을 반환합니다.
               sync_sso: DiscourseConnect를 사용하여 사용자를 동기화합니다.
-              show: 사용자에 대한 정보를 얻습니다.
               check_emails: 사용자 이메일을 나열합니다.
               update: 사용자 프로필 정보를 업데이트합니다.
               log_out: 사용자의 모든 세션을 로그아웃합니다.
@@ -4192,7 +4191,6 @@ ko:
           instructions: "모든 html 이메일이 렌더링되는 템플릿을 사용자 지정하고 CSS를 사용하여 스타일을 지정하세요."
       email:
         title: "이메일"
-        settings: "설정"
         templates: "템플릿"
         preview_digest: "요약 미리보기"
         advanced_test:
@@ -4748,7 +4746,6 @@ ko:
             other: "최근 %{count}일간:"
           value_heading: "값"
           requirement_heading: "요구사항"
-          visits: "방문 횟수"
           days: "일"
           topics_replied_to: "댓글을 단 주제"
           topics_viewed: "읽은 주제"
@@ -5029,6 +5026,7 @@ ko:
         category_title: "카테고리"
         tag_name: "태그 이름"
         external_url: "외부 또는 상대 URL"
+        username: "아이디"
         destination: "대상"
         copy_to_clipboard: "고정 링크를 클립보드에 복사"
         delete_confirm: 이 고정 링크를 삭제할까요?

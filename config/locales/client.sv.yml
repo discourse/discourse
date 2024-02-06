@@ -1463,6 +1463,9 @@ sv:
           description: "Bekräfta att du önskar ändra din e-postadress till:"
           description_add: "Bekräfta att du önskar lägga till en alternativ e-postadress:"
         authorizing_old:
+          title: "Verifiera gammal e-postadress"
+          description: "Verifiera din gamla e-postadress för att fortsätta med ändringen av din e-postadress:"
+          description_add: "Verifiera din befintliga e-postadress för att fortsätta lägga till en alternativ adress:"
           old_email: "Gammal e-postadress: %{email}"
           new_email: "Ny e-postadress: %{email}"
           confirm_success: "Vi har skickat e-post till din nya e-postadress för att bekräfta ändringen!"
@@ -4769,14 +4772,10 @@ sv:
           post_liked: "När en användare gillar ett inlägg."
         notification_event:
           group_name: "Aviseringshändelser"
-          notification_created: "En användare får en avisering i sitt flöde"
         group_user_event:
           group_name: "Gruppanvändarhändelser"
-          user_added_to_group: "En användare läggs till i en grupp"
-          user_removed_from_group: "En användare tas bort från en grupp"
         user_promoted_event:
           group_name: "Användarfrämjande händelser"
-          user_promoted: "En användare befordras"
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"
@@ -5196,7 +5195,6 @@ sv:
           instructions: "Anpassa mallen där alla e-post renderas, samt stil genom CSS."
       email:
         title: "E-post"
-        settings: "Inställningar"
         templates: "Mallar"
         templates_title: "E-postmallar"
         preview_digest: "Förhandsgranska sammandrag"
@@ -5843,7 +5841,6 @@ sv:
             other: "De senaste %{count} dagarna:"
           value_heading: "Värde"
           requirement_heading: "Krav"
-          visits: "Besök"
           days: "dagar"
           topics_replied_to: "Besvarade ämnen"
           topics_viewed: "Besökta ämnen"
@@ -6149,6 +6146,7 @@ sv:
         category_title: "Kategori"
         tag_name: "Namn på tagg"
         external_url: "Extern eller relativ URL"
+        username: "Användarnamn"
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: Är du säker på att du vill ta bort den här permalänken?

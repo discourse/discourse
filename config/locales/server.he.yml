@@ -2220,6 +2220,7 @@ he:
     auto_close_topics_create_linked_topic: "ליצור נושא חדש מקושר כאשר נושא נסגר אוטומטית עקב ההגדרה ‚לסגור אוטומטית נושאים בהתאם לכמות פוסטים’"
     code_formatting_style: "כפתור קוד בדפדפן יציע אוטומטית סגנון קידוד זה"
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
+    disable_watched_word_checking_in_user_fields: "השבתת בדיקת מילים במעקב בשדות המשתמשים"
     watched_words_regular_expressions: "מילים במעקב הן ביטויים רגולריים."
     enable_diffhtml_preview: "יכולת ניסיונית שמשתמשת ב־diffHTML כדי לסנכרן תצוגה מקדימה במקום עיבוד מלא מחדש"
     enable_fast_edit: "מוסיף כפתור לתפריט בחירת הפוסט כדי לערוך בחירה קטנה כחלק מהשורה."

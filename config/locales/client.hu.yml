@@ -3904,7 +3904,6 @@ hu:
               show: Egyetlen kategória kinyerése az azonosító alapján.
             users:
               sync_sso: Felhasználó szinkronizálása a DiscourseConnect használatával.
-              show: Információk beszerzése egy felhasználóról.
               check_emails: Felhasználói e-mailek listázása.
               update: Felhasználói profil adatainak frissítése.
               log_out: Egy felhasználó összes munkamenetének kijelentkeztetése.
@@ -4250,7 +4249,6 @@ hu:
           reset: "Alapértelmezés visszaállítása"
       email:
         title: "Emailek"
-        settings: "Beállítások"
         templates: "Sablonok"
         preview_digest: "Előnézet összefoglalója"
         error: "<b>HIBA</b> - %{server_error}"
@@ -4687,7 +4685,6 @@ hu:
           posts: "Bejegyzések"
         tl3_requirements:
           value_heading: "Érték"
-          visits: "Látogatások"
           days: "nap"
           topics_viewed: "Megtekintett témák"
           posts_read: "Elolvasott bejegyzések"
@@ -4883,6 +4880,7 @@ hu:
         post_title: "Bejegyzés"
         category_id: "Kategóriaazonosító"
         category_title: "Kategória"
+        username: "Felhasználónév"
         copy_to_clipboard: "Másolja az állandó hivatkozást a vágólapra"
         delete_confirm: Biztos, hogy törli ezt az állandó hivatkozást?
         form:

@@ -3725,7 +3725,6 @@ bg:
           reset: "Обновявам до първоначалното"
       email:
         title: "Имейли"
-        settings: "Настройки"
         templates: "Шаблони"
         preview_digest: "Преглед на справочника"
         error: "<b>ГРЕШКА</b> - %{server_error}"
@@ -4111,7 +4110,6 @@ bg:
           title: "Изисквания за Ниво на доверие 3"
           value_heading: "Стойност"
           requirement_heading: "Изисквания"
-          visits: "Посещения "
           days: "дни "
           topics_replied_to: "Теми отговорени до"
           topics_viewed: "Прегледани теми "
@@ -4341,6 +4339,7 @@ bg:
         post_title: "Публикация"
         category_id: "Категория ID"
         category_title: "Категория"
+        username: "Потребителско име"
         delete_confirm: Сигурни ли сте, че искате да изриете този постоянен адрес?
         form:
           label: "Нов:"

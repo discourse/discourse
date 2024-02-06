@@ -3891,7 +3891,6 @@ nb_NO:
           instructions: "Tilpass malen hvor alle html e-poster gjengis og stil ved hjelp av CSS."
       email:
         title: "E-poster"
-        settings: "Instillinger"
         templates: "Maler"
         preview_digest: "Forhåndsvis oppsummering"
         advanced_test:
@@ -4358,7 +4357,6 @@ nb_NO:
             other: "De siste %{count} dagene:"
           value_heading: "Verdi"
           requirement_heading: "Krav"
-          visits: "Besøk"
           days: "dager"
           topics_replied_to: "Emner besvart"
           topics_viewed: "Emner lest"
@@ -4585,6 +4583,7 @@ nb_NO:
         post_title: "Innlegg"
         category_id: "Kategori-ID"
         category_title: "Kategori"
+        username: "Brukernavn"
         delete_confirm: Er du sikker på at du vil slette denne permalenken?
         form:
           label: "Ny:"

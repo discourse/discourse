@@ -1357,8 +1357,8 @@ zh_CN:
         save: "保存"
         title: "通行密钥"
         short_description: "通行密钥是密码替代方法，可以通过生物识别（例如触控 ID 或者面容 ID）或通过设备 PIN/密码验证您的身份。"
-        added_prefix: "已添加"
-        last_used_prefix: "最后使用"
+        added_prefix: "添加："
+        last_used_prefix: "最后使用："
         never_used: "从未使用"
         not_allowed_error: "通行密钥注册过程超时、被取消或不被允许。"
         already_added_error: "您已注册此通行密钥，无需再次注册。"
@@ -1382,12 +1382,15 @@ zh_CN:
         success_via_admin: "我们已向该地址发送一封电子邮件。用户需要按照电子邮件中的确认说明进行操作。"
         success_staff: "我们已向您当前的地址发送一封电子邮件。请按照确认说明进行操作。"
         back_to_preferences: "返回偏好设置"
-        confirm_success: "您的电子邮件已被更新。"
+        confirm_success: "您的电子邮件已更新。"
         confirm: "确认"
         authorizing_new:
           description: "请确认您要使用的新电子邮件地址："
           description_add: "请确认您要添加的备用电子邮件地址："
         authorizing_old:
+          title: "验证旧电子邮件地址"
+          description: "请验证你的旧电子邮件地址，以继续更改你的电子邮件："
+          description_add: "请验证你现有的电子邮件地址，以便继续添加备用地址："
           old_email: "旧电子邮件：%{email}"
           new_email: "新电子邮件：%{email}"
           confirm_success: "我们已向您的新电子邮件地址发送电子邮件以确认更改！"
@@ -3461,7 +3464,7 @@ zh_CN:
         more:
           other: "还差 %{count} 条…"
         left:
-          other: "剩余 %{count} 条"
+          other: "剩余 %{count} 个字符"
     flagging_topic:
       title: "感谢您帮助我们建设文明社区！"
       action: "举报话题"
@@ -4556,14 +4559,10 @@ zh_CN:
           post_liked: "当用户点赞一篇帖子时。"
         notification_event:
           group_name: "通知事件"
-          notification_created: "用户在他们的 Feed 中收到通知"
         group_user_event:
           group_name: "群组用户事件"
-          user_added_to_group: "用户被添加到群组"
-          user_removed_from_group: "用户被从群组中移除"
         user_promoted_event:
           group_name: "用户信任级别提升事件"
-          user_promoted: "用户信任级别被提升"
         delivery_status:
           title: "传送状态"
           inactive: "停用"
@@ -4980,7 +4979,6 @@ zh_CN:
           instructions: "自定义呈现所有 HTML 电子邮件的模板，并使用 CSS 设置样式。"
       email:
         title: "电子邮件"
-        settings: "设置"
         templates: "模板"
         templates_title: "电子邮件模板"
         preview_digest: "预览总结"
@@ -5621,7 +5619,6 @@ zh_CN:
             other: "在过去 %{count} 天内："
           value_heading: "值"
           requirement_heading: "要求"
-          visits: "访问次数"
           days: "天数"
           topics_replied_to: "回复的话题"
           topics_viewed: "浏览的话题"
@@ -5925,6 +5922,7 @@ zh_CN:
         category_title: "类别"
         tag_name: "标签名称"
         external_url: "外部或相关 URL"
+        username: "用户名"
         destination: "目标"
         copy_to_clipboard: "将永久链接复制到剪贴板"
         delete_confirm: 确定要删除此永久链接吗？

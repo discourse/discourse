@@ -3104,7 +3104,6 @@ lv:
           reset: "Atiestatīt uz noklusējumu"
       email:
         title: "E-pasti"
-        settings: "Iestatījumi"
         templates: "Veidnes"
         error: "<b>KĻŪDA</b> - %{server_error}"
         test_error: "Sūtot testa e-pastu, notika kļūda. Lūdzu uzmanīgi pārbaudiet jūsu e-pasta iestatījumus, pārliecinieties, ka jūsu izvietotājs nebloķē e-pasta savienojumus un mēģiniet vēlreiz."
@@ -3460,7 +3459,6 @@ lv:
             other: "Pēdējās %{count} dienās:"
           value_heading: "Vērtība"
           requirement_heading: "Prasības"
-          visits: "Apmeklējumi"
           days: "dienas"
           topics_replied_to: "Tēmās atbildēts / rakstīts"
           topics_viewed: "Tēmas izskatītas"
@@ -3683,6 +3681,7 @@ lv:
         post_title: "Ieraksts"
         category_id: "Kategorijas ID"
         category_title: "Kategorija"
+        username: "Lietotājvārds"
         delete_confirm: Vai tiešām vēlies dzēst šo ierakstu?
         form:
           label: "Jauns:"

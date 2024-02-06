@@ -2988,7 +2988,6 @@ et:
           css: "CSS"
       email:
         title: "Meilid"
-        settings: "Sätted"
         templates: "Mallid"
         preview_digest: "Saadetise eelvaatlus"
         error: "<b>VIGA</b> - %{server_error}"
@@ -3368,7 +3367,6 @@ et:
             other: "viimase %{count} päeva jooksul:"
           value_heading: "Väärtus"
           requirement_heading: "Nõue"
-          visits: "Külastusi"
           days: "päeva"
           topics_replied_to: "Teemasid vastatud"
           topics_viewed: "Vaadatud teemasid"
@@ -3589,6 +3587,7 @@ et:
         post_title: "Postitus"
         category_id: "Foorumi ID"
         category_title: "Foorum"
+        username: "Kasutajanimi"
         delete_confirm: Oled Sa kindel, et soovid seda püsiviidet kustutada?
         form:
           label: "Uus"

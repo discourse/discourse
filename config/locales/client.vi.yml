@@ -3839,7 +3839,6 @@ vi:
             users:
               bookmarks: Liệt kê các dấu trang của người dùng. Nó trả về lời nhắc đánh dấu khi sử dụng định dạng ICS.
               sync_sso: Đồng bộ hóa người dùng bằng DiscourSeconnect.
-              show: Nhận thông tin về người dùng.
               check_emails: Liệt kê các email của người dùng.
               update: Cập nhật thông tin hồ sơ người dùng.
               log_out: Đăng xuất tất cả
@@ -4294,7 +4293,6 @@ vi:
           instructions: "Tùy chỉnh mẫu trong đó tất cả các email html được hiển thị và tạo kiểu bằng CSS."
       email:
         title: "Emails"
-        settings: "Cấu hình"
         templates: "Templates"
         preview_digest: "Xem trước tập san"
         advanced_test:
@@ -4818,7 +4816,6 @@ vi:
             other: "Trong %{count} ngày qua:"
           value_heading: "Giá trị"
           requirement_heading: "Yêu cầu"
-          visits: "Lượt xem"
           days: "ngày"
           topics_replied_to: "Topics Replied To"
           topics_viewed: "Đã xem chủ đề"
@@ -5095,6 +5092,7 @@ vi:
         category_title: "Danh mục"
         tag_name: "Tên thẻ"
         external_url: "URL bên ngoài hoặc tương đối"
+        username: "Tên tài khoản"
         destination: "Điểm đến"
         copy_to_clipboard: "Sao chép Permalink vào Clipboard"
         delete_confirm: Bạn có chắc chắn muốn xóa liên kết tĩnh này?
