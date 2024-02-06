@@ -144,7 +144,7 @@ export default class BulkTopicActions extends Component {
     >
       <:body>
         <div>
-          {{htmlSafe (i18n "topics.bulk.selected" count=this.args.model.bulkSelectHelper.selected.length)}}
+          {{htmlSafe (i18n "topics.bulk.selected" count=@model.bulkSelectHelper.selected.length)}}
         </div>
       </:body>
 
