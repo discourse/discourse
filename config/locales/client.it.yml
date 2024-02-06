@@ -158,8 +158,8 @@ it:
       removed_user: "Ha rimosso %{who} %{when}"
       removed_group: "Ha rimosso %{who} %{when}"
       autobumped: "Riproposto automaticamente %{when}"
-      tags_changed: "Etichette aggiornate il %{when}"
-      category_changed: "Categoria aggiornata il %{when}"
+      tags_changed: "Etichette aggiornate il giorno %{when}"
+      category_changed: "Categoria aggiornata il giorno %{when}"
       autoclosed:
         enabled: "Chiuso %{when}"
         disabled: "Aperto %{when}"
@@ -311,7 +311,7 @@ it:
       edit_bookmark: "Modifica Segnalibro"
       clear_bookmarks: "Cancella Segnalibri"
       help:
-        bookmark: "Clicca per memorizzare il segnalibro a questo argomento"
+        bookmark: "Clicca per mettere il segnalibro all'argomento"
         edit_bookmark: "Clicca per modificare il segnalibro di un messaggio in questo argomento"
         edit_bookmark_for_topic: "Fai clic per modificare il segnalibro per quest'argomento"
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
@@ -360,7 +360,7 @@ it:
       new_topic: "Nuovo argomento in bozza"
       new_private_message: "Nuovo messaggio personale in bozza"
       abandon:
-        confirm: "Hai gia una bozza in corso. Cosa vorresti fare?"
+        confirm: "Hai già una bozza in corso. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
     topic_count_all:
@@ -570,7 +570,7 @@ it:
         rejected_user:
           title: "Utente rifiutato"
         rejected_post:
-          title: "Messaggio respinto"
+          title: "Messaggio rifiutato"
         ignored:
           title: "Segnalazione ignorata"
         deleted:
@@ -1916,7 +1916,7 @@ it:
       no_internet: "Nessuna connessione internet."
       refresh_page: "Aggiorna pagina"
     summary:
-      in_progress: "Riepilogo dell'argomento utilizzando l'AI in corso"
+      in_progress: "Riepilogo dell'argomento utilizzando l'IA in corso"
       summarized_on: "Riassunto con IA del giorno %{date}"
       model_used: "IA utilizzata: %{model}"
       outdated: "Il riepilogo è obsoleto"
@@ -4635,7 +4635,6 @@ it:
             users:
               bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
               sync_sso: Sincronizza un utente utilizzando DiscourseConnect.
-              show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
               update: Aggiorna le informazioni del profilo utente.
               log_out: Disconnetti tutte le sessioni per un utente.
@@ -4756,14 +4755,10 @@ it:
           post_liked: "Quando un utente mette Mi piace su un messaggio."
         notification_event:
           group_name: "Eventi di notifica"
-          notification_created: "Un utente riceve una notifica nel proprio feed"
         group_user_event:
           group_name: "Eventi sui gruppi utente"
-          user_added_to_group: "Un utente viene aggiunto a un gruppo"
-          user_removed_from_group: "Un utente viene rimosso da un gruppo"
         user_promoted_event:
           group_name: "Eventi di promozione degli utenti"
-          user_promoted: "Un utente viene promosso"
         delivery_status:
           title: "Stato di Consegna"
           inactive: "Non attivo"
@@ -5183,7 +5178,6 @@ it:
           instructions: "Personalizza il modello con cui vengono visualizzate tutte le email html e lo stile usando CSS."
       email:
         title: "Email"
-        settings: "Impostazioni"
         templates: "Modelli"
         templates_title: "Modelli di e-mail"
         preview_digest: "Anteprima Riepilogo"
@@ -5830,7 +5824,6 @@ it:
             other: "Negli ultimi %{count} giorni:"
           value_heading: "Valore"
           requirement_heading: "Requisito"
-          visits: "Visite"
           days: "giorni"
           topics_replied_to: "Argomenti cui hai risposto"
           topics_viewed: "Argomenti Visti"
@@ -6136,6 +6129,7 @@ it:
         category_title: "Categoria"
         tag_name: "Nome etichetta"
         external_url: "URL esterno o relativo"
+        username: "Nome utente"
         destination: "Destinazione"
         copy_to_clipboard: "Copia permalink negli appunti"
         delete_confirm: Sei sicuro di voler cancellare questo collegamento permanente?

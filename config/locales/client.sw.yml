@@ -2663,7 +2663,6 @@ sw:
           css: "CSS"
       email:
         title: "Barua Pepe"
-        settings: "Mipangilio"
         templates: "Violezo"
         preview_digest: "Kihakiki Jarida"
         error: "<b>HITILAFU</b> - %{server_error}"
@@ -3064,7 +3063,6 @@ sw:
           title: "Mahitaji ya Kiwango cha 3 cha uaminifu"
           value_heading: "Thamani"
           requirement_heading: "Kinachohitajika"
-          visits: "Waliotembelea"
           days: "siku"
           topics_replied_to: "Mada Zilizopata Majibu"
           topics_viewed: "Mada Zilizoonwa "
@@ -3280,6 +3278,7 @@ sw:
         post_title: "Ujumbe"
         category_id: "Utambulisho wa kikundi"
         category_title: "Kikundi"
+        username: "Jina la mtumiaji"
         delete_confirm: Una uhakika unataka kufuta hii link kiungo?
         form:
           label: "Mpya:"

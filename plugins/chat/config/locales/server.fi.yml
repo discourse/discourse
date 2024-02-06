@@ -96,7 +96,7 @@ fi:
       over_chat_max_direct_message_users:
         one: "Et voi luoda yksityisviestiä useammalle kuin %{count} muulle käyttäjälle."
         other: "Et voi luoda yksityisviestiä useammalle kuin %{count} muulle käyttäjälle."
-      original_message_not_found: "Sen viestin edeltäjää, johon olet vastaamassa, ei löydy tai sen on poistettu."
+      original_message_not_found: "Sen viestin edeltäjää, johon olet vastaamassa, ei löydy, tai se on poistettu."
       thread_invalid_for_channel: "Ketju ei kuulu ilmoitetulle kanavalle."
       thread_does_not_match_parent: "Ketju ei vastaa ylemmän tason viestiä."
     reviewables:

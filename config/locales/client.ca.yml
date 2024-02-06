@@ -3450,7 +3450,6 @@ ca:
           instructions: "Personalitzeu la plantilla en què es presenten tots els correus electrònics HTML i establiu l'estil amb CSS."
       email:
         title: "Correus"
-        settings: "Configuració"
         templates: "Plantilles"
         preview_digest: "Previsualitza el resum"
         advanced_test:
@@ -3913,7 +3912,6 @@ ca:
             other: "Durant els darrers %{count} dies:"
           value_heading: "Valor"
           requirement_heading: "Requisit"
-          visits: "Visites"
           days: "dies"
           topics_replied_to: "Temes resposts a"
           topics_viewed: "Temes vists"
@@ -4152,6 +4150,7 @@ ca:
         post_title: "Publicació"
         category_id: "ID de categoria"
         category_title: "Categoria"
+        username: "Nom d'usuari "
         delete_confirm: Esteu segur que voleu suprimir l'enllaç permanent?
         form:
           label: "Nou:"

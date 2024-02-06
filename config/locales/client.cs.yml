@@ -2870,6 +2870,7 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
+      read_more_in_category: "Chcete si přečíst více? Procházet další témata v %{categoryLink} nebo <a href='%{latestLink}'>zobrazit nejnovější témata</a>."
       read_more: "Chcete si přečíst více? <a href='%{categoryLink}'>Procházet všechny kategorie</a> nebo <a href='%{latestLink}'>zobrazit nejnovější témata</a>."
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
@@ -4662,7 +4663,6 @@ cs:
               create: Vytvoření skupiny štítků.
               update: Aktualizace skupiny štítků podle id.
             users:
-              show: Získejte informace o uživateli.
               check_emails: Seznam e-mailů uživatele.
               update: Aktualizovat informace v uživatelském profilu.
               log_out: Odhlásit všechny relace pro uživatele.
@@ -4765,14 +4765,10 @@ cs:
           post_liked: "Když se uživateli líbí příspěvek."
         notification_event:
           group_name: "Události upozornění"
-          notification_created: "Uživatel obdržel upozornění"
         group_user_event:
           group_name: "Události skupin uživatelů"
-          user_added_to_group: "Uživatel přidán do skupiny"
-          user_removed_from_group: "Uživatel odebrán ze skupiny"
         user_promoted_event:
           group_name: "Události povýšení uživatelů"
-          user_promoted: "Uživatel provýšen"
         delivery_status:
           title: "Stav doručení"
           inactive: "Neaktivní"
@@ -5076,7 +5072,6 @@ cs:
           reset: "Obnovit výchozí"
       email:
         title: "E-mail"
-        settings: "Nastavení"
         templates: "Šablony"
         templates_title: "Šablony e-mailů"
         preview_digest: "Náhled souhrnu"
@@ -5537,7 +5532,6 @@ cs:
             other: "Za posledních %{count} dní:"
           value_heading: "Hodnota"
           requirement_heading: "Požadavek"
-          visits: "Návštěv"
           days: "dní"
           topics_replied_to: "Odpovědí na témata"
           topics_viewed: "Zobrazeno témat"
@@ -5774,6 +5768,7 @@ cs:
         post_title: "Příspěvek"
         category_id: "ID kategorie"
         category_title: "Kategorie"
+        username: "Uživatelské jméno"
         delete_confirm: Opravdu chcete smazat tento trvalý odkaz?
         form:
           label: "Nové:"

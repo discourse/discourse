@@ -4637,7 +4637,6 @@ tr_TR:
             users:
               bookmarks: Kullanıcı yer imlerini listeleyin. ICS formatını kullanırken yer imi anımsatıcılarını getirir.
               sync_sso: DiscourseConnect kullanan bir kullanıcıyı senkronize edin.
-              show: Bir kullanıcı hakkında bilgi edinin.
               check_emails: Kullanıcı e-postalarını listeleyin.
               update: Kullanıcı profili bilgilerini güncelleyin.
               log_out: Bir kullanıcı için tüm oturumları kapatın.
@@ -4758,14 +4757,10 @@ tr_TR:
           post_liked: "Bir kullanıcı bir gönderiyi beğendiğinde."
         notification_event:
           group_name: "Bildirim Olayları"
-          notification_created: "Bir kullanıcı akışında bir bildirim aldığında"
         group_user_event:
           group_name: "Grup Kullanıcısı Olayları"
-          user_added_to_group: "Bir kullanıcı bir gruba eklendi"
-          user_removed_from_group: "Bir kullanıcı bir gruptan çıkarıldı"
         user_promoted_event:
           group_name: "Kullanıcı Terfisi Olayları"
-          user_promoted: "Bir kullanıcı terfi ettirildi"
         delivery_status:
           title: "Teslim Durumu"
           inactive: "Aktif Değil"
@@ -5185,7 +5180,6 @@ tr_TR:
           instructions: "Tüm html e-postalarının oluşturulduğu şablonu özelleştirin ve CSS kullanarak stil verin."
       email:
         title: "E-postalar"
-        settings: "Ayarlar"
         templates: "Şablonlar"
         templates_title: "E-posta Şablonları"
         preview_digest: "Ön İzleme Özeti"
@@ -5832,7 +5826,6 @@ tr_TR:
             other: "Son %{count} günde:"
           value_heading: "Değer"
           requirement_heading: "Gereklilik"
-          visits: "Ziyaretler"
           days: "gün"
           topics_replied_to: "Yanıtlanan Konular"
           topics_viewed: "Görüntülenen Konular"
@@ -6138,6 +6131,7 @@ tr_TR:
         category_title: "Kategori"
         tag_name: "Etiket adı"
         external_url: "Harici veya Göreli URL"
+        username: "Kullanıcı Adı"
         destination: "Hedef"
         copy_to_clipboard: "Kalıcı Bağlantıyı Panoya Kopyala"
         delete_confirm: Bu kalıcı bağlantıyı silmek istediğinizden emin misiniz?

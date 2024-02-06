@@ -3564,7 +3564,6 @@ ro:
           reset: "Resetare la valorile implicite"
       email:
         title: "Email"
-        settings: "Opțiuni"
         templates: "Șabloane"
         templates_title: "Șabloane de email"
         preview_digest: "Rezumat previzualizare"
@@ -3960,7 +3959,6 @@ ro:
             other: "În ultimele %{count} de zile:"
           value_heading: "Valoare"
           requirement_heading: "Cerință"
-          visits: "Vizite"
           days: "Zile"
           topics_replied_to: "Subiecte la care s-a răspuns"
           topics_viewed: "Subiecte vizualizate"
@@ -4186,6 +4184,7 @@ ro:
         post_title: "Postare"
         category_id: "ID categorie"
         category_title: "Categorie"
+        username: "Nume utilizator"
         copy_to_clipboard: "Copiază legătură permanentă în memoria temporară"
         delete_confirm: Ești sigur că vrei să ștergi această adresă permanentă?
         form:

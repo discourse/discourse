@@ -3788,7 +3788,6 @@ lt:
             users:
               bookmarks: Sąrašas vartotojo žymių. Naudojant ICS formatą, jis grąžina priminimus apie žymes.
               sync_sso: Sinchronizuokite vartotoją naudodami DiscourseConnect.
-              show: Gauti informaciją apie vartotoją.
               check_emails: Vartotojų el. paštų sąrašas
               update: Atnaujinti vartotojo profilio informaciją.
               log_out: Atjungti visus seansus vartotojui.
@@ -4152,7 +4151,6 @@ lt:
           save_error_with_reason: "Jūsų pakeitimai nebuvo išsaugoti. %{error}"
       email:
         title: "El. laiškai"
-        settings: "Nustatymai"
         templates: "Juodraščiai"
         preview_digest: "Parodyti Santrauką"
         advanced_test:
@@ -4655,7 +4653,6 @@ lt:
           title: "Reikalavimai 3 pasitikėjimo lygiui"
           value_heading: "Reikšmė"
           requirement_heading: "Reikalavimas"
-          visits: "Apsilankymai"
           days: "dienos"
           topics_replied_to: "Atsakyta į temų"
           topics_viewed: "Peržiūrėta temų"
@@ -4925,6 +4922,7 @@ lt:
         category_title: "Kategorija"
         tag_name: "Žymos pavadinimas"
         external_url: "Išorinis arba santykinis URL"
+        username: "Vartotojo vardas"
         destination: "Paskirtis"
         copy_to_clipboard: "Kopijuoti nuolatinę nuorodą į iškarpinę"
         delete_confirm: Ar tikrain nori ištrinti šią laikiną nuorodą?
