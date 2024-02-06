@@ -17,11 +17,13 @@
     .name-line {
       > a {
         display: flex;
-        gap: 0.5em;
+        flex-wrap: wrap;
+        gap: 0 0.5em;
         color: var(--primary-high);
       }
       .name,
       .username {
+        width: 100%;
         @include ellipsis;
       }
 
@@ -39,6 +41,7 @@
 
     .title {
       color: var(--primary-medium);
+      @include ellipsis;
     }
   }
 
