@@ -58,14 +58,21 @@ export default class Info extends Component {
   }
 
   get tags() {
-    if (!this.args.topic.tags) {
-      return;
+    if (this.args.topic.tags) {
+      return renderTags(this.args.topic);
     }
-    return renderTags(this.args.topic);
   }
 
   get remainingParticipantCount() {
     return this.totalParticipants - this.maxExtraItems;
+  }
+
+  get participants() {
+    const participants = [
+      ...this.args.topic.details.allowed_users,
+      ...this.args.topic.details.allowed_groups,
+    ];
+    return participants.slice(0, this.maxExtraItems);
   }
 
   @action
@@ -76,14 +83,6 @@ export default class Info extends Component {
         keepFilter: true,
       });
     }
-  }
-
-  get participants() {
-    const participants = [
-      ...this.args.topic.details.allowed_users,
-      ...this.args.topic.details.allowed_groups,
-    ];
-    return participants.slice(0, this.maxExtraItems);
   }
 
   <template>
