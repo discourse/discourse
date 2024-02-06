@@ -1463,6 +1463,9 @@ sv:
           description: "Bekräfta att du önskar ändra din e-postadress till:"
           description_add: "Bekräfta att du önskar lägga till en alternativ e-postadress:"
         authorizing_old:
+          title: "Verifiera gammal e-postadress"
+          description: "Verifiera din gamla e-postadress för att fortsätta med ändringen av din e-postadress:"
+          description_add: "Verifiera din befintliga e-postadress för att fortsätta lägga till en alternativ adress:"
           old_email: "Gammal e-postadress: %{email}"
           new_email: "Ny e-postadress: %{email}"
           confirm_success: "Vi har skickat e-post till din nya e-postadress för att bekräfta ändringen!"

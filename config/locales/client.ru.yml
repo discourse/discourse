@@ -668,7 +668,7 @@ ru:
         all:
           title: "Все"
       context_question:
-        is_this_post: "Это %{reviewable_type} %{reviewable_human_score_types}?"
+        is_this_post: "Эта %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "или"
         something_else_wrong: "Что-то не так со следующим: %{reviewable_type}?"
       types:

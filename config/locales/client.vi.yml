@@ -4294,7 +4294,7 @@ vi:
           instructions: "Tùy chỉnh mẫu trong đó tất cả các email html được hiển thị và tạo kiểu bằng CSS."
       email:
         title: "Emails"
-        settings: "Cấu hình"
+        settings: "Cài đặt"
         templates: "Templates"
         preview_digest: "Xem trước tập san"
         advanced_test:

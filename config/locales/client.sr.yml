@@ -2085,7 +2085,7 @@ sr:
         email_style:
           css: "CSS"
       email:
-        settings: "Podešavanje"
+        settings: "Podešavanja"
         preview_digest: "Pregled sažetka"
         error: "<b>GREŠKA</b> - %{server_error}"
         test_error: "Dogodio se problem pri slanju test emaila. Molimo proverite podešavanja emaila, potvrdite da domaćin ne blokira email veze i pokušajte ponovo."

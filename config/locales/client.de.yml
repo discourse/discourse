@@ -1463,6 +1463,9 @@ de:
           description: "Bitte bestätige, dass du deine E-Mail-Adresse ändern möchtest in:"
           description_add: "Bitte bestätige, dass du eine alternative E-Mail-Adresse hinzufügen möchtest:"
         authorizing_old:
+          title: "Alte E-Mail-Adresse verifizieren"
+          description: "Bitte bestätige deine alte E-Mail-Adresse, um mit dem Ändern deiner E-Mail fortzufahren:"
+          description_add: "Bitte überprüfe deine bestehende E-Mail-Adresse, um mit dem Hinzufügen einer alternativen Adresse fortzufahren:"
           old_email: "Alte Adresse: %{email}"
           new_email: "Neue Adresse: %{email}"
           confirm_success: "Wir haben eine E-Mail an deine neue Adresse gesendet, um die Änderung zu bestätigen!"
@@ -1848,7 +1851,7 @@ de:
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
       admin_guide:
         title: "Willkommen auf deiner neuen Website!"
-        content: "<a href=„%{admin_guide_url}'>Lies den Admin-Leitfaden</a> , um mit dem Aufbau deiner Website und Community fortzufahren."
+        content: "<a href='%{admin_guide_url}'>Lies den Administrator-Leitfaden</a>, um deine Website und deine Community weiter auszubauen."
         content_no_url: "Lies den Administrator-Leitfaden, um deine Website und deine Community weiter auszubauen."
     loading: "Wird geladen …"
     errors:
@@ -4904,7 +4907,7 @@ de:
         explain_preview: "Website mit diesem Theme anschauen"
         syntax_error: "Syntaxfehler"
         settings_editor: "Einstellungseditor"
-        validation_settings_keys: "Jedes Element darf nur einen „Einstellungs“-Schlüssel und einen „Wert“-Schlüssel haben."
+        validation_settings_keys: "Jedes Element darf nur einen Schlüssel „Einstellung“ und einen Schlüssel „Wert“ haben."
         validation_settings_deleted: "Diese Einstellungen wurden gelöscht. Bitte stelle sie wieder her und versuche es erneut."
         validation_settings_added: "Diese Einstellungen wurden hinzugefügt. Bitte entferne sie und versuche es erneut."
         save: "Speichern"

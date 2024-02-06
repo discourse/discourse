@@ -46,8 +46,8 @@ it:
       invalid: |-
         Mi dispiace, è matematicamente impossibile lanciare quella combinazione di dadi. :confounded:
       not_enough_dice:
-        one: "Ho solo %{count} tentativo. Purtroppo lo so!"
-        other: "Ho solo %{count} tentativi. Purtroppo lo so!"
+        one: "Ho solo %{count} tentativo. È un peccato, lo so!"
+        other: "Ho solo %{count} tentativi. È un peccato, lo so!"
       out_of_range: |-
         Lo sapevi che [il numero massimo di lati](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per avere un dado matematicamente ben bilanciato è 120?
       results: |-

@@ -1357,8 +1357,8 @@ zh_CN:
         save: "保存"
         title: "通行密钥"
         short_description: "通行密钥是密码替代方法，可以通过生物识别（例如触控 ID 或者面容 ID）或通过设备 PIN/密码验证您的身份。"
-        added_prefix: "已添加"
-        last_used_prefix: "最后使用"
+        added_prefix: "添加："
+        last_used_prefix: "最后使用："
         never_used: "从未使用"
         not_allowed_error: "通行密钥注册过程超时、被取消或不被允许。"
         already_added_error: "您已注册此通行密钥，无需再次注册。"
@@ -1382,12 +1382,15 @@ zh_CN:
         success_via_admin: "我们已向该地址发送一封电子邮件。用户需要按照电子邮件中的确认说明进行操作。"
         success_staff: "我们已向您当前的地址发送一封电子邮件。请按照确认说明进行操作。"
         back_to_preferences: "返回偏好设置"
-        confirm_success: "您的电子邮件已被更新。"
+        confirm_success: "您的电子邮件已更新。"
         confirm: "确认"
         authorizing_new:
           description: "请确认您要使用的新电子邮件地址："
           description_add: "请确认您要添加的备用电子邮件地址："
         authorizing_old:
+          title: "验证旧电子邮件地址"
+          description: "请验证你的旧电子邮件地址，以继续更改你的电子邮件："
+          description_add: "请验证你现有的电子邮件地址，以便继续添加备用地址："
           old_email: "旧电子邮件：%{email}"
           new_email: "新电子邮件：%{email}"
           confirm_success: "我们已向您的新电子邮件地址发送电子邮件以确认更改！"
@@ -3461,7 +3464,7 @@ zh_CN:
         more:
           other: "还差 %{count} 条…"
         left:
-          other: "剩余 %{count} 条"
+          other: "剩余 %{count} 个字符"
     flagging_topic:
       title: "感谢您帮助我们建设文明社区！"
       action: "举报话题"

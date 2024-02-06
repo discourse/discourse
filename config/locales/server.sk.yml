@@ -65,6 +65,11 @@ sk:
       too_many_files: "Počet súborov (%{count}) v téme prekročil maximálny povolený počet súborov (%{limit})"
       migrations:
         invalid_filename: "Nesprávny názov súboru pre migračný súbor: %{filename}. Názvy súborov musia začínať 4 číslicami, po ktorých nasleduje pomlčka a potom názov, ktorý obsahuje len alfanumerické znaky s pomlčkami."
+        name_too_long:
+          one: "Názov migrácie je príliš dlhý. Nemal by presiahnuť %{count} znak."
+          few: "Názov migrácie je príliš dlhý. Nemalo by presiahnuť %{count} znaky."
+          many: "Názov migrácie je príliš dlhý. Nemalo by presiahnuť %{count} znakov."
+          other: "Názov migrácie je príliš dlhý. Nemalo by presiahnuť %{count} znaky."
         too_many_pending_migrations: "V tejto téme je príliš veľa čakajúcich migrácií. Témy nesmú v jednej aktualizácii zaviesť viac ako 100 migrácií"
         out_of_sequence: "Migrácia '%{name}' je mimo poradia. Posledná migrácia pre túto tému mala číslo verzie %{current} , ktoré je vyššie ako nová migrácia."
         syntax_error: "Nepodarilo sa spustiť migráciu '%{name}', pretože obsahuje chybu syntaxe: %{error}"

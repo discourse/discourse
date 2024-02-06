@@ -4254,7 +4254,7 @@ ur:
           instructions: "اس ٹَیمپلَیٹ کو حسب ضرورت بنائیں جس میں تمام HTML ایمیلز پیش کی جاتی ہیں، اور CSS کا استعمال کرتے ہوئے سٹائیل کریں۔"
       email:
         title: "اِیمیل"
-        settings: "سیٹِنگ"
+        settings: "ترتیبات"
         templates: "ٹَیمپلیٹ"
         preview_digest: "ڈائجسٹ کا مشاہدہ کریں"
         advanced_test:
