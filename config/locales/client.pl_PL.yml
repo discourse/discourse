@@ -1611,6 +1611,7 @@ pl_PL:
           description: "Potwierdź, że chcesz zmienić swój adres e-mail na:"
           description_add: "Potwierdź, że chcesz dodać alternatywny adres e-mail:"
         authorizing_old:
+          title: "Zweryfikuj stary adres e-mail"
           old_email: "Stary adres e-mail: %{email}"
           new_email: "Nowy adres e-mail: %{email}"
           confirm_success: "Wysłaliśmy e-maila na nowy adres, aby potwierdzić tę zmianę!"
@@ -2975,6 +2976,7 @@ pl_PL:
           few: "Postęp: <strong>%{count}</strong> tematy"
           many: "Postęp: <strong>%{count}</strong> tematów"
           other: "Postęp: <strong>%{count}</strong> tematów"
+        silent: "Wykonaj tę akcję po cichu."
       none:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
@@ -3007,6 +3009,8 @@ pl_PL:
     topic_bulk_actions:
       close_topics:
         name: "Zamknij tematy"
+      update_category:
+        name: "Aktualizuj kategorię"
     topic:
       filter_to:
         one: "%{count} post w temacie"

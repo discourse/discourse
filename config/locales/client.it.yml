@@ -158,8 +158,8 @@ it:
       removed_user: "Ha rimosso %{who} %{when}"
       removed_group: "Ha rimosso %{who} %{when}"
       autobumped: "Riproposto automaticamente %{when}"
-      tags_changed: "Etichette aggiornate il %{when}"
-      category_changed: "Categoria aggiornata il %{when}"
+      tags_changed: "Etichette aggiornate il giorno %{when}"
+      category_changed: "Categoria aggiornata il giorno %{when}"
       autoclosed:
         enabled: "Chiuso %{when}"
         disabled: "Aperto %{when}"
@@ -311,7 +311,7 @@ it:
       edit_bookmark: "Modifica Segnalibro"
       clear_bookmarks: "Cancella Segnalibri"
       help:
-        bookmark: "Clicca per memorizzare il segnalibro a questo argomento"
+        bookmark: "Clicca per mettere il segnalibro all'argomento"
         edit_bookmark: "Clicca per modificare il segnalibro di un messaggio in questo argomento"
         edit_bookmark_for_topic: "Fai clic per modificare il segnalibro per quest'argomento"
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
@@ -360,7 +360,7 @@ it:
       new_topic: "Nuovo argomento in bozza"
       new_private_message: "Nuovo messaggio personale in bozza"
       abandon:
-        confirm: "Hai gia una bozza in corso. Cosa vorresti fare?"
+        confirm: "Hai già una bozza in corso. Cosa vorresti fare?"
         yes_value: "Elimina"
         no_value: "Riprendi la modifica"
     topic_count_all:
@@ -570,7 +570,7 @@ it:
         rejected_user:
           title: "Utente rifiutato"
         rejected_post:
-          title: "Messaggio respinto"
+          title: "Messaggio rifiutato"
         ignored:
           title: "Segnalazione ignorata"
         deleted:
@@ -1916,7 +1916,7 @@ it:
       no_internet: "Nessuna connessione internet."
       refresh_page: "Aggiorna pagina"
     summary:
-      in_progress: "Riepilogo dell'argomento utilizzando l'AI in corso"
+      in_progress: "Riepilogo dell'argomento utilizzando l'IA in corso"
       summarized_on: "Riassunto con IA del giorno %{date}"
       model_used: "IA utilizzata: %{model}"
       outdated: "Il riepilogo è obsoleto"

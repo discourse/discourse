@@ -2870,6 +2870,7 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
+      read_more_in_category: "Chcete si přečíst více? Procházet další témata v %{categoryLink} nebo <a href='%{latestLink}'>zobrazit nejnovější témata</a>."
       read_more: "Chcete si přečíst více? <a href='%{categoryLink}'>Procházet všechny kategorie</a> nebo <a href='%{latestLink}'>zobrazit nejnovější témata</a>."
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,

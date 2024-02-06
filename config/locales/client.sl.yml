@@ -3050,6 +3050,11 @@ sl:
           two: "vnesite vsaj %{count} znaka"
           few: "vnesite vsaj %{count} znake"
           other: "vnesite vsaj %{count} znakov"
+        more:
+          one: "Še %{count} do konca"
+          two: "Še %{count} do konca"
+          few: "Še %{count} do konca"
+          other: "Še %{count} do konca"
         left:
           one: "%{count} preostal"
           two: "%{count} preostala"
@@ -3578,6 +3583,21 @@ sl:
       errors:
         typeMismatch:
           default: "Vnesite veljavno vsebino"
+        tooShort:
+          one: "Vnos mora vsebovati vsaj %{count} znakov."
+          two: "Vnos mora vsebovati vsaj %{count} znakov."
+          few: "Vnos mora vsebovati vsaj %{count} znakov."
+          other: "Vnos mora vsebovati vsaj %{count} znakov."
+        rangeOverflow:
+          one: "Vnos mora biti manjši od %{count}."
+          two: "Vnos mora biti manjši od %{count}."
+          few: "Vnos mora biti manjši od %{count}."
+          other: "Vnos mora biti manjši od %{count}."
+        rangeUnderflow:
+          one: "Vnos mora biti večji od %{count}."
+          two: "Vnos mora biti večji od %{count}."
+          few: "Vnos mora biti večji od %{count}."
+          other: "Vnos mora biti večji od %{count}."
     table_builder:
       title: "Oblikovalec tabel"
       modal:

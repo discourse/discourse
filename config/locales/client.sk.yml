@@ -2138,6 +2138,11 @@ sk:
       custom_placeholder_notify_user: "Buďte konkrétny, buďte konštruktívny a buďte vždy milý."
       custom_placeholder_notify_moderators: "Dajte nám vedieť, z čoho konkrétne máte obavy, a priložte príslušné odkazy a príklady, ak je to možné."
       custom_message:
+        more:
+          one: "ostáva %{count}"
+          few: "ostáva %{count}"
+          many: "ostáva %{count}"
+          other: "ostáva %{count}"
         left:
           one: "%{count} zostáva"
           few: "%{count} zostávajú"
@@ -2530,6 +2535,21 @@ sk:
         typeMismatch:
           default: "Prosím zadajte platnú hodnotu."
           email: "Zadajte prosím platný email."
+        tooLong:
+          one: "Vstup musí mať menej ako %{count} znakov."
+          few: "Vstup musí mať menej ako %{count} znakov."
+          many: "Vstup musí mať menej ako %{count} znakov."
+          other: "Vstup musí mať menej ako %{count} znakov."
+        rangeOverflow:
+          one: "Vstup musí byť menší ako %{count}."
+          few: "Vstup musí byť menší ako %{count}."
+          many: "Vstup musí byť menší ako %{count}."
+          other: "Vstup musí byť menší ako %{count}."
+        rangeUnderflow:
+          one: "Vstup musí byť väčší ako %{count}."
+          few: "Vstup musí byť väčší ako %{count}."
+          many: "Vstup musí byť väčší ako %{count}."
+          other: "Vstup musí byť väčší ako %{count}."
     table_builder:
       title: "Zostavovač tabuľky"
       modal:

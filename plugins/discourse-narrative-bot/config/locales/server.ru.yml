@@ -46,10 +46,10 @@ ru:
       invalid: |-
         Даже математически невозможно выдать эту комбинацию костей. :confounded:
       not_enough_dice:
-        one: "На кубике %{count}. И мне очень стыдно!"
-        few: "На кубике %{count}. И мне очень стыдно!"
-        many: "На кубике %{count}. И мне очень стыдно!"
-        other: "На кубике %{count}. И мне очень стыдно!"
+        one: "На кубиках %{count}. И мне очень стыдно!"
+        few: "У меня только %{count} кубика. И мне очень стыдно!"
+        many: "На кубиках %{count}. И мне очень стыдно!"
+        other: "На кубиках %{count}. И мне очень стыдно!"
       out_of_range: |-
         Знаете ли вы, что [максимальное количество сторон](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) в кубиках может быть 120?
       results: |-

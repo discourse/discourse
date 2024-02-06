@@ -3339,7 +3339,7 @@ tr_TR:
     only_reply_by_email: "Yanıt vermek için bu e-postayı yanıtlayın."
     only_reply_by_email_pm: "%{participants} adlı katılımcıya yanıt vermek için bu e-postayı yanıtlayın."
     visit_link_to_respond: "Yanıt vermek için [Konuyu Ziyaret Edin](%{base_url}%{url})."
-    visit_link_to_respond_pm: "Yanıt vermek için [mesaja gidin](%{base_url}%{url})."
+    visit_link_to_respond_pm: "%{participants} adlı kişilere yanıt vermek için [mesaja gidin](%{base_url}%{url})."
     reply_above_line: "## Lütfen yanıtınızı bu satırın üzerine yazın. ##"
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
     pm_participants: "Katılımcılar: %{participants}"

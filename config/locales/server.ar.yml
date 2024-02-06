@@ -4929,8 +4929,14 @@ ar:
   onebox:
     discourse:
       user_joined_community: "تاريخ الانضمام: %{date}"
+    gitlab:
+      show_original: "إظهار الأصل"
     github:
+      show_original: "إظهار الأصل"
+      opened: "فُتح"
       closed: "مغلقة"
+      comment_by: "التعليق بواسطة"
+      review_by: "روجع من قبل"
   discourse_push_notifications:
     popup:
       mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'
