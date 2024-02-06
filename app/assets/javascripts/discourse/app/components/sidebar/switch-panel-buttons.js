@@ -22,20 +22,18 @@ export default class SwitchPanelButtons extends Component {
   }
 
   @action
-  switchPanel(panel) {
+  async switchPanel(panel) {
     this.isSwitching = true;
     this.currentPanel = panel;
     this.sidebarState.currentPanel.lastKnownURL = this.router.currentURL;
 
     if (this.destination) {
-      this.router
-        .transitionTo(this.destination)
-        .then(() => {
-          this.sidebarState.setPanel(this.currentPanel.key);
-        })
-        .finally(() => {
-          this.isSwitching = false;
-        });
+      try {
+        await this.router.transitionTo(this.destination);
+        this.sidebarState.setPanel(this.currentPanel.key);
+      } finally {
+        this.isSwitching = false;
+      }
     }
   }
 }
