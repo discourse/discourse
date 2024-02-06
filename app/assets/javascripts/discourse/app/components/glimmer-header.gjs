@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import concatClass from "discourse/helpers/concat-class";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
@@ -23,6 +24,11 @@ const SEARCH_BUTTON_ID = "search-button";
 let additionalPanels = [];
 export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
+}
+
+let _customHeaderClasses = [];
+export function addCustomHeaderClass(className) {
+  _customHeaderClasses.push(className);
 }
 
 export default class GlimmerHeader extends Component {
@@ -54,6 +60,10 @@ export default class GlimmerHeader extends Component {
 
   get inTopicRoute() {
     return this.search.inTopicContext;
+  }
+
+  get customHeaderClasses() {
+    return _customHeaderClasses.join(" ");
   }
 
   @action
@@ -172,7 +182,10 @@ export default class GlimmerHeader extends Component {
   }
 
   <template>
-    <header class="d-header" {{this.appEventsListeners}}>
+    <header
+      class={{concatClass this.customHeaderClasses "d-header"}}
+      {{this.appEventsListeners}}
+    >
       <div class="wrap">
         <Contents
           @sidebarEnabled={{@sidebarEnabled}}
