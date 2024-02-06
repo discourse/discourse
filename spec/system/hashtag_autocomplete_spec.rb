@@ -255,7 +255,9 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
     it "shows a default color and css class for the category icon square" do
       topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
-      expect(page).to have_css(".hashtag-cooked .hashtag-missing")
+      expect(page).to have_css(".hashtag-cooked .hashtag-category-badge")
+      css_class = ".hashtag-color--category--#{private_category.id}"
+      expect(find("#hashtag-css-generator", visible: false).text(:all)).not_to include(css_class)
     end
   end
 end

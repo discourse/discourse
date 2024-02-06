@@ -10,6 +10,7 @@ export default class HashtagTypeBase {
 
   constructor(owner) {
     setOwner(this, owner);
+    this.site = owner.lookup("service:site");
     this.loadedIds = new Set();
   }
 
@@ -32,10 +33,13 @@ export default class HashtagTypeBase {
   async _load() {
     // Convert sets to arrays
     const data = Object.fromEntries(
-      Object.entries(this.loadingIds).map(([type, ids]) => [type, [...ids]])
+      Object.entries(HashtagTypeBase.loadingIds).map(([type, ids]) => [
+        type,
+        [...ids],
+      ])
     );
 
-    this.loadingIds = {};
+    HashtagTypeBase.loadingIds = {};
 
     const hashtags = await ajax("/hashtags/by-ids", { data });
     const typeClasses = getHashtagTypeClasses();
@@ -45,12 +49,14 @@ export default class HashtagTypeBase {
   }
 
   isLoaded(id) {
-    return this.loadedIds.has(parseInt(id, 10));
+    return (
+      !this.site.lazy_load_categories || this.loadedIds.has(parseInt(id, 10))
+    );
   }
 
   load(id) {
     if (!this.isLoaded(id)) {
-      (this.loadingIds[this.type] ||= new Set()).add(id);
+      (HashtagTypeBase.loadingIds[this.type] ||= new Set()).add(id);
       debounce(this, this._load, 100, false);
     }
   }
