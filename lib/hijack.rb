@@ -29,6 +29,7 @@ module Hijack
         Scheduler::Defer.later(
           "hijack #{params["controller"]} #{params["action"]} #{info}",
           force: false,
+          current_user: current_user&.id,
           &scheduled.method(:resolve)
         )
       rescue WorkQueue::WorkQueueFull
