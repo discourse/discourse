@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
 import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
@@ -5,16 +6,38 @@ import { equal } from "@ember/object/computed";
 import { Promise } from "rsvp";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
-const RestModel = EmberObject.extend({
-  isNew: equal("__state", "new"),
-  isCreated: equal("__state", "created"),
-  isSaving: false,
+export default class RestModel extends EmberObject {
+  // Overwrite and JSON will be passed through here before `create` and `update`
+  static munge(json) {
+    return json;
+  }
 
-  beforeCreate() {},
-  afterCreate() {},
+  static create(args) {
+    args = args || {};
 
-  beforeUpdate() {},
-  afterUpdate() {},
+    args.__munge = this.munge;
+    const createArgs = this.munge(args, args.store);
+
+    // Some Discourse code calls `model.create()` directly without going through the
+    // store. In that case the owner is not set, and injections will fail. This workaround ensures
+    // the owner is always present. Eventually we should use the store for everything to fix this.
+    const receivedOwner = getOwner(createArgs);
+    if (!receivedOwner || receivedOwner.isDestroyed) {
+      setOwner(createArgs, getOwnerWithFallback());
+    }
+
+    return super.create(createArgs);
+  }
+
+  @tracked isSaving = false;
+  @equal("__state", "new") isNew;
+  @equal("__state", "created") isCreated;
+
+  beforeCreate() {}
+  afterCreate() {}
+
+  beforeUpdate() {}
+  afterUpdate() {}
 
   update(props) {
     if (this.isSaving) {
@@ -44,7 +67,7 @@ const RestModel = EmberObject.extend({
         return res;
       })
       .finally(() => this.set("isSaving", false));
-  },
+  }
 
   _saveNew(props) {
     if (this.isSaving) {
@@ -77,45 +100,19 @@ const RestModel = EmberObject.extend({
         return res;
       })
       .finally(() => this.set("isSaving", false));
-  },
+  }
 
   createProperties() {
     throw new Error(
       "You must overwrite `createProperties()` before saving a record"
     );
-  },
+  }
 
   save(props) {
     return this.isNew ? this._saveNew(props) : this.update(props);
-  },
+  }
 
   destroyRecord() {
     return this.store.destroyRecord(this.__type, this);
-  },
-});
-
-RestModel.reopenClass({
-  // Overwrite and JSON will be passed through here before `create` and `update`
-  munge(json) {
-    return json;
-  },
-
-  create(args) {
-    args = args || {};
-
-    args.__munge = this.munge;
-    const createArgs = this.munge(args, args.store);
-
-    // Some Discourse code calls `model.create()` directly without going through the
-    // store. In that case the owner is not set, and injections will fail. This workaround ensures
-    // the owner is always present. Eventually we should use the store for everything to fix this.
-    const receivedOwner = getOwner(createArgs);
-    if (!receivedOwner || receivedOwner.isDestroyed) {
-      setOwner(createArgs, getOwnerWithFallback());
-    }
-
-    return this._super(createArgs);
-  },
-});
-
-export default RestModel;
+  }
+}
