@@ -33,8 +33,9 @@ module CategoryBadge
     styles.map { |k, v| "#{k}: #{ERB::Util.html_escape(v)};" }.join(" ")
   end
 
-  def self.wrap_in_link(content, url, extra_classes = "")
-    "<a class='badge-category__wrapper #{extra_classes}' href='#{url}'>#{content}</a>".html_safe
+  def self.wrap_in_link(content, url, extra_classes = "", style_value = nil)
+    style_attr = style_value ? " style='#{style_value}'" : ""
+    "<a class='badge-category__wrapper #{extra_classes}' href='#{url}'#{style_attr}>#{content}</a>".html_safe
   end
 
   def self.style_for_browser(category, opts)
@@ -90,6 +91,6 @@ module CategoryBadge
     result << ERB::Util.html_escape(category.name)
     result << "</span></span>"
 
-    wrap_in_link(result, data[:category_url])
+    wrap_in_link(result, data[:category_url], "", "color: ##{category.text_color}")
   end
 end
