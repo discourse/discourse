@@ -24,13 +24,14 @@ export default class CategoryList extends Component {
       .filter(Boolean);
   }
 
+  async updateSelectedCategories() {
+    await this.pendingCategoriesRequest;
+    this.selectedCategories = await Category.asyncFindByIds(this.categoryIds);
+  }
+
   @action
   valueChanged() {
-    this.pendingCategoriesRequest = this.pendingCategoriesRequest
-      .then(() => Category.asyncFindByIds(this.categoryIds))
-      .then((categories) => {
-        this.selectedCategories = categories;
-      });
+    this.pendingCategoriesRequest = this.updateSelectedCategories();
   }
 
   @action
