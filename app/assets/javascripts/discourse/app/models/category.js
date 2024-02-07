@@ -487,7 +487,10 @@ Category.reopenClass({
     const result = await categoryMultiCache.fetch(ids);
     if (categoryMultiCache.hadTooManyCalls()) {
       warn(
-        "Multiple calls to Category.asyncFindByIds within a second. Could they be combined?"
+        "Multiple calls to Category.asyncFindByIds within a second. Could they be combined?",
+        {
+          id: "discourse.category.multiple-async-find-by-ids-calls",
+        }
       );
     }
 
