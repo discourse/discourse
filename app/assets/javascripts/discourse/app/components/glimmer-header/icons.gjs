@@ -20,6 +20,8 @@ export function clearExtraHeaderIcons() {
 export default class Icons extends Component {
   @service site;
   @service currentUser;
+  @service header;
+  @service search;
 
   <template>
     <ul class="icons d-header-icons">
@@ -34,7 +36,7 @@ export default class Icons extends Component {
         @icon="search"
         @iconId={{@searchButtonId}}
         @onClick={{@toggleSearchMenu}}
-        @active={{@searchVisible}}
+        @active={{this.search.visible}}
         @href={{getURL "/search"}}
         @className="search-dropdown"
         @targetSelector=".search-menu-panel"
@@ -45,7 +47,7 @@ export default class Icons extends Component {
           @title="hamburger_menu"
           @icon="bars"
           @iconId="toggle-hamburger-menu"
-          @active={{@hamburgerVisible}}
+          @active={{this.header.hamburgerVisible}}
           @onClick={{@toggleHamburger}}
           @href=""
           @className="hamburger-dropdown"
@@ -54,7 +56,7 @@ export default class Icons extends Component {
 
       {{#if this.currentUser}}
         <UserDropdown
-          @active={{@userVisible}}
+          @active={{this.header.userVisible}}
           @toggleUserMenu={{@toggleUserMenu}}
         />
       {{/if}}

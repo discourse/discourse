@@ -114,7 +114,7 @@ export default class Info extends Component {
                 href={{@topic.url}}
                 data-topic-id={{@topic.id}}
               >
-                <span>{{@topic.fancyTitle}}</span>
+                <span>{{htmlSafe @topic.fancyTitle}}</span>
               </a>
 
               <span class="header-topic-title-suffix">

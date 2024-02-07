@@ -8,6 +8,7 @@ import { inject as service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import concatClass from "discourse/helpers/concat-class";
+import scrollLock from "discourse/lib/scroll-lock";
 import SwipeEvents from "discourse/lib/swipe-events";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
@@ -22,12 +23,13 @@ export default class GlimmerSiteHeader extends Component {
   @service currentUser;
   @service site;
   @service docking;
+  @service header;
 
   @tracked headerWrap = null;
-  header = null;
+  @tracked pxClosed = null;
+  @tracked headerElement = null;
   @tracked _dockedHeader = false;
   @tracked _swipeMenuOrigin = null;
-
   @tracked _swipeEvents = null;
   @tracked _applicationElement = null;
   @tracked _resizeObserver = null;
@@ -111,11 +113,11 @@ export default class GlimmerSiteHeader extends Component {
     this._headerWrap = document.querySelector(".d-header-wrap");
     if (this._headerWrap) {
       schedule("afterRender", () => {
-        this.header = this._headerWrap.querySelector("header.d-header");
+        this.headerElement = this._headerWrap.querySelector("header.d-header");
         this.updateHeaderOffset();
         document.documentElement.style.setProperty(
           "--header-top",
-          `${this.header.offsetTop}px`
+          `${this.headerElement.offsetTop}px`
         );
       });
 
@@ -123,7 +125,7 @@ export default class GlimmerSiteHeader extends Component {
         passive: true,
       });
 
-      this._itsatrap = new ItsATrap(this.header);
+      this._itsatrap = new ItsATrap(this.headerElement);
       const dirs = ["up", "down"];
       this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
 
@@ -131,7 +133,7 @@ export default class GlimmerSiteHeader extends Component {
         this._resizeObserver = new ResizeObserver((entries) => {
           for (let entry of entries) {
             if (entry.contentRect) {
-              const headerTop = this.header?.offsetTop;
+              const headerTop = this.headerElement?.offsetTop;
               document.documentElement.style.setProperty(
                 "--header-top",
                 `${headerTop}px`
@@ -202,7 +204,7 @@ export default class GlimmerSiteHeader extends Component {
         this._animate = false;
       }
 
-      const headerCloak = document.querySelector(".header-cloak");
+      const cloakElement = document.querySelector(".header-cloak");
 
       panel.classList.remove("drop-down");
       panel.classList.remove("slide-in");
@@ -230,8 +232,8 @@ export default class GlimmerSiteHeader extends Component {
           waitForPromise(animationFinished);
         }
 
-        headerCloak.animate([{ opacity: 0 }], { fill: "forwards" });
-        headerCloak.style.display = "block";
+        cloakElement.animate([{ opacity: 0 }], { fill: "forwards" });
+        cloakElement.style.display = "block";
 
         animationFinished.then(() => {
           if (isTesting()) {
@@ -246,12 +248,13 @@ export default class GlimmerSiteHeader extends Component {
     });
   }
 
+  @bind
   dockCheck() {
     if (this._docAt === null) {
-      if (!this.header) {
+      if (!this.headerElement) {
         return;
       }
-      this._docAt = this.header.offsetTop;
+      this._docAt = this.headerElement.offsetTop;
     }
 
     const main = (this._applicationElement ??=
@@ -271,8 +274,9 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
+  @bind
   _animateOpening(panel, event = null) {
-    const headerCloak = document.querySelector(".header-cloak");
+    const cloakElement = document.querySelector(".header-cloak");
     let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
     if (event && this.pxClosed > 0) {
       durationMs = this._swipeEvents.getMaxAnimationTimeMs(
@@ -280,13 +284,125 @@ export default class GlimmerSiteHeader extends Component {
       );
     }
     const timing = {
-      duration: durationMs,
+      duration: durationMs > 0 ? durationMs : 0,
       fill: "forwards",
       easing: "ease-out",
     };
     panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
-    headerCloak.animate([{ opacity: 1 }], timing);
+    cloakElement?.animate?.([{ opacity: 1 }], timing);
     this.pxClosed = null;
+  }
+
+  @bind
+  _animateClosing(event, panel, menuOrigin) {
+    this._animate = true;
+    const cloakElement = document.querySelector(".header-cloak");
+    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+    if (event && this.pxClosed > 0) {
+      const distancePx = PANEL_WIDTH - this.pxClosed;
+      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        distancePx / Math.abs(event.velocityX)
+      );
+    }
+    const timing = {
+      duration: durationMs > 0 ? durationMs : 0,
+      fill: "forwards",
+    };
+
+    let endPosition = -PANEL_WIDTH; //origin left
+    if (menuOrigin === "right") {
+      endPosition = PANEL_WIDTH;
+    }
+    panel.animate(
+      [{ transform: `translate3d(${endPosition}px, 0, 0)` }],
+      timing
+    );
+    if (cloakElement) {
+      cloakElement.animate([{ opacity: 0 }], timing);
+      cloakElement.style.display = "none";
+
+      // to ensure that the cloak is cleared after animation we need to toggle any active menus
+      if (this.header.hamburgerVisible || this.header.userVisible) {
+        this.header.hamburgerVisible = false;
+        this.header.userVisible = false;
+      }
+    }
+    this.pxClosed = null;
+  }
+
+  @bind
+  onSwipeStart(event) {
+    const e = event.detail;
+    const center = e.center;
+    const swipeOverValidElement = document
+      .elementsFromPoint(center.x, center.y)
+      .some(
+        (ele) =>
+          ele.classList.contains("panel-body") ||
+          ele.classList.contains("header-cloak")
+      );
+    if (
+      swipeOverValidElement &&
+      (e.direction === "left" || e.direction === "right")
+    ) {
+      scrollLock(true, document.querySelector(".panel-body"));
+    } else {
+      event.preventDefault();
+    }
+  }
+
+  @bind
+  onSwipeEnd(event) {
+    const e = event.detail;
+    const menuPanels = document.querySelectorAll(".menu-panel");
+    scrollLock(false, document.querySelector(".panel-body"));
+    menuPanels.forEach((panel) => {
+      if (this._swipeEvents.shouldCloseMenu(e, this._swipeMenuOrigin)) {
+        this._animateClosing(e, panel, this._swipeMenuOrigin);
+      } else {
+        this._animateOpening(panel, e);
+      }
+    });
+  }
+
+  @bind
+  onSwipeCancel() {
+    const menuPanels = document.querySelectorAll(".menu-panel");
+    scrollLock(false, document.querySelector(".panel-body"));
+    menuPanels.forEach((panel) => {
+      this._animateOpening(panel);
+    });
+  }
+
+  @bind
+  onSwipe(event) {
+    const e = event.detail;
+
+    const movingElement = document.querySelector(".menu-panel");
+    const cloakElement = document.querySelector(".header-cloak");
+
+    //origin left
+    this.pxClosed = Math.max(0, -e.deltaX);
+    let translation = -this.pxClosed;
+    if (this._swipeMenuOrigin === "right") {
+      this.pxClosed = Math.max(0, e.deltaX);
+      translation = this.pxClosed;
+    }
+
+    movingElement.animate(
+      [{ transform: `translate3d(${translation}px, 0, 0)` }],
+      {
+        fill: "forwards",
+      }
+    );
+    cloakElement?.animate?.(
+      [
+        {
+          opacity: (PANEL_WIDTH - this.pxClosed) / PANEL_WIDTH,
+        },
+      ],
+      { fill: "forwards" }
+    );
   }
 
   willDestroy() {
@@ -327,7 +443,6 @@ export default class GlimmerSiteHeader extends Component {
         @canSignUp={{@canSignUp}}
         @showSidebar={{@showSidebar}}
         @sidebarEnabled={{@sidebarEnabled}}
-        @navigationMenuQueryParamOverride={{@navigationMenuQueryParamOverride}}
         @toggleSidebar={{@toggleSidebar}}
         @showCreateAccount={{@showCreateAccount}}
         @showLogin={{@showLogin}}
