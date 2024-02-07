@@ -1237,7 +1237,7 @@ class UsersController < ApplicationController
       if usernames.blank?
         UserSearch.new(term, options).search
       else
-        User.where(username_lower: usernames).limit(limit)
+        User.where(username_lower: usernames).includes(:user_option).limit(limit)
       end
     to_render = serialize_found_users(results)
 
