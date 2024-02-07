@@ -174,15 +174,15 @@ acceptance(
 );
 
 acceptance("Ignored users", function (needs) {
-  needs.user();
-  needs.settings({ ignore_allowed_groups: "11" });
+  needs.user({ can_ignore_users: true });
 
-  test("when trust level < min level to ignore", async function (assert) {
+  test("when user is not allowed to ignore", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
     updateCurrentUser({
       trust_level: 0,
       moderator: false,
       admin: false,
+      can_ignore_users: false,
       groups: [
         {
           id: 10,
@@ -199,9 +199,9 @@ acceptance("Ignored users", function (needs) {
     );
   });
 
-  test("when trust level >= min level to ignore", async function (assert) {
+  test("when user is allowed to ignore", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
-    updateCurrentUser({ trust_level: 1 });
+    updateCurrentUser({ can_ignore_users: true });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
   });
 
