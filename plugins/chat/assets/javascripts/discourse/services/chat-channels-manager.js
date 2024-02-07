@@ -19,6 +19,7 @@ export default class ChatChannelsManager extends Service {
   @service chatApi;
   @service currentUser;
   @service router;
+  @service site;
   @tracked _cached = new TrackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {
@@ -111,18 +112,22 @@ export default class ChatChannelsManager extends Service {
 
   @cached
   get publicMessageChannels() {
-    return this.#sortChannelsByUnread(
-      this.channels.filter((channel) => {
-        return (
-          channel.isCategoryChannel && channel.currentUserMembership.following
-        );
-      })
-    );
+    const myChannels = this.channels.filter((channel) => {
+      return (
+        channel.isCategoryChannel && channel.currentUserMembership.following
+      );
+    });
+
+    if (this.site.mobileView) {
+      return this.#sortChannelsByActivity(myChannels);
+    } else {
+      return myChannels.sort((a, b) => a?.title?.localeCompare?.(b?.title));
+    }
   }
 
   @cached
   get directMessageChannels() {
-    return this.#sortChannelsByUnread(
+    return this.#sortChannelsByActivity(
       this.channels.filter((channel) => {
         const membership = channel.currentUserMembership;
         return channel.isDirectMessageChannel && membership.following;
@@ -155,24 +160,29 @@ export default class ChatChannelsManager extends Service {
     return this._cached[id];
   }
 
-  #sortChannelsByUnread(channels) {
+  #sortChannelsByActivity(channels) {
     return channels.sort((a, b) => {
-      if (!a.lastMessage.id) {
-        return 1;
+      // if both channels have mention count, sort by aplhabetical order
+      // otherwise prioritize channel with mention count
+      if (a.tracking.mentionCount > 0 && b.tracking.mentionCount > 0) {
+        return a.title?.localeCompare?.(b.title);
       }
 
-      if (!b.lastMessage.id) {
-        return -1;
+      if (a.tracking.mentionCount > 0 || b.tracking.mentionCount > 0) {
+        return a.tracking.mentionCount > b.tracking.mentionCount ? -1 : 1;
       }
 
-      if (a.tracking.unreadCount === b.tracking.unreadCount) {
-        return new Date(a.lastMessage.createdAt) >
-          new Date(b.lastMessage.createdAt)
-          ? -1
-          : 1;
-      } else {
+      // if both channels have unread count, sort by aplhabetical order
+      // otherwise prioritize channel with unread count
+      if (a.tracking.unreadCount > 0 && b.tracking.unreadCount > 0) {
+        return a.title?.localeCompare?.(b.title);
+      }
+
+      if (a.tracking.unreadCount > 0 || b.tracking.unreadCount > 0) {
         return a.tracking.unreadCount > b.tracking.unreadCount ? -1 : 1;
       }
+
+      return a.title?.localeCompare?.(b.title);
     });
   }
 }
