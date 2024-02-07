@@ -327,7 +327,6 @@ basic:
     min: 0
     max: 6
   whispers_allowed_groups:
-    client: true
     type: group_list
     list_type: compact
     default: ""
@@ -685,7 +684,6 @@ users:
   anonymous_posting_allowed_groups:
     default: "3|11" # auto group staff and trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -867,7 +865,6 @@ posting:
   personal_message_enabled_groups:
     default: "3|11" # auto group trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -885,7 +882,6 @@ posting:
   shared_drafts_allowed_groups:
     default: "3" # auto group staff
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -966,7 +962,6 @@ posting:
   here_mention_allowed_groups:
     default: "3|12" # auto group staff and trust_level_2
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
@@ -1812,7 +1807,6 @@ trust:
   ignore_allowed_groups:
     default: "3|12" # auto group staff and trust_level_2
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"

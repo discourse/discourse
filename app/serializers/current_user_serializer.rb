@@ -24,6 +24,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_invite_to_forum,
              :no_password,
              :can_delete_account,
+             :can_post_anonymously,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,
@@ -119,6 +120,15 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_messages
     scope.can_send_private_messages?
+  end
+
+  def can_post_anonymously
+    SiteSetting.allow_anonymous_posting &&
+      (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
+  end
+
+  def can_ignore_users
+    !is_anonymous && object.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
   end
 
   def can_upload_avatar
