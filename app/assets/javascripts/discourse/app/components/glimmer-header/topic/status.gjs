@@ -42,6 +42,7 @@ export default class Status extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-invalid-interactive }}
     <span class="topic-statuses" {{on "click" this.togglePinnedForUser}}>
       {{#each this.topicStatuses as |status|}}
         {{#if this.canAct}}

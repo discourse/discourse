@@ -10,13 +10,13 @@ export default class CloseOnClickOutside extends Modifier {
 
   modify(
     element,
-    [closeFn, target = { targetHTML, targetSelector, secondaryTargetSelector }]
+    [closeFn, { targetHTML, targetSelector, secondaryTargetSelector }]
   ) {
     this.closeFn = closeFn;
     this.element = element;
-    this.targetSelector = target.targetSelector;
-    this.secondaryTargetSelector = target.secondaryTargetSelector;
-    this.targetHTML = target.targetHTML;
+    this.targetSelector = targetSelector;
+    this.secondaryTargetSelector = secondaryTargetSelector;
+    this.targetHTML = targetHTML;
 
     document.addEventListener("pointerdown", this.check, {
       passive: true,

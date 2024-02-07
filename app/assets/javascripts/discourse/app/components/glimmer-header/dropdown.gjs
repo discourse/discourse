@@ -26,7 +26,6 @@ export default class Dropdown extends Component {
         (if @active "active")
         "header-dropdown-toggle"
       }}
-      {{on "click" this.click}}
       {{(if
         (and @active @targetSelector)
         (modifier
@@ -43,6 +42,7 @@ export default class Dropdown extends Component {
         title={{i18n @title}}
         aria-label={{i18n @title}}
         id={{@iconId}}
+        {{on "click" this.click}}
       >
         {{icon @icon}}
         {{@contents}}

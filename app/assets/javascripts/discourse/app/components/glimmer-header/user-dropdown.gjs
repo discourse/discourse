@@ -28,7 +28,6 @@ export default class UserDropdown extends Component {
         (if @active "active")
         "header-dropdown-toggle current-user user-menu-panel"
       }}
-      {{on "click" this.click}}
     >
       <button
         class="icon btn-flat"
@@ -40,6 +39,7 @@ export default class UserDropdown extends Component {
           (i18n "user.account_possessive")
         }}
         data-auto-route="true"
+        {{on "click" this.click}}
       >
         <Notifications @active={{@active}} />
       </button>
