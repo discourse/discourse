@@ -43,6 +43,10 @@ class ContentSecurityPolicy
 
       @directives.each do |directive, sources|
         if sources.is_a?(Array)
+          if sources.include?("'unsafe-inline'")
+            # Sending nonce- or sha###- values will disable unsafe-inline, so skip them
+            sources = sources.reject { |s| s.start_with?("'nonce-", "'sha") }
+          end
           policy.public_send(directive, *sources)
         else
           policy.public_send(directive, sources)
