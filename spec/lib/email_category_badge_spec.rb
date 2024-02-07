@@ -9,7 +9,7 @@ RSpec.describe CategoryBadge do
     html = CategoryBadge.html_for(c, inline_style: true)
 
     expect(html).not_to include("<b>name</b>")
-    expect(html).to include(ERB::Util.html_escape("<b>name</b>"))
+    expect(html).to include("&lt;b&gt;name&lt;/b&gt;")
   end
 
   it "includes inline color styles" do
