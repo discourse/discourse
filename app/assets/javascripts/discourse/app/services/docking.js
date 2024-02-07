@@ -1,19 +1,19 @@
-import { cancel } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import Service from "@ember/service";
-import { debounce } from "discourse-common/utils/decorators";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
+import Service from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import discourseLater from "discourse-common/lib/later";
+import { debounce } from "discourse-common/utils/decorators";
 
 const INITIAL_DELAY_MS = 50;
 const DEBOUNCE_MS = 5;
 
 @disableImplicitInjections
 export default class Docking extends Service {
+  @tracked dockCheck = null;
   @tracked _initialTimer = null;
   @tracked _queuedTimer = null;
-  @tracked dockCheck = null;
 
   constructor() {
     super(...arguments);

@@ -2,6 +2,7 @@ import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { schedule, scheduleOnce, throttle } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import $ from "jquery";
 import ClickTrack from "discourse/lib/click-track";
@@ -11,7 +12,6 @@ import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import Scrolling from "discourse/mixins/scrolling";
 import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
 
