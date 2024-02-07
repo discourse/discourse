@@ -139,8 +139,10 @@ class HashtagAutocompleteService
     HashtagAutocompleteService
       .data_source_types
       .each_with_object({}) do |type, hash|
+        next if ids_by_type[type].blank?
+
         data_source = HashtagAutocompleteService.data_source_from_type(type)
-        next if !data_source || !data_source.respond_to?(:find_by_ids)
+        next if !data_source.respond_to?(:find_by_ids)
 
         hashtags = data_source.find_by_ids(guardian, ids_by_type[type])
         next if hashtags.blank?

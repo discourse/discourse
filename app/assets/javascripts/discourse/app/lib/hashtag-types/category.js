@@ -12,6 +12,16 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     return this.site.categories || [];
   }
 
+  generatePreloadedCssClasses() {
+    return [
+      // Set a default color for category hashtags. This is added here instead
+      // of `hashtag.scss` because of the CSS precedence rules (<link> has a
+      // higher precedence than <style>)
+      ".hashtag-category-badge { background-color: var(--primary-medium); }",
+      ...super.generatePreloadedCssClasses(),
+    ];
+  }
+
   generateColorCssClasses(categoryOrHashtag) {
     let color, parentColor;
     if (categoryOrHashtag.colors) {
@@ -43,5 +53,9 @@ export default class CategoryHashtagType extends HashtagTypeBase {
 
     const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;
     return `<span class="hashtag-category-badge ${colorCssClass}"></span>`;
+  }
+
+  isLoaded(id) {
+    return !this.site.lazy_load_categories || super.isLoaded(id);
   }
 }

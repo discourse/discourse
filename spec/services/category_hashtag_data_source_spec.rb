@@ -14,6 +14,20 @@ RSpec.describe CategoryHashtagDataSource do
   let(:guardian) { Guardian.new(user) }
   let(:uncategorized_category) { Category.find(SiteSetting.uncategorized_category_id) }
 
+  describe "#find_by_ids" do
+    it "finds categories by their IDs" do
+      expect(
+        described_class.find_by_ids(guardian, [parent_category.id, category1.id]).map(&:slug),
+      ).to contain_exactly("fun", "random")
+    end
+
+    it "does not find categories the user cannot access" do
+      expect(described_class.find_by_ids(guardian, [category4.id]).first).to eq(nil)
+      group.add(user)
+      expect(described_class.find_by_ids(Guardian.new(user), [category4.id]).first).not_to eq(nil)
+    end
+  end
+
   describe "#lookup" do
     it "finds categories using their slug, downcasing for matches" do
       result = described_class.lookup(guardian, ["movies"]).first

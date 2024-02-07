@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class HashtagsController < ApplicationController
+  # Anonymous users can still see public posts which may contain hashtags
   requires_login except: [:by_ids]
 
   def by_ids
+    raise Discourse::NotFound if SiteSetting.login_required? && !current_user
+
     render json: HashtagAutocompleteService.new(guardian).find_by_ids(params)
   end
 

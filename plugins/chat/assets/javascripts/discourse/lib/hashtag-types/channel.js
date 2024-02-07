@@ -5,6 +5,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 export default class ChannelHashtagType extends HashtagTypeBase {
   @service chatChannelsManager;
   @service currentUser;
+  @service site;
 
   get type() {
     return "channel";
@@ -34,5 +35,9 @@ export default class ChannelHashtagType extends HashtagTypeBase {
     return iconHTML(hashtag.icon, {
       class: `hashtag-color--${this.type}-${hashtag.id}`,
     });
+  }
+
+  isLoaded(id) {
+    return !this.site.lazy_load_categories || super.isLoaded(id);
   }
 }

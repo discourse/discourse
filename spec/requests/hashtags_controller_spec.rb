@@ -21,6 +21,39 @@ RSpec.describe HashtagsController do
 
   describe "#by_ids" do
     context "when logged in" do
+      context "as anonymous user" do
+        it "does not return private categories" do
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(
+            {
+              "category" => [
+                {
+                  "relative_url" => category.url,
+                  "text" => category.name,
+                  "description" => nil,
+                  "colors" => [category.color],
+                  "icon" => "folder",
+                  "type" => "category",
+                  "ref" => category.slug,
+                  "slug" => category.slug,
+                  "id" => category.id,
+                },
+              ],
+            },
+          )
+        end
+
+        it "does not return categories on login_required sites" do
+          SiteSetting.login_required = true
+
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
+
+          expect(response.status).to eq(403)
+        end
+      end
+
       context "as regular user" do
         before { sign_in(Fabricate(:user)) }
 

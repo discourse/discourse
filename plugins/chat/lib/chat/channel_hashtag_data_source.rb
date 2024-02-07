@@ -28,9 +28,12 @@ module Chat
     end
 
     def self.find_by_ids(guardian, ids)
+      allowed_channel_ids_sql =
+        Chat::ChannelFetcher.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
+
       Chat::Channel
         .where(id: ids)
-        .where("id IN (#{Chat::ChannelFetcher.generate_allowed_channel_ids_sql(guardian)})")
+        .where("id IN (#{allowed_channel_ids_sql})")
         .map { |channel| channel_to_hashtag_item(guardian, channel) }
     end
 
