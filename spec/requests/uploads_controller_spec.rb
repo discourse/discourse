@@ -19,6 +19,32 @@ RSpec.describe UploadsController do
       let(:fake_jpg) { Rack::Test::UploadedFile.new(file_from_fixtures("fake.jpg")) }
       let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
 
+      context "when rate limited" do
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
+
+        it "should return 429 response code when maximum number of uploads per minute has been exceeded for a user" do
+          SiteSetting.max_uploads_per_minute = 1
+
+          post "/uploads.json",
+               params: {
+                 file: Rack::Test::UploadedFile.new(logo_file),
+                 type: "avatar",
+               }
+
+          expect(response.status).to eq(200)
+
+          post "/uploads.json",
+               params: {
+                 file: Rack::Test::UploadedFile.new(logo_file),
+                 type: "avatar",
+               }
+
+          expect(response.status).to eq(429)
+        end
+      end
+
       it "expects a type or upload_type" do
         post "/uploads.json", params: { file: logo }
         expect(response.status).to eq(400)

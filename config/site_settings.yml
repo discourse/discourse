@@ -2224,6 +2224,9 @@ rate_limits:
   max_complete_multipart_per_minute:
     default: 10
     hidden: true
+  max_uploads_per_minute:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
