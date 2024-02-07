@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import concatClass from "discourse/helpers/concat-class";
 import scrollLock from "discourse/lib/scroll-lock";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
@@ -38,9 +38,8 @@ export default class GlimmerHeader extends Component {
   @service site;
   @service appEvents;
   @service register;
+  @service header;
 
-  @tracked hamburgerVisible = false;
-  @tracked userVisible = false;
   @tracked skipSearchContext = this.site.mobileView;
 
   appEventsListeners = modifier(() => {
@@ -146,8 +145,8 @@ export default class GlimmerHeader extends Component {
 
   @action
   toggleUserMenu() {
-    this.userVisible = !this.userVisible;
-    this.toggleBodyScrolling(this.userVisible);
+    this.header.userVisible = !this.header.userVisible;
+    this.toggleBodyScrolling(this.header.userVisible);
     this.args.animateMenu();
 
     // auto focus on first button in dropdown
@@ -162,8 +161,8 @@ export default class GlimmerHeader extends Component {
       this.args.toggleSidebar();
       this.args.animateMenu();
     } else {
-      this.hamburgerVisible = !this.hamburgerVisible;
-      this.toggleBodyScrolling(this.hamburgerVisible);
+      this.header.hamburgerVisible = !this.header.hamburgerVisible;
+      this.toggleBodyScrolling(this.header.hamburgerVisible);
       this.args.animateMenu();
 
       schedule("afterRender", () => {
@@ -203,9 +202,6 @@ export default class GlimmerHeader extends Component {
             (not (and this.siteSettings.login_required (not this.currentUser)))
           }}
             <Icons
-              @hamburgerVisible={{this.hamburgerVisible}}
-              @userVisible={{this.userVisible}}
-              @searchVisible={{this.search.visible}}
               @sidebarEnabled={{@sidebarEnabled}}
               @toggleSearchMenu={{this.toggleSearchMenu}}
               @toggleHamburger={{this.toggleHamburger}}
@@ -216,11 +212,11 @@ export default class GlimmerHeader extends Component {
 
           {{#if this.search.visible}}
             <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
-          {{else if this.hamburgerVisible}}
+          {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper
               @toggleHamburger={{this.toggleHamburger}}
             />
-          {{else if this.userVisible}}
+          {{else if this.header.userVisible}}
             <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />
           {{/if}}
 
@@ -232,7 +228,7 @@ export default class GlimmerHeader extends Component {
           {{#if
             (and
               (or this.site.mobileView this.site.narrowDesktopView)
-              (or this.hamburgerVisible this.userVisible)
+              (or this.header.hamburgerVisible this.header.userVisible)
             )
           }}
             <div class="header-cloak"></div>
