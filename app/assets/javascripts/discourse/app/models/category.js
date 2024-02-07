@@ -482,6 +482,8 @@ Category.reopenClass({
   },
 
   async asyncFindByIds(ids = []) {
+    ids = ids.map((x) => parseInt(x, 10));
+
     const result = await categoryMultiCache.fetch(ids);
     if (categoryMultiCache.hadTooManyCalls()) {
       warn(

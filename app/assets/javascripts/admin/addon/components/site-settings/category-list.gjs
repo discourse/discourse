@@ -20,7 +20,6 @@ export default class CategoryList extends Component {
   get categoryIds() {
     return this.args.value
       .split("|")
-      .map((x) => parseInt(x, 10))
       .filter(Boolean);
   }
 
