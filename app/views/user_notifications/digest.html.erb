@@ -86,7 +86,7 @@
                             <tr>
                               <td class="digest-topic-category with-dir" style="margin:0;padding:<%= rtl? ? '0 16px 0 0' : '0 0 0 16px' %>;vertical-align:top;">
                                 <p style="color:#8f8f8f;line-height:1.3;margin: 20px 0 0 0;">
-                                  <%= email_category_badge(t.category, inline_style: true, absolute_url: true) %>
+                                  <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
                                 </p>
                               </td>
                               <td class="with-dir" style="margin:0;padding:<%= rtl? ? '0 0 0 16px' : '0 16px 0 0' %>;text-align:<%= rtl? ? 'left' : 'right' %>;vertical-align:top;">
@@ -300,7 +300,7 @@
                             <a class='topic-featured-link' href='<%= t.featured_link %>'><%= raw topic_featured_link_domain(t.featured_link) %></a>
                           <%- end %>
                           <p class="digest-new-topic-category" style="color:#0a0a0a;line-height:1.3;margin:0 0 10px 0;padding:0;">
-                            <%= email_category_badge(t.category, inline_style: true, absolute_url: true) %>
+                            <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
                           </p>
                         </td>
                         <td class="digest-new-topic-stat with-dir" style="padding:8px;">

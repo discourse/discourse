@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "email_category_badge"
+require "category_badge"
 
-RSpec.describe EmailCategoryBadge do
+RSpec.describe CategoryBadge do
   it "escapes HTML in category names" do
     c = Fabricate(:category, name: "<b>name</b>")
 
-    html = EmailCategoryBadge.html_for(c)
+    html = CategoryBadge.html_for(c, inline_style: true)
 
     expect(html).not_to include("<b>name</b>")
     expect(html).to include(ERB::Util.html_escape("<b>name</b>"))
@@ -14,7 +14,8 @@ RSpec.describe EmailCategoryBadge do
 
   it "includes inline color styles" do
     c = Fabricate(:category, color: "123456", text_color: "654321")
-    html = EmailCategoryBadge.html_for(c)
+
+    html = CategoryBadge.html_for(c, inline_style: true)
 
     expect(html).to include("color: #654321;")
     expect(html).to include("background-color: #123456;")
