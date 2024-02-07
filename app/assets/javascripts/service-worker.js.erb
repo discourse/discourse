@@ -12,34 +12,7 @@
   workbox_base = "#{base}/assets/#{EmberCli.workbox_dir_name}"
 %>
 
-<% if GlobalSetting.disable_service_worker_cache %>
-
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    (async () => {
-      if ("navigationPreload" in self.registration) {
-        await self.registration.navigationPreload.enable();
-      }
-    })()
-  );
-
-  // Tell the active service worker to take control of the page immediately.
-  self.clients.claim();
-});
-
-this.addEventListener('fetch', event => {
-  if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request.url).catch(error => {
-        return new Response("<center><h1>You are currently offline</h1><p>Try <a href='#' onclick='window.location.reload()'>refreshing</a></p></center>", {
-          headers: {'Content-Type': 'text/html'}
-        })
-      })
-    );
-  }
-});
-
-<% else %>
+<% if !GlobalSetting.disable_service_worker_cache %>
 
 importScripts("<%= "#{workbox_base}/workbox-sw.js" %>");
 
