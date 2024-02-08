@@ -11,34 +11,56 @@ import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
-const Group = RestModel.extend({
-  user_count: 0,
-  limit: null,
-  offset: null,
+export default class Group extends RestModel {
+  static findAll(opts) {
+    return ajax("/groups/search.json", { data: opts }).then((groups) =>
+      groups.map((g) => Group.create(g))
+    );
+  }
 
-  request_count: 0,
-  requestersLimit: null,
-  requestersOffset: null,
+  static loadMembers(name, opts) {
+    return ajax(`/groups/${name}/members.json`, { data: opts });
+  }
 
+  static mentionable(name) {
+    return ajax(`/groups/${name}/mentionable`);
+  }
+
+  static messageable(name) {
+    return ajax(`/groups/${name}/messageable`);
+  }
+
+  static checkName(name) {
+    return ajax("/groups/check-name", { data: { group_name: name } });
+  }
+
+  user_count = 0;
+  limit = null;
+  offset = null;
+  request_count = 0;
+  requestersLimit = null;
+  requestersOffset = null;
+
+  @equal("mentionable_level", 99) canEveryoneMention;
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.setProperties({ members: [], requesters: [] });
-  },
+  }
 
   @discourseComputed("automatic_membership_email_domains")
   emailDomains(value) {
     return isEmpty(value) ? "" : value;
-  },
+  }
 
   @discourseComputed("associated_group_ids")
   associatedGroupIds(value) {
     return isEmpty(value) ? [] : value;
-  },
+  }
 
   @discourseComputed("automatic")
   type(automatic) {
     return automatic ? "automatic" : "custom";
-  },
+  }
 
   async reloadMembers(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
@@ -73,7 +95,7 @@ const Group = RestModel.extend({
       limit: response.meta.limit,
       offset: response.meta.offset,
     });
-  },
+  }
 
   findRequesters(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
@@ -103,7 +125,7 @@ const Group = RestModel.extend({
         requestersOffset: result.meta.offset,
       });
     });
-  },
+  }
 
   async removeOwner(member) {
     await ajax(`/admin/groups/${this.id}/owners.json`, {
@@ -111,7 +133,7 @@ const Group = RestModel.extend({
       data: { user_id: member.id },
     });
     await this.reloadMembers({}, true);
-  },
+  }
 
   async removeMember(member, params) {
     await ajax(`/groups/${this.id}/members.json`, {
@@ -119,7 +141,7 @@ const Group = RestModel.extend({
       data: { user_id: member.id },
     });
     await this.reloadMembers(params, true);
-  },
+  }
 
   async leave() {
     await ajax(`/groups/${this.id}/leave.json`, {
@@ -127,7 +149,7 @@ const Group = RestModel.extend({
     });
     this.set("can_see_members", this.members_visibility_level < 2);
     await this.reloadMembers({}, true);
-  },
+  }
 
   async addMembers(usernames, filter, notifyUsers, emails = []) {
     const response = await ajax(`/groups/${this.id}/members.json`, {
@@ -139,14 +161,14 @@ const Group = RestModel.extend({
     } else {
       await this.reloadMembers();
     }
-  },
+  }
 
   async join() {
     await ajax(`/groups/${this.id}/join.json`, {
       type: "PUT",
     });
     await this.reloadMembers({}, true);
-  },
+  }
 
   async addOwners(usernames, filter, notifyUsers) {
     const response = await ajax(`/groups/${this.id}/owners.json`, {
@@ -159,44 +181,42 @@ const Group = RestModel.extend({
     } else {
       await this.reloadMembers({}, true);
     }
-  },
+  }
 
   _filterMembers(usernames) {
     return this.reloadMembers({ filter: usernames.join(",") });
-  },
+  }
 
   @discourseComputed("display_name", "name")
   displayName(groupDisplayName, name) {
     return groupDisplayName || name;
-  },
+  }
 
   @discourseComputed("flair_bg_color")
   flairBackgroundHexColor(flairBgColor) {
     return flairBgColor
       ? flairBgColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
-  },
+  }
 
   @discourseComputed("flair_color")
   flairHexColor(flairColor) {
     return flairColor
       ? flairColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
-  },
-
-  canEveryoneMention: equal("mentionable_level", 99),
+  }
 
   @discourseComputed("visibility_level")
   isPrivate(visibilityLevel) {
     return visibilityLevel > 1;
-  },
+  }
 
   @observes("isPrivate", "canEveryoneMention")
   _updateAllowMembershipRequests() {
     if (this.isPrivate || !this.canEveryoneMention) {
       this.set("allow_membership_requests", false);
     }
-  },
+  }
 
   @dependentKeyCompat
   get watchingCategories() {
@@ -210,14 +230,14 @@ const Group = RestModel.extend({
     }
 
     return Category.findByIds(this.get("watching_category_ids"));
-  },
+  }
 
   set watchingCategories(categories) {
     this.set(
       "watching_category_ids",
       categories.map((c) => c.id)
     );
-  },
+  }
 
   @dependentKeyCompat
   get trackingCategories() {
@@ -231,14 +251,14 @@ const Group = RestModel.extend({
     }
 
     return Category.findByIds(this.get("tracking_category_ids"));
-  },
+  }
 
   set trackingCategories(categories) {
     this.set(
       "tracking_category_ids",
       categories.map((c) => c.id)
     );
-  },
+  }
 
   @dependentKeyCompat
   get watchingFirstPostCategories() {
@@ -252,14 +272,14 @@ const Group = RestModel.extend({
     }
 
     return Category.findByIds(this.get("watching_first_post_category_ids"));
-  },
+  }
 
   set watchingFirstPostCategories(categories) {
     this.set(
       "watching_first_post_category_ids",
       categories.map((c) => c.id)
     );
-  },
+  }
 
   @dependentKeyCompat
   get regularCategories() {
@@ -273,14 +293,14 @@ const Group = RestModel.extend({
     }
 
     return Category.findByIds(this.get("regular_category_ids"));
-  },
+  }
 
   set regularCategories(categories) {
     this.set(
       "regular_category_ids",
       categories.map((c) => c.id)
     );
-  },
+  }
 
   @dependentKeyCompat
   get mutedCategories() {
@@ -294,14 +314,14 @@ const Group = RestModel.extend({
     }
 
     return Category.findByIds(this.get("muted_category_ids"));
-  },
+  }
 
   set mutedCategories(categories) {
     this.set(
       "muted_category_ids",
       categories.map((c) => c.id)
     );
-  },
+  }
 
   asJSON() {
     const attrs = {
@@ -382,7 +402,7 @@ const Group = RestModel.extend({
     }
 
     return attrs;
-  },
+  }
 
   async create() {
     const response = await ajax("/admin/groups", {
@@ -397,21 +417,21 @@ const Group = RestModel.extend({
     });
 
     await this.reloadMembers();
-  },
+  }
 
   save(opts = {}) {
     return ajax(`/groups/${this.id}`, {
       type: "PUT",
       data: Object.assign({ group: this.asJSON() }, opts),
     });
-  },
+  }
 
   destroy() {
     if (!this.id) {
       return;
     }
     return ajax(`/admin/groups/${this.id}`, { type: "DELETE" });
-  },
+  }
 
   findLogs(offset, filters) {
     return ajax(`/groups/${this.name}/logs.json`, {
@@ -422,7 +442,7 @@ const Group = RestModel.extend({
         all_loaded: results["all_loaded"],
       });
     });
-  },
+  }
 
   findPosts(opts) {
     opts = opts || {};
@@ -445,7 +465,7 @@ const Group = RestModel.extend({
         return EmberObject.create(p);
       });
     });
-  },
+  }
 
   setNotification(notification_level, userId) {
     this.set("group_user.notification_level", notification_level);
@@ -453,38 +473,12 @@ const Group = RestModel.extend({
       data: { notification_level, user_id: userId },
       type: "POST",
     });
-  },
+  }
 
   requestMembership(reason) {
     return ajax(`/groups/${this.name}/request_membership.json`, {
       type: "POST",
       data: { reason },
     });
-  },
-});
-
-Group.reopenClass({
-  findAll(opts) {
-    return ajax("/groups/search.json", { data: opts }).then((groups) =>
-      groups.map((g) => Group.create(g))
-    );
-  },
-
-  loadMembers(name, opts) {
-    return ajax(`/groups/${name}/members.json`, { data: opts });
-  },
-
-  mentionable(name) {
-    return ajax(`/groups/${name}/mentionable`);
-  },
-
-  messageable(name) {
-    return ajax(`/groups/${name}/messageable`);
-  },
-
-  checkName(name) {
-    return ajax("/groups/check-name", { data: { group_name: name } });
-  },
-});
-
-export default Group;
+  }
+}
