@@ -3946,7 +3946,7 @@ en:
       notify_user_textarea_label: "Message for the user"
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       notify_moderators_textarea_label: "Message for the moderators"
-      custom_placeholder_illegal: "Let us know specifically why you believe this post is illegal, and provide relevant links and examples where possible."
+      custom_placeholder_illegal: "Let us know specifically why you believe this content is illegal, and provide relevant links and examples where possible."
       custom_message:
         at_least:
           one: "enter at least %{count} character"
