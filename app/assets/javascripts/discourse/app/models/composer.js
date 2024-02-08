@@ -11,9 +11,7 @@ import { prioritizeNameFallback } from "discourse/lib/settings";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Draft from "discourse/models/draft";
 import RestModel from "discourse/models/rest";
-import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
-import User from "discourse/models/user";
 import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed, {
@@ -115,98 +113,171 @@ export const SAVE_ICONS = {
   [CREATE_SHARED_DRAFT]: "far-clipboard",
 };
 
-const Composer = RestModel.extend({
-  dialog: service(),
-  _categoryId: null,
-  unlistTopic: false,
-  noBump: false,
-  draftSaving: false,
-  draftForceSave: false,
-  showFullScreenExitPrompt: false,
+export default class Composer extends RestModel {
+  // The status the compose view can have
+  static CLOSED = CLOSED;
+  static SAVING = SAVING;
+  static OPEN = OPEN;
+  static DRAFT = DRAFT;
+  static FULLSCREEN = FULLSCREEN;
 
-  archetypes: reads("site.archetypes"),
+  // The actions the composer can take
+  static CREATE_TOPIC = CREATE_TOPIC;
+  static CREATE_SHARED_DRAFT = CREATE_SHARED_DRAFT;
+  static EDIT_SHARED_DRAFT = EDIT_SHARED_DRAFT;
+  static PRIVATE_MESSAGE = PRIVATE_MESSAGE;
+  static REPLY = REPLY;
+  static EDIT = EDIT;
 
-  sharedDraft: equal("action", CREATE_SHARED_DRAFT),
+  // Draft key
+  static NEW_PRIVATE_MESSAGE_KEY = NEW_PRIVATE_MESSAGE_KEY;
+  static NEW_TOPIC_KEY = NEW_TOPIC_KEY;
 
-  @discourseComputed
-  categoryId: {
-    get() {
-      return this._categoryId;
-    },
+  static serializeToTopic(fieldName, property) {
+    if (!property) {
+      property = fieldName;
+    }
+    _edit_topic_serializer[fieldName] = property;
+  }
 
-    // We wrap categoryId this way so we can fire `applyTopicTemplate` with
-    // the previous value as well as the new value
-    set(categoryId) {
-      const oldCategoryId = this._categoryId;
+  static serializeOnCreate(fieldName, property) {
+    if (!property) {
+      property = fieldName;
+    }
+    _create_serializer[fieldName] = property;
+  }
 
-      if (this.privateMessage) {
-        categoryId = null;
-      } else if (isEmpty(categoryId)) {
-        // Check if there is a default composer category to set
-        const defaultComposerCategoryId = parseInt(
-          this.siteSettings.default_composer_category,
-          10
-        );
-        categoryId =
-          defaultComposerCategoryId && defaultComposerCategoryId > 0
-            ? defaultComposerCategoryId
-            : null;
-      }
-      this._categoryId = categoryId;
+  static serializedFieldsForCreate() {
+    return Object.keys(_create_serializer);
+  }
 
-      if (oldCategoryId !== categoryId) {
-        this.applyTopicTemplate(oldCategoryId, categoryId);
-      }
+  static serializeOnUpdate(fieldName, property) {
+    if (!property) {
+      property = fieldName;
+    }
+    _update_serializer[fieldName] = property;
+  }
 
-      return categoryId;
-    },
-  },
+  static serializedFieldsForUpdate() {
+    return Object.keys(_update_serializer);
+  }
+
+  static serializeToDraft(fieldName, property) {
+    if (!property) {
+      property = fieldName;
+    }
+    _draft_serializer[fieldName] = property;
+    _add_draft_fields[fieldName] = property;
+  }
+
+  static serializedFieldsForDraft() {
+    return Object.keys(_draft_serializer);
+  }
+
+  @service dialog;
+  @service currentUser;
+  @service site;
+
+  unlistTopic = false;
+  noBump = false;
+  draftSaving = false;
+  draftForceSave = false;
+  showFullScreenExitPrompt = false;
+  @reads("site.archetypes") archetypes;
+  @equal("action", CREATE_SHARED_DRAFT) sharedDraft;
+  @equal("action", CREATE_TOPIC) creatingTopic;
+  @equal("action", CREATE_SHARED_DRAFT) creatingSharedDraft;
+  @equal("action", PRIVATE_MESSAGE) creatingPrivateMessage;
+  @not("creatingPrivateMessage") notCreatingPrivateMessage;
+  @not("privateMessage") notPrivateMessage;
+  @or("creatingTopic", "editingFirstPost") topicFirstPost;
+  @equal("action", REPLY) replyingToTopic;
+  @equal("composeState", OPEN) viewOpen;
+  @equal("composeState", DRAFT) viewDraft;
+  @equal("composeState", FULLSCREEN) viewFullscreen;
+  @or("viewOpen", "viewFullscreen") viewOpenOrFullscreen;
+  @and("editingPost", "post.firstPost") editingFirstPost;
+  @propertyNotEqual("reply", "originalText") replyDirty;
+  @propertyNotEqual("title", "originalTitle") titleDirty;
+
+  @or(
+    "creatingTopic",
+    "creatingPrivateMessage",
+    "editingFirstPost",
+    "creatingSharedDraft"
+  )
+  canEditTitle;
+
+  @and("canEditTitle", "notCreatingPrivateMessage", "notPrivateMessage")
+  canCategorize;
+
+  _categoryId = null;
+
+  get user() {
+    return this.currentUser;
+  }
+
+  get categoryId() {
+    return this._categoryId;
+  }
+
+  // We wrap categoryId this way so we can fire `applyTopicTemplate` with
+  // the previous value as well as the new value
+  set categoryId(categoryId) {
+    const oldCategoryId = this._categoryId;
+
+    if (this.privateMessage) {
+      categoryId = null;
+    } else if (isEmpty(categoryId)) {
+      // Check if there is a default composer category to set
+      const defaultComposerCategoryId = parseInt(
+        this.siteSettings.default_composer_category,
+        10
+      );
+      categoryId =
+        defaultComposerCategoryId && defaultComposerCategoryId > 0
+          ? defaultComposerCategoryId
+          : null;
+    }
+    this._categoryId = categoryId;
+
+    if (oldCategoryId !== categoryId) {
+      this.applyTopicTemplate(oldCategoryId, categoryId);
+    }
+  }
 
   @discourseComputed("categoryId")
   category(categoryId) {
     return categoryId ? this.site.categories.findBy("id", categoryId) : null;
-  },
+  }
 
   @discourseComputed("category.minimumRequiredTags")
   minimumRequiredTags(minimumRequiredTags) {
     return minimumRequiredTags || 0;
-  },
-
-  creatingTopic: equal("action", CREATE_TOPIC),
-  creatingSharedDraft: equal("action", CREATE_SHARED_DRAFT),
-  creatingPrivateMessage: equal("action", PRIVATE_MESSAGE),
-  notCreatingPrivateMessage: not("creatingPrivateMessage"),
-  notPrivateMessage: not("privateMessage"),
+  }
 
   @discourseComputed("editingPost", "topic.details.can_edit")
   disableTitleInput(editingPost, canEditTopic) {
     return editingPost && !canEditTopic;
-  },
+  }
 
   @discourseComputed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
     const manyCategories = this.site.categories.length > 1;
     return !isPrivateMessage && (hasOptions || manyCategories);
-  },
+  }
 
   @discourseComputed("creatingPrivateMessage", "topic")
   privateMessage(creatingPrivateMessage, topic) {
     return (
       creatingPrivateMessage || (topic && topic.archetype === "private_message")
     );
-  },
-
-  topicFirstPost: or("creatingTopic", "editingFirstPost"),
+  }
 
   @discourseComputed("action")
-  editingPost: isEdit,
-
-  replyingToTopic: equal("action", REPLY),
-
-  viewOpen: equal("composeState", OPEN),
-  viewDraft: equal("composeState", DRAFT),
-  viewFullscreen: equal("composeState", FULLSCREEN),
-  viewOpenOrFullscreen: or("viewOpen", "viewFullscreen"),
+  editingPost(action) {
+    return isEdit(action);
+  }
 
   @observes("composeState")
   composeStateChanged() {
@@ -230,31 +301,28 @@ const Composer = RestModel.extend({
       this.set("composerOpened", null);
       elem.classList.remove("composer-open");
     }
-  },
+  }
 
-  @discourseComputed
-  composerTime: {
-    get() {
-      let total = this.composerTotalOpened || 0;
-      const oldOpen = this.composerOpened;
+  get composerTime() {
+    let total = this.composerTotalOpened || 0;
+    const oldOpen = this.composerOpened;
 
-      if (oldOpen) {
-        total += new Date() - oldOpen;
-      }
+    if (oldOpen) {
+      total += new Date() - oldOpen;
+    }
 
-      return total;
-    },
-  },
+    return total;
+  }
 
   @discourseComputed("archetypeId")
   archetype(archetypeId) {
     return this.archetypes.findBy("id", archetypeId);
-  },
+  }
 
   @observes("archetype")
   archetypeChanged() {
     return this.set("metaData", EmberObject.create());
-  },
+  }
 
   // called whenever the user types to update the typing time
   typing() {
@@ -267,22 +335,7 @@ const Composer = RestModel.extend({
       100,
       false
     );
-  },
-
-  editingFirstPost: and("editingPost", "post.firstPost"),
-
-  canEditTitle: or(
-    "creatingTopic",
-    "creatingPrivateMessage",
-    "editingFirstPost",
-    "creatingSharedDraft"
-  ),
-
-  canCategorize: and(
-    "canEditTitle",
-    "notCreatingPrivateMessage",
-    "notPrivateMessage"
-  ),
+  }
 
   @discourseComputed(
     "canEditTitle",
@@ -322,14 +375,14 @@ const Composer = RestModel.extend({
       !categoryIds.length ||
       categoryIds.includes(categoryId)
     );
-  },
+  }
 
   @discourseComputed("canEditTopicFeaturedLink")
   titlePlaceholder(canEditTopicFeaturedLink) {
     return canEditTopicFeaturedLink
       ? "composer.title_or_link_placeholder"
       : "composer.title_placeholder";
-  },
+  }
 
   @discourseComputed("action", "post", "topic", "topic.title")
   replyOptions(action, post, topic, topicTitle) {
@@ -381,7 +434,7 @@ const Composer = RestModel.extend({
     }
 
     return options;
-  },
+  }
 
   @discourseComputed("targetRecipients")
   targetRecipientsArray(targetRecipients) {
@@ -397,7 +450,7 @@ const Composer = RestModel.extend({
         return { type: "user", name: item };
       }
     });
-  },
+  }
 
   @discourseComputed(
     "loading",
@@ -476,7 +529,7 @@ const Composer = RestModel.extend({
       // has a category? (when needed)
       return this.requiredCategoryMissing;
     }
-  },
+  }
 
   @discourseComputed("canCategorize", "categoryId")
   requiredCategoryMissing(canCategorize, categoryId) {
@@ -486,7 +539,7 @@ const Composer = RestModel.extend({
       !this.siteSettings.allow_uncategorized_topics &&
       !!this._hasTopicTemplates
     );
-  },
+  }
 
   @discourseComputed("minimumTitleLength", "titleLength", "post.static_doc")
   titleLengthValid(minTitleLength, titleLength, staticDoc) {
@@ -497,21 +550,17 @@ const Composer = RestModel.extend({
       return false;
     }
     return titleLength <= this.siteSettings.max_topic_title_length;
-  },
+  }
 
   @discourseComputed("metaData")
   hasMetaData(metaData) {
     return metaData ? isEmpty(Object.keys(metaData)) : false;
-  },
-
-  replyDirty: propertyNotEqual("reply", "originalText"),
-
-  titleDirty: propertyNotEqual("title", "originalTitle"),
+  }
 
   @discourseComputed("minimumTitleLength", "titleLength")
   missingTitleCharacters(minimumTitleLength, titleLength) {
     return minimumTitleLength - titleLength;
-  },
+  }
 
   @discourseComputed("privateMessage")
   minimumTitleLength(privateMessage) {
@@ -520,7 +569,7 @@ const Composer = RestModel.extend({
     } else {
       return this.siteSettings.min_topic_title_length;
     }
-  },
+  }
 
   @discourseComputed(
     "minimumPostLength",
@@ -539,7 +588,7 @@ const Composer = RestModel.extend({
       return 0;
     }
     return minimumPostLength - replyLength;
-  },
+  }
 
   @discourseComputed(
     "privateMessage",
@@ -557,13 +606,13 @@ const Composer = RestModel.extend({
     } else {
       return this.siteSettings.min_post_length;
     }
-  },
+  }
 
   @discourseComputed("title")
   titleLength(title) {
     title = title || "";
     return title.replace(/\s+/gim, " ").trim().length;
-  },
+  }
 
   @discourseComputed("reply")
   replyLength(reply) {
@@ -630,12 +679,12 @@ const Composer = RestModel.extend({
     }
 
     return len;
-  },
+  }
 
   @on("init")
   _setupComposer() {
     this.set("archetypeId", this.site.default_archetype);
-  },
+  }
 
   appendText(text, position, opts) {
     const reply = this.reply || "";
@@ -685,7 +734,7 @@ const Composer = RestModel.extend({
     this.set("reply", before + text + after);
 
     return before.length + text.length;
-  },
+  }
 
   prependText(text, opts) {
     const reply = this.reply || "";
@@ -695,7 +744,7 @@ const Composer = RestModel.extend({
     }
 
     this.set("reply", text + reply);
-  },
+  }
 
   applyTopicTemplate(oldCategoryId, categoryId) {
     if (this.action !== CREATE_TOPIC) {
@@ -720,7 +769,7 @@ const Composer = RestModel.extend({
     if (category) {
       this.set("reply", category.topic_template || "");
     }
-  },
+  }
 
   /**
     Open a composer
@@ -911,12 +960,12 @@ const Composer = RestModel.extend({
     return promise.finally(() => {
       this.set("loading", false);
     });
-  },
+  }
 
   // Overwrite to implement custom logic
   beforeSave() {
     return Promise.resolve();
-  },
+  }
 
   save(opts) {
     return this.beforeSave().then(() => {
@@ -928,7 +977,7 @@ const Composer = RestModel.extend({
         return this.editingPost ? this.editPost(opts) : this.createPost(opts);
       }
     });
-  },
+  }
 
   clearState() {
     this.setProperties({
@@ -946,12 +995,12 @@ const Composer = RestModel.extend({
       noBump: false,
       editConflict: false,
     });
-  },
+  }
 
   @discourseComputed("editConflict", "originalText")
   rawOld(editConflict, originalText) {
     return editConflict ? null : originalText;
-  },
+  }
 
   editPost(opts) {
     const post = this.post;
@@ -1018,7 +1067,7 @@ const Composer = RestModel.extend({
         post.set("staged", false);
         this.appEvents.trigger("post-stream:refresh", { id: post.id });
       });
-  },
+  }
 
   serialize(serializer, dest) {
     dest = dest || {};
@@ -1029,7 +1078,7 @@ const Composer = RestModel.extend({
       }
     });
     return dest;
-  },
+  }
 
   async createPost(opts) {
     if (CREATE_TOPIC === this.action || PRIVATE_MESSAGE === this.action) {
@@ -1164,7 +1213,7 @@ const Composer = RestModel.extend({
 
       throw extractError(error);
     }
-  },
+  }
 
   getCookedHtml() {
     const editorPreviewNode = document.querySelector(
@@ -1179,7 +1228,7 @@ const Composer = RestModel.extend({
     }
 
     return "";
-  },
+  }
 
   @discourseComputed(
     "draftSaving",
@@ -1219,7 +1268,7 @@ const Composer = RestModel.extend({
     }
 
     return true;
-  },
+  }
 
   saveDraft(user) {
     if (!this.canSaveDraft) {
@@ -1308,7 +1357,7 @@ const Composer = RestModel.extend({
       .finally(() => {
         this.set("draftSaving", false);
       });
-  },
+  }
 
   customizationFor(type) {
     for (let i = 0; i < _customizations.length; i++) {
@@ -1320,77 +1369,5 @@ const Composer = RestModel.extend({
         }
       }
     }
-  },
-});
-
-Composer.reopenClass({
-  // TODO: Replace with injection
-  create(args) {
-    args = args || {};
-    args.user = args.user || User.current();
-    args.site = args.site || Site.current();
-    return this._super(args);
-  },
-
-  serializeToTopic(fieldName, property) {
-    if (!property) {
-      property = fieldName;
-    }
-    _edit_topic_serializer[fieldName] = property;
-  },
-
-  serializeOnCreate(fieldName, property) {
-    if (!property) {
-      property = fieldName;
-    }
-    _create_serializer[fieldName] = property;
-  },
-
-  serializedFieldsForCreate() {
-    return Object.keys(_create_serializer);
-  },
-
-  serializeOnUpdate(fieldName, property) {
-    if (!property) {
-      property = fieldName;
-    }
-    _update_serializer[fieldName] = property;
-  },
-
-  serializedFieldsForUpdate() {
-    return Object.keys(_update_serializer);
-  },
-
-  serializeToDraft(fieldName, property) {
-    if (!property) {
-      property = fieldName;
-    }
-    _draft_serializer[fieldName] = property;
-    _add_draft_fields[fieldName] = property;
-  },
-
-  serializedFieldsForDraft() {
-    return Object.keys(_draft_serializer);
-  },
-
-  // The status the compose view can have
-  CLOSED,
-  SAVING,
-  OPEN,
-  DRAFT,
-  FULLSCREEN,
-
-  // The actions the composer can take
-  CREATE_TOPIC,
-  CREATE_SHARED_DRAFT,
-  EDIT_SHARED_DRAFT,
-  PRIVATE_MESSAGE,
-  REPLY,
-  EDIT,
-
-  // Draft key
-  NEW_PRIVATE_MESSAGE_KEY,
-  NEW_TOPIC_KEY,
-});
-
-export default Composer;
+  }
+}
