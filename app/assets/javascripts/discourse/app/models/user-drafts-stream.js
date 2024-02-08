@@ -10,17 +10,16 @@ import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default RestModel.extend({
-  limit: 30,
-
-  loading: false,
-  hasMore: false,
-  content: null,
+export default class UserDraftsStream extends RestModel {
+  limit = 30;
+  loading = false;
+  hasMore = false;
+  content = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.reset();
-  },
+  }
 
   reset() {
     this.setProperties({
@@ -28,19 +27,19 @@ export default RestModel.extend({
       hasMore: true,
       content: [],
     });
-  },
+  }
 
   @discourseComputed("content.length", "loading")
   noContent(contentLength, loading) {
     return contentLength === 0 && !loading;
-  },
+  }
 
   remove(draft) {
     this.set(
       "content",
       this.content.filter((item) => item.draft_key !== draft.draft_key)
     );
-  },
+  }
 
   findItems(site) {
     if (site) {
@@ -92,5 +91,5 @@ export default RestModel.extend({
       .finally(() => {
         this.set("loading", false);
       });
-  },
-});
+  }
+}

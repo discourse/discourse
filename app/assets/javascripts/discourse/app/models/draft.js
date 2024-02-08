@@ -1,26 +1,24 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 
-const Draft = EmberObject.extend();
-
-Draft.reopenClass({
-  clear(key, sequence) {
+export default class Draft extends EmberObject {
+  static clear(key, sequence) {
     return ajax(`/drafts/${key}.json`, {
       type: "DELETE",
       data: { draft_key: key, sequence },
     });
-  },
+  }
 
-  get(key) {
+  static get(key) {
     return ajax(`/drafts/${key}.json`);
-  },
+  }
 
-  getLocal(key, current) {
+  static getLocal(key, current) {
     // TODO: implement this
     return current;
-  },
+  }
 
-  save(key, sequence, data, clientId, { forceSave = false } = {}) {
+  static save(key, sequence, data, clientId, { forceSave = false } = {}) {
     data = typeof data === "string" ? data : JSON.stringify(data);
     return ajax("/drafts.json", {
       type: "POST",
@@ -33,7 +31,5 @@ Draft.reopenClass({
       },
       ignoreUnsent: false,
     });
-  },
-});
-
-export default Draft;
+  }
+}
