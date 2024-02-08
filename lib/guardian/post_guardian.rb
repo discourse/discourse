@@ -163,7 +163,7 @@ module PostGuardian
       return can_create_post?(post.topic)
     end
 
-    return false if !trusted_with_edits?
+    return false if !trusted_with_post_edits?
 
     if is_my_own?(post)
       return false if @user.silenced?
@@ -369,12 +369,11 @@ module PostGuardian
     is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
-  private
-
-  def trusted_with_edits?
-    @user.trust_level >= SiteSetting.min_trust_to_edit_post ||
-      @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
+  def trusted_with_post_edits?
+    is_staff? || @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
   end
+
+  private
 
   def can_create_post_in_topic?(topic)
     if !SiteSetting.enable_system_message_replies? && topic.try(:subtype) == "system_message"
