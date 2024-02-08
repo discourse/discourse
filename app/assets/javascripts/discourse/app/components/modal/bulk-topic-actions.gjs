@@ -15,6 +15,7 @@ import ChangeTags from "discourse/components/bulk-actions/change-tags";
 import RadioButton from "discourse/components/radio-button";
 //import NotificationLevel from "../bulk-actions/notification-level";
 import TagChooser from "select-kit/components/tag-chooser";
+import CategoryChooser from "select-kit/components/category-chooser";
 import { topicLevels } from "discourse/lib/notification-levels";
 
 export default class BulkTopicActions extends Component {
@@ -148,6 +149,15 @@ export default class BulkTopicActions extends Component {
       case "update-notifications":
         this.performAndRefresh({ type: "change_notification_level", notification_level_id: this.notificationLevelId });
         break;
+      case "update-category":
+        // this.forEachPerformed(
+        //   {
+        //     type: "change_category",
+        //     category_id: this.categoryId,
+        //   },
+        //   (t) => t.set("category_id", this.categoryId)
+        // );
+        break;
     }
   }
 
@@ -181,6 +191,13 @@ export default class BulkTopicActions extends Component {
   get isNotificationAction() {
     return this.args.model.action === 'update-notifications';
   }
+
+  @computed('action')
+  get isCategoryAction() {
+    return this.args.model.action === 'update-category';
+  }
+
+  categoryId = 0;
 
   // NotificationLevel
   notificationLevelId = null;
@@ -222,6 +239,14 @@ export default class BulkTopicActions extends Component {
             @performAndRefresh={{this.performAndRefresh}}
           />
         {{/if}} --}}
+        {{#if this.isCategoryAction}}
+          <p>
+            <CategoryChooser
+              @value={{this.categoryId}}
+              {{!-- @onChange={{action (mut this.categoryId)}} --}}
+            />
+          </p>
+        {{/if}}
         {{#if this.isNotificationAction}}
           <div class="bulk-notification-list">
             {{#each this.notificationLevels as |level|}}

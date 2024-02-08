@@ -119,14 +119,22 @@ export default DropdownSelectBoxComponent.extend({
     switch (id) {
       case "update-category":
         // Temporary: just use the existing modal & action
-        this.modal.show(TopicBulkActions, {
+        // this.modal.show(TopicBulkActions, {
+        //   model: {
+        //     topics: this.bulkSelectHelper.selected,
+        //     category: this.category,
+        //     refreshClosure: () => this.router.refresh(),
+        //     initialAction: "set-component",
+        //     initialComponent: ChangeCategory,
+        //   },
+        // });
+        this.modal.show(BulkTopicActions, {
           model: {
-            topics: this.bulkSelectHelper.selected,
-            category: this.category,
+            action: "update-category",
+            title: i18n("topics.bulk.change_category"),
+            bulkSelectHelper: this.bulkSelectHelper,
             refreshClosure: () => this.router.refresh(),
-            initialAction: "set-component",
-            initialComponent: ChangeCategory,
-          },
+          }
         });
         break;
       case "update-notifications":
