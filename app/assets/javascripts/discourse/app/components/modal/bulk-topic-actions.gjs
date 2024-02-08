@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
-//import { computed } from "@ember/object";
+import { empty } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
@@ -12,8 +12,10 @@ import i18n from "discourse-common/helpers/i18n";
 //import AppendTags from "../bulk-actions/append-tags";
 //import ChangeCategory from "../bulk-actions/change-category";
 import ChangeTags from "discourse/components/bulk-actions/change-tags";
+import RadioButton from "discourse/components/radio-button";
 //import NotificationLevel from "../bulk-actions/notification-level";
 import TagChooser from "select-kit/components/tag-chooser";
+import { topicLevels } from "discourse/lib/notification-levels";
 
 export default class BulkTopicActions extends Component {
   @service router;
@@ -143,6 +145,9 @@ export default class BulkTopicActions extends Component {
       case "defer":
         this.performAndRefresh({ type: "destroy_post_timing" });
         break;
+      case "update-notifications":
+        this.performAndRefresh({ type: "change_notification_level", notification_level_id: this.notificationLevelId });
+        break;
     }
   }
 
@@ -175,6 +180,19 @@ export default class BulkTopicActions extends Component {
   @computed('action')
   get isNotificationAction() {
     return this.args.model.action === 'update-notifications';
+  }
+
+  // NotificationLevel
+  notificationLevelId = null;
+
+  @empty("notificationLevelId") disabled;
+
+  get notificationLevels() {
+    return topicLevels.map((level) => ({
+      id: level.id.toString(),
+      name: I18n.t(`topic.notifications.${level.key}.title`),
+      description: I18n.t(`topic.notifications.${level.key}.description`),
+    }));
   }
 
   <template>
@@ -215,7 +233,7 @@ export default class BulkTopicActions extends Component {
                     @selection={{this.notificationLevelId}}
                   />
                   <strong>{{level.name}}</strong>
-                  <div class="description">{{html-safe level.description}}</div>
+                  <div class="description">{{htmlSafe level.description}}</div>
                 </label>
               </div>
             {{/each}}
