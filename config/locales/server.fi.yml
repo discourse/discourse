@@ -110,7 +110,7 @@ fi:
       optimized_link: Optimoidut kuvalinkit ovat lyhytikäisiä, eikä niitä tulisi sisällyttää teeman lähdekoodiin.
     settings_errors:
       invalid_yaml: "Annettu YAML ei kelpaa"
-      data_type_not_a_number: "Tietotyypiksi ei ole mahdollista asettaa `%{name}`. Tuettuja tietotyyppejä ovat `integer`, `bool`, `list`, `enum` ja `upload`"
+      data_type_inclusion: "Tietotyypiksi ei ole mahdollista asettaa `%{name}`. Tuettuja tietotyyppejä ovat `integer`, `bool`, `list`, `enum` ja `upload`"
       name_too_long: "Jollain asetuksella on liian pitkä nimi. Enimmäispituus on 255."
       default_value_missing: "Asetuksella \"%{name}\" ei ole oletusarvoa"
       default_not_match_type: "Asetuksen \"%{name}\" oletusarvo ei sovi asetuksen tyyppiin."

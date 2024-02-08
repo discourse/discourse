@@ -110,7 +110,7 @@ it:
       optimized_link: I collegamenti ad immagini ottimizzate sono effimeri e non devono essere inclusi nel codice sorgente del tema.
     settings_errors:
       invalid_yaml: "Il codice YAML fornito non è valido."
-      data_type_not_a_number: "L'impostazione del tipo `%{name}` non è supportata. I tipi supportati sono `integer`,` bool`, `list`,` enum` e `upload`"
+      data_type_inclusion: "L'impostazione del tipo `%{name}` non è supportata. I tipi supportati sono `integer`,` bool`, `list`,` enum` e `upload`"
       name_too_long: "Una delle impostazioni ha un nome troppo lungo. La lunghezza massima è 255 caratteri"
       default_value_missing: "L'impostazione `%{name}` non ha alcun valore predefinito"
       default_not_match_type: "L'impostazione del valore predefinito `%{name}` non corrisponde al tipo di impostazione."

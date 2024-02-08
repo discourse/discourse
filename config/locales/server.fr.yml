@@ -110,7 +110,7 @@ fr:
       optimized_link: Les liens optimisés d'images sont éphémères et ne devraient pas être inclus dans le code source d'un thème.
     settings_errors:
       invalid_yaml: "Le YAML est invalide"
-      data_type_not_a_number: "Le type « %{name} » n'est pas supporté. Les types supportés sont « integer », « bool », « list », « enum » et « upload »"
+      data_type_inclusion: "Le type « %{name} » n'est pas supporté. Les types supportés sont « integer », « bool », « list », « enum » et « upload »"
       name_too_long: "Il y a un paramètre avec un nom trop long. Longueur maximum 255"
       default_value_missing: "Le paramètre « %{name} » n'a pas de valeur par défaut"
       default_not_match_type: "Le type de la valeur par défaut du paramètre « %{name} » ne correspond pas au type du paramètre."

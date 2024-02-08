@@ -109,7 +109,7 @@ zh_CN:
       optimized_link: 优化的图片链接是暂时的，不应包含在主题源代码中。
     settings_errors:
       invalid_yaml: "提供的 YAML 无效。"
-      data_type_not_a_number: "设置 `%{name}` 的类型不受支持。支持的类型为 `integer`、`bool`、`list` 、`enum` 和 `upload`"
+      data_type_inclusion: "设置 `%{name}` 的类型不受支持。支持的类型为 `integer`、`bool`、`list` 、`enum` 和 `upload`"
       name_too_long: "有一个设置的名称过长。最大长度为 255"
       default_value_missing: "设置 `%{name}` 无默认值"
       default_not_match_type: "设置 `%{name}` 默认值的类型与设置类型不匹配。"

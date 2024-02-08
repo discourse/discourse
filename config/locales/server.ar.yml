@@ -114,7 +114,7 @@ ar:
       optimized_link: روابط الصور المحسَّنة سريعة الزوال ولا يجب تضمينها في الرمز البرمجي المصدري للسمة.
     settings_errors:
       invalid_yaml: "ملف YAML الذي أدخلته غير صالح."
-      data_type_not_a_number: "نوع الإعداد `%{name}` غير مدعوم. الأنواع المدعومة هي: `integer`، و`bool`، و`list`، و`enum` و`upload`"
+      data_type_inclusion: "نوع الإعداد `%{name}` غير مدعوم. الأنواع المدعومة هي: `integer`، و`bool`، و`list`، و`enum` و`upload`"
       name_too_long: "يوجد إعداد باسم طويل جدًا. الحد الأقصى للطول هو 255"
       default_value_missing: "لا توجد قيمة افتراضية للإعداد `%{name}`"
       default_not_match_type: "لا تتطابق القيمة الافتراضية للإعداد `%{name}` مع نوعه."

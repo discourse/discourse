@@ -110,7 +110,7 @@ sv:
       optimized_link: Optimerade bildlänkar är flyktiga och bör inte inkluderas i temakällkoden.
     settings_errors:
       invalid_yaml: "Angivet YAML är ogiltigt."
-      data_type_not_a_number: "Det går inte att ställa in typen `%{name}`. Typer som stöds är `integer`, `bool`, `list` , `enum` och `upload`"
+      data_type_inclusion: "Det går inte att ställa in typen `%{name}`. Typer som stöds är `integer`, `bool`, `list` , `enum` och `upload`"
       name_too_long: "En inställning har ett namn som är för långt. Maximal längd är 255"
       default_value_missing: "Inställningen `%{name}` har inget standardvärde"
       default_not_match_type: "Standardvärdestypen i inställningen `%{name}` överensstämmer inte med inställningstypen."

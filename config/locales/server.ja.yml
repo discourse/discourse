@@ -109,7 +109,7 @@ ja:
       optimized_link: 最適化された画像のリンクは一時的なリンクであるため、テーマのソースコードに含めるべきではありません。
     settings_errors:
       invalid_yaml: "入力された YAML は無効です。"
-      data_type_not_a_number: "設定 `%{name}` の型はサポートされていません。サポートされている型は `integer`、`bool`、`list`、`enum`、`upload` です"
+      data_type_inclusion: "設定 `%{name}` の型はサポートされていません。サポートされている型は `integer`、`bool`、`list`、`enum`、`upload` です"
       name_too_long: "名前が長すぎる設定があります。最大長は 255 です"
       default_value_missing: "設定 `%{name}` にデフォルト値がありません"
       default_not_match_type: "設定 `%{name}` のデフォルト値の型が設定の型に一致していません。"

@@ -112,7 +112,7 @@ pl_PL:
       optimized_link: Zoptymalizowane łącza do obrazów są efemeryczne i nie powinny być zawarte w kodzie źródłowym motywu.
     settings_errors:
       invalid_yaml: "Wprowadzony YAML jest nieprawidłowy"
-      data_type_not_a_number: "Ustawienie typu `%{name}` nie jest obsługiwane. Poprawne typy to `integer`, `bool`, `list`, `enum` oraz `upload`"
+      data_type_inclusion: "Ustawienie typu `%{name}` nie jest obsługiwane. Poprawne typy to `integer`, `bool`, `list`, `enum` oraz `upload`"
       name_too_long: "Jedno z ustawień ma zbyt długą nazwę. Maksymalna długość to 255 znaków"
       default_value_missing: "Ustawienie `%{name}` nie ma domyślnej wartości"
       default_not_match_type: "Typ domyślnej wartości ustawienia \"%{name}\" nie odpowiada typowi ustawienia."

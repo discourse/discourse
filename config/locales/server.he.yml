@@ -112,7 +112,7 @@ he:
       optimized_link: קישורים משופרים לתמונות הם בני חלוף ואין לכלול אותם בקוד המקור של ערכת העיצוב.
     settings_errors:
       invalid_yaml: "ה־YAML שסופק שגוי."
-      data_type_not_a_number: "סוג ההגדרה `%{name}` אינו נתמך. הסוגים הנתמכים הם: `integer`,‏ `bool`,‏ `list`,‏ `enum` ו־`upload`"
+      data_type_inclusion: "סוג ההגדרה `%{name}` אינו נתמך. הסוגים הנתמכים הם: `integer`,‏ `bool`,‏ `list`,‏ `enum` ו־`upload`"
       name_too_long: "קיימת הגדרה עם שם ארוך מדי. האורך המרבי הוא 255"
       default_value_missing: "להגדרה `%{name}` אין ערך בררת מחדל"
       default_not_match_type: "סוג ערך בררת המחדל של ההגדרה `%{name}` אינו תואם לסוג ההגדרה."
