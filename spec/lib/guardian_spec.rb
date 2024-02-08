@@ -1677,25 +1677,31 @@ RSpec.describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
-      it "returns false when trying to edit a topic with no trust" do
-        SiteSetting.min_trust_to_edit_post = 2
-        SiteSetting.edit_post_allowed_groups = 12
-        post.user.trust_level = 1
+      it "returns false when trying to edit a topic when the user is not in the allowed groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        post.user.change_trust_level!(TrustLevel[1])
 
         expect(Guardian.new(topic.user).can_edit?(topic)).to be_falsey
       end
 
-      it "returns false when trying to edit a post with no trust" do
-        SiteSetting.min_trust_to_edit_post = 2
-        SiteSetting.edit_post_allowed_groups = 12
-        post.user.trust_level = 1
+      it "returns false when trying to edit a post when the user is not in the allowed groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        post.user.change_trust_level!(TrustLevel[1])
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
       end
 
-      it "returns true when trying to edit a post with trust" do
-        SiteSetting.min_trust_to_edit_post = 1
-        post.user.trust_level = 1
+      it "returns true when editing a post when the user is in the allowed groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        post.user.change_trust_level!(TrustLevel[1])
+
+        expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
+      end
+
+      it "returns true when editing a post when the user is admin regardless of groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        post.user.update!(admin: true)
+        post.user.change_trust_level!(TrustLevel[1])
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
