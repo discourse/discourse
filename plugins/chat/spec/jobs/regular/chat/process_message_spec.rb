@@ -182,6 +182,7 @@ describe Jobs::Chat::ProcessMessage do
               message: "hello @all",
             )
 
+            # fixme andrei this actually goes into the edit rspec context
             Chat::Notifier.new(msg, msg.created_at).notify_edit
 
             notifications = Notification.where(user: user_2)
