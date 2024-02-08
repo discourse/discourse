@@ -123,7 +123,7 @@ export default class Category extends RestModel {
   static async asyncFindByIds(ids = []) {
     ids = ids.map((x) => parseInt(x, 10));
 
-    if (!Site.current().lazy_load_categories) {
+    if (!Site.current().lazy_load_categories || this.hasAsyncFoundAll(ids)) {
       return this.findByIds(ids);
     }
 
