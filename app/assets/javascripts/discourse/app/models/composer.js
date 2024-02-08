@@ -3,6 +3,7 @@ import { and, equal, not, or, reads } from "@ember/object/computed";
 import { next, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { observes, on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
@@ -14,10 +15,7 @@ import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 let _customizations = [];
