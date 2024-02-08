@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { action, computed } from "@ember/object";
+//import { computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
@@ -9,11 +11,22 @@ import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 //import AppendTags from "../bulk-actions/append-tags";
 //import ChangeCategory from "../bulk-actions/change-category";
-//import ChangeTags from "../bulk-actions/change-tags";
+import ChangeTags from "discourse/components/bulk-actions/change-tags";
 //import NotificationLevel from "../bulk-actions/notification-level";
+import TagChooser from "select-kit/components/tag-chooser";
 
 export default class BulkTopicActions extends Component {
   @service router;
+  @tracked activeComponent = null;
+  @tracked tags = [];
+
+  constructor() {
+    super(...arguments);
+
+    if (this.args.model.initialAction === "set-component") {
+      this.setComponent(ChangeTags);
+    }
+  }
 
   async perform(operation) {
     this.loading = true;
@@ -98,10 +111,28 @@ export default class BulkTopicActions extends Component {
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
         break;
       case "archive":
-        this.forEachPerformed({ type: "archive" }, (t) => t.set("archived", true));
+        this.forEachPerformed({ type: "archive" }, (t) =>
+          t.set("archived", true)
+        );
         break;
       case "unlist":
-        this.forEachPerformed({ type: "unlist" }, (t) => t.set("unlisted", true));
+        this.forEachPerformed({ type: "unlist" }, (t) =>
+          t.set("unlisted", true)
+        );
+        break;
+      case "relist":
+        this.forEachPerformed({ type: "relist" }, (t) =>
+          t.set("unlisted", false)
+        );
+        break;
+      case "append-tags":
+        this.performAndRefresh({ type: "append_tags", tags: this.tags });
+        break;
+      case "replace-tags":
+        this.performAndRefresh({ type: "change_tags", tags: this.tags });
+        break;
+      case "remove-tags":
+        this.performAndRefresh({ type: "remove_tags" });
         break;
       case "delete":
         this.performAndRefresh({ type: "delete" });
@@ -136,6 +167,16 @@ export default class BulkTopicActions extends Component {
     this.args.model.bulkSelectHelper.toggleBulkSelect();
   }
 
+  @computed('action')
+  get isTagAction() {
+    return this.args.model.action === 'append-tags' || this.args.model.action === 'replace-tags';
+  }
+
+  @computed('action')
+  get isNotificationAction() {
+    return this.args.model.action === 'update-notifications';
+  }
+
   <template>
     <DModal
       @title={{@model.title}}
@@ -144,8 +185,46 @@ export default class BulkTopicActions extends Component {
     >
       <:body>
         <div>
-          {{htmlSafe (i18n "topics.bulk.selected" count=@model.bulkSelectHelper.selected.length)}}
+          {{htmlSafe
+            (i18n
+              "topics.bulk.selected"
+              count=@model.bulkSelectHelper.selected.length
+            )
+          }}
         </div>
+
+        {{log this.activeComponent}}
+        {{!-- {{#if this.activeComponent}}
+          <this.activeComponent
+            @loading={{this.loading}}
+            @topics={{@model.topics}}
+            @category={{@model.category}}
+            @setComponent={{this.setComponent}}
+            @forEachPerformed={{this.forEachPerformed}}
+            @performAndRefresh={{this.performAndRefresh}}
+          />
+        {{/if}} --}}
+        {{#if this.isNotificationAction}}
+          <div class="bulk-notification-list">
+            {{#each this.notificationLevels as |level|}}
+              <div class="controls">
+                <label class="radio notification-level-radio checkbox-label">
+                  <RadioButton
+                    @value={{level.id}}
+                    @name="notification_level"
+                    @selection={{this.notificationLevelId}}
+                  />
+                  <strong>{{level.name}}</strong>
+                  <div class="description">{{html-safe level.description}}</div>
+                </label>
+              </div>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{#if this.isTagAction}}
+          <p><TagChooser @tags={{this.tags}} @categoryId={{@categoryId}} /></p>
+        {{/if}}
       </:body>
 
       <:footer>

@@ -6,6 +6,7 @@ import BulkTopicActions from "discourse/components/modal/bulk-topic-actions";
 import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 import i18n from "discourse-common/helpers/i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import ChangeTags from "discourse/components/bulk-actions/change-tags";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bulk-select-topics-dropdown"],
@@ -65,6 +66,32 @@ export default DropdownSelectBoxComponent.extend({
         id: "unlist-topics",
         icon: "far-eye-slash",
         name: i18n("topic_bulk_actions.unlist_topics.name"),
+        visible: ({ topics }) =>
+        topics.some((t) => t.visible) &&
+        !topics.some((t) => t.isPrivateMessage),
+      },
+      {
+        id: "relist-topics",
+        icon: "far-eye",
+        name: i18n("topic_bulk_actions.relist_topics.name"),
+        visible: ({ topics }) =>
+        topics.some((t) => !t.visible) &&
+        !topics.some((t) => t.isPrivateMessage),
+      },
+      {
+        id: "append-tags",
+        icon: "tag",
+        name: i18n("topic_bulk_actions.append_tags.name"),
+      },
+      {
+        id: "replace-tags",
+        icon: "tag",
+        name: i18n("topic_bulk_actions.replace_tags.name"),
+      },
+      {
+        id: "remove-tags",
+        icon: "tag",
+        name: i18n("topic_bulk_actions.remove_tags.name"),
       },
       {
         id: "delete-topics",
@@ -76,7 +103,7 @@ export default DropdownSelectBoxComponent.extend({
     return [...options].filter(({ visible }) => {
       if (visible) {
         return visible({
-          // topics: this.args.model.topics,
+          topics: this.bulkSelectHelper.selected,
           // category: this.args.model.category,
           currentUser: this.currentUser,
           // siteSettings: this.siteSettings,
@@ -104,14 +131,22 @@ export default DropdownSelectBoxComponent.extend({
         break;
       case "update-notifications":
         // Temporary: just use the existing modal & action
-        this.modal.show(TopicBulkActions, {
+        // this.modal.show(TopicBulkActions, {
+        //   model: {
+        //     topics: this.bulkSelectHelper.selected,
+        //     category: this.category,
+        //     refreshClosure: () => this.router.refresh(),
+        //     initialAction: "set-component",
+        //     initialComponent: NotificationLevel,
+        //   },
+        // });
+        this.modal.show(BulkTopicActions, {
           model: {
-            topics: this.bulkSelectHelper.selected,
-            category: this.category,
+            action: "update-notifications",
+            title: i18n("topics.bulk.notification_level"),
+            bulkSelectHelper: this.bulkSelectHelper,
             refreshClosure: () => this.router.refresh(),
-            initialAction: "set-component",
-            initialComponent: NotificationLevel,
-          },
+          }
         });
         break;
       case "close-topics":
@@ -140,6 +175,47 @@ export default DropdownSelectBoxComponent.extend({
           model: {
             action: "unlist",
             title: i18n("topics.bulk.unlist_topics"),
+            bulkSelectHelper: this.bulkSelectHelper,
+            refreshClosure: () => this.router.refresh(),
+          },
+        });
+        break;
+      case "relist-topics":
+        this.modal.show(BulkTopicActions, {
+          model: {
+            action: "relist",
+            title: i18n("topics.bulk.relist_topics"),
+            bulkSelectHelper: this.bulkSelectHelper,
+            refreshClosure: () => this.router.refresh(),
+          },
+        });
+        break;
+      case "append-tags":
+        this.modal.show(BulkTopicActions, {
+          model: {
+            action: "append-tags",
+            title: i18n("topics.bulk.choose_append_tags"),
+            bulkSelectHelper: this.bulkSelectHelper,
+            refreshClosure: () => this.router.refresh(),
+          },
+        });
+        break;
+      case "replace-tags":
+        this.modal.show(BulkTopicActions, {
+          model: {
+            action: "replace-tags",
+            title: i18n("topics.bulk.change_tags"),
+            bulkSelectHelper: this.bulkSelectHelper,
+            refreshClosure: () => this.router.refresh(),
+            initialAction: "set-component",
+          },
+        });
+        break;
+      case "remove-tags":
+        this.modal.show(BulkTopicActions, {
+          model: {
+            action: "remove-tags",
+            title: i18n("topics.bulk.remove_tags"),
             bulkSelectHelper: this.bulkSelectHelper,
             refreshClosure: () => this.router.refresh(),
           },
