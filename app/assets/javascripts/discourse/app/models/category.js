@@ -1,5 +1,6 @@
 import { warn } from "@ember/debug";
 import { get } from "@ember/object";
+import { on } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
@@ -8,7 +9,7 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { MultiCache } from "discourse-common/utils/multi-cache";
 
 const STAFF_GROUP_NAME = "staff";
