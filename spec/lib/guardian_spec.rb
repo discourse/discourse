@@ -46,6 +46,13 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).link_posting_access).to eq("full")
     end
 
+    it "is full for staff users regardless of TL" do
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+      admin_user = Fabricate(:admin)
+      admin_user.change_trust_level!(TrustLevel[1])
+      expect(Guardian.new(admin_user).link_posting_access).to eq("full")
+    end
+
     it "is none for a user of a low trust level" do
       user.change_trust_level!(TrustLevel[0])
       SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]

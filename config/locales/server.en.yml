@@ -1974,7 +1974,7 @@ en:
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     flag_post_allowed_groups: "Groups that are allowed to flag posts."
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
-    post_links_allowed_groups: "Groups that are allowed to include links in posts."
+    post_links_allowed_groups: "Groups that are allowed to include links in posts. Admins and moderators are always allowed to post links."
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
     embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post"
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
