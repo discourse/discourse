@@ -1,4 +1,3 @@
-import { isEmpty } from "@ember/utils";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
@@ -214,8 +213,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   hidden = true;
 
   get sections() {
+    const currentUser = getOwnerWithFallback().lookup("service:current-user");
     const siteSettings = getOwnerWithFallback().lookup("service:site-settings");
-    if (isEmpty(siteSettings.admin_sidebar_enabled_groups)) {
+    if (!currentUser.use_admin_sidebar) {
       return [];
     }
 
