@@ -175,7 +175,6 @@ describe Jobs::Chat::ProcessMessage do
           let(:mention) { "hello @#{user_2.username}!" }
 
           it "doesn't send notifications with :all_mentioned_user_ids as an identifier" do
-            Jobs.run_immediately!
             msg = build_cooked_msg(mention, user_1)
 
             Chat::UpdateMessage.call(
