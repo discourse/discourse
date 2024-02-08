@@ -65,39 +65,40 @@ describe Jobs::Chat::ProcessMessage do
       end
 
       shared_examples "channel-wide mentions" do
-        it "returns an empty list when the message doesn't include a channel mention" do
+        it "doesn't create notifications when the message doesn't include a channel mention" do
           msg = build_cooked_msg(mention.gsub("@", ""), user_1)
-
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-          expect(to_notify[list_key]).to be_empty
+          Chat::Notifier.new(msg, msg.created_at).notify_new
+          expect(Notification.count).to be(0)
         end
 
-        it "will never include someone who is not accepting channel-wide notifications" do
+        it "will never notify someone who is not accepting channel-wide notifications" do
           user_2.user_option.update!(ignore_channel_wide_mention: true)
           msg = build_cooked_msg(mention, user_1)
+          Fabricate(mention_type, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[list_key]).to be_empty
+          expect(Notification.count).to be(0)
         end
 
-        it "will never mention when channel is not accepting channel wide mentions" do
+        it "doesn't create notifications when a channel is not accepting channel wide mentions" do
           channel.update!(allow_channel_wide_mentions: false)
           msg = build_cooked_msg(mention, user_1)
+          Fabricate(mention_type, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[list_key]).to be_empty
+          expect(Notification.count).to be(0)
         end
 
-        it "will publish a mention warning" do
+        it "publishes a mention warning" do
           channel.update!(allow_channel_wide_mentions: false)
           msg = build_cooked_msg(mention, user_1)
+          Fabricate(mention_type, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+              Chat::Notifier.new(msg, msg.created_at).notify_new
             end
 
           global_mentions_disabled_message = messages.first
@@ -108,64 +109,84 @@ describe Jobs::Chat::ProcessMessage do
           )
         end
 
-        it "includes all members of a channel except the sender" do
+        it "notifies all members of a channel except the sender" do
           msg = build_cooked_msg(mention, user_1)
+          Fabricate(mention_type, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[list_key]).to contain_exactly(user_2.id)
+          expect(Notification.where(user: user_1).count).to be(0)
+          expect(Notification.where(user: user_2).count).to be(1)
         end
       end
 
       shared_examples "ensure only channel members are notified" do
-        it "will never include someone outside the channel" do
-          user3 = Fabricate(:user)
-          @chat_group.add(user3)
+        it "will never notify someone outside the channel" do
+          user_3 = Fabricate(:user)
+          @chat_group.add(user_3)
           another_channel = Fabricate(:category_channel)
-          Fabricate(:user_chat_channel_membership, chat_channel: another_channel, user: user3)
+          Fabricate(:user_chat_channel_membership, chat_channel: another_channel, user: user_3)
+
           msg = build_cooked_msg(mention, user_1)
+          if mention_type == :group_chat_mention
+            Fabricate(mention_type, group: group, chat_message: msg)
+          else
+            Fabricate(mention_type, chat_message: msg)
+          end
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[list_key]).to contain_exactly(user_2.id)
+          expect(Notification.where(user: user_3).count).to be(0)
         end
 
-        it "will never include someone not following the channel anymore" do
-          user3 = Fabricate(:user)
-          @chat_group.add(user3)
+        it "will never notify someone not following the channel anymore" do
+          user_3 = Fabricate(:user)
+          @chat_group.add(user_3)
           Fabricate(
             :user_chat_channel_membership,
             following: false,
             chat_channel: channel,
-            user: user3,
+            user: user_3,
           )
+
           msg = build_cooked_msg(mention, user_1)
+          if mention_type == :group_chat_mention
+            Fabricate(mention_type, group: group, chat_message: msg)
+          else
+            Fabricate(mention_type, chat_message: msg)
+          end
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[list_key]).to contain_exactly(user_2.id)
+          expect(Notification.where(user: user_3).count).to be(0)
         end
 
-        it "will never include someone who is suspended" do
-          user3 = Fabricate(:user, suspended_till: 2.years.from_now)
-          @chat_group.add(user3)
+        it "will never notify someone who is suspended" do
+          user_3 = Fabricate(:user, suspended_till: 2.years.from_now)
+          @chat_group.add(user_3)
           Fabricate(
             :user_chat_channel_membership,
             following: true,
             chat_channel: channel,
-            user: user3,
+            user: user_3,
           )
 
           msg = build_cooked_msg(mention, user_1)
+          if mention_type == :group_chat_mention
+            Fabricate(mention_type, group: group, chat_message: msg)
+          else
+            Fabricate(mention_type, chat_message: msg)
+          end
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[list_key]).to contain_exactly(user_2.id)
+          expect(Notification.where(user: user_3).count).to be(0)
         end
       end
 
       describe "global_mentions" do
         let(:mention) { "hello @all!" }
+        let(:mention_type) { :all_chat_mention } # fixme andrei, super-hacky but this supports shared examples above
         let(:list_key) { :global_mentions }
 
         include_examples "channel-wide mentions"
@@ -212,16 +233,18 @@ describe Jobs::Chat::ProcessMessage do
               expiring_at: 1.day.from_now,
             )
             msg = build_cooked_msg(mention, user_1)
+            Fabricate(:all_chat_mention, chat_message: msg)
 
-            to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+            Chat::Notifier.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            expect(Notification.where(user: user_2).count).to be(0)
           end
         end
       end
 
       describe "here_mentions" do
         let(:mention) { "hello @here!" }
+        let(:mention_type) { :here_chat_mention } # fixme andrei, super-hacky but this supports shared examples above
         let(:list_key) { :here_mentions }
 
         before { user_2.update!(last_seen_at: 4.minutes.ago) }
@@ -231,37 +254,42 @@ describe Jobs::Chat::ProcessMessage do
 
         it "includes users seen less than 5 minutes ago" do
           msg = build_cooked_msg(mention, user_1)
+          Fabricate(:here_chat_mention, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[list_key]).to contain_exactly(user_2.id)
+          expect(Notification.where(user: user_2).count).to be(1)
         end
 
         it "excludes users seen more than 5 minutes ago" do
           user_2.update!(last_seen_at: 6.minutes.ago)
           msg = build_cooked_msg(mention, user_1)
+          Fabricate(:here_chat_mention, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[list_key]).to be_empty
+          expect(Notification.where(user: user_2).count).to be(0)
         end
 
-        it "excludes users mentioned directly" do
-          msg = build_cooked_msg("hello @here @#{user_2.username}!", user_1)
+        it "doesn't create two notifications if a user has been reached both by a @here and a direct mention" do
+          msg = build_cooked_msg("hello @here and @#{user_2.username}", user_1)
+          Fabricate(:here_chat_mention, chat_message: msg)
+          Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[list_key]).to be_empty
+          expect(Notification.where(user: user_2).count).to be(1)
         end
 
         describe "users ignoring or muting the user creating the message" do
           it "does not send notifications to the user who is muting the acting user" do
             Fabricate(:muted_user, user: user_2, muted_user: user_1)
             msg = build_cooked_msg(mention, user_1)
+            Fabricate(:here_chat_mention, chat_message: msg)
 
-            to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+            Chat::Notifier.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[list_key]).to be_empty
+            expect(Notification.where(user: user_2).count).to be(0)
           end
 
           it "does not send notifications to the user who is ignoring the acting user" do
@@ -272,10 +300,11 @@ describe Jobs::Chat::ProcessMessage do
               expiring_at: 1.day.from_now,
             )
             msg = build_cooked_msg(mention, user_1)
+            Fabricate(:here_chat_mention, chat_message: msg)
 
-            to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+            Chat::Notifier.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            expect(Notification.where(user: user_2).count).to be(0)
           end
         end
       end
@@ -287,46 +316,43 @@ describe Jobs::Chat::ProcessMessage do
           another_channel = Fabricate(:category_channel)
           Fabricate(:user_chat_channel_membership, chat_channel: another_channel, user: user_3)
           msg = build_cooked_msg("Is @#{user_3.username} here? And @#{user_2.username}", user_1)
+          Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
+          Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
+          expect(Notification.where(user: user_2).count).to be(1)
         end
 
-        it "include users as direct mentions even if there's a @here mention" do
-          msg = build_cooked_msg("Hello @here and @#{user_2.username}", user_1)
-
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-          expect(to_notify[:here_mentions]).to be_empty
-          expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
-        end
-
-        it "include users as direct mentions even if there's a @all mention" do
+        it "doesn't create two notifications if a user has been reached both by a @all and a direct mention" do
           msg = build_cooked_msg("Hello @all and @#{user_2.username}", user_1)
+          Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[:global_mentions]).to be_empty
-          expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
+          expect(Notification.where(user: user_2).count).to be(1)
         end
 
         describe "users ignoring or muting the user creating the message" do
           it "does not publish new mentions to these users" do
             Fabricate(:muted_user, user: user_2, muted_user: user_1)
             msg = build_cooked_msg("hey @#{user_2.username} stop muting me!", user_1)
+            Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
             Chat::Publisher.expects(:publish_new_mention).never
-            to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+            Chat::Notifier.new(msg, msg.created_at).notify_new
+
+            expect(Notification.where(user: user_2).count).to be(0)
           end
 
           it "does not send notifications to the user who is muting the acting user" do
             Fabricate(:muted_user, user: user_2, muted_user: user_1)
             msg = build_cooked_msg("hey @#{user_2.username} stop muting me!", user_1)
+            Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
-            to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+            Chat::Notifier.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            expect(Notification.where(user: user_2).count).to be(0)
           end
 
           it "does not send notifications to the user who is ignoring the acting user" do
@@ -337,10 +363,11 @@ describe Jobs::Chat::ProcessMessage do
               expiring_at: 1.day.from_now,
             )
             msg = build_cooked_msg("hey @#{user_2.username} stop ignoring me!", user_1)
+            Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
 
-            to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+            Chat::Notifier.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            expect(Notification.where(user: user_2).count).to be(0)
           end
         end
       end
@@ -359,14 +386,18 @@ describe Jobs::Chat::ProcessMessage do
         before { @chat_group.add(user_3) }
 
         let(:mention) { "hello @#{group.name}!" }
+        let(:mention_type) { :group_chat_mention } # fixme andrei, super-hacky but this supports shared examples above
         let(:list_key) { group.name }
 
         include_examples "ensure only channel members are notified"
 
         it "calls guardian can_join_chat_channel?" do
-          Guardian.any_instance.expects(:can_join_chat_channel?).at_least_once
           msg = build_cooked_msg("Hello @#{group.name} and @#{user_2.username}", user_1)
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Fabricate(:group_chat_mention, group: group, chat_message: msg)
+          Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
+
+          Guardian.any_instance.expects(:can_join_chat_channel?).at_least_once
+          Chat::Notifier.new(msg, msg.created_at).notify_new
         end
 
         it "establishes a far-left precedence among group mentions" do
@@ -377,66 +408,81 @@ describe Jobs::Chat::ProcessMessage do
             following: true,
           )
           msg = build_cooked_msg("Hello @#{@chat_group.name} and @#{group.name}", user_1)
+          left_mention = Fabricate(:group_chat_mention, group: @chat_group, chat_message: msg)
+          right_mention = Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[@chat_group.name]).to contain_exactly(user_2.id, user_3.id)
-          expect(to_notify[list_key]).to be_empty
+          expect(left_mention.notifications.count).to be(2)
+          expect(right_mention.notifications.count).to be(0)
 
           second_msg = build_cooked_msg("Hello @#{group.name} and @#{@chat_group.name}", user_1)
+          left_mention = Fabricate(:group_chat_mention, group: group, chat_message: second_msg)
+          right_mention =
+            Fabricate(:group_chat_mention, group: @chat_group, chat_message: second_msg)
 
-          to_notify_2 = Chat::Notifier.new(second_msg, second_msg.created_at).notify_new
+          Chat::Notifier.new(second_msg, second_msg.created_at).notify_new
 
-          expect(to_notify_2[list_key]).to contain_exactly(user_2.id, user_3.id)
-          expect(to_notify_2[@chat_group.name]).to be_empty
+          expect(left_mention.notifications.count).to be(2)
+          expect(right_mention.notifications.count).to be(0)
         end
 
         it "skips groups with too many members" do
           SiteSetting.max_users_notified_per_group_mention = (group.user_count - 1)
 
           msg = build_cooked_msg("Hello @#{group.name}", user_1)
+          Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[group.name]).to be_nil
+          expect(Notification.count).to be(0)
         end
 
         it "respects the 'max_mentions_per_chat_message' setting and skips notifications" do
           SiteSetting.max_mentions_per_chat_message = 1
 
           msg = build_cooked_msg("Hello @#{user_2.username} and @#{user_3.username}", user_1)
+          Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
+          Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[:direct_mentions]).to be_empty
-          expect(to_notify[group.name]).to be_nil
+          expect(Notification.count).to be(0)
         end
 
         it "respects the max mentions setting and skips notifications when mixing users and groups" do
           SiteSetting.max_mentions_per_chat_message = 1
 
+          Fabricate(
+            :user_chat_channel_membership,
+            chat_channel: channel,
+            user: user_3,
+            following: true,
+          )
           msg = build_cooked_msg("Hello @#{user_2.username} and @#{group.name}", user_1)
+          Fabricate(:user_chat_mention, user: user_2, chat_message: msg)
+          Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-          to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+          Chat::Notifier.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[:direct_mentions]).to be_empty
-          expect(to_notify[group.name]).to be_nil
+          expect(Notification.count).to be(0)
         end
 
         describe "users ignoring or muting the user creating the message" do
-          it "does not send notifications to the user inside the group who is muting the acting user" do
+          it "does not notify users inside the group who is muting the acting user" do
             group.add(user_3)
             Fabricate(:user_chat_channel_membership, chat_channel: channel, user: user_3)
             Fabricate(:muted_user, user: user_2, muted_user: user_1)
             msg = build_cooked_msg("Hello @#{group.name}", user_1)
+            Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-            to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+            Chat::Notifier.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
-            expect(to_notify[group.name]).to contain_exactly(user_3.id)
+            expect(Notification.where(user: user_2).count).to be(0)
+            expect(Notification.where(user: user_3).count).to be(1)
           end
 
-          it "does not send notifications to the user inside the group who is ignoring the acting user" do
+          it "does not notify users inside the group who is ignoring the acting user" do
             group.add(user_3)
             Fabricate(:user_chat_channel_membership, chat_channel: channel, user: user_3)
             Fabricate(
@@ -446,11 +492,12 @@ describe Jobs::Chat::ProcessMessage do
               expiring_at: 1.day.from_now,
             )
             msg = build_cooked_msg("Hello @#{group.name}", user_1)
+            Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
-            to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+            Chat::Notifier.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
-            expect(to_notify[group.name]).to contain_exactly(user_3.id)
+            expect(Notification.where(user: user_2).count).to be(0)
+            expect(Notification.where(user: user_3).count).to be(1)
           end
         end
       end
@@ -460,12 +507,12 @@ describe Jobs::Chat::ProcessMessage do
 
         it "notify poster of users who are not allowed to use chat" do
           msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
+          Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[:direct_mentions]).to be_empty
+              Chat::Notifier.new(msg, msg.created_at).notify_new
+              expect(Notification.count).to be(0)
             end
 
           unreachable_msg = messages.first
@@ -496,12 +543,12 @@ describe Jobs::Chat::ProcessMessage do
                 user_1,
                 chat_channel: personal_chat_channel,
               )
+            Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
             messages =
               MessageBus.track_publish("/chat/#{personal_chat_channel.id}") do
-                to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-                expect(to_notify[:direct_mentions]).to be_empty
+                Chat::Notifier.new(msg, msg.created_at).notify_new
+                expect(Notification.count).to be(0)
               end
 
             unreachable_msg = messages.first
@@ -521,12 +568,12 @@ describe Jobs::Chat::ProcessMessage do
               )
             msg =
               build_cooked_msg("Hello @#{group.name}", user_1, chat_channel: personal_chat_channel)
+            Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
             messages =
               MessageBus.track_publish("/chat/#{personal_chat_channel.id}") do
-                to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-                expect(to_notify[group.name]).to contain_exactly(user_2.id)
+                Chat::Notifier.new(msg, msg.created_at).notify_new
+                expect(Notification.where(user: user_2).count).to be(1)
               end
 
             unreachable_msg = messages.first
@@ -546,12 +593,12 @@ describe Jobs::Chat::ProcessMessage do
 
         it "can invite chat user without channel membership" do
           msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
+          Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[:direct_mentions]).to be_empty
+              Chat::Notifier.new(msg, msg.created_at).notify_new
+              expect(Notification.count).to be(0)
             end
 
           not_participating_msg = messages.first
@@ -572,12 +619,12 @@ describe Jobs::Chat::ProcessMessage do
         it "cannot invite chat user without channel membership if they are ignoring the user who created the message" do
           Fabricate(:ignored_user, user: user_3, ignored_user: user_1)
           msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
+          Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[:direct_mentions]).to be_empty
+              Chat::Notifier.new(msg, msg.created_at).notify_new
+              expect(Notification.count).to be(0)
             end
 
           expect(messages).to be_empty
@@ -586,12 +633,12 @@ describe Jobs::Chat::ProcessMessage do
         it "cannot invite chat user without channel membership if they are muting the user who created the message" do
           Fabricate(:muted_user, user: user_3, muted_user: user_1)
           msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
+          Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[:direct_mentions]).to be_empty
+              Chat::Notifier.new(msg, msg.created_at).notify_new
+              expect(Notification.count).to be(0)
             end
 
           expect(messages).to be_empty
@@ -605,12 +652,12 @@ describe Jobs::Chat::ProcessMessage do
             following: false,
           )
           msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
+          Fabricate(:user_chat_mention, user: user_3, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[:direct_mentions]).to be_empty
+              Chat::Notifier.new(msg, msg.created_at).notify_new
+              expect(Notification.count).to be(0)
             end
 
           not_participating_msg = messages.first
@@ -636,12 +683,11 @@ describe Jobs::Chat::ProcessMessage do
               mentionable_level: Group::ALIAS_LEVELS[:everyone],
             )
           msg = build_cooked_msg("Hello @#{group.name}", user_1)
+          Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[:direct_mentions]).to be_empty
+              Chat::Notifier.new(msg, msg.created_at).notify_new
             end
 
           not_participating_msg = messages.first
@@ -668,12 +714,12 @@ describe Jobs::Chat::ProcessMessage do
             )
           Fabricate(:ignored_user, user: user_3, ignored_user: user_1, expiring_at: 1.day.from_now)
           msg = build_cooked_msg("Hello @#{group.name}", user_1)
+          Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[:direct_mentions]).to be_empty
+              Chat::Notifier.new(msg, msg.created_at).notify_new
+              expect(Notification.where(user: user_3).count).to be(0)
             end
 
           expect(messages).to be_empty
@@ -688,12 +734,12 @@ describe Jobs::Chat::ProcessMessage do
             )
           Fabricate(:muted_user, user: user_3, muted_user: user_1)
           msg = build_cooked_msg("Hello @#{group.name}", user_1)
+          Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[:direct_mentions]).to be_empty
+              Chat::Notifier.new(msg, msg.created_at).notify_new
+              expect(Notification.where(user: user_3).count).to be(0)
             end
 
           expect(messages).to be_empty
@@ -713,12 +759,12 @@ describe Jobs::Chat::ProcessMessage do
         it "sends a message to the client signaling the group has too many members" do
           SiteSetting.max_users_notified_per_group_mention = (group.user_count - 1)
           msg = build_cooked_msg("Hello @#{group.name}", user_1)
+          Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[group.name]).to be_nil
+              Chat::Notifier.new(msg, msg.created_at).notify_new
+              expect(Notification.count).to be(0)
             end
 
           too_many_members_msg = messages.first
@@ -732,12 +778,12 @@ describe Jobs::Chat::ProcessMessage do
         it "sends a message to the client signaling the group doesn't allow mentions" do
           group.update!(mentionable_level: Group::ALIAS_LEVELS[:only_admins])
           msg = build_cooked_msg("Hello @#{group.name}", user_1)
+          Fabricate(:group_chat_mention, group: group, chat_message: msg)
 
           messages =
             MessageBus.track_publish("/chat/#{channel.id}") do
-              to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
-
-              expect(to_notify[group.name]).to be_nil
+              Chat::Notifier.new(msg, msg.created_at).notify_new
+              expect(Notification.count).to be(0)
             end
 
           mentions_disabled_msg = messages.first
