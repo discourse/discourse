@@ -49,7 +49,7 @@ export default class CategoryHashtagType extends HashtagTypeBase {
   }
 
   generateIconHTML(hashtag) {
-    hashtag.colors ? this.onLoad(hashtag) : this.load(hashtag.id);
+    hashtag.preloaded ? this.onLoad(hashtag) : this.load(hashtag.id);
 
     const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;
     return `<span class="hashtag-category-badge ${colorCssClass}"></span>`;

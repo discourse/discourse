@@ -7,7 +7,12 @@ class HashtagsController < ApplicationController
   def by_ids
     raise Discourse::NotFound if SiteSetting.login_required? && !current_user
 
-    render json: HashtagAutocompleteService.new(guardian).find_by_ids(params)
+    ids =
+      HashtagAutocompleteService
+        .data_source_types
+        .each_with_object({}) { |type, hash| hash[type] = params[type]&.map(&:to_i) }
+
+    render json: HashtagAutocompleteService.new(guardian).find_by_ids(ids)
   end
 
   def lookup
