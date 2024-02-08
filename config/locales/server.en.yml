@@ -1052,6 +1052,12 @@ en:
       short_description: "Requires staff attention for another reason"
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "It's Illegal"
+      description: "This topic requires staff attention because I believe it contains content that is illegal."
+      short_description: "This is illegal"
+      email_title: 'A post in "%{title}" requires staff attention'
+      email_body: "%{link}\n\n%{message}"
 
   flagging:
     you_must_edit: '<p>Your post was flagged by the community. Please <a href="%{path}">see your messages</a>.</p>'

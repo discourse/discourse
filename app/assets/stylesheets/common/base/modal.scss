@@ -612,7 +612,12 @@
 }
 
 .flag-modal-body {
-  max-height: 450px;
+  form {
+    margin: 0;
+  }
+  .flag-action-type .controls .checkbox-label {
+    margin-bottom: 0.25em;
+  }
   .flag-action-type-details {
     width: 100%;
     // max-width: 500px;
