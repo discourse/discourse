@@ -22,7 +22,7 @@ export default class CategoryList extends Component {
   }
 
   async updateSelectedCategories(previousRequest) {
-    let categories = await Category.asyncFindByIds(this.categoryIds);
+    const categories = await Category.asyncFindByIds(this.categoryIds);
 
     // This is to prevent a race. We want to ensure that the update to
     // selectedCategories for this request happens after the update for the
