@@ -40,6 +40,8 @@ describe Jobs::Chat::ProcessMessage do
       fab!(:user_2) { Fabricate(:user) }
 
       before do
+        Jobs.run_immediately!
+
         @chat_group =
           Fabricate(
             :group,
