@@ -198,10 +198,11 @@ describe Jobs::Chat::ProcessMessage do
           it "does not send notifications to the user who is muting the acting user" do
             Fabricate(:muted_user, user: user_2, muted_user: user_1)
             msg = build_cooked_msg(mention, user_1)
+            Fabricate(:all_chat_mention, chat_message: msg)
 
-            to_notify = Chat::Notifier.new(msg, msg.created_at).notify_new
+            Chat::Notifier.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[list_key]).to be_empty
+            expect(Notification.where(user: user_2).count).to be(0)
           end
 
           it "does not send notifications to the user who is ignoring the acting user" do
