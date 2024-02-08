@@ -9,7 +9,7 @@ RSpec.describe TopicHotScore do
     it "also always updates based on recent activity" do
       freeze_time
 
-      # this will come in with a scor
+      # this will come in with a score
       topic = Fabricate(:topic, created_at: 1.hour.ago, bumped_at: 2.minutes.ago)
       post = Fabricate(:post, topic: topic, created_at: 2.minute.ago)
       PostActionCreator.like(user, post)
