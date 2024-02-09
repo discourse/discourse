@@ -2,7 +2,7 @@
 
 module CategoryBadge
   def self.html_for(category, opts = nil)
-    opts = opts || {}
+    opts ||= {}
 
     # Bail if there is no category, hide uncategorized by default
     return "" if category.blank? || (category.uncategorized? && !opts[:show_uncategorized])
@@ -26,7 +26,7 @@ module CategoryBadge
   end
 
   def self.fetch_parent_category(category)
-    Category.find_by(id: category.parent_category_id) unless category.parent_category_id.nil?
+    Category.find_by(id: category.parent_category_id) if category.parent_category_id
   end
 
   def self.map_styles_to_string(styles)
