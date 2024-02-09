@@ -366,7 +366,6 @@ body.wizard {
   }
 
   &__button.primary {
-    margin-left: 1em;
     background-color: var(--tertiary);
     color: var(--secondary);
     @include breakpoint("mobile-extra-large") {
@@ -388,7 +387,7 @@ body.wizard {
   }
 
   &__button.configure-more {
-    //background-color: var(--primary-200);
+    margin-right: 1em;
     background-color: transparent;
     color: var(--tertiary);
     @include breakpoint("mobile-extra-large") {
