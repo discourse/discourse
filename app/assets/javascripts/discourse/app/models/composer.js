@@ -12,7 +12,9 @@ import { prioritizeNameFallback } from "discourse/lib/settings";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Draft from "discourse/models/draft";
 import RestModel from "discourse/models/rest";
+import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
+import User from "discourse/models/user";
 import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -131,6 +133,14 @@ export default class Composer extends RestModel {
   static NEW_PRIVATE_MESSAGE_KEY = NEW_PRIVATE_MESSAGE_KEY;
   static NEW_TOPIC_KEY = NEW_TOPIC_KEY;
 
+  // TODO: Replace with injection
+  static create(args) {
+    args = args || {};
+    args.user = args.user || User.current();
+    args.site = args.site || Site.current();
+    return super.create(args);
+  }
+
   static serializeToTopic(fieldName, property) {
     if (!property) {
       property = fieldName;
@@ -173,8 +183,6 @@ export default class Composer extends RestModel {
   }
 
   @service dialog;
-  @service currentUser;
-  @service site;
 
   unlistTopic = false;
   noBump = false;
