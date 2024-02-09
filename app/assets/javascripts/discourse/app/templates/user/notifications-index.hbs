@@ -20,6 +20,10 @@
       @value={{this.filter}}
       @onChange={{action (mut this.filter)}}
     />
+    <PluginOutlet
+      @name="user-notifications-after-filter"
+      @outletArgs={{hash items=this.items}}
+    />
   </div>
 
   {{#if this.nothingFound}}

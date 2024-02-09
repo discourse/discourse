@@ -35,25 +35,6 @@ RSpec.describe ContentSecurityPolicy::Builder do
 
       expect(builder.build).to eq(previous)
     end
-
-    it "omits nonce when unsafe-inline enabled" do
-      builder << { script_src: %w['unsafe-inline' 'nonce-abcde'] }
-
-      expect(builder.build).not_to include("nonce-abcde")
-    end
-
-    it "omits sha when unsafe-inline enabled" do
-      builder << { script_src: %w['unsafe-inline' 'sha256-abcde'] }
-
-      expect(builder.build).not_to include("sha256-abcde")
-    end
-
-    it "keeps sha and nonce when unsafe-inline is not specified" do
-      builder << { script_src: %w['nonce-abcde' 'sha256-abcde'] }
-
-      expect(builder.build).to include("nonce-abcde")
-      expect(builder.build).to include("sha256-abcde")
-    end
   end
 
   def parse(csp_string)

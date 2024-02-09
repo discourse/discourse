@@ -2,24 +2,23 @@ import ArrayProxy from "@ember/array/proxy";
 import { Promise } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default ArrayProxy.extend({
-  loading: false,
-  loadingMore: false,
-  totalRows: 0,
-  refreshing: false,
-
-  content: null,
-  loadMoreUrl: null,
-  refreshUrl: null,
-  findArgs: null,
-  store: null,
-  __type: null,
-  resultSetMeta: null,
+export default class ResultSet extends ArrayProxy {
+  loading = false;
+  loadingMore = false;
+  totalRows = 0;
+  refreshing = false;
+  content = null;
+  loadMoreUrl = null;
+  refreshUrl = null;
+  findArgs = null;
+  store = null;
+  resultSetMeta = null;
+  __type = null;
 
   @discourseComputed("totalRows", "length")
   canLoadMore(totalRows, length) {
     return length < totalRows;
-  },
+  }
 
   loadMore() {
     const loadMoreUrl = this.loadMoreUrl;
@@ -37,7 +36,7 @@ export default ArrayProxy.extend({
     }
 
     return Promise.resolve();
-  },
+  }
 
   refresh() {
     if (this.refreshing) {
@@ -53,5 +52,5 @@ export default ArrayProxy.extend({
     return this.store
       .refreshResults(this, this.__type, refreshUrl)
       .finally(() => this.set("refreshing", false));
-  },
-});
+  }
+}
