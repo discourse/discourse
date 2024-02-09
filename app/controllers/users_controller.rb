@@ -1898,7 +1898,7 @@ class UsersController < ApplicationController
     end
 
     if reminder_notifications.present?
-      if SiteSetting.show_user_menu_avatars
+      if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
         Notification.populate_acting_user(reminder_notifications)
       end
       serialized_notifications =
@@ -1971,7 +1971,9 @@ class UsersController < ApplicationController
     end
 
     if unread_notifications.present?
-      Notification.populate_acting_user(unread_notifications) if SiteSetting.show_user_menu_avatars
+      if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
+        Notification.populate_acting_user(unread_notifications)
+      end
       serialized_unread_notifications =
         ActiveModel::ArraySerializer.new(
           unread_notifications,
@@ -1984,7 +1986,7 @@ class UsersController < ApplicationController
       serialized_messages =
         serialize_data(messages_list, TopicListSerializer, scope: guardian, root: false)[:topics]
       serialized_users =
-        if SiteSetting.show_user_menu_avatars
+        if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
           users = messages_list.topics.map { |t| t.posters.last.user }.flatten.compact.uniq(&:id)
           serialize_data(users, BasicUserSerializer, scope: guardian, root: false)
         else
@@ -1993,7 +1995,9 @@ class UsersController < ApplicationController
     end
 
     if read_notifications.present?
-      Notification.populate_acting_user(read_notifications) if SiteSetting.show_user_menu_avatars
+      if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
+        Notification.populate_acting_user(read_notifications)
+      end
       serialized_read_notifications =
         ActiveModel::ArraySerializer.new(
           read_notifications,

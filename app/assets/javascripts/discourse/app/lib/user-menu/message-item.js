@@ -31,7 +31,11 @@ export default class UserMenuMessageItem extends UserMenuBaseItem {
   }
 
   get label() {
-    return this.message.last_poster_username;
+    if (this.siteSettings.prioritize_username_in_ux) {
+      return this.message.last_poster_username;
+    }
+
+    return this.message.last_poster_name || this.message.last_poster_username;
   }
 
   get description() {
