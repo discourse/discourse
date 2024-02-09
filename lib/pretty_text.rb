@@ -302,6 +302,7 @@ module PrettyText
     add_rel_attributes_to_user_content(doc, add_nofollow)
     strip_hidden_unicode_bidirectional_characters(doc)
     sanitize_hotlinked_media(doc)
+    add_video_placeholder_image(doc)
 
     add_mentions(doc, user_id: opts[:user_id]) if SiteSetting.enable_mentions
 
@@ -440,6 +441,17 @@ module PrettyText
       end
 
     links
+  end
+
+  def self.add_video_placeholder_image(doc)
+    doc
+      .css(".video-placeholder-container")
+      .each do |video|
+        video_src = video["data-video-src"]
+        video_sha1 = File.basename(video_src, File.extname(video_src))
+        thumbnail = Upload.where("original_filename LIKE ?", "#{video_sha1}.%").first
+        video["data-thumbnail-src"] = "/uploads/default/original/1X/#{thumbnail.sha1}.jpg"
+      end
   end
 
   def self.extract_mentions(cooked)

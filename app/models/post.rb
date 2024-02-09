@@ -1048,7 +1048,7 @@ class Post < ActiveRecord::Base
             .where("original_filename like ?", "#{upload.sha1}.%")
             .order(id: :desc)
             .first if upload.sha1.present?
-        if thumbnail.present? && self.is_first_post? && !self.topic.image_upload_id
+        if thumbnail.present? && !self.topic.image_upload_id
           upload_ids << thumbnail.id
           self.topic.update_column(:image_upload_id, thumbnail.id)
           extra_sizes =
