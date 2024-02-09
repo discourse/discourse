@@ -21,14 +21,22 @@ export default class CategoryList extends Component {
     return this.args.value.split("|").filter(Boolean);
   }
 
-  async updateSelectedCategories() {
-    await this.pendingCategoriesRequest;
-    this.selectedCategories = await Category.asyncFindByIds(this.categoryIds);
+  async updateSelectedCategories(previousRequest) {
+    const categories = await Category.asyncFindByIds(this.categoryIds);
+
+    // This is to prevent a race. We want to ensure that the update to
+    // selectedCategories for this request happens after the update for the
+    // previous request.
+    await previousRequest;
+
+    this.selectedCategories = categories;
   }
 
   @action
   valueChanged() {
-    this.pendingCategoriesRequest = this.updateSelectedCategories();
+    const previousRequest = this.pendingCategoriesRequest;
+    this.pendingCategoriesRequest =
+      this.updateSelectedCategories(previousRequest);
   }
 
   @action
